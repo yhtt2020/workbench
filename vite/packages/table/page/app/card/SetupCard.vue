@@ -21,12 +21,6 @@
           <div class="button">
             <a-date-picker
               v-model:value="dateValue"
-
-              :disabled-date="
-                (current) => {
-                  return current && current < dayjs().endOf('day');
-                }
-              "
             />
             <a-button type="primary" @click="addCard">添加</a-button>
           </div>
@@ -58,7 +52,8 @@
                     >
                   </div>
                   <div>
-                    {{
+                    <span v-if="item.type">还有</span>
+                    <span v-else>已过</span> {{
                       transDate(
                         appDate.year + "-" + appDate.month + "-" + appDate.day,
                         item.dateValue.year +
@@ -98,11 +93,6 @@
           <div class="button">
             <a-date-picker
               v-model:value="dateValue"
-              :disabled-date="
-                (current) => {
-                  return current && current < dayjs().endOf('day');
-                }
-              "
             />
             <a-button type="primary" @click="addCard">添加</a-button>
           </div>

@@ -163,9 +163,10 @@ export default {
   },
   mounted() {
     this.checkScroll()
-    window.addEventListener('resize',()=>{
-      this.checkScroll()
-    })
+    let that = this
+    window.addEventListener('resize',
+      that.checkScrol
+    )
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
       event.preventDefault();
@@ -175,6 +176,10 @@ export default {
     this.$nextTick(()=>{
       this.rowDrop()
     })
+  },
+  unmounted() {
+    let that = this
+      window.removeEventListener('resize', that.checkScrol)
   },
   methods:{
     ...mapActions(tableStore, ['setNavigationList','sortNavigationList','removeNavigationList']),

@@ -22,7 +22,8 @@
         >
       </div>
       <span
-      >{{
+      ><span v-if="item.type">还有</span>
+        <span v-else>已过</span>{{
           transDate(
             appDate.year + "-" + appDate.month + "-" + appDate.day,
             item.dateValue.year +

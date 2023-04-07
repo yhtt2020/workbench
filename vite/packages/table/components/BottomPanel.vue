@@ -87,7 +87,7 @@
         </div>
 
 
-    <div style="border-left: 1px solid rgba(255, 255, 255, 0.2);" class="flex justify-center items-center  h-2/3 pointer w-20">
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px" class="flex justify-center items-center  h-2/3 pointer">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
   </div>
@@ -224,7 +224,12 @@ export default {
       //screenWidth: document.body.clientWidth
     }
   },
+  unmounted() {
+    let that = this
+    window.removeEventListener('resize', that.checkScroll)
+  },
   mounted () {
+    let that = this
     this.checkScroll()
     // const that = this
     // window.onresize = function() {
@@ -233,9 +238,9 @@ export default {
     //     that.screenWidth = window.screenWidth
     //   }()
     // }
-    window.addEventListener('resize',()=>{
-      this.checkScroll()
-    })
+    window.addEventListener('resize',
+      that.checkScroll
+    )
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
       event.preventDefault();

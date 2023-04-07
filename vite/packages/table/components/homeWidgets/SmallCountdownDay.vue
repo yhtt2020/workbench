@@ -22,7 +22,8 @@
       <span class="text-more"  style="flex: 1">{{
           myCountdownDay[0].eventValue
         }}</span
-      >」还有
+      >」<span v-if="myCountdownDay[0].type">还有</span>
+      <span v-else>已过</span>
     </div>
     <div style="font-size: 3em; margin-top: 0.1em">
       {{
