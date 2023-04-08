@@ -200,7 +200,13 @@ export default defineComponent({
     },
 
     playAll(){
-       window.Spotlight.show(this.myPapers,{
+      const playArr = []
+      this.myPapers.map(el=>{
+        playArr.push({
+          src:el.path
+        })
+      })
+       window.Spotlight.show(playArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,

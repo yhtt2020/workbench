@@ -123,35 +123,42 @@ export default defineComponent({
       pickHeight:80000,
       options:{
         url: 'data-source',
-      }
+      },
+      score:99999999,
+      no:99999999,
+      dateTime:20500101
     }
   },
   mounted() {
     $("#pick-wrapper").scroll(()=>{
       if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-        this.pickHeight = this.pickHeight + 1000
-        this.getPickingData(this.pickFilterValue,this.pickHeight)
+        const newTime = new Date()
+        this.dateTime =  this.formatDateTime(newTime)
+        this.score = this.pickImageData.sort((a,b)=>{
+          return  a.resolution - b.resolution > b.resolution
+        })[this.pickImageData.length-1].score
+        this.no = this.pickImageData.sort((a,b)=>{
+          return  a.resolution - b.resolution  > b.resolution
+        })[this.pickImageData.length-1].no
+        this.getPickingData(this.pickFilterValue,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+        console.log(this.score);
+        console.log(this.no);
       }
     })
-    this.getPickingData(this.pickFilterValue,this.pickHeight)
+    this.getPickingData(this.pickFilterValue,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
     this.getClassOption()
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
     // 获取拾光壁纸数据
-    getPickingData(vl,vh){
-      const apiUrl = `https://api.nguaduot.cn${vl}`
-      const newTime = new Date()
-      const dateTime =  this.formatDateTime(newTime)
-      const params = {
-        order:`${this.filterValue}`,
-        no:`${vh}`,
-        date:`${dateTime}`,
-        score:`${vh}`,
-      }
+    getPickingData(vl,vP){
+      console.log(vl,vP);
+      const apiUrl = `https://api.nguaduot.cn${vl}?${vP}`
+      console.log(apiUrl);
       if(!this.isLoading){
         this.isLoading = true
-        axios.get(apiUrl,{params:params}).then(async res=>{
+        axios.get(apiUrl).then(async res=>{
+          console.log(res.data.data);
           let pickImage = res.data.data
           let animations = ["ani-gray", "bowen", "ani-rotate"];
           if(pickImage){
@@ -162,6 +169,8 @@ export default defineComponent({
                 src:img.thumburl,
                 path:img.imgurl,
                 resolution:img.size,
+                score:img.score,
+                no:img.no,
                 animations: animations[randomIndex],
               }
               this.pickImageData.push(image)
@@ -182,7 +191,8 @@ export default defineComponent({
     },
     pickFilterChange(e){
       this.pickFilterValue = e
-      this.getPickingData(e,this.pickHeight)
+      this.pickImageData  = []
+      this.getPickingData(e,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
     },
     // 重置筛选
     restFilter(){
