@@ -17,6 +17,7 @@ import Index from '../page/Index.vue'
 import Home from '../page/Home.vue'
 import Browser from '../page/settings/Browser.vue'
 import AddCard from "../page/app/card/AddCard.vue"
+import Common from '../page/settings/Common.vue'
 import SetupCard from "../page/app/card/SetupCard.vue"
 import Sensor from '../page/Sensor.vue'
 import Dashboard from '../page/app/watch/Dashboard.vue'
@@ -100,6 +101,7 @@ export default [{
     },
     {
       path: '/deck',
+      name:'deck',
       component: Deck
     }, {
       path: '/status',
@@ -124,6 +126,11 @@ export default [{
       children: [
         {
           path: '',
+          name: 'common',
+          component: Common
+        },
+        {
+          path: '/key',
           name: 'key',
           component: Key
         },

@@ -8,6 +8,7 @@ class TableManager {
   async init () {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
+      console.log(tableWinSetting,'读入设置')
       global.tableWin = {}//因为启动需要时间，如果不先设置一个变量，容易导致重复启动。
       global.tableWin = await windowManager.create({
         name:'table',
@@ -86,10 +87,12 @@ class TableManager {
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized()
     }
+    console.log(tableWinSetting,'保存工作台位置')
     settings.set('tableWinSetting', tableWinSetting)
   }
 
   close () {
+    this.saveBounds()
     global.tableAppManager.closeAllApp()
     global.tableWin.window.close()
     global.tableWin=null
@@ -138,17 +141,22 @@ app.whenReady().then(() => {
     let result = []
     let path = require('path')
     for (let file of files) {
-      let link = null
-      if (file.endsWith('.lnk')) {
-        link = require('electron').shell.readShortcutLink(file)
+      try{
+        let link = null
+        if (file.endsWith('.lnk')) {
+          link = require('electron').shell.readShortcutLink(file)
+        }
+        let icon = await app.getFileIcon(link ? link.target : file)
+        result.push({
+          name: path.parse(file).name,
+          ext: path.parse(file).ext,
+          path: link ? link.target : file,
+          icon: icon.toDataURL()
+        })
+      }catch (e) {
+        console.warn('存在失败的',e,file)
       }
-      let icon = await app.getFileIcon(link ? link.target : file)
-      result.push({
-        name: path.parse(file).name,
-        ext: path.parse(file).ext,
-        path: link ? link.target : file,
-        icon: icon.toDataURL()
-      })
+
     }
     e.returnValue = result
   })
@@ -163,19 +171,24 @@ app.whenReady().then(() => {
       //read directory
       let files = fs.readdirSync(_dir)
       files.forEach(_file => {
-        //console.log(_file);
-        let _p = _dir + '/' + _file
-        //changes slashing for file paths
-        let _path = _p.replace(/\\\\/g, '/')
-        let name = path.parse(_path).name
-        if (_path.endsWith('.lnk')) {
-          _path = require('electron').shell.readShortcutLink(_path).target
+        try{
+          let _p = _dir + '/' + _file
+          //changes slashing for file paths
+          let _path = _p.replace(/\\\\/g, '/')
+          let name = path.parse(_path).name
+          if (_path.endsWith('.lnk')) {
+            _path = require('electron').shell.readShortcutLink(_path).target
+          }
+          filepaths.push({
+            name: name,
+            path: _path,
+            ext: path.parse(_path).ext
+          })
+        }catch (e) {
+          console.warn('存在失败的',e,_file)
         }
-        filepaths.push({
-          name: name,
-          path: _path,
-          ext: path.parse(_path).ext
-        })
+        //console.log(_file);
+
       })
       return filepaths
 
@@ -184,13 +197,19 @@ app.whenReady().then(() => {
     let filepaths = getDesktopFiles(app.getPath('desktop'))
 
     for (let file of filepaths) {
-      let icon = await app.getFileIcon(file.path)
-      apps.push({
-        name: file.name,
-        ext: file.ext,
-        path: file.path,
-        icon: icon.toDataURL()
-      })
+      try{
+        let icon = await app.getFileIcon(file.path)
+        apps.push({
+          name: file.name,
+          ext: file.ext,
+          path: file.path,
+          icon: icon.toDataURL()
+        })
+
+      }catch (e) {
+        console.warn('存在导入失败的',e,file)
+      }
+
     }
     e.returnValue = apps
   })

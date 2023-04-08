@@ -22,7 +22,8 @@
       <span class="text-more"  style="flex: 1">{{
           myCountdownDay[0].eventValue
         }}</span
-      >」还有
+      >」<span v-if="myCountdownDay[0].type">还有</span>
+      <span v-else>已过</span>
     </div>
     <div style="font-size: 3em; margin-top: 0.1em">
       {{
@@ -72,7 +73,7 @@
 <script>
 import { Empty } from "ant-design-vue";
 import {mapActions, mapWritableState} from "pinia";
-import { tableStore } from "../../store";
+import { cardStore } from "../../store/card";
 import { transDate } from "../../../../src/util/dateTime";
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
@@ -92,7 +93,8 @@ export default {
       options:{
         className:'card small',
         title:'',
-        icon:''
+        icon:'',
+        type:'smallCountDownDay'
       },
     };
   },
@@ -102,10 +104,10 @@ export default {
 
   },
   computed: {
-    ...mapWritableState(tableStore, ["appDate", "countdownDay"]),
+    ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
   },
   methods: { transDate,
-    ...mapActions(tableStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     showDrawer()  {
       this.visible = true;
     },

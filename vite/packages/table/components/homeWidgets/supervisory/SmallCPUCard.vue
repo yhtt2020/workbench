@@ -39,7 +39,7 @@
 
 <script>
 import {mapWritableState} from "pinia";
-import {tableStore} from "../../../store";
+import {cardStore} from "../../../store/card";
 import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
@@ -64,7 +64,7 @@ export default {
     HomeComponentSlot
   },
   computed:{
-    ...mapWritableState(tableStore, ["aidaData"]),
+    ...mapWritableState(cardStore, ["aidaData"]),
   },
   watch: {
     "aidaData": {

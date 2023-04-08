@@ -42,7 +42,7 @@
 
 <script>
 import { mapActions } from 'pinia'
-import { tableStore } from '../../store'
+import { cardStore } from '../../store/card'
 import HomeComponentSlot from './HomeComponentSlot.vue'
 
 export default {
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     onPanelChange (value, mode) {},
-    ...mapActions(tableStore, ['removeCustomComponents']),
+    ...mapActions(cardStore, ['removeCustomComponents']),
     showDrawer () {
       this.visible = true
     },

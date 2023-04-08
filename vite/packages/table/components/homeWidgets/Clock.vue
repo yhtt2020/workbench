@@ -44,8 +44,7 @@
     </div>
   </div>
   <a-drawer
-    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
-    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
+    :contentWrapperStyle="{  backgroundColor:'#1F1F1F',height:'11em'}"
     :width="120"
     :height="120"
     class="drawer"
@@ -96,7 +95,8 @@
 <script>
 import { Empty } from "ant-design-vue";
 import { mapWritableState,mapActions } from "pinia";
-import {countDownStore, tableStore} from "../../store";
+import {countDownStore} from "../../store/countDown";
+import {cardStore} from "../../store/card"
 import dayjs from 'dayjs';
 export default {
   name: "Clock",
@@ -115,12 +115,12 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(tableStore, ["appDate", "clockEvent"]),
+    ...mapWritableState(cardStore, ["appDate", "clockEvent"]),
     ...mapWritableState(countDownStore, ["countDowndate","countDowntime","countDownBtn"]),
   },
 
   methods: {
-    ...mapActions(tableStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
     onContextMenuClick(e) {
 
@@ -187,6 +187,10 @@ export default {
   .title-icon {
     position: absolute;
     right: 1em;
+    color: #818181;
+      width: 24px;
+      height: 24px;
+
   }
 
 }
