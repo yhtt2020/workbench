@@ -42,8 +42,8 @@
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {mapActions, mapWritableState} from "pinia";
-
-import {appStore, tableStore} from "./store";
+import {cardStore} from "./store/card"
+import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
 import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
@@ -116,19 +116,15 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(tableStore, [
-      "customComponents",
-      "clockEvent",
-      "appDate",
-    ]),
+    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate",]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo'])
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
     ...mapActions(weatherStore, ['reloadAll']),
-    ...mapActions(tableStore, ['sortClock']),
+    ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
@@ -166,7 +162,7 @@ export default {
     updateMusic(music) {
       this.setMusic(music);
     },
-    ...mapActions(tableStore, ["removeClock"]),
+    ...mapActions(cardStore, ["removeClock"]),
     // async getUserInfo() {
     //   let rs = await tsbApi.user.get()
     //   if (rs.status === 1) {
@@ -201,7 +197,30 @@ export default {
 
         }
       },
-      deep: true,
+      immediate: true,
+    },
+    "clockEvent.length": {
+      handler(newVal, oldVal) {
+        try {
+          if (
+            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
+            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
+          ) {
+            this.visible = true;
+            setTimeout(() => {
+              this.$refs.clock.play();
+            }, 500)
+          }else{
+            this.visible = false;
+            setTimeout(() => {
+              this.$refs.clock.pause();
+              this.$refs.clock.currentTime = 0;
+            }, 1000)
+          }
+        } catch (err) {
+
+        }
+      },
       immediate: true,
     },
   },

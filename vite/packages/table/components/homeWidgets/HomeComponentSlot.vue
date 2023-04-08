@@ -67,7 +67,7 @@
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
-import {tableStore} from "../../store";
+import {cardStore} from "../../store/card";
 import {message} from "ant-design-vue";
 
 export default {
@@ -98,10 +98,10 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(tableStore, ["aidaData"]),
+    ...mapWritableState(cardStore, ["aidaData"]),
   },
   methods:{
-    ...mapActions(tableStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     showDrawer()  {
       this.visible = true;
     },

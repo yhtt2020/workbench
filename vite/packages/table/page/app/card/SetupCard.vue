@@ -235,7 +235,7 @@
 
 <script>
 import { mapWritableState, mapActions } from "pinia";
-import { tableStore } from "../../../store";
+import { cardStore } from "../../../store/card";
 import { timeStamp, transDate } from "../../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
@@ -272,12 +272,12 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(tableStore, ["countdownDay", "appDate", "clockEvent"]),
+    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
   },
   methods: {
     dayjs,
     transDate,
-    ...mapActions(tableStore, [
+    ...mapActions(cardStore, [
       "addCountdownDay",
       "addClock",
       "addCustomComponents",

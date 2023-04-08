@@ -108,7 +108,7 @@
 import vuuri from "../vuuriHome/Vuuri.vue";
 import listItem from "./listItem.vue";
 import {mapActions, mapWritableState} from "pinia";
-import {tableStore} from "../../store";
+import {cardStore} from "../../store/card";
 import ScrolX from '../ScrolX.vue'
 import Sortable from 'sortablejs';
 import navigationData from '../../js/data/tableData'
@@ -148,7 +148,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(tableStore, ['navigationList','routeParams']),
+    ...mapWritableState(cardStore, ['navigationList','routeParams']),
     filterList(){
       return this.ClassifyData.filter(i =>{return i.type === this.nowClassify&&i.name.includes(this.selectContent)})
     }
@@ -182,7 +182,7 @@ export default {
       window.removeEventListener('resize', that.checkScrol)
   },
   methods:{
-    ...mapActions(tableStore, ['setNavigationList','sortNavigationList','removeNavigationList']),
+    ...mapActions(cardStore, ['setNavigationList','sortNavigationList','removeNavigationList']),
      rowDrop()  {
        var that = this
        var drop = document.getElementById('navList')

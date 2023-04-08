@@ -88,7 +88,7 @@ import SupervisorySlot from "./SupervisorySlot.vue";
 import {CPUOption,GPUOption} from './echartOptions'
 import * as echarts from "echarts";
 import {mapWritableState} from "pinia";
-import {tableStore} from "../../../store";
+import {cardStore} from "../../../store/card";
 import {filterObjKeys, netWorkDownUp} from '../../../util'
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
@@ -120,7 +120,7 @@ export default {
     HomeComponentSlot
   },
   computed:{
-    ...mapWritableState(tableStore, ["aidaData"]),
+    ...mapWritableState(cardStore, ["aidaData"]),
     lastDown(){
       return this.down < 1000 ? this.down +'KB/S' : this.down<1024000?(this.down/1024).toFixed(2) + 'MB/S':(this.down/1024/1024).toFixed(2) + 'GB/S'
     },
