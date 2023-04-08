@@ -27,8 +27,8 @@
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
     <viewer :images="myPapers" :options="options">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
-        <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
-          <img @contextmenu.prevent="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution" class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src" style="position: relative">
+        <a-col class="image-wrapper" v-for="img in myPapers" :span="6" style="">
+          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution" class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src" style="position: relative">
           <div @click="previewVideo(img)" v-if="fileImageExtension(img) === true" class="play-icon pointer" style="">
             <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
           </div>
@@ -42,7 +42,7 @@
         </a-col>
       </a-row>
     </viewer>
-   </vue-custom-scrollbar>
+  </vue-custom-scrollbar>
 </div>
 
 
@@ -84,6 +84,8 @@
     <div id="my-mse"></div>
 </div> 
 
+
+
 </template>
 
 <script>
@@ -122,6 +124,10 @@ export default defineComponent({
       previewVideoVisible:false,
       options:{
         url: 'data-source',
+      },
+      playArr:{
+        src:null,
+        path:null
       }
     }
   },
@@ -200,20 +206,24 @@ export default defineComponent({
     },
 
     playAll(){
-      const playArr = []
       this.myPapers.map(el=>{
-        playArr.push({
-          src:el.path
-        })
+         if(this.fileImageExtension(el)){
+           this.playArr.src = el.src
+         }else{
+           this.playArr.path = el.src
+         }
       })
-       window.Spotlight.show(playArr,{
-        control: 'autofit,page,fullscreen,close,zoom,prev,next',
-        play: true,
-        autoslide: true,
-        infinite: true,
-        progress: false,
-        title: false
-       })
+      window.Spotlight.show([{
+       "media": "video",
+       "src-mp4": `${this.playArr.src}`,
+       "poster": `${this.playArr.path}`,
+       "autoplay": true,
+       "muted": true,
+       "preload": true,
+       "controls": true,
+       "inline": true,
+       "control": 'autofit,page,fullscreen,close,zoom,prev,next',
+      }]);
     },
 
     playActive(){

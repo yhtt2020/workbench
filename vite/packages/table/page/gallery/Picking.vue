@@ -28,7 +28,7 @@
     </div>
     <a-row :gutter="[20,20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
       <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
-         <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+         <img  @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
           <div @click.stop="addToMy(img)"  class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
             <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -91,6 +91,24 @@
     </template>
 </a-drawer>
 
+<a-drawer v-model:visible="visibleMenu" placement="bottom">
+  <a-row :gutter="20" style="text-align: center">
+    <a-col :span="4">
+      <div @click="setDesktopPaper" class="btn">
+        <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+        <div>设置为桌面壁纸</div>
+      </div>
+    </a-col>
+
+    <a-col>
+      <div  @click="add()" class="btn">
+        <Icon style="font-size: 3em" icon="xiazai"></Icon>
+        <div>下载该壁纸</div>
+      </div>
+    </a-col>
+  </a-row>
+</a-drawer>
+
 </template>
 
 <script>
@@ -99,6 +117,7 @@ import {InfoCircleOutlined} from '@ant-design/icons-vue'
 import axios from 'axios';
 import { paperStore } from "../../store/paper";
 import { mapActions, mapState } from "pinia";
+import {message,Modal} from 'ant-design-vue'
 export default defineComponent({
   name:'Picking',
   components:{
@@ -126,7 +145,10 @@ export default defineComponent({
       },
       score:99999999,
       no:99999999,
-      dateTime:20500101
+      dateTime:20500101,
+      visibleMenu:false,
+      currentPaper:null,
+      count:'',
     }
   },
   mounted() {
@@ -141,8 +163,6 @@ export default defineComponent({
           return  a.resolution - b.resolution  > b.resolution
         })[this.pickImageData.length-1].no
         this.getPickingData(this.pickFilterValue,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
-        console.log(this.score);
-        console.log(this.no);
       }
     })
     this.getPickingData(this.pickFilterValue,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
@@ -158,10 +178,11 @@ export default defineComponent({
       if(!this.isLoading){
         this.isLoading = true
         axios.get(apiUrl).then(async res=>{
-          console.log(res.data.data);
-          let pickImage = res.data.data
-          let animations = ["ani-gray", "bowen", "ani-rotate"];
-          if(pickImage){
+          if(res.data.data.length !== 1){
+            let pickImage = res.data.data
+            this.count = res.data.count
+            let animations = ["ani-gray", "bowen", "ani-rotate"];
+            if(pickImage){
             pickImage.forEach(img=>{
               let randomIndex = Math.floor(Math.random() * animations.length);
               const image = {
@@ -178,6 +199,9 @@ export default defineComponent({
             this.$nextTick(() => {
               this.isLoading = false;
             });
+            }
+          }else{
+            return
           }
         })  
       }
@@ -222,6 +246,26 @@ export default defineComponent({
         }) > -1
       );
    },
+
+   pickShow(item){
+    this.currentPaper = item
+    this.visibleMenu = true
+   },
+   add(){
+
+   },
+   setDesktopPaper(){
+    Modal.confirm({
+      content:'确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',
+      okText:'设置桌面壁纸',
+      onOk:()=>{
+        message.info('正在为您下载并设桌面壁纸')
+        console.log(this.currentPaper.path);
+        tsbApi.system.setPaper(this.currentPaper.path)
+        this.visibleMenu= false
+      }
+    })
+   }
   },
 
   setup() {
