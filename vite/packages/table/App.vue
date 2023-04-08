@@ -36,7 +36,7 @@
       </div>
     </template>
   </a-modal>
-  <audio ref="clock" src="/sound/clock.mp3"></audio>
+  <audio ref="clock" src="/sound/clock.mp3"  ></audio>
 </template>
 
 <script lang="ts">
@@ -89,11 +89,11 @@ export default {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
-    if (!this.myCode) {
-      //注释此处的代码跳过激活码验证
-      this.$router.push('/code')
-      return
-    }
+    // if (!this.myCode) {
+    //   //注释此处的代码跳过激活码验证
+    //   this.$router.push('/code')
+    //   return
+    // }
     this.verify(rs => {
       if (!rs) {
         this.$router.push('/code')
@@ -120,7 +120,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate",]),
+    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate","clockFlag"]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
@@ -176,11 +176,8 @@ export default {
     // }
     handleOk() {
       this.visible = false;
-      setTimeout(() => {
-        this.removeClock(0);
-        this.$refs.clock.pause();
-        this.$refs.clock.currentTime = 0;
-      }, 1000)
+      this.removeClock(0);
+      this.$refs.clock.pause();
     },
 
 
@@ -193,9 +190,7 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
             this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 500)
+            setTimeout(()=>{ this.$refs.clock.play();},1000)
           }
         } catch (err) {
 
@@ -203,7 +198,7 @@ export default {
       },
       immediate: true,
     },
-    "clockEvent.length": {
+    "clockFlag": {
       handler(newVal, oldVal) {
         try {
           if (
@@ -211,15 +206,10 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
             this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 500)
+            setTimeout(()=>{ this.$refs.clock.play();},1000)
           }else{
             this.visible = false;
-            setTimeout(() => {
-              this.$refs.clock.pause();
-              this.$refs.clock.currentTime = 0;
-            }, 1000)
+            this.$refs.clock.pause()
           }
         } catch (err) {
 

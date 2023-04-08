@@ -29,38 +29,22 @@
       <span style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</span>
     </div>
   </div>
+<div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
+  <div  v-if="clockEvent[0]" class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-xl flex flex-col justify-evenly items-center" style="width: 480px;height: 320px;background:  #282828">
+    <div>
+      {{ clockEvent[0].dateValue.hours }}:{{
+        clockEvent[0].dateValue.minutes
+      }}
+    </div>
+    <div>
+      {{ clockEvent[0].eventValue }}
+    </div>
+  <div style="width: 100px;height: 48px;" class="flex justify-center items-center text-base bg-blue-500 rounded-xl pointer" @click="handleOk">
+    好的
+  </div>
 
-<!--  <a-modal v-model:visible="visible" centered @ok="handleOk" @cancel="handleOk" class="fixed top-1/2 left-1/2" style="z-index: 999999999999">-->
-<!--    <template #modalRender="{}">-->
-<!--      <div-->
-<!--        style="-->
-<!--          height: 14.7em;-->
-<!--          background: #2e2e2e;-->
-<!--          padding: 1em;-->
-<!--          text-align: center;-->
-<!--          border-radius: 2em;-->
-<!--          margin-top: 5em;-->
-<!--        "-->
-<!--        v-if="clockEvent[0]"-->
-<!--      >-->
-<!--        <div style="font-size: 3em; margin-top: 0.5em">-->
-<!--          {{ clockEvent[0].dateValue.hours }}:{{-->
-<!--            clockEvent[0].dateValue.minutes-->
-<!--          }}-->
-<!--        </div>-->
-<!--        <div-->
-<!--          style="-->
-<!--            font-size: 1.5em;-->
-<!--            margin-top: 0.5em;-->
-<!--            overflow: hidden;-->
-<!--            text-overflow: ellipsis;-->
-<!--          "-->
-<!--        >-->
-<!--          {{ clockEvent[0].eventValue }}-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </template>-->
-<!--  </a-modal>-->
+  </div>
+</div>
 </template>
 
 <script>
@@ -86,7 +70,7 @@ export default {
       timer: null,
       date: '2023年2月11日 周四',
       time: ' 14:51 ',
-      visible: true,
+      visible: false,
       wallPaper: 'https://ts1.cn.mm.bing.net/th/id/R-C.653b2eb4ae081875675c6d25a69834b0?rik=p%2fCn01vlMrCUxQ&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fwallpaper%2f1208%2f02%2fc0%2f12659156_1343874598199.jpg&ehk=d8OPA9%2bWy7YX9FLF95st3Rmd8lG6XtopCz0uNZAbebs%3d&risl=&pid=ImgRaw&r=0'
     }
   },
@@ -120,7 +104,7 @@ export default {
   },
   methods: {
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
-    ...mapActions(cardStore, ["removeClock"]),
+    ...mapActions(cardStore, ["removeClock","changeClock"]),
     enterGallery(){
       window.Spotlight.close()
       this.$router.replace({
@@ -129,11 +113,9 @@ export default {
     },
     handleOk() {
       this.visible = false;
-      setTimeout(() => {
         this.removeClock(0);
-        this.$refs.clock.pause();
         this.$refs.clock.currentTime = 0;
-      }, 1000)
+        this.$refs.clock.pause();
     },
     tick () {
       let weeks = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
@@ -213,7 +195,6 @@ export default {
   watch: {
     "appDate.minutes": {
       handler(newVal, oldVal) {
-        console.log(123123)
         try {
           if (
             this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
@@ -229,31 +210,7 @@ export default {
         }
       },
       immediate: true,
-    },
-    "clockEvent.length": {
-      handler(newVal, oldVal) {
-        try {
-          if (
-            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
-          ) {
-            this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 500)
-          }else{
-            this.visible = false;
-            setTimeout(() => {
-              this.$refs.clock.pause();
-              this.$refs.clock.currentTime = 0;
-            }, 1000)
-          }
-        } catch (err) {
-
-        }
-      },
-      immediate: true,
-    },
+    }
   }
 }
 </script>
@@ -285,7 +242,7 @@ export default {
   justify-content:space-between ;
   height: 15%;
   width: 30em;
-  z-index: 99999999999999999;
+  z-index: 999999;
   .left-time{
     flex: 1;
     display: flex;

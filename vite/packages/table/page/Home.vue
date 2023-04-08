@@ -148,7 +148,6 @@ export default {
   created () {
     this.navigationList = []
     this.startAida()
-    this.sortClock()
   },
   unmounted () {
     if (this.timer) {
@@ -157,7 +156,7 @@ export default {
   },
   methods: {
     runExec,
-    ...mapActions(cardStore, ['setAidaData','sortClock']),
+    ...mapActions(cardStore, ['setAidaData']),
     addCard () {
       this.custom=true;
       this.menuVisible = false

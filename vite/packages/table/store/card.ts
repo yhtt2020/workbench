@@ -224,7 +224,8 @@ export const cardStore = defineStore(
             "event": "power"
           }
         ],
-        routeParams:{}
+        routeParams:{},
+        clockFlag:false
       };
     },
 
@@ -291,7 +292,7 @@ export const cardStore = defineStore(
         // }else{
         this.sortClock();
         //}
-
+        this.clockFlag=!this.clockFlag
       },
       sortClock() {
         for (let i = 0; i < this.clockEvent.length; i++) {
@@ -335,7 +336,7 @@ export const cardStore = defineStore(
           this.clockEvent.push(a)
 
         }
-
+        this.clockFlag=!this.clockFlag
       },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
