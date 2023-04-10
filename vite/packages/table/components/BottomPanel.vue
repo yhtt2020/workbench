@@ -55,6 +55,21 @@
 
           </a-col>
           <a-col class="chat" v-if="settings.enableChat" :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
+            <div style="font-size: 13px;" v-if="messages.length===0">
+            <div class="pointer ml-3" @click.stop="enterIM">
+             <a-row :gutter="10">
+               <a-col :span="6" class="pt-2">
+                 <a-avatar src="https://up.apps.vip/logo/group.png?t=2"></a-avatar>
+               </a-col>
+               <a-col :span="18" class="pt-1">
+                 <div class="text font-bold">
+                   轻聊
+                 </div>
+                 <div>举杯，同是科技咖</div>
+               </a-col>
+             </a-row>
+
+             </div></div>
             <div class="pointer" @click.stop="enterIM">
               <div v-for="message in messages" class="text-more">{{message.title}}：{{message.body}}</div>
             </div>
@@ -374,7 +389,12 @@ export default {
         if(readyToSend.length>0){
           window.$manager.sendChat(readyToSend)
         }
-        this.lastTime=this.messages[0].create_time//重新设置指标
+        if(this.messages.length>0){
+          this.lastTime=this.messages[0].create_time//重新设置指标
+        }else{
+          this.lastTime=Date.now()
+        }
+
         localStorage.setItem('lastBarrageMessageTime',this.lastTime)
       }
       if(this.messages.length>2){
