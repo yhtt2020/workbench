@@ -44,7 +44,6 @@ export default {
   data () {
     return {
       loading: false,
-      serialHash: '',
       code:''
     }
   },
@@ -54,31 +53,16 @@ export default {
       await tsbApi.settings.set('migratedTable',true)
       location.href='tsbapp://table.com/table.html'
     }
-   this.getSerialNum()
   },
   computed: {
-    ...mapWritableState(codeStore, ['myCode'])
+    ...mapWritableState(codeStore, ['myCode','serialHash'])
   },
   methods: {
-    ...mapActions(codeStore, ['active']),
-    getSerialNum(cb){
-      let serial=localStorage.getItem('serial')
-      if(serial===null){
-        serial=window.$models.nanoid.nanoid(8)
-        localStorage.setItem('serial',serial)
-      }
-      this.serialHash=serial
-      if(cb)
-        cb()
-    },
+    ...mapActions(codeStore, ['active','getSerialHash']),
+
     checkCode () {
       this.loading = true
-      if(!this.serialHash){
-       this.getSerialNum(()=>{
-         this.checkCode()
-         return
-       })
-      }
+      let hash=this.getSerialHash()
       if (this.code === '') {
         message.error('请输入邀请码')
         return
@@ -89,8 +73,8 @@ export default {
         return
       }
 
-      console.log(this.serialHash)
-      this.active( this.code, this.serialHash).then(rs => {
+      console.log(hash)
+      this.active( this.code,hash).then(rs => {
         console.log(rs)
         this.loading = false
         if (rs.code !== 1000) {
