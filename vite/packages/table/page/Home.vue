@@ -20,8 +20,11 @@
         <vuuri group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key"
                class="grid home-widgets" ref="grid">
           <template #item="{ item }">
-            <component :is="item.name" :customIndex="item.id" :style="{pointerEvents:(editing?'none':'')}"
-                       :editing="editing" :runAida64="runAida64"></component>
+            <div :style="{pointerEvents:(editing?'none':'')}">
+              <component :is="item.name" :customIndex="item.id"
+                         :editing="editing" :runAida64="runAida64"></component>
+            </div>
+
           </template>
         </vuuri>
       </div>
@@ -203,13 +206,13 @@ export default {
             }).catch(err=>{})
           },10000)
           this.setAidaData({
-            SGPU1UTI:{value:"-"},
-            TGPU1DIO:{value:"-"},
-            SMEMUTI:{value:"-"},
-            SCPUUTI:{value:"-"},
-            TCPUPKG:{value:"-"},
-            SRTSSFPS:{value:"-"},
-            SDSK1ACT:{value:"-"},
+            SGPU1UTI:{value:0},
+            TGPU1DIO:{value:0},
+            SMEMUTI:{value:0},
+            SCPUUTI:{value:0},
+            TCPUPKG:{value:0},
+            SRTSSFPS:{value:0},
+            SDSK1ACT:{value:0},
           })
         })
       }, 1000)
