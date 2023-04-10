@@ -29,7 +29,7 @@
           </div>
           <span style="font-weight:700">{{ CPUData.SMEMUTI.value }}%</span></div>
       </div>
-      <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value=='-'?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -103,10 +103,10 @@ export default {
       CPUOption,
       GPUOption,
       CPUData:{
-        SCPUUTI:{value:"-"},
-        SGPU1UTI:{value:"-"},
-        SMEMUTI:{value:"-"},
-        SDSK1ACT:{value:"-"},
+        SCPUUTI:{value:0},
+        SGPU1UTI:{value:0},
+        SMEMUTI:{value:0},
+        SDSK1ACT:{value:0},
       },
       CPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       GPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -135,10 +135,10 @@ export default {
     "aidaData": {
       handler(newVal, oldVal) {
         filterObjKeys(this.CPUData,this.aidaData)
-        if(this.CPUData.SCPUUTI.value!=="-") {
+        if(this.CPUData.SCPUUTI.value!==0) {
         this.CPUList.push(this.CPUData.SCPUUTI.value)
         this.CPUList.shift();}
-        if(this.CPUData.SGPU1UTI.value!=="-") {
+        if(this.CPUData.SGPU1UTI.value!==0) {
          this.GPUList.push(this.CPUData.SGPU1UTI.value)
          this.GPUList.shift();
          }

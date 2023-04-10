@@ -81,7 +81,7 @@
        </div>
     </div>
   </a-drawer>
-    <a-modal v-model:visible="custom" title="" @ok="handleOk" :footer="null" style="font-size: 8px" :maskClosable="false">
+    <a-modal v-model:visible="custom" title="" @ok="()=>{}" :footer="null" style="font-size: 8px" :maskClosable="false">
       <div style="display: flex;flex-direction: column;align-items: center">
         <div style="color: white;">自定义倒计时</div>
         <a-space direction="vertical" style="margin: 14px">
