@@ -206,7 +206,9 @@ export default defineComponent({
         if(this.fileImageExtension(el)){
           if(el.srcProtocol !== undefined){
             imageArr.push({
-              src:`file://${el.src}`,
+              'src-mp4':`file://${el.src}`,
+              media:'video',
+              poster:el.path
             })
           }
         }else{
@@ -221,28 +223,38 @@ export default defineComponent({
         play: true,
         autoslide: true,
         infinite: true,
-        progress: false,
+        progress: true,
         title: false,
         autoplay:true,
         muted:true,
-        media:'video',
       })
     },
 
     playActive(){
       const playArr = []
       this.activePapers.map(el=>{
-        playArr.push({
-          src:el.path
-        })
+        if(this.fileImageExtension(el)){
+          playArr.push({
+            "src-mp4":el.srcProtocol,
+            media:'video',
+            poster:el.path
+          })
+        }else{
+          playArr.push({
+            src:el.path,
+          })
+        }
       })
+      console.log(playArr);
       window.Spotlight.show(playArr, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
         infinite: true,
-        progress: false,
-        title: false
+        progress: true,
+        title: false,
+        autoplay:true,
+        muted:true,
       })
     },
 
