@@ -15,7 +15,7 @@
           <span>温度</span>
           <span style="font-weight: 700;">{{CPUData.TCPUPKG.value}}℃</span></div>
       </div>
-      <a-progress :showInfo="false" :status="CPUData.TCPUPKG.value=='-'?'':'active'"  :percent="CPUData.TCPUPKG.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.TCPUPKG.value===0?'':'active'"  :percent="CPUData.TCPUPKG.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -40,7 +40,7 @@
           <span>温度</span>
           <span style="font-weight: 700;">{{GPUData.TGPU1DIO.value}}℃</span></div>
       </div>
-      <a-progress :showInfo="false" :status="GPUData.TGPU1DIO.value=='-'?'':'active'" :percent="GPUData.TGPU1DIO.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="GPUData.TGPU1DIO.value===0?'':'active'" :percent="GPUData.TGPU1DIO.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -73,15 +73,15 @@ export default {
     return{
       timer: null,
       CPUData:{
-        SCPUUTI:{value:"-"},
-        TCPUPKG:{value:"-"},
-        SMEMUTI:{value:"-"},
+        SCPUUTI:{value:0},
+        TCPUPKG:{value:0},
+        SMEMUTI:{value:0},
       },
       CPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
       GPUData:{
-        SGPU1UTI:{value:"-"},
-        TGPU1DIO:{value:"-"},
-        SMEMUTI:{value:"-"},
+        SGPU1UTI:{value:0},
+        TGPU1DIO:{value:0},
+        SMEMUTI:{value:0},
         SGPU1USEDDEMEM:{value:0}
       },
       GPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
@@ -103,13 +103,13 @@ export default {
       }).catch(err => {
         clearInterval(this.timer)
         this.setAidaData({
-          SGPU1UTI:{value:"-"},
-          TGPU1DIO:{value:"-"},
-          SMEMUTI:{value:"-"},
-          SCPUUTI:{value:"-"},
-          TCPUPKG:{value:"-"},
-          SRTSSFPS:{value:"-"},
-          SDSK1ACT:{value:"-"},
+          SGPU1UTI:{value:0},
+          TGPU1DIO:{value:0},
+          SMEMUTI:{value:0},
+          SCPUUTI:{value:0},
+          TCPUPKG:{value:0},
+          SRTSSFPS:{value:0},
+          SDSK1ACT:{value:0},
         })
       })
     }, 1000)
@@ -125,7 +125,7 @@ export default {
         filterObjKeys(this.CPUData,this.aidaData)
         filterObjKeys(this.GPUData,this.aidaData)
 
-        if(this.GPUData.TGPU1DIO.value==="-"){
+        if(this.GPUData.TGPU1DIO.value===0){
           for (let i = 0; i <Object.keys(this.aidaData).length ; i++) {
             if(Object.keys(this.aidaData)[i]==="TCPUGTC")
               this.GPUData.TGPU1DIO.value=this.aidaData.TCPUGTC.value
