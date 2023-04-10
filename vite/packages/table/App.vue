@@ -48,6 +48,8 @@ import Barrage from "./components/comp/Barrage.vue";
 import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
+import {app} from "electron";
+import {Modal}from 'ant-design-vue'
 const {appModel} =window.$models
 let startX,
   startY,
@@ -69,6 +71,27 @@ export default {
     };
   },
   async mounted() {
+    //还原数据
+    setTimeout(()=>{
+      let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
+      if(require('fs').existsSync(recoverPath)){
+        let json= require('fs').readFileSync(recoverPath,'utf-8')
+        let j=JSON.parse(json)
+        Object.keys(j).forEach(key=>{
+          localStorage.setItem(key,j[key])
+        })
+        require('fs').rmSync(recoverPath)
+        localStorage.setItem('tipInfo','1')
+        location.reload()
+        console.log('检测到存在待回复的json文件')
+      }
+      if(localStorage.getItem('tipInfo')){
+        localStorage.removeItem('tipInfo')
+        Modal.info({content:'已为您迁移数据，目前可正常使用。'})
+      }
+    },3000)
+
+
     window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
     if(!this.settings.zoomFactor){
       this.settings.zoomFactor=100

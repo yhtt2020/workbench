@@ -49,6 +49,11 @@ export default {
     }
   },
   async mounted () {
+    if(location.href.startsWith('tsbapp://./')){
+      //新版本直接设置为已合并
+      await tsbApi.settings.set('migratedTable',true)
+      location.href='tsbapp://table.com/table.html'
+    }
    this.getSerialNum()
   },
   computed: {

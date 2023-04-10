@@ -1,9 +1,16 @@
 global.tableWin = null
-let { app, ipcMain: ipc } = require('electron')
+let { app, ipcMain: ipc ,Notification} = require('electron')
 const path = require('path')
-
+const fs=require('fs')
+ipc.on('recoverSuccess',()=>{
+  new Notification({
+    title:'数据迁移成功',
+    body :'数据迁移成功，您可正常使用。'
+  }).show()
+})
 class TableManager {
   window
+  storage //临时存储
 
   async init () {
     if (global.tableWin === null) {
@@ -50,7 +57,40 @@ class TableManager {
           this.window.maximize()
         }
       }
-      tableWin.window.webContents.loadURL(render.getUrl('table.html'))
+
+      //todo为他迁移数据
+      console.log(app.getVersion())
+      let webContents=tableWin.window.webContents
+      let migrated=settings.get('migratedTable')
+      const tempjson=path.join(app.getPath('userData'),'temp.json')
+      if(migrated===undefined){
+        if(!fs.existsSync(tempjson)){
+          //从未迁移过
+          webContents.on('dom-ready',()=>{
+            webContents.executeJavaScript('JSON.stringify(localStorage)').then(rs=>{
+              require('fs').writeFileSync(tempjson,rs);
+              new Notification({
+                title:'数据迁移',
+                body :'由于版本数据兼容问题，正在为您迁移数据，期间会导致工作台重载和刷新，完成后我们会再次通知您。请稍等。'
+              }).show()
+              //todo 迁移到新的下面
+              this.close()
+              setTimeout(()=>{
+                this.init()
+              },3000)
+            })
+          })
+          tableWin.window.webContents.loadURL(render.getUrl('table.html'))
+        }else{
+          tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
+          settings.set('migratedTable',true)
+        }
+      }else{
+        tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
+      }
+
+
+
 
       tableWin.window.on('close', () => {
         this.saveBounds()
@@ -87,7 +127,6 @@ class TableManager {
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized()
     }
-    console.log(tableWinSetting,'保存工作台位置')
     settings.set('tableWinSetting', tableWinSetting)
   }
 
