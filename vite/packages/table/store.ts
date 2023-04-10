@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import * as util from "util";
 import {nanoid} from 'nanoid'
 import {myStore} from './util.js'
+import dbStorage from "./store/dbStorage";
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
 
@@ -106,7 +107,7 @@ export const appStore = defineStore('appStore', {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       paths:['status','settings','init'],
-      storage: localStorage,
+      storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
   }

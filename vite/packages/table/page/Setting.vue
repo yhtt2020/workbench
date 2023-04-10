@@ -164,14 +164,13 @@ export default {
   },
   methods: {
     ...mapActions(codeStore, ['verify', 'create']),
-    verifyCode () {
-       this.verify(rs=>{
-         if (rs) {
-           message.success('激活码有效')
-         } else {
-           message.error('激活码无效')
-         }
-       })
+    async verifyCode () {
+      let rs=await  this.verify()
+      if (rs) {
+        message.success('激活码有效')
+      } else {
+        message.error('激活码无效')
+      }
     },
     async createCodes () {
       this.create().then(rs=>{

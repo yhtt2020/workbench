@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {myStore} from '../util.js'
+import dbStorage from "./dbStorage";
 // @ts-ignore
 export const appsStore = defineStore('apps', {
   state: () => ({
@@ -47,7 +48,7 @@ export const appsStore = defineStore('apps', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      storage: localStorage,
+      storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
   }

@@ -18,7 +18,7 @@ export const updateStorage = async (strategy: PersistStrategy, store: Store) => 
   }
 }
 
-export default ({ options, store }: PiniaPluginContext): void => {
+export default async ({options, store}: PiniaPluginContext): void => {
   if (options.persist?.enabled) {
     const defaultStrat: PersistStrategy[] = [{
       key: store.$id,
@@ -26,28 +26,25 @@ export default ({ options, store }: PiniaPluginContext): void => {
     }]
 
     const strategies = options.persist?.strategies?.length ? options.persist?.strategies : defaultStrat
-
-    strategies.forEach((strategy) => {
+    for (const strategy of strategies) {
       const storage = strategy.storage || sessionStorage
       const storeKey = strategy.key || store.$id
       const storageResult = storage.getItem(storeKey)
 
       if (storageResult) {
-        if(isPromise(storageResult)){
-          storageResult.then(rs=>{
-            if(rs){
-              console.log(rs,'获取到的值')
-              store.$patch(JSON.parse(rs))
-              updateStorage(strategy, store)
-            }
-          })
-        }else{
+        if (isPromise(storageResult)) {
+          let rs = await storageResult
+          if (rs) {
+            store.$patch(JSON.parse(rs))
+            updateStorage(strategy, store)
+          }
+        } else {
           store.$patch(JSON.parse(storageResult))
           updateStorage(strategy, store)
         }
 
       }
-    })
+    }
 
     store.$subscribe(() => {
       strategies.forEach((strategy) => {

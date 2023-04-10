@@ -11,8 +11,10 @@ const dbStorage:Storage={
       await storageModel.setItem(key,value,dbStorage.sign)
   },
   async  getItem(key: string): string | null | Promise<string>{
-    console.log('尝试获取item')
-    return   storageModel.getItem(key,dbStorage.sign)
+
+    let value=await storageModel.getItem(key,dbStorage.sign)
+    console.log('尝试获取item',value)
+    return   value
   }
  }
 
