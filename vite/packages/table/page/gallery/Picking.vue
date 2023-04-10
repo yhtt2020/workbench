@@ -40,7 +40,7 @@
   </viewer>
 </vue-custom-scrollbar>
 
-<a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
+<a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag" @close="closeFilter()">
   <div class="w-full h-12  flex rounded-lg" style="border:1px solid rgba(255, 255, 255, 0.1);margin-bottom:1.714289em;">
     <div class="w-1/3 h-100 flex items-center justify-center filter-item" :class="filterIndex === item.index ? 'active':''"  v-for="item in filterOption" @click="filterOptionClick(item)" style="border-right:1px solid rgba(255, 255, 255, 0.1);">
       {{ item.title }}
@@ -286,6 +286,11 @@ export default defineComponent({
          this.visibleMenu= false
         }
       })
+    },
+
+    closeFilter(){
+      this.pickImageData = []
+      this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
     }
   },
   setup(){

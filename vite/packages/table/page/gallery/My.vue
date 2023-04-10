@@ -85,7 +85,6 @@
 </div> 
 
 
-
 </template>
 
 <script>
@@ -125,10 +124,6 @@ export default defineComponent({
       options:{
         url: 'data-source',
       },
-      playArr:{
-        src:null,
-        path:null
-      }
     }
   },
   mounted () {
@@ -206,24 +201,32 @@ export default defineComponent({
     },
 
     playAll(){
+      const imageArr = []
       this.myPapers.map(el=>{
-         if(this.fileImageExtension(el)){
-           this.playArr.src = el.src
-         }else{
-           this.playArr.path = el.src
-         }
+        if(this.fileImageExtension(el)){
+          if(el.srcProtocol !== undefined){
+            imageArr.push({
+              src:`file://${el.src}`,
+            })
+          }
+        }else{
+          imageArr.push({
+            src:el.src,
+          })
+        }
       })
-      window.Spotlight.show([{
-       "media": "video",
-       "src-mp4": `${this.playArr.src}`,
-       "poster": `${this.playArr.path}`,
-       "autoplay": true,
-       "muted": true,
-       "preload": true,
-       "controls": true,
-       "inline": true,
-       "control": 'autofit,page,fullscreen,close,zoom,prev,next',
-      }]);
+      console.log(imageArr);
+      window.Spotlight.show(imageArr,{
+        control: 'autofit,page,fullscreen,close,zoom,prev,next',
+        play: true,
+        autoslide: true,
+        infinite: true,
+        progress: false,
+        title: false,
+        autoplay:true,
+        muted:true,
+        media:'video',
+      })
     },
 
     playActive(){
