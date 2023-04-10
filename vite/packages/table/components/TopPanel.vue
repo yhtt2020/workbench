@@ -49,7 +49,8 @@
 
 <script >
 import { getDateTime } from '../../../src/util/dateTime'
-import { appStore, tableStore} from '../store'
+import { appStore} from '../store'
+import {cardStore} from '../store/card'
 import {mapWritableState,mapState,mapActions} from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
@@ -116,14 +117,16 @@ export default {
     window.onfocus=()=>{
       this.clearLockTimer()
     }
-    this.getTime()
     this.loading=false
     if(!this.timer){
       setInterval(this.getTime,1000)
     }
   },
+  created() {
+    this.getTime()
+  },
   methods:{
-    ...mapActions(tableStore,["setAppDate"]),
+    ...mapActions(cardStore,["setAppDate"]),
     clearLockTimer(){
       if(this.lockTimer){
         clearInterval(this.lockTimer)

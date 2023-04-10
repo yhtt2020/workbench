@@ -95,7 +95,8 @@
 <script>
 import { Empty } from "ant-design-vue";
 import { mapWritableState,mapActions } from "pinia";
-import {countDownStore, tableStore} from "../../store";
+import {countDownStore} from "../../store/countDown";
+import {cardStore} from "../../store/card"
 import dayjs from 'dayjs';
 export default {
   name: "Clock",
@@ -114,12 +115,12 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(tableStore, ["appDate", "clockEvent"]),
+    ...mapWritableState(cardStore, ["appDate", "clockEvent"]),
     ...mapWritableState(countDownStore, ["countDowndate","countDowntime","countDownBtn"]),
   },
 
   methods: {
-    ...mapActions(tableStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
     onContextMenuClick(e) {
 

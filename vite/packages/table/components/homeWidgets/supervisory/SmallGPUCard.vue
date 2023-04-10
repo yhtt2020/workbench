@@ -35,7 +35,7 @@
 
 <script>
 import {mapWritableState} from "pinia";
-import {tableStore} from "../../../store";
+import {cardStore} from "../../../store/card";
 import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
@@ -61,7 +61,7 @@ export default {
     HomeComponentSlot
   },
   computed:{
-    ...mapWritableState(tableStore, ["aidaData"]),
+    ...mapWritableState(cardStore, ["aidaData"]),
     GPUStorage() {
       return this.GPUData.SGPU1USEDDEMEM.value>0?(this.GPUData.SGPU1USEDDEMEM.value / 1000).toFixed(2):this.GPUData.SGPU1USEDDEMEM.value
     }

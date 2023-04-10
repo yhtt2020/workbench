@@ -36,14 +36,14 @@
       </div>
     </template>
   </a-modal>
-  <audio ref="clock" src="/sound/clock.mp3"></audio>
+  <audio ref="clock" src="/sound/clock.mp3"  ></audio>
 </template>
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {mapActions, mapWritableState} from "pinia";
-
-import {appStore, tableStore} from "./store";
+import {cardStore} from "./store/card"
+import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
 import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
@@ -112,11 +112,11 @@ export default {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
-    if (!this.myCode) {
-      //注释此处的代码跳过激活码验证
-      this.$router.push('/code')
-      return
-    }
+    // if (!this.myCode) {
+    //   //注释此处的代码跳过激活码验证
+    //   this.$router.push('/code')
+    //   return
+    // }
     this.verify(rs => {
       if (!rs) {
         this.$router.push('/code')
@@ -143,19 +143,15 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(tableStore, [
-      "customComponents",
-      "clockEvent",
-      "appDate",
-    ]),
+    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate","clockFlag"]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo'])
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
     ...mapActions(weatherStore, ['reloadAll']),
-    ...mapActions(tableStore, ['sortClock']),
+    ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
@@ -193,7 +189,7 @@ export default {
     updateMusic(music) {
       this.setMusic(music);
     },
-    ...mapActions(tableStore, ["removeClock"]),
+    ...mapActions(cardStore, ["removeClock"]),
     // async getUserInfo() {
     //   let rs = await tsbApi.user.get()
     //   if (rs.status === 1) {
@@ -203,11 +199,8 @@ export default {
     // }
     handleOk() {
       this.visible = false;
-      setTimeout(() => {
-        this.removeClock(0);
-        this.$refs.clock.pause();
-        this.$refs.clock.currentTime = 0;
-      }, 1000)
+      this.removeClock(0);
+      this.$refs.clock.pause();
     },
 
 
@@ -220,15 +213,31 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
             this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 500)
+            setTimeout(()=>{ this.$refs.clock.play();},1000)
           }
         } catch (err) {
 
         }
       },
-      deep: true,
+      immediate: true,
+    },
+    "clockFlag": {
+      handler(newVal, oldVal) {
+        try {
+          if (
+            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
+            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
+          ) {
+            this.visible = true;
+            setTimeout(()=>{ this.$refs.clock.play();},1000)
+          }else{
+            this.visible = false;
+            this.$refs.clock.pause()
+          }
+        } catch (err) {
+
+        }
+      },
       immediate: true,
     },
   },

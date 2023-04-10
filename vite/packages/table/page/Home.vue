@@ -76,7 +76,7 @@ import SmallCountdownDay from '../components/homeWidgets/SmallCountdownDay.vue'
 import Clock from '../components/homeWidgets/Clock.vue'
 import CountdownDay from '../components/homeWidgets/CountdownDay.vue'
 import { mapActions, mapWritableState } from 'pinia'
-import { tableStore } from '../store'
+import { cardStore } from '../store/card'
 import vuuri from '../components/vuuriHome/Vuuri.vue'
 import Widget from '../components/muuri/Widget.vue'
 import { message } from 'ant-design-vue'
@@ -134,8 +134,8 @@ export default {
     AddCard
   },
   computed: {
-    ...mapWritableState(tableStore, ['customComponents', 'clockEvent']),
-    ...mapWritableState(tableStore, ['aidaData']),
+    ...mapWritableState(cardStore, ['customComponents', 'clockEvent']),
+    ...mapWritableState(cardStore, ['aidaData']),
   },
   mounted () {
     window.onresize = () => {
@@ -150,7 +150,7 @@ export default {
   },
   created () {
     this.navigationList = []
-  this.startAida()
+    this.startAida()
   },
   unmounted () {
     if (this.timer) {
@@ -159,7 +159,7 @@ export default {
   },
   methods: {
     runExec,
-    ...mapActions(tableStore, ['setAidaData']),
+    ...mapActions(cardStore, ['setAidaData']),
     addCard () {
       this.custom=true;
       this.menuVisible = false

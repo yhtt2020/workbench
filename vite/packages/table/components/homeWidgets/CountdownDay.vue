@@ -72,7 +72,7 @@
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
-import { tableStore } from "../../store";
+import { cardStore } from "../../store/card";
 import { transDate } from "../../../../src/util/dateTime";
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
@@ -100,10 +100,10 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(tableStore, ["appDate", "countdownDay"]),
+    ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
   },
   methods: {
-    ...mapActions(tableStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     onPanelChange(value, mode) {},
     transDate,
     showDrawer()  {

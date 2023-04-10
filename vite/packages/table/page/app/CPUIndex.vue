@@ -64,7 +64,7 @@
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
-import {tableStore} from "../../store";
+import {cardStore} from "../../store/card";
 import {filterObjKeys, initCanvas} from "../../util";
 
 export default {
@@ -88,7 +88,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(tableStore, ["aidaData"]),
+    ...mapWritableState(cardStore, ["aidaData"]),
   },
   created () {
     this.timer = setInterval(() => {
@@ -142,7 +142,7 @@ export default {
     },
   },
   methods:{
-    ...mapActions(tableStore, ['setAidaData']),
+    ...mapActions(cardStore, ['setAidaData']),
     initCanvas
   }
 }

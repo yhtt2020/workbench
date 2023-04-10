@@ -20,7 +20,7 @@
 
 <script>
 import { mapActions } from "pinia";
-import { tableStore } from "../../../store";
+import { cardStore } from "../../../store/card";
 import CardPreview from "./CardPreview.vue";
 export default {
   name: "AddCard",
@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(tableStore, ["addCustomComponents"]),
+    ...mapActions(cardStore, ["addCustomComponents"]),
     addAssembly(item) {
       switch (item.name) {
         case "customTimer":

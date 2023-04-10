@@ -8,7 +8,7 @@ import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
 import 'dayjs/locale/zh-cn';
 import './index.css'
-import {tableStore} from "./store";
+import {cardStore} from "./store/card";
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
 
@@ -43,7 +43,7 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next) =>{
-  tableStore().setRouteParams(to.params)
+  cardStore().setRouteParams(to.params)
   next()
 })
 

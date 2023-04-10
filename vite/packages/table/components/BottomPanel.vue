@@ -70,9 +70,9 @@
 <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
 <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
 <!--    </div>-->
-    <div class=" flex flex-row  items-center pl-2" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
+    <div class=" flex flex-row  items-center pl-6" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
         <div style="overflow: hidden;overflow-x: auto;"
-             class="flex flex-row items-center  flex-nowrap scroll-content mr-2" ref="content">
+             class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
         <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
@@ -187,7 +187,8 @@
 
 <script>
 import PanelButton from './PanelButton.vue'
-import {appStore, tableStore} from '../store'
+import {appStore} from '../store'
+import {cardStore} from '../store/card'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
@@ -272,7 +273,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo','settings']),
-    ...mapWritableState(tableStore, ['navigationList','routeParams'])
+    ...mapWritableState(cardStore, ['navigationList','routeParams'])
   },
   watch: {
     navigationList : {
@@ -318,7 +319,6 @@ export default {
       this.changeFlag = false
     },
     showMenu () {
-      console.log(document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight))
       this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
@@ -506,7 +506,7 @@ export default {
 <style>
 
 </style>
-<style scoped>
+<style lang="scss" scoped>
 
 .btn {
   text-align: center;
@@ -628,5 +628,9 @@ export default {
   }
 }
 
-
+.scroll-content{
+  :last-child{
+    margin-right: 0;
+  }
+}
 </style>
