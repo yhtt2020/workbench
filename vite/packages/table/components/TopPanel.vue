@@ -66,9 +66,9 @@ export default {
     };
   },
   computed:{
-    ...mapWritableState(appStore,['status','lockTimeout']),
+    ...mapWritableState(appStore,['status']),
     ...mapState(weatherStore,['cities']),
-    ...mapWritableState(paperStore,['settings']),
+    ...mapWritableState(paperStore,['settings','lockTimeout']),
     lockTimeoutDisplay(){
       // if(this.lockTimeout>=60){
       //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒'

@@ -20,8 +20,9 @@ export const paperStore = defineStore('paper', {
     activePapers: [],//当前激活的壁纸
     playingPaper: null,//播放中的壁纸
     settings: DEFAULT_PAPERS_SETTINGS,
-    tipLock: true,//在状态栏提示还有多久进入锁屏
-    lockTimeout: 300,
+
+
+    lockTimeout: 1800,//锁屏延迟，默认改为半小时
   }),
   actions:{
     /**
@@ -95,6 +96,17 @@ export const paperStore = defineStore('paper', {
   persist: {
     enabled: true,
     strategies: [{
+
+      /**
+       *  myPapers: [],//我的壁纸收藏
+       *     activePapers: [],//当前激活的壁纸
+       *     playingPaper: null,//播放中的壁纸
+       *     settings: DEFAULT_PAPERS_SETTINGS,
+       *
+       *
+       *     lockTimeout: 1800,//锁屏延迟，默认改为半小时
+       */
+      paths:['myPapers','activePapers','playingPaper','settings'],
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: localStorage,
