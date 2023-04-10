@@ -40,7 +40,6 @@ export const codeStore = defineStore('code', {
 
     async listCodes(){
       let rs=await axios.post(listUrl,undefined,await getConfig())
-      console.log(await getConfig(),rs,'请求结果')
       if(rs.code!==1000){
         console.warn(rs)
         return {
@@ -54,10 +53,7 @@ export const codeStore = defineStore('code', {
       }
     },
     async exchange(num=1){
-      console.log('准备发起请求')
-      console.log(exchangeUrl,'请求结果')
       let rs=await axios.post(exchangeUrl,{num},await getConfig())
-      console.log(await getConfig(),rs,'请求结果')
       if(rs.code!==1000){
         console.warn(rs)
         return {
