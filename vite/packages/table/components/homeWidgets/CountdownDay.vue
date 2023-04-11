@@ -22,7 +22,8 @@
         >
       </div>
       <span
-      >{{
+      ><span v-if="item.type">还有</span>
+        <span v-else>已过</span>{{
           transDate(
             appDate.year + "-" + appDate.month + "-" + appDate.day,
             item.dateValue.year +
@@ -71,7 +72,7 @@
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
-import { tableStore } from "../../store";
+import { cardStore } from "../../store/card";
 import { transDate } from "../../../../src/util/dateTime";
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
@@ -90,7 +91,8 @@ export default {
       options:{
         className:'card',
         title:'倒数日',
-        icon:'rili2'
+        icon:'rili2',
+        type:'countdownDay'
       },
       status: "pause",
       value: null,
@@ -98,10 +100,10 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(tableStore, ["appDate", "countdownDay"]),
+    ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
   },
   methods: {
-    ...mapActions(tableStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     onPanelChange(value, mode) {},
     transDate,
     showDrawer()  {

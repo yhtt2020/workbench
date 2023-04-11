@@ -8,7 +8,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   usePassword: false,
   password: '',
   showUnreadMessage: true,
-  lockTimeout: 180,
+  lockTimeout: 1800,
   interval: 3,
   savePath: '',
   tipLock: true//在状态栏提示多久锁屏
@@ -49,7 +49,7 @@ export const paperStore = defineStore('paper', {
 
     /***
      * 移除我的壁纸
-     * 
+     *
     */
     removeToMyPaper(image: { src: any; }){
       let found = this.myPapers.findIndex((img: { src: any; }) => {
@@ -60,7 +60,7 @@ export const paperStore = defineStore('paper', {
         this.myPapers.push(image)
       } else {
         this.myPapers.splice(found, 1)
-      }  
+      }
     },
 
     /**

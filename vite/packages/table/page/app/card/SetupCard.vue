@@ -21,12 +21,6 @@
           <div class="button">
             <a-date-picker
               v-model:value="dateValue"
-
-              :disabled-date="
-                (current) => {
-                  return current && current < dayjs().endOf('day');
-                }
-              "
             />
             <a-button type="primary" @click="addCard">添加</a-button>
           </div>
@@ -58,7 +52,8 @@
                     >
                   </div>
                   <div>
-                    {{
+                    <span v-if="item.type">还有</span>
+                    <span v-else>已过</span> {{
                       transDate(
                         appDate.year + "-" + appDate.month + "-" + appDate.day,
                         item.dateValue.year +
@@ -98,11 +93,6 @@
           <div class="button">
             <a-date-picker
               v-model:value="dateValue"
-              :disabled-date="
-                (current) => {
-                  return current && current < dayjs().endOf('day');
-                }
-              "
             />
             <a-button type="primary" @click="addCard">添加</a-button>
           </div>
@@ -245,7 +235,7 @@
 
 <script>
 import { mapWritableState, mapActions } from "pinia";
-import { tableStore } from "../../../store";
+import { cardStore } from "../../../store/card";
 import { timeStamp, transDate } from "../../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
@@ -282,12 +272,12 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(tableStore, ["countdownDay", "appDate", "clockEvent"]),
+    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
   },
   methods: {
     dayjs,
     transDate,
-    ...mapActions(tableStore, [
+    ...mapActions(cardStore, [
       "addCountdownDay",
       "addClock",
       "addCustomComponents",

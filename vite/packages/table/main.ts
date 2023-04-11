@@ -8,7 +8,7 @@ import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
 import 'dayjs/locale/zh-cn';
 import './index.css'
-
+import {cardStore} from "./store/card";
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
 
@@ -42,10 +42,16 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+router.beforeEach((to,from,next) =>{
+  cardStore().setRouteParams(to.params)
+  next()
+})
+
 app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
+
 export default router;
 

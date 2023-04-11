@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
+import {Server} from '../consts'
 const {axios} = window.$models
-const server = 'https://wad.apps.vip/api'
+const server = Server.baseUrl
 //const server='http://localhost:8001'
 const activeUrl = server + '/app/activeCode'
 const verifyUrl = server + '/app/verifyCode'

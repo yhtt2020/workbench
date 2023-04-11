@@ -83,7 +83,7 @@ export default {
     PlusOutlined,MinusOutlined
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen'])
+    ...mapWritableState(appStore, ['fullScreen','settings'])
   },
   mounted () {
     let app = this.$route.params
@@ -105,10 +105,10 @@ export default {
       this.$nextTick(() => {
         let frame = document.getElementById('frame')
         let position = {
-          x: Number(frame.getBoundingClientRect().x.toFixed(0)),
-          y: Number(frame.getBoundingClientRect().y.toFixed(0)),
-          width: frame.offsetWidth,
-          height: frame.offsetHeight
+          x: this.fixZoom(frame.getBoundingClientRect().x),
+          y: this.fixZoom(frame.getBoundingClientRect().y),
+          width:this.fixZoom(frame.offsetWidth),
+          height:this.fixZoom(frame.offsetHeight)
         }
         let args = {
           position,
@@ -123,6 +123,9 @@ export default {
     this.handleLeave()
   },
   methods: {
+    fixZoom(num){
+      return Number((num*this.settings.zoomFactor/100).toFixed(0))
+    },
     switchScale () {
       this.showScale=!this.showScale
     },
@@ -138,10 +141,10 @@ export default {
     syncBounds () {
       let frame = document.getElementById('frame')
       let position = {
-        x: Number(frame.getBoundingClientRect().x.toFixed(0)),
-        y: Number(frame.getBoundingClientRect().y.toFixed(0)),
-        width: frame.offsetWidth,
-        height: frame.offsetHeight
+        x: this.fixZoom(frame.getBoundingClientRect().x),
+        y: this.fixZoom(frame.getBoundingClientRect().y),
+        width:this.fixZoom(frame.offsetWidth),
+        height:this.fixZoom(frame.offsetHeight)
       }
       let args = {
         bounds: position,

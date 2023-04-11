@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-panel" style="position: fixed;padding:10px;bottom:0;width: 100vw;text-align: center">
+  <div class="bottom-panel flex flex-row items-center justify-center w-full p-2" style="text-align: center" @contextmenu.stop="showMenu">
     <div class="common-panel user" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
@@ -62,15 +62,35 @@
         </a-row>
       </div>
     </div>
-    <div class="common-panel" style="display: inline-block">
-      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>
-      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>
-      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>
-      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>
-      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>
-      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>
-    </div>
+<!--    <div class="common-panel" style="display: inline-block">-->
+<!--      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>-->
+<!--      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
+<!--      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>-->
+<!--      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>-->
+<!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
+<!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
+<!--    </div>-->
+    <div class=" flex flex-row  items-center pl-6" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
+        <div style="overflow: hidden;overflow-x: auto;"
+             class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
+        <div v-if="navigationList.length<=0" style="height: 56px;">
 
+        </div>
+        <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
+              <div style="width: 56px;height:56px;background: rgba(33, 33, 33, 1);" v-if="item.type==='systemApp'" class="flex justify-center items-center rounded-xl">
+                <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+              </div>
+          <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
+            <a-avatar :size="40"  shape="square" :src="item.icon" ></a-avatar>
+          </div>
+        </div>
+        </div>
+
+
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px" class="flex justify-center items-center  h-2/3 pointer">
+      <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
+    </div>
+  </div>
     <!--    <div style="display: inline-block">-->
     <!--      <a-row :gutter="10">-->
     <!--        <a-col :span="2">-->
@@ -133,12 +153,42 @@
 
     </iframe>
   </div>
+  <a-drawer
+    :contentWrapperStyle="{backgroundColor:'#1F1F1F',height:'11em'}"
+    :width="120"
+    :height="120"
+    class="drawer"
+    :closable="false"
+    placement="bottom"
+    :visible="menuVisible"
+    @close="onClose"
+  >
+    <a-row style="margin-top: 1em" :gutter="[20,20]">
+      <a-col>
+        <div @click="editNavigation" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>编辑</span></div>
+        </div>
+      </a-col>
+    </a-row>
+  </a-drawer>
 
+  <transition name="fade">
+    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="quick">
+      <EditNavigation @setQuick="setQuick"></EditNavigation>
+    </div>
+  </transition>
+  <transition name="fade">
+    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
+      <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+    </div>
+  </transition>
 </template>
 
 <script>
 import PanelButton from './PanelButton.vue'
-import { appStore } from '../store'
+import {appStore} from '../store'
+import {cardStore} from '../store/card'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
@@ -146,9 +196,12 @@ import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
 const { messageModel }=window.$models
+import EditNavigation from './bottomPanel/EditNavigation.vue'
+import ChangeApp from './bottomPanel/ChangeApp.vue'
+import ScrolX from "./ScrolX.vue";
 export default {
   name: 'BottomPanel',
-  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled },
+  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX},
   data () {
     return {
 
@@ -159,9 +212,41 @@ export default {
       timer:null,
       messages:[],
       tipped:false,
+      menuVisible: false,
+      quick:false,
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true,
+      },
+      changeFlag:false,
+      //screenWidth: document.body.clientWidth
     }
   },
+  unmounted() {
+    let that = this
+    window.removeEventListener('resize', that.checkScroll)
+  },
   mounted () {
+    let that = this
+    this.checkScroll()
+    // const that = this
+    // window.onresize = function() {
+    //   return function(){
+    //     window.screenWidth = document.body.clientWidth;
+    //     that.screenWidth = window.screenWidth
+    //   }()
+    // }
+    window.addEventListener('resize',
+      that.checkScroll
+    )
+    let content = this.$refs.content
+    content.addEventListener('wheel',(event) => {
+      event.preventDefault();
+      content.scrollLeft += event.deltaY
+    })
     this.setMinute()
     this.lastTime=Number(localStorage.getItem('lastBarrageMessageTime'))
     this.loadMessages()
@@ -187,13 +272,67 @@ export default {
     ipc.send('getDetailUserInfo')
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo','settings'])
+    ...mapWritableState(appStore, ['userInfo','settings']),
+    ...mapWritableState(cardStore, ['navigationList','routeParams'])
+  },
+  watch: {
+    navigationList : {
+      handler(){
+            this.checkScroll()
+        // this.$nextTick(()=>{
+        //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
+        //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
+        //     this.$refs.content.style.marginTop='17px'
+        //   }else{
+        //     this.$refs.content.style.marginTop='0px'
+        //   }
+        // })
+
+      },
+      immediate: true,
+      deep:true
+    }
   },
   methods: {
+    checkScroll(){
+      this.$nextTick(()=>{
+        if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
+          this.$refs.content.style.marginTop='17px'
+        }else{
+          this.$refs.content.style.marginTop='0px'
+        }
+      })
+    },
     goMy(){
       this.$router.push({name:"socialMy"})
     },
     ...mapActions(appStore, ['setUser']),
+    setFull(value){
+      this.full = value
+    },
+    appChange(){
+      this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      this.changeFlag = true
+    },
+    closeChangeApp(){
+      this.routeParams.url&& setTimeout(()=>{this.$router.push({name: 'app', params: this.routeParams})},400)
+      this.changeFlag = false
+    },
+    showMenu () {
+      this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      this.menuVisible = true
+    },
+    onClose () {
+      this.routeParams.url&&this.$router.push({name: 'app', params: this.routeParams})
+      this.menuVisible = false
+    },
+    editNavigation(){
+      this.quick = true
+      this.menuVisible = false
+    },
+    setQuick(){
+      this.quick = false
+    },
     setMinute(){
       setInterval(()=>{
         this.$refs.minute.classList.add('move')
@@ -326,6 +465,40 @@ export default {
           security: true
         }
       })
+    },
+    clickNavigation(item){
+        switch (item.type){
+          case 'systemApp':if(item.event==='fullscreen'){
+            if (this.full) {
+              this.full = false
+              tsbApi.window.setFullScreen(false)
+            } else {
+              this.full = true
+              tsbApi.window.setFullScreen(true)
+            }
+          }else if(item.event==='/status'){
+            if (this.$route.path === '/status') {
+              this.$router.go(-1)
+            } else {
+              this.$router.push({ path: '/status' })
+            }
+          }else if(item.data){
+            this.$router.push({
+              name: 'app',
+              params: item.data
+            })
+          }
+          else{
+            this.$router.push({ name: item.event })
+          }break;
+          case 'coolApp':  this.$router.push({
+            name: 'app',
+            params: item.data
+          });break;
+          case 'localApp': require('electron').shell.openPath(item.path);break;
+          case 'lightApp': ipc.send('executeAppByPackage',{package:item.package});break;
+          default: require('electron').shell.openPath(item.path);
+        }
     }
   }
 }
@@ -333,8 +506,11 @@ export default {
 <style>
 
 </style>
-<style scoped>
+<style lang="scss" scoped>
 
+.btn {
+  text-align: center;
+}
 .status-text {
   font-size: 1.5em;
   line-height: 3em;
@@ -449,6 +625,12 @@ export default {
   to {
     top: -10px;
     opacity: 0;
+  }
+}
+
+.scroll-content{
+  :last-child{
+    margin-right: 0;
   }
 }
 </style>

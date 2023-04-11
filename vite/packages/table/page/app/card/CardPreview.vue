@@ -37,7 +37,7 @@
 
 <script>
 import { mapActions } from "pinia";
-import { tableStore } from "../../../store";
+import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 export default {
@@ -61,7 +61,7 @@ export default {
 
 
   methods: {
-    ...mapActions(tableStore, ["addCustomComponents"]),
+    ...mapActions(cardStore, ["addCustomComponents"]),
     imgChang(i){
      this.carouselIndex = i;
     },

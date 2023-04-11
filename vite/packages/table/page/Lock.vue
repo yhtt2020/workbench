@@ -7,7 +7,6 @@
     <div id="tip" style="color: white;font-size: 20px;margin-top: 2em" >
       <Icon  icon="jiesuo" style="font-size: 30px;vertical-align: text-top"></Icon>点击屏幕中间解锁
     </div>
-
   </div>
   <div class=" card half count-downtime" v-if="countDowntime.hours">
     <div class="left-time"> <Icon
@@ -29,13 +28,30 @@
       <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
       <span style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</span>
     </div>
+  </div>
+<div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
+  <div  v-if="clockEvent[0]" class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-xl flex flex-col justify-evenly items-center" style="width: 480px;height: 320px;background:  #282828">
+    <div>
+      {{ clockEvent[0].dateValue.hours }}:{{
+        clockEvent[0].dateValue.minutes
+      }}
+    </div>
+    <div>
+      {{ clockEvent[0].eventValue }}
+    </div>
+  <div style="width: 100px;height: 48px;" class="flex justify-center items-center text-base bg-blue-500 rounded-xl pointer" @click="handleOk">
+    好的
+  </div>
 
   </div>
+</div>
 </template>
 
 <script>
 import Spotlight from 'spotlight.js'
-import {appStore, countDownStore} from '../store'
+import {appStore} from '../store'
+import {countDownStore} from '../store/countDown'
+import {cardStore} from '../store/card'
 import {mapActions, mapState, mapWritableState} from 'pinia'
 import { message,Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
@@ -54,6 +70,7 @@ export default {
       timer: null,
       date: '2023年2月11日 周四',
       time: ' 14:51 ',
+      visible: false,
       wallPaper: 'https://ts1.cn.mm.bing.net/th/id/R-C.653b2eb4ae081875675c6d25a69834b0?rik=p%2fCn01vlMrCUxQ&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fwallpaper%2f1208%2f02%2fc0%2f12659156_1343874598199.jpg&ehk=d8OPA9%2bWy7YX9FLF95st3Rmd8lG6XtopCz0uNZAbebs%3d&risl=&pid=ImgRaw&r=0'
     }
   },
@@ -82,15 +99,23 @@ export default {
   },
   computed:{
     ...mapState(paperStore,['myPapers','settings','activePapers']),
+    ...mapWritableState(cardStore, [ "clockEvent", "appDate",]),
     ...mapWritableState(countDownStore, ["countDowndate","countDowntime","countDownBtn"]),
   },
   methods: {
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
+    ...mapActions(cardStore, ["removeClock","changeClock"]),
     enterGallery(){
       window.Spotlight.close()
       this.$router.replace({
          path:'/gallery'
       })
+    },
+    handleOk() {
+      this.visible = false;
+        this.removeClock(0);
+        this.$refs.clock.currentTime = 0;
+        this.$refs.clock.pause();
     },
     tick () {
       let weeks = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
@@ -187,15 +212,26 @@ export default {
     deleteCountDown(){
       this.dCountDown()
     },
-    fileImageExtension(filePath){
-      const fileExtensions = filePath.src.split('.').pop()
-      const extensions = ['mp4','mpeg','avi','rmvb']
-      if(extensions.indexOf(fileExtensions) !== -1){
-        return true
-      }else{
-        return false
-      }
-    },
+  },
+  watch: {
+    "appDate.minutes": {
+      handler(newVal, oldVal) {
+        try {
+          if (
+            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
+            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
+          ) {
+            this.visible = true;
+            setTimeout(() => {
+              this.$refs.clock.play();
+            }, 500)
+          }
+        } catch (err) {
+
+        }
+      },
+      immediate: true,
+    }
   }
 }
 </script>
@@ -227,7 +263,7 @@ export default {
   justify-content:space-between ;
   height: 15%;
   width: 30em;
-  z-index: 99999999999999999;
+  z-index: 999999;
   .left-time{
     flex: 1;
     display: flex;

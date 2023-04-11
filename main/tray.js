@@ -207,7 +207,6 @@ app.whenReady().then(() => {
             global.tableWin.window.show()
             global.tableWin.window.focus()
           } else {
-            settings.set('tableWinSetting',undefined)
             global.tableManager.init().then(()=>{
               global.tableWin.window.show()
             })
@@ -226,8 +225,9 @@ app.whenReady().then(() => {
             global.tableWin.window.focus()
           } else {
             settings.set('tableWinSetting',undefined)
-            global.tableManager.init().then(()=>{})
-            global.tableWin.window.show()
+            global.tableManager.init().then(()=>{
+              global.tableWin.window.show()
+            })
           }
         }
       },

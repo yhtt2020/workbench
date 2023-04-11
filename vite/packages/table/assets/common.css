@@ -435,4 +435,24 @@ body {
     background: rgba(0, 0, 0, 0.2);
     color: white; }
 
+.fade-enter-active {
+  animation: bounce-in .5s; }
+
+.fade-leave-active {
+  animation: bounce-in .5s reverse; }
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+.scroll-content::-webkit-scrollbar {
+  width: 0 !important; }
+
+.scroll-content {
+  -ms-overflow-style: none; }
+
+.scroll-content {
+  overflow: -moz-scrollbars-none; }
+
 /*# sourceMappingURL=common.css.map */

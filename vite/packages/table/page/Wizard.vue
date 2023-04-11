@@ -115,43 +115,9 @@
 
       <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
         <div style="color: #999">
-          由于小尺寸的屏幕往往无法获得最佳的触摸体验，故建议设置屏幕缩放比。
+          如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
         </div>
-        <div>
-          <div style="font-size: 1.2em">
-            当前
-          </div>
-          <div style="padding-left: 1em">
-            <div > 缩放比例：100%</div>
-            原始分辨率：
-            <Icon icon="kuandu"/>
-            宽 1920
-            <Icon icon="guanbi1"/>
-            <Icon icon="gaodu"/>
-            高 1080 <br>
-            缩放后分辨率：
-            <Icon icon="kuandu"/>
-            宽 1920
-            <Icon icon="guanbi1"/>
-            <Icon icon="gaodu"/>
-            高 1080
-          </div>
-          </div>
-
-        <div>
-          <div style="font-size: 1.2em">调节后</div>
-          <div style="padding-left: 1em">
-            调节缩放比例：175%<br>
-            调节后后分辨率：<span style="color:orangered"><Icon icon="kuandu"/>宽 1098（<Icon icon="tishi-xianxing"/>低于推荐值）</span>
-            <Icon icon="guanbi1"/>
-            <Icon icon="gaodu"/>
-            高 618
-
-            <a-slider></a-slider>
-          </div>
-
-
-        </div>
+        <ZoomUI></ZoomUI>
       </div>
 
 
@@ -213,19 +179,68 @@ import cp from 'child_process'
 import KeyInput from '../components/comp/KeyInput.vue'
 import { message } from 'ant-design-vue'
 import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
+import ZoomUI from '../components/comp/ZoomUI.vue'
 const { settings } = window.$models
 export default {
   name: 'Wizard',
   components: {
+    ZoomUI,
     KeyInput,
     ChooseScreen,BulbFilled,PlayCircleFilled
   },
   computed: {
-    ...mapWritableState(appStore, ['settings', 'init'])
+    ...mapWritableState(appStore, ['settings', 'init']),
+    fitWidth(){
+      const width=Number(this.currentWidth)
+      if(width<800){
+        return {
+          status:-1,//适合
+          text:'过小',
+          suggest:800
+        }
+
+      }else if(width>2000){
+        return {
+          status:1,//适合
+          text:'过大',
+          suggest:2000
+        }
+      }else{
+        return {
+          status:0,//适合
+          text:'适合'
+        }
+      }
+    },
+    fitHeight(){
+      const height=Number(this.currentHeight)
+      if(height<480){
+        return {
+          status:-1,//适合
+          text:'过小',
+          suggest:480
+        }
+
+      }else if(height>1500){
+        return {
+          status:1,//适合
+          text:'过大',
+          suggest:1500
+        }
+      }else{
+        return {
+          status:0,//适合
+          text:'适合'
+        }
+      }
+    }
   },
   data () {
     return {
       screenSettingTab: 'none',
+      currentWidth:'-',
+      currentHeight:'-',
+
 
       isAutoRun:false,
       ctrl: false,
@@ -283,12 +298,33 @@ export default {
       this.shortKeysSearch = keyMap.globalSearch
     }
     this.isAutoRun=await tsbApi.settings.get('autoRun')
+    this.settings.zoomFactor=await tsbApi.window.getZoomFactor()*100
+    this.getSize()
 
   },
+
+
   methods: {
-    ...mapActions(appStore, ['finishWizard']),
+    ...mapActions(appStore, ['finishWizard','settings']),
     async setAutoRun () {
       await tsbApi.settings.setAutoRun( this.isAutoRun)
+    },
+    async restore(){
+      await tsbApi.window.setZoomFactor(1)
+      setTimeout(()=>{
+        this.settings.zoomFactor=100
+        this.getSize()
+      },300)
+    },
+     getSize(){
+      this.currentWidth=document.body.offsetWidth
+      this.currentHeight=document.body.offsetHeight
+    },
+    async setZoomFactor () {
+      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)
+      setTimeout(()=> {
+        this.getSize()
+      },300)
     },
     openVideo(){
       ipc.send('addTab',{url:'https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click'})
@@ -386,6 +422,10 @@ export default {
   border-radius: 0.4em;
   color: #ffffff;
   margin-bottom: 1em;
+}
+
+.unfit{
+  color:orangered
 }
 
 </style>

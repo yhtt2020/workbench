@@ -5,7 +5,7 @@
     <div class="line-title">互动
       <span style="float: right;font-weight: normal;font-size: 0.8em">
          <icon icon="yonghu"/>
-        在线：- 人
+        在线：{{ online|| '-' }} 人
       </span>
     </div>
     <div class="mb-3" >
@@ -75,7 +75,8 @@
 <script>
 import GradePanel from '../../components/comp/GradePanel.vue'
 import { message } from 'ant-design-vue'
-
+import axios from 'axios'
+import { Server } from '../../consts'
 export default {
   name: 'Com',
   components: { GradePanel },
@@ -97,11 +98,13 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      online:0,
     }
   },
   mounted () {
     this.CONST = tsbApi.barrage.CONST
     this.loadBarrages().then()
+    this.getOnline().then()
   },
   methods:{
     async loadBarrages () {
@@ -112,6 +115,13 @@ export default {
           })
           this.barrages = rs.data
 
+        }
+      })
+    },
+    async getOnline(){
+      axios.get(Server.baseUrl+'/app/open/usageStats/online').then((rs)=>{
+        if(rs.data.code===1000){
+          this.online=rs.data.data
         }
       })
     },

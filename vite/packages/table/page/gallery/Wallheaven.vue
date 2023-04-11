@@ -1,7 +1,7 @@
 <template>
   <div class="wallheaven-header">
     <a-row justify="center">
-      <a-col class="wallheaven-item" :span="4" v-for="item in wallTitle" :class="wallStatus === item.id ? 'wallheaven-active':''" @click="wallTitleClick(item)"> 
+      <a-col class="wallheaven-item" :span="4" v-for="item in wallTitle" :class="wallStatus === item.id ? 'wallheaven-active':''" @click="wallTitleClick(item)">
         {{ item.name }}
       </a-col>
     </a-row>
@@ -108,10 +108,10 @@
             </div>
           </a-col>
         </a-row>
-      </viewer> 
+      </viewer>
       <div v-if="isLoading === false && hotHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
-      </div> 
+      </div>
      </template>
      <template v-if="wallStatus === 1">
       <div  style="display: flex; align-items: center; justify-content: center;">
@@ -129,7 +129,7 @@
             </div>
           </a-col>
         </a-row>
-      </viewer> 
+      </viewer>
       <div v-if="isLoading === false && acgHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
       </div>
@@ -150,7 +150,7 @@
             </div>
           </a-col>
         </a-row>
-      </viewer> 
+      </viewer>
       <div v-if="isLoading === false &&  peopleHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
       </div>
@@ -245,7 +245,7 @@ export default defineComponent({
     wallTitleClick(item){
       this.wallStatus = item.id
       this.dataObj.categories = item.categories
-      this.dataObj.sorting = item.sorting 
+      this.dataObj.sorting = item.sorting
       if(this.wallStatus === 0){
         this.getWallHeavenData(this.page)
       }else if(this.wallStatus === 1){
@@ -342,7 +342,7 @@ export default defineComponent({
     },
     getWallSelectValue(e){
       if(e !== ''){
-        this.searchObj.wallSizeValue = e 
+        this.searchObj.wallSizeValue = e
       }
     },
     getPurity(e){

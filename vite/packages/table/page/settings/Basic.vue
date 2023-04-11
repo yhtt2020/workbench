@@ -1,17 +1,15 @@
 <template>
   <div style="display: flex">
-    <div class="settings-menus">
-      <div @click="setMenu(menu)" v-for="menu in menus" class="item" :class="{'active':currentMenu===menu.name}">
-        {{ menu.title }}
-      </div>
-    </div>
-    <div style="padding: 1em">
+    <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
+    <div style="padding: 1em;padding-left: 12em">
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import SecondPanel from '../../components/SecondPanel.vue'
+
 const menus = [
   {
     title: '通用设置',
@@ -38,10 +36,11 @@ const menus = [
 ]
 export default {
   name: 'Basic',
+  components: { SecondPanel },
   data () {
     return {
       menus,
-      currentMenu: 'key'
+      currentMenu: 'common'
     }
   },
   mounted () {
@@ -54,6 +53,10 @@ export default {
     // })
   },
   methods: {
+    change(tab){
+      console.log(tab)
+      this.$router.push(tab.menu.route)
+    },
     setMenu (menu) {
       this.currentMenu = menu.name
       if (menu.route) {
