@@ -72,7 +72,7 @@
 </a-drawer>
 
 <a-drawer v-model:visible="visibleImport" placement="right" class="no-drag">
-  <Import :loadStaticPaper="loadStaticPaper"></Import>
+  <Import :loadStaticPaper="loadStaticPaper" :getLoadLively="getLoadLively"></Import>
 </a-drawer>
 
 <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">

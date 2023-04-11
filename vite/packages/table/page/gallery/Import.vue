@@ -48,7 +48,10 @@ export default {
   props:{
     loadStaticPaper:{
       type:Function
-    }
+    },
+    // getLoadLively:{
+    //   type:Function
+    // }
   },
   computed:{
     ...mapWritableState(paperStore,['settings'])
@@ -78,6 +81,7 @@ export default {
             }else if(videoReg.test(openPath[i])){
               // 将动态的文件复制到指定存放的动态文件目录中
               fs.copySync(openPath[i],`${livelyDir}\\${openPath[i].split("\\")[openPath[i].split("\\").length -1]}`)
+              // this.getLoadLively()
             }
           }
         }
@@ -109,6 +113,7 @@ export default {
           }else if(videoReg.test(el)){
             // 将动态壁纸复制到指定动态壁纸文件夹中
             fs.copySync(el,`${livelyDir}\\${el.split("\\")[el.split("\\").length -1]}`)
+            // this.getLoadLively()
           }
         })
       }else{
