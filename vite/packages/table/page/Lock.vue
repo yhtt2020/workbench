@@ -212,6 +212,16 @@ export default {
     deleteCountDown(){
       this.dCountDown()
     },
+    // 判断文件是否为图片
+    fileImageExtension(filePath){
+      const fileExtensions = filePath.src.split('.').pop()
+      const extensions = ['mp4','mpeg','avi','rmvb']
+      if(extensions.indexOf(fileExtensions) !== -1){
+        return true
+      }else{
+        return false
+      }
+    },
   },
   watch: {
     "appDate.minutes": {
