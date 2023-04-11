@@ -2,12 +2,10 @@ const _ = require('lodash')
 const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const standReturn = require('../util/standReturn')
-
 /**
  * 简易存储模块，简易存储，无需复杂存储
  */
-class StorageModel {
-  db
+class TableModel {
   async initDb(){
     this.db = new SqlDb('storage')
     let exists = await this.db.knex.schema.hasTable('storage')
@@ -63,4 +61,4 @@ class StorageModel {
   }
 }
 
-module.exports=StorageModel
+module.exports=TableModel

@@ -2,11 +2,10 @@ const _ = require('lodash')
 const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const standReturn = require('../util/standReturn')
-
 /**
  * 简易存储模块，简易存储，无需复杂存储
  */
-class StorageModel {
+class AppStorageModel {
   db
   async initDb(){
     this.db = new SqlDb('storage')
@@ -63,4 +62,4 @@ class StorageModel {
   }
 }
 
-module.exports=StorageModel
+module.exports=AppStorageModel

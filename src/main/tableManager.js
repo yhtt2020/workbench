@@ -8,11 +8,30 @@ ipc.on('recoverSuccess',()=>{
     body :'数据迁移成功，您可正常使用。'
   }).show()
 })
+
+/**
+ * C:\Windows\System32\drivers\etc
+ *
+ * #工作台开发环境补充
+ * 127.0.0.1 table.com
+ * 127.0.0.1 1.table.com
+ * 127.0.0.1 2.table.com
+ * 127.0.0.1 3.table.com
+ * 127.0.0.1 4.table.com
+ * 127.0.0.1 5.table.com
+ * 127.0.0.1 6.table.com
+ * 127.0.0.1 7.table.com
+ * #工作台开发环境end
+ */
+
+
+
 class TableManager {
-  window
+  window //主屏的窗体
+  windows //分屏的窗体
   storage //临时存储
 
-  async init () {
+  async init (tableId) {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
       console.log(tableWinSetting,'读入设置')
