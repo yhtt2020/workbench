@@ -76,7 +76,7 @@
 </a-drawer>
 
 <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
-    <div id="actions" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
+    <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
       <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
         <Icon icon="guanbi1" style="font-size: 2em"></Icon>
       </div>
