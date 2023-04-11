@@ -186,13 +186,10 @@ export default defineComponent({
     ...mapActions(paperStore, ["removeToMyPaper"]),
     // 获取拾光壁纸数据
     getPickingData(vl,vP){
-      console.log(vl,vP);
       const apiUrl = `https://api.nguaduot.cn${vl}?${vP}`
-      console.log(apiUrl);
       if(!this.isLoading){
         this.isLoading = true
         axios.get(apiUrl).then(async res=>{
-          console.log(res.data.data);
           if(res.data.data.length !== 1){
             let pickImage = res.data.data
             this.count = res.data.count
@@ -282,7 +279,6 @@ export default defineComponent({
         okText:'设置桌面壁纸',
         onOk:()=>{
          message.info('正在为您下载并设桌面壁纸')
-         console.log(this.currentPaper.path);
          tsbApi.system.setPaper(this.currentPaper.path)
          this.visibleMenu= false
         }
