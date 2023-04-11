@@ -124,15 +124,22 @@ export default {
       }
       let LockArr = []
       this.myPapers.map(el=>{
-         let image = {
-          src:el.path
-         }
-         LockArr.push(image)
+        if(this.fileImageExtension(el)){
+           LockArr.push({
+             "src-mp4":el.srcProtocol,
+              media:"video",
+              poster:el.path
+           })
+        }else{
+          LockArr.push({
+            src:el.path
+          })
+        }
       })
       window.Spotlight.show(LockArr, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: false,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
@@ -147,10 +154,24 @@ export default {
         Modal.error({content:'请激活壁纸后重新使用激活壁纸模式。'})
         return
       }
-      window.Spotlight.show(this.activePapers, {
-        control: 'autofit,fullscreen,close,zoom,prev,next',
+      let LockActive = []
+      this.activePapers.map((el)=>{
+        if(this.fileImageExtension(el)){
+          LockActive.push({
+            "src-mp4":el.srcProtocol,
+            media:"video",
+            poster:el.path
+          })
+        }else{
+          LockActive.push({
+            src:el.path
+          })
+        }
+      })
+      window.Spotlight.show(LockActive, {
+        control: 'autofit,fullscreen,close,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: false,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
@@ -165,6 +186,15 @@ export default {
     },
     deleteCountDown(){
       this.dCountDown()
+    },
+    fileImageExtension(filePath){
+      const fileExtensions = filePath.src.split('.').pop()
+      const extensions = ['mp4','mpeg','avi','rmvb']
+      if(extensions.indexOf(fileExtensions) !== -1){
+        return true
+      }else{
+        return false
+      }
     },
   }
 }

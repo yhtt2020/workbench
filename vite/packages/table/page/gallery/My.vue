@@ -217,16 +217,14 @@ export default defineComponent({
           })
         }
       })
-      console.log(imageArr);
       window.Spotlight.show(imageArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: false,
         infinite: true,
         progress: true,
         title: false,
         autoplay:true,
-        muted:true,
       })
     },
 
@@ -245,16 +243,14 @@ export default defineComponent({
           })
         }
       })
-      console.log(playArr);
       window.Spotlight.show(playArr, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: false,
         infinite: true,
         progress: true,
         title: false,
         autoplay:true,
-        muted:true,
       })
     },
 
