@@ -5,6 +5,7 @@
         <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
         <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
             <a-select-option value="/timeline/v2">拾光</a-select-option>
+            <a-select-option value="/glutton/snake">贪吃蛇</a-select-option>
             <a-select-option value="/glutton/journal">贪食鬼</a-select-option>
             <a-select-option value="/wallhaven/v2">wallhaven</a-select-option>
         </a-select>
@@ -28,7 +29,7 @@
     </div>
     <a-row :gutter="[20,20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
       <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
-         <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+         <img  @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
           <div @click.stop="addToMy(img)"  class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
             <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -40,21 +41,32 @@
   </viewer>
 </vue-custom-scrollbar>
 
-<a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
+<a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag" @close="closeFilter()">
   <div class="w-full h-12  flex rounded-lg" style="border:1px solid rgba(255, 255, 255, 0.1);margin-bottom:1.714289em;">
-     <div class="w-1/3 h-100 flex items-center justify-center filter-item" :class="filterIndex === item.index ? 'active':''"  v-for="item in filterOption" @click="filterOptionClick(item)" style="border-right:1px solid rgba(255, 255, 255, 0.1);">
-        {{ item.title }}
-     </div>
+    <div class="w-1/3 h-100 flex items-center justify-center filter-item" :class="filterIndex === item.index ? 'active':''"  v-for="item in filterOption" @click="filterOptionClick(item)" style="border-right:1px solid rgba(255, 255, 255, 0.1);">
+      {{ item.title }}
+    </div>
   </div>
   <div class="w-full h-12  flex items-center justify-between" style="margin-bottom:1.714289em;">
     <span>分类</span>
-    <div class="w-60  bg-white bg-opacity-10 rounded-lg flex items-center ">
-        <a-select class="w-full" :bordered="false" v-model:value="classValue" @change="filterClassValue($event)">
-            <a-select-option v-for="item in classOption" :value="item.id">
-              {{ item.name }}
-            </a-select-option>
+    <template v-if="pickFilterValue !== '/wallhaven/v2'">
+      <div class="w-60  bg-white bg-opacity-10 rounded-lg flex items-center ">
+        <a-select class="w-full" :bordered="false" v-model:value="classValue"  @change="filterClassValue($event)">
+          <a-select-option v-for="item in classOption" :value="item.id">
+            {{ item.name }}
+          </a-select-option>
         </a-select>
-    </div>
+      </div>
+    </template>
+    <template v-else>
+      <div class="w-60  bg-white bg-opacity-10 rounded-lg flex items-center ">
+        <a-select class="w-full" :bordered="false" v-model:value="wallValue"  @change="wallFilterChange($event)">
+          <a-select-option v-for="item in wallFilterOption" :value="item.id">
+            {{ item.id ==='anime' ? '动漫精选' : item.id ==='general' ? '热门精选' : item.id ==='people' ? '人物精选':''}}
+          </a-select-option>
+        </a-select>
+      </div>
+    </template>
   </div>
   <div class="w-full h-12  flex items-center justify-between" style="margin-bottom:1.714289em;">
    <span>筛选选</span>
@@ -91,6 +103,24 @@
     </template>
 </a-drawer>
 
+<a-drawer v-model:visible="visibleMenu" placement="bottom">
+  <a-row :gutter="20" style="text-align: center">
+    <a-col :span="4">
+      <div @click="setDesktopPaper" class="btn">
+        <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+        <div>设置为桌面壁纸</div>
+      </div>
+    </a-col>
+
+    <a-col>
+      <div  @click="add()" class="btn">
+        <Icon style="font-size: 3em" icon="xiazai"></Icon>
+        <div>下载该壁纸</div>
+      </div>
+    </a-col>
+  </a-row>
+</a-drawer>
+
 </template>
 
 <script>
@@ -99,6 +129,7 @@ import {InfoCircleOutlined} from '@ant-design/icons-vue'
 import axios from 'axios';
 import { paperStore } from "../../store/paper";
 import { mapActions, mapState } from "pinia";
+import {message,Modal} from 'ant-design-vue'
 export default defineComponent({
   name:'Picking',
   components:{
@@ -112,6 +143,7 @@ export default defineComponent({
       isLoading:false,
       pickChecked:false,
       classOption:[],
+      wallFilterOption:[],
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -126,7 +158,10 @@ export default defineComponent({
       },
       score:99999999,
       no:99999999,
-      dateTime:20500101
+      dateTime:20500101,
+      visibleMenu:false,
+      currentPaper:null,
+      count:'',
     }
   },
   mounted() {
@@ -140,28 +175,26 @@ export default defineComponent({
         this.no = this.pickImageData.sort((a,b)=>{
           return  a.resolution - b.resolution  > b.resolution
         })[this.pickImageData.length-1].no
-        this.getPickingData(this.pickFilterValue,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
-        console.log(this.score);
-        console.log(this.no);
+        this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
       }
     })
-    this.getPickingData(this.pickFilterValue,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+    this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
     this.getClassOption()
+    this.getWallOption()
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
     // 获取拾光壁纸数据
     getPickingData(vl,vP){
-      console.log(vl,vP);
       const apiUrl = `https://api.nguaduot.cn${vl}?${vP}`
-      console.log(apiUrl);
       if(!this.isLoading){
         this.isLoading = true
         axios.get(apiUrl).then(async res=>{
-          console.log(res.data.data);
-          let pickImage = res.data.data
-          let animations = ["ani-gray", "bowen", "ani-rotate"];
-          if(pickImage){
+          if(res.data.data.length !== 1){
+            let pickImage = res.data.data
+            this.count = res.data.count
+            let animations = ["ani-gray", "bowen", "ani-rotate"];
+            if(pickImage){
             pickImage.forEach(img=>{
               let randomIndex = Math.floor(Math.random() * animations.length);
               const image = {
@@ -178,6 +211,9 @@ export default defineComponent({
             this.$nextTick(() => {
               this.isLoading = false;
             });
+            }
+          }else{
+            return
           }
         })  
       }
@@ -189,10 +225,19 @@ export default defineComponent({
           this.classOption = res.data.data
        })
     },
+
+    // 获取wallheaven壁纸分类
+    getWallOption(){
+      const url = 'https://api.nguaduot.cn/wallhaven/cate'
+      axios.get(url).then(res=>{
+        this.wallFilterOption = res.data.data
+      })
+    },
+
     pickFilterChange(e){
       this.pickFilterValue = e
       this.pickImageData  = []
-      this.getPickingData(e,`order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+      this.getPickingData(e,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
     },
     // 重置筛选
     restFilter(){
@@ -201,30 +246,51 @@ export default defineComponent({
       this.classValue = 'landscape'
       this.filterIndex = 'D'
     },
-
-   formatDateTime (date) {
+    formatDateTime (date) {
      var y = date.getFullYear();
      var m = date.getMonth() + 1;
      m = m < 10 ? ('0' + m) : m;
      var d = date.getDate();
      d = d < 10 ? ('0' + d) : d;
      return y+m+d 
-   },
-
-   addToMy(img){
-    this.removeToMyPaper(img);
-   },
-
-   isInMyPapers(image) {
+    },
+    addToMy(img){
+     this.removeToMyPaper(img);
+    },
+    isInMyPapers(image) {
       return (
         this.myPapers.findIndex((img) => {
           return image.src === img.src;
         }) > -1
       );
-   },
-  },
+    },
 
-  setup() {
+    pickShow(item){
+     this.currentPaper = item
+     this.visibleMenu = true
+    },
+    
+    // 下载壁纸
+    add(){},
+
+    setDesktopPaper(){
+      Modal.confirm({
+        content:'确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',
+        okText:'设置桌面壁纸',
+        onOk:()=>{
+         message.info('正在为您下载并设桌面壁纸')
+         tsbApi.system.setPaper(this.currentPaper.path)
+         this.visibleMenu= false
+        }
+      })
+    },
+
+    closeFilter(){
+      this.pickImageData = []
+      this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+    }
+  },
+  setup(){
     const pickFilterValue = ref('/glutton/journal')
     const pickInfoShow = ref(false)
     const pickFilterShow = ref(false)
@@ -248,6 +314,9 @@ export default defineComponent({
     ])
     let filterIndex = ref('D') 
     let filterValue = ref('date')
+    let wallValue = ref('general')
+
+
     // 右侧打开拾光壁纸官网信息
     const openInfo = () =>{
       pickInfoShow.value = true
@@ -256,12 +325,10 @@ export default defineComponent({
     const openFilter = () =>{
       pickFilterShow.value = true
     }
-
     const filterOptionClick = (item) =>{
       filterIndex.value = item.index
       filterValue.value = item.value
     }
-
     // 跳转至拾光壁纸官网
     const toOfficialWebsite = () =>{
       ipc.send('addTab',{url:'https://app.nguaduot.cn/timeline'})
@@ -270,22 +337,29 @@ export default defineComponent({
     const filterClassValue = (e) =>{
       classValue.value = e
     }
+    // 获取wall分类参数
+    const wallFilterChange = (e) =>{
+      wallValue.value = e
+    }
     return{
       pickFilterValue,
       pickInfoShow,
       pickFilterShow,
-      filterValue,
       classValue,
       filterOption,
       filterIndex,
+      filterValue,
+      wallValue,
       openInfo,
-      toOfficialWebsite,
       openFilter,
+      filterOptionClick,
+      toOfficialWebsite,
       filterClassValue,
-      filterOptionClick
+      wallFilterChange
     }
   }
 })
+
 </script>
 
 <style lang="scss" scoped>
