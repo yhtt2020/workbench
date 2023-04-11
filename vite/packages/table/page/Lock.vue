@@ -168,6 +168,7 @@ export default {
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
+        autoplay:true,
         onclose:()=>{this.enter(false)}
       })
     },
@@ -200,6 +201,7 @@ export default {
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
+        autoplay:true,
         onclose:()=>{this.enter(false)}
       })
     },
