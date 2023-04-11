@@ -220,9 +220,9 @@ export default defineComponent({
       window.Spotlight.show(imageArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: false,
+        autoslide: true,
         infinite: true,
-        progress: true,
+        progress: false,
         title: false,
         autoplay:true,
       })
@@ -246,9 +246,9 @@ export default defineComponent({
       window.Spotlight.show(playArr, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: false,
+        autoslide:true,
         infinite: true,
-        progress: true,
+        progress: false,
         title: false,
         autoplay:true,
       })

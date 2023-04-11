@@ -164,7 +164,7 @@ export default {
       window.Spotlight.show(LockArr, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: false,
+        autoslide: true,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
@@ -197,7 +197,7 @@ export default {
       window.Spotlight.show(LockActive, {
         control: 'autofit,fullscreen,close,prev,next',
         play: true,
-        autoslide: false,
+        autoslide: true,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
