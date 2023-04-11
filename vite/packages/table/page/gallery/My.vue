@@ -213,7 +213,7 @@ export default defineComponent({
           }
         }else{
           imageArr.push({
-            src:el.src,
+            src:el.path,
           })
         }
       })
