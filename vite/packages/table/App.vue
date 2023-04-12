@@ -89,11 +89,11 @@ export default {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
-    // if (!this.myCode) {
-    //   //注释此处的代码跳过激活码验证
-    //   this.$router.push('/code')
-    //   return
-    // }
+    if (!this.myCode) {
+      //注释此处的代码跳过激活码验证
+      this.$router.push('/code')
+      return
+    }
     this.verify(rs => {
       if (!rs) {
         this.$router.push('/code')
