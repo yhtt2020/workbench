@@ -30,8 +30,10 @@ export const codeStore = defineStore('code', {
   }),
   actions: {
 
-    async active(code, serialHash) {
-      return axios.post(activeUrl, {key: code, serialHash: serialHash})
+    async active(code, serialHash,uid) {
+      let data={key: code, serialHash: serialHash,uid:uid}
+      console.log(data)
+      return axios.post(activeUrl, data)
     },
 
     async create() {
@@ -78,18 +80,21 @@ export const codeStore = defineStore('code', {
       return this.serialHash
     },
 
-    async verify(cb) {
+    async verify(uid) {
       if (!this.myCode) {
         console.warn('未设置激活码')
         return false
       }
 
-      let hash = this.getSerialHash()
+      // let hash = this.getSerialHash()
 
-      let rs = await axios.post(verifyUrl, {
-        serialHash: hash,
-        key: this.myCode
-      })
+      let data={
+        // serialHash: hash,
+        key: this.myCode,
+        uid:uid
+      }
+      console.log(data)
+      let rs = await axios.post(verifyUrl,data)
       if (rs.code !== 1000) {
         // this.myCode = ''
         console.warn('返回失败', rs)

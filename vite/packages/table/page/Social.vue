@@ -45,16 +45,7 @@ export default {
             {
               name: 'invite',
             }
-        },
-       {
-         title: '等级权益',
-           index: 'grade',
-         icon:'star',
-         route:
-         {
-           name: 'grade',
-         }
-       }
+        }
       ],
 
 

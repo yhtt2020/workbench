@@ -223,7 +223,7 @@ export default {
       lastTime:0,
       visibleTrans: false,
       full: false,
-      lvInfo: {},
+
       timer:null,
       messages:[],
       tipped:false,
@@ -268,26 +268,11 @@ export default {
     setInterval( ()=>{
       this.loadMessages()
     },10000)
-    ipc.on('userInfo', (event, args) => {
-      this.tipped=false
-      this.loading = false
 
-      let lvInfo = {}
-      lvInfo.lv = args.data.onlineGradeExtra.lv
-      let current = this.gradeTableGenerate(64)[lvInfo.lv]
-      let section = this.gradeTableGenerate(64)[lvInfo.lv + 1]
-      let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
-      lvInfo.remainHour = Math.floor(remain / 60)
-      lvInfo.remainMinute = remain - (Math.floor(remain / 60) * 60)
-      lvInfo.minute = args.data.onlineGradeExtra.minutes
-      lvInfo.percentage = ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) * 100
-      this.lvInfo = lvInfo
-      this.setUser(args.data)
-    })
-    ipc.send('getDetailUserInfo')
+
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo','settings']),
+    ...mapWritableState(appStore, ['userInfo','settings','lvInfo']),
     ...mapWritableState(cardStore, ['navigationList','routeParams'])
   },
   watch: {
@@ -406,23 +391,7 @@ export default {
         ipc.send('getDetailUserInfo')
       })
     },
-    gradeTableGenerate (num) {
-      let lvSys = {}
-      for (let i = 0; i < num + 1; i++) {
-        let arrLef = 0
-        let arrRg = 0
-        for (let j = 0; j < i; j++) {
-          arrLef += 10 * (j + 2)
-        }
-        for (let k = 0; k < i + 1; k++) {
-          arrRg += 10 * (k + 2)
-        }
-        arrRg -= 1
-        lvSys[`${i}`] = [arrLef, arrRg]
-      }
-      delete lvSys['lv0']
-      return lvSys
-    },
+
     openSetting () {
       this.$router.push({ name: 'setting' })
     },

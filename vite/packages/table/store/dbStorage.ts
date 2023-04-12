@@ -28,6 +28,10 @@ const dbStorage: Storage = {
         console.warn('本地也没存储')
       }
     }
+    if(!window.loadedStore){
+      window.loadedStore={}
+    }
+    window.loadedStore[key]=-true
     return value
   }
 }

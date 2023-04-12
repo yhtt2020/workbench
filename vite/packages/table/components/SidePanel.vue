@@ -2,7 +2,7 @@
   <ul class="side-panel common-panel" style=" z-index: 999;
   width: 6em;position: fixed;top: calc((100vh - 32em)/2)">
     <li class="active">
-      <PanelButton :active="tab==='home'" @click="goTab('','home')" icon="shouye1" title="主页"></PanelButton>
+      <PanelButton :active="tab==='home'" @click="goTab('index','home')" icon="shouye1" title="主页"></PanelButton>
     </li>
     <li>
       <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="yingyongzhongxin"

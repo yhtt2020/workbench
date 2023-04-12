@@ -1,6 +1,6 @@
 <template>
   <a-config-provider :locale="locale">
-    <div class="a-container" :class="{ dark: settings.darkMod }">
+    <div class="a-container" :class="{ dark:settings? settings.darkMod:'' }">
       <router-view></router-view>
     </div>
     <Barrage></Barrage>
@@ -76,48 +76,41 @@ export default {
     codeStore()
   },
   async mounted() {
+
    //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
-    setTimeout(()=>{
-      if (!this.init) {
-        console.log(this.init)
-        this.$router.push('/wizard')
-        return
-      }
-
-      this.verify(rs => {
-        if (!rs) {
-          this.$router.push('/code')
-          return
-        }
-      }).then(rs=>{
-        if(!rs){
-          this.$router.push('/code')
-          return
-        }
-      })
-    },3000)
+   //  if (!this.init) {
+   //    console.log(this.init)
+   //    this.$router.push('/wizard')
+   //    return
+   //  }
+    //
+    // setTimeout(()=>{
+    //
+    //
+    //
+    // },3000)
     //还原数据
-    setTimeout(()=>{
-      let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
-      if(require('fs').existsSync(recoverPath)){
-        let json= require('fs').readFileSync(recoverPath,'utf-8')
-        let j=JSON.parse(json)
-        Object.keys(j).forEach(key=>{
-          localStorage.setItem(key,j[key])
-        })
-        require('fs').rmSync(recoverPath)
-        localStorage.setItem('tipInfo','1')
-        location.reload()
-        console.log('检测到存在待回复的json文件')
-      }
-      if(localStorage.getItem('tipInfo')){
-        localStorage.removeItem('tipInfo')
-        Modal.info({content:'已为您迁移数据，目前可正常使用。'})
-      }
-    },3000)
+    // setTimeout(()=>{
+    //   let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
+    //   if(require('fs').existsSync(recoverPath)){
+    //     let json= require('fs').readFileSync(recoverPath,'utf-8')
+    //     let j=JSON.parse(json)
+    //     Object.keys(j).forEach(key=>{
+    //       localStorage.setItem(key,j[key])
+    //     })
+    //     require('fs').rmSync(recoverPath)
+    //     localStorage.setItem('tipInfo','1')
+    //     location.reload()
+    //     console.log('检测到存在待回复的json文件')
+    //   }
+    //   if(localStorage.getItem('tipInfo')){
+    //     localStorage.removeItem('tipInfo')
+    //     Modal.info({content:'已为您迁移数据，目前可正常使用。'})
+    //   }
+    // },3000)
 
 
-    window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
+
     if(!this.settings.zoomFactor){
       this.settings.zoomFactor=100
     }
@@ -146,10 +139,8 @@ export default {
     this.sortClock()
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic;
+    window.restore = () => {this.settings.zoomFactor = 100, window.location.reload()}
 
-    if (this.settings.darkMod) {
-      document.body.style.background = "#191919";
-    }
     this.bindTouchEvents();
     this.reloadAll(); //刷新全部天气
     //this.$router.push({name:'sensor'})

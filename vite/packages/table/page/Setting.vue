@@ -165,7 +165,7 @@ export default {
   methods: {
     ...mapActions(codeStore, ['verify', 'create']),
     async verifyCode () {
-      let rs=await  this.verify()
+      let rs=await  this.verify(this.userInfo.uid)
       if (rs) {
         message.success('激活码有效')
       } else {

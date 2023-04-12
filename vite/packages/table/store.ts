@@ -11,6 +11,7 @@ import dbStorage from "./store/dbStorage";
 export const appStore = defineStore('appStore', {
   state: () => ({
     userInfo: false,
+    lvInfo: {},
     myData: {
       myCircle: [],
       joinedCircle: []
