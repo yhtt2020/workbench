@@ -7,6 +7,7 @@ import Social from '../page/Social.vue'
 import Com from '../page/social/Com.vue'
 import SocialMy from '../page/social/My.vue'
 import Invite from '../page/social/Invite.vue'
+import Grade from '../page/social/Grade.vue'
 import BasicSetting from '../page/settings/Basic.vue'
 import Key from '../page/settings/Key.vue'
 import Apps from '../page/Apps.vue'
@@ -16,7 +17,6 @@ import Status from '../page/Status.vue'
 import Index from '../page/Index.vue'
 import Home from '../page/Home.vue'
 import Browser from '../page/settings/Browser.vue'
-import AddCard from "../page/app/card/AddCard.vue"
 import Common from '../page/settings/Common.vue'
 import SetupCard from "../page/app/card/SetupCard.vue"
 import Sensor from '../page/Sensor.vue'
@@ -29,7 +29,6 @@ import PickingPaper from '../page/gallery/Picking.vue'
 import Lively from '../page/gallery/Lively.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
 import My from '../page/gallery/My.vue'
-
 export default [{
   path: '/index',
   name: 'index',
@@ -75,6 +74,11 @@ export default [{
           path: '/invite',
           name: 'invite',
           component: Invite,
+        },
+        {
+          path: '/grade',
+          name: 'grade',
+          component: Grade,
         }
       ]
     },
