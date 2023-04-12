@@ -69,7 +69,7 @@
     </template>
   </div>
   <div class="w-full h-12  flex items-center justify-between" style="margin-bottom:1.714289em;">
-   <span>筛选选</span>
+   <span>筛选项</span>
    <a-switch v-model:checked="pickChecked" />
   </div>
   <div class="w-full flex items-center justify-center">
@@ -190,23 +190,26 @@ export default defineComponent({
       if(!this.isLoading){
         this.isLoading = true
         axios.get(apiUrl).then(async res=>{
+          console.log(res.data.data);
           if(res.data.data.length !== 1){
             let pickImage = res.data.data
             this.count = res.data.count
             let animations = ["ani-gray", "bowen", "ani-rotate"];
             if(pickImage){
             pickImage.forEach(img=>{
-              let randomIndex = Math.floor(Math.random() * animations.length);
-              const image = {
-                title:false,
-                src:img.thumburl,
-                path:img.imgurl,
-                resolution:img.size,
-                score:img.score,
-                no:img.no,
-                animations: animations[randomIndex],
+              if(img.thumburl !== null){
+                let randomIndex = Math.floor(Math.random() * animations.length);
+                const image = {
+                 title:false,
+                 src:img.thumburl,
+                 path:img.imgurl,
+                 resolution:img.size,
+                 score:img.score,
+                 no:img.no,
+                 animations: animations[randomIndex],
+                }
+                this.pickImageData.push(image)
               }
-              this.pickImageData.push(image)
             })
             this.$nextTick(() => {
               this.isLoading = false;
@@ -291,7 +294,7 @@ export default defineComponent({
     }
   },
   setup(){
-    const pickFilterValue = ref('/glutton/journal')
+    const pickFilterValue = ref('/timeline/v2')
     const pickInfoShow = ref(false)
     const pickFilterShow = ref(false)
     let classValue = ref('landscape')
