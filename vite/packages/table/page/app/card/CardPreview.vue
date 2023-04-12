@@ -3,7 +3,7 @@
       <div>{{ cardType.cname }}</div>
       <div>{{ cardType.detail }}</div>
       <div>
-        <a-carousel arrows v-if="cardType.name === 'countdownDay'||cardType.name === 'supervisory'"
+        <a-carousel arrows v-if="cardType.name === 'countdownDay'||cardType.name === 'supervisory' || cardType.name === 'games'"
                     :after-change="imgChang" style="width: 200px;height: 295.86px;"  effect="fade">
 
 
