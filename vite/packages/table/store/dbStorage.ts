@@ -31,7 +31,7 @@ const dbStorage: Storage = {
     if(!window.loadedStore){
       window.loadedStore={}
     }
-    window.loadedStore[key]=-true
+    window.loadedStore[key]=true
     return value
   }
 }

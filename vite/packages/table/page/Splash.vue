@@ -137,19 +137,20 @@ export default {
       lvInfo.percentage = ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) * 100
       //this.lvInfo = lvInfo
       window.loadedStore['userInfo'] = true
-      this.setUser(userInfo)
       if (this.$route.name === 'splash') {
         this.verify(userInfo.uid).then(rs => {
           if (rs) {
-            Modal.success({
-              content: '您的账号具备EA资格，点击确定即可发车。',
-              centered:true,
-              onOk: () => {
-                this.$router.replace({
-                  name: 'home'
-                })
-              }
-            })
+            if(userInfo.uid!==this.userInfo.uid){
+              Modal.success({
+                content: '您的账号具备EA资格，点击确定即可发车。',
+                centered:true,
+                onOk: () => {
+                  this.$router.replace({
+                    name: 'home'
+                  })
+                }
+              })
+            }
           } else {
             Modal.error({
               content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
@@ -159,6 +160,7 @@ export default {
           }
         })
       }
+      this.setUser(userInfo)
     })
 
 
@@ -243,7 +245,7 @@ export default {
         } else {
           this.myCode = this.code
           let timer = setTimeout(() => {
-            this.$router.push({ path: '/wizard' })
+            this.$router.replace({ path: '/wizard' })
 
           }, 10000)
           Modal.success({
@@ -251,7 +253,7 @@ export default {
             content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
               clearTimeout(timer)
-              this.$router.push({ path: '/wizard' })
+              this.$router.replace({ path: '/wizard' })
             },
             okText: '发车'
           })
