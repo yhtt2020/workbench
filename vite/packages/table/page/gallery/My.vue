@@ -145,14 +145,20 @@ export default defineComponent({
     ...mapActions(paperStore,['addToActive','addToMyPaper','addToStaticPaper']),
     // 获取本地视频目录数据
     getLoadLively(){
-      const videos = fs.readdirSync(path.join(this.settings.savePath,'lively'))
-      videos.filter(v=>{
-        const livelyItem = {
-          src:path.join(this.settings.savePath,'lively',v),
-          path:`https://up.apps.vip/lively/${ path.join(path.join(this.settings.savePath,'lively'),v).split("\\")[path.join(path.join(this.settings.savePath,'lively'),v).split("\\").length - 1].split(".")[0]}.jpg`,
-          srcProtocol:'file://'+ path.join(this.settings.savePath,'lively',v),
+      fs.pathExists(path.join(this.settings.savePath,'lively')).then((exists)=>{
+        if(exists){
+          const videos = fs.readdirSync(path.join(this.settings.savePath,'lively'))
+          videos.filter(v=>{
+           const livelyItem = {
+             src:path.join(this.settings.savePath,'lively',v),
+             path:`https://up.apps.vip/lively/${ path.join(path.join(this.settings.savePath,'lively'),v).split("\\")[path.join(path.join(this.settings.savePath,'lively'),v).split("\\").length - 1].split(".")[0]}.jpg`,
+             srcProtocol:'file://'+ path.join(this.settings.savePath,'lively',v),
+           }
+           this.addToStaticPaper(livelyItem)
+          })
+        }else{
+          this.myPapers = []
         }
-        this.addToStaticPaper(livelyItem)
       })
     },
     // 获取本地图片数据

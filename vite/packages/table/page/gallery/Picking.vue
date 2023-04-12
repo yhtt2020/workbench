@@ -69,7 +69,7 @@
     </template>
   </div>
   <div class="w-full h-12  flex items-center justify-between" style="margin-bottom:1.714289em;">
-   <span>筛选选</span>
+   <span>筛选项</span>
    <a-switch v-model:checked="pickChecked" />
   </div>
   <div class="w-full flex items-center justify-center">
