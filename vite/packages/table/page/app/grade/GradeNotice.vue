@@ -45,11 +45,11 @@ export default {
       if(this.known === false){
         message.info('未勾选');
       }else{
-          this.setUp=true
-        this.setAgreeTest(true)
+        this.setUp=true
       }
     },
     goGrade(){
+      this.setAgreeTest(true)
       this.$router.push({ name: 'grade'})
     }
   }
