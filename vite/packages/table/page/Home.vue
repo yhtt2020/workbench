@@ -155,6 +155,7 @@ export default {
   created () {
     this.navigationList = []
     this.startAida()
+    //this.setAgreeTest(false)
   },
   unmounted () {
     if (this.timer) {
@@ -164,6 +165,7 @@ export default {
   methods: {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
+   // ...mapActions(appStore, ['setAgreeTest']),
     addCard () {
       this.custom=true;
       this.menuVisible = false
