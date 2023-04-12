@@ -6,11 +6,13 @@
         <span style="margin-left: 0.5em;font-size: 1em;">返回</span>
       </div>
     </div>
-    <div @click="change($event,menu)" class="menu" :class="{'active':current(menu)}"
+    <vue-custom-scrollbar id="second-container" :settings="settingsScroller" style="height: 80vh">
+      <div @click="change($event,menu)" class="menu" :class="{'active':current(menu)}"
          v-for="(menu) in menus">
-     <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
-     <span style="margin-left: 0.5em;font-size: 1em;">{{ menu.title }}</span>
-    </div>
+        <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
+        <span style="margin-left: 0.5em;font-size: 1em;">{{ menu.title }}</span>
+      </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
 
@@ -34,6 +36,13 @@ export default {
     return {
       panel: {},
       activeIndex: '',
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
     }
   },
   mounted () {
@@ -70,7 +79,7 @@ export default {
   &.small{
     
   }
-  height: auto;
+  height:auto;
   border-radius: 6px;
   position: fixed;
   top: 5em;
