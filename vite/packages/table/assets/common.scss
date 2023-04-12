@@ -245,7 +245,10 @@ body.full-screen{
   position: absolute;
   top: 0;
   right: 0;
-  text-align: center;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .scroll-content::-webkit-scrollbar { width: 0 !important }
 .scroll-content { -ms-overflow-style: none; }

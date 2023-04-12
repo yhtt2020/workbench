@@ -16,7 +16,7 @@ export const appStore = defineStore('appStore', {
       myCircle: [],
       joinedCircle: []
     },
-
+    agreeTest:false,
 
     init: false, //是否已经初始化
 
@@ -56,6 +56,9 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
+    setAgreeTest(value){
+      this.agreeTest = value
+    },
     reset() {
       this.fullScreen = false
     },

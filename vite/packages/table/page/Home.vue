@@ -58,7 +58,7 @@
       </a-col>
     </a-row>
   </a-drawer>
-  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="known" >
+  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>
   </div>
 </template>
@@ -88,6 +88,7 @@ import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
+import {appStore} from "../store";
 const readAida64 = window.readAida64
 export default {
   name: 'Home',
@@ -110,7 +111,6 @@ export default {
       reserveTimer:null,
       custom:false,
       runAida64:true,
-      known:true
     }
   },
   components: {
@@ -137,8 +137,9 @@ export default {
     GradeNotice
   },
   computed: {
-    ...mapWritableState(cardStore, ['customComponents', 'clockEvent']),
-    ...mapWritableState(cardStore, ['aidaData']),
+    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData']),
+    ...mapWritableState(appStore, ['agreeTest']),
+
   },
   mounted () {
     window.onresize = () => {

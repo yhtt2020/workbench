@@ -1,10 +1,10 @@
 <template>
 <div class="flex flex-row items-center justify-center w-full h-full" >
-  <div class="w-1/2 h-52 rounded-xl flex flex-col items-center pt-6 px-4 mr-10" style="background: rgba(33, 33, 33, 1);" v-if="!setUp">
+  <div class="w-1/2 h-52 max-w-md rounded-xl flex flex-col items-center pt-6 px-4 mr-10" style="background: rgba(33, 33, 33, 1);" v-if="!setUp">
     <div class="text-white"><Icon icon="sound" style="font-size: 1.2em" class="mr-2"></Icon>内测须知</div>
     <div class="mt-4 text-xs">在开始本次内测前，请先阅读下方《想天工作台内测须知》，了解相关注意事项和使用帮助。</div>
-    <div class=" text-xs	mt-4" :class="knownTip?'animate-bounce':''"><a-checkbox v-model:checked="known" class="mr-2"></a-checkbox>
-      已阅读并同意<span @click="openAgree" class="pointer" style="color: rgba(80, 139, 254, 1);">《想天工作台内测须知》</span></div>
+    <div class=" text-xs	mt-4 pointer" @click="clickAgree"><a-checkbox v-model:checked="known" class="mr-2"></a-checkbox>
+      已阅读并同意<span @click.stop="openAgree" class="pointer" style="color: rgba(80, 139, 254, 1);">《想天工作台内测须知》</span></div>
     <div class="h-1/5 w-2/5 rounded-xl flex justify-center items-center text-white mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="next">开始</div>
   </div>
   <div class="w-1/2 h-5/12 rounded-xl flex flex-col items-center pt-6 px-4 pb-4" style="background: rgba(33, 33, 33, 1);" v-else>
@@ -21,6 +21,8 @@
 
 <script>
 import { message } from 'ant-design-vue';
+import {mapActions} from "pinia";
+import {appStore} from "../../../store";
 export default {
   name: "GradeNotice",
   data(){
@@ -32,7 +34,10 @@ export default {
     }
   },
   methods:{
-
+    ...mapActions(appStore, ['setAgreeTest']),
+    clickAgree(){
+      this.known=!this.known
+    },
     openAgree(){
       ipc.send('addTab',{url:'   https://www.yuque.com/tswork/mqon1y/hwzcb49pgegupggz'})
     },
@@ -41,6 +46,7 @@ export default {
         message.info('未勾选');
       }else{
           this.setUp=true
+        this.setAgreeTest(true)
       }
     },
     goGrade(){

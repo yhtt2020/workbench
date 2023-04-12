@@ -106,7 +106,8 @@ export default {
     // },3000)
 
 
-
+    window.powerGrade = this.userInfo.onlineGradeExtra
+    window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
     if(!this.settings.zoomFactor){
       this.settings.zoomFactor=100
     }
@@ -134,7 +135,6 @@ export default {
     this.reset()//重置部分状态
     this.sortClock()
     window.updateMusicStatusHandler = this.updateMusic;
-    window.restore = () => {this.settings.zoomFactor = 100, window.location.reload()}
 
     this.bindTouchEvents();
     this.reloadAll(); //刷新全部天气
