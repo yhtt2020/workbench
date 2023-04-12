@@ -12,7 +12,7 @@
         </div>
         <div class="h-2/3 w-full rounded-xl flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
           <div>1. 保持在线状态即可升级</div>
-          <div>2. 目前有「6」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
+          <div>2. 目前有「{{leveList.length}}」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
           <div>3. 「组队升级功能」开发中～</div>
         </div>
       </div>
@@ -22,22 +22,17 @@
       <div class="flex flex-row">
       <div class="mt-6 mr-4" style="width: 160px">
           <a-steps direction="vertical" :current="abilityGrade" ref="step" :progressDot="true">
-            <a-step title="Lv 1" description="null" class="text-black"  @click="clickStep(0)"></a-step>
-            <a-step title="Lv 2" description="null" @click="clickStep(1)"/>
-            <a-step title="Lv 3" description="null"  @click="clickStep(2)"/>
-            <a-step title="Lv 4" description="null"  @click="clickStep(3)"/>
-            <a-step title="Lv 5" description="null"  @click="clickStep(4)"/>
-            <a-step title="Lv 10" description="null" @click="clickStep(5)"/>
+            <a-step :title="'Lv ' + item" description="null" @click="clickStep(index)" v-for="(item,index) in leveList"/>
           </a-steps>
       </div>
       <div class="flex flex-wrap justify-between  bottom-card w-full">
-        <div v-for="item in abilityList" class="rounded-xl h-1/6  mt-2 flex flex-row items-center p-2 relative" style="width: calc(50% - 8px);" :style="item.state?'background: rgba(42, 42, 42, 1)':'background: rgba(42, 42, 42, 1);opacity: 0.6;'">
+        <div  v-for="item in powerList" class="rounded-xl h-1/6  mt-2 flex flex-row items-center p-2 relative" style="width: calc(50% - 8px);" :style="item.state?'background: rgba(42, 42, 42, 1)':'background: rgba(42, 42, 42, 1);opacity: 0.6;'">
           <Icon :icon="item.icon" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>
           <div style="width: calc(100% - 50px)">
             <div class="text-white text-more w-full">{{item.name}}</div>
-            <div v-if="item.detail" class=" text-more w-full">{{item.detail}}</div>
+            <div v-if="item.detail" class=" text-more w-full">{{item.detail[[leveList[clickGrade]]]}}</div>
           </div>
-          <div  class="grade-tip" style="color: rgba(255, 255, 255, 0.85);" v-if="item.name==='自定义侧边导航'||item.name==='主页面壁纸'">即将上线</div>
+          <div  class="grade-tip" style="color: rgba(255, 255, 255, 0.85);" v-if="!item.detail">即将上线</div>
         </div>
       </div>
     </div>
@@ -51,7 +46,7 @@
       </div>
       <div class="h-2/3 w-full rounded-xl flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
         <div>1. 保持在线状态即可升级</div>
-        <div>2. 目前有「6」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
+        <div>2. 目前有「{{leveList.length}}」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
         <div>3. 「组队升级功能」开发中～</div>
       </div>
     </div>
@@ -60,15 +55,17 @@
 
 <script>
 import GradePanel from '../../components/comp/GradePanel.vue'
-import abilityData from '../../js/data/abilityData'
+import {leveList,powerList} from '../../js/data/abilityData'
 import {mapActions, mapState} from "pinia";
 import {appStore} from "../../store";
+import {appData} from "../../app";
 export default {
   name: "Grade",
   components: {GradePanel},
   data(){
     return{
-      abilityData,
+      leveList,
+      powerList,
       clickGrade:0,
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -84,18 +81,18 @@ export default {
   computed:{
     ...mapState(appStore, ['userInfo']),
     abilityList(){
-      return this.abilityData[this.clickGrade]
+      return this.powerList[this.leveList[this.clickGrade]]
     },
     abilityGrade(){
       return this.grade.lv>5&&this.grade.lv<10?4:this.grade.lv>10?5:this.grade.lv-1
     }
   },
   mounted () {
-    this.getUserInfo()
     this.grade = this.userInfo.onlineGradeExtra
+    this.clickStep(this.abilityGrade)
+     console.log(powerGrade)
   },
   methods:{
-    ...mapActions(appStore, ['getUserInfo']),
     openGradeTip(){
         this.tipFlag = true
     },

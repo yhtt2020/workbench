@@ -69,6 +69,7 @@ export default {
     };
   },
   async mounted() {
+     window.powerGrade = this.userInfo.onlineGradeExtra
     window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
     if(!this.settings.zoomFactor){
       this.settings.zoomFactor=100

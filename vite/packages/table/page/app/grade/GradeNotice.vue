@@ -21,6 +21,7 @@
 
 <script>
 import { message } from 'ant-design-vue';
+import {appData} from "../../../app";
 export default {
   name: "GradeNotice",
   data(){
@@ -30,6 +31,9 @@ export default {
       //abilityList:abilityData.splice(0,8),
       setUp:false
     }
+  },
+  mounted() {
+    console.log(appData.getData())
   },
   methods:{
 
