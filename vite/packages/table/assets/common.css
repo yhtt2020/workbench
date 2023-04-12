@@ -446,6 +446,16 @@ body {
     opacity: 0; }
   100% {
     opacity: 1; } }
+.grade-tip {
+  width: 64px;
+  height: 24px;
+  border-radius: 0px 12px 0px 12px;
+  background: #faad14;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center; }
+
 .scroll-content::-webkit-scrollbar {
   width: 0 !important; }
 
