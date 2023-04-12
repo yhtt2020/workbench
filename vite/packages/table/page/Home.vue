@@ -61,6 +61,9 @@
       </a-col>
     </a-row>
   </a-drawer>
+  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="known" >
+    <GradeNotice></GradeNotice>
+  </div>
 </template>
 <script>
 import Weather from '../components/homeWidgets/Weather.vue'
@@ -86,6 +89,7 @@ import InternalList from '../components/homeWidgets/supervisory/InternalList.vue
 import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue'
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
 import AddCard from "./app/card/AddCard.vue";
+import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
 const readAida64 = window.readAida64
 export default {
@@ -109,6 +113,7 @@ export default {
       reserveTimer:null,
       custom:false,
       runAida64:true,
+      known:true
     }
   },
   components: {
@@ -131,7 +136,8 @@ export default {
     InternalList,
     SmallCPUCard,
     SmallGPUCard,
-    AddCard
+    AddCard,
+    GradeNotice
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent']),
