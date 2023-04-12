@@ -82,32 +82,32 @@ class TableManager {
       let webContents=tableWin.window.webContents
       let migrated=settings.get('migratedTable')
       const tempjson=path.join(app.getPath('userData'),'temp.json')
-      if(migrated===undefined){
-        if(!fs.existsSync(tempjson)){
-          //从未迁移过
-          webContents.on('dom-ready',()=>{
-            webContents.executeJavaScript('JSON.stringify(localStorage)').then(rs=>{
-              require('fs').writeFileSync(tempjson,rs);
-              new Notification({
-                title:'数据迁移',
-                body :'由于版本数据兼容问题，正在为您迁移数据，期间会导致工作台重载和刷新，完成后我们会再次通知您。请稍等。'
-              }).show()
-              //todo 迁移到新的下面
-              this.close()
-              setTimeout(()=>{
-                this.init()
-              },3000)
-            })
-          })
-          tableWin.window.webContents.loadURL(render.getUrl('table.html'))
-        }else{
-          tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
-          settings.set('migratedTable',true)
-        }
-      }else{
-        tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
-      }
-
+      // if(migrated===undefined){
+      //   if(!fs.existsSync(tempjson)){
+      //     //从未迁移过
+      //     webContents.on('dom-ready',()=>{
+      //       webContents.executeJavaScript('JSON.stringify(localStorage)').then(rs=>{
+      //         require('fs').writeFileSync(tempjson,rs);
+      //         new Notification({
+      //           title:'数据迁移',
+      //           body :'由于版本数据兼容问题，正在为您迁移数据，期间会导致工作台重载和刷新，完成后我们会再次通知您。请稍等。'
+      //         }).show()
+      //         //todo 迁移到新的下面
+      //         this.close()
+      //         setTimeout(()=>{
+      //           this.init()
+      //         },3000)
+      //       })
+      //     })
+      //     tableWin.window.webContents.loadURL(render.getUrl('table.html'))
+      //   }else{
+      //     tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
+      //     settings.set('migratedTable',true)
+      //   }
+      // }else{
+      //   tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
+      // }
+      tableWin.window.webContents.loadURL(render.getUrl('table.html',{}))
 
 
 
