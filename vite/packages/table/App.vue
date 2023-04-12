@@ -71,10 +71,6 @@ export default {
       dialogVisible: false,
     };
   },
-  beforeCreate() {
-    appStore()
-    codeStore()
-  },
   async mounted() {
 
    //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
