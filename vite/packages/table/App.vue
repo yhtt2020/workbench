@@ -133,7 +133,6 @@ export default {
     document.body.classList.add('lg')
     this.reset()//重置部分状态
     this.sortClock()
-    // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic;
     window.restore = () => {this.settings.zoomFactor = 100, window.location.reload()}
 
@@ -190,13 +189,6 @@ export default {
       this.setMusic(music);
     },
     ...mapActions(cardStore, ["removeClock"]),
-    // async getUserInfo() {
-    //   let rs = await tsbApi.user.get()
-    //   if (rs.status === 1) {
-    //     console.log(rs.data.user_info)
-    //     this.userInfo=rs.data.user_info
-    //   }
-    // }
     handleOk() {
       this.visible = false;
       this.removeClock(0);

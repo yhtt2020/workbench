@@ -1,5 +1,5 @@
 <template>
-  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;"
+  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;" class="no-drag"
        v-if="launching">
     <div style="margin: auto;">
       <div class="animate-bounce mb-5 ">
@@ -22,7 +22,9 @@
   <div v-else style="background: #333;width: 100vw;height: 100vw;" class="p-10 drag">
     <div class="no-drag" style="width: 600px;margin: auto">
       <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台抢鲜体验</h3>
-      <p>目前我们尚未完全面向大众开放，必须使用邀请码方可体验产品。<a-button @click="()=>{this.showTip=!this.showTip}">什么是抢鲜体验？</a-button></p>
+      <p>目前我们尚未完全面向大众开放，必须使用邀请码方可体验产品。
+        <a-button @click="()=>{this.showTip=!this.showTip}">什么是抢鲜体验？</a-button>
+      </p>
       <div v-if="showTip" class="p-5 mb-3" style="background: #3b3b3b;border-radius: 8px;border-width: 2px">
         <p style="font-weight: bold">
           EA阶段说明：
@@ -60,8 +62,10 @@
           </a-row>
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
-          <div class="mt-3 mb-3">抱歉，您暂时还不具备抢鲜体验资格。您可输入激活码激活账号。</div>
-          <p v-if="myCode">当前正在使用的激活码：{{myCode}} <a-button @click="code=myCode" class="ml-3">填入</a-button></p>
+          <div class="mt-3 mb-3 text-red-500">抱歉，您暂时还不具备抢鲜体验资格。您可输入激活码激活账号。</div>
+          <p v-if="myCode">检测到您已使用过激活码：{{ myCode }}，可直接填入发车
+            <a-button @click="code=myCode" class="ml-3">填入</a-button>
+          </p>
           <p>
             <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>
           </p>
@@ -81,22 +85,21 @@ import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { codeStore } from '../store/code'
-import {cardStore} from '../store/card'
-import {deckStore} from '../store/deck'
-import {paperStore} from '../store/paper'
-import {weatherStore} from '../store/weather'
-
+import { cardStore } from '../store/card'
+import { deckStore } from '../store/deck'
+import { paperStore } from '../store/paper'
+import { weatherStore } from '../store/weather'
 
 export default {
   name: 'Code',
   data () {
     return {
-      showTip:false,
+      showTip: false,
       loading: false,
       code: '',
       launching: true,
-      storeReadyTimer:null,
-      launched:false
+      storeReadyTimer: null,
+      launched: false
     }
   },
   async mounted () {
@@ -109,59 +112,78 @@ export default {
      *   paper:false,
      */
     //window.loadedStore={}//启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
-    this.initStore(appStore,'appStore')
-    this.initStore(codeStore,'code')
-    this.initStore(cardStore,'cardStore')
-    this.initStore(weatherStore,'weather')
-    this.initStore(paperStore,'paper')
-    this.initStore(deckStore,'deck')
-    window.loadedStore['userInfo']=false
+    this.initStore(appStore, 'appStore')
+    this.initStore(codeStore, 'code')
+    this.initStore(cardStore, 'cardStore')
+    this.initStore(weatherStore, 'weather')
+    this.initStore(paperStore, 'paper')
+    this.initStore(deckStore, 'deck')
+    window.loadedStore['userInfo'] = false
+    ipc.removeAllListeners('userInfo')
     ipc.on('userInfo', (event, args) => {
-      this.tipped=false
+      console.log('获取到userInfo，并进行数据填充和提示')
+      this.tipped = false
       this.loading = false
+      const userInfo = args.data
 
       let lvInfo = this.lvInfo
-      lvInfo.lv = args.data.onlineGradeExtra.lv
+      lvInfo.lv = userInfo.onlineGradeExtra.lv
       let current = this.gradeTableGenerate(64)[lvInfo.lv]
       let section = this.gradeTableGenerate(64)[lvInfo.lv + 1]
-      let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
+      let remain = section[0] * 60 - (userInfo.onlineGradeExtra.minutes)
       lvInfo.remainHour = Math.floor(remain / 60)
       lvInfo.remainMinute = remain - (Math.floor(remain / 60) * 60)
-      lvInfo.minute = args.data.onlineGradeExtra.minutes
+      lvInfo.minute = userInfo.onlineGradeExtra.minutes
       lvInfo.percentage = ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) * 100
       //this.lvInfo = lvInfo
-      window.loadedStore['userInfo']=true
-
-      this.setUser(args.data)
+      window.loadedStore['userInfo'] = true
+      this.setUser(userInfo)
+      if (this.$route.name === 'splash') {
+        this.verify(userInfo.uid).then(rs => {
+          if (rs) {
+            Modal.success({
+              content: '您的账号具备EA资格，点击确定即可发车。',
+              centered:true,
+              onOk: () => {
+                this.$router.replace({
+                  name: 'home'
+                })
+              }
+            })
+          } else {
+            Modal.error({
+              content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+              centered:true,
+              onOk: () => {}
+            })
+          }
+        })
+      }
     })
-    ipc.send('getDetailUserInfo')
 
-    console.log(window.loadedStore,'已经初始化检测数组')
-    this.storeReadyTimer=setInterval(()=>{
-      console.log(1)
-      if(!this.launching){
+
+    console.log(window.loadedStore, '已经初始化检测数组')
+    this.storeReadyTimer = setInterval(() => {
+      if (!this.launching) {
         console.log('已经没在运行了')
         return
       }
-      console.log(2)
-      if(Object.keys(window.loadedStore).some(key=>{
-        let check=!window.loadedStore[key]
-        console.log(check,key)
+      if (Object.keys(window.loadedStore).some(key => {
+        let check = !window.loadedStore[key]
+        console.log(check, key)
         return check
-      })){
+      })) {
         //未全部搞定
         return
-      }else{
+      } else {
         console.log('检测到已经全部载入完成')
         //已经全部搞定
         clearInterval(this.storeReadyTimer)
-
         this.afterLaunch()
       }
-    },1000)
+    }, 1000)
 
     this.getUserInfo()
-
 
     if (location.href.startsWith('tsbapp://./')) {
       //新版本直接设置为已合并
@@ -171,34 +193,32 @@ export default {
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init','lvInfo']),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo']),
   },
   methods: {
-
-    initStore(store,name){
-      if(!window.loadedStore){
-        window.loadedStore={}
+    initStore (store, name) {
+      if (!window.loadedStore) {
+        window.loadedStore = {}
       }
-      if(typeof window.loadedStore[name]==='undefined'){
-        window.loadedStore[name]=false
+      if (typeof window.loadedStore[name] === 'undefined') {
+        window.loadedStore[name] = false
       }
       store()
     },
-    ...mapActions(codeStore, ['active', 'getSerialHash','verify']),
-    ...mapActions(appStore,['getUserInfo','setUser']),
+    ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser']),
     afterLaunch () {
       if (this.settings.darkMod) {
-        document.body.style.background = "#191919";
+        document.body.style.background = '#191919'
       }
-      console.log(this.userInfo)
       this.verify(this.userInfo.uid).then(rs => {
-
+        //只要提供了uid，就能基于uid验证
         if (!rs) {
           console.log('验证码无效')
-          this.launching=false
+          this.launching = false
           return
-        }else{
-          this.$router.replace({path:'/index/'})
+        } else {
+          this.$router.replace({ path: '/index/' })
         }
       })
 
@@ -215,10 +235,7 @@ export default {
         message.error('激活码长度错误')
         return
       }
-
-      console.log(hash)
-      this.active(this.code, hash,this.userInfo.uid).then(rs => {
-        console.log(rs)
+      this.active(this.code, hash, this.userInfo.uid).then(rs => {
         this.loading = false
         if (rs.code !== 1000) {
           message.error('激活码无效，请重试')
@@ -264,13 +281,15 @@ export default {
     },
     login () {
       tsbApi.user.login((data) => {
-        ipc.send('getDetailUserInfo')
+        this.getUserInfo()
       })
     },
   }
 }
 </script>
 
-<style scoped>
-
+<style >
+.ant-modal-body{
+  -webkit-app-region:no-drag;
+}
 </style>
