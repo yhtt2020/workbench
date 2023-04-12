@@ -27,13 +27,17 @@ export const powerList = [
       2:'同时监控3个',3:'同时监控3个',4:'同时监控3个',5:'同时监控5个',10:'不限制'}
     },
     {icon:'appstore',name:'自定义底部导航',detail:{
-      3:'',4:'',5:'',10:''}
+      3:' ',4:' ',5:' ',10:' '}
     },
-    {icon:'pause',name:'自定义侧边导航'},
+    {icon:'pause',name:'自定义侧边导航',detail:{
+      4:' ',5:' ',10:' '
+    },noOnline:true},
     {icon:'comment',name:'关闭聊天',detail:{
-      5:'',10:''}
+      5:' ',10:' '}
     },
-    {icon:'desktop',name:'主页面壁纸'},
+    {icon:'desktop',name:'主页面壁纸',detail:{
+      10:' '
+    },noOnline:true}
   ]
 
 
