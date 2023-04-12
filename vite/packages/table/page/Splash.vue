@@ -62,7 +62,7 @@
           </a-row>
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
-          <div class="mt-3 mb-3 text-red-500">抱歉，您暂时还不具备抢鲜体验资格。您可输入激活码激活账号。</div>
+          <div class="mt-3 mb-3">请输入激活码激活账号。</div>
           <p v-if="myCode">检测到您已使用过激活码：{{ myCode }}，可直接填入发车
             <a-button @click="code=myCode" class="ml-3">填入</a-button>
           </p>
@@ -99,7 +99,8 @@ export default {
       code: '',
       launching: true,
       storeReadyTimer: null,
-      launched: false
+      launched: false,
+      modal: null
     }
   },
   async mounted () {
@@ -120,10 +121,14 @@ export default {
     this.initStore(deckStore, 'deck')
     window.loadedStore['userInfo'] = false
     ipc.removeAllListeners('userInfo')
-    ipc.on('userInfo', (event, args) => {
+    ipc.on('userInfo', async (event, args) => {
       console.log('获取到userInfo，并进行数据填充和提示')
       this.tipped = false
       this.loading = false
+      if (args.data.uid <= 0) {
+        window.loadedStore['userInfo'] = true
+        return
+      }
       const userInfo = args.data
 
       let lvInfo = this.lvInfo
@@ -138,31 +143,28 @@ export default {
       //this.lvInfo = lvInfo
       window.loadedStore['userInfo'] = true
       if (this.$route.name === 'splash') {
-        this.verify(userInfo.uid).then(rs => {
-          if (rs) {
-            if(userInfo.uid!==this.userInfo.uid){
-              Modal.success({
-                content: '您的账号具备EA资格，点击确定即可发车。',
-                centered:true,
-                onOk: () => {
-                  this.$router.replace({
-                    name: 'home'
-                  })
-                }
-              })
-            }
-          } else {
-            Modal.error({
-              content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
-              centered:true,
-              onOk: () => {}
-            })
-          }
-        })
+        let rs = await this.verify(userInfo.uid)
+        if (rs) {
+          // Modal.success({
+          //   content: '您的账号具备EA资格，点击确定即可发车。',
+          //   centered:true,
+          //   onOk: () => {
+          //     this.$router.replace({
+          //       name: 'home'
+          //     })
+          //   }
+          // })
+          this.$router.replace({ path: '/index/' })
+        } else {
+          Modal.error({
+            content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+            centered: true,
+            onOk: () => {}
+          })
+        }
       }
       this.setUser(userInfo)
     })
-
 
     console.log(window.loadedStore, '已经初始化检测数组')
     this.storeReadyTimer = setInterval(() => {
@@ -245,10 +247,10 @@ export default {
         } else {
           this.myCode = this.code
           let timer = setTimeout(() => {
+            this.modal.destroy()
             this.$router.replace({ path: '/wizard' })
-
           }, 10000)
-          Modal.success({
+          this.modal = Modal.success({
             centered: true,
             content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
@@ -290,8 +292,8 @@ export default {
 }
 </script>
 
-<style >
-.ant-modal-body{
-  -webkit-app-region:no-drag;
+<style>
+.ant-modal-body {
+  -webkit-app-region: no-drag;
 }
 </style>

@@ -20,6 +20,7 @@ const dbStorage: Storage = {
     await storageModel.setItem(key, value, getSign())
   },
   async getItem(key: string): string | null | Promise<string> {
+    console.log('尝试取',key)
     let value = await storageModel.getItem(key, getSign())
     if (!value) {
       try{
@@ -32,6 +33,7 @@ const dbStorage: Storage = {
       window.loadedStore={}
     }
     window.loadedStore[key]=true
+    console.log('设置了',key)
     return value
   }
 }
