@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex">
+  <div style="display: flex;height: 100%">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg"
                  @change-tab="changeTab"></SecondPanel>
     <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
