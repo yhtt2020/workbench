@@ -116,25 +116,27 @@ export default {
     this.bindUserInfoResponse()
 
     console.log(window.loadedStore, '已经初始化检测数组')
-    this.storeReadyTimer = setInterval(() => {
-      if (!this.launching) {
-        console.log('已经没在运行了')
-        return
-      }
-      if (Object.keys(window.loadedStore).some(key => {
-        let check = !window.loadedStore[key]
-        console.log(check, key)
-        return check
-      })) {
-        //未全部搞定
-        return
-      } else {
-        console.log('检测到已经全部载入完成')
-        //已经全部搞定
-        clearInterval(this.storeReadyTimer)
-        this.afterLaunch().then()
-      }
-    }, 1000)
+    setTimeout(()=>{
+      this.storeReadyTimer = setInterval(() => {
+        if (!this.launching) {
+          console.log('已经没在运行了')
+          return
+        }
+        if (Object.keys(window.loadedStore).some(key => {
+          let check = !window.loadedStore[key]
+          console.log(check, key)
+          return check
+        })) {
+          //未全部搞定
+          return
+        } else {
+          console.log('检测到已经全部载入完成')
+          //已经全部搞定
+          clearInterval(this.storeReadyTimer)
+          this.afterLaunch().then()
+        }
+      }, 1000)
+    },2000)
 
     this.getUserInfo()
 
@@ -170,7 +172,7 @@ export default {
         if (this.$route.name === 'splash') {
           let rs = await this.verify(userInfo.uid)
           if (rs) {
-            this.$router.replace({ name:'home' })
+            //this.$router.replace({ name:'home' })
           } else {
             Modal.error({
               content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
