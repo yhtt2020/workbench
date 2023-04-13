@@ -1,7 +1,7 @@
 <template>
   <HomeComponentSlot :options="options" :customIndex="customIndex">
      <div style="margin-top: 1em;">
-       <div class="flex w-full" style="margin-top: 0.3em;" v-for="item in gameList">
+       <div class="flex w-full cursor-pointer" style="margin-top: 0.3em;" v-for="item in gameList">
           <div class="w-1/3 h-20" style="margin-right:10px;">
             <img :src="item.image" alt="" class="rounded-lg" style="width: 100%; height:100%;object-fit: cover;">
           </div>
