@@ -104,14 +104,6 @@ export default {
     }
   },
   async mounted () {
-    /**
-     *   store:false,
-     *   code:false,
-     *   cardStore:false,
-     *   weather:false,
-     *   deck:false,
-     *   paper:false,
-     */
     //window.loadedStore={}//启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     this.initStore(appStore, 'appStore')
     this.initStore(codeStore, 'code')
@@ -183,7 +175,7 @@ export default {
         console.log('检测到已经全部载入完成')
         //已经全部搞定
         clearInterval(this.storeReadyTimer)
-        this.afterLaunch()
+        this.afterLaunch().then()
       }
     }, 1000)
 
@@ -211,7 +203,11 @@ export default {
     },
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
     ...mapActions(appStore, ['getUserInfo', 'setUser']),
-    afterLaunch () {
+    async afterLaunch () {
+      if (!this.settings.zoomFactor) {
+        this.settings.zoomFactor = 100
+      }
+      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
         document.body.style.background = '#191919'
       }

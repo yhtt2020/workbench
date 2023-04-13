@@ -108,10 +108,8 @@ export default {
 
     window.powerGrade = this.userInfo.onlineGradeExtra
     window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
-    if(!this.settings.zoomFactor){
-      this.settings.zoomFactor=100
-    }
-    await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)//根据设置进行缩放比的强制调整
+
+
     ipc.on('updateRunningApps', async (event, args) => {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}
