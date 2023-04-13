@@ -18,11 +18,20 @@
     <!--            </lightgallery>-->
     <div data-fit="cover" class="spotlight-group" data-control="autofit,page,fullscreen,close,zoom" data-play="true"
          data-autoslide="true" data-infinite="true" id="container">
-      <a class="spotlight " v-for="img  in bingImages" :data-lg-size='img.lgSize' :href="img.src">
-        <img :src="img.src" data-animation="my-rotate"/>
-      </a>
+      <template v-for="dayImages  in bingImages">
+        <div>{{dayImages.day}}</div>
+        <a class="spotlight " v-for="img in dayImages.images" :data-lg-size='img.lgSize' :href="img.src">
+          <img :src="img.src" data-animation="my-rotate"/>
+        </a>
+      </template>
+
     </div>
-   <PaperList :list="bingImages"></PaperList>
+
+    <template v-for="dayImages  in bingImages">
+      <div style="text-align: left;font-size: 20px;font-weight: bold;" class="mt-3 mb-3 text-white"> - 第 {{dayImages.day}} 天 -</div>
+      <PaperList :list="dayImages.images"></PaperList>
+    </template>
+
   </vue-custom-scrollbar>
 </template>
 
@@ -69,23 +78,27 @@ export default {
     })
     $('#containerWrapper').scroll(() => {
       if ($('#containerWrapper').scrollTop() +$('#containerWrapper').height()+20>= $('#bingImages').prop('scrollHeight') && this.isLoading===false) {
-        this.page=this.page+1
-        this.getBingWallPaper( this.page)
+        this.getBingWallPaper( this.page++)
       }
     })
 
-    this.getBingWallPaper(this.page++)
-    this.getBingWallPaper(this.page++)
+    this.getBingWallPaper(this.page++,()=>{
+      this.getBingWallPaper(this.page++).then()
+    })
 
   },
   methods: {
     ...mapActions(paperStore,['addToMyPaper']),
 
-    getBingWallPaper (page) {
+    getBingWallPaper (page,cb) {
+      if(page>7){
+        return
+      }
       this.isLoading=true
       let url=`https://cn.bing.com/HPImageArchive.aspx?format=js&idx=${page}&n=8`
       let imagesResult = axios.get(url).then((imagesResult) => {
         if (imagesResult.status === 200) {
+          let dayImages=[]
           let images = imagesResult.data.images
           //let animations = ['a-fadeout','a-fadeoutT', 'a-fadeoutR', 'a-fadeoutB', 'a-fadeoutL','a-rotateoutLT', 'a-rotateoutLB', 'a-rotateoutRT', 'a-rotateoutRB', 'a-flipout', 'a-flipoutX', 'a-flipoutY']
           let animations = ['ani-gray', 'bowen', 'ani-rotate']
@@ -99,10 +112,16 @@ export default {
                   path: 'https://cn.bing.com' + img.url,
                   animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
                 }
-              this.bingImages.push(image)
+               dayImages.push(image)
               })
+            this.bingImages.push({
+              day:page,
+              images:dayImages
+            })
             this.$nextTick(()=>{
+
               this.isLoading=false
+              if(cb) cb()
               // setTimeout(()=>{
               //
               // },500)
