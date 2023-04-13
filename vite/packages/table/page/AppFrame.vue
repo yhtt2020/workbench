@@ -56,10 +56,10 @@
       </a-row>
     </div>
     <div v-if="fullScreen" id="frame" :style="{background:app.theme||'#424242'}" style="width: 100%;flex: 1;">
-      &nbsp;dd
+
     </div>
     <div v-else id="frame" :style="{background:app.theme||'#424242'}"  style="width: 100%;flex: 1;">
-      &nbsp;ddd22
+      &nbsp;
     </div>
   </div>
 

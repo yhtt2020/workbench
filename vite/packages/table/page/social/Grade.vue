@@ -1,6 +1,6 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 13em);padding: 15px;">
+                      style="height: 100%;padding: 15px;">
   <div class="w-full h-full flex justify-center flex-row flex-wrap" >
     <div class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
       <div class="w-full  pt-4 pb-4 grade-card  rounded-xl  mb-4" >

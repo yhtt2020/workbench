@@ -1,6 +1,6 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 35px);padding: 15px;white-space: nowrap">
+                      style="padding: 15px;white-space: nowrap">
 
 
 
