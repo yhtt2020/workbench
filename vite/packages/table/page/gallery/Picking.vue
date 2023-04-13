@@ -21,25 +21,27 @@
        </div>
   </div>
 </div>
-
-<vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
-  <viewer :images="pickImageData" :options="options" >
-    <div  style="display: flex; align-items: center; justify-content: center;">
-      <a-spin  v-if="isLoading" />
-    </div>
-    <a-row :gutter="[20,20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
-      <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
-         <img  @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
-         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-          <div @click.stop="addToMy(img)"  class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
-            <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
-            <Icon v-else style="" icon="yiwancheng"></Icon>
+<div style="flex-shrink: 1;flex-grow: 1;flex-basis: fit-content;height: 0">
+  <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 100%">
+    <viewer :images="pickImageData" :options="options" >
+      <div  style="display: flex; align-items: center; justify-content: center;">
+        <a-spin  v-if="isLoading" />
+      </div>
+      <a-row :gutter="[20,20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
+        <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
+          <img  @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+            <div @click.stop="addToMy(img)"  class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+              <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+              <Icon v-else style="" icon="yiwancheng"></Icon>
+            </div>
           </div>
-        </div>
-      </a-col>
-    </a-row>
-  </viewer>
-</vue-custom-scrollbar>
+        </a-col>
+      </a-row>
+    </viewer>
+  </vue-custom-scrollbar>
+</div>
+
 
 <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag" @close="closeFilter()">
   <div class="w-full h-12  flex rounded-lg" style="border:1px solid rgba(255, 255, 255, 0.1);margin-bottom:1.714289em;">
@@ -218,7 +220,7 @@ export default defineComponent({
           }else{
             return
           }
-        })  
+        })
       }
     },
     // 获取拾光壁纸分类
@@ -255,7 +257,7 @@ export default defineComponent({
      m = m < 10 ? ('0' + m) : m;
      var d = date.getDate();
      d = d < 10 ? ('0' + d) : d;
-     return y+m+d 
+     return y+m+d
     },
     addToMy(img){
      this.removeToMyPaper(img);
@@ -272,7 +274,7 @@ export default defineComponent({
      this.currentPaper = item
      this.visibleMenu = true
     },
-    
+
     // 下载壁纸
     add(){},
 
@@ -315,7 +317,7 @@ export default defineComponent({
           value:'random'
         }
     ])
-    let filterIndex = ref('D') 
+    let filterIndex = ref('D')
     let filterValue = ref('date')
     let wallValue = ref('general')
 

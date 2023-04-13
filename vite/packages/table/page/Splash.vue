@@ -170,7 +170,7 @@ export default {
         if (this.$route.name === 'splash') {
           let rs = await this.verify(userInfo.uid)
           if (rs) {
-            this.$router.replace({ path: '/index/' })
+            this.$router.replace({ name:'home' })
           } else {
             Modal.error({
               content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
@@ -208,7 +208,7 @@ export default {
           this.launching = false
           return
         } else {
-          this.$router.replace({ path: '/index/' })
+          this.$router.replace({ name: 'home' })
         }
       })
 
@@ -234,14 +234,14 @@ export default {
           this.myCode = this.code
           let timer = setTimeout(() => {
             this.modal.destroy()
-            this.$router.replace({ path: '/wizard' })
+            this.$router.replace({ name:'wizard' })
           }, 10000)
           this.modal = Modal.success({
             centered: true,
             content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
               clearTimeout(timer)
-              this.$router.replace({ path: '/wizard' })
+              this.$router.replace({ name:'wizard'  })
             },
             okText: '发车'
           })

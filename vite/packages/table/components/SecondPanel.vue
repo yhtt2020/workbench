@@ -77,12 +77,10 @@ export default {
 <style scoped lang="scss">
 .second-panel {
   &.small{
-    
+
   }
   height:auto;
   border-radius: 6px;
-  position: fixed;
-  top: 5em;
 
   .menu {
     &:hover {
@@ -114,7 +112,7 @@ export default {
   margin-bottom: 0.5em;
   &:hover {
     background: #696969;
-  } 
+  }
 }
 
 </style>

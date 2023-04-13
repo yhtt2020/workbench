@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 1em">
+  <div style="padding: 1em;width: 100%">
     <div class="music-player-wrapper" style="text-align: center;display: flex;align-items: center;height: calc(100vh - 11em );width: 100%">
       <a-row :gutter="[20]" style="width:100%">
         <a-col :span="showPrompt?12:24"  style="display: flex;align-items: center;justify-content: center">
