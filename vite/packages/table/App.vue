@@ -72,42 +72,12 @@ export default {
     };
   },
   async mounted() {
-
-   //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
-   //  if (!this.init) {
-   //    console.log(this.init)
-   //    this.$router.push('/wizard')
-   //    return
-   //  }
-    //
-    // setTimeout(()=>{
-    //
-    //
-    //
-    // },3000)
-    //还原数据
-    // setTimeout(()=>{
-    //   let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
-    //   if(require('fs').existsSync(recoverPath)){
-    //     let json= require('fs').readFileSync(recoverPath,'utf-8')
-    //     let j=JSON.parse(json)
-    //     Object.keys(j).forEach(key=>{
-    //       localStorage.setItem(key,j[key])
-    //     })
-    //     require('fs').rmSync(recoverPath)
-    //     localStorage.setItem('tipInfo','1')
-    //     location.reload()
-    //     console.log('检测到存在待回复的json文件')
-    //   }
-    //   if(localStorage.getItem('tipInfo')){
-    //     localStorage.removeItem('tipInfo')
-    //     Modal.info({content:'已为您迁移数据，目前可正常使用。'})
-    //   }
-    // },3000)
-
-
+    //注意：此处mounted方法早于启动页，所以不能放置数据读取的操作，此类操作可能导致数据还未加载就被访问。
     window.powerGrade = this.userInfo.onlineGradeExtra
-    window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
+    window.restore=()=>{
+      this.settings.zoomFactor=100
+      window.location.reload()
+    }
 
 
     ipc.on('updateRunningApps', async (event, args) => {
@@ -124,10 +94,6 @@ export default {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
-
-
-
-
 
     document.body.classList.add('lg')
     this.reset()//重置部分状态
