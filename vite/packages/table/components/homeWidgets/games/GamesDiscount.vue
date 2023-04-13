@@ -75,23 +75,23 @@ export default {
         })
       }).catch(err=>{
         console.log(err);
-        // if(err){
-        //   // 解决接口请求超时问题
-        //   getRequestWithRetry('featured',4,1000).then(res=>{
-        //     const data = res.data.featured_win
-        //     let indexArr = []
-        //     while(indexArr.length < 4){
-        //      let index = Math.floor(Math.random() * data.length)
-        //      if(indexArr.indexOf(index) === -1){
-        //       indexArr.push(index)
-        //       this.resArr.push(data[index])
-        //      }
-        //     }
-        //     this.resArr.forEach(el=>{
-        //       this.getAppList(el)
-        //     })
-        //   })
-        // }
+        if(err){
+          // 解决接口请求超时问题
+          getRequestWithRetry('featured',4,1000).then(res=>{
+            const data = res.data.featured_win
+            let indexArr = []
+            while(indexArr.length < 4){
+             let index = Math.floor(Math.random() * data.length)
+             if(indexArr.indexOf(index) === -1){
+              indexArr.push(index)
+              this.resArr.push(data[index])
+             }
+            }
+            this.resArr.forEach(el=>{
+              this.getAppList(el)
+            })
+          })
+        }
       })
     },
     getAppList(el){
@@ -113,21 +113,21 @@ export default {
          }
       }).catch(err=>{
         console.log(err);
-        // if (err) {
-        //   getRequestWithRetry(`appdetails/?appids=${el.id}`,4,1000).then(res=>{
-        //     console.log(res);
-        //     const appArr = {
-        //      id:el.id,
-        //      image:el.header_image,
-        //      name:el.name,
-        //      genres:res.data[el.id].data.genres,
-        //      initial_price:res.data[el.id].data.price_overview.initial_formatted.replace('￥',''),
-        //      final_price:res.data[el.id].data.price_overview.final_formatted.replace('￥',''),
-        //      address:res.data[el.id].data.price_overview.currency
-        //     }
-        //     this.gameList.push(appArr)
-        //   })
-        // }
+        if (err) {
+          getRequestWithRetry(`appdetails/?appids=${el.id}`,4,1000).then(res=>{
+            console.log(res);
+            const appArr = {
+             id:el.id,
+             image:el.header_image,
+             name:el.name,
+             genres:res.data[el.id].data.genres,
+             initial_price:res.data[el.id].data.price_overview.initial_formatted.replace('￥',''),
+             final_price:res.data[el.id].data.price_overview.final_formatted.replace('￥',''),
+             address:res.data[el.id].data.price_overview.currency
+            }
+            this.gameList.push(appArr)
+          })
+        }
       })
     }
 
