@@ -26,7 +26,7 @@
         </div>
 
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
-          <div v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
+          <div @click="startDownload" v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
           <!-- <div v-if="getWidth(item)!==100 && item.percent === undefined ">
@@ -164,7 +164,7 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(appStore, ['settings']),
+    ...mapWritableState(paperStore, ['settings']),
     displayList () {
       return this.list.sort((a, b) => {
         return b.done - a.done
@@ -230,6 +230,8 @@ export default {
     startDownload () {
       if (this.savePath === '') {
         Modal.confirm({
+          centered:true,
+          style:{'z-index':999999},
           content: '您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。',
           onOk: async () => {
             await this.queryStart()
@@ -313,5 +315,13 @@ export default {
   top: 50%;
   border-radius: 100px;
   transform: translate(-50%, -50%);
+}
+</style>
+<style>
+.ant-modal-mask{
+  z-index: 999999;
+}
+.ant-modal-wrap{
+  z-index: 9999999;
 }
 </style>
