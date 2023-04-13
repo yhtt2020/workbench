@@ -60,7 +60,6 @@ export default {
   methods:{
     getPercentage(){
       const url = 'https://store.steampowered.com/api/featured'
-      // 后期如果需要mac参数可以使用featured_mac
       axios.get(url,{timeout:5000}).then(res=>{
         // featured_win 是获取window平台的数据
         const data = res.data.featured_win
