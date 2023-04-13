@@ -5,15 +5,15 @@
         <a-row>
           <a-col :span="14">
             <a-row>
-              <a-col :span="6" style="text-align: right">
+              <a-col :span="4" style="text-align: right">
                 <a-avatar style="position: relative;cursor: pointer" :size="50"
                           :src="userInfo.avatar">
                 </a-avatar>
               </a-col>
-              <a-col :span="18" style="padding-left: 20px">
+              <a-col :span="20" style="padding-left: 20px">
                 <div style="font-size: 16px;font-weight: bold">{{ userInfo.nickname }}</div>
                 <div class="live-grade" style="cursor:pointer;">
-                  <div class="ts-grade flex justify-start align-center" style="margin-top: 4px" v-if="grade.lv > 0">
+                  <div class="ts-grade flex justify-start align-center grade-icon" style="margin-top: 4px" v-if="grade.lv > 0" @click="openTip">
                     <div class="ts-grade-crown" v-for="item in userInfo.onlineGradeIcons.crown">
                       <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                     </div>
@@ -52,24 +52,24 @@
         <a-row>
           <div class="arrow-box" style="width:100%;line-height: 2">
 
-            <div class="text-grey" style="line-height: 2">升级剩余时长: {{ remainHour }}小时{{ remainMinute }}分</div>
-            <div class="tip text-grey">距离上一名 ： {{ distance }} <span class="text-button" :disabled="this.times===0"
+            <div class="text-grey mt-2" style="line-height: 2">升级剩余时长: {{ remainHour }}小时{{ remainMinute }}分</div>
+            <div class="tip text-grey mt-2">距离上一名 ： {{ distance }} <span class="text-button" :disabled="this.times===0"
                                                                          @click="use" type="primary"
                                                                          style="margin-left:20px;margin-top: 10px">查看（{{
                 times
               }}次）</span></div>
-            <div class="text-grey" style="line-height: 2">累计在线时长:
+            <div class="text-grey mt-2" style="line-height: 2">累计在线时长:
               {{ grade.cumulativeHours }}小时{{ grade.cumulativeMinutes }}分
             </div>
             <div class="badge-box" :style="{'border-color':this.getBadge().color}">
               <a-row>
-                <a-col :span="10">
+                <a-col :span="6">
                   <img style="width: 75px;margin-top: 10px" :src="this.getPath+getBadge().badge+'.png'">
                   <div v-if="badge.rank<100" class="badge-num" :style="{'background-color':this.getBadge().color}">
                     {{ badge.rank }}
                   </div>
                 </a-col>
-                <a-col style="line-height: 2" :span="14">
+                <a-col style="line-height: 2" :span="18">
                   <div style="font-size: 16px;font-weight: bold;">{{ getBadge().title }}</div>
                   <div class="text-grey">{{ getBadge().summaryNames }}</div>
                   <div class="text-grey">{{ getBadge().summaryDes }}</div>
@@ -170,6 +170,9 @@ export default defineComponent({
 
   methods: {
     ...mapActions(appStore, ['getUserInfo']),
+    openTip(){
+    this.$emit('openGradeTip')
+    },
     getBadge () {
       if (!this.grade.rank) {
         return this.badge.t9999
@@ -253,6 +256,11 @@ export default defineComponent({
 })
 </script>
 <style scoped lang="scss">
+@media screen and (min-width: 1493px)  {
+  .grade-icon{
+    pointer-events: none;
+  }
+}
 .ts-grade-crown, .ts-grade-moon, .ts-grade-star, .ts-grade-sun {
   display: inline-block;
 }
@@ -312,7 +320,7 @@ export default defineComponent({
   background: #ffffff14;
   padding: 18px;
   padding-top: 10px;
-  margin-top: 10px;
+  margin-top: 18px;
 }
 
 .badge-box .badge-num {

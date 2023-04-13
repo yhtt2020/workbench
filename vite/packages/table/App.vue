@@ -1,6 +1,6 @@
 <template>
   <a-config-provider :locale="locale">
-    <div class="a-container" :class="{ dark: settings.darkMod }">
+    <div class="a-container" :class="{ dark:settings? settings.darkMod:'' }">
       <router-view></router-view>
     </div>
     <Barrage></Barrage>
@@ -48,7 +48,10 @@ import Barrage from "./components/comp/Barrage.vue";
 import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
+import {app} from "electron";
+import {Modal}from 'ant-design-vue'
 const {appModel} =window.$models
+
 let startX,
   startY,
   moveEndX,
@@ -69,17 +72,49 @@ export default {
     };
   },
   async mounted() {
+
+   //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
+   //  if (!this.init) {
+   //    console.log(this.init)
+   //    this.$router.push('/wizard')
+   //    return
+   //  }
+    //
+    // setTimeout(()=>{
+    //
+    //
+    //
+    // },3000)
+    //还原数据
+    // setTimeout(()=>{
+    //   let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
+    //   if(require('fs').existsSync(recoverPath)){
+    //     let json= require('fs').readFileSync(recoverPath,'utf-8')
+    //     let j=JSON.parse(json)
+    //     Object.keys(j).forEach(key=>{
+    //       localStorage.setItem(key,j[key])
+    //     })
+    //     require('fs').rmSync(recoverPath)
+    //     localStorage.setItem('tipInfo','1')
+    //     location.reload()
+    //     console.log('检测到存在待回复的json文件')
+    //   }
+    //   if(localStorage.getItem('tipInfo')){
+    //     localStorage.removeItem('tipInfo')
+    //     Modal.info({content:'已为您迁移数据，目前可正常使用。'})
+    //   }
+    // },3000)
+
+
+    window.powerGrade = this.userInfo.onlineGradeExtra
     window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
-    if(!this.settings.zoomFactor){
-      this.settings.zoomFactor=100
-    }
-    await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)//根据设置进行缩放比的强制调整
+
+
     ipc.on('updateRunningApps', async (event, args) => {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}
       for (const app of args.runningApps) {
         this.runningAppsInfo[app] = await appModel.get({nanoid: app})
-        console.log(await appModel.get({nanoid: app}))
         this.runningAppsInfo[app].windowId = args.windows[args.runningApps.indexOf(app)]
         ipc.send('getAppRunningInfo', {nanoid: app})
       }
@@ -89,31 +124,16 @@ export default {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
-    // if (!this.myCode) {
-    //   //注释此处的代码跳过激活码验证
-    //   this.$router.push('/code')
-    //   return
-    // }
-    this.verify(rs => {
-      if (!rs) {
-        this.$router.push('/code')
-        return
-      }
-    })
-    if (!this.init) {
-      console.log(this.settings)
-      this.$router.push('/wizard')
-      return
-    }
+
+
+
+
+
     document.body.classList.add('lg')
     this.reset()//重置部分状态
     this.sortClock()
-    // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic;
 
-    if (this.settings.darkMod) {
-      document.body.style.background = "#191919";
-    }
     this.bindTouchEvents();
     this.reloadAll(); //刷新全部天气
     //this.$router.push({name:'sensor'})
@@ -167,13 +187,6 @@ export default {
       this.setMusic(music);
     },
     ...mapActions(cardStore, ["removeClock"]),
-    // async getUserInfo() {
-    //   let rs = await tsbApi.user.get()
-    //   if (rs.status === 1) {
-    //     console.log(rs.data.user_info)
-    //     this.userInfo=rs.data.user_info
-    //   }
-    // }
     handleOk() {
       this.visible = false;
       this.removeClock(0);
@@ -228,3 +241,4 @@ export default {
   width: 100%;
 }
 </style>
+

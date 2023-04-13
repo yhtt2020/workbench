@@ -20,7 +20,7 @@ import BackBtn from './components/comp/BackBtn.vue'
 import 'viewerjs/dist/viewer.css'
 
 
-import piniaPersist from "pinia-plugin-persist";
+import piniaPersist from "./js/ext/pinia-plugin-persist/index";
 
 import "viewerjs/dist/viewer.css";
 import VueViewer from "v-viewer";
@@ -29,6 +29,7 @@ import $ from "jquery";
 
 import dayjs from 'dayjs';
 import routes from './route/route'
+
 dayjs.locale('zh-cn');
 
 const app = createApp(App)

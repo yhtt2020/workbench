@@ -237,6 +237,19 @@ body.full-screen{
     opacity: 1;
   }
 }
+.grade-tip{
+  width: 64px;
+  height: 24px;
+  border-radius: 0px 12px 0px 12px;
+  background: rgba(250, 173, 20, 1);
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .scroll-content::-webkit-scrollbar { width: 0 !important }
 .scroll-content { -ms-overflow-style: none; }
 .scroll-content { overflow: -moz-scrollbars-none; }

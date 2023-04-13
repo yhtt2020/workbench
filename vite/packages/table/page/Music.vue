@@ -69,7 +69,7 @@ export default {
   name: 'Apps',
   components: { SecondPanel },
   computed: {
-    ...mapWritableState(appStore, ['apps', 'status'])
+    ...mapWritableState(appStore, [ 'status'])
   },
   mounted () {
     //确认自启动，如果未启动，则静默启动
@@ -151,8 +151,6 @@ export default {
       let currentSeconds = current.getHours() * 60 * 60 + current.getMinutes() * 60 + current.getSeconds()
       this.status.music.percent = (currentSeconds / totalSeconds * 100).toFixed(0)
     },
-
-    ...mapActions(appStore, ['addApps']),
 
     changeTab (data) {
       this.currentIndex = data.index

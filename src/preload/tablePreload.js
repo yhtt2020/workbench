@@ -14,14 +14,18 @@ window.iconv = require('iconv-lite')
 window.brightness = require('brightness')
 window.readAida64 = require('aida64-to-json')
 window.fs = require('fs-extra')
+const StorageModel=require('../model/storageModel')
 window.$models = {
   appModel: require('../model/appModel'),
   messageModel,
   axios: require('axios'),
   nanoid:require('nanoid'),
-  fs:require('fs-extra')
+  fs:require('fs-extra'),
+  storageModel:new StorageModel()
 }
 window.$models.appModel.initDb()
+
+window.$models.storageModel.initDb()
 window.$apis = {
   groupApi
 }
