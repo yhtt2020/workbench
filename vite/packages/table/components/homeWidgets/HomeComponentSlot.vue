@@ -13,19 +13,21 @@
         </div>
       </div>
       <div class="content-small text-lg absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center"   >
-        <span class="mb-2">需要安装并运行</span>
-        <span  class="mb-2">AIDA64</span>
-        <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-xl" @click="onDownAida">
+        <span class="mb-2" style="font-size: 0.8em ;line-height: 1.2">需要安装，如图配置AIDA64并运行</span>
+        <div class="mb-2">
+          <AidaGuide ></AidaGuide>
+        </div>
+
+        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-xl" @click="onDownAida">
           <span>立即下载</span>
         </div>
         <div v-if="options.type.includes('Four')" class="flex flex-col items-center">
-          <span class="mb-2">监控游戏「FPS」需要安装并运行</span>
-          <span class="mb-2">RTSS</span>
+          <span class="mb-2" style="font-size: 0.8em ;line-height: 1.2">监控游戏「FPS」需要安装并运行RTSS</span>
           <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-xl" @click="onDownRTSS">
             <span>立即下载</span>
           </div>
         </div>
-        <span class="text-base text-neutral-500">如果已经启动请等待大约30秒</span>
+        <span class="text-base text-neutral-300">如果已经启动请等待大约30秒</span>
       </div>
   </div>
 
@@ -69,8 +71,10 @@
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
 import {message} from "ant-design-vue";
+import AidaGuide from './supervisory/AidaGuide.vue'
 
 export default {
+  components: { AidaGuide },
   data(){
     return {
       visible:false,
