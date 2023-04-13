@@ -155,7 +155,10 @@ const localCacheManager = {
     const { data, headers } = await axios({
       url: url,
       method: 'get',
-      responseType: 'arraybuffer'
+      responseType: 'arraybuffer',
+      headers:{
+        referer:''
+      }
     })
     try {
       await fs.promises.writeFile(path, data, 'binary')
