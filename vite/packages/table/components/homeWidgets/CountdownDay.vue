@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options" :customIndex="customIndex">
-    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 8em 0;align-items: center" v-if="countdownDay.length <= 0">
+    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDay.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
     </div>
@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       options:{
-        className:'card',
+        className:'card small',
         title:'倒数日',
         icon:'rili2',
         type:'countdownDay'
