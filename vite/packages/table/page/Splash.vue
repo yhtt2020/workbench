@@ -284,7 +284,7 @@ export default {
         this.getUserInfo()
       })
     },
-  }
+  },
 }
 </script>
 
