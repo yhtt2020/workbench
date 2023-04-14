@@ -13,7 +13,7 @@ import justifiedGallery from 'justifiedGallery'
 
 
 import VueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-
+import GradeSmallTip from "../components/GradeSmallTip.vue";
 import SecondPanel from '../components/SecondPanel.vue'
 
 export default {
@@ -21,6 +21,7 @@ export default {
   components: {
     SecondPanel,
     VueCustomScrollbar,
+    GradeSmallTip
   },
   data: () => ({
     tab: '',

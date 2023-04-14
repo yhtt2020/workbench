@@ -248,7 +248,14 @@ body.full-screen{
   font-size: 12px;
   display: flex;
   justify-content: center;
+  color: white;
   align-items: center;
+  &.small-tip{
+    width: 34px;
+    font-size: 10px;
+    border-radius: 0px 8px 0px 8px;
+    height: 18px;
+  }
 }
 .scroll-content::-webkit-scrollbar { width: 0 !important }
 .scroll-content { -ms-overflow-style: none; }

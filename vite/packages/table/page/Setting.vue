@@ -13,12 +13,14 @@
                 弹幕
                 <br>
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
+                <GradeSmallTip powerType="barrage" lastPowerType="关闭弹幕"></GradeSmallTip>
               </div>
             </a-col>
             <a-col :span="12">
               <div class="btn">
                 聊天<br>
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
+                <GradeSmallTip powerType="closeChat"></GradeSmallTip>
               </div>
             </a-col>
             <a-col :span="12">
@@ -152,10 +154,10 @@ import { message } from 'ant-design-vue'
 import {mapActions} from 'pinia'
 import { codeStore } from '../store/code'
 import SecondPanel from '../components/SecondPanel.vue'
-
+import GradeSmallTip from "../components/GradeSmallTip.vue";
 export default {
   name: 'Setting',
-  components: { SecondPanel, ChooseScreen },
+  components: { SecondPanel, ChooseScreen,GradeSmallTip },
   data () {
     return {
       visibleChooseScreen: false,

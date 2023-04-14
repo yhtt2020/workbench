@@ -196,6 +196,12 @@ export default {
       },
       immediate: true,
     },
+    "userInfo.onlineGradeExtra": {
+      handler(newVal, oldVal) {
+        window.powerGrade = this.userInfo.onlineGradeExtra
+      },
+      immediate: true,
+    },
   },
 };
 </script>

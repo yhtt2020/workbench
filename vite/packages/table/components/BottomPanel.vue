@@ -180,9 +180,10 @@
   >
     <a-row style="margin-top: 1em" :gutter="[20,20]">
       <a-col>
-        <div @click="editNavigation" class="btn">
+        <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑</span></div>
+          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
       </a-col>
     </a-row>
@@ -210,13 +211,14 @@ import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
+import GradeSmallTip from "./GradeSmallTip.vue";
 const { messageModel }=window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from "./ScrolX.vue";
 export default {
   name: 'BottomPanel',
-  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX},
+  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX,GradeSmallTip},
   data () {
     return {
 
@@ -294,6 +296,9 @@ export default {
     }
   },
   methods: {
+    closeDrawer(){
+      this.menuVisible=false
+    },
     checkScroll(){
       this.$nextTick(()=>{
         if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){

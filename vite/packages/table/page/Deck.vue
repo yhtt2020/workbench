@@ -270,9 +270,12 @@
       </a-col>
 
       <a-col>
-        <div @click="addBoard" class="btn">
+        <div @click="addBoard" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjiawenjianjia"></Icon>
-          <div>添加分组</div>
+          <div v-if="superiorLimit<=grids.length">已达上限</div>
+          <div v-else>添加分组</div>
+          <div class="absolute inset-0" style="border-radius: 6px;background: rgba(42, 42, 42, 0.6)" v-show="superiorLimit<=grids.length" @click.stop="limitTip"></div>
+          <GradeSmallTip powerType="quickInstructions" ref="smallTip"></GradeSmallTip>
         </div>
       </a-col>
       <a-col v-if="menuType==='grid'">
@@ -353,6 +356,8 @@ import Prompt from '../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
 import BackBtn from '../components/comp/BackBtn.vue'
 import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import GradeSmallTip from "../components/GradeSmallTip.vue";
+import {powerState} from '../js/watch/grade'
 import _ from 'lodash-es'
 
 export default {
@@ -365,7 +370,8 @@ export default {
     DeckItem,
     Widget: Widget,
     vuuri,
-    LeftSquareOutlined, RightSquareOutlined, PlusOutlined
+    LeftSquareOutlined, RightSquareOutlined, PlusOutlined,
+    GradeSmallTip
   },
   data () {
     return {
@@ -409,7 +415,8 @@ export default {
 
       cloneMap: [],
       menuVisible: false,
-      visibleAdd: false
+      visibleAdd: false,
+      superiorLimit:10
     }
   },
   computed: {
@@ -426,6 +433,8 @@ export default {
     }
   },
   mounted () {
+    const {superiorLimit}=this.powerState('quickInstructions',powerGrade.lv)
+    this.superiorLimit=superiorLimit
     //进来之后就把存储的部分和初始化部分完全脱钩，这样，可以随意变更按钮，并即时存储，而不会影响到我们界面上的部分。
     //this.displayGrids=_.cloneDeep(this.grids)
     //window.gridsSave=_.cloneDeep(this.grids)
@@ -434,6 +443,11 @@ export default {
     // })
   },
   methods: {
+    powerState,
+    limitTip(){
+      this.$refs.smallTip.clickTip()
+      this.$refs.smallTip.limitFlag=true
+    },
     toggleEditGrid () {
       if (!this.currentGrid.cols) {
         this.currentGrid.cols = 2
@@ -699,6 +713,10 @@ export default {
 
     },
     addBoard () {
+      if(this.superiorLimit<=this.grids.length){
+        this.limitTip()
+        return
+      }
       let grid = {
         id: Date.now(),
         title: '新组',
