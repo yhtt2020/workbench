@@ -34,7 +34,7 @@
     <div :class="options.noTitle===true?'no-title':'content-title'" >
       <div class="left-title" v-if="options.noTitle!==true">
         <Icon :icon="options.icon" class="title-icon"></Icon>
-        <div>{{options.title}}</div>
+        <div class="w-2/3">{{options.title}}</div>
       </div>
       <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
