@@ -1,7 +1,7 @@
 <template>
   <HomeComponentSlot :options="options" :customIndex="customIndex">
      <div style="margin-top: 1em;">
-       <div class="flex w-full cursor-pointer" style="margin-top: 0.3em;" v-for="item in gameList">
+       <div class="flex w-full cursor-pointer" style="margin-top: 0.3em;" v-for="item in list">
           <div class="w-1/3 h-20" style="margin-right:10px;">
             <img :src="item.image" alt="" class="rounded-lg" style="width: 100%; height:100%;object-fit: cover;">
           </div>
@@ -10,13 +10,13 @@
             <div class="active-type">
               <span v-for="activeItem in item.genres" class="bg-white rounded-md bg-opacity-10 active-item  ">{{activeItem.description}}</span>
             </div>
-            <span class="initial-price line-through">{{item.initial_price}}</span>
+            <span class="initial-price line-through">¥{{item.initial_price}}</span>
             <div class="flex justify-between">
               <div class="flex w-2/3">
-                <span class="text-red-600">¥{{item.final_price.replace('¥','')}}</span>
+                <span class="text-red-600">¥{{item.final_price}}</span>
                 <span v-if="item.address === 'CNY'" class="address">(中国区)</span>
               </div>
-              <span class="bg-red-600 w-12 text-center rounded-md">{{parseInt((item.initial_price.replace('¥','') - item.final_price.replace('¥','')) / item.final_price.replace('¥','') * 100)}} %</span>
+              <span class="bg-red-600 w-12 text-center rounded-md">-{{ item.discount_percent }} %</span>
             </div>
           </div>
        </div>
@@ -27,9 +27,9 @@
 <script>
 import Icon from '@ant-design/icons-vue/lib/components/Icon';
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import axios from 'axios';
-import {getRequestWithRetry} from '../../../js/axios/api'
-
+import {requestData,randomData} from '../../../js/axios/api'
+import { mapWritableState,mapActions ,mapState} from 'pinia'
+import {cardStore} from '../../../store/card'
 export default {
   name:'GamesDiscount',
   props:{
@@ -50,88 +50,49 @@ export default {
         icon:'game',
         type:'games'
       },
-      gameList:[], 
-      resArr:[]   //随机获取四个数据
+      list:[]
     }
   },
   mounted(){
     this.getDiscountData()
   },
+  computed:{
+    ...mapWritableState(cardStore,['gameData'])
+  },
   methods:{
+    ...mapActions(cardStore,['getGameOffers']),
     getDiscountData(){
-      const url = 'https://store.steampowered.com/api/featured'
-      axios.get(url).then(res=>{
-        const data = res.data.featured_win
-        let indexArr = []
-        while(indexArr.length < 4){
-          let index = Math.floor(Math.random() * data.length)
-          if(indexArr.indexOf(index) === -1){
-            indexArr.push(index)
-            this.resArr.push(data[index])
-          }
-        }
-        this.resArr.forEach(el=>{
+      requestData('https://store.steampowered.com/api/featuredcategories/?cc=cn&l=cn').then(res=>{
+        const data = res.data.specials.items
+        const randomArr = randomData(data,4)
+        this.getGameOffers(randomArr)
+        this.gameData.forEach(el=>{
           this.getAppList(el)
         })
       }).catch(err=>{
-        console.log(err);
-        if(err){
-          // 解决接口请求超时问题
-          getRequestWithRetry('featured',4,1000).then(res=>{
-            const data = res.data.featured_win
-            let indexArr = []
-            while(indexArr.length < 4){
-             let index = Math.floor(Math.random() * data.length)
-             if(indexArr.indexOf(index) === -1){
-              indexArr.push(index)
-              this.resArr.push(data[index])
-             }
-            }
-            this.resArr.forEach(el=>{
-              this.getAppList(el)
-            })
-          })
-        }
+        console.error(err)
       })
     },
     getAppList(el){
-      const appUrl = `https://store.steampowered.com/api/appdetails/?appids=${el.id}`
-      axios.get(appUrl).then(res=>{
-        console.log(res.data[el.id].data);
-         if(res.data[el.id].data.price_overview.currency === 'CNY'){
-          const appArr = {
-           id:el.id,
-           image:el.header_image,
-           name:el.name,
-           genres:res.data[el.id].data.genres.slice(0,3),
-           initial_price:res.data[el.id].data.price_overview.initial_formatted !== "" ? res.data[el.id].data.price_overview.initial_formatted : res.data[el.id].data.price_overview.final_formatted,
-           final_price:res.data[el.id].data.price_overview.final_formatted,
-           address:res.data[el.id].data.price_overview.currency
-          }
-          this.gameList.push(appArr)
-          console.log(this.gameList);
-         }
-      }).catch(err=>{
-        console.log(err);
-        if (err) {
-          getRequestWithRetry(`appdetails/?appids=${el.id}`,4,1000).then(res=>{
-            console.log(res);
-            const appArr = {
-             id:el.id,
-             image:el.header_image,
-             name:el.name,
-             genres:res.data[el.id].data.genres,
-             initial_price:res.data[el.id].data.price_overview.initial_formatted.replace('￥',''),
-             final_price:res.data[el.id].data.price_overview.final_formatted.replace('￥',''),
-             address:res.data[el.id].data.price_overview.currency
-            }
-            this.gameList.push(appArr)
-          })
+      requestData(`https://store.steampowered.com/api/appdetails/?appids=${el.id}`).then(res=>{
+        if(res.status === 200){
+          console.log(res.data[el.id].data);
+          const appObj = {
+            id:el.id,
+            image:el.header_image,
+            name:el.name,
+            discount_percent:el.discount_percent,
+            genres:res.data[el.id].data.genres.splice(0,2),
+            initial_price:(el.original_price / 100).toFixed(2),
+            final_price:(el.final_price / 100).toFixed(2),
+            address:res.data[el.id].data.price_overview.currency
+          }  
+          this.list.push(appObj)
         }
+      }).catch(err=>{
+        console.error(err);
       })
     }
-
-
   }
 }
 </script>
