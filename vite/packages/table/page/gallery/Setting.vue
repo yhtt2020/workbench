@@ -29,12 +29,12 @@
           <div class="line">
             壁纸保存位置：<a-input placeholder="请选择壁纸保存地址" @click="showSaveDialog" style="width: 15em" v-model:value="settings.savePath"></a-input>
           </div>
-          <div class="line">
-            解锁需要输入密码：<a-switch v-model:checked="settings.usePassword"></a-switch>
-          </div>
-          <div class="line" v-if="settings.usePassword">
-            锁屏密码：<a-input-password v-model:value="settings.password" style="width: 13em"></a-input-password>
-          </div>
+<!--          <div class="line">-->
+<!--            解锁需要输入密码：<a-switch v-model:checked="settings.usePassword"></a-switch>-->
+<!--          </div>-->
+<!--          <div class="line" v-if="settings.usePassword">-->
+<!--            锁屏密码：<a-input-password v-model:value="settings.password" style="width: 13em"></a-input-password>-->
+<!--          </div>-->
 
         </div>
         </div>

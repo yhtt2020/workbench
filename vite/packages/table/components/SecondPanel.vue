@@ -84,8 +84,6 @@ export default {
   }
   height:auto;
   border-radius: 6px;
-  position: fixed;
-  top: 5em;
 
   .menu {
     &:hover {

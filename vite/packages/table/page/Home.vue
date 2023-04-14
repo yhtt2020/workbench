@@ -1,6 +1,6 @@
 <template>
   <div
-    style="display: flex; align-items: center;flex-direction: row;justify-content: center;height: calc( 100vh - 11em)">
+    style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%">
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;">
       <div style="white-space: nowrap;">

@@ -1,6 +1,6 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 35px);padding: 15px;white-space: nowrap">
+                      style="height: calc(100vh - 35px);padding: 15px;white-space: nowrap">
   <div class="card mr-3" style="height: calc(100vh - 13em) ;width: 300px">
     <div class="line-title">互动
       <span style="float: right;font-weight: normal;font-size: 0.8em">
@@ -63,10 +63,6 @@
         </div>
       </div>
     </div>
-<!--    <div class="card mr-3" style="width: 400px;padding: 1em;display: inline-block;vertical-align: top">-->
-
-<!--      <GradePanel></GradePanel>-->
-<!--    </div>-->
 
   </div>
   </vueCustomScrollbar>

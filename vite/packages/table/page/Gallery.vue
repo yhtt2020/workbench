@@ -1,8 +1,7 @@
 <template>
-  <div id="galleryContainer"  style="text-align: center;padding-top: 2em">
-    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; margin-top: 3em;text-align: left; border-right: 1px solid rgba(255, 255, 255, 0.1);"  @changeTab="changeTab">
-    </SecondPanel>
-    <div id="parentScroller" style="margin-left: 15em">
+  <div id="galleryContainer"  style="text-align: center;display: flex;height: 100%">
+    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; text-align: left; "  @changeTab="changeTab"></SecondPanel>
+    <div id="parentScroller" style="flex-grow: 1;flex-shrink: 1;margin-left: 1em;display: flex;flex-direction: column;height: 100%">
       <router-view></router-view>
     </div>
   </div>
