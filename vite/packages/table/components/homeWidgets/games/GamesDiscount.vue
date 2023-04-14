@@ -5,7 +5,7 @@
         <div class="w-full h-20 flex" v-for="item in list" style="margin-bottom: 20px;">
            <img :src="item.image" alt="" class="h-20 rounded-md" style="width:120px; object-fit: cover;"> 
            <div class="flex  discount-content flex-col" style="margin-left: 10px;">
-              <div class="name truncate" style="margin-bottom: 2px;line-height: 21px;">{{item.name}}</div>
+              <div class="name truncate h-20" >{{item.name}}</div>
               <div class="flex flex-row">
                 <span  class="bg-white bg-opacity-40 rounded-md text-white text-opacity-60" v-for="activeItme in item.genres" style="padding: 0 6px; margin-right: 4px; font-size: 12px;">
                   {{ activeItme.description}}
