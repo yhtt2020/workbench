@@ -356,7 +356,6 @@ class WindowManager {
       '--name=' + name
     ].concat(additionalArguments)
 
-    console.log(windowOption, '得到的windowOption')
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {
       if (options.onReadyToShow) {

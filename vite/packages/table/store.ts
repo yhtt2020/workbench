@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import * as util from "util";
 import {nanoid} from 'nanoid'
 import {myStore} from './util.js'
+import dbStorage from "./store/dbStorage";
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
 
@@ -10,15 +11,12 @@ import {myStore} from './util.js'
 export const appStore = defineStore('appStore', {
   state: () => ({
     userInfo: false,
+    lvInfo: {},
     myData: {
       myCircle: [],
       joinedCircle: []
     },
-
-
-    apps: [],
-
-    lockTimeout: 1800, //锁屏延迟，默认改为半小时
+    agreeTest:false,
 
     init: false, //是否已经初始化
 
@@ -58,6 +56,9 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
+    setAgreeTest(value){
+      this.agreeTest = value
+    },
     reset() {
       this.fullScreen = false
     },
@@ -109,7 +110,8 @@ export const appStore = defineStore('appStore', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      storage: localStorage,
+      paths:['status','settings','init','agreeTest'],
+      storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
   }

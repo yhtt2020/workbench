@@ -338,12 +338,14 @@ global.render = {
    * 获得一个url，调试环境下，返回vite调试协议路径，正式环境下，返回tsbapp协议地址
    * @param url
    * @param params 参数表，对象传递
+   * @param domain 默认为. 代表根目录，因为有的时候要和其他的渲染进程分割源，所以需要用到域名
+   * @param forcePrd 强制使用prd路径，用于测试
    * @returns {string}
    */
-  getUrl (url,params) {
+  getUrl (url,params,domain='.',forcePrd=false) {
     let protocolUrl
-    protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
-    if (isDevelopmentMode) {
+    protocolUrl = `tsbapp://${domain}/${url}` //todo 需要验证正式环境的协议情况
+    if (isDevelopmentMode && forcePrd===false) {
       protocolUrl = `http://localhost:1600/html/${url}`
     }
     if(params){
@@ -427,6 +429,8 @@ global.render = {
         mimeType = 'image/svg+xml'
       } else if (extension === '.json') {
         mimeType = 'application/json'
+      }else if(extension==='.mp3'){
+        mimeType = 'audio/mpeg'
       }
       response({ mimeType, data })
     })

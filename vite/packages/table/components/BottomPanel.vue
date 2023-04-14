@@ -55,6 +55,21 @@
 
           </a-col>
           <a-col class="chat" v-if="settings.enableChat" :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
+            <div style="font-size: 13px;" v-if="messages.length===0">
+            <div class="pointer ml-3" @click.stop="enterIM">
+             <a-row :gutter="10">
+               <a-col :span="6" class="pt-2">
+                 <a-avatar src="https://up.apps.vip/logo/group.png?t=2"></a-avatar>
+               </a-col>
+               <a-col :span="18" class="pt-1">
+                 <div class="text font-bold">
+                   轻聊
+                 </div>
+                 <div>举杯，同是科技咖</div>
+               </a-col>
+             </a-row>
+
+             </div></div>
             <div class="pointer" @click.stop="enterIM">
               <div v-for="message in messages" class="text-more">{{message.title}}：{{message.body}}</div>
             </div>
@@ -165,9 +180,10 @@
   >
     <a-row style="margin-top: 1em" :gutter="[20,20]">
       <a-col>
-        <div @click="editNavigation" class="btn">
+        <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑</span></div>
+          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
       </a-col>
     </a-row>
@@ -195,20 +211,21 @@ import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
+import GradeSmallTip from "./GradeSmallTip.vue";
 const { messageModel }=window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from "./ScrolX.vue";
 export default {
   name: 'BottomPanel',
-  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX},
+  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX,GradeSmallTip},
   data () {
     return {
 
       lastTime:0,
       visibleTrans: false,
       full: false,
-      lvInfo: {},
+
       timer:null,
       messages:[],
       tipped:false,
@@ -253,26 +270,11 @@ export default {
     setInterval( ()=>{
       this.loadMessages()
     },10000)
-    ipc.on('userInfo', (event, args) => {
-      this.tipped=false
-      this.loading = false
 
-      let lvInfo = {}
-      lvInfo.lv = args.data.onlineGradeExtra.lv
-      let current = this.gradeTableGenerate(64)[lvInfo.lv]
-      let section = this.gradeTableGenerate(64)[lvInfo.lv + 1]
-      let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
-      lvInfo.remainHour = Math.floor(remain / 60)
-      lvInfo.remainMinute = remain - (Math.floor(remain / 60) * 60)
-      lvInfo.minute = args.data.onlineGradeExtra.minutes
-      lvInfo.percentage = ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) * 100
-      this.lvInfo = lvInfo
-      this.setUser(args.data)
-    })
-    ipc.send('getDetailUserInfo')
+
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo','settings']),
+    ...mapWritableState(appStore, ['userInfo','settings','lvInfo']),
     ...mapWritableState(cardStore, ['navigationList','routeParams'])
   },
   watch: {
@@ -294,6 +296,9 @@ export default {
     }
   },
   methods: {
+    closeDrawer(){
+      this.menuVisible=false
+    },
     checkScroll(){
       this.$nextTick(()=>{
         if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
@@ -365,7 +370,11 @@ export default {
       if(this.lastTime===0){
         let barrages=this.messages.slice(0,10)
         window.$manager.sendChat(barrages)
-        this.lastTime=barrages[0].create_time
+        if(barrages.length>0){
+          this.lastTime=barrages[0].create_time//重新设置指标
+        }else{
+          this.lastTime=Date.now()
+        }
       }else{
         let readyToSend=this.messages.filter(mes=>{
           return mes.create_time>this.lastTime
@@ -374,7 +383,12 @@ export default {
         if(readyToSend.length>0){
           window.$manager.sendChat(readyToSend)
         }
-        this.lastTime=this.messages[0].create_time//重新设置指标
+        if(this.messages.length>0){
+          this.lastTime=this.messages[0].create_time//重新设置指标
+        }else{
+          this.lastTime=Date.now()
+        }
+
         localStorage.setItem('lastBarrageMessageTime',this.lastTime)
       }
       if(this.messages.length>2){
@@ -386,23 +400,7 @@ export default {
         ipc.send('getDetailUserInfo')
       })
     },
-    gradeTableGenerate (num) {
-      let lvSys = {}
-      for (let i = 0; i < num + 1; i++) {
-        let arrLef = 0
-        let arrRg = 0
-        for (let j = 0; j < i; j++) {
-          arrLef += 10 * (j + 2)
-        }
-        for (let k = 0; k < i + 1; k++) {
-          arrRg += 10 * (k + 2)
-        }
-        arrRg -= 1
-        lvSys[`${i}`] = [arrLef, arrRg]
-      }
-      delete lvSys['lv0']
-      return lvSys
-    },
+
     openSetting () {
       this.$router.push({ name: 'setting' })
     },

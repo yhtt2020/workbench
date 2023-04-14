@@ -13,13 +13,7 @@
       </a-calendar>
     </div>
     <div style="font-size: 1.2em; line-height: 2em">
-      <a-row class="festival">
-        <a-col :span="11">
-          <Icon icon="jieriyingxiao"></Icon>
-          清明节
-        </a-col>
-        <a-col :span="13">4月5日~4月5日</a-col>
-      </a-row>
+
       <a-row class="festival">
         <a-col :span="11">
           <Icon icon="jieriyingxiao"></Icon>
@@ -34,6 +28,13 @@
         </a-col>
         <a-col :span="13">6月22日~6月24日</a-col>
       </a-row>
+      <a-row class="festival">
+      <a-col :span="11">
+        <Icon icon="jieriyingxiao"></Icon>
+        中秋节
+      </a-col>
+      <a-col :span="13">9月29日~9月30日</a-col>
+    </a-row>
     </div>
 
   </HomeComponentSlot>

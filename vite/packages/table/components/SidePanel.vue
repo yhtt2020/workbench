@@ -1,8 +1,8 @@
 <template>
   <ul class="side-panel common-panel" style=" z-index: 999;
-  width: 6em;position: fixed;top: calc((100vh - 32em)/2)">
+  width: 6em;">
     <li class="active">
-      <PanelButton :active="tab==='home'" @click="goTab('','home')" icon="shouye1" title="主页"></PanelButton>
+      <PanelButton :active="tab==='home'" @click="goTab('main','home')" icon="shouye1" title="主页"></PanelButton>
     </li>
     <li>
       <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="yingyongzhongxin"
@@ -20,6 +20,7 @@
       <PanelButton :active="tab==='deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
     </li>
   </ul>
+
 </template>
 
 <script>
@@ -43,18 +44,18 @@ export default {
     goApp () {
       this.goTab('todo')
       this.$router.push({
-        name: 'app',
-        params:
-          {
-            fullScreen: false,
-            theme: 'transparent',
-            name: 'todo',
-            url: 'https://a.apps.vip/todo',
-            background: true,
-            node: true,
-            security: true
-          }
-      }
+          name: 'app',
+          params:
+            {
+              fullScreen: false,
+              theme: 'transparent',
+              name: 'todo',
+              url: 'https://a.apps.vip/todo',
+              background: true,
+              node: true,
+              security: true
+            }
+        }
       )
     }
   }
@@ -68,16 +69,18 @@ export default {
 
 @media screen and (max-height: 510px) {
   .side-panel {
-    zoom:0.82;
+    zoom: 0.82;
     margin-top: 3.5em;
   }
 }
+
 @media screen and (min-height: 511px) and (max-height: 550px) {
-  .side-panel{
-    zoom:0.9;
+  .side-panel {
+    zoom: 0.9;
 
   }
 }
+
 @media screen and (min-height: 551px) and (max-height: 610px) {
   .side-panel {
     zoom: 0.9;

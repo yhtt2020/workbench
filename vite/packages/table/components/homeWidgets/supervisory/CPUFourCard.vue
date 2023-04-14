@@ -63,10 +63,10 @@ export default {
         type:'CPUFourCard'
       },
       CPUGPUData:{
-        SCPUUTI:{value:"-"},
-        SGPU1UTI:{value:"-"},
-        SMEMUTI:{value:"-"},
-        SRTSSFPS:{value:"-"},
+        SCPUUTI:{value:0},
+        SGPU1UTI:{value:0},
+        SMEMUTI:{value:0},
+        SRTSSFPS:{value:0},
       },
       down:0,
       up:0

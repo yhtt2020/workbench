@@ -1,6 +1,6 @@
 <template>
   <div
-    style="display: flex; align-items: center;flex-direction: row;justify-content: center;height: calc( 100vh - 11em)">
+    style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%">
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;">
       <div style="white-space: nowrap;">
@@ -58,6 +58,9 @@
       </a-col>
     </a-row>
   </a-drawer>
+  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
+    <GradeNotice></GradeNotice>
+  </div>
 </template>
 <script>
 import Weather from '../components/homeWidgets/Weather.vue'
@@ -85,7 +88,9 @@ import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue
 import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
 import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
 import AddCard from "./app/card/AddCard.vue";
+import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
+import {appStore} from "../store";
 const readAida64 = window.readAida64
 export default {
   name: 'Home',
@@ -131,12 +136,14 @@ export default {
     SmallCPUCard,
     SmallGPUCard,
     AddCard,
+    GradeNotice,
     GamesDiscount,
     DiscountPercentage
   },
   computed: {
-    ...mapWritableState(cardStore, ['customComponents', 'clockEvent']),
-    ...mapWritableState(cardStore, ['aidaData']),
+    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData']),
+    ...mapWritableState(appStore, ['agreeTest']),
+
   },
   mounted () {
     window.onresize = () => {
@@ -152,6 +159,7 @@ export default {
   created () {
     this.navigationList = []
     this.startAida()
+    //this.setAgreeTest(false)
   },
   unmounted () {
     if (this.timer) {
@@ -161,6 +169,7 @@ export default {
   methods: {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
+   // ...mapActions(appStore, ['setAgreeTest']),
     addCard () {
       this.custom=true;
       this.menuVisible = false
