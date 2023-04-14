@@ -226,7 +226,8 @@ export const cardStore = defineStore(
           }
         ],
         routeParams:{},
-        clockFlag:false
+        clockFlag:false,
+        gameData:[]
       };
     },
 
@@ -352,8 +353,9 @@ export const cardStore = defineStore(
         // this.customComponents.splice(customIndex,1);
 
       },
-
-
+      getGameOffers(value){
+        this.gameData = value
+      }
     },
     persist: {
       enabled: true,

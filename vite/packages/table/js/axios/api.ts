@@ -1,33 +1,42 @@
 import axios from "axios"
-const axiosInstance = axios.create({
-  baseURL: 'https://store.steampowered.com/api/',
-  timeout: 5000,  // 设置超时时间为 5 秒钟
-})
-
 /**
- * 处理请求超时问题
- * @param url  路径
- * @param maxRetry  最大限制重试请求的次数
- * @param delay   请求时间内毫秒
- * @param retryCount  重试次数
+ * 随机获取四个数据
+ * @param  data   数组
+ * @param  count  数量
  * **/
-export const getRequestWithRetry = (url,maxRetry,delay) =>{
-   return new Promise((resolve,reject)=>{
-    const doRequest = (retryCount) =>{
-      axiosInstance.get(url)
-      .then(response => {
-        resolve(response.data);
-      })
-      .catch(error => {
-        if (retryCount === maxRetry || error.code !== 'ECONNABORTED') {
-          reject(error);
-        } else {
-          setTimeout(() => {
-            doRequest(retryCount + 1);
-          }, delay * (retryCount + 1));
-        }
-      });
+export function randomData(data: any,count: any) {
+   const result = []
+   while (result.length < count){
+    const randomIndex = Math.floor(Math.random() * data.length)
+    const randomElement = data[randomIndex]
+    if (!result.includes(randomElement)) {
+      result.push(randomElement);
     }
-    doRequest(0)
-   })
+   }
+   return result;
 }
+
+/***
+ * 处理请求超时问题
+ * @param url
+*/
+export const requestData = (url: any, options = {}) => {
+  const defaultOptions = {
+    retries: 3, // 默认重试次数为3次
+    retryInterval: 5000 // 默认重试间隔为5秒
+  };
+  const requestOptions = Object.assign({}, defaultOptions, options);
+
+  return axios({
+    url,
+    method: 'get',
+    timeout: 5000 // 设置超时时间为5秒钟
+  })
+  .catch(error => {
+    if(requestOptions.retries > 0) {
+      console.log(`${url} 请求超时，${requestOptions.retries} 秒后将会进行第 ${requestOptions.retries} 次重试`);
+      return new Promise(resolve => setTimeout(() => resolve(requestData(url, { ...requestOptions, retries: requestOptions.retries - 1 })), requestOptions.retryInterval));
+    }
+    return Promise.reject(error);
+  });
+};
