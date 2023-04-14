@@ -1,8 +1,8 @@
 <template>
-  <h3>我的团队 <a-button style="float: right" type="primary" @click="createGroup">创建团队</a-button></h3>
+  <h3>我的团队 <a-button class="relative" style="float: right;border-radius: 8px;border: none" type="primary" @click="createGroup">创建团队<GradeSmallTip powerType="team" lastPowerType="创建团队"></GradeSmallTip></a-button></h3>
   <a-tabs v-model:activeKey="activeKey">
     <template #rightExtra>
-      <a-button @click="look">寻找圈子</a-button>
+      <a-button @click="look" style="border-radius: 8px;">寻找圈子</a-button>
     </template>
     <a-empty v-if="privateGroup.length===0">
 
@@ -71,7 +71,7 @@
 <script>
 import { appStore } from '../../store'
 import {mapWritableState} from 'pinia'
-
+import GradeSmallTip from "../GradeSmallTip.vue";
 const {groupApi} = window.$apis
 export default {
   name: 'GroupPanel',
@@ -87,6 +87,7 @@ export default {
       },
     }
   },
+  components:{GradeSmallTip},
   mounted () {
     this.getMyCircle({page: 1, row: 20})
     this.getJoinedCircle({page: 1, row: 20})

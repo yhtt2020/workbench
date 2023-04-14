@@ -1,15 +1,17 @@
 import Lock from '../page/Lock.vue'
 import Power from '../page/Power.vue'
 import Wizard from '../page/Wizard.vue'
+import main from './main'
 //应用
 import TomatoStart from '../page/app/tomato/TomatoStart.vue'
 import Tomato from '../page/app/tomato/Tomato.vue'
 //设置
-import Code from '../page/Code.vue'
-import index from './index'
+import Splash from '../page/Splash.vue'
+//import index from './index'
 
 const routes = [
-  ...index,
+  ...main,
+  //...index,
   {
     path: '/lock',
     name: 'lock',
@@ -18,9 +20,9 @@ const routes = [
     ]
   },
   {
-    path:'/code',
-    name:'code',
-    component: Code
+    path:'',
+    name:'splash',
+    component: Splash
   },
   {
     path: '/power',

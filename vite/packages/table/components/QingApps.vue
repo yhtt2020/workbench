@@ -1,6 +1,6 @@
 <template>
-<div style="padding: 1em">
-  <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
+<div style="padding: 1em;width: 100%">
+  <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em); width: 100% ">
   <div @click="executeApp(app)" class="app" v-for="app in apps">
     <a-avatar :size="50" :src="app.logo"></a-avatar>
     <div class="name text-more">

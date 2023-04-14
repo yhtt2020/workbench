@@ -1,6 +1,6 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 11em);padding: 15px;">
+                      style="padding: 15px;height: 100%">
     <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto">
       <div class="line-title">
         邀请好友
@@ -42,7 +42,7 @@
       </a-table>
     </div>
 
-  </vueCustomScrollbar>>
+  </vueCustomScrollbar>
 </template>
 
 <script>

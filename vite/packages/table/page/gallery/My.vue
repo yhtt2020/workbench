@@ -1,30 +1,31 @@
 <template>
-<div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-    我的收藏 {{ myPapers.length }}  
-</div>
-<div class="pointer" style="position: fixed;right: 2em;top: 5.5em">
-  <div @click="playAll" class="bg-white bg-opacity-5 rounded-lg list-hover"  style="display: inline-block;margin-right: 1em;padding: 10px;">
+<div class="rotate-center" style="margin-bottom: 1em">
+  <span style="font-size: 2em;">我的收藏 {{ myPapers.length }}</span>
+  <div class="pointer" style="float: right;font-size: 1em;">
+    <div @click="playAll" class="bg-white bg-opacity-5 rounded-lg list-hover"  style="display: inline-block;margin-right: 1em;padding: 10px;">
     <span>
       <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
     </span>
-    <span  style="font-size:1.2em">轮播全部</span>
-  </div>
-  <div  @click="playActive" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block; margin-right: 1em;padding: 10px;">
+      <span  style="font-size:1.2em">轮播全部</span>
+    </div>
+    <div  @click="playActive" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block; margin-right: 1em;padding: 10px;">
       <span>
         <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
       </span>
       <span  style="font-size:1.2em">激活壁纸（ {{activePapers.length}} ）</span>
-  </div>
-  <div @click="this.visibleImport=true" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block;margin-right: 1em;padding: 10px;">
+    </div>
+    <div @click="this.visibleImport=true" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block;margin-right: 1em;padding: 10px;">
      <span>
       <Icon  style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
      </span>
-     <span style="font-size:1.2em;">导入</span>
+      <span style="font-size:1.2em;">导入</span>
+    </div>
   </div>
 </div>
 
-<div>
-  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
+
+<div style="flex-grow: 1;flex-shrink: 1;height: 0">
+  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller"  style="flex-shrink: 1;flex-grow: 1;height: 100%" >
     <viewer :images="myPapers" :options="options">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col class="image-wrapper" v-for="img in myPapers" :span="6" style="">
@@ -82,7 +83,7 @@
       </div>
     </div>
     <div id="my-mse"></div>
-</div> 
+</div>
 
 
 </template>
@@ -281,7 +282,7 @@ export default defineComponent({
       let second = datetime.getSeconds();
       return year +  '/' + ((month + 1) >= 10 ? (month + 1) : '0' + (month + 1)) +  '/' + ((date + 1) < 10 ? '0' + date : date) + ' ' +  ((hour + 1) < 10 ? '0' + hour : hour) + ':' + ((minute + 1) < 10 ? '0' + minute : minute) +  ':' +  ((second + 1) < 10 ? '0' + second : second);
     },
-    
+
     isInActive(image){
       return this.activePapers.findIndex(img=>{
         return image.src===img.src
@@ -303,12 +304,12 @@ export default defineComponent({
         }
       }else{
         const findIndex =  this.activePapers.findIndex(img=>{
-          if(img.src === this.currentPaper.src) 
+          if(img.src === this.currentPaper.src)
           return true
         })
         this.activePapers.splice(findIndex,1)
         if(this.currentPaper.src.split('//')[0] === 'file:' && imageExtensions.indexOf(this.currentPaper.src.split('.')[1]) !== -1){
-          fs.removeSync(path.join(this.currentPaper.src.split('//')[1])) 
+          fs.removeSync(path.join(this.currentPaper.src.split('//')[1]))
           if(this.myPapers.indexOf(this.currentPaper) !== -1){
            this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
           }

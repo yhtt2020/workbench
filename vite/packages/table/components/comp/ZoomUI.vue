@@ -54,7 +54,7 @@ export default {
   async mounted () {
     this.newZoom = await tsbApi.window.getZoomFactor() * 100
     this.oldZoom = this.newZoom
-    this.inputZoom = this.newZoom
+    this.inputZoom = +(this.newZoom).toFixed(0)
 
     this.getSize()
   },
@@ -124,6 +124,7 @@ export default {
       this.currentHeight = document.body.offsetHeight
     },
     async setZoomFactor (zoom = this.newZoom) {
+      zoom= +zoom.toFixed(0)
       this.inputZoom=zoom
       this.oldZoom=this.settings.zoomFactor
       await tsbApi.window.setZoomFactor(+zoom / 100)

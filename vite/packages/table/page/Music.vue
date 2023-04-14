@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 1em">
+  <div style="padding: 1em;width: 100%">
     <div class="music-player-wrapper" style="text-align: center;display: flex;align-items: center;height: calc(100vh - 11em );width: 100%">
       <a-row :gutter="[20]" style="width:100%">
         <a-col :span="showPrompt?12:24"  style="display: flex;align-items: center;justify-content: center">
@@ -69,7 +69,7 @@ export default {
   name: 'Apps',
   components: { SecondPanel },
   computed: {
-    ...mapWritableState(appStore, ['apps', 'status'])
+    ...mapWritableState(appStore, [ 'status'])
   },
   mounted () {
     //确认自启动，如果未启动，则静默启动
@@ -151,8 +151,6 @@ export default {
       let currentSeconds = current.getHours() * 60 * 60 + current.getMinutes() * 60 + current.getSeconds()
       this.status.music.percent = (currentSeconds / totalSeconds * 100).toFixed(0)
     },
-
-    ...mapActions(appStore, ['addApps']),
 
     changeTab (data) {
       this.currentIndex = data.index

@@ -1,54 +1,58 @@
 <template>
-  <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg"
-               @change-tab="changeTab"></SecondPanel>
-  <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
-    <div v-if="myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
-      <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
-      将应用拖放到此处，即可用于快捷启动
-    </div>
-    <div v-if="myApps.length===0" style="text-align: center">
-      <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
-    </div>
-    <div style="padding: 1em">
-      <MyApps></MyApps>
-    </div>
-  </div>
-  <div class="app-content" v-if="currentIndex==='qing'">
-    <QingApps></QingApps>
-  </div>
-  <div class="app-content" v-if="currentIndex==='store'" style="padding:2em;">
-    <vue-custom-scrollbar :settings="settings"
-                          style="position:relative;height:calc(100vh - 14em);  border-radius: 8px;">
-      <div style="margin: auto;width: 95%;height: auto;text-align: center">
-        <div style="margin-bottom: 1em;font-size: 1.5em">
-          共 {{ storeApps.length }} 应用
-        </div>
-        <div v-for="app in storeApps"
-             style="display: inline-block;width:660px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px;">
-          <a-row :gutter="20">
-            <a-col :span="5">
-              <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
-              </a-avatar>
-            </a-col>
-            <a-col :span="13">
-              <div class="app-name" style="text-align: left">{{ app.name }}</div>
-              <div class="app-summary" style="text-align: left">
-                {{ app.summary }}
-              </div>
-            </a-col>
-            <a-col :span="6">
-              <div v-if="app.needInstall" class="btn">
-                安装
-              </div>
-              <div @click="executeApp(app.data)" v-else class="btn">
-                打开
-              </div>
-            </a-col>
-          </a-row>
-        </div>
+  <div style="display: flex;height: 100%">
+    <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg"
+                 @change-tab="changeTab"></SecondPanel>
+    <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
+      <div v-if="myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
+        <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
+        将应用拖放到此处，即可用于快捷启动
       </div>
-    </vue-custom-scrollbar>
+      <div v-if="myApps.length===0" style="text-align: center">
+        <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
+      </div>
+      <div style="padding: 1em">
+        <MyApps></MyApps>
+      </div>
+    </div>
+    <div class="app-content" v-if="currentIndex==='qing'">
+      <QingApps></QingApps>
+    </div>
+    <div class="app-content" v-if="currentIndex==='store'" style="padding:2em;">
+      <vue-custom-scrollbar :settings="settings"
+                            style="position:relative;height:100%;  border-radius: 8px;">
+        <div style="margin: auto;width: 95%;height: auto;text-align: center">
+          <div style="margin-bottom: 1em;font-size: 1.5em">
+            共 {{ storeApps.length }} 应用
+          </div>
+          <div v-for="app in storeApps"
+               style="display: inline-block;width:660px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px;">
+            <a-row :gutter="20">
+              <a-col :span="5">
+                <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
+                </a-avatar>
+              </a-col>
+              <a-col :span="13">
+                <div class="app-name" style="text-align: left">{{ app.name }}</div>
+                <div class="app-summary" style="text-align: left">
+                  {{ app.summary }}
+                </div>
+              </a-col>
+              <a-col :span="6">
+                <div v-if="app.needInstall" class="btn">
+                  安装
+                </div>
+                <div @click="executeApp(app.data)" v-else class="btn">
+                  打开
+                </div>
+              </a-col>
+            </a-row>
+          </div>
+        </div>
+      </vue-custom-scrollbar>
+    </div>
   </div>
+
+
 </template>
 
 <script>
@@ -239,9 +243,12 @@ export default {
 <style scoped lang="scss">
 .app-content {
   background: #3b3b3b;
-  height: calc(100vh - 2em);
-  margin-left: 11em;
+  height: 100%;
+  flex-shrink: 1;
+  flex-grow: 1;
   border-radius: 8px;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 </style>
