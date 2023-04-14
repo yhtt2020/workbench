@@ -62,7 +62,7 @@
           </a-row>
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
-          <div class="mt-3 mb-3 text-red-500">抱歉，您暂时还不具备抢鲜体验资格。您可输入激活码激活账号。</div>
+          <div class="mt-3 mb-3">请输入激活码激活账号。</div>
           <p v-if="myCode">检测到您已使用过激活码：{{ myCode }}，可直接填入发车
             <a-button @click="code=myCode" class="ml-3">填入</a-button>
           </p>
@@ -99,19 +99,11 @@ export default {
       code: '',
       launching: true,
       storeReadyTimer: null,
-      launched: false
+      launched: false,
+      modal: null
     }
   },
   async mounted () {
-    console.log('splash')
-    /**
-     *   store:false,
-     *   code:false,
-     *   cardStore:false,
-     *   weather:false,
-     *   deck:false,
-     *   paper:false,
-     */
     //window.loadedStore={}//启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     this.initStore(appStore, 'appStore')
     this.initStore(codeStore, 'code')
@@ -121,10 +113,14 @@ export default {
     this.initStore(deckStore, 'deck')
     window.loadedStore['userInfo'] = false
     ipc.removeAllListeners('userInfo')
-    ipc.on('userInfo', (event, args) => {
+    ipc.on('userInfo', async (event, args) => {
       console.log('获取到userInfo，并进行数据填充和提示')
       this.tipped = false
       this.loading = false
+      if (args.data.uid <= 0) {
+        window.loadedStore['userInfo'] = true
+        return
+      }
       const userInfo = args.data
 
       let lvInfo = this.lvInfo
@@ -138,30 +134,29 @@ export default {
       lvInfo.percentage = ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) * 100
       //this.lvInfo = lvInfo
       window.loadedStore['userInfo'] = true
-      this.setUser(userInfo)
       if (this.$route.name === 'splash') {
-        this.verify(userInfo.uid).then(rs => {
-          if (rs) {
-            Modal.success({
-              content: '您的账号具备EA资格，点击确定即可发车。',
-              centered:true,
-              onOk: () => {
-                this.$router.replace({
-                  name: 'home'
-                })
-              }
-            })
-          } else {
-            Modal.error({
-              content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
-              centered:true,
-              onOk: () => {}
-            })
-          }
-        })
+        let rs = await this.verify(userInfo.uid)
+        if (rs) {
+          // Modal.success({
+          //   content: '您的账号具备EA资格，点击确定即可发车。',
+          //   centered:true,
+          //   onOk: () => {
+          //     this.$router.replace({
+          //       name: 'home'
+          //     })
+          //   }
+          // })
+          this.$router.replace({ path: '/index/' })
+        } else {
+          Modal.error({
+            content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+            centered: true,
+            onOk: () => {}
+          })
+        }
       }
+      this.setUser(userInfo)
     })
-
 
     console.log(window.loadedStore, '已经初始化检测数组')
     this.storeReadyTimer = setInterval(() => {
@@ -180,7 +175,7 @@ export default {
         console.log('检测到已经全部载入完成')
         //已经全部搞定
         clearInterval(this.storeReadyTimer)
-        this.afterLaunch()
+        this.afterLaunch().then()
       }
     }, 1000)
 
@@ -208,7 +203,11 @@ export default {
     },
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
     ...mapActions(appStore, ['getUserInfo', 'setUser']),
-    afterLaunch () {
+    async afterLaunch () {
+      if (!this.settings.zoomFactor) {
+        this.settings.zoomFactor = 100
+      }
+      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
         document.body.style.background = '#191919'
       }
@@ -244,15 +243,15 @@ export default {
         } else {
           this.myCode = this.code
           let timer = setTimeout(() => {
-            this.$router.push({ path: '/wizard' })
-
+            this.modal.destroy()
+            this.$router.replace({ path: '/wizard' })
           }, 10000)
-          Modal.success({
+          this.modal = Modal.success({
             centered: true,
             content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
               clearTimeout(timer)
-              this.$router.push({ path: '/wizard' })
+              this.$router.replace({ path: '/wizard' })
             },
             okText: '发车'
           })
@@ -289,8 +288,8 @@ export default {
 }
 </script>
 
-<style >
-.ant-modal-body{
-  -webkit-app-region:no-drag;
+<style>
+.ant-modal-body {
+  -webkit-app-region: no-drag;
 }
 </style>

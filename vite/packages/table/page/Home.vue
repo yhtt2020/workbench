@@ -85,6 +85,8 @@ import CPUFourCard from '../components/homeWidgets/supervisory/CPUFourCard.vue'
 import InternalList from '../components/homeWidgets/supervisory/InternalList.vue'
 import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue'
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
+import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
+import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
@@ -134,7 +136,9 @@ export default {
     SmallCPUCard,
     SmallGPUCard,
     AddCard,
-    GradeNotice
+    GradeNotice,
+    GamesDiscount,
+    DiscountPercentage
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData']),

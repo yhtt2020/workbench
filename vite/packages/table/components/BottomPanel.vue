@@ -370,7 +370,11 @@ export default {
       if(this.lastTime===0){
         let barrages=this.messages.slice(0,10)
         window.$manager.sendChat(barrages)
-        this.lastTime=barrages[0].create_time
+        if(barrages.length>0){
+          this.lastTime=barrages[0].create_time//重新设置指标
+        }else{
+          this.lastTime=Date.now()
+        }
       }else{
         let readyToSend=this.messages.filter(mes=>{
           return mes.create_time>this.lastTime

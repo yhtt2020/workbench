@@ -22,6 +22,7 @@
 import { mapActions } from "pinia";
 import { cardStore } from "../../../store/card";
 import CardPreview from "./CardPreview.vue";
+import axios from 'axios'
 export default {
   name: "AddCard",
   components:{CardPreview},
@@ -36,6 +37,7 @@ export default {
         { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
         { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
         { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
+        { name:"games", cname:"今日折扣",icon:"game",detail:"热门折扣游戏推荐",images:['GamesDiscount','DiscountPercentage']}
       ],
       cardType:{},
       show:false,
@@ -73,6 +75,9 @@ export default {
           break;
         case "supervisory":
           this.cardType=this.cardList[3];
+          break;
+        case "games":
+          this.cardType = this.cardList[8];
           break;
       }
       this.show=true;

@@ -81,10 +81,10 @@ export const codeStore = defineStore('code', {
     },
 
     async verify(uid) {
-      if (!this.myCode) {
-        console.warn('未设置激活码')
-        return false
-      }
+      // if (!this.myCode) {
+      //   console.warn('未设置激活码')
+      //   return false
+      // }
 
       // let hash = this.getSerialHash()
 
@@ -93,7 +93,7 @@ export const codeStore = defineStore('code', {
         key: this.myCode,
         uid:uid
       }
-      console.log(data)
+      console.log(data,'输出验证的数据')
       let rs = await axios.post(verifyUrl,data)
       if (rs.code !== 1000) {
         // this.myCode = ''
