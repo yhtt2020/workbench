@@ -1,31 +1,33 @@
 <template>
-  <HomeComponentSlot :options="options" :customIndex="customIndex">
-     <div style="margin-top: 1em;">
-       <div class="flex w-full cursor-pointer" style="margin-top: 0.3em;" v-for="item in list">
-          <div class="w-1/3 h-20" style="margin-right:10px;">
-            <img :src="item.image" alt="" class="rounded-lg" style="width: 100%; height:100%;object-fit: cover;">
-          </div>
-          <div class="flex w-2/3 flex-col">
-            <div class="w-full truncate name" style="line-height: 20px;margin-bottom: 0.25em;" >{{item.name}}</div>
-            <div class="active-type">
-              <span v-for="activeItem in item.genres" class="bg-white rounded-md bg-opacity-10 active-item  ">{{activeItem.description}}</span>
-            </div>
-            <span class="initial-price line-through">¥{{item.initial_price}}</span>
-            <div class="flex justify-between">
-              <div class="flex w-2/3">
-                <span class="text-red-600">¥{{item.final_price}}</span>
-                <span v-if="item.address === 'CNY'" class="address">(中国区)</span>
+  <HomeComponentSlot :options="options"  :customIndex="customIndex">
+    <div class="discount-item flex flex-col" style="margin-top: 1em;">
+       <div class="flex flex-col ">
+        <div class="w-full h-20 flex" v-for="item in list" style="margin-bottom: 20px;">
+           <img :src="item.image" alt="" class="h-20 rounded-md" style="width:120px; object-fit: cover;"> 
+           <div class="flex  discount-content flex-col" style="margin-left: 10px;">
+              <div class="name truncate" style="margin-bottom: 2px;line-height: 21px;">{{item.name}}</div>
+              <div class="flex flex-row">
+                <span  class="bg-white bg-opacity-40 rounded-md text-white text-opacity-60" v-for="activeItme in item.genres" style="padding: 0 6px; margin-right: 4px; font-size: 12px;">
+                  {{ activeItme.description}}
+                </span>
               </div>
-              <span class="bg-red-600 w-12 text-center rounded-md">-{{ item.discount_percent }} %</span>
-            </div>
-          </div>
+              <span class="line-through text-white text-opacity-60" style="font-size: 10px;">￥{{item.initial_price}}</span>
+              <div class="flex justify-between ">
+                 <span style="color:rgba(255, 77, 79, 1);font-size: 14px;font-weight: 400;">￥{{item.final_price}}</span>
+                 <span class="bg-red-600 rounded-md" style="padding: 3px 7px;">-{{item.discount_percent}}%</span>
+              </div>
+           </div>
+        </div>
        </div>
-     </div> 
+       <div class="bg-black flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+        <Icon icon="reload" style="font-size: 1.429em;"></Icon>
+        <span style="margin-left: 1em;">换一换</span>
+       </div>
+    </div>
   </HomeComponentSlot>
 </template>
 
 <script>
-import Icon from '@ant-design/icons-vue/lib/components/Icon';
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 import {requestData,randomData} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
@@ -39,15 +41,14 @@ export default {
     }
   },
   components:{
-    Icon,
     HomeComponentSlot
   },
   data(){
     return{
       options:{
         className:'card',
-        title:'今日折扣',
-        icon:'game',
+        title:'Steam折扣推荐',
+        icon:'steam',
         type:'games'
       },
       list:[]
@@ -57,14 +58,15 @@ export default {
     this.getDiscountData()
   },
   computed:{
-    ...mapWritableState(cardStore,['gameData'])
+    ...mapWritableState(cardStore,['gameData']),
   },
   methods:{
     ...mapActions(cardStore,['getGameOffers']),
     getDiscountData(){
       requestData('https://store.steampowered.com/api/featuredcategories/?cc=cn&l=cn').then(res=>{
         const data = res.data.specials.items
-        const randomArr = randomData(data,4)
+        this.gameData = []
+        const randomArr = randomData(data,3)
         this.getGameOffers(randomArr)
         this.gameData.forEach(el=>{
           this.getAppList(el)
@@ -76,7 +78,6 @@ export default {
     getAppList(el){
       requestData(`https://store.steampowered.com/api/appdetails/?appids=${el.id}`).then(res=>{
         if(res.status === 200){
-          console.log(res.data[el.id].data);
           const appObj = {
             id:el.id,
             image:el.header_image,
@@ -92,36 +93,23 @@ export default {
       }).catch(err=>{
         console.error(err);
       })
+    },
+    // 点击切换
+    discountChange(){
+      // this.getDiscountData()
+      // // console.log(1);
     }
   }
 }
 </script>
 
 <style  lang="scss" scoped>
-.active-type{
-  display: flex;
-  flex-wrap: wrap;
-  .active-item{
-    flex: 0 0 calc(33.33% - 10px);
-    padding: 1px 6px;
-    margin: 0 4px 5px 0;
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
-    text-align: center;
+.discount-item{
+  
+  .discount-content{
+     .name{
+      max-width: 121px;
+     }
   }
-}
-.initial-price{
-  font-size: 10px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.address{
- font-size: 10px;
- font-weight: 400;
- color: rgba(255, 255, 255, 0.4);
- margin-left: 1.25em;
- margin-top: 0.25em;
 }
 </style>

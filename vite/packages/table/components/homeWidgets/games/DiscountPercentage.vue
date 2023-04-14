@@ -1,10 +1,5 @@
 <template>
-  <HomeComponentSlot :customIndex="customIndex" :options="options">
-     <div class="w-full h-20 cursor-pointer"  v-for="imgItem in discountList" style="margin-bottom:0.5em;margin-top: 0.65em;position: relative;">
-        <img :src="imgItem.banner_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.proportion}}%</div>
-     </div>
-  </HomeComponentSlot>
+   
 </template>
 
 <script>
@@ -28,8 +23,8 @@ export default {
     return{
       options:{
         className:'card',
-        title:'今日折扣',
-        icon:'game',
+        title:'Steam折扣推荐',
+        icon:'steam',
         type:'games'
       },
       discountList:[],
@@ -45,11 +40,15 @@ export default {
     getPercentage(){
        this.gameData.filter(el=>{
           this.discountList.push({
+            id:el.id,
             banner_image:el.header_image,
             proportion:el.discount_percent
           })
        })
     },
+    goToGameDetails(id){
+      console.log(id);
+    }
   }
 }
 </script>
