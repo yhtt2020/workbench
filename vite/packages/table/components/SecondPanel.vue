@@ -7,16 +7,18 @@
       </div>
     </div>
     <vue-custom-scrollbar id="second-container" :settings="settingsScroller" style="height: 80vh">
-      <div @click="change($event,menu)" class="menu" :class="{'active':current(menu)}"
+      <div @click="change($event,menu)" class="menu relative" :class="{'active':current(menu)}"
          v-for="(menu) in menus">
         <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
         <span style="margin-left: 0.5em;font-size: 1em;">{{ menu.title }}</span>
+        <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title==='动态壁纸'"></GradeSmallTip>
       </div>
     </vue-custom-scrollbar>
   </div>
 </template>
 
 <script>
+import GradeSmallTip from "./GradeSmallTip.vue";
 export default {
   name: 'SecondPanel',
   props: [
@@ -32,6 +34,7 @@ export default {
   emits: [
     'changeTab'
   ],
+  components:{GradeSmallTip},
   data () {
     return {
       panel: {},
@@ -77,7 +80,7 @@ export default {
 <style scoped lang="scss">
 .second-panel {
   &.small{
-    
+
   }
   height:auto;
   border-radius: 6px;
@@ -114,7 +117,7 @@ export default {
   margin-bottom: 0.5em;
   &:hover {
     background: #696969;
-  } 
+  }
 }
 
 </style>

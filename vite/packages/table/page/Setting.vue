@@ -7,16 +7,18 @@
         <h3>快速开关功能</h3>
         <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center">
           <a-col :span="12">
-            <div class="btn">
+            <div class="btn relative">
               弹幕
               <br>
               <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
+              <GradeSmallTip powerType="barrage" lastPowerType="关闭弹幕"></GradeSmallTip>
             </div>
           </a-col>
           <a-col :span="12">
-            <div class="btn">
+            <div class="btn relative">
               聊天<br>
               <a-switch v-model:checked="settings.enableChat"></a-switch>
+              <GradeSmallTip powerType="closeChat"></GradeSmallTip>
             </div>
           </a-col>
           <a-col :span="12">
@@ -146,10 +148,10 @@ import { mapWritableState } from 'pinia'
 import { message } from 'ant-design-vue'
 import {mapActions} from 'pinia'
 import { codeStore } from '../store/code'
-
+import GradeSmallTip from "../components/GradeSmallTip.vue";
 export default {
   name: 'Setting',
-  components: { ChooseScreen },
+  components: { ChooseScreen,GradeSmallTip },
   data () {
     return {
       visibleChooseScreen: false

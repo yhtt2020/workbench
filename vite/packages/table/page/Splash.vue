@@ -103,6 +103,7 @@ export default {
     }
   },
   async mounted () {
+    console.log('splash')
     /**
      *   store:false,
      *   code:false,

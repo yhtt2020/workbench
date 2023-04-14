@@ -8,7 +8,7 @@
   <transition name="fade">
   <div class="content flex flex-col" v-show="!editFlag">
     <span>快捷导航栏</span>
-    <span>点击添加更多快捷方式，支持长安拖拽排序，左右滑动查看更多</span>
+    <span>点击添加更多快捷方式，支持长按拖拽排序，左右滑动查看更多</span>
     <div class="nav-list">
         <div style="height: 73px;overflow: hidden;" class="flex flex-row  items-center pl-2 w-full">
         <div style="overflow: hidden;overflow-x: auto;" id="navList"
@@ -68,8 +68,8 @@
           <vue-custom-scrollbar  key="scrollbar"  :settings="rightScrollbarSettings"
                                 class="relative"
                                 style="height: calc(100% - 40px);padding: 5px 0">
-            <listItem v-for="(item,index) in filterList" :item="item" :style="avtiveRightItem===index?'background:rgb(42, 42, 42)':''"
-                      class=" rounded-xl" @click="clickRightListItem(item,index)"></listItem>
+            <listItem v-for="(item,index) in filterList" :item="item"
+                      class=" rounded-xl right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
           </vue-custom-scrollbar>
         </div>
         <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500  h-full">
@@ -443,5 +443,8 @@ export default {
 
     }
   }
+}
+.right-scroll-list:hover{
+  background:rgb(42, 42, 42)
 }
 </style>

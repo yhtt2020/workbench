@@ -63,10 +63,10 @@
         </div>
       </div>
     </div>
-    <div class="card mr-3" style="width: 400px;padding: 1em;display: inline-block;vertical-align: top">
+<!--    <div class="card mr-3" style="width: 400px;padding: 1em;display: inline-block;vertical-align: top">-->
 
-      <GradePanel></GradePanel>
-    </div>
+<!--      <GradePanel></GradePanel>-->
+<!--    </div>-->
 
   </div>
   </vueCustomScrollbar>

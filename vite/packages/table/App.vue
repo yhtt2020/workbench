@@ -72,7 +72,7 @@ export default {
     };
   },
   async mounted() {
-
+    console.log('app')
    //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
    //  if (!this.init) {
    //    console.log(this.init)
@@ -106,7 +106,9 @@ export default {
     // },3000)
 
 
-    window.powerGrade = this.userInfo.onlineGradeExtra
+
+
+
     window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
     if(!this.settings.zoomFactor){
       this.settings.zoomFactor=100
@@ -229,6 +231,12 @@ export default {
         } catch (err) {
 
         }
+      },
+      immediate: true,
+    },
+    "userInfo.onlineGradeExtra": {
+      handler(newVal, oldVal) {
+        window.powerGrade = this.userInfo.onlineGradeExtra
       },
       immediate: true,
     },

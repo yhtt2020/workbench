@@ -1,6 +1,7 @@
 <template>
   <div id="galleryContainer"  style="text-align: center;padding-top: 2em">
-    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; margin-top: 3em;text-align: left; border-right: 1px solid rgba(255, 255, 255, 0.1);"  @changeTab="changeTab"></SecondPanel> 
+    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; margin-top: 3em;text-align: left; border-right: 1px solid rgba(255, 255, 255, 0.1);"  @changeTab="changeTab">
+    </SecondPanel>
     <div id="parentScroller" style="margin-left: 15em">
       <router-view></router-view>
     </div>
@@ -13,7 +14,7 @@ import justifiedGallery from 'justifiedGallery'
 
 
 import VueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-
+import GradeSmallTip from "../components/GradeSmallTip.vue";
 import SecondPanel from '../components/SecondPanel.vue'
 
 export default {
@@ -21,6 +22,7 @@ export default {
   components: {
     SecondPanel,
     VueCustomScrollbar,
+    GradeSmallTip
   },
   data: () => ({
     tab: '',

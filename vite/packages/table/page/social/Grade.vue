@@ -1,7 +1,7 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 13em);padding: 15px;">
-  <div class="w-full h-full flex justify-center flex-row flex-wrap" >
+                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 155px);padding: 15px;">
+  <div class="w-full  flex justify-start flex-row flex-wrap" >
     <div class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
       <div class="w-full  pt-4 pb-4 grade-card  rounded-xl  mb-4" >
         <GradePanel @openGradeTip="openGradeTip"></GradePanel>
@@ -27,9 +27,9 @@
       </div>
       <div class="flex flex-wrap justify-between  bottom-card w-full">
         <div  v-for="item in powerList" class="rounded-xl h-1/6  mt-2 flex flex-row items-center p-2 relative" style="width: calc(50% - 8px);" :style="item.detail[[leveList[clickGrade]]]?'background: rgba(42, 42, 42, 1)':'background: rgba(42, 42, 42, 1);opacity: 0.6;'">
-          <Icon :icon="item.icon" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>
+          <Icon :icon="item.icon" style="width: 24px;height: 24px;" class="mr-4 ml-2 text-white"></Icon>
           <div style="width: calc(100% - 50px)">
-            <div class="text-white text-more w-full">{{item.name}}</div>
+            <div class="text-white text-more w-full">{{item.alias}}</div>
             <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full">{{item.detail[[leveList[clickGrade]]]}}</div>
           </div>
           <div  class="grade-tip" style="color: rgba(255, 255, 255, 0.85);" v-if="item.noOnline">即将上线</div>
@@ -40,7 +40,7 @@
   </div>
   </vueCustomScrollbar>
   <div class="home-blur fixed inset-0 float-tip" style="z-index: 999" v-if="tipFlag" @click.stop="closeTip">
-    <div class="rounded-xl  w-1/3 h-60  px-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="background: rgba(33, 33, 33, 1);">
+    <div class="rounded-xl  w-96  h-60  px-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="background: rgba(33, 33, 33, 1);">
       <div class="flex items-center -ml-4 mt-3">
         <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
       </div>
@@ -89,7 +89,6 @@ export default {
   mounted () {
     this.grade = this.userInfo.onlineGradeExtra
     this.clickStep(this.abilityGrade)
-     console.log(powerGrade)
   },
   methods:{
     openGradeTip(){
