@@ -91,7 +91,9 @@ import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
+import Remote from '../components/homeWidgets/custom/Remote.vue'
 const readAida64 = window.readAida64
+
 export default {
   name: 'Home',
   data () {
@@ -126,6 +128,7 @@ export default {
     CustomTimer,
     SmallCountdownDay,
     Clock,
+    Remote,
     CountdownDay,
     Fish,
     vuuri,
