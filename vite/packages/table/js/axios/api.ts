@@ -1,21 +1,4 @@
 import axios from "axios"
-/**
- * 随机获取四个数据
- * @param  data   数组
- * @param  count  数量
- * **/
-export function randomData(data: any,count: any) {
-   const result = []
-   while (result.length < count){
-    const randomIndex = Math.floor(Math.random() * data.length)
-    const randomElement = data[randomIndex]
-    if (!result.includes(randomElement)) {
-      result.push(randomElement);
-    }
-   }
-   return result;
-}
-
 /***
  * 处理请求超时问题
  * @param url
@@ -40,3 +23,21 @@ export const requestData = (url: any, options = {}) => {
     return Promise.reject(error);
   });
 };
+
+
+/**
+ * 随机获取四个数据
+ * @param  data   数组
+ * @param  count  数量
+ * **/
+export function randomData(data: any,count: any) {
+  const result = []
+  while (result.length < count){
+   const randomIndex = Math.floor(Math.random() * data.length)
+   const randomElement = data[randomIndex]
+   if (!result.includes(randomElement)) {
+     result.push(randomElement);
+   }
+  }
+  return result;
+}
