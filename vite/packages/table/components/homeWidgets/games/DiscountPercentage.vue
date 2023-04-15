@@ -49,11 +49,13 @@ export default {
   methods:{
     getPercentage(){
        const randomApp = randomData(this.gameData,2)
-       console.log(randomApp);
+       
     },
+    // 进入详情页
     goToGameDetails(id){
   
     },
+    // 按钮点击切换
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
