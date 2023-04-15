@@ -66,6 +66,7 @@ export default {
   },
   mounted(){
     this.getDiscountData()
+    this.getRandomData()
   },
   computed:{
     ...mapWritableState(steamStore,['gameData','randomData']),
@@ -77,7 +78,6 @@ export default {
       requestData('https://store.steampowered.com/api/featuredcategories/?cc=cn&l=cn').then(res=>{
         const data = res.data.specials.items
         this.getGameOffers(data)
-        this.getRandomData()
       }).catch(err=>{
         console.error(err)
       })

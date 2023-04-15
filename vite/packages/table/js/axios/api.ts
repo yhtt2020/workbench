@@ -5,7 +5,7 @@ import axios from "axios"
 */
 export const requestData = (url: any, options = {}) => {
   const defaultOptions = {
-    retries: 5, // 默认重试次数为3次
+    retries: 3, // 默认重试次数为3次
     retryInterval: 5000 // 默认重试间隔为5秒
   };
   const requestOptions = Object.assign({}, defaultOptions, options);

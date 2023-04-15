@@ -5,17 +5,18 @@
        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.proportion}}%</div>
     </div>
     <div class=" flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;background: #1f1f1f">
-      <Icon icon="reload" style="font-size: 1.429em;"></Icon>
+      <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
+      <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
       <span style="margin-left: 1em;">换一换</span>
      </div>
  </HomeComponentSlot>
 </template>
 
 <script>
-import Icon from '@ant-design/icons-vue/lib/components/Icon';
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import {requestData,randomData} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
-import {cardStore} from '../../../store/card'
+import {steamStore} from '../../../store/steam'
 export default {
   name:'DiscountPercentage',
   props:{
@@ -25,7 +26,6 @@ export default {
     }
   },
   components:{
-    Icon,
     HomeComponentSlot
   },
   data(){
@@ -37,29 +37,29 @@ export default {
         type:'games'
       },
       discountList:[],
+      reloadShow:false
     }
   },
   computed:{
-    ...mapWritableState(cardStore,['gameData'])
+    ...mapWritableState(steamStore,['gameData'])
   },
   mounted(){
     this.getPercentage()
   },
   methods:{
     getPercentage(){
-       this.gameData.filter(el=>{
-          this.discountList.push({
-            id:el.id,
-            banner_image:el.header_image,
-            proportion:el.discount_percent
-          })
-       })
+       const randomApp = randomData(this.gameData,2)
+       console.log(randomApp);
     },
     goToGameDetails(id){
-      console.log(id);
+  
     },
     discountChange(){
-
+      this.reloadShow = true
+      setTimeout(()=>{
+        this.getPercentage()
+        this.reloadShow = false
+      },2000)
     }
   }
 }
