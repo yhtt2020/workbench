@@ -1,16 +1,16 @@
 <template>
   <HomeComponentSlot :options="options" :customIndex="customIndex">
-    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 8em 0;align-items: center" v-if="countdownDay.length <= 0">
+    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDay.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
     </div>
     <div class="content" v-else>
-    <div >
+    <div style="padding-top: 0.2em">
 
-    </div>
+
     <div
       class="event-list"
-      v-for="item in countdownDay.slice(0, 6)"
+      v-for="(item) in countdownDay.slice(0, 3)"
       style="background-color:  rgba(40, 40, 40, 0.2)"
     >
       <div class="event-title">
@@ -23,7 +23,7 @@
       </div>
       <span
       ><span v-if="item.type">还有</span>
-        <span v-else>已过</span>{{
+        <span v-else>已过</span> {{
           transDate(
             appDate.year + "-" + appDate.month + "-" + appDate.day,
             item.dateValue.year +
@@ -32,9 +32,9 @@
             "-" +
             item.dateValue.day
           )
-        }}天</span
+        }} 天</span
       >
-    </div>
+    </div>    </div>
   </div>
   </HomeComponentSlot>
 
@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       options:{
-        className:'card',
+        className:'card small',
         title:'倒数日',
         icon:'rili2',
         type:'countdownDay'
@@ -146,7 +146,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.7em;
+  margin-top: 0.4em;
   border-radius: 4px;
 }
 .event-title {

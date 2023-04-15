@@ -20,8 +20,10 @@
         <vuuri group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key"
                class="grid home-widgets" ref="grid">
           <template #item="{ item }">
-            <component :is="item.name" :customIndex="item.id" :style="{pointerEvents:(editing?'none':'')}"
+            <div :style="{pointerEvents:(editing?'none':'')}">
+            <component :is="item.name" :customIndex="item.id"
                        :editing="editing" :runAida64="runAida64"></component>
+            </div>
           </template>
         </vuuri>
       </div>
@@ -91,7 +93,9 @@ import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
+import Remote from '../components/homeWidgets/custom/Remote.vue'
 const readAida64 = window.readAida64
+
 export default {
   name: 'Home',
   data () {
@@ -126,6 +130,7 @@ export default {
     CustomTimer,
     SmallCountdownDay,
     Clock,
+    Remote,
     CountdownDay,
     Fish,
     vuuri,

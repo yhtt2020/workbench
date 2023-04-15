@@ -145,7 +145,7 @@ export default {
 
 <style  lang="scss" scoped>
 .discount-item{
-  
+
   .discount-content{
      .name{
       max-width: 121px;

@@ -1,10 +1,10 @@
 <template>
   <HomeComponentSlot :customIndex="customIndex" :options="options">
-    <div class="w-full h-20 cursor-pointer"  v-for="imgItem in discountList" style="margin-bottom:0.5em;margin-top: 0.65em;position: relative;">
+    <div class="w-full  cursor-pointer"  v-for="imgItem in discountList" style="height:94px;margin-bottom:0.5em;margin-top: 0.65em;position: relative;">
        <img :src="imgItem.banner_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.proportion}}%</div>
     </div>
-    <div class="bg-black flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+    <div class=" flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;background: #1f1f1f">
       <Icon icon="reload" style="font-size: 1.429em;"></Icon>
       <span style="margin-left: 1em;">换一换</span>
      </div>
@@ -59,7 +59,7 @@ export default {
       console.log(id);
     },
     discountChange(){
-      
+
     }
   }
 }
