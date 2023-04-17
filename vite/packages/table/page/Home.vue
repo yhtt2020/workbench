@@ -1,9 +1,30 @@
 <template>
+  <a-result v-if="this.customComponents.length===0"
+            status="success"
+            title="使用卡片桌面"
+            sub-title="您可以长按空白处、右键添加卡片。"
+  >
+    <template #extra>
+      <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
+      <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+    </template>
+
+    <div class="desc">
+      <p style="font-size: 16px">
+        <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
+      </p>
+      <p>
+        <close-circle-outlined :style="{ color: 'red' }"/>
+        从社区获得分享代码（此功能暂未上线，请耐心等待）
+        <a>从社区导入 &gt;</a>
+      </p>
+    </div>
+  </a-result>
   <div
     style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%">
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-                          style="position:relative;  border-radius: 8px;width: 100%;height: 100%">
-      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center" :style="{'padding-top':this.settings.marginTop+'px'}">
+                          style="position:relative;  border-radius: 8px;width: 100%;height: 100%;margin-right:1em">
+      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;" :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -18,7 +39,7 @@
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
         <vuuri  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
-               class="grid home-widgets" ref="grid">
+               class="grid home-widgets" ref="grid" >
           <template #item="{ item }">
             <div :style="{pointerEvents:(editing?'none':'')}" >
             <component :is="item.name" :customIndex="item.id"
@@ -64,6 +85,12 @@
           <div><span>设置</span></div>
         </div>
       </a-col>
+      <a-col>
+        <div @click="clear" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div><span>清空卡片</span></div>
+        </div>
+      </a-col>
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
@@ -74,7 +101,7 @@
       卡片缩放：<a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
     </div>
     <div class="line">
-      上边距：<a-slider :min="20" :max="200" v-model:value="settings.marginTop"></a-slider>
+      上边距：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
 
   </a-drawer>
@@ -99,7 +126,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { cardStore } from '../store/card'
 import vuuri from '../components/vuuriHome/Vuuri.vue'
 import Widget from '../components/muuri/Widget.vue'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import CPULineChart from '../components/homeWidgets/supervisory/CPULineChart.vue'
 import CPUFourCard from '../components/homeWidgets/supervisory/CPUFourCard.vue'
 import InternalList from '../components/homeWidgets/supervisory/InternalList.vue'
@@ -113,7 +140,53 @@ import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 const readAida64 = window.readAida64
-
+const initCards=[
+  {
+    "name": "customTimer",
+    "id": 1681303790200,
+    "_$muuri_id": "beb962f8-3a10-4ad3-a01b-21cd2ae5985e"
+  },
+  {
+    "name": "weather",
+    "id": 1681303795258,
+    "_$muuri_id": "f9658e4c-7584-40c6-975b-4b362c13f419"
+  },
+  {
+    "name": "fish",
+    "id": 1681303797561,
+    "_$muuri_id": "cf45bb0a-1ef3-4f73-aeb2-fb4da23cfc79"
+  },
+  {
+    "name": "GamesDiscount",
+    "id": 1681304819425,
+    "_$muuri_id": "53c4c962-85a0-4201-8eff-85b223333206"
+  },
+  {
+    "name": "DiscountPercentage",
+    "id": 1681479859424,
+    "_$muuri_id": "4f0c7734-1669-4cbc-aaf1-f2df032c3589"
+  },
+  {
+    "name": "smallCountdownDay",
+    "id": 1681303811893,
+    "_$muuri_id": "0dac9212-79a0-4cf1-af94-562810c64300"
+  },
+  {
+    "name": "timer",
+    "id": 1681303805239,
+    "_$muuri_id": "51236306-c067-4a42-8d0d-dbe654027e13"
+  },
+  {
+    "name": "clock",
+    "id": 1681303836730,
+    "_$muuri_id": "fc787395-eb58-4b7c-859e-25531369ccf1"
+  },
+  {
+    "name": "weather",
+    "id": 1681395395579,
+    "_$muuri_id": "a093e20f-49ae-4325-8ed6-5a79ec8d9274"
+  }
+]
 export default {
   name: 'Home',
   data () {
@@ -194,6 +267,20 @@ export default {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
    // ...mapActions(appStore, ['setAgreeTest']),
+    initGrids(){
+      this.customComponents=initCards
+    },
+    clear(){
+      this.menuVisible=false
+      Modal.confirm({
+        centered:true,
+        content:'清空全部卡片？此操作不可还原。',
+        onOk:()=>{
+          this.customComponents=[]
+        },
+        okText:"删除全部"
+      })
+    },
     showSetting(){
       this.settingVisible=true
       this.menuVisible=false
