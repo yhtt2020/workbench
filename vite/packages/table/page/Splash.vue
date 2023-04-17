@@ -100,7 +100,8 @@ export default {
       launching: true,
       storeReadyTimer: null,
       launched: false,
-      modal: null
+      modal: null,
+      timeoutHandler:null,
     }
   },
   async mounted () {
@@ -146,6 +147,24 @@ export default {
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo']),
   },
   methods: {
+    timeout(){
+      this.timeoutHandler=setTimeout(()=>{
+        Modal.error({
+          content:'服务器连接超时。无法验证激活信息。请稍后再试。',
+          key:'error',
+          okText:'重试',
+          centered:true,
+          onOk:()=>{
+            window.location.reload()
+          }
+        })
+      },5000)
+    },
+    enter(){
+      console.info('进入首页')
+      clearTimeout(this.timeoutHandler)//清理掉超时提示
+      this.$router.replace({ name: 'home' })
+    },
     bindUserInfoResponse(){
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
@@ -210,8 +229,18 @@ export default {
           this.launching = false
           return
         } else {
-          this.$router.replace({ name: 'home' })
+          this.enter()
         }
+      }).catch((err)=>{
+        Modal.error({
+          content:'服务器连接超时。无法验证激活信息。请稍后再试。',
+          key:'error',
+          okText:'重试',
+          centered:true,
+          onOk:()=>{
+            window.location.reload()
+          }
+        })
       })
 
     },
