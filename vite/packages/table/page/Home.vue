@@ -2,8 +2,8 @@
   <div
     style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%">
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-                          style="position:relative;  border-radius: 8px;">
-      <div style="white-space: nowrap;">
+                          style="position:relative;  border-radius: 8px;width: 100%;height: 100%">
+      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center" :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -17,10 +17,10 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key"
+        <vuuri  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
                class="grid home-widgets" ref="grid">
           <template #item="{ item }">
-            <div :style="{pointerEvents:(editing?'none':'')}">
+            <div :style="{pointerEvents:(editing?'none':'')}" >
             <component :is="item.name" :customIndex="item.id"
                        :editing="editing" :runAida64="runAida64"></component>
             </div>
@@ -58,7 +58,25 @@
           <div><span>添加卡片</span></div>
         </div>
       </a-col>
+      <a-col>
+        <div @click="showSetting" class="btn">
+          <Icon style="font-size: 3em" icon="shezhi1"></Icon>
+          <div><span>设置</span></div>
+        </div>
+      </a-col>
     </a-row>
+  </a-drawer>
+  <a-drawer v-model:visible="settingVisible" placement="right">
+    <div class="line-title">
+      卡片容器设置：
+    </div>
+    <div class="line">
+      卡片缩放：<a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+    </div>
+    <div class="line">
+      上边距：<a-slider :min="20" :max="200" v-model:value="settings.marginTop"></a-slider>
+    </div>
+
   </a-drawer>
   <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>
@@ -101,6 +119,7 @@ export default {
   data () {
     return {
       menuVisible: false,
+      settingVisible:false,
       editing: false,
       key: Date.now(),
       scrollbarSettings: {
@@ -146,7 +165,7 @@ export default {
     DiscountPercentage
   },
   computed: {
-    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData']),
+    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
     ...mapWritableState(appStore, ['agreeTest']),
 
   },
@@ -175,6 +194,10 @@ export default {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
    // ...mapActions(appStore, ['setAgreeTest']),
+    showSetting(){
+      this.settingVisible=true
+      this.menuVisible=false
+    },
     addCard () {
       this.custom=true;
       this.menuVisible = false
@@ -295,92 +318,92 @@ export default {
 }
 </style>
 <style lang="scss">
-@media screen and (max-height: 510px) {
-  #scrollerBar {
-    zoom: 0.718;
-    width: calc(100vw + 40em);
-  }
-  .ant-tooltip{
-    zoom: 0.718;
-  }
-}
-@media screen and (min-height: 511px) and (max-height: 550px) {
-  #scrollerBar {
-    zoom: 0.78;
-    width: calc(100vw +  24em);
-  }
-  .ant-tooltip{
-    zoom: 0.78;
-  }
-}
-
-@media screen and (min-height: 551px) and (max-height: 610px) {
-  #scrollerBar {
-    zoom: 0.88;
-    width: calc(100vw + 8em);
-  }
-  .ant-tooltip{
-    zoom: 0.88;
-  }
-}
-
-@media screen and (min-height: 610px) and (max-height: 710px) {
-  #scrollerBar {
-    zoom: 1;
-    width: calc(100vw - 9em);
-  }
-}
-@media screen and (min-height: 711px) and (max-height: 810px) {
-  #scrollerBar {
-    zoom: 1.2;
-    width: calc(100vw - 9em);
-  }
-  .ant-tooltip{
-    zoom: 1.2;
-  }
-}
-
-@media screen and (min-height: 811px) and (max-height: 910px) {
-  #scrollerBar {
-    zoom: 1.4;
-    width: calc(100vw - 9em);
-  }
-  .ant-tooltip{
-    zoom: 1.4;
-  }
-}
-@media screen and (min-height: 911px) and (max-height: 1020px) {
-  #scrollerBar {
-    zoom: 1.7;
-    width: calc(100vw - 9em);
-  }
-  .ant-tooltip{
-    zoom: 1.7;
-  }
-}
-@media screen and (min-height: 1021px) and (max-height: 1220px) {
-  #scrollerBar {
-    zoom: 1;
-    width: calc(100vw - 9em);
-  }
-
-}
-@media screen and (min-height: 1221px) and (max-height: 1320px) {
-  #scrollerBar {
-    zoom: 1.1;
-    width: calc(100vw - 9em);
-  }
-  .ant-tooltip{
-    zoom: 1.1;
-  }
-}
-@media screen and (min-height: 1321px) and (max-height: 2880px) {
-  #scrollerBar {
-    zoom: 1.4;
-    width: calc(100vw - 9em);
-  }
-  .ant-tooltip{
-    zoom: 1.4;
-  }
-}
+//@media screen and (max-height: 510px) {
+//  #scrollerBar {
+//    zoom: 0.718;
+//    width: calc(100vw + 40em);
+//  }
+//  .ant-tooltip{
+//    zoom: 0.718;
+//  }
+//}
+//@media screen and (min-height: 511px) and (max-height: 550px) {
+//  #scrollerBar {
+//    zoom: 0.78;
+//    width: calc(100vw +  24em);
+//  }
+//  .ant-tooltip{
+//    zoom: 0.78;
+//  }
+//}
+//
+//@media screen and (min-height: 551px) and (max-height: 610px) {
+//  #scrollerBar {
+//    zoom: 0.88;
+//    width: calc(100vw + 8em);
+//  }
+//  .ant-tooltip{
+//    zoom: 0.88;
+//  }
+//}
+//
+//@media screen and (min-height: 610px) and (max-height: 710px) {
+//  #scrollerBar {
+//    zoom: 1;
+//    width: calc(100vw - 9em);
+//  }
+//}
+//@media screen and (min-height: 711px) and (max-height: 810px) {
+//  #scrollerBar {
+//    zoom: 1.2;
+//    width: calc(100vw - 9em);
+//  }
+//  .ant-tooltip{
+//    zoom: 1.2;
+//  }
+//}
+//
+//@media screen and (min-height: 811px) and (max-height: 910px) {
+//  #scrollerBar {
+//    zoom: 1.4;
+//    width: calc(100vw - 9em);
+//  }
+//  .ant-tooltip{
+//    zoom: 1.4;
+//  }
+//}
+//@media screen and (min-height: 911px) and (max-height: 1020px) {
+//  #scrollerBar {
+//    zoom: 1.7;
+//    width: calc(100vw - 9em);
+//  }
+//  .ant-tooltip{
+//    zoom: 1.7;
+//  }
+//}
+//@media screen and (min-height: 1021px) and (max-height: 1220px) {
+//  #scrollerBar {
+//    zoom: 1;
+//    width: calc(100vw - 9em);
+//  }
+//
+//}
+//@media screen and (min-height: 1221px) and (max-height: 1320px) {
+//  #scrollerBar {
+//    zoom: 1.1;
+//    width: calc(100vw - 9em);
+//  }
+//  .ant-tooltip{
+//    zoom: 1.1;
+//  }
+//}
+//@media screen and (min-height: 1321px) and (max-height: 2880px) {
+//  #scrollerBar {
+//    zoom: 1.4;
+//    width: calc(100vw - 9em);
+//  }
+//  .ant-tooltip{
+//    zoom: 1.4;
+//  }
+//}
 </style>
