@@ -1,7 +1,7 @@
-import { PiniaPluginContext } from 'pinia'
+import {PiniaPluginContext} from 'pinia'
 
 const isPromise = (val) => {
-  return typeof val === 'object' && typeof val.then ==='function' && typeof val.catch ==='function';
+  return typeof val === 'object' && typeof val.then === 'function' && typeof val.catch === 'function';
 };
 export const updateStorage = async (strategy: PersistStrategy, store: Store) => {
   const storage = strategy.storage || sessionStorage
@@ -46,9 +46,16 @@ export default async ({options, store}: PiniaPluginContext): void => {
       }
     }
 
-    store.$subscribe(() => {
+    store.$subscribe((s) => {
       strategies.forEach((strategy) => {
-        updateStorage(strategy, store)
+        if (strategy.paths) {
+          //此处过滤掉paths外的对象变化导致被写入数据库，造成不必要的性能损耗
+          if (strategy.paths.indexOf(s.events.key) > -1) {
+            updateStorage(strategy, store)
+          }
+        }else{
+          updateStorage(strategy, store)
+        }
       })
     })
   }

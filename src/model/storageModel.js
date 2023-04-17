@@ -7,6 +7,7 @@ const standReturn = require('../util/standReturn')
  * 简易存储模块，简易存储，无需复杂存储
  */
 class StorageModel {
+  cache={} //缓存
   db
   async initDb(){
     this.db = new SqlDb('storage')
@@ -50,6 +51,14 @@ class StorageModel {
    * @returns {*}
    */
   async setItem(key,value,sign){
+    let cacheValue=this.cache[`${key}_${sign}`]
+    if(cacheValue){
+      //如果已经存在缓存，且缓存与当前一致，则不写入
+      if(cacheValue===value){
+        return
+      }
+    }
+    this.cache[`${key}_${sign}`]=value
     if(typeof value==='object'){
       value=JSON.stringify(value)
     }
@@ -59,7 +68,6 @@ class StorageModel {
     }else{
       return this.db.knex('storage').insert({value,key,sign,nanoid:nanoid(8)})
     }
-
   }
 }
 

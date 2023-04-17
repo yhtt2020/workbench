@@ -110,7 +110,7 @@
                   <div> 验证激活码</div>
                 </div>
               </a-col>
-              <a-col v-if="userInfo && userInfo.uid==='4'" :span="6">
+              <a-col v-if="userInfo && userInfo.uid===4" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 生成激活码</div>
