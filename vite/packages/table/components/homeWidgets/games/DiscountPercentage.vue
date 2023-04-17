@@ -1,21 +1,27 @@
 <template>
   <HomeComponentSlot :customIndex="customIndex" :options="options">
-    <div class="w-full  cursor-pointer"  v-for="imgItem in discountList" style="height:94px;margin-bottom:0.5em;margin-top: 0.65em;position: relative;">
-       <img :src="imgItem.banner_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-       <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.proportion}}%</div>
-    </div>
-    <div class=" flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;background: #1f1f1f">
-      <Icon icon="reload" style="font-size: 1.429em;"></Icon>
-      <span style="margin-left: 1em;">换一换</span>
-     </div>
+     <template v-if="detailShow === false">
+       <div class="w-full  cursor-pointer" @click="goToGameDetails(imgItem)"  v-for="imgItem in discountList" style="height:94px;margin-bottom:0.5em;margin-top: 0.65em;position: relative;">
+        <img :src="imgItem.image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
+        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
+       </div>
+       <div class=" flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;background: #1f1f1f">
+         <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
+         <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
+         <span style="margin-left: 1em;">换一换</span>
+       </div>
+     </template>
+     <template v-if="detailShow === true">
+        应用详情
+     </template>
  </HomeComponentSlot>
 </template>
 
 <script>
-import Icon from '@ant-design/icons-vue/lib/components/Icon';
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import {requestData,randomData} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
-import {cardStore} from '../../../store/card'
+import {steamStore} from '../../../store/steam'
 export default {
   name:'DiscountPercentage',
   props:{
@@ -25,7 +31,6 @@ export default {
     }
   },
   components:{
-    Icon,
     HomeComponentSlot
   },
   data(){
@@ -37,29 +42,41 @@ export default {
         type:'games'
       },
       discountList:[],
+      reloadShow:false,
+      detailShow:false
     }
   },
   computed:{
-    ...mapWritableState(cardStore,['gameData'])
+    ...mapWritableState(steamStore,['gameData'])
   },
   mounted(){
     this.getPercentage()
   },
   methods:{
     getPercentage(){
-       this.gameData.filter(el=>{
-          this.discountList.push({
+       const randomApp = randomData(this.gameData,2)
+       const listArr = []
+       randomApp.forEach(el=>{
+           listArr.push({
             id:el.id,
-            banner_image:el.header_image,
-            proportion:el.discount_percent
-          })
+            image:el.header_image,
+            name:el.name,
+            discount_percent:el.discount_percent
+           })
        })
+       this.discountList = listArr
     },
-    goToGameDetails(id){
-      console.log(id);
+    // 进入详情页
+    goToGameDetails(item){
+      this.detailShow = true
     },
+    // 按钮点击切换
     discountChange(){
-
+      this.reloadShow = true
+      setTimeout(()=>{
+        this.getPercentage()
+        this.reloadShow = false
+      },2000)
     }
   }
 }
