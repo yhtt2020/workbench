@@ -32,12 +32,16 @@ export const requestData = (url: any, options = {}) => {
  * **/
 export function randomData(data: any,count: any) {
   const result = []
-  while (result.length < count){
-   const randomIndex = Math.floor(Math.random() * data.length)
-   const randomElement = data[randomIndex]
-   if (!result.includes(randomElement)) {
-     result.push(randomElement);
-   }
+  if(data.length > 0){
+    while (result.length < count){
+      const randomIndex = Math.floor(Math.random() * data.length)
+      const randomElement = data[randomIndex]
+      if (!result.includes(randomElement)) {
+        result.push(randomElement);
+      }
+    }
+  }else{
+    return 
   }
   return result;
 }
