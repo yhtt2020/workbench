@@ -56,11 +56,10 @@
   </transition>
 
   <a-drawer
-    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'11em'}"
+    :contentWrapperStyle="{   backgroundColor:'#1F1F1F'}"
     :width="120"
-    :height="120"
+    :height="220"
     class="drawer"
-    :closable="false"
     placement="bottom"
     :visible="menuVisible"
     @close="onClose"

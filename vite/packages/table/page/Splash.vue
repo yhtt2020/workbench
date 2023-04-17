@@ -137,7 +137,7 @@ export default {
           this.afterLaunch().then()
         }
       }, 1000)
-    },2000)
+    },100)
 
     this.getUserInfo()
 

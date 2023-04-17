@@ -76,7 +76,7 @@
             </div>
           </div>
           <div style="margin: 2em;background: #282828;padding:1em;border-radius: 0.5em;width: 40em;">
-            <h3>其他</h3>
+
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
               <a-col :span="6">
                 <div @click="wizard" class="btn">
@@ -104,12 +104,12 @@
                   <div> 基础设置</div>
                 </div>
               </a-col>
-              <a-col :span="6">
-                <div @click="verifyCode" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
-                  <div> 验证激活码</div>
-                </div>
-              </a-col>
+<!--              <a-col :span="6">-->
+<!--                <div @click="verifyCode" class="btn">-->
+<!--                  <Icon icon="shezhi" style="font-size: 2em"></Icon>-->
+<!--                  <div> 验证激活码</div>-->
+<!--                </div>-->
+<!--              </a-col>-->
               <a-col v-if="userInfo && userInfo.uid===4" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
