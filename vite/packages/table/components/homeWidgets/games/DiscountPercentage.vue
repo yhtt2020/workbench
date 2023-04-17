@@ -5,6 +5,7 @@
       <div class="w-full  cursor-pointer" @click="goToGameAppDetails(imgItem)"  v-for="imgItem in discountList" style="height:137px;margin-bottom:11px;margin-top: 0.65em;position: relative;">
        <img :src="imgItem.image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
+       <span class="truncate" style="color: rgba(255, 255, 255, 0.85); position: absolute;bottom: 18px;left: 14px;width: 144px;">{{imgItem.name}}</span>
       </div>
       <div class=" flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
         <Icon icon="reload" class="animate-spin" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
