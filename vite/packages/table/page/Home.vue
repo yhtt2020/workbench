@@ -142,49 +142,49 @@ import Remote from '../components/homeWidgets/custom/Remote.vue'
 const readAida64 = window.readAida64
 const initCards=[
   {
-    "name": "customTimer",
-    "id": 1681303790200,
-    "_$muuri_id": "beb962f8-3a10-4ad3-a01b-21cd2ae5985e"
+    "name": "GamesDiscount",
+    "id": 1681304819425,
+    "_$muuri_id": "d955caa6-610e-430c-820b-08d5acd02bc3"
   },
   {
     "name": "weather",
     "id": 1681303795258,
-    "_$muuri_id": "f9658e4c-7584-40c6-975b-4b362c13f419"
+    "_$muuri_id": "321f0445-9dd5-4522-a62b-d49ae8709a7b"
   },
   {
-    "name": "fish",
-    "id": 1681303797561,
-    "_$muuri_id": "cf45bb0a-1ef3-4f73-aeb2-fb4da23cfc79"
-  },
-  {
-    "name": "GamesDiscount",
-    "id": 1681304819425,
-    "_$muuri_id": "53c4c962-85a0-4201-8eff-85b223333206"
+    "name": "music",
+    "id": 1681736564285,
+    "_$muuri_id": "021d5913-a222-4fef-9232-919167ae83a3"
   },
   {
     "name": "DiscountPercentage",
     "id": 1681479859424,
-    "_$muuri_id": "4f0c7734-1669-4cbc-aaf1-f2df032c3589"
-  },
-  {
-    "name": "smallCountdownDay",
-    "id": 1681303811893,
-    "_$muuri_id": "0dac9212-79a0-4cf1-af94-562810c64300"
+    "_$muuri_id": "292bc32b-3192-405a-ba26-7017d3036455"
   },
   {
     "name": "timer",
     "id": 1681303805239,
-    "_$muuri_id": "51236306-c067-4a42-8d0d-dbe654027e13"
+    "_$muuri_id": "72333f53-a4f2-4dc8-99de-6fee90747e4d"
+  },
+  {
+    "name": "fish",
+    "id": 1681303797561,
+    "_$muuri_id": "9676d90f-798e-4c42-9579-b2dd9515c3a4"
+  },
+  {
+    "name": "customTimer",
+    "id": 1681303790200,
+    "_$muuri_id": "0afbf516-ea1f-48da-a085-da53d57cde41"
+  },
+  {
+    "name": "smallCountdownDay",
+    "id": 1681303811893,
+    "_$muuri_id": "044bd2a8-a1a7-472c-b7c1-3577939e4484"
   },
   {
     "name": "clock",
     "id": 1681303836730,
-    "_$muuri_id": "fc787395-eb58-4b7c-859e-25531369ccf1"
-  },
-  {
-    "name": "weather",
-    "id": 1681395395579,
-    "_$muuri_id": "a093e20f-49ae-4325-8ed6-5a79ec8d9274"
+    "_$muuri_id": "ac91b674-bb20-4f1f-9ff2-c9e6b6b44c0a"
   }
 ]
 export default {
