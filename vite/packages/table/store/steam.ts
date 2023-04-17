@@ -6,6 +6,7 @@ export const steamStore = defineStore('steam', {
     gameData:[], // 获取所有数据
     randomData:[], // 随机获取steam的优惠数据
     randomGameApp:[], // 随机获取app应用列表
+    gameRegion:'cn', // 获取地区
   }), 
   actions: {
     saveGameData(){
@@ -44,6 +45,9 @@ export const steamStore = defineStore('steam', {
       return diffMins > 10 // 时间差大于10分钟返回true，表示数据已过时
     },
 
+    saveRegion(value:any){
+      this.gameRegion = value
+    },
   },
   persist: {
     enabled: true,

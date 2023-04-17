@@ -56,6 +56,9 @@
       <div class="option" @click="onSetup" v-if="options.type.includes('downDay')">
         <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
+      <div class="option" @click="onGameSet" v-if="options.type.includes('games')">
+        <Icon class="icon" icon="shezhi1"></Icon>设置
+      </div>
       <div class="option" @click="removeCard">
         <Icon class="icon" icon="guanbi2"></Icon>删除
       </div>
@@ -65,11 +68,21 @@
     </div>
   </a-drawer>
   <textarea id="textArea" style="opacity: 0;height: 0;width: 0;position: absolute" v-if="options.type.includes('CPU')||options.type.includes('GPU')"></textarea>
+
+  <a-drawer :width="500" title="设置" style="text-align: center;" bodyStyle="text-align:left;"  :placement="right" :visible="gameVisible" @close="onClose">
+     <div class="flex flex-col justify-start">
+      <span style="margin-bottom: 14px;">默认地区</span>
+      <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
+        <a-select-option v-for="item in region" :value="item.encode">{{item.name}}</a-select-option>
+      </a-select>
+     </div>
+  </a-drawer>
 </template>
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
+import { steamStore } from "../../store/steam";
 import {message} from "ant-design-vue";
 import AidaGuide from './supervisory/AidaGuide.vue'
 
@@ -78,7 +91,67 @@ export default {
   data(){
     return {
       visible:false,
-      showTip:false
+      showTip:false,
+      gameVisible:false,
+      region:[
+        {
+          id:0,
+          name:'美国',
+          encode:'US'
+        },
+        {
+          id:1,
+          name:'加拿大',
+          encode:'CA'
+        },
+        {
+          id:2,
+          name:'英国',
+          encode:'GB'
+        },{
+          id:3,
+          name:'法国',
+          encode:'FR'
+        },{
+          id:4,
+          name:'德国',
+          encode:'de'
+        },{
+          id:5,
+          name:'意大利',
+          encode:'it'
+        },{
+          id:6,
+          name:'日本',
+          encode:'jp'
+        },{
+          id:7,
+          name:'国区',
+          encode:'cn'
+        },{
+          id:8,
+          name:'巴西',
+          encode:'br'
+        },{
+          id:9,
+          name:'印度',
+          encode:'in'
+        },{
+          id:10,
+          name:'俄罗斯',
+          encode:'RU'
+        },{
+          id:11,
+          name:'澳大利亚',
+          encode:'AU'
+        },
+        {
+          id:12,
+          name:'香港',
+          encode:'hk'
+        }
+      ],
+      defaultRegion:'cn'
     }
   },
   name: "HomeComponentSlot",
@@ -106,11 +179,16 @@ export default {
   },
   methods:{
     ...mapActions(cardStore, ["removeCustomComponents"]),
+    ...mapActions(steamStore,["saveRegion"]),
     showDrawer()  {
       this.visible = true;
     },
     onClose() {
       this.visible = false;
+      this.gameVisible = false
+      if(this.options.type.includes('games')){
+        this.saveRegion(this.defaultRegion)
+      }
     },
     removeCard(){
       this.removeCustomComponents(this.customIndex)
@@ -128,6 +206,9 @@ export default {
           });break;
       }
 
+    },
+    onGameSet(){
+      this.gameVisible = true
     },
     onCPUIndex(){
       if(this.options.type.includes('CPU')||this.options.type.includes('GPU')){
@@ -159,13 +240,15 @@ export default {
       }else{
         message.info('复制失败，请检查是否启动过aida64！')
       }
+    },
+    // 获取steam地区
+    getRegion(e){
+      this.defaultRegion = e
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
-
 
 </style>

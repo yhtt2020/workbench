@@ -27,10 +27,10 @@
          </div>
        </div>
       </div>
-      <div class="bg-black bg-opacity-20 flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-       <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
-       <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
-       <span style="margin-left: 1em;">换一换</span>
+      <div class="bg-black change bg-opacity-10 flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+       <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+       <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
+       <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
       </div>
     </div>
   </HomeComponentSlot>
@@ -68,10 +68,13 @@ export default {
     this.getDiscountData()
     this.getRandomData()
   },
+  computed:{
+    ...mapWritableState(steamStore,['gameRegion'])
+  },
   methods:{
     ...mapActions(steamStore,['getGameOffers']),
     getDiscountData(){
-      requestData('https://store.steampowered.com/api/featuredcategories/?cc=cn&l=cn').then(res=>{
+      requestData(`https://store.steampowered.com/api/featuredcategories/?cc=${this.gameRegion}&l=${this.gameRegion}`).then(res=>{
         const data = res.data.specials.items
         this.getGameOffers(data)
         this.getRandomData()
@@ -102,7 +105,7 @@ export default {
       setTimeout(()=>{
         this.getRandomData()
         this.reloadShow = false
-      },400)
+      },800)
     }
   }
 }
@@ -116,5 +119,9 @@ export default {
       max-width: 121px;
      }
   }
+}
+.change:active{
+  filter: brightness(0.8);
+  background:rgba(42, 42, 42, 0.25);
 }
 </style>

@@ -6,10 +6,10 @@
        <img :src="imgItem.image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
       </div>
-      <div class=" flex bg-black bg-opacity-20 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-        <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
-        <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
-        <span style="margin-left: 1em;">换一换</span>
+      <div class=" flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+        <Icon icon="reload" class="animate-spin" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+        <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
+        <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
       </div>
     </template>
     <template v-if="detailShow === true">
@@ -35,10 +35,10 @@
             </div>
          </div>
           <div class="flex items-center justify-around"> 
-            <div @click="discountBack()" class="bg-black cursor-pointer bg-opacity-20 rounded-lg w-12 h-12 flex items-center justify-center">
-              <Icon icon="xiangzuo" style="font-size: 1.715em;"></Icon>
+            <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
+              <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-20" style="width:196px;">打开steam</div>
+            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
           </div>
        </div>
     </template>
@@ -112,7 +112,7 @@ export default {
       setTimeout(()=>{
         this.getPercentage()
         this.reloadShow = false
-      },400)
+      },800)
     },
     // 返回
     discountBack(){
@@ -143,5 +143,9 @@ export default {
   margin-right:4px;
   padding:1px 6px;
   color:rgba(255, 255, 255, 0.6);
+}
+.change:active{
+  filter: brightness(0.8);
+  background:rgba(42, 42, 42, 0.25);
 }
 </style>
