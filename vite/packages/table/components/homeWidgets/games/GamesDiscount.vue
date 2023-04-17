@@ -2,20 +2,15 @@
   <HomeComponentSlot :options="options"  :customIndex="customIndex">
     <div class="discount-item flex flex-col" style="margin-top: 1em;">
       <div class="flex flex-col ">
-       <div class="w-full h-20 flex" v-for="item in list" style="margin-bottom: 20px;">
-         <img :src="item.image" alt="" class="h-20 rounded-md" style="width:120px; object-fit: cover;"> 
+       <div class="w-full flex" v-for="item in list" style="height:65px; margin-bottom: 12px;">
+         <img :src="item.image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
          <div class="flex  discount-content flex-col" style="margin-left: 10px;">
-             <div class="name truncate h-20" >{{item.name}}</div>
-             <!-- <div class="flex flex-row">
-               <span  class="bg-white bg-opacity-40 rounded-md text-white text-opacity-60" v-for="activeItme in item.genres" style="padding: 0 6px; margin-right: 4px; font-size: 12px;">
-                 {{ activeItme.description}}
-               </span>
-             </div> -->
+             <div class="name truncate" >{{item.name}}</div>
              <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
                ￥{{item.initial_price}}
              </span>
              <div class="flex w-full justify-between ">
-                <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 13px;font-weight: 400; padding-right: 2.41em;">
+                <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 13px;font-weight: 400; padding-right: 1.2em;">
                  ￥{{item.final_price}}    
                 </span>
                 <div style="flex justify-end">
@@ -84,7 +79,7 @@ export default {
     },
     getRandomData(){
       const gameData = window.localStorage.getItem('gameData')
-      const randomArr = randomData(JSON.parse(gameData),3)
+      const randomArr = randomData(JSON.parse(gameData),4)
       const listArr = []
       randomArr.forEach(el=>{
          listArr.push({
@@ -116,7 +111,7 @@ export default {
 
   .discount-content{
      .name{
-      max-width: 121px;
+      max-width: 104px;
      }
   }
 }
