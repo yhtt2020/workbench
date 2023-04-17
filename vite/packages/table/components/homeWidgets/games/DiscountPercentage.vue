@@ -8,7 +8,7 @@
        <span class="truncate" style="color: rgba(255, 255, 255, 0.85); position: absolute;bottom: 8px;left: 8px;width:90%;text-shadow: 0 0 4px #333">{{imgItem.name}}</span>
       </div>
       <div class="mt-7 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-        <Icon icon="reload" class="animate-spin" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+        <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
         <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
         <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
       </div>
@@ -120,7 +120,7 @@ export default {
       setTimeout(()=>{
         this.getPercentage()
         this.reloadShow = false
-      },800)
+      },300)
     },
     // 返回
     discountBack(){

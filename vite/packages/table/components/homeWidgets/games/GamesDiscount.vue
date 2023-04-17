@@ -3,7 +3,7 @@
     <div class="discount-item flex flex-col" style="margin-top: 1em;">
       <div class="flex flex-col ">
        <div class="w-full flex" v-for="item in list" style="height:65px; margin-bottom: 12px;">
-         <img :src="item.image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
+         <img :src="item.image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
          <div class="flex  discount-content flex-col" style="margin-left: 10px;">
              <div class="name truncate" >{{item.name}}</div>
              <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
@@ -11,7 +11,7 @@
              </span>
              <div class="flex w-full justify-between ">
                 <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 13px;font-weight: 400; padding-right: 1.2em;">
-                 ￥{{item.final_price}}    
+                 ￥{{item.final_price}}
                 </span>
                 <div style="flex justify-end">
                  <span class="bg-red-600 rounded-md" style="padding: 3px 6px 3px 7px;font-size: 12px;">
@@ -23,7 +23,7 @@
        </div>
       </div>
       <div class="bg-black change bg-opacity-10 flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-       <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+       <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
        <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
        <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
       </div>
@@ -100,7 +100,7 @@ export default {
       setTimeout(()=>{
         this.getRandomData()
         this.reloadShow = false
-      },800)
+      },300)
     }
   }
 }
