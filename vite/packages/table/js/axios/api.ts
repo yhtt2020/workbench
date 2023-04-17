@@ -32,7 +32,7 @@ export const requestData = (url: any, options = {}) => {
  * **/
 export function randomData(data: any,count: any) {
   const result = []
-  if(data.length > 0){
+  if(data && data.length > 0){
     while (result.length < count){
       const randomIndex = Math.floor(Math.random() * data.length)
       const randomElement = data[randomIndex]
@@ -41,7 +41,7 @@ export function randomData(data: any,count: any) {
       }
     }
   }else{
-    return 
+    return []
   }
   return result;
 }

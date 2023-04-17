@@ -1,5 +1,5 @@
 import {PiniaPluginContext} from 'pinia'
-
+import _ from 'lodash-es'
 const isPromise = (val) => {
   return typeof val === 'object' && typeof val.then === 'function' && typeof val.catch === 'function';
 };
@@ -46,16 +46,9 @@ export default async ({options, store}: PiniaPluginContext): void => {
       }
     }
 
-    store.$subscribe((s) => {
+    store.$subscribe((s,state) => {
       strategies.forEach((strategy) => {
-        if (strategy.paths) {
-          //此处过滤掉paths外的对象变化导致被写入数据库，造成不必要的性能损耗
-          if (strategy.paths.indexOf(s.events.key) > -1) {
-            updateStorage(strategy, store)
-          }
-        }else{
-          updateStorage(strategy, store)
-        }
+        updateStorage(strategy, store)
       })
     })
   }
