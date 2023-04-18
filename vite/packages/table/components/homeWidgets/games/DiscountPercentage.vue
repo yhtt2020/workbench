@@ -1,12 +1,15 @@
-
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex">
     <template v-if="detailShow === false">
-      <div class="w-full  cursor-pointer  mt-7" @click="goToGameAppDetails(imgItem)"  v-for="imgItem in discountList" style="height:118px;position: relative;">
-       <img :src="imgItem.image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-       <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
-<!--       <span class="truncate" style="color: rgba(255, 255, 255, 0.85); position: absolute;bottom: 8px;left: 8px;width:90%;text-shadow: 0 0 4px #333">{{imgItem.name}}</span>-->
-      </div>
+      <swiper  :spaceBetween="30" :loop="true" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
+        <swiper-slide v-for="item in detailList">
+          <div class="w-full  cursor-pointer  mt-7" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem)"   style="height:118px;position: relative;">
+            <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
+            <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
+          </div>
+        </swiper-slide>
+      </swiper>
+
       <div class="mt-7 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
         <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
         <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
@@ -52,6 +55,11 @@ import HomeComponentSlot from "../HomeComponentSlot.vue";
 import {randomData,sendRequest} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper';
+
 export default {
   name:'GamesDiscount',
   props:{
@@ -62,6 +70,8 @@ export default {
   },
   components:{
     HomeComponentSlot,
+    Swiper,
+    SwiperSlide,
   },
   data(){
     return{
@@ -79,28 +89,24 @@ export default {
     }
   },
   mounted(){
-     this.getPercentage()
+    this.groupData()
   },
   methods:{
-    getPercentage(){
-      const gameData = window.localStorage.getItem('gameData')
-      if(gameData){
-        const randomAppList = randomData(JSON.parse(gameData),2)
-        const disList = []
-        randomAppList.forEach(el=>{
-          disList.push({
-           id:el.id,
-           name:el.name,
-           image:el.header_image,
-           discount_percent:el.discount_percent,
-           initial_price:(el.original_price / 100).toFixed(2),
-           final_price:(el.final_price / 100).toFixed(2),
-          })
-        })
-        this.discountList = disList
-      }else{
-        return
+    // 将数据分成五组
+    groupData() {
+      let groups = [];
+      const gameData = JSON.parse(window.localStorage.getItem('gameData'))
+      for (let i = 0; i < 5; i++) {
+        groups.push([]);
       }
+      groups.forEach((arr) => (arr.length = 0));
+      // 随机获取两条数据，放入五个数组中
+      for (let i = 0; i < groups.length; i++) {
+        const index = randomData(gameData,2);
+        groups[i].push(index)
+      }
+      console.log(groups);
+      this.detailList = groups
     },
     goToGameAppDetails(item){
       this.detailShow = true
@@ -124,7 +130,7 @@ export default {
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
-        this.getPercentage()
+        this.groupData()
         this.reloadShow = false
       },300)
     },
@@ -136,7 +142,12 @@ export default {
     openSteam(){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
     }
-  }
+  },
+  setup() {
+    return {
+      modules: [Pagination],
+    };
+  },
 }
 </script>
 
@@ -174,5 +185,14 @@ export default {
   text-overflow: ellipsis;
   white-space: pre-wrap;
   margin-bottom: 5px;
+}
+</style>
+<style>
+.swiper-pagination-bullet{
+  background:rgba(255, 255, 255, 0.4) !important;
+}
+.swiper-pagination{
+  position: fixed !important;
+  bottom: 4.5em !important;
 }
 </style>

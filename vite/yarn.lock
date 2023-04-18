@@ -1726,6 +1726,11 @@ ssr-window@^3.0.0-alpha.1:
   resolved "https://registry.npmmirror.com/ssr-window/-/ssr-window-3.0.0.tgz"
   integrity sha512-q+8UfWDg9Itrg0yWK7oe5p/XRCJpJF9OBtXfOPgSJl+u3Xd5KI328RUEvUqSMVM9CiQUEf1QdBzJMkYGErj9QA==
 
+ssr-window@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npmmirror.com/ssr-window/-/ssr-window-4.0.2.tgz#dc6b3ee37be86ac0e3ddc60030f7b3bc9b8553be"
+  integrity sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ==
+
 style-mod@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/style-mod/-/style-mod-4.0.0.tgz"
@@ -1742,6 +1747,13 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
+
+swiper@^9.2.3:
+  version "9.2.3"
+  resolved "https://registry.npmmirror.com/swiper/-/swiper-9.2.3.tgz#557b5872f711de0e9a80c8cb2901c645f7937b19"
+  integrity sha512-hxqcjIsYPP1fv+KIXPqGywl6ik8RBp0y0i9+TOIh55ca6SpZ5FrgNJ4QXPhsl6mlSBMEYPmh5zOKtZpI8zpWeQ==
+  dependencies:
+    ssr-window "^4.0.2"
 
 tailwindcss@^3.2.7:
   version "3.2.7"
