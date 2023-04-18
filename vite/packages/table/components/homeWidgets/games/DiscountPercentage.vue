@@ -16,19 +16,19 @@
     <template v-if="detailShow === true">
        <div class="flex flex-grow flex-col" style="margin-top: 14px;">
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
-             <img class="rounded-lg" :src="detailList.image" alt="">
+             <img class="rounded-lg" :src="detailList.img" alt="">
           </div>
           <div style="margin-bottom: 6px;">{{detailList.name}}</div>
-          <span class="content-introduction">{{briefIntroduction}}</span>
+          <span class="content-introduction">{{detailList.short_description}}</span>
           <div class="flex" style="margin-bottom: 12px;">
-            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in genres">{{item.description}}</span>
+            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
           <span class="line-through text-white text-opacity-60" style="font-size: 12px;margin-bottom: 6px;">
-            ￥{{detailList.initial_price}}
+            {{detailList.initial_price}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
-             ￥{{detailList.final_price}}    
+             {{detailList.final_price}}    
             </span>
             <div class="flex justify-end">
              <span class="bg-red-600 rounded-md" style="padding: 3px 6px 3px 7px;font-size: 12px;">
@@ -49,7 +49,7 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import {randomData, requestData} from '../../../js/axios/api'
+import {randomData,sendRequest} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
 export default {
@@ -61,7 +61,7 @@ export default {
     }
   },
   components:{
-    HomeComponentSlot
+    HomeComponentSlot,
   },
   data(){
     return{
@@ -74,10 +74,8 @@ export default {
       discountList:[],
       reloadShow:false,
       detailShow:false,
-      detailList:'',
-      genres:[],
+      detailList:{},
       id:'',
-      briefIntroduction:''
     }
   },
   mounted(){
@@ -86,32 +84,41 @@ export default {
   methods:{
     getPercentage(){
       const gameData = window.localStorage.getItem('gameData')
-      const randomAppList = randomData(JSON.parse(gameData),2)
-      const disList = []
-      randomAppList.forEach(el=>{
-        disList.push({
-          id:el.id,
-          name:el.name,
-          image:el.header_image,
-          discount_percent:el.discount_percent,
-          initial_price:(el.original_price / 100).toFixed(2),
-          final_price:(el.final_price / 100).toFixed(2),
+      if(gameData){
+        const randomAppList = randomData(JSON.parse(gameData),2)
+        const disList = []
+        randomAppList.forEach(el=>{
+          disList.push({
+           id:el.id,
+           name:el.name,
+           image:el.header_image,
+           discount_percent:el.discount_percent,
+           initial_price:(el.original_price / 100).toFixed(2),
+           final_price:(el.final_price / 100).toFixed(2),
+          })
         })
-      })
-      this.discountList = disList
+        this.discountList = disList
+      }else{
+        return
+      }
     },
     goToGameAppDetails(item){
       this.detailShow = true
-      requestData(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
+      sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
         if(res.data[item.id].success !== false){
-          console.log(res.data[item.id].data.short_description);
-          this.genres = res.data[item.id].data.genres
-          this.briefIntroduction = res.data[item.id].data.short_description
+          this.detailList = {
+            id:res.data[item.id].data.steam_appid,
+            img:res.data[item.id].data.header_image,
+            name:res.data[item.id].data.name,
+            genres:res.data[item.id].data.genres,
+            final_price:res.data[item.id].data.price_overview.final_formatted,
+            initial_price:res.data[item.id].data.price_overview.initial_formatted,
+            discount_percent:res.data[item.id].data.price_overview.discount_percent,
+            short_description:res.data[item.id].data.short_description
+          }
         }
       })
-      this.detailList = item
       this.id = item.id
-      console.log(this.id);
     },
     // 按钮点击切换
     discountChange(){
@@ -127,7 +134,7 @@ export default {
     },
     // 打开steam官网
     openSteam(){
-      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}/_Against_the_Storm`})
+      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
     }
   }
 }
