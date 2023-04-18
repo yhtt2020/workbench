@@ -106,7 +106,6 @@ export default {
     getDiscountData(){
       sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.gameRegion}&l=${this.gameRegion}`).then(res=>{
         const data = res.data.specials.items
-        console.log(data);
         this.getGameOffers(data)
         this.getRandomData()
       }).catch(err=>{

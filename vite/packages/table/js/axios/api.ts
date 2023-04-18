@@ -21,7 +21,7 @@ export const sendRequest = (url, params, retries = 0) => {
           sendRequest(url, params, retries);
         });
       } else {
-        console.log(error);
+        console.error(error);
         throw new Error("已经达到最大次数");
       }
     });
