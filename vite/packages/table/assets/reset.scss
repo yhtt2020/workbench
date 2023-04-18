@@ -1,7 +1,11 @@
-.ant-picker-dropdown{
+.ant-picker-dropdown,.ant-drawer-content-wrapper{
   -webkit-app-region:no-drag;
 }
-
+.ant-drawer-close{
+  background: #333;
+  border-radius: 4px;
+  padding: 10px 10px;
+}
 .lg{
   .ant-modal-body{
     svg{

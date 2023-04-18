@@ -2,13 +2,13 @@
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex">
     <template v-if="detailShow === false">
-      <div class="w-full  cursor-pointer" @click="goToGameAppDetails(imgItem)"  v-for="imgItem in discountList" style="height:118px;margin-bottom:14px;margin-top: 0.65em;position: relative;">
+      <div class="w-full  cursor-pointer  mt-7" @click="goToGameAppDetails(imgItem)"  v-for="imgItem in discountList" style="height:118px;position: relative;">
        <img :src="imgItem.image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
        <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
-       <span class="truncate" style="color: rgba(255, 255, 255, 0.85); position: absolute;bottom: 18px;left: 14px;width: 144px;">{{imgItem.name}}</span>
+<!--       <span class="truncate" style="color: rgba(255, 255, 255, 0.85); position: absolute;bottom: 8px;left: 8px;width:90%;text-shadow: 0 0 4px #333">{{imgItem.name}}</span>-->
       </div>
-      <div class=" flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-        <Icon icon="reload" class="animate-spin" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+      <div class="mt-7 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+        <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
         <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
         <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
       </div>
@@ -36,7 +36,7 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center justify-around"> 
+          <div class="flex items-center justify-around">
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
@@ -126,7 +126,7 @@ export default {
       setTimeout(()=>{
         this.getPercentage()
         this.reloadShow = false
-      },800)
+      },300)
     },
     // 返回
     discountBack(){

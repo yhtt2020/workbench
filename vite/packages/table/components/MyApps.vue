@@ -1,8 +1,8 @@
 <template>
-  <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
-    <a-dropdown v-for="app in myApps" :trigger="['contextmenu']">
-
-      <div @click="open(app)" class="app" >
+  <vue-custom-scrollbar @contextmenu.stop="menuVisible=true" :settings="outerSettings"
+                        style="position:relative;height:calc(100vh - 14em);  ">
+    <a-dropdown @contextmenu.stop="()=>{}" v-for="app in myApps" :trigger="['contextmenu']">
+      <div @click="open(app)" class="app">
         <a-avatar :size="50" shape="square" :src="app.icon"></a-avatar>
         <br>
         <div class="name text-more">
@@ -11,7 +11,7 @@
       </div>
       <template #overlay>
         <a-menu>
-          <a-menu-item  @click="open(app)" key="open">
+          <a-menu-item @click="open(app)" key="open">
             打开
           </a-menu-item>
           <a-menu-item @click="deleteAnApp(app)" key="delete">删除</a-menu-item>
@@ -23,19 +23,30 @@
 
 
   </vue-custom-scrollbar>
+  <a-drawer :height="250" v-model:visible="menuVisible" placement="bottom">
+    <a-row style="margin-top: 1em" :gutter="[20,20]">
+      <a-col>
+        <div @click="clear" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div><span>清空应用</span></div>
+        </div>
+      </a-col>
+    </a-row>
+  </a-drawer>
 </template>
 
 <script>
-import { mapWritableState,mapActions ,mapState} from 'pinia'
+import { mapWritableState, mapActions, mapState } from 'pinia'
 import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import { appsStore } from '../store/apps'
 
 export default {
   name: 'MyApps',
-  data(){
+  data () {
     return {
-      outerSettings:{
+      menuVisible: false,
+      outerSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
         suppressScrollY: false,
@@ -45,24 +56,38 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appsStore,['qingApps']),
-      ...mapState(appsStore,['myApps'])
+    ...mapWritableState(appsStore, ['qingApps']),
+    ...mapWritableState(appsStore, ['myApps'])
   },
-  methods:{
-    ...mapActions(appsStore,['deleteApp']),
+  methods: {
+    ...mapActions(appsStore, ['deleteApp']),
     open (app) {
       require('electron').shell.openPath(app.path)
     },
-    deleteAnApp(app){
+    deleteAnApp (app) {
       Modal.confirm({
-        content:'是否删除应用快捷方式？此操作不会删除物理文件。',
-        onOk:()=>{
+        content: '是否删除应用快捷方式？此操作不会删除物理文件。',
+        onOk: () => {
+
           this.deleteApp(app)
+
         }
       })
     },
-    showInFolder(app){
+    showInFolder (app) {
       require('electron').shell.showItemInFolder(app.path)
+    },
+    clear () {
+      this.menuVisible=false
+      Modal.confirm({
+        centered: true,
+        content: '清空全部应用快捷方式？此操作不可还原。',
+        onOk: () => {
+          this.myApps = []
+
+        },
+        okText: '清空'
+      })
     }
   }
 }

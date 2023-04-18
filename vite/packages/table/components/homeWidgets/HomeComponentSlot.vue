@@ -1,5 +1,5 @@
 <template>
-  <div @contextmenu.stop="showDrawer" class="gradient gradient--14" :class="options.className"
+  <div  @contextmenu.stop="showDrawer" class="gradient gradient--14" :class="options.className"
        :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex" @mouseleave="onMouseOut"
        @mouseenter="onMouseOver">
     <div

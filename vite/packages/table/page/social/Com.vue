@@ -63,7 +63,14 @@
         </div>
       </div>
     </div>
+    <div class="card mb-3" style="width: 400px">
+      <div >
+        当前版本：<br>
 
+        <div  class="bg-indigo-500 w-1/8 inline-block px-4 py-1 text-white text-center font-extrabold rounded-full mt-3 mr-5 ml-5">{{appVersion}}</div>(请在反馈问题的时候附上版本号)
+
+      </div>
+    </div>
   </div>
   </vueCustomScrollbar>
 </template>
@@ -95,12 +102,15 @@ export default {
         wheelPropagation: true
       },
       online:0,
+      appVersion:'',
     }
   },
   mounted () {
     this.CONST = tsbApi.barrage.CONST
     this.loadBarrages().then()
     this.getOnline().then()
+    this.appVersion=tsbApi.runtime.appVersion
+    console.log(tsbApi.runtime)
   },
   methods:{
     async loadBarrages () {
