@@ -376,7 +376,7 @@ export default {
     },
     finish () {
       this.finishWizard()
-      this.$router.replace({ path: '/index' })
+      this.$router.replace({ name:'home' })
     },
     getKeys (e) {
       let key = ''
