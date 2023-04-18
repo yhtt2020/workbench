@@ -34,7 +34,7 @@
              {{detailList.final_price}}    
             </span>
             <div class="flex justify-end">
-             <span class="bg-red-600 rounded-md" style="padding: 3px 6px 3px 7px;font-size: 12px;">
+             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
                -{{detailList.discount_percent}}%
               </span>
             </div>
