@@ -1,6 +1,6 @@
 <template>
 
-  <div @click="onClick" class="item" :class="{'active':active}">
+  <div @click="onClick" class="item suspension-item" :class="{'active':active}">
     <template v-if="settings.showButtonTitle">
       <div style="height: 3em;vertical-align: baseline">
         <Icon :icon="icon"></Icon>

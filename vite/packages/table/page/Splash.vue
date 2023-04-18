@@ -201,7 +201,7 @@ export default {
       }
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
-        document.body.style.background = '#191919'
+       // document.body.style.background = '#191919'
       }
       this.verify(this.userInfo.uid).then(rs => {
         //只要提供了uid，就能基于uid验证

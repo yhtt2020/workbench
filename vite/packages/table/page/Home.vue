@@ -30,8 +30,9 @@
     </vue-custom-scrollbar>
   </div>
   <transition name="fade">
-<div class="home-blur" style="position: fixed;top: 0;right: 0;left: 0;bottom: 0;z-index: 999" v-if="custom">
-  <AddCard @setCustom="setCustom"></AddCard></div>
+    <div class="home-blur" style="position: fixed;top: 0;right: 0;left: 0;bottom: 0;z-index: 999" v-if="custom">
+      <AddCard @setCustom="setCustom"></AddCard>
+    </div>
   </transition>
 
   <a-drawer
@@ -300,7 +301,7 @@ export default {
     zoom: 0.718;
     width: calc(100vw + 40em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 0.718;
   }
 }
@@ -309,7 +310,7 @@ export default {
     zoom: 0.78;
     width: calc(100vw +  24em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 0.78;
   }
 }
@@ -319,7 +320,7 @@ export default {
     zoom: 0.88;
     width: calc(100vw + 8em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 0.88;
   }
 }
@@ -335,7 +336,7 @@ export default {
     zoom: 1.2;
     width: calc(100vw - 9em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 1.2;
   }
 }
@@ -345,7 +346,7 @@ export default {
     zoom: 1.4;
     width: calc(100vw - 9em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 1.4;
   }
 }
@@ -354,7 +355,7 @@ export default {
     zoom: 1.7;
     width: calc(100vw - 9em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 1.7;
   }
 }
@@ -370,7 +371,7 @@ export default {
     zoom: 1.1;
     width: calc(100vw - 9em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 1.1;
   }
 }
@@ -379,7 +380,7 @@ export default {
     zoom: 1.4;
     width: calc(100vw - 9em);
   }
-  .ant-tooltip{
+  .ant-tooltip,.ant-slider{
     zoom: 1.4;
   }
 }

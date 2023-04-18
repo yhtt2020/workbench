@@ -165,14 +165,13 @@ export default {
     this.checkScroll()
     let that = this
     window.addEventListener('resize',
-      that.checkScrol
+      that.checkScroll
     )
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
       event.preventDefault();
       content.scrollLeft += event.deltaY
     })
-
     this.$nextTick(()=>{
       this.rowDrop()
     })
@@ -297,6 +296,10 @@ export default {
          if(this.navigationList[i].name ===item.name)return
        }
        this.setNavigationList(item)
+       this.$nextTick(() => {
+         let scrollElem = this.$refs.content;
+         scrollElem.scrollTo({ left: scrollElem .scrollWidth, behavior: 'smooth' });
+       });
      }
 
 

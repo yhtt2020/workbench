@@ -16,7 +16,7 @@ import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
 import BackBtn from './components/comp/BackBtn.vue'
 
-
+import { setupCalendar } from 'v-calendar';
 import 'viewerjs/dist/viewer.css'
 
 
@@ -48,7 +48,7 @@ router.beforeEach((to,from,next) =>{
   next()
 })
 
-app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).mount('#app')
+app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

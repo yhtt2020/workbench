@@ -5,13 +5,13 @@
     </div>
     <a-row :gutter="10">
       <a-col :span="12">
-        <div class="sub-card">
+        <div class="sub-card suspension-item">
           喜欢<br>
           <Icon icon="shoucang" style="width: 3em;height:3em;margin-top: 1em"></Icon>
         </div>
       </a-col>
       <a-col :span="12">
-        <div class="sub-card">
+        <div class="sub-card suspension-item">
           歌单<br>
           <Icon icon="liebiaoshitu" style="width: 3em;height:3em;margin-top: 1em"></Icon>
         </div>
@@ -31,7 +31,7 @@ export default {
       options:{
         className:'card',
         title:'网易云',
-        icon:'wangyiyunyinle',
+        icon:'customerservice',
         type:'music'
       },
     }

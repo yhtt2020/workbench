@@ -2,11 +2,18 @@
 @import "reset";
 @import 'dark';
 @import "deck";
-
+@import "custom";
 body{
-  background-color: rgb(50, 50, 50);
+  //background-color: rgb(50, 50, 50);
   overflow: hidden;
 }
+.suspension-background{
+  background: $suspensionBackGround;
+
+}
+.suspension-item{
+    background: $suspensionItemBackGround;
+  }
 .bottom-panel{
   .item{
     background: transparent !important;
@@ -19,7 +26,6 @@ body{
   padding-left: 0;
   padding-bottom: 5px;
   padding-top: 5px;
-  background: rgba(190, 190, 190, 0.38);
 
   .icon {
     display: inline-block;
@@ -34,7 +40,7 @@ body{
     height: 4em;
     display: inline-block;
     text-align: center;
-    background: rgba(201, 201, 201, 0.5);
+
     border-radius: 6px;
     font-size: 1.2em;
     &:hover {
@@ -67,7 +73,6 @@ body{
   width: 120px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(42, 42, 42, 1);
 }
 .small-button{
   width: 56px;
@@ -99,6 +104,15 @@ body{
 body{
   user-select: none;
 }
+.round-dot{
+  left: 12px;
+  top: 25px;
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+}
 .main{
   position: fixed;
   bottom: 0;
@@ -113,7 +127,7 @@ body{
 .btn{
   cursor: pointer;
   padding: 0.8em;
-  background: rgba(0, 0, 0, 0.3);
+  background: $suspensionItemBackGround;
   display: inline-block;
   border-radius: 0.5em;
   &:hover ,&:active{
@@ -223,10 +237,10 @@ body.full-screen{
   }
 }
 .fade-enter-active {
-  animation: bounce-in .5s;
+  animation: bounce-in .3s;
 }
 .fade-leave-active {
-  animation: bounce-in .5s reverse;
+  animation: bounce-in .3s reverse;
 }
 @keyframes bounce-in {
   0% {
@@ -260,3 +274,15 @@ body.full-screen{
 .scroll-content::-webkit-scrollbar { width: 0 !important }
 .scroll-content { -ms-overflow-style: none; }
 .scroll-content { overflow: -moz-scrollbars-none; }
+body{
+
+  background: url("https://cn.bing.com/th?id=OHR.RedSeaStars_ZH-CN6243743747_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp") ;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size:cover;
+}
+.background-img-blur-light{
+  background: rgba(0, 0, 0, $backGroundImgLight);
+  backdrop-filter: blur($backGroundImgBlur);
+}
+

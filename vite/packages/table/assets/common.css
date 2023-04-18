@@ -98,10 +98,11 @@
 }
 
 .gradient--14 {
-  --gradient-start: #333333;
+  --gradient-start: rgb(51,51,51,0.8);
   --gradient-start-text: "#121317";
-  --gradient-end: #212121;
+  --gradient-end:rgb(33,33,33,0.8);
   --gradient-end-text: "#323B42";
+  backdrop-filter: blur(8px);
 }
 
 .gradient {
@@ -175,7 +176,6 @@
 }
 .card .sub-card {
   text-align: center;
-  background: #3b3b3b;
   padding: 1em;
   border-radius: 0.3em;
   font-size: 1.2em;
@@ -264,12 +264,6 @@
 .dark .side-panel .icon {
   fill: #6e6e6e;
 }
-.dark .common-panel {
-  background: #282828;
-}
-.dark .common-panel .item {
-  background: #1f1f1f;
-}
 .dark .common-panel .item:hover {
   background: #a6a6a6;
 }
@@ -325,8 +319,15 @@
 }
 
 body {
-  background-color: rgb(50, 50, 50);
   overflow: hidden;
+}
+
+.suspension-background {
+  background: var(--suspensiondBackGround, rgba(40, 40, 40, 0.6));
+}
+
+.suspension-item {
+  background: var(--suspensionItemBackGround, rgba(59, 59, 59, 0.6));
 }
 
 .bottom-panel .item {
@@ -340,7 +341,6 @@ body {
   padding-left: 0;
   padding-bottom: 5px;
   padding-top: 5px;
-  background: rgba(190, 190, 190, 0.38);
 }
 .common-panel .icon {
   display: inline-block;
@@ -354,7 +354,6 @@ body {
   height: 4em;
   display: inline-block;
   text-align: center;
-  background: rgba(201, 201, 201, 0.5);
   border-radius: 6px;
   font-size: 1.2em;
 }
@@ -385,7 +384,6 @@ body {
   width: 120px;
   height: 48px;
   border-radius: 12px;
-  background: rgb(42, 42, 42);
 }
 
 .small-button {
@@ -422,6 +420,16 @@ body {
   user-select: none;
 }
 
+.round-dot {
+  left: 12px;
+  top: 25px;
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
 .main {
   position: fixed;
   bottom: 0;
@@ -437,7 +445,7 @@ body {
 .btn {
   cursor: pointer;
   padding: 0.8em;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--suspensionItemBackGround, rgba(59, 59, 59, 0.6));
   display: inline-block;
   border-radius: 0.5em;
 }
@@ -536,11 +544,11 @@ body {
 }
 
 .fade-enter-active {
-  animation: bounce-in 0.5s;
+  animation: bounce-in 0.3s;
 }
 
 .fade-leave-active {
-  animation: bounce-in 0.5s reverse;
+  animation: bounce-in 0.3s reverse;
 }
 
 @keyframes bounce-in {
@@ -582,6 +590,18 @@ body {
 
 .scroll-content {
   overflow: -moz-scrollbars-none;
+}
+
+body {
+  background: url("https://cn.bing.com/th?id=OHR.RedSeaStars_ZH-CN6243743747_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.background-img-blur-light {
+  background: rgba(0, 0, 0, var(--backGroundImgLight, 0.3));
+  backdrop-filter: blur(var(--backGroundImgBlur, 0px));
 }
 
 /*# sourceMappingURL=common.css.map */

@@ -7,7 +7,7 @@
       </div>
     </div>
     <vue-custom-scrollbar id="second-container" :settings="settingsScroller" style="height: 80vh">
-      <div @click="change($event,menu)" class="menu relative" :class="{'active':current(menu)}"
+      <div @click="change($event,menu)" class="menu relative suspension-background" :class="{'active':current(menu)}"
          v-for="(menu) in menus">
         <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
         <span style="margin-left: 0.5em;font-size: 1em;">{{ menu.title }}</span>
@@ -99,7 +99,7 @@ export default {
     font-size: 1.3em;
     height: 3em;
     line-height: 3em;
-    border-radius: 0.3em;
+    border-radius: 0.5em;
     cursor: pointer;
     margin-bottom: 0.5em;
   }

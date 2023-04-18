@@ -67,6 +67,19 @@
     </div>
 
   </div>
+    <div class="card auto-height" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
+      <div class="line-title">
+        背景设置
+      </div>
+      <div class="line">
+        模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="30"  :step="3" class="w-56"/>
+      </div>
+      <div class="line">
+        遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0.3"   :step="0.1" class="w-56"/>
+      </div>
+
+    </div>
+
 
   </vue-custom-scrollbar>
 </template>
@@ -90,6 +103,10 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      backgroundSettings:{
+        backGroundImgBlur:0,
+        backGroundImgLight:0.3,
+      }
     }
   },
   mounted () {
@@ -108,6 +125,16 @@ export default {
       }else{
         console.log('取消选择')
       }
+    }
+  },
+
+  watch:{
+    "backgroundSettings":{
+      handler(){
+        document.body.style.setProperty('--backGroundImgBlur', this.backgroundSettings.backGroundImgBlur + 'px');
+        document.body.style.setProperty('--backGroundImgLight', this.backgroundSettings.backGroundImgLight);
+      },
+      deep:true
     }
   }
 }
