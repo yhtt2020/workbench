@@ -1,20 +1,12 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div @click="enterMusic" class="pointer" style="text-align: center;padding:3em">
+    <div @click="enterMusic" class="pointer" style="text-align: center;padding:2em">
       <a-avatar :size="100" :class="{'playing':status.music.playing}" style="border:3px solid #999"  :src="status.music.cover || 'https://a.apps.vip/icons/wyy.png'"></a-avatar>
     </div>
     <a-row :gutter="10">
       <a-col :span="12">
-        <div class="sub-card suspension-item">
-          喜欢<br>
-          <Icon icon="shoucang" style="width: 3em;height:3em;margin-top: 1em"></Icon>
-        </div>
       </a-col>
       <a-col :span="12">
-        <div class="sub-card suspension-item">
-          歌单<br>
-          <Icon icon="liebiaoshitu" style="width: 3em;height:3em;margin-top: 1em"></Icon>
-        </div>
       </a-col>
     </a-row>
   </HomeComponentSlot>
@@ -29,7 +21,7 @@ export default {
   data(){
     return {
       options:{
-        className:'card',
+        className:'card small',
         title:'网易云',
         icon:'customerservice',
         type:'music'

@@ -20,34 +20,55 @@
     <div class="app-content suspension-background" v-if="currentIndex==='store'" style="padding:2em;">
       <vue-custom-scrollbar :settings="settings"
                             style="position:relative;height:100%;  border-radius: 8px;">
-        <div style="margin: auto;width: 95%;height: auto;text-align: center">
+        <div style="margin: auto;width:100%;height: auto;text-align: center">
           <div style="margin-bottom: 1em;font-size: 1.5em">
             共 {{ storeApps.length }} 应用
           </div>
-          <div v-for="app in storeApps"
-               class="suspension-item"
-               style="display: inline-block;width:660px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;border-radius: 10px;">
-            <a-row :gutter="20">
-              <a-col :span="5">
-                <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
+          <a-row :gutter="[30,20]">
+          <template v-for="app in storeApps">
+              <a-col :span="3">
+                <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="60">
                 </a-avatar>
               </a-col>
-              <a-col :span="13">
-                <div class="app-name" style="text-align: left">{{ app.name }}</div>
-                <div class="app-summary" style="text-align: left">
+              <a-col :span="5">
+                <div class="app-name font-bold text-white" style="text-align: left">{{ app.name }}</div>
+                <div class="app-summary" :title="app.summary" style="text-align: left;">
                   {{ app.summary }}
                 </div>
               </a-col>
-              <a-col :span="6">
-                <div v-if="app.needInstall" class="btn">
-                  安装
-                </div>
-                <div @click="executeApp(app.data)" v-else class="btn">
-                  打开
-                </div>
+              <a-col :span="4">
+                <tempalate v-if="app.needInstall">
+                  <div  v-if="!checkInstalled(app)" @click="install(app)"  class="btn">
+                    <template v-if="app.downloading">
+                      <svg style="vertical-align: text-bottom;"  class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span >{{app.percent}} %</span>
+                    </template>
+                    <template v-if="app.installing">
+                      <svg style="vertical-align: text-bottom;"  class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg> 安装中
+                    </template>
+                    <template v-else>
+                      <span >下载安装</span>
+                    </template>
+                  </div>
+                  <div v-else @click="executeLocalApp(app)"  class="btn">
+                    运行软件
+                  </div>
+                </tempalate>
+                <template v-else>
+                  <div @click="executeApp(app.data)"  class="btn">
+                    打开
+                  </div>
+                </template>
               </a-col>
-            </a-row>
-          </div>
+
+          </template>
+          </a-row>
         </div>
       </vue-custom-scrollbar>
     </div>
@@ -63,11 +84,13 @@ import SecondPanel from '../components/SecondPanel.vue'
 import QingApps from '../components/QingApps.vue'
 import MyApps from '../components/MyApps.vue'
 import { appsStore } from '../store/apps'
-
-let fs = require('fs')
+import { message } from 'ant-design-vue'
+import {runExec} from '../js/common/exec'
+import Template from '../../user/pages/Template.vue'
+let { fs }=window.$models
 export default {
   name: 'Apps',
-  components: { MyApps, QingApps, SecondPanel },
+  components: { Template, MyApps, QingApps, SecondPanel },
   computed: {
     ...mapWritableState(appStore, ['appData']),
     ...mapWritableState(appsStore, ['myApps'])
@@ -119,6 +142,30 @@ export default {
           name: 'PPet桌面宠物',
           summary: '一款开源桌面看板娘，让你不再孤单。',
           needInstall: true,
+          installPath:'C:\\Program Files\\PPet3\\PPet3.exe',
+          downloadUrl:"https://a.apps.vip/download/ppet3330.exe",
+          data: {
+            security: true
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/download/aida64.jpg',
+          name: 'AIDA64',
+          summary: '一款商业级计算机硬件状态监控软件。',
+          needInstall: true,
+          installPath:'C:\\Program Files (x86)\\FinalWire\\AIDA64 Extreme\\aida64.exe',
+          downloadUrl:"https://a.apps.vip/download/aida64.exe",
+          data: {
+            security: true
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/download/rtss.png',
+          name: 'RTSS',
+          summary: '一款免费的游戏帧数监测软件。',
+          needInstall: true,
+          installPath:'C:\\Program Files (x86)\\RivaTuner Statistics Server\\RTSS.exe',
+          downloadUrl:"https://a.apps.vip/download/rtss.exe",
           data: {
             security: true
           }
@@ -224,6 +271,67 @@ export default {
     changeTab (data) {
       this.currentIndex = data.index
     },
+    checkInstalled(checkApp){
+      if(fs.existsSync(checkApp.installPath)){
+        return true
+      }
+    },
+    executeLocalApp(app){
+      runExec('"'+app.installPath+'"')
+    },
+    installS(app,path){
+      message.success({content: '正在为您安装',key:'install' })
+      app.installing=true
+      runExec('start /wait '+path+ ' /S',require('path').dirname(path)).then(rs=>{
+        message.success({content:'安装成功，并为您运行此软件',key:'install'})
+        this.executeLocalApp(app)
+        app.installed=true
+      },(rs)=>{
+        message.error({content: '安装失败',key:'install' })
+      }).catch((err)=>{
+        message.error({content: '安装错误',key:'install' })
+      }).finally(()=>{
+        app.installing=false
+      })
+
+    },
+    install(app){
+      if(app.downloading){
+        return
+      }
+      app.downloading=true
+      let downloadDir=require('path').join(window.globalArgs['user-data-dir'],'download')
+
+      fs.ensureDirSync(downloadDir)
+      let basePath=require('path').join(downloadDir,require('path').basename(new URL(app.downloadUrl).pathname))
+      if(fs.existsSync(basePath)){
+        app.downloading=false
+        this.installS(app,basePath)
+        return
+      }
+
+      let downloadPath=basePath+'.'+Date.now()
+
+      console.log(downloadPath)
+      tsbApi.download.start({
+        url: app.downloadUrl,
+        savePath:downloadPath ,
+        updated: (args) => {
+          app.done = 1
+          app.percent = (args.downloadInfo.receivedBytes / args.downloadInfo.totalBytes * 100).toFixed(1)
+          //https://www.electronjs.org/zh/docs/latest/api/download-item#%E4%BA%8B%E4%BB%B6%E5%90%8D-updated
+        },
+        done: (args) => {
+          fs.renameSync(downloadPath,downloadPath.substring(0,downloadPath.lastIndexOf('.')))
+          app.downloading=false
+          app.percent = 100
+          app.done = 1
+          this.installS(app,basePath)
+        },
+        willDownload: (args) => {
+        }
+      })
+    },
     async drop (e) {
       let files = e.dataTransfer.files
 
@@ -243,6 +351,7 @@ export default {
 
 <style scoped lang="scss">
 .app-content {
+  background: #3b3b3b;
   height: 100%;
   flex-shrink: 1;
   flex-grow: 1;
@@ -250,5 +359,11 @@ export default {
   margin-left: 1em;
   margin-right: 1em;
 }
-
+.app-summary{
+  -webkit-line-clamp: 2;//这里就是最大显示三行
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
 </style>

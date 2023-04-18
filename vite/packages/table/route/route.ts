@@ -42,6 +42,7 @@ const routes = [
   },
   {
     path:'/wizard',
+    name:'wizard',
     component: Wizard
   }
 

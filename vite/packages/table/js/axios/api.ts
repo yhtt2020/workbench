@@ -1,28 +1,11 @@
 import axios from "axios"
-/**
- * 随机获取四个数据
- * @param  data   数组
- * @param  count  数量
- * **/
-export function randomData(data: any,count: any) {
-   const result = []
-   while (result.length < count){
-    const randomIndex = Math.floor(Math.random() * data.length)
-    const randomElement = data[randomIndex]
-    if (!result.includes(randomElement)) {
-      result.push(randomElement);
-    }
-   }
-   return result;
-}
-
 /***
  * 处理请求超时问题
  * @param url
 */
 export const requestData = (url: any, options = {}) => {
   const defaultOptions = {
-    retries: 5, // 默认重试次数为3次
+    retries: 3, // 默认重试次数为3次
     retryInterval: 5000 // 默认重试间隔为5秒
   };
   const requestOptions = Object.assign({}, defaultOptions, options);
@@ -40,3 +23,25 @@ export const requestData = (url: any, options = {}) => {
     return Promise.reject(error);
   });
 };
+
+
+/**
+ * 随机获取四个数据
+ * @param  data   数组
+ * @param  count  数量
+ * **/
+export function randomData(data: any,count: any) {
+  const result = []
+  if(data && data.length > 0){
+    while (result.length < count){
+      const randomIndex = Math.floor(Math.random() * data.length)
+      const randomElement = data[randomIndex]
+      if (!result.includes(randomElement)) {
+        result.push(randomElement);
+      }
+    }
+  }else{
+    return []
+  }
+  return result;
+}

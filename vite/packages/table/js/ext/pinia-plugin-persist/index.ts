@@ -1,7 +1,7 @@
-import { PiniaPluginContext } from 'pinia'
-
+import {PiniaPluginContext} from 'pinia'
+import _ from 'lodash-es'
 const isPromise = (val) => {
-  return typeof val === 'object' && typeof val.then ==='function' && typeof val.catch ==='function';
+  return typeof val === 'object' && typeof val.then === 'function' && typeof val.catch === 'function';
 };
 export const updateStorage = async (strategy: PersistStrategy, store: Store) => {
   const storage = strategy.storage || sessionStorage
@@ -46,7 +46,7 @@ export default async ({options, store}: PiniaPluginContext): void => {
       }
     }
 
-    store.$subscribe(() => {
+    store.$subscribe((s,state) => {
       strategies.forEach((strategy) => {
         updateStorage(strategy, store)
       })

@@ -1,46 +1,52 @@
 <template>
-  <div class=" gradient gradient--14" :class="options.className" :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex"  @mouseleave="onMouseOut"   @mouseenter="onMouseOver">
-    <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;border-radius: 12px;z-index: 888;padding: 1em; backdrop-filter: blur(8px)"
-         v-show="showTip"   v-if="(options.type.includes('CPU')&&runAida64===false)||(options.type.includes('GPU')&&runAida64===false)"
-     >
-      <div :class="options.noTitle===true?'no-title':'content-title'" >
+  <div  @contextmenu.stop="showDrawer" class="gradient gradient--14" :class="options.className"
+       :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex" @mouseleave="onMouseOut"
+       @mouseenter="onMouseOver">
+    <div
+      style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;border-radius: 12px;z-index: 888;padding: 1em; backdrop-filter: blur(8px)"
+      v-show="showTip"
+      v-if="(options.type.includes('CPU')&&runAida64===false)||(options.type.includes('GPU')&&runAida64===false)"
+    >
+      <div :class="options.noTitle===true?'no-title':'content-title'">
         <div class="left-title" v-if="options.noTitle!==true">
           <Icon :icon="options.icon" class="title-icon"></Icon>
-          <div>{{options.title}}</div>
+          <div>{{ options.title }}</div>
         </div>
         <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
           <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
         </div>
       </div>
-      <div class="content-small text-lg absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center"   >
+      <div class="content-small text-lg absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center">
         <span class="mb-2" style="font-size: 0.8em ;line-height: 1.2">需要安装，如图配置AIDA64并运行</span>
         <div class="mb-2">
-          <AidaGuide ></AidaGuide>
+          <AidaGuide></AidaGuide>
         </div>
 
-        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-xl" @click="onDownAida">
+        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-xl"
+             @click="onDownAida">
           <span>立即下载</span>
         </div>
         <div v-if="options.type.includes('Four')" class="flex flex-col items-center">
           <span class="mb-2" style="font-size: 0.8em ;line-height: 1.2">监控游戏「FPS」需要安装并运行RTSS</span>
-          <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-xl" @click="onDownRTSS">
+          <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-xl"
+               @click="onDownRTSS">
             <span>立即下载</span>
           </div>
         </div>
         <span class="text-base text-neutral-300">如果已经启动请等待大约30秒</span>
       </div>
-  </div>
+    </div>
 
-    <div :class="options.noTitle===true?'no-title':'content-title'" >
+    <div :class="options.noTitle===true?'no-title':'content-title'">
       <div class="left-title" v-if="options.noTitle!==true">
         <Icon :icon="options.icon" class="title-icon"></Icon>
-        <div class="w-2/3">{{options.title}}</div>
+        <div class="w-2/3">{{ options.title }}</div>
       </div>
       <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
       </div>
     </div>
-    <slot :customIndex="customIndex" ></slot>
+    <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
     :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'11em',}"
@@ -54,118 +60,205 @@
   >
     <div style="display: flex;flex-direction: row;height: 100%">
       <div class="option" @click="onSetup" v-if="options.type.includes('downDay')">
+        <Icon class="icon" icon="shezhi1"></Icon>
+        设置
+      </div>
+      <div class="option" @click="onGameSet" v-if="options.type.includes('games')">
         <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
       <div class="option" @click="removeCard">
-        <Icon class="icon" icon="guanbi2"></Icon>删除
+        <Icon class="icon" icon="guanbi2"></Icon>
+        删除
       </div>
       <div class="option" @click="onCopy" v-if="options.type.includes('CPU')||options.type.includes('GPU')">
-        <Icon class="icon" icon="fuzhi"></Icon>复制数据
+        <Icon class="icon" icon="fuzhi"></Icon>
+        复制数据
       </div>
     </div>
   </a-drawer>
   <textarea id="textArea" style="opacity: 0;height: 0;width: 0;position: absolute" v-if="options.type.includes('CPU')||options.type.includes('GPU')"></textarea>
+
+  <a-drawer :width="500" title="设置" style="text-align: center;" bodyStyle="text-align:left;"  placement="right" :visible="gameVisible" @close="onClose">
+     <div class="flex flex-col justify-start">
+      <span style="margin-bottom: 14px;">默认地区</span>
+      <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
+        <a-select-option v-for="item in region" :value="item.encode">{{item.name}}</a-select-option>
+      </a-select>
+     </div>
+  </a-drawer>
 </template>
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
+import { steamStore } from "../../store/steam";
 import {message} from "ant-design-vue";
 import AidaGuide from './supervisory/AidaGuide.vue'
 
 export default {
   components: { AidaGuide },
-  data(){
+  data () {
     return {
       visible:false,
-      showTip:false
+      showTip:false,
+      gameVisible:false,
+      region:[
+        {
+          id:0,
+          name:'美国',
+          encode:'US'
+        },
+        {
+          id:1,
+          name:'加拿大',
+          encode:'CA'
+        },
+        {
+          id:2,
+          name:'英国',
+          encode:'GB'
+        },{
+          id:3,
+          name:'法国',
+          encode:'FR'
+        },{
+          id:4,
+          name:'德国',
+          encode:'de'
+        },{
+          id:5,
+          name:'意大利',
+          encode:'it'
+        },{
+          id:6,
+          name:'日本',
+          encode:'jp'
+        },{
+          id:7,
+          name:'国区',
+          encode:'cn'
+        },{
+          id:8,
+          name:'巴西',
+          encode:'br'
+        },{
+          id:9,
+          name:'印度',
+          encode:'in'
+        },{
+          id:10,
+          name:'俄罗斯',
+          encode:'RU'
+        },{
+          id:11,
+          name:'澳大利亚',
+          encode:'AU'
+        },
+        {
+          id:12,
+          name:'香港',
+          encode:'hk'
+        }
+      ],
+      defaultRegion:'cn'
     }
   },
-  name: "HomeComponentSlot",
+  name: 'HomeComponentSlot',
 
-  props:{
+  props: {
     options: {
       type: Object,
       default: () => ({})
     },
-    editing:{
-      type:Boolean,
-      default:false
+    editing: {
+      type: Boolean,
+      default: false
     },
-    customIndex:{
-      type:Number,
-      default:0
+    customIndex: {
+      type: Number,
+      default: 0
     },
-    runAida64:{
-      type:Boolean,
-      default:true
+    runAida64: {
+      type: Boolean,
+      default: true
     }
   },
-  computed:{
-    ...mapWritableState(cardStore, ["aidaData"]),
+  computed: {
+    ...mapWritableState(cardStore, ['aidaData']),
   },
   methods:{
     ...mapActions(cardStore, ["removeCustomComponents"]),
+    ...mapActions(steamStore,["saveRegion"]),
     showDrawer()  {
       this.visible = true;
     },
     onClose() {
       this.visible = false;
+      this.gameVisible = false
+      if(this.options.type.includes('games')){
+        this.saveRegion(this.defaultRegion)
+      }
     },
-    removeCard(){
+    removeCard () {
       this.removeCustomComponents(this.customIndex)
-      this.visible = false;
+      this.visible = false
     },
-    onSetup(){
-      switch (this.options.title){
-        case "倒数日":
+    onSetup () {
+      switch (this.options.title) {
+        case '倒数日':
           this.$router.push({
-            name: "addCardSetting",
+            name: 'addCardSetting',
             params: {
               name: 'countdownDay',
               cname: '倒数日',
             },
-          });break;
+          })
+          break
       }
 
+    },
+    onGameSet(){
+      this.gameVisible = true
     },
     onCPUIndex(){
       if(this.options.type.includes('CPU')||this.options.type.includes('GPU')){
        // this.$router.push('CPUIndex')
       }
     },
-    onDownAida(){
-      ipc.send('addTab',{url:'https://www.aida64.com/'})
+    onDownAida () {
+      ipc.send('addTab', { url: 'https://www.aida64.com/' })
     },
-    onDownRTSS(){
-      ipc.send('addTab',{url:'https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html'})
+    onDownRTSS () {
+      ipc.send('addTab', { url: 'https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html' })
 
     },
-    onMouseOver(){
+    onMouseOver () {
       this.showTip = true
     },
-    onMouseOut(){
+    onMouseOut () {
       this.showTip = false
     },
-    onCopy() {
-      if(this.aidaData) {
+    onCopy () {
+      if (this.aidaData) {
         let textArea = document.getElementById('textArea')
-        textArea.innerText =JSON.stringify(this.aidaData);
-        console.log(textArea);
+        textArea.innerText = JSON.stringify(this.aidaData)
+        console.log(textArea)
         textArea.select()
         document.execCommand('copy')
-        this.visible = false;
+        this.visible = false
         message.info('复制成功！')
-      }else{
+      } else {
         message.info('复制失败，请检查是否启动过aida64！')
       }
+    },
+    // 获取steam地区
+    getRegion(e){
+      this.defaultRegion = e
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
-
 
 </style>

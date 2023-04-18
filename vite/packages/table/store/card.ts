@@ -5,6 +5,10 @@ export const cardStore = defineStore(
   {
     state: () => {
       return {
+        settings:{
+          cardZoom:100,
+          marginTop:0
+        },
         countdownDay: [],
         appDate: {},
         clockEvent: [],
@@ -227,7 +231,6 @@ export const cardStore = defineStore(
         ],
         routeParams:{},
         clockFlag:false,
-        gameData:[]
       };
     },
 
@@ -251,7 +254,6 @@ export const cardStore = defineStore(
       },
       setAppDate(value) {
         this.appDate = value;
-
       },
 
       addCountdownDay(value) {
@@ -353,16 +355,13 @@ export const cardStore = defineStore(
         // this.customComponents.splice(customIndex,1);
 
       },
-      getGameOffers(value){
-        this.gameData = value
-      }
     },
     persist: {
       enabled: true,
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths:['countdownDay','clockEvent','customComponents','navigationList'],
+        paths:['countdownDay','clockEvent','customComponents','navigationList','settings'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]
