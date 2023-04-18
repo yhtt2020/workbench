@@ -137,6 +137,7 @@ export default {
     // 返回
     discountBack(){
       this.detailShow = false
+      this.groupData()
     },
     // 打开steam官网
     openSteam(){
