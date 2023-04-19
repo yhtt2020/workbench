@@ -112,6 +112,9 @@
     <div class="line">
       遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0"   :step="0.1" />
     </div>
+    <div class="line">
+      <a-button type="primary" @click="clearWallpaper">清除壁纸</a-button>
+    </div>
   </a-drawer>
   <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>
@@ -247,7 +250,7 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
-    ...mapWritableState(appStore, ['agreeTest','backgroundSettings']),
+    ...mapWritableState(appStore, ['agreeTest','backgroundSettings','backgroundImage']),
 
   },
   mounted () {
@@ -274,7 +277,10 @@ export default {
   methods: {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
-   // ...mapActions(appStore, ['setAgreeTest']),
+    ...mapActions(appStore, ['setBackgroundImage']),
+    clearWallpaper(){
+      this.setBackgroundImage({path:""})
+    },
     initGrids(){
       this.customComponents=initCards
     },

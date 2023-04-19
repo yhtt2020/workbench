@@ -220,16 +220,16 @@ export default {
       }
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
-     if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
-       document.body.style.background = '#191919'
-
-
-     }else if(this.backgroundImage.runpath){
-
-     }else{
-       document.body.style.background=  ''
-       document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
-     }
+     // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
+     //   document.body.style.background = '#191919'
+     //
+     //
+     // }else if(this.backgroundImage.runpath){
+     //
+     // }else{
+     //   document.body.style.background=  ''
+     //   document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
+     // }
       }
       this.verify(this.userInfo.uid).then(rs => {
         //只要提供了uid，就能基于uid验证

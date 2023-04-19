@@ -225,6 +225,11 @@ export default defineComponent({
               runpath:`file://${this.currentPaper.src}`
             })
           }else{
+            encodeURIComponent(this.currentPaper.src)
+            if(!this.currentPaper.path){
+              this.currentPaper.path =  this.currentPaper.src
+            }
+            console.log(this.currentPaper.path)
             this.setBackgroundImage(this.currentPaper)
           }
 
@@ -249,6 +254,7 @@ export default defineComponent({
           })
         }
       })
+      console.log(imageArr)
       window.Spotlight.show(imageArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
