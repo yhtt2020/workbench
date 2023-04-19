@@ -20,9 +20,12 @@
       </p>
     </div>
   </a-result>
+  <div style="position: fixed;top: 0;bottom: 0;right: 0;left: 0" @click="hideDesk" @contextmenu="hideDesk">
+
+  </div>
   <div
-    style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%">
-    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+    style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
+    <vue-custom-scrollbar v-if="!hide" key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;width: 100%;height: 100%;margin-right:1em">
       <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;" :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
@@ -89,6 +92,12 @@
         <div @click="clear" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div><span>清空卡片</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="hideDesk" class="btn">
+          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
+          <div><span>隐藏桌面</span></div>
         </div>
       </a-col>
     </a-row>
@@ -199,6 +208,7 @@ export default {
   name: 'Home',
   data () {
     return {
+      hide:false,
       menuVisible: false,
       settingVisible:false,
       editing: false,
@@ -247,7 +257,7 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
-    ...mapWritableState(appStore, ['agreeTest','backgroundSettings']),
+    ...mapWritableState(appStore, ['agreeTest','backgroundSettings','fullScreen']),
 
   },
   mounted () {
@@ -277,6 +287,11 @@ export default {
    // ...mapActions(appStore, ['setAgreeTest']),
     initGrids(){
       this.customComponents=initCards
+    },
+    hideDesk(){
+      this.fullScreen=!this.fullScreen
+      this.hide=!this.hide
+      this.menuVisible=false
     },
     clear(){
       this.menuVisible=false
