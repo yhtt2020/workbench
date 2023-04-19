@@ -64,6 +64,8 @@
       </a-tab-pane>
     </a-tabs>
 
+    <a-empty class="mt-20" v-if="cities.length===0" description="请先添加城市"></a-empty>
+
   </div>
   <a-drawer v-model:visible="visibleAdd">
     <h3>添加城市</h3>

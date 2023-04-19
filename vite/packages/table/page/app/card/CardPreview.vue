@@ -71,6 +71,7 @@ export default {
     },
     addCard () {
           this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
+          this.$emit("addSuccess")
           this.$router.push({
             name: "home",
             params: {

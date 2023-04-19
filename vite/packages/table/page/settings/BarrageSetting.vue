@@ -1,6 +1,6 @@
 <template>
-<h2>弹幕设置</h2>
-  <div class="card" style="padding: 1em;width: 30em">
+<h2 class="suspension-text">弹幕设置</h2>
+  <div style="padding: 1em;width: 30em">
     <div class="line">
       页面允许渲染弹幕数：<a-input-number v-model:value="settings.barrage.limit"></a-input-number>
     </div>
@@ -17,7 +17,7 @@
       与内嵌浏览器当前页面联动：<a-switch v-model:checked="settings.barrage.browserLink"></a-switch>
     </div>
     <div class="line">
-      <div @click="refresh" class="btn"><Icon icon="shuaxin"></Icon> 刷新测试</div>
+      <div @click="refresh" class="btn suspension-item"><Icon icon="shuaxin"></Icon> 刷新测试</div>
     </div>
   </div>
 

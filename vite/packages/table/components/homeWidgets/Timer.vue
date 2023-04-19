@@ -12,7 +12,7 @@
           ></Icon>
           <div style="margin-top:20px;font-size: 18px;font-weight: 400;color: rgba(255, 255, 255, 0.85);">今日番茄：0</div>
           <div
-            class="middle-button timer-btn"
+            class="middle-button timer-btn suspension-item"
             @click="start"
           >
             立即开始

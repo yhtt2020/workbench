@@ -78,7 +78,7 @@
   </a-drawer>
   <textarea id="textArea" style="opacity: 0;height: 0;width: 0;position: absolute" v-if="options.type.includes('CPU')||options.type.includes('GPU')"></textarea>
 
-  <a-drawer :width="500" title="设置" style="text-align: center;" bodyStyle="text-align:left;"  placement="right" :visible="gameVisible" @close="onClose">
+  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}"  placement="right" :visible="gameVisible" @close="onClose">
      <div class="flex flex-col justify-start">
       <span style="margin-bottom: 14px;">默认地区</span>
       <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
@@ -195,9 +195,6 @@ export default {
     onClose() {
       this.visible = false;
       this.gameVisible = false
-      if(this.options.type.includes('games')){
-        this.saveRegion(this.defaultRegion)
-      }
     },
     removeCard () {
       this.removeCustomComponents(this.customIndex)
@@ -254,6 +251,8 @@ export default {
     // 获取steam地区
     getRegion(e){
       this.defaultRegion = e
+      console.log(e);
+      this.saveRegion(e)
     }
   }
 }

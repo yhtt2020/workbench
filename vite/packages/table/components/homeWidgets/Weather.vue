@@ -1,7 +1,6 @@
 <template>
   <HomeComponentSlot :options="options">
   <div @click="enterWeather">
-    <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
     <div v-if="!cities.length">
       <div>
         <a-col style="text-align: center; margin-top: 1em">
@@ -98,14 +97,12 @@ export default {
   name: "Weather",
   data() {
     return {
-      src: "https://a.apps.vip/weather/weather.html",
       today: "",
       options:{
         className:'card small',
         title:'',
         icon:'',
         type:'weather',
-
       },
     };
   },
@@ -115,7 +112,11 @@ export default {
   computed: {
     ...mapState(weatherStore, ['cities']),
     city () {
-      return this.cities[0]
+      if(this.cities[0]){
+        return this.cities[0]
+      }else{
+        return {}
+      }
     }
   },
   mounted() {

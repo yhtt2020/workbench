@@ -23,7 +23,7 @@ export default {
       options:{
         className:'card small',
         title:'网易云',
-        icon:'wangyiyunyinle',
+        icon:'customerservice',
         type:'music'
       },
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
+  <div class="rotate-center suspension-text" style="font-size: 2em;margin-bottom: 1em">
     动态壁纸 {{ list.length }}
   </div>
   <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="flex-grow: 1;flex-shrink: 1">
@@ -26,7 +26,7 @@
         </div>
 
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
-          <div @click="startDownload" v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
+          <div @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
           <!-- <div v-if="getWidth(item)!==100 && item.percent === undefined ">

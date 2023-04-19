@@ -92,7 +92,7 @@
                    :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
                    style="min-height: 3em"
                    item-key="id"
-                   class="grid"
+                   class="grid suspension-background"
                    :get-item-width="getIconSize" :get-item-height="getIconSize"
                    v-model="grid.children">
               <template #item="{ item }">
@@ -754,7 +754,6 @@ export default {
   position: relative;
   width: 18em;
   display: inline-block;
-  background: rgba(204, 204, 204, 0.08);
   border: 5px solid transparent;
   border-radius: 8px;
   vertical-align: top;

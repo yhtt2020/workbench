@@ -1,13 +1,16 @@
-
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex">
     <template v-if="detailShow === false">
-      <div class="w-full  cursor-pointer  mt-7" @click="goToGameAppDetails(imgItem)"  v-for="imgItem in discountList" style="height:118px;position: relative;">
-       <img :src="imgItem.image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-       <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 8px;border-bottom-right-radius: 8px;">-{{imgItem.discount_percent}}%</div>
-<!--       <span class="truncate" style="color: rgba(255, 255, 255, 0.85); position: absolute;bottom: 8px;left: 8px;width:90%;text-shadow: 0 0 4px #333">{{imgItem.name}}</span>-->
-      </div>
-      <div class="mt-7 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+      <swiper  :spaceBetween="30" :loop="true" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
+        <swiper-slide v-for="item in detailList">
+          <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem)"   style="height:118px;position: relative;">
+            <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
+            <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
+          </div>
+        </swiper-slide>
+      </swiper>
+
+      <div class="mt-12 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
         <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
         <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
         <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
@@ -16,22 +19,22 @@
     <template v-if="detailShow === true">
        <div class="flex flex-grow flex-col" style="margin-top: 14px;">
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
-             <img class="rounded-lg" :src="detailList.image" alt="">
+             <img class="rounded-lg" :src="detailList.img" alt="">
           </div>
           <div style="margin-bottom: 6px;">{{detailList.name}}</div>
-          <span class="content-introduction">{{briefIntroduction}}</span>
+          <span class="content-introduction">{{detailList.short_description}}</span>
           <div class="flex" style="margin-bottom: 12px;">
-            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in genres">{{item.description}}</span>
+            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
           <span class="line-through text-white text-opacity-60" style="font-size: 12px;margin-bottom: 6px;">
-            ￥{{detailList.initial_price}}
+            {{detailList.initial_price}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
-             ￥{{detailList.final_price}}
+             {{detailList.final_price}}
             </span>
             <div class="flex justify-end">
-             <span class="bg-red-600 rounded-md" style="padding: 3px 6px 3px 7px;font-size: 12px;">
+             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
                -{{detailList.discount_percent}}%
               </span>
             </div>
@@ -49,9 +52,14 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import {randomData, requestData} from '../../../js/axios/api'
+import {randomData,sendRequest} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper';
+
 export default {
   name:'GamesDiscount',
   props:{
@@ -61,7 +69,9 @@ export default {
     }
   },
   components:{
-    HomeComponentSlot
+    HomeComponentSlot,
+    Swiper,
+    SwiperSlide,
   },
   data(){
     return{
@@ -74,63 +84,71 @@ export default {
       discountList:[],
       reloadShow:false,
       detailShow:false,
-      detailList:'',
-      genres:[],
+      detailList:{},
       id:'',
-      briefIntroduction:''
     }
   },
   mounted(){
-     this.getPercentage()
+    this.groupData()
   },
   methods:{
-    getPercentage(){
-      const gameData = window.localStorage.getItem('gameData')
-      const randomAppList = randomData(JSON.parse(gameData),2)
-      const disList = []
-      randomAppList.forEach(el=>{
-        disList.push({
-          id:el.id,
-          name:el.name,
-          image:el.header_image,
-          discount_percent:el.discount_percent,
-          initial_price:(el.original_price / 100).toFixed(2),
-          final_price:(el.final_price / 100).toFixed(2),
-        })
-      })
-      this.discountList = disList
+    // 将数据分成五组
+    groupData() {
+      let groups = [];
+      const gameData = JSON.parse(window.localStorage.getItem('gameData'))
+      for (let i = 0; i < 5; i++) {
+        groups.push([]);
+      }
+      groups.forEach((arr) => (arr.length = 0));
+      // 随机获取两条数据，放入五个数组中
+      for (let i = 0; i < groups.length; i++) {
+        const index = randomData(gameData,2);
+        groups[i].push(index)
+      }
+      console.log(groups);
+      this.detailList = groups
     },
     goToGameAppDetails(item){
-
-      requestData(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
+      this.detailShow = true
+      sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
         if(res.data[item.id].success !== false){
-          this.detailShow = true
-          console.log(res.data[item.id].data.short_description);
-          this.genres = res.data[item.id].data.genres
-          this.briefIntroduction = res.data[item.id].data.short_description
+          this.detailList = {
+            id:res.data[item.id].data.steam_appid,
+            img:res.data[item.id].data.header_image,
+            name:res.data[item.id].data.name,
+            genres:res.data[item.id].data.genres,
+            final_price:res.data[item.id].data.price_overview.final_formatted,
+            initial_price:res.data[item.id].data.price_overview.initial_formatted,
+            discount_percent:res.data[item.id].data.price_overview.discount_percent,
+            short_description:res.data[item.id].data.short_description
+          }
         }
       })
-      this.detailList = item
       this.id = item.id
-      console.log(this.id);
     },
     // 按钮点击切换
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
-        this.getPercentage()
+        this.groupData()
         this.reloadShow = false
       },300)
     },
     // 返回
     discountBack(){
       this.detailShow = false
+      this.groupData()
     },
     // 打开steam官网
     openSteam(){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
     }
-  }
+  },
+  setup() {
+    return {
+      modules: [Pagination],
+    };
+  },
 }
 </script>
 
@@ -156,7 +174,7 @@ export default {
   padding:1px 6px;
   color:rgba(255, 255, 255, 0.6);
 }
-.change:active{
+.change:active,.change:hover{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }
@@ -168,5 +186,14 @@ export default {
   text-overflow: ellipsis;
   white-space: pre-wrap;
   margin-bottom: 5px;
+}
+</style>
+<style>
+.swiper-pagination-bullet{
+  background:rgba(255, 255, 255, 0.4) !important;
+}
+.swiper-pagination{
+  position: fixed !important;
+  bottom: 5.5em !important;
 }
 </style>
