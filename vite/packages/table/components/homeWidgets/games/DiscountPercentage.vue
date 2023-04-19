@@ -1,7 +1,7 @@
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex">
     <template v-if="detailShow === false">
-      <swiper  :spaceBetween="30" :loop="true" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
+      <swiper  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
         <swiper-slide v-for="item in detailList">
           <div class="w-full  cursor-pointer  mt-7" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem)"   style="height:118px;position: relative;">
             <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
@@ -17,7 +17,8 @@
       </div>
     </template>
     <template v-if="detailShow === true">
-       <div class="flex flex-grow flex-col" style="margin-top: 14px;">
+      <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;"></a-spin>
+       <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.img" alt="">
           </div>
@@ -58,7 +59,7 @@ import {steamStore} from '../../../store/steam'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper';
+import { Pagination,Autoplay } from 'swiper';
 
 export default {
   name:'GamesDiscount',
@@ -86,6 +87,7 @@ export default {
       detailShow:false,
       detailList:{},
       id:'',
+      isLoading:false
     }
   },
   mounted(){
@@ -110,9 +112,11 @@ export default {
     },
     goToGameAppDetails(item){
       this.detailShow = true
-      sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
-        if(res.data[item.id].success !== false){
-          this.detailList = {
+      if(!this.isLoading){
+        this.isLoading = true
+        sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
+         if(res.data[item.id].success !== false){
+           const detailObj = {
             id:res.data[item.id].data.steam_appid,
             img:res.data[item.id].data.header_image,
             name:res.data[item.id].data.name,
@@ -121,9 +125,15 @@ export default {
             initial_price:res.data[item.id].data.price_overview.initial_formatted,
             discount_percent:res.data[item.id].data.price_overview.discount_percent,
             short_description:res.data[item.id].data.short_description
-          }
-        }
-      })
+           }
+           this.detailList = detailObj
+           this.$nextTick(()=>{
+            this.isLoading = false
+           })
+         }
+        })
+        
+      }
       this.id = item.id
     },
     // 按钮点击切换
@@ -146,7 +156,7 @@ export default {
   },
   setup() {
     return {
-      modules: [Pagination],
+      modules: [Pagination,Autoplay],
     };
   },
 }
