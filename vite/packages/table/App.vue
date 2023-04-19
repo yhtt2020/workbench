@@ -1,6 +1,6 @@
 <template>
   <a-config-provider :locale="locale">
-    <div class="a-container" :class="{ dark:settings? settings.darkMod:'' }">
+    <div  class="a-container "  :class="{ dark:settings? settings.darkMod:'','horse_run':this.settings.houserun }">
       <router-view></router-view>
     </div>
     <Barrage></Barrage>

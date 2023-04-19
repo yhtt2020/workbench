@@ -23,6 +23,7 @@ export const appStore = defineStore('appStore', {
     fullScreen: false, //是否是全屏模式
 
     settings: {
+      houserun:false,//rgb跑马灯
       zoomFactor:100,//缩放比
       openUrlBrowser: 'builtin',//默认打开浏览器
       enableChat: true,//主界面显示聊天

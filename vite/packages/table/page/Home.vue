@@ -121,6 +121,12 @@
     <div class="line">
       遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0"   :step="0.1" />
     </div>
+    <div class="line-title">
+      RGB
+    </div>
+    <div class="line">
+      边框跑马灯：<a-switch v-model:checked="appSettings.houserun"></a-switch>
+    </div>
   </a-drawer>
   <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>
@@ -258,6 +264,9 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
     ...mapWritableState(appStore, ['agreeTest','backgroundSettings','fullScreen']),
+    ...mapWritableState(appStore, {
+      appSettings: 'settings',
+    }),
 
   },
   mounted () {
