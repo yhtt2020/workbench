@@ -1,3 +1,4 @@
+@import 'custom';
 .gradient--0 {
   --gradient-start: #6DE195;
   --gradient-start-text: '#6DE195';
@@ -97,15 +98,13 @@
 }
 
 .gradient--14 {
-  --gradient-start: #333333;
-  --gradient-start-text: '#121317';
-  --gradient-end: #212121;
-  --gradient-end-text: '#323B42';
+  --gradient:rgb(26,26,26,.65) ;
+
 }
 
 .gradient {
+  backdrop-filter: blur($suspensionBlur);
   display: inline-block;
-  background: linear-gradient(-33deg, var(--gradient-start), var(--gradient-end));
-
-  box-shadow: 0 0 5px #0002;
+  background:var(--gradient);
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }

@@ -37,6 +37,13 @@
     </template>
   </a-modal>
   <audio ref="clock" src="/sound/clock.mp3"  ></audio>
+  <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath">
+  <video class="fullscreen-video"   playsinline="" autoplay="" muted="" loop="">
+    <source :src="videoPath" type="video/mp4" id="bgVid">
+  </video>
+</div>
+  <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
+
 </template>
 
 <script lang="ts">
@@ -69,15 +76,46 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
+      videoPath:''
     };
   },
   async mounted() {
-    //注意：此处mounted方法早于启动页，所以不能放置数据读取的操作，此类操作可能导致数据还未加载就被访问。
+
+   //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
+   //  if (!this.init) {
+   //    console.log(this.init)
+   //    this.$router.push('/wizard')
+   //    return
+   //  }
+    //
+    // setTimeout(()=>{
+    //
+    //
+    //
+    // },3000)
+    //还原数据
+    // setTimeout(()=>{
+    //   let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
+    //   if(require('fs').existsSync(recoverPath)){
+    //     let json= require('fs').readFileSync(recoverPath,'utf-8')
+    //     let j=JSON.parse(json)
+    //     Object.keys(j).forEach(key=>{
+    //       localStorage.setItem(key,j[key])
+    //     })
+    //     require('fs').rmSync(recoverPath)
+    //     localStorage.setItem('tipInfo','1')
+    //     location.reload()
+    //     console.log('检测到存在待回复的json文件')
+    //   }
+    //   if(localStorage.getItem('tipInfo')){
+    //     localStorage.removeItem('tipInfo')
+    //     Modal.info({content:'已为您迁移数据，目前可正常使用。'})
+    //   }
+    // },3000)
+
+
     window.powerGrade = this.userInfo.onlineGradeExtra
-    window.restore=()=>{
-      this.settings.zoomFactor=100
-      window.location.reload()
-    }
+    window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
 
 
     ipc.on('updateRunningApps', async (event, args) => {
@@ -95,6 +133,10 @@ export default {
       app.memoryUsage = args.info.memoryUsage
     })
 
+
+
+
+
     document.body.classList.add('lg')
     this.reset()//重置部分状态
     this.sortClock()
@@ -107,7 +149,7 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate","clockFlag"]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init','backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
   },
@@ -202,6 +244,19 @@ export default {
       },
       immediate: true,
     },
+    "backgroundImage":{
+      handler(){
+        if(this.backgroundImage.runpath){
+          document.body.style.backgroundImage = ""
+          this.videoPath = this.backgroundImage.runpath
+        }else if(this.backgroundImage.path!==""){
+          document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
+        }
+
+      },
+      immediate: true,
+      deep:true
+    }
   },
 };
 </script>

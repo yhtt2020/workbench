@@ -13,7 +13,7 @@
   </div>
   <vue-custom-scrollbar key="scrollbar" id="addScroll"  :settings="scrollbarSettings"
                         style="position:relative;  border-radius: 8px;height: 100vh">
-  <CardPreview :cardType="item"   v-for="item in filterList"></CardPreview>
+  <CardPreview :cardType="item"   v-for="item in filterList" @addSuccess="onBack"></CardPreview>
     <div style="height: 650px"></div>
   </vue-custom-scrollbar>
 </template>
@@ -38,7 +38,8 @@ export default {
         { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
         { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
         { name:"games", cname:"Steam折扣推荐",icon:"steam",detail:"热门折扣游戏推荐",images:['GamesDiscount','DiscountPercentage']},
-        { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote']}
+        { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote']},
+        { name:"wallpaper", cname:"壁纸",icon:"image",detail:"壁纸",images:['middleWallpaper']}
       ],
       cardType:{},
       show:false,
@@ -84,7 +85,6 @@ export default {
       this.show=true;
     },
     onBack(){
-
       this.$emit('setCustom',false)
     },
 

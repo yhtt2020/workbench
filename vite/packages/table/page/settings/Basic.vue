@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex">
+  <div style="display: flex" class="h-full">
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
-    <div class="ml-3" style="padding: 1em;">
+    <div style="padding: 1em;border-radius: 8px;margin-left: 1em" class="suspension-background">
       <router-view></router-view>
     </div>
   </div>

@@ -27,6 +27,12 @@
         <div>下载该壁纸</div>
       </div>
     </a-col>
+    <a-col :span="4">
+      <div @click="setAppPaper" class="btn">
+        <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+        <div>设为壁纸</div>
+      </div>
+    </a-col>
   </a-row>
 </a-drawer>
 </template>
@@ -53,6 +59,7 @@ export default {
   },
   methods:{
     ...mapActions(paperStore,['removeToMyPaper']),
+    ...mapActions(appStore,['setBackgroundImage']),
     addToMy(img){
       let image = {
         src:img.src,
@@ -76,6 +83,17 @@ export default {
         onOk:()=>{
           message.info('正在为您下载并设桌面壁纸')
           tsbApi.system.setPaper(this.paperCurrent.src)
+          this.visibleMenu = false
+        }
+      })
+    },
+    setAppPaper(){
+      Modal.confirm({
+        content:'确定将此壁纸设置为工作台壁纸？',
+        okText:'设置壁纸',
+        onOk:()=>{
+          message.info('正在为您设置壁纸')
+          this.setBackgroundImage(this.paperCurrent)
           this.visibleMenu = false
         }
       })

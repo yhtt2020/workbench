@@ -24,7 +24,7 @@
         </span>
       </div>
     </a-col>
-    <a-col :span="8" style="text-align: right">
+    <a-col :span="8" style="text-align: right" class="suspension-text">
       <span
         style="color: grey; font-size: 0.8em; margin-right: 1em"
         v-if="settings.tipLock && this.showLockTip"

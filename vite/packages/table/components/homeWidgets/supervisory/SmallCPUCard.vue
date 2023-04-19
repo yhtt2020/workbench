@@ -29,7 +29,7 @@
         '100%': '#348FFF',
       }"/>
 
-        <div style="margin-top: 1px">CPU</div>
+        <div style="margin-top: 1px" class="text-left">CPU</div>
         <canvas id='myCPUCanvas' ref="myCPUCanvas"  style='width:130px;height:40px;margin-top: 5px'> </canvas>
 
       </div>
@@ -49,7 +49,7 @@ export default {
       options:{
         className:'card small',
         title:'CPU',
-        icon:'gaoxingneng',
+        icon:'cpu',
         type:'smallCPUCard'
       },
       CPUData:{

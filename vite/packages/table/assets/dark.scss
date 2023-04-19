@@ -1,5 +1,5 @@
 @import '../../../node_modules/ant-design-vue/dist/antd.dark.css';
-
+@import "custom";
 .dark {
   .key-button {
     border: 1px solid #3a3a3a;
@@ -14,7 +14,7 @@
     }
 
     .item:hover .icon {
-      fill: #bbbbbb !important;
+      fill: rgba(255,255,255) !important;
     }
   }
 
@@ -25,26 +25,25 @@
   }
 
   .common-panel {
-    background: #282828;
 
     .item {
       &:hover {
-        background: #a6a6a6;
-
+          background: rgba(255,255,255,0.08);
         .icon {
-          fill: #333;
+          fill: rgba(255,255,255,.6);
         }
       }
 
       &.active {
+        background: rgba(255,255,255,0.08);
         .icon {
-          fill: #333;
+          fill:rgba(255,255,255,.6);
         }
 
-        background: #888888;
+
       }
 
-      background: #1f1f1f;
+
     }
   }
 
@@ -55,9 +54,12 @@
 
 
   .input-box {
-    border-color: rgb(58, 58, 57) !important;
+    border-color: transparent !important;
     border-width: 0.15em !important;
     color: #7a7a7a;
+    background: $suspensionBackGround;
+    backdrop-filter:blur($suspensionBlur);
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
   }
 }
 

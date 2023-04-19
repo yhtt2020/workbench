@@ -1,24 +1,24 @@
 <template>
 <div class="rotate-center" style="margin-bottom: 1em">
-  <span style="font-size: 2em;">我的收藏 {{ myPapers.length }}</span>
+  <span style="font-size: 2em;" class="suspension-text">我的收藏 {{ myPapers.length }}</span>
   <div class="pointer" style="float: right;font-size: 1em;">
-    <div @click="playAll" class="bg-white bg-opacity-5 rounded-lg list-hover"  style="display: inline-block;margin-right: 1em;padding: 10px;">
+    <div @click="playAll" class=" rounded-lg list-hover suspension-icon"  style="display: inline-block;margin-right: 1em;padding: 10px;">
     <span>
       <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
     </span>
-      <span  style="font-size:1.2em">轮播全部</span>
+      <span  style="font-size:1.2em" class="suspension-text">轮播全部</span>
     </div>
-    <div  @click="playActive" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block; margin-right: 1em;padding: 10px;">
+    <div  @click="playActive" class="rounded-lg list-hover suspension-icon" style="display: inline-block; margin-right: 1em;padding: 10px;">
       <span>
         <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
       </span>
-      <span  style="font-size:1.2em">激活壁纸（ {{activePapers.length}} ）</span>
+      <span  style="font-size:1.2em" class="suspension-text">激活壁纸（ {{activePapers.length}} ）</span>
     </div>
-    <div @click="this.visibleImport=true" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block;margin-right: 1em;padding: 10px;">
+    <div @click="this.visibleImport=true" class=" rounded-lg list-hover suspension-icon" style="display: inline-block;margin-right: 1em;padding: 10px;">
      <span>
       <Icon  style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
      </span>
-      <span style="font-size:1.2em;">导入</span>
+      <span style="font-size:1.2em;" class="suspension-text">导入</span>
     </div>
   </div>
 </div>
@@ -69,6 +69,12 @@
         <div>删除该壁纸</div>
       </div>
     </a-col>
+    <a-col :span="2">
+      <div class="btn" @click="setAppPaper">
+        <Icon icon="tianjia1" style="font-size: 3em"></Icon>
+        <div>设为壁纸</div>
+      </div>
+    </a-col>
   </a-row>
 </a-drawer>
 
@@ -99,12 +105,12 @@ const path=require('path')
 import { paperStore } from '../../store/paper'
 import Player from 'xgplayer/dist/simple_player'
 import {defineComponent ,ref} from 'vue'
-
 export default defineComponent({
   name:'My',
   components:{Import},
   computed:{
     ...mapWritableState(paperStore,['settings','activePapers','myPapers']),
+    ...mapWritableState(appStore,['backgroundImage']),
   },
   data(){
     return{
@@ -144,6 +150,7 @@ export default defineComponent({
   },
   methods:{
     ...mapActions(paperStore,['addToActive','addToMyPaper','addToStaticPaper']),
+    ...mapActions(appStore,['setBackgroundImage']),
     // 获取本地视频目录数据
     getLoadLively(){
       fs.pathExists(path.join(this.settings.savePath,'lively')).then((exists)=>{
@@ -206,7 +213,25 @@ export default defineComponent({
       this.currentPaper=item
       this.visibleMenu=true
     },
+    setAppPaper(){
+      Modal.confirm({
+        content:'确定将此壁纸设置为工作台壁纸？',
+        okText:'设置壁纸',
+        onOk:()=>{
+          message.info('正在为您设置壁纸')
+          if(this.currentPaper.srcProtocol){
+            this.setBackgroundImage({
+              path:'',
+              runpath:`file://${this.currentPaper.src}`
+            })
+          }else{
+            this.setBackgroundImage(this.currentPaper)
+          }
 
+          this.visibleMenu = false
+        }
+      })
+    },
     playAll(){
       const imageArr = []
       this.myPapers.map(el=>{
@@ -393,9 +418,7 @@ export default defineComponent({
   border-radius: 100px;
   transform: translate(-50%, -50%);
 }
-.list-hover:hover{
-  background: rgba(255, 255, 255, 0.2);
-}
+
 .rotate-center{
   text-align: left !important;
 }

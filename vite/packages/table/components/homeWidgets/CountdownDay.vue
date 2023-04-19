@@ -4,25 +4,27 @@
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
     </div>
-    <div class="content" v-else>
+    <div class="content  mt-2" v-else>
     <div style="padding-top: 0.2em">
 
 
     <div
-      class="event-list"
-      v-for="(item) in countdownDay.slice(0, 3)"
-      style="background-color:  rgba(40, 40, 40, 0.2)"
+      class="event-list px-4 mb-3 suspension-item"
+      v-for="(item) in countdownDay.slice(0, 2)"
     >
+      <div class="flex flex-row items-center">
+        <div class="round-dot mr-4"></div>
       <div class="event-title">
-        <span class="text-more">{{ item.eventValue }}</span>
-        <span class="event"
+        <span class="text-more" style="color: rgba(255, 255, 255, 0.85);font-size: 16px">{{ item.eventValue }}</span>
+        <span class="event" style="color: rgba(255, 255, 255, 0.4);font-size: 12px;"
         >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
             item.dateValue.day
           }}</span
         >
       </div>
+      </div>
       <span
-      ><span v-if="item.type">还有</span>
+      style="color: rgba(255, 255, 255, 0.85);font-size: 18px;"><span v-if="item.type">还有</span>
         <span v-else>已过</span> {{
           transDate(
             appDate.year + "-" + appDate.month + "-" + appDate.day,
@@ -91,7 +93,7 @@ export default {
       options:{
         className:'card small',
         title:'倒数日',
-        icon:'rili2',
+        icon:'calendar-check',
         type:'countdownDay'
       },
       status: "pause",
@@ -142,12 +144,12 @@ export default {
 .event-list {
   width: 100%;
   display: flex;
-  padding: 0.2em 0.5em;
+  padding: 9px 16px 9px 12px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin-top: 0.4em;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 .event-title {
   display: flex;
