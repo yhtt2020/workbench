@@ -45,7 +45,7 @@
     </video>
 
   </div>
-  <div v-else class="video-container fixed inset-0 ">
+  <div v-else-if="backgroundImage.path" class="video-container fixed inset-0 ">
     <img style="object-fit: cover;width: 100%;height: 100%"  :src="backgroundImage.path">
   </div>
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
