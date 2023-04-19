@@ -631,7 +631,7 @@ body {
 }
 
 .background-img-blur-light {
-  background: rgba(0, 0, 0, var(--backGroundImgLight, 0.3));
+  background: rgba(0, 0, 0, var(--backGroundImgLight, 0));
   backdrop-filter: blur(var(--backGroundImgBlur, 0px));
 }
 

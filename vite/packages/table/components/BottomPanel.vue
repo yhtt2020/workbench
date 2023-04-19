@@ -555,51 +555,51 @@ export default {
   }
 }
 
-
-@media screen and (max-height: 510px) {
-  .bottom-panel {
-    zoom:0.9;
-
-  }
-  .chat{
-    display: none;
-  }
-  .user-info{
-    width: 100%;
-  }
-  .user{
-    width: 12.5em;
-  }
-}
-@media screen and (min-height: 511px) and (max-height: 550px) {
-  .bottom-panel{
-    zoom:0.9;
-
-  }
-  .chat{
-    display: none;
-  }
-  .user-info{
-    width: 100%;
-  }
-  .user{
-    width: 12.5em;
-  }
-}
-@media screen and (min-height: 551px) and (max-height: 610px) {
-  .bottom-panel {
-    zoom: 0.9;
-  }
-  .chat{
-    display: none;
-  }
-  .user-info{
-    width: 100%;
-  }
-  .user{
-    width: 12.5em;
-  }
-}
+//
+//@media screen and (max-height: 510px) {
+//  .bottom-panel {
+//    zoom:0.9;
+//
+//  }
+//  .chat{
+//    display: none;
+//  }
+//  .user-info{
+//    width: 100%;
+//  }
+//  .user{
+//    width: 12.5em;
+//  }
+//}
+//@media screen and (min-height: 511px) and (max-height: 550px) {
+//  .bottom-panel{
+//    zoom:0.9;
+//
+//  }
+//  .chat{
+//    display: none;
+//  }
+//  .user-info{
+//    width: 100%;
+//  }
+//  .user{
+//    width: 12.5em;
+//  }
+//}
+//@media screen and (min-height: 551px) and (max-height: 610px) {
+//  .bottom-panel {
+//    zoom: 0.9;
+//  }
+//  .chat{
+//    display: none;
+//  }
+//  .user-info{
+//    width: 100%;
+//  }
+//  .user{
+//    width: 12.5em;
+//  }
+//}
 .tip{
   position: absolute;
   top: 0;
