@@ -10,7 +10,7 @@
           <h3>快速开关功能</h3>
           <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
-              <div class="btn relative">
+              <div class="btn relative ">
                 弹幕
                 <br>
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>

@@ -28,7 +28,7 @@
     </div>
 
     <template v-for="dayImages  in bingImages">
-      <div style="text-align: left;font-size: 20px;font-weight: bold;" class="mt-3 mb-3 text-white"> - 第 {{dayImages.day}} 天 -</div>
+      <div style="text-align: left;font-size: 20px;font-weight: bold;" class="mt-3 mb-3 text-white suspension-text"> - 第 {{dayImages.day}} 天 -</div>
       <PaperList :list="dayImages.images"></PaperList>
     </template>
 

@@ -1,18 +1,18 @@
 <template>
-  <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
+  <div class="rotate-center suspension-text" style="font-size: 2em;margin-bottom: 1em">
     锁屏设置
 
   </div>
-  <div class="pointer" style="position: fixed;right: 2em;top: 4em">
+  <div class="pointer suspension-icon" style="position: fixed;right: 2em;top: 4em">
     <div  @click="resetPapersSettings" style="display: inline-block;margin-right: 1em">
       <span><Icon style="font-size: 2em;vertical-align: top"
-                  icon="shuaxin"></Icon></span><span  style="font-size:1.2em"> 重置全部设置</span>
+                  icon="shuaxin"></Icon></span><span  style="font-size:1.2em" class="suspension-text"> 重置全部设置</span>
     </div>
   </div>
-  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 80vh;">
-      <div class="card auto-height" style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em">
+  <vue-custom-scrollbar id="containerWrapper " :settings="settingsScroller" style="height: 80vh;">
+      <div class="card auto-height suspension-background" style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em">
 
-        <div class="line-title">基础设置</div>
+        <div class="line-title ">基础设置</div>
         <div class="line" v-if="!settings.enable">
           如果您的显示器为OLed面板，建议启用锁屏壁纸，且轮播不少于3张壁纸，以防止烧屏。
         </div>
@@ -38,7 +38,7 @@
 
         </div>
         </div>
-  <div class="card auto-height" v-if="settings.enable"  style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em">
+  <div class="card auto-height suspension-background" v-if="settings.enable"  style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em">
     <div class="line-title">
       锁屏显示设置
     </div>
@@ -55,7 +55,7 @@
       显示播放进度：<a-switch v-model:checked="settings.showProgress"></a-switch>
     </div>
   </div>
-  <div class="card auto-height" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
+  <div class="card auto-height suspension-background" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
     <div class="line-title">
       轮播设置
     </div>
@@ -67,18 +67,7 @@
     </div>
 
   </div>
-    <div class="card auto-height" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
-      <div class="line-title">
-        背景设置
-      </div>
-      <div class="line">
-        模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="30"  :step="3" class="w-56"/>
-      </div>
-      <div class="line">
-        遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0.3"   :step="0.1" class="w-56"/>
-      </div>
 
-    </div>
 
 
   </vue-custom-scrollbar>
@@ -103,10 +92,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      backgroundSettings:{
-        backGroundImgBlur:0,
-        backGroundImgLight:0.3,
-      }
+
     }
   },
   mounted () {
@@ -128,15 +114,7 @@ export default {
     }
   },
 
-  watch:{
-    "backgroundSettings":{
-      handler(){
-        document.body.style.setProperty('--backGroundImgBlur', this.backgroundSettings.backGroundImgBlur + 'px');
-        document.body.style.setProperty('--backGroundImgLight', this.backgroundSettings.backGroundImgLight);
-      },
-      deep:true
-    }
-  }
+
 }
 </script>
 

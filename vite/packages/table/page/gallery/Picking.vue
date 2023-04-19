@@ -12,11 +12,11 @@
     </div>
   </div>
   <div class="w-48 h-12 flex items-center">
-       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="openFilter">
+       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center suspension-icon" @click="openFilter">
          <Icon icon="filter" style="font-size: 1.715em;"></Icon>
-         <span style="font-size: 1.15em;">筛选</span>
+         <span style="font-size: 1.15em; " class="suspension-text">筛选</span>
        </div>
-       <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="openInfo" style="margin-left: 12px;">
+       <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center suspension-icon" @click="openInfo" style="margin-left: 12px;">
          <InfoCircleOutlined style="font-size: 1.715em;"/>
        </div>
   </div>
@@ -120,6 +120,13 @@
         <div>下载该壁纸</div>
       </div>
     </a-col>
+    <a-col :span="4">
+      <div @click="setAppPaper" class="btn">
+        <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+        <div>设为壁纸</div>
+      </div>
+    </a-col>
+
   </a-row>
 </a-drawer>
 
@@ -132,6 +139,8 @@ import axios from 'axios';
 import { paperStore } from "../../store/paper";
 import { mapActions, mapState } from "pinia";
 import {message,Modal} from 'ant-design-vue'
+import {appStore} from "../../store";
+
 export default defineComponent({
   name:'Picking',
   components:{
@@ -186,6 +195,7 @@ export default defineComponent({
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
+    ...mapActions(appStore, ["setBackgroundImage"]),
     // 获取拾光壁纸数据
     getPickingData(vl,vP){
       const apiUrl = `https://api.nguaduot.cn${vl}?${vP}`
@@ -222,6 +232,17 @@ export default defineComponent({
           }
         })
       }
+    },
+    setAppPaper(){
+      Modal.confirm({
+        content:'确定将此壁纸设置为工作台壁纸？',
+        okText:'设置壁纸',
+        onOk:()=>{
+          message.info('正在为您设置壁纸')
+          this.setBackgroundImage(this.currentPaper)
+          this.visibleMenu = false
+        }
+      })
     },
     // 获取拾光壁纸分类
     getClassOption(){

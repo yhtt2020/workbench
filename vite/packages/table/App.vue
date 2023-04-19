@@ -37,7 +37,13 @@
     </template>
   </a-modal>
   <audio ref="clock" src="/sound/clock.mp3"  ></audio>
+  <div class="videoContainer fixed inset-0 " v-if="backgroundImage.runpath">
+  <video class="fullscreenVideo"   playsinline="" autoplay="" muted="" loop="">
+    <source :src="videoPath" type="video/mp4" id="bgVid">
+  </video>
+</div>
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
+
 </template>
 
 <script lang="ts">
@@ -70,6 +76,7 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
+      videoPath:''
     };
   },
   async mounted() {
@@ -142,7 +149,7 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate","clockFlag"]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init','backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
   },
@@ -237,6 +244,19 @@ export default {
       },
       immediate: true,
     },
+    "backgroundImage":{
+      handler(){
+        if(this.backgroundImage.runpath){
+          document.body.style.backgroundImage = ""
+          this.videoPath = this.backgroundImage.runpath
+        }else if(this.backgroundImage.path!==""){
+          document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
+        }
+
+      },
+      immediate: true,
+      deep:true
+    }
   },
 };
 </script>

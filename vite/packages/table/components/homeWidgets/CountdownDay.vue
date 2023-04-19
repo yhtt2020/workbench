@@ -9,8 +9,8 @@
 
 
     <div
-      class="event-list px-4 mb-3"
-      v-for="(item) in countdownDay.slice(0, 3)"
+      class="event-list px-4 mb-3 suspension-item"
+      v-for="(item) in countdownDay.slice(0, 2)"
     >
       <div class="flex flex-row items-center">
         <div class="round-dot mr-4"></div>
@@ -150,7 +150,6 @@ export default {
   align-items: center;
   margin-top: 0.4em;
   border-radius: 12px;
-  background-color: rgba(42, 42, 42, 1);
 }
 .event-title {
   display: flex;

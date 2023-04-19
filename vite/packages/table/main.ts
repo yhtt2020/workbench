@@ -44,6 +44,10 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next) =>{
+  if(from.name==='home'){
+    document.body.style.setProperty('--backGroundImgBlur',  '12px');
+    document.body.style.setProperty('--backGroundImgLight', 0.5);
+  }
   cardStore().setRouteParams(to.params)
   next()
 })

@@ -103,7 +103,15 @@
     <div class="line">
       上边距：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
-
+    <div class="line-title">
+      背景设置：
+    </div>
+    <div class="line">
+      模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="30"  :step="3" />
+    </div>
+    <div class="line">
+      遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0.3"   :step="0.1" />
+    </div>
   </a-drawer>
   <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>
@@ -239,7 +247,7 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
-    ...mapWritableState(appStore, ['agreeTest']),
+    ...mapWritableState(appStore, ['agreeTest','backgroundSettings']),
 
   },
   mounted () {
@@ -344,6 +352,16 @@ export default {
     },
 
   },
+  watch:{
+    "backgroundSettings":{
+      handler(){
+        document.body.style.setProperty('--backGroundImgBlur', this.backgroundSettings.backGroundImgBlur + 'px');
+        document.body.style.setProperty('--backGroundImgLight', this.backgroundSettings.backGroundImgLight);
+      },
+      deep:true,
+      immediate: true,
+    }
+  }
 }
 </script>
 <style scoped lang="scss">

@@ -59,6 +59,7 @@ export default {
   },
   methods:{
     ...mapActions(paperStore,['removeToMyPaper']),
+    ...mapActions(appStore,['setBackgroundImage']),
     addToMy(img){
       let image = {
         src:img.src,
@@ -92,8 +93,7 @@ export default {
         okText:'设置壁纸',
         onOk:()=>{
           message.info('正在为您设置壁纸')
-          console.log(this.paperCurrent.src)
-          document.body.style.backgroundImage = "url(" + this.paperCurrent.src + ")"
+          this.setBackgroundImage(this.paperCurrent)
           this.visibleMenu = false
         }
       })

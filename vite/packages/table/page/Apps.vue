@@ -351,7 +351,6 @@ export default {
 
 <style scoped lang="scss">
 .app-content {
-  background: #3b3b3b;
   height: 100%;
   flex-shrink: 1;
   flex-grow: 1;
