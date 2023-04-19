@@ -71,6 +71,12 @@
                   <div> 选择屏幕</div>
                 </div>
               </a-col>
+              <a-col :span="6">
+                <div @click="subscreen" class="btn">
+                  <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>
+                  <div> 分屏设置</div>
+                </div>
+              </a-col>
             </a-row>
             <div>
             </div>
@@ -207,6 +213,9 @@ export default {
         await tsbApi.window.setAlwaysOnTop(true)
       })
     },
+    subscreen(){
+      this.$router.push({name:'subscreen'})
+    },
     chooseScreen () {
       this.visibleChooseScreen = true
     },
@@ -215,7 +224,7 @@ export default {
     },
     barrage () {
       this.$router.push({
-        path: '/barrage'
+        name: 'barrageSetting'
       })
     },
     papersSettings () {

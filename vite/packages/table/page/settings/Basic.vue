@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex">
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
-    <div style="padding: 1em;padding-left: 12em">
+    <div class="ml-3" style="padding: 1em;">
       <router-view></router-view>
     </div>
   </div>
@@ -12,24 +12,38 @@ import SecondPanel from '../../components/SecondPanel.vue'
 
 const menus = [
   {
-    title: '通用设置',
+    title: '通用',
     name: 'common',
     route: {
       name: 'common'
     }
   },
   {
-    title: '浏览器设置',
+    title: '浏览器',
     name: 'browser',
     route: {
       name: 'browser'
     }
   },
   {
-    title: '按键设置',
+    title: '按键',
     name: 'key',
     route: {
       name: 'key'
+    }
+  },
+  {
+    title: '分屏',
+    name: 'subscreen',
+    route: {
+      name: 'subscreen'
+    }
+  },
+  {
+    title: '弹幕',
+    name: 'barrage',
+    route: {
+      name: 'barrageSetting'
     }
   }
 

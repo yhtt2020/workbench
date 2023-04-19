@@ -15,7 +15,7 @@
                   <Icon icon="jingyin" style="font-size: 3em"></Icon>
                 </div>
               </a-col>
-              <a-col :span="21">
+              <a-col id="scroller"  :span="21">
                 <a-slider @after-change="setVol" v-model:value="vol"></a-slider>
               </a-col>
             </a-row>
@@ -110,6 +110,32 @@ export default {
     }
   },
   async mounted () {
+  //   console.log(this.$refs)
+  // setTimeout(()=>{
+  //   $('scroller').on('mousedown',(e)=>{
+  //     cosnole.log('触摸开始')
+  //     e.stopPropagation()
+  //     e.preventDefault()
+  //     return false
+  //   })
+  //   $('scroller').on('touchstart',(e)=>{
+  //     cosnole.log('触摸开始')
+  //     e.stopPropagation()
+  //     e.preventDefault()
+  //     return false
+  //   })
+  //   $('scroller').on('touchend',(e)=>{
+  //     cosnole.log('触摸解锁')
+  //     console.log('toucheend')
+  //     e.stopPropagation()
+  //     return false
+  //   })
+  //   $('scroller').on('touchmove',(e)=>{
+  //     cosnole.log('触摸移动')
+  //     e.stopPropagation()
+  //     return false
+  //   })
+  // },200)
     let isDevelopmentMode = 'development-mode' in window.globalArgs
     let path = getResPathJoin('adjust_get_current_system_volume_vista_plus.exe')
     loudness.setCmdPath(path)
