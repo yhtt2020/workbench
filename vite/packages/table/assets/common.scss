@@ -29,11 +29,11 @@ body{
     background: transparent !important;
   }
 }
-.videoContainer{
+.video-container{
   z-index: -100;
 }
 
-.videoContainer:before{
+.video-container:before{
   content: "";
   position: absolute;
   width: 100%;
@@ -46,7 +46,7 @@ body{
   background-size: cover;
 }
 
-.fullscreenVideo {
+.fullscreen-video {
   width: 100%;
   height: 100%;
   object-fit: fill

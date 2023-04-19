@@ -37,8 +37,8 @@
     </template>
   </a-modal>
   <audio ref="clock" src="/sound/clock.mp3"  ></audio>
-  <div class="videoContainer fixed inset-0 " v-if="backgroundImage.runpath">
-  <video class="fullscreenVideo"   playsinline="" autoplay="" muted="" loop="">
+  <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath">
+  <video class="fullscreen-video"   playsinline="" autoplay="" muted="" loop="">
     <source :src="videoPath" type="video/mp4" id="bgVid">
   </video>
 </div>
