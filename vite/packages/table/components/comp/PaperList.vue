@@ -12,7 +12,7 @@
       </a-col>
     </a-row>
   </viewer>
-<a-drawer v-model:visible="visibleMenu" placement="bottom">
+<a-drawer :height="200" v-model:visible="visibleMenu" placement="bottom">
   <a-row :gutter="20" style="text-align: center">
     <a-col :span="4">
       <div @click="setDesktopPaper" class="btn">
@@ -88,15 +88,9 @@ export default {
       })
     },
     setAppPaper(){
-      Modal.confirm({
-        content:'确定将此壁纸设置为工作台壁纸？',
-        okText:'设置壁纸',
-        onOk:()=>{
-          message.info('正在为您设置壁纸')
-          this.setBackgroundImage(this.paperCurrent)
-          this.visibleMenu = false
-        }
-      })
+      message.info('正在为您设置壁纸')
+      this.setBackgroundImage(this.paperCurrent)
+      this.visibleMenu = false
     },
     add(){}
   },

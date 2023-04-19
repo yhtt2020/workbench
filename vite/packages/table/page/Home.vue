@@ -20,14 +20,14 @@
       </p>
     </div>
   </a-result>
-  <div style="position: fixed;top: 0;bottom: 0;right: 0;left: 0" @click="hideDesk" @contextmenu="hideDesk">
+  <div v-if="hide" style="position: fixed;top: 0;bottom: 0;right: 0;left: 0" @click="hideDesk" @contextmenu="hideDesk">
 
   </div>
   <div
     style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
     <vue-custom-scrollbar v-if="!hide" key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-                          style="position:relative;  border-radius: 8px;width: 100%;height: 100%;margin-right:1em">
-      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;" :style="{'padding-top':this.settings.marginTop+'px'}">
+                          style="position:relative;  border-radius: 8px;width: 100%;height: 100%;">
+      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;margin-right: 1em" :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -116,7 +116,7 @@
       背景设置：
     </div>
     <div class="line">
-      <a-button type="primary" @click="clearWallpaper">清除背景</a-button>
+      <a-button type="primary" class="mr-3" @click="goPaper">壁纸设置</a-button> <a-button  @click="clearWallpaper">清除背景</a-button>
     </div>
     <div class="line">
       模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="30"  :step="3" />
@@ -331,6 +331,9 @@ export default {
       this.settingVisible=true
       this.menuVisible=false
     },
+    goPaper(){
+      this.$router.push({name:'my'})
+    },
     addCard () {
       this.custom=true;
       this.menuVisible = false
@@ -411,6 +414,7 @@ export default {
   vertical-align: top;
   left: 0;
   right: 0;
+  margin-right:1em
 }
 
 .btn {

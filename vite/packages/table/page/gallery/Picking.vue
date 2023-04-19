@@ -81,7 +81,7 @@
   </div>
 </a-drawer>
 
-<a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag">
+<a-drawer  v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag">
     <div class="flex w-full   justify-center items-center flex-col">
         <div class="w-60" style="margin: 50%;">
           <div class="flex" style="margin-bottom: 12px;">
@@ -105,7 +105,7 @@
     </template>
 </a-drawer>
 
-<a-drawer v-model:visible="visibleMenu" placement="bottom">
+<a-drawer :height="200" v-model:visible="visibleMenu" placement="bottom">
   <a-row :gutter="20" style="text-align: center">
     <a-col :span="4">
       <div @click="setDesktopPaper" class="btn">
@@ -234,15 +234,9 @@ export default defineComponent({
       }
     },
     setAppPaper(){
-      Modal.confirm({
-        content:'确定将此壁纸设置为工作台壁纸？',
-        okText:'设置壁纸',
-        onOk:()=>{
-          message.info('正在为您设置壁纸')
-          this.setBackgroundImage(this.currentPaper)
-          this.visibleMenu = false
-        }
-      })
+      message.info('正在为您设置壁纸')
+      this.setBackgroundImage(this.currentPaper)
+      this.visibleMenu = false
     },
     // 获取拾光壁纸分类
     getClassOption(){

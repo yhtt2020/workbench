@@ -1,7 +1,8 @@
 <template>
-  <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item" :class="settings.down.type+'flake'"></div>
+  <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
+       :class="settings.down.type+'flake'"></div>
   <a-config-provider :locale="locale">
-    <div  class="a-container "  :class="{ dark:settings? settings.darkMod:'','horse_run':this.settings.houserun }">
+    <div class="a-container " :class="{ dark:settings? settings.darkMod:'','horse_run':this.settings.houserun }">
       <router-view></router-view>
     </div>
     <Barrage></Barrage>
@@ -37,12 +38,16 @@
       </div>
     </template>
   </a-modal>
-  <audio ref="clock" src="/sound/clock.mp3"  ></audio>
+  <audio ref="clock" src="/sound/clock.mp3"></audio>
   <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath">
-  <video class="fullscreen-video"   playsinline="" autoplay="" muted="" loop="">
-    <source :src="videoPath" type="video/mp4" id="bgVid">
-  </video>
-</div>
+    <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="">
+      <source :src="videoPath" type="video/mp4" id="bgVid">
+    </video>
+
+  </div>
+  <div v-else class="video-container fixed inset-0 ">
+    <img style="object-fit: cover;width: 100%;height: 100%"  :src="backgroundImage.path">
+  </div>
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
 
 </template>
@@ -57,8 +62,9 @@ import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {app} from "electron";
-import {Modal}from 'ant-design-vue'
-const {appModel} =window.$models
+import {Modal} from 'ant-design-vue'
+
+const {appModel} = window.$models
 
 let startX,
   startY,
@@ -77,17 +83,17 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
-      videoPath:''
+      videoPath: ''
     };
   },
   async mounted() {
 
-   //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
-   //  if (!this.init) {
-   //    console.log(this.init)
-   //    this.$router.push('/wizard')
-   //    return
-   //  }
+    //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
+    //  if (!this.init) {
+    //    console.log(this.init)
+    //    this.$router.push('/wizard')
+    //    return
+    //  }
     //
     // setTimeout(()=>{
     //
@@ -116,7 +122,9 @@ export default {
 
 
     window.powerGrade = this.userInfo.onlineGradeExtra
-    window.restore=()=>{this.settings.zoomFactor=100,window.location.reload()}
+    window.restore = () => {
+      this.settings.zoomFactor = 100, window.location.reload()
+    }
 
 
     ipc.on('updateRunningApps', async (event, args) => {
@@ -128,14 +136,11 @@ export default {
         ipc.send('getAppRunningInfo', {nanoid: app})
       }
     })
-    ipc.on('updateRunningInfo',  (event, args) =>{
+    ipc.on('updateRunningInfo', (event, args) => {
       let app = this.runningAppsInfo[args.nanoid]
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
-
-
-
 
 
     document.body.classList.add('lg')
@@ -149,8 +154,8 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate","clockFlag"]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init','backgroundImage']),
+    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
   },
@@ -212,7 +217,9 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
             this.visible = true;
-            setTimeout(()=>{ this.$refs.clock.play();},1000)
+            setTimeout(() => {
+              this.$refs.clock.play();
+            }, 1000)
           }
         } catch (err) {
 
@@ -228,8 +235,10 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
             this.visible = true;
-            setTimeout(()=>{ this.$refs.clock.play();},1000)
-          }else{
+            setTimeout(() => {
+              this.$refs.clock.play();
+            }, 1000)
+          } else {
             this.visible = false;
             this.$refs.clock.pause()
           }
@@ -245,27 +254,20 @@ export default {
       },
       immediate: true,
     },
-    "backgroundImage":{
-      handler(){
+    "backgroundImage": {
+      handler() {
         console.log(this.backgroundImage)
-        if(this.backgroundImage.runpath){
+        if (this.backgroundImage.runpath) {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
           document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
           document.body.style.backgroundImage = ""
           this.videoPath = this.backgroundImage.runpath
-        }else if(this.backgroundImage.path!==""){
+        } else if (this.backgroundImage.path !== "") {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
           document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
-          let p=this.backgroundImage.path
-          if(this.backgroundImage.path.startsWith('file://')){
-            p=p.replaceAll('\\','/')
-          }
-          document.body.style.backgroundImage = "url(" + p + ")"
-
-          console.log(p,'ddddd')
-        }else{
+        } else {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(33, 33, 33)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 0 + 'px');
           document.body.style.setProperty('--gradient', "linear-gradient(-33deg,#333333, #212121)");
@@ -274,7 +276,7 @@ export default {
 
       },
       immediate: true,
-      deep:true
+      deep: true
     }
   },
 };
