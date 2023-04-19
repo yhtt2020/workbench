@@ -2,7 +2,7 @@
   <div style="display: flex;height: 100%">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg"
                  @change-tab="changeTab"></SecondPanel>
-    <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content suspension-background">
+    <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content suspension-background" style="margin: 1em">
       <div v-if="myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
         <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
         将应用拖放到此处，即可用于快捷启动
@@ -10,17 +10,17 @@
       <div v-if="myApps.length===0" style="text-align: center">
         <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
       </div>
-      <div style="padding: 1em">
+      <div style="margin: 1em">
         <MyApps></MyApps>
       </div>
     </div>
-    <div class="app-content suspension-background" v-if="currentIndex==='qing'">
+    <div class="app-content suspension-background" style="margin: 1em" v-if="currentIndex==='qing'">
       <QingApps></QingApps>
     </div>
-    <div class="app-content suspension-background" v-if="currentIndex==='store'" style="padding:2em;">
+    <div class="app-content suspension-background" v-if="currentIndex==='store'" style="margin:1em;padding: 1em">
       <vue-custom-scrollbar :settings="settings"
                             style="position:relative;height:100%;  border-radius: 8px;">
-        <div style="margin: auto;width:100%;height: auto;text-align: center">
+        <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center">
           <div style="margin-bottom: 1em;font-size: 1.5em">
             共 {{ storeApps.length }} 应用
           </div>
@@ -419,7 +419,6 @@ export default {
 
 <style scoped lang="scss">
 .app-content {
-  height: 100%;
   flex-shrink: 1;
   flex-grow: 1;
   border-radius: 8px;

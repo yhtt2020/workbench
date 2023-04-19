@@ -2,7 +2,7 @@
 
   <div style="display: flex;width: 100%">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-                          style="position:relative;  border-radius: 8px;height: calc(100vh - 12em)">
+                          style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
       <div style="width: auto;    white-space: nowrap;">
         <div
           class="suspension-background"

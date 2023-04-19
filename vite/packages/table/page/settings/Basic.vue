@@ -1,9 +1,10 @@
 <template>
   <div style="display: flex" class="h-full">
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
-    <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin-right: 1em" class="suspension-background">
+    <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em" class="suspension-background">
       <router-view></router-view>
     </div>
+
   </div>
 </template>
 
@@ -67,7 +68,7 @@ export default {
     // })
   },
   methods: {
-    change(tab){
+    change (tab) {
       console.log(tab)
       this.$router.push(tab.menu.route)
     },

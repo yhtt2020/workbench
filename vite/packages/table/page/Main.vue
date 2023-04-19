@@ -9,7 +9,7 @@
         <!--左侧栏区域        -->
         <SidePanel></SidePanel>
       </div>
-      <div style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden">
+      <div style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;">
         <!--主题区域，自动滚动条        -->
           <router-view></router-view>
       </div>
