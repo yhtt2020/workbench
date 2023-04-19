@@ -4,7 +4,7 @@
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
            <div class="w-full flex cursor-pointer" @click="enterDetail(item.id)"  v-for="item in list" style="height:65px; margin-bottom: 12px;">
-             <img :src="item.image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
+             <img :src="item.image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
              <div class="flex  discount-content flex-col" style="margin-left: 10px;">
                  <div class="name truncate" >{{item.name}}</div>
                  <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
@@ -12,7 +12,7 @@
                  </span>
                  <div class="flex w-full justify-between ">
                     <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 13px;font-weight: 400; padding-right: 1.2em;">
-                     ￥{{item.final_price}}    
+                     ￥{{item.final_price}}
                     </span>
                     <div style="flex justify-end">
                      <span class="rounded-md" style="background: rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
@@ -45,7 +45,7 @@
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
-             {{detailList.final_price}}    
+             {{detailList.final_price}}
             </span>
             <div class="flex justify-end">
              <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
@@ -53,7 +53,7 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center justify-around"> 
+          <div class="flex items-center justify-around">
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
@@ -135,7 +135,7 @@ export default {
       setTimeout(()=>{
         this.getRandomData()
         this.reloadShow = false
-      },800)
+      },300)
     },
     // 点击进入详情
     enterDetail(item){
@@ -174,7 +174,7 @@ export default {
      }
   }
 }
-.change:active{
+.change:active,.change:hover{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }
