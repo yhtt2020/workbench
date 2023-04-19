@@ -6,14 +6,12 @@
         <span style="margin-left: 0.5em;font-size: 1em;" class="suspension-text">返回</span>
       </div>
     </div>
-    <vue-custom-scrollbar id="second-container" :settings="settingsScroller" style="height: 80vh">
-      <div @click="change($event,menu)" class="menu relative suspension-icon" :class="{'suspension-background':current(menu)}"
+    <div @click="change($event,menu)" class="menu relative suspension-icon" :class="{'suspension-background':current(menu)}"
          v-for="(menu) in menus">
-        <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
-        <span style="margin-left: 0.5em;font-size: 1em;" class="suspension-text">{{ menu.title }}</span>
-        <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title==='动态壁纸'"></GradeSmallTip>
-      </div>
-    </vue-custom-scrollbar>
+      <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
+      <span style="margin-left: 0.5em;font-size: 1em;" class="suspension-text">{{ menu.title }}</span>
+      <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title==='动态壁纸'"></GradeSmallTip>
+    </div>
   </div>
 </template>
 
