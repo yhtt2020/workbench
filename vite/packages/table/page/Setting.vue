@@ -82,7 +82,7 @@
             <div>
             </div>
           </div>
-          <div style="margin: 2em;background: #282828;padding:1em;border-radius: 0.5em;width: 40em;">
+          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="suspension-background">
 
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
               <a-col :span="6">

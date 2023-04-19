@@ -116,6 +116,9 @@
       背景设置：
     </div>
     <div class="line">
+      <a-button type="primary" @click="clearWallpaper">清除背景</a-button>
+    </div>
+    <div class="line">
       模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="30"  :step="3" />
     </div>
     <div class="line">
@@ -272,11 +275,10 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
-    ...mapWritableState(appStore, ['agreeTest','backgroundSettings','fullScreen']),
+    ...mapWritableState(appStore, ['agreeTest','backgroundSettings','backgroundImage']),
     ...mapWritableState(appStore, {
       appSettings: 'settings',
     }),
-
   },
   mounted () {
     window.onresize = () => {
@@ -302,7 +304,10 @@ export default {
   methods: {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
-   // ...mapActions(appStore, ['setAgreeTest']),
+    ...mapActions(appStore, ['setBackgroundImage']),
+    clearWallpaper(){
+      this.setBackgroundImage({path:""})
+    },
     initGrids(){
       this.customComponents=initCards
     },
