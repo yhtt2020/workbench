@@ -45,7 +45,7 @@ export const steamStore = defineStore('steam', {
       return diffMins > 10 // 时间差大于10分钟返回true，表示数据已过时
     },
 
-    saveRegion(value:any){
+    saveRegion(value:any): void{
       this.gameRegion = value
     },
   },
