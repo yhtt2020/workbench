@@ -313,7 +313,7 @@ body{
   background-size:cover;
 }
 .background-img-blur-light{
-  background: rgba(0, 0, 0, $backGroundImgLight);
+  background: rgba(0, 0, 0, 0.0);
   backdrop-filter: blur($backGroundImgBlur);
 }
 
