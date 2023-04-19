@@ -174,6 +174,7 @@ import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
+import { weatherStore } from '../store/weather'
 const readAida64 = window.readAida64
 const initCards=[
   {
@@ -276,11 +277,13 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
     ...mapWritableState(appStore, ['agreeTest','backgroundSettings','backgroundImage']),
+
     ...mapWritableState(appStore, {
       appSettings: 'settings',
     }),
   },
   mounted () {
+    this.fixData()
     window.onresize = () => {
       this.scrollbar = Date.now()
     }
@@ -305,6 +308,7 @@ export default {
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
     ...mapActions(appStore, ['setBackgroundImage']),
+    ...mapActions(weatherStore,['fixData']),
     clearWallpaper(){
       this.setBackgroundImage({path:""})
     },

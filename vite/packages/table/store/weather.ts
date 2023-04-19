@@ -26,6 +26,7 @@ export const weatherStore = defineStore('weather', {
      * 刷新全部城市的天气
      */
     reloadAll() {
+      this.fixData()
       this.cities.forEach(async city => {
         if (city) {
           await this.reloadCityWeatherAll(city)
