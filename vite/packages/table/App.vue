@@ -258,8 +258,13 @@ export default {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
           document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
+          let p=this.backgroundImage.path
+          if(this.backgroundImage.path.startsWith('file://')){
+            p=p.replaceAll('\\','/')
+          }
+          document.body.style.backgroundImage = "url(" + p + ")"
 
-          document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
+          console.log(p,'ddddd')
         }else{
           document.body.style.setProperty('--suspensiondBackGround', "rgb(33, 33, 33)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 0 + 'px');
