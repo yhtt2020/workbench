@@ -9,8 +9,8 @@ body{
   overflow: hidden;
 }
 .suspension-background{
-  background: var(--suspensiondBackGround,rgb(26,26,26,.65));
-  backdrop-filter:var(--suspensiondBackGroundBlur,50px);
+  background: var(--suspensiondBackGround,rgba(26,26,26,.65));
+  backdrop-filter:blur(var(--suspensiondBackGroundBlur,50px));
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }
 .suspension-text{
@@ -314,7 +314,7 @@ body{
   background-size:cover;
 }
 .background-img-blur-light{
-  background: rgba(0, 0, 0,var(--backGroundImgLight,0));
+  background: rgba(0, 0, 0,0);
   backdrop-filter: blur(var(--backGroundImgBlur, 0px));
 }
 
