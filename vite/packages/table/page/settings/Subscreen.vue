@@ -1,6 +1,8 @@
 <template>
-
-  <a-tabs style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">
+  <div class="mb-3">
+    此功能暂时未完成开发，请勿尝试。
+  </div>
+  <a-tabs v-if="false" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">
     <a-tab-pane v-for="screen in screens" :key="screen.key" :tab="screen.title" :closable="screen.closable">
       <div class="line-title">
         基础设置

@@ -1,6 +1,6 @@
 <template>
 <h2 class="suspension-text">弹幕设置</h2>
-  <div class="card suspension-background" style="padding: 1em;width: 30em">
+  <div style="padding: 1em;width: 30em">
     <div class="line">
       页面允许渲染弹幕数：<a-input-number v-model:value="settings.barrage.limit"></a-input-number>
     </div>

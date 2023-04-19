@@ -73,9 +73,9 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <div @click="subscreen" class="btn">
+                <div style="opacity: 0.5" @click="subscreen" class="btn">
                   <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>
-                  <div> 分屏设置</div>
+                  <div > 分屏设置</div>
                 </div>
               </a-col>
             </a-row>
@@ -215,7 +215,7 @@ export default {
       })
     },
     subscreen(){
-      this.$router.push({name:'subscreen'})
+     // this.$router.push({name:'subscreen'})
     },
     chooseScreen () {
       this.visibleChooseScreen = true
