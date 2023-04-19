@@ -14,14 +14,23 @@ export const weatherStore = defineStore('weather', {
      * @param city
      */
     addCity(city) {
+      this.fixData()
       this.cities.push(city)
+    },
+    fixData(){
+      this.cities= this.cities.filter(c=>{
+        return !!c
+      })
     },
     /**
      * 刷新全部城市的天气
      */
-     reloadAll(){
-      this.cities.forEach(async city=>{
-        await this.reloadCityWeatherAll(city)
+    reloadAll() {
+      this.cities.forEach(async city => {
+        if (city) {
+          await this.reloadCityWeatherAll(city)
+        } else {
+        }
       })
     },
 
@@ -31,35 +40,35 @@ export const weatherStore = defineStore('weather', {
      */
     async reloadCityWeatherAll(city) {
       try {
-        let lastUpdate=city.getTime
-        let nowTime=Date.now()
-        let span=nowTime-lastUpdate
-        if(span<=60*60*12*1000){
+        let lastUpdate = city.getTime
+        let nowTime = Date.now()
+        let span = nowTime - lastUpdate
+        if (span <= 60 * 60 * 12 * 1000) {
           console.warn('获取间隔过小，直接返回')
           return
         }
-        let nowData=await this.getNow(city)
-        let now=nowData.now
-        let h24= await this.get24h(city)
-        let d7= await this.get7d(city)
-        if(now){
-          city.now=now
+        let nowData = await this.getNow(city)
+        let now = nowData.now
+        let h24 = await this.get24h(city)
+        let d7 = await this.get7d(city)
+        if (now) {
+          city.now = now
         }
-        if(h24){
-          city.h24=h24
+        if (h24) {
+          city.h24 = h24
         }
-        if(d7){
-          city.d7=d7
+        if (d7) {
+          city.d7 = d7
         }
         city.getTime = Date.now()
-        if(typeof city.now==='undefined'){
-          city.now={}
+        if (typeof city.now === 'undefined') {
+          city.now = {}
         }
-        if(typeof city.h24 ==='undefined'){
-          city.h24={}
+        if (typeof city.h24 === 'undefined') {
+          city.h24 = {}
         }
-        if(typeof city.d7==='undefined'){
-          city.d7={}
+        if (typeof city.d7 === 'undefined') {
+          city.d7 = {}
         }
 
         return city

@@ -104,7 +104,12 @@ export default {
       return secTotime(this.lockTimeout)
     },
     city () {
-      return this.cities[0]
+      if(this.cities[0]){
+        return this.cities[0]
+      }else{
+        return {}
+      }
+
     },
     hasWeather() {
       return this.cities.length > 0;

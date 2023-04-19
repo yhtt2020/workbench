@@ -112,7 +112,11 @@ export default {
   computed: {
     ...mapState(weatherStore, ['cities']),
     city () {
-      return this.cities[0]
+      if(this.cities[0]){
+        return this.cities[0]
+      }else{
+        return {}
+      }
     }
   },
   mounted() {
