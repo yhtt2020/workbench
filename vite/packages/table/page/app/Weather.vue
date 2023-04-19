@@ -115,6 +115,8 @@ export default {
     }
   },
   mounted () {
+    this.fixData()
+
     $("#display").on("touchend", (e) => { e.stopPropagation() })
     if (this.$route.params['add']) {
       this.visibleAdd = true
@@ -132,7 +134,7 @@ export default {
     ...mapWritableState(weatherStore, ['cities', 'lastUpdateTime']),
   },
   methods: {
-    ...mapActions(weatherStore, ['getNow', 'get24h', 'get7d', 'search', 'addCity', 'removeCity', 'reloadCityWeatherAll', 'get']),
+    ...mapActions(weatherStore, ['getNow', 'get24h', 'get7d', 'search', 'addCity', 'removeCity', 'reloadCityWeatherAll', 'get','fixData']),
     getMonthAndDay (time) {
       let format = this.getDateTime(new Date(time))
       return format.month + '/' + format.day
