@@ -38,3 +38,123 @@
     background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), -100px calc(100% - 1px), 1px 0px;
   }
 }
+
+
+
+.snowflake {
+  --size: 2vw;
+  width: var(--size);
+  height: var(--size);
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: -5vh;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
+  100% {
+    transform: translate3d(var(--left-end), 100vh, 0);
+  }
+}
+
+@for $i from 1 through 100 {
+  .snowflake:nth-child(#{$i}) {
+    --size: #{random(10) * 0.2}vw;
+    --left-ini: #{random(20) - 10}vw;
+    --left-end: #{random(20) - 10}vw;
+    left: #{random(100)}vw;
+    animation: snowfall #{5 + random(10)}s linear infinite;
+    animation-delay: -#{random(10)}s;
+  }
+}
+
+/* added small blur every 6 snowflakes*/
+.snowflake:nth-child(6n) {
+  filter: blur(1px);
+}
+.rainflake {
+  --size: 2px;
+  width: var(--size);
+  height: var(--hsize);
+  border-radius: 200% 200% 0 0;
+  position: absolute;
+  top: -5vh;
+  background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.6)
+  );
+}
+
+@keyframes rainfall {
+  0% {
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
+  75% {
+    transform: translate3d(var(--left-ini), 100vh, 0);
+  }
+  100% {
+    transform: translate3d(var(--left-end), 100vh, 0);
+  }
+}
+
+@for $i from 1 through 150 {
+  .rainflake:nth-child(#{$i}) {
+    --size: #{random(10) * 0.2}px;
+    --hsize: #{random(3) * 12}px;
+    --left-ini: #{random(20) - 10}vw;
+    --left-end: #{random(20) - 10}vw;
+    left: #{random(100)}vw;
+    animation: rainfall #{0.5 + random(3)}s linear infinite;
+    animation-delay: -#{random(10)}s;
+  }
+}
+
+/* added small blur every 6 rainflakes*/
+.rainflake:nth-child(6n) {
+  filter: blur(1px);
+}
+
+
+.leafflake {
+  --size: 3vw;
+  width: var(--size);
+  height: var(--size);
+  position: absolute;
+  top: -5vh;
+  background-image: linear-gradient(
+      135deg,
+      rgb(224, 127, 126),
+      rgb(235, 187, 190)
+  );
+  border-radius: var(--radius);
+}
+
+@keyframes leaffall {
+  0% {
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
+  100% {
+    transform: translate3d(var(--left-end), 100vh, 0);
+  }
+}
+
+@for $i from 1 through 100 {
+  .leafflake:nth-child(#{$i}) {
+    --size: #{random(10) * 0.2 + 1}vw;
+    --radius: #{($i%2) * 100}px #{(($i + 1) %2) * 100}px;
+    --left-ini: #{random(20) - 10}vw;
+    --left-end: #{random(20) - 10}vw;
+    left: #{random(100)}vw;
+    animation: leaffall #{5 + random(10)}s linear infinite;
+    animation-delay: -#{random(10)}s;
+  }
+}
+
+/* added small blur every 6 leafflakes*/
+.leafflake:nth-child(6n) {
+  filter: blur(1px);
+}
