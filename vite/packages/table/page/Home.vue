@@ -127,6 +127,15 @@
     <div class="line">
       边框跑马灯：<a-switch v-model:checked="appSettings.houserun"></a-switch>
     </div>
+    <div class="line">
+      飘落特效：<a-switch v-model:checked="appSettings.down.enable"></a-switch>
+    </div>
+    <div class="line" v-if="appSettings.down.enable">
+      飘落物： <a-radio-group v-model:value="appSettings.down.type"><a-radio value="rain">雨</a-radio><a-radio value="snow">雪</a-radio><a-radio value="leaf">叶</a-radio></a-radio-group>
+    </div>
+    <div class="line" v-if="appSettings.down.enable">
+      飘落物数量：<a-input-number v-model:value="appSettings.down.count"></a-input-number>
+    </div>
   </a-drawer>
   <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>

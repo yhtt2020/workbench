@@ -1,4 +1,5 @@
 <template>
+  <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item" :class="settings.down.type+'flake'"></div>
   <a-config-provider :locale="locale">
     <div  class="a-container "  :class="{ dark:settings? settings.darkMod:'','horse_run':this.settings.houserun }">
       <router-view></router-view>
