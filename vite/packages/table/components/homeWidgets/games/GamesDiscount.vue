@@ -31,7 +31,8 @@
         </div>
       </template>
       <template v-if="gameShow === true">
-        <div class="flex flex-grow flex-col" style="margin-top: 14px;">
+        <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;"></a-spin>
+        <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.img" alt="">
           </div>
@@ -59,7 +60,7 @@
             </div>
             <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
           </div>
-       </div>
+        </div>
       </template>
   </HomeComponentSlot>
 </template>
@@ -92,6 +93,7 @@ export default {
       reloadShow:false,
       gameShow:false,
       detailList:{},
+      isLoading:false
     }
   },
   mounted(){
@@ -140,9 +142,11 @@ export default {
     // 点击进入详情
     enterDetail(item){
       this.gameShow = true
-      sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item}`).then(res=>{
+      if(!this.isLoading){
+        this.isLoading = true,
+        sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item}`).then(res=>{
         if(res.data[item].success === true){
-          this.detailList = {
+          const detailObj= {
             id:res.data[item].data.steam_appid,
             img:res.data[item].data.header_image,
             name:res.data[item].data.name,
@@ -152,8 +156,13 @@ export default {
             discount_percent:res.data[item].data.price_overview.discount_percent,
             short_description:res.data[item].data.short_description
           }
+          this.detailList = detailObj
+          this.$nextTick(()=>{
+            this.isLoading = false
+          })
         }
       })
+      }
     },
     discountBack(){
       this.gameShow = false
