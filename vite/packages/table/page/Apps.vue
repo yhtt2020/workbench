@@ -27,11 +27,19 @@
           <a-row :gutter="[30,20]">
           <template v-for="app in storeApps">
               <a-col :span="3">
+                <div class="text-left" style="position:absolute;z-index: 9;">
+                  <a-tag color="#ff5500cc" v-if="app.data.type==='system'">系统</a-tag>
+                  <a-tag color="#87d068cc" v-else-if="app.needInstall">软件</a-tag>
+                  <a-tag color="#108ee9cc" v-else>网页</a-tag>
+                </div>
                 <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="60">
                 </a-avatar>
               </a-col>
               <a-col :span="5">
-                <div class="app-name font-bold text-white" style="text-align: left">{{ app.name }}</div>
+                <div class="app-name font-bold text-white" style="text-align: left">{{ app.name }}
+
+                </div>
+
                 <div class="app-summary" :title="app.summary" style="text-align: left;">
                   {{ app.summary }}
                 </div>
@@ -134,6 +142,66 @@ export default {
             type: 'system',//网页助手
             route: JSON.stringify({
               name: 'watch',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/weather.png',
+          name: '天气',
+          summary: '可以自由添加城市。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'weather',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'weather',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/paper.png',
+          name: '壁纸',
+          summary: '锁屏壁纸，支持导入本地壁纸，以及多个图源，同时支持动态壁纸。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'gallery',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'my',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/music.png',
+          name: '音乐',
+          summary: '网络音乐播放器。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'music',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'music',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/tomato.png',
+          name: '番茄钟',
+          summary: '一个时间管理工具。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'tomato',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'tomato',
             })
           }
         },
