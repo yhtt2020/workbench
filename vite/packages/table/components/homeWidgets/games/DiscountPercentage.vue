@@ -10,7 +10,7 @@
         </swiper-slide>
       </swiper>
 
-      <div class="mt-12 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+      <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
         <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
         <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
         <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
@@ -197,6 +197,6 @@ export default {
 }
 .swiper-pagination{
   position: fixed !important;
-  bottom: 5.5em !important;
+  bottom: 4.95em !important;
 }
 </style>

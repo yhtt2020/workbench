@@ -11,7 +11,7 @@
                    {{currencyFormat(item.original_price,item.currency)}}
                  </span>
                  <div class="flex w-full justify-between ">
-                    <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 13px;font-weight: 400; padding-right: 1.2em;">
+                    <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 14px;font-weight: 500; padding-right: 1.2em;">
                      {{ currencyFormat(item.final_price,item.currency) }}    
                     </span>
                     <div style="flex justify-end">
@@ -23,7 +23,7 @@
              </div>
            </div>
           </div>
-          <div class="bg-black change bg-opacity-10 flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+          <div class="bg-black change bg-opacity-10 flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
            <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
            <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
            <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
@@ -54,7 +54,7 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center justify-around">
+          <div class="flex items-center justify-around"> 
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
@@ -116,7 +116,7 @@ export default {
       setTimeout(()=>{
         this.getRandomData()
         this.reloadShow = false
-      },300)
+      },800)
     },
     // 点击进入详情
     enterDetail(item){
@@ -133,13 +133,13 @@ export default {
         },500)
       }
     },
-    discountBack(){
+     discountBack(){
       this.gameShow = false
       window.localStorage.removeItem('detailData')
-    },
-    openSteam(id){
+     },
+     openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
-    }
+     }
   }
 }
 </script>
@@ -153,7 +153,7 @@ export default {
      }
   }
 }
-.change:active,.change:hover{
+.change:active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }
