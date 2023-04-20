@@ -2,8 +2,9 @@ import axios from "axios";
 /***
  * 处理请求超时问题
  * @param url
+ * @param retries
  */
-export const sendRequest = (url, params, retries = 0) => {
+export const sendRequest = (url: string, params: any,retries=0) => {
   const max_count = 5;
   return axios
     .get(url, { params })
@@ -46,4 +47,17 @@ export function randomData(data: any, count: any) {
     return;
   }
   return result;
+}
+
+
+/***
+ * 根据不同国家将货币进行转换
+*/
+export function currencyFormat(value: number, currencyCode: any){
+  const priceValue = (value / 100).toFixed(2)
+  const formatter = new Intl.NumberFormat('us', {
+    style: 'currency',
+    currency: currencyCode
+  });
+  return formatter.format(priceValue);
 }

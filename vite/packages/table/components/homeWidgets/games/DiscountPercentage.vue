@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex">
-    <template v-if="detailShow === false">
+    <!-- <template v-if="detailShow === false">
       <swiper  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
         <swiper-slide v-for="item in detailList">
           <div class="w-full  cursor-pointer  mt-7" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem)"   style="height:118px;position: relative;">
@@ -47,19 +47,19 @@
             <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
           </div>
        </div>
-    </template>
+    </template> -->
   </HomeComponentSlot>
 </template>
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import {randomData,sendRequest} from '../../../js/axios/api'
-import { mapWritableState,mapActions ,mapState} from 'pinia'
-import {steamStore} from '../../../store/steam'
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import { Pagination,Autoplay } from 'swiper';
+// import {randomData,sendRequest} from '../../../js/axios/api'
+// import { mapWritableState,mapActions ,mapState} from 'pinia'
+// import {steamStore} from '../../../store/steam'
+// import { Swiper, SwiperSlide } from 'swiper/vue';
+// import 'swiper/css';
+// import 'swiper/css/pagination';
+// import { Pagination,Autoplay } from 'swiper';
 
 export default {
   name:'GamesDiscount',
@@ -71,8 +71,8 @@ export default {
   },
   components:{
     HomeComponentSlot,
-    Swiper,
-    SwiperSlide,
+    // Swiper,
+    // SwiperSlide,
   },
   data(){
     return{
@@ -82,83 +82,83 @@ export default {
         icon:'steam',
         type:'games'
       },
-      discountList:[],
-      reloadShow:false,
-      detailShow:false,
-      detailList:{},
-      id:'',
-      isLoading:false
+      // discountList:[],
+      // reloadShow:false,
+      // detailShow:false,
+      // detailList:{},
+      // id:'',
+      // isLoading:false
     }
   },
   mounted(){
-    this.groupData()
+    // this.groupData()
   },
-  methods:{
-    // 将数据分成五组
-    groupData() {
-      let groups = [];
-      const gameData = JSON.parse(window.localStorage.getItem('gameData'))
-      for (let i = 0; i < 5; i++) {
-        groups.push([]);
-      }
-      groups.forEach((arr) => (arr.length = 0));
-      // 随机获取两条数据，放入五个数组中
-      for (let i = 0; i < groups.length; i++) {
-        const index = randomData(gameData,2);
-        groups[i].push(index)
-      }
-      console.log(groups);
-      this.detailList = groups
-    },
-    goToGameAppDetails(item){
-      this.detailShow = true
-      if(!this.isLoading){
-        this.isLoading = true
-        sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
-         if(res.data[item.id].success !== false){
-           const detailObj = {
-            id:res.data[item.id].data.steam_appid,
-            img:res.data[item.id].data.header_image,
-            name:res.data[item.id].data.name,
-            genres:res.data[item.id].data.genres,
-            final_price:res.data[item.id].data.price_overview.final_formatted,
-            initial_price:res.data[item.id].data.price_overview.initial_formatted,
-            discount_percent:res.data[item.id].data.price_overview.discount_percent,
-            short_description:res.data[item.id].data.short_description
-           }
-           this.detailList = detailObj
-           this.$nextTick(()=>{
-            this.isLoading = false
-           })
-         }
-        })
+  // methods:{
+  //   // 将数据分成五组
+  //   groupData() {
+  //     let groups = [];
+  //     const gameData = JSON.parse(window.localStorage.getItem('gameData'))
+  //     for (let i = 0; i < 5; i++) {
+  //       groups.push([]);
+  //     }
+  //     groups.forEach((arr) => (arr.length = 0));
+  //     // 随机获取两条数据，放入五个数组中
+  //     for (let i = 0; i < groups.length; i++) {
+  //       const index = randomData(gameData,2);
+  //       groups[i].push(index)
+  //     }
+  //     console.log(groups);
+  //     this.detailList = groups
+  //   },
+  //   goToGameAppDetails(item){
+  //     this.detailShow = true
+  //     if(!this.isLoading){
+  //       this.isLoading = true
+  //       sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
+  //        if(res.data[item.id].success !== false){
+  //          const detailObj = {
+  //           id:res.data[item.id].data.steam_appid,
+  //           img:res.data[item.id].data.header_image,
+  //           name:res.data[item.id].data.name,
+  //           genres:res.data[item.id].data.genres,
+  //           final_price:res.data[item.id].data.price_overview.final_formatted,
+  //           initial_price:res.data[item.id].data.price_overview.initial_formatted,
+  //           discount_percent:res.data[item.id].data.price_overview.discount_percent,
+  //           short_description:res.data[item.id].data.short_description
+  //          }
+  //          this.detailList = detailObj
+  //          this.$nextTick(()=>{
+  //           this.isLoading = false
+  //          })
+  //        }
+  //       })
         
-      }
-      this.id = item.id
-    },
-    // 按钮点击切换
-    discountChange(){
-      this.reloadShow = true
-      setTimeout(()=>{
-        this.groupData()
-        this.reloadShow = false
-      },300)
-    },
-    // 返回
-    discountBack(){
-      this.detailShow = false
-      this.groupData()
-    },
-    // 打开steam官网
-    openSteam(){
-      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
-    }
-  },
-  setup() {
-    return {
-      modules: [Pagination,Autoplay],
-    };
-  },
+  //     }
+  //     this.id = item.id
+  //   },
+  //   // 按钮点击切换
+  //   discountChange(){
+  //     this.reloadShow = true
+  //     setTimeout(()=>{
+  //       this.groupData()
+  //       this.reloadShow = false
+  //     },300)
+  //   },
+  //   // 返回
+  //   discountBack(){
+  //     this.detailShow = false
+  //     this.groupData()
+  //   },
+  //   // 打开steam官网
+  //   openSteam(){
+  //     window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
+  //   }
+  // },
+  // setup() {
+  //   return {
+  //     modules: [Pagination,Autoplay],
+  //   };
+  // },
 }
 </script>
 
