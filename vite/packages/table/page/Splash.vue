@@ -268,7 +268,7 @@ export default {
       this.active(this.code, hash, this.userInfo.uid).then(rs => {
         this.loading = false
         if (rs.code !== 1000) {
-          message.error('激活码无效，请重试')
+          message.error('邀请码验证不通过，请检查网络（代理）或退出后重试。')
           return
         } else {
           this.myCode = this.code
