@@ -2,16 +2,57 @@
 @import "reset";
 @import 'dark';
 @import "deck";
-
+@import "custom";
+@import "rgb";
 body{
-  background-color: rgb(50, 50, 50);
+  //background-color: rgb(50, 50, 50);
   overflow: hidden;
 }
+.s-bg{
+  background: var(--suspensiondBackGround,rgba(26,26,26,.65));
+  backdrop-filter:blur(var(--suspensiondBackGroundBlur,50px));
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+}//suspension-background
+.s-text{
+  text-shadow: 0 3px 6px #000000;
+
+}//suspension-text
+.s-icon{
+  svg{
+    filter: drop-shadow(0 3px 6px #000000);
+  }
+}//suspension-icon
+.s-item{
+    background:var(--suspensionItemBackGround, rgba(0,0,0,0.30));
+  }//suspension-item
 .bottom-panel{
   .item{
     background: transparent !important;
   }
 }
+.video-container{
+  z-index: -100;
+}
+
+.video-container:before{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  background: rgba(25,29,34,.65);
+  background-size: cover;
+}
+
+.fullscreen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: fill
+}
+
 .common-panel {
   list-style: none;
   border-radius: 8px;
@@ -19,7 +60,6 @@ body{
   padding-left: 0;
   padding-bottom: 5px;
   padding-top: 5px;
-  background: rgba(190, 190, 190, 0.38);
 
   .icon {
     display: inline-block;
@@ -34,15 +74,15 @@ body{
     height: 4em;
     display: inline-block;
     text-align: center;
-    background: rgba(201, 201, 201, 0.5);
+
     border-radius: 6px;
     font-size: 1.2em;
     &:hover {
-      background: #bebebe;
+
     }
 
     &.active {
-      background: #b9b9b9;
+
     }
   }
 
@@ -67,7 +107,6 @@ body{
   width: 120px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(42, 42, 42, 1);
 }
 .small-button{
   width: 56px;
@@ -99,6 +138,15 @@ body{
 body{
   user-select: none;
 }
+.round-dot{
+  left: 12px;
+  top: 25px;
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+}
 .main{
   position: fixed;
   bottom: 0;
@@ -113,7 +161,7 @@ body{
 .btn{
   cursor: pointer;
   padding: 0.8em;
-  background: rgba(0, 0, 0, 0.3);
+  background: $suspensionItemBackGround;
   display: inline-block;
   border-radius: 0.5em;
   &:hover ,&:active{
@@ -223,10 +271,10 @@ body.full-screen{
   }
 }
 .fade-enter-active {
-  animation: bounce-in .5s;
+  animation: bounce-in .3s;
 }
 .fade-leave-active {
-  animation: bounce-in .5s reverse;
+  animation: bounce-in .3s reverse;
 }
 @keyframes bounce-in {
   0% {
@@ -260,3 +308,13 @@ body.full-screen{
 .scroll-content::-webkit-scrollbar { width: 0 !important }
 .scroll-content { -ms-overflow-style: none; }
 .scroll-content { overflow: -moz-scrollbars-none; }
+body{
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size:cover;
+}
+.background-img-blur-light{
+  background: rgba(0, 0, 0,var(--backGroundImgLight,0));
+  backdrop-filter: blur(var(--backGroundImgBlur, 0px));
+}
+

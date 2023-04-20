@@ -64,6 +64,8 @@
       </a-tab-pane>
     </a-tabs>
 
+    <a-empty class="mt-20" v-if="cities.length===0" description="请先添加城市"></a-empty>
+
   </div>
   <a-drawer v-model:visible="visibleAdd">
     <h3>添加城市</h3>
@@ -113,6 +115,8 @@ export default {
     }
   },
   mounted () {
+    this.fixData()
+
     $("#display").on("touchend", (e) => { e.stopPropagation() })
     if (this.$route.params['add']) {
       this.visibleAdd = true
@@ -130,7 +134,7 @@ export default {
     ...mapWritableState(weatherStore, ['cities', 'lastUpdateTime']),
   },
   methods: {
-    ...mapActions(weatherStore, ['getNow', 'get24h', 'get7d', 'search', 'addCity', 'removeCity', 'reloadCityWeatherAll', 'get']),
+    ...mapActions(weatherStore, ['getNow', 'get24h', 'get7d', 'search', 'addCity', 'removeCity', 'reloadCityWeatherAll', 'get','fixData']),
     getMonthAndDay (time) {
       let format = this.getDateTime(new Date(time))
       return format.month + '/' + format.day

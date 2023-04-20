@@ -2,14 +2,15 @@
 
   <div style="display: flex;width: 100%">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-                          style="position:relative;  border-radius: 8px;height: calc(100vh - 12em)">
+                          style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
       <div style="width: auto;    white-space: nowrap;">
         <div
-          style="margin: 2em;margin-right: 1em;background: #282828;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
+          class="s-bg"
+          style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
           <h3>快速开关功能</h3>
           <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
-              <div class="btn">
+              <div class="btn relative ">
                 弹幕
                 <br>
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
@@ -17,7 +18,7 @@
               </div>
             </a-col>
             <a-col :span="12">
-              <div class="btn">
+              <div class="btn relative">
                 聊天<br>
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
                 <GradeSmallTip powerType="closeChat"></GradeSmallTip>
@@ -46,7 +47,7 @@
           </div>
         </div>
         <div style="display: inline-block;vertical-align: top">
-          <div style="margin: 2em;background: #282828;padding:1em;border-radius: 0.5em;width: 40em;">
+          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg">
             <h3>屏幕设置</h3>
             <a-row style="font-size: 1.2em;text-align: center">
               <a-col :span="6">
@@ -71,11 +72,17 @@
                   <div> 选择屏幕</div>
                 </div>
               </a-col>
+              <a-col :span="6">
+                <div style="opacity: 0.5" @click="subscreen" class="btn">
+                  <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>
+                  <div > 分屏设置</div>
+                </div>
+              </a-col>
             </a-row>
             <div>
             </div>
           </div>
-          <div style="margin: 2em;background: #282828;padding:1em;border-radius: 0.5em;width: 40em;">
+          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg">
 
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
               <a-col :span="6">
@@ -207,6 +214,9 @@ export default {
         await tsbApi.window.setAlwaysOnTop(true)
       })
     },
+    subscreen(){
+     // this.$router.push({name:'subscreen'})
+    },
     chooseScreen () {
       this.visibleChooseScreen = true
     },
@@ -215,7 +225,7 @@ export default {
     },
     barrage () {
       this.$router.push({
-        path: '/barrage'
+        name: 'barrageSetting'
       })
     },
     papersSettings () {

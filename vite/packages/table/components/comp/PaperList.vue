@@ -12,7 +12,7 @@
       </a-col>
     </a-row>
   </viewer>
-<a-drawer v-model:visible="visibleMenu" placement="bottom">
+<a-drawer :height="200" v-model:visible="visibleMenu" placement="bottom">
   <a-row :gutter="20" style="text-align: center">
     <a-col :span="4">
       <div @click="setDesktopPaper" class="btn">
@@ -25,6 +25,12 @@
       <div  @click="add()" class="btn">
         <Icon style="font-size: 3em" icon="xiazai"></Icon>
         <div>下载该壁纸</div>
+      </div>
+    </a-col>
+    <a-col :span="4">
+      <div @click="setAppPaper" class="btn">
+        <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+        <div>设为壁纸</div>
       </div>
     </a-col>
   </a-row>
@@ -53,6 +59,7 @@ export default {
   },
   methods:{
     ...mapActions(paperStore,['removeToMyPaper']),
+    ...mapActions(appStore,['setBackgroundImage']),
     addToMy(img){
       let image = {
         src:img.src,
@@ -79,6 +86,11 @@ export default {
           this.visibleMenu = false
         }
       })
+    },
+    setAppPaper(){
+      message.info('正在为您设置壁纸')
+      this.setBackgroundImage(this.paperCurrent)
+      this.visibleMenu = false
     },
     add(){}
   },

@@ -1,9 +1,10 @@
 <template>
-  <div style="display: flex">
+  <div style="display: flex" class="h-full">
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
-    <div style="padding: 1em;padding-left: 12em">
+    <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em" class="s-bg">
       <router-view></router-view>
     </div>
+
   </div>
 </template>
 
@@ -12,24 +13,38 @@ import SecondPanel from '../../components/SecondPanel.vue'
 
 const menus = [
   {
-    title: '通用设置',
+    title: '通用',
     name: 'common',
     route: {
       name: 'common'
     }
   },
   {
-    title: '浏览器设置',
+    title: '浏览器',
     name: 'browser',
     route: {
       name: 'browser'
     }
   },
   {
-    title: '按键设置',
+    title: '按键',
     name: 'key',
     route: {
       name: 'key'
+    }
+  },
+  {
+    title: '分屏',
+    name: 'subscreen',
+    route: {
+      name: 'subscreen'
+    }
+  },
+  {
+    title: '弹幕',
+    name: 'barrage',
+    route: {
+      name: 'barrageSetting'
     }
   }
 
@@ -53,7 +68,7 @@ export default {
     // })
   },
   methods: {
-    change(tab){
+    change (tab) {
       console.log(tab)
       this.$router.push(tab.menu.route)
     },

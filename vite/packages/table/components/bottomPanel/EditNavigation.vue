@@ -44,63 +44,46 @@
 <!--  </div>-->
 
   <transition name="fade">
-  <div class="add-navigation" v-if="editFlag" >
-      <div>添加导航</div>
-      <div @click="closeAdd" class="pointer">
-        <Icon icon="guanbi" class="no-drag" style="width:18px;height:18px;color: rgba(255, 255, 255, 0.85);" ></Icon>
+  <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
+    <div v-show="nowClassify!=='localApp'" class="h-full">
+      <a-input v-model:value="selectContent" class="no-drag h-10 rounded-xl" placeholder="搜索"  style="background: rgba(42, 42, 42, 0.6);">
+        <template #prefix>
+          <Icon icon="sousuo" class="text-gray-600"></Icon>
+        </template>
+      </a-input>
+      <vue-custom-scrollbar  key="scrollbar"  :settings="rightScrollbarSettings"
+                             class="relative"
+                             style="height: calc(100% - 40px);padding: 5px 0">
+        <listItem v-for="(item,index) in filterList" :item="item"
+                  class=" rounded-xl right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+      </vue-custom-scrollbar>
+    </div>
+    <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500  h-full">
+      <div>1. 点击选择需要添加的应用快捷方式</div>
+      <div>2. 拖动应用快捷方式拖放到下方</div>
+      <div>3. 支持持批量添加</div>
+      <div class="border-dashed w-full h-1/2 mt-2.5 rounded-xl flex flex-row justify-center items-center"  @dragover.prevent="" @drop.prevent="drop">
+        <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
+        添加快捷方式
       </div>
-    <div class="add-navigation-content flex flex-row">
-      <div class="left-content">
-          <div v-for="(item,index) in navClassify" :style="activeItem ===index?' border-right: 1px rgba(22, 119, 255, 1) solid;' :''">
-            <div :class="activeItem ===index?'active' :''" @click="clickItem(item,index)">
-              {{item.cname}}
-            </div>
-          </div>
-      </div>
-
-      <div class="right-content  ml-3" style="width: calc(100% - 145px)">
-        <div v-show="nowClassify!=='localApp'" class="h-full">
-          <a-input v-model:value="selectContent" class="no-drag h-10 rounded-xl" placeholder="搜索"  style="background: rgba(42, 42, 42, 0.6);">
-          <template #prefix>
-            <Icon icon="sousuo" class="text-gray-600"></Icon>
-          </template>
-        </a-input>
-          <vue-custom-scrollbar  key="scrollbar"  :settings="rightScrollbarSettings"
-                                class="relative"
-                                style="height: calc(100% - 40px);padding: 5px 0">
-            <listItem v-for="(item,index) in filterList" :item="item"
-                      class=" rounded-xl right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
-          </vue-custom-scrollbar>
-        </div>
-        <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500  h-full">
-          <div>1. 点击选择需要添加的应用快捷方式</div>
-          <div>2. 拖动应用快捷方式拖放到下方</div>
-          <div>3. 支持持批量添加</div>
-          <div class="border-dashed w-full h-1/2 mt-2.5 rounded-xl flex flex-row justify-center items-center"  @dragover.prevent="" @drop.prevent="drop">
-            <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
-            添加快捷方式
-          </div>
-          <ScrolX :height="66">
-          <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
-              <div v-for="(item,index) in dropList" class="flex  ml-4">
-                <a-badge>
-                  <template #count>
-                    <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)" class="pointer"></Icon>
-                  </template>
-                <a-avatar :size="40" shape="square" :src="item.icon" >
-                </a-avatar>
-                </a-badge>
-              </div>
-          </div>
-          </ScrolX>
-          <div @click="clickRightListItem(dropList)" class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-xl  " style="background: rgb(42, 42, 42);color: rgba(255, 255, 255, 0.85);">
-           确定添加
+      <ScrolX :height="66">
+        <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
+          <div v-for="(item,index) in dropList" class="flex  ml-4">
+            <a-badge>
+              <template #count>
+                <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)" class="pointer"></Icon>
+              </template>
+              <a-avatar :size="40" shape="square" :src="item.icon" >
+              </a-avatar>
+            </a-badge>
           </div>
         </div>
-
+      </ScrolX>
+      <div @click="clickRightListItem(dropList)" class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-xl  " style="background: rgb(42, 42, 42);color: rgba(255, 255, 255, 0.85);">
+        确定添加
       </div>
     </div>
-  </div>
+  </Classification>
   </transition>
 </template>
 
@@ -112,6 +95,7 @@ import {cardStore} from "../../store/card";
 import ScrolX from '../ScrolX.vue'
 import Sortable from 'sortablejs';
 import navigationData from '../../js/data/tableData'
+import Classification from "../comp/Classification.vue";
 const {appModel}=window.$models
 export default {
   name: "EditNavigation",
@@ -156,7 +140,8 @@ export default {
   components:{
     vuuri,
     ScrolX,
-    listItem
+    listItem,
+    Classification
   },
   created() {
     this.loadDeskIconApps()
@@ -165,14 +150,13 @@ export default {
     this.checkScroll()
     let that = this
     window.addEventListener('resize',
-      that.checkScrol
+      that.checkScroll
     )
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
       event.preventDefault();
       content.scrollLeft += event.deltaY
     })
-
     this.$nextTick(()=>{
       this.rowDrop()
     })
@@ -256,10 +240,9 @@ export default {
       this.dropList.push(...this.dropFiles)
     },
 
-    clickItem(item,index){
-      this.activeItem = index;
-      this.avtiveRightItem = 0;
-      this.nowClassify = item.name;
+    clickItem(item){
+       this.avtiveRightItem = 0;
+       this.nowClassify = item.name;
     },
     async loadDeskIconApps () {
      const lightApps=await appModel.getAllApps()
@@ -297,6 +280,10 @@ export default {
          if(this.navigationList[i].name ===item.name)return
        }
        this.setNavigationList(item)
+       this.$nextTick(() => {
+         let scrollElem = this.$refs.content;
+         scrollElem.scrollTo({ left: scrollElem .scrollWidth, behavior: 'smooth' });
+       });
      }
 
 
@@ -309,7 +296,7 @@ export default {
       },
       immediate: true,
       deep:true
-    }
+    },
   },
 }
 </script>

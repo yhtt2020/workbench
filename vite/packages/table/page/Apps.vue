@@ -2,7 +2,7 @@
   <div style="display: flex;height: 100%">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg"
                  @change-tab="changeTab"></SecondPanel>
-    <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
+    <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg" style="margin: 1em">
       <div v-if="myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
         <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
         将应用拖放到此处，即可用于快捷启动
@@ -10,28 +10,36 @@
       <div v-if="myApps.length===0" style="text-align: center">
         <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
       </div>
-      <div style="padding: 1em">
+      <div style="margin: 1em">
         <MyApps></MyApps>
       </div>
     </div>
-    <div class="app-content" v-if="currentIndex==='qing'">
+    <div class="app-content s-bg" style="margin: 1em" v-if="currentIndex==='qing'">
       <QingApps></QingApps>
     </div>
-    <div class="app-content" v-if="currentIndex==='store'" style="padding:2em;">
+    <div class="app-content s-bg" v-if="currentIndex==='store'" style="margin:1em;padding: 1em">
       <vue-custom-scrollbar :settings="settings"
                             style="position:relative;height:100%;  border-radius: 8px;">
-        <div style="margin: auto;width:100%;height: auto;text-align: center">
+        <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center">
           <div style="margin-bottom: 1em;font-size: 1.5em">
             共 {{ storeApps.length }} 应用
           </div>
           <a-row :gutter="[30,20]">
           <template v-for="app in storeApps">
               <a-col :span="3">
+                <div class="text-left" style="position:absolute;z-index: 9;">
+                  <a-tag color="#ff5500cc" v-if="app.data.type==='system'">系统</a-tag>
+                  <a-tag color="#87d068cc" v-else-if="app.needInstall">软件</a-tag>
+                  <a-tag color="#108ee9cc" v-else>网页</a-tag>
+                </div>
                 <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="60">
                 </a-avatar>
               </a-col>
               <a-col :span="5">
-                <div class="app-name font-bold text-white" style="text-align: left">{{ app.name }}</div>
+                <div class="app-name font-bold text-white" style="text-align: left">{{ app.name }}
+
+                </div>
+
                 <div class="app-summary" :title="app.summary" style="text-align: left;">
                   {{ app.summary }}
                 </div>
@@ -134,6 +142,66 @@ export default {
             type: 'system',//网页助手
             route: JSON.stringify({
               name: 'watch',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/weather.png',
+          name: '天气',
+          summary: '可以自由添加城市。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'weather',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'weather',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/paper.png',
+          name: '壁纸',
+          summary: '锁屏壁纸，支持导入本地壁纸，以及多个图源，同时支持动态壁纸。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'gallery',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'my',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/music.png',
+          name: '音乐',
+          summary: '网络音乐播放器。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'music',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'music',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/tomato.png',
+          name: '番茄钟',
+          summary: '一个时间管理工具。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'tomato',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'tomato',
             })
           }
         },
@@ -351,8 +419,6 @@ export default {
 
 <style scoped lang="scss">
 .app-content {
-  background: #3b3b3b;
-  height: 100%;
   flex-shrink: 1;
   flex-grow: 1;
   border-radius: 8px;

@@ -29,6 +29,7 @@ import PickingPaper from '../page/gallery/Picking.vue'
 import Lively from '../page/gallery/Lively.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
 import My from '../page/gallery/My.vue'
+import Subscreen from '../page/settings/Subscreen.vue'
 export default [{
   path: '/main',
   name: 'main',
@@ -89,11 +90,6 @@ export default [{
 
     },
     {
-      path: '/barrage',
-      name: 'barrageSetting',
-      component: BarrageSetting
-    },
-    {
       path: '/music',
       name: 'music',
       component: Music
@@ -142,6 +138,16 @@ export default [{
           path: '/browser',
           name: 'browser',
           component: Browser
+        },
+        {
+          path: '/subscreen',
+          name: 'subscreen',
+          component: Subscreen
+        },
+        {
+          path: '/barrage',
+          name: 'barrageSetting',
+          component: BarrageSetting
         },
       ]
     },
