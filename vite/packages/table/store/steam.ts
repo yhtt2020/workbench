@@ -1,15 +1,22 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
-import {sendRequest} from '../js/axios/api'
 // @ts-ignore
 export const steamStore = defineStore('steam', {
   state: () => ({
-    gameData:[], 
+    gameData:[], // 获取所有数据
+    randomData:[], // 随机获取steam的优惠数据
+    randomGameApp:[], // 随机获取app应用列表
     gameRegion:'cn', // 获取地区
-    detailData:{},
-    updatedAt:null,
   }), 
   actions: {
+    saveGameData(){
+      // 保存数据
+      window.localStorage.setItem('gameData',JSON.stringify(this.gameData))
+      // 更新时间戳
+      this.updatedAt = new Date()
+      window.localStorage.setItem('updateGameData',this.updatedAt.toISOString())
+    },
+    
     // 获取更新后数据
     loadGameData(){
       const saveData = localStorage.getItem('gameData')
@@ -20,6 +27,11 @@ export const steamStore = defineStore('steam', {
       if (savedUpdatedAt) {
         this.updatedAt = new Date(savedUpdatedAt)
       }
+    },
+
+    getGameOffers(value: any){
+      this.gameData = value
+      this.saveGameData()
     },
 
     // 判断数据是否超时
@@ -33,31 +45,9 @@ export const steamStore = defineStore('steam', {
       return diffMins > 10 // 时间差大于10分钟返回true，表示数据已过时
     },
 
-    saveRegion(value:any){
+    saveRegion(value:any): void{
       this.gameRegion = value
-      window.localStorage.setItem('gameRegion',JSON.stringify(this.gameRegion))
     },
-    fetchData(){
-      const fetchRegion = window.localStorage.getItem('gameRegion')
-      if(fetchRegion){
-        const parseRegion = JSON.parse(fetchRegion)
-        sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${parseRegion.id}&l=${parseRegion.id}`,3).then(res=>{
-          window.localStorage.setItem('gameData',JSON.stringify(res?.data.specials.items))
-          // 更新时间戳
-          this.updatedAt = new Date()
-          window.localStorage.setItem('updateGameData',this.updatedAt.toISOString())
-        })
-      }
-    },
-    fetchDetail(id,regId){
-      sendRequest(`https://store.steampowered.com/api/appdetails?appids=${id}&cc=${regId}&l=${regId}`,3).then(res=>{
-        const detailData = res?.data[id].data
-        const detailShow = res?.data[id].success
-        if(detailShow){
-          window.localStorage.setItem('detailData',JSON.stringify(detailData))
-        }
-      })
-    }
   },
   persist: {
     enabled: true,
