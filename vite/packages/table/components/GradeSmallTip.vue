@@ -47,8 +47,8 @@ export default {
     }
   },
   mounted() {
-    this.lv = powerGrade.lv
-    const {tipTitle,blocking,powerLv,powerAlias,superiorLimit}= this.powerState(this.powerType,powerGrade.lv,this.lastPowerType)
+    this.lv = lv
+    const {tipTitle,blocking,powerLv,powerAlias,superiorLimit}= this.powerState(this.powerType,lv,this.lastPowerType)
     this.tipTitle=tipTitle
     this.blocking=blocking
     this.powerLv=powerLv

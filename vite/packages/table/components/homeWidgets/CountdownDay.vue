@@ -9,7 +9,7 @@
 
 
     <div
-      class="event-list px-4 mb-3 suspension-item"
+      class="event-list px-4 mb-3 s-item"
       v-for="(item) in countdownDay.slice(0, 2)"
     >
       <div class="flex flex-row items-center">

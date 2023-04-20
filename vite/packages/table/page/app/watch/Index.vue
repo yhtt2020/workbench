@@ -418,8 +418,8 @@ export default {
   },
   computed: {},
   mounted () {
-    this.lv = powerGrade.lv
-    const {blocking,superiorLimit,powerAlias,powerLv}=this.powerState('dataMonitoring',powerGrade.lv)
+    this.lv = lv
+    const {blocking,superiorLimit,powerAlias,powerLv}=this.powerState('dataMonitoring',lv)
     this.superiorLimit=superiorLimit
     this.blocking=blocking
     this.powerAlias=powerAlias

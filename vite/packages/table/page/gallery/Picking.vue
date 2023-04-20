@@ -12,11 +12,11 @@
     </div>
   </div>
   <div class="w-48 h-12 flex items-center">
-       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center suspension-icon" @click="openFilter">
+       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center s-icon" @click="openFilter">
          <Icon icon="filter" style="font-size: 1.715em;"></Icon>
-         <span style="font-size: 1.15em; " class="suspension-text">筛选</span>
+         <span style="font-size: 1.15em; " class="s-text">筛选</span>
        </div>
-       <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center suspension-icon" @click="openInfo" style="margin-left: 12px;">
+       <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center s-icon" @click="openInfo" style="margin-left: 12px;">
          <InfoCircleOutlined style="font-size: 1.715em;"/>
        </div>
   </div>

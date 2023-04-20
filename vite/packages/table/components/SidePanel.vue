@@ -1,5 +1,5 @@
 <template>
-  <ul class="side-panel common-panel suspension-background" style=" z-index: 999;
+  <ul class="side-panel common-panel s-bg" style=" z-index: 999;
   width: 6em;">
     <li class="active">
       <PanelButton :active="tab==='home'" @click="goTab('main','home')" icon="shouye1" title="主页"></PanelButton>

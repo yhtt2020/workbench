@@ -8,7 +8,7 @@
     </div>
 
 
-      <a-row class="festival mt-4 suspension-item" style="border-radius: 12px;height: 60px">
+      <a-row class="festival mt-4 s-item" style="border-radius: 12px;height: 60px">
         <a-col :span="11" class="flex flex-row items-center pl-2 py-2">
           <div class="round-dot mr-3"></div>
           <div class="flex flex-col">

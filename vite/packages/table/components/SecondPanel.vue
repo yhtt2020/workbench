@@ -1,15 +1,15 @@
 <template>
   <div class="second-panel ml-3 mt-3"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
     <div  style="margin-bottom:2em;" v-if="gallery === true">
-      <div :onClick="goHome"  class="second-panel-back suspension-icon" >
+      <div :onClick="goHome"  class="second-panel-back s-icon" >
         <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>
-        <span style="margin-left: 0.5em;font-size: 1em;" class="suspension-text">返回</span>
+        <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">返回</span>
       </div>
     </div>
-    <div @click="change($event,menu)" class="menu relative suspension-icon" :class="{'suspension-background':current(menu)}"
+    <div @click="change($event,menu)" class="menu relative s-icon" :class="{'s-bg':current(menu)}"
          v-for="(menu) in menus">
       <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
-      <span style="margin-left: 0.5em;font-size: 1em;" class="suspension-text">{{ menu.title }}</span>
+      <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">{{ menu.title }}</span>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title==='动态壁纸'"></GradeSmallTip>
     </div>
   </div>
