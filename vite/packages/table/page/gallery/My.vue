@@ -1,27 +1,27 @@
 <template>
   <div class="rotate-center" style="margin-bottom: 1em">
-    <span style="font-size: 2em;" class="suspension-text">我的收藏 {{ myPapers.length }}</span>
+    <span style="font-size: 2em;" class="s-text">我的收藏 {{ myPapers.length }}</span>
     <div class="pointer" style="float: right;font-size: 1em;">
-      <div @click="playAll" class=" rounded-lg list-hover suspension-icon"
+      <div @click="playAll" class=" rounded-lg list-hover s-icon"
            style="display: inline-block;margin-right: 1em;padding: 10px;">
     <span>
       <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
     </span>
-        <span style="font-size:1.2em" class="suspension-text">轮播全部</span>
+        <span style="font-size:1.2em" class="s-text">轮播全部</span>
       </div>
-      <div @click="playActive" class="rounded-lg list-hover suspension-icon"
+      <div @click="playActive" class="rounded-lg list-hover s-icon"
            style="display: inline-block; margin-right: 1em;padding: 10px;">
       <span>
         <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
       </span>
-        <span style="font-size:1.2em" class="suspension-text">激活壁纸（ {{ activePapers.length }} ）</span>
+        <span style="font-size:1.2em" class="s-text">激活壁纸（ {{ activePapers.length }} ）</span>
       </div>
-      <div @click="this.visibleImport=true" class=" rounded-lg list-hover suspension-icon"
+      <div @click="this.visibleImport=true" class=" rounded-lg list-hover s-icon"
            style="display: inline-block;margin-right: 1em;padding: 10px;">
      <span>
       <Icon style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
      </span>
-        <span style="font-size:1.2em;" class="suspension-text">导入</span>
+        <span style="font-size:1.2em;" class="s-text">导入</span>
       </div>
     </div>
   </div>

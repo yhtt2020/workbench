@@ -119,7 +119,7 @@
       <a-button type="primary" class="mr-3" @click="goPaper">壁纸设置</a-button> <a-button  @click="clearWallpaper">清除背景</a-button>
     </div>
     <div class="line">
-      模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="30"  :step="3" />
+      模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="100"  :step="1" />
     </div>
     <div class="line">
       遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0"   :step="0.1" />

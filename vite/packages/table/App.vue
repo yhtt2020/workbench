@@ -120,8 +120,6 @@ export default {
     //   }
     // },3000)
 
-
-    window.powerGrade = this.userInfo.onlineGradeExtra
     window.restore = () => {
       this.settings.zoomFactor = 100, window.location.reload()
     }
@@ -250,7 +248,11 @@ export default {
     },
     "userInfo.onlineGradeExtra": {
       handler(newVal, oldVal) {
-        window.powerGrade = this.userInfo.onlineGradeExtra
+        window.lv=1
+       if(this.userInfo.onlineGradeExtra)  {
+         window.lv = this.userInfo.onlineGradeExtra.lv
+       }
+
       },
       immediate: true,
     },
