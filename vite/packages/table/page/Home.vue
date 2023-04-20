@@ -169,6 +169,7 @@ import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
 import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
 import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
+import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
@@ -272,7 +273,8 @@ export default {
     AddCard,
     GradeNotice,
     GamesDiscount,
-    DiscountPercentage
+    DiscountPercentage,
+    MiddleWallpaper
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
@@ -302,6 +304,9 @@ export default {
   unmounted () {
     if (this.timer) {
       clearInterval(this.timer)
+    }
+    if (this.reserveTimer) {
+      clearInterval(this.reserveTimer)
     }
   },
   methods: {
@@ -464,6 +469,10 @@ export default {
 
     &.small {
       height: 204px;
+    }
+    &.double{
+      width: 572px;
+      height: 420px;
     }
   }
 }

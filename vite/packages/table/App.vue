@@ -251,6 +251,7 @@ export default {
         window.lv=1
        if(this.userInfo.onlineGradeExtra)  {
          window.lv = this.userInfo.onlineGradeExtra.lv
+         console.log(window)
        }
 
       },

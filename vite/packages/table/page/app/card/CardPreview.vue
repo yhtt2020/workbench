@@ -70,6 +70,7 @@ export default {
       this.show = true;
     },
     addCard () {
+      console.log(this.cardType.images[this.carouselIndex])
           this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$emit("addSuccess")
           this.$router.push({
