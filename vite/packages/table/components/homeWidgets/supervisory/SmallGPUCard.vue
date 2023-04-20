@@ -26,7 +26,7 @@
         </div>
 
 
-        <div style="margin-top: 13px">GPU</div>
+        <div style="margin-top: 13px;" class="text-left">GPU</div>
         <canvas id='myGPUCanvas' ref="myGPUCanvas" style='width:130px;height:40px;margin-top: 5px'> </canvas>
       </div>
     </div>
@@ -45,7 +45,7 @@ export default {
       options:{
         className:'card small',
         title:'GPU',
-        icon:'gaoxingneng',
+        icon:'cpu',
         type:'smallGPUCard'
       },
       GPUData:{

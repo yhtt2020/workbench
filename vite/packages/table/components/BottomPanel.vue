@@ -1,6 +1,6 @@
 <template>
-  <div class="bottom-panel flex flex-row items-center justify-center w-full p-2" style="text-align: center" @contextmenu.stop="showMenu">
-    <div class="common-panel user" style="display: inline-block;vertical-align: top">
+  <div class="bottom-panel flex flex-row items-center justify-center w-full" style="text-align: center" @contextmenu.stop="showMenu">
+    <div class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -85,14 +85,14 @@
 <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
 <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
 <!--    </div>-->
-    <div class=" flex flex-row  items-center pl-6" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
+    <div class=" flex flex-row  items-center pl-6 s-bg" style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
         <div style="overflow: hidden;overflow-x: auto;"
              class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
         <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
         <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
-              <div style="width: 56px;height:56px;background: rgba(33, 33, 33, 1);" v-if="item.type==='systemApp'" class="flex justify-center items-center rounded-xl">
+              <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'" class="s-item flex justify-center items-center rounded-xl">
                 <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
               </div>
           <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
@@ -555,51 +555,51 @@ export default {
   }
 }
 
-
-@media screen and (max-height: 510px) {
-  .bottom-panel {
-    zoom:0.9;
-
-  }
-  .chat{
-    display: none;
-  }
-  .user-info{
-    width: 100%;
-  }
-  .user{
-    width: 12.5em;
-  }
-}
-@media screen and (min-height: 511px) and (max-height: 550px) {
-  .bottom-panel{
-    zoom:0.9;
-
-  }
-  .chat{
-    display: none;
-  }
-  .user-info{
-    width: 100%;
-  }
-  .user{
-    width: 12.5em;
-  }
-}
-@media screen and (min-height: 551px) and (max-height: 610px) {
-  .bottom-panel {
-    zoom: 0.9;
-  }
-  .chat{
-    display: none;
-  }
-  .user-info{
-    width: 100%;
-  }
-  .user{
-    width: 12.5em;
-  }
-}
+//
+//@media screen and (max-height: 510px) {
+//  .bottom-panel {
+//    zoom:0.9;
+//
+//  }
+//  .chat{
+//    display: none;
+//  }
+//  .user-info{
+//    width: 100%;
+//  }
+//  .user{
+//    width: 12.5em;
+//  }
+//}
+//@media screen and (min-height: 511px) and (max-height: 550px) {
+//  .bottom-panel{
+//    zoom:0.9;
+//
+//  }
+//  .chat{
+//    display: none;
+//  }
+//  .user-info{
+//    width: 100%;
+//  }
+//  .user{
+//    width: 12.5em;
+//  }
+//}
+//@media screen and (min-height: 551px) and (max-height: 610px) {
+//  .bottom-panel {
+//    zoom: 0.9;
+//  }
+//  .chat{
+//    display: none;
+//  }
+//  .user-info{
+//    width: 100%;
+//  }
+//  .user{
+//    width: 12.5em;
+//  }
+//}
 .tip{
   position: absolute;
   top: 0;

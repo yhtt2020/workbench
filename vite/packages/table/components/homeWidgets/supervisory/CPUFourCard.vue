@@ -59,7 +59,7 @@ export default {
       options:{
         className:'card',
         title:'性能',
-        icon:'gaoxingneng',
+        icon:'dashboard',
         type:'CPUFourCard'
       },
       CPUGPUData:{

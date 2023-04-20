@@ -92,7 +92,7 @@
                    :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
                    style="min-height: 3em"
                    item-key="id"
-                   class="grid"
+                   class="grid s-bg"
                    :get-item-width="getIconSize" :get-item-height="getIconSize"
                    v-model="grid.children">
               <template #item="{ item }">
@@ -433,7 +433,7 @@ export default {
     }
   },
   mounted () {
-    const {superiorLimit}=this.powerState('quickInstructions',powerGrade.lv)
+    const {superiorLimit}=this.powerState('quickInstructions',lv)
     this.superiorLimit=superiorLimit
     //进来之后就把存储的部分和初始化部分完全脱钩，这样，可以随意变更按钮，并即时存储，而不会影响到我们界面上的部分。
     //this.displayGrids=_.cloneDeep(this.grids)
@@ -754,7 +754,6 @@ export default {
   position: relative;
   width: 18em;
   display: inline-block;
-  background: rgba(204, 204, 204, 0.08);
   border: 5px solid transparent;
   border-radius: 8px;
   vertical-align: top;

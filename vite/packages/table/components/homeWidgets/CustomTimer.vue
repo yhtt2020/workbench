@@ -1,41 +1,31 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div>
-      <a-calendar
-        v-model:value="value"
-        :fullscreen="false"
-        @panelChange="onPanelChange"
-      >
-        <template #headerRender="{}">
-          <div class="timer-title" style="display: none">
-          </div>
-        </template>
-      </a-calendar>
-    </div>
-    <div style="font-size: 1.2em; line-height: 2em">
+    <div class="absolute  left-4 top-4 h-6 w-16 pointer"   @click="moveToday"></div>
+    <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);" class="my-calendar">
+      <Calendar  :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
 
-      <a-row class="festival">
-        <a-col :span="11">
-          <Icon icon="jieriyingxiao"></Icon>
-          劳动节
-        </a-col>
-        <a-col :span="13">4月29日~5月3日</a-col>
-      </a-row>
-      <a-row class="festival">
-        <a-col :span="11">
-          <Icon icon="jieriyingxiao"></Icon>
-          端午节
-        </a-col>
-        <a-col :span="13">6月22日~6月24日</a-col>
-      </a-row>
-      <a-row class="festival">
-      <a-col :span="11">
-        <Icon icon="jieriyingxiao"></Icon>
-        中秋节
-      </a-col>
-      <a-col :span="13">9月29日~9月30日</a-col>
-    </a-row>
+      </Calendar>
     </div>
+
+
+      <a-row class="festival mt-4 s-item" style="border-radius: 12px;height: 60px">
+        <a-col :span="11" class="flex flex-row items-center pl-2 py-2">
+          <div class="round-dot mr-3"></div>
+          <div class="flex flex-col">
+            <span>劳动节</span>
+            <span style="color: rgba(255, 255, 255, 0.4);font-size: 12px;">农历三月十二</span>
+          </div>
+
+        </a-col>
+        <a-col :span="13" class="flex flex-row items-center justify-end pr-2" >4月29日~5月3日</a-col>
+      </a-row>
+<!--      <a-row class="festival mt-2 " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
+<!--        <a-col :span="11" class="flex flex-row items-center pl-2">-->
+<!--          <div class="round-dot mr-3"></div>-->
+<!--          端午节-->
+<!--        </a-col>-->
+<!--        <a-col :span="13"  class="text-right flex  items-center justify-end pr-2">6月22日~6月24日</a-col>-->
+<!--      </a-row>-->
 
   </HomeComponentSlot>
 
@@ -45,7 +35,8 @@
 import { mapActions } from 'pinia'
 import { cardStore } from '../../store/card'
 import HomeComponentSlot from './HomeComponentSlot.vue'
-
+import { Calendar  } from 'v-calendar';
+import 'v-calendar/style.css';
 export default {
   name: 'CustomTimer',
   data () {
@@ -56,17 +47,32 @@ export default {
       options: {
         className: 'card',
         title: '日历',
-        icon: 'rili3',
+        icon: 'carryout',
         type: 'customTimer'
       },
+      attributes:[{
+        highlight: true,
+        dates: new Date()
+      },],
+      selectedColor:'red',
+      isDark:true
+
+
     }
   },
   components: {
-    HomeComponentSlot
+    HomeComponentSlot,
+    Calendar,
+  },
+  mounted() {
+    console.log(this.$refs.calendar)
   },
   methods: {
     onPanelChange (value, mode) {},
     ...mapActions(cardStore, ['removeCustomComponents']),
+   async moveToday(){
+    await  this.$refs.calendar.move(new Date());
+    },
     showDrawer () {
       this.visible = true
     },
@@ -152,5 +158,53 @@ export default {
   border-radius: 4px;
   margin-bottom: 2px;
 }
-
+:deep(.vc-title){
+  background-color: transparent;
+}
+:deep(vc-arrow vc-next vc-focus){
+  background-color: transparent;
+}
+:deep(.vc-container .vc-weekday-1) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-container .vc-weekday-2) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-container .vc-weekday-3) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-container .vc-weekday-4) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-container .vc-weekday-5) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-container .vc-weekday-6) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-container .vc-weekday-7) {
+  color: rgba(255, 255, 255, 0.85);
+}
+:deep(.vc-header .vc-next){
+  background-color: transparent;
+}
+:deep(.vc-header .vc-prev){
+  background-color: transparent;
+}
+:deep(.vc-nav-arrow){
+  background-color: transparent;
+}
+:deep(.vc-nav-title){
+  background-color: transparent;
+}
+:deep(.vc-nav-item){
+  background-color: transparent;
+}
+:deep(.vc-focus:focus-within) {
+  outline: 0;
+   box-shadow: none;
+}
+:deep(.vc-day){
+  min-height: 35px;
+}
 </style>

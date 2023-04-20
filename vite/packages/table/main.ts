@@ -16,7 +16,7 @@ import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
 import BackBtn from './components/comp/BackBtn.vue'
 
-
+import { setupCalendar } from 'v-calendar';
 import 'viewerjs/dist/viewer.css'
 
 
@@ -44,11 +44,15 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next) =>{
+  if(from.name==='home'){
+    document.body.style.setProperty('--backGroundImgBlur',  '12px');
+    document.body.style.setProperty('--backGroundImgLight', 0.3);
+  }
   cardStore().setRouteParams(to.params)
   next()
 })
 
-app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).mount('#app')
+app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
