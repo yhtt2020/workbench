@@ -4,7 +4,7 @@
     class="content"
     v-if="myCountdownDay.length <= 0"
   >
-    <div style="text-align: center; ">暂无倒数日</div>
+    <div style="text-align: center; ">暂无纪念日</div>
     <a-empty :description="null" :image="simpleImage" style="margin: 15px;" />
     <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
   </div>
@@ -119,7 +119,7 @@ export default {
         name: "addCardSetting",
         params: {
           name: 'smallCountdownDay',
-          cname: '倒数日',
+          cname: '纪念日',
           customIndex:this.customIndex
         },
       });

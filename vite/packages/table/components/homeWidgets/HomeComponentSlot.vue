@@ -202,12 +202,12 @@ export default {
     },
     onSetup () {
       switch (this.options.title) {
-        case '倒数日':
+        case '纪念日':
           this.$router.push({
             name: 'addCardSetting',
             params: {
               name: 'countdownDay',
-              cname: '倒数日',
+              cname: '纪念日',
             },
           })
           break

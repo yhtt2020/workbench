@@ -92,7 +92,7 @@ export default {
     return {
       options:{
         className:'card small',
-        title:'倒数日',
+        title:'纪念日',
         icon:'calendar-check',
         type:'countdownDay'
       },
@@ -119,7 +119,7 @@ export default {
         name: "addCardSetting",
         params: {
           name: 'countdownDay',
-          cname: '倒数日',
+          cname: '纪念日',
         },
       });
     },
