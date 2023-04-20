@@ -1,5 +1,5 @@
 <template>
-   <div class="music-player-wrapper suspension-background m-3" style="text-align: center;display: flex;align-items: center;width:80%;height:95%;border-radius: 8px;margin: auto;margin-top: 1em">
+   <div class="music-player-wrapper s-bg m-3" style="text-align: center;display: flex;align-items: center;width:80%;height:95%;border-radius: 8px;margin: auto;margin-top: 1em">
       <a-row :gutter="[20]" style="width:100%">
         <a-col :span="showPrompt?12:24"  style="display: flex;align-items: center;justify-content: center">
           <div class="music-player" style="width: 400px;height: 410px;display: inline-block">
