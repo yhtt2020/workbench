@@ -8,23 +8,23 @@ body{
   //background-color: rgb(50, 50, 50);
   overflow: hidden;
 }
-.suspension-background{
+.s-bg{
   background: var(--suspensiondBackGround,rgba(26,26,26,.65));
   backdrop-filter:blur(var(--suspensiondBackGroundBlur,50px));
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-}
-.suspension-text{
+}//suspension-background
+.s-text{
   text-shadow: 0 3px 6px #000000;
 
-}
-.suspension-icon{
+}//suspension-text
+.s-icon{
   svg{
     filter: drop-shadow(0 3px 6px #000000);
   }
-}
-.suspension-item{
+}//suspension-icon
+.s-item{
     background:var(--suspensionItemBackGround, rgba(0,0,0,0.30));
-  }
+  }//suspension-item
 .bottom-panel{
   .item{
     background: transparent !important;
@@ -314,7 +314,7 @@ body{
   background-size:cover;
 }
 .background-img-blur-light{
-  background: rgba(0, 0, 0,0);
+  background: rgba(0, 0, 0,var(--backGroundImgLight,0));
   backdrop-filter: blur(var(--backGroundImgBlur, 0px));
 }
 
