@@ -35,8 +35,6 @@ tsbApi.barrage.setOnUrlChanged((a) => {
     tsbApi.barrage.reload()
   }
 })
-let si = require('systeminformation')
-const crypto = require('crypto')
 window.getSerialNum=async () => {
   try{
     // console.log('尝试获取机器码')
