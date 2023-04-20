@@ -3,16 +3,16 @@
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div class="w-full flex cursor-pointer" @click="enterDetail(item.id)"  v-for="item in list" style="height:65px; margin-bottom: 12px;">
-             <img :src="item.image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
+           <div class="w-full flex cursor-pointer" @click="enterDetail(item)"  v-for="item in list" style="height:65px; margin-bottom: 12px;">
+             <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
              <div class="flex  discount-content flex-col" style="margin-left: 10px;">
                  <div class="name truncate" >{{item.name}}</div>
                  <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
-                   ￥{{item.initial_price}}
+                   {{currencyFormat(item.original_price,item.currency)}}
                  </span>
                  <div class="flex w-full justify-between ">
-                    <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 13px;font-weight: 400; padding-right: 1.2em;">
-                     ￥{{item.final_price}}
+                    <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 14px;font-weight: 500; padding-right: 1.2em;">
+                     {{ currencyFormat(item.final_price,item.currency) }}    
                     </span>
                     <div style="flex justify-end">
                      <span class="rounded-md" style="background: rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
@@ -23,7 +23,7 @@
              </div>
            </div>
           </div>
-          <div class="bg-black change bg-opacity-10 flex rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+          <div class="bg-black change bg-opacity-10 flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
            <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
            <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
            <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
@@ -34,7 +34,7 @@
         <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;"></a-spin>
         <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
-             <img class="rounded-lg" :src="detailList.img" alt="">
+             <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
           <div style="margin-bottom: 6px;">{{detailList.name}}</div>
           <span class="content-introduction">{{detailList.short_description}}</span>
@@ -42,23 +42,23 @@
             <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
           <span class="line-through text-white text-opacity-60" style="font-size: 12px;margin-bottom: 6px;">
-            {{detailList.initial_price}}
+            {{detailList.price_overview.initial_formatted}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
-             {{detailList.final_price}}
+             {{detailList.price_overview.final_formatted}}    
             </span>
             <div class="flex justify-end">
              <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
-               -{{detailList.discount_percent}}%
+               -{{detailList.price_overview.discount_percent}}%
               </span>
             </div>
           </div>
-          <div class="flex items-center justify-around">
+          <div class="flex items-center justify-around"> 
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
+            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam(detailList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
           </div>
         </div>
       </template>
@@ -67,7 +67,7 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import {sendRequest,randomData} from '../../../js/axios/api'
+import {randomData,sendRequest,currencyFormat} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
 export default {
@@ -96,80 +96,50 @@ export default {
       isLoading:false
     }
   },
+  computed:{
+     ...mapWritableState(steamStore,["gameData","gameRegion"])
+  },
   mounted(){
-    this.getDiscountData()
+    this.loadGameData()
     this.getRandomData()
   },
-  computed:{
-    ...mapWritableState(steamStore,['gameRegion'])
-  },
   methods:{
-    ...mapActions(steamStore,['getGameOffers']),
-    getDiscountData(){
-      sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.gameRegion}&l=${this.gameRegion}`).then(res=>{
-        const data = res.data.specials.items
-        this.getGameOffers(data)
-        this.getRandomData()
-      }).catch(err=>{
-        console.error(err)
-      })
-    },
+    ...mapActions(steamStore,["loadGameData","fetchDetail"]),
+    currencyFormat,
     getRandomData(){
-      const gameData = window.localStorage.getItem('gameData')
-      const randomArr = randomData(JSON.parse(gameData),4)
-      const listArr = []
-      randomArr.forEach(el=>{
-         listArr.push({
-            id:el.id,
-            image:el.header_image,
-            name:el.name,
-            discount_percent:el.discount_percent,
-            initial_price:(el.original_price / 100).toFixed(2),
-            final_price:(el.final_price / 100).toFixed(2),
-         })
-      })
-      this.list = listArr
+      const randomArr = randomData(this.gameData,4)
+      this.list = randomArr
     },
-
     // 点击切换
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
         this.getRandomData()
         this.reloadShow = false
-      },300)
+      },800)
     },
     // 点击进入详情
     enterDetail(item){
       this.gameShow = true
+      this.fetchDetail(item.id,this.gameRegion.id)
       if(!this.isLoading){
-        this.isLoading = true,
-        sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item}`).then(res=>{
-        if(res.data[item].success === true){
-          const detailObj= {
-            id:res.data[item].data.steam_appid,
-            img:res.data[item].data.header_image,
-            name:res.data[item].data.name,
-            genres:res.data[item].data.genres,
-            final_price:res.data[item].data.price_overview.final_formatted,
-            initial_price:res.data[item].data.price_overview.initial_formatted,
-            discount_percent:res.data[item].data.price_overview.discount_percent,
-            short_description:res.data[item].data.short_description
-          }
-          this.detailList = detailObj
+        this.isLoading = true
+        setTimeout(()=>{
+          const getDetail = window.localStorage.getItem('detailData')
+          this.detailList = JSON.parse(getDetail)
           this.$nextTick(()=>{
             this.isLoading = false
           })
-        }
-      })
+        },500)
       }
     },
-    discountBack(){
+     discountBack(){
       this.gameShow = false
-    },
-    openSteam(){
-      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
-    }
+      window.localStorage.removeItem('detailData')
+     },
+     openSteam(id){
+      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
+     }
   }
 }
 </script>
@@ -183,7 +153,7 @@ export default {
      }
   }
 }
-.change:active,.change:hover{
+.change:active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }
