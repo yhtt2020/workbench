@@ -24,24 +24,24 @@
                 <GradeSmallTip powerType="closeChat"></GradeSmallTip>
               </div>
             </a-col>
-            <a-col :span="12">
-              <div class="btn">
-                免打扰模式<br>
-                <a-switch></a-switch>
-              </div>
-            </a-col>
-            <a-col :span="12">
-              <div class="btn">
-                浅色模式<br>
-                <a-switch></a-switch>
-              </div>
-            </a-col>
-            <a-col :span="12">
-              <div class="btn">
-                静音<br>
-                <a-switch></a-switch>
-              </div>
-            </a-col>
+<!--            <a-col :span="12">-->
+<!--              <div class="btn">-->
+<!--                免打扰模式<br>-->
+<!--                <a-switch></a-switch>-->
+<!--              </div>-->
+<!--            </a-col>-->
+<!--            <a-col :span="12">-->
+<!--              <div class="btn">-->
+<!--                浅色模式<br>-->
+<!--                <a-switch></a-switch>-->
+<!--              </div>-->
+<!--            </a-col>-->
+<!--            <a-col :span="12">-->
+<!--              <div class="btn">-->
+<!--                静音<br>-->
+<!--                <a-switch></a-switch>-->
+<!--              </div>-->
+<!--            </a-col>-->
           </a-row>
           <div>
           </div>
