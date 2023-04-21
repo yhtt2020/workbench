@@ -5,9 +5,10 @@ import {sendRequest} from '../js/axios/api'
 export const steamStore = defineStore('steam', {
   state: () => ({
     gameData:[], 
-    gameRegion:'cn', 
+    gameRegion:'cn', // 默认中国区
     detailData:{},
     updatedAt:null,
+    updatedTypeAt :null
   }), 
   actions: {
     // 获取更新后数据
@@ -21,6 +22,17 @@ export const steamStore = defineStore('steam', {
         this.updatedAt = new Date(savedUpdatedAt)
       }
     },
+    // 获取更新后的卡片标识参数
+    updateLogoType(){
+       const getLogoType = localStorage.getItem('gameRegion')
+       const getUpdateAt = localStorage.getItem('updateGameData')
+       if (getLogoType) {
+        this.gameRegion = JSON.parse(getLogoType )
+      }
+      if (getUpdateAt) {
+        this.updatedTypeAt = new Date(getUpdateAt)
+      }
+    },
     // 判断数据是否超时
     isDataOutdated(){
       if(!this.updatedAt){
@@ -32,9 +44,15 @@ export const steamStore = defineStore('steam', {
       return diffMins > 10 // 时间差大于10分钟返回true，表示数据已过时
     },
 
-    saveRegion(value:any): void{
-      this.gameRegion = value
+    // 根据地区设置保存当前地区参数
+    saveRegion(value:any,id:number): void{
+      this.gameRegion = {
+        id,
+        value
+      }
       window.localStorage.setItem('gameRegion',JSON.stringify(this.gameRegion))
+      this.updatedTypeAt = new Date()
+      window.localStorage.setItem('updateGameDataType',this.updatedTypeAt.toISOString())
     },
     fetchData(){
       const fetchRegion = window.localStorage.getItem('gameRegion')
