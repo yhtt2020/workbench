@@ -1,3 +1,5 @@
+const { ipcMain: ipc } = require('electron')
+
 class TableAppManager {
   runningApps = []
   tableWin = null //方便调用
@@ -179,6 +181,23 @@ class TableAppManager {
     if (appInstance) {
       appInstance.view.webContents.send(channel, args)
     }
+  }
+
+  /**
+   * 获取到全部运行中的应用
+   * @returns {{instances: *[], apps: *[]}}
+   */
+  getRunningApps(){
+    return {
+      apps:this.runningApps,
+      instances:this.runningAppsInstance
+    }
+  }
+  bindIPC(){
+    ipc.on('getRunningTableApps', (event, args) => {
+      let data= this.getRunningApps()
+      event.reply('updateRunningTableApps', { apps:data.apps })
+    })
   }
 }
 

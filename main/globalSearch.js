@@ -75,6 +75,7 @@ const TableAppManager = require('./src/main/tableAppManager.js')
 global.tableManager = new TableManager()
 app.whenReady().then(async () => {
   global.tableAppManager = new TableAppManager()
+  tableAppManager.bindIPC()
   let registerTableShortcutResult = false
 
   /**
