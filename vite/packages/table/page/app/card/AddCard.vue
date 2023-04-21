@@ -1,9 +1,17 @@
 <template>
   <div class="top-title drag">
-    <div class="left-title pointer no-drag" @click="onBack">
-    <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
-    <span>返回</span>
-    </div>
+    <a-row  :gutter="20">
+      <a-col>
+        <div class="left-title pointer no-drag" @click="onBack">
+          <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
+          <span>返回</span>
+        </div>
+      </a-col>
+      <a-col style="font-size: 1.2em;line-height: 2.5em">
+        共 {{count}} 种卡片
+      </a-col>
+    </a-row>
+
     <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索"  style="height: 100%;
    width: 400px;border-radius: 12px;background: rgba(42, 42, 42, 0.6);">
       <template #prefix>
@@ -60,6 +68,13 @@ export default {
   computed:{
     filterList(){
       return this.cardList.filter(i =>{return i.cname.includes(this.selectContent)} )
+    },
+    count(){
+      let i =0
+      this.cardList.forEach(c=>{
+        i+=c.images.length
+      })
+      return i
     }
   },
   methods: {
