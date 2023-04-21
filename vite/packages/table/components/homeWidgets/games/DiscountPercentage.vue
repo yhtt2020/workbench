@@ -10,7 +10,7 @@
         </swiper-slide>
       </swiper>
 
-      <div class="mt-12 flex change bg-black bg-opacity-10 rounded-md cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+      <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
         <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
         <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
         <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
@@ -20,23 +20,23 @@
       <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;"></a-spin>
        <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
-             <img class="rounded-lg" :src="detailList.img" alt="">
+             <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div style="margin-bottom: 6px;">{{detailList.name}}</div>
-          <span class="content-introduction">{{detailList.short_description}}</span>
-          <div class="flex" style="margin-bottom: 12px;">
-            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in detailList.genres">{{item.description}}</span>
+          <div class="truncate" style="font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
+          <span class="content-introduction" style="color: rgba(255, 255, 255, 0.6);font-size: 16px;font-weight: 400;">{{detailList.short_description}}</span>
+          <div class="flex" style="margin-bottom: 8px;">
+            <span class="discount-description rounded-md" style="background: rgba(255, 255, 255, 0.2);color: rgba(255, 255, 255, 0.6);font-size: 12px;font-weight: 500;"  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
-          <span class="line-through text-white text-opacity-60" style="font-size: 12px;margin-bottom: 6px;">
-            {{detailList.initial_price}}
+          <span class="line-through text-white text-opacity-60" style="font-size: 12px;">
+            {{detailList.price_overview.initial_formatted}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
-             {{detailList.final_price}}
+             {{detailList.price_overview.final_formatted}}
             </span>
             <div class="flex justify-end">
-             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
-               -{{detailList.discount_percent}}%
+             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
+               -{{detailList.price_overview.discount_percent}}%
               </span>
             </div>
           </div>
@@ -44,7 +44,7 @@
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
+            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam(detailList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
           </div>
        </div>
     </template>
@@ -97,7 +97,11 @@ export default {
   mounted(){
     this.groupData()
   },
+  computed:{
+    ...mapWritableState(steamStore,['gameRegion'])
+  },
   methods:{
+    ...mapActions(steamStore,["fetchDetail"]),
     // 将数据分成五组
     groupData() {
       let groups = [];
@@ -116,29 +120,17 @@ export default {
     },
     goToGameAppDetails(item){
       this.detailShow = true
+      this.fetchDetail(item.id,this.gameRegion.id)
       if(!this.isLoading){
         this.isLoading = true
-        sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}`).then(res=>{
-         if(res.data[item.id].success !== false){
-           const detailObj = {
-            id:res.data[item.id].data.steam_appid,
-            img:res.data[item.id].data.header_image,
-            name:res.data[item.id].data.name,
-            genres:res.data[item.id].data.genres,
-            final_price:res.data[item.id].data.price_overview.final_formatted,
-            initial_price:res.data[item.id].data.price_overview.initial_formatted,
-            discount_percent:res.data[item.id].data.price_overview.discount_percent,
-            short_description:res.data[item.id].data.short_description
-           }
-           this.detailList = detailObj
-           this.$nextTick(()=>{
+        setTimeout(()=>{
+          const getDetail = window.localStorage.getItem('detailData')
+          this.detailList = JSON.parse(getDetail)
+          this.$nextTick(()=>{
             this.isLoading = false
-           })
-         }
-        })
-
+          })
+        },500)
       }
-      this.id = item.id
     },
     // 按钮点击切换
     discountChange(){
@@ -152,10 +144,11 @@ export default {
     discountBack(){
       this.detailShow = false
       this.groupData()
+      window.localStorage.removeItem('detailData')
     },
     // 打开steam官网
-    openSteam(){
-      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${this.id}`})
+    openSteam(id){
+      window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
     }
   },
   setup() {
@@ -188,7 +181,7 @@ export default {
   padding:1px 6px;
   color:rgba(255, 255, 255, 0.6);
 }
-.change:active,.change:hover{
+.change:active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }
@@ -208,6 +201,9 @@ export default {
 }
 .swiper-pagination{
   position: fixed !important;
-  bottom: 5.5em !important;
+  bottom: 4.95em !important;
+}
+.animate-spin{
+  animation: spin 0.3s linear infinite !important;
 }
 </style>

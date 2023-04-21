@@ -47,3 +47,14 @@ export function randomData(data: any, count: any) {
   }
   return result;
 }
+/***
+ * 根据不同国家将货币进行转换
+*/
+export function currencyFormat(value: number, currencyCode: any){
+  const priceValue = (value / 100).toFixed(2)
+  const formatter = new Intl.NumberFormat('us', {
+    style: 'currency',
+    currency: currencyCode
+  });
+  return formatter.format(priceValue);
+}
