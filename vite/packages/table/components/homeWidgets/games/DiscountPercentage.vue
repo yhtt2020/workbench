@@ -22,12 +22,12 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div style="margin-bottom: 6px;">{{detailList.name}}</div>
-          <span class="content-introduction">{{detailList.short_description}}</span>
-          <div class="flex" style="margin-bottom: 12px;">
-            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in detailList.genres">{{item.description}}</span>
+          <div class="truncate" style="font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
+          <span class="content-introduction" style="color: rgba(255, 255, 255, 0.6);font-size: 16px;font-weight: 400;">{{detailList.short_description}}</span>
+          <div class="flex" style="margin-bottom: 8px;">
+            <span class="discount-description rounded-md" style="background: rgba(255, 255, 255, 0.2);color: rgba(255, 255, 255, 0.6);font-size: 12px;font-weight: 500;"  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
-          <span class="line-through text-white text-opacity-60" style="font-size: 12px;margin-bottom: 6px;">
+          <span class="line-through text-white text-opacity-60" style="font-size: 12px;">
             {{detailList.price_overview.initial_formatted}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
@@ -35,7 +35,7 @@
              {{detailList.price_overview.final_formatted}}    
             </span>
             <div class="flex justify-end">
-             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
+             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
                -{{detailList.price_overview.discount_percent}}%
               </span>
             </div>
@@ -134,7 +134,7 @@ export default {
       setTimeout(()=>{
         this.groupData()
         this.reloadShow = false
-      },300)
+      },800)
     },
     // 返回
     discountBack(){

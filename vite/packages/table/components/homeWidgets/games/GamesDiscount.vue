@@ -5,21 +5,21 @@
           <div class="flex flex-col ">
            <div class="w-full flex cursor-pointer" @click="enterDetail(item)"  v-for="item in list" style="height:65px; margin-bottom: 12px;">
              <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
-             <div class="flex  discount-content flex-col" style="margin-left: 10px;">
-                 <div class="name truncate" >{{item.name}}</div>
-                 <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
-                   {{currencyFormat(item.original_price,item.currency)}}
-                 </span>
-                 <div class="flex w-full justify-between ">
-                    <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 14px;font-weight: 500; padding-right: 1.2em;">
-                     {{ currencyFormat(item.final_price,item.currency) }}    
-                    </span>
-                    <div style="flex justify-end">
-                     <span class="rounded-md" style="background: rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
-                       -{{item.discount_percent}}%
-                      </span>
-                    </div>
-                 </div>
+             <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
+              <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
+              <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
+                {{currencyFormat(item.original_price,item.currency)}}
+              </span>
+              <div class="flex w-full justify-between ">
+                <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 14px;font-weight: 500;">
+                 {{ currencyFormat(item.final_price,item.currency) }}    
+                </span>
+                <div style="flex justify-end">
+                 <span class="rounded-md" style="background: rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
+                   -{{item.discount_percent}}%
+                  </span>
+                </div>
+              </div>
              </div>
            </div>
           </div>
@@ -36,20 +36,20 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div style="margin-bottom: 6px;">{{detailList.name}}</div>
-          <span class="content-introduction">{{detailList.short_description}}</span>
-          <div class="flex" style="margin-bottom: 12px;">
-            <span class="discount-description rounded-md bg-white bg-opacity-40"  v-for="item in detailList.genres">{{item.description}}</span>
+          <div style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
+          <span class="content-introduction text-white text-opacity-60">{{detailList.short_description}}</span>
+          <div class="flex" style="margin-bottom: 10px;">
+            <span class="discount-description rounded-md bg-white bg-opacity-20 "  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
-          <span class="line-through text-white text-opacity-60" style="font-size: 12px;margin-bottom: 6px;">
+          <span class="line-through text-white text-opacity-60" style="font-size: 12px;">
             {{detailList.price_overview.initial_formatted}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
-            <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
+            <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500; padding-right: 2.41em;">
              {{detailList.price_overview.final_formatted}}    
             </span>
             <div class="flex justify-end">
-             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 6px 3px 7px;font-size: 12px;">
+              <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
                -{{detailList.price_overview.discount_percent}}%
               </span>
             </div>
