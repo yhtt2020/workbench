@@ -134,7 +134,7 @@ export default {
       setTimeout(()=>{
         this.groupData()
         this.reloadShow = false
-      },800)
+      },300)
     },
     // 返回
     discountBack(){
@@ -177,7 +177,7 @@ export default {
   padding:1px 6px;
   color:rgba(255, 255, 255, 0.6);
 }
-.change:active,.change:hover{
+.change:active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }
@@ -198,5 +198,8 @@ export default {
 .swiper-pagination{
   position: fixed !important;
   bottom: 4.95em !important;
+}
+.animate-spin{
+  animation: spin 0.3s linear infinite !important;
 }
 </style>

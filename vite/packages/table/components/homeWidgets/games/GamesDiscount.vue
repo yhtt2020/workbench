@@ -186,4 +186,15 @@ export default {
   white-space: pre-wrap;
   margin-bottom: 5px;
 }
+.animate-spin{
+  animation: spin 0.8s linear infinite !important;
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
 </style>
