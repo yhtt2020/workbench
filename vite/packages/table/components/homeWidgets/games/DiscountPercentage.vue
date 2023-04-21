@@ -95,7 +95,6 @@ export default {
     }
   },
   mounted(){
-    console.log(typeof this.customData)
     this.groupData()
   },
   methods:{

@@ -1,5 +1,5 @@
 <template>
-  <a-spin tip="Loading...">
+  <a-spin tip="切换壁纸源中..." :spinning="true">
   <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange">
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
