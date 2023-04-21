@@ -16,6 +16,12 @@ export const appStore = defineStore('appStore', {
       myCircle: [],
       joinedCircle: []
     },
+
+    //小组
+    team:{
+      status:false
+    },
+
     agreeTest:false,
 
     init: false, //是否已经初始化
@@ -23,6 +29,7 @@ export const appStore = defineStore('appStore', {
     fullScreen: false, //是否是全屏模式
 
     settings: {
+      teamVisible:false,//小组可见
       down:{
         enable:false,
         count:100,

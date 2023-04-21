@@ -1,5 +1,5 @@
 <template>
-  <div class="back-btn" @click="click">
+  <div class="back-btn no-drag" @click="click">
     <Icon icon="xiangzuo"  style="font-size: 2em"></Icon>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
         this.$emit('click')
       }else{
         this.$emit('click')
-        this.onClick()
+        //this.onClick()
       }
     }
   }
