@@ -134,6 +134,12 @@ export default {
         ipc.send('getAppRunningInfo', {nanoid: app})
       }
     })
+
+    ipc.on('updateRunningTableApps',async (event,args)=>{
+      this.runningTableApps=args.apps
+      console.log(args.apps)
+    })
+
     ipc.on('updateRunningInfo', (event, args) => {
       let app = this.runningAppsInfo[args.nanoid]
       app.capture = args.info.capture + '?t=' + Date.now()
@@ -155,7 +161,7 @@ export default {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),

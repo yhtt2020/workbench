@@ -7,7 +7,8 @@ export const cardStore = defineStore(
       return {
         settings:{
           cardZoom:100,
-          marginTop:0
+          marginTop:0,
+          cardMargin:5//卡片间隙
         },
         countdownDay: [],
         appDate: {},

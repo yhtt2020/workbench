@@ -8,6 +8,8 @@ export const appsStore = defineStore('apps', {
     qingApps:[],
     runningApps:[],//运行中的apps
     runningAppsInfo:{},
+    runningTableApps:[],//运行中的工作台应用
+    runningTableAppsInfo:{}
   }),
   actions:{
     loadData(){
@@ -48,6 +50,7 @@ export const appsStore = defineStore('apps', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+      paths:['myApps','qingApps'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

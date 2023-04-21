@@ -41,11 +41,11 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
+        <vuuri :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
                class="grid home-widgets" ref="grid" >
           <template #item="{ item }">
             <div :style="{pointerEvents:(editing?'none':'')}" >
-            <component :is="item.name" :customIndex="item.id"
+            <component :style="{margin:settings.cardMargin+'px'}" :is="item.name" :customIndex="item.id"
                        :editing="editing" :runAida64="runAida64"></component>
             </div>
           </template>
@@ -104,13 +104,16 @@
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
     <div class="line-title">
-      卡片容器设置：
+      卡片设置：
     </div>
     <div class="line">
       卡片缩放：<a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
     </div>
     <div class="line">
-      上边距：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
+      卡片空隙：(调大空隙可能变成瀑布流布局)<a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+    </div>
+    <div class="line">
+      距离顶部：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
     <div class="line-title">
       背景设置：
@@ -282,6 +285,7 @@ export default {
       appSettings: 'settings',
     }),
   },
+
   mounted () {
     this.fixData()
     window.onresize = () => {
@@ -296,7 +300,7 @@ export default {
   },
   created () {
     this.navigationList = []
-    this.startAida()
+    //this.startAida()
     //this.setAgreeTest(false)
   },
   unmounted () {
@@ -405,6 +409,13 @@ export default {
       },
       deep:true,
       immediate: true,
+    },
+    'settings.cardMargin':{
+      handler(newValue){
+        this.key=Date.now()
+        // //$('.muuri-item').css('margin',newValue+'px')
+        this.$refs.grid.update()
+      }
     }
   }
 }
@@ -454,7 +465,6 @@ export default {
   }
 
   .muuri-item {
-    margin: 6px;
   }
 
   .card {

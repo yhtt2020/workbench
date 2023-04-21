@@ -80,6 +80,11 @@ export default {
       required: false,
       default: () => ItemSize.height
     },
+    getItemMargin:{
+      type:Function,
+      required:false,
+      default:()=>ItemSize.margin
+    },
     /**
      * Enable drag and drop feature on the grid
      */
@@ -370,7 +375,8 @@ export default {
     _getItemStyles (item) {
       return {
         width: this.getItemWidth(item),
-        height: this.getItemHeight(item)
+        height: this.getItemHeight(item),
+        margin:this.getItemMargin(item)
       }
     },
     /**
