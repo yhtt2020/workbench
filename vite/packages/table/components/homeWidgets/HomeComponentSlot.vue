@@ -37,12 +37,15 @@
       </div>
     </div>
 
-    <div :class="options.noTitle===true?'no-title':'content-title'">
+    <div :class="options.noTitle===true?'no-title':'content-title'" class="flex justify-between items-center">
       <div class="left-title" v-if="options.noTitle!==true">
         <Icon :icon="options.icon" class="title-icon"></Icon>
         <div class="w-2/3">{{ options.title }}</div>
       </div>
-      <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games')">
+        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">{{ gameRegion.name }}</span>
+      </div>
+      <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
       </div>
     </div>
@@ -82,7 +85,7 @@
      <div class="flex flex-col justify-start">
       <span style="margin-bottom: 14px;">默认地区</span>
       <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
-        <a-select-option v-for="item in region" :value="item.encode">{{item.name}}</a-select-option>
+        <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
       </a-select>
      </div>
   </a-drawer>
@@ -104,63 +107,56 @@ export default {
       gameVisible:false,
       region:[
         {
-          id:0,
-          name:'美国',
-          encode:'US'
+          id:'us',
+          name:'美国'
         },
         {
-          id:1,
-          name:'加拿大',
-          encode:'CA'
+          id:'ca',
+          name:'加拿大'
         },
         {
-          id:2,
-          name:'英国',
-          encode:'GB'
+          id:'gb',
+          name:'英国'
         },{
-          id:3,
-          name:'法国',
-          encode:'FR'
+          id:'fr',
+          name:'法国'
         },{
-          id:4,
-          name:'德国',
-          encode:'de'
+          id:'de',
+          name:'德国'
         },{
-          id:5,
-          name:'意大利',
-          encode:'it'
+          id:'it',
+          name:'意大利'
         },{
-          id:6,
+          id:'jp',
           name:'日本',
-          encode:'jp'
         },{
-          id:7,
+          id:'cn',
           name:'国区',
-          encode:'cn'
         },{
-          id:8,
+          id:'br',
           name:'巴西',
-          encode:'br'
         },{
-          id:9,
+          id:'in',
           name:'印度',
-          encode:'in'
         },{
-          id:10,
+          id:'ru',
           name:'俄罗斯',
-          encode:'RU'
         },{
-          id:11,
+          id:'au',
           name:'澳大利亚',
-          encode:'AU'
         },
         {
-          id:12,
+          id:'hk',
           name:'香港',
-          encode:'hk'
+        },
+        {
+          id:'ar',
+          name:'阿根廷',
         }
+
       ],
-      defaultRegion:'cn'
+      defaultRegion:'cn',
+      gameRegionShow:false
     }
   },
   name: 'HomeComponentSlot',
@@ -185,16 +181,24 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['aidaData']),
+    ...mapWritableState(steamStore,["gameRegion"])
   },
   methods:{
     ...mapActions(cardStore, ["removeCustomComponents"]),
-    ...mapActions(steamStore,["saveRegion"]),
+    ...mapActions(steamStore,["saveRegion","fetchData"]),
     showDrawer()  {
       this.visible = true;
     },
     onClose() {
       this.visible = false;
       this.gameVisible = false
+      const findIndex =  this.region.find(el=>{
+          if(el.id === this.defaultRegion){
+            return  el
+          }
+      })
+      this.saveRegion(findIndex)
+      this.fetchData()
     },
     removeCard () {
       this.removeCustomComponents(this.customIndex)
@@ -231,9 +235,11 @@ export default {
     },
     onMouseOver () {
       this.showTip = true
+      this.gameRegionShow = true
     },
     onMouseOut () {
       this.showTip = false
+      this.gameRegionShow = false
     },
     onCopy () {
       if (this.aidaData) {
@@ -251,8 +257,6 @@ export default {
     // 获取steam地区
     getRegion(e){
       this.defaultRegion = e
-      console.log(e);
-      this.saveRegion(e)
     }
   }
 }
