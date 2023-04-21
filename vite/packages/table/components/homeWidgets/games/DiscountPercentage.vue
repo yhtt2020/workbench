@@ -67,6 +67,10 @@ export default {
     customIndex:{
       type:Number,
       default:0
+    },
+    customData:{
+      type:Object,
+      default: ()=>{}
     }
   },
   components:{
@@ -91,6 +95,7 @@ export default {
     }
   },
   mounted(){
+    console.log(typeof this.customData)
     this.groupData()
   },
   methods:{
@@ -132,7 +137,7 @@ export default {
            })
          }
         })
-        
+
       }
       this.id = item.id
     },

@@ -28,9 +28,10 @@
       </div>
     </a-col>
     <a-col :span="4">
-      <div @click="setAppPaper" class="btn">
+      <div @click="setAppPaper" class="btn relative">
         <Icon style="font-size: 3em" icon="tianjia1"></Icon>
         <div>设为壁纸</div>
+        <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
       </div>
     </a-col>
   </a-row>
@@ -41,10 +42,14 @@
 import { mapActions,mapState  } from 'pinia'
 import { appStore} from '../../store'
 import { paperStore } from '../../store/paper'
+import GradeSmallTip from "../GradeSmallTip.vue";
 import {message,Modal} from 'ant-design-vue'
 export default {
   name: 'PaperList',
   props:['list'],
+  components:{
+    GradeSmallTip
+  },
   data(){
     return{
       options:{

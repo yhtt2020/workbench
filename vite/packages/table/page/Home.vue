@@ -46,6 +46,7 @@
           <template #item="{ item }">
             <div :style="{pointerEvents:(editing?'none':'')}" >
             <component :is="item.name" :customIndex="item.id"
+                       :customData="item.data"
                        :editing="editing" :runAida64="runAida64"></component>
             </div>
           </template>
@@ -297,6 +298,12 @@ export default {
     }
   },
   created () {
+    this.customComponents.forEach((e) =>{
+      if(!e.data){
+        e.data = {}
+      }
+
+    })
     this.navigationList = []
     this.startAida()
     //this.setAgreeTest(false)
@@ -454,7 +461,6 @@ export default {
 <style lang="scss">
 .home-widgets {
   .muuri-item {
-    width: 280px;
     padding: 0;
   }
 
