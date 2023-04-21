@@ -70,7 +70,8 @@ export default {
       this.show = true;
     },
     addCard () {
-          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
+      console.log(this.cardType.images[this.carouselIndex])
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{} });
           this.$emit("addSuccess")
           this.$router.push({
             name: "home",

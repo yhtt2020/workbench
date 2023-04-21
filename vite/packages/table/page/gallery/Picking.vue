@@ -121,9 +121,10 @@
       </div>
     </a-col>
     <a-col :span="4">
-      <div @click="setAppPaper" class="btn">
+      <div @click="setAppPaper" class="btn relative">
         <Icon style="font-size: 3em" icon="tianjia1"></Icon>
         <div>设为壁纸</div>
+        <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
       </div>
     </a-col>
 
@@ -139,12 +140,13 @@ import axios from 'axios';
 import { paperStore } from "../../store/paper";
 import { mapActions, mapState } from "pinia";
 import {message,Modal} from 'ant-design-vue'
+import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import {appStore} from "../../store";
 
 export default defineComponent({
   name:'Picking',
   components:{
-    InfoCircleOutlined
+    InfoCircleOutlined,GradeSmallTip
   },
   computed: {
     ...mapState(paperStore, ["myPapers"]),

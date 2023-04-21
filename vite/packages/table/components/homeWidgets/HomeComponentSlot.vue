@@ -62,7 +62,7 @@
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="onSetup" v-if="options.type.includes('downDay')">
+      <div class="option" @click="onSetup" v-if="options.type.includes('downDay')||options.type.includes('Wallpaper')">
         <Icon class="icon" icon="shezhi1"></Icon>
         设置
       </div>
@@ -89,6 +89,16 @@
       </a-select>
      </div>
   </a-drawer>
+  <a-drawer :width="500"  v-model:visible="settingVisible" placement="right">
+    <template #title>
+     <div class="text-center">「{{options.title}}」设置</div>
+    </template>
+    <div class="text-base">壁纸源</div>
+    <a-select style="background: rgba(42, 42, 42, 1);border: 1px solid rgba(255, 255, 255, 0.1);"
+     class="w-full h-10 rounded-xl mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
+      @change="pickFilterChange($event)"  :options="wallpaperOptions">
+    </a-select>
+  </a-drawer>
 </template>
 
 <script>
@@ -105,6 +115,17 @@ export default {
       visible:false,
       showTip:false,
       gameVisible:false,
+      settingVisible:false,
+      pickFilterValue:'我的收藏',
+      wallpaperOptions: [
+        {value:'我的收藏',name:'my',path:''},
+        {value:'必应壁纸',name:'bing',path:'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'},
+        {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'picking'},
+        {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'picking'},
+        {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'picking'},
+        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'wallhaven'},
+        // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
+      ],
       region:[
         {
           id:'us',
@@ -205,6 +226,7 @@ export default {
       this.visible = false
     },
     onSetup () {
+
       switch (this.options.title) {
         case '倒数日':
           this.$router.push({
@@ -214,9 +236,12 @@ export default {
               cname: '倒数日',
             },
           })
-          break
+          break;
+        case '壁纸':
+        this.settingVisible=true
+          break;
       }
-
+      this.visible = false
     },
     onGameSet(){
       this.gameVisible = true
@@ -257,6 +282,9 @@ export default {
     // 获取steam地区
     getRegion(e){
       this.defaultRegion = e
+    },
+    pickFilterChange(e){
+      this.$emit('pickFilterChange',this.wallpaperOptions.find(i => i.value === e))
     }
   }
 }

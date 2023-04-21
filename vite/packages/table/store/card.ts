@@ -262,6 +262,9 @@ export const cardStore = defineStore(
         //   this.saveCountdownDay();
       },
       sortCountdown() {
+        for (let i = 0; i < this.countdownDay.length; i++) {
+          this.countdownDay[i].type = null
+        }
         this.countdownDay.sort((v1, v2) => {
           let value1 = v1.dateValue;
           let value2 = v2.dateValue;
@@ -275,7 +278,7 @@ export const cardStore = defineStore(
           return (
             value.dateValue.year > this.appDate.year ||
             (value.dateValue.year === this.appDate.year &&
-              value.dateValue.month >= this.appDate.month) || (value.dateValue.year === this.appDate.year &&
+              value.dateValue.month > this.appDate.month) || (value.dateValue.year === this.appDate.year &&
               value.dateValue.day >= this.appDate.day && value.dateValue.month === this.appDate.month)
           );
         });

@@ -77,9 +77,10 @@
         </div>
       </a-col>
       <a-col :span="2">
-        <div class="btn" @click="setAppPaper">
+        <div class="btn relative" @click="setAppPaper">
           <Icon icon="tianjia1" style="font-size: 3em"></Icon>
-          <div>设为背景</div>
+          <div>设为壁纸</div>
+          <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
         </div>
       </a-col>
     </a-row>
@@ -107,6 +108,7 @@ import { mapWritableState, mapActions } from 'pinia'
 import { appStore } from '../../store'
 import Import from './Import.vue'
 import { message, Modal } from 'ant-design-vue'
+import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import Spotlight from 'spotlight.js'
 
 const fs = window.$models.fs
@@ -117,7 +119,7 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'My',
-  components: { Import },
+  components: { Import,GradeSmallTip },
   computed: {
     ...mapWritableState(paperStore, ['settings', 'activePapers', 'myPapers']),
     ...mapWritableState(appStore, ['backgroundImage']),

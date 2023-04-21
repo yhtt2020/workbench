@@ -32,7 +32,7 @@
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
-             {{detailList.price_overview.final_formatted}}    
+             {{detailList.price_overview.final_formatted}}
             </span>
             <div class="flex justify-end">
              <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
@@ -67,6 +67,10 @@ export default {
     customIndex:{
       type:Number,
       default:0
+    },
+    customData:{
+      type:Object,
+      default: ()=>{}
     }
   },
   components:{
