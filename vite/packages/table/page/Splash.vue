@@ -140,13 +140,15 @@ export default {
     },100)
 
     this.getUserInfo()
-
+    this.sortCountdown()
+    this.sortClock()
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo','backgroundImage']),
   },
   methods: {
+    ...mapActions(cardStore, ['sortClock','sortCountdown']),
     timeout(){
       this.timeoutHandler=setTimeout(()=>{
         Modal.error({
@@ -235,6 +237,7 @@ export default {
         //只要提供了uid，就能基于uid验证
         if (!rs) {
           console.log('验证码无效')
+          this.enter()
           this.launching = false
           return
         } else {

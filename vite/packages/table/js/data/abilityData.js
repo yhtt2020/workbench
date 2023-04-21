@@ -41,7 +41,7 @@ export const powerList = [
     },
     {icon:'desktop',name:'mainWallpaper',alias:'主页面壁纸',detail:{
       10:' '
-    },noOnline:true}
+    }}
   ]
 
 

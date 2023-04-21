@@ -163,7 +163,7 @@ export default {
   },
   unmounted() {
     let that = this
-      window.removeEventListener('resize', that.checkScrol)
+      window.removeEventListener('resize', that.checkScroll)
   },
   methods:{
     ...mapActions(cardStore, ['setNavigationList','sortNavigationList','removeNavigationList']),

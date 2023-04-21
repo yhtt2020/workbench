@@ -46,6 +46,7 @@
           <template #item="{ item }">
             <div :style="{pointerEvents:(editing?'none':'')}" >
             <component :style="{margin:settings.cardMargin+'px'}" :is="item.name" :customIndex="item.id"
+                       :customData="item.data"
                        :editing="editing" :runAida64="runAida64"></component>
             </div>
           </template>
@@ -172,6 +173,7 @@ import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
 import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
 import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
+import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
@@ -275,7 +277,8 @@ export default {
     AddCard,
     GradeNotice,
     GamesDiscount,
-    DiscountPercentage
+    DiscountPercentage,
+    MiddleWallpaper
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
@@ -299,6 +302,12 @@ export default {
     }
   },
   created () {
+    this.customComponents.forEach((e) =>{
+      if(!e.data){
+        e.data = {}
+      }
+
+    })
     this.navigationList = []
     //this.startAida()
     //this.setAgreeTest(false)
@@ -306,6 +315,9 @@ export default {
   unmounted () {
     if (this.timer) {
       clearInterval(this.timer)
+    }
+    if (this.reserveTimer) {
+      clearInterval(this.reserveTimer)
     }
   },
   methods: {
@@ -460,7 +472,6 @@ export default {
 <style lang="scss">
 .home-widgets {
   .muuri-item {
-    width: 280px;
     padding: 0;
   }
 
@@ -474,6 +485,10 @@ export default {
 
     &.small {
       height: 204px;
+    }
+    &.double{
+      width: 572px;
+      height: 420px;
     }
   }
 }

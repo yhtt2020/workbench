@@ -67,6 +67,10 @@ export default {
     customIndex:{
       type:Number,
       default:0
+    },
+    customData:{
+      type:Object,
+      default: ()=>{}
     }
   },
   components:{
