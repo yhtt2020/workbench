@@ -42,8 +42,8 @@
         <Icon :icon="options.icon" class="title-icon"></Icon>
         <div class="w-2/3">{{ options.title }}</div>
       </div>
-      <div class="flex justify-center items-center" v-if="gameRegionShow === false">
-        <span class="rounded-md text-white text-opacity-60" style="background: rgba(255, 255,255, 0.4); width:64px;font-size: 12px;text-align: center;line-height: 22px;">{{ gameRegion.name }}</span>
+      <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games')">
+        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">{{ gameRegion.name }}</span>
       </div>
       <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
