@@ -1,5 +1,5 @@
 <template>
-  <div class="rotate-center s-text" style="font-size: 2em;margin-bottom: 1em">
+  <div class="rotate-center s-text" style="font-size: 2em;margin-bottom: 1em;display: none;">
     动态壁纸 {{ list.length }}
   </div>
   <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="flex-grow: 1;flex-shrink: 1">
