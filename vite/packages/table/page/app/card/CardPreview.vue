@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import { mapActions } from "pinia";
+import { mapActions,mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card";
+import { steamStore } from "../../../store/steam";
 import { message } from "ant-design-vue";
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 export default {
@@ -59,9 +60,13 @@ export default {
     }
   },
 
+  computed:{
+    ...mapWritableState(steamStore,["gameRegion"])
+  },
 
   methods: {
     ...mapActions(cardStore, ["addCustomComponents"]),
+    ...mapActions(steamStore,["updateLogoType"]),
     imgChang(i){
      this.carouselIndex = i;
     },
@@ -70,17 +75,18 @@ export default {
       this.show = true;
     },
     addCard () {
-      console.log(this.cardType.images[this.carouselIndex])
-          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{} });
-          this.$emit("addSuccess")
-          this.$router.push({
-            name: "home",
-            params: {
-              name: this.cardType.images[this.carouselIndex],
-              cname: this.cardType.cname,
-            },
-          });
-          message.info("添加成功！");
+      this.updateLogoType()
+      // 将标识带入卡片组件里面
+      this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{Code:this.gameRegion} });
+      this.$emit("addSuccess")
+      this.$router.push({
+        name: "home",
+        params: {
+          name: this.cardType.images[this.carouselIndex],
+          cname: this.cardType.cname,
+        },
+      });
+      message.info("添加成功！");
     }
   }
 
