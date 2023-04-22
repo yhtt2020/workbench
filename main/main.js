@@ -318,8 +318,8 @@ function createWindowWithBounds(bounds) {
           detail: '完全退出之后，将无法累计在线时长、无法接收消息，还将增加打开浏览器的耗时。选『节能后台运行』，则保留到托盘菜单，且以最低内存运行。建议后台运行。',
           checkboxLabel: '不再询问',
           buttons: [
-            '完全退出',
-            '节能后台运行（推荐）'
+            '完全退出（同时关闭工作台）',
+            '节能后台运行（保留工作台）'
           ]
         })
         if (choose.checkboxChecked) {
