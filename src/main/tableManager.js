@@ -75,7 +75,6 @@ class TableManager {
       this.window = tableWin.window
       if (tableWinSetting) {
         this.window.setBounds(tableWinSetting.bounds)
-        console.log('读出位置信息',tableWinSetting)
         setTimeout(()=>{
           if (tableWinSetting.isMaximized) {
             this.window.maximize()
@@ -173,7 +172,6 @@ class TableManager {
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized()
     }
-    console.log('存入位置信息',tableWinSetting)
     settings.set('tableWinSetting', tableWinSetting)
   }
 
