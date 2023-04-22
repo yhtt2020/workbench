@@ -31,6 +31,8 @@ class TableManager {
   windows //分屏的窗体
   storage //临时存储
 
+
+
   async init (tableId) {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
@@ -46,7 +48,8 @@ class TableManager {
           minWidth: 800,
           minHeight: 480,
           frame: false,
-          backgroundColor: '#fff',
+          //transparent:true,
+          //backgroundColor: '#fff',
         },
         webPreferences: {
           webSecurity: false,
@@ -72,9 +75,12 @@ class TableManager {
       this.window = tableWin.window
       if (tableWinSetting) {
         this.window.setBounds(tableWinSetting.bounds)
-        if (tableWinSetting.isMaximized) {
-          this.window.maximize()
-        }
+        console.log('读出位置信息',tableWinSetting)
+        setTimeout(()=>{
+          if (tableWinSetting.isMaximized) {
+            this.window.maximize()
+          }
+        },1000)
       }
 
       //todo为他迁移数据
@@ -120,6 +126,27 @@ class TableManager {
         this.saveBounds()
       })
 
+      tableWin.window.on('enter-html-full-screen',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('leave-html-full-screen',()=>{
+        this.saveBounds()
+      })
+
+
+      tableWin.window.on('blur',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.webContents.on('content-bounds-updated',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('session-end',()=>{
+        this.saveBounds()
+      })
+
       tableWin.window.on('moved',()=>{
         this.saveBounds()
       })
@@ -146,6 +173,7 @@ class TableManager {
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized()
     }
+    console.log('存入位置信息',tableWinSetting)
     settings.set('tableWinSetting', tableWinSetting)
   }
 
