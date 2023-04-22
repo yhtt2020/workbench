@@ -3,8 +3,8 @@
    内置浏览器设置
  </div>
   <div class="line">
-    默认打开网页使用：
-    <a-radio-group v-model:value="settings.openUrlBrowser">
+    默认打开网页使用：此配置项暂未生效
+    <a-radio-group disabled v-model:value="settings.openUrlBrowser">
       <a-radio value="builtin">内嵌浏览器</a-radio>
       <a-radio value="system">系统默认浏览器</a-radio>
     </a-radio-group>
