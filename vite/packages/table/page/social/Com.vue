@@ -71,6 +71,26 @@
 
       </div>
     </div>
+    <div class="card mb-3" style="width: 400px">
+      <div class="line-title">
+        成为开发者：
+      </div>
+      <div class="line">我们欢迎每一位前端开发者、独立软件开发者、主题设计师、浏览器插件开发者入驻。我们将对早期开发者提供各项支持与流量奖励。
+        <div class="mt-5">
+          <a-row :gutter="10">
+            <a-col :span="16">
+              <a-button @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary" block>开发者入驻</a-button>
+            </a-col>
+            <a-col :span="8">
+              <a-button @click="openTab('https://www.yuque.com/tswork/mqon1y/ldt3ll8lqoedpo07')" block>前端实习机会</a-button>
+            </a-col>
+          </a-row>
+
+
+        </div>
+      </div>
+
+    </div>
   </div>
   </vueCustomScrollbar>
 </template>
@@ -113,6 +133,9 @@ export default {
     console.log(tsbApi.runtime)
   },
   methods:{
+    openTab(url){
+      ipc.send('addTab',{url:url})
+    },
     async loadBarrages () {
       tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, 'table').then(rs => {
         if (rs.status) {
