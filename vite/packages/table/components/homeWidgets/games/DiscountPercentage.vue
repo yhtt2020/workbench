@@ -1,8 +1,8 @@
 <template>
-  <HomeComponentSlot :options="options"  :customIndex="customIndex">
+  <HomeComponentSlot :options="options"  :customIndex="customIndex" :customData="customData">
     <template v-if="detailShow === false">
       <swiper  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
-        <swiper-slide v-for="item in detailList">
+        <swiper-slide v-for="item in groupList">
           <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem)"   style="height:118px;position: relative;">
             <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
             <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
@@ -56,6 +56,7 @@ import HomeComponentSlot from "../HomeComponentSlot.vue";
 import {randomData,sendRequest} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
+import { cardStore } from "../../../store/card";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -88,6 +89,7 @@ export default {
       },
       discountList:[],
       reloadShow:false,
+      groupList:[],
       detailShow:false,
       detailList:{},
       id:'',
@@ -98,34 +100,46 @@ export default {
     this.groupData()
   },
   computed:{
-    ...mapWritableState(steamStore,['gameRegion'])
+    ...mapWritableState(steamStore,['gameRegion']),
+    ...mapWritableState(cardStore,["customComponents"])
   },
   methods:{
     ...mapActions(steamStore,["fetchDetail"]),
     // 将数据分成五组
     groupData() {
-      let groups = [];
-      const gameData = JSON.parse(window.localStorage.getItem('gameData'))
-      for (let i = 0; i < 5; i++) {
-        groups.push([]);
-      }
-      groups.forEach((arr) => (arr.length = 0));
-      // 随机获取两条数据，放入五个数组中
-      for (let i = 0; i < groups.length; i++) {
-        const index = randomData(gameData,2);
-        groups[i].push(index)
-      }
-      console.log(groups);
-      this.detailList = groups
+      this.customComponents.forEach(el=>{
+        if(this.customIndex === el.id){
+          sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+            // const arrId = this.customIndex
+            // this.setGameData({arrId, arr:res.data.specials.items})
+            this.discountList = res.data.specials.items
+            let groups = [];
+            for (let i = 0; i < 5; i++) {
+             groups.push([]);
+            }
+            groups.forEach((arr) => (arr.length = 0));
+            // 随机获取两条数据，放入五个数组中
+            for (let i = 0; i < groups.length; i++) {
+             const index = randomData(this.discountList,2);
+             groups[i].push(index)
+            }
+            this.groupList = groups
+          })
+        }
+      })
     },
     goToGameAppDetails(item){
       this.detailShow = true
-      this.fetchDetail(item.id,this.gameRegion.id)
+      // this.fetchDetail(item.id,this.gameRegion.id)
       if(!this.isLoading){
         this.isLoading = true
         setTimeout(()=>{
-          const getDetail = window.localStorage.getItem('detailData')
-          this.detailList = JSON.parse(getDetail)
+          // const getDetail = window.localStorage.getItem('detailData')
+          // this.detailList = JSON.parse(getDetail)
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+            const resData = res.data[item.id]
+            this.detailList = resData.data
+          })
           this.$nextTick(()=>{
             this.isLoading = false
           })

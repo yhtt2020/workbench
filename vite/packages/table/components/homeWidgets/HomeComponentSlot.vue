@@ -43,7 +43,9 @@
         <div class="w-2/3">{{ options.title }}</div>
       </div>
       <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games')">
-        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">{{ regionName.name }}</span>
+        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">
+          {{ customData.name }}
+        </span>
       </div>
       <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
@@ -104,7 +106,7 @@
 <script>
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
-import { steamStore } from "../../store/steam";
+import {steamStore} from "../../store/steam";
 import {message} from "ant-design-vue";
 import AidaGuide from './supervisory/AidaGuide.vue'
 
@@ -199,42 +201,38 @@ export default {
     runAida64: {
       type: Boolean,
       default: true
+    },
+    customData:{
+      type:Object,
+      default:()=>{}
     }
-  },
-
-  created(){
-    // 根据不同id标识将国家名称显示 例如中国的显示国区
-    this.customComponents.filter(i=>{
-      if(i.id === this.customIndex){
-        const reItem = i.data.Code.value
-        this.regionName = {
-          id:reItem.id,
-          name:reItem.name
-        }
-      }
-    })
   },
 
   computed: {
     ...mapWritableState(cardStore, ['aidaData','customComponents']),
-    ...mapWritableState(steamStore,["gameRegion"]),
+    ...mapWritableState(steamStore,["steamCC"])
   },
+  
+  mounted(){
+    
+  },
+
   methods:{
-    ...mapActions(cardStore, ["removeCustomComponents"]),
-    ...mapActions(steamStore,["saveRegion","fetchData"]),
+    ...mapActions(cardStore, ["removeCustomComponents","updateCustomComponents"]),
     showDrawer()  {
       this.visible = true;
     },
     onClose() {
       this.visible = false;
       this.gameVisible = false
+      // 获取国家地区名称参数
       const findIndex =  this.region.find(el=>{
           if(el.id === this.defaultRegion){
             return  el
           }
       })
-      this.saveRegion(findIndex,this.customIndex)
-      // this.fetchData()
+      // 将获取国家地区名称参数缓存到customComponents里面
+      this.updateCustomComponents(this.customIndex,findIndex)
     },
     removeCard () {
       this.removeCustomComponents(this.customIndex)
