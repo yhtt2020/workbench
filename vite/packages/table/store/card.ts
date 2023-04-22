@@ -400,6 +400,12 @@ export const cardStore = defineStore(
         this.customComponents.push(value);
 
       },
+      updateCustomComponents(value,newData){
+        const findCustom = this.customComponents.find(el=>{
+          return value === el.id
+        })
+        this.customComponents[this.customComponents.indexOf(findCustom)].data = newData
+      },
       removeCustomComponents(customIndex) {
         this.customComponents.splice( this.customComponents.findIndex(item=>{
           return item.id===customIndex

@@ -38,7 +38,6 @@
 <script>
 import { mapActions,mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card";
-import { steamStore } from "../../../store/steam";
 import { message } from "ant-design-vue";
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 export default {
@@ -61,7 +60,6 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(steamStore,["gameRegion"]),
     getSize(){
       if(this.cardType.images.length===1){
         return this.cardType.size[0]
@@ -71,7 +69,6 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["addCustomComponents"]),
-    ...mapActions(steamStore,["updateLogoType"]),
     imgChang(i){
      this.carouselIndex = i;
     },
@@ -81,9 +78,7 @@ export default {
     },
 
     addCard () {
-      this.updateLogoType()
-      // 将标识带入卡片组件里面
-      this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{Code:this.gameRegion} });
+      this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{} });
       this.$emit("addSuccess")
       this.$router.push({
         name: "home",
