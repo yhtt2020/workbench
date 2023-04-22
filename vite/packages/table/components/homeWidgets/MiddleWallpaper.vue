@@ -1,30 +1,41 @@
 <template>
 
-  <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange">
+  <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
         <a-empty :image="simpleImage" />
       </div>
       <div class="h-full w-full" v-else>
-        <video class="fullscreen-video" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
+        <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
         <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
         </video>
-      <img :src="currentImg.path" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
+
+      <img :src="currentImg.middleSrc" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
+      <img :src="currentImg.src" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
 
     </div>
     </div>
-    <div class="flex flex-row absolute bottom-4 justify-between" style="width: 543px">
-      <div class="item-icon flex justify-center items-center pointer" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer" @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer" @click="collect" v-if="addressType.name!=='my'">
+    <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px">
+      <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
+      <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
+      <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
+      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'">
         <Icon v-if="!isInMyPapers()" icon="star"></Icon>
         <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
       </div>
       <div class="item-icon flex justify-center items-center pointer" @click="settingImg"> <Icon class="icon"  icon="desktop"></Icon></div>
     </div>
   </HomeComponentSlot>
-
+  <a-drawer :width="500"  v-model:visible="settingVisible" placement="right">
+    <template #title>
+      <div class="text-center">「壁纸」设置</div>
+    </template>
+    <div class="text-base">壁纸源</div>
+    <a-select style="background: rgba(42, 42, 42, 1);border: 1px solid rgba(255, 255, 255, 0.1);"
+              class="w-full h-10 rounded-xl mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
+              @change="pickFilterChange($event)"  :options="wallpaperOptions">
+    </a-select>
+  </a-drawer>
 </template>
 
 <script>
@@ -39,14 +50,32 @@ export default {
   components:{
     HomeComponentSlot
   },
+  props:{
+    customIndex:{
+      type:Number,
+      default:0
+    },
+  },
   data(){
     return {
       options:{
         className:'card double',
         title:'壁纸',
         icon:'image',
-        type:'MiddleWallpaper'
+        type:'MiddleWallpaper',
       },
+      formulaBar:[{icon:'shezhi1',title:'设置',fn:()=>{this.settingVisible = true;this.$refs.cardSlot.visible = false}},],
+      pickFilterValue:'我的收藏',
+      wallpaperOptions: [
+        {value:'我的收藏',name:'my',path:''},
+        {value:'必应壁纸',name:'bing',path:'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'},
+        {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'picking'},
+        {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'picking'},
+        {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'picking'},
+        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'picking'},
+        // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
+      ],
+      settingVisible:false,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
       addressType:{
         value:'我的收藏',
@@ -66,7 +95,7 @@ export default {
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ['setBackgroundImage']),
     pickFilterChange(e){
-        this.addressType = e
+        this.addressType =this.wallpaperOptions.find(i => i.value === e)
       if(this.addressType.path !=='') {
         axios.get(this.addressType.path,{
 
@@ -77,10 +106,19 @@ export default {
             this.count = res.data.count
             let animations = ["ani-gray", "bowen", "ani-rotate"];
             if(pickImage){
-
               pickImage.forEach(img=>{
                 if(img.thumburl !== null){
+                let thumburl = ''
+                  let str=''
                   let randomIndex = Math.floor(Math.random() * animations.length);
+                  if(img.thumburl.indexOf('@')!==-1){
+                   str =  img.thumburl.substring(img.thumburl.indexOf('@'),img.thumburl.length)
+                   thumburl =   img.thumburl.replace(str,'@1200w.webp')
+                  }
+                  if(img.thumburl.indexOf('fw')!==-1){
+                    str =  img.thumburl.substring(img.thumburl.indexOf('fw'),img.thumburl.length)
+                    thumburl =   img.thumburl.replace(str,'fw1200webp')
+                  }
                   const image = {
                     title:false,
                     src:img.thumburl,
@@ -88,6 +126,7 @@ export default {
                     resolution:img.size,
                     score:img.score,
                     no:img.no,
+                    middleSrc:thumburl,
                     animations: animations[randomIndex],
                   }
                   this.imgList.push(image)
@@ -130,6 +169,12 @@ export default {
         srcProtocol:null,
         path:''
       }
+      this.$nextTick(()=>{
+        if(this.currentImg.srcProtocol){
+          this.$refs.wallpaperVideo.load()
+          this.$refs.wallpaperVideo.play()
+        }
+      })
 
 
     },
@@ -140,7 +185,6 @@ export default {
       }
     },
    async nextImg(){
-
       // if(this.imgIndex>=this.imgList.length-1){
       //   if(this.addressType.name ==='picking') {
       //
@@ -241,7 +285,7 @@ export default {
   },
   mounted() {
    // this.myPapers.pop()
-    this.imgList = this.myPapers
+    this.pickFilterChange('我的收藏')
     this.setImg()
   },
   watch:{

@@ -168,7 +168,6 @@ export default defineComponent({
       fs.pathExists(path.join(this.settings.savePath, 'lively')).then((exists) => {
         if (exists) {
           const videos = fs.readdirSync(path.join(this.settings.savePath, 'lively'))
-
           videos.filter(v => {
             let videoPath=path.join(this.settings.savePath, 'lively', v)
             const filename=path.basename(videoPath,'.mp4')

@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options" :customIndex="customIndex">
+  <HomeComponentSlot :options="options" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
     <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDay.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
@@ -26,20 +26,74 @@
       <span
       style="color: rgba(255, 255, 255, 0.85);font-size: 18px;"><span v-if="item.type">还有</span>
         <span v-else>已过</span> {{
-          transDate(
-            appDate.year + "-" + appDate.month + "-" + appDate.day,
-            item.dateValue.year +
-            "-" +
-            item.dateValue.month +
-            "-" +
-            item.dateValue.day
-          )
+          differenceDay(item)
         }} 天</span
       >
     </div>    </div>
   </div>
   </HomeComponentSlot>
-
+  <a-drawer :width="500" v-model:visible="settingVisible" placement="right" @close="()=>{this.goAddFlag = false}">
+    <template #title>
+      <div class="text-center">「壁纸」设置</div>
+    </template>
+      <div v-if="!goAddFlag">
+        已设置的倒数日
+        <div>
+          <vue-custom-scrollbar
+            :settings="outerSettings"
+            style="position: relative; height: calc(100vh - 15em);margin-top: 10px"
+            class="scroll"
+          >
+            <div
+              class="event-list px-4 mb-3 s-item"
+              style="background: rgba(42, 42, 42, 1);"
+              v-for="(item,index) in countdownDay"
+            >
+              <a-dropdown :trigger="['contextmenu']" class="w-full">
+                <div class="flex flex-row justify-between items-center">
+              <div class="flex flex-row items-center">
+                <div class="round-dot mr-4"></div>
+                <div class="event-title">
+                  <span class="text-more" style="color: rgba(255, 255, 255, 0.85);font-size: 16px">{{ item.eventValue }}</span>
+                  <span class="event" style="color: rgba(255, 255, 255, 0.4);font-size: 12px;"
+                  >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
+                      item.dateValue.day
+                    }}</span
+                  >
+                </div>
+              </div>
+              <span
+                style="color: rgba(255, 255, 255, 0.85);font-size: 18px;"><span v-if="item.type">还有</span>
+        <span v-else>已过</span> {{
+                  differenceDay(item)
+                }} 天</span
+              ></div>
+              <template #overlay>
+                <a-menu @click="(e) => onContextMenuClick(e, index)">
+                  <a-menu-item key="1">删除</a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+            </div>
+           </vue-custom-scrollbar
+          >
+        </div>
+        <div class="flex flex-row items-center w-full justify-center mt-4">
+          <div class="rounded-xl h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeDrawer">取消</div>
+          <div class="rounded-xl h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="goAddEvent">添加事件</div>
+        </div>
+      </div>
+    <div v-else>
+      <div>事件名称</div>
+      <a-input class="rounded-xl  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
+      <div class="mt-4">日期</div>
+      <a-date-picker v-model:value="dateValue" class="mt-4"/>
+      <div class="flex flex-row items-center w-full justify-center mt-4">
+        <div class="rounded-xl h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="()=>{this.goAddFlag = false}">取消</div>
+        <div class="rounded-xl h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
+      </div>
+    </div>
+  </a-drawer>
 
 <!--  <a-drawer-->
 <!--    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',-->
@@ -77,42 +131,72 @@ import {mapActions, mapWritableState} from "pinia";
 import { cardStore } from "../../store/card";
 import { transDate } from "../../../../src/util/dateTime";
 import HomeComponentSlot from "./HomeComponentSlot.vue";
+import {message} from "ant-design-vue";
+import {timeStamp} from "../../util";
 export default {
   name: "CountdownDay",
   props:{
     customIndex:{
       type:Number,
       default:0
+    },
+    customData:{
+      type:Object,
+      default:()=>{}
     }
   },
   components:{
     HomeComponentSlot
   },
+
   data() {
     return {
+      outerSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true,
+      },
+      eventValue: "",
+      dateValue: null,
       options:{
         className:'card small',
         title:'纪念日',
         icon:'calendar-check',
         type:'countdownDay'
       },
+      formulaBar:[{icon:'shezhi1',title:'设置',fn:()=>{this.settingVisible = true;this.$refs.cardSlot.visible = false}},],
+      settingVisible:false,
       status: "pause",
       value: null,
       visible:false,
+      goAddFlag:false
     };
   },
   computed: {
     ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
   },
+  mounted() {
+
+  },
   methods: {
-    ...mapActions(cardStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCountdownDay",'addCountdownDay']),
     onPanelChange(value, mode) {},
     transDate,
-    showDrawer()  {
-      this.visible = true;
+    differenceDay(item){
+      return  transDate(
+        this.appDate.year + "-" +this.appDate.month + "-" + this.appDate.day,
+        item.dateValue.year +
+        "-" +
+        item.dateValue.month +
+        "-" +
+        item.dateValue.day
+      )
     },
-    onClose() {
-      this.visible = false;
+    closeDrawer(){
+      this.goAddFlag=false
+      this.settingVisible = false;
     },
     onSetup(){
       this.$router.push({
@@ -123,9 +207,27 @@ export default {
         },
       });
     },
-    removeCountdownDay(){
-      this.removeCustomComponents(this.customIndex)
-      this.visible = false;
+
+    onContextMenuClick(e, index) {
+      this.removeCountdownDay(index);
+    },
+    goAddEvent(){
+      this.goAddFlag = true
+    },
+    addEvent(){
+        if (this.eventValue === "" || this.dateValue === null) {
+            message.info("不可为空！");
+         return
+        }
+        this.goAddFlag=false
+        this.addCountdownDay({
+          eventValue: this.eventValue,
+          dateValue: timeStamp(this.dateValue.valueOf()),
+          customIndex:this.customIndex
+        });
+      this.eventValue = ""
+      this.dateValue = null
+        message.info("添加成功！");
     }
   },
 };
