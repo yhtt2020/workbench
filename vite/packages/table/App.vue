@@ -40,7 +40,7 @@
   </a-modal>
   <audio ref="clock" src="/sound/clock.mp3"></audio>
   <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath">
-    <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="">
+    <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
 
@@ -259,13 +259,17 @@ export default {
     },
     "backgroundImage": {
       handler() {
-        console.log(this.backgroundImage)
         if (this.backgroundImage.runpath) {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
           document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
           document.body.style.backgroundImage = ""
           this.videoPath = this.backgroundImage.runpath
+          this.$nextTick(()=>{
+              this.$refs.backgroundVideo.load()
+              this.$refs.backgroundVideo.play()
+
+          })
         } else if (this.backgroundImage.path !== "") {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
