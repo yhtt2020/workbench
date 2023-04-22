@@ -97,7 +97,7 @@ export const codeStore = defineStore('code', {
       let rs = await axios.post(verifyUrl,data)
       if (rs.code !== 1000) {
         // this.myCode = ''
-        console.warn('返回失败', rs.code)
+        console.warn('返回失败', rs)
         if(rs.code==='ENOTFOUND'){
           throw 'neterror'
         }
