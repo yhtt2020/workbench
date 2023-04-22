@@ -3,7 +3,23 @@
 <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
 <!--  </div>-->
   <HomeComponentSlot :options="options">
+    <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
+      <a-button size="large" @click="this.panelVisible=true"  type="primary">配置卡片</a-button>
+    </div>
+
   </HomeComponentSlot>
+  <a-drawer v-model:visible="panelVisible">
+    <div class="line">
+      卡片地址： <a-input style="width:230px" placeholder="请输入远程地址，需带协议"></a-input>
+    </div>
+    <div class="line">卡片尺寸：</div>
+    <div class="line">
+      <a-input-number></a-input-number> x <a-input-number></a-input-number>
+    </div>
+    <div class="mt-10">
+      <a-button type="primary" block>确定</a-button>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -27,6 +43,7 @@ export default {
   components: { HomeComponentSlot },
   data(){
     return{
+      panelVisible:false,
       id:Date.now().toString(),
       options: {
         className: 'card small',
