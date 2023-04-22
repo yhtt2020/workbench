@@ -34,10 +34,10 @@
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right" @close="()=>{this.goAddFlag = false}">
     <template #title>
-      <div class="text-center">「壁纸」设置</div>
+      <div class="text-center">纪念日设置</div>
     </template>
       <div v-if="!goAddFlag">
-        已设置的倒数日
+        已设置的纪念日
         <div>
           <vue-custom-scrollbar
             :settings="outerSettings"

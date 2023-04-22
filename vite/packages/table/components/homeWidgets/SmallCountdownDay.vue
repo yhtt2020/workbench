@@ -39,7 +39,7 @@
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
-      <div class="text-center">「壁纸」设置</div>
+      <div class="text-center">纪念日设置</div>
     </template>
     <div>
       <div>事件名称</div>
