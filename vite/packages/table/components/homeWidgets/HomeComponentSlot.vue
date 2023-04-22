@@ -123,7 +123,7 @@ export default {
         {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'picking'},
         {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'picking'},
         {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'picking'},
-        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'wallhaven'},
+        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2?cate=general&order=date&no=99999999&date=20500101&score=99999999',name:'wallhaven'},
         // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       region:[
