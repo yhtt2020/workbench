@@ -184,6 +184,8 @@ export default {
         ],
         series: [
           {
+            smooth: 0.6,
+            symbol: 'none',
             name: 'Email',
             type: 'line',
             stack: 'Total',
@@ -252,6 +254,8 @@ export default {
       ],
       series: [
         {
+          symbol: 'none',
+          smooth: 0.6,
           name: 'Email',
           type: 'line',
           stack: 'Total',
