@@ -188,6 +188,10 @@ body{
   animation: rotate 30s linear infinite;
   -webkit-animation: rotate 30s linear infinite;
 }
+.replace-it{
+  animation: rotate .5s linear infinite;
+  -webkit-animation: rotate .5s linear infinite;
+}
 @keyframes rotate {
   0% {
     transform: rotate(0);
