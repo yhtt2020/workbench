@@ -41,11 +41,11 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
-               class="grid home-widgets" ref="grid" >
+        <vuuri   :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
+               class="grid home-widgets" ref="grid" :options="muuriOptions" >
           <template #item="{ item }">
-            <div :style="{pointerEvents:(editing?'none':'')}" >
-            <component :style="{margin:settings.cardMargin+'px'}" :is="item.name" :customIndex="item.id"
+            <div  :style="{pointerEvents:(editing?'none':'')}" >
+            <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
                        :customData="item.data"
                        :editing="editing" :runAida64="runAida64"></component>
             </div>
@@ -180,6 +180,7 @@ import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
+import Muuri from 'muuri'
 const readAida64 = window.readAida64
 const initCards=[
   {
@@ -251,6 +252,20 @@ export default {
       reserveTimer:null,
       custom:false,
       runAida64:true,
+      muuriOptions:{
+        dragAutoScroll:{
+          targets: [{
+            element:'#scrollerBar>div'
+          }],
+          handle: null,
+          threshold: 50,
+          safeZone: 0.2,
+          speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+          sortDuringScroll: true,
+          smoothStop: false,
+          onStart: null,
+          onStop: null
+        }}
     }
   },
   components: {
@@ -321,6 +336,13 @@ export default {
     }
   },
   methods: {
+    touch(event){
+      if(this.editing){
+        event.stopPropagation()
+      }else{
+
+      }
+    },
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
     ...mapActions(appStore, ['setBackgroundImage']),

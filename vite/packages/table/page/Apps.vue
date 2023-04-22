@@ -241,6 +241,18 @@ export default {
           }
         },
         {
+          icon: 'https://a.apps.vip/download/dsf.svg',
+          name: 'DisplayFusion',
+          summary: '解决游戏触摸最小化问题。一款用来提升副屏体验的商业软件。',
+          needInstall: true,
+          silent:false,//非静默安装
+          installPath:'C:\\Program Files\\DisplayFusion\\DisplayFusion.exe',
+          downloadUrl:"https://a.apps.vip/download/DisplayFusionSetup-10.0.exe",
+          data: {
+            security: true
+          }
+        },
+        {
           icon: 'https://a.apps.vip/wallpaper/favicon.png',
           name: 'OneWallheaven壁纸',
           summary: '开源壁纸轻应用，可以将wallheaven上的壁纸设置为桌面壁纸或者工作台壁纸。',

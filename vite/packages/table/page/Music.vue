@@ -5,7 +5,7 @@
           <div class="music-player" style="width: 400px;height: 410px;display: inline-block">
             <div class="pointer" @click="enterMusic" >
               <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
-                        style="margin: 16px;border: 3px solid #6b6b6b"></a-avatar>
+                        style="margin: 16px;border: 3px solid #6b6b6b">点击选歌播放</a-avatar>
             </div>
             <div style="font-size: 1.8em">{{ status.music.title }}</div>
             <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
