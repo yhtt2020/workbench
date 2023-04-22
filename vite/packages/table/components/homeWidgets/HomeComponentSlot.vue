@@ -43,7 +43,7 @@
         <div class="w-2/3">{{ options.title }}</div>
       </div>
       <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games')">
-        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">{{ gameRegion.name }}</span>
+        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">{{ regionName.name }}</span>
       </div>
       <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
@@ -123,7 +123,7 @@ export default {
         {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'picking'},
         {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'picking'},
         {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'picking'},
-        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'wallhaven'},
+        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2?cate=general&order=date&no=99999999&date=20500101&score=99999999',name:'wallhaven'},
         // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       region:[
@@ -177,7 +177,8 @@ export default {
 
       ],
       defaultRegion:'cn',
-      gameRegionShow:false
+      gameRegionShow:false,
+      regionName:'',
     }
   },
   name: 'HomeComponentSlot',
@@ -200,9 +201,23 @@ export default {
       default: true
     }
   },
+
+  created(){
+    // 根据不同id标识将国家名称显示 例如中国的显示国区
+    this.customComponents.filter(i=>{
+      if(i.id === this.customIndex){
+        const reItem = i.data.Code.value
+        this.regionName = {
+          id:reItem.id,
+          name:reItem.name
+        }
+      }
+    })
+  },
+
   computed: {
-    ...mapWritableState(cardStore, ['aidaData']),
-    ...mapWritableState(steamStore,["gameRegion"])
+    ...mapWritableState(cardStore, ['aidaData','customComponents']),
+    ...mapWritableState(steamStore,["gameRegion"]),
   },
   methods:{
     ...mapActions(cardStore, ["removeCustomComponents"]),
@@ -218,8 +233,8 @@ export default {
             return  el
           }
       })
-      this.saveRegion(findIndex)
-      this.fetchData()
+      this.saveRegion(findIndex,this.customIndex)
+      // this.fetchData()
     },
     removeCard () {
       this.removeCustomComponents(this.customIndex)

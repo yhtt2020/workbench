@@ -204,7 +204,6 @@ export default defineComponent({
       if(!this.isLoading){
         this.isLoading = true
         axios.get(apiUrl).then(async res=>{
-          console.log(res.data.data);
           if(res.data.data.length !== 1){
             let pickImage = res.data.data
             this.count = res.data.count
@@ -277,7 +276,7 @@ export default defineComponent({
      return y+m+d
     },
     addToMy(img){
-     this.removeToMyPaper(img);
+    this.removeToMyPaper(img);
     },
     isInMyPapers(image) {
       return (
