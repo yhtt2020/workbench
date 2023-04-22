@@ -129,7 +129,7 @@
       遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0"   :step="0.1" />
     </div>
     <div class="line-title">
-      RGB
+      RGB<br>（此类功能性能消耗较高，请酌情开启）
     </div>
     <div class="line">
       边框跑马灯：<a-switch v-model:checked="appSettings.houserun"></a-switch>
