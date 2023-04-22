@@ -191,10 +191,11 @@ export default {
             e.preventDefault();
           }
         } else if (Y < -distY) {
-          if (this.touchUpRoutes.indexOf(this.$route.name) > -1) {
-            this.$router.push({name: 'status'})
-            e.preventDefault();
-          }
+          //取消上滑手势
+          // if (this.touchUpRoutes.indexOf(this.$route.name) > -1) {
+          //   this.$router.push({name: 'status'})
+          //   e.preventDefault();
+          // }
           //e.preventDefault();
         } else {
           console.log("just touch");
