@@ -110,7 +110,7 @@ export default {
     HomeComponentSlot
   },
   computed: {
-    ...mapState(weatherStore, ['cities']),
+    ...mapState(weatherStore, ['cities','reloadAll']),
     city () {
       if(this.cities[0]){
         return this.cities[0]
@@ -120,6 +120,7 @@ export default {
     }
   },
   mounted() {
+    this.reloadAll()
     this.today = getDateTime();
     if(this.city)this.options.title = this.city.name;
     if(this.cities.length)this.options.icon = 'position';

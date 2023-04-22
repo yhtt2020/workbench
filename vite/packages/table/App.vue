@@ -153,7 +153,6 @@ export default {
     window.updateMusicStatusHandler = this.updateMusic;
 
     this.bindTouchEvents();
-    this.reloadAll(); //刷新全部天气
     //this.$router.push({name:'sensor'})
   },
 
@@ -165,7 +164,6 @@ export default {
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
-    ...mapActions(weatherStore, ['reloadAll']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     bindTouchEvents() {
