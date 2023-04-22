@@ -22,7 +22,7 @@
                             style="position:relative;height:100%;  border-radius: 8px;">
         <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center">
           <div style="margin-bottom: 1em;font-size: 1.5em">
-            共 {{ storeApps.length }} 应用  <div class="pointer" @click="openDir" style="font-size: 0.8em;float: right">下载目录</div>
+           <div @click="becomeDeveloper" class="pointer" style="float:left;font-size: 0.8em;"><notification-outlined /> 入驻成为开发者</div> 共 {{ storeApps.length }} 应用  <div class="pointer" @click="openDir" style="font-size: 0.8em;float: right"><FolderOpenOutlined/> 下载目录</div>
           </div>
           <a-row :gutter="[30,20]">
           <template v-for="app in storeApps">
@@ -95,10 +95,11 @@ import { appsStore } from '../store/apps'
 import { message } from 'ant-design-vue'
 import {runExec} from '../js/common/exec'
 import Template from '../../user/pages/Template.vue'
+import {NotificationOutlined,FolderOpenOutlined} from '@ant-design/icons-vue'
 let { fs }=window.$models
 export default {
   name: 'Apps',
-  components: { Template, MyApps, QingApps, SecondPanel },
+  components: { Template, MyApps, QingApps, SecondPanel,NotificationOutlined,FolderOpenOutlined  },
   computed: {
     ...mapWritableState(appStore, ['appData']),
     ...mapWritableState(appsStore, ['myApps'])
@@ -383,6 +384,9 @@ export default {
       }
 
 
+    },
+    becomeDeveloper(){
+      ipc.send('addTab',{url:'https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug'})
     },
     openDir(){
       require('electron').shell.openPath(require('path').join(window.globalArgs['user-data-dir'],'download'))
