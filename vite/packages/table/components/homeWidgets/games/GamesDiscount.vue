@@ -1,9 +1,9 @@
 <template>
-  <HomeComponentSlot :options="options"  :customIndex="customIndex">
+  <HomeComponentSlot :options="options"  :customIndex="customIndex" :customData="customData">
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div class="w-full flex cursor-pointer" @click="enterDetail(item)"  v-for="item in list" style="height:65px; margin-bottom: 12px;">
+           <div class="w-full flex cursor-pointer" @click="enterDetail(item)"  v-for="item in randomList" style="height:65px; margin-bottom: 12px;">
              <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
               <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
@@ -42,11 +42,11 @@
             <span class="discount-description rounded-md bg-white bg-opacity-20 "  v-for="item in detailList.genres">{{item.description}}</span>
           </div>
           <span class="line-through text-white text-opacity-60" style="font-size: 12px;">
-            {{detailList.price_overview.initial_formatted}}
+            {{ detailList.price_overview.initial_formatted }}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500; padding-right: 2.41em;">
-             {{detailList.price_overview.final_formatted}}    
+             {{ detailList.price_overview.final_formatted }}    
             </span>
             <div class="flex justify-end">
               <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
@@ -70,12 +70,17 @@ import HomeComponentSlot from "../HomeComponentSlot.vue";
 import {randomData,sendRequest,currencyFormat} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
+import { cardStore } from "../../../store/card";
 export default {
   name:'GamesDiscount',
   props:{
     customIndex:{
       type:Number,
       default:0
+    },
+    customData:{
+      type:Object,
+      default:()=>{}
     }
   },
   components:{
@@ -90,6 +95,7 @@ export default {
         type:'games'
       },
       list:[],
+      randomList:[],
       reloadShow:false,
       gameShow:false,
       detailList:{},
@@ -97,36 +103,52 @@ export default {
     }
   },
   computed:{
-     ...mapWritableState(steamStore,["gameData","gameRegion"])
+     ...mapWritableState(steamStore,["gameData"]),
+     ...mapWritableState(cardStore,["customComponents"])
   },
   mounted(){
-    this.loadGameData()
+    // this.loadGameData()
     this.getRandomData()
+    
   },
   methods:{
-    ...mapActions(steamStore,["loadGameData","fetchDetail"]),
+    ...mapActions(steamStore,["setGameData","fetchDetail"]),
     currencyFormat,
     getRandomData(){
-      const randomArr = randomData(this.gameData,4)
-      this.list = randomArr
+      this.customComponents.forEach(el=>{
+        if(this.customIndex === el.id){
+          sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+            // const arrId = this.customIndex
+            // this.setGameData({arrId, arr:res.data.specials.items})
+            this.list = res.data.specials.items
+            this.getRandomList()
+          })
+        }
+      })
     },
+    getRandomList(){
+      const randomArr = randomData(this.list,4)
+      this.randomList = randomArr
+    },
+    
     // 点击切换
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
-        this.getRandomData()
+        this.getRandomList()
         this.reloadShow = false
       },800)
     },
     // 点击进入详情
     enterDetail(item){
       this.gameShow = true
-      this.fetchDetail(item.id,this.gameRegion.id)
       if(!this.isLoading){
         this.isLoading = true
         setTimeout(()=>{
-          const getDetail = window.localStorage.getItem('detailData')
-          this.detailList = JSON.parse(getDetail)
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+            const resData = res.data[item.id]
+            this.detailList = resData.data
+          })
           this.$nextTick(()=>{
             this.isLoading = false
           })
