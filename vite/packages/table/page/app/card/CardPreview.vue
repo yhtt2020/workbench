@@ -25,7 +25,7 @@
         </div>
       </div>
     <div class="add-button pointer" @click="addCard">
-      添加
+      {{getSize}} 添加
     </div>
 <!--      <div class="btn">-->
 <!--        <a-button type="primary" style="background: #2266D1;border: none;"  @click="addCard()">添加</a-button>-->
@@ -58,7 +58,13 @@ export default {
       default: () => { }
     }
   },
-
+  computed:{
+    getSize(){
+      if(this.cardType.images.length===1){
+        return this.cardType.size[0]
+      }
+    },
+  },
 
   methods: {
     ...mapActions(cardStore, ["addCustomComponents"]),
@@ -69,6 +75,7 @@ export default {
       this.$emit("onBack")
       this.show = true;
     },
+
     addCard () {
       console.log(this.cardType.images[this.carouselIndex])
           this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{} });
