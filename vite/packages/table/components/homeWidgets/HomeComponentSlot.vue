@@ -195,7 +195,7 @@ export default {
     // 根据不同id标识将国家名称显示 例如中国的显示国区
     this.customComponents.filter(i=>{
       if(i.id === this.customIndex){
-        if(i.data.Code){
+        if(i.data && i.data.Code){
           const reItem = i.data.Code.value
           this.regionName = {
             id:reItem.id,
