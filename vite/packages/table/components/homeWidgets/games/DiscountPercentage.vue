@@ -17,7 +17,7 @@
       </div>
     </template>
     <template v-if="detailShow === true">
-      <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;"></a-spin>
+      <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
        <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
