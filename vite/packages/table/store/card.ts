@@ -9,7 +9,55 @@ export const cardStore = defineStore(
           cardZoom:100,
           marginTop:0
         },
-        countdownDay: [],
+        countdownDay: [{
+          "eventValue": "劳动节",
+          "dateValue": {
+            "year": 2023,
+            "month": 5,
+            "day": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "week": "星期一"
+          },
+          "type": null
+        },{
+          "eventValue": "端午节",
+          "dateValue": {
+            "year": 2023,
+            "month": 6,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "week": "星期四"
+          },
+          "type": null
+        },{
+          "eventValue": "中秋节",
+          "dateValue": {
+            "year": 2023,
+            "month": 9,
+            "day": 29,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "week": "星期五"
+          },
+          "type": null
+        },{
+          "eventValue": "国庆节",
+          "dateValue": {
+            "year": 2023,
+            "month": 10,
+            "day": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "week": "星期日"
+          },
+          "type": null
+        }],
         appDate: {},
         clockEvent: [],
         customComponents: [],
@@ -257,6 +305,7 @@ export const cardStore = defineStore(
       },
 
       addCountdownDay(value) {
+        console.log(this.countdownDay)
         this.countdownDay.push(value);
         this.sortCountdown()
         //   this.saveCountdownDay();

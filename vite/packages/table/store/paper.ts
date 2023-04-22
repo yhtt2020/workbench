@@ -83,6 +83,7 @@ export const paperStore = defineStore('paper', {
 
     // 将本地数据存储在myPaper
     addToStaticPaper(image: any){
+      console.log(image)
       let found = this.myPapers.findIndex(img=>{
         if(img.src === image.src) return true
       })

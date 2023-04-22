@@ -65,7 +65,7 @@ export default {
     Calendar,
   },
   mounted() {
-    console.log(this.$refs.calendar)
+
   },
   methods: {
     onPanelChange (value, mode) {},
