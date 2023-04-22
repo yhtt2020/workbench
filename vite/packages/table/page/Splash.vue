@@ -1,5 +1,5 @@
 <template>
-  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;" class="no-drag"
+  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333" class="no-drag"
        v-if="launching">
     <div style="margin: auto;">
       <div class="animate-bounce mb-5 ">
