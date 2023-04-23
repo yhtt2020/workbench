@@ -208,6 +208,9 @@ export default {
   white-space: pre-wrap;
   margin-bottom: 5px;
 }
+.animate-spin{
+  animation: spin 0.3s linear infinite !important;
+}
 </style>
 <style>
 .swiper-pagination-bullet{
@@ -217,7 +220,5 @@ export default {
   position: fixed !important;
   bottom: 4.95em !important;
 }
-.animate-spin{
-  animation: spin 0.3s linear infinite !important;
-}
+
 </style>
