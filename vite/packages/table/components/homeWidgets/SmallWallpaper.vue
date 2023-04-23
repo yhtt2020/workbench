@@ -10,7 +10,8 @@
         <video class="fullscreen-video " ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
           <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
         </video>
-        <img :src="currentImg.src" alt="" class="h-full w-full " style="border-radius: 8px;object-fit: cover" v-else>
+        <img :src="currentImg.middleSrc"  alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
+        <img :src="currentImg.src" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
 
       </div>
     </div>
@@ -124,12 +125,12 @@ export default {
                   let randomIndex = Math.floor(Math.random() * animations.length);
                   if(img.thumburl.indexOf('@')!==-1){
                     str =  img.thumburl.substring(img.thumburl.indexOf('@'),img.thumburl.length)
-                    thumburl =   img.thumburl.replace(str,'@1200w.webp')
+                    thumburl =   img.thumburl.replace(str,'@500w.webp')
                   }
-                  if(img.thumburl.indexOf('fw')!==-1){
-                    str =  img.thumburl.substring(img.thumburl.indexOf('fw'),img.thumburl.length)
-                    thumburl =   img.thumburl.replace(str,'fw1200webp')
+                  if(img.thumburl.indexOf('400')!==-1){
+                    thumburl =  img.thumburl.substring(0,img.thumburl.indexOf('400'))+'500'+img.thumburl.slice(img.thumburl.indexOf('400')-img.thumburl.length+3)
                   }
+
                   const image = {
                     title:false,
                     src:img.thumburl,
