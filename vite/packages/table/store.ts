@@ -17,10 +17,7 @@ export const appStore = defineStore('appStore', {
       joinedCircle: []
     },
 
-    //小组
-    team:{
-      status:false
-    },
+
 
     agreeTest:false,
 

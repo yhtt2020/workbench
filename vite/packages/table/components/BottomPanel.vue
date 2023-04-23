@@ -110,7 +110,7 @@
     <div @click="toggleTeam" class="common-panel s-bg pointer " style="margin-left: 0;padding:0.5em;min-width: 6em;">
 
       <Icon icon="smile"   style="margin:0.3em;fill:#d7d7d7"></Icon>
-      <div class="mb-2">  小队 <div style="display: inline-block;position: relative"> <span class="flex h-3 w-3">
+      <div class="mb-2">  小队 <div v-if="!team" style="display: inline-block;position: relative"> <span class="flex h-3 w-3">
   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
   <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
 </span></div></div>
@@ -227,6 +227,7 @@ import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from "./ScrolX.vue";
 
 import TeamTip from "./TeamTip.vue";
+import { teamStore } from '../store/team'
 export default {
   name: 'BottomPanel',
   components: {TeamTip, SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX,GradeSmallTip},
@@ -284,11 +285,10 @@ export default {
     setInterval( ()=>{
       this.loadMessages()
     },10000)
-
-
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo','settings','lvInfo','team']),
+    ...mapWritableState(appStore, ['userInfo','settings','lvInfo']),
+    ...mapWritableState(teamStore,['team']),
     ...mapWritableState(cardStore, ['navigationList','routeParams'])
   },
   watch: {

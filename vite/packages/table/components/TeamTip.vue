@@ -42,7 +42,7 @@
       </div>
 
 
-        <CreateTeam  v-if="step===2"></CreateTeam>
+        <CreateTeam @created="created"  v-if="step===2"></CreateTeam>
 
     </div>
 
@@ -71,6 +71,11 @@ export default {
     this.step=1
   },
   methods:{
+    created(){
+      this.$emit(
+        'update:visible',false
+      )
+    },
     hide(){
       console.log(this.step)
       if(this.step!==1){

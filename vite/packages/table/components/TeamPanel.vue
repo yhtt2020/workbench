@@ -2,7 +2,7 @@
 
 
     <div class="common-panel s-bg " style="width: 100px">
-      <div class="p-2 pt-2 p-3 truncate font-large text-center" style="font-size: 1.1em">#组名</div>
+      <div class="p-2 pt-2 p-3 truncate font-large text-center" style="font-size: 1.1em">#{{ team.name }}</div>
       <div class="text-center" v-for="user in userList">
         <a-avatar :size="50" :src="user.avatar"></a-avatar>
         <div class="p-2">{{ user.nickname }}</div>
@@ -18,7 +18,8 @@
 
 <script>
 import {PlusOutlined} from '@ant-design/icons-vue'
-
+import { teamStore } from '../store/team'
+import {mapWritableState} from 'pinia'
 const userList = [
   {
     nickname: '张三',
@@ -32,6 +33,9 @@ const userList = [
 export default {
   name: "TeamPanel",
   components: {PlusOutlined},
+  computed:{
+    ...mapWritableState(teamStore,['team'])
+  },
   data() {
     return {
       userList
