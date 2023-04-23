@@ -1,24 +1,44 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
-import {sendRequest} from '../js/axios/api'
 
 // @ts-ignore
 export const steamStore = defineStore("steam", {
   state: () => ({
     steamCC:{id:"cc",name:'国区'},
-    gameData:[],
+    data:[],
+    dataDetail:{}, // 应用详情
   }),
   actions: {
-    setGameData(value: any){
-      const dataArr:Array<any> = []
-      dataArr.push(value)
-      this.gameData = dataArr
-      localStorage.setItem('gameData',JSON.stringify(this.gameData))
+    // 根据编码分类列表数据存储
+    setGameData(value){
+      const findIndex = this.data.findIndex(el=>{
+        return el.cc === value.cc
+      })
+      if(findIndex === -1){
+        this.data.push(value)
+        localStorage.setItem("gameData",JSON.stringify(this.data))
+      }else{
+        return
+      }
     },
-    // getGameData(){
-    //   // const getData = localStorage.getItem('gameData')
-    //   // this.gameData = JSON.parse(getData)
-    // }
+    getGameData(){
+      const getData = localStorage.getItem('gameData')
+      if(getData){
+        this.data = JSON.parse(getData)
+      }
+    },
+    // 详情数据存储
+    setGameDetail(value){
+      this.dataDetail = value
+      localStorage.setItem("detail",JSON.stringify(this.dataDetail)) 
+    },
+    getGameDetail(){
+      const getDetail = localStorage.getItem("detail")
+      if(getDetail){
+        this.dataDetail = JSON.parse(getDetail)
+      }
+    }
+  
   },
   persist: {
     enabled: true,
