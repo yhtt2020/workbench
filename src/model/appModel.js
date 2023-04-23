@@ -1222,7 +1222,8 @@ const appModel = {
    * @returns {Promise<*>}
    */
   async countApps () {
-    return await sqlDb.knex('app').count()
+    let rs=await sqlDb.knex('app').count({count:'nanoid'})
+    return rs[0].count
   },
   /**
    * sqldb
