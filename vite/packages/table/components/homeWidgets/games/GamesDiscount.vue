@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options"  :customIndex="customIndex" :customData="customData">
+  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData">
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
@@ -69,7 +69,7 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import {randomData,sendRequest,currencyFormat} from '../../../js/axios/api'
+import {randomData,sendRequest,currencyFormat,compareTime} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
 import { cardStore } from "../../../store/card";
@@ -82,6 +82,10 @@ export default {
     },
     customData:{
       type:Object,
+      default:()=>{}
+    },
+    confirmCCData:{
+      type:Function,
       default:()=>{}
     }
   },
@@ -105,28 +109,36 @@ export default {
     }
   },
   computed:{
-     ...mapWritableState(steamStore,["gameData"]),
+     ...mapWritableState(steamStore,["data","dataDetail"]),
      ...mapWritableState(cardStore,["customComponents"])
   },
-  mounted(){
-    // this.loadGameData()
-    this.getRandomData()
 
+  created(){
+    this.getRandomData()
+  },
+
+  mounted(){
+    this.getRandomList()
   },
   methods:{
-    ...mapActions(steamStore,["setGameData","fetchDetail"]),
+    ...mapActions(steamStore,["setGameData","setGameDetail"]),
     currencyFormat,
     getRandomData(){
-      this.customComponents.forEach(el=>{
-        if(this.customIndex === el.id){
-          sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
-            // const arrId = this.customIndex
-            // this.setGameData({arrId, arr:res.data.specials.items})
-            this.list = res.data.specials.items
-            this.getRandomList()
-          })
+      if(this.data.length !== 0){
+        const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
+          return this.customData.id === el.cc
+        })
+        if(dataIndex){
+          const discountList = this.data[this.data.indexOf(dataIndex)]
+          console.log(discountList);
+          if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
+            this.list = discountList.list
+          }else{
+            // 超过时间就重新获取数据
+            this.confirmCCData()
+          }
         }
-      })
+      }
     },
     getRandomList(){
       const randomArr = randomData(this.list,4)
@@ -149,7 +161,8 @@ export default {
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.detailList = resData.data
+            this.setGameDetail(resData)
+            this.detailList = this.dataDetail.data
           })
           this.$nextTick(()=>{
             this.isLoading = false
@@ -159,7 +172,7 @@ export default {
     },
      discountBack(){
       this.gameShow = false
-      window.localStorage.removeItem('detailData')
+      window.localStorage.removeItem('detail')
      },
      openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
