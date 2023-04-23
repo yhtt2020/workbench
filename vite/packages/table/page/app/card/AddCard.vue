@@ -39,7 +39,7 @@ export default {
         { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
         { name:"games", cname:"Steam折扣推荐",icon:"steam",detail:"热门折扣游戏推荐",images:['GamesDiscount','DiscountPercentage']},
         { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote']},
-        { name:"wallpaper", cname:"壁纸",icon:"image",detail:"发现新壁纸，浏览我收藏的壁纸",images:['middleWallpaper']}
+        { name:"wallpaper", cname:"壁纸",icon:"image",detail:"发现新壁纸，浏览我收藏的壁纸",images:['middleWallpaper','smallWallpaper']}
       ],
       cardType:{},
       show:false,
