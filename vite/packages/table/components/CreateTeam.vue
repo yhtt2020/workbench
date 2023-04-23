@@ -8,14 +8,14 @@
         </div>
         <div class="mb-5">
           <a-input placeholder="团队号" :value="no" disabled class="w-1/4 h-10 rounded-xl text-center mr-3"></a-input>
-          <a-input placeholder="团队名" v-model:value="name" class="w-2/3 h-10 rounded-xl text-center"></a-input>
+          <a-input  placeholder="团队名" v-model:value="name" class="w-2/3 h-10 rounded-xl text-center"></a-input>
         </div>
         <div class="mb-5"><strong class="text-white">注意：团队号为有限资源，一旦选定，终身有效，除非解散小队，</strong>
         </div>
         <a-row :gutter="10">
           <a-col :span="4">
-            <div @click="roll" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer text-white"
-                 style="background: rgb(104,58,169);">Roll
+            <div @click="roll" class="rounded-xl h-10 w-4/5 flex justify-center items-center mt-4 pointer text-white"
+                 style="background: rgb(58,58,58);"><Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
             </div>
           </a-col>
           <a-col :span="20">
@@ -48,15 +48,17 @@ export default {
     return {
       avatar: '',
       name: '',
+      randomName:true,
       i: 1,
       j: 1,
       k: 0,
       no: 0,
+      timer:null
     }
   },
   emits:['created'],
   mounted () {
-    this.roll()
+    this.roll(false)
   },
   computed:{
     ...mapWritableState(teamStore,['team'])
@@ -134,15 +136,33 @@ export default {
       this.k = k
       this.no = k
     },
-    roll () {
-      this.rollAvatar()
-      this.rollName()
-      this.rollNo()
+    roll (animate=true) {
+      if(animate){
+        if(this.timer){
+          clearTimeout(this.timer)
+        }
+        $('#touzi').addClass('animate-spin')
+        this.timer=setTimeout(()=>{
+          this.rollAvatar()
+          this.rollName()
+          this.rollNo()
+          $('#touzi').removeClass('animate-spin')
+        },400)
+      }else{
+        this.rollAvatar()
+        this.rollName()
+        this.rollNo()
+      }
+
+
+
     }
   }
 }
 </script>
 
 <style scoped>
-
+.animate-spin{
+  animation: spin .6s linear infinite !important;
+}
 </style>

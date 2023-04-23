@@ -2,7 +2,7 @@
 
 
     <div class="common-panel s-bg " style="width: 100px">
-      <div class="p-2 pt-2 p-3 truncate font-large text-center" style="font-size: 1.1em">#{{ team.name }}</div>
+      <div @click="cleanTeam" class="p-2 pt-2 p-3 truncate font-large text-center" style="font-size: 1.1em">#{{ team.name }}</div>
       <div class="text-center" v-for="user in userList">
         <a-avatar :size="50" :src="user.avatar"></a-avatar>
         <div class="p-2">{{ user.nickname }}</div>
@@ -41,6 +41,13 @@ export default {
       userList
     }
   },
+  methods:{
+    cleanTeam(){
+      this.team={
+        status:false
+      }
+    }
+  }
 
 }
 </script>

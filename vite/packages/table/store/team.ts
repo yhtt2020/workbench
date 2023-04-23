@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {Server} from '../consts'
 import {getConfig} from "../js/axios/serverApi";
+import dbStorage from "./dbStorage";
 const {axios} = window.$models
 const createUrl = Server.baseUrl + '/app/team/create'
 const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
@@ -24,5 +25,17 @@ export const teamStore = defineStore("teamStore", {
       console.log(rs)
       return rs
     }
-  }
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        paths:['team'],
+        // 自定义存储的 key，默认是 store.$id
+        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+        storage: dbStorage,
+        // state 中的字段名，按组打包储存
+      },
+    ],
+  },
 })
