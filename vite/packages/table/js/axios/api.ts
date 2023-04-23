@@ -27,6 +27,24 @@ export const sendRequest = (url, params, retries = 0) => {
     });
 };
 
+// 判断时间是否大于12h
+export function compareTime(date){
+  const nowDate = new Date()  // 获取当前时间
+  const expiresDate = new Date(date)  // 过期时间
+
+  // 计算时间差  当前时间  -  过期时间
+  const timeDiff = nowDate.getTime() - expiresDate.getTime()
+
+  // 时间差转换成小时来比较是否大于12h
+  const hoursDiff = timeDiff / (1000 * 60 *60)
+
+  if(hoursDiff > 12){
+    return true
+  }else{
+    return false
+  }
+}
+
 /**
  * 随机获取四个数据
  * @param  data   数组
@@ -47,6 +65,7 @@ export function randomData(data: any, count: any) {
   }
   return result;
 }
+
 /***
  * 根据不同国家将货币进行转换
 */
