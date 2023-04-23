@@ -51,9 +51,11 @@
 
 <script>
 import {Modal} from 'ant-design-vue'
+import {mapWritableState} from 'pinia'
 import {UsergroupAddOutlined} from '@ant-design/icons-vue'
 import CreateTeam from "./CreateTeam.vue";
 import BackBtn from "./comp/BackBtn.vue";
+import { teamStore } from '../store/team'
 export default {
   name: "TeamTip",
   components:{
@@ -62,6 +64,9 @@ export default {
   },
   props:{
     visible:false,
+  },
+  computed:{
+    ...mapWritableState(teamStore,['teamVisible'])
   },
   data(){
     return {
@@ -77,6 +82,7 @@ export default {
       this.$emit(
         'update:visible',false
       )
+      this.teamVisible=true
     },
     more(){
       Modal.info({

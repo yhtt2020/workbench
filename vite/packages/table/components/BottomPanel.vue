@@ -288,7 +288,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo','settings','lvInfo']),
-    ...mapWritableState(teamStore,['team']),
+    ...mapWritableState(teamStore,['team','teamVisible']),
     ...mapWritableState(cardStore, ['navigationList','routeParams'])
   },
   watch: {
@@ -315,7 +315,7 @@ export default {
         this.teamKey=Date.now()
         this.showTeamTip=true
       }else{
-        this.settings.teamVisible=!this.settings.teamVisible
+        this.teamVisible=!this.teamVisible
       }
 
     },

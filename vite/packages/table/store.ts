@@ -26,7 +26,7 @@ export const appStore = defineStore('appStore', {
     fullScreen: false, //是否是全屏模式
 
     settings: {
-      teamVisible:false,//小组可见
+
       down:{
         enable:false,
         count:100,

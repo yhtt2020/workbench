@@ -34,7 +34,8 @@ export default {
   name: "TeamPanel",
   components: {PlusOutlined},
   computed:{
-    ...mapWritableState(teamStore,['team'])
+    ...mapWritableState(teamStore,['team','teamVisible']),
+
   },
   data() {
     return {
@@ -43,6 +44,7 @@ export default {
   },
   methods:{
     cleanTeam(){
+      this.teamVisible=false
       this.team={
         status:false
       }

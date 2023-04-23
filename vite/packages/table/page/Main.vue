@@ -14,7 +14,7 @@
           <router-view></router-view>
       </div>
       <Transition name="bounce">
-      <div v-if="settings.teamVisible && !fullScreen" class="h-100 trans" style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;position: fixed;top:50%;bottom: 0;;right: 0;z-index:120" >
+      <div v-if="teamVisible && !fullScreen" class="h-100 trans" style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;position: fixed;top:50%;bottom: 0;;right: 0;z-index:120" >
            <TeamPanel ></TeamPanel>
       </div>
       </Transition>
@@ -32,6 +32,7 @@ import BottomPanel from '../components/BottomPanel.vue'
 import { mapWritableState } from 'pinia'
 import { appStore } from '../store'
 import TeamPanel from "../components/TeamPanel.vue";
+import { teamStore } from '../store/team'
 
 export default {
   name: 'Main',
@@ -42,7 +43,8 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init'])
+    ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
+    ...mapWritableState(teamStore,['teamVisible'])
   },
   data () {
     return {
