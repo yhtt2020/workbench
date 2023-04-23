@@ -261,6 +261,7 @@ export default {
         //只要提供了uid，就能基于uid验证
         if (!rs) {
           console.log('验证码无效')
+          this.enter()
           this.launching = false
           return
         } else {

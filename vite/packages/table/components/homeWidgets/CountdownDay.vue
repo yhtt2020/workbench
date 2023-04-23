@@ -15,7 +15,7 @@
       <div class="flex flex-row items-center">
         <div class="round-dot mr-4"></div>
       <div class="event-title">
-        <span class="text-more" style="color: rgba(255, 255, 255, 0.85);font-size: 16px">{{ item.eventValue }}</span>
+        <span class="text-more w-28" style="color: rgba(255, 255, 255, 0.85);font-size: 16px">{{ item.eventValue }}</span>
         <span class="event" style="color: rgba(255, 255, 255, 0.4);font-size: 12px;"
         >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
             item.dateValue.day
@@ -54,7 +54,7 @@
               <div class="flex flex-row items-center">
                 <div class="round-dot mr-4"></div>
                 <div class="event-title">
-                  <span class="text-more" style="color: rgba(255, 255, 255, 0.85);font-size: 16px">{{ item.eventValue }}</span>
+                  <span class="text-more" style="color: rgba(255, 255, 255, 0.85);font-size: 16px;">{{ item.eventValue }}</span>
                   <span class="event" style="color: rgba(255, 255, 255, 0.4);font-size: 12px;"
                   >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
                       item.dateValue.day

@@ -3,7 +3,7 @@
       <div>{{ cardType.cname }}</div>
       <div>{{ cardType.detail }}</div>
       <div>
-        <a-carousel arrows v-if="cardType.name === 'countdownDay'||cardType.name === 'supervisory' || cardType.name === 'games'"
+        <a-carousel arrows v-if="cardType.images.length>1"
                     :after-change="imgChang" style="width: 200px;height: 295.86px;"  effect="fade">
 
 
@@ -46,6 +46,9 @@ export default {
       visibility:false,
       carouselIndex:0
     }
+  },
+  mounted() {
+    console.log(this.cardType)
   },
   components:{
     LeftCircleOutlined,
