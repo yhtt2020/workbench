@@ -5,7 +5,7 @@
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
         <a-empty :image="simpleImage" />
       </div>
-      <div class="h-full w-full" v-else>
+      <div class="h-full w-full pointer" v-else @click="goSource">
         <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
         <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
         </video>
@@ -19,7 +19,7 @@
       <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
       <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
       <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'">
+      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'&&addressType.name!=='lively'">
         <Icon v-if="!isInMyPapers" icon="star"></Icon>
         <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
       </div>
@@ -42,10 +42,13 @@
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 import axios from 'axios';
 import {mapActions, mapWritableState} from "pinia";
-import { Empty } from 'ant-design-vue';
+import {Empty, message} from 'ant-design-vue';
 import {paperStore} from "../../store/paper";
 import {appStore} from "../../store";
 import {cardStore} from "../../store/card";
+import {lively,lively2} from '../../js/data/livelyData'
+let fs = require('fs')
+let path = require('path')
 export default {
   name: "MiddleWallpaper",
   components:{
@@ -74,11 +77,11 @@ export default {
       wallpaperOptions: [
         {value:'我的收藏',name:'my',path:''},
         {value:'必应壁纸',name:'bing',path:'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'},
-        {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'picking'},
-        {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'picking'},
-        {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'picking'},
-        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'picking'},
-        // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
+        {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'PickingPaper'},
+        {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'PickingPaper'},
+        {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'PickingPaper'},
+        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'PickingPaper'},
+       // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       settingVisible:false,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
@@ -93,7 +96,9 @@ export default {
         path:''
       },
       imgIndex:0,
-      randomFlag:false
+      randomFlag:false,
+      list: [],
+
     }
   },
   methods:{
@@ -103,10 +108,8 @@ export default {
     pickFilterChange(e){
         this.addressType =this.wallpaperOptions.find(i => i.value === e)
         this.updateCustomComponents(this.customIndex,this.addressType)
-      if(this.addressType.path !=='') {
-        axios.get(this.addressType.path,{
-
-        }).then(res => {
+      if(this.addressType.name ==='PickingPaper'||this.addressType.name ==='bing') {
+        axios.get(this.addressType.path).then(res => {
           this.imgList=[]
           if(res.data.data){
             let pickImage = res.data.data
@@ -165,15 +168,24 @@ export default {
           this.imgList = []
           this.initImg()
         })
-      }else{
+      }else if(this.addressType.name ==='my'){
         this.imgList = this.myPapers
-        this.initImg()
-      }
+        this.initImg()}
+      // else if(this.addressType.name === 'lively'){
+      //   this.imgList = this.list
+      //   this.initImg()
+      // }
     },
     initImg(){
       this.imgIndex = 0
       this.setImg()
     },
+    // getVideo (item) {
+    //
+    //   let filename = item.name
+    //   filename = `https://up.apps.vip/lively/${filename}`
+    //   return filename
+    // },
     setImg(){
       this.currentImg =  this.imgList[this.imgIndex] || {
         srcProtocol:null,
@@ -182,7 +194,9 @@ export default {
       this.$nextTick(()=>{
         if(this.currentImg.srcProtocol){
           this.$refs.wallpaperVideo.load()
-          this.$refs.wallpaperVideo.play()
+          this.$refs.wallpaperVideo.play().catch((err)=>{
+
+          })
         }
       })
 
@@ -250,7 +264,7 @@ export default {
 
     },
     collect(){
-      if(this.addressType.name ==='picking'){
+      if(this.addressType.name ==='PickingPaper'){
         this.removeToMyPaper(this.imgList[this.imgIndex]);
       }else if(this.addressType.name ==='bing'){
         let image = {
@@ -276,15 +290,37 @@ export default {
 
           this.setBackgroundImage(this.imgList[this.imgIndex])
         }
+      }else if(this.addressType.name === 'lively'){
+        this.doStartDownload(this.imgList[this.imgIndex])
       }else{
         this.setBackgroundImage(this.imgList[this.imgIndex])
       }
 
 
     },
+    // doStartDownload (item) {
+    //   message.info('开始下载壁纸')
+    //   item.percent = 0
+    //   tsbApi.download.start({
+    //     url: this.getVideo(item),
+    //     savePath: this.savePath + '/lively/' + item.name,
+    //     updated: (args) => {
+    //       item.done = 1
+    //       item.percent = (args.downloadInfo.receivedBytes / args.downloadInfo.totalBytes * 100).toFixed(0)
+    //       //https://www.electronjs.org/zh/docs/latest/api/download-item#%E4%BA%8B%E4%BB%B6%E5%90%8D-updated
+    //     },
+    //     done: (args) => {
+    //       item.percent = 100
+    //       item.done = 1
+    //       message.success('动态壁纸下载完成')
+    //     },
+    //     willDownload: (args) => {
+    //     }
+    //   })
+    // },
   },
   computed:{
-    ...mapWritableState(paperStore, ['myPapers']),
+    ...mapWritableState(paperStore, ['myPapers','settings']),
     isInMyPapers() {
       return (
         this.myPapers.findIndex((img) => {
@@ -292,8 +328,47 @@ export default {
         }) > -1
       );
     },
+    goSource(){
+      this.$router.push({name:this.addressType.name})
+    },
+    // savePath(){
+    //   if(!this.settings.savePath){
+    //     return ''
+    //   }
+    //   return this.settings.savePath
+    // }
   },
   mounted() {
+    // this.list = [...lively]
+    // this.savePath = this.settings.savePath
+    // lively2.forEach((w) => {
+    //   this.list.push({
+    //     name: w
+    //   })
+    // })
+    // if (this.savePath) {
+    //   //如果已经设置过下载地址了
+    //   this.list.forEach(li => {
+    //     if (fs.existsSync(require('path').join(this.savePath, 'lively', li.name))) {
+    //       li.done = 1
+    //     } else {
+    //       li.done = 0
+    //     }
+    //   })
+    // }
+    // this.list.forEach(item =>{
+    //   let url = this.getVideo(item)
+    //   let local = ''
+    //   if (item.done) {
+    //     //如果是已经触发过下载的，则判断一下本地是否存在，存在则替换成本地播放链接
+    //     local = path.join(this.savePath, 'lively', item.name)
+    //   }
+    //   if (fs.existsSync(local)) {
+    //     url = 'file://' + local
+    //   }
+    //   item.srcProtocol = url
+    // })
+
     this.$nextTick(()=>{
       if(!this.customData.value){
         this.pickFilterChange('我的收藏')
