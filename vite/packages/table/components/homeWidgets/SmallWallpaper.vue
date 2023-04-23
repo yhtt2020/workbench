@@ -1,30 +1,33 @@
 <template>
 
   <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
+    <div class="small-wallpaper">
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
         <a-empty :image="simpleImage" />
       </div>
       <div class="h-full w-full" v-else>
-        <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
-        <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
+        <video class="fullscreen-video " ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
+          <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
         </video>
+        <img :src="currentImg.src" alt="" class="h-full w-full " style="border-radius: 8px;object-fit: cover" v-else>
 
-      <img :src="currentImg.middleSrc"  alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
-      <img :src="currentImg.src" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
-
-    </div>
-    </div>
-    <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px">
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'">
-        <Icon v-if="!isInMyPapers" icon="star"></Icon>
-        <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
       </div>
-      <div class="item-icon flex justify-center items-center pointer" @click="settingImg"> <Icon class="icon"  icon="desktop"></Icon></div>
     </div>
+    <div class="home-blur absolute inset-0  small-blur" style="border-radius: 8px;z-index: -1;">
+      <div class="item-icon flex justify-center items-center pointer mx-auto mt-2"  @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
+      <div class="flex flex-row mt-2 justify-between px-3">
+        <div class="item-icon flex justify-center items-center pointer" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
+        <div class="item-icon flex justify-center items-center pointer" @click="collect" v-if="addressType.name!=='my'">
+          <Icon v-if="!isInMyPapers" icon="star"></Icon>
+          <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
+        </div>
+        <div class="item-icon flex justify-center items-center pointer" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
+      </div>
+
+      <div class="item-icon flex justify-center items-center pointer mt-2 mx-auto" @click="settingImg"> <Icon class="icon"  icon="desktop"></Icon></div>
+
+    </div></div>
   </HomeComponentSlot>
   <a-drawer :width="500"  v-model:visible="settingVisible" placement="right">
     <template #title>
@@ -47,7 +50,7 @@ import {paperStore} from "../../store/paper";
 import {appStore} from "../../store";
 import {cardStore} from "../../store/card";
 export default {
-  name: "MiddleWallpaper",
+  name: "smallWallpaper",
   components:{
     HomeComponentSlot
   },
@@ -64,10 +67,11 @@ export default {
   data(){
     return {
       options:{
-        className:'card double',
+        className:'card small',
         title:'壁纸',
         icon:'image',
         type:'MiddleWallpaper',
+        noTitle: true,
       },
       formulaBar:[{icon:'shezhi1',title:'设置',fn:()=>{this.settingVisible = true;this.$refs.cardSlot.visible = false}},],
       pickFilterValue:'我的收藏',
@@ -101,8 +105,8 @@ export default {
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ["updateCustomComponents"]),
     pickFilterChange(e){
-        this.addressType =this.wallpaperOptions.find(i => i.value === e)
-        this.updateCustomComponents(this.customIndex,this.addressType)
+      this.addressType =this.wallpaperOptions.find(i => i.value === e)
+      this.updateCustomComponents(this.customIndex,this.addressType)
       if(this.addressType.path !=='') {
         axios.get(this.addressType.path,{
 
@@ -115,15 +119,12 @@ export default {
             if(pickImage){
               pickImage.forEach(img=>{
                 if(img.thumburl !== null){
-                let thumburl = ''
+                  let thumburl = ''
                   let str=''
                   let randomIndex = Math.floor(Math.random() * animations.length);
                   if(img.thumburl.indexOf('@')!==-1){
-                   str =  img.thumburl.substring(img.thumburl.indexOf('@'),img.thumburl.length)
-                   thumburl =   img.thumburl.replace(str,'@1200w.webp')
-                  }
-                  if(img.thumburl.indexOf('400')!==-1){
-                    thumburl =  img.thumburl.substring(0,img.thumburl.indexOf('400'))+'1200'+img.thumburl.slice(img.thumburl.indexOf('400')-img.thumburl.length+3)
+                    str =  img.thumburl.substring(img.thumburl.indexOf('@'),img.thumburl.length)
+                    thumburl =   img.thumburl.replace(str,'@1200w.webp')
                   }
                   if(img.thumburl.indexOf('fw')!==-1){
                     str =  img.thumburl.substring(img.thumburl.indexOf('fw'),img.thumburl.length)
@@ -194,7 +195,7 @@ export default {
         this.imgIndex = this.imgList.length -1
       }
     },
-   async nextImg(){
+    async nextImg(){
       // if(this.imgIndex>=this.imgList.length-1){
       //   if(this.addressType.name ==='picking') {
       //
@@ -235,9 +236,9 @@ export default {
       //
       // }
       this.imgIndex+=1
-     if(this.imgIndex >= this.imgList.length){
-       this.imgIndex = 0
-     }
+      if(this.imgIndex >= this.imgList.length){
+        this.imgIndex = 0
+      }
     },
     randomImg(){
       if(this.randomFlag===true)return
@@ -308,7 +309,7 @@ export default {
   watch:{
     imgIndex:{
       handler(){
-       this.setImg()
+        this.setImg()
       },
     }
   }
@@ -317,7 +318,7 @@ export default {
 
 <style lang="scss" scoped>
 .item-icon{
-  width: 100px;
+  width: 56px;
   height: 56px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.4);
@@ -326,5 +327,20 @@ export default {
     height: 36px;
     width: 36px;
   }
+}
+
+.small-wallpaper{
+  .small-blur{
+  display: none;
+
+}
+  &:hover{
+    .small-blur{
+      display: block;
+    }
+
+  }
+
+
 }
 </style>
