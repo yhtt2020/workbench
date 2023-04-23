@@ -274,21 +274,7 @@ body.full-screen{
     color: white;
   }
 }
-.fade-enter-active {
-  animation: bounce-in .3s;
-}
-.fade-leave-active {
-  animation: bounce-in .3s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    opacity: 0;
-  }
 
-  100% {
-    opacity: 1;
-  }
-}
 .grade-tip{
   width: 64px;
   height: 24px;
