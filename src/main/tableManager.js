@@ -31,12 +31,17 @@ class TableManager {
   windows //分屏的窗体
   storage //临时存储
 
-
+static alive(){
+  return global.tableWin && !global.tableWin.window.isDestroyed()
+}
 
   async init (tableId) {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
-      console.log(tableWinSetting,'读入设置')
+      let showInTaskbar=settings.get('showInTaskBar')
+      if(showInTaskbar===undefined){
+        showInTaskbar=true
+      }
       global.tableWin = {}//因为启动需要时间，如果不先设置一个变量，容易导致重复启动。
       global.tableWin = await windowManager.create({
         name:'table',
@@ -48,6 +53,7 @@ class TableManager {
           minWidth: 800,
           minHeight: 480,
           frame: false,
+          skipTaskbar:!showInTaskbar,
           //transparent:true,
           //backgroundColor: '#fff',
         },
@@ -191,6 +197,13 @@ class TableManager {
 
 app.whenReady().then(() => {
   let transWin = null
+
+  settings.listen('showInTaskBar',(value)=>{
+    //监听showInTaskBar
+    if(TableManager.alive()){
+      global.tableWin.window.setSkipTaskbar(!value)
+    }
+  })
 
   ipc.on('transFile', async () => {
     if (transWin === null) {
