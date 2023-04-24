@@ -54,13 +54,13 @@
     <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
-    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'11em',}"
+    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'15em',}"
     :width="120"
-    :height="120"
+    :height="320"
     class="drawer"
-    :closable="false"
+    :closable="true"
     placement="bottom"
-    :visible="visible"
+    v-model:visible="visible"
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">

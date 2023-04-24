@@ -46,19 +46,22 @@
       </div>
       <div v-if="showDetail" class="text-center">小队成员</div>
       <a-divider style="margin-top: 10px;margin-bottom: 10px"></a-divider>
+      <vue-custom-scrollbar :settings="outerSettings"
+                            style="position:relative;height:100%;  ">
       <div class="text-center mb-5 mt-5" v-if="teamLeader.userInfo">
         <a-avatar :size="50" :src="teamLeader.userInfo.avatar"></a-avatar>
-        <div v-if="showDetail" class="p-2 truncate">{{ teamLeader.userInfo.nickname }}</div>
+        <div v-if="showDetail" class="p-2 truncate" :title="teamLeader.userInfo.nickname">{{ teamLeader.userInfo.nickname }}</div>
       </div>
       <div class="text-center  mb-5 " v-for="user in teamMembers">
         <a-avatar :size="50" :src="user.userInfo.avatar"></a-avatar>
-        <div v-if="showDetail" class="p-2 truncate">{{ user.userInfo.nickname }}</div>
+        <div v-if="showDetail" class="p-2 truncate" :title=" user.userInfo.nickname">{{ user.userInfo.nickname }}</div>
       </div>
-      <div class="text-center pb-2" v-if="team.leader===userInfo.uid">
+      <div class="text-center pb-2" title="邀请" v-if="team.leader===userInfo.uid && team.member_count < team.member_limit">
         <a-avatar :size="50">
           <PlusOutlined/>
         </a-avatar>
       </div>
+      </vue-custom-scrollbar>
     </div>
   </div>
 
@@ -82,16 +85,25 @@ export default {
   },
   data () {
     return {
+      outerSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      },
       showDetail: false,
       timer:null//用于定期刷新队伍信息
     }
   },
   mounted () {
-    this.updateTeamShip(this.team.no).then()
-    this.timer=setInterval(()=>{
-      console.info('定期更新小队信息')
-      this.updateTeamShip()
-    },30000)
+    if(this.team.status){
+      this.updateTeamShip(this.team.no).then()
+      this.timer=setInterval(()=>{
+        console.info('定期更新小队信息')
+        this.updateTeamShip(this.team.no)
+      },30000)
+    }
   },
   unmounted () {
     clearInterval(this.timer)
