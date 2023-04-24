@@ -133,7 +133,7 @@ export default {
             this.list = discountList.list
           }else{ 
             // 超过时间就重新获取数据  
-            this.confirmCCData()
+            // this.confirmCCData()
           }
         }
       }
@@ -160,13 +160,13 @@ export default {
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
             const resData = res.data[item.id]
             this.setGameDetail(resData)
-            this.detailList = this.dataDetail.data
           })
           this.$nextTick(()=>{
             this.isLoading = false
           })
         },500)
       }
+      this.detailList = this.dataDetail.data
     },
      discountBack(){
       this.gameShow = false

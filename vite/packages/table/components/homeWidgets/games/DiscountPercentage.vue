@@ -147,13 +147,13 @@ export default {
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
             const resData = res.data[item.id]
             this.setGameDetail(resData)
-            this.dpList = this.dataDetail.data
           })
           this.$nextTick(()=>{
             this.isLoading = false
           })
         },500)
       }
+      this.dpList = this.dataDetail.data
     },
     // 按钮点击切换
     discountChange(){
