@@ -195,10 +195,6 @@ export default {
     ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
     ...mapActions(cardStore,["updateCustomComponents"]),
     currencyFormat,
-    getRandomList(){
-      const randomArr = randomData(this.list,4)
-      this.randomList = randomArr
-    },
 
     getData(){
       if(Object.keys(this.customData).length === 0){
@@ -233,6 +229,12 @@ export default {
         }
     },
 
+    getRandomList(){
+      const randomArr = randomData(this.list,4)
+      console.log(randomArr);
+      this.randomList = randomArr
+    },
+
     // 点击切换
     discountChange(){
       this.reloadShow = true
@@ -246,8 +248,19 @@ export default {
       this.gameShow = true
       if(!this.isLoading){
         this.isLoading = true
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+        if(Object.keys(this.customData).length !== 0){
+          setTimeout(()=>{
+           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+            const resData = res.data[item.id]
+            this.setGameDetail(resData)
+          })
+           this.$nextTick(()=>{
+            this.isLoading = false
+           })
+          },500)
+        }else{
+          setTimeout(()=>{
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
             this.setGameDetail(resData)
           })
@@ -255,6 +268,7 @@ export default {
             this.isLoading = false
           })
         },500)
+        }
       }
       this.detailList = this.dataDetail.data
     },

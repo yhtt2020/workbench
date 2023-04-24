@@ -3,7 +3,7 @@
     <template v-if="detailShow === false">
       <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
         <swiper-slide v-for="item in groupList">
-          <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem)"   style="height:118px;position: relative;">
+          <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,this.customData.id)"   style="height:118px;position: relative;">
             <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
             <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
           </div>
@@ -160,7 +160,7 @@ export default {
       visible:false,
       id:'',
       isLoading:false,
-      detailBare:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.detailSlot.visible = false}}]
+      detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.detailSlot.visible = false}}]
     }
   },
   mounted(){
@@ -186,24 +186,6 @@ export default {
 
   methods:{
     ...mapActions(steamStore,["setGameDetail","updateGameData"]),
-    // 海报进入详情
-    goToGameAppDetails(item){
-      this.detailShow = true
-      if(!this.isLoading){
-        this.isLoading = true
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
-            const resData = res.data[item.id]
-            this.setGameDetail(resData)
-          })
-          this.$nextTick(()=>{
-            this.isLoading = false
-          })
-        },500)
-      }
-      this.dpList = this.dataDetail.data
-    },
-
     getDPData(){
       if(Object.keys(this.customData).length === 0){
            if(this.data.length !== 0){
@@ -225,37 +207,62 @@ export default {
           if(this.data.length !== 0){
             const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
             return this.customData.id === el.cc
-          })
-          if(dataIndex){
-            const discountList = this.data[this.data.indexOf(dataIndex)]
-            this.percentageList = discountList.list
-            let groups = [];
+            })
+            if(dataIndex){
+             const discountList = this.data[this.data.indexOf(dataIndex)]
+             this.percentageList = discountList.list
+             let groups = [];
              for (let i = 0; i < 5; i++) {
               groups.push([]);
-            }
-            groups.forEach((arr) => (arr.length = 0));
-            // 随机获取两条数据，放入五个数组中
-            for (let i = 0; i < groups.length; i++) {
+             }
+             groups.forEach((arr) => (arr.length = 0));
+             // 随机获取两条数据，放入五个数组中
+             for (let i = 0; i < groups.length; i++) {
               const index = randomData(this.percentageList,2);
               groups[i].push(index)
+             }
+             this.groupList = groups
             }
-            this.groupList = groups
-          }
           }
         }
+    },
+    // 海报进入详情
+    goToGameAppDetails(item,cc){
+      this.detailShow = true
+      if(Object.keys(this.customData).length !== 0){
+        setTimeout(()=>{
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
+            const resData = res.data[item.id]
+            this.setGameDetail(resData)
+          })
+          this.$nextTick(()=>{
+            this.isLoading = false
+          })
+        },500)
+      }else{
+        setTimeout(()=>{
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
+            const resData = res.data[item.id]
+            this.setGameDetail(resData)
+          })
+          this.$nextTick(()=>{
+            this.isLoading = false
+          })
+        },500)
+      }
+      this.dpList = this.dataDetail.data
     },
     // 按钮点击切换
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
-        this.groupData()
+        this.getDPData()
         this.reloadShow = false
       },300)
     },
     // 返回
     discountBack(){
       this.detailShow = false
-      this.groupData()
       window.localStorage.removeItem('detail')
     },
     // 打开steam官网
