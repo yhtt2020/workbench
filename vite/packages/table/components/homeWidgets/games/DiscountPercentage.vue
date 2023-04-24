@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData">
+  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :formulaBar="detailBar" ref="detailSlot" :customData="customData">
     <template v-if="detailShow === false">
       <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
         <swiper-slide v-for="item in groupList">
@@ -49,6 +49,15 @@
        </div>
     </template>
   </HomeComponentSlot>
+
+  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}"  placement="right" :visible="gameVisible" @close="onClose">
+    <div class="flex flex-col justify-start">
+     <span style="margin-bottom: 14px;">默认地区</span>
+     <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
+       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
+     </a-select>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -91,47 +100,92 @@ export default {
         icon:'steam',
         type:'games'
       },
+      region:[
+        {
+          id:'us',
+          name:'美国'
+        },
+        {
+          id:'ca',
+          name:'加拿大'
+        },
+        {
+          id:'gb',
+          name:'英国'
+        },{
+          id:'fr',
+          name:'法国'
+        },{
+          id:'de',
+          name:'德国'
+        },{
+          id:'it',
+          name:'意大利'
+        },{
+          id:'jp',
+          name:'日本',
+        },{
+          id:'cn',
+          name:'国区',
+        },{
+          id:'br',
+          name:'巴西',
+        },{
+          id:'in',
+          name:'印度',
+        },{
+          id:'ru',
+          name:'俄罗斯',
+        },{
+          id:'au',
+          name:'澳大利亚',
+        },
+        {
+          id:'hk',
+          name:'香港',
+        },
+        {
+          id:'ar',
+          name:'阿根廷',
+        }
+
+      ],
       percentageList:[],
       reloadShow:false,
       groupList:[],
       detailShow:false,
+      gameVisible:false,
       dpList:{},
+      defaultRegion:'cn',
+      visible:false,
       id:'',
-      isLoading:false
+      isLoading:false,
+      detailBare:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.detailSlot.visible = false}}]
     }
   },
   mounted(){
-    this.groupData()
+
   },
+
   computed:{
     ...mapWritableState(steamStore,["data","dataDetail"]),
     ...mapWritableState(cardStore,["customComponents"])
   },
+
+  watch:{
+    data:{
+      handler(newVal,oldVal){
+       if(Object.keys(newVal).length !== 0){
+         this.getDPData()
+       }
+      },
+      deep:true,
+      immediate:true
+    }
+  },
+
   methods:{
     ...mapActions(steamStore,["setGameDetail","updateGameData"]),
-    // 将数据分成五组
-    groupData() {
-      if(this.data.length !== 0){
-        const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
-          return this.customData.id === el.cc
-        })
-        if(dataIndex){
-          const discountList = this.data[this.data.indexOf(dataIndex)]
-          this.percentageList = discountList.list
-          let groups = [];
-          for (let i = 0; i < 5; i++) {
-            groups.push([]);
-          }
-          groups.forEach((arr) => (arr.length = 0));
-          // 随机获取两条数据，放入五个数组中
-          for (let i = 0; i < groups.length; i++) {
-            const index = randomData(this.percentageList,2);
-            groups[i].push(index)
-          }
-          this.groupList = groups
-        }
-      }
-    },
     // 海报进入详情
     goToGameAppDetails(item){
       this.detailShow = true
@@ -148,6 +202,47 @@ export default {
         },500)
       }
       this.dpList = this.dataDetail.data
+    },
+
+    getDPData(){
+      if(Object.keys(this.customData).length === 0){
+           if(this.data.length !== 0){
+            const discountList = this.data[0]
+            this.percentageList = discountList.list
+            let groups = [];
+            for (let i = 0; i < 5; i++) {
+             groups.push([]);
+            }
+            groups.forEach((arr) => (arr.length = 0));
+            // 随机获取两条数据，放入五个数组中
+            for (let i = 0; i < groups.length; i++) {
+             const index = randomData(this.percentageList,2);
+             groups[i].push(index)
+            }
+            this.groupList = groups
+           }
+        }else{
+          if(this.data.length !== 0){
+            const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
+            return this.customData.id === el.cc
+          })
+          if(dataIndex){
+            const discountList = this.data[this.data.indexOf(dataIndex)]
+            this.percentageList = discountList.list
+            let groups = [];
+             for (let i = 0; i < 5; i++) {
+              groups.push([]);
+            }
+            groups.forEach((arr) => (arr.length = 0));
+            // 随机获取两条数据，放入五个数组中
+            for (let i = 0; i < groups.length; i++) {
+              const index = randomData(this.percentageList,2);
+              groups[i].push(index)
+            }
+            this.groupList = groups
+          }
+          }
+        }
     },
     // 按钮点击切换
     discountChange(){
@@ -166,7 +261,33 @@ export default {
     // 打开steam官网
     openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
-    }
+    },
+    getRegion(e){
+      this.defaultRegion = e
+       // 获取国家地区名称参数
+      const findIndex =  this.region.find(el=>{
+        if(el.id === this.defaultRegion){
+          return  el
+        }
+      })
+      // 将获取国家地区名称参数缓存到customComponents里面
+      this.updateCustomComponents(this.customIndex,findIndex)
+      sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.defaultRegion}&l=${this.defaultRegion}`,3)
+      .then(res=>{
+        const date = Date.parse(res.headers.expires)
+        const resObj = {
+          cc:this.defaultRegion,
+          expiresDate:date,
+          list:res.data.specials.items
+        }
+        this.setGameData(resObj)
+      })
+    },
+    onClose() {
+      this.gameVisible = false
+      this.visible = false
+      this.getDPData()
+    },
   },
   setup() {
     return {
