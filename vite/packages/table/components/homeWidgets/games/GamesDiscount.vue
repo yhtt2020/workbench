@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData">
+  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData" :formulaBar="gameBare" ref="gameSlot">
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
@@ -65,6 +65,15 @@
         </div>
       </template>
   </HomeComponentSlot>
+
+  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}"  placement="right" :visible="gameVisible" @close="onClose">
+    <div class="flex flex-col justify-start">
+     <span style="margin-bottom: 14px;">默认地区</span>
+     <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
+       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
+     </a-select>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -100,12 +109,65 @@ export default {
         icon:'steam',
         type:'games'
       },
+      region:[
+        {
+          id:'us',
+          name:'美国'
+        },
+        {
+          id:'ca',
+          name:'加拿大'
+        },
+        {
+          id:'gb',
+          name:'英国'
+        },{
+          id:'fr',
+          name:'法国'
+        },{
+          id:'de',
+          name:'德国'
+        },{
+          id:'it',
+          name:'意大利'
+        },{
+          id:'jp',
+          name:'日本',
+        },{
+          id:'cn',
+          name:'国区',
+        },{
+          id:'br',
+          name:'巴西',
+        },{
+          id:'in',
+          name:'印度',
+        },{
+          id:'ru',
+          name:'俄罗斯',
+        },{
+          id:'au',
+          name:'澳大利亚',
+        },
+        {
+          id:'hk',
+          name:'香港',
+        },
+        {
+          id:'ar',
+          name:'阿根廷',
+        }
+
+      ],
+      defaultRegion:'cn',
       list:[],
       randomList:[],
       reloadShow:false,
-      gameShow:false,
+      gameVisible:false,
       detailList:{},
-      isLoading:false
+      gameShow:false,
+      isLoading:false,
+      gameBare:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.gameSlot.visible = false}}]
     }
   },
   computed:{
@@ -113,29 +175,51 @@ export default {
      ...mapWritableState(cardStore,["customComponents"])
   },
 
-  created(){
-    this.getRandomData()
-  },
-
   mounted(){
     this.getRandomList()
   },
+
+  watch:{
+    data:{
+      handler(newVal,oldVal){
+       if(Object.keys(newVal).length !== 0){
+          this.getData()
+       }
+      },
+      deep:true,
+      immediate:true
+    }
+  },
+
   methods:{
-    ...mapActions(steamStore,["setGameDetail","updateGameData"]),
+    ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
+    ...mapActions(cardStore,["updateCustomComponents"]),
     currencyFormat,
-    getRandomData(){
-      if(this.data.length !== 0){
-        const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
-          return this.customData.id === el.cc
-        })
-        if(dataIndex){
-          const discountList = this.data[this.data.indexOf(dataIndex)]
-          console.log(discountList);
-          if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
+    getRandomList(){
+      const randomArr = randomData(this.list,4)
+      this.randomList = randomArr
+    },
+
+    getData(){
+      if(Object.keys(this.customData).length === 0){
+          if(this.data.length !== 0){
+            const discountList = this.data[0]
             this.list = discountList.list
+            this.getRandomList()
           }else{
-            // 超过时间就重新获取数据
-            sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+            return
+          }
+        }else{
+          const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
+            return this.customData.id === el.cc
+          })
+          if(dataIndex){
+            const discountList = this.data[this.data.indexOf(dataIndex)]
+            if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
+              this.list = discountList.list
+              this.getRandomList()
+            }else{
+              sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
                 const date = new Date(res.headers.expires)
                 const requestObj = {
                   cc:this.customData.id,
@@ -143,14 +227,10 @@ export default {
                   list:res.data.specials.items
                 }
                 this.updateGameData(requestObj)
-            })
+              })
+            }
           }
         }
-      }
-    },
-    getRandomList(){
-      const randomArr = randomData(this.list,4)
-      this.randomList = randomArr
     },
 
     // 点击切换
@@ -184,7 +264,34 @@ export default {
      },
      openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
-     }
+     },
+
+    onClose() {
+      this.gameVisible = false
+      this.visible = false
+      this.getData()
+    },
+    getRegion(e){
+      this.defaultRegion = e
+       // 获取国家地区名称参数
+      const findIndex =  this.region.find(el=>{
+        if(el.id === this.defaultRegion){
+          return  el
+        }
+      })
+      // 将获取国家地区名称参数缓存到customComponents里面
+      this.updateCustomComponents(this.customIndex,findIndex)
+      sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.defaultRegion}&l=${this.defaultRegion}`,3)
+      .then(res=>{
+        const date = Date.parse(res.headers.expires)
+        const resObj = {
+          cc:this.defaultRegion,
+          expiresDate:date,
+          list:res.data.specials.items
+        }
+        this.setGameData(resObj)
+      })
+    }
   }
 }
 </script>
