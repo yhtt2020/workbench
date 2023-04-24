@@ -18,8 +18,8 @@ export function powerState(powerType,lv,powerDetail=''){
   if(powerDetail===''){
     if(Object.keys(filterList[0].detail).includes(gradeStratum+'')){
       tip.tipTitle = '已解锁'
-      if(filterList[0].detail[1]==='限时免费'){
-        tip.tipTitle = '限免'
+      if(filterList[0].detail[1]==='限时体验'){
+        tip.tipTitle = '限时'
       }
       tip.blocking = true
 if(filterList[0].superiorLimit)tip.superiorLimit = filterList[0].superiorLimit[gradeStratum]
