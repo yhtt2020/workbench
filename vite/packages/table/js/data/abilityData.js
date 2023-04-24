@@ -31,7 +31,7 @@ export const powerList = [
       }
     },
     {icon:'appstore',name:'bottomNavigation',alias:'自定义底部导航',detail:{
-      3:' ',4:' ',5:' ',10:' '}
+      1:' ',4:' ',5:' ',10:' '}
     },
     {icon:'pause',name:'sideNavigation',alias:'自定义侧边导航',detail:{
       4:' ',5:' ',10:' '
@@ -40,7 +40,7 @@ export const powerList = [
       5:'关闭聊天',10:'关闭聊天'}
     },
     {icon:'desktop',name:'mainWallpaper',alias:'主页面壁纸',detail:{
-      10:' '
+        1:'限时免费',2:'限时免费',3:'限时免费',4:'限时免费',5:'限时免费',10:'限时免费'
     }}
   ]
 
