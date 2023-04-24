@@ -119,7 +119,7 @@ export default {
     this.getRandomList()
   },
   methods:{
-    ...mapActions(steamStore,["setGameData","setGameDetail"]),
+    ...mapActions(steamStore,["setGameDetail","updateGameData"]),
     currencyFormat,
     getRandomData(){
       if(this.data.length !== 0){
@@ -133,7 +133,15 @@ export default {
             this.list = discountList.list
           }else{ 
             // 超过时间就重新获取数据  
-            // this.confirmCCData()
+            sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+                const date = new Date(res.headers.expires)
+                const requestObj = {
+                  cc:this.customData.id,
+                  expiresDate:date,
+                  list:res.data.specials.items
+                }
+                this.updateGameData(requestObj)
+            })
           }
         }
       }
