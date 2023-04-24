@@ -177,11 +177,13 @@ export default {
           this.initImg()
         }).catch(err =>{
           this.imgList = []
-          this.initImg()
+          this.imgIndex = 0
+          this.imgSpin = false
         })
       }else if(this.addressType.name ==='my'){
         this.imgList = this.myPapers
-        this.initImg()}
+        this.initImg()
+      }
       // else if(this.addressType.name === 'lively'){
       //   this.imgList = this.list
       //   this.initImg()

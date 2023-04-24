@@ -64,10 +64,11 @@
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="onSetup" v-if="options.type.includes('downDay')||options.type.includes('Wallpaper')">
-        <Icon class="icon" icon="shezhi1"></Icon>
-        设置
+      <div class="option" @click="item.fn()" v-for="item in formulaBar" >
+        <Icon class="icon" :icon="item.icon"></Icon>
+        {{item.title}}
       </div>
+
       <div class="option" @click="onGameSet" v-if="options.type.includes('games')">
         <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
@@ -89,20 +90,7 @@
       <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
         <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
       </a-select>
-      <div class="flex justify-center items-center mt-5">
-        <span @click="confirmCCData" class="bg-black bg-opacity-20 pointer p-2 confirm-active rounded-md">确认选择</span>
-      </div>
      </div>
-  </a-drawer>
-  <a-drawer :width="500"  v-model:visible="settingVisible" placement="right">
-    <template #title>
-     <div class="text-center">「{{options.title}}」设置</div>
-    </template>
-    <div class="text-base">壁纸源</div>
-    <a-select style="background: rgba(42, 42, 42, 1);border: 1px solid rgba(255, 255, 255, 0.1);"
-     class="w-full h-10 rounded-xl mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
-      @change="pickFilterChange($event)"  :options="wallpaperOptions">
-    </a-select>
   </a-drawer>
 </template>
 
@@ -111,7 +99,6 @@ import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
 import {steamStore} from "../../store/steam";
 import {message} from "ant-design-vue";
-import { sendRequest,compareTime } from "../../js/axios/api";
 import AidaGuide from './supervisory/AidaGuide.vue'
 
 export default {
@@ -122,16 +109,6 @@ export default {
       showTip:false,
       gameVisible:false,
       settingVisible:false,
-      pickFilterValue:'我的收藏',
-      wallpaperOptions: [
-        {value:'我的收藏',name:'my',path:''},
-        {value:'必应壁纸',name:'bing',path:'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'},
-        {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'picking'},
-        {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'picking'},
-        {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'picking'},
-        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'wallhaven'},
-        // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
-      ],
       region:[
         {
           id:'us',
@@ -194,6 +171,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    formulaBar:{
+      type:Array,
+      default:()=>[]
+    },
     editing: {
       type: Boolean,
       default: false
@@ -209,7 +190,7 @@ export default {
     customData:{
       type:Object,
       default:()=>{}
-    }
+    },
   },
 
   computed: {
@@ -223,7 +204,6 @@ export default {
 
   methods:{
     ...mapActions(cardStore, ["removeCustomComponents","updateCustomComponents"]),
-    ...mapActions(steamStore,["setGameData"]),
     showDrawer()  {
       this.visible = true;
     },
@@ -244,17 +224,7 @@ export default {
       this.visible = false
     },
     onSetup () {
-
       switch (this.options.title) {
-        case '倒数日':
-          this.$router.push({
-            name: 'addCardSetting',
-            params: {
-              name: 'countdownDay',
-              cname: '倒数日',
-            },
-          })
-          break;
         case '壁纸':
         this.settingVisible=true
           break;
@@ -288,7 +258,6 @@ export default {
       if (this.aidaData) {
         let textArea = document.getElementById('textArea')
         textArea.innerText = JSON.stringify(this.aidaData)
-        console.log(textArea)
         textArea.select()
         document.execCommand('copy')
         this.visible = false
@@ -301,30 +270,11 @@ export default {
     getRegion(e){
       this.defaultRegion = e
     },
-    pickFilterChange(e){
-      this.$emit('pickFilterChange',this.wallpaperOptions.find(i => i.value === e))
-    },
-    confirmCCData(){
-      this.visible = false
-      this.gameVisible = false
-      sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.defaultRegion}&l=${this.defaultRegion}`,3)
-      .then(res=>{
-        const date = Date.parse(res.headers.expires)
-        const resObj = {
-          cc:this.defaultRegion,
-          expiresDate:date,
-          list:res.data.specials.items
-        }
-        this.setGameData(resObj)
-      })
-    }
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.confirm-active:active{
-  filter: brightness(0.8);
-  background:rgba(42, 42, 42, 0.25);
-}
+
 </style>
