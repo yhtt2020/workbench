@@ -31,10 +31,17 @@ class TableManager {
   windows //分屏的窗体
   storage //临时存储
 
+static alive(){
+  return global.tableWin && !global.tableWin.window.isDestroyed()
+}
+
   async init (tableId) {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
-      console.log(tableWinSetting,'读入设置')
+      let showInTaskbar=settings.get('showInTaskBar')
+      if(showInTaskbar===undefined){
+        showInTaskbar=true
+      }
       global.tableWin = {}//因为启动需要时间，如果不先设置一个变量，容易导致重复启动。
       global.tableWin = await windowManager.create({
         name:'table',
@@ -46,7 +53,9 @@ class TableManager {
           minWidth: 800,
           minHeight: 480,
           frame: false,
-          backgroundColor: '#fff',
+          skipTaskbar:!showInTaskbar,
+          //transparent:true,
+          //backgroundColor: '#fff',
         },
         webPreferences: {
           webSecurity: false,
@@ -72,9 +81,11 @@ class TableManager {
       this.window = tableWin.window
       if (tableWinSetting) {
         this.window.setBounds(tableWinSetting.bounds)
-        if (tableWinSetting.isMaximized) {
-          this.window.maximize()
-        }
+        setTimeout(()=>{
+          if (tableWinSetting.isMaximized) {
+            this.window.maximize()
+          }
+        },1000)
       }
 
       //todo为他迁移数据
@@ -117,6 +128,27 @@ class TableManager {
       })
 
       tableWin.window.on('resized',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('enter-html-full-screen',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('leave-html-full-screen',()=>{
+        this.saveBounds()
+      })
+
+
+      tableWin.window.on('blur',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.webContents.on('content-bounds-updated',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('session-end',()=>{
         this.saveBounds()
       })
 
@@ -165,6 +197,13 @@ class TableManager {
 
 app.whenReady().then(() => {
   let transWin = null
+
+  settings.listen('showInTaskBar',(value)=>{
+    //监听showInTaskBar
+    if(TableManager.alive()){
+      global.tableWin.window.setSkipTaskbar(!value)
+    }
+  })
 
   ipc.on('transFile', async () => {
     if (transWin === null) {

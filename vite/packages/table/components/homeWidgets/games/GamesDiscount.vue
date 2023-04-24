@@ -1,10 +1,10 @@
 <template>
-  <HomeComponentSlot :options="options"  :customIndex="customIndex" :customData="customData">
+  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData">
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div class="w-full flex cursor-pointer" @click="enterDetail(item)"  v-for="item in randomList" style="height:65px; margin-bottom: 12px;">
-             <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;"> 
+           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
+             <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
               <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
               <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
@@ -12,15 +12,17 @@
               </span>
               <div class="flex w-full justify-between ">
                 <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 14px;font-weight: 500;">
-                 {{ currencyFormat(item.final_price,item.currency) }}    
+                 {{ currencyFormat(item.final_price,item.currency) }}
                 </span>
-                <div style="flex justify-end">
-                 <span class="rounded-md" style="background: rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
+
+              </div>
+               <div style="position: absolute;top:0;left:0;background-color: rgba(255, 77, 79,0.5);backdrop-filter: blur(8px);border-bottom-right-radius: 9px;">
+                 <span style=" padding: 3px 10px;font-size: 12px;">
                    -{{item.discount_percent}}%
                   </span>
-                </div>
-              </div>
+               </div>
              </div>
+
            </div>
           </div>
           <div class="bg-black change bg-opacity-10 flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
@@ -31,7 +33,7 @@
         </div>
       </template>
       <template v-if="gameShow === true">
-        <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;"></a-spin>
+        <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
         <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
@@ -46,7 +48,7 @@
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
             <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500; padding-right: 2.41em;">
-             {{ detailList.price_overview.final_formatted }}    
+             {{ detailList.price_overview.final_formatted }}
             </span>
             <div class="flex justify-end">
               <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
@@ -54,7 +56,7 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center justify-around"> 
+          <div class="flex items-center justify-around">
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
@@ -67,7 +69,7 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import {randomData,sendRequest,currencyFormat} from '../../../js/axios/api'
+import {randomData,sendRequest,currencyFormat,compareTime} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
 import { cardStore } from "../../../store/card";
@@ -80,6 +82,10 @@ export default {
     },
     customData:{
       type:Object,
+      default:()=>{}
+    },
+    confirmCCData:{
+      type:Function,
       default:()=>{}
     }
   },
@@ -103,34 +109,42 @@ export default {
     }
   },
   computed:{
-     ...mapWritableState(steamStore,["gameData"]),
+     ...mapWritableState(steamStore,["data","dataDetail"]),
      ...mapWritableState(cardStore,["customComponents"])
   },
-  mounted(){
-    // this.loadGameData()
+
+  created(){
     this.getRandomData()
-    
+  },
+
+  mounted(){
+    this.getRandomList()
   },
   methods:{
-    ...mapActions(steamStore,["setGameData","fetchDetail"]),
+    ...mapActions(steamStore,["setGameData","setGameDetail"]),
     currencyFormat,
     getRandomData(){
-      this.customComponents.forEach(el=>{
-        if(this.customIndex === el.id){
-          sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
-            // const arrId = this.customIndex
-            // this.setGameData({arrId, arr:res.data.specials.items})
-            this.list = res.data.specials.items
-            this.getRandomList()
-          })
+      if(this.data.length !== 0){
+        const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
+          return this.customData.id === el.cc
+        })
+        if(dataIndex){
+          const discountList = this.data[this.data.indexOf(dataIndex)]
+          console.log(discountList);
+          if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
+            this.list = discountList.list
+          }else{
+            // 超过时间就重新获取数据
+            this.confirmCCData()
+          }
         }
-      })
+      }
     },
     getRandomList(){
       const randomArr = randomData(this.list,4)
       this.randomList = randomArr
     },
-    
+
     // 点击切换
     discountChange(){
       this.reloadShow = true
@@ -147,7 +161,8 @@ export default {
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.detailList = resData.data
+            this.setGameDetail(resData)
+            this.detailList = this.dataDetail.data
           })
           this.$nextTick(()=>{
             this.isLoading = false
@@ -157,7 +172,7 @@ export default {
     },
      discountBack(){
       this.gameShow = false
-      window.localStorage.removeItem('detailData')
+      window.localStorage.removeItem('detail')
      },
      openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})

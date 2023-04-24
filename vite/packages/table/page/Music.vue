@@ -1,12 +1,11 @@
 <template>
-  <div style="padding: 1em;width: 100%">
-    <div class="music-player-wrapper" style="text-align: center;display: flex;align-items: center;height: calc(100vh - 11em );width: 100%">
+   <div class="music-player-wrapper s-bg m-3" style="text-align: center;display: flex;align-items: center;width:80%;height:95%;border-radius: 8px;margin: auto;margin-top: 1em">
       <a-row :gutter="[20]" style="width:100%">
         <a-col :span="showPrompt?12:24"  style="display: flex;align-items: center;justify-content: center">
           <div class="music-player" style="width: 400px;height: 410px;display: inline-block">
             <div class="pointer" @click="enterMusic" >
               <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
-                        style="margin: 16px;border: 3px solid #6b6b6b"></a-avatar>
+                        style="margin: 16px;border: 3px solid #6b6b6b">点击选歌播放</a-avatar>
             </div>
             <div style="font-size: 1.8em">{{ status.music.title }}</div>
             <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
@@ -51,7 +50,7 @@
         </a-col>
       </a-row>
     </div>
-  </div>
+
   <div @click="togglePrompt" style="position:fixed;right: 3em;top: 43vh;z-index: 99">
     <Icon icon="zimu" style="font-size: 4em"></Icon>
   </div>
@@ -260,7 +259,6 @@ export default {
 @media screen  and (max-height: 618px){
   .music-player-wrapper {
     zoom: 0.8;
-    margin-top: 1em;
   }
 }
 @media screen  and (min-height: 618px) and (max-height:800px){
@@ -272,7 +270,6 @@ export default {
 @media screen and (min-height: 801px) and (max-height:2800px) {
   .music-player-wrapper {
     zoom: 1.3;
-    margin-top:-6em;
   }
 }
 </style>

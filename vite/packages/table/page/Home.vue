@@ -27,7 +27,7 @@
     style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
     <vue-custom-scrollbar v-if="!hide" key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;width: 100%;height: 100%;">
-      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;margin-right: 1em" :style="{'padding-top':this.settings.marginTop+'px'}">
+      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;" :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -41,11 +41,11 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
-               class="grid home-widgets" ref="grid" >
+        <vuuri   :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
+               class="grid home-widgets" ref="grid" :options="muuriOptions" >
           <template #item="{ item }">
-            <div :style="{pointerEvents:(editing?'none':'')}" >
-            <component :is="item.name" :customIndex="item.id"
+            <div  :style="{pointerEvents:(editing?'none':'')}" >
+            <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
                        :customData="item.data"
                        :editing="editing" :runAida64="runAida64"></component>
             </div>
@@ -105,13 +105,16 @@
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
     <div class="line-title">
-      卡片容器设置：
+      卡片设置：
     </div>
     <div class="line">
       卡片缩放：<a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
     </div>
     <div class="line">
-      上边距：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
+      卡片空隙：(调大空隙可能变成瀑布流布局)<a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+    </div>
+    <div class="line">
+      距离顶部：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
     <div class="line-title">
       背景设置：
@@ -126,7 +129,7 @@
       遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0"   :step="0.1" />
     </div>
     <div class="line-title">
-      RGB
+      RGB<br>（此类功能性能消耗较高，请酌情开启）
     </div>
     <div class="line">
       边框跑马灯：<a-switch v-model:checked="appSettings.houserun"></a-switch>
@@ -178,52 +181,77 @@ import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
+import Muuri from 'muuri'
 const readAida64 = window.readAida64
-const initCards=[
+const initCards= [
   {
     "name": "GamesDiscount",
     "id": 1681304819425,
-    "_$muuri_id": "d955caa6-610e-430c-820b-08d5acd02bc3"
+    "_$muuri_id": "55c84b95-d86c-44af-b762-2670a0b46402",
+    "data": {
+      "Code": {
+        "id": 1682157435113,
+        "value": {
+          "id": "cn",
+          "name": "国区"
+        }
+      }
+    }
   },
   {
     "name": "weather",
     "id": 1681303795258,
-    "_$muuri_id": "321f0445-9dd5-4522-a62b-d49ae8709a7b"
+    "_$muuri_id": "3b0a3701-25e5-4324-b1b0-a25f7cc91d02",
+    "data": {}
   },
   {
     "name": "music",
     "id": 1681736564285,
-    "_$muuri_id": "021d5913-a222-4fef-9232-919167ae83a3"
+    "_$muuri_id": "64c17a09-b036-44b3-99b9-4c2c13e4ca3b",
+    "data": {}
   },
   {
     "name": "DiscountPercentage",
     "id": 1681479859424,
-    "_$muuri_id": "292bc32b-3192-405a-ba26-7017d3036455"
+    "_$muuri_id": "361290b7-f0f9-44d6-b213-39d0dfb34c97",
+    "data": {}
   },
   {
     "name": "timer",
     "id": 1681303805239,
-    "_$muuri_id": "72333f53-a4f2-4dc8-99de-6fee90747e4d"
+    "_$muuri_id": "f508d0b1-046f-46f1-b423-e39226b91256",
+    "data": {}
   },
   {
     "name": "fish",
     "id": 1681303797561,
-    "_$muuri_id": "9676d90f-798e-4c42-9579-b2dd9515c3a4"
+    "_$muuri_id": "6a6bf415-1491-4a70-bc45-c72877843a34",
+    "data": {}
   },
   {
     "name": "customTimer",
     "id": 1681303790200,
-    "_$muuri_id": "0afbf516-ea1f-48da-a085-da53d57cde41"
+    "_$muuri_id": "5084aec4-5597-40e3-9b71-8eda52328eb1",
+    "data": {}
   },
   {
     "name": "smallCountdownDay",
     "id": 1681303811893,
-    "_$muuri_id": "044bd2a8-a1a7-472c-b7c1-3577939e4484"
+    "_$muuri_id": "e7652694-bad4-4688-80ac-b8cb89111ae2",
+    "data": {}
   },
   {
     "name": "clock",
     "id": 1681303836730,
-    "_$muuri_id": "ac91b674-bb20-4f1f-9ff2-c9e6b6b44c0a"
+    "_$muuri_id": "799e50c0-9c51-46c5-9134-6d70a107d6bf",
+    "data": {}
+  },
+  {
+    "name": "middleWallpaper",
+    "id": 1682158281403,
+    "data": {
+    },
+    "_$muuri_id": "9eae01ee-7184-47f3-ad73-a62d90ba4630"
   }
 ]
 export default {
@@ -249,6 +277,20 @@ export default {
       reserveTimer:null,
       custom:false,
       runAida64:true,
+      muuriOptions:{
+        dragAutoScroll:{
+          targets: [{
+            element:'#scrollerBar>div'
+          }],
+          handle: null,
+          threshold: 50,
+          safeZone: 0.2,
+          speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+          sortDuringScroll: true,
+          smoothStop: false,
+          onStart: null,
+          onStop: null
+        }}
     }
   },
   components: {
@@ -287,6 +329,7 @@ export default {
       appSettings: 'settings',
     }),
   },
+
   mounted () {
     this.fixData()
     window.onresize = () => {
@@ -319,6 +362,13 @@ export default {
     }
   },
   methods: {
+    touch(event){
+      if(this.editing){
+        event.stopPropagation()
+      }else{
+
+      }
+    },
     runExec,
     ...mapActions(cardStore, ['setAidaData']),
     ...mapActions(appStore, ['setBackgroundImage']),
@@ -419,6 +469,13 @@ export default {
       },
       deep:true,
       immediate: true,
+    },
+    'settings.cardMargin':{
+      handler(newValue){
+        this.key=Date.now()
+        // //$('.muuri-item').css('margin',newValue+'px')
+        this.$refs.grid.update()
+      }
     }
   }
 }
@@ -467,7 +524,6 @@ export default {
   }
 
   .muuri-item {
-    margin: 6px;
   }
 
   .card {

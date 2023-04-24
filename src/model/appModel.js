@@ -150,7 +150,7 @@ const systemAppPackage = [
   'com.thisky.desk'
 ]  //包名为上述包名的判定为系统应用
 
-const defaultAuth= {
+const defaultAuth = {
   'base': {
     'webSecure': false,
     'node': false
@@ -159,17 +159,17 @@ const defaultAuth= {
   'ability': {}
 }
 
-const defaultOptimize={
-  autoRun:false,
-  keepRunning:false,
-  showInSideBar:false
+const defaultOptimize = {
+  autoRun: false,
+  keepRunning: false,
+  showInSideBar: false
 }
 const appModel = {
   authBaseList,
   authApiList,
   authAbilityList,
 
-  defaultOptimize:defaultOptimize,
+  defaultOptimize: defaultOptimize,
 
   async initDb () {
     settingModel = new SettingModel()
@@ -375,6 +375,14 @@ const appModel = {
       name: '轻聊',
       logo: 'https://up.apps.vip/logo/group.png?t=2',
       appid: 'qQ79Dw',
+      settings: JSON.stringify({
+        bounds: {
+          width: 920,
+          height: 720
+        },
+        autoRun: false,
+        showInSideBar: true
+      }),
     })
 
     await appModel.updateAppData({ name: '帮助教程' }, {
@@ -437,7 +445,7 @@ const appModel = {
       }),
       unread_count: 0,
     })
-    settingModel.remove('appSetting','com.thisky.appStore','bounds')
+    settingModel.remove('appSetting', 'com.thisky.appStore', 'bounds')
 
     await appModel.updateAppData({ package: 'com.thisky.com' }, {
       package: 'com.thisky.com',
@@ -459,7 +467,32 @@ const appModel = {
     await appModel.ensureAppsData()
 
   },
+  _testPin (target, find) {
+    if (!target) {
+      return false
+    }
 
+    function split (str) {
+      let arr = []
+      for (let i = 0; i < str.length; i++) {
+        arr.push(str.charAt(i))
+      }
+      return arr
+    }
+
+    find = find.toLowerCase()
+    let full = pinyin(target.toLowerCase(), { toneType: 'none', type: 'array' })
+    let first = pinyin(target.toLowerCase(), {
+      pattern: 'first',
+      toneType: 'none',
+      type: 'array'
+    })
+    let fullStr = full.join('')
+    let firstStr = first.join('')
+    if (isOrderMatch(fullStr, find) || isOrderMatch(firstStr, find)) {
+      return true
+    }
+  },
   /**
    *sqldb
    * @param word
@@ -468,68 +501,6 @@ const appModel = {
    */
   async find (word, option) {
     let result = await sqlDb.knex('app').orderBy(option.order, 'desc').select()
-    let searchResult = []
-
-    const { pinyin } = require('pinyin-pro')
-
-    function checkMatched (item) {
-      return searchResult.some(v => v.name === item.name)
-    }
-
-    function dealItem (item) {
-      if (item.hasOwnProperty('settings')) {
-        item.settings = JSON.parse(item.settings)
-      }
-    }
-
-    function matchChinese (str) {
-      let match = str.match(/[\u4e00-\u9fa5]/g)
-      if (match)
-        return match
-      else {
-        return []
-      }
-    }
-
-    function intelligentMatch (arr, word) {
-      if (word.length <= 1) return false
-      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false
-      let result = false
-      let stop = false
-      let wordArr = word.split('')
-
-      function recur (targetArrParam, wordArrParam, targetIndexParam, wordArrIndexParam) {
-        if (stop === false && wordArrParam.length <= targetArrParam.length && wordArrParam[wordArrIndexParam + 1]) {
-          if (targetArrParam[targetIndexParam + 1] === wordArrParam[wordArrIndexParam + 1]) {
-            result = true
-          } else {
-            result = false
-            stop = true
-          }
-          recur(targetArrParam, wordArrParam, targetIndexParam + 1, wordArrIndexParam + 1)
-        }
-      }
-
-      let arrIndex = 0
-      let wordArrIndex = 0
-      let needToRecur = false
-      for (let i = 0; i < arr.length; i++) {
-        if (needToRecur) break
-        for (let j = 0; j < wordArr.length; j++) {
-          if (needToRecur) break
-          if (wordArr[j] === arr[i] && arr[i + 1]) {
-            arrIndex = i
-            wordArrIndex = j
-            needToRecur = true
-          }
-        }
-      }
-
-      if (needToRecur) {
-        recur(arr, wordArr, arrIndex, wordArrIndex)
-      }
-      return result
-    }
 
     function isOrderMatch (target, find) {
       for (let i = 0; i < find.length; i++) {
@@ -547,35 +518,8 @@ const appModel = {
       return true
     }
 
-    function testPin (target, find) {
-      if (!target) {
-        return false
-      }
-
-      function split (str) {
-        let arr = []
-        for (let i = 0; i < str.length; i++) {
-          arr.push(str.charAt(i))
-        }
-        return arr
-      }
-
-      find = find.toLowerCase()
-      let full = pinyin(target.toLowerCase(), { toneType: 'none', type: 'array' })
-      let first = pinyin(target.toLowerCase(), {
-        pattern: 'first',
-        toneType: 'none',
-        type: 'array'
-      })
-      let fullStr = full.join('')
-      let firstStr = first.join('')
-      if (isOrderMatch(fullStr, find) || isOrderMatch(firstStr, find)) {
-        return true
-      }
-    }
-
     let matchedApps = result.filter(testApp => {
-      if (testPin(testApp.name, word) || testPin(testApp.summary, word) || testPin(testApp.url, word) || isOrderMatch(testApp.name, word) || isOrderMatch(testApp.summary, word)) {
+      if (this._testPin(testApp.name, word) || this._testPin(testApp.summary, word) || this._testPin(testApp.url, word) || isOrderMatch(testApp.name, word) || isOrderMatch(testApp.summary, word)) {
         return true
       }
     })
@@ -585,82 +529,6 @@ const appModel = {
 
     return matchedApps
 
-    //
-    // result.forEach(item => {
-    //   try{
-    //     let haveChinese=matchChinese(item.name) || matchChinese(item.summary)
-    //     if (haveChinese) {
-    //       let quanPinName = pinyin(matchChinese(item.name).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
-    //       let firstPinName = pinyin(matchChinese(item.name).join(''), {
-    //         pattern: 'first',
-    //         toneType: 'none',
-    //         type: 'array'
-    //       })   // 获取数组形式不带音调拼音首字母
-    //
-    //
-    //       console.log('quanPinName',quanPinName)
-    //       console.log('firstPinName',firstPinName)
-    //       let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
-    //       let firstPinSummary = pinyin(matchChinese(item.summary).join(''), {
-    //         pattern: 'first',
-    //         toneType: 'none',
-    //         type: 'array'
-    //       })
-    //       console.log('quanPinSummary',quanPinSummary)
-    //       console.log('firstPinSummary',firstPinSummary)
-    //       if ((item.name.toLowerCase().includes(word) || item.summary.includes(word) || tools.execDomain(item.url).toLowerCase().includes(word)) && !checkMatched(item)) {
-    //         dealItem(item)
-    //         console.log('匹配1')
-    //         searchResult.push(item)
-    //       }
-    //
-    //       quanPinName.forEach((v, index) => {
-    //         if (v === word && !checkMatched(item)) {
-    //           console.log('匹配2')
-    //           dealItem(item)
-    //           searchResult.push(item)
-    //         } else if (quanPinName.join('') === word && !checkMatched(item)) {
-    //           console.log('匹配3')
-    //           dealItem(item)
-    //           searchResult.push(item)
-    //         } else if (index <= quanPinName.length - 2 && word.includes(v.concat(quanPinName[index + 1])) && !checkMatched(item)) {
-    //           console.log('匹配4')
-    //           dealItem(item)
-    //           searchResult.push(item)
-    //         }
-    //       })
-    //       if (intelligentMatch(firstPinName, word) && !checkMatched(item)) {
-    //         console.log('匹配5')
-    //         dealItem(item)
-    //         searchResult.push(item)
-    //       }
-    //
-    //       quanPinSummary.forEach((v, index) => {
-    //         if (v === word && !checkMatched(item)) {
-    //           dealItem(item)
-    //           searchResult.push(item)
-    //         } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
-    //           dealItem(item)
-    //           searchResult.push(item)
-    //         } else if (index <= quanPinSummary.length - 2 && word.includes(v.concat(quanPinSummary[index + 1])) && !checkMatched(item)) {
-    //           dealItem(item)
-    //           searchResult.push(item)
-    //         }
-    //       })
-    //       if (intelligentMatch(firstPinSummary, word) && !checkMatched(item)) {
-    //         dealItem(item)
-    //         searchResult.push(item)
-    //       }
-    //     }
-    //   }catch (e) {
-    //     console.warn(e)
-    //     console.warn(item)
-    //   }
-    //
-    //
-    // })
-    //
-    // return result.filter(v => v.name.includes(word) === true) || searchResult
   },
   /**
    * sqldb
@@ -784,7 +652,7 @@ const appModel = {
       // circleMessage: app.circleMessage ? app.circleMessage : '',
       preload: app.preload || '',
       package: app.package || '',
-      theme_color: app.theme_color ||  '#4A90E2',//theme_color不存在的时候默认给一个相对好看的蓝色
+      theme_color: app.theme_color || '#4A90E2',//theme_color不存在的时候默认给一个相对好看的蓝色
       user_theme_color: '',
       attribute: JSON.stringify({
         isOffical: app.isOfficial,
@@ -812,8 +680,8 @@ const appModel = {
     }
     let hasInstalled = false
     if (app.package) {
-      if(app.is_debug){
-        app.package='d.'+app.package //调试应用包名额外加d.
+      if (app.is_debug) {
+        app.package = 'd.' + app.package //调试应用包名额外加d.
       }
       hasInstalled = await appModel.isInstalled(app.package)
       if (hasInstalled) {
@@ -851,31 +719,31 @@ const appModel = {
     }
     app.is_new = app.is_new === 1
     app.settings = app.settings ? JSON.parse(app.settings) : {}
-    try{
+    try {
       if (typeof app.window === 'string') {
         app.window = JSON.parse(app.window)
       }
-    }catch (e) {
-      console.warn(app.alias+'的window参数损坏')
+    } catch (e) {
+      console.warn(app.alias + '的window参数损坏')
       await appModel.update(app.nanoid, { window: defaultWindow })
-      app.window=defaultWindow
+      app.window = defaultWindow
     }
-    if(app.theme_color==='#ccc'){
-      app.theme_color=`#4A90E2` //修正一下灰色主题色的颜色
+    if (app.theme_color === '#ccc') {
+      app.theme_color = `#4A90E2` //修正一下灰色主题色的颜色
       await appModel.update(app.nanoid, { theme_color: `#4A90E2` })
     }
 
-    if(app.logo.startsWith('../../')){
+    if (app.logo.startsWith('../../')) {
       //证明还存在脏数据，进行修正替换
-      const replaceMap={
-        '../../pages/import/img/logo.svg':'https://up.apps.vip/logo/logo.svg',//导入助手
-        '../../icons/apps/help.png':'https://up.apps.vip/logo/help.png',//帮助
-        '../../icons/apps/wechatfile.png':'https://up.apps.vip/yyscIcon/wechatfile.png',//文件小助手
-        '../../icons/svg/apps.svg':'https://a.apps.vip/icons/default.png'
+      const replaceMap = {
+        '../../pages/import/img/logo.svg': 'https://up.apps.vip/logo/logo.svg',//导入助手
+        '../../icons/apps/help.png': 'https://up.apps.vip/logo/help.png',//帮助
+        '../../icons/apps/wechatfile.png': 'https://up.apps.vip/yyscIcon/wechatfile.png',//文件小助手
+        '../../icons/svg/apps.svg': 'https://a.apps.vip/icons/default.png'
       }
       for (const key of Object.keys(replaceMap)) {
-        if(app.logo===key){
-          await appModel.update(app.nanoid,{logo:replaceMap[key]})
+        if (app.logo === key) {
+          await appModel.update(app.nanoid, { logo: replaceMap[key] })
         }
       }
     }
@@ -955,31 +823,31 @@ const appModel = {
   /*
   获取到默认的用户配置，可作为充值方法，如果取不到默认的值，则返回一个默认值
    */
-  async getDefaultUserSetting(id){
+  async getDefaultUserSetting (id) {
     //let app=await this.get({nanoid:id})此方法会导致循环嵌套，内存泄漏
-    let app=await sqlDb.knex('app').where({nanoid:id}).first()
-    let defaultSetting={
+    let app = await sqlDb.knex('app').where({ nanoid: id }).first()
+    let defaultSetting = {
       auth: app.auth || defaultAuth,
-      window:app.window || defaultWindow,
-      optimize:app.optimize || {
-        autoRun:false,
-        keepRunning:false,
-        showInSideBar:false
+      window: app.window || defaultWindow,
+      optimize: app.optimize || {
+        autoRun: false,
+        keepRunning: false,
+        showInSideBar: false
       }
     }
-   return  defaultSetting
+    return defaultSetting
   },
   /**
    * 读取用户设置，如果用户未进行设置，则初始化
    * @param app
    * @returns {Promise<*>}
    */
-  async getUserSetting(app){
-    let userSetting= await settingModel.get('appSetting', appModel.getName(app),'common')
-    if (!userSetting || userSetting.auth===null) {
+  async getUserSetting (app) {
+    let userSetting = await settingModel.get('appSetting', appModel.getName(app), 'common')
+    if (!userSetting || userSetting.auth === null) {
       //初始化用户设置的值
-      userSetting=await appModel.getDefaultUserSetting(app.nanoid)
-      app.userSettings =userSetting
+      userSetting = await appModel.getDefaultUserSetting(app.nanoid)
+      app.userSettings = userSetting
       await settingModel.set('appSetting', appModel.getName(app), 'common', app.userSettings)
     }
     return userSetting
@@ -1116,7 +984,7 @@ const appModel = {
             width: 920,
             height: 720
           },
-          autoRun: true,
+          autoRun: false,
           showInSideBar: true
         }),
         is_new: true,
@@ -1354,7 +1222,8 @@ const appModel = {
    * @returns {Promise<*>}
    */
   async countApps () {
-    return await sqlDb.knex('app').count()
+    let rs=await sqlDb.knex('app').count({count:'nanoid'})
+    return rs[0].count
   },
   /**
    * sqldb
@@ -1372,14 +1241,14 @@ const appModel = {
     return assigned
   },
 
-  async addFav(nanoid){
-    return appModel.update(nanoid,{
-      is_fav:true
+  async addFav (nanoid) {
+    return appModel.update(nanoid, {
+      is_fav: true
     })
   },
-  async removeFav(nanoid){
-    return appModel.update(nanoid,{
-      is_fav:false
+  async removeFav (nanoid) {
+    return appModel.update(nanoid, {
+      is_fav: false
     })
   }
 }

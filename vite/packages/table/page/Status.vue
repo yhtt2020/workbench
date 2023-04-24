@@ -2,11 +2,11 @@
   <div v-if="loaded">
     <vue-custom-scrollbar :settings="scrollbarSettings"
                           style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
-      <div style="width: auto;    white-space: nowrap;">
+      <div style="width: auto;   ">
         <div style="display: inline-block;vertical-align: top">
-          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
+          <div  style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
             <h3>音量</h3>
-            <a-row>
+            <a-row >
               <a-col :span="3">
                 <div style="cursor: pointer" v-if="!muted" @click="setMuted">
                   <Icon icon="yinliang" style="font-size: 3em"></Icon>
@@ -15,8 +15,8 @@
                   <Icon icon="jingyin" style="font-size: 3em"></Icon>
                 </div>
               </a-col>
-              <a-col id="scroller"  :span="21">
-                <a-slider @after-change="setVol" v-model:value="vol"></a-slider>
+              <a-col  id="scroller"  :span="21">
+                <a-slider @touchstart.stop="()=>{log('1')}" @touchmove.stop="()=>{log('2')}" @touchend.stop="()=>{log('3')}" @after-change="setVol" v-model:value="vol"></a-slider>
               </a-col>
             </a-row>
             <div>
@@ -101,15 +101,21 @@ export default {
       audioList: [],
       micList: [],
       scrollbarSettings: {
-        useBothWheelAxes: true,
+        useBothWheelAxes: false,
+        minScrollbarLength:30,
         swipeEasing: true,
-        suppressScrollY: true,
-        suppressScrollX: false,
+        suppressScrollY: false,
+        suppressScrollX: true,
         wheelPropagation: true
       },
     }
   },
   async mounted () {
+
+    // $('#scroller').on('touchstart',()=>{
+    //
+    // })
+
   //   console.log(this.$refs)
   // setTimeout(()=>{
   //   $('scroller').on('mousedown',(e)=>{
@@ -193,6 +199,9 @@ export default {
     clearInterval(this.timer)
   },
   methods: {
+    log(info){
+      console.log(info)
+    },
     async getSpeakerList () {
       listOutputs().then((devices) => {
         let list = []

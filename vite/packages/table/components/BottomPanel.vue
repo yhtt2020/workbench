@@ -105,7 +105,16 @@
     <div style="border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px" class="flex justify-center items-center  h-2/3 pointer">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
+
   </div>
+    <div @click="toggleTeam" class="common-panel s-bg pointer " style="margin-left: 0;padding:0.5em;min-width: 6em;">
+
+      <Icon icon="smile"   style="margin:0.3em;fill:#d7d7d7"></Icon>
+      <div class="mb-2">  小队 <div v-if="!team.status" style="display: inline-block;position: relative"> <span class="flex h-3 w-3">
+  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+  <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+</span></div></div>
+    </div>
     <!--    <div style="display: inline-block">-->
     <!--      <a-row :gutter="10">-->
     <!--        <a-col :span="2">-->
@@ -194,11 +203,11 @@
       <EditNavigation @setQuick="setQuick"></EditNavigation>
     </div>
   </transition>
-  <transition name="fade">
+
     <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
       <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
     </div>
-  </transition>
+    <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
 
 <script>
@@ -216,15 +225,21 @@ const { messageModel }=window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from "./ScrolX.vue";
+
+import TeamTip from "./TeamTip.vue";
+import { teamStore } from '../store/team'
 export default {
   name: 'BottomPanel',
-  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX,GradeSmallTip},
+  components: {TeamTip, SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX,GradeSmallTip},
   data () {
     return {
 
       lastTime:0,
       visibleTrans: false,
       full: false,
+      //显示小组提示
+      showTeamTip:false,
+      teamKey:Date.now(),
 
       timer:null,
       messages:[],
@@ -270,11 +285,10 @@ export default {
     setInterval( ()=>{
       this.loadMessages()
     },10000)
-
-
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo','settings','lvInfo']),
+    ...mapWritableState(teamStore,['team','teamVisible']),
     ...mapWritableState(cardStore, ['navigationList','routeParams'])
   },
   watch: {
@@ -296,6 +310,15 @@ export default {
     }
   },
   methods: {
+    toggleTeam(){
+      if(this.team.status===false){
+        this.teamKey=Date.now()
+        this.showTeamTip=true
+      }else{
+        this.teamVisible=!this.teamVisible
+      }
+
+    },
     closeDrawer(){
       this.menuVisible=false
     },

@@ -11,17 +11,7 @@ const verifyUrl = server + '/app/verifyCode'
 const createUrl = server + '/app/createCodes'
 const exchangeUrl = server + '/app/exchangeCode'
 const listUrl = server + '/app/listCodes'
-const getConfig = async () => {
-  let token;
-  const res = await window.tsbApi.user.get()
-  token = res.data.token
-
-  return {
-    headers: {
-      'Authorization': token
-    }
-  }
-}
+import {getConfig} from "../js/axios/serverApi";
 // @ts-ignore
 export const codeStore = defineStore('code', {
   state: () => ({
@@ -97,7 +87,7 @@ export const codeStore = defineStore('code', {
       let rs = await axios.post(verifyUrl,data)
       if (rs.code !== 1000) {
         // this.myCode = ''
-        console.warn('返回失败', rs.code)
+        console.warn('返回失败', rs)
         if(rs.code==='ENOTFOUND'){
           throw 'neterror'
         }

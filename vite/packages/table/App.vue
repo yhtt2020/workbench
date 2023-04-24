@@ -134,6 +134,12 @@ export default {
         ipc.send('getAppRunningInfo', {nanoid: app})
       }
     })
+
+    ipc.on('updateRunningTableApps',async (event,args)=>{
+      this.runningTableApps=args.apps
+      console.log(args.apps)
+    })
+
     ipc.on('updateRunningInfo', (event, args) => {
       let app = this.runningAppsInfo[args.nanoid]
       app.capture = args.info.capture + '?t=' + Date.now()
@@ -147,7 +153,6 @@ export default {
     window.updateMusicStatusHandler = this.updateMusic;
 
     this.bindTouchEvents();
-    this.reloadAll(); //刷新全部天气
     //this.$router.push({name:'sensor'})
   },
 
@@ -155,11 +160,10 @@ export default {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo']),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
-    ...mapActions(weatherStore, ['reloadAll']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     bindTouchEvents() {
@@ -185,10 +189,11 @@ export default {
             e.preventDefault();
           }
         } else if (Y < -distY) {
-          if (this.touchUpRoutes.indexOf(this.$route.name) > -1) {
-            this.$router.push({name: 'status'})
-            e.preventDefault();
-          }
+          //取消上滑手势
+          // if (this.touchUpRoutes.indexOf(this.$route.name) > -1) {
+          //   this.$router.push({name: 'status'})
+          //   e.preventDefault();
+          // }
           //e.preventDefault();
         } else {
           console.log("just touch");

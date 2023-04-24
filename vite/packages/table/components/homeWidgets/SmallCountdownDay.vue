@@ -4,7 +4,7 @@
     class="content"
     v-if="myCountdownDay.length <= 0"
   >
-    <div style="text-align: center; ">暂无倒数日</div>
+    <div style="text-align: center; ">暂无纪念日</div>
     <a-empty :description="null" :image="simpleImage" style="margin: 15px;" />
     <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
   </div>
@@ -39,7 +39,7 @@
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
-      <div class="text-center">「壁纸」设置</div>
+      <div class="text-center">纪念日设置</div>
     </template>
     <div>
       <div>事件名称</div>

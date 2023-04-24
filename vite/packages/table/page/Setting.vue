@@ -24,24 +24,24 @@
                 <GradeSmallTip powerType="closeChat"></GradeSmallTip>
               </div>
             </a-col>
-            <a-col :span="12">
-              <div class="btn">
-                免打扰模式<br>
-                <a-switch></a-switch>
-              </div>
-            </a-col>
-            <a-col :span="12">
-              <div class="btn">
-                浅色模式<br>
-                <a-switch></a-switch>
-              </div>
-            </a-col>
-            <a-col :span="12">
-              <div class="btn">
-                静音<br>
-                <a-switch></a-switch>
-              </div>
-            </a-col>
+<!--            <a-col :span="12">-->
+<!--              <div class="btn">-->
+<!--                免打扰模式<br>-->
+<!--                <a-switch></a-switch>-->
+<!--              </div>-->
+<!--            </a-col>-->
+<!--            <a-col :span="12">-->
+<!--              <div class="btn">-->
+<!--                浅色模式<br>-->
+<!--                <a-switch></a-switch>-->
+<!--              </div>-->
+<!--            </a-col>-->
+<!--            <a-col :span="12">-->
+<!--              <div class="btn">-->
+<!--                静音<br>-->
+<!--                <a-switch></a-switch>-->
+<!--              </div>-->
+<!--            </a-col>-->
           </a-row>
           <div>
           </div>
@@ -102,7 +102,7 @@
               <a-col :span="6">
                 <div @click="papersSettings" class="btn">
                   <Icon icon="banner" style="font-size: 2em"></Icon>
-                  <div> 锁屏壁纸</div>
+                  <div> 壁纸</div>
                 </div>
               </a-col>
               <a-col :span="6">
@@ -111,12 +111,12 @@
                   <div> 基础设置</div>
                 </div>
               </a-col>
-<!--              <a-col :span="6">-->
-<!--                <div @click="verifyCode" class="btn">-->
-<!--                  <Icon icon="shezhi" style="font-size: 2em"></Icon>-->
-<!--                  <div> 验证激活码</div>-->
-<!--                </div>-->
-<!--              </a-col>-->
+              <a-col :span="6">
+                <div @click="verifyCode" class="btn">
+                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                  <div> 验证激活码</div>
+                </div>
+              </a-col>
               <a-col v-if="userInfo && userInfo.uid===4" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
@@ -188,12 +188,7 @@ export default {
   methods: {
     ...mapActions(codeStore, ['verify', 'create']),
     async verifyCode () {
-      let rs=await  this.verify(this.userInfo.uid)
-      if (rs) {
-        message.success('激活码有效')
-      } else {
-        message.error('激活码无效')
-      }
+      this.$router.push({name:'splash'})
     },
     async createCodes () {
       this.create().then(rs=>{

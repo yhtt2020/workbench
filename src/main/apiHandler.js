@@ -53,6 +53,7 @@ class ApiHandler {
       event.returnValue=settings.get(args.key)
     })
     ApiHandler.on('settings','set',(event,args,instance)=>{
+      console.log('set ',args.key,args.value)
       event.returnValue=settings.set(args.key,args.value)
     })
 

@@ -4,6 +4,7 @@ export const ItemKey = {
 }
 
 export const ItemSize = {
+  margin:'6px'
 
 }
 

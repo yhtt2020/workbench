@@ -13,11 +13,13 @@
         <!--主题区域，自动滚动条        -->
           <router-view></router-view>
       </div>
-      <div>
-
+      <Transition name="bounce">
+      <div v-if="teamVisible && !fullScreen" class="h-100 " style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;z-index:120" >
+           <TeamPanel ></TeamPanel>
       </div>
+      </Transition>
     </div>
-    <div style="height: auto;flex: 0">
+    <div  style="flex: 0;">
       <BottomPanel v-if="!fullScreen"></BottomPanel>
     </div>
   </div>
@@ -29,17 +31,20 @@ import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
 import { mapWritableState } from 'pinia'
 import { appStore } from '../store'
+import TeamPanel from "../components/TeamPanel.vue";
+import { teamStore } from '../store/team'
 
 export default {
   name: 'Main',
-  components: { BottomPanel, TopPanel, SidePanel },
+  components: {TeamPanel, BottomPanel, TopPanel, SidePanel },
   mounted () {
     this.$router.afterEach((to, from) => {
       this.routeUpdateTime = Date.now()
     })
   },
   computed: {
-    ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init'])
+    ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
+    ...mapWritableState(teamStore,['teamVisible'])
   },
   data () {
     return {
@@ -55,6 +60,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0) ;
+  }
+  50% {
+    transform: scale(1.25) ;
+  }
+  100% {
+    transform: scale(1) ;
+  }
+}
 
 </style>

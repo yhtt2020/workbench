@@ -16,6 +16,9 @@ export const appStore = defineStore('appStore', {
       myCircle: [],
       joinedCircle: []
     },
+
+
+
     agreeTest:false,
 
     init: false, //是否已经初始化
@@ -23,6 +26,7 @@ export const appStore = defineStore('appStore', {
     fullScreen: false, //是否是全屏模式
 
     settings: {
+
       down:{
         enable:false,
         count:100,

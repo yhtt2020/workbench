@@ -1,5 +1,5 @@
 <template>
-  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;" class="no-drag"
+  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333" class="no-drag"
        v-if="launching">
     <div style="margin: auto;">
       <div class="animate-bounce mb-5 ">
@@ -22,7 +22,7 @@
   <div v-else style="background: #333;width: 100vw;height: 100vw;" class="p-10 drag">
     <div class="no-drag" style="width: 600px;margin: auto">
       <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台抢鲜体验</h3>
-      <p>目前我们尚未完全面向大众开放，必须使用邀请码方可体验产品。
+      <p>目前我们仍处于早期阶段，必须使用邀请码方可体验产品。
         <a-button @click="()=>{this.showTip=!this.showTip}">什么是抢鲜体验？</a-button>
       </p>
       <div v-if="showTip" class="p-5 mb-3" style="background: #3b3b3b;border-radius: 8px;border-width: 2px">
@@ -37,7 +37,7 @@
         您可通过以下多种途径获得邀请码：
       </p>
       <p>
-        1.参与各类产品活动，例如在产品群内等待发码，我们将不定期在产品群发码。
+        1.我们将不定期在产品群发码。
       </p>
       <p>
         2.通过老用户邀请，每一位老用户均可通过在线使用时长兑换邀请码。
@@ -62,9 +62,9 @@
           </a-row>
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
-          <div class="mt-3 mb-3">请输入激活码激活账号。</div>
-          <p v-if="myCode">检测到您已使用过激活码：{{ myCode }}，可直接填入发车
-            <a-button @click="code=myCode" class="ml-3">填入</a-button>
+          <div v-if="!myCode" class="mt-3 mb-3">请输入激活码激活账号。</div>
+          <p v-if="myCode" class="mt-2">检测到您已使用过激活码：<span style="user-select: text;font-weight: bold">{{ myCode }}</span>，可直接填入发车。如遇已激活但无法验证的情况，请确认网络（如梯子），并退出重试，若多次重试仍不可验证，请更新版本，联系QQ<span style="user-select: text;font-weight: bold">276905621</span>，重新领码。
+            <a-button type="primary" @click="code=myCode" size="small" class="ml-3">填入</a-button> 当前版本：<span style="user-select: text;font-weight: bold">{{version}}</span>
           </p>
           <p>
             <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>
@@ -73,9 +73,12 @@
 
       </div>
 
-      <a-button :loading="loading" @click="checkCode" :disabled="code===''" block type="primary" size="large">
-        Go ! 发车
-      </a-button>
+      <div class="flex">
+        <a-button class="m-3" :loading="loading" @click="checkCode" :disabled="code===''" block type="primary" size="large">
+          激活 ! 发车
+        </a-button> <a-button size="large" class="m-3" v-if="myCode" @click="verifyAgain">验证</a-button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -102,6 +105,7 @@ export default {
       launched: false,
       modal: null,
       timeoutHandler:null,
+      version:tsbApi.runtime.appVersion
     }
   },
   async mounted () {
@@ -170,13 +174,14 @@ export default {
     bindUserInfoResponse(){
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
-        console.log('获取到userInfo，并进行数据填充和提示')
+        console.log('获取到userInfo，并进行数据填充和提示',args)
         this.tipped = false
         this.loading = false
         if (args.data.uid <= 0) {
           window.loadedStore['userInfo'] = true
           return
         }
+
         const userInfo = args.data
 
         let lvInfo = this.lvInfo
@@ -204,6 +209,25 @@ export default {
         }
         this.setUser(userInfo)
       })
+    },
+    async verifyAgain () {
+      if (!this.userInfo) {
+        message.info('请登录后重试')
+        return
+      } else {
+        let rs=await this.verify(this.userInfo.uid)
+        if (rs) {
+          message.success('欢迎回来')
+          this.$router.replace({ name:'home' })
+        } else {
+          Modal.error({
+            content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+            centered: true,
+            onOk: () => {}
+          })
+        }
+
+      }
     },
     initStore (store, name) {
       if (!window.loadedStore) {
@@ -237,6 +261,7 @@ export default {
         //只要提供了uid，就能基于uid验证
         if (!rs) {
           console.log('验证码无效')
+         // this.enter()
           this.launching = false
           return
         } else {
@@ -252,6 +277,8 @@ export default {
             window.location.reload()
           }
         })
+      }).finally(()=>{
+        this.launching = false
       })
 
     },
@@ -270,7 +297,7 @@ export default {
       this.active(this.code, hash, this.userInfo.uid).then(rs => {
         this.loading = false
         if (rs.code !== 1000) {
-          message.error('激活码无效，请重试')
+          message.error('邀请码验证不通过或已被绑定（请点击验证），请检查网络（代理）或退出后重试。')
           return
         } else {
           this.myCode = this.code

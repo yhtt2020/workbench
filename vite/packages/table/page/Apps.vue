@@ -22,7 +22,7 @@
                             style="position:relative;height:100%;  border-radius: 8px;">
         <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center">
           <div style="margin-bottom: 1em;font-size: 1.5em">
-            共 {{ storeApps.length }} 应用
+           <div @click="becomeDeveloper" class="pointer" style="float:left;font-size: 0.8em;"><notification-outlined /> 入驻成为开发者</div> 共 {{ storeApps.length }} 应用  <div class="pointer" @click="openDir" style="font-size: 0.8em;float: right"><FolderOpenOutlined/> 下载目录</div>
           </div>
           <a-row :gutter="[30,20]">
           <template v-for="app in storeApps">
@@ -54,7 +54,7 @@
                       </svg>
                       <span >{{app.percent}} %</span>
                     </template>
-                    <template v-if="app.installing">
+                    <template v-else-if="app.installing">
                       <svg style="vertical-align: text-bottom;"  class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -95,10 +95,11 @@ import { appsStore } from '../store/apps'
 import { message } from 'ant-design-vue'
 import {runExec} from '../js/common/exec'
 import Template from '../../user/pages/Template.vue'
+import {NotificationOutlined,FolderOpenOutlined} from '@ant-design/icons-vue'
 let { fs }=window.$models
 export default {
   name: 'Apps',
-  components: { Template, MyApps, QingApps, SecondPanel },
+  components: { Template, MyApps, QingApps, SecondPanel,NotificationOutlined,FolderOpenOutlined  },
   computed: {
     ...mapWritableState(appStore, ['appData']),
     ...mapWritableState(appsStore, ['myApps'])
@@ -236,8 +237,9 @@ export default {
           name: 'AIDA64',
           summary: '一款商业级计算机硬件状态监控软件。',
           needInstall: true,
+          silent:false,//静默安装
           installPath:'C:\\Program Files (x86)\\FinalWire\\AIDA64 Extreme\\aida64.exe',
-          downloadUrl:"https://a.apps.vip/download/aida64.exe",
+          downloadUrl:"https://a.apps.vip/download/aida64extreme685.exe",
           data: {
             security: true
           }
@@ -249,6 +251,18 @@ export default {
           needInstall: true,
           installPath:'C:\\Program Files (x86)\\RivaTuner Statistics Server\\RTSS.exe',
           downloadUrl:"https://a.apps.vip/download/rtss.exe",
+          data: {
+            security: true
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/download/dsf.svg',
+          name: 'DisplayFusion',
+          summary: '解决游戏触摸最小化问题。一款用来提升副屏体验的商业软件。',
+          needInstall: true,
+          silent:false,//非静默安装
+          installPath:'C:\\Program Files\\DisplayFusion\\DisplayFusion.exe',
+          downloadUrl:"https://a.apps.vip/download/DisplayFusionSetup-10.0.exe",
           data: {
             security: true
           }
@@ -362,21 +376,47 @@ export default {
     executeLocalApp(app){
       runExec('"'+app.installPath+'"')
     },
-    installS(app,path){
+    /**
+     * 安装，区分静默与否
+     * @param app
+     * @param path
+     */
+    setup(app,path,silent=true){
       message.success({content: '正在为您安装',key:'install' })
       app.installing=true
-      runExec('start /wait '+path+ ' /S',require('path').dirname(path)).then(rs=>{
-        message.success({content:'安装成功，并为您运行此软件',key:'install'})
-        this.executeLocalApp(app)
-        app.installed=true
-      },(rs)=>{
-        message.error({content: '安装失败',key:'install' })
-      }).catch((err)=>{
-        message.error({content: '安装错误',key:'install' })
-      }).finally(()=>{
-        app.installing=false
-      })
+      if(silent){
+        runExec('start /wait '+path+ ' /S',require('path').dirname(path)).then(rs=>{
+          message.success({content:'安装成功，并为您运行此软件',key:'install'})
+          this.executeLocalApp(app)
+          app.installed=true
+        },(rs)=>{
+          message.error({content: '安装失败',key:'install' })
+        }).catch((err)=>{
+          message.error({content: '安装错误',key:'install' })
+        }).finally(()=>{
+          app.installing=false
+        })
+      }else{
+        runExec('start /wait '+path,require('path').dirname(path)).then(rs=>{
+          message.success({content:'安装成功，并为您运行此软件',key:'install'})
+          this.executeLocalApp(app)
+          app.installed=true
+        },(rs)=>{
+          message.error({content: '安装失败',key:'install' })
+        }).catch((err)=>{
+          message.error({content: '安装错误',key:'install' })
+        }).finally(()=>{
+          app.installing=false
+        })
+      }
 
+
+    },
+    becomeDeveloper(){
+      ipc.send('addTab',{url:'https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug'})
+    },
+    openDir(){
+      require('electron').shell.openPath(require('path').join(window.globalArgs['user-data-dir'],'download'))
     },
     install(app){
       if(app.downloading){
@@ -389,7 +429,7 @@ export default {
       let basePath=require('path').join(downloadDir,require('path').basename(new URL(app.downloadUrl).pathname))
       if(fs.existsSync(basePath)){
         app.downloading=false
-        this.installS(app,basePath)
+        this.setup(app,basePath)
         return
       }
 
@@ -409,7 +449,7 @@ export default {
           app.downloading=false
           app.percent = 100
           app.done = 1
-          this.installS(app,basePath)
+          this.setup(app,basePath)
         },
         willDownload: (args) => {
         }

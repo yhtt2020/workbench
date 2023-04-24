@@ -1,9 +1,17 @@
 <template>
   <div class="top-title drag">
-    <div class="left-title pointer no-drag" @click="onBack">
-    <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
-    <span>返回</span>
-    </div>
+    <a-row  :gutter="20">
+      <a-col>
+        <div class="left-title pointer no-drag" @click="onBack">
+          <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
+          <span>返回</span>
+        </div>
+      </a-col>
+      <a-col style="font-size: 1.2em;line-height: 2.5em">
+        共 {{count}} 种卡片
+      </a-col>
+    </a-row>
+
     <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索"  style="height: 100%;
    width: 400px;border-radius: 12px;background: rgba(42, 42, 42, 0.6);">
       <template #prefix>
@@ -29,17 +37,17 @@ export default {
   data() {
     return {
       cardList: [
-        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" ,images:['customTimer']},
-        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" ,images:['countdownDay','smallCountdownDay']},
-        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟",images:['clock'] },
+        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" ,images:['customTimer'],size:['1x2']},
+        { name: "countdownDay", cname: "纪念日", icon: "rili2",detail:"设置你的纪念日、考试日等等，支持正/倒数" ,images:['countdownDay','smallCountdownDay'],size:['1x1']},
+        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟",images:['clock'],size:['1x1'] },
         { name: "supervisory", cname: "性能", icon: "xingneng",detail:'监控系统状态，查看游戏帧数',images:['CPULineChart','CPUFourCard','SmallCPUCard','SmallGPUCard']},
-        { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'] },
-        { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
-        { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
-        { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
+        { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'],size:['1x1'] },
+        { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] ,size:['1x1']},
+        { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] ,size:['1x1']},
+        { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'],size:['1x1'] },
         { name:"games", cname:"Steam折扣推荐",icon:"steam",detail:"热门折扣游戏推荐",images:['GamesDiscount','DiscountPercentage']},
-        { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote']},
-        { name:"wallpaper", cname:"壁纸",icon:"image",detail:"发现新壁纸，浏览我收藏的壁纸",images:['middleWallpaper','smallWallpaper']}
+        { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote'],size:['1x2']},
+        { name:"wallpaper", cname:"壁纸",icon:"image",detail:"发现新壁纸，浏览我收藏的壁纸",images:['middleWallpaper','smallWallpaper'],size:['2x2']}
       ],
       cardType:{},
       show:false,
@@ -60,6 +68,13 @@ export default {
   computed:{
     filterList(){
       return this.cardList.filter(i =>{return i.cname.includes(this.selectContent)} )
+    },
+    count(){
+      let i =0
+      this.cardList.forEach(c=>{
+        i+=c.images.length
+      })
+      return i
     }
   },
   methods: {

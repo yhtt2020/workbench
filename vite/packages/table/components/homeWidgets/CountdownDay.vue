@@ -34,10 +34,10 @@
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right" @close="()=>{this.goAddFlag = false}">
     <template #title>
-      <div class="text-center">「倒数日」设置</div>
+      <div class="text-center">纪念日设置</div>
     </template>
       <div v-if="!goAddFlag">
-        已设置的倒数日
+        已设置的纪念日
         <div>
           <vue-custom-scrollbar
             :settings="outerSettings"
@@ -162,7 +162,7 @@ export default {
       dateValue: null,
       options:{
         className:'card small',
-        title:'倒数日',
+        title:'纪念日',
         icon:'calendar-check',
         type:'countdownDay'
       },
@@ -198,12 +198,21 @@ export default {
       this.goAddFlag=false
       this.settingVisible = false;
     },
+    onSetup(){
+      this.$router.push({
+        name: "addCardSetting",
+        params: {
+          name: 'countdownDay',
+          cname: '纪念日',
+        },
+      });
+    },
 
     onContextMenuClick(e, index) {
       this.removeCountdownDay(index);
     },
     goAddEvent(){
-        this.goAddFlag = true
+      this.goAddFlag = true
     },
     addEvent(){
         if (this.eventValue === "" || this.dateValue === null) {

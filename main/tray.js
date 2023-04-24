@@ -95,7 +95,23 @@ function getUrl (url) {
   }
   return protocolUrl
 }
-
+function openWorktable(){
+  if (global.tableWin && !global.tableWin.window.isDestroyed()) {
+    global.tableWin.window.show()
+    global.tableWin.window.focus()
+  } else {
+    global.tableManager.init().then(()=>{
+      global.tableWin.window.show()
+    })
+  }
+}
+function openBrowser(){
+  if (!mainWindow) {
+    createWindow()
+  } else {
+    mainWindow.show()
+  }
+}
 let tray = null
 app.whenReady().then(() => {
   async function uploadCumulativeTime () {
@@ -181,11 +197,15 @@ app.whenReady().then(() => {
 
   tray.on('double-click', (event) => {
     timeCount = 1
-    if (!mainWindow) {
-      createWindow()
-    } else {
-      mainWindow.show()
+    //兼容新的设置项目
+    let open= settings.get('trayOpen')
+    if(open===undefined || open==='browser'){
+      openBrowser()
+    }else{
+      openWorktable()
     }
+
+
   })
   tray.on('right-click', () => {
     let tableRunning=global.tableWin && !global.tableWin.window.isDestroyed()
@@ -193,24 +213,13 @@ app.whenReady().then(() => {
       {
         label: '打开浏览器',
         click: () => {
-          if (!mainWindow) {
-            createWindow()
-          } else {
-            mainWindow.show()
-          }
+         openBrowser()
         }
       },
       {
         label: '打开工作台',
         click: () => {
-          if (global.tableWin && !global.tableWin.window.isDestroyed()) {
-            global.tableWin.window.show()
-            global.tableWin.window.focus()
-          } else {
-            global.tableManager.init().then(()=>{
-              global.tableWin.window.show()
-            })
-          }
+         openWorktable()
         }
       },
       {

@@ -40,7 +40,7 @@ import { mapWritableState, mapActions, mapState } from 'pinia'
 import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import { appsStore } from '../store/apps'
-
+const {fs} = window.$models
 export default {
   name: 'MyApps',
   data () {
@@ -62,7 +62,12 @@ export default {
   methods: {
     ...mapActions(appsStore, ['deleteApp']),
     open (app) {
-      require('electron').shell.openPath(app.path)
+      // if(fs.lstatSync(app.path).isDirectory()){
+      //   require('electron').shell.openPath(app.path.replaceAll('/','\\'))
+      // }else{
+      //   require('electron').shell.openPath(app.path)
+      // }
+      require('electron').shell.openPath( require('path').normalize(app.path))
     },
     deleteAnApp (app) {
       Modal.confirm({
