@@ -15,11 +15,11 @@
 
     </div>
     </div>
-    <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px">
+    <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px" v-if="imgList.length>0">
       <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
       <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
       <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'&&addressType.name!=='lively'">
+      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'">
         <Icon v-if="!isInMyPapers" icon="star"></Icon>
         <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
       </div>
@@ -189,7 +189,9 @@ export default {
     setImg(){
       this.currentImg =  this.imgList[this.imgIndex] || {
         srcProtocol:null,
-        path:''
+        value:'我的收藏',
+        path:'',
+        name:'my'
       }
       this.$nextTick(()=>{
         if(this.currentImg.srcProtocol){
