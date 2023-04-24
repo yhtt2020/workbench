@@ -1,5 +1,5 @@
 <template>
-  <div class="second-panel ml-3 mt-3"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
+  <div class="second-panel  mt-3"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
     <div  style="margin-bottom:2em;" v-if="gallery === true">
       <div :onClick="goHome"  class="second-panel-back s-icon" >
         <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>
@@ -77,6 +77,7 @@ export default {
 
 <style scoped lang="scss">
 .second-panel {
+  padding-left: 0 !important;
   &.small{
 
   }

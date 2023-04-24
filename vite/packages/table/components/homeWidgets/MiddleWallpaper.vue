@@ -1,5 +1,5 @@
 <template>
-
+  <a-spin tip="加载中..." :spinning="imgSpin" size="large">
   <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
@@ -10,8 +10,8 @@
         <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
         </video>
 
-      <img :src="currentImg.middleSrc"  alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
-      <img :src="currentImg.src" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
+      <img :src="currentImg.middleSrc" @load="imgLoad" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
+      <img :src="currentImg.src" @load="imgLoad" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
 
     </div>
     </div>
@@ -26,6 +26,7 @@
       <div class="item-icon flex justify-center items-center pointer" @click="settingImg"> <Icon class="icon"  icon="desktop"></Icon></div>
     </div>
   </HomeComponentSlot>
+  </a-spin>
   <a-drawer :width="500"  v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">「壁纸」设置</div>
@@ -36,6 +37,7 @@
               @change="pickFilterChange($event)"  :options="wallpaperOptions">
     </a-select>
   </a-drawer>
+
 </template>
 
 <script>
@@ -66,6 +68,7 @@ export default {
   },
   data(){
     return {
+      imgSpin:false,
       options:{
         className:'card double',
         title:'壁纸',
@@ -105,6 +108,9 @@ export default {
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ["updateCustomComponents"]),
+    imgLoad(){
+      this.imgSpin = false
+    },
     pickFilterChange(e){
         this.addressType =this.wallpaperOptions.find(i => i.value === e)|| {
           value:'我的收藏',
@@ -171,11 +177,13 @@ export default {
           this.initImg()
         }).catch(err =>{
           this.imgList = []
-          this.initImg()
+          this.imgIndex = 0
+          this.imgSpin = false
         })
       }else if(this.addressType.name ==='my'){
         this.imgList = this.myPapers
-        this.initImg()}
+        this.initImg()
+      }
       // else if(this.addressType.name === 'lively'){
       //   this.imgList = this.list
       //   this.initImg()
@@ -192,6 +200,7 @@ export default {
     //   return filename
     // },
     setImg(){
+      this.imgSpin = true
       this.currentImg =  this.imgList[this.imgIndex] || {
         srcProtocol:null,
         value:'我的收藏',
