@@ -14,7 +14,7 @@
           <router-view></router-view>
       </div>
       <Transition name="bounce">
-      <div v-if="teamVisible && !fullScreen" class="h-100 trans" style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;position: fixed;top:50%;bottom: 0;;right: 0;z-index:120" >
+      <div v-if="teamVisible && !fullScreen" class="h-100 " style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;z-index:120" >
            <TeamPanel ></TeamPanel>
       </div>
       </Transition>
@@ -69,17 +69,14 @@ export default {
 }
 @keyframes bounce-in {
   0% {
-    transform: scale(0) translate(0,-50%);
+    transform: scale(0) ;
   }
   50% {
-    transform: scale(1.25) translate(0,-50%);
+    transform: scale(1.25) ;
   }
   100% {
-    transform: scale(1) translate(0,-50%);
+    transform: scale(1) ;
   }
-}
-.trans{
-  transform:translate(0,-50%);
 }
 
 </style>
