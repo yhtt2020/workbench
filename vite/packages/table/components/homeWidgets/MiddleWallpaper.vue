@@ -112,6 +112,7 @@ export default {
           name:'my'
         }
         this.updateCustomComponents(this.customIndex,this.addressType)
+      this.options.title =   this.addressType.value
       if(this.addressType.name ==='PickingPaper'||this.addressType.name ==='bing') {
         axios.get(this.addressType.path).then(res => {
           this.imgList=[]
