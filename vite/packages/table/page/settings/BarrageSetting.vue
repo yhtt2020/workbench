@@ -41,7 +41,7 @@ export default {
         }
       )
       window.$manager.reload()
-      message.success('刷新成果')
+      message.success('刷新成功。')
     }
   }
 }
