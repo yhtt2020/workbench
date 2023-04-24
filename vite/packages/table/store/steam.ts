@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
+import {compareTime} from '../js/axios/api'
 
 // @ts-ignore
 export const steamStore = defineStore("steam", {
@@ -17,28 +18,37 @@ export const steamStore = defineStore("steam", {
       if(findIndex === -1){
         this.data.push(value)
         localStorage.setItem("gameData",JSON.stringify(this.data))
+        const getGame = localStorage.getItem("gameData")
+        if(getGame){
+          this.data = JSON.parse(getGame)
+        }
       }else{
         return
-      }
-    },
-    getGameData(){
-      const getData = localStorage.getItem('gameData')
-      if(getData){
-        this.data = JSON.parse(getData)
       }
     },
     // 详情数据存储
     setGameDetail(value){
       this.dataDetail = value
       localStorage.setItem("detail",JSON.stringify(this.dataDetail)) 
-    },
-    getGameDetail(){
       const getDetail = localStorage.getItem("detail")
       if(getDetail){
         this.dataDetail = JSON.parse(getDetail)
       }
+    },
+    // 通过时间更新数据
+    updateGameData(value){
+       const updateIndex = this.data.find(el => {
+          return compareTime(el.expiresDate) === compareTime(value.expiresDate)
+       })
+       if(updateIndex && updateIndex !== undefined){
+        this.data.splice(this.data.indexOf(updateIndex),1,value)
+        localStorage.setItem("gameData",JSON.stringify(this.data))
+        const getGame = localStorage.getItem("gameData")
+        if(getGame){
+          this.data = JSON.parse(getGame)
+        }
+       }
     }
-  
   },
   persist: {
     enabled: true,

@@ -108,7 +108,7 @@ export default {
     ...mapWritableState(cardStore,["customComponents"])
   },
   methods:{
-    ...mapActions(steamStore,["setGameDetail"]),
+    ...mapActions(steamStore,["setGameDetail","updateGameData"]),
     // 将数据分成五组
     groupData() {
       if(this.data.length !== 0){
@@ -117,24 +117,18 @@ export default {
         })
         if(dataIndex){
           const discountList = this.data[this.data.indexOf(dataIndex)]
-
-          if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
-            this.percentageList = discountList.list
-            let groups = [];
-            for (let i = 0; i < 5; i++) {
-             groups.push([]);
-            }
-            groups.forEach((arr) => (arr.length = 0));
-            // 随机获取两条数据，放入五个数组中
-            for (let i = 0; i < groups.length; i++) {
-             const index = randomData(this.percentageList,2);
-             groups[i].push(index)
-            }
-            this.groupList = groups
-          }else{ 
-            // 超过时间就重新获取数据  
-            this.confirmCCData()
+          this.percentageList = discountList.list
+          let groups = [];
+          for (let i = 0; i < 5; i++) {
+            groups.push([]);
           }
+          groups.forEach((arr) => (arr.length = 0));
+          // 随机获取两条数据，放入五个数组中
+          for (let i = 0; i < groups.length; i++) {
+            const index = randomData(this.percentageList,2);
+            groups[i].push(index)
+          }
+          this.groupList = groups
         }
       }
     },
@@ -147,13 +141,13 @@ export default {
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
             const resData = res.data[item.id]
             this.setGameDetail(resData)
-            this.dpList = this.dataDetail.data
           })
           this.$nextTick(()=>{
             this.isLoading = false
           })
         },500)
       }
+      this.dpList = this.dataDetail.data
     },
     // 按钮点击切换
     discountChange(){
