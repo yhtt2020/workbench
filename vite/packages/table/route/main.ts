@@ -30,6 +30,13 @@ import Lively from '../page/gallery/Lively.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
 import My from '../page/gallery/My.vue'
 import Subscreen from '../page/settings/Subscreen.vue'
+import GameAssistant from '../page/gameAssistant/GameAssistant.vue'
+import GameIndex from '../page/gameAssistant/GameIndex.vue'
+import GameSetting from '../page/gameAssistant/GameSetting.vue'
+import GameCommunity from '../page/gameAssistant/GameCommunity.vue'
+import GameDiscount from '../page/gameAssistant/GameDiscount.vue'
+import GameIntroduction from '../page/gameAssistant/GameIntroduction.vue'
+import MyGame from '../page/gameAssistant/MyGame.vue'
 export default [{
   path: '/main',
   name: 'main',
@@ -99,6 +106,45 @@ export default [{
       name: 'weather',
       component: Weather
     },
+    {
+      path: '/gameAssistant',
+      name: 'gameAssistant',
+      component: GameAssistant,
+      children: [
+        {
+          path: '/gameIndex',
+          name: 'gameIndex',
+          component: GameIndex,
+        },
+        {
+          path:'/gameSetting',
+          name:'gameSetting',
+          component:GameSetting
+        },
+        {
+          path:'/gameCommunity',
+          name:'gameCommunity',
+          component:GameCommunity
+        },
+        {
+          path:'/gameDiscount',
+          name:'gameDiscount',
+          component:GameDiscount
+        },
+        {
+          path:'/gameIntroduction',
+          name:'gameIntroduction',
+          component:GameIntroduction
+        },
+        {
+          path:'/myGame',
+          name:'myGame',
+          component:MyGame
+        }
+      ]
+    },
+
+
     {
       path: '/deck',
       name:'deck',

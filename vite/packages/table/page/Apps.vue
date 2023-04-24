@@ -36,7 +36,7 @@
                 </a-avatar>
               </a-col>
               <a-col :span="5">
-                <div class="app-name font-bold text-white" style="text-align: left">{{ app.name }}
+                <div class="app-name  font-bold text-white" style="text-align: left">{{ app.name }}
 
                 </div>
 
@@ -157,6 +157,21 @@ export default {
             type: 'system',//网页助手
             route: JSON.stringify({
               name: 'weather',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/weather.png',
+          name: '游戏小助手',
+          summary: '',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'gameAssistant',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'gameIndex',
             })
           }
         },

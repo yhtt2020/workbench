@@ -31,7 +31,7 @@ export const powerList = [
       }
     },
     {icon:'appstore',name:'bottomNavigation',alias:'自定义底部导航',detail:{
-      1:' ',4:' ',5:' ',10:' '}
+      3:' ',4:' ',5:' ',10:' '}
     },
     {icon:'pause',name:'sideNavigation',alias:'自定义侧边导航',detail:{
       4:' ',5:' ',10:' '
