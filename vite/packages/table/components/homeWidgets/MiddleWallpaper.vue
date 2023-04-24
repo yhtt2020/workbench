@@ -106,7 +106,11 @@ export default {
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ["updateCustomComponents"]),
     pickFilterChange(e){
-        this.addressType =this.wallpaperOptions.find(i => i.value === e)
+        this.addressType =this.wallpaperOptions.find(i => i.value === e)|| {
+          value:'我的收藏',
+          path:'',
+          name:'my'
+        }
         this.updateCustomComponents(this.customIndex,this.addressType)
       if(this.addressType.name ==='PickingPaper'||this.addressType.name ==='bing') {
         axios.get(this.addressType.path).then(res => {
