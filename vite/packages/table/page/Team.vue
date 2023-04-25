@@ -1,13 +1,13 @@
 <template>
 
-  <div class="m-5 flex">
+  <div class="p-3 flex" style="height: 100%;display: flex;">
 
     <div>
       <SecondPanel :menus="menus">
 
       </SecondPanel>
     </div>
-    <div class="ml-10" style="flex: 1">
+    <div class="ml-10" style="flex: 1;height: 100%;display: flex;flex-direction: column;">
       <router-view></router-view>
     </div>
   </div>
@@ -16,6 +16,7 @@
 
 <script>
 import SecondPanel from '../components/SecondPanel.vue'
+
 export default {
   name: 'Team',
   components: { SecondPanel },
@@ -34,6 +35,10 @@ export default {
         },
       ],
     }
+  },methods:{
+
+  },async mounted () {
+
   }
 }
 </script>

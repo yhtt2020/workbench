@@ -129,6 +129,15 @@ import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
   {
+    name:'3.7.30',
+    date:'04月26日',
+    list:[
+      '修复部分问题',
+      '增加小队面板查看成员等级信息',
+      '增加小队大厅'
+    ]
+  },
+  {
     name:'3.7.28',
     date:'04月25日',
     list:[

@@ -24,7 +24,7 @@
                 <a-col  class="pt-3">
                   <UsergroupAddOutlined class="text-white icon"/>
                 </a-col>
-                <a-col><div class="title">加入小队</div>作为小队成员，加入小队</a-col>
+                <a-col><div class="title">加入小队</div>作为小队成员，加入小队，<a @click="goHall">前往小队大厅</a></a-col>
 
               </a-row>
               <a-row class="mt-4" :gutter="10">
@@ -84,6 +84,12 @@ export default {
         'update:visible',false
       )
       this.teamVisible=true
+    },
+    goHall(){
+      this.$router.push({name:'hall'})
+      this.$emit(
+        'update:visible',false
+      )
     },
     more(){
       Modal.info({

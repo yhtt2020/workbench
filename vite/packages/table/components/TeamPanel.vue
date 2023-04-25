@@ -85,7 +85,7 @@
     <div class="common-panel  flex" style="width: 80px;flex-direction: column">
       <div v-if="!teamDetail" @click="showTeamDetail" class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
-        <div>
+        <div class="mb-3">
           <a-avatar :size="50" shape="square" :src="team.avatar"></a-avatar>
         </div>
       </div>
