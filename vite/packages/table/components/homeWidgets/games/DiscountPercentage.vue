@@ -236,7 +236,10 @@ export default {
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
+            if(resData.success === true){
+               const percentData = resData.data
+               this.dpList = percentData
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
@@ -246,14 +249,18 @@ export default {
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
+            // this.setGameDetail(resData)
+            if(resData.success === true){
+               const percentData = resData.data
+               this.dpList = percentData
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
           })
         },500)
       }
-      this.dpList = this.dataDetail.data
+
     },
     // 按钮点击切换
     discountChange(){

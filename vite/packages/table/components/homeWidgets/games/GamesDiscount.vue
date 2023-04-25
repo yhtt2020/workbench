@@ -250,8 +250,13 @@ export default {
           setTimeout(()=>{
            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
-          })
+            if(resData.success === true){
+              const detailData = resData.data
+              this.detailList = detailData
+            }else{
+              return
+            }
+           })
            this.$nextTick(()=>{
             this.isLoading = false
            })
@@ -260,7 +265,12 @@ export default {
           setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
+            if(resData.success === true){
+              const detailData = resData.data
+              this.detailList = detailData
+            }else{
+              return
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
@@ -268,7 +278,6 @@ export default {
         },500)
         }
       }
-      this.detailList = this.dataDetail.data
     },
      discountBack(){
       this.gameShow = false
