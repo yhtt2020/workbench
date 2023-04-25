@@ -11,7 +11,7 @@
         </a-select>
     </div>
   </div>
-  <div class="w-48 h-12 flex items-center">
+  <div class="w-48 h-12 flex items-center justify-end" style="margin-right: 1em;">
        <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center s-icon" @click="openFilter">
          <Icon icon="filter" style="font-size: 1.715em;"></Icon>
          <span style="font-size: 1.15em; " class="s-text">筛选</span>
