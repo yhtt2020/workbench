@@ -6,8 +6,8 @@
         <a-empty :image="simpleImage" />
       </div>
       <div class="h-full w-full pointer" v-else @click="goSource">
-        <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
-        <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
+        <video class="fullscreen-video"   ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
+        <source :src="currentImg.srcProtocol"  type="video/mp4" id="bgVid">
         </video>
 
       <img :src="currentImg.middleSrc" @load="imgLoad" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
@@ -213,6 +213,7 @@ export default {
           this.$refs.wallpaperVideo.play().catch((err)=>{
 
           })
+          this.imgSpin = false
         }
       })
 
