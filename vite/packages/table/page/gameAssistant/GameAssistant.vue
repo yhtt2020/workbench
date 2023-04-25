@@ -36,7 +36,7 @@ export default {
         {
           index: 'm',
           title: '我的游戏',
-          icon:'game',
+          icon:'wanggeshitu',
           route:
             {
               name: 'myGame'
@@ -45,7 +45,7 @@ export default {
         {
           index: 'm',
           title: '游戏攻略',
-          icon:'game',
+          icon:'trophy',
           route:
             {
               name: 'gameIntroduction'
@@ -54,7 +54,7 @@ export default {
         {
           index: 'm',
           title: '折扣推荐',
-          icon:'game',
+          icon:'star',
           route:
             {
               name: 'gameDiscount'
@@ -63,7 +63,7 @@ export default {
         {
           index: 'm',
           title: '社区',
-          icon:'game',
+          icon:'team',
           route:
             {
               name: 'gameCommunity'
@@ -71,7 +71,7 @@ export default {
         },   {
           index: 'm',
           title: '设置',
-          icon:'game',
+          icon:'setting',
           route:
             {
               name: 'gameSetting'

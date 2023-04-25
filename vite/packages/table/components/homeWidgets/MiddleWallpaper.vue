@@ -1,6 +1,8 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
+
   <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
+    <div class="absolute top-4 left-4  w-24 h-5 pointer" @click="openRight"></div>
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
         <a-empty :image="simpleImage" />
@@ -110,6 +112,9 @@ export default {
     ...mapActions(cardStore, ["updateCustomComponents"]),
     imgLoad(){
       this.imgSpin = false
+    },
+    openRight(){
+      this.settingVisible = true
     },
     pickFilterChange(e){
         this.addressType =this.wallpaperOptions.find(i => i.value === e)|| {
