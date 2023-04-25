@@ -3,7 +3,7 @@
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
+           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item,customData.id)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
              <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
               <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
@@ -242,13 +242,13 @@ export default {
       },800)
     },
     // 点击进入详情
-    enterDetail(item){
+    enterDetail(item,cc){
       this.gameShow = true
       if(!this.isLoading){
         this.isLoading = true
         if(Object.keys(this.customData).length !== 0){
           setTimeout(()=>{
-           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
             const resData = res.data[item.id]
             this.setGameDetail(resData)
           })
