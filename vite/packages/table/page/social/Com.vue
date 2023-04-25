@@ -129,6 +129,14 @@ import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
   {
+    name:'3.7.28',
+    date:'04月25日',
+    list:[
+      '修复工作台打开轻应用错误',
+      '修复缩放显示器后导致浏览器左侧栏空白'
+    ]
+  },
+  {
     name:'3.7.27',
     date:'04月24日',
     list:[
@@ -136,7 +144,6 @@ let updateLog=[
       '支持创建小队',
       '支持加入小队',
       'steam折扣卡片支持独立源!暂时无法正常使用!',
-      '天气卡片支持独立地区',
       '修复部分用户不能累计在线时长的问题',
       '增加设置双击托盘菜单默认打开',
       '增加设置任务栏是否显示工作台',
