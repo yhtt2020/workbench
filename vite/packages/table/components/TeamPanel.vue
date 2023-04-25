@@ -29,8 +29,8 @@
           <icon icon="tishi-xianxing"></icon>
           小队功能正在开发中，暂时还未开放组队升级加速，敬请期待。显示升级效率为理论加速值，功能上线后即可生效。
         </div>
-        <div style="position: absolute;bottom: 0">
-          <a-row class="m-5">
+        <div style="position: absolute;bottom: 0;margin-left:20px">
+          <a-row class="m-5" :gutter="10">
             <a-col>
               <div class="rounded-xl bg-mask px-6 py-3 pointer " @click="exit">
                 <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
@@ -38,6 +38,10 @@
               </div>
             </a-col>
             <a-col>
+              <div class="rounded-xl bg-mask px-6 py-3 pointer " @click="goHall">
+                <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
+                小队大厅
+              </div>
             </a-col>
           </a-row>
         </div>
@@ -166,6 +170,10 @@ export default {
 
   methods: {
     ...mapActions(teamStore, ['updateTeamShip']),
+    goHall(){
+      this.closeDetail()
+      this.$router.push({name:'hall'})
+    },
     showUserDetail (userInfo) {
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
