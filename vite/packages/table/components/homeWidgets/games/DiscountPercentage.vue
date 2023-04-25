@@ -187,9 +187,12 @@ export default {
   methods:{
     ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
     getDPData(){
-      if(Object.keys(this.customData).length === 0){
+      if(Object.keys(this.customData).length === 0 && this.defaultRegion === "cn"){
            if(this.data.length !== 0){
-            const discountList = this.data[0]
+            const defaultIndex = this.data.filter(el=>{
+              return el.cc === 'cn'
+            })
+            const discountList = defaultIndex[0]
             this.percentageList = discountList.list
             let groups = [];
             for (let i = 0; i < 5; i++) {
@@ -203,7 +206,7 @@ export default {
             }
             this.groupList = groups
            }
-        }else{
+      }else{
           if(this.data.length !== 0){
             const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
             return this.customData.id === el.cc
@@ -224,7 +227,7 @@ export default {
              this.groupList = groups
             }
           }
-        }
+      }
     },
     // 海报进入详情
     goToGameAppDetails(item,cc){
@@ -292,7 +295,7 @@ export default {
     },
     onClose() {
       this.gameVisible = false
-      this.visible = false
+      localStorage.removeItem('detail')
       this.getDPData()
     },
   },

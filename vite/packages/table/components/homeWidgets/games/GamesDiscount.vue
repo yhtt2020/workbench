@@ -193,15 +193,18 @@ export default {
     currencyFormat,
 
     getData(){
-      if(Object.keys(this.customData).length === 0){
+      if(Object.keys(this.customData).length === 0  && this.defaultRegion == "cn"){
           if(this.data.length !== 0){
-            const discountList = this.data[0]
+            const defaultIndex = this.data.filter(el=>{
+              return el.cc === 'cn'
+            })
+            const discountList = defaultIndex[0]
             this.list = discountList.list
             this.getRandomList()
           }else{
             return
           }
-        }else{
+      }else{
           const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
             return this.customData.id === el.cc
           })
@@ -222,12 +225,11 @@ export default {
               })
             }
           }
-        }
+      }
     },
 
     getRandomList(){
       const randomArr = randomData(this.list,4)
-      console.log(randomArr);
       this.randomList = randomArr
     },
 
@@ -278,6 +280,7 @@ export default {
 
     onClose() {
       this.gameVisible = false
+      localStorage.removeItem("detail")
       this.getData()
     },
     getRegion(e){
