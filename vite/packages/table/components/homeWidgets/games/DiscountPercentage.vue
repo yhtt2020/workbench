@@ -299,11 +299,11 @@ export default {
         }
         this.setGameData(resObj)
       })
+      this.getDPData()
     },
     onClose() {
       this.gameVisible = false
       localStorage.removeItem('detail')
-      this.getDPData()
     },
   },
   setup() {

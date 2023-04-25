@@ -290,7 +290,6 @@ export default {
     onClose() {
       this.gameVisible = false
       localStorage.removeItem("detail")
-      this.getData()
     },
     getRegion(e){
       this.defaultRegion = e
@@ -312,6 +311,7 @@ export default {
         }
         this.setGameData(resObj)
       })
+      this.getData()
     }
   }
 }
