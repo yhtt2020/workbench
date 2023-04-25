@@ -44,7 +44,7 @@
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam(detailList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
+            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam(dpList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
           </div> 
        </div>
     </template>
@@ -236,7 +236,10 @@ export default {
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
+            if(resData.success === true){
+               const percentData = resData.data
+               this.dpList = percentData
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
@@ -246,14 +249,18 @@ export default {
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
+            // this.setGameDetail(resData)
+            if(resData.success === true){
+               const percentData = resData.data
+               this.dpList = percentData
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
           })
         },500)
       }
-      this.dpList = this.dataDetail.data
+
     },
     // 按钮点击切换
     discountChange(){
@@ -292,11 +299,11 @@ export default {
         }
         this.setGameData(resObj)
       })
+      this.getDPData()
     },
     onClose() {
       this.gameVisible = false
       localStorage.removeItem('detail')
-      this.getDPData()
     },
   },
   setup() {
