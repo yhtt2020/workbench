@@ -9,6 +9,7 @@ const getTeamLeaderUrl = Server.baseUrl + '/app/team/getLeader'
 const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
 const getMy=Server.baseUrl+'/app/team/getMy'
 const getByNo=Server.baseUrl+'/app/team/getByNo'
+const getUserGradeUrl=Server.baseUrl+'/app/getUserGrade'
 // @ts-ignore
 export const teamStore = defineStore("teamStore", {
   state: () => ({
@@ -23,7 +24,10 @@ export const teamStore = defineStore("teamStore", {
     teamMembers: {},//当前小队成员
     my:{ //我的队伍
 
-    }
+    },
+    members:[
+
+    ]
   }),
   actions: {
     async getTeamLeader(no, cache = 1, userCache = 1) {
@@ -39,10 +43,20 @@ export const teamStore = defineStore("teamStore", {
         }
       }
     },
+    async getMemberGrade(uid){
+      let conf=await getConfig()
+      conf.params={uid:uid}
+      let response=await axios.get(getUserGradeUrl, conf)
+      console.log(response,'response======================')
+      if(response.code===1000){
+        return response.data
+      }
+    },
     async getTeamMembers(no, cache = 1, userCache = 1) {
 
       let teamMembersResult = await axios.post(getTeamMembersUrl, {no: no, cache: cache, userCache: userCache},
         await getConfig())
+
       if (teamMembersResult.code === 1000) {
         let data = teamMembersResult.data
         if (data.status) {
