@@ -38,7 +38,7 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
+          <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
           <span class="content-introduction text-white text-opacity-60">{{detailList.short_description}}</span>
           <div class="flex" style="margin-bottom: 10px;">
             <span class="discount-description rounded-md bg-white bg-opacity-20 "  v-for="item in detailList.genres">{{item.description}}</span>
@@ -250,8 +250,13 @@ export default {
           setTimeout(()=>{
            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
-          })
+            if(resData.success === true){
+              const detailData = resData.data
+              this.detailList = detailData
+            }else{
+              return
+            }
+           })
            this.$nextTick(()=>{
             this.isLoading = false
            })
@@ -260,7 +265,12 @@ export default {
           setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
+            if(resData.success === true){
+              const detailData = resData.data
+              this.detailList = detailData
+            }else{
+              return
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
@@ -268,7 +278,6 @@ export default {
         },500)
         }
       }
-      this.detailList = this.dataDetail.data
     },
      discountBack(){
       this.gameShow = false
@@ -281,7 +290,6 @@ export default {
     onClose() {
       this.gameVisible = false
       localStorage.removeItem("detail")
-      this.getData()
     },
     getRegion(e){
       this.defaultRegion = e
@@ -303,6 +311,7 @@ export default {
         }
         this.setGameData(resObj)
       })
+      this.getData()
     }
   }
 }
