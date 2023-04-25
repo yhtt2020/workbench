@@ -169,7 +169,7 @@ export default {
 
   computed:{
     ...mapWritableState(steamStore,["data","dataDetail"]),
-    ...mapWritableState(cardStore,["customComponents"])
+    ...mapWritableState(cardStore,["customComponents","updateCustomComponents"])
   },
 
   watch:{
@@ -185,7 +185,7 @@ export default {
   },
 
   methods:{
-    ...mapActions(steamStore,["setGameDetail","updateGameData"]),
+    ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
     getDPData(){
       if(Object.keys(this.customData).length === 0){
            if(this.data.length !== 0){

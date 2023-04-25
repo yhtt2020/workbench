@@ -190,6 +190,9 @@ export default {
         message.info('复制失败，请检查是否启动过aida64！')
       }
     },
+    onClose(){
+      this.visible = false
+    }
 
   }
 }

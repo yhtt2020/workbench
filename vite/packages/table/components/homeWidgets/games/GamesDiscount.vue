@@ -175,10 +175,6 @@ export default {
      ...mapWritableState(cardStore,["customComponents"])
   },
 
-  mounted(){
-    this.getRandomList()
-  },
-
   watch:{
     data:{
       handler(newVal,oldVal){
@@ -282,7 +278,6 @@ export default {
 
     onClose() {
       this.gameVisible = false
-      this.visible = false
       this.getData()
     },
     getRegion(e){
