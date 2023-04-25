@@ -222,9 +222,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-:deep(.bg-mask) {
-  background: rgba(0, 0, 0, 0.2);
-}
+
 .active{
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;

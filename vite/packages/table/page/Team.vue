@@ -1,13 +1,13 @@
 <template>
 
-  <div class="m-5">
+  <div class="m-5 flex">
 
     <div>
       <SecondPanel :menus="menus">
 
       </SecondPanel>
     </div>
-    <div>
+    <div class="ml-10" style="flex: 1">
       <router-view></router-view>
     </div>
   </div>
@@ -21,6 +21,7 @@ export default {
   components: { SecondPanel },
   data(){
     return {
+
       menus: [
         {
           index: 'hall',
