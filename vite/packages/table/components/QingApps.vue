@@ -39,7 +39,6 @@ export default {
   },
   methods:{
     executeApp(app){
-      console.log(app)
       ipc.send('executeApp',{app:JSON.parse(JSON.stringify(app))})
     }
   }
