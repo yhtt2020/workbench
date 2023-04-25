@@ -10,15 +10,14 @@
     </div>
   </div>
   <vue-custom-scrollbar id="containerWrapper " :settings="settingsScroller" style="height: 80vh;">
-      <div class="card auto-height s-bg" style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em">
-
-        <div class="line-title ">基础设置</div>
-        <div class="line" v-if="!settings.enable">
-          如果您的显示器为OLed面板，建议启用锁屏壁纸，且轮播不少于3张壁纸，以防止烧屏。
-        </div>
-        <div class="line">
-          使用锁屏壁纸：<a-switch v-model:checked="settings.enable"></a-switch>
-        </div>
+    <div class="card auto-height s-bg" style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em">
+      <div class="line-title ">基础设置</div>
+      <div class="line" v-if="!settings.enable">
+        如果您的显示器为OLed面板，建议启用锁屏壁纸，且轮播不少于3张壁纸，以防止烧屏。
+      </div>
+      <div class="line">
+        使用锁屏壁纸：<a-switch v-model:checked="settings.enable"></a-switch>
+      </div>
         <div v-if="settings.enable">
           <div class="line">
             进入锁屏时间：   <a-input-number default-value="300" v-model:value="settings.lockTimeout"></a-input-number> 秒
@@ -37,39 +36,35 @@
 <!--          </div>-->
 
         </div>
-        </div>
-  <div class="card auto-height s-bg" v-if="settings.enable"  style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em">
-    <div class="line-title">
+    </div>
+    <div class="card auto-height s-bg" v-if="settings.enable"  style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em">
+     <div class="line-title">
       锁屏显示设置
-    </div>
-    <div class="line">
+     </div>
+     <div class="line">
       显示时间：<a-switch v-model:checked="settings.showTime"></a-switch>
-    </div>
-    <div class="line">
+     </div>
+     <div class="line">
       显示未读消息：<a-switch v-model:checked="settings.showUnreadMessage"></a-switch>
-    </div>
-    <div class="line">
+     </div>
+     <div class="line">
       显示天气：<a-switch v-model:checked="settings.showWeather"></a-switch>
-    </div>
-    <div class="line">
+     </div>
+     <div class="line">
       显示播放进度：<a-switch v-model:checked="settings.showProgress"></a-switch>
+     </div>
     </div>
-  </div>
-  <div class="card auto-height s-bg" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
-    <div class="line-title">
+    <div class="card auto-height s-bg" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left;margin-left: 2em;">
+     <div class="line-title">
       轮播设置
-    </div>
-    <div class="line">
-      默认轮播模式：<a-radio-group v-model:value="settings.playType"><a-radio value="my">轮播我的收藏</a-radio>  <a-radio value="active">轮播激活壁纸</a-radio></a-radio-group>
-    </div>
-    <div class="line">
+     </div>
+     <div class="line">
+       默认轮播模式：<a-radio-group v-model:value="settings.playType"><a-radio value="my">轮播我的收藏</a-radio>  <a-radio value="active">轮播激活壁纸</a-radio></a-radio-group>
+     </div>
+     <div class="line">
       切换图片时间间隔：   <a-input-number default-value="3" v-model:value="settings.interval"></a-input-number> 秒
+     </div>
     </div>
-
-  </div>
-
-
-
   </vue-custom-scrollbar>
 </template>
 
