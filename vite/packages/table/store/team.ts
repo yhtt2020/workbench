@@ -7,7 +7,8 @@ const createUrl = Server.baseUrl + '/app/team/create'
 const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
 const getTeamLeaderUrl = Server.baseUrl + '/app/team/getLeader'
 const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
-
+const getMy=Server.baseUrl+'/app/team/getMy'
+const getByNo=Server.baseUrl+'/app/team/getByNo'
 // @ts-ignore
 export const teamStore = defineStore("teamStore", {
   state: () => ({
@@ -20,6 +21,9 @@ export const teamStore = defineStore("teamStore", {
       userInfo:{}
     },//当前小队队长
     teamMembers: {},//当前小队成员
+    my:{ //我的队伍
+
+    }
   }),
   actions: {
     async getTeamLeader(no, cache = 1, userCache = 1) {
@@ -48,6 +52,58 @@ export const teamStore = defineStore("teamStore", {
           console.warn('无法取到队员信息')
         }
       }
+    },
+
+    async updateTeam(no,cache){
+      let conf=await getConfig()
+      console.log(conf)
+      conf.params={
+        no:no,
+        cache:cache
+      }
+      let teamResult=await axios.get(getByNo,conf)
+      if(teamResult.code===1000){
+        //获取到队伍信息
+        if(teamResult.data.status){
+          this.team=teamResult.data.data
+        }else{
+          this.team={
+            status:false
+          }
+        }
+      }
+      console.log('teamResult=',teamResult)
+    },
+
+    async updateMy(cache=1){
+      let conf=await getConfig()
+      console.log(conf)
+      conf.params={
+        cache:cache
+      }
+      let myTeamResult=await axios.get(getMy,conf)
+      if(myTeamResult.code===1000){
+        let data=myTeamResult.data
+        console.log('myTeamResult=',myTeamResult)
+        this.my=data.data
+        let teamNo=0
+        if(this.my.created.hasOwnProperty('no')){
+          //自己是队长
+          teamNo=this.my.created.no
+        }else{
+          //是队员
+          if(this.my.joined.length>0){
+            teamNo=this.my.joined[0].team_no
+          }
+        }
+        console.log('取到队伍=',teamNo)
+        //更新队伍信息
+        if(teamNo){
+          await this.updateTeam(teamNo,cache)
+        }
+      }
+      console.log(myTeamResult)
+
     },
 
     /**
