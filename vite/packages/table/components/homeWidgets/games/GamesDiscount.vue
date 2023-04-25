@@ -3,7 +3,7 @@
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
+           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item,customData.id)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
              <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
               <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
@@ -175,10 +175,6 @@ export default {
      ...mapWritableState(cardStore,["customComponents"])
   },
 
-  mounted(){
-    this.getRandomList()
-  },
-
   watch:{
     data:{
       handler(newVal,oldVal){
@@ -195,21 +191,20 @@ export default {
     ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
     ...mapActions(cardStore,["updateCustomComponents"]),
     currencyFormat,
-    getRandomList(){
-      const randomArr = randomData(this.list,4)
-      this.randomList = randomArr
-    },
 
     getData(){
-      if(Object.keys(this.customData).length === 0){
+      if(Object.keys(this.customData).length === 0  && this.defaultRegion == "cn"){
           if(this.data.length !== 0){
-            const discountList = this.data[0]
+            const defaultIndex = this.data.filter(el=>{
+              return el.cc === 'cn'
+            })
+            const discountList = defaultIndex[0]
             this.list = discountList.list
             this.getRandomList()
           }else{
             return
           }
-        }else{
+      }else{
           const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
             return this.customData.id === el.cc
           })
@@ -230,7 +225,12 @@ export default {
               })
             }
           }
-        }
+      }
+    },
+
+    getRandomList(){
+      const randomArr = randomData(this.list,4)
+      this.randomList = randomArr
     },
 
     // 点击切换
@@ -242,12 +242,23 @@ export default {
       },800)
     },
     // 点击进入详情
-    enterDetail(item){
+    enterDetail(item,cc){
       this.gameShow = true
       if(!this.isLoading){
         this.isLoading = true
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+        if(Object.keys(this.customData).length !== 0){
+          setTimeout(()=>{
+           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
+            const resData = res.data[item.id]
+            this.setGameDetail(resData)
+          })
+           this.$nextTick(()=>{
+            this.isLoading = false
+           })
+          },500)
+        }else{
+          setTimeout(()=>{
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
             this.setGameDetail(resData)
           })
@@ -255,6 +266,7 @@ export default {
             this.isLoading = false
           })
         },500)
+        }
       }
       this.detailList = this.dataDetail.data
     },
@@ -268,7 +280,7 @@ export default {
 
     onClose() {
       this.gameVisible = false
-      this.visible = false
+      localStorage.removeItem("detail")
       this.getData()
     },
     getRegion(e){

@@ -41,7 +41,7 @@ export const steamStore = defineStore("steam", {
           return compareTime(el.expiresDate) === compareTime(value.expiresDate)
        })
        if(updateIndex && updateIndex !== undefined){
-        this.data.splice(this.data.indexOf(updateIndex),1,value)
+        this.data.splice(this.data.indexOf(updateIndex),0,value)
         localStorage.setItem("gameData",JSON.stringify(this.data))
         const getGame = localStorage.getItem("gameData")
         if(getGame){
