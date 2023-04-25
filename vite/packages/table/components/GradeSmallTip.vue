@@ -3,8 +3,8 @@
   <div class="absolute inset-0" style="border-radius: 6px;background: rgba(42, 42, 42, 0.6);" @click.stop="clickTip" v-else>
     <div  class="grade-tip small-tip" style="color: rgba(255, 255, 255, 0.85);">{{tipTitle}}</div>
   </div>
-  <a-modal v-model:visible="clickTipShow" :closable="false"  title="" @ok="()=>{}" :footer="null" style="font-size: 8px" :maskClosable="false" :centered="true">
-    <div class="flex flex-col items-center rounded-xl h-44 w-96 justify-evenly text-sm text-white mx-auto" style="background: rgba(33, 33, 33, 1);">
+  <a-modal v-model:visible="clickTipShow" :closable="false"  title="" @ok="()=>{}" :footer="null" :bodyStyle="{padding:0}" style="font-size: 8px;" :maskClosable="false" :centered="true">
+    <div class="flex flex-col items-center rounded-xl h-56 w-full justify-evenly text-sm text-white " style="background: rgba(33, 33, 33, 1);">
       <div><Icon icon="-dengpao" style="font-size: 1.2em" class="mr-2"></Icon>提示</div>
       <div v-if="limitFlag">当前「 等级{{lv}} 」，已达当前等级上限</div>
       <div v-else-if="lastPowerType===''">当前「 等级{{lv}} 」，解锁{{powerAlias}}功能需要达到「 等级 {{powerLv}} 」</div>
@@ -73,5 +73,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
