@@ -38,7 +38,7 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
+          <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
           <span class="content-introduction text-white text-opacity-60">{{detailList.short_description}}</span>
           <div class="flex" style="margin-bottom: 10px;">
             <span class="discount-description rounded-md bg-white bg-opacity-20 "  v-for="item in detailList.genres">{{item.description}}</span>
