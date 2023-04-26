@@ -77,3 +77,16 @@ export function currencyFormat(value: number, currencyCode: any){
   });
   return formatter.format(priceValue);
 }
+
+// 判断本周的方法
+export function startOfWeek(){
+  const today = new Date();
+  const firstDayOfWeek = today.getDate() - today.getDay() + 1;
+  return new Date(today.setDate(firstDayOfWeek));
+}
+// 判断下周的方法
+export function startOfNextWeek(){
+  const today = new Date();
+  const firstDayOfWeek = today.getDate() - today.getDay() + 1;
+  return new Date(today.setDate(firstDayOfWeek + 7));
+}

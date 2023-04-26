@@ -184,6 +184,8 @@ import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
+import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
+
 import Muuri from 'muuri'
 const readAida64 = window.readAida64
 const initCards= [
@@ -322,7 +324,8 @@ export default {
     GamesDiscount,
     DiscountPercentage,
     MiddleWallpaper,
-    SmallWallpaper
+    SmallWallpaper,
+    GameEpic
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),

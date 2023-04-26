@@ -107,7 +107,8 @@ export default {
         className:'card',
         title:'Steam折扣推荐',
         icon:'steam',
-        type:'games'
+        type:'games',
+        epicShow:true
       },
       region:[
         {
@@ -167,6 +168,7 @@ export default {
       detailList:{},
       gameShow:false,
       isLoading:false,
+      epicShow:false,
       gameBare:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.gameSlot.visible = false}}]
     }
   },
@@ -198,7 +200,8 @@ export default {
             const defaultIndex = this.data.filter(el=>{
               return el.cc === 'cn'
             })
-            const discountList = defaultIndex[0]
+            console.log(defaultIndex[0]);
+            // const discountList = defaultIndex
             this.list = discountList.list
             this.getRandomList()
           }else{

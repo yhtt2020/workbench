@@ -45,8 +45,8 @@ export default {
         { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] ,size:['1x1']},
         { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] ,size:['1x1']},
         { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'],size:['1x1'] },
-        { name:"games", cname:"Steam折扣推荐",icon:"steam",detail:"热门折扣游戏推荐",images:['GamesDiscount','DiscountPercentage']},
-        // { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote'],size:['1x2']},
+        { name:"games", cname:"Steam折扣推荐",icon:"steam",detail:"热门折扣游戏推荐",images:['GamesDiscount','DiscountPercentage','GameEpic']},
+        { name:"remote", cname:"外部卡片",icon:"game",detail:"外部卡片",images:['Remote'],size:['1x2']},
         { name:"wallpaper", cname:"壁纸",icon:"image",detail:"发现新壁纸，浏览我收藏的壁纸",images:['middleWallpaper','smallWallpaper'],size:['2x2']}
       ],
       cardType:{},
