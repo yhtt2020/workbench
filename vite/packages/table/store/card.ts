@@ -21,7 +21,7 @@ export const cardStore = defineStore(
             "seconds": 0,
             "week": "星期一"
           },
-          "type": null
+          "type": 'noOver'
         },{
           "eventValue": "端午节",
           "dateValue": {
@@ -33,7 +33,7 @@ export const cardStore = defineStore(
             "seconds": 0,
             "week": "星期四"
           },
-          "type": null
+          "type": 'noOver'
         },{
           "eventValue": "中秋节",
           "dateValue": {
@@ -45,7 +45,7 @@ export const cardStore = defineStore(
             "seconds": 0,
             "week": "星期五"
           },
-          "type": null
+          "type": 'noOver'
         },{
           "eventValue": "国庆节",
           "dateValue": {
@@ -57,7 +57,7 @@ export const cardStore = defineStore(
             "seconds": 0,
             "week": "星期日"
           },
-          "type": null
+          "type": 'noOver'
         }],
         appDate: {},
         clockEvent: [],
@@ -306,7 +306,6 @@ export const cardStore = defineStore(
       },
 
       addCountdownDay(value) {
-        console.log(this.countdownDay)
         this.countdownDay.push(value);
         this.sortCountdown()
         //   this.saveCountdownDay();
@@ -397,6 +396,10 @@ export const cardStore = defineStore(
       },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
+<<<<<<< HEAD
+=======
+
+>>>>>>> wjl-delevlop-37-epic
         this.customComponents.push(value);
       },
       updateCustomComponents(value,newData){

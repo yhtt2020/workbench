@@ -98,8 +98,7 @@ export default {
         className:'card',
         title:'Steam折扣推荐',
         icon:'steam',
-        type:'games',
-        epicShow:false
+        type:'games'
       },
       region:[
         {

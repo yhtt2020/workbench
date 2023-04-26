@@ -1,13 +1,15 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
+
   <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
+    <div class="absolute top-4 left-4  w-24 h-5 pointer" @click="openRight"></div>
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
       <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
         <a-empty :image="simpleImage" />
       </div>
       <div class="h-full w-full pointer" v-else @click="goSource">
-        <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
-        <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
+        <video class="fullscreen-video"   ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
+        <source :src="currentImg.srcProtocol"  type="video/mp4" id="bgVid">
         </video>
 
       <img :src="currentImg.middleSrc" @load="imgLoad" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
@@ -111,6 +113,9 @@ export default {
     imgLoad(){
       this.imgSpin = false
     },
+    openRight(){
+      this.settingVisible = true
+    },
     pickFilterChange(e){
         this.addressType =this.wallpaperOptions.find(i => i.value === e)|| {
           value:'我的收藏',
@@ -213,6 +218,7 @@ export default {
           this.$refs.wallpaperVideo.play().catch((err)=>{
 
           })
+          this.imgSpin = false
         }
       })
 

@@ -1,0 +1,64 @@
+@charset "UTF-8";
+#g_player .play {
+  width: 500px !important; }
+
+#g_player .play .m-pbar, #g_player .play .m-pbar .barbg {
+  width: 400px !important; }
+
+.m-playbar .btns {
+  margin-left: 50px !important; }
+
+/*顶部*/
+.m-nav .lst {
+  display: none; }
+
+.m-nav li, .m-nav li span, .m-nav a, .m-nav a em {
+  font-size: 20px !important; }
+
+.m-srch, .m-srch .srchbg {
+  width: 312px; }
+
+.m-tophead {
+  margin-right: 30px; }
+
+#g_nav2 .m-subnav .nav {
+  left: 80px !important; }
+
+.m-top .logo {
+  margin-left: 20px; }
+
+.m-subnav .nav li {
+  padding: 10px 10px; }
+
+.m-subnav {
+  height: 50px;
+  line-height: 50px; }
+
+.m-subnav {
+  border-bottom: none;
+  height: 70px; }
+
+.m-subnav .nav a em {
+  font-size: 1.8em !important; }
+
+.m-subnav .nav a:hover em, .m-subnav .nav a.z-slt em {
+  background: none !important; }
+
+.m-subnav .wrap {
+  height: 70px; }
+
+.m-subnav .nav li, .m-subnav .nav a {
+  float: left;
+  height: 59px;
+  text-align: center;
+  /* margin-top: -10px; */
+  padding-top: 12px;
+  margin-top: -5px; }
+
+.v-hd2 {
+  border-bottom: none; }
+
+.m-topvd {
+  display: none; }
+
+/*# sourceMappingURL=wyyFrame.css.map */

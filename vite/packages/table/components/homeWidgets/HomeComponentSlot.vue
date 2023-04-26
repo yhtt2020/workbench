@@ -42,8 +42,7 @@
         <Icon :icon="options.icon" class="title-icon"></Icon>
         <div class="w-2/3">{{ options.title }}</div>
       </div>
-      <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games') && options.epicShow === false ">
-        <span  class="rounded-md custom-hide w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">
+        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">
           {{ Object.keys(customData).length !== 0 ? customData.name : steamCC.name }}
         </span>
       </div>
@@ -54,13 +53,13 @@
     <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
-    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'11em',}"
+    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'15em',}"
     :width="120"
-    :height="120"
+    :height="320"
     class="drawer"
-    :closable="false"
+    :closable="true"
     placement="bottom"
-    :visible="visible"
+    v-model:visible="visible"
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
@@ -98,6 +97,7 @@ export default {
       settingVisible:false,
       gameRegionShow:false,
       regionName:'',
+      epicShow:true,
     }
   },
   name: 'HomeComponentSlot',

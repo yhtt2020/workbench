@@ -66,7 +66,11 @@ export default {
         title:'Epic喜加一',
         icon:'epicgames',
         type:'games',
+<<<<<<< HEAD
         epicShow:true,
+=======
+        epicShow:false,
+>>>>>>> wjl-delevlop-37-epic
       },
       teaserTips:[
         { id:0, name:'本周免费',},

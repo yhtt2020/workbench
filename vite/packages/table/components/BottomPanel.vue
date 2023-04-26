@@ -310,7 +310,9 @@ export default {
     }
   },
   methods: {
-    toggleTeam(){
+    ...mapActions(teamStore,['updateMy']),
+    async toggleTeam(){
+      await this.updateMy()
       if(this.team.status===false){
         this.teamKey=Date.now()
         this.showTeamTip=true
