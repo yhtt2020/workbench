@@ -37,11 +37,25 @@ import GameCommunity from '../page/gameAssistant/GameCommunity.vue'
 import GameDiscount from '../page/gameAssistant/GameDiscount.vue'
 import GameIntroduction from '../page/gameAssistant/GameIntroduction.vue'
 import MyGame from '../page/gameAssistant/MyGame.vue'
+import Team from '../page/Team.vue'
+import Hall from '../page/team/Hall.vue'
 export default [{
   path: '/main',
   name: 'main',
   component: Main,
   children: [
+    {
+      path:'/team',
+      name:'team',
+      component: Team,
+      children: [
+        {
+          path:'',
+          name:'hall',
+          component:Hall
+        }
+      ]
+    },
     {
       path: '',
       name: 'home',

@@ -1,30 +1,33 @@
 <template>
-  <a-result v-if="this.grids.length===0"
-            status="success"
-            title="使用快捷指令"
-            sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
-  >
-    <template #extra>
-      <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
-      <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
-    </template>
+  <div  v-if="this.grids.length===0" class="p-5" style="max-height: 100%">
+    <a-result  class="s-bg rounded-xl " style=""
+               status="success"
+               title="使用快捷指令"
+               sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
+    >
+      <template #extra>
+        <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
+        <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+      </template>
 
-    <div class="desc">
-      <p style="font-size: 16px">
-        <strong>您也可以通过多种方式导入别人分享的方案：</strong>
-      </p>
-      <p>
-        <close-circle-outlined :style="{ color: 'red' }"/>
-        使用分享代码导入
-        <a @click="toggleImport">导入代码 &gt;</a>
-      </p>
-      <p>
-        <close-circle-outlined :style="{ color: 'red' }"/>
-        从社区获得分享代码（此功能暂未上线，请耐心等待）
-        <a>从社区导入 &gt;</a>
-      </p>
-    </div>
-  </a-result>
+      <div class="desc">
+        <p style="font-size: 16px">
+          <strong>您也可以通过多种方式导入别人分享的方案：</strong>
+        </p>
+        <p>
+          <close-circle-outlined :style="{ color: 'red' }"/>
+          使用分享代码导入
+          <a @click="toggleImport">导入代码 &gt;</a>
+        </p>
+        <p>
+          <close-circle-outlined :style="{ color: 'red' }"/>
+          从社区获得分享代码（此功能暂未上线，请耐心等待）
+          <a>从社区导入 &gt;</a>
+        </p>
+      </div>
+    </a-result>
+  </div>
+
   <div v-if="sharing" style="padding: 2em;padding-left: 4em;padding-bottom: 0">
     <h2>请选择您要分享的小组，勾选后，在底部选择需要分享的方式。</h2>
     <p>对于不希望分享的小组，可以不做勾选。</p>
@@ -321,7 +324,13 @@
         </div>
 
       </a-col>
+      <a-col>
+        <div class="btn" @click="clean">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div>清空</div>
+        </div>
 
+      </a-col>
 
     </a-row>
 
@@ -548,6 +557,16 @@ export default {
     getShareJson () {
       return JSON.stringify(this.selectedGrids)
     },
+    clean(){
+      Modal.confirm({
+        centered:true,
+        content:'是否删除全部指令？此操作不可还原。',
+        okText:'清空',
+        onOk:()=>{
+          this.grids=[]
+        }
+      })
+    },
     toggleImport () {
       this.importJsonTxt = ''
       this.importMenuJsonVisible = !this.importMenuJsonVisible
@@ -750,6 +769,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.ant-result-content {
+  margin-top: 24px;
+  padding: 15px;
+  background-color: #fafafa;
+  padding-bottom: 5px;
+}
 .grid {
   position: relative;
   width: 18em;

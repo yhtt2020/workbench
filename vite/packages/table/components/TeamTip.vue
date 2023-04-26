@@ -51,7 +51,7 @@
 
 <script>
 import {Modal} from 'ant-design-vue'
-import {mapWritableState} from 'pinia'
+import {mapWritableState,mapActions} from 'pinia'
 import {UsergroupAddOutlined} from '@ant-design/icons-vue'
 import CreateTeam from "./CreateTeam.vue";
 import BackBtn from "./comp/BackBtn.vue";
@@ -66,7 +66,7 @@ export default {
     visible:false,
   },
   computed:{
-    ...mapWritableState(teamStore,['teamVisible'])
+    ...mapWritableState(teamStore,['teamVisible','team'])
   },
   data(){
     return {
@@ -78,6 +78,7 @@ export default {
     this.step=1
   },
   methods:{
+    ...mapActions(teamStore,['joinByNo','updateTeamShip']),
     created(){
       this.$emit(
         'update:visible',false
@@ -91,11 +92,27 @@ export default {
         content:'创建、加入一个小队的好处：您可以获得每位小队成员5%的在线时长累计加成，加速等级提升，同时体验次时代的小团队协作模式（陆续上线）'
       })
     },
-    join(){
-      Modal.error({
-        content:'暂不支持加入小队',
-        centered:true
-      })
+    async join () {
+      let rs= await this.joinByNo(this.teamNo)
+      console.log(rs,'最终rs')
+      if(rs.code===1000){
+        let result=rs.data
+        if(result.status){
+          this.team=result.data
+          Modal.success({content:'加入小队成功。',centered:true})
+          this.$emit(
+            'update:visible',false
+          )
+          this.teamVisible=true
+        }else{
+          Modal.error({content:result.info,centered:true})
+        }
+
+      }
+      // Modal.error({
+      //   content: '暂不支持加入小队',
+      //   centered: true
+      // })
     },
     hide(){
       console.log(this.step)

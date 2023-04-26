@@ -1,7 +1,7 @@
 import {getResPath, getResPathJoin} from "../../common/exec";
 const  path = require('path');
 const { exec, ChildProcess } =require('child_process');
-
+const iconv=window.iconv
 //此类将外部的一个项目提取到了项目当中，进行了简化，防止这个包打包之后因为路径问题而无法使用。
 //https://github.com/JosephusPaye/win-audio-outputs
 
@@ -64,6 +64,7 @@ export interface AudioOutput {
  */
 //const binDir = path.join(__dirname, '..', 'bin');
 const binDir=getResPathJoin('nir')
+console.log(binDir)
 /**
  * A Promise wrapper around child_process.exec()
  */
@@ -82,10 +83,11 @@ function execAsPromised(
         if (err) {
           reject(err);
         }
-
+        let outDecode= iconv.decode(Buffer.from(stdout, "binary"), 'GBK')
+        let errDecode= iconv.decode(Buffer.from(stderr, "binary"), 'GBK')
         resolve({
-          stdout: stdout.trim(),
-          stderr: stderr.trim(),
+          stdout: outDecode,
+          stderr: errDecode,
           exitCode: child.exitCode,
         });
       }

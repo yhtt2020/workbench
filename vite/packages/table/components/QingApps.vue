@@ -39,7 +39,7 @@ export default {
   },
   methods:{
     executeApp(app){
-      ipc.send('executeAppByPackage',{package:app.package})
+      ipc.send('executeApp',{app:JSON.parse(JSON.stringify(app))})
     }
   }
 }
