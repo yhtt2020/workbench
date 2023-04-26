@@ -124,8 +124,9 @@ export default {
         if (result.status) {
           this.team = result.data
           await this.updateMy(0)
-          Modal.success({ content: '加入小队成功。', centered: true })
           this.teamVisible = true
+          Modal.success({ content: '加入小队成功。', centered: true })
+
         } else {
           Modal.error({ content: result.info, centered: true })
         }

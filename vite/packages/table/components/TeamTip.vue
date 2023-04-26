@@ -17,7 +17,10 @@
 
               </a-row>
 
-              <div  @click="()=>{this.step=2}" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer" style="background: #535bf2;color: white">立即创建</div>
+              <div  @click="()=>{this.step=2}" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer relative" style="background: #535bf2;color: white">
+                <GradeSmallTip powerType="team" ></GradeSmallTip>
+
+                立即创建</div>
             </div>
             <div class="mt-6">
               <a-row   :gutter="20">
@@ -56,9 +59,11 @@ import {UsergroupAddOutlined} from '@ant-design/icons-vue'
 import CreateTeam from "./CreateTeam.vue";
 import BackBtn from "./comp/BackBtn.vue";
 import { teamStore } from '../store/team'
+import GradeSmallTip from './GradeSmallTip.vue'
 export default {
   name: "TeamTip",
   components:{
+    GradeSmallTip,
     BackBtn,
     CreateTeam, UsergroupAddOutlined
   },

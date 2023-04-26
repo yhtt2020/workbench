@@ -6,6 +6,7 @@ import dbStorage from "./dbStorage";
 const {axios} = window.$models
 const createUrl = Server.baseUrl + '/app/team/create'
 const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
+const quitByNoUrl = Server.baseUrl + '/app/team/quitByNo'
 const getTeamLeaderUrl = Server.baseUrl + '/app/team/getLeader'
 const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
 const getMy = Server.baseUrl + '/app/team/getMy'
@@ -185,6 +186,19 @@ export const teamStore = defineStore("teamStore", {
           info: e.message
         }
         console.warn(e)
+      }
+
+    },
+    async quitByNo(no) {
+      try {
+        let rs = await axios.post(quitByNoUrl, {no: no},
+          await getConfig())
+        return rs
+      } catch (e) {
+        return {
+          status: 0,
+          info: e.message
+        }
       }
 
     },
