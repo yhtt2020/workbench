@@ -8,6 +8,8 @@ export const steamStore = defineStore("steam", {
     steamCC:{id:"cc",name:'国区'},
     data:[],
     dataDetail:{}, // 应用详情
+    weekList:[],
+    nextWeekLits:[]
   }),
   actions: {
     // 根据编码分类列表数据存储
@@ -48,7 +50,7 @@ export const steamStore = defineStore("steam", {
           this.data = JSON.parse(getGame)
         }
        }
-    }
+    },
   },
   persist: {
     enabled: true,

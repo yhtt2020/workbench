@@ -107,7 +107,8 @@ export default {
         className:'card',
         title:'Steam折扣推荐',
         icon:'steam',
-        type:'games'
+        type:'games',
+        epicShow:false
       },
       region:[
         {
@@ -198,7 +199,8 @@ export default {
             const defaultIndex = this.data.filter(el=>{
               return el.cc === 'cn'
             })
-            const discountList = defaultIndex[0]
+            console.log(defaultIndex[0]);
+            // const discountList = defaultIndex
             this.list = discountList.list
             this.getRandomList()
           }else{

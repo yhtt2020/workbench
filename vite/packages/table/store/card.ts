@@ -398,7 +398,6 @@ export const cardStore = defineStore(
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
         this.customComponents.push(value);
-
       },
       updateCustomComponents(value,newData){
         const findCustom = this.customComponents.find(el=>{
