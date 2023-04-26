@@ -100,6 +100,9 @@ export default {
       let randomNums=[]
       while (1) {
         let randomNum = (Math.random()*this.list.length).toFixed(0)
+        if(randomNum>=this.list.length){
+          continue
+        }
         if(randomNums.indexOf(randomNum) >= -1){
           randomNums.push(randomNum)
           if(randomNums.length>=6){

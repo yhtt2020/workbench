@@ -79,6 +79,7 @@ export const teamStore = defineStore("teamStore", {
         let data = teamLeaderResult.data
         if (data.status) {
           this.teamLeader = data.data
+          console.log(data,'leader')
           return this.teamLeader
         } else {
           console.warn('无法取到队长信息')
