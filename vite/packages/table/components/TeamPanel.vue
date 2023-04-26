@@ -9,7 +9,7 @@
         </div>
         <a-row :gutter="20">
           <a-col>
-            <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
+            <a-avatar class="mt-3 ml-3"  :size="50" shape="square" :src="team.avatar"></a-avatar>
           </a-col>
           <a-col>
             <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
@@ -19,7 +19,14 @@
         <div class="bg-mask rounded-xl m-3 p-3" style="line-height: 2">
           升级效率：<strong style="color: #48ef48" class="mr-3">{{ effect }} % </strong> {{online-1}} 队友在线 *5%
          <br>
-          小队等级：1级<br>
+          <a-row>
+            <a-col>
+              小队等级：1级
+            </a-col>
+            <a-col>
+              <LevelIcon style="margin-top: -2px;margin-left: 5px"  :level="1"></LevelIcon>
+            </a-col>
+          </a-row>
           全网排名：-<br>
           升级剩余时长：-<br>
           累计在线时长：-
@@ -130,10 +137,11 @@ import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import UserDetail from './team/UserDetail.vue'
 import UserAvatar from './small/UserAvatar.vue'
+import LevelIcon from './small/LevelIcon.vue'
 
 export default {
   name: 'TeamPanel',
-  components: { UserAvatar, UserDetail, PlusOutlined },
+  components: { LevelIcon, UserAvatar, UserDetail, PlusOutlined },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
     ...mapState(appStore, ['userInfo']),
