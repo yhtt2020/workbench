@@ -341,9 +341,14 @@ global.SidePanel=class SidePanel {
         debounce(()=>{
           if(SidePanel.alive()){
             try{
+              //必须清理掉小数点，否则就会出现
+              bounds.x=Number(parseFloat(bounds.x).toFixed(0))
+              bounds.y=Number(parseFloat(bounds.y).toFixed(0))
+              bounds.width=Number(parseFloat(bounds.width).toFixed(0))
+              bounds.height=Number(parseFloat(bounds.height).toFixed(0))
               sidePanel._sidePanel.setBounds(bounds)
             }catch (e) {
-              console.warn('侧边栏未载入，导致无法设置边框报错')
+              console.warn('侧边栏定位错误',e)
             }
           }
         },15)() //60帧=1000/60
