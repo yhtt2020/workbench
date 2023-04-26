@@ -108,7 +108,7 @@ export default {
         title:'Steam折扣推荐',
         icon:'steam',
         type:'games',
-        epicShow:false
+        epicShow:true
       },
       region:[
         {
@@ -168,6 +168,7 @@ export default {
       detailList:{},
       gameShow:false,
       isLoading:false,
+      epicShow:false,
       gameBare:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.gameSlot.visible = false}}]
     }
   },

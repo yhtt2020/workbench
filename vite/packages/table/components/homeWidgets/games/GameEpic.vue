@@ -66,7 +66,7 @@ export default {
         title:'Epic喜加一',
         icon:'epicgames',
         type:'games',
-        epicShow:true,
+        epicShow:false,
       },
       teaserTips:[
         { id:0, name:'本周免费',},

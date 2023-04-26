@@ -99,7 +99,7 @@ export default {
         title:'Steam折扣推荐',
         icon:'steam',
         type:'games',
-        epicShow:false
+        epicShow:true
       },
       region:[
         {
