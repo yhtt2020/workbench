@@ -1,16 +1,21 @@
 <template>
 
-  <a-row >
-    <a-col :span="10">
+  <a-row :gutter="20">
+    <a-col :span="8">
       <HorizontalPanel :navList="teamNavList" v-model:selectType="teamType"></HorizontalPanel>
     </a-col>
-    <a-col :span="14">
+    <a-col :span="3">
+      <div @click="random" class="s-bg pointer h-12 w-24 rounded-xl flex justify-center items-center px-3">
+        <icon class="mr-1" style="font-size: 1.2em" icon="shuaxin"></icon>
+        换一换</div>
+    </a-col>
+    <a-col :span="13">
       <div style="float: right" class="p-3 text-lg"  > {{list.length}} 小队</div>
     </a-col>
   </a-row>
   <div style="flex: 1;overflow:hidden;" class="">
     <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 100%">
-    <TeamList @showAction="showAction" :list="list"></TeamList>
+    <TeamList @showAction="showAction" :list="showTeam"></TeamList>
     </vue-custom-scrollbar>
   </div>
 
@@ -58,6 +63,7 @@ export default {
   components: { TeamList, HorizontalPanel },
   data () {
     return {
+      randomNums:[],
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -76,10 +82,33 @@ export default {
   },
   computed:{
     ...mapState(teamStore,['hasTeam']),
-    ...mapWritableState(teamStore,'teamVisible')
+    ...mapWritableState(teamStore,'teamVisible'),
+    showTeam(){
+
+      let data=[]
+      this.randomNums.forEach(num=>{
+        console.log(num)
+        data.push(this.list[num])
+      })
+      console.log(data)
+      return data
+    }
   },
   methods: {
     ...mapActions(teamStore, ['getTeamList','updateMy','joinByNo']),
+    random(){
+      let randomNums=[]
+      while (1) {
+        let randomNum = (Math.random()*this.list.length).toFixed(0)
+        if(randomNums.indexOf(randomNum) >= -1){
+          randomNums.push(randomNum)
+          if(randomNums.length>=6){
+            break
+          }
+        }
+      }
+      this.randomNums=randomNums
+    },
     showAction (data) {
       this.selectTeam = data.team
       this.actionVisible = true
@@ -105,11 +134,12 @@ export default {
     let result = await this.getTeamList({
       take: this.take,
       skip: (this.page - 1) * this.take,
-      type:this.teamType.name
+      type:this.teamType.name,
+      cache:0
     })
     if (result) {
       this.list = result.data
-      console.log(  this.list, '页面上result')
+      this.random()
     }
     this.updateMy().then()
   }
