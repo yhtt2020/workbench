@@ -1,7 +1,7 @@
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex" >
     <template v-if="epicAppShow === false">
-      <div class="flex h-11 justify-between items-center bg-white bg-opacity-30 p-1 rounded-md mt-2">
+      <div class="flex h-11 justify-between items-center  p-1 rounded-md mt-2" style="background: rgba(255, 255, 255, 0.1);">
         <span class="flex items-center h-9 cursor-pointer justify-center change-item" :class="weekIndex === item.id ? 'epic-active':''" v-for="item in teaserTips" @click="weekPick(item.id)">
            {{ item.name }}
         </span>
