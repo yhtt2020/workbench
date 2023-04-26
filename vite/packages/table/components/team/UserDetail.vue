@@ -4,7 +4,9 @@
       <a-avatar class="mt-3 ml-3" :size="50" :src="userInfo.avatar"></a-avatar>
     </a-col>
     <a-col :span="19">
-      <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ userInfo.nickname }}</div>
+      <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ userInfo.nickname }}
+
+      </div>
       <div>
         <div class="rounded-md ml-2 px-2 bg-mask inline-block font-bold">UID: {{ userInfo.uid }}</div>
       </div>
@@ -28,8 +30,8 @@
   </div>
   <div class="bg-mask rounded-xl m-3 p-3 mt-0" style="line-height: 2">
 <!--    升级效率：<strong>{{ effect }} %</strong>-->
-    小队在线时长：<br>
-    平均每日在线：1级<br>
+    小队在线时长：-<br>
+    平均每日在线：-<br>
     加入时间：-<br>
     下线时间：-<br>
     离被自动请离还有：1小时<br>
@@ -38,7 +40,7 @@
 </template>
 
 <script>
-import {mapActions} from 'pinia'
+import { mapActions } from 'pinia'
 import { teamStore } from '../../store/team'
 import OnlineGradeDisplay from './OnlineGradeDisplay.vue'
 import OnlineMedal from './OnlineMedal.vue'
@@ -46,7 +48,7 @@ import OnlineMedal from './OnlineMedal.vue'
 export default {
   name: 'UserDetail',
   components: { OnlineMedal, OnlineGradeDisplay },
-  props:['userInfo'],
+  props:['userInfo','isLeader','memberInfo'],
   data(){
     return{
       grade:{},
@@ -54,9 +56,7 @@ export default {
     }
   },
   async mounted () {
-
-    let rs=await  this.getMemberGrade(this.userInfo.uid)
-    this.grade = rs
+    this.grade = await this.getMemberGrade(this.userInfo.uid)
   },
   methods:{
     ...mapActions(teamStore,['getMemberGrade'])

@@ -29,8 +29,9 @@
             style="border-radius: 6px;line-height: 18px;padding-bottom:7px"
       ><span>
                                    全球排名：<span style="font-size: 20px;"> {{ extra.rank }}</span>
+
 </span></span>
-      <span v-else> 超过{{ (extra.percentage).toFixed(2) }}%的用户</span>
+      <span v-else> 超过{{ (extra.percentage).toFixed(2) }}%的用户</span> <span class="ml-3">累计在线：{{extra.hours}}小时</span>
     </div>
   </div>
 </template>

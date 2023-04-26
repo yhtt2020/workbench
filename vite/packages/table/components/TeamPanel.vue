@@ -1,5 +1,5 @@
 <template>
-  <div class="flex s-bg rounded-xl" :style="{height:showDetail?'100%':'auto'}" style="overflow: hidden">
+  <div :class="{'fix':showDetail}" class="flex s-bg rounded-xl" :style="{height:showDetail?'100%':'auto'}" style="overflow: hidden">
     <transition name="fade">
       <div v-if="showDetail && teamDetail"
            style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
@@ -57,7 +57,7 @@
         <vue-custom-scrollbar :settings="outerSettings"
                               style="position:relative;height:calc(100% - 60px);  ">
           <div class="mb-10">
-            <UserDetail :key="userInfoKey" :userInfo="showUserInfo"></UserDetail>
+            <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo"></UserDetail>
           </div>
         </vue-custom-scrollbar>
 
@@ -82,7 +82,7 @@
       </div>
 
     </transition>
-    <div class="common-panel  flex" style="width: 80px;flex-direction: column">
+    <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0">
       <div v-if="!teamDetail" @click="showTeamDetail" class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
         <div class="mb-3">
@@ -93,16 +93,20 @@
       <a-divider style="margin-top: 10px;margin-bottom: 10px"></a-divider>
       <vue-custom-scrollbar :settings="outerSettings"
                             style="position:relative;height:100%;  ">
-        <div @click="showUserDetail(teamLeader.userInfo)" :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-5 mt-5 pointer pt-2"
+        <div @click="showUserDetail(teamLeader.userInfo,teamLeader)" :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
-          <a-avatar :size="50" :src="teamLeader.userInfo.avatar"></a-avatar>
-          <div v-if="showDetail" class="p-2 truncate" :title="teamLeader.userInfo.nickname">
+
+          <UserAvatar :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" ></UserAvatar>
+
+                   <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
+
           </div>
         </div>
-        <div @click="showUserDetail(user.userInfo)" class="text-center  mb-5 pointer  pt-2" :class="{'active':this.showUserInfo===user.userInfo}"  v-for="user in teamMembers">
-          <a-avatar :size="50" :src="user.userInfo.avatar"></a-avatar>
-          <div v-if="showDetail" class="p-2 truncate" :title=" user.userInfo.nickname">{{
+        <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2" :class="{'active':this.showUserInfo===user.userInfo}"  v-for="user in teamMembers">
+
+          <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''"></UserAvatar>
+          <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
           </div>
@@ -126,10 +130,11 @@ import { mapWritableState, mapActions, mapState } from 'pinia'
 import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import UserDetail from './team/UserDetail.vue'
+import UserAvatar from './small/UserAvatar.vue'
 
 export default {
   name: 'TeamPanel',
-  components: { UserDetail, PlusOutlined },
+  components: { UserAvatar, UserDetail, PlusOutlined },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
     ...mapState(appStore, ['userInfo']),
@@ -151,6 +156,7 @@ export default {
       teamDetail: false,
       showUid: 0,
       showUserInfo: {},
+      showUserMemberInfo:{},//成员信息
       timer: null,//用于定期刷新队伍信息
       userInfoKey:Date.now()
     }
@@ -174,7 +180,8 @@ export default {
       this.closeDetail()
       this.$router.push({name:'hall'})
     },
-    showUserDetail (userInfo) {
+    showUserDetail (userInfo,memberInfo) {
+      this.showUserMemberInfo=memberInfo
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
       this.userInfoKey=Date.now()
@@ -227,5 +234,14 @@ export default {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 
+}
+.fix{
+  position: fixed;
+  max-height: 550px;
+  right: 0;
+  top: 50%;
+  z-index:99999;
+  -webkit-app-region:no-drag;
+  transform: translateY(-50%);
 }
 </style>
