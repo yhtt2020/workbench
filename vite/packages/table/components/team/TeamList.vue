@@ -16,8 +16,6 @@
               <div class="bg-mask m-1 px-1.5 py-0.5   rounded-md">1级</div>
               <div class="bg-mask m-1 px-1.5  py-0.5  rounded-md">排名：-</div>
             </div>
-
-
           </a-col>
         </a-row>
         <div class="m-5 ml-6 mt-1 mb-3">

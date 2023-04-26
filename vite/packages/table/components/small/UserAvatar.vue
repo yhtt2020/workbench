@@ -9,12 +9,16 @@
 
 
     <a-avatar :size="50" :src="avatar"></a-avatar>
+    <OnlineTag style="position: absolute;right:5px;bottom: 5px;z-index: 99" v-if="online"></OnlineTag>
   </div>
 </template>
 
 <script>
+import OnlineTag from './OnlineTag.vue'
+
 export default {
   name: 'UserAvatar',
+  components: { OnlineTag },
   props: ['avatar', 'tag', 'online', 'tagColor']
 }
 </script>

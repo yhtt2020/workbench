@@ -17,9 +17,8 @@
           </a-col>
         </a-row>
         <div class="bg-mask rounded-xl m-3 p-3" style="line-height: 2">
-          升级效率：<strong>{{ effect }} %</strong>
-          <icon icon="tishi-xianxing"></icon>
-          暂未开放加速<br>
+          升级效率：<strong style="color: #48ef48" class="mr-3">{{ effect }} % </strong> {{online-1}} 队友在线 *5%
+         <br>
           小队等级：1级<br>
           全网排名：-<br>
           升级剩余时长：-<br>
@@ -96,7 +95,7 @@
         <div @click="showUserDetail(teamLeader.userInfo,teamLeader)" :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
 
-          <UserAvatar :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" ></UserAvatar>
+          <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" ></UserAvatar>
 
                    <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
@@ -105,8 +104,8 @@
         </div>
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2" :class="{'active':this.showUserInfo===user.userInfo}"  v-for="user in teamMembers">
 
-          <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''"></UserAvatar>
-          <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
+          <UserAvatar :online="user.online" :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''"></UserAvatar>
+          <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
           </div>
@@ -139,11 +138,20 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
     ...mapState(appStore, ['userInfo']),
     effect () {
-      return (this.team.member_count - 1) * 5 + 100
+      let online= this.teamLeader.online?1:0
+      this.teamMembers.forEach(member=>{
+        if(member.online){
+          online++
+        }
+      })
+      this.online=online
+
+      return (online - 1) * 5 + 100
     }
   },
   data () {
     return {
+      online:0,
       outerSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
