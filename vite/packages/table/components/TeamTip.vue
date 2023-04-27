@@ -17,14 +17,17 @@
 
               </a-row>
 
-              <div  @click="()=>{this.step=2}" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer" style="background: #535bf2;color: white">立即创建</div>
+              <div  @click="()=>{this.step=2}" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer relative" style="background: #535bf2;color: white">
+                <GradeSmallTip powerType="team" ></GradeSmallTip>
+
+                立即创建</div>
             </div>
             <div class="mt-6">
               <a-row   :gutter="20">
                 <a-col  class="pt-3">
                   <UsergroupAddOutlined class="text-white icon"/>
                 </a-col>
-                <a-col><div class="title">加入小队</div>作为小队成员，加入小队</a-col>
+                <a-col><div class="title">加入小队</div>作为小队成员，加入小队，<a @click="goHall">前往小队大厅</a></a-col>
 
               </a-row>
               <a-row class="mt-4" :gutter="10">
@@ -56,9 +59,11 @@ import {UsergroupAddOutlined} from '@ant-design/icons-vue'
 import CreateTeam from "./CreateTeam.vue";
 import BackBtn from "./comp/BackBtn.vue";
 import { teamStore } from '../store/team'
+import GradeSmallTip from './GradeSmallTip.vue'
 export default {
   name: "TeamTip",
   components:{
+    GradeSmallTip,
     BackBtn,
     CreateTeam, UsergroupAddOutlined
   },
@@ -84,6 +89,12 @@ export default {
         'update:visible',false
       )
       this.teamVisible=true
+    },
+    goHall(){
+      this.$router.push({name:'hall'})
+      this.$emit(
+        'update:visible',false
+      )
     },
     more(){
       Modal.info({

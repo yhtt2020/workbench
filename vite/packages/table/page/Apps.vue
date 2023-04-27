@@ -233,6 +233,17 @@ export default {
           }
         },
         {
+          icon: 'https://a.apps.vip/icons/debugtron.svg',
+          name: 'Debugtron',
+          summary: '基于Electron的调试工具，用于发现问题。',
+          needInstall: true,
+          installPath:'%LOCALAPPDATA%\\debugtron\\Debugtron.exe',
+          downloadUrl:"https://a.apps.vip/download/debugtron.exe",
+          data: {
+            security: true
+          }
+        },
+        {
           icon: 'https://a.apps.vip/download/aida64.jpg',
           name: 'AIDA64',
           summary: '一款商业级计算机硬件状态监控软件。',

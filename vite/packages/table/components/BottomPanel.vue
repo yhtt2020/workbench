@@ -107,10 +107,10 @@
     </div>
 
   </div>
-    <div @click="toggleTeam" class="common-panel s-bg pointer " style="margin-left: 0;padding:0.5em;min-width: 6em;">
+    <div @click="toggleTeam" class="common-panel s-bg pointer " style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
 
-      <Icon icon="smile"   style="margin:0.3em;fill:#d7d7d7"></Icon>
-      <div class="mb-2">  小队 <div v-if="!team.status" style="display: inline-block;position: relative"> <span class="flex h-3 w-3">
+      <Icon class="mt-2 mb-0 " icon="smile"   style="fill:#d7d7d7"></Icon>
+      <div class="mb-0 mt-0">  小队 <div v-if="!team.status" style="display: inline-block;position: relative"> <span class="flex h-3 w-3">
   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
   <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
 </span></div></div>
@@ -312,7 +312,7 @@ export default {
   methods: {
     ...mapActions(teamStore,['updateMy']),
     async toggleTeam(){
-      await this.updateMy()
+      await this.updateMy(0)
       if(this.team.status===false){
         this.teamKey=Date.now()
         this.showTeamTip=true
