@@ -1,26 +1,38 @@
 <template>
   <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :formulaBar="detailBar" ref="detailSlot" :customData="customData">
-    <template v-if="detailShow === false">
-      <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
-        <swiper-slide v-for="item in groupList">
-          <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
-            <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-            <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
-          </div>
-        </swiper-slide>
-      </swiper>
-
-      <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-        <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
-        <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
-        <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
-      </div>
+    <div class="bg-mask rounded-xl px-3 py-1 pointer" @click="showRegionSelect"
+         style="position: absolute;left: 45px;top:10px">{{ region.name }}
+    </div>
+    <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
+    <template v-else-if="fail">
+      <a-result :status="null" title="请确认网络" style="margin-top: 3em">
+        <template #extra>
+          <a-button key="console" type="primary" @click="retry">重试</a-button>
+        </template>
+      </a-result>
     </template>
-    <template v-if="detailShow === true">
-      <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
-       <div class="flex flex-grow flex-col" style="margin-top: 14px;" v-else>
+    <template v-else>
+      <template v-if="detailShow === false">
+        <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
+          <swiper-slide v-for="item in list">
+            <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
+              <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
+              <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
+            </div>
+          </swiper-slide>
+        </swiper>
+
+        <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+          <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+          <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
+          <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+        </div>
+      </template>
+      <template v-if="detailShow === true">
+
+        <div class="flex flex-grow flex-col" style="margin-top: 14px;" >
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
-             <img class="rounded-lg" :src="dpList.header_image" alt="">
+            <img class="rounded-lg" :src="dpList.header_image" alt="">
           </div>
           <div class="truncate" style="font-size: 18px;font-weight: 500;">{{dpList.name}}</div>
           <span class="content-introduction" style="color: rgba(255, 255, 255, 0.6);font-size: 16px;font-weight: 400;">{{dpList.short_description}}</span>
@@ -45,17 +57,26 @@
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
             <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam(dpList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
-          </div> 
-       </div>
+          </div>
+        </div>
+      </template>
     </template>
+
   </HomeComponentSlot>
 
-  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}"  placement="right" :visible="gameVisible" @close="onClose">
+
+  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right"
+            v-model:visible="gameVisible" @close="onClose">
     <div class="flex flex-col justify-start">
-     <span style="margin-bottom: 14px;">默认地区</span>
-     <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
-       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
-     </a-select>
+      <span style="margin-bottom: 14px;">游戏区服</span>
+      <a-radio-group @change="getRegion($event)" v-model:value="defaultRegion">
+        <a-radio class="line" v-for="item in regionRange" :value="item.id">
+          {{ item.name }}
+        </a-radio>
+      </a-radio-group>
+      <!--      <a-select style="width: 452px" @change="getRegion($event)">-->
+      <!--        <a-select-option  >{{ item.name }}</a-select-option>-->
+      <!--      </a-select>-->
     </div>
   </a-drawer>
 </template>
@@ -70,7 +91,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination,Autoplay } from 'swiper';
-
+import Template from '../../../../user/pages/Template.vue'
+import { regionRange } from '../../../js/axios/api'
 export default {
   name:'GamesDiscount',
   props:{
@@ -88,69 +110,23 @@ export default {
     }
   },
   components:{
+    Template,
     HomeComponentSlot,
     Swiper,
     SwiperSlide,
   },
   data(){
     return{
+      fail:false,
+      key:Date.now(),
       options:{
         className:'card',
-        title:'Steam折扣推荐',
+        title:'',
         icon:'steam',
         type:'games',
         epicShow:true
       },
-      region:[
-        {
-          id:'us',
-          name:'美国'
-        },
-        {
-          id:'ca',
-          name:'加拿大'
-        },
-        {
-          id:'gb',
-          name:'英国'
-        },{
-          id:'fr',
-          name:'法国'
-        },{
-          id:'de',
-          name:'德国'
-        },{
-          id:'it',
-          name:'意大利'
-        },{
-          id:'jp',
-          name:'日本',
-        },{
-          id:'cn',
-          name:'国区',
-        },{
-          id:'br',
-          name:'巴西',
-        },{
-          id:'in',
-          name:'印度',
-        },{
-          id:'ru',
-          name:'俄罗斯',
-        },{
-          id:'au',
-          name:'澳大利亚',
-        },
-        {
-          id:'hk',
-          name:'香港',
-        },
-        {
-          id:'ar',
-          name:'阿根廷',
-        }
-
-      ],
+      regionRange:regionRange,
       percentageList:[],
       reloadShow:false,
       groupList:[],
@@ -165,74 +141,71 @@ export default {
     }
   },
   mounted(){
+    this.isLoading = true
+    if (this.customData && this.customData.id) {
+      this.defaultRegion = this.customData.id
+    }
 
+
+    this.getRegion().then(() => {
+
+    })
   },
 
   computed:{
-    ...mapWritableState(steamStore,["data","dataDetail"]),
-    ...mapWritableState(cardStore,["customComponents","updateCustomComponents"])
-  },
+    ...mapWritableState(steamStore,["data","dataDetail",'getData']),
+    ...mapWritableState(cardStore,["customComponents","updateCustomComponents"]),
+    region () {
+      if (this.customData && this.customData.id) {
+        let found = this.regionRange.find(re => {
+          return re.id === this.customData.id
+        })
+        if (found) {
+          return found
+        }
+      }
+      return this.regionRange[0]
 
-  watch:{
-    data:{
-      handler(newVal,oldVal){
-       if(Object.keys(newVal).length !== 0){
-         this.getDPData()
-       }
-      },
-      deep:true,
-      immediate:true
+    },
+    list () {
+      if (this.key) {
+
+      }
+      if (this.data[this.customData.id]) {
+        console.log(this.data[this.customData.id], '显示的list')
+        let groups = [];
+        for (let i = 0; i < 5; i++) {
+          groups.push([]);
+        }
+        groups.forEach((arr) => (arr.length = 0));
+        // 随机获取两条数据，放入五个数组中
+        for (let i = 0; i < groups.length; i++) {
+          const index = randomData(this.data[this.customData.id].list,2);
+          groups[i].push(index)
+        }
+        return groups
+      } else return []
     }
   },
 
+
   methods:{
-    ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
-    getDPData(){
-      if(Object.keys(this.customData).length === 0 && this.defaultRegion === "cn"){
-           if(this.data.length !== 0){
-            const defaultIndex = this.data.filter(el=>{
-              return el.cc === 'cn'
-            })
-            const discountList = defaultIndex[0]
-            this.percentageList = discountList.list
-            let groups = [];
-            for (let i = 0; i < 5; i++) {
-             groups.push([]);
-            }
-            groups.forEach((arr) => (arr.length = 0));
-            // 随机获取两条数据，放入五个数组中
-            for (let i = 0; i < groups.length; i++) {
-             const index = randomData(this.percentageList,2);
-             groups[i].push(index)
-            }
-            this.groupList = groups
-           }
-      }else{
-          if(this.data.length !== 0){
-            const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
-            return this.customData.id === el.cc
-            })
-            if(dataIndex){
-             const discountList = this.data[this.data.indexOf(dataIndex)]
-             this.percentageList = discountList.list
-             let groups = [];
-             for (let i = 0; i < 5; i++) {
-              groups.push([]);
-             }
-             groups.forEach((arr) => (arr.length = 0));
-             // 随机获取两条数据，放入五个数组中
-             for (let i = 0; i < groups.length; i++) {
-              const index = randomData(this.percentageList,2);
-              groups[i].push(index)
-             }
-             this.groupList = groups
-            }
-          }
-      }
+    ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData",'getRandomList']),
+    showRegionSelect () {
+      this.gameVisible = true
+    },
+
+    retry(){
+      this.getRegion().then(() => {
+      }).catch(()=>this.fail=true).finally(()=>{
+        this.isLoading = false
+      })
     },
     // 海报进入详情
     goToGameAppDetails(item,cc){
       this.detailShow = true
+      this.isLoading=true
+      this.fail=false
       if(Object.keys(this.customData).length !== 0){
         setTimeout(()=>{
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
@@ -241,10 +214,11 @@ export default {
                const percentData = resData.data
                this.dpList = percentData
             }
+            this.$nextTick(()=>{
+              this.isLoading = false
+            })
           })
-          this.$nextTick(()=>{
-            this.isLoading = false
-          })
+
         },500)
       }else{
         setTimeout(()=>{
@@ -255,10 +229,11 @@ export default {
                const percentData = resData.data
                this.dpList = percentData
             }
+            this.$nextTick(()=>{
+              this.isLoading = false
+            })
           })
-          this.$nextTick(()=>{
-            this.isLoading = false
-          })
+
         },500)
       }
 
@@ -267,7 +242,7 @@ export default {
     discountChange(){
       this.reloadShow = true
       setTimeout(()=>{
-        this.getDPData()
+        this.key=Date.now()
         this.reloadShow = false
       },300)
     },
@@ -280,27 +255,23 @@ export default {
     openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
     },
-    getRegion(e){
-      this.defaultRegion = e
-       // 获取国家地区名称参数
-      const findIndex =  this.region.find(el=>{
-        if(el.id === this.defaultRegion){
-          return  el
+    async getRegion () {
+
+      this.fail=false
+      this.isLoading = true
+      setTimeout(()=>{
+        if(this.loading){
+          this.fail=true
         }
+      },6000)
+
+
+      this.gameVisible = false
+      this.customData.id = this.defaultRegion
+      // 获取国家地区名称参数
+      await this.getData(this.region.id).catch(()=>this.fail=true).finally(()=>{
+        this.isLoading = false
       })
-      // 将获取国家地区名称参数缓存到customComponents里面
-      this.updateCustomComponents(this.customIndex,findIndex)
-      sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.defaultRegion}&l=${this.defaultRegion}`,3)
-      .then(res=>{
-        const date = Date.parse(res.headers.expires)
-        const resObj = {
-          cc:this.defaultRegion,
-          expiresDate:date,
-          list:res.data.specials.items
-        }
-        this.setGameData(resObj)
-      })
-      this.getDPData()
     },
     onClose() {
       this.gameVisible = false

@@ -42,11 +42,6 @@
         <Icon :icon="options.icon" class="title-icon"></Icon>
         <div class="w-2/3">{{ options.title }}</div>
       </div>
-      <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games') && options.epicShow === true">
-        <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">
-          {{ Object.keys(customData).length !== 0 ? customData.name : steamCC.name }}
-        </span>
-      </div>
       <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
       </div>
