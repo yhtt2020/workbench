@@ -30,7 +30,7 @@ const store = createStore({
         }
         return
       }
-      user.onlineGradeExtra.cumulativeMinutes= user.onlineGradeExtra.cumulativeHours % 60
+      user.onlineGradeExtra.cumulativeMinutes=  user.onlineGradeExtra.minutes- user.onlineGradeExtra.cumulativeHours* 60
       user.onlineGradeExtra.cumulativeMinute = user.onlineGradeExtra.minutes
       state.onlineGrade.crown = []
       state.onlineGrade.sun = []
