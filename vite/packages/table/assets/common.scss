@@ -291,7 +291,7 @@ body.full-screen{
   &.small-tip{
     width: 34px;
     font-size: 10px;
-    border-radius: 0px 8px 0px 8px;
+    border-radius: 0px 4px 0px 4px;
     height: 18px;
   }
 }
@@ -310,4 +310,14 @@ body{
 
 .game-page-nav{
   max-width: 932px;
+}
+.game-item-title-bg{
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, .3) 100%);
+  color: rgba(255, 255, 255, 0.85);
+  &.first{
+    border-radius:0 0 12px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+  }
 }

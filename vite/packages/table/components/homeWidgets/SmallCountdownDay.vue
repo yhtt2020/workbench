@@ -103,7 +103,7 @@ export default {
     },
   },
   methods: { transDate,
-    ...mapActions(cardStore, ["removeCountdownDay",'addCountdownDay']),
+    ...mapActions(cardStore, ["removeCountdownDay",'addCountdownDay','sortCountdown']),
     onSetup(){
     this.settingVisible = true
     },
@@ -133,7 +133,7 @@ export default {
     },
 
   mounted() {
-
+      this.sortCountdown()
   },
 };
 </script>

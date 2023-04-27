@@ -144,7 +144,6 @@ export default {
     },100)
 
     this.getUserInfo()
-    this.sortCountdown()
     this.sortClock()
   },
   computed: {
