@@ -43,7 +43,7 @@
         <div class="w-2/3">{{ options.title }}</div>
       </div>
         <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">
-          {{ Object.keys(customData).length !== 0 ? customData.name : steamCC.name }}
+          {{ isCustomData ? customData.Code.value.name  : steamCC.name }}
         </span>
       </div>
       <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
@@ -131,7 +131,13 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ['aidaData','customComponents']),
-    ...mapWritableState(steamStore,["steamCC"])
+    ...mapWritableState(steamStore,["steamCC"]),
+    isCustomData(){
+      return Object.keys(this.customData).length !== 0
+    },
+    isCode(){
+      return this.customData.hasOwnProperty('Code') 
+    }
   },
 
   mounted(){

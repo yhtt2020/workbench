@@ -3,7 +3,7 @@
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item,customData.id)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
+           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item,customData.Code.value.id)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
              <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
               <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
@@ -156,6 +156,10 @@ export default {
         {
           id:'ar',
           name:'阿根廷',
+        },
+        {
+          id:'tr',
+          name:'土耳其'
         }
 
       ],
@@ -179,13 +183,16 @@ export default {
   watch:{
     data:{
       handler(newVal,oldVal){
-       if(Object.keys(newVal).length !== 0){
+        if(newVal.length !== 0 ){
           this.getData()
-       }
+        }
       },
       deep:true,
       immediate:true
     }
+  },
+
+  mounted(){
   },
 
   methods:{
@@ -194,39 +201,18 @@ export default {
     currencyFormat,
 
     getData(){
-      if(Object.keys(this.customData).length === 0  && this.defaultRegion == "cn"){
-          if(this.data.length !== 0){
-            const defaultIndex = this.data.filter(el=>{
-              return el.cc === 'cn'
-            })
-            console.log(defaultIndex[0]);
-            // const discountList = defaultIndex
-            this.list = discountList.list
-            this.getRandomList()
-          }else{
-            return
-          }
-      }else{
-          const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
-            return this.customData.id === el.cc
-          })
-          if(dataIndex){
-            const discountList = this.data[this.data.indexOf(dataIndex)]
-            if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
-              this.list = discountList.list
-              this.getRandomList()
-            }else{
-              sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
-                const date = new Date(res.headers.expires)
-                const requestObj = {
-                  cc:this.customData.id,
-                  expiresDate:date,
-                  list:res.data.specials.items
-                }
-                this.updateGameData(requestObj)
-              })
-            }
-          }
+      if(Object.keys(this.customData).length !== 0 && this.customData.hasOwnProperty('Code') === true && this.defaultRegion === 'cn'){
+        const defaultData = this.data.filter(el=>{
+          return el.cc === this.customData.Code.value.id  
+        })
+        this.list = defaultData[0].list
+        this.getRandomList()
+      }else if(this.defaultRegion !== 'cn' && Object.keys(this.customData).length !== 0 && this.customData.hasOwnProperty('Code') === true){
+        const defaultData = this.data.filter(el=>{
+          return el.cc === this.defaultRegion  
+        })
+        this.list = defaultData[0].list
+        this.getRandomList()
       }
     },
 
@@ -305,7 +291,7 @@ export default {
       this.updateCustomComponents(this.customIndex,findIndex)
       sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.defaultRegion}&l=${this.defaultRegion}`,3)
       .then(res=>{
-        const date = Date.parse(res.headers.expires)
+        const date = new Date(res.headers.expires).getTime()
         const resObj = {
           cc:this.defaultRegion,
           expiresDate:date,
