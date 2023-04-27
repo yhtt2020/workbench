@@ -315,4 +315,9 @@ body{
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, .3) 100%);
   color: rgba(255, 255, 255, 0.85);
+  &.first{
+    border-radius:0 0 12px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+  }
 }

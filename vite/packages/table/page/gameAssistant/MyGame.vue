@@ -1,80 +1,118 @@
 <template>
-  <div>
-  <div class="flex flex-row  items-center game-page-nav">
-    <div class="flex flex-row">
-      <HorizontalPanel :navList="gameNavList" v-model:selectType="gameType"></HorizontalPanel>
-      <HorizontalPanel :navList="sortList" class="ml-3 main-nav"></HorizontalPanel>
-    </div>
-    <div class="flex flex-row ml-3">
-      <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
-      <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
-    </div>
+<div>
+<div class="flex flex-row  items-center game-page-nav">
+  <div class="flex flex-row">
+    <HorizontalPanel :navList="gameNavList" v-model:selectType="gameType"></HorizontalPanel>
+    <HorizontalPanel :navList="sortList" class="ml-3 main-nav"></HorizontalPanel>
+  </div>
+  <div class="flex flex-row ml-3">
+    <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
+    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
+  </div>
 
-  </div>
-  <vue-custom-scrollbar :settings="settingsScroller"
-                        style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
-  <div class="flex flex-row flex-wrap" v-if="gameType.name==='other'&&myGameList.length>0">
-    <div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in myGameList">
-      <div class="   s-bg rounded-xl w-auto h-full ">
-        <img :src="item.src" class="w-full h-full rounded-xl" style="object-fit: cover" alt="">
-        <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
-      </div>
-    </div>
-  </div>
-  <div class="flex flex-row flex-wrap -ml-3 content-game" v-else-if="gameType.name==='steam'&&steamGameList.length>0">
-    <div class=" pl-3 pb-3 game-list-item-first flex-shrink-0 ">
-      <div class="relative rounded-xl  w-auto h-full " >
-        <img :src="steamGameList[0].src" class="w-full h-full rounded-xl" style="object-fit: cover" alt="">
-      </div>
-    </div>
-  <div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in filterSteamGameList">
-    <div class="relative rounded-xl w-auto h-full ">
-      <img :src="item.src" class="w-full h-full rounded-xl" style="object-fit: cover" alt="">
+</div>
+<vue-custom-scrollbar :settings="settingsScroller"
+                      style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
+<div class="flex flex-row flex-wrap -ml-3" v-if="gameType.name==='other'&&myGameList.length>0">
+  <div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in myGameList">
+    <div class="   s-bg rounded-xl w-auto h-full ">
+      <img :src="item.src" class="w-full h-full rounded-xl object-cover"  alt="">
       <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
     </div>
   </div>
-
-  </div>
-    <div v-else>
-      none
-    </div>
-  </vue-custom-scrollbar>
-  </div>
-  <Modal v-model:visibility="modalVisibility" v-show="modalVisibility">
-    <div class="p-6">
-        <div class="flex flex-row items-center">
-          <Icon style="height: 26px;width: 26px" icon="steam"></Icon>
-          <div class="flex flex-col ml-4">
-            <span class="text-white">导入Steam游戏库</span>
-            <span>选择你本地的Steam本地库</span>
+</div>
+<div class="flex flex-row flex-wrap -ml-3 content-game" v-else-if="gameType.name==='steam'&&steamGameList.length>0">
+  <div class=" pl-3 pb-3 game-list-item-first flex-shrink-0 ">
+    <div class="relative rounded-xl  w-auto h-full " @contextmenu="openSteamDetail(steamGameList[0])">
+      <img :src="steamGameList[0].src" class="w-full h-full rounded-xl object-cover"  alt="">
+      <div class="game-item-title-bg first w-full h-1/4 absolute bottom-0 flex flex-row items-center pl-3"  >
+        <div v-if="!gameRun" @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(82, 196, 26, 1);aspect-ratio: 1/1;border-radius: 10px">
+          <Icon style="height: 60%;width: 60%" icon="caret-right"></Icon>
+        </div>
+        <div v-else @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(250, 173, 20, 1);aspect-ratio: 1/1;border-radius: 10px">
+          <Icon style="height: 60%;width: 60%" icon="tuichu"></Icon>
+        </div>
+        <div class="flex flex-col ml-3">
+          <span>{{steamGameList[0].title}}</span>
+          <div class="text-xs" style="color: rgba(255, 255, 255, 0.6);">
+            <span>过去两周：12小时</span>
+            <span class="ml-1">总数：133小时</span>
           </div>
         </div>
-      <div class="flex flex-row mt-4 mb-4">
-        <div class="s-item pointer h-12 w-48 rounded-xl flex justify-center items-center">选择游戏库</div>
-        <div @click="openModal" class="s-item pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
-      </div>
+       </div>
+    </div>
+  </div>
+<div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in filterSteamGameList">
+  <div class="relative rounded-xl w-auto h-full pointer" @contextmenu="openSteamDetail(item)" @click="runGame">
+    <img :src="item.src" class="w-full h-full rounded-xl object-cover"  alt="">
+    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
+  </div>
+</div>
+
+</div>
+  <div v-else>
+    none
+  </div>
+</vue-custom-scrollbar>
+</div>
+<Modal v-model:visibility="modalVisibility" v-show="modalVisibility">
+  <div class="p-6">
       <div class="flex flex-row items-center">
-        <Icon style="height: 26px;width: 26px" icon="game"></Icon>
+        <Icon style="height: 26px;width: 26px" icon="steam"></Icon>
         <div class="flex flex-col ml-4">
-          <span class="text-white">自定义导入其他游戏</span>
-          <span>手动选择游戏安装目录</span>
+          <span class="text-white">导入Steam游戏库</span>
+          <span>选择你本地的Steam本地库</span>
         </div>
       </div>
-      <div class="flex flex-row mt-4">
-        <div class="s-item pointer h-12 w-48 rounded-xl flex justify-center items-center">选择游戏库</div>
-        <div @click="openModal" class="s-item pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
+    <div class="flex flex-row mt-4 mb-4">
+      <div class="s-item pointer h-12 w-48 rounded-xl flex justify-center items-center">选择游戏库</div>
+      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
+    </div>
+    <div class="flex flex-row items-center">
+      <Icon style="height: 26px;width: 26px" icon="game"></Icon>
+      <div class="flex flex-col ml-4">
+        <span class="text-white">自定义导入其他游戏</span>
+        <span>手动选择游戏安装目录</span>
       </div>
     </div>
-  </Modal>
-  <a-drawer :width="500"  v-model:visible="drawerVisible" placement="right">
-    <template #title>
-      <div class="text-center">搜索</div>
-    </template>
-    <div class="hidden select-main-nav">
-      <div>排序</div>
-      <HorizontalPanel :navList="sortList" class="w-80 mt-3"></HorizontalPanel>
+    <div class="flex flex-row mt-4">
+      <div class="s-item pointer h-12 w-48 rounded-xl flex justify-center items-center">选择游戏库</div>
+      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
     </div>
-  </a-drawer>
+  </div>
+</Modal>
+  <Modal v-model:visibility="steamShow" v-show="steamShow">
+    <div class="pl-6 pr-9 py-6 flex flex-row">
+      <div class="w-52 h-72 relative">
+        <img :src="currentSteam.src" class="w-full h-full rounded-xl object-cover" alt="">
+        <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{currentSteam.title}}</div>
+      </div>
+      <div class="flex flex-col w-64 ml-5 justify-between">
+        <div class="flex flex-row justify-between"><span>上次游玩</span><span class="text-white">3天前</span></div>
+        <div class="flex flex-row justify-between"><span>总时长</span><span class="text-white">129小时</span></div>
+        <div class="flex flex-row justify-between"><span>近两周</span><span class="text-white">1小时</span></div>
+        <div class="flex flex-row justify-between"><span>成就</span><span class="text-white">12/29</span></div>
+        <div class="flex flex-row justify-between"><span>Steam在线</span><span class="text-white">1111,2222,3333</span></div>
+        <div class="flex flex-row justify-between"><span>M站评分</span><span class="text-white">9.0</span></div>
+
+          <div class="flex flex-row justify-between mt-3">
+            <div class="pointer s-item w-44 flex justify-center items-center rounded-xl"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
+            <div class="pointer s-item w-10 h-10 flex justify-center items-center rounded-xl"><Icon style=""  class="mr-2" icon="delete"></Icon></div>
+          </div>
+
+          <div  class="pointer s-item flex h-10 justify-center items-center rounded-xl"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+        </div>
+    </div>
+  </Modal>
+<a-drawer :width="500"  v-model:visible="drawerVisible" placement="right">
+  <template #title>
+    <div class="text-center">搜索</div>
+  </template>
+  <div class="hidden select-main-nav">
+    <div>排序</div>
+    <HorizontalPanel :navList="sortList" class="w-80 mt-3"></HorizontalPanel>
+  </div>
+</a-drawer>
 </template>
 
 <script>
@@ -101,7 +139,13 @@ export default {
       sortList:[{title:'最近游玩'},{title:'A-Z'}],
       myGameList:[{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'}],
       steamGameList:[{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},],
-      modalVisibility:false
+      modalVisibility:false,
+      gameRun:false,
+      steamShow:false,
+      currentSteam:{
+        src:'',
+        lastTime:0,
+      }
     }
   },
   computed:{
@@ -115,6 +159,13 @@ export default {
     },
     openDrawer(){
       this.drawerVisible = true
+    },
+    runGame(){
+      this.gameRun=!this.gameRun
+    },
+    openSteamDetail(item){
+      this.currentSteam = item
+      this.steamShow = true
     }
   }
 }
