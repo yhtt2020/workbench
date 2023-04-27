@@ -107,7 +107,8 @@ export default {
         className:'card',
         title:'Steam折扣推荐',
         icon:'steam',
-        type:'games'
+        type:'games',
+        epicShow:true
       },
       region:[
         {
@@ -161,7 +162,6 @@ export default {
           id:'tr',
           name:'土耳其'
         }
-
       ],
       defaultRegion:'cn',
       list:[],

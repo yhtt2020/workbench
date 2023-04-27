@@ -396,10 +396,7 @@ export const cardStore = defineStore(
       },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
-<<<<<<< HEAD
-=======
 
->>>>>>> wjl-delevlop-37-epic
         this.customComponents.push(value);
       },
       updateCustomComponents(value,newData){
