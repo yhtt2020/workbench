@@ -127,7 +127,13 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ['aidaData','customComponents']),
-    ...mapWritableState(steamStore,["steamCC"])
+    ...mapWritableState(steamStore,["steamCC"]),
+    isCustomData(){
+      return Object.keys(this.customData).length !== 0
+    },
+    isCode(){
+      return this.customData.hasOwnProperty('Code')
+    }
   },
 
   mounted(){

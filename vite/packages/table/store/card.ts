@@ -403,7 +403,7 @@ export const cardStore = defineStore(
         const findCustom = this.customComponents.find(el=>{
           return value === el.id
         })
-        this.customComponents[this.customComponents.indexOf(findCustom)].data = newData
+        this.customComponents[this.customComponents.indexOf(findCustom)].data = {Code:{id:value,value:newData}}
       },
       removeCustomComponents(customIndex) {
         this.customComponents.splice( this.customComponents.findIndex(item=>{
@@ -412,6 +412,9 @@ export const cardStore = defineStore(
         // this.customComponents.splice(customIndex,1);
 
       },
+      setDataEmpty(){
+
+      }
     },
     persist: {
       enabled: true,
