@@ -1,9 +1,9 @@
 <template>
-  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData">
+  <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :customData="customData" :formulaBar="gameBare" ref="gameSlot">
       <template v-if="gameShow ===false">
         <div class="discount-item flex flex-col" style="margin-top: 1em;">
           <div class="flex flex-col ">
-           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
+           <div  class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item,customData.id)"  v-for="item in randomList" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
              <img :src="item.header_image" alt="" class=" rounded-md" style="width:140px;height:65px; object-fit: cover;">
              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
               <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{item.name}}</div>
@@ -38,7 +38,7 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
+          <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{detailList.name}}</div>
           <span class="content-introduction text-white text-opacity-60">{{detailList.short_description}}</span>
           <div class="flex" style="margin-bottom: 10px;">
             <span class="discount-description rounded-md bg-white bg-opacity-20 "  v-for="item in detailList.genres">{{item.description}}</span>
@@ -65,6 +65,15 @@
         </div>
       </template>
   </HomeComponentSlot>
+
+  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}"  placement="right" :visible="gameVisible" @close="onClose">
+    <div class="flex flex-col justify-start">
+     <span style="margin-bottom: 14px;">默认地区</span>
+     <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
+       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
+     </a-select>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -98,14 +107,69 @@ export default {
         className:'card',
         title:'Steam折扣推荐',
         icon:'steam',
-        type:'games'
+        type:'games',
+        epicShow:true
       },
+      region:[
+        {
+          id:'us',
+          name:'美国'
+        },
+        {
+          id:'ca',
+          name:'加拿大'
+        },
+        {
+          id:'gb',
+          name:'英国'
+        },{
+          id:'fr',
+          name:'法国'
+        },{
+          id:'de',
+          name:'德国'
+        },{
+          id:'it',
+          name:'意大利'
+        },{
+          id:'jp',
+          name:'日本',
+        },{
+          id:'cn',
+          name:'国区',
+        },{
+          id:'br',
+          name:'巴西',
+        },{
+          id:'in',
+          name:'印度',
+        },{
+          id:'ru',
+          name:'俄罗斯',
+        },{
+          id:'au',
+          name:'澳大利亚',
+        },
+        {
+          id:'hk',
+          name:'香港',
+        },
+        {
+          id:'ar',
+          name:'阿根廷',
+        }
+
+      ],
+      defaultRegion:'cn',
       list:[],
       randomList:[],
       reloadShow:false,
-      gameShow:false,
+      gameVisible:false,
       detailList:{},
-      isLoading:false
+      gameShow:false,
+      isLoading:false,
+      epicShow:false,
+      gameBare:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.gameSlot.visible = false}}]
     }
   },
   computed:{
@@ -113,33 +177,60 @@ export default {
      ...mapWritableState(cardStore,["customComponents"])
   },
 
-  created(){
-    this.getRandomData()
+  watch:{
+    data:{
+      handler(newVal,oldVal){
+       if(Object.keys(newVal).length !== 0){
+          this.getData()
+       }
+      },
+      deep:true,
+      immediate:true
+    }
   },
 
-  mounted(){
-    this.getRandomList()
-  },
   methods:{
-    ...mapActions(steamStore,["setGameData","setGameDetail"]),
+    ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
+    ...mapActions(cardStore,["updateCustomComponents"]),
     currencyFormat,
-    getRandomData(){
-      if(this.data.length !== 0){
-        const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
-          return this.customData.id === el.cc
-        })
-        if(dataIndex){
-          const discountList = this.data[this.data.indexOf(dataIndex)]
-          console.log(discountList);
-          if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
+
+    getData(){
+      if(Object.keys(this.customData).length === 0  && this.defaultRegion == "cn"){
+          if(this.data.length !== 0){
+            const defaultIndex = this.data.filter(el=>{
+              return el.cc === 'cn'
+            })
+            console.log(defaultIndex[0]);
+            // const discountList = defaultIndex
             this.list = discountList.list
+            this.getRandomList()
           }else{
-            // 超过时间就重新获取数据
-            this.confirmCCData()
+            return
           }
-        }
+      }else{
+          const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
+            return this.customData.id === el.cc
+          })
+          if(dataIndex){
+            const discountList = this.data[this.data.indexOf(dataIndex)]
+            if(!compareTime(discountList.expiresDate)){   // 将对象里面的时间进行判断是否大于12小时
+              this.list = discountList.list
+              this.getRandomList()
+            }else{
+              sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+                const date = new Date(res.headers.expires)
+                const requestObj = {
+                  cc:this.customData.id,
+                  expiresDate:date,
+                  list:res.data.specials.items
+                }
+                this.updateGameData(requestObj)
+              })
+            }
+          }
       }
     },
+
     getRandomList(){
       const randomArr = randomData(this.list,4)
       this.randomList = randomArr
@@ -154,20 +245,41 @@ export default {
       },800)
     },
     // 点击进入详情
-    enterDetail(item){
+    enterDetail(item,cc){
       this.gameShow = true
       if(!this.isLoading){
         this.isLoading = true
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.customData.id}&l=${this.customData.id}`,3).then(res=>{
+        if(Object.keys(this.customData).length !== 0){
+          setTimeout(()=>{
+           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
             const resData = res.data[item.id]
-            this.setGameDetail(resData)
-            this.detailList = this.dataDetail.data
+            if(resData.success === true){
+              const detailData = resData.data
+              this.detailList = detailData
+            }else{
+              return
+            }
+           })
+           this.$nextTick(()=>{
+            this.isLoading = false
+           })
+          },500)
+        }else{
+          setTimeout(()=>{
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
+            const resData = res.data[item.id]
+            if(resData.success === true){
+              const detailData = resData.data
+              this.detailList = detailData
+            }else{
+              return
+            }
           })
           this.$nextTick(()=>{
             this.isLoading = false
           })
         },500)
+        }
       }
     },
      discountBack(){
@@ -176,7 +288,34 @@ export default {
      },
      openSteam(id){
       window.ipc.send('addTab',{url:`https://store.steampowered.com/app/${id}`})
-     }
+     },
+
+    onClose() {
+      this.gameVisible = false
+      localStorage.removeItem("detail")
+    },
+    getRegion(e){
+      this.defaultRegion = e
+       // 获取国家地区名称参数
+      const findIndex =  this.region.find(el=>{
+        if(el.id === this.defaultRegion){
+          return  el
+        }
+      })
+      // 将获取国家地区名称参数缓存到customComponents里面
+      this.updateCustomComponents(this.customIndex,findIndex)
+      sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${this.defaultRegion}&l=${this.defaultRegion}`,3)
+      .then(res=>{
+        const date = Date.parse(res.headers.expires)
+        const resObj = {
+          cc:this.defaultRegion,
+          expiresDate:date,
+          list:res.data.specials.items
+        }
+        this.setGameData(resObj)
+      })
+      this.getData()
+    }
   }
 }
 </script>

@@ -1,25 +1,28 @@
 <template>
-  <a-result v-if="this.customComponents.length===0"
-            status="success"
-            title="使用卡片桌面"
-            sub-title="您可以长按空白处、右键添加卡片。"
-  >
-    <template #extra>
-      <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
-      <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
-    </template>
+  <div class="p-3" v-if="this.customComponents.length===0">
+    <a-result class="s-bg rounded-xl"
+              status="success"
+              title="使用卡片桌面"
+              sub-title="您可以长按空白处、右键添加卡片。"
+    >
+      <template #extra>
+        <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
+        <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+      </template>
 
-    <div class="desc">
-      <p style="font-size: 16px">
-        <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
-      </p>
-      <p>
-        <close-circle-outlined :style="{ color: 'red' }"/>
-        从社区获得分享代码（此功能暂未上线，请耐心等待）
-        <a>从社区导入 &gt;</a>
-      </p>
-    </div>
-  </a-result>
+      <div class="desc">
+        <p style="font-size: 16px">
+          <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
+        </p>
+        <p>
+          <close-circle-outlined :style="{ color: 'red' }"/>
+          从社区获得分享代码（此功能暂未上线，请耐心等待）
+          <a>从社区导入 &gt;</a>
+        </p>
+      </div>
+    </a-result>
+  </div>
+
   <div v-if="hide" style="position: fixed;top: 0;bottom: 0;right: 0;left: 0" @click="hideDesk" @contextmenu="hideDesk">
 
   </div>
@@ -181,6 +184,8 @@ import {runExec} from "../js/common/exec";
 import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
+import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
+
 import Muuri from 'muuri'
 const readAida64 = window.readAida64
 const initCards= [
@@ -319,7 +324,8 @@ export default {
     GamesDiscount,
     DiscountPercentage,
     MiddleWallpaper,
-    SmallWallpaper
+    SmallWallpaper,
+    GameEpic
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),

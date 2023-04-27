@@ -1,0 +1,13 @@
+.text-icon {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background: #0a84ff;
+  color: white;
+  padding: 0.2em;
+  text-align: center;
+  border-radius: 0.2em;
+  overflow: hidden;
+  word-break: break-all; }
+
+/*# sourceMappingURL=deck.css.map */

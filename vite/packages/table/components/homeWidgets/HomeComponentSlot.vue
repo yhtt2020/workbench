@@ -42,9 +42,9 @@
         <Icon :icon="options.icon" class="title-icon"></Icon>
         <div class="w-2/3">{{ options.title }}</div>
       </div>
-      <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games')">
+      <div class="flex justify-center items-center" v-if="gameRegionShow === false && options.type.includes('games') && options.epicShow === true">
         <span class="rounded-md w-auto text-white text-opacity-60" style="background: rgba(255, 255,255, 0.2); font-size: 12px;text-align: center;line-height: 22px;padding: 0 5px;">
-          {{ customData.name }}
+          {{ Object.keys(customData).length !== 0 ? customData.name : steamCC.name }}
         </span>
       </div>
       <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
@@ -54,23 +54,19 @@
     <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
-    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'11em',}"
+    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'15em',}"
     :width="120"
-    :height="120"
+    :height="320"
     class="drawer"
-    :closable="false"
+    :closable="true"
     placement="bottom"
-    :visible="visible"
+    v-model:visible="visible"
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
       <div class="option" @click="item.fn()" v-for="item in formulaBar" >
         <Icon class="icon" :icon="item.icon"></Icon>
         {{item.title}}
-      </div>
-
-      <div class="option" @click="onGameSet" v-if="options.type.includes('games')">
-        <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
       <div class="option" @click="removeCard">
         <Icon class="icon" icon="guanbi2"></Icon>
@@ -84,14 +80,6 @@
   </a-drawer>
   <textarea id="textArea" style="opacity: 0;height: 0;width: 0;position: absolute" v-if="options.type.includes('CPU')||options.type.includes('GPU')"></textarea>
 
-  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}"  placement="right" :visible="gameVisible" @close="onClose">
-     <div class="flex flex-col justify-start">
-      <span style="margin-bottom: 14px;">默认地区</span>
-      <a-select style="width: 452px" @change="getRegion($event)" v-model:value="defaultRegion">
-        <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
-      </a-select>
-     </div>
-  </a-drawer>
 </template>
 
 <script>
@@ -107,61 +95,10 @@ export default {
     return {
       visible:false,
       showTip:false,
-      gameVisible:false,
       settingVisible:false,
-      region:[
-        {
-          id:'us',
-          name:'美国'
-        },
-        {
-          id:'ca',
-          name:'加拿大'
-        },
-        {
-          id:'gb',
-          name:'英国'
-        },{
-          id:'fr',
-          name:'法国'
-        },{
-          id:'de',
-          name:'德国'
-        },{
-          id:'it',
-          name:'意大利'
-        },{
-          id:'jp',
-          name:'日本',
-        },{
-          id:'cn',
-          name:'国区',
-        },{
-          id:'br',
-          name:'巴西',
-        },{
-          id:'in',
-          name:'印度',
-        },{
-          id:'ru',
-          name:'俄罗斯',
-        },{
-          id:'au',
-          name:'澳大利亚',
-        },
-        {
-          id:'hk',
-          name:'香港',
-        },
-        {
-          id:'ar',
-          name:'阿根廷',
-        }
-
-      ],
-      defaultRegion:'cn',
       gameRegionShow:false,
       regionName:'',
+      epicShow:true,
     }
   },
   name: 'HomeComponentSlot',
@@ -203,21 +140,9 @@ export default {
   },
 
   methods:{
-    ...mapActions(cardStore, ["removeCustomComponents","updateCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents"]),
     showDrawer()  {
       this.visible = true;
-    },
-    onClose() {
-      this.visible = false;
-      this.gameVisible = false
-      // 获取国家地区名称参数
-      const findIndex =  this.region.find(el=>{
-          if(el.id === this.defaultRegion){
-            return  el
-          }
-      })
-      // 将获取国家地区名称参数缓存到customComponents里面
-      this.updateCustomComponents(this.customIndex,findIndex)
     },
     removeCard () {
       this.removeCustomComponents(this.customIndex)
@@ -266,10 +191,9 @@ export default {
         message.info('复制失败，请检查是否启动过aida64！')
       }
     },
-    // 获取steam地区
-    getRegion(e){
-      this.defaultRegion = e
-    },
+    onClose(){
+      this.visible = false
+    }
 
   }
 }
