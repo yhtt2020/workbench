@@ -105,7 +105,7 @@ export const appStore = defineStore('appStore', {
      * @param userInfo
      */
     setUser(userInfo) {
-      userInfo.onlineGradeExtra.cumulativeMinutes = userInfo.onlineGradeExtra.cumulativeHours % 60
+      userInfo.onlineGradeExtra.cumulativeMinutes =Number(userInfo.onlineGradeExtra.minutes) - Number(userInfo.onlineGradeExtra.cumulativeHours) * 60
       userInfo.onlineGradeExtra.cumulativeMinute = userInfo.onlineGradeExtra.minutes
       userInfo.onlineGradeIcons = {}
       userInfo.onlineGradeIcons.crown = []
