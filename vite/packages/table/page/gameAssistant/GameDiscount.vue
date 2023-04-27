@@ -34,22 +34,13 @@
 </template>
 
 <script>
-import { sendRequest } from '../../js/axios/api';
+import { sendRequest,regionRange } from '../../js/axios/api';
 export default {
   name: "GameDiscount",
   data(){
     return{
-      leftTitle:[{id:0,name:'Steam折扣'},{id:1,name:'Epic喜加一'}], 
-      rightSelect:[
-        { id:'us', name:'美国'},{ id:'ca', name:'加拿大'},
-        {id:'gb', name:'英国'},{id:'fr',name:'法国'},
-        {id:'de',name:'德国'},{ id:'it', name:'意大利'},
-        { id:'jp', name:'日本'},{ id:'cn',name:'国区',},
-        { id:'ar', name:'阿根廷' }, { id:'tr',name:'土耳其'},
-        { id:'br', name:'巴西'},{ id:'in', name:'印度'},
-        { id:'ru', name:'俄罗斯' },{ id:'au',name:'澳大利亚'},
-        { id:'hk', name:'香港'}
-      ],
+      leftTitle:[{id:0,name:'Steam折扣'},{id:1,name:'Epic喜加一'}],
+      rightSelect:regionRange,
       titleIndex:0,
       defaultGameValue:'cn',
       steamList:[],
@@ -139,7 +130,7 @@ export default {
 <style lang="scss" scoped>
 .active{
   background:rgba(33, 33, 33, 1);
-  border-radius: 10px; 
+  border-radius: 10px;
 }
 .content-introduction{
   display: -webkit-box;
@@ -152,9 +143,9 @@ export default {
 }
 </style>
 <style>
-.ant-select .ant-select-selector{
-  border-radius: 6px !important;
-  border:none !important;
-  background: rgba(42, 42, 42, 1) !important;
-}
+/*.ant-select .ant-select-selector{*/
+/*  border-radius: 6px !important;*/
+/*  border:none !important;*/
+/*  background: rgba(42, 42, 42, 1) !important;*/
+/*}*/
 </style>
