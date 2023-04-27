@@ -36,7 +36,7 @@ export default {
       this.activeItem = index;
       this.$emit('clickLeftList',item)
     }
-  }
+  },
 }
 </script>
 

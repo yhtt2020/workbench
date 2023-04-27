@@ -178,10 +178,10 @@ export default {
     ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
   },
   mounted() {
-
+      this.sortCountdown()
   },
   methods: {
-    ...mapActions(cardStore, ["removeCountdownDay",'addCountdownDay']),
+    ...mapActions(cardStore, ["removeCountdownDay",'addCountdownDay','sortCountdown']),
     onPanelChange(value, mode) {},
     transDate,
     differenceDay(item){
