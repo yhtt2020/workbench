@@ -102,7 +102,7 @@
         </div>
 
 
-    <div style="border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px" class="flex justify-center items-center  h-2/3 pointer">
+    <div style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px" class="flex justify-center items-center  h-2/3 pointer">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
 

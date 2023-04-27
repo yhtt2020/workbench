@@ -12,8 +12,8 @@
         <source :src="currentImg.srcProtocol"  type="video/mp4" id="bgVid">
         </video>
 
-      <img :src="currentImg.middleSrc" @load="imgLoad" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
-      <img :src="currentImg.src" @load="imgLoad" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
+      <img :src="currentImg.middleSrc" @load="imgLoad"  @error="imgError"  alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
+      <img :src="currentImg.src" @load="imgLoad" alt="" @error="imgError" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
 
     </div>
     </div>
@@ -197,6 +197,10 @@ export default {
     initImg(){
       this.imgIndex = 0
       this.setImg()
+    },
+    imgError(){
+      this.imgSpin = false
+      this.currentImg.src = '/img/homeComponent/smallWallpaper.png'
     },
     // getVideo (item) {
     //

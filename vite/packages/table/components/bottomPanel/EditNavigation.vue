@@ -44,7 +44,7 @@
 <!--  </div>-->
 
   <transition name="fade">
-  <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
+  <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem" @load="addNav">
     <div v-show="nowClassify!=='localApp'" class="h-full">
       <a-input v-model:value="selectContent" class="no-drag h-10 rounded-xl" placeholder="搜索"  style="background: rgba(42, 42, 42, 0.6);">
         <template #prefix>
@@ -168,15 +168,15 @@ export default {
   methods:{
     ...mapActions(cardStore, ['setNavigationList','sortNavigationList','removeNavigationList']),
      rowDrop()  {
-       var that = this
-       var drop = document.getElementById('navList')
-       var dropRubbish = document.getElementById('navListRubbish')
+       let that = this
+       let drop = document.getElementById('navList')
+       let dropRubbish = document.getElementById('navListRubbish')
        Sortable.create(drop, {
         group: 'navigation',
         animation: 150,
      onUpdate:function(event){
 
-       var newIndex = event.newIndex,
+       let newIndex = event.newIndex,
          oldIndex = event.oldIndex
      let  newItem = drop.children[newIndex]
      let  oldItem = drop.children[oldIndex]
@@ -287,6 +287,9 @@ export default {
      }
 
 
+    },
+    addNav(){
+      console.log('loadnav')
     }
   },
   watch: {

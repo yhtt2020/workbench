@@ -12,13 +12,13 @@
                  playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
             <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid">
           </video>
-          <img :src="currentImg.middleSrc" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover"
+          <img :src="currentImg.middleSrc" alt="" @error="imgError" class="h-full w-full" style="border-radius: 8px;object-fit: cover"
                v-else-if="currentImg.middleSrc">
-          <img :src="currentImg.src" alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
+          <img :src="currentImg.src" alt="" @error="imgError" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
 
         </div>
       </div>
-      <div class="home-blur absolute inset-0  small-blur" style="border-radius: 8px;z-index: -1;">
+      <div class="home-blur absolute inset-0  small-blur" style="border-radius: 8px;z-index: -1;"  v-if="imgList.length>0">
         <div class="item-icon flex justify-center items-center pointer mx-auto mt-2" @click="randomImg">
           <Icon class="icon " :class="randomFlag?'replace-it':''" icon="reload"></Icon>
         </div>
@@ -124,6 +124,10 @@ export default {
     ...mapActions(paperStore, ['removeToMyPaper']),
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ['updateCustomComponents']),
+    imgError(){
+      this.imgSpin = false
+      this.currentImg.src = '/img/homeComponent/smallWallpaper.png'
+    },
     pickFilterChange (e) {
       this.addressType = this.wallpaperOptions.find(i => i.value === e)
       this.updateCustomComponents(this.customIndex, this.addressType)

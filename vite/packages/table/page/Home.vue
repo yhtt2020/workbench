@@ -432,6 +432,7 @@ export default {
           Object.keys(res).map(i => {
             if (i === 'TCPUDIO') res.TCPUPKG = res[i]
             if (i === 'TGPUDIO') res.TGPU1DIO = res[i]
+            if (i === 'TGPU1HOT'&&!res.TGPU1DIO) res.TGPU1DIO = res[i]
           })
           this.setAidaData(res)
           // console.log(res)
