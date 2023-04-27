@@ -1,6 +1,6 @@
 <template>
-<div class="fixed inset-0 home-blur" style="z-index: 999999999999999999999999999999999999" @click="closeModal">
-  <div class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl" >
+<div class="fixed inset-0" :class="blurFlag?'home-blur':''" style="z-index: 999999999999999999999999999999999999" @click="closeModal">
+  <div class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl " :class="className">
     <slot></slot>
   </div>
 </div>
@@ -9,15 +9,182 @@
 <script>
 export default {
   name: "Modal",
-  props:[ 'visibility'],
+  data(){
+    return {
+      className: '',
+      flag:false
+    }
+  },
+  props:[ 'visibility','blurFlag','animationName'],
   methods:{
     closeModal(){
-      this.$emit('update:visibility',false)
+      if(this.animationName){
+        if(this.flag)return
+        this.flag = true
+        this.className +='-close'
+        setTimeout(()=>{
+          this.$emit('update:visibility',false)
+          this.className = this.animationName
+          this.flag = false
+        },1000)
+      }else{
+        this.$emit('update:visibility',false)
+      }
     }
-  }
+  },
+  mounted() {
+    this.className = this.animationName
+  },
 }
 </script>
 
 <style scoped>
+.t-b{
+  animation:t-b 1s;
+}
+.t-b-close{
+  animation:t-b-close 1s;
+}
+.b-t{
+  animation:b-t 1s;
+}
+.b-t-close{
+  animation:b-t-close 1s;
+}
+.l-r{
+  animation:l-r 1s;
+}
+.l-r-close{
+  animation:l-r-close 1s;
+}
+.r-l{
+  animation:r-l 1s;
+}
+.r-l-close{
+  animation:r-l-close 1s;
+}
+@keyframes t-b {
+   0% {
+     opacity: 0;
+     transform: translateY(-150%) translateX(-50%);
 
+   }
+
+   60% {
+     transform: translateY(-40%) translateX(-50%);
+   }
+
+   80% {
+     transform: translateY(-60%) translateX(-50%);
+   }
+
+   100% {
+     opacity: 1;
+     transform: translateY(-50%) translateX(-50%);
+   }
+ }
+@keyframes t-b-close {
+  0% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(50%) translateX(-50%);
+  }
+}
+@keyframes b-t {
+  0% {
+    opacity: 0;
+    transform: translateY(50%) translateX(-50%);
+
+  }
+
+  60% {
+    transform: translateY(-60%) translateX(-50%);
+  }
+
+  80% {
+    transform: translateY(-40%) translateX(-50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+  }
+}
+@keyframes b-t-close {
+  0% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-150%) translateX(-50%);
+  }
+}
+@keyframes l-r {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-150%);
+
+  }
+
+  60% {
+    transform: translateY(-50%) translateX(-40%);
+  }
+
+  80% {
+    transform: translateY(-50%) translateX(-60%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+  }
+}
+@keyframes l-r-close {
+  0% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(50%);
+  }
+}
+@keyframes r-l {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(50%);
+
+  }
+
+  60% {
+    transform: translateY(-50%) translateX(-60%);
+  }
+
+  80% {
+    transform: translateY(-50%) translateX(-40%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+  }
+}
+@keyframes r-l-close {
+  0% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-150%);
+  }
+}
 </style>

@@ -60,15 +60,16 @@ export default {
               name: 'gameDiscount'
             }
         },
+        // {
+        //   index: 'm',
+        //   title: '社区',
+        //   icon:'team',
+        //   route:
+        //     {
+        //       name: 'gameCommunity'
+        //     }
+        // },
         {
-          index: 'm',
-          title: '社区',
-          icon:'team',
-          route:
-            {
-              name: 'gameCommunity'
-            }
-        },   {
           index: 'm',
           title: '设置',
           icon:'setting',
