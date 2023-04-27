@@ -3,7 +3,7 @@
     <template v-if="detailShow === false">
       <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
         <swiper-slide v-for="item in groupList">
-          <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
+          <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData)"   style="height:118px;position: relative;">
             <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
             <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
           </div>
@@ -22,7 +22,7 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
              <img class="rounded-lg" :src="dpList.header_image" alt="">
           </div>
-          <div class="truncate" style="font-size: 18px;font-weight: 500;">{{dpList.name}}</div>
+          <!-- <div class="truncate" style="font-size: 18px;font-weight: 500;">{{dpList.name}}</div>
           <span class="content-introduction" style="color: rgba(255, 255, 255, 0.6);font-size: 16px;font-weight: 400;">{{dpList.short_description}}</span>
           <div class="flex" style="margin-bottom: 8px;">
             <span class="discount-description rounded-md" style="background: rgba(255, 255, 255, 0.2);color: rgba(255, 255, 255, 0.6);font-size: 12px;font-weight: 500;"  v-for="item in dpList.genres">{{item.description}}</span>
@@ -39,7 +39,7 @@
                -{{dpList.price_overview.discount_percent}}%
               </span>
             </div>
-          </div>
+          </div> -->
           <div class="flex items-center justify-around">
             <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
@@ -82,10 +82,6 @@ export default {
       type:Object,
       default: ()=>{}
     },
-    confirmCCData:{
-      type:Function,
-      default:()=>{}
-    }
   },
   components:{
     HomeComponentSlot,
@@ -148,6 +144,10 @@ export default {
         {
           id:'ar',
           name:'阿根廷',
+        },
+        {
+          id:'tr',
+          name:'土耳其'
         }
 
       ],
@@ -176,7 +176,7 @@ export default {
   watch:{
     data:{
       handler(newVal,oldVal){
-       if(Object.keys(newVal).length !== 0){
+       if(newVal.length !== 0){
          this.getDPData()
        }
       },
@@ -188,78 +188,77 @@ export default {
   methods:{
     ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData"]),
     getDPData(){
-      if(Object.keys(this.customData).length === 0 && this.defaultRegion === "cn"){
-           if(this.data.length !== 0){
-            const defaultIndex = this.data.filter(el=>{
-              return el.cc === 'cn'
-            })
-            const discountList = defaultIndex[0]
-            this.percentageList = discountList.list
-            let groups = [];
-            for (let i = 0; i < 5; i++) {
-             groups.push([]);
-            }
-            groups.forEach((arr) => (arr.length = 0));
-            // 随机获取两条数据，放入五个数组中
-            for (let i = 0; i < groups.length; i++) {
-             const index = randomData(this.percentageList,2);
-             groups[i].push(index)
-            }
-            this.groupList = groups
-           }
-      }else{
-          if(this.data.length !== 0){
-            const dataIndex = this.data.find(el=>{  // 根据地区卡片的区服将数据取出
-            return this.customData.id === el.cc
-            })
-            if(dataIndex){
-             const discountList = this.data[this.data.indexOf(dataIndex)]
-             this.percentageList = discountList.list
-             let groups = [];
-             for (let i = 0; i < 5; i++) {
-              groups.push([]);
-             }
-             groups.forEach((arr) => (arr.length = 0));
-             // 随机获取两条数据，放入五个数组中
-             for (let i = 0; i < groups.length; i++) {
-              const index = randomData(this.percentageList,2);
-              groups[i].push(index)
-             }
-             this.groupList = groups
-            }
-          }
+      if(Object.keys(this.customData).length !== 0 && this.customData.hasOwnProperty('Code') === true && this.defaultRegion === 'cn'){
+        const defaultIndex = this.data.filter(el=>{
+          return el.cc === this.customData.Code.value.id
+        })
+        const discountList = defaultIndex[0]
+        this.percentageList = discountList.list
+        let groups = [];
+        for (let i = 0; i < 5; i++) {
+          groups.push([]);
+        }
+        groups.forEach((arr) => (arr.length = 0));
+        // 随机获取两条数据，放入五个数组中
+        for (let i = 0; i < groups.length; i++) {
+          const index = randomData(this.percentageList,2);
+          groups[i].push(index)
+        }
+        this.groupList = groups
+      }else if(Object.keys(this.customData).length === 0 && this.defaultRegion === "cn" && this.customData.hasOwnProperty('Code') === false){
+        const dataIndex = this.data.filter(el=>{  // 根据地区卡片的区服将数据取出
+          return this.defaultRegion === el.cc
+        })
+        this.percentageList = dataIndex[0].list
+        let groups = [];
+        for (let i = 0; i < 5; i++) {
+          groups.push([]);
+        }
+        groups.forEach((arr) => (arr.length = 0));
+        // 随机获取两条数据，放入五个数组中
+        for (let i = 0; i < groups.length; i++) {
+          const index = randomData(this.percentageList,2);
+          groups[i].push(index)
+        }
+        this.groupList = groups
       }
     },
     // 海报进入详情
     goToGameAppDetails(item,cc){
       this.detailShow = true
-      if(Object.keys(this.customData).length !== 0){
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
+      if(Object.keys(cc).length === 0 && cc.hasOwnProperty('Code') !== true ){
+        if(this.isLoading){
+          this.isLoading = true
+          setTimeout(()=>{
+            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${this.defaultRegion}&l=${this.defaultRegion}`,3).then(res=>{
             const resData = res.data[item.id]
             if(resData.success === true){
                const percentData = resData.data
+               console.log(percentData);
                this.dpList = percentData
             }
           })
-          this.$nextTick(()=>{
-            this.isLoading = false
-          })
-        },500)
+            this.$nextTick(()=>{
+             this.isLoading = false
+            })
+          },500)
+        }
       }else{
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
+        if(this.isLoading){
+          setTimeout(()=>{
+           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
             const resData = res.data[item.id]
-            // this.setGameDetail(resData)
             if(resData.success === true){
                const percentData = resData.data
+               console.log(percentData);
                this.dpList = percentData
             }
-          })
-          this.$nextTick(()=>{
+           })
+           this.$nextTick(()=>{
             this.isLoading = false
-          })
-        },500)
+           })
+          },500)
+        }
       }
 
     },
