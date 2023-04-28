@@ -1,6 +1,9 @@
 <template>
-  <HomeComponentSlot :options="options">
-  <div @click="enterWeather">
+  <HomeComponentSlot :options="options" ref="weatherSlot">
+    <div class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
+      {{ city.name }}
+    </div>
+    <div @click="enterWeather">
     <div v-if="!cities.length">
       <div>
         <a-col style="text-align: center; margin-top: 1em">
@@ -84,8 +87,18 @@
       </template>
 
     </div>
-  </div>
+    </div>
   </HomeComponentSlot>
+  <a-drawer :width="500" v-model:visible="weatherVisible" @close="onClose" title="常用天气位置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right">
+    <div class="flex flex-col justify-start">
+      <span style="margin-bottom: 14px;">常用天气位置</span>
+      <a-radio-group @change="getDefaultWeather($event)" v-model:value="city.id">
+        <a-radio class="line" v-for="item in cities" :value="item.id">
+          {{ item.name }}
+        </a-radio>
+      </a-radio-group>
+    </div>
+  </a-drawer>
 </template>
 <script>
 
@@ -104,8 +117,11 @@ export default {
         icon:'',
         type:'weather',
       },
+      weatherVisible:false,
+      defaultCity:{}
     };
   },
+
   components:{
     HomeComponentSlot
   },
@@ -118,14 +134,27 @@ export default {
         return {}
       }
     }
+
   },
   mounted() {
     this.reloadAll()
     this.today = getDateTime();
-    if(this.city)this.options.title = this.city.name;
+    if(this.cities) this.defaultCity = this.city
     if(this.cities.length)this.options.icon = 'position';
   },
   methods: {
+    openWeatherDrawer(){
+      this.weatherVisible = true
+    },
+    getDefaultWeather(e){
+      const found =  this.cities.find(ci=>{
+        return ci.id === e.target.value
+      })
+      if(found){
+        return found
+      }
+      console.log(found);
+    },
     enterWeather() {
       this.$router.push({ name: "weather" });
     },
