@@ -132,7 +132,8 @@ export const weatherStore = defineStore('weather', {
       } else {
         return false
       }
-    },//
+    },
+
   },
   persist: {
     enabled: true,
