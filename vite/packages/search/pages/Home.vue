@@ -10,7 +10,7 @@
             class="flex flex-direction justify-around align-center"
             @click="executeApp(app)"
         >
-          <img
+          <img style="cursor: pointer"
             :src="app.logo"
             alt=""
             onerror="this.src='../../icons/default.svg'"
@@ -23,6 +23,11 @@
         </li>
       </ul>
     </div>
+  </div>
+  <div style="-webkit-app-region:no-drag;margin-top:-0.5em" v-if="true" class="gpt-tip-wrapper" >
+
+    <!--  tip!=='1'  -->
+    欢迎使用全局搜索功能，目前已支持想天浏览器标签搜索、轻应用搜索，其他功能正在添加中。默认快捷键Alf+F，您也可以在设置中修改。
   </div>
   <div v-if="false" class="gpt-tip-wrapper">
     <div class="gpt-icon">
@@ -66,6 +71,10 @@ export default {
   methods:{
     learn(){
       this.$router.push('/learn')
+    },
+    executeApp(app){
+      ipc.send('executeApp',{app:JSON.parse(JSON.stringify(app))})
+
     },
     /**
      * 关闭提示

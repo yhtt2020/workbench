@@ -20,6 +20,7 @@ const dbUtil={
         filename = path.join(app.getPath('userData'), 'db/'+dbName+'.sqlite')
       }
     }
+    console.log('得到数据库名称',filename)
     return filename
   }
 }

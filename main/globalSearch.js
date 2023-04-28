@@ -28,7 +28,13 @@ const globalSearchMod = {
           devTools: true,
           preload: path.join(__dirname, '/src/preload/searchPreload.js'),
           nodeIntegration: true,
-          contextIsolation: false
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
         }
       })
     } else {
@@ -48,7 +54,13 @@ const globalSearchMod = {
         webPreferences: {
           devTools: true,
           nodeIntegration: true,
-          contextIsolation: false
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
         }
       })
     }

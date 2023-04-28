@@ -22,7 +22,7 @@
     <div>
       <a-avatar :size="35" alt="" class="app-hover" shape="circle"
                 src="https://up.apps.vip/logo/favicon.svg"
-                style="-webkit-app-region:no-drag"
+                style="-webkit-app-region:no-drag;cursor: pointer"
                 @click="openAppstore"
       ></a-avatar>
     </div>
