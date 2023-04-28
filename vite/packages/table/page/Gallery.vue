@@ -59,7 +59,7 @@ export default {
         title:'拾光壁纸',
         icon:'wallpaper',
         route:{
-          name:'PickingPaper'
+          name:'pickingPaper'
         }
       },
       {

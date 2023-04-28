@@ -28,7 +28,12 @@
 
 
   <div style="flex-grow: 1;flex-shrink: 1;height: 0">
-    <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller"
+    <div v-if="myPapers.length===0">
+      <a-empty style="margin-top: 3em" description=""></a-empty>
+      <a-button type="primary" @click="go">去挑选心仪的壁纸</a-button>
+    </div>
+
+    <vue-custom-scrollbar id="containerWrapper" v-else :settings="settingsScroller"
                           style="flex-shrink: 1;flex-grow: 1;height: 100%">
       <viewer :images="myPapers" :options="options">
         <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
@@ -163,6 +168,9 @@ export default defineComponent({
   methods: {
     ...mapActions(paperStore, ['addToActive', 'addToMyPaper', 'addToStaticPaper']),
     ...mapActions(appStore, ['setBackgroundImage']),
+    go(){
+      this.$router.push({name:'pickingPaper'})
+    },
     // 获取本地视频目录数据
     getLoadLively () {
       fs.pathExists(path.join(this.settings.savePath, 'lively')).then((exists) => {

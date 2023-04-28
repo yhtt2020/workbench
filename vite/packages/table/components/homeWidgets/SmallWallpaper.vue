@@ -4,8 +4,11 @@
                      :formulaBar="formulaBar" ref="cardSlot">
     <div class="small-wallpaper">
       <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
-        <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
+        <div class=" w-full   " style="margin-top: 15%;text-align: center" v-if="imgList.length<=0">
           <a-empty :image="simpleImage"/>
+          <div style="margin-top: -1em">
+            <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
+          </div>
         </div>
         <div class="h-full w-full" v-else>
           <video class="fullscreen-video " ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover"
@@ -124,6 +127,9 @@ export default {
     ...mapActions(paperStore, ['removeToMyPaper']),
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ['updateCustomComponents']),
+    goGallery(){
+      this.$router.push({name:'my'})
+    },
     imgError(){
       this.imgSpin = false
       this.currentImg.src = '/img/homeComponent/smallWallpaper.png'

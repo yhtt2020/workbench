@@ -242,7 +242,7 @@ export default [{
         },
         {
           path: '',
-          name: 'PickingPaper',
+          name: 'pickingPaper',
           component: PickingPaper
         },
         {

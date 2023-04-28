@@ -4,8 +4,11 @@
   <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
     <div class="absolute top-4 left-4  w-24 h-5 pointer" @click="openRight"></div>
     <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
-      <div class="h-full w-full flex justify-center items-center" v-if="imgList.length<=0">
+      <div class=" w-full text-center  " style="margin-top:20%" v-if="imgList.length<=0">
         <a-empty :image="simpleImage" />
+        <div style="margin-top: 2em">
+          <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
+        </div>
       </div>
       <div class="h-full w-full pointer" v-else @click="goSource">
         <video class="fullscreen-video"   ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
@@ -110,6 +113,9 @@ export default {
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ["updateCustomComponents"]),
+    goGallery(){
+      this.$router.push({name:'my'})
+    },
     imgLoad(){
       this.imgSpin = false
     },
@@ -210,21 +216,28 @@ export default {
     // },
     setImg(){
       this.imgSpin = true
-      this.currentImg =  this.imgList[this.imgIndex] || {
-        srcProtocol:null,
-        value:'我的收藏',
-        path:'',
-        name:'my'
-      }
-      this.$nextTick(()=>{
-        if(this.currentImg.srcProtocol){
-          this.$refs.wallpaperVideo.load()
-          this.$refs.wallpaperVideo.play().catch((err)=>{
+      console.log(this.imgList,'imglist')
+      if(this.imgList.length>0){
+        this.currentImg =  this.imgList[this.imgIndex]
+        this.$nextTick(()=>{
+          if(this.currentImg.srcProtocol){
+            this.$refs.wallpaperVideo.load()
+            this.$refs.wallpaperVideo.play().catch((err)=>{
 
-          })
-          this.imgSpin = false
+            })
+            this.imgSpin = false
+          }
+        })
+      }else{
+        this.currentImg= {
+          srcProtocol:null,
+          value:'我的收藏',
+          path:'',
+          name:'my'
         }
-      })
+        this.imgSpin = false
+      }
+
 
 
     },

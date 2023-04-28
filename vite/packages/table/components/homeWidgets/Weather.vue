@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options" ref="weatherSlot">
-    <div class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
+    <div v-if="city" class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ city.name }}
     </div>
     <div @click="enterWeather">
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div @click="enterWeather" v-else>
-      <template v-if="city.now && city.d7 && city.h24">
+      <template v-if="city.now && city.d7 && city.h24 && city.d7.daily">
         <a-row>
           <a-col :span="7" style="text-align: center">
             <i
