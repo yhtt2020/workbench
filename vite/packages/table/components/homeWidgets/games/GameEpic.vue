@@ -1,63 +1,47 @@
 <template>
   <HomeComponentSlot :options="options"  :customIndex="customIndex" >
-    <template v-if="epicAppShow === false">
-      <div class="flex h-11 justify-between items-center  p-1 rounded-md mt-2" style="background: rgba(255, 255, 255, 0.1);">
-        <span class="flex items-center h-9 cursor-pointer justify-center change-item" :class="weekIndex === item.id ? 'epic-active':''" v-for="item in teaserTips" @click="weekPick(item.id)">
-           {{ item.name }}
-        </span>
+    <HorizontalPanel :navList="epicTips" v-model:selectType="epicType" class="mt-2"></HorizontalPanel>
+    <template v-if="epicType.name === 'week'">
+      <div class="w-full" v-if="detailShow === false">
+        <div class="week-image rounded-lg relative cursor-pointer"  v-for="weekItem in weekEpic" @click="enterWeek(weekItem)">
+          <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt="" style="width:100%;height:100%;object-fit: cover;">
+          <div class="remainder-day">剩余{{remainderDay(weekItem.promotions.promotionalOffers[0].promotionalOffers[0].endDate)}}天</div>
+          <div class="stablish-province">立省  {{weekItem.price.totalPrice.fmtPrice.originalPrice}}</div>
+       </div>
       </div>
-      <div v-if="weekIndex === 0" class="w-full">
-         <div class="week-image rounded-lg relative cursor-pointer"  v-for="weekItem in weekEpic" @click="enterWeek(weekItem)">
-            <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt="" style="width:100%;height:100%;object-fit: cover;">
-            <div class="remainder-day">剩余{{remainderDay(weekItem.promotions.promotionalOffers[0].promotionalOffers[0].endDate)}}天</div>
-            <div class="stablish-province">立省  {{weekItem.price.totalPrice.fmtPrice.originalPrice}}</div>
-         </div>
-      </div>
-      <div v-else class="w-full">
+      <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
+    </template>
+    <template v-else>
+      <div class="w-full" v-if="detailShow === false">
         <div class="week-image rounded-lg relative cursor-pointer"  v-for="weekItem in nextWeekEpic" @click="enterWeek(weekItem)">
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt="" style="width:100%;height:100%;object-fit: cover;">
           <div class="remainder-day">剩余{{remainderDay(weekItem.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].endDate)}}天</div>
           <div class="stablish-province">立省  {{weekItem.price.totalPrice.fmtPrice.originalPrice}}</div>
        </div>
       </div>
+      <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
     </template>
-    <template v-if="epicAppShow === true">
-       <div class="flex mt-2 flex-col justify-start">
-          <div class="epic-detail-image rounded-lg">
-            <img :src="epicDetail.image" alt="" class="rounded-lg">
-          </div>
-          <span class="mt-3">{{ epicDetail.name }}</span>
-          <span class="content-introduction mt-2">{{epicDetail.illustrate}}</span>
-          <span class="line-through mt-2" style="color: rgba(151, 151, 151, 1);">{{epicDetail.price}}</span>
-          <div class="flex justify-between mt-2">
-            <span style="color: rgba(255, 77, 79, 1);">免费领取</span>
-            <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;">剩余{{ weekIndex === 0 ? remainderDay(epicDetail.weekDate) : remainderDay(epicDetail.nextWeekDate)  }}天</span>
-          </div>
-          <div class="flex justify-between mt-4">
-              <span @click="epicBack" class="w-12 h-12 cursor-pointer epic-back flex items-center rounded-lg justify-center" style="background: rgba(42, 42, 42, 1);">
-                 <Icon icon="xiangzuo" class="text-xl"></Icon>
-              </span>
-              <span @click="onClickOffice(epicDetail.productSlug)" class="h-12 w-48 open-epic  cursor-pointer flex items-center rounded-lg justify-center" style="background: rgba(42, 42, 42, 1);">打开 Epic</span>
-          </div>
-       </div>
-    </template>
-      
+   
   </HomeComponentSlot>
 </template>
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue"
-import { sendRequest,startOfNextWeek,startOfWeek } from "../../../js/axios/api";
+import HorizontalPanel from "../../HorizontalPanel.vue"
+import { sendRequest,startOfNextWeek,startOfWeek,remainderDay} from "../../../js/axios/api"
+import EpicDetail from './EpicDetail.vue'
 export default {
-  name:'GamesDiscount',
+  name:'GameEpic',
+  components:{
+    HomeComponentSlot,
+    HorizontalPanel,
+    EpicDetail
+  },
   props:{
     customIndex:{
       type:Number,
       default:0
     },
-  },
-  components:{
-    HomeComponentSlot,
   },
   data(){
     return{
@@ -68,20 +52,18 @@ export default {
         type:'games',
         epicShow:true,
       },
-      teaserTips:[
-        { id:0, name:'本周免费',},
-        { id:1,name:'下周预告'}
+      epicTips:[
+        { title:"本周免费",name:"week"},
+        { title:"下周预告",name:"next"}
       ],
-      epicAppShow:false,
-      weekIndex:0,
+      epicType:{ title:"本周免费",name:"week"},
+      epicWeek:[], // 本周数据
+      epicNext:[],  // 下周数据
       epicList:[],
-      epicDetail:{},
+      detailList:{},
+      detailShow:false
     }
   },
-  mounted(){
-    this.getEpicData()
-  },
-
   computed:{
      weekEpic(){
         const weekEpicIndex = this.epicList.filter(el=>{
@@ -91,7 +73,7 @@ export default {
               const endDate = new Date(startPromotions.promotionalOffers[0].startDate)
               const ofWeek = new Date(startOfWeek())
               const nextWeek = new Date(startOfNextWeek())
-              return startDate.getTime() < ofWeek.getTime() && endDate.getTime() < nextWeek.getTime()
+              return startDate.getTime() >= ofWeek.getTime() && endDate.getTime() <= nextWeek.getTime()
            }
         })
         return weekEpicIndex
@@ -104,32 +86,32 @@ export default {
               const nextEndDate = new Date(nextPromotions.promotionalOffers[0].startDate)
               const ofWeek = new Date(startOfWeek())
               const nextWeek = new Date(startOfNextWeek())
-              return nextStartDate.getTime() > ofWeek.getTime() && nextEndDate.getTime(),nextWeek.getTime()
+              return nextStartDate.getTime() >= ofWeek.getTime() && nextEndDate.getTime() >= nextWeek.getTime()
            }
         })
-        return nextWeekEpicIndex
+        return nextWeekEpicIndex.slice(0,2)
      },
   },
-
+  mounted() {
+    this.getEpicData()
+  },
   methods:{
+    remainderDay,
     getEpicData(){
-       sendRequest('https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN',3).then(res=>{
-         const epicData = res.data.data.Catalog.searchStore.elements
-         // 根据promotions判断Epic是否免费
-         const epicIndex = epicData.filter(el=>{
-           return el.promotions !== null 
-         })
-         this.epicList = epicIndex
-       })
-    },
-    weekPick(val){
-      this.weekIndex = val
+      sendRequest('https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN').then(res=>{
+        const epicData = res.data.data.Catalog.searchStore.elements
+        // 根据promotions判断Epic是否免费
+        const epicIndex = epicData.filter(el=>{
+          return el.promotions !== null 
+        })
+        this.epicList = epicIndex
+      })
     },
     enterWeek(item){
-      this.epicAppShow = true
+      this.detailShow = true
       if(item.promotions.promotionalOffers.length !== 0){
         const promotions = item.promotions.promotionalOffers[0].promotionalOffers[0]
-        this.epicDetail = {
+        this.detailList = {
          image:item.keyImages[0].url,
          name:item.title,
          price:item.price.totalPrice.fmtPrice.originalPrice,
@@ -139,7 +121,7 @@ export default {
         }
       }else if(item.promotions.upcomingPromotionalOffers.length !== 0){
         const upcomingPromotional = item.promotions.upcomingPromotionalOffers[0].promotionalOffers[0]
-        this.epicDetail = {
+        this.detailList = {
          image:item.keyImages[0].url,
          name:item.title,
          price:item.price.totalPrice.fmtPrice.originalPrice,
@@ -149,29 +131,10 @@ export default {
         }
       }  
     },
-    // 计算剩余多少天
-    remainderDay(date){
-       // 假设要计算的日期为2023年6月1日
-       let targetDate = new Date(date);
-       // 获取当前日期
-       let currentDate = new Date();
-       // 计算剩余天数
-       let remainingDays = Math.ceil((targetDate - currentDate) / (1000 * 60 * 60 * 24));
-       // 输出剩余天数
-       return remainingDays
-    },
-    epicBack(){
-      this.epicAppShow = false
-    },
-    // 进入详情网站
-    onClickOffice(value){
-      if(value !== null){
-        console.log(`https://store.epicgames.com/zh-CN/p/${value}`);
-        window.ipc.send('addTab',{url:`https://store.epicgames.com/zh-CN/p/${value}`})
-      }
+    detailBack(){
+      this.detailShow = false
     }
-
-  },
+  }
   
 }
 </script>
@@ -188,7 +151,7 @@ export default {
   width: 252px;
   height: 144px;
   &:nth-of-type(1){
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     margin-top: 14px;
   }
 }
@@ -237,12 +200,13 @@ export default {
   font-size: 16px;
   font-weight: 400;
 }
-.epic-back:active{
-  filter: brightness(0.8);
-  background:rgba(42, 42, 42, 0.25);
+
+
+.nav-list-container{
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
 }
-.open-epic:active{
-  filter: brightness(0.8);
-  background:rgba(42, 42, 42, 0.25);
+.nav-list-container ::v-deep .s-item{
+  border-radius: 6px !important;
 }
 </style>
