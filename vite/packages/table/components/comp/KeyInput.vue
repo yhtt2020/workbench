@@ -6,7 +6,7 @@
       修改
     </a-button>
   </a-input-group>
-  <div tabindex='0/1' :id="'keyListener_'+this.name" v-show="listening" style="position: fixed;width: 100vw;height: 100vh;left: 0;right: 0;text-align: center;bottom: 0;top: 0;background: rgba(21,21,21,0.93);line-height: 33vh;font-size: 3em;z-index: 999">
+  <div tabindex='0/1' :id="'keyListener_'+this.name" v-show="listening" style="position: absolute;width: 100vw;height: 100vh;left: 0;right: 0;text-align: center;bottom: 0;top: 0;background: rgba(21,21,21,0.93);line-height: 33vh;font-size: 3em;z-index: 999">
     请按下 {{this.title}} 快捷键<br>先按功能键（Ctrl、Shift、Alt再按其他键）<br>
     当前键位 {{this.value}}
   </div>

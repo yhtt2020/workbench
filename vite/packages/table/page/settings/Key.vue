@@ -55,7 +55,9 @@ export default {
     },
     setSearchKeys (args) {
 
-      let rs=ipc.sendSync('setGlobalShortcut',{shortcut:args.keys})
+      let rs=tsbApi.settings.set('')
+
+        ipc.sendSync('setGlobalShortcut',{shortcut:args.keys})
       if(!rs){
         message.error('设置快捷键失败，请更换快捷键')
         return

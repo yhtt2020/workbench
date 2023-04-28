@@ -40,7 +40,7 @@ export default {
     ...mapWritableState(appStore, ['settings'])
   },
   async mounted () {
-    this.trayOpen = await tsbApi.settings.get('trayOpen') || 'browser'
+    this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
     let showInTaskBar= await tsbApi.settings.get('showInTaskBar')
     if(showInTaskBar===undefined){
       this.showInTaskBar=true

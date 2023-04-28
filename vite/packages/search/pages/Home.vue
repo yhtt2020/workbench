@@ -24,10 +24,11 @@
       </ul>
     </div>
   </div>
-  <div v-if="tip!=='1'" class="gpt-tip-wrapper">
+  <div v-if="false" class="gpt-tip-wrapper">
     <div class="gpt-icon">
       <img  :src="gpt">
     </div>
+<!--  tip!=='1'  -->
     按下ctrl+回车，或者无搜索结果将会询问ChatGPT，<strong @click="learn" style="color:#0a84ff;cursor: pointer"><bulb-outlined />学习提问方式</strong>
     <span  @click="closeTip" style="float: right" class="close-btn">
                   <close-outlined />

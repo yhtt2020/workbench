@@ -199,7 +199,7 @@ app.whenReady().then(() => {
     timeCount = 1
     //兼容新的设置项目
     let open= settings.get('trayOpen')
-    if(open===undefined || open==='browser'){
+    if( open==='browser'){
       openBrowser()
     }else{
       openWorktable()

@@ -77,6 +77,7 @@ app.whenReady().then(async () => {
   global.tableAppManager = new TableAppManager()
   tableAppManager.bindIPC()
   let registerTableShortcutResult = false
+  let registerGlobalSearchShortcutResult =false
 
   /**
    * 获得一个键位
@@ -134,9 +135,15 @@ app.whenReady().then(async () => {
   registerTableShortcut().then()//注册工作台的全局快捷键
   ipc.on('setTableShortcut', async (e, a) => {
     //接收到设置工作台快捷键的消息
-    let rs = await globalShortcut.register(a.shortcut, async () => {
-      await callTable()
-    })
+    let rs
+    try{
+       rs = await globalShortcut.register(a.shortcut, async () => {
+        await callTable()
+      })
+    }catch (e) {
+      e.returnValue = false
+    }
+
 
     if (rs) {
       let oldKey = 'alt+space'
@@ -154,7 +161,42 @@ app.whenReady().then(async () => {
       e.returnValue = false
     }
   })
-  ipc.on('setGlobalShortcut', (e, a) => {
+  ipc.on('setGlobalShortcut', async (e, a) => {
+    let rs
+    try{
+      rs = await globalShortcut.register(a.shortcut, async () => {
+        globalSearchMod.init()
+
+        // statsh 快捷键打开全局搜索
+        if (globalSearch && globalSearch.isFocused()) {
+          statsh.do({
+            action: 'increase',
+            key: 'globalSearchBaseShortOpen',
+            value: 1
+          })
+        }
+      })
+    }catch (e) {
+      e.returnValue = false
+    }
+
+
+    if (rs) {
+      let oldKey = 'alt+f'
+      //成功则更改快捷键设置
+      const keyMap = getKeyMap('globalSearch', 'alt+f')
+      oldKey = keyMap
+      setKeyMap('globalSearch', a.shortcut)//设置新快捷键
+      if (registerGlobalSearchShortcutResult) {
+        //如果之前注册是成功的，则取消，否则则不需要取消
+        globalShortcut.unregister(oldKey)
+      }
+      registerGlobalSearchShortcutResult = true
+      e.returnValue = true
+    } else {
+      e.returnValue = false
+    }
+
     e.returnValue = true
   })
 
