@@ -169,7 +169,7 @@ export default {
 }
 .stablish-province{
   position: absolute;
-  top:1.99em;
+  top:1.9em;
   right: 0;
   padding: 3px 6px 2px 6px;
   text-align: center;
