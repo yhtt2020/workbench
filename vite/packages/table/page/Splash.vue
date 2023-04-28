@@ -197,7 +197,7 @@ export default {
         if (this.$route.name === 'splash') {
           let rs = await this.verify(userInfo.uid)
           if (rs) {
-            //this.$router.replace({ name:'home' })
+            this.$router.replace({ name:'home' })
           } else {
             Modal.error({
               content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
