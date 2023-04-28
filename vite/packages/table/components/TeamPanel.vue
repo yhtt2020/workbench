@@ -2,6 +2,68 @@
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-xl" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden">
     <transition name="fade">
+      <div v-if="earningsShow" class="p-4"  style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
+          <HorizontalPanel :navList="incomeTitle" v-model:selectType="defaultIncome"></HorizontalPanel>
+          <div v-if="defaultIncome.name === 'MIC'" class="mt-6">
+              <div class="flex justify-between items-center h-12">
+                <span style="font-size: 16px;font-weight: 400;">我的额外收益: 3000分钟</span>
+                <span @click="myExtra" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">
+                  领取
+                </span>
+              </div>
+              <a-divider style="height: 1px; background-color:background: rgba(255,255,255,0.10);" />
+              <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:50vh;  ">
+                <div class="flex">
+                  <div>
+                    <div :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center flex items-center  mb-3 mt-2 pointer pt-2" v-if="teamLeader.userInfo">
+                      <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" style="margin-left:12px;"></UserAvatar>
+                      <div style="margin-left:35px;font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>
+                      <div @click="captainExtra" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-4 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
+                    </div>
+                    <div class="text-center flex items-center justify-between mb-3 pointer  pt-2" :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
+                      <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''" style="margin-left:12px;"></UserAvatar>
+                      <div class="ml-7" style="margin-left:35px; font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>
+                      <div @click="captainExtra" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-4 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
+                    </div>
+                  </div>
+                </div>
+              </vue-custom-scrollbar>
+          </div>
+          <div v-else>
+            <div class="flex items-center justify-between mt-6">
+              <span class="pl-4">队员</span>
+              <span>今日贡献</span> 
+              <span class="pr-4">累计贡献</span> 
+            </div>
+            <a-divider style="height: 1px; background-color:background: rgba(255,255,255,0.10);" />
+            <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:50vh;  ">
+                <div class="flex">
+                  <div>
+                    <div :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center flex items-center  mb-3 mt-2 pointer pt-2" v-if="teamLeader.userInfo">
+                      <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" style="margin-left:12px;"></UserAvatar>
+                      <div style="margin-left:35px;font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>
+                      <div @click="captainContribute" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-6 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
+                    </div>
+                    <div class="text-center flex items-center justify-between mb-3 pointer  pt-2" :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
+                      <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''" style="margin-left:12px;"></UserAvatar>
+                      <div class="ml-7" style="margin-left:35px; font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>
+                      <div @click="captainContribute" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-6 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
+                    </div>
+                  </div>
+                </div>
+            </vue-custom-scrollbar>
+          </div>
+          <div class="flex items-center rounded-lg h-12" style="background: rgba(0,0,0,0.30);">
+            <a-col class="mr-4">
+              <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
+            </a-col>
+            <div>
+              总计贡献:2000分钟
+            </div>
+          </div>
+      </div>
+    </transition>
+    <transition name="fade">
       <div v-if="showDetail && teamDetail"
            style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
@@ -31,7 +93,12 @@
           全网排名：-<br>
           升级剩余时长：-<br>
           累计在线时长：-
+          <div @click="receiveTeamEarnings" class="btn-active mt-4 h-12 flex justify-center cursor-pointer rounded-md  items-center text-white text-white" style="background: rgba(80,139,254, 1);font-size: 16px;font-weight: 400;"> 
+            <Icon icon="thunderbolt"></Icon>
+            <span>领取加速收益</span>
+          </div>
         </div>
+
         <div class="bg-mask p-3 m-3 rounded-xl">
           <icon icon="tishi-xianxing"></icon>
           小队功能正在开发中，暂时还未开放组队升级加速，敬请期待。显示升级效率为理论加速值，功能上线后即可生效。
@@ -59,6 +126,7 @@
         </div>
       </div>
     </transition>
+    
     <transition name="fade">
       <div v-if="showDetail && userDetail"
            style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
@@ -93,8 +161,9 @@
           </a-row>
         </div>
       </div>
-
     </transition>
+    
+
     <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0">
       <div v-if="!teamDetail" @click="showTeamDetail" class="p-2 pt-2 pb-5 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
@@ -149,10 +218,10 @@ import { Modal } from 'ant-design-vue'
 import UserDetail from './team/UserDetail.vue'
 import UserAvatar from './small/UserAvatar.vue'
 import LevelIcon from './small/LevelIcon.vue'
-
+import HorizontalPanel from './HorizontalPanel.vue'
 export default {
   name: 'TeamPanel',
-  components: { LevelIcon, UserAvatar, UserDetail, PlusOutlined },
+  components: { LevelIcon, UserAvatar, UserDetail, PlusOutlined,HorizontalPanel },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
     ...mapState(appStore, ['userInfo']),
@@ -189,7 +258,12 @@ export default {
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
-      userInfoKey: Date.now()
+      userInfoKey: Date.now(),
+      earningsShow:false,
+      incomeTitle:[{title:'我的收益',name:'MIC'},{title:'小队贡献',name:'CB'}],
+      defaultIncome:{title:'我的收益',name:'MIC'},
+      teamIncome:[],  // 小队收益
+      teamCB:[]  // 小队贡献
     }
   },
   mounted () {
@@ -228,6 +302,7 @@ export default {
       this.teamDetail = false
       this.showDetail = false
       this.showUserInfo = {}
+      this.earningsShow = false
     },
     showTeamDetail () {
       this.userDetail = false
@@ -277,7 +352,20 @@ export default {
       //   status: false
       // }
       // this.teamVisible = false
-    }
+    },
+    // 点击领取收益弹出事件
+    receiveTeamEarnings(){
+      this.earningsShow = !this.earningsShow
+    },
+    // 我的额外收益领取
+    myExtra(){
+
+    },
+    // 小队收益
+    captainExtra(){},
+    // 小队贡献
+    captainContribute(){}
+
   }
 
 }
@@ -299,5 +387,28 @@ export default {
   z-index: 99999;
   -webkit-app-region: no-drag;
   transform: translateY(-50%);
+}
+.btn-active:active{
+  filter: brightness(0.8);
+  background: rgba(80,139,254, 0.8);
+}
+.nav-list-container{
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+}
+.nav-list-container ::v-deep .s-item{
+  border-radius: 6px !important;
+}
+.ant-divider-horizontal{
+  margin: 16px 0 16px 0 !important;
+}
+
+.receive-active:active{
+  filter: brightness(0.8);
+  background: rgba(0,0,0,0.40);
+}
+::v-deep .ant-avatar-image{
+  position: relative;
+  top:-5px;
 }
 </style>
