@@ -46,6 +46,10 @@ export const regionRange= [
   {
     id: 'hk',
     name: '香港',
+  },
+  {
+    id:'tr',
+    name:'土耳其'
   }
 
 ]
@@ -143,4 +147,16 @@ export function startOfNextWeek() {
   const today = new Date();
   const firstDayOfWeek = today.getDate() - today.getDay() + 1;
   return new Date(today.setDate(firstDayOfWeek + 7));
+}
+
+ // 计算剩余多少天
+ export const remainderDay = (date: string | number | Date) => {
+  // 假设要计算的日期为2023年6月1日
+  let targetDate = new Date(date);
+  // 获取当前日期
+  let currentDate = new Date();
+  // 计算剩余天数
+  let remainingDays = Math.ceil((targetDate - currentDate) / (1000 * 60 * 60 * 24));
+  // 输出剩余天数
+  return remainingDays
 }
