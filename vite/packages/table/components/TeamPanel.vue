@@ -42,10 +42,6 @@
           </div>
         </div>
 
-        <div class="bg-mask p-3 m-3 rounded-xl">
-          <icon icon="tishi-xianxing"></icon>
-          小队功能正在开发中，暂时还未开放组队升级加速，敬请期待。显示升级效率为理论加速值，功能上线后即可生效。
-        </div>
         <div style="position: absolute;bottom: 0;margin-left:20px">
           <a-row class="m-5" :gutter="10">
             <a-col>
