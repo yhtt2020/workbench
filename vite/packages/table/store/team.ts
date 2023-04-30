@@ -9,6 +9,10 @@ const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
 const quitByNoUrl = Server.baseUrl + '/app/team/quitByNo'
 const getTeamLeaderUrl = Server.baseUrl + '/app/team/getLeader'
 const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
+
+
+const getMemberDevote = Server.baseUrl + '/app/online/getMemberDevote'
+
 const getMy = Server.baseUrl + '/app/team/getMy'
 const getByNo = Server.baseUrl + '/app/team/getByNo'
 const getUserGradeUrl = Server.baseUrl + '/app/getUserGrade'
@@ -30,7 +34,11 @@ export const teamStore = defineStore("teamStore", {
     my: { //我的队伍
 
     },
-    members: []
+    members: [],
+    //小队成员的待领取奖励
+    membersDevote:{
+
+    },
   }),
   getters:{
     hasTeam:(state)=>{
@@ -111,7 +119,21 @@ export const teamStore = defineStore("teamStore", {
         }
       }
     },
-
+    async getMemberDevote() {
+      let result = await axios.get(getMemberDevote,
+        await getConfig())
+      console.log('小队收益',result)
+      if (result.code === 1000) {
+        let data = result.data
+        if (data) {
+          console.log('小队收益',data.data)
+          this.membersDevote = data.data
+          return this.membersDevote
+        } else {
+          console.warn('无法获取到小队收益')
+        }
+      }
+    },
     async updateTeam(no, cache) {
       let conf = await getConfig()
       console.log(conf)
