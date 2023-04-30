@@ -216,7 +216,6 @@ export default {
     // },
     setImg(){
       this.imgSpin = true
-      console.log(this.imgList,'imglist')
       if(this.imgList.length>0){
         this.currentImg =  this.imgList[this.imgIndex]
         this.$nextTick(()=>{
