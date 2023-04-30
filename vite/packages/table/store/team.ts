@@ -12,6 +12,8 @@ const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
 
 
 const getMemberDevote = Server.baseUrl + '/app/online/getMemberDevote'
+const exchangeDevoteUrl = Server.baseUrl + '/app/online/exchangeDevote'
+
 
 const getMy = Server.baseUrl + '/app/team/getMy'
 const getByNo = Server.baseUrl + '/app/team/getByNo'
@@ -127,13 +129,42 @@ export const teamStore = defineStore("teamStore", {
         let data = result.data
         if (data) {
           console.log('小队收益',data.data)
-          this.membersDevote = data.data
+          this.membersDevote = data.data || {}
           return this.membersDevote
         } else {
+          this.membersDevote={}
           console.warn('无法获取到小队收益')
         }
       }
     },
+
+    async exchangeDevote(from_uid=0){
+      let result=await axios.post(exchangeDevoteUrl,
+        {from_uid:from_uid},await getConfig())
+      if (result.code === 1000) {
+        console.log('兑换结果',result)
+        let data = result.data
+        if (data) {
+          console.log('兑换成功',data)
+          return {
+            status:1,
+            data
+          }
+        } else {
+          return {
+            status:0,
+            info:'兑换失败'
+          }
+        }
+      }else{
+        return {
+          status:0,
+          info:'意外错误'
+        }
+      }
+    },
+
+
     async updateTeam(no, cache) {
       let conf = await getConfig()
       console.log(conf)

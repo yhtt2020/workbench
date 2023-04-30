@@ -4,7 +4,7 @@
     <div v-if="defaultIncome.name === 'MIC'" class="mt-4 flex flex-col">
       <div class="flex justify-between items-center h-12">
         <span style="font-size: 16px;font-weight: 400;">累计收益: 0 分钟</span>
-        <span @click="myExtra" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">
+        <span @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">
                 一键领取
               </span>
       </div>
@@ -24,7 +24,7 @@
                       {{ user.devote }} 分钟</div>
                   </a-col>
                   <a-col :span="8" v-if="user.devote">
-                    <div @click="captainExtra" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;"  class=" rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
+                    <div @click="doExchangeDevote(user.uid)" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;"  class=" rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
                   </a-col>
                 </a-row>
             </div>
@@ -80,6 +80,7 @@ import {appStore} from "../../store";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import UserAvatar from "../small/UserAvatar.vue";
 import {teamStore} from "../../store/team";
+import {message} from "ant-design-vue";
 
 export default {
   name: "TeamDevote",
@@ -92,6 +93,7 @@ export default {
       let display=JSON.parse(JSON.stringify(this.teamMembers))
       display.unshift(JSON.parse(JSON.stringify(this.teamLeader)))
       console.log('membersDevote=',this.membersDevote)
+
       display.map(user=>{
         user.devote = this.membersDevote[user.uid]||0
       })
@@ -129,13 +131,21 @@ export default {
     await this.getMemberDevote()
   },
   methods:{
-    ...mapActions(teamStore,['getMemberDevote']),
+    ...mapActions(teamStore,['getMemberDevote','exchangeDevote']),
     // 我的额外收益领取
     myExtra(){
 
     },
     // 小队收益
-    captainExtra(){},
+    async doExchangeDevote(uid = 0) {
+      let rs = await this.exchangeDevote(uid)
+      if (rs.status) {
+        message.success('兑换成功')
+        await this.getMemberDevote()
+      } else {
+        message.error('兑换失败，失败原因：' + rs.info)
+      }
+    },
     // 小队贡献
     captainContribute(){}
 
