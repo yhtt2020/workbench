@@ -21,7 +21,7 @@
                   </a-col>
                   <a-col :span="8" class="text-center">
                     <div class=" pt-3 " style=" font-size: 14px; color: rgba(255,255,255,0.85);font-weight: 500;">
-                      {{ user.devote }} 分钟</div>
+                      {{ user.devote.toFixed(2) }} 分钟</div>
                   </a-col>
                   <a-col :span="8" v-if="user.devote">
                     <div @click="doExchangeDevote(user.uid)" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;"  class=" rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
@@ -36,7 +36,7 @@
           <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
         </a-col>
         <div>
-          待领取总计：{{total}} 分钟
+          待领取总计：{{total.toFixed(2)}} 分钟
         </div>
       </div>
     </div>
