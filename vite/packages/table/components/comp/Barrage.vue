@@ -26,9 +26,10 @@ export default {
     this.timer=setInterval(()=>{
       this.changeUrl('table').then()
     },180000)
-    this.$router.afterEach((to, from) => {
-      this.changeUrl('table').then()
-    })
+    // this.$router.afterEach((to, from) => {
+    //   this.changeUrl('table').then()
+    // })
+    //禁用路由切换的时候的barrage请求
     this.filteredBarrages =JSON.parse(localStorage.getItem('filteredBarrages')) || []
     this.sendBarragesCount =JSON.parse(localStorage.getItem('sendBarragesCount')) || {}
     let that = this
