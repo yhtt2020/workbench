@@ -116,10 +116,15 @@ let tray = null
 app.whenReady().then(() => {
   async function uploadCumulativeTime () {
     try {
+      let clientId=settings.get('clientID')
+      if(!clientId){
+        clientId=require('nanoid').nanoid(8)
+        settings.set('clientID',clientId)
+      }
       const userInfo = await userModel.getCurrent()
       const options = {
         uid: userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0, // 用户uid
-        client_id: settings.get('clientID') // 设备号
+        client_id: clientId // 设备号
       }
 
       await baseApi.init()
