@@ -77,14 +77,14 @@ function execAsPromised(
 ): Promise<CommandOutput> {
   return new Promise((resolve, reject) => {
     const child = exec(
-      command,
-      { cwd: options?.cwd },
+     'chcp 65001 &'+ command,
+      { cwd: options?.cwd ,encoding: 'binary'},
       (err, stdout, stderr) => {
         if (err) {
           reject(err);
         }
-        let outDecode= iconv.decode(Buffer.from(stdout, "binary"), 'GBK')
-        let errDecode= iconv.decode(Buffer.from(stderr, "binary"), 'GBK')
+        let outDecode= iconv.decode(Buffer.from(stdout, "binary"), 'utf-8')
+        let errDecode= iconv.decode(Buffer.from(stderr, "binary"), 'utf-8')
         resolve({
           stdout: outDecode,
           stderr: errDecode,

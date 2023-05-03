@@ -45,12 +45,12 @@
         </div>
 
         <div style="display: inline-block;">
-          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 20em;vertical-align: top">
+          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top">
             <h3>音频输出设备</h3>
             <div v-for="audio in audioList">
               <div @click="setAudio(audio)" class="audio" :class="{'active':audio.isDefaultForMultimedia}">
                 <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon>
-                {{ audio.name }} <span v-if="audio.deviceId==='default'">当前</span>
+                {{ audio.name }} ({{audio.deviceName}}) <span v-if="audio.deviceId==='default'">当前</span>
               </div>
             </div>
             <div>
