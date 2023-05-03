@@ -21,7 +21,7 @@
       </div>
       <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
     </template>
-   
+
   </HomeComponentSlot>
 </template>
 
@@ -66,30 +66,37 @@ export default {
   },
   computed:{
      weekEpic(){
-        const weekEpicIndex = this.epicList.filter(el=>{
+       try{
+         const weekEpicIndex = this.epicList.filter(el=>{
            if(el.promotions.promotionalOffers.length !== 0){
-              const startPromotions = el.promotions.promotionalOffers[0]
-              const startDate = new Date(startPromotions.promotionalOffers[0].startDate)
-              const endDate = new Date(startPromotions.promotionalOffers[0].startDate)
-              const ofWeek = new Date(startOfWeek())
-              const nextWeek = new Date(startOfNextWeek())
-              return startDate.getTime() >= ofWeek.getTime() && endDate.getTime() <= nextWeek.getTime()
+             const startPromotions = el.promotions.promotionalOffers[0]
+             const startDate = new Date(startPromotions.promotionalOffers[0].startDate)
+             const endDate = new Date(startPromotions.promotionalOffers[0].endDate)
+             return startDate.getTime() <= Date.now() && Date.now()<=endDate.getTime()
            }
-        })
-        return weekEpicIndex
+         })
+         return weekEpicIndex
+       }catch (e) {
+         console.warn(e)
+         return []
+       }
+
      },
      nextWeekEpic(){
-        const nextWeekEpicIndex = this.epicList.filter(el=>{
+       try{
+         const nextWeekEpicIndex = this.epicList.filter(el=>{
            if(el.promotions.upcomingPromotionalOffers.length !== 0){
-              const nextPromotions = el.promotions.upcomingPromotionalOffers[0]
-              const nextStartDate = new Date(nextPromotions.promotionalOffers[0].startDate)
-              const nextEndDate = new Date(nextPromotions.promotionalOffers[0].startDate)
-              const ofWeek = new Date(startOfWeek())
-              const nextWeek = new Date(startOfNextWeek())
-              return nextStartDate.getTime() >= ofWeek.getTime() && nextEndDate.getTime() >= nextWeek.getTime()
+             const nextPromotions = el.promotions.upcomingPromotionalOffers[0]
+             const nextStartDate = new Date(nextPromotions.promotionalOffers[0].startDate)
+             return nextStartDate.getTime() >= Date.now()
            }
-        })
-        return nextWeekEpicIndex.slice(0,2)
+         })
+         return nextWeekEpicIndex.slice(0,2)
+       }catch (e) {
+         console.warn(e)
+         return []
+       }
+
      },
   },
   mounted() {
@@ -99,11 +106,13 @@ export default {
     remainderDay,
     getEpicData(){
       sendRequest('https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN').then(res=>{
+        console.log(res,'epic数据')
         const epicData = res.data.data.Catalog.searchStore.elements
         // 根据promotions判断Epic是否免费
         const epicIndex = epicData.filter(el=>{
-          return el.promotions !== null 
+          return el.promotions !== null
         })
+        console.log(epicIndex)
         this.epicList = epicIndex
       })
     },
@@ -129,13 +138,13 @@ export default {
          nextWeekDate:upcomingPromotional.endDate,
          productSlug:item.productSlug
         }
-      }  
+      }
     },
     detailBack(){
       this.detailShow = false
     }
   }
-  
+
 }
 </script>
 
