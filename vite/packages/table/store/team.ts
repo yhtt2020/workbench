@@ -21,6 +21,8 @@ const getUserGradeUrl = Server.baseUrl + '/app/getUserGrade'
 
 
 const getListUrl=Server.baseUrl+'/app/team/getList'
+import {appStore} from "../store";
+
 // @ts-ignore
 export const teamStore = defineStore("teamStore", {
   state: () => ({
@@ -77,7 +79,6 @@ export const teamStore = defineStore("teamStore", {
       let conf = await getConfig()
       conf.params = query
       let response = await axios.get(getListUrl, conf)
-      console.log(response, 'response======================')
       if (response.code === 1000) {
         return response.data
       }
@@ -90,7 +91,6 @@ export const teamStore = defineStore("teamStore", {
         let data = teamLeaderResult.data
         if (data.status) {
           this.teamLeader = data.data
-          console.log(data,'leader')
           return this.teamLeader
         } else {
           console.warn('无法取到队长信息')
@@ -101,7 +101,6 @@ export const teamStore = defineStore("teamStore", {
       let conf = await getConfig()
       conf.params = {uid: uid}
       let response = await axios.get(getUserGradeUrl, conf)
-      console.log(response, 'response======================')
       if (response.code === 1000) {
         return response.data
       }
@@ -124,11 +123,9 @@ export const teamStore = defineStore("teamStore", {
     async getMemberDevote() {
       let result = await axios.get(getMemberDevote,
         await getConfig())
-      console.log('小队收益',result)
       if (result.code === 1000) {
         let data = result.data
         if (data) {
-          console.log('小队收益',data.data)
           this.membersDevote = data.data || {}
           return this.membersDevote
         } else {
@@ -142,10 +139,8 @@ export const teamStore = defineStore("teamStore", {
       let result=await axios.post(exchangeDevoteUrl,
         {from_uid:from_uid},await getConfig())
       if (result.code === 1000) {
-        console.log('兑换结果',result)
         let data = result.data
         if (data) {
-          console.log('兑换成功',data)
           return {
             status:1,
             data
@@ -167,7 +162,6 @@ export const teamStore = defineStore("teamStore", {
 
     async updateTeam(no, cache) {
       let conf = await getConfig()
-      console.log(conf)
       conf.params = {
         no: no,
         cache: cache
@@ -183,19 +177,16 @@ export const teamStore = defineStore("teamStore", {
           }
         }
       }
-      console.log('teamResult=', teamResult)
     },
 
     async updateMy(cache = 1) {
       let conf = await getConfig()
-      console.log(conf)
       conf.params = {
         cache: cache
       }
       let myTeamResult = await axios.get(getMy, conf)
       if (myTeamResult.code === 1000) {
         let data = myTeamResult.data
-        console.log('myTeamResult=', myTeamResult)
         this.my = data.data
         let teamNo = 0
         if (this.my.created.hasOwnProperty('no')) {
@@ -207,7 +198,6 @@ export const teamStore = defineStore("teamStore", {
             teamNo = this.my.joined[0].team_no
           }
         }
-        console.log('取到队伍=', teamNo)
         //更新队伍信息
         if (teamNo) {
           await this.updateTeam(teamNo, cache)
@@ -216,8 +206,6 @@ export const teamStore = defineStore("teamStore", {
 
         }
       }
-      console.log(myTeamResult)
-
     },
 
     /**
@@ -226,6 +214,27 @@ export const teamStore = defineStore("teamStore", {
     async updateTeamShip(no) {
       await this.getTeamLeader(no)
       await this.getTeamMembers(no)
+      console.log(this.team,'小队信息')
+      console.log(this.teamMembers,'队员信息')
+      if(!this.checkMember()){
+        await this.closeTeam()
+      }
+    },
+    /**
+     * 检查自己是不是成员，此方法包括队长也算在内
+     */
+    checkMember(){
+      let myUid=appStore().userInfo.uid
+      console.log('我的uid',myUid)
+      let isMember=false
+      if(myUid===Number(this.team.leader)){
+        return true
+      }
+      return !!this.teamMembers.some((member => {
+        if (Number(member.uid) === myUid) {
+          return true
+        }
+      }));
     },
 
     async joinByNo(no) {
@@ -242,9 +251,14 @@ export const teamStore = defineStore("teamStore", {
       }
 
     },
-    async quitByNo(no) {
+    /**
+     * 退出或者踢人
+     * @param no
+     * @param uid 如果不提交，则为自己退出
+     */
+    async quitByNo(no,uid) {
       try {
-        let rs = await axios.post(quitByNoUrl, {no: no},
+        let rs = await axios.post(quitByNoUrl, {no: no,uid:uid},
           await getConfig())
         return rs
       } catch (e) {
@@ -262,7 +276,6 @@ export const teamStore = defineStore("teamStore", {
           avatar
         },
         await getConfig())
-      console.log(rs)
       return rs
     }
   },

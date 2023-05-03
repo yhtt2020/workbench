@@ -91,7 +91,7 @@
             <a-col>
               <a-col>
                 <div class="rounded-xl bg-mask px-6 py-3 pointer " v-if="teamLeader.userInfo.uid===userInfo.uid && this.showUserInfo.uid!==userInfo.uid"
-                     @click="exit">
+                     @click="kick(this.showUserInfo.uid)">
                   <icon icon="shanchu" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                   移出小队
                 </div>
@@ -256,6 +256,35 @@ export default {
         status: false
       }
     },
+    /**踢人
+     *
+     * @param uid
+     */
+    kick(uid){
+      Modal.confirm({
+        content: '将队员移出队伍后，此人将无法再为小队做出贡献，但是历史贡献记录将被保留，其再次加入队伍后可继承。',
+        centered: true,
+        okText: '请离',
+        onOk: async () => {
+          let rs = await this.quitByNo(this.team.no,uid)
+          if (rs.code === 1000) {
+            if(rs.data.status){
+              this.closeDetail()
+              this.updateTeamShip(this.team.no).then()
+              this.updateMy().then()
+              Modal.info({ content: '将队员请离队伍成功',centered:true })
+            }else{
+              this.updateMy().then()
+              Modal.error({content:'请离失败',centered:true})
+            }
+
+          }else{
+            this.updateMy().then()
+            Modal.error({content:'请离意外失败',centered:true})
+          }
+        }
+      })
+    },
     quit () {
       Modal.confirm({
         content: '退出小队后，您将无法再为小队做出贡献，但是历史贡献记录将被保留，以便您回到队伍后继承。',
@@ -281,7 +310,6 @@ export default {
             Modal.error({content:'退出小队意外失败',centered:true})
           }
         }
-
       })
     },
     exit () {
