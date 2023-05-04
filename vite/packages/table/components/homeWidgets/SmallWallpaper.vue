@@ -320,12 +320,12 @@ export default {
     },
   },
   mounted () {
-    this.$nextTick(() => {
-      if (!this.customData.value) {
+    this.$nextTick(()=>{
+      if(!this.customData.Code){
         this.pickFilterChange('我的收藏')
-      } else {
-        this.pickFilterValue = this.customData.value
-        this.pickFilterChange(this.customData.value)
+      }else{
+        this.pickFilterValue = this.customData.Code.value.value
+        this.pickFilterChange(this.customData.Code.value.value)
       }
       this.setImg()
     })

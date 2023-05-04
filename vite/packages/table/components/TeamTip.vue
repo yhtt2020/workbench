@@ -18,8 +18,7 @@
               </a-row>
 
               <div  @click="()=>{this.step=2}" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer relative" style="background: #535bf2;color: white">
-                <GradeSmallTip powerType="team" ></GradeSmallTip>
-
+                <GradeSmallTip powerType="team"  lastPowerType="创建小队"></GradeSmallTip>
                 立即创建</div>
             </div>
             <div class="mt-6">
@@ -35,7 +34,10 @@
                   <a-input v-model:value="teamNo" placeholder="小队号" class="h-10 rounded-xl text-center"></a-input>
                 </a-col>
                 <a-col :span="12">
-                  <div @click="join" :style="{'background':!teamNo?'#343434':'#535bf2'}" class="rounded-xl h-10 w-100 flex justify-center items-center pointer" style="color: white">加入</div>
+                  <div @click="join" :style="{'background':!teamNo?'#343434':'#535bf2'}" class="rounded-xl relative h-10 w-100 flex justify-center items-center pointer" style="color: white">加入
+                    <GradeSmallTip powerType="team"></GradeSmallTip>
+                  </div>
+
                 </a-col>
               </a-row>
 
