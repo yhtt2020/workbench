@@ -29,7 +29,7 @@
           </div>
           <span style="font-weight:700">{{ CPUData.SMEMUTI.value }}%</span></div>
       </div>
-      <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0 || saving?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -91,6 +91,7 @@ import {mapWritableState} from "pinia";
 import {cardStore} from "../../../store/card";
 import {filterObjKeys, netWorkDownUp} from '../../../util'
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import { appStore } from '../../../store'
 export default {
   data(){
     return {
@@ -120,6 +121,7 @@ export default {
     HomeComponentSlot
   },
   computed:{
+    ...mapWritableState(appStore,['saving']),
     ...mapWritableState(cardStore, ["aidaData"]),
     lastDown(){
       return this.down < 1000 ? this.down +'KB/S' : this.down<1024000?(this.down/1024).toFixed(2) + 'MB/S':(this.down/1024/1024).toFixed(2) + 'GB/S'

@@ -24,6 +24,12 @@
                 <GradeSmallTip powerType="closeChat"></GradeSmallTip>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div style="cursor: help" @click="tipSaving" class="btn relative">
+                性能模式<br>
+                <a-switch @click.stop="()=>{}" v-model:checked="saving"></a-switch>
+              </div>
+            </a-col>
 <!--            <a-col :span="12">-->
 <!--              <div class="btn">-->
 <!--                免打扰模式<br>-->
@@ -157,7 +163,7 @@
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
-import { message } from 'ant-design-vue'
+import { message,Modal } from 'ant-design-vue'
 import {mapActions} from 'pinia'
 import { codeStore } from '../store/code'
 import SecondPanel from '../components/SecondPanel.vue'
@@ -182,11 +188,17 @@ export default {
     console.log(this.userInfo)
   },
   computed: {
-    ...mapWritableState(appStore, ['settings']),
+    ...mapWritableState(appStore, ['settings','saving']),
     ...mapWritableState(appStore,['userInfo'])
   },
   methods: {
     ...mapActions(codeStore, ['verify', 'create']),
+    tipSaving(){
+      Modal.info({
+        content:'使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。',
+        centered:true
+      })
+    },
     async verifyCode () {
       this.$router.push({name:'splash'})
     },
