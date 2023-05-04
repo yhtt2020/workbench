@@ -18,6 +18,7 @@ export const appStore = defineStore('appStore', {
     },
 
 
+    saving:true,//性能模式
 
     agreeTest:false,
 
