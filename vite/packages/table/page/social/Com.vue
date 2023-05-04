@@ -129,6 +129,31 @@ import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
   {
+    name:'3.7.43',
+    data:'05月04日',
+    list:[
+      '增加自定义卡片',
+      '天气卡片扩容，天气应用样式美化'
+    ]
+  },
+  {
+    name:'3.7.33',
+    date:'04月27日',
+    list:[
+      '修复steam折扣助手的数据获取问题',
+      '增加游戏助手前端部分页面',
+    ]
+  },
+  {
+    name:'3.7.31',
+    date:'04月26日',
+    list:[
+      '支持退出小队',
+      '增加小队成员在线、成员加速提示',
+      '增加Epic卡片',
+    ]
+  },
+  {
     name:'3.7.30',
     date:'04月26日',
     list:[
