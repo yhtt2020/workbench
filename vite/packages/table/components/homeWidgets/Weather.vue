@@ -147,7 +147,6 @@ export default {
       this.weatherVisible = true
     },
     getDefaultWeather(e){
-      console.log(e.target.value);
       const val = e.target.value
       this.defaultCity = val
     },
