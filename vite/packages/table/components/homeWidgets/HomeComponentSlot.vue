@@ -1,6 +1,6 @@
 <template>
   <div  @contextmenu.stop="showDrawer" class="gradient gradient--14" :class="options.className"
-       :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex" @mouseleave="onMouseOut"
+       :style="{pointerEvents:(editing?'none':''),width:size.width,height:size.height}" @click="onCPUIndex" @mouseleave="onMouseOut"
        @mouseenter="onMouseOver">
     <div
       style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;border-radius: 12px;z-index: 888;padding: 1em; backdrop-filter: blur(8px)"
@@ -123,6 +123,13 @@ export default {
       type:Object,
       default:()=>{}
     },
+    size:{
+      type:Object,
+      default: {
+        width:undefined,
+        height:undefined
+      }
+    }
   },
 
   computed: {

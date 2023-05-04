@@ -90,7 +90,7 @@
             </a-col>
             <a-col>
               <a-col>
-                <div class="rounded-xl bg-mask px-6 py-3 pointer " v-if="teamLeader.userInfo.uid===userInfo.uid && this.showUserInfo.uid!==userInfo.uid"
+                <div class="rounded-xl bg-mask px-6 py-3 pointer " v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
                      @click="kick(this.showUserInfo.uid)">
                   <icon icon="shanchu" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                   移出小队
@@ -313,7 +313,10 @@ export default {
       })
     },
     exit () {
-
+      Modal.info({
+        content:'此功能暂未完成',
+        centered:true
+      })
       // this.team = {
       //   status: false
       // }

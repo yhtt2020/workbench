@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div @click="enterWeather" v-else>
+    <div @click="enterWeather" class="pointer" v-else>
       <template v-if="city.now && city.d7 && city.h24 && city.d7.daily">
         <a-row>
           <a-col :span="7" style="text-align: center">

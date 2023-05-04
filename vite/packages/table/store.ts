@@ -113,6 +113,7 @@ export const appStore = defineStore('appStore', {
       userInfo.onlineGradeIcons.moon = []
       userInfo.onlineGradeIcons.star = []
 
+      userInfo.uid=Number(userInfo.uid)
       function handleGrade(name) {
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
