@@ -37,6 +37,7 @@ import GameCommunity from '../page/gameAssistant/GameCommunity.vue'
 import GameDiscount from '../page/gameAssistant/GameDiscount.vue'
 import GameIntroduction from '../page/gameAssistant/GameIntroduction.vue'
 import MyGame from '../page/gameAssistant/MyGame.vue'
+import GameDiscountDetail from '../page/gameAssistant/GameDiscountDetail.vue'
 import Team from '../page/Team.vue'
 import Hall from '../page/team/Hall.vue'
 export default [{
@@ -143,7 +144,7 @@ export default [{
         {
           path:'/gameDiscount',
           name:'gameDiscount',
-          component:GameDiscount
+          component:GameDiscount,
         },
         {
           path:'/gameIntroduction',
@@ -154,6 +155,12 @@ export default [{
           path:'/myGame',
           name:'myGame',
           component:MyGame
+        },
+        {
+          path:'/GameDiscountDetail',
+          name:'GameDiscountDetail',
+          component:GameDiscountDetail,
+          props:true
         }
       ]
     },
