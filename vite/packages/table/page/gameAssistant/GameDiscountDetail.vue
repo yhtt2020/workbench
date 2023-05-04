@@ -34,7 +34,19 @@
         </div>
       </div>
       <span class="mt-4">语言</span>
-      <!-- <span>{{ detailData.supported_languages }}</span> -->
+      <div style="padding: 12px 13px; background: rgba(33, 33, 33, 1);" class="flex rounded-lg items-center justify-between mt-6">
+         <div class="flex flex-col mt-1">
+          <span>价格</span>
+          <span>特价促销！4 月 24 日 截止</span>
+         </div>
+         <div class="flex flex-col">
+            <span class="line-through" style="color:rgba(255, 255, 255, 0.4);">{{ oldPrice }}</span>
+            <div>
+               <span class="mr-2 rounded-lg" style="padding: 2px 4px 5px 4px;background: rgba(255, 77, 79, 1);"> -{{percent}}%</span>
+               <span style="font-size: 18px;color:rgba(255, 77, 79, 1);font-weight: 500;">{{ newPrice }}</span>
+            </div>
+         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +62,9 @@ export default {
         releaseDate:'',
         developers:'',
         publishers:'',
+        oldPrice:'',
+        newPrice:'',
+        percent:''
       }
     },
     mounted(){
@@ -64,10 +79,12 @@ export default {
           const getDetailData = JSON.parse(this.val)
           console.log(getDetailData.data);
           this.detailData = getDetailData.data
+          this.oldPrice = getDetailData.oldPrice
+          this.newPrice = getDetailData.newPrice
+          this.percent = getDetailData.percent
           this.releaseDate = getDetailData.data.release_date.date
           this.developers = getDetailData.data.developers[0]
           this.publishers = getDetailData.data.publishers[0]
-          console.log(this.detailData.supported_languages.split('<strong>*</strong>'));
          }else{
            this.$router.push({name:'gameDiscount'}) 
          }
