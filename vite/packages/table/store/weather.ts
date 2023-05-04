@@ -78,7 +78,13 @@ export const weatherStore = defineStore('weather', {
         throw e
       }
     },
+    /**
+     * 请求api，如果免费的失败了，则请求付费的
+     * @param url 链接
+     * @param data 地址
+     */
     async get(url, data) {
+      const pay='48feb467ef1b444ba7b666a59f61dbeb'
       let result = await axios.get(url, {
         params: {
           ...data,
@@ -86,10 +92,19 @@ export const weatherStore = defineStore('weather', {
         }
       })
       if (result.status === 200 && result.data.code === '200') {
-        console.log(result.data)
         return result.data
       } else {
-        return false
+        let result=await axios.get(url.replace('devapi.','api.'),{
+          params: {
+            ...data,
+            key: pay
+          }
+        })
+        if (result.status === 200 && result.data.code === '200') {
+          return result.data
+        }else{
+          return false
+        }
       }
     },
     /**
