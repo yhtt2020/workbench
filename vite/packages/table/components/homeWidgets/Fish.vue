@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options">
+  <HomeComponentSlot :options="options"  :customIndex="customIndex">
     <div style="display: flex;flex-direction: column">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
         <div ref="fish" @click="click" class="fish"
@@ -27,6 +27,16 @@ import { mapWritableState } from 'pinia'
 
 export default {
   name: 'Fish',
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0
+    },
+    customData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data () {
     return {
       clicking: false,

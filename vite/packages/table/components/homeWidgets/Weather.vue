@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options" ref="weatherSlot">
+  <HomeComponentSlot :options="options" ref="weatherSlot" :customIndex="customIndex">
     <div v-if="city" class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ city.name }}
     </div>
@@ -108,6 +108,16 @@ import { weatherStore } from '../../store/weather'
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: "Weather",
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0
+    },
+    customData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       today: "",
