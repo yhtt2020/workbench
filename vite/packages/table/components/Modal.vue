@@ -26,7 +26,7 @@ export default {
           this.$emit('update:visibility',false)
           this.className = this.animationName
           this.flag = false
-        },1000)
+        },500)
       }else{
         this.$emit('update:visibility',false)
       }
@@ -40,28 +40,28 @@ export default {
 
 <style scoped>
 .t-b{
-  animation:t-b 1s;
+  animation:t-b .5s;
 }
 .t-b-close{
-  animation:t-b-close 1s;
+  animation:t-b-close .5s;
 }
 .b-t{
-  animation:b-t 1s;
+  animation:b-t .5s;
 }
 .b-t-close{
-  animation:b-t-close 1s;
+  animation:b-t-close .5s;
 }
 .l-r{
-  animation:l-r 1s;
+  animation:l-r .5s;
 }
 .l-r-close{
-  animation:l-r-close 1s;
+  animation:l-r-close .5s;
 }
 .r-l{
-  animation:r-l 1s;
+  animation:r-l .5s;
 }
 .r-l-close{
-  animation:r-l-close 1s;
+  animation:r-l-close .5s;
 }
 @keyframes t-b {
    0% {
