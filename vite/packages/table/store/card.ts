@@ -11,18 +11,6 @@ export const cardStore = defineStore(
           cardMargin:5//卡片间隙
         },
         countdownDay: [{
-          "eventValue": "劳动节",
-          "dateValue": {
-            "year": 2023,
-            "month": 5,
-            "day": 1,
-            "hours": 0,
-            "minutes": 0,
-            "seconds": 0,
-            "week": "星期一"
-          },
-          "type": 'noOver'
-        },{
           "eventValue": "端午节",
           "dateValue": {
             "year": 2023,

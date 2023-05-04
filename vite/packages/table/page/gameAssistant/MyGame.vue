@@ -15,7 +15,7 @@
                       style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
 <div class="flex flex-row flex-wrap -ml-3" v-if="gameType.name==='other'&&myGameList.length>0">
   <div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in myGameList">
-    <div class="   s-bg rounded-xl w-auto h-full ">
+    <div class="relative   rounded-xl w-auto h-full pointer" @contextmenu="openSteamDetail(item)" @click="runGame">
       <img :src="item.src" class="w-full h-full rounded-xl object-cover"  alt="">
       <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
     </div>

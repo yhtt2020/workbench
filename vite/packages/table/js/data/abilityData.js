@@ -22,8 +22,11 @@ export const powerList = [
       0:5,1:5,2:5,3:5,5:10,10:10
     }
   },
-  {icon:'team',name:'team',alias:'团队',detail: {
+  {icon:'chengyuan',name:'group',alias:'团队',detail: {
       0:'仅加入',1:'创建团队',2:'创建团队',3:'创建团队',5:'创建团队',10:'创建团队'}
+  },
+  {icon:'team',name:'team',alias:'小队',detail: {
+      0:'仅加入',1:'仅加入',2:'仅加入',3:'创建小队',5:'创建小队',10:'创建小队'}
   },
   {icon:'linechart',name:'dataMonitoring',alias:'数据监控助手',detail: {
       1:'同时监控3个',2:'同时监控3个',3:'同时监控3个',5:'同时监控5个',10:'不限制'},superiorLimit:{
