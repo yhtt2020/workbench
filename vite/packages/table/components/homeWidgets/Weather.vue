@@ -1,7 +1,7 @@
 <template>
   <HomeComponentSlot :options="options" ref="weatherSlot">
     <div v-if="city" class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
-      {{ city.name }}
+      {{ defaultCity.name }}
     </div>
     <div @click="enterWeather">
     <div v-if="!cities.length">
@@ -36,12 +36,12 @@
       </div>
     </div>
     <div @click="enterWeather" v-else>
-      <template v-if="city.now && city.d7 && city.h24 && city.d7.daily">
+      <template v-if="defaultCity.now && defaultCity.d7 && defaultCity.h24 && defaultCity.d7.daily">
         <a-row>
           <a-col :span="7" style="text-align: center">
             <i
               style="font-size: 4em"
-              :class="'qi-' + city.now.icon + '-fill'"
+              :class="'qi-' + defaultCity.now.icon + '-fill'"
             ></i>
           </a-col>
           <a-col :span="17" style="text-align: center">
@@ -49,7 +49,7 @@
               {{ today.month }}月{{ today.day }}日 {{ today.week }}
             </div>
             <div style="font-size: 1.5em">
-              {{ city.now.text }} {{ city.now.temp }}℃
+              {{ defaultCity.now.text }} {{ defaultCity.now.temp }}℃
             </div>
           </a-col>
         </a-row>
@@ -59,10 +59,10 @@
             <div style="font-size: 1.2em">
               <i
                 style="font-size: 1.2em"
-                :class="'qi-' + city.d7.daily[1].iconDay + '-fill'"
+                :class="'qi-' + defaultCity.d7.daily[1].iconDay + '-fill'"
               ></i>
-              {{ city.d7.daily[1].text }} {{ city.d7.daily[1].tempMin }}℃ ~
-              {{ city.d7.daily[1].tempMax }}℃
+              {{ defaultCity.d7.daily[1].text }} {{ defaultCity.d7.daily[1].tempMin }}℃ ~
+              {{ defaultCity.d7.daily[1].tempMax }}℃
             </div>
           </a-col>
           <a-col :span="12" style="text-align: center">
@@ -70,10 +70,10 @@
             <div style="font-size: 1.2em">
               <i
                 style="font-size: 1.2em"
-                :class="'qi-' + city.d7.daily[2].iconDay + '-fill'"
+                :class="'qi-' + defaultCity.d7.daily[2].iconDay + '-fill'"
               ></i>
-              {{ city.d7.daily[2].text }} {{ city.d7.daily[2].tempMin }}℃ ~
-              {{ city.d7.daily[2].tempMax }}℃
+              {{ defaultCity.d7.daily[2].text }} {{ defaultCity.d7.daily[2].tempMin }}℃ ~
+              {{ defaultCity.d7.daily[2].tempMax }}℃
             </div>
           </a-col>
         </a-row>
@@ -92,8 +92,8 @@
   <a-drawer :width="500" v-model:visible="weatherVisible" @close="onClose" title="常用天气位置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right">
     <div class="flex flex-col justify-start">
       <span style="margin-bottom: 14px;">常用天气位置</span>
-      <a-radio-group @change="getDefaultWeather($event)" v-model:value="city.id">
-        <a-radio class="line" v-for="item in cities" :value="item.id">
+      <a-radio-group @change="getDefaultWeather($event)" v-model:value="defaultCity" >
+        <a-radio class="line" v-for="item in cities" :value="item">
           {{ item.name }}
         </a-radio>
       </a-radio-group>
@@ -147,13 +147,9 @@ export default {
       this.weatherVisible = true
     },
     getDefaultWeather(e){
-      const found =  this.cities.find(ci=>{
-        return ci.id === e.target.value
-      })
-      if(found){
-        return found
-      }
-      console.log(found);
+      console.log(e.target.value);
+      const val = e.target.value
+      this.defaultCity = val
     },
     enterWeather() {
       this.$router.push({ name: "weather" });
