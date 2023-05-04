@@ -102,6 +102,12 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     callback('')
   })
 
+  view.webContents.on('did-fail-load',(event,errorCode,errorDescription,validatedURL,isMainFrame,frameProcessId,frameRoutingId)=>{
+    console.log(
+      event,errorCode,errorDescription,validatedURL,isMainFrame,frameProcessId,frameRoutingId
+    )
+  })
+
   view.webContents.on('certificate-error', (event, url, error, certificate, callback, isMainFrame) => {
     const reg = /^http(s)?:\/\/(.*)\.(\w*)/
     const regedUrl = reg.exec(url)[0]
@@ -312,7 +318,7 @@ function destroyView (id) {
   // }
 }
 
-function destroyAllViews () {
+global.destroyAllViews=function destroyAllViews () {
   for (const id in viewMap) {
     destroyView(id)
   }

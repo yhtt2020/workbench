@@ -104,7 +104,7 @@ if (!isFirstInstance) {
 	return
 }
 
-var saveWindowBounds = function() {
+global.saveWindowBounds = function() {
 	if (mainWindow) {
 		var bounds = Object.assign(mainWindow.getBounds(), {
 			maximized: mainWindow.isMaximized()

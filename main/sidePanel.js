@@ -128,7 +128,6 @@ global.SidePanel=class SidePanel {
 
     this.syncBounds()
     this._sidePanel.on('ready-to-show', () => {
-      checkUpdate()
       let layout= settings.get('layout') || 'max'
       SidePanel.send('adjustSidePanel',layout)
     })
