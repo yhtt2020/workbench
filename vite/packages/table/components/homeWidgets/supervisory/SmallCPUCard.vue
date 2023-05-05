@@ -14,7 +14,7 @@
           <span>温度</span>
           <span style="font-weight: 700;">{{CPUData.TCPUPKG.value}}℃</span></div>
       </div>
-        <a-progress :showInfo="false" :status="CPUData.TCPUPKG.value==0?'':'active'"  :percent="CPUData.TCPUPKG.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.TCPUPKG.value==0|| saving?'':'active'"  :percent="CPUData.TCPUPKG.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -24,7 +24,7 @@
             <span>内存</span>
             <span style="font-weight: 700;">{{CPUData.SMEMUTI.value}}%</span></div>
         </div>
-        <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0|| saving?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -42,6 +42,7 @@ import {mapWritableState} from "pinia";
 import {cardStore} from "../../../store/card";
 import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import { appStore } from '../../../store'
 export default {
   name: "SmallCPUCard",
   data(){
@@ -65,6 +66,7 @@ export default {
   },
   computed:{
     ...mapWritableState(cardStore, ["aidaData"]),
+    ...mapWritableState(appStore,['saving'])
   },
   watch: {
     "aidaData": {

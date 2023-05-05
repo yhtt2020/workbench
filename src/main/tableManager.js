@@ -121,7 +121,6 @@ static alive(){
       tableWin.window.webContents.loadURL(render.getUrl('table.html',{}))
 
 
-
       tableWin.window.on('close', () => {
         this.saveBounds()
         global.tableWin = null
