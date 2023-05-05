@@ -1,10 +1,10 @@
 <template>
-  <div id="display">
+  <div id="display" class="s-bg p-3 m-3 rounded-xl" style="height:calc(100vh - 12em); ">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit" :destroyInactiveTabPane="true">
       <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name">
 
-        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
+        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 17em);  ">
           <div class="section" style="text-align: center">
             <div style="width: 40em;display: inline-block">
               <a-row style="">

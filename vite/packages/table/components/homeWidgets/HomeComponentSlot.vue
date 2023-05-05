@@ -1,6 +1,8 @@
 <template>
-  <div  @contextmenu.stop="showDrawer" class="gradient gradient--14" :class="options.className"
-       :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex" @mouseleave="onMouseOut"
+  <div @contextmenu.stop="showDrawer" :class="classes"
+
+       :style="{pointerEvents:(editing?'none':''),width:size.width,height:size.height}" @click="onCPUIndex"
+       @mouseleave="onMouseOut"
        @mouseenter="onMouseOver">
     <div
       style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;border-radius: 12px;z-index: 888;padding: 1em; backdrop-filter: blur(8px)"
@@ -59,9 +61,9 @@
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="item.fn()" v-for="item in formulaBar" >
+      <div class="option" @click="item.fn()" v-for="item in formulaBar">
         <Icon class="icon" :icon="item.icon"></Icon>
-        {{item.title}}
+        {{ item.title }}
       </div>
       <div class="option" @click="removeCard">
         <Icon class="icon" icon="guanbi2"></Icon>
@@ -73,7 +75,8 @@
       </div>
     </div>
   </a-drawer>
-  <textarea id="textArea" style="opacity: 0;height: 0;width: 0;position: absolute" v-if="options.type.includes('CPU')||options.type.includes('GPU')"></textarea>
+  <textarea id="textArea" style="opacity: 0;height: 0;width: 0;position: absolute"
+            v-if="options.type.includes('CPU')||options.type.includes('GPU')"></textarea>
 
 </template>
 
@@ -83,17 +86,18 @@ import {cardStore} from "../../store/card";
 import {steamStore} from "../../store/steam";
 import {message} from "ant-design-vue";
 import AidaGuide from './supervisory/AidaGuide.vue'
+import _ from 'lodash-es'
 
 export default {
-  components: { AidaGuide },
-  data () {
+  components: {AidaGuide},
+  data() {
     return {
-      visible:false,
-      showTip:false,
-      settingVisible:false,
-      gameRegionShow:false,
-      regionName:'',
-      epicShow:true,
+      visible: false,
+      showTip: false,
+      settingVisible: false,
+      gameRegionShow: false,
+      regionName: '',
+      epicShow: true,
     }
   },
   name: 'HomeComponentSlot',
@@ -103,9 +107,9 @@ export default {
       type: Object,
       default: () => ({})
     },
-    formulaBar:{
-      type:Array,
-      default:()=>[]
+    formulaBar: {
+      type: Array,
+      default: () => []
     },
     editing: {
       type: Boolean,
@@ -119,68 +123,100 @@ export default {
       type: Boolean,
       default: true
     },
-    customData:{
-      type:Object,
-      default:()=>{}
+    customData: {
+      type: Object,
+      default: () => {
+      }
     },
-  },
-
-  computed: {
-    ...mapWritableState(cardStore, ['aidaData','customComponents']),
-    ...mapWritableState(steamStore,["steamCC"]),
-    isCustomData(){
-      return Object.keys(this.customData).length !== 0
-    },
-    isCode(){
-      return this.customData.hasOwnProperty('Code')
+    size: {
+      type: Object,
+      default: {
+        width: undefined,
+        height: undefined
+      }
     }
   },
 
-  mounted(){
+  computed: {
+    ...mapWritableState(cardStore, ['aidaData', 'customComponents']),
+    ...mapWritableState(steamStore, ["steamCC"]),
+    isCustomData() {
+      return Object.keys(this.customData).length !== 0
+    },
+    isCode() {
+      return this.customData.hasOwnProperty('Code')
+    },
+    classes() {
+      let defaultClass = {
+        "gradient": true,
+        "gradient--14": true
+      }
+      if (this.customData && this.customData.hideFrame) {
+        defaultClass = {}
+      }
+
+      let classNameObject = {}
+      if (Object.keys(defaultClass).length > 0) {
+        if (this.options.className) {
+          this.options.className.split(' ').map(c => {
+            classNameObject[c] = true
+          })
+        }
+      }
+      console.log(_.cloneDeep(Object.assign(classNameObject, defaultClass)))
+      let after=_.cloneDeep(Object.assign(classNameObject, defaultClass))
+      if(Object.keys(after).length===0){
+        after['no-frame']=true
+      }
+      return after
+    }
+  },
+
+  mounted() {
 
   },
 
-  methods:{
+  methods: {
     ...mapActions(cardStore, ["removeCustomComponents"]),
-    showDrawer()  {
+    showDrawer() {
       this.visible = true;
     },
-    removeCard () {
+    removeCard() {
       this.removeCustomComponents(this.customIndex)
       this.visible = false
     },
-    onSetup () {
+    onSetup() {
       switch (this.options.title) {
         case '壁纸':
-        this.settingVisible=true
+          this.settingVisible = true
           break;
       }
       this.visible = false
     },
-    onGameSet(){
+    onGameSet() {
       this.gameVisible = true
     },
-    onCPUIndex(){
-      if(this.options.type.includes('CPU')||this.options.type.includes('GPU')){
-       // this.$router.push('CPUIndex')
+    onCPUIndex() {
+      if (this.options.type.includes('CPU') || this.options.type.includes('GPU')) {
+        // this.$router.push('CPUIndex')
       }
     },
-    onDownAida () {
-      ipc.send('addTab', { url: 'https://www.aida64.com/' })
+    onDownAida() {
+      ipc.send('addTab', {url: 'https://www.aida64.com/'})
     },
-    onDownRTSS () {
-      ipc.send('addTab', { url: 'https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html' })
+    onDownRTSS() {
+      ipc.send('addTab', {url: 'https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html'})
 
     },
-    onMouseOver () {
+    onMouseOver() {
       this.showTip = true
       this.gameRegionShow = true
     },
-    onMouseOut () {
+    onMouseOut() {
       this.showTip = false
       this.gameRegionShow = false
     },
-    onCopy () {
+    onCopy() {
       if (this.aidaData) {
         let textArea = document.getElementById('textArea')
         textArea.innerText = JSON.stringify(this.aidaData)
@@ -192,7 +228,7 @@ export default {
         message.info('复制失败，请检查是否启动过aida64！')
       }
     },
-    onClose(){
+    onClose() {
       this.visible = false
     }
 
@@ -201,5 +237,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.no-frame{
+  position:relative;
+}
 </style>

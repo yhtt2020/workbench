@@ -86,7 +86,7 @@ export default {
     PlusOutlined,MinusOutlined
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen','settings'])
+    ...mapWritableState(appStore, ['fullScreen','settings','saving'])
   },
   mounted () {
     let app = this.$route.params
@@ -157,6 +157,11 @@ export default {
       ipc.send('syncTableAppBounds', JSON.parse(JSON.stringify(args)))
     },
     handleLeave () {
+      if(this.saving && this.app.name!=='wyyMusic'){
+        ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
+        this.fullScreen = false
+        return
+      }
       if (this.app.type !== 'system') {
         //非系统应用，隐藏应用
         if (this.app.background) {

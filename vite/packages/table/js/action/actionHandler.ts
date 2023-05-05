@@ -1,6 +1,7 @@
 import BrowserAction from "./browserAction";
 import ActionExecutor from "./actionExecutor";
 import CmdAction from './cmdAction'
+import SendKeysAction from "./sendKeysAction";
 
 /**
  * 动作处理类，根据指令类型，分发处理指令，此类不做具体操作，只负责分发和返回结果
@@ -25,6 +26,9 @@ class ActionHandler {
 
     let actionCommander: ActionExecutor
     switch (action.group.name) {
+      case 'sendKeys':
+        actionCommander = new SendKeysAction(action)
+        break
       case 'browser':
         actionCommander = new BrowserAction(action)
         break

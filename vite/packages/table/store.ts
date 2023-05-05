@@ -18,7 +18,9 @@ export const appStore = defineStore('appStore', {
     },
 
 
+    saving:true,//性能模式
 
+    simple:false,//极简模式
     agreeTest:false,
 
     init: false, //是否已经初始化
@@ -113,6 +115,7 @@ export const appStore = defineStore('appStore', {
       userInfo.onlineGradeIcons.moon = []
       userInfo.onlineGradeIcons.star = []
 
+      userInfo.uid=Number(userInfo.uid)
       function handleGrade(name) {
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
@@ -130,7 +133,7 @@ export const appStore = defineStore('appStore', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths:['status','settings','init','agreeTest','backgroundSettings','backgroundImage'],
+      paths:['status','settings','init','agreeTest','backgroundSettings','backgroundImage','saving','simple'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

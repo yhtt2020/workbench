@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options">
+  <HomeComponentSlot :options="options" :customIndex="customIndex">
     <div @click="enterMusic" class="pointer" style="text-align: center;padding:2em">
       <a-avatar :size="100" :class="{'playing':status.music.playing}" style="border:3px solid #999"  :src="status.music.cover || 'https://a.apps.vip/icons/wyy.png'"></a-avatar>
     </div>
@@ -18,6 +18,16 @@ import {mapWritableState} from 'pinia'
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: 'Music',
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0
+    },
+    customData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data(){
     return {
       options:{

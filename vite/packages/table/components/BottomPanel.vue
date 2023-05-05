@@ -1,5 +1,6 @@
 <template>
-  <div class="bottom-panel flex flex-row items-center justify-center w-full" style="text-align: center" @contextmenu.stop="showMenu">
+  <div class="bottom-panel flex flex-row items-center justify-center w-full" style="text-align: center"
+       @contextmenu.stop="showMenu">
     <div class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
@@ -10,15 +11,16 @@
           </div>
         </div>
       </div>
-      <div v-else :style="{width:settings.enableChat?'23em':'11em'}">
+      <div v-else :style="{width:settings.enableChat && !simple?'23em':(simple?'4.5em':'11em')}">
         <a-row class="pointer" @click="social">
-          <a-col class="user-info"  :span="settings.enableChat?10:24" style="padding: 0.6em;position:relative;">
-            <a-row  style="text-align: left" :gutter="10">
+          <a-col class="user-info" :span="settings.enableChat && !simple?10:24"
+                 style="padding: 0.6em;position:relative;">
+            <a-row style="text-align: left" :gutter="10">
               <a-col>
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
               </a-col>
-              <a-col @click.stop="goMy()" style="position: relative">
-                <span  ref="minute" class="tip" >+1</span>
+              <a-col v-if="!simple" @click.stop="goMy()" style="position: relative">
+                <span ref="minute" class="tip">+1</span>
                 <div style="padding-top: 0.2em;">
                   <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
                   <span>
@@ -54,67 +56,86 @@
 
 
           </a-col>
-          <a-col class="chat" v-if="settings.enableChat" :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
+          <a-col class="chat" v-if="settings.enableChat && !simple" :span="14"
+                 style="text-align: left;padding-top: 0.5em;line-height: 1.75">
             <div style="font-size: 13px;" v-if="messages.length===0">
-            <div class="pointer ml-3" @click.stop="enterIM">
-             <a-row :gutter="10">
-               <a-col :span="6" class="pt-2">
-                 <a-avatar src="https://up.apps.vip/logo/group.png?t=2"></a-avatar>
-               </a-col>
-               <a-col :span="18" class="pt-1">
-                 <div class="text font-bold">
-                   轻聊
-                 </div>
-                 <div>举杯，同是科技咖</div>
-               </a-col>
-             </a-row>
+              <div class="pointer ml-3" @click.stop="enterIM">
+                <a-row :gutter="10">
+                  <a-col :span="6" class="pt-2">
+                    <a-avatar src="https://up.apps.vip/logo/group.png?t=2"></a-avatar>
+                  </a-col>
+                  <a-col :span="18" class="pt-1">
+                    <div class="text font-bold">
+                      轻聊
+                    </div>
+                    <div>举杯，同是科技咖</div>
+                  </a-col>
+                </a-row>
 
-             </div></div>
+              </div>
+            </div>
             <div class="pointer" @click.stop="enterIM">
-              <div v-for="message in messages" class="text-more">{{message.title}}：{{message.body}}</div>
+              <div v-for="message in messages" class="text-more">{{ message.title }}：{{ message.body }}</div>
             </div>
           </a-col>
         </a-row>
       </div>
     </div>
-<!--    <div class="common-panel" style="display: inline-block">-->
-<!--      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>-->
-<!--      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
-<!--      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>-->
-<!--      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>-->
-<!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
-<!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
-<!--    </div>-->
-    <div class=" flex flex-row  items-center pl-6 s-bg" style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
-        <div style="overflow: hidden;overflow-x: auto;"
-             class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
+    <!--    <div class="common-panel" style="display: inline-block">-->
+    <!--      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>-->
+    <!--      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
+    <!--      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>-->
+    <!--      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>-->
+    <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
+    <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
+    <!--    </div>-->
+    <div class=" flex flex-row  items-center pl-6 s-bg"
+         style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
+      <div style="overflow: hidden;overflow-x: auto;"
+           class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
         <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
-        <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
-              <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'" class="s-item flex justify-center items-center rounded-xl">
-                <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
-              </div>
+        <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList"
+             @click="clickNavigation(item)" v-else>
+          <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
+               class="s-item flex justify-center items-center rounded-xl">
+            <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+          </div>
           <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
-            <a-avatar :size="40"  shape="square" :src="item.icon" ></a-avatar>
+            <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
           </div>
         </div>
+      </div>
+
+
+      <div style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
+           class="flex justify-center items-center  h-2/3 pointer">
+        <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
+      </div>
+
+    </div>
+    <template v-if="!simple">
+      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
+        <div @click="toggleTeam" class="common-panel s-bg pointer "
+             style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
+          <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+          <div class="mb-0 mt-0"> 小队
+            <div v-if="true" style="display: inline-block;position: relative">
+            </div>
+          </div>
         </div>
+      </a-badge-ribbon>
+      <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
+           style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
+        <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+        <div class="mb-0 mt-0"> 小队
+          <div v-if="true" style="display: inline-block;position: relative">
+          </div>
+        </div>
+      </div>
+    </template>
 
-
-    <div style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px" class="flex justify-center items-center  h-2/3 pointer">
-      <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
-    </div>
-
-  </div>
-    <div @click="toggleTeam" class="common-panel s-bg pointer " style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
-
-      <Icon class="mt-2 mb-0 " icon="smile"   style="fill:#d7d7d7"></Icon>
-      <div class="mb-0 mt-0">  小队 <div v-if="!team.status" style="display: inline-block;position: relative"> <span class="flex h-3 w-3">
-  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-  <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-</span></div></div>
-    </div>
     <!--    <div style="display: inline-block">-->
     <!--      <a-row :gutter="10">-->
     <!--        <a-col :span="2">-->
@@ -204,48 +225,61 @@
     </div>
   </transition>
 
-    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
-      <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
-    </div>
-    <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
+  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
+    <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+  </div>
+  <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
 
 <script>
 import PanelButton from './PanelButton.vue'
-import {appStore} from '../store'
-import {cardStore} from '../store/card'
+import { appStore } from '../store'
+import { cardStore } from '../store/card'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
-import GradeSmallTip from "./GradeSmallTip.vue";
-const { messageModel }=window.$models
+import GradeSmallTip from './GradeSmallTip.vue'
+
+const { messageModel } = window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
-import ScrolX from "./ScrolX.vue";
+import ScrolX from './ScrolX.vue'
 
-import TeamTip from "./TeamTip.vue";
+import TeamTip from './TeamTip.vue'
 import { teamStore } from '../store/team'
+
 export default {
   name: 'BottomPanel',
-  components: {TeamTip, SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX,GradeSmallTip},
+  components: {
+    TeamTip,
+    SecondPanel,
+    SidePanel,
+    Template,
+    PanelButton,
+    ThunderboltFilled,
+    EditNavigation,
+    ChangeApp,
+    ScrolX,
+    GradeSmallTip
+  },
   data () {
     return {
 
-      lastTime:0,
+      lastTime: 0,
       visibleTrans: false,
       full: false,
       //显示小组提示
-      showTeamTip:false,
-      teamKey:Date.now(),
+      showTeamTip: false,
+      teamKey: Date.now(),
 
-      timer:null,
-      messages:[],
-      tipped:false,
+      timer: null,
+      messages: [],
+      tipped: false,
       menuVisible: false,
-      quick:false,
+      quick: false,
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -253,11 +287,11 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true,
       },
-      changeFlag:false,
+      changeFlag: false,
       //screenWidth: document.body.clientWidth
     }
   },
-  unmounted() {
+  unmounted () {
     let that = this
     window.removeEventListener('resize', that.checkScroll)
   },
@@ -275,26 +309,26 @@ export default {
       that.checkScroll
     )
     let content = this.$refs.content
-    content.addEventListener('wheel',(event) => {
-      event.preventDefault();
+    content.addEventListener('wheel', (event) => {
+      event.preventDefault()
       content.scrollLeft += event.deltaY
     })
     this.setMinute()
-    this.lastTime=Number(localStorage.getItem('lastBarrageMessageTime'))
+    this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
     this.loadMessages()
-    setInterval( ()=>{
+    setInterval(() => {
       this.loadMessages()
-    },10000)
+    }, 10000)
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo','settings','lvInfo']),
-    ...mapWritableState(teamStore,['team','teamVisible']),
-    ...mapWritableState(cardStore, ['navigationList','routeParams'])
+    ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
+    ...mapWritableState(teamStore, ['team', 'teamVisible']),
+    ...mapWritableState(cardStore, ['navigationList', 'routeParams'])
   },
   watch: {
-    navigationList : {
-      handler(){
-            this.checkScroll()
+    navigationList: {
+      handler () {
+        this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
         //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
@@ -306,117 +340,117 @@ export default {
 
       },
       immediate: true,
-      deep:true
+      deep: true
     }
   },
   methods: {
-    ...mapActions(teamStore,['updateMy']),
-    async toggleTeam(){
+    ...mapActions(teamStore, ['updateMy']),
+    async toggleTeam () {
       await this.updateMy(0)
-      if(this.team.status===false){
-        this.teamKey=Date.now()
-        this.showTeamTip=true
-      }else{
-        this.teamVisible=!this.teamVisible
+      if (this.team.status === false) {
+        this.teamKey = Date.now()
+        this.showTeamTip = true
+      } else {
+        this.teamVisible = !this.teamVisible
       }
 
     },
-    closeDrawer(){
-      this.menuVisible=false
+    closeDrawer () {
+      this.menuVisible = false
     },
-    checkScroll(){
-      this.$nextTick(()=>{
-        if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
-          this.$refs.content.style.marginTop='17px'
-        }else{
-          this.$refs.content.style.marginTop='0px'
+    checkScroll () {
+      this.$nextTick(() => {
+        if (this.$refs.content.offsetHeight - this.$refs.content.clientHeight > 0) {
+          this.$refs.content.style.marginTop = '17px'
+        } else {
+          this.$refs.content.style.marginTop = '0px'
         }
       })
     },
-    goMy(){
-      this.$router.push({name:"socialMy"})
+    goMy () {
+      this.$router.push({ name: 'socialMy' })
     },
     ...mapActions(appStore, ['setUser']),
-    setFull(value){
+    setFull (value) {
       this.full = value
     },
-    appChange(){
-      this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+    appChange () {
+      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.changeFlag = true
     },
-    closeChangeApp(){
-      this.routeParams.url&& setTimeout(()=>{this.$router.push({name: 'app', params: this.routeParams})},400)
+    closeChangeApp () {
+      this.routeParams.url && setTimeout(() => {this.$router.push({ name: 'app', params: this.routeParams })}, 400)
       this.changeFlag = false
     },
     showMenu () {
-      this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
     onClose () {
-      this.routeParams.url&&this.$router.push({name: 'app', params: this.routeParams})
+      this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
-    editNavigation(){
+    editNavigation () {
       this.quick = true
       this.menuVisible = false
     },
-    setQuick(){
+    setQuick () {
       this.quick = false
     },
-    setMinute(){
-      setInterval(()=>{
+    setMinute () {
+      setInterval(() => {
         this.$refs.minute.classList.add('move')
         this.lvInfo.remainMinute--
-        if(this.lvInfo.remainMinute<=0){
+        if (this.lvInfo.remainMinute <= 0) {
           this.lvInfo.remainHour--
-          if(this.lvInfo.remainHour<0 &&  this.tipped===false){
-            this.tipped=true
+          if (this.lvInfo.remainHour < 0 && this.tipped === false) {
+            this.tipped = true
             ipc.send('getDetailUserInfo')
             Modal.info({
-              title:'升级提示',
-              content:'恭喜您等级提升',
+              title: '升级提示',
+              content: '恭喜您等级提升',
             })
           }
-          this.lvInfo.remainMinute=59
+          this.lvInfo.remainMinute = 59
         }
-       this.timer= setTimeout(()=>{
+        this.timer = setTimeout(() => {
           this.$refs.minute.classList.remove('move')
-        },1000)
-      },60000)
+        }, 1000)
+      }, 60000)
     },
-    async loadMessages(){
-      this.messages=await messageModel.allList()
-      this.messages.forEach(mes=>{
+    async loadMessages () {
+      this.messages = await messageModel.allList()
+      this.messages.forEach(mes => {
         //修正一下登录小助手的
-        if(mes.title==='登录小助手'){
-          mes.body='[提醒]'
+        if (mes.title === '登录小助手') {
+          mes.body = '[提醒]'
         }
       })
-      if(this.lastTime===0){
-        let barrages=this.messages.slice(0,10)
+      if (this.lastTime === 0) {
+        let barrages = this.messages.slice(0, 10)
         window.$manager.sendChat(barrages)
-        if(barrages.length>0){
-          this.lastTime=barrages[0].create_time//重新设置指标
-        }else{
-          this.lastTime=Date.now()
+        if (barrages.length > 0) {
+          this.lastTime = barrages[0].create_time//重新设置指标
+        } else {
+          this.lastTime = Date.now()
         }
-      }else{
-        let readyToSend=this.messages.filter(mes=>{
-          return mes.create_time>this.lastTime
+      } else {
+        let readyToSend = this.messages.filter(mes => {
+          return mes.create_time > this.lastTime
         })
-         //readyToSend.splice(0,10)
-        if(readyToSend.length>0){
+        //readyToSend.splice(0,10)
+        if (readyToSend.length > 0) {
           window.$manager.sendChat(readyToSend)
         }
-        if(this.messages.length>0){
-          this.lastTime=this.messages[0].create_time//重新设置指标
-        }else{
-          this.lastTime=Date.now()
+        if (this.messages.length > 0) {
+          this.lastTime = this.messages[0].create_time//重新设置指标
+        } else {
+          this.lastTime = Date.now()
         }
 
-        localStorage.setItem('lastBarrageMessageTime',this.lastTime)
+        localStorage.setItem('lastBarrageMessageTime', this.lastTime)
       }
-      if(this.messages.length>2){
+      if (this.messages.length > 2) {
         this.messages.splice(2)
       }
     },
@@ -436,7 +470,7 @@ export default {
         this.$router.push({ path: '/status' })
       }
     },
-    social(){
+    social () {
       this.$router.push({ path: '/social/' })
     },
     power () {
@@ -476,11 +510,11 @@ export default {
     enterIM () {
       this.$router.push({
         name: 'app',
-        params:{
+        params: {
           fullScreen: false,
           theme: 'transparent',
           name: 'chat',
-          package:'com.thisky.chat',
+          package: 'com.thisky.chat',
           url: 'http://im.xiangtian.ren',
           preload: '../preload/chatPreload',
           background: true,
@@ -489,9 +523,10 @@ export default {
         }
       })
     },
-    clickNavigation(item){
-        switch (item.type){
-          case 'systemApp':if(item.event==='fullscreen'){
+    clickNavigation (item) {
+      switch (item.type) {
+        case 'systemApp':
+          if (item.event === 'fullscreen') {
             if (this.full) {
               this.full = false
               tsbApi.window.setFullScreen(false)
@@ -499,29 +534,36 @@ export default {
               this.full = true
               tsbApi.window.setFullScreen(true)
             }
-          }else if(item.event==='/status'){
+          } else if (item.event === '/status') {
             if (this.$route.path === '/status') {
               this.$router.go(-1)
             } else {
               this.$router.push({ path: '/status' })
             }
-          }else if(item.data){
+          } else if (item.data) {
             this.$router.push({
               name: 'app',
               params: item.data
             })
-          }
-          else{
+          } else {
             this.$router.push({ name: item.event })
-          }break;
-          case 'coolApp':  this.$router.push({
+          }
+          break
+        case 'coolApp':
+          this.$router.push({
             name: 'app',
             params: item.data
-          });break;
-          case 'localApp': require('electron').shell.openPath(item.path);break;
-          case 'lightApp': ipc.send('executeAppByPackage',{package:item.package});break;
-          default: require('electron').shell.openPath(item.path);
-        }
+          })
+          break
+        case 'localApp':
+          require('electron').shell.openPath(item.path)
+          break
+        case 'lightApp':
+          ipc.send('executeAppByPackage', { package: item.package })
+          break
+        default:
+          require('electron').shell.openPath(item.path)
+      }
     }
   }
 }
@@ -534,6 +576,7 @@ export default {
 .btn {
   text-align: center;
 }
+
 .status-text {
   font-size: 1.5em;
   line-height: 3em;
@@ -625,7 +668,7 @@ export default {
 //    width: 12.5em;
 //  }
 //}
-.tip{
+.tip {
   position: absolute;
   top: 0;
   right: -25px;
@@ -636,10 +679,12 @@ export default {
   text-align: center;
   line-height: 15px;
 }
-.move{
+
+.move {
 
   animation: moveUp 0.8s;
 }
+
 @keyframes moveUp {
   from {
     top: 20px;
@@ -651,8 +696,8 @@ export default {
   }
 }
 
-.scroll-content{
-  :last-child{
+.scroll-content {
+  :last-child {
     margin-right: 0;
   }
 }

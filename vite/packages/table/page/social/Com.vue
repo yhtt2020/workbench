@@ -59,7 +59,7 @@
               <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">
                 <a-avatar class="mr-2" src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
                 想天工作台
-                <a-button size="small" style="float: right" type="primary">访问社区</a-button>
+                <a-button size="small" @click="checkUpdate" style="float: right" type="primary">访问社区</a-button>
               </div>
             </div>
           </div>
@@ -69,6 +69,7 @@
 
               <div  class="bg-indigo-500 w-1/8 inline-block px-4 py-1 text-white text-center font-extrabold rounded-full mt-3 mr-5 ml-5">{{appVersion}}</div>反馈问题请附版本号
 
+              <a-button class="mt-3" block type="primary" @click="checkUpdate">检查更新</a-button>
             </div>
           </div>
           <div class="card mb-3" style="width: 300px">
@@ -128,6 +129,35 @@ import axios from 'axios'
 import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
+  {
+    name:'3.7.43',
+    date:'05月04日',
+    list:[
+      '修复小队部分bug',
+      '增加自定义卡片',
+      '天气卡片扩容，天气应用样式美化',
+      '快捷指令增加快捷键功能',
+      '增加性能模式，同时优化小队动画性能消耗',
+      '优化自动升级机制，支持不打开浏览器下检测和手动检测'
+    ]
+  },
+  {
+    name:'3.7.33',
+    date:'04月27日',
+    list:[
+      '修复steam折扣助手的数据获取问题',
+      '增加游戏助手前端部分页面',
+    ]
+  },
+  {
+    name:'3.7.31',
+    date:'04月26日',
+    list:[
+      '支持退出小队',
+      '增加小队成员在线、成员加速提示',
+      '增加Epic卡片',
+    ]
+  },
   {
     name:'3.7.30',
     date:'04月26日',
@@ -203,6 +233,9 @@ export default {
     console.log(tsbApi.runtime)
   },
   methods:{
+    checkUpdate(){
+      ipc.send('checkUpdate')
+    },
     openTab(url){
       ipc.send('addTab',{url:url})
     },

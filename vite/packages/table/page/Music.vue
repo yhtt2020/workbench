@@ -155,6 +155,11 @@ export default {
       this.currentIndex = data.index
     },
 
+  },
+  beforeUnmount () {
+    if(!this.status.music.playing){
+      ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(SystemApps.wyyMusic)) })
+    }
   }
 }
 </script>
