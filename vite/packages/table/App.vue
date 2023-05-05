@@ -203,7 +203,7 @@ export default {
     updateMusic(music) {
       this.setMusic(music);
     },
-    ...mapActions(cardStore, ["removeClock"]),
+    ...mapActions(cardStore, ["removeClock","sortClock"]),
     handleOk() {
       this.visible = false;
       this.removeClock(0);
@@ -214,6 +214,7 @@ export default {
   }, watch: {
     "appDate.minutes": {
       handler(newVal, oldVal) {
+        this.sortClock()
         try {
           if (
             this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&

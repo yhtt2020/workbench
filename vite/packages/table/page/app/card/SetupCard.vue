@@ -318,6 +318,7 @@ export default {
         clockType: this.clockType,
         eventValue: this.eventValue,
         dateValue: timeStamp(this.clockDate.valueOf()),
+        clockTimeStamp:this.clockDate.valueOf()
       });
       this.$router.push({
         name: "home",

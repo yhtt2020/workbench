@@ -330,6 +330,7 @@ export const cardStore = defineStore(
       },
       addClock(value) {
         this.clockEvent.push(value);
+
         // if(this.clockEvent[this.clockEvent.length-1].clockType==='每天'&&this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.hours===this.appDate.hours&&
         //   this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.minutes===this.appDate.minutes){
         //   this.everySortClock()
