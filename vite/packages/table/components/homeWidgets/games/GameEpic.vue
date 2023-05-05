@@ -30,6 +30,7 @@ import HomeComponentSlot from "../HomeComponentSlot.vue"
 import HorizontalPanel from "../../HorizontalPanel.vue"
 import { sendRequest,startOfNextWeek,startOfWeek,remainderDay} from "../../../js/axios/api"
 import EpicDetail from './EpicDetail.vue'
+import _ from 'lodash-es'
 export default {
   name:'GameEpic',
   components:{
@@ -75,6 +76,9 @@ export default {
              return startDate.getTime() <= Date.now() && Date.now()<=endDate.getTime()
            }
          })
+         if(weekEpicIndex.length>2){
+           return  _.sampleSize(weekEpicIndex,2)
+         }
          return weekEpicIndex
        }catch (e) {
          console.warn(e)
@@ -91,6 +95,9 @@ export default {
              return nextStartDate.getTime() >= Date.now()
            }
          })
+         if(nextWeekEpicIndex.length>2){
+           return  _.sampleSize(nextWeekEpicIndex,2)
+         }
          return nextWeekEpicIndex.slice(0,2)
        }catch (e) {
          console.warn(e)
