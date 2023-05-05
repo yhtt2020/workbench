@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :options="options">
+  <HomeComponentSlot :options="options" :customIndex="customIndex">
         <div class="timer-content ">
           <Icon
             style="
@@ -25,6 +25,16 @@
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: "Timer",
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0
+    },
+    customData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data(){
     return {
       options:{
