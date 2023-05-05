@@ -1,0 +1,155 @@
+html, body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: Aral, Helvetica, sans-serif;
+    text-align: center;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    background: #f8f9fa;
+}
+main{
+    position: relative;
+    max-width: 800px;
+    margin: auto;
+}
+a, b{
+    display: inline-block;
+    color: #6c757d;
+    text-decoration: none;
+    font-weight: 600;
+}
+b{
+    padding: 10px;
+}
+button{
+    padding: 5px 10px;
+}
+
+.spotlight img,
+.image{
+    width: 29vw;
+    height: auto;
+    max-width: 300px;
+    margin: 1vmin 1vmin;
+    content-visibility: auto;
+}
+.image{
+    display: inline-block;
+    height: 20vw;
+    max-height: 200px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.spotlight img{
+    height: 20vw;
+    max-height: 200px;
+    object-fit: cover;
+}
+.spotlight{
+    cursor: pointer;
+    display: inline-block;
+}
+
+hr{
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+h1 img{
+    width: 500px;
+    max-width: 70vw;
+}
+label, button{
+    display: inline-block;
+    padding: 5px 7px;
+    margin: 3px 1px;
+    border: 1px solid #ddd;
+    background: #e9ecef;
+    font-size: 12px;
+    line-height: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 5px;
+}
+button{
+    border:0;
+    outline: 0;
+    padding: 8px 18px;
+    font-weight: 400;
+    font-size: 15px;
+    background-color: #6c757d;
+    color: #fff;
+}
+label input{
+    float: left;
+    margin-right: 7px;
+    margin-left: 2px;
+}
+pre{
+    display: inline-block;
+    margin: auto;
+    text-align: left;
+    width: 100%;
+    max-width: calc(100vw - 1.7em);
+}
+pre code.hljs{
+    background: #fff;
+    padding: 1em 1.5em;
+    border-radius: 10px;
+    width: 100%;
+    max-width: calc(100vw - 1.7em);
+}
+
+a[data-media="node"]{
+    width: 29vw;
+    max-width: 300px;
+    margin: 1vmin 1vmin;
+    display: inline-block;
+    height: 20vw;
+    max-height: 200px;
+}
+a[data-media="node"] img{
+    float: left;
+    width: 33.33%;
+    margin: 0;
+    object-fit: cover;
+    height: 100%;
+    padding: 0;
+}
+
+/*
+.hljs{
+    color: #000;
+}
+.hljs-attr {
+    color:#79c0ff
+}
+.hljs-name,
+.hljs-built_in {
+    color: #ffa657;
+}
+.hljs-attribute{
+    color: #e0e7ff
+}
+.hljs-selector-class {
+    color: #79c0ff
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+    color: #f92672
+}
+
+.hljs-bullet,
+.hljs-link,
+.hljs-literal,
+.hljs-number,
+.hljs-quote,
+.hljs-regexp {
+    color: #d2a8ff
+}
+*/
