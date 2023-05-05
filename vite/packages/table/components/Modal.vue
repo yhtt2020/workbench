@@ -1,6 +1,6 @@
 <template>
 <div class="fixed inset-0" :class="blurFlag?'home-blur':''" style="z-index: 999999999999999999999999999999999999" @click="closeModal">
-  <div class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl " :class="className">
+  <div class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl " style="transform-origin: 0 0" :class="className">
     <slot></slot>
   </div>
 </div>
@@ -62,6 +62,12 @@ export default {
 }
 .r-l-close{
   animation:r-l-close .5s;
+}
+.bounce-in{
+  animation: bounce-in .5s;
+}
+.bounce-in-close{
+  animation: bounce-in-close .5s;
 }
 @keyframes t-b {
    0% {
@@ -185,6 +191,29 @@ export default {
   100% {
     opacity: 0;
     transform: translateY(-50%) translateX(-150%);
+  }
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0) translateY(-50%) translateX(-50%);
+  }
+  50% {
+    transform: scale(1.25) translateY(-50%) translateX(-50%);
+  }
+  100% {
+    transform: scale(1) translateY(-50%) translateX(-50%);
+  }
+}
+@keyframes bounce-in-close {
+  0% {
+    transform: scale(1)  translateY(-50%) translateX(-50%);
+
+  }
+  50% {
+    transform: scale(1.25) translateY(-50%) translateX(-50%) ;
+  }
+  100% {
+    transform: scale(0) translateY(-50%) translateX(-50%);
   }
 }
 </style>

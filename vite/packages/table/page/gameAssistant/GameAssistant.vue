@@ -6,7 +6,7 @@
 <!--        <span style="margin-left: 0.5em;" class="s-text text-base">{{ item.title }}</span>-->
 <!--      </div>-->
 <!--    </div>-->
-    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; text-align: left; "  @changeTab="changeTab"></SecondPanel>
+    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em 0; text-align: left; "  @changeTab="changeTab"></SecondPanel>
     <div class="flex-1 mt-3 " style="padding-top: 1em">
       <router-view></router-view>
     </div>
