@@ -20,3 +20,6 @@ yarn.lock
 /tsbSdk/node_modules/
 /补丁/
 **/node_modules/**
+/packages/vuuri/
+/packages/wallpaper/
+/packages/spotlight/node_modules

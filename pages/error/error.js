@@ -342,7 +342,7 @@ if (errDesc && errDesc.secondaryAction) {
 //证书类的都允许用户强制跳过，如果用户强制跳过，则无需进行协议转换，故不需要此代码了
 console.log(erorDescriptions[ec],sslError)
 
-if (erorDescriptions[ec]===sslError) {
+if (erorDescriptions[ec]===sslError || ec==='-2') {
   //证书类的都允许
   continueButton.hidden = false
 }

@@ -164,7 +164,7 @@ export default {
       window.Spotlight.show(LockArr, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: this.settings.interval,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
@@ -180,24 +180,29 @@ export default {
         Modal.error({content:'请激活壁纸后重新使用激活壁纸模式。'})
         return
       }
-      let LockActive = []
+      let lockActive = []
+      let loop=false
+      if(lockActive.length===1){
+          loop=true
+      }
       this.activePapers.map((el)=>{
         if(this.fileImageExtension(el)){
-          LockActive.push({
+          lockActive.push({
             "src-mp4":el.srcProtocol,
             media:"video",
             poster:el.path
           })
         }else{
-          LockActive.push({
+          lockActive.push({
             src:el.path
           })
         }
       })
-      window.Spotlight.show(LockActive, {
+      window.Spotlight.show(lockActive, {
         control: 'autofit,fullscreen,close,prev,next',
         play: true,
-        autoslide: true,
+        loop:loop,
+        autoslide: this.settings.interval,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,

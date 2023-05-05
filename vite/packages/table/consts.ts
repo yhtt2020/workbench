@@ -1,6 +1,6 @@
 //系统应用变量
-const Server={
-  baseUrl:'https://wad.apps.vip/api',
+const Server = {
+  baseUrl: 'https://wad.apps.vip/api',
   //baseUrl:'http://localhost:8001'
 }
 
@@ -15,6 +15,26 @@ const SystemApps = {
   }
 }
 let ActionGroups = [
+  {
+    title: '常用',
+    name: 'sendKeys',
+    color: '#ff0aba',
+    actions: [
+      {
+        title:'快捷键',
+        name: 'sendKeys',
+        summary: '调用全局快捷键，可实现音频控制等功能。直接输入单词即可，例如ctrl+x，<a href="https://www.yuque.com/tswork/mqon1y/mm28svv194g628gc" target="_blank">查看帮助</a>',
+        inputs: [{
+          rules: [{required: true, message: '必须填写快捷键'}],
+          name: 'keys',
+          title: '名称',
+          type: 'input',
+          width: '26em',
+          placeholder: '请输入快捷键'
+        }]
+      }
+    ]
+  },
   {
     title: '浏览器',
     name: 'browser',
@@ -270,4 +290,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {SystemApps, ActionGroups,Server}
+export {SystemApps, ActionGroups, Server}
