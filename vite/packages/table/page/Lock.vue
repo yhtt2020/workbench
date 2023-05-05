@@ -1,19 +1,26 @@
 <template>
-  <div id="displayMiddle" @click.prevent="enter" class="pointer"  style="margin-top: -6em;min-height: 15em">
-    <div v-if="settings.showTime && loaded" class="time" style="" >
+  <div class=" fixed inset-0 " style="z-index:1" v-if="singleLively">
+    <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
+      <source :src="videoPath" type="video/mp4" id="bgVid">dddd
+    </video>
+  </div>
+  <div id="displayMiddle" @click.prevent="enter" class="pointer" style="margin-top: -6em;min-height: 15em">
+    <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
-     <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
+      <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
     </div>
-    <div id="tip" style="color: white;font-size: 20px;margin-top: 2em" >
-      <Icon  icon="jiesuo" style="font-size: 30px;vertical-align: text-top"></Icon>点击屏幕中间解锁
+    <div id="tip" style="color: white;font-size: 20px;margin-top: 2em">
+      <Icon icon="jiesuo" style="font-size: 30px;vertical-align: text-top"></Icon>
+      点击屏幕中间解锁
     </div>
   </div>
   <div class=" card half count-downtime" v-if="countDowntime.hours">
-    <div class="left-time"> <Icon
-      style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
-      icon="zanting"
-      @click="closeCountDown" v-show="!countDownBtn"
-    ></Icon>
+    <div class="left-time">
+      <Icon
+        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+        icon="zanting"
+        @click="closeCountDown" v-show="!countDownBtn"
+      ></Icon>
       <Icon
         style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
         icon="bofang"
@@ -23,42 +30,52 @@
         style="width: 2em; height: 2em;cursor:pointer"
         icon="guanbi1"
         @click="deleteCountDown"
-      ></Icon></div>
+      ></Icon>
+    </div>
     <div class="right-time">
       <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
-      <span style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</span>
+      <span
+        style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{
+          countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds
+        }}</span>
     </div>
   </div>
-<div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
-  <div  v-if="clockEvent[0]" class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-xl flex flex-col justify-evenly items-center" style="width: 480px;height: 320px;background:  #282828">
-    <div>
-      {{ clockEvent[0].dateValue.hours }}:{{
-        clockEvent[0].dateValue.minutes
-      }}
-    </div>
-    <div>
-      {{ clockEvent[0].eventValue }}
-    </div>
-  <div style="width: 100px;height: 48px;" class="flex justify-center items-center text-base bg-blue-500 rounded-xl pointer" @click="handleOk">
-    好的
-  </div>
+  <div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
+    <div v-if="clockEvent[0]"
+         class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-xl flex flex-col justify-evenly items-center"
+         style="width: 480px;height: 320px;background:  #282828">
+      <div>
+        {{ clockEvent[0].dateValue.hours }}:{{
+          clockEvent[0].dateValue.minutes
+        }}
+      </div>
+      <div>
+        {{ clockEvent[0].eventValue }}
+      </div>
+      <div style="width: 100px;height: 48px;"
+           class="flex justify-center items-center text-base bg-blue-500 rounded-xl pointer" @click="handleOk">
+        好的
+      </div>
 
+    </div>
   </div>
-</div>
 </template>
 
 <script>
 import Spotlight from 'spotlight.js'
-import {appStore} from '../store'
-import {countDownStore} from '../store/countDown'
-import {cardStore} from '../store/card'
-import {mapActions, mapState, mapWritableState} from 'pinia'
-import { message,Modal } from 'ant-design-vue'
+import { appStore } from '../store'
+import { countDownStore } from '../store/countDown'
+import { cardStore } from '../store/card'
+import { mapActions, mapState, mapWritableState } from 'pinia'
+import { message, Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
+
 export default {
   name: 'Lock',
   data () {
     return {
+      playing: [],
+      singleLively: false,
       loaded: false,
       year: 0,
       month: 0,
@@ -75,16 +92,16 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(()=>{
-      $('#displayMiddle').css('top','calc(50vh - '+$('#displayMiddle').height()/2+'px)')
+    this.$nextTick(() => {
+      $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
     })
     $('#displayMiddle').fadeIn(1000)
-    setTimeout(()=>{
+    setTimeout(() => {
       $('#tip').fadeOut(1000)
-    },3000)
-    if(this.settings.playType==='my'){
+    }, 3000)
+    if (this.settings.playType === 'my') {
       this.playAll()
-    }else{
+    } else {
       this.playActive()
     }
     this.tick()
@@ -97,25 +114,29 @@ export default {
   beforeUnmount () {
     clearInterval(this.timer)
   },
-  computed:{
-    ...mapState(paperStore,['myPapers','settings','activePapers']),
-    ...mapWritableState(cardStore, [ "clockEvent", "appDate",]),
-    ...mapWritableState(countDownStore, ["countDowndate","countDowntime","countDownBtn"]),
+  computed: {
+    ...mapState(paperStore, ['myPapers', 'settings', 'activePapers']),
+    ...mapWritableState(cardStore, ['clockEvent', 'appDate',]),
+    ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
+    videoPath () {
+      console.log(this.playing[0]['src-mp4'], 'playingeee')
+      return this.playing[0]['src-mp4']
+    }
   },
   methods: {
-    ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
-    ...mapActions(cardStore, ["removeClock","changeClock"]),
-    enterGallery(){
+    ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
+    ...mapActions(cardStore, ['removeClock', 'changeClock']),
+    enterGallery () {
       window.Spotlight.close()
       this.$router.replace({
-         path:'/gallery'
+        path: '/gallery'
       })
     },
-    handleOk() {
-      this.visible = false;
-        this.removeClock(0);
-        this.$refs.clock.currentTime = 0;
-        this.$refs.clock.pause();
+    handleOk () {
+      this.visible = false
+      this.removeClock(0)
+      this.$refs.clock.currentTime = 0
+      this.$refs.clock.pause()
     },
     tick () {
       let weeks = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
@@ -133,109 +154,128 @@ export default {
       this.week = weeks[date.getDay() - 1]
       this.loaded = true
     },
-    enter (closeSpot=true) {
-      if(closeSpot)
+    enter (closeSpot = true) {
+      if (closeSpot)
         window.Spotlight.close()
       console.log('解锁')
       this.$router.go(-1)
     },
-    playAll(){
-      if(this.myPapers.length===0){
+    playAll () {
+      if (this.myPapers.length === 0) {
         this.$router.replace({
-          name:'my'
+          name: 'my'
         })
-        Modal.error({content:'请添加我的壁纸后重新锁屏。'})
+        Modal.error({ content: '请添加我的壁纸后重新锁屏。' })
         return
       }
       let LockArr = []
-      this.myPapers.map(el=>{
-        if(this.fileImageExtension(el)){
-           LockArr.push({
-             "src-mp4":el.srcProtocol,
-              media:"video",
-              poster:el.path
-           })
-        }else{
+      this.myPapers.map(el => {
+        if (this.fileImageExtension(el)) {
           LockArr.push({
-            src:el.path
+            'src-mp4': el.srcProtocol,
+            media: 'video',
+            poster: el.path
+          })
+        } else {
+          LockArr.push({
+            src: el.path
           })
         }
       })
+      if (LockArr.length === 1) {
+        if (LockArr[0].media === 'video') {
+          this.singleLively = true
+          this.playing = LockArr
+          return
+        }
+      } else {
+        this.singleLively = false
+      }
       window.Spotlight.show(LockArr, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: this.settings.interval,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
-        autoplay:true,
-        onclose:()=>{this.enter(false)}
+        autoplay: true,
+        onclose: () => {this.enter(false)}
       })
     },
-    playActive(){
-      if(this.activePapers.length===0){
+    playActive () {
+      if (this.activePapers.length === 0) {
         this.$router.replace({
-          name:'my'
+          name: 'my'
         })
-        Modal.error({content:'请激活壁纸后重新使用激活壁纸模式。'})
+        Modal.error({ content: '请激活壁纸后重新使用激活壁纸模式。' })
         return
       }
-      let LockActive = []
-      this.activePapers.map((el)=>{
-        if(this.fileImageExtension(el)){
-          LockActive.push({
-            "src-mp4":el.srcProtocol,
-            media:"video",
-            poster:el.path
+      let lockActive = []
+
+      this.activePapers.map((el) => {
+        if (this.fileImageExtension(el)) {
+          lockActive.push({
+            'src-mp4': el.srcProtocol,
+            media: 'video',
+            poster: el.path
           })
-        }else{
-          LockActive.push({
-            src:el.path
+        } else {
+          lockActive.push({
+            src: el.path
           })
         }
       })
-      window.Spotlight.show(LockActive, {
+      if (lockActive.length === 1) {
+        if (lockActive[0].media === 'video') {
+          this.playing = lockActive
+          this.singleLively = true
+          return
+        }
+      } else {
+        this.singleLively = false
+      }
+      window.Spotlight.show(lockActive, {
         control: 'autofit,fullscreen,close,prev,next',
         play: true,
-        autoslide: true,
+        autoslide: this.settings.interval,
         infinite: true,
         progress: this.settings.showProgress,
         title: false,
-        autoplay:true,
-        onclose:()=>{this.enter(false)}
+        autoplay: true,
+        onclose: () => {this.enter(false)}
       })
     },
-    closeCountDown(){
-      this.stopCountDown();
+    closeCountDown () {
+      this.stopCountDown()
     },
-    startCountDown(){
-      this.openCountDown();
+    startCountDown () {
+      this.openCountDown()
     },
-    deleteCountDown(){
+    deleteCountDown () {
       this.dCountDown()
     },
     // 判断文件是否为图片
-    fileImageExtension(filePath){
+    fileImageExtension (filePath) {
       const fileExtensions = filePath.src.split('.').pop()
-      const extensions = ['mp4','mpeg','avi','rmvb']
-      if(extensions.indexOf(fileExtensions) !== -1){
+      const extensions = ['mp4', 'mpeg', 'avi', 'rmvb']
+      if (extensions.indexOf(fileExtensions) !== -1) {
         return true
-      }else{
+      } else {
         return false
       }
     },
   },
   watch: {
-    "appDate.minutes": {
-      handler(newVal, oldVal) {
+    'appDate.minutes': {
+      handler (newVal, oldVal) {
         try {
           if (
             this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
             this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
-            this.visible = true;
+            this.visible = true
             setTimeout(() => {
-              this.$refs.clock.play();
+              this.$refs.clock.play()
             }, 500)
           }
         } catch (err) {
@@ -255,8 +295,11 @@ export default {
   text-shadow: 0 0 2em #000;
   text-align: center
 }
-#displayMiddle{
-  display:none;position: fixed;left: calc(25%);
+
+#displayMiddle {
+  display: none;
+  position: fixed;
+  left: calc(25%);
   width: 50%;
   text-align: center;
   z-index: 9999999;
@@ -264,7 +307,8 @@ export default {
   padding: 1em;
   border-radius: 2em;
 }
-.count-downtime{
+
+.count-downtime {
   display: flex;
   flex-direction: row;
   position: fixed;
@@ -272,17 +316,19 @@ export default {
   top: 50%;
   transform: translateX(-50%);
   align-items: center;
-  justify-content:space-between ;
+  justify-content: space-between;
   height: 15%;
   width: 30em;
   z-index: 999999;
-  .left-time{
+
+  .left-time {
     flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
   }
-  .right-time{
+
+  .right-time {
     flex: 3;
     display: flex;
     justify-content: center;

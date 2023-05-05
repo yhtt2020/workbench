@@ -159,6 +159,7 @@ export default {
     handleLeave () {
       if(this.saving && this.app.name!=='wyyMusic'){
         ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
+        this.fullScreen = false
         return
       }
       if (this.app.type !== 'system') {

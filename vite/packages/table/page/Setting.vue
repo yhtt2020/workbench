@@ -30,6 +30,12 @@
                 <a-switch @click.stop="()=>{}" v-model:checked="saving"></a-switch>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div style="cursor: help" @click="tipSimple" class="btn relative">
+                极简模式<br>
+                <a-switch @click.stop="()=>{}" v-model:checked="simple"></a-switch>
+              </div>
+            </a-col>
 <!--            <a-col :span="12">-->
 <!--              <div class="btn">-->
 <!--                免打扰模式<br>-->
@@ -188,7 +194,7 @@ export default {
     console.log(this.userInfo)
   },
   computed: {
-    ...mapWritableState(appStore, ['settings','saving']),
+    ...mapWritableState(appStore, ['settings','saving','simple']),
     ...mapWritableState(appStore,['userInfo'])
   },
   methods: {
@@ -199,6 +205,13 @@ export default {
         centered:true
       })
     },
+    tipSimple(){
+      Modal.info({
+        content:'使用极简模式后，将隐藏一些娱乐、社交类的功能，例如小队功能、聊天功能。',
+        centered:true
+      })
+    },
+
     async verifyCode () {
       this.$router.push({name:'splash'})
     },

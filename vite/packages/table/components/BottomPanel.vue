@@ -11,14 +11,15 @@
           </div>
         </div>
       </div>
-      <div v-else :style="{width:settings.enableChat?'23em':'11em'}">
+      <div v-else :style="{width:settings.enableChat && !simple?'23em':(simple?'4.5em':'11em')}">
         <a-row class="pointer" @click="social">
-          <a-col class="user-info" :span="settings.enableChat?10:24" style="padding: 0.6em;position:relative;">
+          <a-col class="user-info" :span="settings.enableChat && !simple?10:24"
+                 style="padding: 0.6em;position:relative;">
             <a-row style="text-align: left" :gutter="10">
               <a-col>
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
               </a-col>
-              <a-col @click.stop="goMy()" style="position: relative">
+              <a-col v-if="!simple" @click.stop="goMy()" style="position: relative">
                 <span ref="minute" class="tip">+1</span>
                 <div style="padding-top: 0.2em;">
                   <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
@@ -55,7 +56,7 @@
 
 
           </a-col>
-          <a-col class="chat" v-if="settings.enableChat" :span="14"
+          <a-col class="chat" v-if="settings.enableChat && !simple" :span="14"
                  style="text-align: left;padding-top: 0.5em;line-height: 1.75">
             <div style="font-size: 13px;" v-if="messages.length===0">
               <div class="pointer ml-3" @click.stop="enterIM">
@@ -114,16 +115,17 @@
       </div>
 
     </div>
-    <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
-      <div @click="toggleTeam" class="common-panel s-bg pointer "
-           style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
-        <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
-        <div class="mb-0 mt-0"> 小队
-          <div v-if="true" style="display: inline-block;position: relative">
+    <template v-if="!simple">
+      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
+        <div @click="toggleTeam" class="common-panel s-bg pointer "
+             style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
+          <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+          <div class="mb-0 mt-0"> 小队
+            <div v-if="true" style="display: inline-block;position: relative">
+            </div>
           </div>
         </div>
-      </div>
-    </a-badge-ribbon>
+      </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
            style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
         <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
@@ -132,6 +134,8 @@
           </div>
         </div>
       </div>
+    </template>
+
     <!--    <div style="display: inline-block">-->
     <!--      <a-row :gutter="10">-->
     <!--        <a-col :span="2">-->
@@ -317,7 +321,7 @@ export default {
     }, 10000)
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo']),
+    ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(cardStore, ['navigationList', 'routeParams'])
   },

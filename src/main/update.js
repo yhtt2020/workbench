@@ -2,6 +2,7 @@ const { autoUpdater } = require('electron-updater')
 const {app,Notification,ipcMain:ipc,BrowserWindow,net}=require('electron')
 let updaterWindow = null
 global.initedUpdater=false
+global.showUpdateWindow=false
 class Updater {
   showedError = false
   //升级数据
@@ -39,7 +40,7 @@ class Updater {
    * @param showWindow 显示更新窗口
    */
   checkUpdate (showWindow = false) {
-
+    global.showUpdateWindow=showWindow
     //
     // if (isDevelopmentMode) {
     //   // 如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
@@ -82,7 +83,7 @@ class Updater {
         this.loadUpdate(this.updateData)
       })
       autoUpdater.on('update-not-available', (data) => {
-        if (showWindow) {
+        if (global.showUpdateWindow) {
           this.updateData = data
           // console.log(updateInfo)
           this.loadUpdate(data)

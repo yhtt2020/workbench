@@ -131,8 +131,9 @@ import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
   {
     name:'3.7.43',
-    data:'05月04日',
+    date:'05月04日',
     list:[
+      '修复小队部分bug',
       '增加自定义卡片',
       '天气卡片扩容，天气应用样式美化',
       '快捷指令增加快捷键功能',
