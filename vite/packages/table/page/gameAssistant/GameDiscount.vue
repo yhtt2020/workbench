@@ -1,8 +1,9 @@
 <template>
   <div class="flex justify-between h-12 items-center" style="margin-right: 30px;">
     <HorizontalPanel :navList="leftTitle" v-model:selectType="leftTitleType"></HorizontalPanel>
-    <a-select v-model:value="defaultGameValue" style="width: 200px;" @change="selectOptionValue($event)">
-      <a-select-option  v-for="selectItem in rightSelect" :value="selectItem.id">{{selectItem.name}}</a-select-option>
+    <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
+              @change="selectOptionValue($event)"    class="w-56 h-auto rounded-xl  text-xs s-item" size="large" :bordered="false" v-model:value="defaultGameValue">
+      <a-select-option v-for="item in rightSelect" :value="item.id">{{item.name}}</a-select-option>
     </a-select>
   </div>
   <template v-if="leftTitleType.name === 'steam' ">
@@ -10,7 +11,7 @@
       <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
          <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
          <div  class="w-full flex justify-start flex-col">
-            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center cursor-pointer mt-3  w-full flex-row  rounded-lg p-3" style="background: rgba(33, 33, 33, 1);">
+            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center s-bg cursor-pointer mt-3  w-full flex-row  rounded-lg p-3">
               <div style="width: 269px;height: 120px;" class="mr-3">
                 <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
               </div>
@@ -113,15 +114,19 @@ export default {
             listData.map(el=>{
               sendRequest(`https://store.steampowered.com/api/appdetails?appids=${el.id}&cc=${this.defaultGameValue}&l=${this.defaultGameValue}`,3).then(res=>{
                 const data = res.data[el.id].data
-                console.log(data);
-                this.steamList.push({
-                  image:data.header_image,
-                  name:data.name,
-                  brief:data.short_description,
-                  newPrice:data.price_overview.final_formatted,
-                  oldPrice:data.price_overview.initial_formatted,
-                  percent:data.price_overview.discount_percent
-                })
+                if(data !== undefined){
+                  this.steamList.push({
+                   id:data.steam_appid,
+                   image:data.header_image,
+                   name:data.name,
+                   brief:data.short_description,
+                   newPrice:data.price_overview.final_formatted,
+                   oldPrice:data.price_overview.initial_formatted,
+                   percent:data.price_overview.discount_percent,
+                   data:data
+                  })
+                }
+              }).finally(()=>{
                 this.$nextTick(()=>{
                  this.isLoading = false
                 })
