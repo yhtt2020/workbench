@@ -241,6 +241,8 @@ import MyGameMiddle from '../components/homeWidgets/games/MyGameMiddle.vue'
 import Capture from '../components/homeWidgets/games/Capture.vue'
 import AddCard from './app/card/AddCard.vue'
 import GradeNotice from './app/grade/GradeNotice.vue'
+import Voice from '../components/homeWidgets/games/Voice.vue'
+import Audio from '../components/homeWidgets/games/Audio.vue'
 import { runExec } from '../js/common/exec'
 import { appStore } from '../store'
 import Remote from '../components/homeWidgets/custom/Remote.vue'
@@ -404,7 +406,9 @@ export default {
     GameEpic,
     MyGameSmall,
     MyGameMiddle,
-    Capture
+    Capture,
+    Voice,
+    Audio
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'aidaData', 'settings', 'desks', 'moved', 'currentDeskIndex']),
