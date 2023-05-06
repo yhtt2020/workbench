@@ -178,6 +178,9 @@ import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
 import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
 import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/homeWidgets/SmallWallpaper.vue";
+import MyGameSmall from '../components/homeWidgets/games/MyGameSmall.vue'
+import MyGameMiddle from '../components/homeWidgets/games/MyGameMiddle.vue'
+import Capture from '../components/homeWidgets/games/Capture.vue'
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
 import {runExec} from "../js/common/exec";
@@ -325,7 +328,10 @@ export default {
     DiscountPercentage,
     MiddleWallpaper,
     SmallWallpaper,
-    GameEpic
+    GameEpic,
+    MyGameSmall,
+    MyGameMiddle,
+    Capture
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
