@@ -288,6 +288,11 @@ export default defineComponent({
       /* Password auto-fill settings  */
       this.passwordManagers=passwordManagers
       settings.get('passwordManager',(value)=>{
+        if(!value){
+          this.currentPasswordManager= this.passwordManagers[0]
+          return
+        }
+        console.log(value,'pwd')
         this.currentPasswordManager=this.passwordManagers.find(pm=>{
           return pm.name===value.name
         })
@@ -296,6 +301,10 @@ export default defineComponent({
         }
       })
       settings.listen('passwordManager', (value)=>{
+        if(!value){
+          this.currentPasswordManager= this.passwordManagers[0]
+          return
+        }
         this.currentPasswordManager=this.passwordManagers.find(pm=>{
           return pm.name===value.name
         })
@@ -860,7 +869,7 @@ export default defineComponent({
                 <label
                   for="itab-input"
                 >iTab（热门新秀）</label>
-                <div class="url-icon" @click="openUrl('https://go.itab.link/')"> <link-outlined /></div>
+                <div class="url-icon" @click="openUrl('https://go.itab.link/sw.js')"> <link-outlined /></div>
               </div>
               <div class="setting-option">
                 <input type="radio" name="tabChoosed" id="tab-custom-input"/>

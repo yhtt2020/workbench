@@ -11,7 +11,7 @@
       <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
          <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
          <div  class="w-full flex justify-start flex-col">
-            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center cursor-pointer mt-3  w-full flex-row  rounded-lg p-3" style="background: rgba(33, 33, 33, 1);">
+            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center s-bg cursor-pointer mt-3  w-full flex-row  rounded-lg p-3">
               <div style="width: 269px;height: 120px;" class="mr-3">
                 <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
               </div>

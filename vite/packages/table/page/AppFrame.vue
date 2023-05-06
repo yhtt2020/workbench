@@ -69,6 +69,7 @@
 import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
 import {PlusOutlined,MinusOutlined} from '@ant-design/icons-vue'
+import _ from 'lodash-es'
 export default {
   name: 'AppFrame',
   data () {
@@ -119,8 +120,17 @@ export default {
         }
         this.app = app
         ipc.send('executeTableApp', args)
+        frame.addEventListener('resize',()=>{
+          _.debounce(()=>{
+            this.syncBounds()
+          },1000)
+        })
+        setTimeout(()=>{
+          this.syncBounds()
+        },600)
       })
     }
+
   },
   beforeUnmount () {
     this.handleLeave()
