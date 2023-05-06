@@ -18,7 +18,7 @@
           <div class="item-name">{{ outputContent }}</div>
           <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
         </div>
-        <span class="mt-1" style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输入检测</span>
+        <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
         <div class="flex">
           <div style="width: 180px;" class="mr-4 flex items-center justify-center">
             <a-progress :percent="10" :showInfo="false"/>
