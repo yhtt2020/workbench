@@ -1,37 +1,40 @@
 <template>
-  <div class="p-3" v-if="this.customComponents.length===0">
-    <a-result class="s-bg rounded-xl"
-              status="success"
-              title="使用卡片桌面"
-              sub-title="您可以长按空白处、右键添加卡片。"
-    >
-      <template #extra>
-        <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
-        <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
-      </template>
 
-      <div class="desc">
-        <p style="font-size: 16px">
-          <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
-        </p>
-        <p>
-          <close-circle-outlined :style="{ color: 'red' }"/>
-          从社区获得分享代码（此功能暂未上线，请耐心等待）
-          <a>从社区导入 &gt;</a>
-        </p>
-      </div>
-    </a-result>
-  </div>
 
   <div v-if="hide" style="position: fixed;top: 0;bottom: 0;right: 0;left: 0" @click="hideDesk" @contextmenu="hideDesk">
 
   </div>
-  <div v-if="!hide"
+  <div v-if="!hide" @contextmenu="showMenu"
        style="display: flex; align-items: flex-start;flex-direction: column;justify-content: left;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
     <div class="text-left" v-if="desks.length>1">
       <HorizontalPanel @changed="this.key=Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex"></HorizontalPanel>
     </div>
+    <div class="p-3 m-auto "   v-if="this.currentDesk.cards.length===0">
+      <div style="width: 100%">
+        <a-result class="s-bg rounded-xl m-auto" style="margin: auto"
+                  status="success"
+                  title="使用卡片桌面"
+                  sub-title="您可以长按空白处、右键添加卡片。"
+        >
+          <template #extra>
+            <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
+            <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+          </template>
 
+          <div class="desc">
+            <p style="font-size: 16px">
+              <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
+            </p>
+            <p>
+              <close-circle-outlined :style="{ color: 'red' }"/>
+              从社区获得分享代码（此功能暂未上线，请耐心等待）
+              <a>从社区导入 &gt;</a>
+            </p>
+          </div>
+        </a-result>
+      </div>
+
+    </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;width: 100%;height: 100%;">
       <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;"
@@ -491,7 +494,7 @@ export default {
       this.setBackgroundImage({ path: '' })
     },
     initGrids () {
-      this.customComponents = initCards
+      this.currentDesk.cards =  this.cleanMuuriData(deskTemplate['daily'])
     },
     hideDesk () {
       this.fullScreen = !this.fullScreen
