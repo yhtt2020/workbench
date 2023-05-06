@@ -163,7 +163,7 @@ export default {
         },
         {
           icon: '/img/game.png',
-          name: '游戏小助手',
+          name: '游戏小助手（正在开发中）',
           summary: '',
           needInstall: false,
           data: {
