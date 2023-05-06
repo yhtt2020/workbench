@@ -22,6 +22,13 @@ export default {
       activeIndex:0
     }
   },
+  mounted () {
+    if(this.selectType){
+      this.activeIndex = this.navList.findIndex(item=>{
+        return item.name===this.selectType.name
+      })
+    }
+  },
   methods:{
     clickNav(item,index){
       this.activeIndex = index

@@ -26,9 +26,13 @@
   <div v-if="hide" style="position: fixed;top: 0;bottom: 0;right: 0;left: 0" @click="hideDesk" @contextmenu="hideDesk">
 
   </div>
-  <div
-    style="display: flex; align-items: center;flex-direction: row;justify-content: center;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
-    <vue-custom-scrollbar v-if="!hide" key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+  <div v-if="!hide"
+    style="display: flex; align-items: flex-start;flex-direction: column;justify-content: left;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
+    <div class="text-left">
+      <HorizontalPanel :navList="desksList" v-model:selectType="currentDeskIndex"></HorizontalPanel>
+    </div>
+
+    <vue-custom-scrollbar  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;width: 100%;height: 100%;">
       <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;" :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
@@ -44,7 +48,7 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri   :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
+        <vuuri v-if="currentDesk.cards"   :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
                class="grid home-widgets" ref="grid" :options="muuriOptions" >
           <template #item="{ item }">
             <div  :style="{pointerEvents:(editing?'none':'')}" >
@@ -99,6 +103,12 @@
         </div>
       </a-col>
       <a-col>
+        <div @click="addDesk" class="btn">
+          <Icon style="font-size: 3em" icon="desktop"></Icon>
+          <div><span>添加桌面</span></div>
+        </div>
+      </a-col>
+      <a-col>
         <div @click="hideDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
           <div><span>隐藏桌面</span></div>
@@ -150,6 +160,31 @@
   <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
     <GradeNotice></GradeNotice>
   </div>
+  <a-drawer v-model:visible="addDeskVisible">
+    <div class="line-title">
+      添加桌面
+    </div>
+    <div class="line">
+      <a-input v-model:value="newDesk.name" placeholder="桌面名称"></a-input>
+    </div>
+    <div class="line">
+      选择初始布局：
+    </div>
+    <div class="line">
+      <a-radio-group v-model:value="newDesk.template" defaultValue="daily">
+        <a-radio value="daily">日常桌面</a-radio>
+        <a-radio value="game">游戏桌面</a-radio>
+        <a-radio value="work">办公桌面</a-radio>
+        <a-radio value="empty">空白桌面</a-radio>
+      </a-radio-group>
+    </div>
+    <div class="mt-5">
+      <a-button type="primary" block>确认添加</a-button>
+    </div>
+
+
+
+  </a-drawer>
 </template>
 <script>
 import Weather from '../components/homeWidgets/Weather.vue'
@@ -190,6 +225,7 @@ import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
 
 import Muuri from 'muuri'
+import HorizontalPanel from '../components/HorizontalPanel.vue'
 const readAida64 = window.readAida64
 const initCards= [
   {
@@ -266,9 +302,15 @@ export default {
   name: 'Home',
   data () {
     return {
+      newDesk:{
+        name:'',
+        template:'daily'
+      },
+
       hide:false,
       menuVisible: false,
       settingVisible:false,
+      addDeskVisible:false,
       editing: false,
       key: Date.now(),
       scrollbarSettings: {
@@ -302,6 +344,8 @@ export default {
     }
   },
   components: {
+    HorizontalPanel,
+    Modal,
     Dou,
     AddMore,
     Stock,
@@ -334,15 +378,45 @@ export default {
     Capture
   },
   computed: {
-    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
+    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings','desks','moved','currentDeskIndex']),
     ...mapWritableState(appStore, ['agreeTest','backgroundSettings','backgroundImage']),
 
     ...mapWritableState(appStore, {
       appSettings: 'settings',
     }),
+    desksList(){
+      return this.desks.map(desk=>{
+        return {
+          name:desk.nanoid,
+          title:desk.name,
+        }
+      })
+    },
+    currentDesk(){
+      let find= this.desks.find(desk=>{
+        return desk.nanoid===this.currentDeskIndex.name
+      })
+      if(find){
+        return find
+      }else{
+        return {
+          cards:[]
+        }
+      }
+    }
   },
-
   mounted () {
+    if(!this.moved){
+      this.desks[0].cards=this.customComponents
+      this.moved=true
+    }
+    if(this.desks.length>0 && !this.currentDeskIndex.name){
+      this.currentDeskIndex={
+        name:this.desks[0].nanoid,
+        title:this.desks[0].name
+      }
+    }
+    console.log(this.currentDeskIndex,'current')
     this.fixData()
     window.onresize = () => {
       this.scrollbar = Date.now()
@@ -382,7 +456,7 @@ export default {
       }
     },
     runExec,
-    ...mapActions(cardStore, ['setAidaData']),
+    ...mapActions(cardStore, ['setAidaData','getCurrentDesk']),
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(weatherStore,['fixData']),
     clearWallpaper(){
@@ -396,16 +470,24 @@ export default {
       this.hide=!this.hide
       this.menuVisible=false
     },
+    addDesk(){
+      this.menuVisible=false
+      this.addDeskVisible=true
+    },
     clear(){
       this.menuVisible=false
-      Modal.confirm({
-        centered:true,
-        content:'清空全部卡片？此操作不可还原。',
-        onOk:()=>{
-          this.customComponents=[]
-        },
-        okText:"删除全部"
-      })
+      let desk= this.getCurrentDesk()
+      if(desk){
+        Modal.confirm({
+          centered:true,
+          content:'清空当前桌面的全部卡片？此操作不可还原。',
+          onOk:()=>{
+            desk.cards=[]
+          },
+          okText:"删除全部"
+        })
+      }
+
     },
     showSetting(){
       this.settingVisible=true
