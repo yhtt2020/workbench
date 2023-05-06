@@ -2,16 +2,16 @@
 <div class="flex flex-row items-center justify-between nav-top-game">
   <div class="flex flex-row">
   <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
-            class="w-60 h-12 rounded-xl  text-xs s-bg" size="large" :bordered="false" >
+            class="w-60 h-12 rounded-lg  text-xs s-bg" size="large" :bordered="false" >
   </a-select>
   <HorizontalPanel class="ml-3" :navList="introductionSubList" v-model:selectType="gameType"></HorizontalPanel>
   <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
-            class="w-60 h-12 mx-3 rounded-xl s-bg text-xs" size="large" :bordered="false" >
+            class="w-60 h-12 mx-3 rounded-lg s-bg text-xs" size="large" :bordered="false" >
   </a-select>
   </div>
   <div class="flex flex-row">
-    <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
-    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
+    <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
+    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
   </div>
 </div>
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3">

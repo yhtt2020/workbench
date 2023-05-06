@@ -1,6 +1,6 @@
 <template>
   <div class="p-3" v-if="this.customComponents.length===0">
-    <a-result class="s-bg rounded-xl"
+    <a-result class="s-bg rounded-lg"
               status="success"
               title="使用卡片桌面"
               sub-title="您可以长按空白处、右键添加卡片。"
@@ -50,7 +50,7 @@
             <div  :style="{pointerEvents:(editing?'none':'')}" >
             <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
                        :customData="item.data"
-                       :editing="editing" :runAida64="runAida64"></component>
+                       :editing="editing" :runAida64="runAida64" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -185,7 +185,7 @@ import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
-
+import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
 import Muuri from 'muuri'
 const readAida64 = window.readAida64
 const initCards= [
@@ -325,7 +325,8 @@ export default {
     DiscountPercentage,
     MiddleWallpaper,
     SmallWallpaper,
-    GameEpic
+    GameEpic,
+    CustomAssembly
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),
@@ -368,6 +369,9 @@ export default {
     }
   },
   methods: {
+    customEvent(){
+      this.$refs.grid.update();
+    },
     touch(event){
       if(this.editing){
         event.stopPropagation()

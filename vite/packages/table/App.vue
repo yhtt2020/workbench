@@ -269,6 +269,8 @@ export default {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
           document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
+          document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
+
           document.body.style.backgroundImage = ""
           this.videoPath = this.backgroundImage.runpath
           this.$nextTick(()=>{
@@ -280,10 +282,14 @@ export default {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
           document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
+          document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
+
         } else {
           document.body.style.setProperty('--suspensiondBackGround', "rgb(33, 33, 33)");
           document.body.style.setProperty('--suspensiondBackGroundBlur', 0 + 'px');
           document.body.style.setProperty('--gradient', "linear-gradient(-33deg,#333333, #212121)");
+          document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px");
+
           document.body.style.background = '#191919'
         }
 

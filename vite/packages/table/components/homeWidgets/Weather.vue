@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options" ref="weatherSlot" :customIndex="customIndex">
-    <div v-if="city" class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
+    <div v-if="city" class="bg-mask rounded-lg px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ city.name }}
     </div>
     <div @click="enterWeather">

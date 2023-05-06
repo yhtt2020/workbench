@@ -162,7 +162,7 @@ export default {
           }
         },
         {
-          icon: 'https://a.apps.vip/icons/weather.png',
+          icon: '/img/game.png',
           name: '游戏小助手',
           summary: '',
           needInstall: false,

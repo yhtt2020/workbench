@@ -5,7 +5,7 @@
       <HorizontalPanel :navList="teamNavList" v-model:selectType="teamType"></HorizontalPanel>
     </a-col>
     <a-col :span="3">
-      <div @click="random" class="s-bg pointer h-12 w-24 rounded-xl flex justify-center items-center px-3">
+      <div @click="random" class="s-bg pointer h-12 w-24 rounded-lg flex justify-center items-center px-3">
         <icon class="mr-1" style="font-size: 1.2em" icon="shuaxin"></icon>
         换一换</div>
     </a-col>
@@ -24,7 +24,7 @@
     <div class="line-title">
       选中的小队：
     </div>
-    <div class="ml-5 bg-mask p-5 rounded-xl" v-if="selectTeam">
+    <div class="ml-5 bg-mask p-5 rounded-lg" v-if="selectTeam">
       <a-avatar :size="50" :src="selectTeam.avatar"></a-avatar> <strong class="text-lg ml-5">{{selectTeam.name}}</strong>
       <div class="mt-3" v-if="selectTeam.leaderInfo">
         队长：

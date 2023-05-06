@@ -345,13 +345,13 @@
 
   </a-drawer>
   <a-modal v-model:visible="clickTipShow" :closable="false"  title="" @ok="()=>{}" :footer="null" style="font-size: 8px" :maskClosable="false" :centered="true">
-    <div class="flex flex-col items-center rounded-xl h-44 w-96 justify-evenly text-sm text-white mx-auto" style="background: rgba(33, 33, 33, 1);">
+    <div class="flex flex-col items-center rounded-lg h-44 w-96 justify-evenly text-sm text-white mx-auto" style="background: rgba(33, 33, 33, 1);">
       <div><Icon icon="-dengpao" style="font-size: 1.2em" class="mr-2"></Icon>提示</div>
       <div v-if="blocking===false">当前「 等级{{lv}} 」，解锁{{powerAlias}}功能需要达到「 等级 {{powerLv}} 」</div>
       <div v-else>当前「 等级{{lv}} 」，已达当前等级上限</div>
       <div class="flex flex-row w-2/3  justify-between">
-        <div class="rounded-xl w-28 h-10 flex justify-center items-center mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="goGrade">了解更多</div>
-        <div class="rounded-xl w-28 h-10 flex justify-center items-center mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeTip">关闭</div>
+        <div class="rounded-lg w-28 h-10 flex justify-center items-center mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="goGrade">了解更多</div>
+        <div class="rounded-lg w-28 h-10 flex justify-center items-center mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeTip">关闭</div>
       </div>
     </div>
   </a-modal>

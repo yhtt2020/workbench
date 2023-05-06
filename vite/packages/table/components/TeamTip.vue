@@ -4,7 +4,7 @@
       <back-btn  @click="hide()"></back-btn>
       <div  v-if="step===1" class="flex flex-row items-center justify-center w-full h-full" style="position: relative" >
 
-          <div @click.stop="()=>{}" class="w-1/2  h-82 max-w-lg rounded-xl flex flex-col  pt-6  mr-10 p-10 px-15" style="background: rgba(33, 33, 33, 1);" >
+          <div @click.stop="()=>{}" class="w-1/2  h-82 max-w-lg rounded-lg flex flex-col  pt-6  mr-10 p-10 px-15" style="background: rgba(33, 33, 33, 1);" >
             <div>
               <a-row :gutter="20">
                 <a-col class="pt-3">
@@ -17,7 +17,7 @@
 
               </a-row>
 
-              <div  @click="()=>{this.step=2}" class="rounded-xl h-10 w-100 flex justify-center items-center mt-4 pointer relative" style="background: #535bf2;color: white">
+              <div  @click="()=>{this.step=2}" class="rounded-lg h-10 w-100 flex justify-center items-center mt-4 pointer relative" style="background: #535bf2;color: white">
                 <GradeSmallTip powerType="team"  lastPowerType="创建小队"></GradeSmallTip>
                 立即创建</div>
             </div>
@@ -31,10 +31,10 @@
               </a-row>
               <a-row class="mt-4" :gutter="10">
                 <a-col :span="12">
-                  <a-input v-model:value="teamNo" placeholder="小队号" class="h-10 rounded-xl text-center"></a-input>
+                  <a-input v-model:value="teamNo" placeholder="小队号" class="h-10 rounded-lg text-center"></a-input>
                 </a-col>
                 <a-col :span="12">
-                  <div @click="join" :style="{'background':!teamNo?'#343434':'#535bf2'}" class="rounded-xl relative h-10 w-100 flex justify-center items-center pointer" style="color: white">加入
+                  <div @click="join" :style="{'background':!teamNo?'#343434':'#535bf2'}" class="rounded-lg relative h-10 w-100 flex justify-center items-center pointer" style="color: white">加入
                     <GradeSmallTip powerType="team"></GradeSmallTip>
                   </div>
 

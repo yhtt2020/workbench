@@ -24,13 +24,13 @@
           <AidaGuide></AidaGuide>
         </div>
 
-        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-xl"
+        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-lg"
              @click="onDownAida">
           <span>立即下载</span>
         </div>
         <div v-if="options.type.includes('Four')" class="flex flex-col items-center">
           <span class="mb-2" style="font-size: 0.8em ;line-height: 1.2">监控游戏「FPS」需要安装并运行RTSS</span>
-          <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-xl"
+          <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-lg"
                @click="onDownRTSS">
             <span>立即下载</span>
           </div>

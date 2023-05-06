@@ -1,10 +1,10 @@
 <template>
   <a-row class="mt-5" style="width: 100%;">
     <a-col :xxl="6" :xl="8" :lg="12" v-for="team in list">
-      <div class="m-3 s-bg rounded-xl p-1 pointer" @click="onAction(team)">
+      <div class="m-3 s-bg rounded-lg p-1 pointer" @click="onAction(team)">
         <a-row :gutter="10">
           <a-col :span="8" class="text-center">
-            <a-avatar :src="team.avatar" class="m-5 rounded-xl" shape="square" :size="55"></a-avatar>
+            <a-avatar :src="team.avatar" class="m-5 rounded-lg" shape="square" :size="55"></a-avatar>
           </a-col>
           <a-col :span="16" class="">
             <div class="mt-5 truncate">
