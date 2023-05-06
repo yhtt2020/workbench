@@ -163,7 +163,6 @@ export default {
           })
         }
       }
-      console.log(_.cloneDeep(Object.assign(classNameObject, defaultClass)))
       let after=_.cloneDeep(Object.assign(classNameObject, defaultClass))
       if(Object.keys(after).length===0){
         after['no-frame']=true

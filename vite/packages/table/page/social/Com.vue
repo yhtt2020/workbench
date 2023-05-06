@@ -130,6 +130,17 @@ import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
   {
+    name:'3.7.44',
+    date:'05月05日',
+    list:[
+      '修复epic错位',
+      '修复锁屏壁纸界面单个动态壁纸的时候不轮播',
+      '锁屏壁纸轮播间隔设置生效',
+      '增加极简模式',
+      '修复全屏应用在性能模式下返回时侧边栏底部栏不显示'
+    ]
+  },
+  {
     name:'3.7.43',
     date:'05月04日',
     list:[

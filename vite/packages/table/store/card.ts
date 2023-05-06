@@ -1,14 +1,29 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
+import {nanoid} from 'nanoid'
+
+// @ts-ignore
 export const cardStore = defineStore(
   "cardStore",
   {
     state: () => {
       return {
-        settings:{
-          cardZoom:100,
-          marginTop:0,
-          cardMargin:5//卡片间隙
+        moved: false,
+        currentDeskIndex: {},
+        desks: [{
+          name: '日常桌面',
+          nanoid: nanoid(4),
+          cards: []
+        },
+          {
+            name: '游戏桌面',
+            nanoid: nanoid(4),
+            cards: []
+          }],
+        settings: {
+          cardZoom: 100,
+          marginTop: 0,
+          cardMargin: 5//卡片间隙
         },
         countdownDay: [{
           "eventValue": "端午节",
@@ -22,7 +37,7 @@ export const cardStore = defineStore(
             "week": "星期四"
           },
           "type": 'noOver'
-        },{
+        }, {
           "eventValue": "中秋节",
           "dateValue": {
             "year": 2023,
@@ -34,7 +49,7 @@ export const cardStore = defineStore(
             "week": "星期五"
           },
           "type": 'noOver'
-        },{
+        }, {
           "eventValue": "国庆节",
           "dateValue": {
             "year": 2023,
@@ -51,7 +66,7 @@ export const cardStore = defineStore(
         clockEvent: [],
         customComponents: [],
         aidaData: null,
-        navigationList:[
+        navigationList: [
           {
             "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
             "name": "微信",
@@ -266,24 +281,72 @@ export const cardStore = defineStore(
             "event": "power"
           }
         ],
-        routeParams:{},
-        clockFlag:false,
+        routeParams: {},
+        clockFlag: false,
       };
     },
 
     actions: {
-      setRouteParams(value){
-        this.routeParams=value
+      switchToDesk(index) {
+        let desk = this.desks[index]
+        this.currentDeskIndex = {
+          name: desk.nanoid,
+          title: desk.name
+        }
       },
-      removeNavigationList(index){
-        this.navigationList.splice(index,1)
+      getCurrentIndex() {
+        let deskIndex = this.desks.findIndex(item => {
+          return item.nanoid === this.currentDeskIndex.name
+        })
+        return deskIndex
       },
-      sortNavigationList(evt){
-        let temp =  this.navigationList[evt.oldIndex]
-        this.navigationList.splice(evt.oldIndex,1)
-        this.navigationList.splice(evt.newIndex,0,temp)
+      removeDesk(index) {
+        if (this.desks.length === 1) {
+          return false//至少保留一个桌面
+        }
+        this.desks.splice(index, 1)
+        if (index < this.desks.length) {
+          this.switchToDesk(index)
+        } else {
+          if (index - 1 < 0) {
+            this.switchToDesk(0)
+          } else {
+            this.switchToDesk(index - 1)
+          }
+
+        }
+
       },
-      setNavigationList(item){
+      addDesk(name, cards = []) {
+        if (name.trim() === '') {
+          return false
+        }
+        let desk = {
+          name: name,
+          nanoid: nanoid(4),
+          cards: cards
+        }
+        this.desks.push(desk)
+        return desk
+      },
+      getCurrentDesk() {
+        let desk = this.desks.find(item => {
+          return item.nanoid === this.currentDeskIndex.name
+        })
+        return desk
+      },
+      setRouteParams(value) {
+        this.routeParams = value
+      },
+      removeNavigationList(index) {
+        this.navigationList.splice(index, 1)
+      },
+      sortNavigationList(evt) {
+        let temp = this.navigationList[evt.oldIndex]
+        this.navigationList.splice(evt.oldIndex, 1)
+        this.navigationList.splice(evt.newIndex, 0, temp)
+      },
+      setNavigationList(item) {
         this.navigationList.push(item)
       },
       setAidaData(value) {
@@ -337,7 +400,7 @@ export const cardStore = defineStore(
         // }else{
         this.sortClock();
         //}
-        this.clockFlag=!this.clockFlag
+        this.clockFlag = !this.clockFlag
       },
       sortClock() {
         for (let i = 0; i < this.clockEvent.length; i++) {
@@ -372,7 +435,7 @@ export const cardStore = defineStore(
 
       },
       removeClock(index, n) {
-        if (this.clockEvent[0].clockType!=='每天'||n===1){
+        if (this.clockEvent[0].clockType !== '每天' || n === 1) {
           this.clockEvent.splice(index, 1);
         } else {
           const a = this.clockEvent.shift()
@@ -381,27 +444,31 @@ export const cardStore = defineStore(
           this.clockEvent.push(a)
 
         }
-        this.clockFlag=!this.clockFlag
+        this.clockFlag = !this.clockFlag
       },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
-
-        this.customComponents.push(value);
+        let desk = this.desks.find(item => {
+          return item.nanoid === this.currentDeskIndex.name
+        })
+        desk.cards.push(value)
       },
-      updateCustomComponents(value,newData){
-        const findCustom = this.customComponents.find(el=>{
+      updateCustomComponents(value, newData) {
+        let currentDesk = this.getCurrentDesk()
+        const findCustom = currentDesk.cards.find(el => {
           return value === el.id
         })
-        this.customComponents[this.customComponents.indexOf(findCustom)].data = {Code:{id:value,value:newData}}
+        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {Code: {id: value, value: newData}}
       },
       removeCustomComponents(customIndex) {
-        this.customComponents.splice( this.customComponents.findIndex(item=>{
-          return item.id===customIndex
-        }),1)
+        let currentDesk = this.getCurrentDesk()
+        currentDesk.cards.splice(currentDesk.cards.findIndex(item => {
+          return item.id === customIndex
+        }), 1)
         // this.customComponents.splice(customIndex,1);
 
       },
-      setDataEmpty(){
+      setDataEmpty() {
 
       }
     },
@@ -410,7 +477,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths:['countdownDay','clockEvent','customComponents','navigationList','settings'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings','desks','currentDeskIndex'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]

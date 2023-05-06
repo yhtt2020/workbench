@@ -118,7 +118,7 @@ static alive(){
       // }else{
       //   tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
       // }
-      tableWin.window.webContents.loadURL(render.getUrl('table.html',{}))
+      tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
 
 
       tableWin.window.on('close', () => {

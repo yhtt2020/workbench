@@ -1,47 +1,52 @@
 <template>
-  <div class="flex justify-between h-12 items-center">
-      <div class="flex game-left rounded-lg justify-between bg-white bg-opacity-20 p-1">
-        <span @click="changTitle(titleItem.id)" class="cursor-pointer" v-for="titleItem in leftTitle" :class="titleIndex === titleItem.id ? 'active':''" style="padding: 9px 41px 7px 41px;">{{ titleItem.name }}</span>
-      </div>
-      <a-select v-model:value="defaultGameValue" style="width: 200px;" @change="selectOptionValue($event)">
-        <a-select-option  v-for="selectItem in rightSelect" :value="selectItem.id">{{selectItem.name}}</a-select-option>
-      </a-select>
+  <div class="flex justify-between h-12 items-center" style="margin-right: 30px;">
+    <HorizontalPanel :navList="leftTitle" v-model:selectType="leftTitleType"></HorizontalPanel>
+    <a-select v-model:value="defaultGameValue" style="width: 200px;" @change="selectOptionValue($event)">
+      <a-select-option  v-for="selectItem in rightSelect" :value="selectItem.id">{{selectItem.name}}</a-select-option>
+    </a-select>
   </div>
-  <div class="flex  items-center" v-if="titleIndex === 0">
-    <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
-       <a-spin v-if="isLoading === true"></a-spin>
-       <div  class="w-full flex justify-start flex-col">
-          <div v-for="item in steamList" class="flex items-center cursor-pointer mt-3  w-full flex-row  rounded-lg p-3" style="background: rgba(33, 33, 33, 1);">
-            <div style="width: 180px;height: 120px;" class="mr-3">
-              <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
+  <template v-if="leftTitleType.name === 'steam' ">
+    <div class="flex  items-center justify-center">
+      <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
+         <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
+         <div  class="w-full flex justify-start flex-col">
+            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center cursor-pointer mt-3  w-full flex-row  rounded-lg p-3" style="background: rgba(33, 33, 33, 1);">
+              <div style="width: 269px;height: 120px;" class="mr-3">
+                <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
+              </div>
+              <div class="flex flex-col" style="width: 80%;">
+                  <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">{{item.name}}</span>
+                  <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">{{item.brief}}</span>
+                  <div class="flex items-center">
+                     <span class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">-{{ item.percent }} %</span>
+                     <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 500;">{{ item.newPrice }}</span>
+                     <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.oldPrice }}</span>
+                  </div>
+              </div>
             </div>
-            <div class="flex flex-col" style="width: 80%;">
-                <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">{{item.name}}</span>
-                <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">{{item.brief}}</span>
-                <div class="flex items-center">
-                   <span class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">-{{ item.percent }} %</span>
-                   <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 500;">{{ item.newPrice }}</span>
-                   <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.oldPrice }}</span>
-                </div>
-            </div>
-          </div>
-       </div>
-    </vue-custom-scrollbar>
-  </div>
-  <div class="flex" v-else>
-      Epic喜加一
-  </div>
+         </div>
+      </vue-custom-scrollbar>
+    </div>
+  </template>
+  <template v-else>
+    epic
+  </template>
+  <router-view></router-view>
 </template>
 
 <script>
 import { sendRequest,regionRange } from '../../js/axios/api';
+import HorizontalPanel from '../../components/HorizontalPanel.vue';
 export default {
   name: "GameDiscount",
+  components:{
+    HorizontalPanel
+  },
   data(){
     return{
-      leftTitle:[{id:0,name:'Steam折扣'},{id:1,name:'Epic喜加一'}],
+      leftTitle:[{title:'Steam折扣',name:'steam'},{title:'Epic喜加一',name:'epic'}],
+      leftTitleType:{title:'Steam折扣',name:'steam'},
       rightSelect:regionRange,
-      titleIndex:0,
       defaultGameValue:'cn',
       steamList:[],
       epicList:[],
@@ -70,12 +75,14 @@ export default {
               sendRequest(`https://store.steampowered.com/api/appdetails?appids=${el.id}&cc=${this.defaultGameValue}&l=${this.defaultGameValue}`,3).then(res=>{
                 const data = res.data[el.id].data
                 this.steamList.push({
+                  id:el.id,
                   image:data.header_image,
                   name:data.name,
                   brief:data.short_description,
                   newPrice:data.price_overview.final_formatted,
                   oldPrice:data.price_overview.initial_formatted,
-                  percent:data.price_overview.discount_percent
+                  percent:data.price_overview.discount_percent,
+                  data:data
                 })
                 this.$nextTick(()=>{
                  this.isLoading = false
@@ -106,6 +113,7 @@ export default {
             listData.map(el=>{
               sendRequest(`https://store.steampowered.com/api/appdetails?appids=${el.id}&cc=${this.defaultGameValue}&l=${this.defaultGameValue}`,3).then(res=>{
                 const data = res.data[el.id].data
+                console.log(data);
                 this.steamList.push({
                   image:data.header_image,
                   name:data.name,
@@ -122,6 +130,10 @@ export default {
           })
         },2000)
       }
+    },
+    // 进入详情
+    enterDiscountDetail(val){
+      this.$router.push({name:'GameDiscountDetail',params:{val:JSON.stringify(val)}})
     }
   }
 }

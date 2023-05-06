@@ -516,7 +516,9 @@ function buildAppMenu (options = {}) {
         {
           label: '检测升级',
           click: function () {
-            loadUpdate(updateData)
+            const Updater=require('./src/main/update')
+            let updater=new Updater()
+            updater.checkUpdate(true)
           }
         },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
