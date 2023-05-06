@@ -9,6 +9,7 @@
 <script>
 export default {
   name: 'HorizontalPanel',
+  emits:['changed'],
   props: {
     navList: {
       type: Array,
@@ -43,6 +44,7 @@ export default {
     clickNav (item, index) {
       this.activeIndex = index
       this.$emit('update:selectType', item)
+      this.$emit('changed')
     }
   }
 }

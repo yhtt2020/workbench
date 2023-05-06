@@ -28,8 +28,8 @@
   </div>
   <div v-if="!hide"
        style="display: flex; align-items: flex-start;flex-direction: column;justify-content: left;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
-    <div class="text-left">
-      <HorizontalPanel :navList="desksList" v-model:selectType="currentDeskIndex"></HorizontalPanel>
+    <div class="text-left" v-if="desks.length>1">
+      <HorizontalPanel @changed="this.key=Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex"></HorizontalPanel>
     </div>
 
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
@@ -519,6 +519,7 @@ export default {
         template: 'daily',
         data: {}
       }
+      this.key = Date.now()
       this.addDeskVisible = false
 
     },
@@ -559,6 +560,8 @@ export default {
           onOk: () => {
             this.menuVisible=false
             this.removeDesk(this.getCurrentIndex())
+            this.key = Date.now()
+
           },
           okText: '删除桌面'
         })
