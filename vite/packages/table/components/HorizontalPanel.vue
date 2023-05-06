@@ -43,6 +43,7 @@ export default {
   },
   methods: {
     posType () {
+  if(!this.selectType)return
       if (this.selectType.name && this.navList.length > 0) {
         this.activeIndex = this.navList.findIndex(item => {
           return item.name === this.selectType.name
