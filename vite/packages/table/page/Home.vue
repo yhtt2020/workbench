@@ -327,8 +327,87 @@ const deskTemplate = {
       '_$muuri_id': '9eae01ee-7184-47f3-ad73-a62d90ba4630'
     }
   ],
-  'game': [],
-  'work': [],
+  'game': [
+    {
+      "name": "GamesDiscount",
+      "id": 1683361279519,
+      "data": {
+        "id": "cn"
+      },
+      "_$muuri_id": "afe08db5-591c-4c03-8535-302485228da7"
+    },
+    {
+      "name": "GameEpic",
+      "id": 1683361479503,
+      "data": {},
+      "_$muuri_id": "d9775365-ac7a-44eb-9643-f5afd2ce1927"
+    },
+    {
+      "name": "CPULineChart",
+      "id": 1683361318879,
+      "data": {},
+      "_$muuri_id": "cddb3c87-1dd9-429c-8db5-b626a41b520e"
+    },
+    {
+      "name": "capture",
+      "id": 1683361487658,
+      "data": {},
+      "_$muuri_id": "4f68f51f-12c3-4dfd-a56f-a317eefb2a8d"
+    },
+    {
+      "name": "MyGameSmall",
+      "id": 1683361327075,
+      "data": {},
+      "_$muuri_id": "27f6b805-9460-4b4f-b48a-0fe9f861d4fb"
+    }
+  ],
+  'work':  [
+    {
+      "name": "customTimer",
+      "id": 1683361408159,
+      "data": {},
+      "_$muuri_id": "b9da8e82-b907-45b8-b4f7-404409a53625"
+    },
+    {
+      "name": "clock",
+      "id": 1683361412293,
+      "data": {},
+      "_$muuri_id": "43c55d51-7ffb-4fbd-994c-64a4b8a503d0"
+    },
+    {
+      "name": "weather",
+      "id": 1683361418237,
+      "data": {},
+      "_$muuri_id": "d6e03889-a8ea-4328-97b4-599350aa4002"
+    },
+    {
+      "name": "timer",
+      "id": 1683361422401,
+      "data": {},
+      "_$muuri_id": "75ed0b65-5b37-4f79-82e5-3b1c46b9df53"
+    },
+    {
+      "name": "smallCountdownDay",
+      "id": 1683361434496,
+      "data": {},
+      "_$muuri_id": "698a7d80-23c9-42cf-9e7b-3a580acc7be8"
+    },
+    {
+      "name": "smallWallpaper",
+      "id": 1683361445577,
+      "data": {
+        "Code": {
+          "id": 1683361445577,
+          "value": {
+            "value": "贪食鬼",
+            "path": "https://api.nguaduot.cn/glutton/journal",
+            "name": "PickingPaper"
+          }
+        }
+      },
+      "_$muuri_id": "d6f9dfae-8098-4da3-8f15-3913cb506bf7"
+    }
+  ],
   'empty': []
 }
 export default {
