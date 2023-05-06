@@ -59,7 +59,7 @@
               </div>
             </a-col>
           </a-row>
-  
+
         </template>
         <template v-else>
           <div style="text-align: center;padding: 3em">
@@ -137,12 +137,12 @@ export default {
       }
       return this.cities[0]
     }
-    
+
   },
   mounted() {
     this.reloadAll()
     this.today = getDateTime();
-    if(this.cities.length !== 0) this.defaultValue = this.defaultCity.id 
+    if(this.cities.length !== 0) this.defaultValue = this.defaultCity.id
     if(this.cities.length)this.options.icon = 'position';
   },
   methods: {

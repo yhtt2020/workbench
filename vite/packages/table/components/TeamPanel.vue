@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'fix':showDetail}" class="flex s-bg rounded-xl" :style="{height:showDetail?'100%':'auto'}"
+  <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden">
     <transition name="fade">
       <div v-if="earningsShow" class="p-4"  style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
@@ -22,7 +22,7 @@
             <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
           </a-col>
         </a-row>
-        <div class="bg-mask rounded-xl m-3 p-3" style="line-height: 2">
+        <div class="bg-mask rounded-lg m-3 p-3" style="line-height: 2">
           升级效率：<strong style="color: #48ef48" class="mr-3">{{ effect }} % </strong>  <span v-if="online-1>0">{{ online - 1 }} 位队友在线 *5%</span><span v-else>无队友在线</span>
           <br>
           <a-row>
@@ -46,17 +46,17 @@
           <a-row class="m-5" :gutter="10">
             <a-col>
               <div v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
-                   class="rounded-xl bg-mask px-6 py-3 pointer ">
+                   class="rounded-lg bg-mask px-6 py-3 pointer ">
                 <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                 退出小队
               </div>
-              <div v-else @click="dismiss" class="rounded-xl bg-mask px-6 py-3 pointer ">
+              <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer ">
                 <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                 解散小队
               </div>
             </a-col>
             <a-col>
-              <div class="rounded-xl bg-mask px-6 py-3 pointer " @click="goHall">
+              <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="goHall">
                 <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                 小队大厅
               </div>
@@ -83,14 +83,14 @@
         <div style="position: absolute;bottom: 0;left: 15px">
           <a-row class="m-5 mb-2" :gutter="10">
             <a-col v-if="this.showUserInfo.uid!==userInfo.uid" >
-              <div class="rounded-xl bg-mask px-6 py-3 pointer " @click="exit">
+              <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="exit">
                 <icon icon="tianjia2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                 加为好友
               </div>
             </a-col>
             <a-col>
               <a-col>
-                <div class="rounded-xl bg-mask px-6 py-3 pointer " v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
+                <div class="rounded-lg bg-mask px-6 py-3 pointer " v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
                      @click="kick(this.showUserInfo.uid)">
                   <icon icon="shanchu" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                   移出小队

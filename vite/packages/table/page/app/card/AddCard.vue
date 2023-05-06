@@ -117,6 +117,7 @@ export default {
           images: ['Remote'],
           size: ['1x2']
         },
+        { name:"customAssembly", cname:"自定义（开发中）",icon:"image",detail:"自定义小组件封面和快捷方式",images:['customAssembly'],size:['2x2']}
       ],
       cardType: {},
       show: false,

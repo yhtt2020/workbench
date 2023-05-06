@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative;">
 
-    <div v-if="tag" class="rounded-xl w-10 tag"
+    <div v-if="tag" class="rounded-lg w-10 tag"
          :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}"
     >
       {{ tag }}

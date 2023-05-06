@@ -39,16 +39,16 @@
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
-      <div class="text-center">纪念日设置</div>
+      <div class="text-center"> 纪念日设置</div>
     </template>
     <div>
       <div>事件名称</div>
-      <a-input class="rounded-xl  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
+      <a-input class="rounded-lg  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">
-        <div class="rounded-xl h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeSettingVisible">取消</div>
-        <div class="rounded-xl h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeSettingVisible">取消</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>

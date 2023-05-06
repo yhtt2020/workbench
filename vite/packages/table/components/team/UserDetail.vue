@@ -12,13 +12,13 @@
       </div>
     </a-col>
   </a-row>
-  <div class="bg-mask rounded-xl p-3 m-3 mt-2 mb-0 " style="min-height: 77px">
+  <div class="bg-mask rounded-lg p-3 m-3 mt-2 mb-0 " style="min-height: 77px">
     <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
   </div>
   <div class=" mb-0 pd-0 m-3 p-3 mt-0" style="margin-bottom: 0;">
     成就勋章
   </div>
-  <div class="bg-mask rounded-xl p-3 m-3 mt-0  mb-0">
+  <div class="bg-mask rounded-lg p-3 m-3 mt-0  mb-0">
       <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
       <Medal :medal="medal" v-for="medal in medals"></Medal>
 
@@ -26,7 +26,7 @@
   <div class=" mb-0 pd-0 m-3 p-3 mt-0">
     小队贡献
   </div>
-  <div class="bg-mask rounded-xl m-3 p-3 mt-0" style="line-height: 2">
+  <div class="bg-mask rounded-lg m-3 p-3 mt-0" style="line-height: 2">
 <!--    升级效率：<strong>{{ effect }} %</strong>-->
     小队在线时长：{{ online_h}} 小时 {{online_m}}分钟<br>
     小队贡献：{{memberInfo.score}} 分<br>

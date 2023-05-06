@@ -1,6 +1,6 @@
 <template>
   <div  v-if="this.grids.length===0" class="p-5" style="max-height: 100%">
-    <a-result  class="s-bg rounded-xl " style=""
+    <a-result  class="s-bg rounded-lg " style=""
                status="success"
                title="使用快捷指令"
                sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"

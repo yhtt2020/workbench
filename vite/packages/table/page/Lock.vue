@@ -42,7 +42,7 @@
   </div>
   <div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
     <div v-if="clockEvent[0]"
-         class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-xl flex flex-col justify-evenly items-center"
+         class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
          style="width: 480px;height: 320px;background:  #282828">
       <div>
         {{ clockEvent[0].dateValue.hours }}:{{
@@ -53,7 +53,7 @@
         {{ clockEvent[0].eventValue }}
       </div>
       <div style="width: 100px;height: 48px;"
-           class="flex justify-center items-center text-base bg-blue-500 rounded-xl pointer" @click="handleOk">
+           class="flex justify-center items-center text-base bg-blue-500 rounded-lg pointer" @click="handleOk">
         好的
       </div>
 

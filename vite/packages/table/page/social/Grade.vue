@@ -3,21 +3,21 @@
                       style="height: 100%;padding: 15px;">
   <div class="w-full h-full flex justify-center flex-row flex-wrap" >
     <div class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
-      <div class="w-full  pt-4 pb-4 grade-card  rounded-xl  mb-4" >
+      <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" >
         <GradePanel @openGradeTip="openGradeTip"></GradePanel>
       </div>
-      <div class="rounded-xl flex-1 w-full  tip-card px-5 text-white" style="background: rgba(33, 33, 33, 1);">
+      <div class="rounded-lg flex-1 w-full  tip-card px-5 text-white" style="background: rgba(33, 33, 33, 1);">
         <div class="flex items-center -ml-4 mt-3">
           <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
         </div>
-        <div class="h-2/3 w-full rounded-xl flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
+        <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
           <div>1. 保持在线状态即可升级</div>
           <div>2. 目前有「{{leveList.length}}」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
           <div>3. 「组队升级功能」开发中～</div>
         </div>
       </div>
     </div>
-    <div class="grade-card p-6 rounded-xl  mr-4">
+    <div class="grade-card p-6 rounded-lg  mr-4">
       <div class="text-white">等级权益</div>
       <div class="flex flex-row">
       <div class="mt-6 mr-4" style="width: 160px">
@@ -26,7 +26,7 @@
           </a-steps>
       </div>
       <div class="flex flex-wrap justify-between  bottom-card w-full">
-        <div  v-for="item in powerList" class="rounded-xl h-1/6  mt-2 flex flex-row items-center p-2 relative" style="width: calc(50% - 8px);" :style="item.detail[[leveList[clickGrade]]]?'background: rgba(42, 42, 42, 1)':'background: rgba(42, 42, 42, 1);opacity: 0.6;'">
+        <div  v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative" style="width: calc(50% - 8px);" :style="item.detail[[leveList[clickGrade]]]?'background: rgba(42, 42, 42, 1)':'background: rgba(42, 42, 42, 1);opacity: 0.6;'">
           <Icon :icon="item.icon" style="width: 24px;height: 24px;" class="mr-4 ml-2 text-white"></Icon>
           <div style="width: calc(100% - 50px)">
             <div class="text-white text-more w-full">{{item.alias}}</div>
@@ -40,11 +40,11 @@
   </div>
   </vueCustomScrollbar>
   <div class="home-blur fixed inset-0 float-tip" style="z-index: 999" v-if="tipFlag" @click.stop="closeTip">
-    <div class="rounded-xl  w-96  h-60  px-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="background: rgba(33, 33, 33, 1);">
+    <div class="rounded-lg  w-96  h-60  px-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="background: rgba(33, 33, 33, 1);">
       <div class="flex items-center -ml-4 mt-3">
         <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
       </div>
-      <div class="h-2/3 w-full rounded-xl flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
+      <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
         <div>1. 保持在线状态即可升级</div>
         <div>2. 目前有「{{leveList.length}}」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
         <div>3. 「组队升级功能」开发中～</div>
