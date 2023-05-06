@@ -3,6 +3,9 @@
     <div class="w-1/2 rounded-lg  relative mr-5" style="height:55vh;">
        <img :src="middleDetail.src" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
        <span class="middle-tag rounded-md mr-2 mt-2">正在运行</span>
+       <div class="detail-name w-full flex items-center rounded-b-lg px-4 py-2" style="font-size: 18px;font-weight: 600;">
+          {{ middleDetail.title }}
+       </div>
     </div>
     <div class="w-1/2 flex flex-col">
        <div class="flex mb-4 justify-between">
@@ -80,5 +83,13 @@
   filter: brightness(0.8);
   background: rgba(42, 42, 42, 0.25);
 }
-
+.detail-name{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 600;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
 </style>
