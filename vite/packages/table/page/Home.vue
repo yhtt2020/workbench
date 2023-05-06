@@ -27,14 +27,15 @@
 
   </div>
   <div v-if="!hide"
-    style="display: flex; align-items: flex-start;flex-direction: column;justify-content: left;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
+       style="display: flex; align-items: flex-start;flex-direction: column;justify-content: left;flex-grow: 1;flex-shrink: 1;height: 100%;width:100%">
     <div class="text-left">
       <HorizontalPanel :navList="desksList" v-model:selectType="currentDeskIndex"></HorizontalPanel>
     </div>
 
-    <vue-custom-scrollbar  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
                           style="position:relative;  border-radius: 8px;width: 100%;height: 100%;">
-      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;" :style="{'padding-top':this.settings.marginTop+'px'}">
+      <div style="white-space: nowrap;height: 100%;width: 100%;display: flex;align-items: center;align-content: center;"
+           :style="{'padding-top':this.settings.marginTop+'px'}">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -48,13 +49,15 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri v-if="currentDesk.cards"   :get-item-margin="()=>{return settings.cardMargin+'px'}"  group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
-               class="grid home-widgets" ref="grid" :options="muuriOptions" >
+        <vuuri v-if="currentDesk.cards" :get-item-margin="()=>{return settings.cardMargin+'px'}" group-id="grid.id"
+               :drag-enabled="editing" v-model="currentDesk.cards" :key="key"
+               :style="{zoom:(this.settings.cardZoom/100).toFixed(2),height:'100%',width:'100%'}"
+               class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
-            <div  :style="{pointerEvents:(editing?'none':'')}" >
-            <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
-                       :customData="item.data"
-                       :editing="editing" :runAida64="runAida64"></component>
+            <div :style="{pointerEvents:(editing?'none':'')}">
+              <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
+                         :customData="item.data"
+                         :editing="editing" :runAida64="runAida64"></component>
             </div>
           </template>
         </vuuri>
@@ -103,9 +106,15 @@
         </div>
       </a-col>
       <a-col>
-        <div @click="addDesk" class="btn">
+        <div @click="showAddDeskForm" class="btn">
           <Icon style="font-size: 3em" icon="desktop"></Icon>
           <div><span>添加桌面</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="delDesk" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div><span>删除桌面</span></div>
         </div>
       </a-col>
       <a-col>
@@ -121,43 +130,57 @@
       卡片设置：
     </div>
     <div class="line">
-      卡片缩放：<a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+      卡片缩放：
+      <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
     </div>
     <div class="line">
-      卡片空隙：(调大空隙可能变成瀑布流布局)<a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+      卡片空隙：(调大空隙可能变成瀑布流布局)
+      <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
     </div>
     <div class="line">
-      距离顶部：<a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
+      距离顶部：
+      <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
     <div class="line-title">
       背景设置：
     </div>
     <div class="line">
-      <a-button type="primary" class="mr-3" @click="goPaper">壁纸设置</a-button> <a-button  @click="clearWallpaper">清除背景</a-button>
+      <a-button type="primary" class="mr-3" @click="goPaper">壁纸设置</a-button>
+      <a-button @click="clearWallpaper">清除背景</a-button>
     </div>
     <div class="line">
-      模糊度：<a-slider  v-model:value="backgroundSettings.backGroundImgBlur" :max="100"  :step="1" />
+      模糊度：
+      <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1"/>
     </div>
     <div class="line">
-      遮罩浓度：<a-slider  v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0"   :step="0.1" />
+      遮罩浓度：
+      <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>
     </div>
     <div class="line-title">
       RGB<br>（此类功能性能消耗较高，请酌情开启）
     </div>
     <div class="line">
-      边框跑马灯：<a-switch v-model:checked="appSettings.houserun"></a-switch>
+      边框跑马灯：
+      <a-switch v-model:checked="appSettings.houserun"></a-switch>
     </div>
     <div class="line">
-      飘落特效：<a-switch v-model:checked="appSettings.down.enable"></a-switch>
+      飘落特效：
+      <a-switch v-model:checked="appSettings.down.enable"></a-switch>
     </div>
     <div class="line" v-if="appSettings.down.enable">
-      飘落物： <a-radio-group v-model:value="appSettings.down.type"><a-radio value="rain">雨</a-radio><a-radio value="snow">雪</a-radio><a-radio value="leaf">叶</a-radio></a-radio-group>
+      飘落物：
+      <a-radio-group v-model:value="appSettings.down.type">
+        <a-radio value="rain">雨</a-radio>
+        <a-radio value="snow">雪</a-radio>
+        <a-radio value="leaf">叶</a-radio>
+      </a-radio-group>
     </div>
     <div class="line" v-if="appSettings.down.enable">
-      飘落物数量：<a-input-number v-model:value="appSettings.down.count"></a-input-number>
+      飘落物数量：
+      <a-input-number v-model:value="appSettings.down.count"></a-input-number>
     </div>
   </a-drawer>
-  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false" >
+  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest===false">
     <GradeNotice></GradeNotice>
   </div>
   <a-drawer v-model:visible="addDeskVisible">
@@ -179,14 +202,14 @@
       </a-radio-group>
     </div>
     <div class="mt-5">
-      <a-button type="primary" block>确认添加</a-button>
+      <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div>
-
 
 
   </a-drawer>
 </template>
 <script>
+
 import Weather from '../components/homeWidgets/Weather.vue'
 import Calendar from '../components/homeWidgets/Calendar.vue'
 import Timer from '../components/homeWidgets/Timer.vue'
@@ -211,106 +234,111 @@ import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
 import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
 import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
-import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
-import SmallWallpaper from "../components/homeWidgets/SmallWallpaper.vue";
+import MiddleWallpaper from '../components/homeWidgets/MiddleWallpaper.vue'
+import SmallWallpaper from '../components/homeWidgets/SmallWallpaper.vue'
 import MyGameSmall from '../components/homeWidgets/games/MyGameSmall.vue'
 import MyGameMiddle from '../components/homeWidgets/games/MyGameMiddle.vue'
 import Capture from '../components/homeWidgets/games/Capture.vue'
-import AddCard from "./app/card/AddCard.vue";
-import GradeNotice from "./app/grade/GradeNotice.vue";
-import {runExec} from "../js/common/exec";
-import {appStore} from "../store";
+import AddCard from './app/card/AddCard.vue'
+import GradeNotice from './app/grade/GradeNotice.vue'
+import { runExec } from '../js/common/exec'
+import { appStore } from '../store'
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
 
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
+
 const readAida64 = window.readAida64
-const initCards= [
-  {
-    "name": "GamesDiscount",
-    "id": 1681304819425,
-    "_$muuri_id": "55c84b95-d86c-44af-b762-2670a0b46402",
-    "data": {
-      "Code": {
-        "id": 1682157435113,
-        "value": {
-          "id": "cn",
-          "name": "国区"
+const deskTemplate = {
+  daily: [
+    {
+      'name': 'GamesDiscount',
+      'id': 1681304819425,
+      '_$muuri_id': '55c84b95-d86c-44af-b762-2670a0b46402',
+      'data': {
+        'Code': {
+          'id': 1682157435113,
+          'value': {
+            'id': 'cn',
+            'name': '国区'
+          }
         }
       }
-    }
-  },
-  {
-    "name": "weather",
-    "id": 1681303795258,
-    "_$muuri_id": "3b0a3701-25e5-4324-b1b0-a25f7cc91d02",
-    "data": {}
-  },
-  {
-    "name": "music",
-    "id": 1681736564285,
-    "_$muuri_id": "64c17a09-b036-44b3-99b9-4c2c13e4ca3b",
-    "data": {}
-  },
-  {
-    "name": "DiscountPercentage",
-    "id": 1681479859424,
-    "_$muuri_id": "361290b7-f0f9-44d6-b213-39d0dfb34c97",
-    "data": {}
-  },
-  {
-    "name": "timer",
-    "id": 1681303805239,
-    "_$muuri_id": "f508d0b1-046f-46f1-b423-e39226b91256",
-    "data": {}
-  },
-  {
-    "name": "fish",
-    "id": 1681303797561,
-    "_$muuri_id": "6a6bf415-1491-4a70-bc45-c72877843a34",
-    "data": {}
-  },
-  {
-    "name": "customTimer",
-    "id": 1681303790200,
-    "_$muuri_id": "5084aec4-5597-40e3-9b71-8eda52328eb1",
-    "data": {}
-  },
-  {
-    "name": "smallCountdownDay",
-    "id": 1681303811893,
-    "_$muuri_id": "e7652694-bad4-4688-80ac-b8cb89111ae2",
-    "data": {}
-  },
-  {
-    "name": "clock",
-    "id": 1681303836730,
-    "_$muuri_id": "799e50c0-9c51-46c5-9134-6d70a107d6bf",
-    "data": {}
-  },
-  {
-    "name": "middleWallpaper",
-    "id": 1682158281403,
-    "data": {
     },
-    "_$muuri_id": "9eae01ee-7184-47f3-ad73-a62d90ba4630"
-  }
-]
+    {
+      'name': 'weather',
+      'id': 1681303795258,
+      '_$muuri_id': '3b0a3701-25e5-4324-b1b0-a25f7cc91d02',
+      'data': {}
+    },
+    {
+      'name': 'music',
+      'id': 1681736564285,
+      '_$muuri_id': '64c17a09-b036-44b3-99b9-4c2c13e4ca3b',
+      'data': {}
+    },
+    {
+      'name': 'DiscountPercentage',
+      'id': 1681479859424,
+      '_$muuri_id': '361290b7-f0f9-44d6-b213-39d0dfb34c97',
+      'data': {}
+    },
+    {
+      'name': 'timer',
+      'id': 1681303805239,
+      '_$muuri_id': 'f508d0b1-046f-46f1-b423-e39226b91256',
+      'data': {}
+    },
+    {
+      'name': 'fish',
+      'id': 1681303797561,
+      '_$muuri_id': '6a6bf415-1491-4a70-bc45-c72877843a34',
+      'data': {}
+    },
+    {
+      'name': 'customTimer',
+      'id': 1681303790200,
+      '_$muuri_id': '5084aec4-5597-40e3-9b71-8eda52328eb1',
+      'data': {}
+    },
+    {
+      'name': 'smallCountdownDay',
+      'id': 1681303811893,
+      '_$muuri_id': 'e7652694-bad4-4688-80ac-b8cb89111ae2',
+      'data': {}
+    },
+    {
+      'name': 'clock',
+      'id': 1681303836730,
+      '_$muuri_id': '799e50c0-9c51-46c5-9134-6d70a107d6bf',
+      'data': {}
+    },
+    {
+      'name': 'middleWallpaper',
+      'id': 1682158281403,
+      'data': {},
+      '_$muuri_id': '9eae01ee-7184-47f3-ad73-a62d90ba4630'
+    }
+  ],
+  'game': [],
+  'work': [],
+  'empty': []
+}
 export default {
   name: 'Home',
   data () {
     return {
-      newDesk:{
-        name:'',
-        template:'daily'
+      newDesk: {
+        name: '',
+        template: 'daily'
       },
 
-      hide:false,
+      hide: false,
       menuVisible: false,
-      settingVisible:false,
-      addDeskVisible:false,
+      settingVisible: false,
+      addDeskVisible: false,
       editing: false,
       key: Date.now(),
       scrollbarSettings: {
@@ -324,13 +352,13 @@ export default {
       },
       scrollbar: Date.now(),
       timer: null,
-      reserveTimer:null,
-      custom:false,
-      runAida64:true,
-      muuriOptions:{
-        dragAutoScroll:{
+      reserveTimer: null,
+      custom: false,
+      runAida64: true,
+      muuriOptions: {
+        dragAutoScroll: {
           targets: [{
-            element:'#scrollerBar>div'
+            element: '#scrollerBar>div'
           }],
           handle: null,
           threshold: 50,
@@ -340,7 +368,8 @@ export default {
           smoothStop: false,
           onStart: null,
           onStop: null
-        }}
+        }
+      }
     }
   },
   components: {
@@ -378,45 +407,44 @@ export default {
     Capture
   },
   computed: {
-    ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings','desks','moved','currentDeskIndex']),
-    ...mapWritableState(appStore, ['agreeTest','backgroundSettings','backgroundImage']),
+    ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'aidaData', 'settings', 'desks', 'moved', 'currentDeskIndex']),
+    ...mapWritableState(appStore, ['agreeTest', 'backgroundSettings', 'backgroundImage']),
 
     ...mapWritableState(appStore, {
       appSettings: 'settings',
     }),
-    desksList(){
-      return this.desks.map(desk=>{
+    desksList () {
+      return this.desks.map(desk => {
         return {
-          name:desk.nanoid,
-          title:desk.name,
+          name: desk.nanoid,
+          title: desk.name,
         }
       })
     },
-    currentDesk(){
-      let find= this.desks.find(desk=>{
-        return desk.nanoid===this.currentDeskIndex.name
+    currentDesk () {
+      let find = this.desks.find(desk => {
+        return desk.nanoid === this.currentDeskIndex.name
       })
-      if(find){
+      if (find) {
         return find
-      }else{
+      } else {
         return {
-          cards:[]
+          cards: []
         }
       }
     }
   },
   mounted () {
-    if(!this.moved){
-      this.desks[0].cards=this.customComponents
-      this.moved=true
+    if (!this.moved) {
+      this.desks[0].cards = this.customComponents
+      this.moved = true
     }
-    if(this.desks.length>0 && !this.currentDeskIndex.name){
-      this.currentDeskIndex={
-        name:this.desks[0].nanoid,
-        title:this.desks[0].name
+    if (this.desks.length > 0 && !this.currentDeskIndex.name) {
+      this.currentDeskIndex = {
+        name: this.desks[0].nanoid,
+        title: this.desks[0].name
       }
     }
-    console.log(this.currentDeskIndex,'current')
     this.fixData()
     window.onresize = () => {
       this.scrollbar = Date.now()
@@ -429,8 +457,8 @@ export default {
     }
   },
   created () {
-    this.customComponents.forEach((e) =>{
-      if(!e.data){
+    this.customComponents.forEach((e) => {
+      if (!e.data) {
         e.data = {}
       }
 
@@ -448,56 +476,103 @@ export default {
     }
   },
   methods: {
-    touch(event){
-      if(this.editing){
+    touch (event) {
+      if (this.editing) {
         event.stopPropagation()
-      }else{
+      } else {
 
       }
     },
     runExec,
-    ...mapActions(cardStore, ['setAidaData','getCurrentDesk']),
+    ...mapActions(cardStore, ['setAidaData', 'getCurrentDesk', 'addDesk', 'switchToDesk','removeDesk','getCurrentIndex']),
     ...mapActions(appStore, ['setBackgroundImage']),
-    ...mapActions(weatherStore,['fixData']),
-    clearWallpaper(){
-      this.setBackgroundImage({path:""})
+    ...mapActions(weatherStore, ['fixData']),
+    clearWallpaper () {
+      this.setBackgroundImage({ path: '' })
     },
-    initGrids(){
-      this.customComponents=initCards
+    initGrids () {
+      this.customComponents = initCards
     },
-    hideDesk(){
-      this.fullScreen=!this.fullScreen
-      this.hide=!this.hide
-      this.menuVisible=false
+    hideDesk () {
+      this.fullScreen = !this.fullScreen
+      this.hide = !this.hide
+      this.menuVisible = false
     },
-    addDesk(){
-      this.menuVisible=false
-      this.addDeskVisible=true
+    showAddDeskForm () {
+      this.menuVisible = false
+      this.addDeskVisible = true
     },
-    clear(){
-      this.menuVisible=false
-      let desk= this.getCurrentDesk()
-      if(desk){
+    doAddDesk () {
+      if (this.newDesk.name.trim() === '') {
+        message.error('请输入新桌面名称')
+        return
+      }
+      if (this.newDesk.name.length >= 16) {
+        message.error('新桌面名称长度不可超过16')
+        return
+      }
+
+      this.addDesk(this.newDesk.name, this.cleanMuuriData(deskTemplate[this.newDesk.template]))
+      this.switchToDesk(this.desks.length - 1)
+      this.newDesk = {
+        name: '',
+        template: 'daily',
+        data: {}
+      }
+      this.addDeskVisible = false
+
+    },
+    cleanMuuriData (list) {
+      list.forEach(li => {
+        li.id = Date.now()
+        delete li['_$muuri_id']
+      })
+      return list
+    },
+    clear () {
+      this.menuVisible = false
+      let desk = this.getCurrentDesk()
+      if (desk) {
         Modal.confirm({
-          centered:true,
-          content:'清空当前桌面的全部卡片？此操作不可还原。',
-          onOk:()=>{
-            desk.cards=[]
+          centered: true,
+          content: '清空当前桌面的全部卡片？此操作不可还原。',
+          onOk: () => {
+            desk.cards = []
+            this.menuVisible=false
           },
-          okText:"删除全部"
+          okText: '清空卡片'
         })
       }
 
     },
-    showSetting(){
-      this.settingVisible=true
-      this.menuVisible=false
+    delDesk(){
+      if(this.desks.length===1){
+        Modal.info({
+          content:'至少保留一个桌面',
+          centered:true
+        })
+        return
+      }else{
+        Modal.confirm({
+          centered: true,
+          content: '删除当前桌面？此操作不可还原。',
+          onOk: () => {
+            this.menuVisible=false
+            this.removeDesk(this.getCurrentIndex())
+          },
+          okText: '删除桌面'
+        })
+      }
     },
-    goPaper(){
-      this.$router.push({name:'my'})
+    showSetting () {
+      this.settingVisible = true
+      this.menuVisible = false
+    },
+    goPaper () {
+      this.$router.push({ name: 'my' })
     },
     addCard () {
-      this.custom=true;
+      this.custom = true
       this.menuVisible = false
     },
     showMenu () {
@@ -516,57 +591,63 @@ export default {
       this.menuVisible = false
       this.key = Date.now()
     },
-    setCustom(){
-      this.custom=false;
+    setCustom () {
+      this.custom = false
     },
-    startAida(){
+    startAida () {
       this.timer = setInterval(() => {
         readAida64().then(res => {
-          this.runAida64= true;
+          this.runAida64 = true
           Object.keys(res).map(i => {
             if (i === 'TCPUDIO') res.TCPUPKG = res[i]
             if (i === 'TGPUDIO') res.TGPU1DIO = res[i]
-            if (i === 'TGPU1HOT'&&!res.TGPU1DIO) res.TGPU1DIO = res[i]
+            if (i === 'TGPU1HOT' && !res.TGPU1DIO) res.TGPU1DIO = res[i]
           })
           this.setAidaData(res)
           // console.log(res)
           //this.data=JSON.stringify(res, null, '\t')
         }).catch(err => {
-          this.runAida64=false
+          this.runAida64 = false
           clearInterval(this.timer)
-          this.reserveTimer = setInterval(()=>{
-            readAida64().then(res=>{
-              this.runAida64= true;
+          this.reserveTimer = setInterval(() => {
+            readAida64().then(res => {
+              this.runAida64 = true
               clearInterval(this.reserveTimer)
               this.startAida()
-            }).catch(err=>{})
-          },10000)
+            }).catch(err => {})
+          }, 10000)
           this.setAidaData({
-            SGPU1UTI:{value:"-"},
-            TGPU1DIO:{value:"-"},
-            SMEMUTI:{value:"-"},
-            SCPUUTI:{value:"-"},
-            TCPUPKG:{value:"-"},
-            SRTSSFPS:{value:"-"},
-            SDSK1ACT:{value:"-"},
+            SGPU1UTI: { value: '-' },
+            TGPU1DIO: { value: '-' },
+            SMEMUTI: { value: '-' },
+            SCPUUTI: { value: '-' },
+            TCPUPKG: { value: '-' },
+            SRTSSFPS: { value: '-' },
+            SDSK1ACT: { value: '-' },
           })
         })
       }, 1000)
     },
 
   },
-  watch:{
-    "backgroundSettings":{
-      handler(){
-        document.body.style.setProperty('--backGroundImgBlur', this.backgroundSettings.backGroundImgBlur + 'px');
-        document.body.style.setProperty('--backGroundImgLight', this.backgroundSettings.backGroundImgLight);
+  watch: {
+    'currentDeskIndex':{
+     handler(){
+       this.$refs.grid.update()
+     }
+    },
+
+    'backgroundSettings': {
+      handler () {
+        document.body.style.setProperty('--backGroundImgBlur', this.backgroundSettings.backGroundImgBlur + 'px')
+        document.body.style.setProperty('--backGroundImgLight', this.backgroundSettings.backGroundImgLight)
       },
-      deep:true,
+      deep: true,
       immediate: true,
     },
-    'settings.cardMargin':{
-      handler(newValue){
-        this.key=Date.now()
+    'settings.cardMargin': {
+      handler (newValue) {
+        this.key = Date.now()
         // //$('.muuri-item').css('margin',newValue+'px')
         this.$refs.grid.update()
       }
@@ -583,7 +664,7 @@ export default {
   vertical-align: top;
   left: 0;
   right: 0;
-  margin-right:1em
+  margin-right: 1em
 }
 
 .btn {
@@ -593,11 +674,13 @@ export default {
 @media screen and (min-height: 1020px) and (max-height: 1600px) {
   #scrollerBar {
     height: 880px;
+
     .grid {
       height: 880px;
     }
   }
 }
+
 @media screen and (max-height: 1021px) {
   #scrollerBar {
     height: 438px;
@@ -607,7 +690,6 @@ export default {
     }
   }
 }
-
 
 
 </style>
@@ -628,7 +710,8 @@ export default {
     &.small {
       height: 204px;
     }
-    &.double{
+
+    &.double {
       width: 572px;
       height: 420px;
     }

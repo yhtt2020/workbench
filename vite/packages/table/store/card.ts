@@ -8,17 +8,17 @@ export const cardStore = defineStore(
   {
     state: () => {
       return {
-        moved:false,
-        currentDeskIndex:{},
+        moved: false,
+        currentDeskIndex: {},
         desks: [{
           name: '日常桌面',
           nanoid: nanoid(4),
-          cards:[]
+          cards: []
         },
           {
             name: '游戏桌面',
             nanoid: nanoid(4),
-            cards:[]
+            cards: []
           }],
         settings: {
           cardZoom: 100,
@@ -287,21 +287,51 @@ export const cardStore = defineStore(
     },
 
     actions: {
-      addDesk(name,cards=[]){
-        if(name.trim()===''){
+      switchToDesk(index) {
+        let desk = this.desks[index]
+        this.currentDeskIndex = {
+          name: desk.nanoid,
+          title: desk.name
+        }
+      },
+      getCurrentIndex() {
+        let deskIndex = this.desks.findIndex(item => {
+          return item.nanoid === this.currentDeskIndex.name
+        })
+        return deskIndex
+      },
+      removeDesk(index) {
+        if (this.desks.length === 1) {
+          return false//至少保留一个桌面
+        }
+        this.desks.splice(index, 1)
+        if (index < this.desks.length) {
+          this.switchToDesk(index)
+        } else {
+          if (index - 1 < 0) {
+            this.switchToDesk(0)
+          } else {
+            this.switchToDesk(index - 1)
+          }
+
+        }
+
+      },
+      addDesk(name, cards = []) {
+        if (name.trim() === '') {
           return false
         }
-        let desk={
-          name:name,
-          nanoid:nanoid(4),
-          cards:cards
+        let desk = {
+          name: name,
+          nanoid: nanoid(4),
+          cards: cards
         }
         this.desks.push(desk)
         return desk
       },
-      getCurrentDesk(){
-        let desk   =   this.desks.find(item=>{
-          return item.nanoid===this.currentDeskIndex.name
+      getCurrentDesk() {
+        let desk = this.desks.find(item => {
+          return item.nanoid === this.currentDeskIndex.name
         })
         return desk
       },
@@ -417,19 +447,21 @@ export const cardStore = defineStore(
       },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
-        let desk   =   this.desks.find(item=>{
-          return item.nanoid===this.currentDeskIndex.name
+        let desk = this.desks.find(item => {
+          return item.nanoid === this.currentDeskIndex.name
         })
         desk.cards.push(value)
       },
       updateCustomComponents(value, newData) {
-        const findCustom = this.customComponents.find(el => {
+        let currentDesk = this.getCurrentDesk()
+        const findCustom = currentDesk.cards.find(el => {
           return value === el.id
         })
-        this.customComponents[this.customComponents.indexOf(findCustom)].data = {Code: {id: value, value: newData}}
+        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {Code: {id: value, value: newData}}
       },
       removeCustomComponents(customIndex) {
-        this.customComponents.splice(this.customComponents.findIndex(item => {
+        let currentDesk = this.getCurrentDesk()
+        currentDesk.cards.splice(currentDesk.cards.findIndex(item => {
           return item.id === customIndex
         }), 1)
         // this.customComponents.splice(customIndex,1);
