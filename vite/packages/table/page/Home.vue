@@ -188,7 +188,8 @@ import {appStore} from "../store";
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
-
+import Voice from '../components/homeWidgets/games/Voice.vue'
+import Audio from '../components/homeWidgets/games/Audio.vue'
 import Muuri from 'muuri'
 const readAida64 = window.readAida64
 const initCards= [
@@ -331,7 +332,9 @@ export default {
     GameEpic,
     MyGameSmall,
     MyGameMiddle,
-    Capture
+    Capture,
+    Voice,
+    Audio
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent','aidaData','settings']),

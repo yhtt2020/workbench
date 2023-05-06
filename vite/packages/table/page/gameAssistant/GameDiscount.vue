@@ -1,8 +1,9 @@
 <template>
   <div class="flex justify-between h-12 items-center" style="margin-right: 30px;">
     <HorizontalPanel :navList="leftTitle" v-model:selectType="leftTitleType"></HorizontalPanel>
-    <a-select v-model:value="defaultGameValue" style="width: 200px;" @change="selectOptionValue($event)">
-      <a-select-option  v-for="selectItem in rightSelect" :value="selectItem.id">{{selectItem.name}}</a-select-option>
+    <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
+              @change="selectOptionValue($event)"    class="w-56 h-auto rounded-xl  text-xs s-item" size="large" :bordered="false" v-model:value="defaultGameValue">
+      <a-select-option v-for="item in rightSelect" :value="item.id">{{item.name}}</a-select-option>
     </a-select>
   </div>
   <template v-if="leftTitleType.name === 'steam' ">
@@ -113,15 +114,19 @@ export default {
             listData.map(el=>{
               sendRequest(`https://store.steampowered.com/api/appdetails?appids=${el.id}&cc=${this.defaultGameValue}&l=${this.defaultGameValue}`,3).then(res=>{
                 const data = res.data[el.id].data
-                console.log(data);
-                this.steamList.push({
-                  image:data.header_image,
-                  name:data.name,
-                  brief:data.short_description,
-                  newPrice:data.price_overview.final_formatted,
-                  oldPrice:data.price_overview.initial_formatted,
-                  percent:data.price_overview.discount_percent
-                })
+                if(data !== undefined){
+                  this.steamList.push({
+                   id:data.steam_appid,
+                   image:data.header_image,
+                   name:data.name,
+                   brief:data.short_description,
+                   newPrice:data.price_overview.final_formatted,
+                   oldPrice:data.price_overview.initial_formatted,
+                   percent:data.price_overview.discount_percent,
+                   data:data
+                  })
+                }
+              }).finally(()=>{
                 this.$nextTick(()=>{
                  this.isLoading = false
                 })
