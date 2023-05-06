@@ -96,7 +96,7 @@
           <div class="line font-bold text-white" >更新日志：</div>
           <vuuri v-model="updateLog" style="height: 100%">
             <template #item="{ item }">
-              <div class="card mb-3 " style="width: 400px;background: rgba(55,102,255,0.67);color:white;height: auto">
+              <div class="card mb-3 " style="width: 400px;background: rgba(13,62,227,0.8);color:white;height: auto">
                 <div class="line-title">
                   {{ item.name }} 更新内容
                 </div>
@@ -129,6 +129,20 @@ import axios from 'axios'
 import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 let updateLog=[
+  {
+    name:'3.7.50',
+    date:'05月06日',
+    list:[
+      '增加勋章显示（可显示日活1000勋章）',
+      '增加多卡片桌面支持',
+      '修复单动态壁纸锁屏无法退出',
+      '增加游戏相关卡片若干（仅实现样式）',
+      '增加自定义图片卡片（开发中）',
+      '修复全屏应用在性能模式下返回时侧边栏底部栏不显示',
+      '完善部分游戏小助手界面',
+      '修复性能（更名节能模式）模式下返回主界面样式错位'
+    ]
+  },
   {
     name:'3.7.44',
     date:'05月05日',
