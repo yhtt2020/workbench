@@ -30,8 +30,34 @@
     </div>
   </template>
   <template v-else>
-     <div>
-        
+    <div class="flex items-center justify-center">
+        <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
+          <div  class="w-full flex justify-start flex-col">
+            <!-- @click="enterDiscountDetail(item)" -->
+            <div v-for="item in epicList"  class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 98%;">
+              <div style="width: 269px;height: 120px;" class="mr-3">
+                <img :src="item.keyImages.url" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
+              </div>
+              <div class="flex flex-col" style="width: 80%;">
+                <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                  {{ item.el.title }}
+                </span>
+                <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">
+                  {{ item.el.description }}
+                </span>
+                <div class="flex items-center">
+                  <span v-if="item.el.promotions !== null" class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">
+                    -{{ item.el.promotions.promotionalOffers.length === 0 ? item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage : item.el.promotions.promotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage }} %
+                  </span>
+                  <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 500;">
+                    {{ item.el.price.totalPrice.fmtPrice.intermediatePrice }}
+                  </span>
+                  <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.el.price.totalPrice.fmtPrice.originalPrice }}</span>
+               </div>
+              </div>
+            </div>
+          </div>
+        </vue-custom-scrollbar>
      </div>
   </template>
   <router-view></router-view>
@@ -51,6 +77,7 @@ export default {
       leftTitleType:{title:'Steam折扣',name:'steam'},
       rightSelect:regionRange,
       defaultGameValue:'cn',
+      defaultLocale:'zh-CN',
       steamList:[],
       epicList:[],
       isLoading:false,
@@ -65,6 +92,7 @@ export default {
   },
   mounted(){
     this.getSteamDataList()
+    this.getEpicData(this.defaultLocale)
   },
   methods:{
     // 获取默认的加载数据
@@ -87,6 +115,7 @@ export default {
                   percent:data.price_overview.discount_percent,
                   data:data
                 })
+              }).finally(()=>{
                 this.$nextTick(()=>{
                  this.isLoading = false
                 })
@@ -103,7 +132,11 @@ export default {
     // 区服切换
     selectOptionValue(e){
       this.defaultGameValue = e
+      const found = this.rightSelect.find(el=>{
+        return el.id === e
+      })
       this.getSelectCCData(e)
+      this.getEpicData(found.locale)
     },
     // 根据不同区服切换数据
     getSelectCCData(v){
@@ -140,13 +173,26 @@ export default {
     },
     // 进入详情
     enterDiscountDetail(val){
-      this.$router.push({name:'GameDiscountDetail',params:{val:JSON.stringify(val)}})
+      this.$router.push({name:'GameDiscountDetail',params:{id:val.data.steam_appid}})
     },
 
     // 根据区服获取epic数据
     getEpicData(){
-      console.log(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN`);
-      // sendRequest()
+      sendRequest(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=${this.defaultLocale}&country=${this.defaultGameValue.toLocaleUpperCase()}&allowCountries=${this.defaultGameValue.toLocaleUpperCase()}`,3).then(res=>{
+         const result = res.data.data.Catalog.searchStore.elements
+         const resultArr = []
+         result.forEach(el=>{
+            // 取出epic图片
+            const fIndex = el.keyImages.find(keyImg=>{
+              return keyImg.type === 'OfferImageWide'
+            })
+            resultArr.push({
+              el,
+              keyImages:fIndex
+            })
+         })
+         this.epicList  = resultArr
+        })
     },
   }
 }

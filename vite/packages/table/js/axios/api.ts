@@ -3,53 +3,73 @@ export const regionRange= [
   {
     id: 'cn',
     name: '国区',
+    locale:'zh-CN'
   },
   {
     id: 'ar',
     name: '阿根廷',
+    locale:'ar-AR'
   }, {
     id: 'us',
-    name: '美国'
+    name: '美国',
+    locale:'us-US'
   },
   {
     id: 'ca',
-    name: '加拿大'
+    name: '加拿大',
+    locale:'ca-CA'
   },
   {
     id: 'gb',
-    name: '英国'
+    name: '英国',
+    locale:'gb-GB'
   }, {
     id: 'fr',
-    name: '法国'
+    name: '法国',
+    locale:'fr-FR'
   }, {
     id: 'de',
-    name: '德国'
+    name: '德国',
+    locale:'de-DE'
   }, {
     id: 'it',
-    name: '意大利'
+    name: '意大利',
+    locale:'it-IT'
   }, {
     id: 'jp',
     name: '日本',
+    locale:'jp-JP'
   }, {
     id: 'br',
     name: '巴西',
+    locale:'br-BR'
   }, {
     id: 'in',
     name: '印度',
+    locale:'in-IN'
   }, {
     id: 'ru',
     name: '俄罗斯',
+    locale:'ru-RU'
   }, {
     id: 'au',
     name: '澳大利亚',
+    locale:'au-AU'
   },
   {
     id: 'hk',
     name: '香港',
+    locale:'zh-HK'
   },
   {
     id:'tr',
-    name:'土耳其'
+    name:'土耳其',
+    locale:'tr-TR'
+  },
+  {
+    id:'kr',
+    name:'韩国',
+    locale:'kr-KR'
   }
 
 ]
@@ -149,8 +169,8 @@ export function startOfNextWeek() {
   return new Date(today.setDate(firstDayOfWeek + 7));
 }
 
- // 计算剩余多少天
- export const remainderDay = (date: string | number | Date) => {
+// 计算剩余多少天
+export const remainderDay = (date: string | number | Date) => {
   // 假设要计算的日期为2023年6月1日
   let targetDate = new Date(date);
   // 获取当前日期
