@@ -248,7 +248,7 @@ import { appStore } from '../store'
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
-
+import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 
@@ -408,7 +408,8 @@ export default {
     MyGameMiddle,
     Capture,
     Voice,
-    Audio
+    Audio,
+    SteamFriends
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'aidaData', 'settings', 'desks', 'moved', 'currentDeskIndex']),

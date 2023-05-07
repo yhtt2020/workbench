@@ -107,7 +107,7 @@ export default {
           cname: '游戏折扣推荐',
           icon: 'steam',
           detail: 'Steam、Epic折扣推荐',
-          images: ['GamesDiscount', 'DiscountPercentage', 'GameEpic','MyGameSmall','MyGameMiddle','capture','audio','voice']
+          images: ['GamesDiscount', 'DiscountPercentage', 'GameEpic','MyGameSmall','MyGameMiddle','capture','audio','voice','SteamFriends']
         },
         {
           name: 'remote',
