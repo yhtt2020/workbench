@@ -39,9 +39,14 @@
                 <img :src="item.keyImages.url" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
               </div>
               <div class="flex flex-col" style="width: 80%;">
-                <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                  {{ item.el.title }}
-                </span>
+                <div>
+                  <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                    {{ item.el.title }}
+                  </span>
+                  <span class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                     {{ item.el.offerType }}
+                  </span>
+                </div>
                 <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">
                   {{ item.el.description }}
                 </span>
