@@ -1,10 +1,10 @@
 <template>
   <div class=" fixed inset-0 " style="z-index:1" v-if="singleLively">
     <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
-      <source :src="videoPath" type="video/mp4" id="bgVid">dddd
+      <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle" @click.prevent="enter" class="pointer" style="margin-top: -6em;min-height: 15em">
+  <div id="displayMiddle" @click.prevent="enter" class="pointer" style="margin-top: -6em;min-height: 15em; z-index:9999999">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
       <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
@@ -42,7 +42,7 @@
   </div>
   <div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
     <div v-if="clockEvent[0]"
-         class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-xl flex flex-col justify-evenly items-center"
+         class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
          style="width: 480px;height: 320px;background:  #282828">
       <div>
         {{ clockEvent[0].dateValue.hours }}:{{
@@ -53,7 +53,7 @@
         {{ clockEvent[0].eventValue }}
       </div>
       <div style="width: 100px;height: 48px;"
-           class="flex justify-center items-center text-base bg-blue-500 rounded-xl pointer" @click="handleOk">
+           class="flex justify-center items-center text-base bg-blue-500 rounded-lg pointer" @click="handleOk">
         好的
       </div>
 
@@ -155,9 +155,11 @@ export default {
       this.loaded = true
     },
     enter (closeSpot = true) {
-      if (closeSpot)
+      if (closeSpot && !this.singleLively)
+      {
         window.Spotlight.close()
-      console.log('解锁')
+      }
+
       this.$router.go(-1)
     },
     playAll () {
@@ -287,7 +289,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .time {
   font-size: 1.5em;
@@ -334,5 +335,8 @@ export default {
     justify-content: center;
     align-items: center;
   }
+}
+#displayMiddle{
+  z-index: 9999
 }
 </style>

@@ -79,18 +79,18 @@
           >
         </div>
         <div class="flex flex-row items-center w-full justify-center mt-4">
-          <div class="rounded-xl h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeDrawer">取消</div>
-          <div class="rounded-xl h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="goAddEvent">添加事件</div>
+          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeDrawer">取消</div>
+          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="goAddEvent">添加事件</div>
         </div>
       </div>
     <div v-else>
       <div>事件名称</div>
-      <a-input class="rounded-xl  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
+      <a-input class="rounded-lg  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">
-        <div class="rounded-xl h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="()=>{this.goAddFlag = false}">取消</div>
-        <div class="rounded-xl h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="()=>{this.goAddFlag = false}">取消</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>

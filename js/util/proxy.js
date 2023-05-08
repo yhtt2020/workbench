@@ -2,6 +2,9 @@ let proxyConfig = {}
 
 settings.listen('proxy', (proxy = {}) => {
   switch (proxy.type) {
+    case 0:
+      proxyConfig = {}
+      break
     case 1:
       proxyConfig = {
         pacScript: '',

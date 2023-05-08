@@ -1,22 +1,22 @@
 <template>
-<div class="s-bg  h-20 rounded-xl flex flex-row items-center px-6 mb-4" style="width: 572px">
+<div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
   <Icon style="height: 36px;width: 36px" icon="steam"></Icon>
   <div class="flex flex-col ml-4 w-2/3">
     <span class="text-white">Steam</span>
     <span>绑定Steam帐号即可同步显示你的游戏数据</span>
   </div>
-  <div class="s-item ml-10 w-28 h-12 rounded-xl flex justify-center items-center pointer" @click="bindSteam">
+  <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="bindSteam">
     绑定
   </div>
 </div>
-  <div class="s-bg  h-20 rounded-xl flex flex-row items-center px-6 mb-4" style="width: 572px">
+  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
     <Icon style="height: 36px;width: 36px" icon="position"></Icon>
     <div class="flex flex-col ml-4 w-2/3">
       <span class="text-white">折扣地区</span>
       <span>选择默认的折扣地区</span>
     </div>
     <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
-              @change="getRegion($event)"    class="w-56 h-auto rounded-xl  text-xs s-item" size="large" :bordered="false" v-model:value="area">
+              @change="getRegion($event)"    class="w-56 h-auto rounded-lg  text-xs s-item" size="large" :bordered="false" v-model:value="area">
       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
     </a-select>
   </div>

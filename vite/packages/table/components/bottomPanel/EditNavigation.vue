@@ -46,7 +46,7 @@
   <transition name="fade">
   <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem" @load="addNav">
     <div v-show="nowClassify!=='localApp'" class="h-full">
-      <a-input v-model:value="selectContent" class="no-drag h-10 rounded-xl" placeholder="搜索"  style="background: rgba(42, 42, 42, 0.6);">
+      <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索"  style="background: rgba(42, 42, 42, 0.6);">
         <template #prefix>
           <Icon icon="sousuo" class="text-gray-600"></Icon>
         </template>
@@ -55,14 +55,14 @@
                              class="relative"
                              style="height: calc(100% - 40px);padding: 5px 0">
         <listItem v-for="(item,index) in filterList" :item="item"
-                  class=" rounded-xl right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+                  class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
       </vue-custom-scrollbar>
     </div>
     <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500  h-full">
       <div>1. 点击选择需要添加的应用快捷方式</div>
       <div>2. 拖动应用快捷方式拖放到下方</div>
       <div>3. 支持持批量添加</div>
-      <div class="border-dashed w-full h-1/2 mt-2.5 rounded-xl flex flex-row justify-center items-center"  @dragover.prevent="" @drop.prevent="drop">
+      <div class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"  @dragover.prevent="" @drop.prevent="drop">
         <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
         添加快捷方式
       </div>
@@ -79,7 +79,7 @@
           </div>
         </div>
       </ScrolX>
-      <div @click="clickRightListItem(dropList)" class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-xl  " style="background: rgb(42, 42, 42);color: rgba(255, 255, 255, 0.85);">
+      <div @click="clickRightListItem(dropList)" class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg  " style="background: rgb(42, 42, 42);color: rgba(255, 255, 255, 0.85);">
         确定添加
       </div>
     </div>

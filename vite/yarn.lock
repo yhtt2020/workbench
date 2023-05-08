@@ -202,7 +202,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@popperjs/core@^2.11.7":
+"@popperjs/core@^2.11.7", "@popperjs/core@^2.9.0":
   version "2.11.7"
   resolved "https://registry.npmmirror.com/@popperjs/core/-/core-2.11.7.tgz#ccab5c8f7dc557a52ca3288c10075c9ccd37fff7"
   integrity sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==
@@ -1315,6 +1315,11 @@ justifiedGallery@^3.8.1:
   dependencies:
     jquery "^3.5.1"
 
+keen-slider@^6.8.5:
+  version "6.8.5"
+  resolved "https://registry.npmmirror.com/keen-slider/-/keen-slider-6.8.5.tgz#1d96ff3ab77f195fc6cacd2e5aecc35d8ceb9702"
+  integrity sha512-9yoosfffgTCrkmbX8kCUMWsn9KDgPSkxBof5/0yXde001D1xao7i9ppfxQCCK0MLnoCa+Rdssby0jFbTTUM4rw==
+
 lightgallery@^2.7.1:
   version "2.7.1"
   resolved "https://registry.npmmirror.com/lightgallery/-/lightgallery-2.7.1.tgz"
@@ -1821,6 +1826,13 @@ tiny-warning@^1.0.3:
   resolved "https://registry.npmmirror.com/tiny-warning/-/tiny-warning-1.0.3.tgz"
   integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
 
+tippy.js@^6.3.7:
+  version "6.3.7"
+  resolved "https://registry.npmmirror.com/tippy.js/-/tippy.js-6.3.7.tgz#8ccfb651d642010ed9a32ff29b0e9e19c5b8c61c"
+  integrity sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==
+  dependencies:
+    "@popperjs/core" "^2.9.0"
+
 to-regex-range@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmmirror.com/to-regex-range/-/to-regex-range-5.0.1.tgz"
@@ -2039,6 +2051,13 @@ vue-screen-utils@^1.0.0-beta.13:
   version "1.0.0-beta.13"
   resolved "https://registry.npmmirror.com/vue-screen-utils/-/vue-screen-utils-1.0.0-beta.13.tgz#0c739e19f6ffbffab63184aba7b6d710b6a63681"
   integrity sha512-EJ/8TANKhFj+LefDuOvZykwMr3rrLFPLNb++lNBqPOpVigT2ActRg6icH9RFQVm4nHwlHIHSGm5OY/Clar9yIg==
+
+vue-tippy@v6:
+  version "6.1.2"
+  resolved "https://registry.npmmirror.com/vue-tippy/-/vue-tippy-6.1.2.tgz#25b6c1a8ba5ff31b851b5eabd375bb7c647961cb"
+  integrity sha512-GjD3+u1O4uNpseOaBwhCwQWlPmxGFxzGYVLgffplLSWARj0uBiQ0crsSHQSc/Vbi42+3EX0wwUJtabpEZpmw4w==
+  dependencies:
+    tippy.js "^6.3.7"
 
 vue-tsc@^0.34.7:
   version "0.34.17"

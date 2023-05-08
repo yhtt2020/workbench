@@ -30,6 +30,7 @@
                 <div class="text-left" style="position:absolute;z-index: 9;">
                   <a-tag color="#ff5500cc" v-if="app.data.type==='system'">系统</a-tag>
                   <a-tag color="#87d068cc" v-else-if="app.needInstall">软件</a-tag>
+                  <a-tag color="black" v-else-if="app.data.type==='game'">游戏</a-tag>
                   <a-tag color="#108ee9cc" v-else>网页</a-tag>
                 </div>
                 <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="60">
@@ -147,6 +148,19 @@ export default {
           }
         },
         {
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Mlappy Bird',
+          summary: '和小伙伴们一起飞。',
+          needInstall: false,
+          data: {
+            theme: '#030c13',
+            name: 'mlappyBird',
+            url: 'http://bird.apps.vip/?',
+            background: false,
+            type:'game'
+          }
+        },
+        {
           icon: 'https://a.apps.vip/icons/weather.png',
           name: '天气',
           summary: '可以自由添加城市。',
@@ -162,8 +176,8 @@ export default {
           }
         },
         {
-          icon: 'https://a.apps.vip/icons/weather.png',
-          name: '游戏小助手',
+          icon: '/img/game.png',
+          name: '游戏小助手（正在开发中）',
           summary: '',
           needInstall: false,
           data: {

@@ -18,7 +18,7 @@ const exchangeDevoteUrl = Server.baseUrl + '/app/online/exchangeDevote'
 const getMy = Server.baseUrl + '/app/team/getMy'
 const getByNo = Server.baseUrl + '/app/team/getByNo'
 const getUserGradeUrl = Server.baseUrl + '/app/getUserGrade'
-
+const getUserMedalUrl = Server.baseUrl + '/app/medal/getUserMedal'
 
 const getListUrl = Server.baseUrl + '/app/team/getList'
 import {appStore} from "../store";
@@ -50,6 +50,17 @@ export const teamStore = defineStore("teamStore", {
     },
   },
   actions: {
+    async getUserMedal(uid){
+      let conf = await getConfig()
+      conf.params = {uid: uid}
+      let response = await axios.get(getUserMedalUrl, conf)
+      if (response.code === 1000) {
+        return response.data
+      }else{
+        return false
+      }
+    },
+
     async closeTeam() {
       this.team = {
         status: false

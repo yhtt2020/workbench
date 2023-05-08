@@ -96,7 +96,7 @@
           <div class="line font-bold text-white" >更新日志：</div>
           <vuuri v-model="updateLog" style="height: 100%">
             <template #item="{ item }">
-              <div class="card mb-3 " style="width: 400px;background: rgba(55,102,255,0.67);color:white;height: auto">
+              <div class="card mb-3 " style="width: 400px;background: rgba(13,62,227,0.8);color:white;height: auto">
                 <div class="line-title">
                   {{ item.name }} 更新内容
                 </div>
@@ -128,88 +128,6 @@ import { message } from 'ant-design-vue'
 import axios from 'axios'
 import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
-let updateLog=[
-  {
-    name:'3.7.44',
-    date:'05月05日',
-    list:[
-      '修复epic错位',
-      '修复锁屏壁纸界面单个动态壁纸的时候不轮播',
-      '锁屏壁纸轮播间隔设置生效',
-      '增加极简模式',
-      '修复全屏应用在性能模式下返回时侧边栏底部栏不显示'
-    ]
-  },
-  {
-    name:'3.7.43',
-    date:'05月04日',
-    list:[
-      '修复小队部分bug',
-      '增加自定义卡片',
-      '天气卡片扩容，天气应用样式美化',
-      '快捷指令增加快捷键功能',
-      '增加性能模式，同时优化小队动画性能消耗',
-      '优化自动升级机制，支持不打开浏览器下检测和手动检测'
-    ]
-  },
-  {
-    name:'3.7.33',
-    date:'04月27日',
-    list:[
-      '修复steam折扣助手的数据获取问题',
-      '增加游戏助手前端部分页面',
-    ]
-  },
-  {
-    name:'3.7.31',
-    date:'04月26日',
-    list:[
-      '支持退出小队',
-      '增加小队成员在线、成员加速提示',
-      '增加Epic卡片',
-    ]
-  },
-  {
-    name:'3.7.30',
-    date:'04月26日',
-    list:[
-      '修复部分问题',
-      '增加小队面板查看成员等级信息',
-      '增加小队大厅'
-    ]
-  },
-  {
-    name:'3.7.28',
-    date:'04月25日',
-    list:[
-      '修复工作台打开轻应用错误',
-      '修复缩放显示器后导致浏览器左侧栏空白'
-    ]
-  },
-  {
-    name:'3.7.27',
-    date:'04月24日',
-    list:[
-      '新增壁纸小卡片，壁纸卡片支持独立壁纸源',
-      '支持创建小队',
-      '支持加入小队',
-      'steam折扣卡片支持独立源!暂时无法正常使用!',
-      '修复部分用户不能累计在线时长的问题',
-      '增加设置双击托盘菜单默认打开',
-      '增加设置任务栏是否显示工作台',
-      '增加更新日志显示'
-    ]
-  },
-  {
-    name:'3.7.26',
-    date:'04月22日',
-    list:[
-      '天气不刷新问题解决',
-      '新增壁纸大卡片',
-      '修复大量Bug',
-    ]
-  }
-]
 export default {
   name: 'Com',
   components: { GradePanel ,vuuri},
@@ -233,7 +151,7 @@ export default {
       },
       online:0,
       appVersion:'',
-      updateLog:updateLog
+      updateLog:[]
     }
   },
   mounted () {
@@ -242,6 +160,9 @@ export default {
     this.getOnline().then()
     this.appVersion=tsbApi.runtime.appVersion
     console.log(tsbApi.runtime)
+    axios.get('https://a.apps.vip/download/updateLog.json').then(data=>{
+      this.updateLog=data.data
+    })
   },
   methods:{
     checkUpdate(){

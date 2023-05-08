@@ -12,23 +12,21 @@
       </div>
     </a-col>
   </a-row>
-  <div class="bg-mask rounded-xl p-3 m-3 mt-2 mb-0 " style="min-height: 77px">
+  <div class="bg-mask rounded-lg p-3 m-3 mt-2 mb-0 " style="min-height: 77px">
     <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
   </div>
   <div class=" mb-0 pd-0 m-3 p-3 mt-0" style="margin-bottom: 0;">
     成就勋章
   </div>
-  <div class="bg-mask rounded-xl p-3 m-3 mt-0 text-center mb-0">
-
-    <div>
+  <div class="bg-mask rounded-lg p-3 m-3 mt-0  mb-0">
       <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
-    </div>
+      <Medal :medal="medal" v-for="medal in medals"></Medal>
 
   </div>
   <div class=" mb-0 pd-0 m-3 p-3 mt-0">
     小队贡献
   </div>
-  <div class="bg-mask rounded-xl m-3 p-3 mt-0" style="line-height: 2">
+  <div class="bg-mask rounded-lg m-3 p-3 mt-0" style="line-height: 2">
 <!--    升级效率：<strong>{{ effect }} %</strong>-->
     小队在线时长：{{ online_h}} 小时 {{online_m}}分钟<br>
     小队贡献：{{memberInfo.score}} 分<br>
@@ -46,10 +44,10 @@ import { mapActions } from 'pinia'
 import { teamStore } from '../../store/team'
 import OnlineGradeDisplay from './OnlineGradeDisplay.vue'
 import OnlineMedal from './OnlineMedal.vue'
-
+import Medal from './Medal.vue'
 export default {
   name: 'UserDetail',
-  components: { OnlineMedal, OnlineGradeDisplay },
+  components: { Medal, OnlineMedal, OnlineGradeDisplay },
   props:['userInfo','isLeader','memberInfo'],
   data(){
     return{
@@ -60,10 +58,19 @@ export default {
       daily_minutes:0,
       daily_h:0,
       daily_m:0,
-      joined_days:0
+      joined_days:0,
+      medals:[]
     }
   },
   async mounted () {
+    this.getUserMedal(this.userInfo.uid).then(result=>{
+      if(result){
+        console.log('或得到的勋章',result)
+        this.medals=result
+      }else{
+        this.medals=[]
+      }
+    })
     this.grade = await this.getMemberGrade(this.userInfo.uid)
     this.joined_days=Number(((new Date().getTime()-(new Date(this.memberInfo.updateTime).getTime()))/(24*60*60*1000)).toFixed(0))
     if(this.joined_days===0){
@@ -77,8 +84,9 @@ export default {
     this.daily_m=(this.daily_minutes%60).toFixed(0)
   },
   methods:{
-    ...mapActions(teamStore,['getMemberGrade'])
-  }
+    ...mapActions(teamStore,['getMemberGrade','getUserMedal'])
+  },
+
 }
 </script>
 

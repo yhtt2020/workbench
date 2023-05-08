@@ -99,7 +99,7 @@
         <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList"
              @click="clickNavigation(item)" v-else>
           <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
-               class="s-item flex justify-center items-center rounded-xl">
+               class="s-item flex justify-center items-center rounded-lg">
             <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
           </div>
           <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
@@ -292,10 +292,30 @@ export default {
     }
   },
   unmounted () {
+
     let that = this
     window.removeEventListener('resize', that.checkScroll)
   },
   mounted () {
+    let inserted=localStorage.getItem('insertBird')
+    if(!inserted){
+      this.navigationList.unshift( {
+        icon: 'http://a.apps.vip/icons/flappy.jpg',
+        type:'coolApp',
+        name: 'Mlappy Bird',
+        summary: '和小伙伴们一起飞。',
+        needInstall: false,
+        data: {
+          theme: '#030c13',
+          name: 'mlappyBird',
+          url: 'http://bird.apps.vip/?',
+          background: false,
+          type:'game',
+          scale:160
+        }
+      })
+      localStorage.setItem('insertBird','1')
+    }
     let that = this
     this.checkScroll()
     // const that = this

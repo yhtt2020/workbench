@@ -1,30 +1,30 @@
 <template>
 <div>
 <div class="flex flex-row  items-center game-page-nav">
-  <div class="flex flex-row">
+  <div class="flex flex-row" style="padding-left: 1em">
     <HorizontalPanel :navList="gameNavList" v-model:selectType="gameType"></HorizontalPanel>
     <HorizontalPanel :navList="sortList" class="ml-3 main-nav"></HorizontalPanel>
   </div>
   <div class="flex flex-row ml-3">
-    <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
-    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
+    <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
+    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
   </div>
 
 </div>
 <vue-custom-scrollbar :settings="settingsScroller"
-                      style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
-<div class="flex flex-row flex-wrap -ml-3" v-if="gameType.name==='other'&&myGameList.length>0">
-  <div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in myGameList">
-    <div class="relative   rounded-xl w-auto h-full pointer" @contextmenu="openSteamDetail(item)" @click="runGame">
-      <img :src="item.src" class="w-full h-full rounded-xl object-cover"  alt="">
+                 ref="gameScroll"     style="height: calc(100vh - 15.8em);padding-right: 5px;padding-left: 1em" class="pt-3 mr-3" @scroll="scrollList($event)">
+<div class="flex flex-row flex-wrap -ml-3 " v-if="gameType.name==='other'&&myGameList.length>0">
+  <div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content" v-for="(item,index) in myGameList">
+    <div class="relative   rounded-lg w-auto h-full pointer "  :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @contextmenu="openOtherDetail(item)" @click="runGame">
+      <img :src="item.src" class="w-full h-full rounded-lg object-cover"  alt="">
       <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
     </div>
   </div>
 </div>
-<div class="flex flex-row flex-wrap -ml-3 content-game" v-else-if="gameType.name==='steam'&&steamGameList.length>0">
-  <div class=" pl-3 pb-3 game-list-item-first flex-shrink-0 ">
-    <div class="relative rounded-xl  w-auto h-full " @contextmenu="openSteamDetail(steamGameList[0])">
-      <img :src="steamGameList[0].src" class="w-full h-full rounded-xl object-cover"  alt="">
+<div class="flex flex-row flex-wrap -ml-3 content-game " v-else-if="gameType.name==='steam'&&steamGameList.length>0">
+  <div class=" pl-3 pb-3 game-list-item-first flex-shrink-0">
+    <div class="relative rounded-lg  w-auto h-full " @contextmenu="openSteamDetail(steamGameList[0])">
+      <img :src="steamGameList[0].src" class="w-full h-full rounded-lg object-cover"  alt="">
       <div class="game-item-title-bg first w-full h-1/4 absolute bottom-0 flex flex-row items-center pl-3"  >
         <div v-if="!gameRun" @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(82, 196, 26, 1);aspect-ratio: 1/1;border-radius: 10px">
           <Icon style="height: 60%;width: 60%" icon="caret-right"></Icon>
@@ -42,9 +42,9 @@
        </div>
     </div>
   </div>
-<div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="item in filterSteamGameList">
-  <div class="relative rounded-xl w-auto h-full pointer" @contextmenu="openSteamDetail(item)" @click="runGame">
-    <img :src="item.src" class="w-full h-full rounded-xl object-cover"  alt="">
+<div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content" v-for="(item,index) in filterSteamGameList">
+  <div class="relative rounded-lg w-auto h-full pointer" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @contextmenu="openSteamDetail(item)" @click="runGame">
+    <img :src="item.src" class="w-full h-full rounded-lg object-cover"  alt="">
     <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
   </div>
 </div>
@@ -65,8 +65,8 @@
         </div>
       </div>
     <div class="flex flex-row mt-4 mb-4">
-      <div class="s-item pointer h-12 w-48 rounded-xl flex justify-center items-center">选择游戏库</div>
-      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
+      <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center">选择游戏库</div>
+      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
     </div>
     <div class="flex flex-row items-center">
       <Icon style="height: 26px;width: 26px" icon="game"></Icon>
@@ -76,15 +76,15 @@
       </div>
     </div>
     <div class="flex flex-row mt-4">
-      <div class="s-item pointer h-12 w-48 rounded-xl flex justify-center items-center">选择游戏库</div>
-      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-xl flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
+      <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center">选择游戏库</div>
+      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
     </div>
   </div>
 </Modal>
-  <Modal v-model:visibility="steamShow" v-show="steamShow" animationName="r-l" :blurFlag="true">
+  <Modal v-model:visibility="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
     <div class="pl-6 pr-9 py-6 flex flex-row">
       <div class="w-52 h-72 relative">
-        <img :src="currentSteam.src" class="w-full h-full rounded-xl object-cover" alt="">
+        <img :src="currentSteam.src" class="w-full h-full rounded-lg object-cover" alt="">
         <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{currentSteam.title}}</div>
       </div>
       <div class="flex flex-col w-64 ml-5 justify-between">
@@ -94,14 +94,28 @@
         <div class="flex flex-row justify-between"><span>成就</span><span class="text-white">12/29</span></div>
         <div class="flex flex-row justify-between"><span>Steam在线</span><span class="text-white">1111,2222,3333</span></div>
         <div class="flex flex-row justify-between"><span>M站评分</span><span class="text-white">9.0</span></div>
-
           <div class="flex flex-row justify-between mt-3">
-            <div class="pointer s-item w-44 flex justify-center items-center rounded-xl"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
-            <div class="pointer s-item w-10 h-10 flex justify-center items-center rounded-xl"><Icon style=""  class="mr-2" icon="delete"></Icon></div>
+            <div class="pointer s-item w-44 flex justify-center items-center rounded-lg"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
+            <div class="pointer s-item w-10 h-10 flex justify-center items-center rounded-lg"><Icon style=""   icon="delete"></Icon></div>
           </div>
-
-          <div  class="pointer s-item flex h-10 justify-center items-center rounded-xl"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+          <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
         </div>
+    </div>
+  </Modal>
+  <Modal v-model:visibility="otherShow" v-show="otherShow" animationName="bounce-in" :blurFlag="true">
+    <div class="pt-12 pb-8 px-8">
+      <div class="w-24 h-24 mx-auto">
+        <img :src="currentSteam.src" class="w-full h-full rounded-lg object-cover" alt="">
+      </div>
+      <div class=" w-full h-12  flex items-center justify-center mt-3" >{{currentSteam.title}}</div>
+      <div class="flex flex-col  justify-between">
+
+        <div class="flex flex-row  mt-3">
+          <div class="pointer s-item w-44 flex justify-center items-center rounded-lg mr-3"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
+          <div class="pointer s-item w-10 h-10 flex justify-center items-center rounded-lg"><Icon style=""   icon="delete"></Icon></div>
+        </div>
+        <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg mt-3"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+      </div>
     </div>
   </Modal>
 <a-drawer :width="500"  v-model:visible="drawerVisible" placement="right">
@@ -137,15 +151,17 @@ export default {
       gameNavList:[{title:'Steam游戏',name:'steam'},{title:'其他游戏',name:'other'}],
       gameType:{title:'Steam游戏',name:'steam'},
       sortList:[{title:'最近游玩'},{title:'A-Z'}],
-      myGameList:[{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'}],
+      myGameList:[{src:'/img/test/2.jpg',title:'双人成行'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'}],
       steamGameList:[{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},],
       modalVisibility:false,
       gameRun:false,
       steamShow:false,
+      otherShow:false,
       currentSteam:{
         src:'',
         lastTime:0,
-      }
+      },
+      hoverIndex:-1
     }
   },
   computed:{
@@ -154,6 +170,20 @@ export default {
       }
   },
   methods:{
+    scrollList(e){
+      console.log(e.target.scrollTop>0&&e.target.scrollTop<13)
+      if(e.target.scrollTop<13){
+        this.$refs.gameScroll.$el.style.marginTop =  e.target.scrollTop + 'px'
+      }else {
+        this.$refs.gameScroll.$el.style.marginTop = '13px'
+      }
+    },
+    mouseOn(e){
+      this.hoverIndex = e
+    },
+    mouseClose(){
+      this.hoverIndex = -1
+    },
     openModal(){
       this.modalVisibility = true
     },
@@ -166,12 +196,33 @@ export default {
     openSteamDetail(item){
       this.currentSteam = item
       this.steamShow = true
+    },
+    openOtherDetail(item){
+      this.currentSteam = item
+      this.otherShow = true
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.my-game-content{
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.fly{
+  animation: fly .5s;
+  animation-fill-mode: forwards;
+  transform-origin: 50% 0 10px;
+}
+@keyframes fly {
+  0% {
+
+  }
+  100% {
+    transform: rotateX(5deg) translateZ(20px);
+  }
+}
 @media screen and (max-width:1064px ){
   .main-nav{
     display: none;
