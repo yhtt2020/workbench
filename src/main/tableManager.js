@@ -54,7 +54,7 @@ static alive(){
           minHeight: 480,
           frame: false,
           skipTaskbar:!showInTaskbar,
-          //transparent:true,
+          transparent:true,
           //backgroundColor: '#fff',
         },
         webPreferences: {

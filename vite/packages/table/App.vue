@@ -39,13 +39,13 @@
     </template>
   </a-modal>
   <audio ref="clock" src="/sound/clock.mp3"></audio>
-  <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath">
+  <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath && !settings.transparent">
     <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
 
   </div>
-  <div v-else-if="backgroundImage.path" class="video-container fixed inset-0 ">
+  <div v-else-if="backgroundImage.path && !settings.transparent" class="video-container fixed inset-0 ">
     <img style="object-fit: cover;width: 100%;height: 100%"  :src="backgroundImage.path">
   </div>
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
@@ -211,7 +211,19 @@ export default {
     },
 
 
-  }, watch: {
+  },
+  watch: {
+    'settings.transparent':{
+      handler(){
+        console.log('修改了透明背景')
+        if(this.settings.transparent){
+          $('body').css('background','transparent')
+        }else{
+          $('body').css('background','rgb(25, 25, 25)')
+        }
+      }
+      // document.body.attributes['background']=''
+    },
     "appDate.minutes": {
       handler(newVal, oldVal) {
         this.sortClock()
