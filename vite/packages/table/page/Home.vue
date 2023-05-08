@@ -499,7 +499,7 @@ export default {
       this.setBackgroundImage({ path: '' })
     },
     initGrids () {
-      this.customComponents = initCards
+      this.customComponents = deskTemplate.daily
     },
     hideDesk () {
       this.fullScreen = !this.fullScreen
