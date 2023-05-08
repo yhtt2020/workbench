@@ -215,7 +215,6 @@ export default {
   watch: {
     'settings.transparent':{
       handler(){
-        console.log('修改了透明背景')
         if(this.settings.transparent){
           $('body').css('background','transparent')
         }else{
@@ -269,7 +268,6 @@ export default {
         window.lv=1
        if(this.userInfo.onlineGradeExtra)  {
          window.lv = this.userInfo.onlineGradeExtra.lv
-         console.log(window)
        }
 
       },
