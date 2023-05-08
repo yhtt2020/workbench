@@ -2,6 +2,7 @@
   <div class="flex flex-col items-center justify-center">
      <div class="rounded-lg mt-4" style="width: 252px; height: 168px;">
        <img class="rounded-lg" :src="detailData.src" alt="" style="width: 100%;height: 100%; object-fit: cover;">
+       
      </div>  
      <span class="mt-4 mb-5" style="font-size: 18px; font-weight: 500;">{{ detailData.title }}</span>
      <div @click="openGameGuide" class="rounded-lg flex items-center pointer-active mb-3  pointer justify-center" style=" padding: 13px 80px; background: rgba(42, 42, 42, 1);">
