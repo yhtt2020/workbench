@@ -1,6 +1,5 @@
 <template>
   <div @contextmenu.stop="showDrawer" :class="classes"
-
        :style="{pointerEvents:(editing?'none':''),width:size.width,height:size.height}" @click="onCPUIndex"
        @mouseleave="onMouseOut"
        @mouseenter="onMouseOver">
@@ -181,7 +180,7 @@ export default {
       this.visible = true;
     },
     removeCard() {
-      this.removeCustomComponents(this.customIndex)
+     this.removeCustomComponents(this.$parent.customIndex||this.$parent.$parent.customIndex||this.$parent.$attrs.customIndex)
       this.visible = false
     },
     onSetup() {
