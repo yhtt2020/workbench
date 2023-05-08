@@ -18,8 +18,8 @@
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
     <div class="flex justify-between items-center mr-7 mt-3">
      <div class="w-2/3 flex items-center justify-center flex-col">
-      <div> 大图和视频容器预览 </div>
-      <div> 缩略图和视频轮播 </div>
+      <!-- <div> 大图和视频容器预览 </div>
+      <div> 缩略图和视频轮播 </div> -->
      </div>
      <div class="w-1/3 flex  flex-col">
       <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
