@@ -1,7 +1,7 @@
 <template>
   <!-- 音频输出设备选项 -->
   <div class="mt-4">
-    <vue-custom-scrollbar :settings="settingsScroller" style="height: 350px;">
+    <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 350px;">
        <div v-for="(item,index) in outputList" :class="selectIndex === index ? 'select-active':''"
         @click="selectAudio(item,index)" class="flex pointer items-center justify-center" style="padding: 8px 10px 6px 10px;">
           <span class="item-name" style="font-size: 1.2em; font-weight: 400;">
@@ -73,5 +73,8 @@
 .select-active{
   background: rgba(32, 32,32, 1);
   border-radius: 8px;
+}
+::v-deep .ps__thumb-y{
+  display: none !important;
 }
 </style>
