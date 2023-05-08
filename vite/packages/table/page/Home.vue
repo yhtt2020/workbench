@@ -794,8 +794,10 @@ export default {
     padding: 0;
   }
 
+  /**
   .muuri-item {
   }
+  */
 
   .card {
     position: relative;

@@ -16,56 +16,59 @@
     </div>
   </div>
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
-    <div class="flex justify-between items-center mr-7 mt-3">
-     <div class="w-2/3 flex items-center justify-center flex-col">
-      <!-- <div> 大图和视频容器预览 </div>
-      <div> 缩略图和视频轮播 </div> -->
-     </div>
-     <div class="w-1/3 flex  flex-col">
-      <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
-      <div class="flex justify-between items-center mt-4" >
-        <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">发行日期</span>
-        <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.85);">{{ detailData.releaseDate }}</span>
-      </div>
-      <div class="flex justify-between items-center mt-4" >
-        <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">发行商</span>
-        <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.85);">{{detailData.publishers}}</span>
-      </div>
-      <div class="flex justify-between items-center mt-4" >
-        <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">开发商</span>
-        <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.85);">{{detailData.developers}}</span>
-      </div>
-      <div class="flex  items-center justify-between mt-4" >
-        <span class="w-1/3" style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">标签</span>
-        <div class="flex items-center justify-center">
-           <span v-for="item in detailData.genres"  class="rounded-lg mr-1" style="background: rgba(255, 255, 255, 0.4);padding: 2px 6px 1px 6px;">{{item.description}}</span>
-        </div>
-      </div>
-      <span class="mt-4 mb-3" style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">语言</span>
-      <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">
-        {{ detailData.language }}
-      </span>
-      <div  style="padding: 12px 13px;" class="s-bg flex mb-4 rounded-lg items-center justify-between mt-6">
-         <div class="flex flex-col mt-1">
-          <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">价格</span>
-          <span style="font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！4 月 24 日 截止</span>
-         </div>
-         <div class="flex flex-col">
-            <span class="line-through mr-2" style="text-align: right; color:rgba(255, 255, 255, 0.4);font-size: 14px; font-weight: 400;">{{ detailData.oldPrice }}</span>
-            <div>
-               <span class="mr-2 rounded-lg" style="padding: 2px 4px 5px 4px;background: rgba(255, 77, 79, 1);"> -{{detailData.percent}}%</span>
-               <span style="font-size: 18px;color:rgba(255, 77, 79, 1);font-weight: 500;">{{ detailData.newPrice }}</span>
+    <a-row :gutter="[24,8]">
+      <a-col :span="12" class="mr-48 ml-4">
+        <WheelCastingUnit></WheelCastingUnit>
+        <!-- :screenshots="detailScreenshots" :movies="detailMovies -->
+      </a-col>
+      <a-col :span="8">
+        <div class="flex flex-col">
+          <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
+          <div class="flex justify-between items-center mt-4" >
+            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">发行日期</span>
+            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.85);">{{ detailData.releaseDate }}</span>
+          </div>
+          <div class="flex justify-between items-center mt-4" >
+            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">发行商</span>
+            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.85);">{{detailData.publishers}}</span>
+          </div>
+          <div class="flex justify-between items-center mt-4" >
+            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">开发商</span>
+            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.85);">{{detailData.developers}}</span>
+          </div>
+          <div class="flex  items-center justify-between mt-4" >
+            <span class="w-1/3" style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">标签</span>
+            <div class="flex items-center justify-center">
+               <span v-for="item in detailData.genres"  class="rounded-lg mr-1" style="background: rgba(255, 255, 255, 0.4);padding: 2px 6px 1px 6px;">{{item.description}}</span>
             </div>
+          </div>
+          <span class="mt-4 mb-3" style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">语言</span>
+          <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">
+            {{ detailData.language }}
+          </span>
+          <div  style="padding: 12px 13px;" class="s-bg flex mb-4 rounded-lg items-center justify-between mt-6">
+            <div class="flex flex-col mt-1">
+             <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">价格</span>
+             <span style="font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！4 月 24 日 截止</span>
+            </div>
+            <div class="flex flex-col">
+               <span class="line-through mr-2" style="text-align: right; color:rgba(255, 255, 255, 0.4);font-size: 14px; font-weight: 400;">{{ detailData.oldPrice }}</span>
+               <div>
+                  <span class="mr-2 rounded-lg" style="padding: 2px 4px 5px 4px;background: rgba(255, 77, 79, 1);"> -{{detailData.percent}}%</span>
+                  <span style="font-size: 18px;color:rgba(255, 77, 79, 1);font-weight: 500;">{{ detailData.newPrice }}</span>
+               </div>
+            </div>
+          </div>
          </div>
-      </div>
-     </div>
-    </div>
+      </a-col>
+    </a-row>
   </vue-custom-scrollbar>
 </template>
 
 <script>
 import { regionRange,sendRequest } from '../../js/axios/api';
 import _ from 'lodash-es';
+import WheelCastingUnit from '../../components/WheelCastingUnit.vue'
 export default {
     name:'GameDiscountDetail',
     props:{
@@ -73,6 +76,9 @@ export default {
         type:Object,
         default:()=>{}
       }
+    },
+    components:{
+      WheelCastingUnit
     },
     data(){
       return{
@@ -92,6 +98,7 @@ export default {
         },
         // 接收轮播视频和图片
         detailMovies:[],
+        detailScreenshots:[],
         settingsScroller: {
          useBothWheelAxes: true,
          swipeEasing: true,
@@ -126,8 +133,8 @@ export default {
               newPrice:result.price_overview.final_formatted,
               oldPrice:result.price_overview.initial_formatted
             }
-            this.detailMovies = result.movies.concat(result.screenshots)  // 详情图片和视频数组拼接方便后期渲染
-            console.log(this.detailMovies);
+            this.detailMovies = result.movies // 详情图片和视频数组拼接方便后期渲染
+            this.detailScreenshots = result.screenshots
           })
         }else{
           this.$router.push({name:'gameDiscount'})
