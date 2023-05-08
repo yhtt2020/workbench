@@ -43,7 +43,7 @@
                   <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
                     {{ item.el.title }}
                   </span>
-                  <span class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                  <span v-if="item.el.offerType === 'DLC'" class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
                      {{ item.el.offerType }}
                   </span>
                 </div>
@@ -51,11 +51,16 @@
                   {{ item.el.description }}
                 </span>
                 <div class="flex items-center">
-                  <span v-if="item.el.promotions !== null" class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">
-                    -{{ item.el.promotions.promotionalOffers.length === 0 ? item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage : item.el.promotions.promotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage }} %
-                  </span>
-                  <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 500;">
-                    {{ item.el.price.totalPrice.fmtPrice.intermediatePrice }}
+                  <template v-if="item.el.promotions !== null">
+                    <span v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex justify-center mr-3 reset-day rounded-lg items-center" >
+                      剩余{{ remainderDay(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}天
+                    </span>
+                    <span v-else class="mr-3 rounded-lg px-4 py-1 s-bg" style="font-size: 16px; font-weight: 600;">
+                      下周预告
+                    </span>
+                  </template>
+                  <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 600;">
+                    {{ item.el.price.totalPrice.fmtPrice.intermediatePrice ==='0' ? '免费领取' : item.el.price.totalPrice.fmtPrice.intermediatePrice }}
                   </span>
                   <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.el.price.totalPrice.fmtPrice.originalPrice }}</span>
                </div>
@@ -69,7 +74,7 @@
 </template>
 
 <script>
-import { sendRequest,regionRange } from '../../js/axios/api';
+import { sendRequest,regionRange,remainderDay } from '../../js/axios/api';
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
 export default {
   name: "GameDiscount",
@@ -100,6 +105,7 @@ export default {
     this.getEpicData(this.defaultLocale)
   },
   methods:{
+    remainderDay,
     // 获取默认的加载数据
     getSteamDataList(){
       if(!this.isLoading){
@@ -185,6 +191,7 @@ export default {
     getEpicData(){
       sendRequest(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=${this.defaultLocale}&country=${this.defaultGameValue.toLocaleUpperCase()}&allowCountries=${this.defaultGameValue.toLocaleUpperCase()}`,3).then(res=>{
          const result = res.data.data.Catalog.searchStore.elements
+          // <!-- -{{ item.el.promotions.promotionalOffers.length === 0 ? item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage : item.el.promotions.promotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage }} 
          const resultArr = []
          result.forEach(el=>{
             // 取出epic图片
@@ -217,11 +224,12 @@ export default {
   white-space: pre-wrap;
   margin-bottom: 5px;
 }
-</style>
-<style>
-/*.ant-select .ant-select-selector{*/
-/*  border-radius: 6px !important;*/
-/*  border:none !important;*/
-/*  background: rgba(42, 42, 42, 1) !important;*/
-/*}*/
+.reset-day{
+  padding: 5px 14px;
+  background: rgba(255, 77, 79, 1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  font-weight: 600;
+}
+
 </style>
