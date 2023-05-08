@@ -292,10 +292,30 @@ export default {
     }
   },
   unmounted () {
+
     let that = this
     window.removeEventListener('resize', that.checkScroll)
   },
   mounted () {
+    let inserted=localStorage.getItem('insertBird')
+    if(!inserted){
+      this.navigationList.unshift( {
+        icon: 'http://a.apps.vip/icons/flappy.jpg',
+        type:'coolApp',
+        name: 'Mlappy Bird',
+        summary: '和小伙伴们一起飞。',
+        needInstall: false,
+        data: {
+          theme: '#030c13',
+          name: 'mlappyBird',
+          url: 'http://bird.apps.vip/?',
+          background: false,
+          type:'game',
+          scale:160
+        }
+      })
+      localStorage.setItem('insertBird','1')
+    }
     let that = this
     this.checkScroll()
     // const that = this

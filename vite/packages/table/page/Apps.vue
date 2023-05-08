@@ -147,19 +147,19 @@ export default {
             })
           }
         },
-        // {
-        //   icon: 'http://a.apps.vip/wallpaper/favicon.png',
-        //   name: 'Mlappy Bird',
-        //   summary: '和小伙伴们一起飞。',
-        //   needInstall: false,
-        //   data: {
-        //     theme: '#030c13',
-        //     name: 'mlappyBird',
-        //     url: 'http://bird.apps.vip/',
-        //     background: false,
-        //     type:'game'
-        //   }
-        // },
+        {
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Mlappy Bird',
+          summary: '和小伙伴们一起飞。',
+          needInstall: false,
+          data: {
+            theme: '#030c13',
+            name: 'mlappyBird',
+            url: 'http://bird.apps.vip/?',
+            background: false,
+            type:'game'
+          }
+        },
         {
           icon: 'https://a.apps.vip/icons/weather.png',
           name: '天气',
