@@ -17,7 +17,7 @@
          </div>
       </div>
       <span class="mt-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">默认输出</span>
-      <vue-custom-scrollbar :settings="settingsScroller" style="height:184px;">
+      <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
         <div v-for="(item,index) in outputList" :class="outputIndex === index ? 'active-index' :''" @click="selectOutputDevice(item,index)" class="w-full flex items-center justify-center pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 16px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}
@@ -170,5 +170,8 @@ export default {
 .active-index{
   background: rgba(32, 32,32, 1);
   border-radius: 8px;
+}
+::v-deep .ps__thumb-y{
+  display: none !important;
 }
 </style>

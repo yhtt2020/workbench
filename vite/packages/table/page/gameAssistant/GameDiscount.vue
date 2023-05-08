@@ -8,10 +8,10 @@
   </div>
   <template v-if="leftTitleType.name === 'steam' ">
     <div class="flex  items-center justify-center">
-      <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
+      <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
          <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
          <div  class="w-full flex justify-start flex-col">
-            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center s-bg cursor-pointer mt-3  w-full flex-row  rounded-lg p-3">
+            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 98%;">
               <div style="width: 269px;height: 120px;" class="mr-3">
                 <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
               </div>
@@ -30,13 +30,51 @@
     </div>
   </template>
   <template v-else>
-    epic
+    <div class="flex items-center justify-center">
+        <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
+          <div  class="w-full flex justify-start flex-col">
+            <!-- @click="enterDiscountDetail(item)" -->
+            <div v-for="item in epicList"  class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 98%;">
+              <div style="width: 269px;height: 120px;" class="mr-3">
+                <img :src="item.keyImages.url" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
+              </div>
+              <div class="flex flex-col" style="width: 80%;">
+                <div>
+                  <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                    {{ item.el.title }}
+                  </span>
+                  <span v-if="item.el.offerType === 'DLC'" class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                     {{ item.el.offerType }}
+                  </span>
+                </div>
+                <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">
+                  {{ item.el.description }}
+                </span>
+                <div class="flex items-center">
+                  <template v-if="item.el.promotions !== null">
+                    <span v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex justify-center mr-3 reset-day rounded-lg items-center" >
+                      剩余{{ remainderDay(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}天
+                    </span>
+                    <span v-else class="mr-3 rounded-lg px-4 py-1 s-bg" style="font-size: 16px; font-weight: 600;">
+                      下周预告
+                    </span>
+                  </template>
+                  <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 600;">
+                    {{ item.el.price.totalPrice.fmtPrice.intermediatePrice ==='0' ? '免费领取' : item.el.price.totalPrice.fmtPrice.intermediatePrice }}
+                  </span>
+                  <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.el.price.totalPrice.fmtPrice.originalPrice }}</span>
+               </div>
+              </div>
+            </div>
+          </div>
+        </vue-custom-scrollbar>
+     </div>
   </template>
   <router-view></router-view>
 </template>
 
 <script>
-import { sendRequest,regionRange } from '../../js/axios/api';
+import { sendRequest,regionRange,remainderDay } from '../../js/axios/api';
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
 export default {
   name: "GameDiscount",
@@ -49,6 +87,7 @@ export default {
       leftTitleType:{title:'Steam折扣',name:'steam'},
       rightSelect:regionRange,
       defaultGameValue:'cn',
+      defaultLocale:'zh-CN',
       steamList:[],
       epicList:[],
       isLoading:false,
@@ -63,8 +102,10 @@ export default {
   },
   mounted(){
     this.getSteamDataList()
+    this.getEpicData(this.defaultLocale)
   },
   methods:{
+    remainderDay,
     // 获取默认的加载数据
     getSteamDataList(){
       if(!this.isLoading){
@@ -85,6 +126,7 @@ export default {
                   percent:data.price_overview.discount_percent,
                   data:data
                 })
+              }).finally(()=>{
                 this.$nextTick(()=>{
                  this.isLoading = false
                 })
@@ -101,7 +143,11 @@ export default {
     // 区服切换
     selectOptionValue(e){
       this.defaultGameValue = e
+      const found = this.rightSelect.find(el=>{
+        return el.id === e
+      })
       this.getSelectCCData(e)
+      this.getEpicData(found.locale)
     },
     // 根据不同区服切换数据
     getSelectCCData(v){
@@ -138,8 +184,28 @@ export default {
     },
     // 进入详情
     enterDiscountDetail(val){
-      this.$router.push({name:'GameDiscountDetail',params:{val:JSON.stringify(val)}})
-    }
+      this.$router.push({name:'GameDiscountDetail',params:{id:val.data.steam_appid}})
+    },
+
+    // 根据区服获取epic数据
+    getEpicData(){
+      sendRequest(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=${this.defaultLocale}&country=${this.defaultGameValue.toLocaleUpperCase()}&allowCountries=${this.defaultGameValue.toLocaleUpperCase()}`,3).then(res=>{
+         const result = res.data.data.Catalog.searchStore.elements
+          // <!-- -{{ item.el.promotions.promotionalOffers.length === 0 ? item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage : item.el.promotions.promotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage }} 
+         const resultArr = []
+         result.forEach(el=>{
+            // 取出epic图片
+            const fIndex = el.keyImages.find(keyImg=>{
+              return keyImg.type === 'OfferImageWide'
+            })
+            resultArr.push({
+              el,
+              keyImages:fIndex
+            })
+         })
+         this.epicList  = resultArr
+        })
+    },
   }
 }
 </script>
@@ -158,11 +224,14 @@ export default {
   white-space: pre-wrap;
   margin-bottom: 5px;
 }
-</style>
-<style>
-/*.ant-select .ant-select-selector{*/
-/*  border-radius: 6px !important;*/
-/*  border:none !important;*/
-/*  background: rgba(42, 42, 42, 1) !important;*/
-/*}*/
+.reset-day{
+  padding: 5px 14px;
+  background: rgba(255, 77, 79, 1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  font-weight: 600;
+}
+::v-deep .ps__thumb-y{
+  display: none !important;
+}
 </style>
