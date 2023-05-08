@@ -35,11 +35,17 @@
           </a-row>
           全网排名：-<br>
           升级剩余时长：-<br>
-          累计在线时长：-
+          累计在线时长：-<br>
+          小队人数上限：{{team.member_limit}}<br>
+          <a-divider></a-divider>
+          加入方式：{{team.join_type===0?'公开加入':'其他'}}<br>
+
+          成立时间：{{team.createTime}}
           <div @click="receiveTeamEarnings" class="btn-active mt-4 h-12 flex justify-center cursor-pointer rounded-md  items-center text-white text-white" style="background: rgba(80,139,254, 1);font-size: 16px;font-weight: 400;">
             <Icon icon="thunderbolt"></Icon>
             <span>领取加速收益</span>
           </div>
+
         </div>
 
         <div style="position: absolute;bottom: 0;margin-left:20px">
@@ -218,7 +224,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam']),
+    ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam','updateTeam']),
     goHall () {
       this.closeDetail()
       this.$router.push({ name: 'hall' })
@@ -244,6 +250,7 @@ export default {
     },
     showTeamDetail () {
       this.userDetail = false
+      this.updateTeam(this.team.no).then()
       setTimeout(() => {
         this.teamDetail = true
         this.showDetail = true
