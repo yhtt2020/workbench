@@ -346,7 +346,11 @@ global.render = {
     let protocolUrl
     protocolUrl = `tsbapp://${domain}/${url}` //todo 需要验证正式环境的协议情况
     if (isDevelopmentMode && forcePrd===false) {
-      protocolUrl = `http://localhost:1600/html/${url}`
+      if(domain==='.'){
+        protocolUrl = `http://localhost:1600/html/${url}`
+      }else{
+        protocolUrl = `http://${domain}:1600/html/${url}`
+      }
     }
     if(params){
       let url= new URL(protocolUrl)

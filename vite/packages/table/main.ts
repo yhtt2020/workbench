@@ -11,6 +11,8 @@ import './index.css'
 import {cardStore} from "./store/card";
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
+import VueTippy from 'vue-tippy'
+import 'tippy.js/dist/tippy.css' // optional for styling
 
 import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
@@ -52,11 +54,23 @@ router.beforeEach((to,from,next) =>{
   next()
 })
 
-app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).mount('#app')
+app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
+  VueTippy,
+  // optional
+  {
+    directive: 'tippy', // => v-tippy
+    component: 'tippy', // => <tippy/>
+    componentSingleton: 'tippy-singleton', // => <tippy-singleton/>,
+    defaultProps: {
+      placement: 'auto-end',
+      allowHTML: true,
+      trigger:"mouseenter click"
+    }, // => Global default options * see all props
+  }
+).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
-
 export default router;
 

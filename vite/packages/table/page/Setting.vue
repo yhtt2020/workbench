@@ -26,7 +26,7 @@
             </a-col>
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="btn relative">
-                性能模式<br>
+                节能模式<br>
                 <a-switch @click.stop="()=>{}" v-model:checked="saving"></a-switch>
               </div>
             </a-col>

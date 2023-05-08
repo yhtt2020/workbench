@@ -68,6 +68,21 @@ export const cardStore = defineStore(
         aidaData: null,
         navigationList: [
           {
+            icon: 'http://a.apps.vip/icons/flappy.jpg',
+            type:'coolApp',
+            name: 'Mlappy Bird',
+            summary: '和小伙伴们一起飞。',
+            needInstall: false,
+            data: {
+              theme: '#030c13',
+              name: 'mlappyBird',
+              url: 'http://bird.apps.vip/?',
+              background: false,
+              type:'game',
+              scale:160
+            }
+          },
+          {
             "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
             "name": "微信",
             "type": "coolApp",
@@ -477,7 +492,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings','desks','currentDeskIndex'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings','desks','currentDeskIndex','moved'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]
