@@ -17,7 +17,7 @@
                   sub-title="您可以长按空白处、右键添加卡片。"
         >
           <template #extra>
-            <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
+            <a-button @click="addCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
             <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
           </template>
 
