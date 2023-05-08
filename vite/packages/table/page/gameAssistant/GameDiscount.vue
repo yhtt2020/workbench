@@ -8,7 +8,7 @@
   </div>
   <template v-if="leftTitleType.name === 'steam' ">
     <div class="flex  items-center justify-center">
-      <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
+      <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
          <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
          <div  class="w-full flex justify-start flex-col">
             <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 98%;">
@@ -31,7 +31,7 @@
   </template>
   <template v-else>
     <div class="flex items-center justify-center">
-        <vue-custom-scrollbar  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
+        <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
           <div  class="w-full flex justify-start flex-col">
             <!-- @click="enterDiscountDetail(item)" -->
             <div v-for="item in epicList"  class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 98%;">
@@ -231,5 +231,7 @@ export default {
   font-size: 16px;
   font-weight: 600;
 }
-
+::v-deep .ps__thumb-y{
+  display: none !important;
+}
 </style>

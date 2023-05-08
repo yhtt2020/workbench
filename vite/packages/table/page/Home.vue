@@ -251,9 +251,7 @@ import { appStore } from '../store'
 import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
-<<<<<<<<< Temporary merge branch 1
 import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
-=========
 import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
