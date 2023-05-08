@@ -4,7 +4,7 @@
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle" @click.prevent="enter" class="pointer" style="margin-top: -6em;min-height: 15em;">
+  <div id="displayMiddle" @click.prevent="enter" class="pointer" style="margin-top: -6em;min-height: 15em; z-index:9999999">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
       <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
@@ -289,7 +289,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .time {
   font-size: 1.5em;
