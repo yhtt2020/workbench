@@ -68,6 +68,21 @@ export const cardStore = defineStore(
         aidaData: null,
         navigationList: [
           {
+            icon: 'http://a.apps.vip/icons/flappy.jpg',
+            type:'coolApp',
+            name: 'Mlappy Bird',
+            summary: '和小伙伴们一起飞。',
+            needInstall: false,
+            data: {
+              theme: '#030c13',
+              name: 'mlappyBird',
+              url: 'http://bird.apps.vip/?',
+              background: false,
+              type:'game',
+              scale:160
+            }
+          },
+          {
             "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
             "name": "微信",
             "type": "coolApp",
