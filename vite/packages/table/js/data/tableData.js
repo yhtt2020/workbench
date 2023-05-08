@@ -13,6 +13,21 @@ export default {
   ],
   coolAppList:[
     {
+      icon: 'http://a.apps.vip/icons/flappy.jpg',
+      type:'coolApp',
+      name: 'Mlappy Bird',
+      summary: '和小伙伴们一起飞。',
+      needInstall: false,
+      data: {
+        theme: '#030c13',
+        name: 'mlappyBird',
+        url: 'http://bird.apps.vip/?',
+        background: false,
+        type:'game',
+        scale:160
+      }
+    },
+    {
       icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
       name: '网页数据监控小助手',
       type:'coolApp',

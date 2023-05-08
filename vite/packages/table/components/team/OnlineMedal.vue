@@ -3,7 +3,7 @@
     <div class="badge-box" style="border:none;background: none;zoom: 0.5;margin: 0">
       <div style="width: 100px;height: 100px;position: relative">
         <img style="width: 75px;margin-top: 10px" :src="this.getPath+getBadge().badge+'.png'">
-        <div v-if="badge.rank<100" class="badge-num" style="right: 20px;bottom: 18px"
+        <div v-if="badge.rank<100" class="badge-num" style="right: 33px;bottom: 20px"
              :style="{'background-color':this.getBadge().color}">
           {{ badge.rank }}
         </div>
@@ -116,6 +116,7 @@ export default {
 
 <style scoped lang="scss">
 .medal-wrapper {
+  display: inline-block;
   &:hover {
     .big{
       opacity:1;
@@ -146,7 +147,7 @@ export default {
   height: 10px;
   line-height: 10px;
   color: white;
-  right: 14px;
+  right: 19px;
   width: 15px;
   text-align: center;
   font-size: 12px;
