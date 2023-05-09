@@ -124,7 +124,8 @@ export default {
                   newPrice:data.price_overview.final_formatted,
                   oldPrice:data.price_overview.initial_formatted,
                   percent:data.price_overview.discount_percent,
-                  data:data
+                  data:data,
+                  expirationTime:el.discount_expiration
                 })
               }).finally(()=>{
                 this.$nextTick(()=>{
@@ -169,7 +170,8 @@ export default {
                    newPrice:data.price_overview.final_formatted,
                    oldPrice:data.price_overview.initial_formatted,
                    percent:data.price_overview.discount_percent,
-                   data:data
+                   data:data,
+                   expirationTime:el.discount_expiration
                   })
                 }
               }).finally(()=>{
@@ -184,14 +186,13 @@ export default {
     },
     // 进入详情
     enterDiscountDetail(val){
-      this.$router.push({name:'GameDiscountDetail',params:{id:val.data.steam_appid}})
+      this.$router.push({name:'GameDiscountDetail',params:{id:val.data.steam_appid,exTime:val.expirationTime}})
     },
 
     // 根据区服获取epic数据
     getEpicData(){
       sendRequest(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=${this.defaultLocale}&country=${this.defaultGameValue.toLocaleUpperCase()}&allowCountries=${this.defaultGameValue.toLocaleUpperCase()}`,3).then(res=>{
          const result = res.data.data.Catalog.searchStore.elements
-          // <!-- -{{ item.el.promotions.promotionalOffers.length === 0 ? item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage : item.el.promotions.promotionalOffers[0].promotionalOffers[0].discountSetting.discountPercentage }} 
          const resultArr = []
          result.forEach(el=>{
             // 取出epic图片
