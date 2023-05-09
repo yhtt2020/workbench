@@ -81,7 +81,6 @@ export default {
       ipc.send('addTab',{url:url})
     },
     changeTab (data) {
-      console.log(data)
       this.$router.push(data.menu.route)
     },
   }

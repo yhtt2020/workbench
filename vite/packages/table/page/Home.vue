@@ -17,7 +17,7 @@
                   sub-title="您可以长按空白处、右键添加卡片。"
         >
           <template #extra>
-            <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例卡片初始化</a-button>
+            <a-button @click="addCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
             <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
           </template>
 
@@ -148,17 +148,25 @@
       背景设置：
     </div>
     <div class="line">
-      <a-button type="primary" class="mr-3" @click="goPaper">壁纸设置</a-button>
+      透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
+    </div>
+    <div class="line" v-if="!appSettings.transparent">
+      <a-button type="primary" class="mr-3" @click="goPaper">背景设置</a-button>
       <a-button @click="clearWallpaper">清除背景</a-button>
     </div>
-    <div class="line">
-      模糊度：
-      <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1"/>
+    <div v-if="!appSettings.transparent" class="line">
+
+      <div class="line">
+        背景模糊度：
+        <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1"/>
+      </div>
+<!--      <div class="line">-->
+<!--        遮罩浓度：-->
+<!--        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>-->
+<!--      </div>-->
     </div>
-    <div class="line">
-      遮罩浓度：
-      <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>
-    </div>
+
+
     <div class="line-title">
       RGB<br>（此类功能性能消耗较高，请酌情开启）
     </div>
@@ -252,6 +260,7 @@ import Remote from '../components/homeWidgets/custom/Remote.vue'
 import { weatherStore } from '../store/weather'
 import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
 import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
+import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 
@@ -491,7 +500,8 @@ export default {
     Capture,
     CustomAssembly,
     Voice,
-    Audio
+    Audio,
+    SteamFriends
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'aidaData', 'settings', 'desks', 'moved', 'currentDeskIndex']),
@@ -792,8 +802,10 @@ export default {
     padding: 0;
   }
 
+  /**
   .muuri-item {
   }
+  */
 
   .card {
     position: relative;

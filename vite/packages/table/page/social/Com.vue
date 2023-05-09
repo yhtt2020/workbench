@@ -159,8 +159,7 @@ export default {
     this.loadBarrages().then()
     this.getOnline().then()
     this.appVersion=tsbApi.runtime.appVersion
-    console.log(tsbApi.runtime)
-    axios.get('https://a.apps.vip/download/updateLog.json').then(data=>{
+    axios.get('https://a.apps.vip/download/updateLog.json?t='+Date.now()).then(data=>{
       this.updateLog=data.data
     })
   },

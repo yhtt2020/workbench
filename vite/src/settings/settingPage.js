@@ -593,6 +593,7 @@ const settingPage = {
 
     const setProxy = (key, value) => {
       settings.get('proxy', (proxy = {}) => {
+        console.log(proxy,'proxy')
         proxy[key] = value
         settings.set('proxy', proxy)
       })
@@ -600,7 +601,10 @@ const settingPage = {
 
     settings.get('proxy', (proxy = {}) => {
       toggleProxyOptions(proxy.type)
-      proxyTypeInput.options.selectedIndex = proxy.type || 3
+      if(proxy.type===undefined){
+        proxy.type=3
+      }
+      proxyTypeInput.options.selectedIndex = proxy.type
       proxyInputs.forEach(item => item.value = proxy[item.name] || '')
     })
 
