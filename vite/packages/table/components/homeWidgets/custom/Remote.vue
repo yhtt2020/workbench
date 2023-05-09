@@ -128,7 +128,7 @@ export default {
   computed:{
     customSize(){
       return {
-        width:(this.customData.width||1)*280+'px',
+        width:(this.customData.width||1)*280+ (this.customData.width-1)*10+'px',
         height:(this.customData.height||2)*205+ (this.customData.height-1)*10+'px'
       }
     }
