@@ -183,12 +183,11 @@ export default {
 
     },
     list () {
-      console.log('输出列表数据=',this.data)
       if (this.key) {
 
       }
-      if (this.data[this.customData.id]) {
-        return this.getRandomList(this.data[this.customData.id].list)
+      if (this.data[this.region.id]) {
+        return this.getRandomList(this.data[this.region.id].list)
       } else return []
     }
   },

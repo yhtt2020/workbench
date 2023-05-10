@@ -93,6 +93,7 @@ import 'swiper/css/pagination';
 import { Pagination,Autoplay } from 'swiper';
 import Template from '../../../../user/pages/Template.vue'
 import { regionRange } from '../../../js/axios/api'
+import _ from 'lodash-es'
 export default {
   name:'GamesDiscount',
   props:{
@@ -171,20 +172,23 @@ export default {
       if (this.key) {
 
       }
-      if (this.data[this.customData.id]) {
-        console.log(this.data[this.customData.id], '显示的list')
+      let myCustomData=this.data[this.customData.id]
+      if (myCustomData) {
+        let waitUse=_.cloneDeep(myCustomData.list)
         let groups = [];
         for (let i = 0; i < 5; i++) {
           groups.push([]);
         }
-        groups.forEach((arr) => (arr.length = 0));
         // 随机获取两条数据，放入五个数组中
         for (let i = 0; i < groups.length; i++) {
-          const index = randomData(this.data[this.customData.id].list,2);
+          const index = _.sampleSize(waitUse,2);
+          waitUse=_.without(waitUse,...index)
           groups[i].push(index)
         }
         return groups
-      } else return []
+      } else {
+        return []
+      }
     }
   },
 
@@ -207,9 +211,14 @@ export default {
       this.isLoading=true
       this.fail=false
       if(Object.keys(this.customData).length !== 0){
-        setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,3).then(res=>{
+
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`, {},{
+            localCache:true,
+            localTtl:60
+          }
+        ).then(res=>{
             const resData = res.data[item.id]
+            this.key=Date.now()
             if(resData.success === true){
                const percentData = resData.data
                this.dpList = percentData
@@ -219,10 +228,12 @@ export default {
             })
           })
 
-        },500)
       }else{
         setTimeout(()=>{
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,3).then(res=>{
+          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`,{},{
+            localCache:true,
+            localTtl:60
+          }).then(res=>{
             const resData = res.data[item.id]
             // this.setGameDetail(resData)
             if(resData.success === true){
