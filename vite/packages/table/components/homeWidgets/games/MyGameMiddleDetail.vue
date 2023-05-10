@@ -1,6 +1,6 @@
 <template>
   <div class="flex mt-4">
-    <div class="w-1/2 rounded-lg  relative mr-5" style="height:55vh;">
+    <div class="w-1/2 rounded-lg  relative mr-5">
        <img :src="middleDetail.src" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
        <span class="middle-tag rounded-md mr-2 mt-2">正在运行</span>
        <div class="detail-name w-full flex items-center rounded-b-lg px-4 py-2" style="font-size: 18px;font-weight: 600;">

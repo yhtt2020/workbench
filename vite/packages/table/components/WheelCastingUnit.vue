@@ -1,47 +1,33 @@
 <template>
-  <div style="width:50vw">
-    <div ref="container" class="keen-slider" style="height: 25.5em;">
-      <div class="keen-slider__slide number-slide1 rounded-lg">
-        <img src="/img/test/2.jpg" class="w-full h-full rounded-lg object-cover"  alt="">
-      </div>
-      <div class="keen-slider__slide number-slide2 rounded-lg">
-        <video class="" playsinline="" autoplay="" muted="" loop="" >
-          <source src="/img/test/video/video1.webm" type="video/mp4" id="bgVid">
+  <div style="width: 50vw; margin:0 auto 12px auto;">
+    <div ref="slider" class="keen-slider" style="height: 25.5em;">
+      <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
+        <video class="w-full h-full rounded-lg"  controls="controls"   controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
+        disablePictureInPicture   playsinline="" autoplay="" muted="" loop="" v-if="item.mp4">
+          <source :src="item.mp4.max" class="w-full rounded-lg" type="video/mp4" id="bgVid">
         </video>
+        <img :src="item.path_full" class="w-full h-full rounded-lg object-cover"  alt="" v-else>
       </div>
-      <div class="keen-slider__slide number-slide3 rounded-lg">3</div>
-      <div class="keen-slider__slide number-slide4 rounded-lg">4</div>
-      <div class="keen-slider__slide number-slide5 rounded-lg">5</div>
-      <div class="keen-slider__slide number-slide6 rounded-lg">6</div>
     </div>
-    <div>
+    <div class="flex mt-2">
+      <button class="keen-slider__arrow mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
+         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+      </button>
       <div ref="thumbnail" class="keen-slider thumbnail">
-        <button class="keen-slider__arrow keen-slider__arrow--left" @click="prev()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M15.41 7.41L14 6l-6 6 6 6 1.411.41L10.83 12z"/></svg>
-        </button>
-        <div class="keen-slider__slide number-slide1">
-          <img src="/img/test/2.jpg" class="w-full h-full  object-cover"  alt="">
+        <div class="keen-slider__slide" v-for="item in wheelList">
+          <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full rounded-lg  object-cover" alt="">
         </div>
-        <div class="keen-slider__slide number-slide2">
-          <video class="" playsinline="" autoplay="" muted="" loop="" >
-            <source src="/img/test/video/video1.webm" type="video/mp4" id="bgVid">
-          </video>
-        </div>
-        <div class="keen-slider__slide number-slide3">3</div>
-        <div class="keen-slider__slide number-slide4">4</div>
-        <div class="keen-slider__slide number-slide5">5</div>
-        <div class="keen-slider__slide number-slide6">6</div>
-        <button class="keen-slider__arrow keen-slider__arrow--right" @click="next()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
-        </button>
       </div>
+      <button class="keen-slider__arrow ml-2  pointer rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
+        <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { useKeenSlider } from "keen-slider/vue.es"
 import "keen-slider/keen-slider.min.css"
+import KeenSlider from "keen-slider"
 
 function ThumbnailPlugin(main) {
   return (slider) => {
@@ -57,7 +43,7 @@ function ThumbnailPlugin(main) {
     function addClickEvents() {
       slider.slides.forEach((slide, idx) => {
         slide.addEventListener("click", () => {
-          main.value.moveToIdx(idx)
+          main.moveToIdx(idx)
         })
       })
     }
@@ -65,45 +51,67 @@ function ThumbnailPlugin(main) {
     slider.on("created", () => {
       addActive(slider.track.details.rel)
       addClickEvents()
-      main.value.on("animationStarted", () => {
+      main.on("animationStarted", (main) => {
         removeActive()
-        const next = main.value.animator.targetIdx || 0
-        addActive(main.value.track.absToRel(next))
+        const next = main.animator.targetIdx || 0
+        addActive(main.track.absToRel(next))
         slider.moveToIdx(Math.min(slider.track.details.maxIdx, next))
       })
     })
   }
 }
+
 export default {
-  setup() {
-    const [container, slider] = useKeenSlider()
-    const [thumbnail] = useKeenSlider(
-      {
+  name: "WheelCastingUnit",
+  props:{
+    screenshots:{
+      type:Array,
+      default:()=>[]
+    },
+    movies:{
+      type:Array,
+      default:()=>[]
+    }
+  },
+  computed:{
+    wheelList(){
+      if(this.movies !== undefined && this.screenshots !== undefined){
+        return this.screenshots.concat(this.movies)
+      }
+    }
+  },
+  mounted() {
+    setTimeout(()=>{
+      this.slider = new KeenSlider(this.$refs.slider)
+      this.thumbnail = new KeenSlider(
+       this.$refs.thumbnail,
+       {
         initial: 0,
         slides: {
           perView: 4,
           spacing: 10,
         },
-      },
-      [ThumbnailPlugin(slider)]
-    )
-    function prev() {
-      slider.value.prev();
+       },
+       [ThumbnailPlugin(this.slider)]
+      )
+    },100)
+  },
+  methods:{
+    prev() {
+      this.slider.prev()
+    },
+    next(){
+      this.slider.next()
     }
-
-    function next() {
-      slider.value.next();
-    }
-
-    return { container, thumbnail,prev, next, }
+  },
+  beforeDestroy() {
+    if (this.slider) this.slider.destroy()
+    if (this.thumbnail) this.thumbnail.destroy()
   },
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
-<style scoped>
+<style>
 [class^="number-slide"],
 [class*=" number-slide"] {
   background: grey;
@@ -113,7 +121,6 @@ export default {
   font-size: 50px;
   color: #fff;
   font-weight: 500;
-  height: 200px;
 }
 
 .number-slide1 {
@@ -176,40 +183,6 @@ export default {
 }
 
 .thumbnail .keen-slider__slide {
-  font-size: 30px;
-  margin-top: 10px;
-  height: 100px;
-}
-.thumbnail .keen-slider__slide {
   cursor: pointer;
-}
-.thumbnail .keen-slider__slide.active {
-  border: 2px dashed black;
-}
-.keen-slider__arrow {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-}
-
-.keen-slider__arrow--left {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  z-index: 999;
-}
-
-.keen-slider__arrow--right {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index:999;
 }
 </style>
