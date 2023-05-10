@@ -24,8 +24,8 @@
       <a-col :span="24" :lg="16">
         <WheelCastingUnit :screenshots="detailScreenshots" :movies="detailMovies" class="wheel-content"></WheelCastingUnit>
       </a-col>
-      <a-col :span="24" :lg="8">
-        <div class="flex flex-col">
+      <a-col :span="24" :lg="8" >
+        <div class="flex flex-col " id="detail-ms">
           <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
           <div class="flex justify-between items-center mt-4" >
             <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">发行日期</span>
@@ -116,6 +116,13 @@ export default {
     },
     mounted(){
       this.getDetailVal()
+      // window.onresize = () => {
+      //   if(document.body.clientWidth <= 900){
+      //     document.querySelector('.detail-ms').style = 'margin:0 15%; !important'
+      //   }else{
+      //     document.querySelector('.detail-ms').style = 'margin:0; !important'
+      //   }
+      // }
     },
     methods:{
       goBack(){
@@ -169,5 +176,11 @@ export default {
 } 
 ::v-deep .ps__thumb-y{
   display: none !important;
+}
+
+@media screen and (max-width:1000px) {
+  #detail-ms{
+    margin: 0 15% !important;
+  }
 }
 </style>
