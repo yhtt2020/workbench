@@ -1,24 +1,25 @@
 <template>
-  <div style="width: 50vw;">
+  <div style="width: 50vw; margin:0 auto 12px auto;">
     <div ref="slider" class="keen-slider" style="height: 25.5em;">
       <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
-        <video class="w-full h-full rounded-lg" playsinline="" autoplay="" muted="" loop="" v-if="item.mp4">
-          <source :src="item.mp4.max" class="rounded-lg" type="video/mp4" id="bgVid">
+        <video class="w-full h-full rounded-lg"  controls="controls"   controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
+        disablePictureInPicture   playsinline="" autoplay="" muted="" loop="" v-if="item.mp4">
+          <source :src="item.mp4.max" class="w-full rounded-lg" type="video/mp4" id="bgVid">
         </video>
         <img :src="item.path_full" class="w-full h-full rounded-lg object-cover"  alt="" v-else>
       </div>
     </div>
     <div class="flex mt-2">
-      <button class="keen-slider__arrow keen-slider__arrow--left" @click="prev()">
-         <Icon icon="xiangzuo"></Icon>
+      <button class="keen-slider__arrow mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
+         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </button>
       <div ref="thumbnail" class="keen-slider thumbnail">
         <div class="keen-slider__slide" v-for="item in wheelList">
           <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full rounded-lg  object-cover" alt="">
         </div>
       </div>
-      <button class="keen-slider__arrow  keen-slider__arrow--right" @click="next()">
-        <Icon icon="xiangyou"></Icon>
+      <button class="keen-slider__arrow ml-2  pointer rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
+        <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
       </button>
     </div>
   </div>
@@ -93,7 +94,7 @@ export default {
        },
        [ThumbnailPlugin(this.slider)]
       )
-    },1000)
+    },100)
   },
   methods:{
     prev() {
@@ -181,11 +182,6 @@ export default {
   );
 }
 
-.thumbnail .keen-slider__slide {
-  font-size: 30px;
-  margin-top: 10px;
-  height: 100px;
-}
 .thumbnail .keen-slider__slide {
   cursor: pointer;
 }

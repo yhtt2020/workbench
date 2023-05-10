@@ -10,7 +10,7 @@
     </div>
     <div class="flex-grow-0">
       <div class="right-flex flex items-center justify-center mr-5">
-        <span class="rounded-lg btn-active s-bg cursor-pointer mr-3 " @click="enterSteamStore"  style="padding: 13px 41px 12px 41px;">Steam商店</span>
+        <span class="rounded-lg btn-active s-bg cursor-pointer mr-3 " @click="enterSteamStore"  style="padding: 8px 41px 10px 41px;">Steam商店</span>
         <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" @change="selectOptionValue($event)"  
          class="w-56 h-auto rounded-xl  text-xs s-item" size="large"
          :bordered="false" v-model:value="defaultDetailRegion">
@@ -20,11 +20,11 @@
     </div>
   </div>
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
-    <div class="flex">
-      <div class="flex-grow mr-5">
-        <WheelCastingUnit :screenshots="detailScreenshots" :movies="detailMovies"></WheelCastingUnit>
-      </div>
-      <div class="flex-grow-0 mr-1">
+    <a-row :wrap="true">
+      <a-col :span="24" :lg="16">
+        <WheelCastingUnit :screenshots="detailScreenshots" :movies="detailMovies" class="wheel-content"></WheelCastingUnit>
+      </a-col>
+      <a-col :span="24" :lg="8">
         <div class="flex flex-col">
           <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
           <div class="flex justify-between items-center mt-4" >
@@ -62,9 +62,9 @@
                </div>
             </div>
           </div>
-         </div>
-      </div>
-    </div>
+        </div>
+      </a-col>
+    </a-row>
   </vue-custom-scrollbar>
 </template>
 
