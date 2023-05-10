@@ -36,18 +36,15 @@ export const localCache = {
     if (localCache) {
 
       let cacheData = JSON.parse(localCache)
-      console.log('存在本地缓存', cacheData)
       if (cacheData.expireTime) {
         //如果设置了本地缓存过期时间，则加入时间的判断
         if (Date.now() > cacheData.expireTime) {
           //本地缓存过期
-          console.log('本地缓存已过期')
           localStorage.removeItem(key)
         } else {
           localCacheData = cacheData.data
         }
       } else {
-        console.log('命中本地缓存')
         localCacheData = cacheData.data
       }
     }
@@ -91,7 +88,6 @@ export const serverCache = {
         if (localCacheData) {
           return localCacheData
         } else {
-          console.log('不存在本地缓存')
         }
       }
       let serverCacheResponse = await axios.get(getUrl, {
@@ -101,7 +97,6 @@ export const serverCache = {
       })
       // 请求服务器的serverCache接口
       if (serverCacheResponse.data.code === 1000 && serverCacheResponse.data.data !== undefined) {
-        console.log(serverCacheResponse.data)
         return serverCacheResponse.data.data
       }
     } catch (e) {
@@ -111,7 +106,6 @@ export const serverCache = {
     // 直接发起axios请求
     let axiosResponse = await axios.get(url, axiosConfig.config)
     if (axiosResponse.status === 200) {
-      console.log(axiosResponse.status)
       // 如果请求到数据，post到serverCache的setCache api
       serverCache.set(url, axiosResponse).then()
       localCache.set(key, axiosResponse, cacheOptions.localTtl)
