@@ -5,10 +5,10 @@ const sendThis = ( _this )=> {
 export default {
   sendThis,
   navigationClassify :[
-    {name:'systemApp',cname:'系统应用'},
+    {name:'systemApp',cname:'我的应用'},
     {name:'coolApp',cname:'酷应用'},
-    {name:'tableApp',cname:'桌面应用'},
-    {name:'localApp',cname:'本地应用'},
+    {name:'tableApp',cname:'Windows应用'},
+    {name:'localApp',cname:'自定义应用'},
     {name:'lightApp',cname:'轻应用'},
   ],
   coolAppList:[

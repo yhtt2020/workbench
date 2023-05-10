@@ -1,16 +1,16 @@
 <template>
-  <HomeComponentSlot :options="options" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
+  <HomeComponentSlot :sizeList="sizeList" :options="options" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
     <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDay.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
     </div>
-    <div class="content  mt-2" v-else>
+    <div class="content  mt-1 " style="height: calc(100% - 20px);overflow: hidden;" v-else>
     <div style="padding-top: 0.2em">
 
 
     <div
       class="event-list px-4 mb-3 s-item"
-      v-for="(item) in countdownDay.slice(0, 2)"
+      v-for="(item) in countdownDay"
     >
       <div class="flex flex-row items-center">
         <div class="round-dot mr-4"></div>
@@ -159,6 +159,7 @@ export default {
         wheelPropagation: true,
       },
       eventValue: "",
+      sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
       dateValue: null,
       options:{
         className:'card small',

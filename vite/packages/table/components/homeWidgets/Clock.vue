@@ -84,8 +84,8 @@
     <a-modal v-model:visible="custom" title="" @ok="()=>{}" :footer="null" style="font-size: 8px" :maskClosable="false">
       <div style="display: flex;flex-direction: column;align-items: center">
         <div style="color: white;">自定义倒计时</div>
-        <a-space direction="vertical" style="margin: 14px">
-          <a-time-picker v-model:value="value1" size="large" />
+        <a-space direction="vertical" style="margin: 14px"  :popupStyle="{zIndex:9999999999999}">
+          <a-time-picker v-model:value="value1" size="large" :popupStyle="{zIndex:9999999999999}"/>
         </a-space>
         <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
       </div>
@@ -222,4 +222,5 @@ export default {
   border-radius: 10%;
   z-index: 999;
 }
+
 </style>

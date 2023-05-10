@@ -1,6 +1,6 @@
 <template>
 
-  <HomeComponentSlot :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex"
+  <HomeComponentSlot  :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex"
                      :formulaBar="formulaBar" ref="cardSlot">
     <div class="small-wallpaper">
       <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">

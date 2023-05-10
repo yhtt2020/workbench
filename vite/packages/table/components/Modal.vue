@@ -15,7 +15,7 @@ export default {
       flag:false
     }
   },
-  props:[ 'visibility','blurFlag','animationName'],
+  props:[ 'visible','blurFlag','animationName'],
   methods:{
     closeModal(){
       if(this.animationName){
@@ -23,12 +23,12 @@ export default {
         this.flag = true
         this.className +='-close'
         setTimeout(()=>{
-          this.$emit('update:visibility',false)
+          this.$emit('update:visible',false)
           this.className = this.animationName
           this.flag = false
         },500)
       }else{
-        this.$emit('update:visibility',false)
+        this.$emit('update:visible',false)
       }
     }
   },
