@@ -6,7 +6,7 @@ import {compareTime, randomData, sendRequest} from '../js/axios/api'
 export const steamStore = defineStore("steam", {
   state: () => ({
     steamCC: {id: "cc", name: '国区'},
-    data: [],
+    data: {},
     dataDetail: {}, // 应用详情
     weekList: [],
     nextWeekLits: []
@@ -33,7 +33,10 @@ export const steamStore = defineStore("steam", {
         }
       }
 
-      let res = await sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${cc}&l=${cc}`,{})
+      let res = await sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${cc}&l=${cc}`,{},{
+        localCache:true,
+        localTtl:12*60*60
+      })
       if (res && res.headers) {
         const date = new Date(res.headers.expires)
         const requestObj = {
@@ -42,6 +45,8 @@ export const steamStore = defineStore("steam", {
           list: res.data.specials.items
         }
         this.updateGameData(cc, requestObj)
+      }else{
+        this.updateGameData(cc,{})
       }
 
 
@@ -77,22 +82,22 @@ export const steamStore = defineStore("steam", {
       this.data[cc] = value
     },
   },
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        // 自定义存储的 key，默认是 store.$id
-        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        storage: dbStorage,
-        // state 中的字段名，按组打包储存
-      },
-      {
-        // 自定义存储的 key，默认是 store.$id
-        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        storage: localStorage,
-        paths: ['data']
-        // state 中的字段名，按组打包储存
-      },
-    ],
-  },
+  // persist: {
+  //   enabled: true,
+  //   // strategies: [
+  //   //   {
+  //   //     // 自定义存储的 key，默认是 store.$id
+  //   //     // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+  //   //     storage: dbStorage,
+  //   //     // state 中的字段名，按组打包储存
+  //   //   },
+  //   //   // {
+  //   //   //   // 自定义存储的 key，默认是 store.$id
+  //   //   //   // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+  //   //   //   storage: localStorage,
+  //   //   //   paths: []
+  //   //   //   // state 中的字段名，按组打包储存
+  //   //   // },
+  //   // ],
+  // },
 });

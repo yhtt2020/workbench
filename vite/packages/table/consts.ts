@@ -1,7 +1,15 @@
 //系统应用变量
 const Server = {
-  baseUrl: 'https://wad.apps.vip/api',
-  //baseUrl:'http://localhost:8001'
+   baseUrl: 'https://wad.apps.vip/api',
+ //baseUrl:'http://localhost:8001'
+}
+
+/**
+ * 生成服务端url，斜杠开头
+ * @param url 接口地址，斜杠开头
+ */
+function sUrl(url:string) {
+  return Server.baseUrl+url
 }
 
 const SystemApps = {
@@ -21,7 +29,7 @@ let ActionGroups = [
     color: '#ff0aba',
     actions: [
       {
-        title:'快捷键',
+        title: '快捷键',
         name: 'sendKeys',
         summary: '调用全局快捷键，可实现音频控制等功能。直接输入单词即可，例如ctrl+x，<a href="https://www.yuque.com/tswork/mqon1y/mm28svv194g628gc" target="_blank">查看帮助</a>',
         inputs: [{
@@ -290,4 +298,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {SystemApps, ActionGroups, Server}
+export {SystemApps, ActionGroups, Server, sUrl}

@@ -121,15 +121,22 @@ export default {
   methods: {
     remainderDay,
     getEpicData () {
-      sendRequest('https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN').then(res => {
-        console.log(res, 'epic数据')
-        const epicData = res.data.data.Catalog.searchStore.elements
-        // 根据promotions判断Epic是否免费
-        const epicIndex = epicData.filter(el => {
-          return el.promotions !== null
-        })
-        console.log(epicIndex)
-        this.epicList = epicIndex
+      sendRequest('https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN',{},{
+        localCache:true,
+        localTtl:60*12*60
+      }).then(res => {
+        if(!res){
+          this.epicList =[]
+        }else{
+          console.log(res, 'epic数据')
+          const epicData = res.data.data.Catalog.searchStore.elements
+          // 根据promotions判断Epic是否免费
+          const epicIndex = epicData.filter(el => {
+            return el.promotions !== null
+          })
+          console.log(epicIndex)
+          this.epicList = epicIndex
+        }
       })
     },
     enterWeek (item) {

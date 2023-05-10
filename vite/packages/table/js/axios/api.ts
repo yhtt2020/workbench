@@ -1,4 +1,5 @@
 import axios from "axios";
+import {serverCache} from "./serverCache";
 export const regionRange= [
   {
     id: 'cn',
@@ -77,9 +78,10 @@ export const regionRange= [
  * 处理请求超时问题
  * @param url
  * @param params
+ * @param cacheOptions
  */
-export const sendRequest = async (url, params) => {
-  return await axios.get(url, {params})
+export const sendRequest = async (url, params,cacheOptions={}) => {
+  return await  serverCache.get(url,{cache:true,ttl:60,...cacheOptions},{params}) // axios.get(url, {params})
   // return axios
   //   .get(url, {params})
   //   .then((response) => {

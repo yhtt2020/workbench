@@ -25,7 +25,7 @@ export default {
     window.loadBarrage=this.changeUrl
     this.timer=setInterval(()=>{
       this.changeUrl('table').then()
-    },180000)
+    },60000)
     // this.$router.afterEach((to, from) => {
     //   this.changeUrl('table').then()
     // })
@@ -92,7 +92,11 @@ export default {
     }) //挂载url变化事件
 
     this.pageUrl ='table'// (await tsbApi.tabs.current()).sourceUrl
-    this.getList()
+    if(this.settings.enableBarrage){
+      //如果开启弹幕则加载第一次
+      this.getList().then()
+    }
+
     window.$manager = manager
     window.$manager.reload=this.getList
     window.$manager.sendChat=this.sendChat
@@ -110,7 +114,10 @@ export default {
   methods:{
     async changeUrl(url) {
       this.pageUrl = url
-      await this.getList()
+      if(this.settings.enableBarrage){
+        //如果启用弹幕，才刷新
+        await this.getList()
+      }
     },
     /**
      * 通过计数的方式进行弹幕的屏蔽
@@ -165,9 +172,13 @@ export default {
         let rs = await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, this.pageUrl)
         this.barrages = rs.data
         if (rs.status) {
-          $manager.clear()
-          $manager.send(this.filterBarrages(this.barrages))//进行前置过滤
-          $manager.start()
+          if(this.settings.enableBarrage){
+            //如果是设置了启用弹幕
+            $manager.clear()
+            $manager.send(this.filterBarrages(this.barrages))//进行前置过滤
+            $manager.start()
+          }
+
         } else {
           message.error({content:'获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。',key:'barrage'})
         }

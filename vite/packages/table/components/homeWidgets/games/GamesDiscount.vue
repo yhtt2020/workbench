@@ -186,8 +186,8 @@ export default {
       if (this.key) {
 
       }
-      if (this.data[this.customData.id]) {
-        return this.getRandomList(this.data[this.customData.id].list)
+      if (this.data[this.region.id]) {
+        return this.getRandomList(this.data[this.region.id].list)
       } else return []
     }
   },
@@ -244,7 +244,11 @@ export default {
         this.isLoading = true
         if (Object.keys(this.customData).length !== 0) {
           setTimeout(() => {
-            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`, 3).then(res => {
+            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`, {},{
+              localCache:true,
+              localTtl:60
+            }).then(res => {
+              console.log('steam数据',res)
               const resData = res.data[item.id]
               if (resData.success === true) {
                 const detailData = resData.data
@@ -256,21 +260,6 @@ export default {
               this.$nextTick(() => {
                 this.isLoading = false
               })
-            })
-          }, 500)
-        } else {
-          setTimeout(() => {
-            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=cn&l=cn`, 3).then(res => {
-              const resData = res.data[item.id]
-              if (resData.success === true) {
-                const detailData = resData.data
-                this.detailList = detailData
-              } else {
-                return
-              }
-            })
-            this.$nextTick(() => {
-              this.isLoading = false
             })
           }, 500)
         }
@@ -302,7 +291,9 @@ export default {
       this.gameVisible = false
       this.customData.id = this.defaultRegion
       // 获取国家地区名称参数
+      console.log(this.region.id,'当前的国家')
       await this.getData(this.region.id).catch(()=>this.fail=true).finally(()=>{
+        this.key=Date.now()
         this.isLoading = false
       })
     }
