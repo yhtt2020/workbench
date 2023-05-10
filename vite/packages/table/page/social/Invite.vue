@@ -102,7 +102,6 @@ export default {
   computed: {
     ...mapState(appStore, ['userInfo']),
     totalHours () {
-      console.log(this.userInfo.onlineGradeExtra)
       return (this.userInfo.onlineGradeExtra.cumulativeHours)
     },
     canExchange () {

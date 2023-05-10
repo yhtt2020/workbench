@@ -175,9 +175,12 @@ export const teamStore = defineStore("teamStore", {
       }
       let teamResult = await axios.get(getByNo, conf)
       if (teamResult.code === 1000) {
+
         //获取到队伍信息
         if (teamResult.data.status) {
+
           this.team = teamResult.data.data
+          console.log(this.team)
         } else {
           this.team = {
             status: false
