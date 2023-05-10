@@ -188,7 +188,6 @@ export default {
   },
 mounted() {
     let customData = this.$parent.customData||this.$parent.$attrs.customData||this.$parent.$parent.customData
-  console.log(customData)
     if(customData.width&&customData.height){
       this.sizeType={title:customData.width+ 'x' + customData.height,height:customData.height,width:customData.width,name:customData.width+ 'x' + customData.height}
       // this.$parent.$attrs.onCustomEvent()
@@ -199,7 +198,6 @@ mounted() {
   watch:{
     'sizeType':{
       handler(){
-        console.log(this.$parent.customIndex||this.$parent.$parent.customIndex||this.$parent.$attrs.customIndex)
         this.increaseCustomComponents(this.$parent.customIndex||this.$parent.$parent.customIndex||this.$parent.$attrs.customIndex,{
           width:this.sizeType.width,
           height:this.sizeType.height,

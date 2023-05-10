@@ -43,7 +43,7 @@ export default {
 <style lang="scss" scoped>
 .add-navigation{
   padding: 16px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);

@@ -1,40 +1,20 @@
 <template>
-  <div style="width:50vw">
-    <div ref="container" class="keen-slider" style="height: 25.5em;">
-      <div class="keen-slider__slide number-slide1 rounded-lg">
-        <img src="/img/test/2.jpg" class="w-full h-full rounded-lg object-cover"  alt="">
-      </div>
-      <div class="keen-slider__slide number-slide2 rounded-lg">
-        <video class="" playsinline="" autoplay="" muted="" loop="" >
-          <source src="/img/test/video/video1.webm" type="video/mp4" id="bgVid">
-        </video>
-      </div>
-      <div class="keen-slider__slide number-slide3 rounded-lg">3</div>
-      <div class="keen-slider__slide number-slide4 rounded-lg">4</div>
-      <div class="keen-slider__slide number-slide5 rounded-lg">5</div>
-      <div class="keen-slider__slide number-slide6 rounded-lg">6</div>
+  <div  class="abcabc">
+    <div ref="container" class="keen-slider">
+      <div class="keen-slider__slide number-slide1">1</div>
+      <div class="keen-slider__slide number-slide2">2</div>
+      <div class="keen-slider__slide number-slide3">3</div>
+      <div class="keen-slider__slide number-slide4">4</div>
+      <div class="keen-slider__slide number-slide5">5</div>
+      <div class="keen-slider__slide number-slide6">6</div>
     </div>
-    <div>
-      <div ref="thumbnail" class="keen-slider thumbnail">
-        <button class="keen-slider__arrow keen-slider__arrow--left" @click="prev()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M15.41 7.41L14 6l-6 6 6 6 1.411.41L10.83 12z"/></svg>
-        </button>
-        <div class="keen-slider__slide number-slide1">
-          <img src="/img/test/2.jpg" class="w-full h-full  object-cover"  alt="">
-        </div>
-        <div class="keen-slider__slide number-slide2">
-          <video class="" playsinline="" autoplay="" muted="" loop="" >
-            <source src="/img/test/video/video1.webm" type="video/mp4" id="bgVid">
-          </video>
-        </div>
-        <div class="keen-slider__slide number-slide3">3</div>
-        <div class="keen-slider__slide number-slide4">4</div>
-        <div class="keen-slider__slide number-slide5">5</div>
-        <div class="keen-slider__slide number-slide6">6</div>
-        <button class="keen-slider__arrow keen-slider__arrow--right" @click="next()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
-        </button>
-      </div>
+    <div ref="thumbnail" class="keen-slider thumbnail">
+      <div class="keen-slider__slide number-slide1">1</div>
+      <div class="keen-slider__slide number-slide2">2</div>
+      <div class="keen-slider__slide number-slide3">3</div>
+      <div class="keen-slider__slide number-slide4">4</div>
+      <div class="keen-slider__slide number-slide5">5</div>
+      <div class="keen-slider__slide number-slide6">6</div>
     </div>
   </div>
 </template>
@@ -74,6 +54,7 @@ function ThumbnailPlugin(main) {
     })
   }
 }
+
 export default {
   setup() {
     const [container, slider] = useKeenSlider()
@@ -87,23 +68,35 @@ export default {
       },
       [ThumbnailPlugin(slider)]
     )
-    function prev() {
-      slider.value.prev();
-    }
-
-    function next() {
-      slider.value.next();
-    }
-
-    return { container, thumbnail,prev, next, }
+    return { container, thumbnail }
   },
 }
 </script>
 
-<style lang="scss" scoped>
+<style>
+.keen-slider__slide {
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+@media (min-width: 768px) {
+  .keen-slider__slide {
+    min-width: calc(50% - 4px) !important;
+    max-width: calc(50% - 4px) !important;
+  }
+}
+@media (min-width: 1024px) {
+  .keen-slider__slide {
+    min-width: calc(33% - 4px) !important;
+    max-width: calc(33% - 4px) !important;
+  }
+}
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-</style>
-<style scoped>
 [class^="number-slide"],
 [class*=" number-slide"] {
   background: grey;
@@ -114,6 +107,7 @@ export default {
   color: #fff;
   font-weight: 500;
   height: 200px;
+  max-height: 100vh;
 }
 
 .number-slide1 {
@@ -185,31 +179,5 @@ export default {
 }
 .thumbnail .keen-slider__slide.active {
   border: 2px dashed black;
-}
-.keen-slider__arrow {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-}
-
-.keen-slider__arrow--left {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  z-index: 999;
-}
-
-.keen-slider__arrow--right {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index:999;
 }
 </style>

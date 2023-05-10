@@ -481,11 +481,7 @@ export const cardStore = defineStore(
           return value === el.id
         })
        console.log(findCustom)
-        if(findCustom.name === "middleWallpaper" && newData.width === 1){
-          findCustom.name = "smallWallpaper"
-        }else if(findCustom.name === "smallWallpaper" && newData.width === 2){
-          findCustom.name = "middleWallpaper"
-        }
+
         currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
       },
       removeCustomComponents(customIndex) {

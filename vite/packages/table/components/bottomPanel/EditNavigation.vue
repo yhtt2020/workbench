@@ -119,7 +119,7 @@ export default {
       listData:[],
       editFlag:false,
       activeItem:0,
-      avtiveRightItem:0,
+      activeRightItem:0,
       rubbish:false,
       nowClassify:'systemApp',
       navClassify:[
@@ -241,7 +241,7 @@ export default {
     },
 
     clickItem(item){
-       this.avtiveRightItem = 0;
+       this.activeRightItem = 0;
        this.nowClassify = item.name;
     },
     async loadDeskIconApps () {
@@ -267,7 +267,7 @@ export default {
       this.editFlag = false;
     },
     clickRightListItem(item,index){
-      this.avtiveRightItem = index
+      this.activeRightItem = index
       this.editFlag = false;
      if(item instanceof Array){
        for (let i = 0; i < item.length; i++) {
@@ -285,8 +285,6 @@ export default {
          scrollElem.scrollTo({ left: scrollElem .scrollWidth, behavior: 'smooth' });
        });
      }
-
-
     },
     addNav(){
       console.log('loadnav')
