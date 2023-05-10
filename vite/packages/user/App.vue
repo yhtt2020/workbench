@@ -28,6 +28,7 @@ export default {
     }
   },
   async mounted() {
+    tsbApi.window.setZoomFactor(1)
     this.users = await userModel.getAll()
     this.users.forEach(user=>{
       const date=new Date(user.expire_time)
