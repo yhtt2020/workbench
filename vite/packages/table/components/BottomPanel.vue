@@ -17,7 +17,9 @@
                  style="padding: 0.6em;position:relative;">
             <a-row style="text-align: left" :gutter="10">
               <a-col>
+                <a-badge  style="border:none;" :count="totalCount">
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
+                </a-badge>
               </a-col>
               <a-col v-if="!simple" @click.stop="goMy()" style="position: relative">
                 <span ref="minute" class="tip">+1</span>
@@ -250,6 +252,7 @@ import ScrolX from './ScrolX.vue'
 
 import TeamTip from './TeamTip.vue'
 import { teamStore } from '../store/team'
+import { messageStore } from '../store/message'
 
 export default {
   name: 'BottomPanel',
@@ -316,6 +319,7 @@ export default {
     //   })
     //   localStorage.setItem('insertBird','1')
     // }
+    this.getMessageIndex().then()
     let that = this
     this.checkScroll()
     // const that = this
@@ -343,7 +347,8 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
-    ...mapWritableState(cardStore, ['navigationList', 'routeParams'])
+    ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
+    ...mapWritableState(messageStore,['messageIndex','totalCount'])
   },
   watch: {
     navigationList: {
@@ -365,6 +370,7 @@ export default {
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
+    ...mapActions(messageStore,['getMessageIndex']),
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -491,7 +497,11 @@ export default {
       }
     },
     social () {
-      this.$router.push({ path: '/social/' })
+      if(this.totalCount){
+        this.$router.push({ name: 'message' })
+      }else{
+        this.$router.push({ path: '/social/' })
+      }
     },
     power () {
       this.$router.push({ path: '/power' })
