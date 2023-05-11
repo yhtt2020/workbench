@@ -13,7 +13,7 @@
         <a-empty  description="" />
         <div class="flex justify-center items-center rounded-lg  h-12 drawer-item-bg w-40 pointer mt-4 text-base" @click="()=>{this.panelVisible = true}">选择图片</div>
       </div>
-    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3"  v-if="showName">{{myData.title}}</div>
+    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3"  v-if="showName" style="border-radius: 0 0 8px 8px">{{myData.title}}</div>
     </div>
   </HomeComponentSlot>
   <a-drawer v-model:visible="panelVisible" :width="500" title="设置" :headerStyle="{border:0}" :bodyStyle="{padding:'0 24px '}">
