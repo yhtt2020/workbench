@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-row nav-list-container rounded-lg p-1" :class="bgColor">
-    <div v-for="(item,index) in navList" class=" w-40 flex justify-center items-center rounded-lg pointer"
-         @click="clickNav(item,index)" :class="activeIndex===index?'s-item':''" :style="{height:itemHeight}">{{ item.title }}
+  <div class="flex flex-row nav-list-container rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}">
+    <div v-for="(item,index) in navList" class=" w-40 h-full flex justify-center items-center rounded-lg pointer"
+         @click="clickNav(item,index)" :class="activeIndex===index?'s-item':''" >{{ item.title }}
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
     },
     height:{
       type:Number,
-      default:40
+      default:48
     }
   },
   data () {
