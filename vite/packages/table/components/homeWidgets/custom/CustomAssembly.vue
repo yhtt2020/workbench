@@ -5,8 +5,9 @@
       <video class="fullscreen-video"   ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="myData.img.srcProtocol">
         <source :src="myData.img.srcProtocol"  type="video/mp4" id="bgVid">
       </video>
-      <img :src="myData.img.middleSrc"   alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="myData.img.middleSrc">
-      <img :src="myData.img.src"  class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="myData.img.src">
+      <img  @error="imgError" :src="myData.img.path"   alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="myData.img.path&&imgState">
+      <img  @error="imgError" :src="myData.img.src"  class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="myData.img.src&&imgState">
+      <img   src="/img/homeComponent/smallWallpaper.png"  class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
     </div>
       <div v-else class="flex justify-center items-center flex-col h-full">
         <a-empty  description="" />
@@ -138,6 +139,7 @@ export default {
   data(){
     return{
       dropList:[],
+      imgState:true,
       myImgShow:false,
       sizeList:[
         {title:'1x1',className:'small',name:'1x1'}, {title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'},
@@ -346,7 +348,7 @@ export default {
 
     },
     saveData(){
-      if(!this.myData.link){
+      if(!Object.keys(this.myData.img).length>0){
         message.warning("未添加小组件封面");
         return
       }
@@ -357,14 +359,16 @@ export default {
         }
       )
       this.panelVisible = false
-
-    }
+    },
+    imgError(){
+      this.imgState = false
+    },
   },
   mounted() {
     const {showName,mySize,myData} = this.customData
     if(showName)this.showName = showName
-    if(mySize)this.mySize = mySize
-    if(myData)this.myData = myData
+    if(mySize)this.mySize = {...this.mySize,...mySize}
+    if(myData)this.myData = {...this.myData,...myData}
   },
   watch:{
     'mySize':{
