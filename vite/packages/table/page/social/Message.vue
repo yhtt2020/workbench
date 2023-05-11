@@ -147,9 +147,10 @@ export default {
   data(){
     return{
       // category这个数组后期需要从后端数据库获取数据
+      // category数组中的state是模拟消息未读状态
       category:[
-        {title:'互动',name:'interact'},{title:'关注',name:'attention'},
-        {title:'系统',name:'system'},{title:'推送',name:'push'},{title:'自定义',name:'custom'}
+        {title:'互动',name:'interact',state:false},{title:'关注',name:'attention',state:true},
+        {title:'系统',name:'system',state:true},{title:'推送',name:'push',state:false},{title:'自定义',name:'custom',state:false}
       ],
       categoryType: {title:'互动',name:'interact'},
       scrollbarSettings: {
