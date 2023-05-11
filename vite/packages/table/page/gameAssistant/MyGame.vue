@@ -55,7 +55,7 @@
   </div>
 </vue-custom-scrollbar>
 </div>
-<Modal v-model:visibility="modalVisibility"  v-show="modalVisibility" animationName="b-t" :blurFlag="true">
+<Modal v-model:visible="modalVisibility"  v-show="modalVisibility" animationName="b-t" :blurFlag="true">
   <div class="p-6">
       <div class="flex flex-row items-center">
         <Icon style="height: 26px;width: 26px" icon="steam"></Icon>
@@ -81,7 +81,7 @@
     </div>
   </div>
 </Modal>
-  <Modal v-model:visibility="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
+  <Modal v-model:visible="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
     <div class="pl-6 pr-9 py-6 flex flex-row">
       <div class="w-52 h-72 relative">
         <img :src="currentSteam.src" class="w-full h-full rounded-lg object-cover" alt="">
@@ -102,7 +102,7 @@
         </div>
     </div>
   </Modal>
-  <Modal v-model:visibility="otherShow" v-show="otherShow" animationName="bounce-in" :blurFlag="true">
+  <Modal v-model:visible="otherShow" v-show="otherShow" animationName="bounce-in" :blurFlag="true">
     <div class="pt-12 pb-8 px-8">
       <div class="w-24 h-24 mx-auto">
         <img :src="currentSteam.src" class="w-full h-full rounded-lg object-cover" alt="">

@@ -1,6 +1,6 @@
 <template>
   <div @contextmenu.stop="showDrawer" :class="classes"
-       :style="{pointerEvents:(editing?'none':''),width:size.width,height:size.height}" @click="onCPUIndex"
+       :style="{pointerEvents:(editing?'none':''),width:customSize.width,height:customSize.height}" @click="onCPUIndex"
        @mouseleave="onMouseOut"
        @mouseenter="onMouseOver">
     <div
@@ -50,25 +50,30 @@
     <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
-    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'15em',}"
+    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',}"
     :width="120"
-    :height="320"
+    height="auto"
     class="drawer"
     :closable="true"
     placement="bottom"
     v-model:visible="visible"
     @close="onClose"
   >
-    <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="item.fn()" v-for="item in formulaBar">
+    <div class=" ml-4 mb-3 flex flex-row items-center"  v-if="sizeList&&sizeList.length>0">
+      <div class="mr-4">小组件尺寸</div>
+      <HorizontalPanel :navList="sizeList" v-model:selectType="sizeType" bgColor="drawer-item-select-bg"></HorizontalPanel>
+    </div>
+    <hr style=" border: none; border-top: 1px solid rgba(255,255,255,0.10);" class="ml-4 mr-4 my-8"  v-if="sizeList&&sizeList.length>0">
+    <div  class="flex flex-row">
+      <div class="option h-24 w-24 ml-4" @click="item.fn()" v-for="item in formulaBar">
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
-      <div class="option" @click="removeCard">
+      <div class="option h-24 w-24 ml-4" @click="removeCard">
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
       </div>
-      <div class="option" @click="onCopy" v-if="options.type.includes('CPU')||options.type.includes('GPU')">
+      <div class="option h-24 w-24 ml-4" @click="onCopy" v-if="options.type.includes('CPU')||options.type.includes('GPU')">
         <Icon class="icon" icon="fuzhi"></Icon>
         复制数据
       </div>
@@ -85,10 +90,11 @@ import {cardStore} from "../../store/card";
 import {steamStore} from "../../store/steam";
 import {message} from "ant-design-vue";
 import AidaGuide from './supervisory/AidaGuide.vue'
+import HorizontalPanel from "../HorizontalPanel.vue";
 import _ from 'lodash-es'
 
 export default {
-  components: {AidaGuide},
+  components: {AidaGuide,HorizontalPanel},
   data() {
     return {
       visible: false,
@@ -97,11 +103,16 @@ export default {
       gameRegionShow: false,
       regionName: '',
       epicShow: true,
+      sizeType: {title:'',height:undefined,width:undefined,name:''},
     }
   },
   name: 'HomeComponentSlot',
 
   props: {
+    sizeList:{
+      type:Array,
+      default:()=>[]
+    },
     options: {
       type: Object,
       default: () => ({})
@@ -145,6 +156,12 @@ export default {
     isCode() {
       return this.customData.hasOwnProperty('Code')
     },
+    customSize(){
+      return {
+        width:this.size.width||((this.sizeType.width)*280+ ((this.sizeType.width)-1)*10+'px')||undefined,
+        height:this.size.height||((this.sizeType.height)*205 + ((this.sizeType.height)-1)*10+'px')||undefined
+      }
+    },
     classes() {
       let defaultClass = {
         "gradient": true,
@@ -169,13 +186,28 @@ export default {
       return after
     }
   },
+mounted() {
+    let customData = this.$parent.customData||this.$parent.$attrs.customData||this.$parent.$parent.customData
+    if(customData.width&&customData.height){
+      this.sizeType={title:customData.width+ 'x' + customData.height,height:customData.height,width:customData.width,name:customData.width+ 'x' + customData.height}
+      // this.$parent.$attrs.onCustomEvent()
+      // console.log(this.$parent.$attrs.onCustomEvent)
+    }
+},
 
-  mounted() {
-
-  },
+  watch:{
+    'sizeType':{
+      handler(){
+        this.increaseCustomComponents(this.$parent.customIndex||this.$parent.$parent.customIndex||this.$parent.$attrs.customIndex,{
+          width:this.sizeType.width,
+          height:this.sizeType.height,
+        })
+      },
+    }
+},
 
   methods: {
-    ...mapActions(cardStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCustomComponents","increaseCustomComponents"]),
     showDrawer() {
       this.visible = true;
     },
