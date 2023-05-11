@@ -54,8 +54,8 @@ app.on('session-created',async (ses)=>{
 })
 
 function ensureDb(){
-  const DB_ROOT=path.join(app.getPath('userData'),'db')
-  const DB_PATH=path.join(DB_ROOT,'db.sqlite')
+  const DB_ROOT= require(__dirname+'/src/util/dbUtil.js').getDbPath('db')
+  const DB_PATH=path.dirname(DB_ROOT)
   const TPL_PATH=path.join(__dirname,'/db/tpl.sqlite')
   if(!fs.existsSync(DB_PATH)){
     fs.ensureDirSync(DB_ROOT)
@@ -66,5 +66,13 @@ function ensureDb(){
 
 ensureDb()
 
+
 global.settings.initSetting(()=>{
+  //设置nanoid
+  let clientId=settings.get('clientID')
+  if(!clientId){
+    clientId=require('nanoid').nanoid(8)
+    settings.set('clientID',clientId)
+  }
+
 
