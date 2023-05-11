@@ -56,12 +56,7 @@
                  </span>
                  <span class="truncate w-52" style=" font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;"></span>
                </div>
-               <span style="font-size: 14px; color: rgba(255,255,255,0.40); font-weight: 400;">{{ item.user.add_time }}</span>
-<!--               url:'002.png',
-          name:'彩虹小白马 ',
-          createTime:'1小时前',
-          content:'',
-          dynamic:'关注了你'  -->
+               <span style="font-size: 14px; color: rgba(255,255,255,0.40); font-weight: 400;">{{ item.create_time }}</span>
              </div>
            </div>
          </vueCustomScrollbar>
@@ -73,14 +68,14 @@
            <!-- 数据空状态 -->
            <a-list :data-source="[]" v-if="systemNotice.length === 0" />
            <div v-else v-for="item in systemNotice" @click="systemItemClick()" class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
-             <div class="w-10 h-10 flex items-center  justify-center s-bg rounded-full">
+             <div style="min-width: 40px;max-width:40px;flex:1" class="w-10 h-10 flex items-center  justify-center s-bg rounded-full">
                <Icon icon="bell" style="font-size: 1.429em;"></Icon>
              </div>
              <div class="flex flex-col ml-4">
                 <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 600;">
                  {{item.title}}
                 </span>
-                <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 300;">
+                <span class="truncate" style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 300;">
                  {{item.content}}
                 </span>
                 <span style="font-size: 14px;color: rgba(255,255,255,0.40);font-weight: 400;">
