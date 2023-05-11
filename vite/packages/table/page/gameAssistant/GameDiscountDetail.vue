@@ -1,28 +1,31 @@
 <template>
-  <div class="flex w-full h-12 justify-between">
-    <div class="left-flex flex items-center justify-center">
-       <div class="w-12 h-12 flex items-center cursor-pointer btn-active justify-center rounded-lg s-bg"  @click="goBack">
-         <Icon icon="xiangzuo" style="font-size:1.5em;"></Icon>
-       </div>
-       <span style="font-size:20px;font-weight: 500;" class="ml-4">{{ detailData.name }}</span>
+  <div class="flex">
+    <div class="flex-grow">
+      <div class="left-flex flex items-center">
+        <div class="w-12 h-12 flex items-center cursor-pointer btn-active justify-center rounded-lg s-bg"  @click="goBack">
+          <Icon icon="xiangzuo" style="font-size:1.5em;"></Icon>
+        </div>
+        <span style="font-size:20px;font-weight: 500;" class="ml-4">{{ detailData.name }}</span>
+      </div>
     </div>
-    <div class="right-flex flex items-center justify-center mr-5">
-      <span class="rounded-lg btn-active s-bg cursor-pointer mr-3 " @click="enterSteamStore"  style="padding: 13px 41px 12px 41px;">Steam商店</span>
-      <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" @change="selectOptionValue($event)"  
-       class="w-56 h-auto rounded-xl  text-xs s-item" size="large"
-       :bordered="false" v-model:value="defaultDetailRegion">
-       <a-select-option v-for="item in rightSelect" :value="item.id">{{item.name}}</a-select-option>
-      </a-select>
+    <div class="flex-grow-0">
+      <div class="right-flex flex items-center justify-center mr-5">
+        <span class="rounded-lg btn-active s-bg cursor-pointer mr-3 " @click="enterSteamStore"  style="padding: 8px 41px 10px 41px;">Steam商店</span>
+        <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" @change="selectOptionValue($event)"  
+         class="w-56 h-auto rounded-xl  text-xs s-item" size="large"
+         :bordered="false" v-model:value="defaultDetailRegion">
+         <a-select-option v-for="item in rightSelect" :value="item.id">{{item.name}}</a-select-option>
+        </a-select>
+      </div>
     </div>
   </div>
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
-    <a-row :gutter="[24,8]">
-      <a-col :span="12" class="mr-48 ml-4">
-        <WheelCastingUnit></WheelCastingUnit>
-        <!-- :screenshots="detailScreenshots" :movies="detailMovies -->
+    <a-row :wrap="true">
+      <a-col :span="24" :lg="16">
+        <WheelCastingUnit :screenshots="detailScreenshots" :movies="detailMovies" class="wheel-content"></WheelCastingUnit>
       </a-col>
-      <a-col :span="8">
-        <div class="flex flex-col">
+      <a-col :span="24" :lg="8" >
+        <div class="flex flex-col " id="detail-ms">
           <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
           <div class="flex justify-between items-center mt-4" >
             <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">发行日期</span>
@@ -49,7 +52,7 @@
           <div  style="padding: 12px 13px;" class="s-bg flex mb-4 rounded-lg items-center justify-between mt-6">
             <div class="flex flex-col mt-1">
              <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">价格</span>
-             <span style="font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！4 月 24 日 截止</span>
+             <span style="font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！{{ acquisitionDate(exTime) }} 截止</span>
             </div>
             <div class="flex flex-col">
                <span class="line-through mr-2" style="text-align: right; color:rgba(255, 255, 255, 0.4);font-size: 14px; font-weight: 400;">{{ detailData.oldPrice }}</span>
@@ -59,7 +62,7 @@
                </div>
             </div>
           </div>
-         </div>
+        </div>
       </a-col>
     </a-row>
   </vue-custom-scrollbar>
@@ -67,12 +70,15 @@
 
 <script>
 import { regionRange,sendRequest } from '../../js/axios/api';
-import _ from 'lodash-es';
 import WheelCastingUnit from '../../components/WheelCastingUnit.vue'
 export default {
     name:'GameDiscountDetail',
     props:{
       id:{
+        type:Object,
+        default:()=>{}
+      },
+      exTime:{
         type:Object,
         default:()=>{}
       }
@@ -110,6 +116,13 @@ export default {
     },
     mounted(){
       this.getDetailVal()
+      // window.onresize = () => {
+      //   if(document.body.clientWidth <= 900){
+      //     document.querySelector('.detail-ms').style = 'margin:0 15%; !important'
+      //   }else{
+      //     document.querySelector('.detail-ms').style = 'margin:0; !important'
+      //   }
+      // }
     },
     methods:{
       goBack(){
@@ -119,7 +132,6 @@ export default {
         if(this.id !== undefined){
           sendRequest(`https://store.steampowered.com/api/appdetails?appids=${this.id}&cc=${this.defaultDetailRegion}&l=${this.defaultDetailRegion}`,3).then(res=>{
             const result = res.data[this.id].data
-            console.log(result);
             const newLanguages = result.supported_languages.replaceAll('<strong>*</strong>','')
             this.detailData = {
               name:result.name,
@@ -146,6 +158,12 @@ export default {
       },
       enterSteamStore(){
         window.ipc.send('addTab', { url: `https://store.steampowered.com/app/${this.id}` })
+      },
+      acquisitionDate(val){
+        const expireDate = new Date(parseInt(val)*1000)
+        let m = expireDate.getMonth() + 1 // 月
+        let d = expireDate.getDate() // 日
+        return m + '月' + d + '日'
       }
     }
   }
@@ -158,5 +176,11 @@ export default {
 } 
 ::v-deep .ps__thumb-y{
   display: none !important;
+}
+
+@media screen and (max-width:1000px) {
+  #detail-ms{
+    margin: 0 15% !important;
+  }
 }
 </style>

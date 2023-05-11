@@ -116,17 +116,19 @@ export default {
             listData.map(el=>{
               sendRequest(`https://store.steampowered.com/api/appdetails?appids=${el.id}&cc=${this.defaultGameValue}&l=${this.defaultGameValue}`,3).then(res=>{
                 const data = res.data[el.id].data
-                this.steamList.push({
-                  id:el.id,
-                  image:data.header_image,
-                  name:data.name,
-                  brief:data.short_description,
-                  newPrice:data.price_overview.final_formatted,
-                  oldPrice:data.price_overview.initial_formatted,
-                  percent:data.price_overview.discount_percent,
-                  data:data,
-                  expirationTime:el.discount_expiration
-                })
+                if(data !== undefined){
+                  this.steamList.push({
+                   id:el.id,
+                   image:data.header_image,
+                   name:data.name,
+                   brief:data.short_description,
+                   newPrice:data.price_overview.final_formatted,
+                   oldPrice:data.price_overview.initial_formatted,
+                   percent:data.price_overview.discount_percent,
+                   data:data,
+                   expirationTime:el.discount_expiration
+                  })
+                }
               }).finally(()=>{
                 this.$nextTick(()=>{
                  this.isLoading = false

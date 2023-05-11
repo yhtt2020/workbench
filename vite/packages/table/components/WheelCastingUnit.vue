@@ -1,27 +1,33 @@
 <template>
-  <div  class="abcabc">
-    <div ref="container" class="keen-slider">
-      <div class="keen-slider__slide number-slide1">1</div>
-      <div class="keen-slider__slide number-slide2">2</div>
-      <div class="keen-slider__slide number-slide3">3</div>
-      <div class="keen-slider__slide number-slide4">4</div>
-      <div class="keen-slider__slide number-slide5">5</div>
-      <div class="keen-slider__slide number-slide6">6</div>
+  <div style="width: 50vw; margin:0 auto 12px auto;">
+    <div ref="slider" class="keen-slider" style="height: 25.5em;">
+      <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
+        <video class="w-full h-full rounded-lg"  controls="controls"   controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
+        disablePictureInPicture   playsinline="" autoplay="" muted="" loop="" v-if="item.mp4">
+          <source :src="item.mp4.max" class="w-full rounded-lg" type="video/mp4" id="bgVid">
+        </video>
+        <img :src="item.path_full" class="w-full h-full rounded-lg object-cover"  alt="" v-else>
+      </div>
     </div>
-    <div ref="thumbnail" class="keen-slider thumbnail">
-      <div class="keen-slider__slide number-slide1">1</div>
-      <div class="keen-slider__slide number-slide2">2</div>
-      <div class="keen-slider__slide number-slide3">3</div>
-      <div class="keen-slider__slide number-slide4">4</div>
-      <div class="keen-slider__slide number-slide5">5</div>
-      <div class="keen-slider__slide number-slide6">6</div>
+    <div class="flex mt-2">
+      <button class="keen-slider__arrow mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
+         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+      </button>
+      <div ref="thumbnail" class="keen-slider thumbnail">
+        <div class="keen-slider__slide" v-for="item in wheelList">
+          <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full rounded-lg  object-cover" alt="">
+        </div>
+      </div>
+      <button class="keen-slider__arrow ml-2  pointer rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
+        <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { useKeenSlider } from "keen-slider/vue.es"
 import "keen-slider/keen-slider.min.css"
+import KeenSlider from "keen-slider"
 
 function ThumbnailPlugin(main) {
   return (slider) => {
@@ -37,7 +43,7 @@ function ThumbnailPlugin(main) {
     function addClickEvents() {
       slider.slides.forEach((slide, idx) => {
         slide.addEventListener("click", () => {
-          main.value.moveToIdx(idx)
+          main.moveToIdx(idx)
         })
       })
     }
@@ -45,10 +51,10 @@ function ThumbnailPlugin(main) {
     slider.on("created", () => {
       addActive(slider.track.details.rel)
       addClickEvents()
-      main.value.on("animationStarted", () => {
+      main.on("animationStarted", (main) => {
         removeActive()
-        const next = main.value.animator.targetIdx || 0
-        addActive(main.value.track.absToRel(next))
+        const next = main.animator.targetIdx || 0
+        addActive(main.track.absToRel(next))
         slider.moveToIdx(Math.min(slider.track.details.maxIdx, next))
       })
     })
@@ -56,47 +62,56 @@ function ThumbnailPlugin(main) {
 }
 
 export default {
-  setup() {
-    const [container, slider] = useKeenSlider()
-    const [thumbnail] = useKeenSlider(
-      {
+  name: "WheelCastingUnit",
+  props:{
+    screenshots:{
+      type:Array,
+      default:()=>[]
+    },
+    movies:{
+      type:Array,
+      default:()=>[]
+    }
+  },
+  computed:{
+    wheelList(){
+      if(this.movies !== undefined && this.screenshots !== undefined){
+        return this.screenshots.concat(this.movies)
+      }
+    }
+  },
+  mounted() {
+    setTimeout(()=>{
+      this.slider = new KeenSlider(this.$refs.slider)
+      this.thumbnail = new KeenSlider(
+       this.$refs.thumbnail,
+       {
         initial: 0,
         slides: {
           perView: 4,
           spacing: 10,
         },
-      },
-      [ThumbnailPlugin(slider)]
-    )
-    return { container, thumbnail }
+       },
+       [ThumbnailPlugin(this.slider)]
+      )
+    },100)
+  },
+  methods:{
+    prev() {
+      this.slider.prev()
+    },
+    next(){
+      this.slider.next()
+    }
+  },
+  beforeDestroy() {
+    if (this.slider) this.slider.destroy()
+    if (this.thumbnail) this.thumbnail.destroy()
   },
 }
 </script>
 
 <style>
-.keen-slider__slide {
-  min-width: 100% !important;
-  max-width: 100% !important;
-}
-@media (min-width: 768px) {
-  .keen-slider__slide {
-    min-width: calc(50% - 4px) !important;
-    max-width: calc(50% - 4px) !important;
-  }
-}
-@media (min-width: 1024px) {
-  .keen-slider__slide {
-    min-width: calc(33% - 4px) !important;
-    max-width: calc(33% - 4px) !important;
-  }
-}
-body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 [class^="number-slide"],
 [class*=" number-slide"] {
   background: grey;
@@ -106,8 +121,6 @@ body {
   font-size: 50px;
   color: #fff;
   font-weight: 500;
-  height: 200px;
-  max-height: 100vh;
 }
 
 .number-slide1 {
@@ -170,14 +183,6 @@ body {
 }
 
 .thumbnail .keen-slider__slide {
-  font-size: 30px;
-  margin-top: 10px;
-  height: 100px;
-}
-.thumbnail .keen-slider__slide {
   cursor: pointer;
-}
-.thumbnail .keen-slider__slide.active {
-  border: 2px dashed black;
 }
 </style>
