@@ -104,7 +104,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
 
   view.webContents.on('did-fail-load',(event,errorCode,errorDescription,validatedURL,isMainFrame,frameProcessId,frameRoutingId)=>{
     console.log(
-      event,errorCode,errorDescription,validatedURL,isMainFrame,frameProcessId,frameRoutingId
+      errorCode,errorDescription,validatedURL,isMainFrame,frameProcessId,frameRoutingId
     )
   })
 

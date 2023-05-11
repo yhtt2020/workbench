@@ -32,21 +32,28 @@ class SettingModel {
   }
 
   async getAll(sign='',group){
-    if(!!!sign){
-      throw '标志必须提供'
+    let where={}
+    if(sign){
+      where['sign']=sign
     }
-
+    where['group']=group
+    return await sqlDb.knex('setting').where(where).select()
   }
 
 
 
   async get(sign,group,key){
-    if(!!!key || !!!sign){
-      throw '标志和键名必须提供'
+    if(!!!key){
+      throw '键名必须提供'
     }
-    let record= await sqlDb.knex('setting').where({
-      key,group,sign
-    }).first()
+    let map={}
+    if(sign){
+      map.sign=sign
+    }
+    map.key=key
+    map.group=group
+
+    let record= await sqlDb.knex('setting').where(map).first()
     if(record){
       return JSON.parse(record.value)
     }else{
@@ -63,12 +70,19 @@ class SettingModel {
    * @returns {Promise<*>}
    */
   async set(sign,group,key,value){
-    if(!!!key || !!!sign || !!!value){
-      throw '必须提供key，sign和值'
+    if(!!!key){
+      throw '必须提供key和值'
     }
-    if(!(await sqlDb.knex('setting').where({
-      key,group,sign
-    }).first())){
+    if(!!!key){
+      throw '键名必须提供'
+    }
+    let map={}
+    if(sign){
+      map.sign=sign
+    }
+    map.key=key
+    map.group=group
+    if(!(await sqlDb.knex('setting').where(map).first())){
       return await sqlDb.knex('setting').insert({
         value:JSON.stringify(value),key,group,sign,
         nanoid:nanoid(6),
@@ -77,9 +91,7 @@ class SettingModel {
       })
     }
 
-    return await sqlDb.knex('setting').where({
-      key,group,sign
-    }).update({
+    return await sqlDb.knex('setting').where(map).update({
       value:JSON.stringify(value),
       update_time:Date.now()
     })

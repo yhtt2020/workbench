@@ -5,6 +5,7 @@ const outFile = path.resolve(__dirname, '../main.build.js')
 
 const modules = [
   'dist/localization.build.js',
+  'main/start.js',
   'main/menu.js',
   'main/touchbar.js',
   'main/registryConfig.js',
@@ -56,6 +57,8 @@ function buildMain () {
   modules.forEach(function (script) {
     output += fs.readFileSync(path.resolve(__dirname, '../', script)) + ';\n'
   })
+
+  output+='})'//拼接回后面部分
 
   fs.writeFileSync(outFile, output, 'utf-8')
 }
