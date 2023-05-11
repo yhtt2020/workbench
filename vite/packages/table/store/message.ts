@@ -5,7 +5,8 @@ import {getConfig} from "../js/axios/serverApi";
 import axios from 'axios'
 const url={
   messageIndex:sUrl('/app/com/messageIndex'),
-  getNewFollower:sUrl('/app/com/newFollower')
+  getNewFollower:sUrl('/app/com/newFollower'),
+  getSystemNotice:sUrl('/app/com/systemNotice')
 }
 
 
@@ -23,7 +24,9 @@ export const messageStore = defineStore("messageStore", {
     followCount:0,
     totalCount:0,
     //新关注
-    newFollower:[]
+    newFollower:[],
+    //系统消息
+    systemNotice:[]
   }),
   actions:{
     async getMessageIndex() {
@@ -47,6 +50,17 @@ export const messageStore = defineStore("messageStore", {
         if(messageResponse.data.data.code===200){
           const comReturn=messageResponse.data.data.data
           this.newFollower=comReturn
+          console.log(comReturn,'获得消息')
+        }
+      }
+    },
+    async getSystemNotice(){
+      let messageResponse = await axios.post(url.getSystemNotice, {},
+        await getConfig())
+      if(messageResponse.data.code===1000){
+        if(messageResponse.data.data.code===200){
+          const comReturn=messageResponse.data.data.data
+          this.systemNotice=comReturn
           console.log(comReturn,'获得消息')
         }
       }

@@ -40,7 +40,7 @@
        <div style="height: 26.99em;">
          <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: 100%">
            <!-- 数据空状态 -->
-           <a-list :data-source="[]" v-if="concernList.length === 0" />
+           <a-list :data-source="[]" v-if="newFollower.length === 0" />
 
            <div v-else v-for="item in  newFollower" @click="concernToggle(item)" class="px-4 rounded-lg interact-hover pointer py-4 mb-3 flex items-center">
              <div>
@@ -71,20 +71,20 @@
         <div style="height: 26.99em;">
          <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: 100%">
            <!-- 数据空状态 -->
-           <a-list :data-source="[]" v-if="systemList.length === 0" />
-           <div v-else v-for="item in systemList" @click="systemItemClick()" class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
+           <a-list :data-source="[]" v-if="systemNotice.length === 0" />
+           <div v-else v-for="item in systemNotice" @click="systemItemClick()" class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
              <div class="w-10 h-10 flex items-center  justify-center s-bg rounded-full">
                <Icon icon="bell" style="font-size: 1.429em;"></Icon>
              </div>
              <div class="flex flex-col ml-4">
                 <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 600;">
-                 {{item.notice}}
+                 {{item.title}}
                 </span>
-                <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 600;">
+                <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 300;">
                  {{item.content}}
                 </span>
                 <span style="font-size: 14px;color: rgba(255,255,255,0.40);font-weight: 400;">
-                 {{item.createTime}}
+                 {{item.create_time}}
                 </span>
              </div>
            </div>
@@ -307,15 +307,18 @@ export default {
     }
   },
   computed:{
-    ...mapState(messageStore,['newFollower'])
+    ...mapState(messageStore,['newFollower','systemNotice'])
   },
   methods:{
-    ...mapActions(messageStore,['getNewFollower']),
+    ...mapActions(messageStore,['getNewFollower','getSystemNotice']),
     navChanged(){
       console.log(this.categoryType)
       switch (this.categoryType.name){
         case 'attention':
           this.getNewFollower().then()
+          break
+        case 'system':
+          this.getSystemNotice().then()
           break
       }
     },

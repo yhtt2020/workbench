@@ -22,7 +22,6 @@ export const codeStore = defineStore('code', {
 
     async active(code, serialHash,uid) {
       let data={key: code, serialHash: serialHash,uid:uid}
-      console.log(data)
       return axios.post(activeUrl, data)
     },
 
@@ -83,7 +82,6 @@ export const codeStore = defineStore('code', {
         key: this.myCode,
         uid:uid
       }
-      console.log(data,'输出验证的数据')
       let rs = await axios.post(verifyUrl,data)
       if (rs.code !== 1000) {
         // this.myCode = ''
@@ -93,7 +91,6 @@ export const codeStore = defineStore('code', {
         }
         return false
       } else {
-        console.info('验证通过')
         return true
       }
     }
