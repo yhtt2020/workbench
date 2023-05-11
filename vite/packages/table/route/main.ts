@@ -38,6 +38,7 @@ import GameDiscount from '../page/gameAssistant/GameDiscount.vue'
 import GameIntroduction from '../page/gameAssistant/GameIntroduction.vue'
 import MyGame from '../page/gameAssistant/MyGame.vue'
 import GameDiscountDetail from '../page/gameAssistant/GameDiscountDetail.vue'
+import Message from '../page/social/Message.vue'
 import Team from '../page/Team.vue'
 import Hall from '../page/team/Hall.vue'
 export default [{
@@ -102,6 +103,11 @@ export default [{
           path: '/grade',
           name: 'grade',
           component: Grade,
+        },
+        {
+          path:'/message',
+          name:'message',
+          component:Message
         }
       ]
     },
