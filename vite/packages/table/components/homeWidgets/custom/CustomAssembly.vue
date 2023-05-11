@@ -358,6 +358,7 @@ export default {
         myData:this.myData
         }
       )
+      message.success("保存成功");
       this.panelVisible = false
     },
     imgError(){
