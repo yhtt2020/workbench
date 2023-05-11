@@ -2,7 +2,7 @@
   <div class="mb-3">
     此功能暂时未完成开发，请勿尝试。
   </div>
-  <a-tabs v-if="false" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">
+  <a-tabs v-if="true" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">
     <a-tab-pane v-for="screen in screens" :key="screen.key" :tab="screen.title" :closable="screen.closable">
       <div class="line-title">
         基础设置
@@ -42,7 +42,7 @@
           <a-switch v-model:checked="screen.apps.bottomPanel"></a-switch>
         </div>
         <div v-if="screen.apps" class="line">
-          独立桌面：
+          独立卡片桌面：
           <a-switch v-model:checked="screen.apps.home"></a-switch>
         </div>
         <div v-if="screen.apps" class="line">

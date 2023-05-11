@@ -8,27 +8,11 @@ global.kdbxManager=new KdbxManager()
 const { config } = require(__dirname+'/server-config.js')
 global.serverConfig=config
 global.isExit=false
-electron.protocol.registerSchemesAsPrivileged([
-  { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
-])
-let forceClose = false //是否强制退出应用
-var clipboardContent=''
-var spaceManager
-const {
-  app, // Module to control application life.
-  protocol, // Module to control protocol handling
-  BrowserWindow, // Module to create native browser window.
-  webContents,
-  session,
-  ipcMain: ipc,
-  Menu, MenuItem,
-  crashReporter,
-  dialog,
-  nativeTheme,
-  globalShortcut
-} = electron
-global.___dirname=__dirname
-global.ipcMessageMain=require('./src/main/ipcMessageMain.js')
+
+
+
+
+
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
 	uploadToServer: false,
@@ -85,8 +69,8 @@ electronLog.transports.console.level='debug'
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 global.userDataPath = app.getPath('userData')
-global.settings=require('./js/util/settings/settingsMain.js')
-global.settings.initialize()
+//必须先加载到userData目录才可以加载settings
+
 const browserPage = 'file://' + __dirname + '/index.html'
 
 global.mainWindow = null
@@ -659,7 +643,7 @@ ipc.on('showSecondaryMenu', function(event, data) {
 ipc.on('quit', function() {
 	app.quit()
 })
-var sessions=[]
+
 app.on('ready', function() {
   nativeTheme.on('updated', function () {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
@@ -674,16 +658,7 @@ app.on('before-quit',()=>{
   }
   global.isExit=true
 })
-app.on('session-created',async (ses)=>{
-  sessions.push(ses)
-  ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
-    render.regDefaultProtocol(request, response)
-  })
-  if(ses!==session.defaultSession && session!==session.fromPartition('persist:webcontent')){
-    if(typeof browser!=='undefined')
-      await browser.ensureExtension(ses) //如果不是默认会话和网页会话，就载入插件
-  }
-})
+
 })
 
 // ipc.on('showBookmarks',function(){
