@@ -277,6 +277,7 @@ export default {
       //显示小组提示
       showTeamTip: false,
       teamKey: Date.now(),
+      updateMessageTimer:null,
 
       timer: null,
       messages: [],
@@ -298,6 +299,7 @@ export default {
 
     let that = this
     window.removeEventListener('resize', that.checkScroll)
+    clearInterval(this.updateMessageTimer)
   },
   mounted () {
     // let inserted=localStorage.getItem('insertBird')
@@ -320,6 +322,10 @@ export default {
     //   localStorage.setItem('insertBird','1')
     // }
     this.getMessageIndex().then()
+    //每3分钟刷新一次消息
+    this.updateMessageTimer=setInterval(()=>{
+      this.getMessageIndex().then()
+    },180000)
     let that = this
     this.checkScroll()
     // const that = this
