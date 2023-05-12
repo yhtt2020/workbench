@@ -7,7 +7,7 @@
           <Icon icon="cpu" class="icon"></Icon>
           <span>CPU</span>
         </div>
-          <span style="font-weight:700">{{CPUData.SCPUUTI.value}}%</span></div>
+          <span style="font-weight:700">{{CPUData.useCPU.value}}%</span></div>
       </div>
       <div id="cpu" ref="cpuChart" class="echarts"></div>
 
@@ -17,7 +17,7 @@
             <Icon icon="xianka" class="icon"></Icon>
             <span>GPU</span>
           </div>
-          <span style="font-weight:700">{{CPUData.SGPU1UTI.value}}%</span></div>
+          <span style="font-weight:700">{{CPUData.useGPU.value}}%</span></div>
       </div>
       <div id="gpu" ref="gpuChart"  class="echarts"></div>
 
@@ -27,9 +27,9 @@
             <Icon icon="neicun" class="icon"></Icon>
             <span>内存</span>
           </div>
-          <span style="font-weight:700">{{ CPUData.SMEMUTI.value }}%</span></div>
+          <span style="font-weight:700">{{ CPUData.useMemory.value }}%</span></div>
       </div>
-      <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0 || saving?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.useMemory.value==0 || saving?'':'active'" :percent="CPUData.useMemory.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -104,15 +104,16 @@ export default {
       CPUOption,
       GPUOption,
       CPUData:{
-        SCPUUTI:{value:0},
-        SGPU1UTI:{value:0},
-        SMEMUTI:{value:0},
-        SDSK1ACT:{value:0},
+        useGPU:{value:0},
+        useCPU:{value:0},
+        useMemory:{value:0},
+        down:0,
+        up:0
       },
       CPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       GPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      down:0,
-      up:0
+      echartsInstance:null,
+      echartsGPUInstance:null
     }
   },
 
@@ -124,10 +125,10 @@ export default {
     ...mapWritableState(appStore,['saving']),
     ...mapWritableState(cardStore, ["aidaData"]),
     lastDown(){
-      return this.down < 1000 ? this.down +'KB/S' : this.down<1024000?(this.down/1024).toFixed(2) + 'MB/S':(this.down/1024/1024).toFixed(2) + 'GB/S'
+      return this.CPUData.down < 1000 ? this.CPUData.down +'KB/S' : this.CPUData.down<1024000?(this.CPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUData.down/1024/1024).toFixed(2) + 'GB/S'
     },
     lastUp(){
-      return this.up < 1000 ? this.up +'KB/S' : this.up<1024000?(this.up/1024).toFixed(2) + 'MB/S':(this.up/1024/1024).toFixed(2) + 'GB/S'
+      return this.CPUData.up < 1000 ? this.CPUData.up +'KB/S' : this.CPUData.up<1024000?(this.CPUData.up/1024).toFixed(2) + 'MB/S':(this.CPUData.up/1024/1024).toFixed(2) + 'GB/S'
     }
   },
   mounted() {
@@ -136,26 +137,108 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        filterObjKeys(this.CPUData,this.aidaData)
-        if(this.CPUData.SCPUUTI.value!==0) {
-        this.CPUList.push(this.CPUData.SCPUUTI.value)
+        let { useGPU, warmGPU, useMemory, useCPU, warmCPU, FPS, videoStorage, down, up} = this.aidaData || {}
+        this.CPUData = {
+          useGPU:useGPU,
+          useCPU:useCPU,
+          useMemory:useMemory,
+          down:down,
+          up:up
+        }
+        if(this.CPUData.useCPU.value!==0) {
+        this.CPUList.push(this.CPUData.useCPU.value)
         this.CPUList.shift();}
-        if(this.CPUData.SGPU1UTI.value!==0) {
-         this.GPUList.push(this.CPUData.SGPU1UTI.value)
+        if(this.CPUData.useGPU.value!==0) {
+         this.GPUList.push(this.CPUData.useGPU.value)
          this.GPUList.shift();
          }
-        const {down,up} =  netWorkDownUp(this.aidaData)
-        this.down = down
-        this.up = up
-        this.CPUEcharts()
+        //this.CPUEcharts()
+        this.echartsInstance.setOption({series: [
+            {
+              smooth: 0.6,
+              symbol: 'none',
+              name: 'Email',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
+              },
+              data: this.CPUList,
+              itemStyle : {
+                normal : {
+                  color:'#1890FF'
+                },
+
+              },
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [  // 渐变颜色
+                    {
+                      offset: 0,
+                      color: '#404D61',
+                    },
+                    {
+                      offset: 1,
+                      color: '#404D61',
+                    },
+                  ],
+                  global: false,
+                },
+              },
+            },
+          ]});
+        this.echartsGPUInstance.setOption({series: [
+            {
+              symbol: 'none',
+              smooth: 0.6,
+              name: 'Email',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
+              },
+              data: this.GPUList,
+              itemStyle : {
+                normal : {
+                  color:'#1890FF'
+                },
+
+              },
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [  // 渐变颜色
+                    {
+                      offset: 0,
+                      color: '#404D61',
+                    },
+                    {
+                      offset: 1,
+                      color: '#404D61',
+                    },
+                  ],
+                  global: false,
+                },
+              },
+            },
+          ]})
       },
       deep: true,
     },
   },
   methods:{
     CPUEcharts() {
-      let myChart = echarts.init(this.$refs.cpuChart);
-      myChart.setOption({
+      this.echartsInstance = echarts.init(this.$refs.cpuChart);
+      this.echartsInstance.setOption({
         title: {
           text: ''
         },
@@ -224,8 +307,8 @@ export default {
           },
         ]
       })
-    let myGpuChart = echarts.init(this.$refs.gpuChart);
-    myGpuChart.setOption({
+     this.echartsGPUInstance = echarts.init(this.$refs.gpuChart);
+      this.echartsGPUInstance.setOption({
       animation:false,
       title: {
         text: ''
