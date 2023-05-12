@@ -212,7 +212,9 @@ export default {
   },
   mounted () {
     if (this.team.status) {
-      this.updateTeamShip(this.team.no).then()
+      this.updateTeamShip(this.team.no,{
+        userCache:0
+      }).then()
       this.timer = setInterval(() => {
         console.info('定期更新小队信息')
         this.updateTeamShip(this.team.no)

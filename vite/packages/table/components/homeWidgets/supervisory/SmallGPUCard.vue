@@ -1,9 +1,9 @@
 <template>
   <HomeComponentSlot :options="options">
     <div class="content">
-      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.SGPU1UTI.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
+      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-          <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{GPUData.SGPU1UTI.value}}%</div>
+          <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{GPUData.useGPU.value}}%</div>
           <div style="color:#ACACAC;font-size: 14px;margin-top: 6px">负载</div>
         </template>
       </a-progress>
@@ -12,9 +12,9 @@
         <div class="cpu">
           <div class="cpu-number">
             <span>温度</span>
-            <span style="font-weight: 700;">{{GPUData.TGPU1DIO.value}}℃</span></div>
+            <span style="font-weight: 700;">{{GPUData.warmGPU.value}}℃</span></div>
         </div>
-        <a-progress :showInfo="false" :status="GPUData.TGPU1DIO.value===0?'':'active'" :percent="GPUData.TGPU1DIO.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="GPUData.warmGPU.value===0?'':'active'" :percent="GPUData.warmGPU.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -49,10 +49,9 @@ export default {
         type:'smallGPUCard'
       },
       GPUData:{
-        SGPU1UTI:{value:0},
-        TGPU1DIO:{value:0},
-        SMEMUTI:{value:0},
-        SGPU1USEDDEMEM:{value:0}
+        useGPU:{value:0},
+        warmGPU:{value:0},
+        videoStorage:{value:0}
       },
       GPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
     }
@@ -63,22 +62,19 @@ export default {
   computed:{
     ...mapWritableState(cardStore, ["aidaData"]),
     GPUStorage() {
-      return this.GPUData.SGPU1USEDDEMEM.value>0?(this.GPUData.SGPU1USEDDEMEM.value / 1000).toFixed(2):this.GPUData.SGPU1USEDDEMEM.value
+      return this.GPUData.videoStorage.value>0?(this.GPUData.videoStorage.value / 1000).toFixed(2):this.GPUData.videoStorage.value
     }
   },
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        filterObjKeys(this.GPUData,this.aidaData)
-
-        if(this.GPUData.TGPU1DIO.value===0){
-          for (let i = 0; i <Object.keys(this.aidaData).length ; i++) {
-            if(Object.keys(this.aidaData)[i]==="TCPUGTC")
-              this.GPUData.TGPU1DIO.value=this.aidaData.TCPUGTC.value
-          }
+        let { useGPU, warmGPU, videoStorage} = this.aidaData || {}
+        this.GPUData = {
+          useGPU:useGPU,
+          warmGPU:warmGPU,
+          videoStorage:videoStorage
         }
-
-        this.GPUData.SGPU1UTI.value&& this.GPUList.push(this.GPUData.SGPU1UTI.value)
+        this.GPUData.useGPU.value&& this.GPUList.push(this.GPUData.useGPU.value)
         this.GPUList.shift();
         this.initCanvas('myGPUCanvas',this.GPUList,6,12,"#515151","#3B8FFA")
       },
