@@ -5,7 +5,7 @@
         <div class="w-12 h-12 flex items-center cursor-pointer btn-active justify-center rounded-lg s-bg"  @click="goBack">
           <Icon icon="xiangzuo" style="font-size:1.5em;"></Icon>
         </div>
-        <span style="font-size:20px;font-weight: 500;" id="detail-name" class="ml-4 truncate">{{ detailData.name }}</span>
+        <span style="font-size:20px;font-weight: 500;" id="detail-name" class="ml-4 px-2 py-2 rounded-lg truncate s-bg">{{ detailData.name }}</span>
       </div>
     </div>
     <div class="flex-grow-0">
@@ -208,6 +208,33 @@ export default {
 .active{
   background: rgba(255,255,255,0.40);
 }
+
+.min-introduction{
+  .game-intro{
+    width: 100%;
+    ::v-deep .bb_ul{
+      padding: 0 !important;
+      li{
+        list-style: none !important;
+        padding: 0 !important;
+        img{
+          height: 10px !important;
+          width: 10px !important;
+          object-fit: cover;
+        }
+      }
+    }
+    ::v-deep p img{
+      width: 100% !important;
+      object-fit: cover;
+    }
+    ::v-deep img{
+      width: 100% !important;
+      object-fit: cover;
+    }
+  }
+}
+
 @media screen and (max-width:1224px) {
   #detail-name{
     max-width: 120px;
@@ -234,6 +261,17 @@ export default {
       }
       ::v-deep img{
         width: 100% !important;
+      }
+      ::v-deep .bb_ul {
+        width: 100% !important;
+        li{
+          padding: 0 !important;
+          list-style: none !important;
+          img{
+            height: 10px !important;
+            width: 10px !important;
+          }
+        }
       }
     }
   }
@@ -262,6 +300,17 @@ export default {
       }
       ::v-deep img{
         width: 100% !important;
+      }
+      ::v-deep .bb_ul {
+        width: 100% !important;
+        li{
+          padding: 0 !important;
+          list-style: none !important;
+          img{
+            height: 10px !important;
+            width: 10px !important;
+          }
+        }
       }
     }
   }
