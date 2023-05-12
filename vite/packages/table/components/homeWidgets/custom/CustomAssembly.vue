@@ -189,7 +189,7 @@ export default {
       return this.ClassifyData.filter(i =>{return i.type === this.nowClassify&&i.name.includes(this.selectContent)})
     },
     title(){
-      return this.myData.link.name||this.myData
+      return this.myData.link.name||this.myData.link
     }
   },
   created() {

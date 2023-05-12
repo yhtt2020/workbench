@@ -1,24 +1,24 @@
 <template>
 <HomeComponentSlot :options="options">
   <div class="top-content">
-    <div><span>{{CPUGPUData.SCPUUTI.value}}%</span>
+    <div><span>{{CPUGPUData.useCPU.value}}%</span>
       <span>
       <Icon icon="cpu" class="icon" ></Icon>CPU</span>
     </div>
 
     <div>
-      <span>{{CPUGPUData.SGPU1UTI.value}}%</span>
+      <span>{{CPUGPUData.useGPU.value}}%</span>
       <span>
       <Icon icon="xianka" class="icon"></Icon>GPU</span></div>
 
     <div>
-      <span>{{CPUGPUData.SMEMUTI.value}}%</span>
+      <span>{{CPUGPUData.useMemory.value}}%</span>
       <span>
       <Icon icon="neicun" class="icon"></Icon>内存</span></div>
 
     <div style="position: relative">
-      <span>{{CPUGPUData.SRTSSFPS.value}}</span>
-      <a-tooltip v-if="CPUGPUData.SRTSSFPS.value==0" :arrowPointAtCenter="true">
+      <span>{{CPUGPUData.FPS.value}}</span>
+      <a-tooltip v-if="CPUGPUData.FPS.value==0" :arrowPointAtCenter="true">
       <template #title>需要游戏运行在前台且打开RTSS方可读取到</template>
       <Icon v-zoom icon="tishi-xianxing" style="height: 24px;width: 24px;position: absolute;top: 12px;right: 12px;color: orange;margin: 0"></Icon>
     </a-tooltip>
@@ -63,13 +63,14 @@ export default {
         type:'CPUFourCard'
       },
       CPUGPUData:{
-        SCPUUTI:{value:0},
-        SGPU1UTI:{value:0},
-        SMEMUTI:{value:0},
-        SRTSSFPS:{value:0},
+        useCPU:{value:0},
+        useGPU:{value:0},
+        useMemory:{value:0},
+        FPS:{value:0},
+        down:0,
+        up:0
       },
-      down:0,
-      up:0
+
   }
   },
   // directives: {
@@ -97,19 +98,24 @@ export default {
   computed:{
     ...mapWritableState(cardStore, ["aidaData"]),
     lastDown(){
-      return this.down < 1000 ? this.down +'KB/S' : this.down<1024000?(this.down/1024).toFixed(2) + 'MB/S':(this.down/1024/1024).toFixed(2) + 'GB/S'
+      return this.CPUGPUData.down < 1000 ? this.CPUGPUData.down +'KB/S' : this.CPUGPUData.down<1024000?(this.CPUGPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.down/1024/1024).toFixed(2) + 'GB/S'
     },
     lastUp(){
-      return this.up < 1000 ? this.up +'KB/S' : this.up<1024000?(this.up/1024).toFixed(2) + 'MB/S':(this.up/1024/1024).toFixed(2) + 'GB/S'
+      return this.CPUGPUData.up < 1000 ? this.CPUGPUData.up +'KB/S' : this.CPUGPUData.up<1024000?(this.CPUGPUData.up/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.up/1024/1024).toFixed(2) + 'GB/S'
     }
   },
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        filterObjKeys(this.CPUGPUData,this.aidaData)
-        const {down,up} =  netWorkDownUp(this.aidaData)
-        this.down = down
-        this.up = up
+        let { useGPU, useMemory, useCPU, FPS, down, up} = this.aidaData || {}
+        this.CPUGPUData = {
+          useGPU:useGPU,
+          useCPU:useCPU,
+          useMemory:useMemory,
+          FPS:FPS,
+          down:down,
+          up:up
+        }
       },
       deep: true,
     },
