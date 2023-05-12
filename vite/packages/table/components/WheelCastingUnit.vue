@@ -1,15 +1,15 @@
 <template>
-  <div style="width: 50vw; margin:0 auto 12px auto;">
-    <div ref="slider" class="keen-slider" style="height: 25.5em;">
+  <div class="wheel-content flex flex-col" style="width:600px;">
+    <div ref="slider" class="keen-slider s-bg rounded-lg">
       <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
         <video class="w-full h-full rounded-lg"  controls="controls"   controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
         disablePictureInPicture   playsinline="" autoplay="" muted="" loop="" v-if="item.mp4">
           <source :src="item.mp4.max" class="w-full rounded-lg" type="video/mp4" id="bgVid">
         </video>
-        <img :src="item.path_full" class="w-full h-full rounded-lg object-cover"  alt="" v-else>
+        <img :src="item.path_full" class="w-full h-full rounded-lg object-cover "  alt="" v-else>
       </div>
     </div>
-    <div class="flex mt-2">
+    <div class="flex mt-3 " style="height: 72px;">
       <button class="keen-slider__arrow mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </button>
@@ -184,5 +184,9 @@ export default {
 
 .thumbnail .keen-slider__slide {
   cursor: pointer;
+}
+.keen-slider{
+  flex: 1;
+  align-self: stretch;
 }
 </style>
