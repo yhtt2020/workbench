@@ -263,7 +263,7 @@ import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue"
 import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
-
+import {setSupervisoryData} from '../js/action/supervisory'
 const readAida64 = window.readAida64
 const deskTemplate = {
   daily: [
@@ -587,6 +587,7 @@ export default {
     ...mapActions(cardStore, ['setAidaData', 'getCurrentDesk', 'addDesk', 'switchToDesk','removeDesk','getCurrentIndex']),
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(weatherStore, ['fixData']),
+    setSupervisoryData,
     clearWallpaper () {
       this.setBackgroundImage({ path: '' })
     },
@@ -701,12 +702,8 @@ export default {
       this.timer = setInterval(() => {
         readAida64().then(res => {
           this.runAida64 = true
-          Object.keys(res).map(i => {
-            if (i === 'TCPUDIO') res.TCPUPKG = res[i]
-            if (i === 'TGPUDIO') res.TGPU1DIO = res[i]
-            if (i === 'TGPU1HOT' && !res.TGPU1DIO) res.TGPU1DIO = res[i]
-          })
-          this.setAidaData(res)
+          const newData =  this.setSupervisoryData(res)
+          this.setAidaData(newData)
           // console.log(res)
           //this.data=JSON.stringify(res, null, '\t')
         }).catch(err => {
@@ -719,15 +716,8 @@ export default {
               this.startAida()
             }).catch(err => {})
           }, 10000)
-          this.setAidaData({
-            SGPU1UTI: { value: '-' },
-            TGPU1DIO: { value: '-' },
-            SMEMUTI: { value: '-' },
-            SCPUUTI: { value: '-' },
-            TCPUPKG: { value: '-' },
-            SRTSSFPS: { value: '-' },
-            SDSK1ACT: { value: '-' },
-          })
+          const newData =  this.setSupervisoryData(undefined)
+          this.setAidaData(newData)
         })
       }, 1000)
     },

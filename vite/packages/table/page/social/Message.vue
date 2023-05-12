@@ -12,7 +12,7 @@
        <HorizontalPanel @changed="navChanged" :navList="category" v-model:selectType="categoryType" bgColor="drawer-item-select-bg" :height="44"></HorizontalPanel>
        <template v-if="categoryType.name === 'interact'">
         <div style="height: 26.99em;">
-         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4" style="height: 100%">
+         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4" style="height: calc(100vh - 18em)">
             <!-- 数据空状态 -->
            <a-list :data-source="[]" v-if="interact.length === 0" />
 
@@ -22,49 +22,46 @@
              </div>
              <div class="flex flex-col ml-4">
                <div class="flex">
-                 <span class="pr-1 truncate" style="max-width: 84px; font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
+                 <span class="pr-1 truncate  interact-name" style="max-width: 84px; font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
                    {{item.title}}
                  </span>
-                 <span class="pr-1 truncate " style="font-size: 16px;color: rgba(255,255,255,0.60);font-weight: 400;">
+                 <span class="pr-1 truncate  dynamic" style="font-size: 16px;color: rgba(255,255,255,0.60);font-weight: 400;">
                    {{item.dynamic}}
                  </span>
                </div>
-               <div class="truncate" style="width: 98%"><span class="w-100" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 300;">{{item.content}}</span></div>
-               <span style="font-size: 14px; color: rgba(255,255,255,0.40); font-weight: 400;">{{ item.create_time }}</span>
+               <div class="truncate " style="width: 98%"><span class="w-100 interact-content" >{{item.content}}</span></div>
+               <span class="create-time mt-2">{{ item.create_time }}</span>
              </div>
            </div>
          </vueCustomScrollbar>
-        </div>
        </template>
        <template v-if="categoryType.name === 'attention'">
-       <div style="height: 26.99em;">
-         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: 100%">
-           <!-- 数据空状态 -->
-           <a-list :data-source="[]" v-if="newFollower.length === 0" />
+        <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: calc(100vh - 18em)">
+          <!-- 数据空状态 -->
+          <a-list :data-source="[]" v-if="newFollower.length === 0" />
 
-           <div v-else v-for="item in  newFollower" @click="concernToggle(item)" class="px-4 rounded-lg interact-hover pointer py-4 mb-3 flex items-center">
-             <div>
-               <a-avatar :size="40" :src="item.user.avatar_64" class="avatar-list"></a-avatar>
+          <div v-else v-for="item in  newFollower" @click="concernToggle(item)" class="px-4 rounded-lg interact-hover pointer py-4 mb-3 flex items-center">
+            <div>
+              <a-avatar :size="40" :src="item.user.avatar_64" class="avatar-list"></a-avatar>
              </div>
              <div class="flex flex-col ml-4">
                <div class="flex">
-                 <span class="pr-1 truncate" style="max-width: 84px; font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
-                   {{item.user.nickname}}
-                 </span>
-                 <span class="pr-1 truncate" style="font-size: 16px;color: rgba(255,255,255,0.60);font-weight: 400;">
-                   关注了你
-                 </span>
-                 <span class="truncate w-52" style=" font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;"></span>
-               </div>
-               <span style="font-size: 14px; color: rgba(255,255,255,0.40); font-weight: 400;">{{ item.create_time }}</span>
-             </div>
-           </div>
-         </vueCustomScrollbar>
-       </div>
+                 <span class="pr-1 truncatepush-theme">
+                  {{item.user.nickname}}
+                </span>
+                <span class="pr-1 truncate dynamic">
+                  关注了你
+                </span>
+                <span class="truncate w-52 interact-content" ></span>
+              </div>
+              <span class="create-time">{{ item.create_time }}</span>
+            </div>
+          </div>
+        </vueCustomScrollbar>
        </template>
        <template v-if="categoryType.name === 'system'">
         <div style="height: 26.99em;">
-         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: 100%">
+         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"   style="height: calc(100vh - 18em)">
            <!-- 数据空状态 -->
            <a-list :data-source="[]" v-if="systemNotice.length === 0" />
            <div v-else v-for="item in systemNotice" @click="systemItemClick()" class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
@@ -72,13 +69,13 @@
                <Icon icon="bell" style="font-size: 1.429em;"></Icon>
              </div>
              <div class="flex flex-col ml-4">
-                <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 600;">
+                <span class="push-theme">
                  {{item.title}}
                 </span>
-                <span class="truncate" style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 300;">
+                <span class="interact-content">
                  {{item.content}}
                 </span>
-                <span style="font-size: 14px;color: rgba(255,255,255,0.40);font-weight: 400;">
+                <span class="create-time">
                  {{item.create_time}}
                 </span>
              </div>
@@ -87,31 +84,29 @@
         </div>
        </template>
        <template v-if="categoryType.name === 'push'">
-       <div style="height: 26.99em;">
-         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: 100%">
-            <!-- 数据空状态 -->
-           <a-list :data-source="[]" v-if="push.length === 0" />
-           <div v-else v-for="item in push" @click="clickDetail(item)" class="px-4 rounded-lg interact-hover pointer py-4 mb-3 flex  flex-col">
-             <span style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
-               {{item.title}}
-             </span>
-             <span style="font-size: 14px;color: rgba(255,255,255,0.85);font-weight: 400;">
-               {{item.summary}}
-             </span>
-             <div class="rounded-lg mt-3 mb-3" style="height: 240px;">
-                <img :src="item.logo_350" class="rounded-lg" style="width:100%;height: 100%; object-fit: cover;" alt="">
-             </div>
-             <div class="flex justify-between">
-               <span>{{item.create_time}}</span>
-               <span >点击查看详情</span>
-             </div>
+        <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: calc(100vh - 18em)">
+          <!-- 数据空状态 -->
+         <a-list :data-source="[]" v-if="push.length === 0" />
+         <div v-else v-for="item in push" @click="clickDetail(item)" class="px-4 rounded-lg interact-hover pointer py-4 mb-3 flex  flex-col">
+           <span class="push-theme">
+             {{item.title}}
+           </span>
+           <span style="font-size: 14px;color: rgba(255,255,255,0.85);font-weight: 400;">
+             {{item.summary}}
+           </span>
+           <div class="rounded-lg mt-3 mb-3" style="height: 240px;">
+              <img :src="item.logo_350" class="rounded-lg" style="width:100%;height: 100%; object-fit: cover;" alt="">
            </div>
-         </vueCustomScrollbar>
-       </div>
+           <div class="flex justify-between">
+             <span>{{item.create_time}}</span>
+             <span >点击查看详情</span>
+           </div>
+         </div>
+       </vueCustomScrollbar>
        </template>
        <template v-if="categoryType.name === 'custom'">
         <div style="height: 26.99em;">
-          <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: 100%">
+          <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: calc(100vh - 18em)">
             <!-- 数据空状态 -->
             <a-list :data-source="[]" v-if="customNotice.length === 0" />
             <div v-else v-for="item in customNotice" @click="customListClick()" class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
@@ -119,13 +114,13 @@
                 <Icon icon="bell" style="font-size: 1.429em;"></Icon>
               </div>
               <div class="flex flex-col ml-4">
-                 <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 600;">
+                 <span class="interact-name">
                   {{item.title}}
                  </span>
-                 <span style="font-size: 16px;color: rgba(255,255,255,0.85); font-weight: 300;">
+                 <span class="interact-name">
                   {{item.content.substring(0,30)}}…
                  </span>
-                 <span style="font-size: 14px;color: rgba(255,255,255,0.40);font-weight: 400;">
+                 <span class="create-time">
                   {{item.create_time}}
                  </span>
               </div>
@@ -272,5 +267,31 @@ export default {
     filter: brightness(0.8);
     background:rgba(42, 42, 42, 0.25);
   }
+}
+.interact-name{
+  max-width: 84px;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+.interact-content{
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+.create-time{
+  font-size: 14px;
+  color: rgba(255,255,255,0.40);
+  font-weight: 400;
+}
+.dynamic{
+  font-size: 16px;
+  color: rgba(255,255,255,0.40);
+  font-weight: 400;
+}
+.push-theme{
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
 }
 </style>

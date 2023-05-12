@@ -1,9 +1,9 @@
 <template>
   <HomeComponentSlot :options="options">
     <div class="content">
-      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.SCPUUTI.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
+      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-            <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{CPUData.SCPUUTI.value}}%</div>
+            <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{CPUData.useCPU.value}}%</div>
             <div style="color:#ACACAC;font-size: 14px;margin-top: 6px">负载</div>
         </template>
       </a-progress>
@@ -12,9 +12,9 @@
         <div class="cpu right-content">
         <div class="cpu-number">
           <span>温度</span>
-          <span style="font-weight: 700;">{{CPUData.TCPUPKG.value}}℃</span></div>
+          <span style="font-weight: 700;">{{CPUData.warmCPU.value}}℃</span></div>
       </div>
-        <a-progress :showInfo="false" :status="CPUData.TCPUPKG.value==0|| saving?'':'active'"  :percent="CPUData.TCPUPKG.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.warmCPU.value==0|| saving?'':'active'"  :percent="CPUData.warmCPU.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -22,9 +22,9 @@
         <div class="cpu" style="margin-top: 3px">
           <div class="cpu-number">
             <span>内存</span>
-            <span style="font-weight: 700;">{{CPUData.SMEMUTI.value}}%</span></div>
+            <span style="font-weight: 700;">{{CPUData.useMemory.value}}%</span></div>
         </div>
-        <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value==0|| saving?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.useMemory.value==0|| saving?'':'active'" :percent="CPUData.useMemory.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -54,9 +54,9 @@ export default {
         type:'smallCPUCard'
       },
       CPUData:{
-        SCPUUTI:{value:0},
-        TCPUPKG:{value:0},
-        SMEMUTI:{value:0},
+        useCPU:{value:0},
+        warmCPU:{value:0},
+        useMemory:{value:0},
       },
       CPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
     }
@@ -71,8 +71,13 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        filterObjKeys(this.CPUData,this.aidaData)
-        this.CPUData.SCPUUTI.value&&  this.CPUList.push(this.CPUData.SCPUUTI.value)
+        let {  useMemory, useCPU, warmCPU} = this.aidaData || {}
+        this.CPUData = {
+          useCPU:useCPU,
+          useMemory:useMemory,
+          warmCPU:warmCPU
+        }
+        this.CPUData.useCPU.value&&  this.CPUList.push(this.CPUData.useCPU.value)
         this.CPUList.shift();
         this.initCanvas('myCPUCanvas',this.CPUList,6,12,"#515151","#3B8FFA")
       },
