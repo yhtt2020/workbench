@@ -11,11 +11,10 @@
        <!-- 消息分类的tab -->
        <HorizontalPanel @changed="navChanged" :navList="category" v-model:selectType="categoryType" bgColor="drawer-item-select-bg" :height="44"></HorizontalPanel>
        <template v-if="categoryType.name === 'interact'">
-        <div style="height: 26.99em;">
+        <div style="">
          <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4" style="height: calc(100vh - 18em)">
             <!-- 数据空状态 -->
-           <a-list :data-source="[]" v-if="interact.length === 0" />
-
+           <a-list :data-source="[]" v-if="interact.length === 0" >     </a-list>
            <div v-else v-for="item in  interact" @click="clickInteract(item)" class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
              <div>
                <a-avatar v-if="item.user" :size="40" :src="item.user.avatar_128" class="avatar-list"></a-avatar>
@@ -33,7 +32,9 @@
                <span class="create-time mt-2">{{ item.create_time }}</span>
              </div>
            </div>
+
          </vueCustomScrollbar>
+        </div>
        </template>
        <template v-if="categoryType.name === 'attention'">
         <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: calc(100vh - 18em)">
@@ -60,7 +61,7 @@
         </vueCustomScrollbar>
        </template>
        <template v-if="categoryType.name === 'system'">
-        <div style="height: 26.99em;">
+        <div >
          <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"   style="height: calc(100vh - 18em)">
            <!-- 数据空状态 -->
            <a-list :data-source="[]" v-if="systemNotice.length === 0" />
@@ -105,7 +106,7 @@
        </vueCustomScrollbar>
        </template>
        <template v-if="categoryType.name === 'custom'">
-        <div style="height: 26.99em;">
+        <div >
           <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4"  style="height: calc(100vh - 18em)">
             <!-- 数据空状态 -->
             <a-list :data-source="[]" v-if="customNotice.length === 0" />
@@ -114,10 +115,10 @@
                 <Icon icon="bell" style="font-size: 1.429em;"></Icon>
               </div>
               <div class="flex flex-col ml-4">
-                 <span class="interact-name">
+                 <span class="interact-name" style="max-width: 100%">
                   {{item.title}}
                  </span>
-                 <span class="interact-name">
+                 <span class="interact-content">
                   {{item.content.substring(0,30)}}…
                  </span>
                  <span class="create-time">
@@ -276,7 +277,7 @@ export default {
 }
 .interact-content{
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 300;
   color: rgba(255,255,255,0.85);
 }
 .create-time{
