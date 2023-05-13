@@ -26,14 +26,20 @@
 import BackBtn from '../components/comp/BackBtn.vue'
 import { Modal, message } from 'ant-design-vue'
 import { runNir } from '../js/common/exec'
-
+import { getSign, isMain } from '../js/common/screenUtils'
 const execShell = require('child_process').exec
 export default {
   name: 'Power',
   components: { BackBtn },
   methods: {
+
     exit () {
-      ipc.send('exitTable')
+      if(isMain()){
+        ipc.send('exitTable')
+      }else{
+        ipc.send('closeScreen',{fullDomain:getSign()})
+      }
+
     },
     shutdown () {
       Modal.confirm({

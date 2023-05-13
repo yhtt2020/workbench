@@ -1,5 +1,7 @@
 const { app ,ipcMain:ipc } = require('electron')
-
+function sendToTable(event,args){
+  global.tableManager.send(event,args)
+}
 /**
  * 分屏管理器，此处的管理器不直接操作屏幕数据，而只存运行时
  */
@@ -44,7 +46,6 @@ class TableScreenManager {
   bindSaveBoundsEvent(window,key){
     window.on('close', () => {
       this.saveBounds(window,key)
-      global.tableWin = null
     })
 
     window.on('resized',()=>{
@@ -64,7 +65,7 @@ class TableScreenManager {
       this.saveBounds(window,key)
     })
 
-    tableWin.window.webContents.on('content-bounds-updated',()=>{
+    window.on('content-bounds-updated',()=>{
       this.saveBounds(window,key)
     })
 
@@ -81,6 +82,17 @@ class TableScreenManager {
     window.on('enter-full-screen',()=>{
       this.saveBounds(window,key)
     })
+  }
+  closeByDomain(domain){
+    console.log('关闭分屏')
+    let key=Object.keys(this.runningScreens).find(key=>{
+      return this.runningScreens[key].fullDomain===domain
+    })
+    let screen=this.runningScreens[key]
+    if(screen){
+      screen.window.close()
+      delete this.runningScreens[key]
+    }
   }
   /**
    *
@@ -130,14 +142,25 @@ class TableScreenManager {
       }
       this.bindSaveBoundsEvent(window, screen.key)
       const url=render.getUrl('table.html',{},screen.fullDomain)
-      console.log(url)
       window.loadURL(url)
-      window.webContents.openDevTools()
+      this.runningScreens[key]={
+        windowInstance:windowInstance,
+        window:window,
+        screen:screen,
+        domain:screen.domain,
+        fullDomain:screen.fullDomain
+      }
     }
   }
   bindIPC(){
     ipc.on('startupScreen',async (event, args) => {
       await this.startupScreen(args.screen)
+    })
+
+    ipc.on('closeScreen',(event,args)=>{
+      let fullDomain=args.fullDomain
+      this.closeByDomain(fullDomain)
+      sendToTable('closeScreen')
     })
   }
 }
