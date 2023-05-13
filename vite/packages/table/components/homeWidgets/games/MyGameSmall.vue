@@ -6,10 +6,10 @@
      <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
       当前游戏
      </div>
-     <div class="flex w-full items-center justify-between flex-wrap mt-4 " v-if="myDetailShow === false">
-      <div class="rounded-lg pointer relative mb-3" v-for="item in listImage" @click="enterMySmallDetail(item)"  style=" width: 120px; height: 110px;">
-        <img :src="item.src" alt="" class="rounded-lg" style="width: 100%; height:100%; object-fit: cover;">
-        <div class="small-title w-full flex items-center  px-2 py-2" style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</div>
+     <div class="flex w-full items-center justify-between flex-wrap mt-4" v-if="myDetailShow === false">
+      <div class="rounded-lg pointer relative mb-3" v-for="item in listImage" @click="enterMySmallDetail(item)"  style=" width: 100px; height: 100px;">
+        <img :src="item.src" alt="" class="rounded-lg " style="width: 100%; height:100%; object-fit: cover;">
+        <div class="small-title  truncate px-2 py-1" style="width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</div>
       </div>
      </div>
      <MyGameSmallDetail v-else :detailData="detailData" @quitGame="closeGameGuide"></MyGameSmallDetail>
