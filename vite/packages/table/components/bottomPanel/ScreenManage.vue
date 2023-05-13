@@ -23,14 +23,17 @@
     <div class="line-title">
       选中： 游戏分屏
     </div>
-    <div class="line">
-      <a-switch></a-switch>
-      启用分屏
-    </div>
-    <div class="line">
-      <a-switch></a-switch>
-      自启动
-    </div>
+    <temlate v-if="currentScreen.key!=='main'">
+      <div class="line">
+        <a-switch @change="toggleScreen" v-model:checked="currentScreen.running"></a-switch>
+        启用分屏
+      </div>
+      <div class="line">
+        <a-switch></a-switch>
+        自启动
+      </div>
+    </temlate>
+
     <div class="line">
       <a-button type="primary">设置屏幕</a-button>
     </div>
@@ -41,26 +44,41 @@
 </template>
 
 <script>
-import { mapWritableState } from 'pinia'
+import { mapWritableState ,mapActions} from 'pinia'
 import { screenStore } from '../../store/screen'
 import _ from 'lodash-es'
 export default {
   name: 'ScreenManage',
   data(){
     return {
-      list:[]
+      list:[],
+      currentScreen:{}
     }
   },
   computed: {
     ...mapWritableState(screenStore, ['screens']),
 
   },
+
   mounted () {
-    this.list=_.cloneDeep(this.screens)
-    this.list[0].active=true
+    setTimeout(()=>{
+      this.list=_.cloneDeep(this.screens)
+      this.list[0].active=true
+      this.currentScreen=this.list[0]
+    },500)
   },
   methods:{
+    ...mapActions(screenStore,['startupScreen']),
+    toggleScreen(checked){
+      console.log(checked)
+      if(checked){
+        this.startupScreen(this.currentScreen.key)
+      }else{
+
+      }
+    },
     click(screen){
+      this.currentScreen=screen
       this.list.forEach(s=>{
         s.active=false
       })
