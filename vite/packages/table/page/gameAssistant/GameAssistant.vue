@@ -57,7 +57,7 @@ export default {
           icon:'star',
           route:
             {
-              name: 'gameDiscount'
+              name: 'recommend'
             }
         },
         // {
