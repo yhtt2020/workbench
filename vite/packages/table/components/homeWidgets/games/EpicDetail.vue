@@ -41,7 +41,6 @@ export default {
   methods:{
     remainderDay,
     epicBack(){
-      console.log(11);
       this.$emit('update:backShow',this.backShow)
     },
     onClickOffice(value){

@@ -22,10 +22,18 @@
           </swiper-slide>
         </swiper>
 
-        <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
+        <!-- <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
           <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
           <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
           <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+        </div> -->
+        <div class="flex mt-12 items-center justify-between">
+          <div class="s-bg change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
+            <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+            <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
+            <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+          </div> 
+          <span style="padding:13px 26px;" class="s-bg rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
         </div>
       </template>
       <template v-if="detailShow === true">
@@ -53,10 +61,18 @@
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack()" class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
+            <div @click="discountBack()" class=" change pointer s-bg rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10" @click="openSteam(dpList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam</div>
+            <span class="change pointer rounded-lg s-bg  flex items-center justify-center" 
+            style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             @click="enterGameDetail(dpList.steam_appid)"
+            >
+              详情
+            </span>
+            <span class="change pointer rounded-lg s-bg  flex items-center justify-center"
+             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             @click="openSteam(dpList.steam_appid)">购买</span>
           </div>
         </div>
       </template>
@@ -140,7 +156,6 @@ export default {
 
     })
   },
-
   computed:{
     ...mapWritableState(steamStore,["data","dataDetail",'getData']),
     ...mapWritableState(cardStore,["customComponents","updateCustomComponents"]),
@@ -179,8 +194,6 @@ export default {
       }
     }
   },
-
-
   methods:{
     ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData",'getRandomList']),
     // 按钮触发右侧抽屉弹窗
@@ -275,8 +288,14 @@ export default {
     getArea(v){
       this.defaultRegion = v.id
       this.getRegion()
-    }
+    },
 
+    enterDiscountDetail(){
+      this.$router.push({name:'recommend',params:{id:this.customData.id}})
+    },
+    enterGameDetail(v){
+      this.$router.push({name:'GameDiscountDetail',params:{id:v}})
+    }
   },
   setup() {
     return {

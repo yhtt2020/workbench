@@ -127,7 +127,7 @@ export default {
     },
     methods:{
       goBack(){
-        this.$router.push({name:'gameDiscount'}) 
+        this.$router.push({name:'recommend'}) 
       },
       getDetailVal(){
         if(this.id !== undefined){

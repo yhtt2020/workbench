@@ -83,13 +83,19 @@
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack()"
+            <div @click="discountBack"
                  class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10"
-                 @click="openSteam(detailList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam
-            </div>
+            <span class="change pointer rounded-lg s-bg  flex items-center justify-center" 
+            style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             @click="enterGameDetail(detailList.steam_appid)"
+            >
+              详情
+            </span>
+            <span class="change pointer rounded-lg s-bg  flex items-center justify-center"
+             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             @click="openSteam(detailList.steam_appid)">购买</span>
           </div>
         </div>
       </template>
@@ -289,6 +295,9 @@ export default {
     },
     enterDiscountDetail(){
       this.$router.push({name:'recommend',params:{id:this.customData.id}})
+    },
+    enterGameDetail(v){
+      this.$router.push({name:'GameDiscountDetail',params:{id:v}})
     }
   }
 }
