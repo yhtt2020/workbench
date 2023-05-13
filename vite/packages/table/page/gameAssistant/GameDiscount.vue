@@ -69,27 +69,18 @@
      </div>
   </template>
   <router-view></router-view>
-
-  <a-drawer  v-model:visible="discountDisplay" title="地区" style="text-align: center;"
-   :bodyStyle="{textAlign:'left'}" placement="right"  width="500" @close="onClose">
-   <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
-    <div class="w-full h-12 flex items-center right-select-active  justify-center pointer my-4 rounded-lg s-bg"
-      v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'active':''" @click="selectedAreaSuit(item,index)"
-    >
-      {{ item.name }}
-    </div>
-   </vue-custom-scrollbar>
-  </a-drawer>
-   
+  <HorizontalDrawer :drawerTitle="drawerTitle" :rightSelect="rightSelect" ref="regionDrawer" @getArea="getArea"></HorizontalDrawer>
 </template>
 
 <script>
 import { sendRequest,regionRange,remainderDay } from '../../js/axios/api';
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
+import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 export default {
   name: "GameDiscount",
   components:{
-    HorizontalPanel
+    HorizontalPanel,
+    HorizontalDrawer
   },
   data(){
     return{
@@ -113,6 +104,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      drawerTitle:'地区'
     }
   },
   mounted(){
@@ -123,14 +115,12 @@ export default {
     remainderDay,
     // 打开右侧抽屉事件
     openRightDrawer(){
-      this.discountDisplay = true
+       this.$refs.regionDrawer.openDrawer()
     },
     // 打开右侧抽屉区服选中事件
-    selectedAreaSuit(item,index){
-      this.defaultGameIndex = index
-      this.defaultGameValue = item
-      this.getSelectCCData(item.id)
-      this.discountDisplay = false
+    getArea(v){
+      this.defaultGameValue = v
+      this.getSelectCCData(v.id)
     },
 
     // 进入详情
