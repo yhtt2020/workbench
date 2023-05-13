@@ -33,7 +33,7 @@
                 <div>
                   <a-avatar v-if="item.user" :size="40" :src="item.user.avatar_128" class="avatar-list"></a-avatar>
                 </div>
-                <div class="flex flex-col ml-4">
+                <div class="flex flex-col ml-4" style="flex:1">
                   <div class="flex">
                  <span class="pr-1 truncate  interact-name"
                        style="max-width: 84px; font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
@@ -151,7 +151,6 @@
         </template>
       </a-col>
       <a-col id="userDetail"   v-show="selectedUid!==0" :lg="10" >
-
         <div style="display: flex;justify-content: center;flex-direction: column;height: 100%">
           <div class=" mb-5">
             <div @click="openDetail" style="background: rgb(80, 139, 254); font-size: 16px; font-weight: 400;"
@@ -169,8 +168,6 @@
 
 
         </div>
-
-
       </a-col>
     </a-row>
   </div>
