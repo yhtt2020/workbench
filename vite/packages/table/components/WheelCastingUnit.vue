@@ -2,26 +2,28 @@
   <div class="wheel-content flex flex-col" style="width:600px;">
     <div ref="slider" class="keen-slider s-bg rounded-lg">
       <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
-        <video class="w-full h-full rounded-lg"  controls="controls"   controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
-        disablePictureInPicture   playsinline="" autoplay="" muted="" loop="" v-if="item.mp4">
+        <video class="w-full h-full rounded-lg" @ended="next"  controls="controls"   controlslist="nodownload  noremoteplayback noplaybackrate"
+        disablePictureInPicture   playsinline="" autoplay="" muted="" v-if="item.mp4">
           <source :src="item.mp4.max" class="w-full rounded-lg" type="video/mp4" id="bgVid">
         </video>
-        <img :src="item.path_full" class="w-full h-full rounded-lg object-cover "  alt="" v-else>
+        <viewer :images="item.path_full" :options="options" class="w-full h-full rounded-lg object-cover " v-else>
+          <img :src="item.path_full"  class="w-full pointer h-full rounded-lg object-cover " :data-source="item.path_full" alt="" >
+        </viewer>
       </div>
     </div>
     <div class="flex mt-3 " style="height: 72px;">
-      <button class="keen-slider__arrow mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
+      <button class="keen-slider__arrow btn-active mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </button>
       <div ref="thumbnail" class="keen-slider thumbnail">
         <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
           <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full  rounded-md  object-cover" alt="">
-          <div class="thumbnail-bofang w-8 h-8 rounded-full s-bg flex items-center justify-center" v-if="item.mp4">
+          <div class="thumbnail-bofang w-8 h-8  rounded-full s-bg flex items-center justify-center" v-if="item.mp4">
             <Icon icon="bofang" style="font-size: 2em;"></Icon>
           </div>
         </div>
       </div>
-      <button class="keen-slider__arrow ml-2  pointer rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
+      <button class="keen-slider__arrow ml-2  pointer btn-active rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
         <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
       </button>
     </div>
@@ -85,7 +87,7 @@ export default {
   },
   mounted() {
     setTimeout(()=>{
-      this.slider = new KeenSlider(this.$refs.slider)
+      this.slider = new KeenSlider(this.$refs.slider,)
       this.thumbnail = new KeenSlider(
        this.$refs.thumbnail,
        {
@@ -98,6 +100,17 @@ export default {
        [ThumbnailPlugin(this.slider)]
       )
     },100)
+  },
+  data(){
+    return{
+      options: {
+        url: 'data-source',
+        toolbar:false,
+        title:false,
+        tooltip:false,
+        navbar:false
+      },
+    }
   },
   methods:{
     prev() {
@@ -200,5 +213,9 @@ export default {
 }
 .thumbnail .keen-slider__slide.active {
   border: 3px solid rgba(255,255,255,0.5);
+}
+.btn-active:active{
+  filter: brightness(0.8);
+  background:rgba(42, 42, 42, 0.25);
 }
 </style>
