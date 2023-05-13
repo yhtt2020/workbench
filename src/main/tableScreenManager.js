@@ -27,6 +27,7 @@ class TableScreenManager {
       isMaximized: window.isMaximized()
     }
     settings.set('tableWinSetting_'+key, tableWinSetting)
+    console.log('设置',key,tableWinSetting)
   }
 
   /**
@@ -135,11 +136,16 @@ class TableScreenManager {
         }
       })
       let savedBounds = this.getBounds(screen.key)
-      console.log(windowInstance,'创建出的串口给')
       let window=windowInstance.window
       if (savedBounds) {
-        window.setBounds(savedBounds)
+        window.setBounds(savedBounds.bounds)
+        setTimeout(()=>{
+          if (savedBounds.isMaximized) {
+            window.maximize()
+          }
+        },1000)
       }
+
       this.bindSaveBoundsEvent(window, screen.key)
       const url=render.getUrl('table.html',{},screen.fullDomain)
       window.loadURL(url)
