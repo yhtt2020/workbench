@@ -70,16 +70,8 @@
       </div>
     </div>
   </HomeComponentSlot>
-  <a-drawer :width="500" v-model:visible="weatherVisible" @close="onClose" title="常用天气位置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right">
-    <div class="flex flex-col justify-start">
-      <span style="margin-bottom: 14px;">常用天气位置</span>
-      <a-radio-group @change="getDefaultWeather($event)" v-model:value="defaultValue" >
-        <a-radio class="line" v-for="item in cities" :value="item.id">
-          {{ item.name }}
-        </a-radio>
-      </a-radio-group>
-    </div>
-  </a-drawer>
+
+  <HorizontalDrawer :drawerTitle="drawerTitle" :rightSelect="cities" ref="regionDrawer" v-model:selectRegion="defaultValue" @getArea="getDefaultWeather"></HorizontalDrawer>
 </template>
 <script>
 
@@ -87,6 +79,7 @@ import { mapState } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { weatherStore } from '../../store/weather'
 import HomeComponentSlot from "./HomeComponentSlot.vue";
+import HorizontalDrawer from '../HorizontalDrawer.vue';
 export default {
   name: "Weather",
   props:{
@@ -108,13 +101,14 @@ export default {
         icon:'',
         type:'weather',
       },
-      weatherVisible:false,
-      defaultValue:''
+      defaultValue:'',
+      drawerTitle:'常用天气位置'
     };
   },
 
   components:{
-    HomeComponentSlot
+    HomeComponentSlot,
+    HorizontalDrawer
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),
@@ -147,7 +141,7 @@ export default {
   },
   methods: {
     openWeatherDrawer(){
-      this.weatherVisible = true
+      this.$refs.regionDrawer.openDrawer()
     },
     enterWeather() {
       this.$router.push({ name: "weather" });
@@ -161,8 +155,7 @@ export default {
       });
     },
     getDefaultWeather(e){
-      const val = e.target.value
-      this.customData.id = val
+      this.customData.id = e.id
     },
   },
 };

@@ -1,9 +1,9 @@
 <template>
-  <a-drawer v-model:visible="detailDisplay" :title="drawerTitle" @close="onClose" style="text-align: center;"
+  <a-drawer v-model:visible="detailDisplay" :title="drawerTitle" @close="onClose"
   :bodyStyle="{textAlign:'left',overflow:'hidden',}" placement="right"  width="500"
   > 
    <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
-    <div class="w-full h-12 flex items-center right-select-active  justify-center pointer my-4 rounded-lg s-bg"
+    <div class="w-full h-12 flex items-center  justify-center pointer my-4 rounded-lg drawer-item-bg"
       v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'active':''" @click="selectedAreaSuit(item,index)"
     >
       {{ item.name }}
@@ -70,10 +70,14 @@ export default {
 
 <style lang="scss" scoped>
 .active{
-  background: rgba(255,255,255,0.40);
+  background: rgba(255,255,255,0.2);
 }
-.btn-active:active{
-  filter: brightness(0.8);
-  background:rgba(42, 42, 42, 0.25);
-} 
+::v-deep .ps__thumb-y{
+  display: none !important;
+}
+</style>
+<style>
+.ant-drawer-header{
+  border-bottom: none !important;
+}
 </style>
