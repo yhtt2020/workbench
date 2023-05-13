@@ -95,24 +95,12 @@
 
   </HomeComponentSlot>
 
-  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right"
-            v-model:visible="gameVisible" @close="onClose">
-    <div class="flex flex-col justify-start">
-      <span style="margin-bottom: 14px;">游戏区服</span>
-      <a-radio-group @change="getRegion($event)" v-model:value="defaultRegion">
-        <a-radio class="line" v-for="item in regionRange" :value="item.id">
-          {{ item.name }}
-        </a-radio>
-      </a-radio-group>
-      <!--      <a-select style="width: 452px" @change="getRegion($event)">-->
-      <!--        <a-select-option  >{{ item.name }}</a-select-option>-->
-      <!--      </a-select>-->
-    </div>
-  </a-drawer>
+  <HorizontalDrawer :drawerTitle="drawerTitle" ref="regionDrawer" v-model:selectRegion="customData.id" :rightSelect="regionRange" @getArea="getArea"></HorizontalDrawer>
 </template>
 
 <script>
 import HomeComponentSlot from '../HomeComponentSlot.vue'
+import HorizontalDrawer from '../../HorizontalDrawer.vue'
 import { randomData, sendRequest, currencyFormat, compareTime } from '../../../js/axios/api'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { steamStore } from '../../../store/steam'
@@ -137,7 +125,8 @@ export default {
   },
   components: {
     Template,
-    HomeComponentSlot
+    HomeComponentSlot,
+    HorizontalDrawer
   },
   data () {
     return {
@@ -154,7 +143,7 @@ export default {
       randomList: [],
       key: Date.now(),
       reloadShow: false,
-      gameVisible: false,
+      drawerTitle:'地区',
       detailList: {},
       gameShow: false,
       isLoading: false,
@@ -220,7 +209,7 @@ export default {
     ...mapActions(cardStore, ['updateCustomComponents']),
     currencyFormat,
     showRegionSelect () {
-      this.gameVisible = true
+      this.$refs.regionDrawer.openDrawer()
     },
     retry(){
       this.getRegion().then(() => {
@@ -272,11 +261,6 @@ export default {
     openSteam (id) {
       window.ipc.send('addTab', { url: `https://store.steampowered.com/app/${id}` })
     },
-
-    onClose () {
-      this.gameVisible = false
-      localStorage.removeItem('detail')
-    },
     async getRegion () {
 
       this.fail=false
@@ -296,6 +280,10 @@ export default {
         this.key=Date.now()
         this.isLoading = false
       })
+    },
+    getArea(v){
+      this.defaultRegion = v.id
+      this.getRegion()
     }
   }
 }

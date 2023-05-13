@@ -19,7 +19,8 @@ export default {
     rightSelect:{
       type:Array,
       default:()=>[]
-    }
+    },
+    selectRegion:String,
   },
   data(){
     return{
@@ -34,6 +35,16 @@ export default {
       defaultGameIndex:0,
     }
   },
+  mounted(){
+    this.posRegion()
+  },
+  watch:{
+    'selectRegion':{
+      handler(){
+        this.posRegion()
+      }
+    }
+  },
   methods:{
     openDrawer(){
       this.detailDisplay = true
@@ -42,6 +53,16 @@ export default {
       this.$emit('getArea',item)
       this.defaultGameIndex = index
       this.detailDisplay = false 
+    },
+    posRegion(){
+      if(this.selectRegion){
+        console.log(this.selectRegion);
+        if(this.selectRegion && this.rightSelect.length > 0){
+          this.defaultGameIndex = this.rightSelect.findIndex(el=>{
+            return el.id === this.selectRegion
+          })
+        }
+      }
     }
   }
 }

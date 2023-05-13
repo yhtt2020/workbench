@@ -64,25 +64,12 @@
 
   </HomeComponentSlot>
 
-
-  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right"
-            v-model:visible="gameVisible" @close="onClose">
-    <div class="flex flex-col justify-start">
-      <span style="margin-bottom: 14px;">游戏区服</span>
-      <a-radio-group @change="getRegion($event)" v-model:value="defaultRegion">
-        <a-radio class="line" v-for="item in regionRange" :value="item.id">
-          {{ item.name }}
-        </a-radio>
-      </a-radio-group>
-      <!--      <a-select style="width: 452px" @change="getRegion($event)">-->
-      <!--        <a-select-option  >{{ item.name }}</a-select-option>-->
-      <!--      </a-select>-->
-    </div>
-  </a-drawer>
+  <HorizontalDrawer :drawerTitle="drawerTitle" ref="regionDrawer" v-model:selectRegion="customData.id" :rightSelect="regionRange" @getArea="getArea" ></HorizontalDrawer>
 </template>
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import HorizontalDrawer from "../../HorizontalDrawer.vue";
 import {randomData,sendRequest,compareTime} from '../../../js/axios/api'
 import { mapWritableState,mapActions ,mapState} from 'pinia'
 import {steamStore} from '../../../store/steam'
@@ -115,6 +102,7 @@ export default {
     HomeComponentSlot,
     Swiper,
     SwiperSlide,
+    HorizontalDrawer
   },
   data(){
     return{
@@ -132,7 +120,7 @@ export default {
       reloadShow:false,
       groupList:[],
       detailShow:false,
-      gameVisible:false,
+      drawerTitle:'地区',
       dpList:{},
       defaultRegion:'cn',
       visible:false,
@@ -195,8 +183,9 @@ export default {
 
   methods:{
     ...mapActions(steamStore,["setGameDetail","updateGameData","setGameData",'getRandomList']),
+    // 按钮触发右侧抽屉弹窗
     showRegionSelect () {
-      this.gameVisible = true
+      this.$refs.regionDrawer.openDrawer()
     },
 
     retry(){
@@ -276,18 +265,18 @@ export default {
         }
       },6000)
 
-
-      this.gameVisible = false
       this.customData.id = this.defaultRegion
       // 获取国家地区名称参数
       await this.getData(this.region.id).catch(()=>this.fail=true).finally(()=>{
         this.isLoading = false
       })
     },
-    onClose() {
-      this.gameVisible = false
-      localStorage.removeItem('detail')
-    },
+
+    getArea(v){
+      this.defaultRegion = v.id
+      this.getRegion()
+    }
+
   },
   setup() {
     return {

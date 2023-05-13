@@ -43,7 +43,7 @@
         <div  style="padding: 12px 13px;" class="s-bg flex rounded-lg items-center justify-between mt-6">
           <div class="flex flex-col mt-1">
            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">价格</span>
-           <span style="font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！{{ acquisitionDate(exTime) }} 截止</span>
+           <span style="font-size: 14px; max-width: 120px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！{{ acquisitionDate(exTime) }}截止</span>
           </div>
           <div class="flex flex-col">
              <span class="line-through mr-2" style="text-align: right; color:rgba(255, 255, 255, 0.4);font-size: 14px; font-weight: 400;">{{ detailData.oldPrice }}</span>
