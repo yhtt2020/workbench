@@ -14,8 +14,11 @@
          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </button>
       <div ref="thumbnail" class="keen-slider thumbnail">
-        <div class="keen-slider__slide" v-for="item in wheelList">
-          <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full rounded-lg  object-cover" alt="">
+        <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
+          <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full  rounded-md  object-cover" alt="">
+          <div class="thumbnail-bofang w-8 h-8 rounded-full s-bg flex items-center justify-center" v-if="item.mp4">
+            <Icon icon="bofang" style="font-size: 2em;"></Icon>
+          </div>
         </div>
       </div>
       <button class="keen-slider__arrow ml-2  pointer rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
@@ -76,7 +79,7 @@ export default {
   computed:{
     wheelList(){
       if(this.movies !== undefined && this.screenshots !== undefined){
-        return this.screenshots.concat(this.movies)
+        return this.movies.concat(this.screenshots)
       }
     }
   },
@@ -188,5 +191,14 @@ export default {
 .keen-slider{
   flex: 1;
   align-self: stretch;
+}
+.thumbnail-bofang{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.thumbnail .keen-slider__slide.active {
+  border: 3px solid rgba(255,255,255,0.5);
 }
 </style>
