@@ -44,12 +44,14 @@
 
             </div>
           </div>
-          <div class="bg-black change bg-opacity-10 flex rounded-lg cursor-pointer" @click="discountChange"
-               style="padding:13px 80px;">
-            <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);"
-                  v-if="reloadShow === true"></Icon>
-            <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
-            <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+      
+          <div class="flex items-center justify-between">
+            <div class="s-bg change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
+              <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+              <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
+              <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+            </div> 
+            <span style="padding:13px 26px;" class="s-bg rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
           </div>
         </div>
       </template>
@@ -284,6 +286,9 @@ export default {
     getArea(v){
       this.defaultRegion = v.id
       this.getRegion()
+    },
+    enterDiscountDetail(){
+      this.$router.push({name:'recommend',params:{id:this.customData.id}})
     }
   }
 }
