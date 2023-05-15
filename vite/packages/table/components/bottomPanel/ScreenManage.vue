@@ -4,13 +4,13 @@
 
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
-           class="pointer screen rounded-md" style="display: inline-block;position: relative">
+           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative">
         <a-image :preview="false"
                  fallback="/public/icons/logo128.png"
                  class="screen-preview" :width="120" :height="80" :src="'file://'+screen.capture"></a-image>
         <span style="" class="p-2 screen-title">{{ screen.title }}</span>
       </div>
-      <div class="text-right mt-2">
+      <div class="text-right ">
         <a-button @click="add" class="mr-3">创建</a-button>
         <a-button @click="tagScreen">辨别</a-button>
       </div>

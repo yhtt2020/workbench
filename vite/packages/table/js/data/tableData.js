@@ -137,6 +137,12 @@ export default {
   systemAppList: [
     {
       type:'systemApp',
+      icon:'home',
+      name:'主页',
+      event:'home',
+    },
+    {
+      type:'systemApp',
       icon:'lock',
       name:'锁定屏幕',
       event:'lock',
@@ -183,12 +189,7 @@ export default {
       event:'power',
       fn:()=>{vm.$router.push({ path: '/power' })}
     },
-    {
-      type:'systemApp',
-      icon:'home',
-      name:'主页',
-      event:'home',
-    }, {
+     {
       type:'systemApp',
       icon:'thunderbolt',
       name:'快捷指令',
