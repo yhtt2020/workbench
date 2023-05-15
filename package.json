@@ -71,7 +71,7 @@
     "ref-struct-di": "^1.1.1",
     "regedit": "^5.0.0",
     "shepherd.js": "^9.1.1",
-    "sqlite3": "5.0.10",
+    "sqlite3": "^5.0.10",
     "steam-session": "^1.2.2",
     "steam-user": "^4.28.3",
     "stemmer": "^1.0.5",

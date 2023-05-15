@@ -32,11 +32,11 @@
         <span class="font-color">M站评分</span>
         <span class="font-time">9.0</span>
        </div>
-       <div class="flex items-center rounded-lg pointer justify-center mb-3 px-3 py-3" style="background: rgba(42, 42, 42, 1);">
+       <div class="flex items-center rounded-lg pointer justify-center mb-3 px-3 py-3 s-item">
         <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>
        </div>
-       <div @click="closeMyGameMiddleDetail" class="flex items-center  rounded-lg pointer justify-center px-3 py-3"  style="background: rgba(42, 42, 42, 1);">
+       <div @click="closeMyGameMiddleDetail" class="flex items-center  rounded-lg pointer s-item justify-center px-3 py-3" >
         <Icon icon="tuichu" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">关闭游戏</span>
        </div>
