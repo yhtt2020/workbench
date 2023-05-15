@@ -44,12 +44,14 @@
 
             </div>
           </div>
-          <div class="bg-black change bg-opacity-10 flex rounded-lg cursor-pointer" @click="discountChange"
-               style="padding:13px 80px;">
-            <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);"
-                  v-if="reloadShow === true"></Icon>
-            <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
-            <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+      
+          <div class="flex items-center justify-between">
+            <div class="s-bg change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
+              <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+              <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
+              <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+            </div> 
+            <span style="padding:13px 26px;" class="s-bg rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
           </div>
         </div>
       </template>
@@ -81,13 +83,19 @@
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack()"
+            <div @click="discountBack"
                  class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <div class="bg-black change flex items-center justify-center  rounded-lg  h-12 cursor-pointer bg-opacity-10"
-                 @click="openSteam(detailList.steam_appid)" style="width:196px;color: rgba(255, 255, 255, 0.85);">打开steam
-            </div>
+            <span class="change pointer rounded-lg s-bg  flex items-center justify-center" 
+            style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             @click="enterGameDetail(detailList.steam_appid)"
+            >
+              详情
+            </span>
+            <span class="change pointer rounded-lg s-bg  flex items-center justify-center"
+             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             @click="openSteam(detailList.steam_appid)">购买</span>
           </div>
         </div>
       </template>
@@ -95,24 +103,12 @@
 
   </HomeComponentSlot>
 
-  <a-drawer :width="500" title="设置" style="text-align: center;" :bodyStyle="{textAlign:'left'}" placement="right"
-            v-model:visible="gameVisible" @close="onClose">
-    <div class="flex flex-col justify-start">
-      <span style="margin-bottom: 14px;">游戏区服</span>
-      <a-radio-group @change="getRegion($event)" v-model:value="defaultRegion">
-        <a-radio class="line" v-for="item in regionRange" :value="item.id">
-          {{ item.name }}
-        </a-radio>
-      </a-radio-group>
-      <!--      <a-select style="width: 452px" @change="getRegion($event)">-->
-      <!--        <a-select-option  >{{ item.name }}</a-select-option>-->
-      <!--      </a-select>-->
-    </div>
-  </a-drawer>
+  <HorizontalDrawer :drawerTitle="drawerTitle" ref="regionDrawer" v-model:selectRegion="customData.id" :rightSelect="regionRange" @getArea="getArea"></HorizontalDrawer>
 </template>
 
 <script>
 import HomeComponentSlot from '../HomeComponentSlot.vue'
+import HorizontalDrawer from '../../HorizontalDrawer.vue'
 import { randomData, sendRequest, currencyFormat, compareTime } from '../../../js/axios/api'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { steamStore } from '../../../store/steam'
@@ -137,7 +133,8 @@ export default {
   },
   components: {
     Template,
-    HomeComponentSlot
+    HomeComponentSlot,
+    HorizontalDrawer
   },
   data () {
     return {
@@ -154,7 +151,7 @@ export default {
       randomList: [],
       key: Date.now(),
       reloadShow: false,
-      gameVisible: false,
+      drawerTitle:'地区',
       detailList: {},
       gameShow: false,
       isLoading: false,
@@ -220,7 +217,7 @@ export default {
     ...mapActions(cardStore, ['updateCustomComponents']),
     currencyFormat,
     showRegionSelect () {
-      this.gameVisible = true
+      this.$refs.regionDrawer.openDrawer()
     },
     retry(){
       this.getRegion().then(() => {
@@ -272,11 +269,6 @@ export default {
     openSteam (id) {
       window.ipc.send('addTab', { url: `https://store.steampowered.com/app/${id}` })
     },
-
-    onClose () {
-      this.gameVisible = false
-      localStorage.removeItem('detail')
-    },
     async getRegion () {
 
       this.fail=false
@@ -296,6 +288,16 @@ export default {
         this.key=Date.now()
         this.isLoading = false
       })
+    },
+    getArea(v){
+      this.defaultRegion = v.id
+      this.getRegion()
+    },
+    enterDiscountDetail(){
+      this.$router.push({name:'recommend',params:{id:this.customData.id}})
+    },
+    enterGameDetail(v){
+      this.$router.push({name:'GameDiscountDetail',params:{id:v}})
     }
   }
 }

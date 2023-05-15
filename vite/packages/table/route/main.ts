@@ -149,7 +149,7 @@ export default [{
         },
         {
           path:'/gameDiscount',
-          name:'gameDiscount',
+          name:'recommend',
           component:GameDiscount,
         },
         {

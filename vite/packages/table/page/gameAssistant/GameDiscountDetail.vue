@@ -5,7 +5,7 @@
         <div class="w-12 h-12 flex items-center cursor-pointer btn-active justify-center rounded-lg s-bg"  @click="goBack">
           <Icon icon="xiangzuo" style="font-size:1.5em;"></Icon>
         </div>
-        <span style="font-size:20px;font-weight: 500;" id="detail-name" class="ml-4 px-2 py-2 rounded-lg truncate s-bg">{{ detailData.name }}</span>
+        <span style="font-size:20px;font-weight: 500;" id="detail-name" class="ml-4 px-2 py-2 rounded-lg truncate">{{ detailData.name }}</span>
       </div>
     </div>
     <div class="flex-grow-0">
@@ -43,7 +43,7 @@
         <div  style="padding: 12px 13px;" class="s-bg flex rounded-lg items-center justify-between mt-6">
           <div class="flex flex-col mt-1">
            <span style="font-size: 16px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">价格</span>
-           <span style="font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！{{ acquisitionDate(exTime) }} 截止</span>
+           <span style="font-size: 14px; max-width: 120px; font-weight: 400; color: rgba(255, 255, 255, 0.6);">特价促销！{{ acquisitionDate(exTime) }}截止</span>
           </div>
           <div class="flex flex-col">
              <span class="line-through mr-2" style="text-align: right; color:rgba(255, 255, 255, 0.4);font-size: 14px; font-weight: 400;">{{ detailData.oldPrice }}</span>
@@ -63,21 +63,16 @@
     </div>
   </vue-custom-scrollbar>
 
-  <a-drawer  v-model:visible="detailDisplay" title="地区" style="text-align: center;"
-   :bodyStyle="{textAlign:'left'}" placement="right"  width="500" @close="onClose">
-   <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
-    <div class="w-full h-12 flex items-center right-select-active  justify-center pointer my-4 rounded-lg s-bg"
-      v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'active':''" @click="selectedAreaSuit(item,index)"
-    >
-      {{ item.name }}
-    </div>
-   </vue-custom-scrollbar>
-  </a-drawer>
+  <HorizontalDrawer 
+  :drawerTitle="drawerTitle" ref="regionDrawer" :rightSelect="rightSelect"
+  @getArea="getArea" 
+  ></HorizontalDrawer>
 </template>
 
 <script>
 import { regionRange,sendRequest } from '../../js/axios/api';
 import WheelCastingUnit from '../../components/WheelCastingUnit.vue'
+import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 export default {
     name:'GameDiscountDetail',
     props:{
@@ -91,7 +86,8 @@ export default {
       }
     },
     components:{
-      WheelCastingUnit
+      WheelCastingUnit,
+      HorizontalDrawer
     },
     data(){
       return{
@@ -123,8 +119,7 @@ export default {
          wheelPropagation: true
         },
         gameIntroduction:'',  // 接收游戏介绍
-        detailDisplay:false,
-        defaultGameIndex:0
+        drawerTitle:'地区'
       }
     },
     mounted(){
@@ -132,7 +127,7 @@ export default {
     },
     methods:{
       goBack(){
-        this.$router.push({name:'gameDiscount'}) 
+        this.$router.push({name:'recommend'}) 
       },
       getDetailVal(){
         if(this.id !== undefined){
@@ -162,10 +157,6 @@ export default {
           this.$router.push({name:'gameDiscount'})
         }
       },
-      selectOptionValue(e){
-        this.defaultDetailRegion = e
-        this.getDetailVal()
-      },
       enterSteamStore(){
         window.ipc.send('addTab', { url: `https://store.steampowered.com/app/${this.id}` })
       },
@@ -177,13 +168,12 @@ export default {
       },
       // 打开详情区服选项
       openDetailDrawer(){
-        this.detailDisplay = true
+        this.$refs.regionDrawer.openDrawer()
       },
-      selectedAreaSuit(item,index){
-        this.defaultDetailRegion = item
-        this.defaultGameIndex = index
+      // 获取地区状态和选中情况
+      getArea(v){
+        this.defaultDetailRegion = v
         this.getDetailVal()
-        this.detailDisplay = false 
       }
     }
   }

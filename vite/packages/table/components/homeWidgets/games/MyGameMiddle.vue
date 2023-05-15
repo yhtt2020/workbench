@@ -6,8 +6,8 @@
      <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
       当前游戏
      </div>
-     <div class="flex w-full items-center justify-between flex-wrap mt-4" v-if="myMiddleDetailShow === false">
-      <div v-for="item in testData" @click="enterMiddleDetail(item)" class="rounded-lg pointer relative mb-4" style="width: 124px;height: 106px;">
+     <div class="flex w-full flex-wrap mt-4" v-if="myMiddleDetailShow === false">
+      <div v-for="item in testData" @click="enterMiddleDetail(item)" class="items-center justify-center flex rounded-lg pointer relative mb-4" style="margin-right:34px;width: 100px;height: 100px;">
         <img :src="item.src" alt="" class="rounded-lg" style="width: 100%; height:100%; object-fit: cover;">
         <div class="small-title w-full flex items-center px-2 py-2" style="border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
       </div>
