@@ -169,6 +169,7 @@ export default {
     ...mapActions(appStore, ['setMusic', 'reset']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
+    ...mapActions(steamUserStore, ['setUserData','setSteamLoginData']),
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -312,12 +313,10 @@ export default {
     },
     "steamLoginData.refreshToken":{
       handler(){
-        console.log(this.steamLoginData)
         if(this.steamLoginData.refreshToken === '') return
-        console.log('login')
         client.logOn({"refreshToken":this.steamLoginData.refreshToken})
-        client.on('loggedOn', async function () {
-          console.log( client);
+        client.on('loggedOn',  () =>{
+          this.setUserData({...client})
           client.setPersona(steamUser.EPersonaState.Online);
           client.on('appOwnershipCached', () => {
             console.log('Game ownership cached');

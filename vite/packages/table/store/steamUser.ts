@@ -10,12 +10,16 @@ export const steamUserStore = defineStore("steam", {
       refreshToken: '',
       webCookies: ''
     },
-    
+    userData:{
+    }
   }),
   actions: {
     setSteamLoginData(value) {
       this.steamLoginData = {...this.steamLoginData,...value}
     },
+    setUserData(value){
+      this.userData = {...value}
+    }
   },
   persist: {
     enabled: true,

@@ -3,10 +3,11 @@
   <Icon style="height: 36px;width: 36px" icon="steam"></Icon>
   <div class="flex flex-col ml-4 w-2/3">
     <span class="text-white">Steam</span>
-    <span>绑定Steam帐号即可同步显示你的游戏数据</span>
+    <span v-if="userData.chat">{{userData.chat.user.accountInfo.name}}</span>
+    <span v-else>绑定Steam帐号即可同步显示你的游戏数据</span>
   </div>
   <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="()=>{ this.modalVisibility = true}">
-    绑定
+  {{userData.chat?'解绑':'绑定'}}
   </div>
 </div>
   <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
@@ -139,10 +140,10 @@ export default {
     }
   },
   mounted() {
-    console.log(this.steamLoginData)
+    console.log(this.userData)
   },
   computed:{
-    ...mapState(steamUserStore, ['steamLoginData'])
+    ...mapState(steamUserStore, ['steamLoginData','userData'])
   },
   methods:{
     ...mapActions(steamUserStore, ['setSteamLoginData']),
