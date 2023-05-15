@@ -113,7 +113,8 @@
 
       <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
            class="flex justify-center items-center  h-2/3 pointer">
-        <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" ></Icon>
+        <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
+        <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
       </div>
 
     </div>
@@ -129,7 +130,7 @@
         </div>
       </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-           style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
+           style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0">
         <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
         <div class="mb-0 mt-0"> 小队
           <div v-if="true" style="display: inline-block;position: relative">
@@ -254,6 +255,7 @@ import ScrolX from './ScrolX.vue'
 import TeamTip from './TeamTip.vue'
 import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
+import { appsStore } from '../store/apps'
 
 export default {
   name: 'BottomPanel',
@@ -353,6 +355,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
+    ...mapWritableState(appsStore,['runningApps','runningTableApps']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(messageStore,['messageIndex','totalCount']),

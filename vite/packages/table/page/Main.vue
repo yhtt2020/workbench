@@ -4,7 +4,7 @@
       <!--顶部状态栏      -->
       <TopPanel v-if="!fullScreen "></TopPanel>
     </div>
-    <div class="mt-3" style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
+    <div  :class="{'mt-3':!fullScreen}" style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
       <div v-if="!fullScreen" style="display: flex;align-content: center;align-items: center">
         <!--左侧栏区域        -->
         <SidePanel></SidePanel>

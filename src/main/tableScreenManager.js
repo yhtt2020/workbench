@@ -1,18 +1,21 @@
-const { app ,ipcMain:ipc } = require('electron')
-function sendToTable(event,args){
-  global.tableManager.send(event,args)
+const { app, ipcMain: ipc } = require('electron')
+const captureHelper = require('./captureHelper')
+
+function sendToTable (event, args) {
+  global.tableManager.send(event, args)
 }
+
 /**
  * 分屏管理器，此处的管理器不直接操作屏幕数据，而只存运行时
  */
 class TableScreenManager {
   //运行中的屏幕
-  runningScreens={}
+  runningScreens = {}
 
   /**
    * 获取分屏的url
    */
-  getUrl(){
+  getUrl () {
 
   }
 
@@ -21,13 +24,12 @@ class TableScreenManager {
    * @param window
    * @param key
    */
-  saveBounds(window,key){
+  saveBounds (window, key) {
     let tableWinSetting = {
       bounds: window.getBounds(),
       isMaximized: window.isMaximized()
     }
-    settings.set('tableWinSetting_'+key, tableWinSetting)
-    console.log('设置',key,tableWinSetting)
+    settings.set('tableWinSetting_' + key, tableWinSetting)
   }
 
   /**
@@ -35,7 +37,7 @@ class TableScreenManager {
    * @param key
    * @returns {*}
    */
-  getBounds(key){
+  getBounds (key) {
     return settings.get('tableWinSetting_' + key)
   }
 
@@ -44,57 +46,58 @@ class TableScreenManager {
    * @param window
    * @param key
    */
-  bindSaveBoundsEvent(window,key){
+  bindSaveBoundsEvent (window, key) {
     window.on('close', () => {
-      this.saveBounds(window,key)
+      this.saveBounds(window, key)
     })
 
-    window.on('resized',()=>{
-      this.saveBounds(window,key)
+    window.on('resized', () => {
+      this.saveBounds(window, key)
     })
 
-    window.on('enter-html-full-screen',()=>{
-      this.saveBounds(window,key)
+    window.on('enter-html-full-screen', () => {
+      this.saveBounds(window, key)
     })
 
-    window.on('leave-html-full-screen',()=>{
-      this.saveBounds(window,key)
+    window.on('leave-html-full-screen', () => {
+      this.saveBounds(window, key)
     })
 
-
-    window.on('blur',()=>{
-      this.saveBounds(window,key)
+    window.on('blur', () => {
+      this.saveBounds(window, key)
     })
 
-    window.on('content-bounds-updated',()=>{
-      this.saveBounds(window,key)
+    window.on('content-bounds-updated', () => {
+      this.saveBounds(window, key)
     })
 
-    window.on('session-end',()=>{
-      this.saveBounds(window,key)
+    window.on('session-end', () => {
+      this.saveBounds(window, key)
     })
 
-    window.on('moved',()=>{
-      this.saveBounds(window,key)
+    window.on('moved', () => {
+      this.saveBounds(window, key)
     })
-    window.on('leave-full-screen',()=>{
-      this.saveBounds(window,key)
+    window.on('leave-full-screen', () => {
+      this.saveBounds(window, key)
     })
-    window.on('enter-full-screen',()=>{
-      this.saveBounds(window,key)
+    window.on('enter-full-screen', () => {
+      this.saveBounds(window, key)
     })
   }
-  closeByDomain(domain){
+
+  closeByDomain (domain) {
     console.log('关闭分屏')
-    let key=Object.keys(this.runningScreens).find(key=>{
-      return this.runningScreens[key].fullDomain===domain
+    let key = Object.keys(this.runningScreens).find(key => {
+      return this.runningScreens[key].fullDomain === domain
     })
-    let screen=this.runningScreens[key]
-    if(screen){
+    let screen = this.runningScreens[key]
+    if (screen) {
       screen.window.close()
       delete this.runningScreens[key]
     }
   }
+
   /**
    *
    * @param screen
@@ -103,12 +106,13 @@ class TableScreenManager {
     let key = screen.key
     if (this.runningScreens[key]) {
       const window = this.runningScreens[key].window
-      if (window && !window.isDestoryed()) {
+      if (window && !window.isDestroyed()) {
+        console.log('聚焦窗口')
         window.focus()
       }
     } else {
       let windowInstance = await windowManager.create({
-        name: 'table',
+        name:screen.key+ '_table',
         windowOption: {
           alwaysOnTop: false,
           width: 1098,
@@ -119,7 +123,7 @@ class TableScreenManager {
           frame: false,
           skipTaskbar: screen.settings.skipTaskbar,//增加单独的设置项目
           transparent: true,
-          show:true,
+          show: true,
           //backgroundColor: '#fff',
         },
         webPreferences: {
@@ -136,60 +140,102 @@ class TableScreenManager {
         }
       })
       let savedBounds = this.getBounds(screen.key)
-      let window=windowInstance.window
+      let window = windowInstance.window
       if (savedBounds) {
         window.setBounds(savedBounds.bounds)
-        setTimeout(()=>{
+        setTimeout(() => {
           if (savedBounds.isMaximized) {
             window.maximize()
           }
-        },1000)
+        }, 1000)
       }
 
       this.bindSaveBoundsEvent(window, screen.key)
-      const url=render.getUrl('table.html',{},screen.fullDomain)
+      const url = render.getUrl('table.html', {}, screen.fullDomain)
       window.loadURL(url)
-      this.runningScreens[key]={
-        windowInstance:windowInstance,
-        window:window,
-        screen:screen,
-        domain:screen.domain,
-        fullDomain:screen.fullDomain
+      window.webContents.on('did-finish-load', async () => {
+        setTimeout(async () => {
+          console.log('截图外发')
+          //延迟3秒再截图，保证不截取到载入界面
+          if (!window.isDestroyed()) {
+            //如果用户手速够快，还是有可能被关闭了的。
+            let captureImg = await captureHelper.capture(window.webContents)
+            if (captureImg) {
+              sendToTable('updateCapture', { key: screen.key, image: captureImg })
+            }
+          }
+          window.webContents.send('updateDetail', { detail: screen })
+        }, 3000)
+
+      })
+      window.on('closed', () => {
+        try {
+          sendToTable('stoppedScreen', { screen: screen })
+          delete this.runningScreens[screen.key]
+        } catch (e) {
+          console.warn(e)
+        }
+      })
+      this.runningScreens[key] = {
+        windowInstance: windowInstance,
+        window: window,
+        screen: screen,
+        domain: screen.domain,
+        fullDomain: screen.fullDomain
+      }
+    }
+
+  }
+
+  /**
+   * 关闭某个分屏
+   * @param screen
+   */
+  stopScreen (screen) {
+    let runningScreen = this.runningScreens[screen.key]
+    if (runningScreen) {
+      if (!runningScreen.window.isDestroyed()) {
+        runningScreen.window.close()
       }
     }
   }
-  bindIPC(){
-    ipc.on('startupScreen',async (event, args) => {
+
+  bindIPC () {
+    ipc.on('startupScreen', async (event, args) => {
       await this.startupScreen(args.screen)
     })
 
-    ipc.on('closeScreen',(event,args)=>{
-      let fullDomain=args.fullDomain
+    ipc.on('stopScreen', async (event, args) => {
+      await this.stopScreen(args.screen)
+    })
+
+    ipc.on('closeScreen', (event, args) => {
+      let fullDomain = args.fullDomain
       this.closeByDomain(fullDomain)
       sendToTable('closeScreen')
     })
 
-    ipc.on('sendToSubs',(event,argsOrigin)=>{
-      console.log('接收到转发到全部分屏的消息',event,argsOrigin)
+    ipc.on('sendToSubs', (event, argsOrigin) => {
+      console.log('接收到转发到全部分屏的消息',  argsOrigin)
       const {
-        channel,args
-      }=argsOrigin
-      Object.keys(this.runningScreens).forEach(sub=>{
-        this.runningScreens[sub].window.webContents.send(channel,args)
+        channel, args
+      } = argsOrigin
+      Object.keys(this.runningScreens).forEach(sub => {
+        this.runningScreens[sub].window.webContents.send(channel, args)
       })
     })
-    ipc.on('sendToSub',(event,argsOrigin)=>{
-      console.log('接收到转发到指定分屏的消息',event,argsOrigin)
+    ipc.on('sendToSub', (event, argsOrigin) => {
+      console.log('接收到转发到指定分屏的消息',argsOrigin.key, argsOrigin)
       const {
-        key,channel,args
-      }=argsOrigin
-      Object.keys(this.runningScreens).forEach(sub=>{
-        if(this.runningScreens[sub].screen.key===key){
-          this.runningScreens[sub].window.webContents.send(channel,args)
+        key, channel, args
+      } = argsOrigin
+      Object.keys(this.runningScreens).forEach(sub => {
+        if (this.runningScreens[sub].screen.key === key) {
+          this.runningScreens[sub].window.webContents.send(channel, args)
         }
       })
     })
   }
 }
 
-module.exports=TableScreenManager
+module.exports = TableScreenManager
