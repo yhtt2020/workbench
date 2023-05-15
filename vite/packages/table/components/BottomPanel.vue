@@ -136,7 +136,9 @@
       <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
              style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
-          <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+          <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
+
+          </a-avatar>
           <div class="mb-0 mt-0"> 小队
             <div v-if="true" style="display: inline-block;position: relative">
             </div>
@@ -144,8 +146,10 @@
         </div>
       </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-           style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0">
-        <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+           style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0">
+        <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
+
+        </a-avatar>
         <div class="mb-0 mt-0"> 小队
           <div v-if="true" style="display: inline-block;position: relative">
           </div>
