@@ -7,9 +7,20 @@ export const regionRange= [
     locale:'zh-CN'
   },
   {
+    id:'tr',
+    name:'土耳其',
+    locale:'tr-TR'
+  },
+
+  {
     id: 'ar',
     name: '阿根廷',
     locale:'ar-AR'
+  },
+  {
+    id: 'hk',
+    name: '香港',
+    locale:'zh-HK'
   }, {
     id: 'us',
     name: '美国',
@@ -56,16 +67,6 @@ export const regionRange= [
     id: 'au',
     name: '澳大利亚',
     locale:'au-AU'
-  },
-  {
-    id: 'hk',
-    name: '香港',
-    locale:'zh-HK'
-  },
-  {
-    id:'tr',
-    name:'土耳其',
-    locale:'tr-TR'
   },
   {
     id:'kr',
