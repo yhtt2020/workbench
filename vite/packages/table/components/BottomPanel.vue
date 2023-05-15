@@ -110,20 +110,22 @@
         </div>
       </div>
 
+      <a-tooltip :title="showScreen?'运行中的分屏':'运行中的应用'">
+        <div  @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
+              class="flex justify-center items-center  h-2/3 pointer">
 
-      <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
-           class="flex justify-center items-center  h-2/3 pointer">
+          <template v-if="!showScreen && runningScreen!==0 ">
+            <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
+            <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
+          </template>
+          <template v-else>
+            <Icon icon="touping" style="width: 40px;height: 40px;color: white;margin-left: 2px;" ></Icon>
+            <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{runningScreen}}</span>
+          </template>
 
-        <template v-if="!showScreen && runningScreen!==0 ">
-          <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
-          <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
-        </template>
-        <template v-else>
-          <Icon icon="touping" style="width: 40px;height: 40px;color: white;margin-left: 2px;" ></Icon>
-          <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{runningScreen}}</span>
-        </template>
+        </div>
+      </a-tooltip>
 
-      </div>
 
 
     </div>
