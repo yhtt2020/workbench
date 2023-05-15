@@ -22,7 +22,7 @@
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
           <div class="remainder-day">
-            剩余{{ remainderDay(weekItem.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].endDate) }}天
+            还有{{ remainderDay(weekItem.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].endDate) }}天
           </div>
           <div class="stablish-province">立省 {{ weekItem.price.totalPrice.fmtPrice.originalPrice }}</div>
         </div>

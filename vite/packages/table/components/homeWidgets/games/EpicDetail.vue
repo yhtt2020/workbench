@@ -11,11 +11,10 @@
       <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;">剩余{{ detailType.name === 'week' ? remainderDay(detailOptions.weekDate) : remainderDay(detailOptions.nextWeekDate)  }}天</span>
     </div>
     <div class="flex justify-between mt-2">
-        <span @click="epicBack" class="w-12 h-12 s-bg cursor-pointer epic-back flex items-center rounded-lg justify-center">
+        <span @click="epicBack" class="w-12 h-12 s-item cursor-pointer epic-back flex items-center rounded-lg justify-center">
            <Icon icon="xiangzuo" class="text-xl"></Icon>
         </span>
-        <span @click="onClickOffice(detailOptions.productSlug)" class="epic-back pointer rounded-lg s-bg" style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);">详情</span>
-        <span @click="onClickOffice(detailOptions.productSlug)" class="epic-back pointer rounded-lg s-bg" style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);">领取</span>
+        <span @click="onClickOffice(detailOptions.productSlug)" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);">领取</span>
     </div>
  </div>
 </template>
