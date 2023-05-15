@@ -2,19 +2,23 @@
   <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options">
     <HorizontalPanel :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
     <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col">
-      <div class="flex flex-col">
-         <div class="flex justify-between my-1">
+      <div class="flex">
+        <div class="flex-1 flex flex-col mr-4">
+          <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
-         </div>
-         <div class="flex items-center justify-between">
-          <div style="width:180px;">
-            <a-slider v-model:value="audioValue" :tooltip-visible="false" />
-          </div>
+          </div> 
+          <div class="flex items-center justify-between">
+            <div style="width:180px;">
+              <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+            </div>
+          </div> 
+        </div>
+        <div class="flex-1">
           <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
-            <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
+            <Icon icon="sound" style="font-size: 2.286em;"></Icon>
           </div>
-         </div>
+        </div>
       </div>
       <span class="mt-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">默认输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">

@@ -169,7 +169,7 @@ export function startOfWeek(startDate,endDate) {
 export function startOfNextWeek(startDate,endDate) {
   const today = new Date();
   const firstDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
-  const lastDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 14));
+  const lastDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
   return startDate.getTime() <= firstDayOfNextWeek.getTime() && endDate.getTime() <= lastDayOfNextWeek.getTime();
 }
 
