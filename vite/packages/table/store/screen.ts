@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
-import {forEach} from "lodash";
+import {isMain} from '../js/common/screenUtils'
 import _ from "lodash-es";
-
+import {subIPC,mainIPC} from '../js/common/screenIPC'
 const tips = {
   zoom: {
     status: true,
@@ -46,11 +46,42 @@ export const screenStore = defineStore('screen', {
       running: true
     }] as [Screen],
     tips: tips,
-    currentTip: 'zoom'
+    currentTip: 'zoom',
+    taggingScreen:false,//标记屏幕
+    screenDetail:{},//当前屏幕信息
 
+    timerTag:0,
   })
   ,
   actions: {
+    /**
+     * 副屏专门绑定的IPC信息
+     */
+    bindSubIPC(){
+      subIPC.on('tagScreen',()=>{this.tagScreen()})
+    },
+    /**
+     * 主屏专门绑定的IPC
+     */
+    bindMainIPC(){
+      //mainIPC.on()
+    },
+    //运行在全部屏幕中
+    tagScreen(){
+      this.taggingScreen=true
+      if(isMain()){
+        //主窗口则发送到子窗口
+        mainIPC.sendToSubs('tagScreen')
+      }
+      if(this.timer){
+        clearTimeout(this.timerTag)
+      }
+      this.timer= setTimeout(()=>{
+        this.taggingScreen=false
+        clearTimeout(this.timerTag)
+      },3000)
+    },
+
 
     getFullDomain(domain){
       if(!domain){

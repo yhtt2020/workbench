@@ -168,6 +168,27 @@ class TableScreenManager {
       this.closeByDomain(fullDomain)
       sendToTable('closeScreen')
     })
+
+    ipc.on('sendToSubs',(event,argsOrigin)=>{
+      console.log('接收到转发到全部分屏的消息',event,argsOrigin)
+      const {
+        channel,args
+      }=argsOrigin
+      Object.keys(this.runningScreens).forEach(sub=>{
+        this.runningScreens[sub].window.webContents.send(channel,args)
+      })
+    })
+    ipc.on('sendToSub',(event,argsOrigin)=>{
+      console.log('接收到转发到指定分屏的消息',event,argsOrigin)
+      const {
+        key,channel,args
+      }=argsOrigin
+      Object.keys(this.runningScreens).forEach(sub=>{
+        if(this.runningScreens[sub].screen.key===key){
+          this.runningScreens[sub].window.webContents.send(channel,args)
+        }
+      })
+    })
   }
 }
 

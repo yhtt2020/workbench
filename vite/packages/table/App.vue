@@ -46,10 +46,14 @@
 
   </div>
   <div v-else-if="backgroundImage.path && !settings.transparent" class="video-container fixed inset-0 ">
-    <img style="object-fit: cover;width: 100%;height: 100%"  :src="backgroundImage.path">
+    <img style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
   </div>
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
 
+  <div v-if="taggingScreen" class="px-10 rounded-lg"
+       style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
+    主屏
+  </div>
 </template>
 
 <script lang="ts">
@@ -63,6 +67,7 @@ import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {app} from "electron";
 import {Modal} from 'ant-design-vue'
+import {screenStore} from './store/screen'
 
 const {appModel} = window.$models
 
@@ -135,8 +140,8 @@ export default {
       }
     })
 
-    ipc.on('updateRunningTableApps',async (event,args)=>{
-      this.runningTableApps=args.apps
+    ipc.on('updateRunningTableApps', async (event, args) => {
+      this.runningTableApps = args.apps
       console.log(args.apps)
     })
 
@@ -160,7 +165,8 @@ export default {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
+    ...mapWritableState(screenStore, ['taggingScreen'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
@@ -203,7 +209,7 @@ export default {
     updateMusic(music) {
       this.setMusic(music);
     },
-    ...mapActions(cardStore, ["removeClock","sortClock"]),
+    ...mapActions(cardStore, ["removeClock", "sortClock"]),
     handleOk() {
       this.visible = false;
       this.removeClock(0);
@@ -213,12 +219,12 @@ export default {
 
   },
   watch: {
-    'settings.transparent':{
-      handler(){
-        if(this.settings.transparent){
-          $('body').css('background','transparent')
-        }else{
-          $('body').css('background','rgb(25, 25, 25)')
+    'settings.transparent': {
+      handler() {
+        if (this.settings.transparent) {
+          $('body').css('background', 'transparent')
+        } else {
+          $('body').css('background', 'rgb(25, 25, 25)')
         }
       }
       // document.body.attributes['background']=''
@@ -265,10 +271,10 @@ export default {
     },
     "userInfo.onlineGradeExtra": {
       handler(newVal, oldVal) {
-        window.lv=1
-       if(this.userInfo.onlineGradeExtra)  {
-         window.lv = this.userInfo.onlineGradeExtra.lv
-       }
+        window.lv = 1
+        if (this.userInfo.onlineGradeExtra) {
+          window.lv = this.userInfo.onlineGradeExtra.lv
+        }
 
       },
       immediate: true,
@@ -283,9 +289,9 @@ export default {
 
           document.body.style.backgroundImage = ""
           this.videoPath = this.backgroundImage.runpath
-          this.$nextTick(()=>{
-              this.$refs.backgroundVideo.load()
-              this.$refs.backgroundVideo.play()
+          this.$nextTick(() => {
+            this.$refs.backgroundVideo.load()
+            this.$refs.backgroundVideo.play()
 
           })
         } else if (this.backgroundImage.path !== "") {

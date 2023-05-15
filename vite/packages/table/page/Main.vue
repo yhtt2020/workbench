@@ -2,9 +2,9 @@
   <div style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;">
     <div style="height: auto;flex: 0">
       <!--顶部状态栏      -->
-      <TopPanel v-if="!fullScreen"></TopPanel>
+      <TopPanel v-if="!fullScreen "></TopPanel>
     </div>
-    <div style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
+    <div class="mt-3" style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
       <div v-if="!fullScreen" style="display: flex;align-content: center;align-items: center">
         <!--左侧栏区域        -->
         <SidePanel></SidePanel>
@@ -33,6 +33,7 @@ import { mapWritableState } from 'pinia'
 import { appStore } from '../store'
 import TeamPanel from "../components/TeamPanel.vue";
 import { teamStore } from '../store/team'
+import {isMain} from '../js/common/screenUtils'
 
 export default {
   name: 'Main',
@@ -44,7 +45,8 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
-    ...mapWritableState(teamStore,['teamVisible'])
+    ...mapWritableState(teamStore,['teamVisible']),
+    isMain
   },
   data () {
     return {

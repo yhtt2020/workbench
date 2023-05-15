@@ -1,7 +1,7 @@
 <template>
-  <div class="bottom-panel flex flex-row items-center justify-center w-full" style="text-align: center"
+  <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
        @contextmenu.stop="showMenu">
-    <div class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
+    <div v-if="isMain" class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -111,13 +111,13 @@
       </div>
 
 
-      <div style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
+      <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
            class="flex justify-center items-center  h-2/3 pointer">
-        <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
+        <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" ></Icon>
       </div>
 
     </div>
-    <template v-if="!simple">
+    <template v-if="!simple && isMain">
       <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
              style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
@@ -227,7 +227,7 @@
     </div>
   </transition>
 
-  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
+  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag " @click="closeChangeApp">
     <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
@@ -244,6 +244,7 @@ import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
+import {isMain} from '../js/common/screenUtils'
 
 const { messageModel } = window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
@@ -354,7 +355,10 @@ export default {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
-    ...mapWritableState(messageStore,['messageIndex','totalCount'])
+    ...mapWritableState(messageStore,['messageIndex','totalCount']),
+    isMain(){
+      return isMain()
+    },
   },
   watch: {
     navigationList: {
@@ -608,7 +612,9 @@ export default {
 
 </style>
 <style lang="scss" scoped>
-
+.common-panel{
+  margin-bottom: 0;
+}
 .btn {
   text-align: center;
 }

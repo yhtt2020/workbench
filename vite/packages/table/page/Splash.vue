@@ -92,6 +92,8 @@ import { cardStore } from '../store/card'
 import { deckStore } from '../store/deck'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
+import { screenStore } from '../store/screen'
+import {isMain} from '../js/common/screenUtils'
 
 export default {
   name: 'Code',
@@ -116,6 +118,13 @@ export default {
     this.initStore(weatherStore, 'weather')
     this.initStore(paperStore, 'paper')
     this.initStore(deckStore, 'deck')
+    this.initStore(screenStore, 'screen')
+    if(isMain()){
+      this.bindMainIPC()
+    }else{
+      this.bindSubIPC()
+    }
+
     window.loadedStore['userInfo'] = false
 
     this.bindUserInfoResponse()
@@ -148,6 +157,7 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ['sortClock','sortCountdown']),
+    ...mapActions(screenStore,['bindMainIPC','bindSubIPC']),
     timeout(){
       this.timeoutHandler=setTimeout(()=>{
         Modal.error({
