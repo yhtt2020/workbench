@@ -1,14 +1,18 @@
 <template>
   <!-- 音频输出设备选项 -->
-  <div class="mt-4">
-    <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 350px;">
-       <div v-for="(item,index) in outputList" :class="selectIndex === index ? 'select-active':''"
-        @click="selectAudio(item,index)" class="flex pointer items-center justify-center" style="padding: 8px 10px 6px 10px;">
-          <span class="item-name" style="font-size: 1.2em; font-weight: 400;">
+  <div class="mt-4 flex flex-col">
+    <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
+       <div v-for="(item,index) in outputList" :class="selectIndex === index ? 's-item':''"
+        @click="selectAudio(item,index)" class="flex pointer rounded-lg items-center justify-center " style="padding: 7px  10px;">
+          <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
             {{ item.name }}
           </span>
        </div>
     </vue-custom-scrollbar> 
+    <div @click="backOutput" class="flex items-center select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
+      <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
+      <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
+    </div>
   </div>
 </template>
 
@@ -50,13 +54,17 @@
          suppressScrollX: true,
          wheelPropagation: true
         },
-        selectIndex:0
+        selectIndex:0,
+        defaultItem:{ name:'扬声器1（High Definition Audio Device）'},
       }
     },
     methods:{
       selectAudio(item,index){
         this.selectIndex = index
-        this.$emit('updateOutput',item)
+        this.defaultItem = item
+      },
+      backOutput(){
+        this.$emit('updateOutput',this.defaultItem)
       }
     }
   }
@@ -70,9 +78,9 @@
   word-wrap: break-word;
   overflow: hidden;
 }
-.select-active{
-  background: rgba(32, 32,32, 1);
-  border-radius: 8px;
+.select-active:active{
+  filter: brightness(0.8);
+  background:rgba(42, 42, 42, 0.25);
 }
 ::v-deep .ps__thumb-y{
   display: none !important;

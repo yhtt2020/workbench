@@ -15,14 +15,14 @@
           </div> 
         </div>
         <div class="flex-1">
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
+          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item" >
             <Icon icon="sound" style="font-size: 2.286em;"></Icon>
           </div>
         </div>
       </div>
       <span class="mt-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">默认输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
-        <div v-for="(item,index) in outputList" :class="outputIndex === index ? 'active-index' :''" @click="selectOutputDevice(item,index)" class="w-full flex items-center justify-center pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 16px;font-weight: 200;">
+        <div v-for="(item,index) in outputList" :class="outputIndex === index ? 's-item' :''" @click="selectOutputDevice(item,index)" class="w-full flex items-center rounded-lg justify-center pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}
           </span>
@@ -37,14 +37,14 @@
           <div style="width: 180px;" class="mr-4 flex items-center justify-center">
             <a-progress :percent="10" :showInfo="false"/>
           </div>
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
+          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item">
             <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
           </div>
         </div>
       </div>
       <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
       <vue-custom-scrollbar :settings="settingsScroller" style="height:200px;">
-        <div v-for="(item,index) in inputList" :class="inputIndex === index ? 'active-index' :''" class="w-full pointer flex items-center justify-center my-1" @click="selectInputDevice(item,index)" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 16px;font-weight: 200;">
+        <div v-for="(item,index) in inputList" :class="inputIndex === index ? 's-item' :''" class="w-full pointer rounded-lg flex items-center justify-center my-1" @click="selectInputDevice(item,index)" style="padding: 7px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}
           </span>
