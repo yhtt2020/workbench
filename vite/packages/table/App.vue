@@ -63,8 +63,7 @@ import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {app} from "electron";
 import {Modal} from 'ant-design-vue'
-
-const {appModel} = window.$models
+const {appModel,steamUser,steamSession} = $models
 
 let startX,
   startY,

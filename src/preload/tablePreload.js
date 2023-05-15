@@ -21,7 +21,12 @@ window.$models = {
   axios: require('axios'),
   nanoid:require('nanoid'),
   fs:require('fs-extra'),
-  storageModel:new StorageModel()
+  storageModel:new StorageModel(),
+  steamUser:require('steam-user'),
+  steamSession:require('steam-session'),
+  path:require('path'),
+  https:require('https'),
+  steamFs:require('fs')
 }
 window.$models.appModel.initDb()
 

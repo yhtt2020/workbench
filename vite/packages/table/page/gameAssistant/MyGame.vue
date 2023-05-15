@@ -132,6 +132,7 @@
 <script>
 import HorizontalPanel from "../../components/HorizontalPanel.vue";
 import Modal from '../../components/Modal.vue'
+
 export default {
   name: "MyGame",
   components:{
@@ -163,6 +164,10 @@ export default {
       },
       hoverIndex:-1
     }
+  },
+  mounted() {
+
+
   },
   computed:{
       filterSteamGameList(){
