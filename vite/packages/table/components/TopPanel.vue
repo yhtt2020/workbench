@@ -1,5 +1,5 @@
 <template>
-  <a-row class="top-panel drag" type="flex" :gutter="10">
+  <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="8">
       <div
         class="pointer no-drag text-more"
@@ -18,10 +18,10 @@
     <a-col :span="8" style="text-align: center">
       <div @click="openGlobalSearch" class="input-box no-drag pointer">
         <Icon icon="sousuo"></Icon> 搜索 网页内容、标签
-<!--        <span style="float: right; padding-right: 10px">-->
-<!--          <span style="margin-right: 3px" class="key-button">Alt</span-->
-<!--          ><span class="key-button">F</span>-->
-<!--        </span>-->
+        <!--        <span style="float: right; padding-right: 10px">-->
+        <!--          <span style="margin-right: 3px" class="key-button">Alt</span-->
+        <!--          ><span class="key-button">F</span>-->
+        <!--        </span>-->
       </div>
     </a-col>
     <a-col :span="8" style="text-align: right" class="s-text">
@@ -32,7 +32,7 @@
         {{ lockTimeoutDisplay }}后锁屏
       </span>
       <span class="no-drag" v-if="!loading"
-        >{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{
+      >{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{
           dateTime.minutes
         }}
         {{ dateTime.week }}
@@ -45,6 +45,10 @@
      </span>
     </a-col>
   </a-row>
+  <a-row style="height: 1em;cursor: move" class="drag text-right" v-else>
+
+  </a-row>
+
 </template>
 
 <script >
@@ -54,6 +58,7 @@ import {cardStore} from '../store/card'
 import {mapWritableState,mapState,mapActions} from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
+import {isMain} from '../js/common/screenUtils'
 
 export default {
   name: "TopPanel",
@@ -70,6 +75,7 @@ export default {
     ...mapWritableState(appStore,['status']),
     ...mapState(weatherStore,['cities']),
     ...mapWritableState(paperStore,['settings','lockTimeout']),
+    isMain,
     lockTimeoutDisplay(){
       // if(this.lockTimeout>=60){
       //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒'
@@ -177,6 +183,7 @@ export default {
 <style scoped>
 .top-panel {
   padding: 0.8em;
+  padding-bottom: 0;
 }
 .input-box {
   height: 2em;

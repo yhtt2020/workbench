@@ -83,10 +83,11 @@ export default {
       return this.powerList[this.leveList[this.clickGrade]]
     },
     abilityGrade(){
-      return this.grade.lv>5&&this.grade.lv<10?4:this.grade.lv>10?5:this.grade.lv-1
+      return leveList.findIndex( (n)=> n > lv)!==-1?leveList.findIndex( (n)=> n > lv)-1 : leveList.length-1
     }
   },
   mounted () {
+
     this.grade = this.userInfo.onlineGradeExtra
     this.clickStep(this.abilityGrade)
   },

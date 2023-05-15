@@ -2,6 +2,7 @@ global.tableWin = null
 let { app, ipcMain: ipc ,Notification} = require('electron')
 const path = require('path')
 const fs=require('fs')
+const TableScreenManager = require('./tableScreenManager')
 ipc.on('recoverSuccess',()=>{
   new Notification({
     title:'数据迁移成功',
@@ -31,11 +32,13 @@ class TableManager {
   windows //分屏的窗体
   storage //临时存储
 
+  tableScreenManager
+
 static alive(){
   return global.tableWin && !global.tableWin.window.isDestroyed()
 }
 
-  async init (tableId) {
+  async init () {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
       let showInTaskbar=settings.get('showInTaskBar')
@@ -141,6 +144,10 @@ static alive(){
           tableWin.window.focus()
         }
       }
+    }
+    if(!this.tableScreenManager){
+      this.tableScreenManager=new TableScreenManager()
+      this.tableScreenManager.bindIPC()
     }
     global.tableAppManager.setTableWin(tableWin.window)//更新tablewin
   }
