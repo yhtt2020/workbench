@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {mapActions, mapWritableState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {cardStore} from "./store/card"
 import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
@@ -63,8 +63,11 @@ import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {app} from "electron";
 import {Modal} from 'ant-design-vue'
-const {appModel,steamUser,steamSession} = $models
-
+import {steamUserStore} from "./store/steamUser";
+const {steamUser,steamSession,path,https,steamFs} = $models
+let client = new steamUser({
+  enablePicsCache: true
+});
 let startX,
   startY,
   moveEndX,
@@ -160,6 +163,7 @@ export default {
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
+    ...mapWritableState(steamUserStore, ['steamLoginData'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
@@ -305,6 +309,40 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    "steamLoginData.refreshToken":{
+      handler(){
+        console.log(this.steamLoginData)
+        if(this.steamLoginData.refreshToken === '') return
+        console.log('login')
+        client.logOn({"refreshToken":this.steamLoginData.refreshToken})
+        client.on('loggedOn', async function () {
+          console.log( client);
+          client.setPersona(steamUser.EPersonaState.Online);
+          client.on('appOwnershipCached', () => {
+            console.log('Game ownership cached');
+            client.getProductInfo(client.getOwnedApps({excludeFree: false}),[],(err,data)=>{
+              console.log(data)
+              if(err) console.log(err)
+              Object.keys(data).forEach(i=>{
+                if(data[i].appinfo.common){
+                  if(data[i].appinfo.common.type === 'Game'){
+                    console.log(data[i],data[i].appinfo.common.oslist)
+                  }
+                }
+              })
+            })
+            // client.getUserOwnedApps(client.steamID.getSteamID64(),[],(err,data)=>{
+            //  if(err) console.log(err)
+            //   console.log(data)
+            // })
+          });
+          client.on('error', async function (err) {
+            console.log(err)
+          })
+        })
+      },
+      immediate: true,
     }
   },
 };
