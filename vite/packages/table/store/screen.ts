@@ -60,7 +60,11 @@ export const screenStore = defineStore('screen', {
     bindSubIPC(){
       console.log('绑定副屏事件')
       subIPC.on('tagScreen',()=>{this.tagScreen()})
+      subIPC.on('updateDetail',(event,args)=>{
+        this.screenDetail=args.detail
+      })
     },
+
     /**
      * 主屏专门绑定的IPC
      */
@@ -87,6 +91,18 @@ export const screenStore = defineStore('screen', {
       },3000)
     },
 
+    async onTableStarted(){
+      this.runAutoRun()
+    },
+    runAutoRun(){
+      this.screens.forEach(s=>{
+        if(s.key!=='main'){
+          if(s.settings.autoRun){
+            this.startupScreen(s.key)
+          }
+        }
+      })
+    },
 
     getFullDomain(domain){
       if(!domain){

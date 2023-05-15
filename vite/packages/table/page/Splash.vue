@@ -157,7 +157,9 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ['sortClock','sortCountdown']),
-    ...mapActions(screenStore,['bindMainIPC','bindSubIPC']),
+    ...mapActions(screenStore,['bindMainIPC','bindSubIPC','onTableStarted']),
+    ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser']),
     timeout(){
       this.timeoutHandler=setTimeout(()=>{
         Modal.error({
@@ -241,9 +243,10 @@ export default {
       }
       store()
     },
-    ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
-    ...mapActions(appStore, ['getUserInfo', 'setUser']),
+
     async afterLaunch () {
+      //执行分屏的启动操作
+      this.onTableStarted().then()
       if (!this.settings.zoomFactor) {
         this.settings.zoomFactor = 100
       }

@@ -52,7 +52,7 @@
 
   <div v-if="taggingScreen" class="px-10 rounded-lg"
        style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
-    主屏
+    {{screenDetail.title || '主屏'}}
   </div>
 </template>
 
@@ -166,7 +166,7 @@ export default {
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
-    ...mapWritableState(screenStore, ['taggingScreen'])
+    ...mapWritableState(screenStore, ['taggingScreen','screenDetail'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),

@@ -4,7 +4,7 @@
 
       <div @click="click(screen)" :class="{die:!screen.running,active:screen.active}" v-for="screen in screens"
            class="pointer screen rounded-md" style="display: inline-block;position: relative">
-        <a-image
+        <a-image :preview="false"
           fallback="/public/icons/logo128.png"
           class="screen-preview" :width="120" :height="80" :src="'file://'+screen.capture"></a-image>
         <span style="" class="p-2 screen-title">{{ screen.title }}</span>
