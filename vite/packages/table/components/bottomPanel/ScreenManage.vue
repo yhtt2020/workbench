@@ -26,7 +26,7 @@
       </div>
       <template v-if="currentScreen.key!=='main'">
         <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center;">
-          <a-col :span="6">
+          <a-col :span="5">
             <div class="btn relative ">
               <a-switch @change="toggleScreen" v-model:checked="currentScreen.running"></a-switch>
               <div class="mt-3">
@@ -34,7 +34,7 @@
               </div>
             </div>
           </a-col>
-          <a-col v-if="currentScreen.settings" :span="6">
+          <a-col v-if="currentScreen.settings" :span="5">
             <div class="btn relative ">
               <a-switch v-model:checked="currentScreen.settings.autoRun"></a-switch>
               <div class="mt-3">
@@ -42,7 +42,7 @@
               </div>
             </div>
           </a-col>
-          <a-col :span="6" >
+          <a-col :span="5" >
             <div @click="restore" class="btn">
               <Icon icon="huanyuan" style="font-size: 2em"></Icon>
               <div >
@@ -51,7 +51,7 @@
             </div>
           </a-col>
 
-          <a-col :span="6" v-if="false">
+          <a-col :span="4" v-if="false">
             <div @click="setTouch" class="btn">
               <Icon icon="Touch" style="font-size: 2em"></Icon>
               <div >
@@ -159,7 +159,7 @@ export default {
 .screen {
   opacity: 0.7;
   border: #343434 2px solid;
-  margin-right: 0.5em;
+  margin-right: 1em;
   background: #1c1c1c;
   cursor: pointer;
 

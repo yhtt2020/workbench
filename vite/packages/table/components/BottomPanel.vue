@@ -133,9 +133,9 @@
 
     </div>
     <template v-if="!simple && isMain">
-      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
+      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
-             style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
+             style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0">
           <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
           </a-avatar>
