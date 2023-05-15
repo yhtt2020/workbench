@@ -265,6 +265,13 @@ import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 import {setSupervisoryData} from '../js/action/supervisory'
 const readAida64 = window.readAida64
+const {steamUser,steamSession,path,https,steamFs} = $models
+const {LoginSession, EAuthTokenPlatformType} = steamSession
+let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
+let client = new steamUser({
+  enablePicsCache: true
+});
+let List = []
 const deskTemplate = {
   daily: [
     {
@@ -531,7 +538,111 @@ export default {
       }
     }
   },
-  mounted () {
+ async mounted () {
+  // await session.startWithCredentials({
+  //    accountName: 'snpsly123123',
+  //    password:'xyx86170060',
+  //   // steamGuardCode:'5BCMH'
+  //  }).then((res) =>{
+  //    console.log(res)
+  //  }).catch(err=>{
+  //    console.log(err)
+  //  })
+  //  session.on('authenticated', async () => {
+  //    console.log(`Logged into Steam as ${session.accountName}`);
+  //    let webCookies = await session.getWebCookies();
+  //    if (webCookies) {
+  //      const steamLoginData = {
+  //        accessToken: session.accessToken,
+  //        refreshToken: session.refreshToken,
+  //        webCookies: webCookies
+  //      }
+  //      console.log(steamLoginData)
+  //    }
+  //  });
+  //  client.logOn({"refreshToken": 'eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5OTI0MzA3NjczMSIsICJhdWQiOiBbICJjbGllbnQiLCAid2ViIiwgInJlbmV3IiwgImRlcml2ZSIgXSwgImV4cCI6IDE3MDIyNTcxNTgsICJuYmYiOiAxNjc1Mjk5NTkwLCAiaWF0IjogMTY4MzkzOTU5MCwgImp0aSI6ICIxNEJCXzIyODVDQzAzXzVDNTA1IiwgIm9hdCI6IDE2ODM5Mzk1OTAsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIxMTEuMy4xMS4xNzMiLCAiaXBfY29uZmlybWVyIjogIjE4NS4yMzAuMjQ1LjIxMCIgfQ.C3cpZLysxiWU6UuyfyHGYKidNiWXCkyBbr6I0LLY5qIjodrwoHPE1pWsv0NIIvU10--EUme20XCf9aQR43R9CQ'})
+  //  client.on('loggedOn', async function () {
+  //    console.log("Logged into Steam as " + client.steamID.getSteamID64());
+  //    //  console.log(client)
+  //    // const appid = 570;
+  //    // const coverUrl = `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`;
+  //    // const cacheDir = path.join('C:\\Users\\2\\Desktop\\abc', 'pics_cache');
+  //    // if (!steamFs.existsSync(cacheDir)) {
+  //    //   steamFs.mkdirSync(cacheDir);
+  //    //   console.log(steamFs.existsSync(cacheDir))
+  //    // }
+  //    //
+  //    // const cacheFile = path.join(cacheDir, `${appid}_header.jpg`);
+  //
+  //    // const file = steamFs.createWriteStream(cacheFile);
+  //    // const request = https.get(coverUrl, (response) => {
+  //    //   response.pipe(file);
+  //    // });
+  //    // const steamid = client.steamID.getSteamID64();
+  //    // const avatarUrl = `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/5a/5a8d6e7a7d9d7d9d7d9d7d9d7d9d7d9d7d9d7d9.jpg`;
+  //    // const avatarCacheDir = path.join('C:\\Users\\2\\Desktop\\abc', 'pics_cache', 'avatars');
+  //    //
+  //    // if (!steamFs.existsSync(avatarCacheDir)) {
+  //    //   steamFs.mkdirSync(avatarCacheDir);
+  //    // }
+  //    //
+  //    // const avatarCacheFile = path.join(avatarCacheDir, `${steamid}.jpg`);
+  //    //
+  //    // const avatarFile = steamFs.createWriteStream(avatarCacheFile);
+  //    // const avatarRequest = https.get(avatarUrl, (response) => {
+  //    //   response.pipe(avatarFile);
+  //    // });
+  //    client.setPersona(steamUser.EPersonaState.Online);
+  //
+  //    client.on('appOwnershipCached', () => {
+  //      console.log('Game ownership cached');
+  //
+  //      client.getProductInfo(client.getOwnedApps({excludeFree: false}),[],(err,data)=>{
+  //        console.log(data)
+  //     if(err) console.log(err)
+  //        Object.keys(data).forEach(i=>{
+  //           if(data[i].appinfo.common){
+  //             if(data[i].appinfo.common.type === 'Game'){
+  //               console.log(data[i],data[i].appinfo.common.oslist)
+  //               // console.log(data[i].appinfo.common.name_localized||data[i].appinfo.common.name
+  //               // )
+  //             }
+  //           }
+  //        })
+  //      })
+  //      // client.getUserOwnedApps(client.steamID.getSteamID64(),[],(err,data)=>{
+  //      //  if(err) console.log(err)
+  //      //   console.log(data)
+  //      // })
+  //    });
+  //
+  //    client.on('error', async function (err) {
+  //      console.log(err)
+  //    })
+  //
+  //  })
+// await session.startWithCredentials({
+//       accountName: 'snpsly123',
+//       password:'xyx86170060',
+//       steamGuardCode:'5BCMH'
+//     }).then((res) =>{
+//   console.log(res)
+// }).catch(err=>{
+//   console.log(err)
+// })
+//    session.on('authenticated', async () => {
+//      console.log(`Logged into Steam as ${session.accountName}`);
+//      let webCookies = await session.getWebCookies();
+//
+//      if (webCookies) {
+//       const steamLoginData = {
+//          accessToken: session.accessToken,
+//          refreshToken: session.refreshToken,
+//          webCookies: webCookies
+//        }
+//        console.log(steamLoginData)
+//      }
+//    });
     if (!this.moved) {
       this.desks[0].cards = this.customComponents
       this.moved = true

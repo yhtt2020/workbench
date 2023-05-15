@@ -5,7 +5,7 @@
     <span class="text-white">Steam</span>
     <span>绑定Steam帐号即可同步显示你的游戏数据</span>
   </div>
-  <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="bindSteam">
+  <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="()=>{ this.modalVisibility = true}">
     绑定
   </div>
 </div>
@@ -20,13 +20,71 @@
       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
     </a-select>
   </div>
+  <Modal v-model:visible="modalVisibility"   v-show="modalVisibility" animationName="bounce-in" :blurFlag="true">
+    <div class="flex flex-col p-6 text-white">
+      <div class="mx-auto">绑定Steam</div>
+      <HorizontalPanel :navList="loginTypeList" v-model:selectType="loginType" class="mt-4 mx-auto" bgColor="drawer-item-select-bg"></HorizontalPanel>
+      <div class=" mt-6">
+        <a-input v-model:value="userName" placeholder="账号"  class="no-drag rounded-lg h-12 mx-auto"  style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/></div>
+      <div class=" mt-6">
+        <a-input v-model:value="password" class="no-drag  rounded-lg h-12  mx-auto" placeholder="密码"  style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+      </div>
+      <div class=" mt-6" v-show="loginType.name==='phone'">
+        <a-input v-model:value="AuthCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="令牌"   style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+      </div>
+      <div class=" mt-6" v-show="mailBoxShow&&loginType.name!=='phone'">
+        <a-input v-model:value="mailBoxAuthCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="邮箱验证码"   style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+      </div>
+      <div class="flex justify-between mt-6">
+        <div class="s-item  h-12 rounded-lg flex justify-center items-center pointer w-40" style="background: #2A2A2A" @click="()=>{this.modalVisibility = false}">
+          取消
+        </div>
+        <div class="s-item  h-12 rounded-lg flex justify-center items-center pointer w-40" style="background: #508BFE" @click.stop="bindSteam">
+          {{loginLoading?'登录中....':'登录'}}
+        </div>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script>
+import { mapState,mapActions } from 'pinia'
+import Modal from '../../components/Modal.vue'
+import HorizontalPanel from "../../components/HorizontalPanel.vue";
+import {message} from 'ant-design-vue'
+import {cardStore} from "../../store/card";
+import {steamUserStore} from "../../store/steamUser";
+const {steamSession,path,https} = $models
+const {LoginSession, EAuthTokenPlatformType} = steamSession
+let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
+session.on('authenticated', async () => {
+  message.info({
+    content:`登录成功用户名 ${session.accountName}`,
+  })
+  let webCookies = await session.getWebCookies();
+  if (webCookies) {
+    const steamLoginData = {
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+      webCookies: webCookies
+    }
+    steamUserStore().setSteamLoginData(steamLoginData)
+  }
+});
 export default {
   name: "gameSetting",
+  components:{Modal,HorizontalPanel},
   data(){
     return {
+      mailBoxShow:false,
+      loginTypeList:[{title:'邮箱验证',name:'mailBox'},{title:'手机令牌',name:'phone'}],
+      loginType:{title:'邮箱验证',name:'mailBox'},
+      loginLoading:false,
+      userName:'',
+      password:'',
+      mailBoxAuthCode:'',
+      AuthCode:'',
+      modalVisibility:false,
       area:'国区',
       region:[
         {
@@ -80,11 +138,74 @@ export default {
       ],
     }
   },
+  mounted() {
+    console.log(this.steamLoginData)
+  },
+  computed:{
+    ...mapState(steamUserStore, ['steamLoginData'])
+  },
   methods:{
+    ...mapActions(steamUserStore, ['setSteamLoginData']),
     getRegion(e){
       console.log(e)
     },
-    bindSteam(){
+    mailBox(){
+      session.submitSteamGuardCode(this.mailBoxAuthCode)
+    },
+   async bindSteam(){
+     if(this.loginLoading===true)return
+     this.loginLoading = true
+     switch (this.loginType.name){
+       case'mailBox':
+         if( this.mailBoxShow !== true){
+           session.startWithCredentials({
+             accountName: this.userName,
+             password:this.password,
+             // steamGuardCode:'5BCMH'
+           }).then((res) =>{
+             this.mailBoxShow = true
+           }).catch(err=>{
+             message.error({
+               content:'用户或密码错误',
+             })
+           }).finally(()=>{this.loginLoading = false})
+         }else{
+           session.submitSteamGuardCode(this.mailBoxAuthCode).then((res) =>{
+             message.info({
+               content:'登录成功',
+             })
+           }).catch(err=>{
+             message.error({
+               content:'邮箱错误',
+             })
+           }).finally(()=>{
+             this.loginLoading = false
+           this.modalVisibility = false})
+         }
+         break;
+       case'phone':
+         session.startWithCredentials({
+           accountName: this.userName,
+           password:this.password,
+           steamGuardCode:this.AuthCode
+         }).then((res) =>{
+
+         }).catch(err=>{
+           message.error({
+             content:'用户或密码或令牌错误',
+           })
+         }).finally(()=>{this.loginLoading = false});
+         break;
+     }
+  //   session.startWithCredentials({
+  //     accountName: 'snpsly123123',
+  //     password:'xyx86170060',
+  //    // steamGuardCode:'5BCMH'
+  //   }).then((res) =>{
+  // console.log(res)
+  // }).catch(err=>{
+  // console.log(err)
+  //   })
 
     }
   }
