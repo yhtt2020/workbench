@@ -10,6 +10,7 @@
 
 <script>
 import SecondPanel from '../../components/SecondPanel.vue'
+import {isMain} from '../../js/common/screenUtils'
 
 const menus = [
   {
@@ -49,12 +50,30 @@ const menus = [
   }
 
 ]
+
+const subMenus = [
+  {
+    title: '通用',
+    name: 'common',
+    route: {
+      name: 'common'
+    }
+  },
+  {
+    title: '弹幕',
+    name: 'barrage',
+    route: {
+      name: 'barrageSetting'
+    }
+  }
+
+]
 export default {
   name: 'Basic',
   components: { SecondPanel },
   data () {
     return {
-      menus,
+      menus:isMain()?menus:subMenus,
       currentMenu: 'common'
     }
   },
@@ -66,6 +85,9 @@ export default {
     // this.$router.push({
     //   name:'key'
     // })
+  },
+  computed:{
+    isMain
   },
   methods: {
     change (tab) {

@@ -10,20 +10,25 @@
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
          <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
          <div  class="w-full flex justify-start flex-col">
-            <div v-for="item in steamList" @click="enterDiscountDetail(item)" class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 100%;">
-              <div style="width: 269px;height: 120px;" class="mr-3">
-                <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
-              </div>
-              <div class="flex flex-col" style="width: 80%;">
-                  <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">{{item.name}}</span>
-                  <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">{{item.brief}}</span>
-                  <div class="flex items-center">
-                     <span class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">-{{ item.percent }} %</span>
-                     <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 500;">{{ item.newPrice }}</span>
-                     <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.oldPrice }}</span>
-                  </div>
+          <div v-for="item in steamList" class="flex items-center s-bg  mt-3  flex-row  rounded-lg p-3" style="width: 100%;">
+            <div class="flex-none mr-3" style="width: 258px;height: 120px;">
+              <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
+            </div>
+            <div class="flex-grow" >
+              <div class="flex flex-col">
+                <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">{{item.name}}</span>
+                <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">{{item.brief}}</span>
+                <div class="flex items-center">
+                   <span class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">-{{ item.percent }} %</span>
+                   <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 500;">{{ item.newPrice }}</span>
+                   <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.oldPrice }}</span>
+                </div>
               </div>
             </div>
+            <div class="flex-none btn-active ml-4 h-12 py-3 pointer px-8 s-bg rounded-md" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;" @click="enterDiscountDetail(item)" >
+              查看详情
+            </div>
+          </div>
          </div>
       </vue-custom-scrollbar>
     </div>
@@ -69,27 +74,18 @@
      </div>
   </template>
   <router-view></router-view>
-
-  <a-drawer  v-model:visible="discountDisplay" title="地区" style="text-align: center;"
-   :bodyStyle="{textAlign:'left'}" placement="right"  width="500" @close="onClose">
-   <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
-    <div class="w-full h-12 flex items-center right-select-active  justify-center pointer my-4 rounded-lg s-bg"
-      v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'active':''" @click="selectedAreaSuit(item,index)"
-    >
-      {{ item.name }}
-    </div>
-   </vue-custom-scrollbar>
-  </a-drawer>
-   
+  <HorizontalDrawer :drawerTitle="drawerTitle" :rightSelect="rightSelect" ref="regionDrawer" @getArea="getArea"></HorizontalDrawer>
 </template>
 
 <script>
 import { sendRequest,regionRange,remainderDay } from '../../js/axios/api';
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
+import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 export default {
   name: "GameDiscount",
   components:{
-    HorizontalPanel
+    HorizontalPanel,
+    HorizontalDrawer
   },
   data(){
     return{
@@ -113,6 +109,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      drawerTitle:'地区'
     }
   },
   mounted(){
@@ -123,14 +120,12 @@ export default {
     remainderDay,
     // 打开右侧抽屉事件
     openRightDrawer(){
-      this.discountDisplay = true
+       this.$refs.regionDrawer.openDrawer()
     },
     // 打开右侧抽屉区服选中事件
-    selectedAreaSuit(item,index){
-      this.defaultGameIndex = index
-      this.defaultGameValue = item
-      this.getSelectCCData(item.id)
-      this.discountDisplay = false
+    getArea(v){
+      this.defaultGameValue = v
+      this.getSelectCCData(v.id)
     },
 
     // 进入详情
@@ -276,6 +271,10 @@ export default {
   padding-bottom: 9px;
 }
 .right-select-active:active{
+  filter: brightness(0.8);
+  background:rgba(42, 42, 42, 0.25);
+}
+.btn-active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
 }

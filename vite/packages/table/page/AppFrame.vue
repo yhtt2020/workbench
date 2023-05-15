@@ -120,6 +120,10 @@ export default {
         }
         this.app = app
         ipc.send('executeTableApp', args)
+        setTimeout(()=>{
+          ipc.send('getRunningApps')
+          ipc.send('getRunningTableApps')
+        },3000)
         frame.addEventListener('resize',()=>{
           _.debounce(()=>{
             this.syncBounds()

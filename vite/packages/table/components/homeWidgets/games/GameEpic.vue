@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options" :customIndex="customIndex">
-    <HorizontalPanel :navList="epicTips" v-model:selectType="epicType" class="mt-2"></HorizontalPanel>
+    <HorizontalPanel :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
     <template v-if="epicType.name === 'week'">
       <div class="w-full" v-if="detailShow === false">
         <div class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in weekEpic"

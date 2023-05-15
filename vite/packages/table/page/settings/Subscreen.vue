@@ -17,7 +17,7 @@
       <template v-if="screen.key!=='main'">
         <div class="line">
           开机自启动：
-          <a-switch v-model:checked="screen.autoStart"></a-switch>
+          <a-switch v-model:checked="screen.settings.autoRun"></a-switch>
         </div>
         <!--分屏专属设置项目        -->
 
@@ -104,8 +104,10 @@ export default {
       this.screens.push({
         key: nanoid(6),
         title: '分屏',
-        autoStart: true,
         closable: true,
+        settings:{
+          autoRun:false
+        },
         apps: {
           deck: false
         }

@@ -66,7 +66,6 @@ export default {
       this.activeIndex = index
       item.state = false  // 将消息未读状态隐藏
       this.$emit('update:selectType', item)
-      this.$emit('changed')
     }
   },
 }

@@ -1,7 +1,7 @@
 <template>
-  <div class="bottom-panel flex flex-row items-center justify-center w-full" style="text-align: center"
+  <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
        @contextmenu.stop="showMenu">
-    <div class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
+    <div v-if="isMain" class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -98,30 +98,47 @@
         <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
-        <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList"
-             @click="clickNavigation(item)" v-else>
-          <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
-               class="s-item flex justify-center items-center rounded-lg">
-            <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+        <a-tooltip v-else :title="item.name" v-for="item in navigationList">
+          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block"
+               @click="clickNavigation(item)" >
+            <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
+                 class="s-item flex justify-center items-center rounded-lg">
+              <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+            </div>
+            <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
+              <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
+            </div>
           </div>
-          <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
-            <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
-          </div>
+        </a-tooltip>
+
+      </div>
+
+      <a-tooltip :title="showScreen?'运行中的分屏':'运行中的应用'">
+        <div  @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
+              class="flex justify-center items-center  h-2/3 pointer">
+
+          <template v-if="!showScreen ">
+            <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
+            <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
+          </template>
+          <template v-else>
+            <Icon icon="touping" style="width: 40px;height: 40px;color: white;margin-left: 2px;" ></Icon>
+            <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{runningScreen}}</span>
+          </template>
+
         </div>
-      </div>
+      </a-tooltip>
 
 
-      <div style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
-           class="flex justify-center items-center  h-2/3 pointer">
-        <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
-      </div>
 
     </div>
-    <template v-if="!simple">
+    <template v-if="!simple && isMain">
       <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
              style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
-          <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+          <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
+
+          </a-avatar>
           <div class="mb-0 mt-0"> 小队
             <div v-if="true" style="display: inline-block;position: relative">
             </div>
@@ -129,8 +146,10 @@
         </div>
       </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-           style="margin-left: 0;padding:0.4em !important;min-width: 6em;">
-        <Icon class="mt-2 mb-0 " icon="smile" style="fill:#d7d7d7"></Icon>
+           style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0">
+        <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
+
+        </a-avatar>
         <div class="mb-0 mt-0"> 小队
           <div v-if="true" style="display: inline-block;position: relative">
           </div>
@@ -227,8 +246,8 @@
     </div>
   </transition>
 
-  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
-    <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag " @click="closeChangeApp">
+    <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
@@ -244,6 +263,7 @@ import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
+import {isMain} from '../js/common/screenUtils'
 
 const { messageModel } = window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
@@ -253,6 +273,8 @@ import ScrolX from './ScrolX.vue'
 import TeamTip from './TeamTip.vue'
 import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
+import { appsStore } from '../store/apps'
+import { screenStore } from '../store/screen'
 
 export default {
   name: 'BottomPanel',
@@ -270,6 +292,7 @@ export default {
   },
   data () {
     return {
+      tab:'screen',
 
       lastTime: 0,
       visibleTrans: false,
@@ -292,6 +315,8 @@ export default {
         wheelPropagation: true,
       },
       changeFlag: false,
+      timerRunning:false,
+      showScreen:false
       //screenWidth: document.body.clientWidth
     }
   },
@@ -300,8 +325,14 @@ export default {
     let that = this
     window.removeEventListener('resize', that.checkScroll)
     clearInterval(this.updateMessageTimer)
+    if(this.timerRunning){
+      clearInterval(this.timerRunning)
+    }
   },
   mounted () {
+    this.timerRunning=setInterval(()=>{
+      this.showScreen=!this.showScreen
+    },5000)
     // let inserted=localStorage.getItem('insertBird')
     // if(!inserted){
     //   this.navigationList.unshift( {
@@ -352,9 +383,23 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
+    ...mapWritableState(appsStore,['runningApps','runningTableApps']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
+    ...mapWritableState(screenStore,['screens']),
     ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
-    ...mapWritableState(messageStore,['messageIndex','totalCount'])
+    ...mapWritableState(messageStore,['messageIndex','totalCount']),
+    isMain(){
+      return isMain()
+    },
+    runningScreen(){
+      let count=0
+      this.screens.forEach(s=>{
+        if(s.running){
+          count++
+        }
+      })
+      return count
+    }
   },
   watch: {
     navigationList: {
@@ -407,7 +452,13 @@ export default {
       this.full = value
     },
     appChange () {
-      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      if(this.showScreen){
+        this.tab='screen'
+        this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      }else{
+        this.tab='apps'
+        this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      }
       this.changeFlag = true
     },
     closeChangeApp () {
@@ -608,7 +659,9 @@ export default {
 
 </style>
 <style lang="scss" scoped>
-
+.common-panel{
+  margin-bottom: 0;
+}
 .btn {
   text-align: center;
 }

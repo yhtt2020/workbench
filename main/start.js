@@ -55,12 +55,24 @@ app.on('session-created',async (ses)=>{
 
 function ensureDb(){
   const DB_ROOT= require(__dirname+'/src/util/dbUtil.js').getDbPath('db')
+  console.log('DB_ROOT=',DB_ROOT)
   const DB_PATH=path.dirname(DB_ROOT)
+  console.log('DB_PATH=',DB_PATH)
   const TPL_PATH=path.join(__dirname,'/db/tpl.sqlite')
+  console.log('TPL_PATH=',TPL_PATH)
+  console.log('__dirname=',__dirname)
   if(!fs.existsSync(DB_PATH)){
-    fs.ensureDirSync(DB_ROOT)
-    fs.copyFileSync(TPL_PATH,DB_PATH)
+    fs.ensureDirSync(DB_PATH)
+    if(!fs.existsSync(DB_ROOT)){
+      fs.copyFileSync(TPL_PATH,DB_ROOT)
+    }
     console.warn('由于数据库未初始化，尝试复制初始化数据库')
+  }
+  //判断DB_ROOT是否是文件夹，如果是文件夹，则进行清理
+  let stat= fs.statSync(DB_ROOT)
+  if(stat.isDirectory()){
+    fs.rmdirSync(DB_ROOT)
+    fs.copyFileSync(TPL_PATH,DB_ROOT)
   }
 }
 

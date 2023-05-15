@@ -92,6 +92,8 @@ import { cardStore } from '../store/card'
 import { deckStore } from '../store/deck'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
+import { screenStore } from '../store/screen'
+import {isMain} from '../js/common/screenUtils'
 
 export default {
   name: 'Code',
@@ -116,6 +118,13 @@ export default {
     this.initStore(weatherStore, 'weather')
     this.initStore(paperStore, 'paper')
     this.initStore(deckStore, 'deck')
+    this.initStore(screenStore, 'screen')
+    if(isMain()){
+      this.bindMainIPC()
+    }else{
+      this.bindSubIPC()
+    }
+
     window.loadedStore['userInfo'] = false
 
     this.bindUserInfoResponse()
@@ -148,6 +157,9 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ['sortClock','sortCountdown']),
+    ...mapActions(screenStore,['bindMainIPC','bindSubIPC','onTableStarted']),
+    ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser']),
     timeout(){
       this.timeoutHandler=setTimeout(()=>{
         Modal.error({
@@ -231,9 +243,10 @@ export default {
       }
       store()
     },
-    ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
-    ...mapActions(appStore, ['getUserInfo', 'setUser']),
+
     async afterLaunch () {
+      //执行分屏的启动操作
+      this.onTableStarted().then()
       if (!this.settings.zoomFactor) {
         this.settings.zoomFactor = 100
       }

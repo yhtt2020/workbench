@@ -17,7 +17,7 @@
                 <GradeSmallTip powerType="barrage" lastPowerType="关闭弹幕"></GradeSmallTip>
               </div>
             </a-col>
-            <a-col :span="12">
+            <a-col v-if="isMain()" :span="12">
               <div class="btn relative">
                 聊天<br>
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -30,30 +30,12 @@
                 <a-switch @click.stop="()=>{}" v-model:checked="saving"></a-switch>
               </div>
             </a-col>
-            <a-col :span="12">
+            <a-col v-if="isMain()" :span="12">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br>
                 <a-switch @click.stop="()=>{}" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
-<!--            <a-col :span="12">-->
-<!--              <div class="btn">-->
-<!--                免打扰模式<br>-->
-<!--                <a-switch></a-switch>-->
-<!--              </div>-->
-<!--            </a-col>-->
-<!--            <a-col :span="12">-->
-<!--              <div class="btn">-->
-<!--                浅色模式<br>-->
-<!--                <a-switch></a-switch>-->
-<!--              </div>-->
-<!--            </a-col>-->
-<!--            <a-col :span="12">-->
-<!--              <div class="btn">-->
-<!--                静音<br>-->
-<!--                <a-switch></a-switch>-->
-<!--              </div>-->
-<!--            </a-col>-->
           </a-row>
           <div>
           </div>
@@ -62,15 +44,15 @@
           <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg">
             <h3>屏幕设置</h3>
             <a-row style="font-size: 1.2em;text-align: center">
-              <a-col :span="6">
-                <div @click="setTouch" class="btn">
+              <a-col v-if="isMain()" :span="6">
+                <div  @click="setTouch" class="btn">
                   <Icon icon="Touch" style="font-size: 2em"></Icon>
                   <div>
                     设置触摸屏
                   </div>
                 </div>
               </a-col>
-              <a-col :span="6">
+              <a-col v-if="isMain()" :span="6">
                 <div @click="setPen" class="btn">
                   <Icon icon="icon-checkin" style="font-size: 2em"></Icon>
                   <div>
@@ -78,14 +60,14 @@
                   </div>
                 </div>
               </a-col>
-              <a-col :span="6">
+              <a-col  :span="6">
                 <div @click="chooseScreen" class="btn">
                   <Icon icon="touping" style="font-size: 2em"></Icon>
                   <div> 选择屏幕</div>
                 </div>
               </a-col>
               <a-col :span="6">
-                <div style="opacity: 0.5" @click="subscreen" class="btn">
+                <div v-if="isMain()"  @click="subscreen" class="btn">
                   <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>
                   <div > 分屏设置</div>
                 </div>
@@ -96,8 +78,8 @@
           </div>
           <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg">
 
-            <a-row style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
-              <a-col :span="6">
+            <a-row   style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
+              <a-col v-if="isMain()" :span="6">
                 <div @click="wizard" class="btn">
                   <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
                   <div> 配置向导</div>
@@ -117,19 +99,19 @@
                   <div> 壁纸</div>
                 </div>
               </a-col>
-              <a-col :span="6">
+              <a-col  :span="6">
                 <div @click="basic" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 基础设置</div>
                 </div>
               </a-col>
-              <a-col :span="6">
+              <a-col v-if="isMain()"  :span="6">
                 <div @click="verifyCode" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 验证激活码</div>
                 </div>
               </a-col>
-              <a-col v-if="userInfo && userInfo.uid===4" :span="6">
+              <a-col  v-if="userInfo && userInfo.uid===4 && isMain()" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 生成激活码</div>
@@ -174,6 +156,8 @@ import {mapActions} from 'pinia'
 import { codeStore } from '../store/code'
 import SecondPanel from '../components/SecondPanel.vue'
 import GradeSmallTip from "../components/GradeSmallTip.vue";
+import {isMain} from '../js/common/screenUtils'
+
 export default {
   name: 'Setting',
   components: { SecondPanel, ChooseScreen,GradeSmallTip },
@@ -199,6 +183,7 @@ export default {
   },
   methods: {
     ...mapActions(codeStore, ['verify', 'create']),
+    isMain:isMain,
     tipSaving(){
       Modal.info({
         content:'使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。',
@@ -235,7 +220,7 @@ export default {
       })
     },
     subscreen(){
-     // this.$router.push({name:'subscreen'})
+      this.$router.push({name:'subscreen'})
     },
     chooseScreen () {
       this.visibleChooseScreen = true
