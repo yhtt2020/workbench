@@ -254,6 +254,7 @@ import AddCard from './app/card/AddCard.vue'
 import GradeNotice from './app/grade/GradeNotice.vue'
 import Voice from '../components/homeWidgets/games/Voice.vue'
 import Audio from '../components/homeWidgets/games/Audio.vue'
+import CaptureNewCard from '../components/homeWidgets/games/CaptureNewCard.vue'
 import { runExec } from '../js/common/exec'
 import { appStore } from '../store'
 import Remote from '../components/homeWidgets/custom/Remote.vue'
@@ -508,7 +509,8 @@ export default {
     CustomAssembly,
     Voice,
     Audio,
-    SteamFriends
+    SteamFriends,
+    CaptureNewCard
   },
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'aidaData', 'settings', 'desks', 'moved', 'currentDeskIndex']),

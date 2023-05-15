@@ -28,12 +28,12 @@
           <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
         </div> -->
         <div class="flex mt-12 items-center justify-between">
-          <div class="s-bg change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
+          <div class="s-item change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
             <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
             <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
             <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
           </div> 
-          <span style="padding:13px 26px;" class="s-bg rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
+          <span style="padding:13px 26px;" class="s-item rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
         </div>
       </template>
       <template v-if="detailShow === true">
@@ -61,16 +61,16 @@
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack()" class=" change pointer s-bg rounded-lg w-12 h-12 flex items-center justify-center">
+            <div @click="discountBack()" class=" change pointer s-item rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <span class="change pointer rounded-lg s-bg  flex items-center justify-center" 
+            <span class="change pointer rounded-lg s-item flex items-center justify-center" 
             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
              @click="enterGameDetail(dpList.steam_appid)"
             >
               详情
             </span>
-            <span class="change pointer rounded-lg s-bg  flex items-center justify-center"
+            <span class="change pointer rounded-lg s-item  flex items-center justify-center"
              style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
              @click="openSteam(dpList.steam_appid)">购买</span>
           </div>
@@ -142,7 +142,7 @@ export default {
       visible:false,
       id:'',
       isLoading:false,
-      detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.gameVisible = true;this.$refs.detailSlot.visible = false}}]
+      detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.$refs.regionDrawer.detailDisplay = true; this.$refs.detailSlot.visible = false}}]
     }
   },
   mounted(){

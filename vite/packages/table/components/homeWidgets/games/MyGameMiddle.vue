@@ -6,10 +6,14 @@
      <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
       当前游戏
      </div>
-     <div class="flex w-full flex-wrap mt-4" v-if="myMiddleDetailShow === false">
-      <div v-for="item in testData" @click="enterMiddleDetail(item)" class="items-center justify-center flex rounded-lg pointer relative mb-4" style="margin-right:34px;width: 100px;height: 100px;">
-        <img :src="item.src" alt="" class="rounded-lg" style="width: 100%; height:100%; object-fit: cover;">
-        <div class="small-title w-full flex items-center px-2 py-2" style="border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
+     <div class="flex flex-col items-center change justify-center" v-if="testData.length === 0">
+      <a-empty :image="simpleImage"/>
+      <span class="s-item py-3 px-12 rounded-lg pointer">导入游戏</span>
+     </div>
+     <div class="mt-4 w-full my-game" v-else-if="myMiddleDetailShow === false">
+      <div  v-for="item in testData" class="my-game-item pointer relative">
+        <img :src="item.src" alt="" class="rounded-lg " @click="enterMiddleDetail(item)"  style="width: 100%; height:100%; object-fit: cover;">
+        <div class="small-title w-full truncate px-2 py-2" style="max-width:100px; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
       </div>
      </div>
      <MyGameMiddleDetail  :middleDetail="middleDetail"  @close="updateShow " v-else></MyGameMiddleDetail>
@@ -19,6 +23,7 @@
 <script>
 import HomeComponentSlot from '../HomeComponentSlot.vue'
 import MyGameMiddleDetail from './MyGameMiddleDetail.vue'
+import { Empty } from 'ant-design-vue';
 export default {
   name:'MyGameMiddle',
   components:{
@@ -98,7 +103,8 @@ export default {
          },
          
       ],
-      middleDetail:''
+      middleDetail:'',
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   },
   methods:{
@@ -122,5 +128,28 @@ export default {
   font-size: 12px;
   font-weight: 600;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.my-game{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+.my-game-item{
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:  0  auto;
+}
+::v-deep .ant-empty-description{
+  display: none !important;
+}
+.change:active {
+  filter: brightness(0.8);
+  background: rgba(42, 42, 42, 0.25);
 }
 </style>

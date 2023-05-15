@@ -1,6 +1,6 @@
 <template>
    <HomeComponentSlot :options="options" :customData="customData" :customIndex="customIndex">
-       <div class="flex justify-center items-center mx-5 my-8">
+      <div class="flex justify-center items-center mx-5 my-8">
           <div class="flex justify-center pointer items-center mr-6 flex-col ml-6">
               <span class="px-4 py-4 rounded-full mb-3" style="background: rgba(32, 32, 32, 1);">
                 <Icon  icon="camera" style="font-size: 2em;"></Icon>
@@ -19,7 +19,7 @@
             </span>
             <span>麦克风</span>
           </div>
-       </div>
+      </div>
    </HomeComponentSlot>
 </template>
 
