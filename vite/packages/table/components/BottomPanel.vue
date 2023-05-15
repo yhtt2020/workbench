@@ -98,16 +98,19 @@
         <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
-        <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList"
-             @click="clickNavigation(item)" v-else>
-          <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
-               class="s-item flex justify-center items-center rounded-lg">
-            <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+        <a-tooltip v-else :title="item.name" v-for="item in navigationList">
+          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block"
+               @click="clickNavigation(item)" >
+            <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
+                 class="s-item flex justify-center items-center rounded-lg">
+              <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+            </div>
+            <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
+              <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
+            </div>
           </div>
-          <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
-            <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
-          </div>
-        </div>
+        </a-tooltip>
+
       </div>
 
       <a-tooltip :title="showScreen?'运行中的分屏':'运行中的应用'">
