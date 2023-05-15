@@ -11,7 +11,7 @@
             <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
               {{ status.music.singer }}
             </div>
-            <div  style="width: 400px;margin: auto" class="player">
+            <div  style="max-width: 400px;margin: auto" class="player px-3">
               <a-slider v-model:value="status.music.percent"/>
             </div>
             <div style="font-size: 1.5em">
@@ -51,7 +51,7 @@
       </a-row>
     </div>
 
-  <div @click="togglePrompt" style="position:fixed;right: 3em;top: 43vh;z-index: 99">
+  <div @click="togglePrompt" style="position:absolute;right: 3em;top: 43vh;z-index: 99">
     <Icon icon="zimu" style="font-size: 4em"></Icon>
   </div>
 </template>

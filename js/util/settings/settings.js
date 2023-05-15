@@ -1,8 +1,9 @@
-if(typeof fs ==='undefined'){
-  var fs=require('fs')
-}
+const SettingModel=require('../../../src/model/settingModel')
+settingModel=new SettingModel()
+
+
 var settings = {
-  filePath: window.globalArgs['user-data-path'] + (process.platform === 'win32' ? '\\' : '/') + 'settings.json',
+  //filePath: window.globalArgs['user-data-path'] + (process.platform === 'win32' ? '\\' : '/') + 'settings.json',
   list: {},
   onChangeCallbacks: [],
   runChangeCallbacks (key) {
@@ -33,32 +34,19 @@ var settings = {
     ipc.send('settingChanged', key, value)
     settings.runChangeCallbacks(key)
   },
-  reload(){
-    var fileData
-    try {
-      fileData = fs.readFileSync(settings.filePath, 'utf-8')
-    } catch (e) {
-      if (e.code !== 'ENOENT') {
-        console.warn(e)
-      }
-    }
-    if (fileData) {
-      settings.list = JSON.parse(fileData)
-    }
+  async loadFromDb () {
+    let dbSettings = await settingModel.getAll(undefined, 'system')
+
+    dbSettings.forEach(set => {
+      settings.list[set.key] = JSON.parse(set.value)
+    })
+  },
+  async reload () {
+    await settings.loadFromDb()
     settings.runChangeCallbacks()
   },
-  initialize: function () {
-    var fileData
-    try {
-      fileData = fs.readFileSync(settings.filePath, 'utf-8')
-    } catch (e) {
-      if (e.code !== 'ENOENT') {
-        console.warn(e)
-      }
-    }
-    if (fileData) {
-      settings.list = JSON.parse(fileData)
-    }
+  initialize: async function () {
+    await settings.loadFromDb()
 
     settings.runChangeCallbacks()
 
@@ -67,11 +55,15 @@ var settings = {
       settings.runChangeCallbacks(key)
     })
 
-	ipc.on('returnIsDefaultBrowser',function(e,value){
-		//console.log(value)
-	})
+    ipc.on('returnIsDefaultBrowser', function (e, value) {
+      //console.log(value)
+    })
   }
 }
+settingModel.initDb().then(async ()=>{
+  {
+    await settings.initialize()
+  }
+})
 
-settings.initialize()
 module.exports = settings

@@ -120,22 +120,18 @@ export default {
 
     this.bindUserInfoResponse()
 
-    console.log(window.loadedStore, '已经初始化检测数组')
     setTimeout(()=>{
       this.storeReadyTimer = setInterval(() => {
         if (!this.launching) {
-          console.log('已经没在运行了')
           return
         }
         if (Object.keys(window.loadedStore).some(key => {
           let check = !window.loadedStore[key]
-          console.log(check, key)
           return check
         })) {
           //未全部搞定
           return
         } else {
-          console.log('检测到已经全部载入完成')
           //已经全部搞定
           clearInterval(this.storeReadyTimer)
           this.afterLaunch().then()
@@ -166,14 +162,12 @@ export default {
       },5000)
     },
     enter(){
-      console.info('进入首页')
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       this.$router.replace({ name: 'home' })
     },
     bindUserInfoResponse(){
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
-        console.log('获取到userInfo，并进行数据填充和提示',args)
         this.tipped = false
         this.loading = false
         if (args.data.uid <= 0) {
@@ -259,7 +253,6 @@ export default {
       this.verify(this.userInfo.uid).then(rs => {
         //只要提供了uid，就能基于uid验证
         if (!rs) {
-          console.log('验证码无效')
          // this.enter()
           this.launching = false
           return

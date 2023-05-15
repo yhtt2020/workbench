@@ -59,6 +59,14 @@ export default {
          {
            name: 'grade',
          }
+       },
+       {
+        title:'消息',
+        index:'message',
+        icon:'message',
+        route:{
+          name:'message'
+        }
        }
       ],
 

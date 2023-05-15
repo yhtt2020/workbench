@@ -1,0 +1,94 @@
+<template>
+  <a-row :gutter="20">
+    <a-col :span="5">
+      <a-avatar class="mt-3 ml-3" :size="50" :src="displayUserInfo.avatar"></a-avatar>
+    </a-col>
+    <a-col :span="19">
+      <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ displayUserInfo.nickname }}
+
+      </div>
+      <div>
+        <div class="rounded-md ml-2 px-2 bg-mask inline-block font-bold">UID: {{ uid }}</div>
+      </div>
+    </a-col>
+  </a-row>
+  <div class="bg-mask rounded-lg p-3 m-3 mt-2 mb-0 " style="min-height: 77px">
+    <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
+  </div>
+  <div class=" mb-0 pd-0 m-3 p-3 mt-0" style="margin-bottom: 0;">
+    成就勋章
+  </div>
+  <div class="bg-mask rounded-lg p-3 m-3 mt-0  mb-0">
+    <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
+    <Medal :medal="medal" v-for="medal in medals"></Medal>
+
+  </div>
+<!--  <div class=" mb-0 pd-0 m-3 p-3 mt-0">-->
+<!--    小队信息-->
+<!--  </div>-->
+</template>
+
+<script>
+import { mapActions } from 'pinia'
+import { teamStore } from '../../store/team'
+import Medal from '../team/Medal.vue'
+import OnlineMedal from '../team/OnlineMedal.vue'
+import OnlineGradeDisplay from '../team/OnlineGradeDisplay.vue'
+
+export default {
+  name: 'UserCard',
+  components: { Medal, OnlineMedal, OnlineGradeDisplay },
+  props:['uid','visible','userInfo'],
+  emits:['visibleChanged'],
+  data(){
+    return {
+      grade:{},
+      medals:[],
+      key:Date.now(),
+    }
+  },
+  watch:{
+    'uid': {
+      async handler () {
+        this.getUserMedal(this.uid).then(result => {
+          if (result) {
+            console.log('或得到的勋章', result)
+            this.medals = result
+          } else {
+            this.medals = []
+          }
+        })
+
+        this.grade = await this.getMemberGrade(this.uid)
+      }
+    }
+  },
+  computed:{
+    displayUserInfo(){
+      if(this.userInfo){
+        return this.userInfo
+      }else{
+        return {}
+      }
+    }
+  },
+  async mounted () {
+    this.getUserMedal(this.uid).then(result => {
+      if (result) {
+        console.log('或得到的勋章', result)
+        this.medals = result
+      } else {
+        this.medals = []
+      }
+    })
+    this.grade = await this.getMemberGrade(this.uid)
+  },
+  methods:{
+    ...mapActions(teamStore,['getMemberGrade','getUserMedal'])
+  },
+}
+</script>
+
+<style scoped>
+
+</style>

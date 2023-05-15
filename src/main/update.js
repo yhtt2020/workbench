@@ -69,7 +69,7 @@ class Updater {
         setTimeout(() => {
           const content = {
             title: '自动更新',
-            body: '有新版本可用，将为您准备更新。'
+            body: '有新版本可用，正在后台为您下载更新包。请稍候…'
           }
           const notification = new Notification(content)
           notification.show()

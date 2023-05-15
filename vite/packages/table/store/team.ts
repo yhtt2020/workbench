@@ -22,6 +22,7 @@ const getUserMedalUrl = Server.baseUrl + '/app/medal/getUserMedal'
 
 const getListUrl = Server.baseUrl + '/app/team/getList'
 import {appStore} from "../store";
+import _ from "lodash-es";
 
 // @ts-ignore
 export const teamStore = defineStore("teamStore", {
@@ -218,12 +219,19 @@ export const teamStore = defineStore("teamStore", {
       }
     },
 
+
     /**
-     * 更新全部的队伍信息
+     * 更新全部的队伍信息，
+     * @param no
+     * @param options  userCache，用户缓存，默认未1
      */
-    async updateTeamShip(no) {
-      await this.getTeamLeader(no)
-      await this.getTeamMembers(no)
+    async updateTeamShip(no,options) {
+      const defaultOptions={
+        userCache:1
+      }
+      options= Object.assign(_.cloneDeep(defaultOptions),options)
+      await this.getTeamLeader(no,options.userCache)
+      await this.getTeamMembers(no,1,options.userCache)
       if (!this.checkMember()) {
         await this.closeTeam()
       }

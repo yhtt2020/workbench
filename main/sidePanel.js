@@ -648,7 +648,7 @@ async function openSetting(params){
     settingsWindow.window.on('close',()=>{
       settingsWindow=null
     })
-//settingsWindow.window.webContents.openDevTools()
+    //settingsWindow.window.webContents.openDevTools()
   }
 
 }
