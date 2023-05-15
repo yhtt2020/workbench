@@ -151,12 +151,8 @@ export default {
 .nav-list-container{
   box-shadow: none !important;
   background: rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px !important;
 }
 
-.nav-list-container ::v-deep .s-item{
-  border-radius: 6px !important;
-}
 ::v-deep .ant-slider-track{
   background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
 }

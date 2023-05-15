@@ -78,11 +78,11 @@ export default {
     weekEpic () {
       try {
         const weekEpicIndex = this.epicList.filter(el => {
-          if (el.promotions.promotionalOffers.length !== 0) {
+          if (el.promotions.promotionalOffers.length !== 0 && el.price.totalPrice.discountPrice === 0) {
             const startPromotions = el.promotions.promotionalOffers[0]
             const startDate = new Date(startPromotions.promotionalOffers[0].startDate)
             const endDate = new Date(startPromotions.promotionalOffers[0].endDate)
-            return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime()
+            return startOfWeek(startDate,endDate)
           }
         })
         if (weekEpicIndex.length > 2) {
@@ -98,10 +98,11 @@ export default {
     nextWeekEpic () {
       try {
         const nextWeekEpicIndex = this.epicList.filter(el => {
-          if (el.promotions.upcomingPromotionalOffers.length !== 0) {
+          if (el.promotions.upcomingPromotionalOffers.length !== 0 && el.price.totalPrice.discountPrice === 0) {
             const nextPromotions = el.promotions.upcomingPromotionalOffers[0]
             const nextStartDate = new Date(nextPromotions.promotionalOffers[0].startDate)
-            return nextStartDate.getTime() >= Date.now()
+            const nextEndDate = new Date(nextPromotions.promotionalOffers[0].endDate)
+            return startOfNextWeek(nextStartDate,nextEndDate)
           }
         })
         if (nextWeekEpicIndex.length > 2) {

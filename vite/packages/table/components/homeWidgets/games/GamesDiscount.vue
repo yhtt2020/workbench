@@ -84,7 +84,7 @@
           </div>
           <div class="flex items-center justify-around">
             <div @click="discountBack"
-                 class="bg-black change cursor-pointer bg-opacity-10 rounded-lg w-12 h-12 flex items-center justify-center">
+                 class="s-bg change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
             <span class="change pointer rounded-lg s-bg  flex items-center justify-center" 
