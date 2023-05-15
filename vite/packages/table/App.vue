@@ -126,7 +126,8 @@ export default {
     // },3000)
 
     window.restore = () => {
-      this.settings.zoomFactor = 100, window.location.reload()
+      this.settings.zoomFactor = 100
+      tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100).then()
     }
 
 

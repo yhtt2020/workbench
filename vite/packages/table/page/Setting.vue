@@ -99,7 +99,7 @@
                   <div> 壁纸</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col  :span="6">
                 <div @click="basic" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 基础设置</div>

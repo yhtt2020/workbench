@@ -3,6 +3,7 @@ import dbStorage from "./dbStorage";
 import {isMain} from '../js/common/screenUtils'
 import _ from "lodash-es";
 import {subIPC,mainIPC} from '../js/common/screenIPC'
+import {nanoid} from "nanoid";
 const tips = {
   zoom: {
     status: true,
@@ -54,6 +55,19 @@ export const screenStore = defineStore('screen', {
   })
   ,
   actions: {
+    add(){
+      this.screens.push({
+        key: nanoid(6),
+        title: '分屏',
+        closable: true,
+        settings:{
+          autoRun:true
+        },
+        apps: {
+          deck: false
+        }
+      })
+    },
     /**
      * 副屏专门绑定的IPC信息
      */
@@ -62,6 +76,9 @@ export const screenStore = defineStore('screen', {
       subIPC.on('tagScreen',()=>{this.tagScreen()})
       subIPC.on('updateDetail',(event,args)=>{
         this.screenDetail=args.detail
+      })
+      subIPC.on('restore',()=>{
+        window.restore()
       })
     },
 
@@ -73,6 +90,7 @@ export const screenStore = defineStore('screen', {
       mainIPC.on('updateCapture',(event,args)=>{
         console.log(args,'获取到屏幕截图')
         this.getScreen(args.key).capture=args.image
+        this.getScreen(args.key).running=true
       })
     },
     //运行在全部屏幕中
@@ -170,8 +188,15 @@ export const screenStore = defineStore('screen', {
      */
     startupScreen(key){
       let screen=JSON.parse(JSON.stringify(this.getScreen(key)))
-      console.log('接收到指令启动分配',screen)
       ipc.send('startupScreen',{screen:screen})
+    },
+    /**
+     * 关闭分屏
+     * @param key
+     */
+    stopScreen(key){
+      let screen=JSON.parse(JSON.stringify(this.getScreen(key)))
+      ipc.send('stopScreen',{screen:screen})
     }
   },
   persist: {
