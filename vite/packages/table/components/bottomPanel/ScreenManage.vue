@@ -6,7 +6,7 @@
            class="pointer screen rounded-md" style="display: inline-block;position: relative">
         <a-image
           fallback="/public/icons/logo128.png"
-          class="screen-preview" :width="120" :height="80" src="/screen.jpg"></a-image>
+          class="screen-preview" :width="120" :height="80" :src="'file://'+screen.capture"></a-image>
         <span style="" class="p-2 screen-title">{{ screen.title }}</span>
       </div>
       <div class="text-right mt-2">

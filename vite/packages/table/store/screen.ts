@@ -58,13 +58,18 @@ export const screenStore = defineStore('screen', {
      * 副屏专门绑定的IPC信息
      */
     bindSubIPC(){
+      console.log('绑定副屏事件')
       subIPC.on('tagScreen',()=>{this.tagScreen()})
     },
     /**
      * 主屏专门绑定的IPC
      */
     bindMainIPC(){
-      //mainIPC.on()
+      console.log('绑定主屏事件')
+      mainIPC.on('updateCapture',(event,args)=>{
+        console.log(args,'获取到屏幕截图')
+        this.getScreen(args.key).capture=args.image
+      })
     },
     //运行在全部屏幕中
     tagScreen(){
