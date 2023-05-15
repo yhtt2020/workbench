@@ -114,7 +114,7 @@
         <div  @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
               class="flex justify-center items-center  h-2/3 pointer">
 
-          <template v-if="!showScreen && runningScreen!==0 ">
+          <template v-if="!showScreen ">
             <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
             <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
           </template>
