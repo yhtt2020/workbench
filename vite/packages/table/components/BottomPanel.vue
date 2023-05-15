@@ -113,9 +113,18 @@
 
       <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
            class="flex justify-center items-center  h-2/3 pointer">
-        <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
-        <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
+
+        <template v-if="!showScreen && runningScreen!==0 ">
+          <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
+          <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
+        </template>
+        <template v-else>
+          <Icon icon="touping" style="width: 40px;height: 40px;color: white;margin-left: 2px;" ></Icon>
+          <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{runningScreen}}</span>
+        </template>
+
       </div>
+
 
     </div>
     <template v-if="!simple && isMain">
@@ -229,7 +238,7 @@
   </transition>
 
   <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag " @click="closeChangeApp">
-    <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+    <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
@@ -256,6 +265,7 @@ import TeamTip from './TeamTip.vue'
 import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
+import { screenStore } from '../store/screen'
 
 export default {
   name: 'BottomPanel',
@@ -273,6 +283,7 @@ export default {
   },
   data () {
     return {
+      tab:'screen',
 
       lastTime: 0,
       visibleTrans: false,
@@ -295,6 +306,8 @@ export default {
         wheelPropagation: true,
       },
       changeFlag: false,
+      timerRunning:false,
+      showScreen:false
       //screenWidth: document.body.clientWidth
     }
   },
@@ -303,8 +316,14 @@ export default {
     let that = this
     window.removeEventListener('resize', that.checkScroll)
     clearInterval(this.updateMessageTimer)
+    if(this.timerRunning){
+      clearInterval(this.timerRunning)
+    }
   },
   mounted () {
+    this.timerRunning=setInterval(()=>{
+      this.showScreen=!this.showScreen
+    },5000)
     // let inserted=localStorage.getItem('insertBird')
     // if(!inserted){
     //   this.navigationList.unshift( {
@@ -357,11 +376,21 @@ export default {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
     ...mapWritableState(appsStore,['runningApps','runningTableApps']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
+    ...mapWritableState(screenStore,['screens']),
     ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(messageStore,['messageIndex','totalCount']),
     isMain(){
       return isMain()
     },
+    runningScreen(){
+      let count=0
+      this.screens.forEach(s=>{
+        if(s.running){
+          count++
+        }
+      })
+      return count
+    }
   },
   watch: {
     navigationList: {
@@ -414,7 +443,13 @@ export default {
       this.full = value
     },
     appChange () {
-      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      if(this.showScreen){
+        this.tab='screen'
+        this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      }else{
+        this.tab='apps'
+        this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      }
       this.changeFlag = true
     },
     closeChangeApp () {
