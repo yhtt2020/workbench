@@ -107,7 +107,6 @@ export default {
           cname: '游戏折扣推荐',
           icon: 'steam',
           detail: 'Steam、Epic折扣推荐',
-<<<<<<< HEAD
           images: ['GamesDiscount', 'DiscountPercentage', 'GameEpic']
         }, {
           name: 'gameAssis',
@@ -128,9 +127,6 @@ export default {
           icon: 'audio',
           detail: '音频工具',
           images: [ 'audio', 'voice']
-=======
-          images: ['GamesDiscount', 'DiscountPercentage', 'GameEpic','MyGameSmall','MyGameMiddle','capture','audio','voice','SteamFriends','CaptureNewCard']
->>>>>>> wjl-develop-37-game-assistant-disocunt
         },
         {
           name: 'remote',

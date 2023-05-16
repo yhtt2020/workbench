@@ -87,7 +87,6 @@
 <script>
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
-import {steamStore} from "../../store/steam";
 import {message} from "ant-design-vue";
 import AidaGuide from './supervisory/AidaGuide.vue'
 import HorizontalPanel from "../HorizontalPanel.vue";
@@ -149,7 +148,6 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ['aidaData', 'customComponents']),
-    ...mapWritableState(steamStore, ["steamCC"]),
     isCustomData() {
       return Object.keys(this.customData).length !== 0
     },
