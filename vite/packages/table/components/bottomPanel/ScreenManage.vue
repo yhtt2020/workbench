@@ -5,10 +5,14 @@
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
            class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative">
-        <a-image :preview="false"
+        <a-image v-if="screen.key!=='main'" :preview="false"
                  fallback="/public/icons/logo128.png"
-                 class="screen-preview" :width="120" :height="80" :src="'file://'+screen.capture"></a-image>
-        <span style="" class="p-2 screen-title">{{ screen.title }}</span>
+                 class="screen-preview" :width="120" :height="70" :src="'file://'+screen.capture"></a-image>
+        <a-image v-else :preview="false"
+                 fallback="/public/icons/logo128.png"
+                 class="screen-preview" :width="120" :height="70" src="/public/icons/main.png"></a-image>
+        <span v-if="screen.key!=='main'" style="" class="p-2 screen-title">{{ screen.title }}</span>
+        <span v-else style="left: 50%;top:50%;font-size: 24px;width: 100px;transform: translateY(-60%) translateX(-50%);text-align: center;line-height: 30px;border-radius: 4px;background: none" class="p-2 screen-title">{{ screen.title }}</span>
       </div>
       <div class="text-right ">
         <a-button @click="add" class="mr-3">创建</a-button>
@@ -149,9 +153,10 @@ export default {
 
 .screen {
   .ant-image-img {
-    object-fit: scale-down;
+    object-fit: cover;
     width: 120px !important;
-    height: 80px !important;
+    border-radius:4px;
+    height: 70px !important;
   }
 }
 </style>
