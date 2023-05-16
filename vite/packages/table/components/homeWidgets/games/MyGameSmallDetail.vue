@@ -1,10 +1,9 @@
 <template>
   <div class="flex flex-col items-center justify-center">
-     <div class="rounded-lg mt-4" style="width: 252px; height: 168px;">
+     <div class="rounded-lg " style="width: 100px; height: 100px;margin-top: 40px;">
        <img class="rounded-lg" :src="detailData.src" alt="" style="width: 100%;height: 100%; object-fit: cover;">
-       
      </div>  
-     <span class="mt-4 mb-5" style="font-size: 18px; font-weight: 500;">{{ detailData.title }}</span>
+     <span class="mt-4" style="font-size: 18px; font-weight: 500; margin-bottom: 60px;">{{ detailData.title }}</span>
      <div @click="openGameGuide" class="rounded-lg flex items-center pointer-active mb-3 s-item  pointer justify-center" style=" padding: 13px 80px;">
         <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>

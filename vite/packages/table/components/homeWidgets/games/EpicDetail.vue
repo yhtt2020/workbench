@@ -14,7 +14,7 @@
         <span @click="epicBack" class="w-12 h-12 s-item cursor-pointer epic-back flex items-center rounded-lg justify-center">
            <Icon icon="xiangzuo" class="text-xl"></Icon>
         </span>
-        <span @click="onClickOffice(detailOptions.productSlug)" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);">领取</span>
+        <span @click="onClickOffice" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);">领取</span>
     </div>
  </div>
 </template>
@@ -43,10 +43,8 @@ export default {
     epicBack(){
       this.$emit('update:backShow',this.backShow)
     },
-    onClickOffice(value){
-      if(value !== null){
-        window.ipc.send('addTab',{url:`https://store.epicgames.com/zh-CN/p/${value}`})
-      }
+    onClickOffice(){
+      window.ipc.send('addTab',{url:`https://store.epicgames.com/zh-CN`})
     }
   }
 }
