@@ -32,7 +32,18 @@ export const steamUserStore = defineStore("steamUser", {
         }
       })
       this.gameList = value
-
+      this.gameList.sort((a, b) => {
+        if (a.time === undefined && a.time === undefined) {
+          return 0;
+        } else if (a.time === undefined) {
+          return 1;
+        } else if (b.time === undefined) {
+          return -1;
+        }
+        else if (a.time !== b.time) {
+          return b.time.rtime_last_played - a.time.rtime_last_played;
+        }
+      });
       //   this.gameList.forEach((e,index) =>{
       //       const obj = value.find(i => i.appinfo.appid ==e.appid)
       //     if(obj){

@@ -8,6 +8,8 @@
   <div class="flex flex-row ml-3">
     <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
     <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
+    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="desktop"></Icon></div>
+    <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="shezhi"></Icon></div>
   </div>
 
 </div>
@@ -44,15 +46,15 @@
 <!--  </div>-->
 <div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content " v-for="(item,index) in steamGameList">
   <div  class="relative  w-auto h-full s-bg  pointer flex flex-col " style="border-radius: 12px" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @click="openSteamDetail(item)">
-    <div style="height: calc(100% - 96px)">
+    <div :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
       <img v-if="item.appinfo" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appinfo.appid+'/header.jpg'" class="w-full h-full  object-cover"  alt="">
     </div>
 
 <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
-    <div style="height: 96px" class="p-3 flex flex-col justify-between ">
+    <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
       <span class="text-more text-white text-base " style="font-weight: 400">{{item.appinfo?.common.name}}</span>
-      <span class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
-      <span  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
+      <span :style="showTime?'':'display:none'"  class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
+      <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
     </div>
   </div>
 
@@ -91,22 +93,24 @@
   </div>
 </Modal>
   <Modal v-model:visible="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
-    <div class="pl-6 pr-9 py-6 flex flex-row">
-      <div class="w-52 h-72 relative" v-if="currentSteam.appinfo">
-        <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appinfo.appid+'/header.jpg'" class="w-full h-full rounded-lg object-cover" alt="">
-        <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{currentSteam.appinfo.common.name}}</div>
+    <div class=" flex flex-col" style="border-radius: 12px" v-if="currentSteam.appinfo">
+      <div class=" relative" style="height: 188px;width: 400px" v-if="currentSteam.appinfo">
+        <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appinfo.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
       </div>
-      <div class="flex flex-col w-64 ml-5 justify-between">
-        <div class="flex flex-row justify-between"><span>上次游玩</span><span class="text-white">3天前</span></div>
-        <div class="flex flex-row justify-between"><span>总时长</span><span class="text-white">{{totalTime(currentSteam.time)}}小时</span></div>
-        <div class="flex flex-row justify-between"><span>近两周</span><span class="text-white">{{twoWeekTime(currentSteam.time)}}小时</span></div>
-        <div class="flex flex-row justify-between"><span>M站评分</span><span class="text-white">9.0</span></div>
-          <div class="flex flex-row justify-between mt-3">
-            <div class="pointer s-item w-44 flex justify-center items-center rounded-lg"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
-            <div class="pointer s-item w-10 h-10 flex justify-center items-center rounded-lg"><Icon style=""   icon="delete"></Icon></div>
-          </div>
-          <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+      <div class="  p-4">
+        <div class="text-white" >{{currentSteam.appinfo.common.name}}</div>
+        <div class="flex flex-row flex-wrap w-80">
+          <div class="w-1/2 mt-3">上次游玩：{{getDateMyTime(currentSteam.time)}}</div>
+          <div class="w-1/2 mt-3">总时长：{{totalTime(currentSteam.time)}}小时</div>
+          <div class="w-1/2 mt-3">近两周：{{twoWeekTime(currentSteam.time)}}小时</div>
+          <div class="w-1/2 mt-3">M站评分：{{currentSteam.appinfo.common.metacritic_score||'无'}}</div>
         </div>
+          <div class="flex flex-row justify-between mt-3 text-white">
+            <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+            <div class="pointer s-item w-10  flex justify-center items-center rounded-lg ml-4"><Icon style=""  icon="folder-open"></Icon></div>
+            <div class="pointer s-item h-10 w-10 flex justify-center items-center rounded-lg ml-4"><Icon style=""   icon="delete"></Icon></div>
+        </div>
+      </div>
     </div>
   </Modal>
   <Modal v-model:visible="otherShow" v-show="otherShow" animationName="bounce-in" :blurFlag="true">
@@ -133,6 +137,9 @@
     <div>排序</div>
     <HorizontalPanel :navList="sortList" class="w-80 mt-3"></HorizontalPanel>
   </div>
+  <div @click="()=>{this.showTime=!this.showTime}">
+    显示游戏时长
+  </div>
 </a-drawer>
 </template>
 
@@ -141,7 +148,7 @@ import HorizontalPanel from "../../components/HorizontalPanel.vue";
 import Modal from '../../components/Modal.vue'
 import {mapWritableState} from "pinia";
 import {steamUserStore} from "../../store/steamUser";
-
+import {getDateTime} from '../../util'
 export default {
   name: "MyGame",
   components:{
@@ -150,6 +157,7 @@ export default {
   },
   data(){
     return {
+      showTime:true,
       drawerVisible:false,
       settingsScroller: {
         useBothWheelAxes: true,
@@ -177,14 +185,20 @@ export default {
   },
   mounted() {
   this.steamGameList = this.gameList
-    console.log(this.steamGameList)
   },
   computed:{
     ...mapWritableState(steamUserStore, ['gameList']),
-
-
   },
   methods:{
+    getDateMyTime(time){
+      if(time){
+        const timer = getDateTime(new Date(parseInt(time.rtime_last_played) * 1000))
+        return time.rtime_last_played !==0 ? timer.year+ '-' + timer.month+ '-' + timer.day:'0'
+      }else{
+        return 0
+      }
+
+    },
     twoWeekTime(time){
       return time? ( time.playtime_2weeks / 60 ).toFixed(1): 0
     },
@@ -214,7 +228,6 @@ export default {
       this.gameRun=!this.gameRun
     },
     openSteamDetail(item){
-      console.log(item)
       this.currentSteam = item
       this.steamShow = true
     },
@@ -242,7 +255,8 @@ export default {
             }
           });
         }
-      }
+      },
+      immediate:true
     }
   }
 }
