@@ -223,18 +223,25 @@ export default {
         const result = res.data.data.Catalog.searchStore.elements
         const resultArr = []
         result.forEach(el=>{
-          // 取出epic图片
-          const fIndex = el.keyImages.find(keyImg=>{
-            return keyImg.type === 'OfferImageWide'
-          })
-          if(fIndex !== undefined){
-            resultArr.push({
-              el,
-              keyImages:fIndex
+          if(el.price.totalPrice.discountPrice === 0){
+            // 取出epic图片
+            const fIndex = el.keyImages.findIndex(keyImg=>{
+              return keyImg.type === 'OfferImageWide'
             })
+            if(fIndex !== -1){
+             resultArr.push({
+              el,
+              keyImages:el.keyImages[fIndex]
+             })
+            }else{
+              resultArr.push({
+              el,
+              keyImages:el.keyImages[0]
+             })
+            }
           }
-         })
-         this.epicList  = resultArr
+        })
+        this.epicList  = resultArr
       })
     }
     

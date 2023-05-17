@@ -56,7 +56,7 @@ export const screenStore = defineStore('screen', {
   ,
   actions: {
     add(){
-      this.screens.push({
+      let s={
         key: nanoid(6),
         title: '分屏',
         closable: true,
@@ -66,7 +66,9 @@ export const screenStore = defineStore('screen', {
         apps: {
           deck: false
         }
-      })
+      }
+      this.screens.push(s)
+      return s
     },
     /**
      * 副屏专门绑定的IPC信息

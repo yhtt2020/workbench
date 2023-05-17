@@ -22,7 +22,7 @@
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
           <div class="remainder-day">
-            剩余{{ remainderDay(weekItem.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].endDate) }}天
+            还有{{ remainderDay(weekItem.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].endDate) }}天
           </div>
           <div class="stablish-province">立省 {{ weekItem.price.totalPrice.fmtPrice.originalPrice }}</div>
         </div>
@@ -78,11 +78,11 @@ export default {
     weekEpic () {
       try {
         const weekEpicIndex = this.epicList.filter(el => {
-          if (el.promotions.promotionalOffers.length !== 0) {
+          if (el.promotions.promotionalOffers.length !== 0 && el.price.totalPrice.discountPrice === 0) {
             const startPromotions = el.promotions.promotionalOffers[0]
             const startDate = new Date(startPromotions.promotionalOffers[0].startDate)
             const endDate = new Date(startPromotions.promotionalOffers[0].endDate)
-            return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime()
+            return startOfWeek(startDate,endDate)
           }
         })
         if (weekEpicIndex.length > 2) {
@@ -98,10 +98,11 @@ export default {
     nextWeekEpic () {
       try {
         const nextWeekEpicIndex = this.epicList.filter(el => {
-          if (el.promotions.upcomingPromotionalOffers.length !== 0) {
+          if (el.promotions.upcomingPromotionalOffers.length !== 0 && el.price.totalPrice.discountPrice === 0) {
             const nextPromotions = el.promotions.upcomingPromotionalOffers[0]
             const nextStartDate = new Date(nextPromotions.promotionalOffers[0].startDate)
-            return nextStartDate.getTime() >= Date.now()
+            const nextEndDate = new Date(nextPromotions.promotionalOffers[0].endDate)
+            return startOfNextWeek(nextStartDate,nextEndDate)
           }
         })
         if (nextWeekEpicIndex.length > 2) {

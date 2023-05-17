@@ -178,6 +178,7 @@ export default {
            }).then((res) =>{
              this.mailBoxShow = true
            }).catch(err=>{
+             console.warn(err)
              message.error({
                content:'用户或密码错误',
              })
@@ -192,6 +193,7 @@ export default {
              this.mailBoxAuthCode = ''
              this.authCode = ''
            }).catch(err=>{
+             console.warn(err)
              message.error({
                content:'邮箱错误',
              })
@@ -208,6 +210,7 @@ export default {
          }).then((res) =>{
 
          }).catch(err=>{
+           console.warn(err)
            message.error({
              content:'用户或密码或令牌错误',
            })

@@ -1,37 +1,43 @@
 <template>
   <HomeComponentSlot :customIndex="customIndex" :customData="customData" :options="options">
     <div class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false ">
-        <div class="flex justify-between">
-          <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
-          <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
+      <div class="flex">
+        <div class="flex-1 flex flex-col mr-4">
+          <div class="flex my-1 justify-between">
+            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
+            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
+          </div> 
+          <div class="flex items-center justify-between">
+            <div style="width:180px;">
+              <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+            </div>
+          </div> 
         </div>
-        <div class="flex items-center justify-between my-1">
-          <div style="width:180px;">
-            <a-slider v-model:value="audioValue" :tooltip-visible="false" />
-          </div>
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
-            <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
-          </div>
-        </div>
-        <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
-        <div @click="selectOutputVoice" class="flex mt-3 pointer items-center rounded-lg justify-center " style="background: rgba(32, 32, 32, 1);padding: 8px 10px">
-          <div class="item-name">{{ outputContent }}</div>
-          <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
-        </div>
-        <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
-        <div class="flex">
-          <div style="width: 180px;" class="mr-4 flex items-center justify-center">
-            <a-progress :percent="10" :showInfo="false"/>
-          </div>
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
-            <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
+        <div class="flex-1">
+          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item" >
+            <Icon icon="sound" style="font-size: 2.286em;"></Icon>
           </div>
         </div>
-        <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-        <div @click="selectInputVoice"  class="flex mt-3 pointer items-center rounded-lg justify-center " style="background: rgba(32, 32, 32, 1);padding: 8px 10px">
-          <span class="item-name">{{ inputContent }}</span>
-          <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
+      </div>
+      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
+      <div @click="selectOutputVoice" class="flex mt-3 pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+        <div class="item-name">{{ outputContent }}</div>
+        <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
+      </div>
+      <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
+      <div class="flex">
+        <div style="width: 180px;" class="mr-4 flex items-center justify-center">
+          <a-progress :percent="10" :showInfo="false"/>
         </div>
+        <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item">
+          <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
+        </div>
+      </div>
+      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
+      <div @click="selectInputVoice"  class="flex mt-3 pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+        <span class="item-name">{{ inputContent }}</span>
+        <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
+      </div>
     </div>
     <VoiceOutputDetail v-if="outputShow" @updateOutput="receiveOutput"></VoiceOutputDetail> 
     <VoiceInputDetail v-if="inputShow" @updateInput="receiveInput"></VoiceInputDetail>

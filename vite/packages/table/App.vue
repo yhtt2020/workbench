@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {mapActions, mapWritableState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {cardStore} from "./store/card"
 import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
@@ -67,14 +67,16 @@ import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {app} from "electron";
 import {Modal} from 'ant-design-vue'
+import {steamUserStore} from "./store/steamUser";
 import {screenStore} from './store/screen'
 
-const {appModel} = window.$models
-import {steamUserStore} from "./store/steamUser";
 const {steamUser,steamSession,path,https,steamFs} = $models
 let client = new steamUser({
   enablePicsCache: true
 });
+
+
+const {appModel} = window.$models
 let startX,
   startY,
   moveEndX,
@@ -170,7 +172,7 @@ export default {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
     ...mapWritableState(screenStore, ['taggingScreen','screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData'])
   },

@@ -107,7 +107,26 @@ export default {
           cname: '游戏折扣推荐',
           icon: 'steam',
           detail: 'Steam、Epic折扣推荐',
-          images: ['GamesDiscount', 'DiscountPercentage', 'GameEpic','MyGameSmall','MyGameMiddle','capture','audio','voice','SteamFriends']
+          images: ['GamesDiscount', 'DiscountPercentage', 'GameEpic']
+        }, {
+          name: 'gameAssis',
+          cname: '游戏助手',
+          icon: 'steam',
+          detail: '各种游戏工具',
+          images: ['MyGameSmall', 'MyGameMiddle', 'SteamFriends']
+        }, {
+          name: 'capture',
+          cname: '捕获',
+          icon: 'audio',
+          detail: '捕获',
+          images: ['capture', 'CaptureNewCard']
+        },
+        {
+          name: 'Audio',
+          cname: '音频工具',
+          icon: 'audio',
+          detail: '音频工具',
+          images: [ 'audio', 'voice']
         },
         {
           name: 'remote',
@@ -117,7 +136,14 @@ export default {
           images: ['Remote'],
           size: ['1x2']
         },
-        { name:"customAssembly", cname:"自定义",icon:"image",detail:"自定义小组件封面和快捷方式",images:['customAssembly'],size:['2x2']}
+        {
+          name: 'customAssembly',
+          cname: '自定义',
+          icon: 'image',
+          detail: '自定义小组件封面和快捷方式',
+          images: ['customAssembly'],
+          size: ['2x2']
+        }
       ],
       cardType: {},
       show: false,

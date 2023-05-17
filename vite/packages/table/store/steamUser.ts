@@ -3,7 +3,7 @@ import dbStorage from "./dbStorage";
 import {compareTime, randomData, sendRequest} from '../js/axios/api'
 
 // @ts-ignore
-export const steamUserStore = defineStore("steam", {
+export const steamUserStore = defineStore("steamUser", {
   state: () => ({
     steamLoginData: {
       accessToken: '',

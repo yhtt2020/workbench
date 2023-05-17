@@ -34,13 +34,13 @@ const menus = [
       name: 'key'
     }
   },
-  {
-    title: '分屏',
-    name: 'subscreen',
-    route: {
-      name: 'subscreen'
-    }
-  },
+  // {
+  //   title: '分屏',
+  //   name: 'subscreen',
+  //   route: {
+  //     name: 'subscreen'
+  //   }
+  // },
   {
     title: '弹幕',
     name: 'barrage',

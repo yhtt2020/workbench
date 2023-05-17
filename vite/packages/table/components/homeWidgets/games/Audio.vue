@@ -2,23 +2,27 @@
   <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options">
     <HorizontalPanel :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
     <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col">
-      <div class="flex flex-col">
-         <div class="flex justify-between my-1">
+      <div class="flex">
+        <div class="flex-1 flex flex-col mr-4">
+          <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
-         </div>
-         <div class="flex items-center justify-between">
-          <div style="width:180px;">
-            <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+          </div> 
+          <div class="flex items-center justify-between">
+            <div style="width:180px;">
+              <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+            </div>
+          </div> 
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item" >
+            <Icon icon="sound" style="font-size: 2.286em;"></Icon>
           </div>
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
-            <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
-          </div>
-         </div>
+        </div>
       </div>
       <span class="mt-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">默认输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
-        <div v-for="(item,index) in outputList" :class="outputIndex === index ? 'active-index' :''" @click="selectOutputDevice(item,index)" class="w-full flex items-center justify-center pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 16px;font-weight: 200;">
+        <div v-for="(item,index) in outputList" :class="outputIndex === index ? 's-item' :''" @click="selectOutputDevice(item,index)" class="w-full flex items-center rounded-lg justify-center pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}
           </span>
@@ -33,14 +37,14 @@
           <div style="width: 180px;" class="mr-4 flex items-center justify-center">
             <a-progress :percent="10" :showInfo="false"/>
           </div>
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3" style="background: rgba(32, 32, 32, 1);">
+          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item">
             <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
           </div>
         </div>
       </div>
       <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
       <vue-custom-scrollbar :settings="settingsScroller" style="height:200px;">
-        <div v-for="(item,index) in inputList" :class="inputIndex === index ? 'active-index' :''" class="w-full pointer flex items-center justify-center my-1" @click="selectInputDevice(item,index)" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 16px;font-weight: 200;">
+        <div v-for="(item,index) in inputList" :class="inputIndex === index ? 's-item' :''" class="w-full pointer rounded-lg flex items-center justify-center my-1" @click="selectInputDevice(item,index)" style="padding: 7px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}
           </span>
@@ -151,12 +155,8 @@ export default {
 .nav-list-container{
   box-shadow: none !important;
   background: rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px !important;
 }
 
-.nav-list-container ::v-deep .s-item{
-  border-radius: 6px !important;
-}
 ::v-deep .ant-slider-track{
   background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
 }

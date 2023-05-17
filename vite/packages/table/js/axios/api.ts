@@ -7,9 +7,20 @@ export const regionRange= [
     locale:'zh-CN'
   },
   {
+    id:'tr',
+    name:'土耳其',
+    locale:'tr-TR'
+  },
+
+  {
     id: 'ar',
     name: '阿根廷',
     locale:'ar-AR'
+  },
+  {
+    id: 'hk',
+    name: '香港',
+    locale:'zh-HK'
   }, {
     id: 'us',
     name: '美国',
@@ -56,16 +67,6 @@ export const regionRange= [
     id: 'au',
     name: '澳大利亚',
     locale:'au-AU'
-  },
-  {
-    id: 'hk',
-    name: '香港',
-    locale:'zh-HK'
-  },
-  {
-    id:'tr',
-    name:'土耳其',
-    locale:'tr-TR'
   },
   {
     id:'kr',
@@ -158,17 +159,19 @@ export function currencyFormat(value: number, currencyCode: any) {
 }
 
 // 判断本周的方法
-export function startOfWeek() {
+export function startOfWeek(startDate,endDate) {
   const today = new Date();
-  const firstDayOfWeek = today.getDate() - today.getDay() + 1;
-  return new Date(today.setDate(firstDayOfWeek));
+  const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1));
+  const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
+  return startDate.getTime() <= firstDayOfWeek.getTime() && endDate.getTime() <= lastDayOfWeek.getTime()
 }
 
 // 判断下周的方法
-export function startOfNextWeek() {
+export function startOfNextWeek(startDate,endDate) {
   const today = new Date();
-  const firstDayOfWeek = today.getDate() - today.getDay() + 1;
-  return new Date(today.setDate(firstDayOfWeek + 7));
+  const firstDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
+  const lastDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
+  return startDate.getTime() <= firstDayOfNextWeek.getTime() && endDate.getTime() <= lastDayOfNextWeek.getTime();
 }
 
 // 计算剩余多少天
