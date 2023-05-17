@@ -11,7 +11,8 @@ export const steamUserStore = defineStore("steam", {
       webCookies: ''
     },
     userData:{
-    }
+    },
+    gameList:[]
   }),
   actions: {
     setSteamLoginData(value) {
@@ -19,6 +20,27 @@ export const steamUserStore = defineStore("steam", {
     },
     setUserData(value){
       this.userData = {...value}
+    },
+    setGameList(value){
+      this.gameList = value
+    },
+    addGameDetail(value){
+      value.forEach((e)=>{
+        const obj = this.gameList.find(i => i.appid ==e.appinfo.appid)
+        if(obj){
+          e.time = obj
+        }
+      })
+      this.gameList = value
+
+      //   this.gameList.forEach((e,index) =>{
+      //       const obj = value.find(i => i.appinfo.appid ==e.appid)
+      //     if(obj){
+      //       e.appinfo = obj.appinfo
+      //       //console.log(e,obj)
+      //      // e = {...e,...obj}
+      //     }
+      // })
     }
   },
   persist: {

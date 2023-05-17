@@ -3,11 +3,11 @@
   <Icon style="height: 36px;width: 36px" icon="steam"></Icon>
   <div class="flex flex-col ml-4 w-2/3">
     <span class="text-white">Steam</span>
-    <span v-if="userData.chat">{{userData.chat.user.accountInfo.name}}</span>
+    <span v-if="steamLoginData.refreshToken">{{userData.name}}</span>
     <span v-else>绑定Steam帐号即可同步显示你的游戏数据</span>
   </div>
-  <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="()=>{ this.modalVisibility = true}">
-  {{userData.chat?'解绑':'绑定'}}
+  <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clickBind">
+  {{steamLoginData.refreshToken?'解绑':'绑定'}}
   </div>
 </div>
   <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
@@ -21,17 +21,17 @@
       <a-select-option v-for="item in region" :value="item.id">{{item.name}}</a-select-option>
     </a-select>
   </div>
-  <Modal v-model:visible="modalVisibility"   v-show="modalVisibility" animationName="bounce-in" :blurFlag="true">
-    <div class="flex flex-col p-6 text-white">
+  <Modal v-model:visible="modalVisibility"   v-show="modalVisibility" animationName="bounce-in" :maskNoClose="true" :blurFlag="true" @click.stop>
+    <div class="flex flex-col p-6 text-white"  @click.stop>
       <div class="mx-auto">绑定Steam</div>
       <HorizontalPanel :navList="loginTypeList" v-model:selectType="loginType" class="mt-4 mx-auto" bgColor="drawer-item-select-bg"></HorizontalPanel>
       <div class=" mt-6">
         <a-input v-model:value="userName" placeholder="账号"  class="no-drag rounded-lg h-12 mx-auto"  style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/></div>
       <div class=" mt-6">
-        <a-input v-model:value="password" class="no-drag  rounded-lg h-12  mx-auto" placeholder="密码"  style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+        <a-input-password v-model:value="password" class="no-drag  rounded-lg h-12  mx-auto" placeholder="密码"  style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
       </div>
       <div class=" mt-6" v-show="loginType.name==='phone'">
-        <a-input v-model:value="AuthCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="令牌"   style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+        <a-input v-model:value="authCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="令牌"   style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
       </div>
       <div class=" mt-6" v-show="mailBoxShow&&loginType.name!=='phone'">
         <a-input v-model:value="mailBoxAuthCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="邮箱验证码"   style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
@@ -84,7 +84,7 @@ export default {
       userName:'',
       password:'',
       mailBoxAuthCode:'',
-      AuthCode:'',
+      authCode:'',
       modalVisibility:false,
       area:'国区',
       region:[
@@ -141,12 +141,25 @@ export default {
   },
   mounted() {
     console.log(this.userData)
+    console.log(session)
   },
   computed:{
     ...mapState(steamUserStore, ['steamLoginData','userData'])
   },
   methods:{
-    ...mapActions(steamUserStore, ['setSteamLoginData']),
+    ...mapActions(steamUserStore, ['setSteamLoginData','setUserData']),
+    clickBind(){
+      if( this.steamLoginData.refreshToken ===''){
+        this.modalVisibility = true
+      }else{
+        this.setSteamLoginData({
+          accessToken: '',
+          refreshToken: '',
+          webCookies: ''
+        })
+        this.setUserData({})
+      }
+    },
     getRegion(e){
       console.log(e)
     },
@@ -162,7 +175,6 @@ export default {
            session.startWithCredentials({
              accountName: this.userName,
              password:this.password,
-             // steamGuardCode:'5BCMH'
            }).then((res) =>{
              this.mailBoxShow = true
            }).catch(err=>{
@@ -175,6 +187,10 @@ export default {
              message.info({
                content:'登录成功',
              })
+             this.userName=''
+             this.password=''
+             this.mailBoxAuthCode = ''
+             this.authCode = ''
            }).catch(err=>{
              message.error({
                content:'邮箱错误',
@@ -188,7 +204,7 @@ export default {
          session.startWithCredentials({
            accountName: this.userName,
            password:this.password,
-           steamGuardCode:this.AuthCode
+           steamGuardCode:this.authCode
          }).then((res) =>{
 
          }).catch(err=>{
@@ -198,16 +214,6 @@ export default {
          }).finally(()=>{this.loginLoading = false});
          break;
      }
-  //   session.startWithCredentials({
-  //     accountName: 'snpsly123123',
-  //     password:'xyx86170060',
-  //    // steamGuardCode:'5BCMH'
-  //   }).then((res) =>{
-  // console.log(res)
-  // }).catch(err=>{
-  // console.log(err)
-  //   })
-
     }
   }
 }

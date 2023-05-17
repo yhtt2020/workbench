@@ -3,7 +3,7 @@
 <div class="flex flex-row  items-center game-page-nav">
   <div class="flex flex-row" style="padding-left: 1em">
     <HorizontalPanel :navList="gameNavList" v-model:selectType="gameType"></HorizontalPanel>
-    <HorizontalPanel :navList="sortList" class="ml-3 main-nav"></HorizontalPanel>
+    <HorizontalPanel :navList="sortList" class="ml-3 main-nav" v-model:selectType="sortType"></HorizontalPanel>
   </div>
   <div class="flex flex-row ml-3">
     <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
@@ -22,31 +22,40 @@
   </div>
 </div>
 <div class="flex flex-row flex-wrap -ml-3 content-game " v-else-if="gameType.name==='steam'&&steamGameList.length>0">
-  <div class=" pl-3 pb-3 game-list-item-first flex-shrink-0">
-    <div class="relative rounded-lg  w-auto h-full " @contextmenu="openSteamDetail(steamGameList[0])">
-      <img :src="steamGameList[0].src" class="w-full h-full rounded-lg object-cover"  alt="">
-      <div class="game-item-title-bg first w-full h-1/4 absolute bottom-0 flex flex-row items-center pl-3"  >
-        <div v-if="!gameRun" @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(82, 196, 26, 1);aspect-ratio: 1/1;border-radius: 10px">
-          <Icon style="height: 60%;width: 60%" icon="caret-right"></Icon>
-        </div>
-        <div v-else @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(250, 173, 20, 1);aspect-ratio: 1/1;border-radius: 10px">
-          <Icon style="height: 60%;width: 60%" icon="tuichu"></Icon>
-        </div>
-        <div class="flex flex-col ml-3">
-          <span>{{steamGameList[0].title}}</span>
-          <div class="text-xs" style="color: rgba(255, 255, 255, 0.6);">
-            <span>过去两周：12小时</span>
-            <span class="ml-1">总数：133小时</span>
-          </div>
-        </div>
-       </div>
+<!--  <div class=" pl-3 pb-3 game-list-item-first flex-shrink-0">-->
+<!--    <div class="relative rounded-lg  w-auto h-full " @contextmenu="openSteamDetail(steamGameList[0])">-->
+<!--      <img :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+steamGameList[0].appinfo.appid+'/header.jpg'" class="w-full h-full rounded-lg object-cover"  alt="">-->
+<!--      <div class="game-item-title-bg first w-full h-1/4 absolute bottom-0 flex flex-row items-center pl-3"  >-->
+<!--        <div v-if="!gameRun" @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(82, 196, 26, 1);aspect-ratio: 1/1;border-radius: 10px">-->
+<!--          <Icon style="height: 60%;width: 60%" icon="caret-right"></Icon>-->
+<!--        </div>-->
+<!--        <div v-else @click="runGame" class="pointer flex justify-center items-center" style="height: 80%;background: rgba(250, 173, 20, 1);aspect-ratio: 1/1;border-radius: 10px">-->
+<!--          <Icon style="height: 60%;width: 60%" icon="tuichu"></Icon>-->
+<!--        </div>-->
+<!--        <div class="flex flex-col ml-3">-->
+<!--          <span>{{steamGameList[0].appinfo.appid}}</span>-->
+<!--          <div class="text-xs" style="color: rgba(255, 255, 255, 0.6);">-->
+<!--            <span>过去两周：12小时</span>-->
+<!--            <span class="ml-1">总数：133小时</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--       </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content " v-for="(item,index) in steamGameList">
+  <div  class="relative  w-auto h-full s-bg  pointer flex flex-col " style="border-radius: 12px" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @click="openSteamDetail(item)">
+    <div style="height: calc(100% - 96px)">
+      <img v-if="item.appinfo" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appinfo.appid+'/header.jpg'" class="w-full h-full  object-cover"  alt="">
+    </div>
+
+<!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
+    <div style="height: 96px" class="p-3 flex flex-col justify-between ">
+      <span class="text-more text-white text-base " style="font-weight: 400">{{item.appinfo?.common.name}}</span>
+      <span class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
+      <span  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
     </div>
   </div>
-<div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content" v-for="(item,index) in filterSteamGameList">
-  <div class="relative rounded-lg w-auto h-full pointer" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @contextmenu="openSteamDetail(item)" @click="runGame">
-    <img :src="item.src" class="w-full h-full rounded-lg object-cover"  alt="">
-    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.title}}</div>
-  </div>
+
 </div>
 
 </div>
@@ -83,16 +92,14 @@
 </Modal>
   <Modal v-model:visible="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
     <div class="pl-6 pr-9 py-6 flex flex-row">
-      <div class="w-52 h-72 relative">
-        <img :src="currentSteam.src" class="w-full h-full rounded-lg object-cover" alt="">
-        <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{currentSteam.title}}</div>
+      <div class="w-52 h-72 relative" v-if="currentSteam.appinfo">
+        <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appinfo.appid+'/header.jpg'" class="w-full h-full rounded-lg object-cover" alt="">
+        <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{currentSteam.appinfo.common.name}}</div>
       </div>
       <div class="flex flex-col w-64 ml-5 justify-between">
         <div class="flex flex-row justify-between"><span>上次游玩</span><span class="text-white">3天前</span></div>
-        <div class="flex flex-row justify-between"><span>总时长</span><span class="text-white">129小时</span></div>
-        <div class="flex flex-row justify-between"><span>近两周</span><span class="text-white">1小时</span></div>
-        <div class="flex flex-row justify-between"><span>成就</span><span class="text-white">12/29</span></div>
-        <div class="flex flex-row justify-between"><span>Steam在线</span><span class="text-white">1111,2222,3333</span></div>
+        <div class="flex flex-row justify-between"><span>总时长</span><span class="text-white">{{totalTime(currentSteam.time)}}小时</span></div>
+        <div class="flex flex-row justify-between"><span>近两周</span><span class="text-white">{{twoWeekTime(currentSteam.time)}}小时</span></div>
         <div class="flex flex-row justify-between"><span>M站评分</span><span class="text-white">9.0</span></div>
           <div class="flex flex-row justify-between mt-3">
             <div class="pointer s-item w-44 flex justify-center items-center rounded-lg"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
@@ -132,6 +139,8 @@
 <script>
 import HorizontalPanel from "../../components/HorizontalPanel.vue";
 import Modal from '../../components/Modal.vue'
+import {mapWritableState} from "pinia";
+import {steamUserStore} from "../../store/steamUser";
 
 export default {
   name: "MyGame",
@@ -151,9 +160,10 @@ export default {
       },
       gameNavList:[{title:'Steam游戏',name:'steam'},{title:'其他游戏',name:'other'}],
       gameType:{title:'Steam游戏',name:'steam'},
-      sortList:[{title:'最近游玩'},{title:'A-Z'}],
+      sortList:[{title:'最近游玩',name:'timer'},{title:'A-Z',name:'letter'}],
+      sortType:{title:'最近游玩',name:'timer'},
       myGameList:[{src:'/img/test/2.jpg',title:'双人成行'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'},{src:'/img/test/2.jpg'}],
-      steamGameList:[{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},{src:'/img/test/1.png',title:'双人成行'},],
+      steamGameList:[],
       modalVisibility:false,
       gameRun:false,
       steamShow:false,
@@ -166,17 +176,22 @@ export default {
     }
   },
   mounted() {
-
-
+  this.steamGameList = this.gameList
+    console.log(this.steamGameList)
   },
   computed:{
-      filterSteamGameList(){
-        return this.steamGameList.slice(1)
-      }
+    ...mapWritableState(steamUserStore, ['gameList']),
+
+
   },
   methods:{
+    twoWeekTime(time){
+      return time? ( time.playtime_2weeks / 60 ).toFixed(1): 0
+    },
+    totalTime(time){
+      return time? ( time.playtime_forever / 60 ).toFixed(1): 0
+    },
     scrollList(e){
-      console.log(e.target.scrollTop>0&&e.target.scrollTop<13)
       if(e.target.scrollTop<13){
         this.$refs.gameScroll.$el.style.marginTop =  e.target.scrollTop + 'px'
       }else {
@@ -199,12 +214,35 @@ export default {
       this.gameRun=!this.gameRun
     },
     openSteamDetail(item){
+      console.log(item)
       this.currentSteam = item
       this.steamShow = true
     },
     openOtherDetail(item){
       this.currentSteam = item
       this.otherShow = true
+    }
+  },
+  watch:{
+    'sortType':{
+      handler(){
+        if(this.sortType.name === 'letter'){
+          this.steamGameList.sort((a, b) => a.appinfo.common.name.localeCompare(b.appinfo.common.name));
+        }else{
+          this.steamGameList.sort((a, b) => {
+            if (a.time === undefined && a.time === undefined) {
+              return 0;
+            } else if (a.time === undefined) {
+              return 1;
+            } else if (b.time === undefined) {
+              return -1;
+            }
+            else if (a.time !== b.time) {
+              return b.time.rtime_last_played - a.time.rtime_last_played;
+            }
+          });
+        }
+      }
     }
   }
 }
@@ -236,101 +274,64 @@ export default {
     display: block;
   }
 }
-.game-list-item-first{
-  aspect-ratio: 478/300;
-  max-width: calc(462px);
-}
+
 .game-list-item{
-  aspect-ratio: 231/300;
-  max-width: 231px;
+  max-width: 300px;
 }
-@media screen and (max-width: 940px){
-  .game-list-item-first{
-    width: calc(66.66%);
-  }
+@media screen and (max-width: 840px){
   .game-list-item{
-    width: calc(33.33%);
+    width: calc(100% / 2);
   }
 }
-@media screen and (min-width: 940px) and (max-width: 1140px){
-  .game-list-item-first{
-    width: calc(50%);
-  }
+@media screen and (min-width: 840px) and (max-width: 1140px){
   .game-list-item{
-    width: calc(25%);
+    width: calc(100% / 3);
   }
 }
-@media screen and (min-width: 1140px) and (max-width: 1340px){
-  .game-list-item-first{
-    width: calc(40%);
-  }
+@media screen and (min-width: 1140px) and (max-width: 1440px){
   .game-list-item{
-    width: calc(20%);
+    width: calc(100% / 4);
   }
 }
-@media screen and (min-width: 1340px)and (max-width: 1540px){
-  .game-list-item-first{
-    width: calc(33.33%);
-  }
+@media screen and (min-width: 1440px) and (max-width: 1740px){
   .game-list-item{
-    width: calc(16.66%);
+    width: calc(100% / 5);
   }
 }
 
-@media screen and (min-width: 1540px)and (max-width: 1740px){
-  .game-list-item-first{
-    width: calc(28.57%);
-  }
+@media screen and (min-width: 1740px) and (max-width: 2040px){
   .game-list-item{
-    width: calc(14.28%);
+    width: calc(100% / 6);
   }
 }
-@media screen and (min-width: 1740px)and (max-width: 1940px){
-  .game-list-item-first{
-    width: calc(25%);
-  }
+@media screen and (min-width: 2040px) and (max-width: 2340px){
   .game-list-item{
-    width: calc(12.5%);
+    width: calc(100% / 7);
   }
 }
-@media screen and (min-width: 1940px)and (max-width: 2140px){
-  .game-list-item-first{
-    width: calc(22.22%);
-  }
+@media screen and (min-width: 2340px) and (max-width: 2640px){
   .game-list-item{
-    width: calc(11.11%);
+    width: calc(100% / 8);
   }
 }
-@media screen and (min-width: 2140px)and (max-width: 2340px){
-  .game-list-item-first{
-    width: calc(20%);
-  }
+@media screen and (min-width: 2640px) and (max-width: 2940px){
   .game-list-item{
-    width: calc(10%);
+    width: calc(100% / 9);
   }
 }
-@media screen and (min-width: 2340px)and (max-width: 2540px){
-  .game-list-item-first{
-    width: calc(18.18%);
-  }
+@media screen and (min-width: 2940px) and (max-width: 3240px){
   .game-list-item{
-    width: calc(9.09%);
+    width: calc(100% / 10);
   }
 }
-@media screen and (min-width: 2540px)and (max-width: 2740px){
-  .game-list-item-first{
-    width: calc(16.66%);
-  }
+@media screen and (min-width: 3240px) and (max-width: 3540px){
   .game-list-item{
-    width: calc(8.33%);
+    width: calc(100% / 11);
   }
 }
-@media screen and (min-width: 2740px)and (max-width: 2940px){
-  .game-list-item-first{
-    width: calc(15.38%);
-  }
+@media screen and (min-width: 3540px) and (max-width: 3840px){
   .game-list-item{
-    width: calc(7.69%);
+    width: calc(100% / 12);
   }
 }
 </style>
