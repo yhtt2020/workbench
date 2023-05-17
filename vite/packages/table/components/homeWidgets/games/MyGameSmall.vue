@@ -23,7 +23,6 @@
   <a-drawer v-model:visible="smallShow" title="设置" placement="right" width="500">
     <div class="flex flex-col">
       <span class="mb-8" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 500">展示游戏</span>
-      <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">全部游戏，按最近游玩时间顺序展示</span>
       <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">Steam游戏，按最近游玩时间顺序展示</span>
       <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">其他游戏，按最近游玩时间顺序展示</span>
     </div>

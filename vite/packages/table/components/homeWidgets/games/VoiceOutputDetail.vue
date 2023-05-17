@@ -9,7 +9,7 @@
           </span>
        </div>
     </vue-custom-scrollbar> 
-    <div @click="backOutput" class="flex items-center select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
+    <div @click="backOutput" class="flex items-center voice-item-hover select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
       <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
     </div>
@@ -86,6 +86,6 @@
   display: none !important;
 }
 .voice-item-hover:hover{
-  background:rgba(42, 42, 42, 0.5);
+  background:rgba(42, 42, 42, 0.8);
 }
 </style>
