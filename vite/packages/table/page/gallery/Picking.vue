@@ -5,7 +5,7 @@
         <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
         <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
             <a-select-option value="/timeline/v2">拾光</a-select-option>
-            <a-select-option value="/glutton/snake">贪吃蛇</a-select-option>
+            <!-- <a-select-option value="/glutton/snake">贪吃蛇</a-select-option> -->
             <a-select-option value="/glutton/journal">贪食鬼</a-select-option>
             <a-select-option value="/wallhaven/v2">wallhaven</a-select-option>
         </a-select>
