@@ -25,7 +25,7 @@
                :src="getCover(item)" style="position: relative">
         </div>
 
-        <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
+        <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 50">
           <div @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
@@ -306,7 +306,7 @@ export default {
 <style scoped>
 .play-icon {
   position: absolute;
-  z-index: 999;
+  z-index: 50;
   background: rgba(0, 0, 0, 0.51);
   text-align: center;
   width: 4em;
