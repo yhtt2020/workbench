@@ -20,7 +20,7 @@
     </a-input>
   </div>
   <vue-custom-scrollbar key="scrollbar" id="addScroll" :settings="scrollbarSettings"
-                        style="position:relative;  border-radius: 8px;height: 100vh">
+    style="position:relative;  border-radius: 8px;height: 100vh">
     <CardPreview :cardType="item" v-for="item in filterList" @addSuccess="onBack"></CardPreview>
     <div style="height: 650px"></div>
   </vue-custom-scrollbar>
@@ -30,7 +30,6 @@
 import { mapActions } from 'pinia'
 import { cardStore } from '../../../store/card'
 import CardPreview from './CardPreview.vue'
-import axios from 'axios'
 
 export default {
   name: 'AddCard',
@@ -143,6 +142,14 @@ export default {
           detail: '自定义小组件封面和快捷方式',
           images: ['customAssembly'],
           size: ['2x2']
+        },
+        {
+          name: 'signIn',
+          cname: '签到',
+          icon: '',
+          detail: '完成签到，获得奖励',
+          images: ['signIn'],
+          size: ['1x1']
         }
       ],
       cardType: {},
