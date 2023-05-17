@@ -14,13 +14,13 @@
           </div> 
         </div>
         <div class="flex-1">
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item" >
+          <div class="flex btn-active items-center rounded-full pointer justify-center px-3 py-3 s-item" >
             <Icon icon="sound" style="font-size: 2.286em;"></Icon>
           </div>
         </div>
       </div>
       <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
-      <div @click="selectOutputVoice" class="flex mt-3 pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
         <div class="item-name">{{ outputContent }}</div>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
@@ -29,12 +29,12 @@
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
           <a-progress :percent="10" :showInfo="false"/>
         </div>
-        <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item">
+        <div class="flex items-center btn-active rounded-full pointer justify-center px-3 py-3 s-item">
           <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
         </div>
       </div>
       <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-      <div @click="selectInputVoice"  class="flex mt-3 pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+      <div @click="selectInputVoice"  class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
         <span class="item-name">{{ inputContent }}</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>

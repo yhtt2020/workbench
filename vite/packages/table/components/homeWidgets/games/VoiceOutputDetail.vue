@@ -3,7 +3,7 @@
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
        <div v-for="(item,index) in outputList" :class="selectIndex === index ? 's-item':''"
-        @click="selectAudio(item,index)" class="flex pointer rounded-lg items-center justify-center " style="padding: 7px  10px;">
+        @click="selectAudio(item,index)" class="flex pointer rounded-lg btn-active voice-item-hover  items-center justify-center " style="padding: 7px  10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
             {{ item.name }}
           </span>
@@ -84,5 +84,8 @@
 }
 ::v-deep .ps__thumb-y{
   display: none !important;
+}
+.voice-item-hover:hover{
+  background:rgba(42, 42, 42, 0.5);
 }
 </style>

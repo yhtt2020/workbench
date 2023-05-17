@@ -156,7 +156,6 @@ export default {
                 localTtl:60*12*60
               }).then(res=>{
                 const data = res.data[el.id].data
-                console.log(data);
                 if(data !== undefined){
                   this.steamList.push({
                    id:el.id,

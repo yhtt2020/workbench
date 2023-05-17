@@ -89,7 +89,7 @@ export default {
           src:'/img/test/2.jpg'
         }
       ],
-      detailData:'',
+      detailData:{},
       smallShow:false,
       myDetailShow:false,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
