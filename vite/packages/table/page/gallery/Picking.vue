@@ -1,5 +1,5 @@
 <template>
-<div class="flex w-full justify-between items-center" style="margin-bottom: 16px;">
+<div class="flex w-full justify-between items-center" style="margin-bottom: 16px;margin-top: 2em;">
   <div class="w-96 h-12 flex items-center">
     <div class="w-80 h-12 bg-white bg-opacity-10 rounded-lg flex items-center ">
         <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
