@@ -3,7 +3,7 @@
       <div>
         <div class="flex justify-between s-item p-4 mt-3 rounded-lg">
           <div>
-            <div style="color: rgba(255,255,255,0.85); font-size: 16px; font-weight: 600;">{{ signedIn ? '今日已签到' : '今日未签到（开发中）' }}</div>
+            <div style="color: rgba(255,255,255,0.85); font-size: 16px; font-weight: 600;">{{ signedIn ? '今日已签到' : '今日未签到' }}</div>
             <span style="color: rgba(255,255,255,0.60); font-size: 14px; font-weight: 400;">已连续签到2天</span>
           </div>
           <div @click="signIn" class="middle-button sign-in-btn s-item" :class="signedIn ? 'new-people' : 'old-people'">{{ signedIn ? '每日迎新' : '签到' }}</div>
@@ -60,7 +60,7 @@
       return {
         options:{
           className: 'card',
-          title: '签到',
+          title: '签到（开发中）',
           icon: 'sound',
           type: 'signIn'
         },
