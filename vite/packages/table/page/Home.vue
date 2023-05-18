@@ -122,7 +122,6 @@
                 @touchend="touch"
                 :customData="item.data"
                 :editing="editing"
-                :runAida64="runAida64"
                 @customEvent="customEvent"
               ></component>
             </div>
@@ -359,7 +358,7 @@ import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 import {setSupervisoryData} from '../js/action/supervisory'
-const readAida64 = window.readAida64
+
 const {steamUser,steamSession,path,https,steamFs} = $models
 const {LoginSession, EAuthTokenPlatformType} = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -545,10 +544,9 @@ export default {
         currentItemId: -1,
       },
       scrollbar: Date.now(),
-      timer: null,
+      inspectorTimer: null,
       reserveTimer: null,
       custom: false,
-      runAida64: true,
       muuriOptions: {
         dragAutoScroll: {
           targets: [
@@ -607,13 +605,11 @@ export default {
     Audio,
     SteamFriends,
     CaptureNewCard,
-    clocks,
   },
   computed: {
     ...mapWritableState(cardStore, [
       "customComponents",
       "clockEvent",
-      "aidaData",
       "settings",
       "desks",
       "moved",
@@ -782,13 +778,10 @@ export default {
       }
     });
     this.navigationList = [];
-    this.startAida();
     //this.setAgreeTest(false)
   },
   unmounted() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+
     if (this.reserveTimer) {
       clearInterval(this.reserveTimer);
     }
@@ -805,7 +798,6 @@ export default {
     },
     runExec,
     ...mapActions(cardStore, [
-      "setAidaData",
       "getCurrentDesk",
       "addDesk",
       "switchToDesk",
@@ -814,7 +806,7 @@ export default {
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
-    setSupervisoryData,
+
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
     },
@@ -924,33 +916,6 @@ export default {
     },
     setCustom() {
       this.custom = false;
-    },
-    startAida() {
-      this.timer = setInterval(() => {
-        readAida64()
-          .then((res) => {
-            this.runAida64 = true;
-            const newData = this.setSupervisoryData(res);
-            this.setAidaData(newData);
-            // console.log(res)
-            //this.data=JSON.stringify(res, null, '\t')
-          })
-          .catch((err) => {
-            this.runAida64 = false;
-            clearInterval(this.timer);
-            this.reserveTimer = setInterval(() => {
-              readAida64()
-                .then((res) => {
-                  this.runAida64 = true;
-                  clearInterval(this.reserveTimer);
-                  this.startAida();
-                })
-                .catch((err) => {});
-            }, 10000);
-            const newData = this.setSupervisoryData(undefined);
-            this.setAidaData(newData);
-          });
-      }, 1000);
     },
   },
   watch: {

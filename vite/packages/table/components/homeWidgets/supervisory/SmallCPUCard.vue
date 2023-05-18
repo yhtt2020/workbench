@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div class="content">
+    <div @click="go" class="content pointer">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
             <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{CPUData.useCPU.value}}%</div>
@@ -38,11 +38,11 @@
 </template>
 
 <script>
-import {mapWritableState} from "pinia";
-import {cardStore} from "../../../store/card";
+import { mapActions, mapWritableState } from 'pinia'
 import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 import { appStore } from '../../../store'
+import { inspectorStore } from '../../../store/inspector'
 export default {
   name: "SmallCPUCard",
   data(){
@@ -65,13 +65,13 @@ export default {
     HomeComponentSlot
   },
   computed:{
-    ...mapWritableState(cardStore, ["aidaData"]),
+    ...mapWritableState(inspectorStore,['displayData']),
     ...mapWritableState(appStore,['saving'])
   },
   watch: {
-    "aidaData": {
+    "displayData": {
       handler(newVal, oldVal) {
-        let {  useMemory, useCPU, warmCPU} = this.aidaData || {}
+        let {  useMemory, useCPU, warmCPU} = this.displayData || {}
         this.CPUData = {
           useCPU:useCPU,
           useMemory:useMemory,
@@ -86,6 +86,9 @@ export default {
   },
   methods:{
     initCanvas,
+    go(){
+      this.$router.push({name:'inspector'})
+    }
   }
 }
 </script>
