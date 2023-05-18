@@ -15,9 +15,10 @@ export default {
       flag:false
     }
   },
-  props:[ 'visible','blurFlag','animationName'],
+  props:[ 'visible','blurFlag','animationName','maskNoClose'],
   methods:{
     closeModal(){
+      if(this.maskNoClose)return
       if(this.animationName){
         if(this.flag)return
         this.flag = true

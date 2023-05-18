@@ -1,5 +1,5 @@
 <template>
-  <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options">
+  <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" ref="gameMiddleSlot"  :formulaBar="gameMiddleBare">
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-if="myMiddleDetailShow === false">
       我的游戏
      </div>
@@ -18,6 +18,13 @@
      </div>
      <MyGameMiddleDetail  :middleDetail="middleDetail"  @close="updateShow " v-else></MyGameMiddleDetail>
   </HomeComponentSlot>
+  <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
+    <div class="flex flex-col">
+      <span class="mb-8" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 500">展示游戏</span>
+      <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">Steam游戏，按最近游玩时间顺序展示</span>
+      <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">其他游戏，按最近游玩时间顺序展示</span>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -104,7 +111,16 @@ export default {
          
       ],
       middleDetail:'',
+      middleShow:false,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      gameMiddleBare:[
+        {
+          icon: 'shezhi1', title: '设置', fn: () => {
+            this.middleShow = true;
+            this.$refs.gameMiddleSlot.visible = false
+          }
+        }
+      ]
     }
   },
   methods:{
@@ -132,7 +148,7 @@ export default {
 
 .my-game{
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 0.225fr);
   grid-gap: 20px;
   justify-content: center;
   align-items: center;

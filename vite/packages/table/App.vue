@@ -69,6 +69,7 @@ import {app} from "electron";
 import {Modal} from 'ant-design-vue'
 import {steamUserStore} from "./store/steamUser";
 import {screenStore} from './store/screen'
+
 const {steamUser,steamSession,path,https,steamFs} = $models
 let client = new steamUser({
   enablePicsCache: true
@@ -179,6 +180,7 @@ export default {
     ...mapActions(appStore, ['setMusic', 'reset']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
+    ...mapActions(steamUserStore, ['setUserData','setSteamLoginData','setGameList','addGameDetail']),
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -322,30 +324,37 @@ export default {
     },
     "steamLoginData.refreshToken":{
       handler(){
-        console.log(this.steamLoginData)
-        if(this.steamLoginData.refreshToken === '') return
-        console.log('login')
+        if(this.steamLoginData.refreshToken === ''){
+          client.logOff();
+          client.once('disconnected', () => {
+          });
+          return
+        }
         client.logOn({"refreshToken":this.steamLoginData.refreshToken})
-        client.on('loggedOn', async function () {
-          console.log( client);
+        client.on('loggedOn', (res,err) =>{
           client.setPersona(steamUser.EPersonaState.Online);
+          client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) =>{
+            this.setUserData({name,country})
+          });
           client.on('appOwnershipCached', () => {
             console.log('Game ownership cached');
-            client.getProductInfo(client.getOwnedApps({excludeFree: false}),[],(err,data)=>{
-              console.log(data)
+            client.getUserOwnedApps(client.steamID.getSteamID64(),{includeFreeSub: true,includePlayedFreeGames:true},(err,data)=>{
               if(err) console.log(err)
+              this.setGameList(data.apps)
+            })
+            client.getProductInfo(client.getOwnedApps({excludeFree: false}),[],(err,data)=>{
+              if(err) console.log(err)
+              const list = []
               Object.keys(data).forEach(i=>{
                 if(data[i].appinfo.common){
-                  if(data[i].appinfo.common.type === 'Game'){
-                    console.log(data[i],data[i].appinfo.common.oslist)
+                  if(data[i].appinfo.common.type === 'Game'&&data[i].appinfo.common.oslist&&data[i].appinfo.common.small_capsule||data[i].appinfo.common.type === 'game'&&data[i].appinfo.common.oslist&&data[i].appinfo.common.small_capsule){
+                    list.push(data[i])
                   }
                 }
               })
+              this.addGameDetail(list)
             })
-            // client.getUserOwnedApps(client.steamID.getSteamID64(),[],(err,data)=>{
-            //  if(err) console.log(err)
-            //   console.log(data)
-            // })
+
           });
           client.on('error', async function (err) {
             console.log(err)

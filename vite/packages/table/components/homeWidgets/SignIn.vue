@@ -45,7 +45,7 @@
       </div>
     </HomeComponentSlot>
 </template>
-  
+
   <script>
   import HomeComponentSlot from "./HomeComponentSlot.vue";
   import HorizontalPanel from '../HorizontalPanel.vue';
@@ -61,7 +61,7 @@
       return {
         options:{
           className: 'card',
-          title: '签到',
+          title: '签到（开发中）',
           icon: 'sound',
           type: 'signIn'
         },
@@ -110,7 +110,7 @@
     }
   }
   </script>
-  
+
   <style scoped lang="scss">
     .sign-in-btn {
       width: 91px;
@@ -215,4 +215,3 @@
       display: none !important;
     }
   </style>
-  

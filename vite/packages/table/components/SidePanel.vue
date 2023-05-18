@@ -9,13 +9,19 @@
                    title="应用"></PanelButton>
     </li>
     <li>
+      <PanelButton :active="tab==='game'" @click="goGame()"
+                   iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="youxishoubing"
+                   title="游戏"></PanelButton>
+    </li>
+    <li>
       <PanelButton :active="tab==='music'" @click="goTab('music')"
                    iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="yinle1"
                    title="音乐"></PanelButton>
     </li>
-    <li>
-      <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>
-    </li>
+
+<!--    <li>-->
+<!--      <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>-->
+<!--    </li>-->
     <li>
       <PanelButton :active="tab==='deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
     </li>
@@ -39,6 +45,12 @@ export default {
       this.tab = name
       this.$router.push({
         path: '/' + tab
+      })
+    },
+    goGame(){
+      this.tab='game'
+      this.$router.push({
+        name:'gameIndex'
       })
     },
     goApp () {
