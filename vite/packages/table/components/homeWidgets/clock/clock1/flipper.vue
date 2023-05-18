@@ -22,7 +22,7 @@ export default {
       type: [Number, String],
       default: 0,
     },
-    // back paper text
+    // back paper  text
     // 后牌文字
     backText: {
       type: [Number, String],

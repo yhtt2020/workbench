@@ -1,11 +1,7 @@
 <template>
   <div class="clock3">
     <div class="coolClockWrap">
-      <canvas
-        :id="'canvas_' + this.elementId"
-        :width="canvas.width"
-        :height="canvas.height"
-      ></canvas>
+      <canvas :id="'canvas_' + this.elementId" :width="canvas.width" :height="canvas.height"></canvas>
     </div>
   </div>
 </template>
@@ -30,7 +26,7 @@ export default {
     this.drawCoolClock();
     this.timer = setInterval(() => {
       this.drawCoolClock();
-    }, 30);
+    }, 50);
   },
   methods: {
     drawCoolClock() {
@@ -42,7 +38,7 @@ export default {
       let [hourMaxL, hourMinL] = [this.L, this.L - 28]; //获取时刻度首位距离x0,y0位置
       let [minMaxL, minMinL] = [this.L - 2, this.L - 15];
       let centerL = 15;
-      let oDate = new Date(); //绑定当前时间
+      let oDate = new Date();  //绑定当前时间
       let oHours = oDate.getHours();
       let oMin = oDate.getMinutes();
       let oSen = oDate.getSeconds();

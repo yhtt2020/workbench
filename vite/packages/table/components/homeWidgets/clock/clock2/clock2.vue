@@ -60,8 +60,8 @@ export default {
     },
   },
   destroyed() {
-    // 销毁定时器
-    clearInterval(this.timerID);
+
+    clearInterval(this.timerID);   //  销毁定时器
   },
 };
 </script>

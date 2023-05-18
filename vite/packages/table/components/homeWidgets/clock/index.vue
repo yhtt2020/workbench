@@ -8,9 +8,14 @@
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    <ClockBackground></ClockBackground>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
+
+  <teleport to="body">
+    <ClockFullScreen v-if="isClockFullScreen" :clock="customData.clockiD" @exit="isClockFullScreen = false"
+      @updateClockStyle="updateClockStyle">
+    </ClockFullScreen>
+  </teleport>
 </template>
 
 <script>
@@ -19,8 +24,10 @@ import clock1 from "./clock1/clock1.vue";
 import clock2 from "./clock2/clock2.vue";
 import clock3 from "./clock3/clock3.vue";
 import clock4 from "./clock4/clock4.vue";
+import clock5 from "./clock5/clock5.vue";
+import clock6 from "./clock6/clock6.vue";
 import ClockStyle from "./clockStyle/ClockStyle.vue";
-import ClockBackground from "./clockStyle/ClockBackground.vue";
+import ClockFullScreen from "./clockStyle/ClockFullScreen.vue"
 
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
@@ -43,7 +50,7 @@ export default {
         icon: "sound",
         type: "games",
       },
-
+      isClockFullScreen: false,
       settingVisible: false,
       formulaBar: [
         {
@@ -64,8 +71,10 @@ export default {
     clock2,
     clock3,
     clock4,
+    clock5,
+    clock6,
     ClockStyle,
-    ClockBackground,
+    ClockFullScreen
   },
   created() {
     if (!this.customData.clockiD) {
@@ -77,6 +86,7 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
+
     updateClockStyle(e) {
       this.increaseCustomComponents(this.customIndex, {
         clockiD: e,
@@ -84,12 +94,7 @@ export default {
     },
 
     fullScreen() {
-      this.$router.push({
-        path: "/clock",
-        query: {
-          clock: this.customData.clockiD,
-        },
-      });
+      this.isClockFullScreen = true
     },
     zeroPadding(num, digit) {
       let zero = "";
@@ -137,6 +142,18 @@ export default {
     margin: 20px 2px;
     font-size: 58px;
     width: 55px;
+  }
+
+  :deep(.clock5) {
+    width: 90%;
+    height: 120px;
+    margin-top: 10px;
+
+    #seconds,
+    .a,
+    #toggle-button {
+      display: none;
+    }
   }
 }
 
