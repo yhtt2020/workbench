@@ -9,33 +9,34 @@
           <div @click="signIn" class="middle-button sign-in-btn s-item" :class="signedIn ? 'new-people' : 'old-people'">{{ signedIn ? '每日迎新' : '签到' }}</div>
         </div>
         <HorizontalPanel :navList="signInTitle" v-model:selectType="signInType" :height="44"  class="mt-4"></HorizontalPanel>
-        <div v-if="signInType.name === 'today'" class="flex flex-col">
-          <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;">
-            <div v-for="item in todayList" :key="item.id" class="w-full flex items-center rounded-lg justify-between pointer mt-3 test">
-              <div class="ranking">{{ item.id }}</div>
+        <div v-if="signInType.name === 'today'" class="flex flex-col overflow">
+          <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
+            <div v-if="!todayList.length" class="not-sign h-full flex justify-center items-center">还没有人签到，快来抢第一</div>
+            <div v-else v-for="item in todayList" :key="item.id" class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type">
+              <span class="ranking">{{ item.id }}</span>
               <div class="flex-1 flex ml-3 items-center">
                 <a-avatar>
                   <template #icon><UserOutlined /></template>
                 </a-avatar>
                 <div class="ml-3" style="color: rgba(255,255,255,0.85);font-size: 16px;">{{ item.username }}</div>
               </div>
-              <span style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.time }}</span>
+              <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.time }}</div>
             </div>
-          </vue-custom-scrollbar>
+          <!-- </vue-custom-scrollbar> -->
         </div>
         <div v-else class="flex flex-col">
-          <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;">
-            <div v-for="item in accrueList" :key="item.id" class="w-full flex items-center rounded-lg justify-between pointer mt-3">
-              <div class="ranking">{{ item.id }}</div>
-              <div class="flex-1 ml-3">
+          <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
+            <div v-for="item in accrueList" :key="item.id" class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type">
+              <span class="ranking">{{ item.id }}</span>
+              <div class="flex-1 flex ml-3 items-center">
                 <a-avatar>
                   <template #icon><UserOutlined /></template>
                 </a-avatar>
-                <span class="ml-3">{{ item.username }}</span>
+                <div class="ml-3" style="color: rgba(255,255,255,0.85);font-size: 16px;">{{ item.username }}</div>
               </div>
-              <span>{{ item.accumulate }}</span>
+              <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.accumulate }}</div>
             </div>
-          </vue-custom-scrollbar>
+          <!-- </vue-custom-scrollbar> -->
         </div>
         <div class="integral-modal" v-if="toggleModal">
           <div class="modal-icon"></div>
@@ -75,10 +76,11 @@
           {id: 6,headSculpture: '',username: '彩虹马',time: '00:01'},
           {id: 7,headSculpture: '',username: '彩虹马',time: '00:01'}
         ],
+        // todayList: [],
         accrueList: [
           {id: 1,headSculpture: '',username: '外太空的狗',accumulate: '345天'},
           {id: 2,headSculpture: '',username: '猫星人',accumulate: '300天'},
-          {id: 3,headSculpture: '',username: '彩虹马',accumulate: '266天'},
+          {id: 3,headSculpture: '',username: '晒太阳的猫',accumulate: '266天'},
           {id: 4,headSculpture: '',username: '猪猪人',accumulate: '240天'},
           {id: 5,headSculpture: '',username: '彩虹马',accumulate: '160天'}
         ],
@@ -100,8 +102,10 @@
           setTimeout(() => {
             this.toggleModal = false
           }, 1500);
+          this.signedIn = true
+        }else{
+
         }
-        this.signedIn = true
       }
     }
   }
@@ -168,20 +172,31 @@
         margin-top: 14px;
       }
     }
-    /* .test:nth-of-type(1){
+    .set-type:nth-of-type(1)>span{
       background: #FE2C46;
     }
-    .test:nth-of-type(2){
+    .set-type:nth-of-type(2)>span{
       background: #FF6600;
     }
-    .ranking:nth-of-type(3){
+    .set-type:nth-of-type(3)>span{
       background: #FAAA10;
-    } */
+    }
+    .not-sign{
+      font-size: 14px;
+      color: rgba(255,255,255,0.60);
+      text-align: center;
+      font-weight: 400;
+    }
+    .test{
+      overflow: hidden;
+    }
     .nav-list-container{
       box-shadow: none !important;
       background: rgba(255, 255, 255, 0.2) !important;
     }
-
+    ::v-deep .home-widgets .card{
+      overflow: hidden !important;
+    }
     ::v-deep .ant-slider-track{
       background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
     }
