@@ -38,40 +38,47 @@
         <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
           <div  class="w-full flex justify-start flex-col">
             <div v-for="item in epicList"  class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 100%;">
-              <div style="width: 269px;height: 120px;" class="mr-3">
+              <div class="flex-none mr-3" style="width: 258px;height: 120px;">
                 <img :src="item.keyImages.url" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
               </div>
-              <div class="flex flex-col" style="width: 80%;">
-                <div>
-                  <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                    {{ item.el.title }}
+              <div class="flex-grow" >
+                <div class="flex flex-col">
+                  <div>
+                    <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                      {{ item.el.title }}
+                    </span>
+                    <span v-if="item.el.offerType === 'DLC'" class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                       {{ item.el.offerType }}
+                    </span>
+                  </div>
+                  <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">
+                    {{ item.el.description }}
                   </span>
-                  <span v-if="item.el.offerType === 'DLC'" class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                     {{ item.el.offerType }}
-                  </span>
+                  <div class="flex items-center">
+                    <template v-if="item.el.promotions !== null">
+                      <span v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex justify-center mr-3 reset-day rounded-lg items-center" >
+                        剩余{{ remainderDay(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}天
+                      </span>
+                      <span v-else class="mr-3 rounded-lg px-4 py-1 s-bg" style="font-size: 16px; font-weight: 600;">
+                        下周预告
+                      </span>
+                    </template>
+                    <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 600;">
+                      {{ item.el.price.totalPrice.fmtPrice.intermediatePrice ==='0' ? '免费领取' : item.el.price.totalPrice.fmtPrice.intermediatePrice }}
+                    </span>
+                    <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.el.price.totalPrice.fmtPrice.originalPrice }}</span>
+                 </div>
                 </div>
-                <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">
-                  {{ item.el.description }}
-                </span>
-                <div class="flex items-center">
-                  <template v-if="item.el.promotions !== null">
-                    <span v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex justify-center mr-3 reset-day rounded-lg items-center" >
-                      剩余{{ remainderDay(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}天
-                    </span>
-                    <span v-else class="mr-3 rounded-lg px-4 py-1 s-bg" style="font-size: 16px; font-weight: 600;">
-                      下周预告
-                    </span>
-                  </template>
-                  <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 600;">
-                    {{ item.el.price.totalPrice.fmtPrice.intermediatePrice ==='0' ? '免费领取' : item.el.price.totalPrice.fmtPrice.intermediatePrice }}
-                  </span>
-                  <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.el.price.totalPrice.fmtPrice.originalPrice }}</span>
-               </div>
+              </div>
+              <div class="flex-none btn-active ml-4 h-12 py-3 pointer px-8 s-bg rounded-md" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;" 
+                @click="openEpicStore"
+              >
+                打开epic商城
               </div>
             </div>
           </div>
         </vue-custom-scrollbar>
-     </div>
+    </div>
   </template>
   <router-view></router-view>
   <HorizontalDrawer :drawerTitle="drawerTitle" :rightSelect="rightSelect" ref="regionDrawer" @getArea="getArea"></HorizontalDrawer>
@@ -243,8 +250,10 @@ export default {
         })
         this.epicList  = resultArr
       })
+    },
+    openEpicStore(){
+      window.ipc.send('addTab',{url:'https://store.epicgames.com/zh-CN/'})
     }
-    
   },
 }
 </script>

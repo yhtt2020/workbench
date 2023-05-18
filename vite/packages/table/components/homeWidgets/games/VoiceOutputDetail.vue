@@ -3,13 +3,13 @@
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
        <div v-for="(item,index) in outputList" :class="selectIndex === index ? 's-item':''"
-        @click="selectAudio(item,index)" class="flex pointer rounded-lg items-center justify-center " style="padding: 7px  10px;">
+        @click="selectAudio(item,index)" class="flex pointer rounded-lg btn-active voice-item-hover  items-center justify-center " style="padding: 7px  10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
             {{ item.name }}
           </span>
        </div>
     </vue-custom-scrollbar> 
-    <div @click="backOutput" class="flex items-center select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
+    <div @click="backOutput" class="flex items-center voice-item-hover select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
       <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
     </div>
@@ -84,5 +84,8 @@
 }
 ::v-deep .ps__thumb-y{
   display: none !important;
+}
+.voice-item-hover:hover{
+  background:rgba(42, 42, 42, 0.8);
 }
 </style>

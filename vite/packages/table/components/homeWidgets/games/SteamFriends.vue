@@ -1,11 +1,9 @@
 <template>
   <HomeComponentSlot :options="options" :customData="customData" :customIndex="customIndex">
-      <div class="mt-5 flex justify-between flex-wrap">
-        <div v-for="item in avatarList" class="pointer avatar-item" style="width: calc(33.33% - 20px);">
+      <div class="mt-5 my-friends">
+        <div v-for="item in avatarList" class="pointer avatar-item">
           <a-avatar shape="square" :size="48" :src="item.url"  class="mb-4 rounded-md" style="border:3px solid rgba(82, 196, 26, 1);"></a-avatar>
         </div>
-        <!-- -->
-         <!--  -->
       </div>
   </HomeComponentSlot>
 </template>
@@ -65,5 +63,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.my-friends{
+  display: grid;
+  grid-template-columns: repeat(3,0.35fr);
+  grid-gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.avatar-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:  0  auto;
+}
 </style>

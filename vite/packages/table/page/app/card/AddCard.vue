@@ -28,26 +28,17 @@
       </template>
     </a-input>
   </div>
-  <vue-custom-scrollbar
-    key="scrollbar"
-    id="addScroll"
-    :settings="scrollbarSettings"
-    style="position: relative; border-radius: 8px; height: 100vh"
-  >
-    <CardPreview
-      :cardType="item"
-      v-for="item in filterList"
-      @addSuccess="onBack"
-    ></CardPreview>
+  <vue-custom-scrollbar key="scrollbar" id="addScroll" :settings="scrollbarSettings"
+    style="position:relative;  border-radius: 8px;height: 100vh">
+    <CardPreview :cardType="item" v-for="item in filterList" @addSuccess="onBack"></CardPreview>
     <div style="height: 650px"></div>
   </vue-custom-scrollbar>
 </template>
 
 <script>
-import { mapActions } from "pinia";
-import { cardStore } from "../../../store/card";
-import CardPreview from "./CardPreview.vue";
-import axios from "axios";
+import { mapActions } from 'pinia'
+import { cardStore } from '../../../store/card'
+import CardPreview from './CardPreview.vue'
 
 export default {
   name: "AddCard",
@@ -146,43 +137,21 @@ export default {
           images: ["MyGameSmall", "MyGameMiddle", "SteamFriends"],
         },
         {
-          name: "capture",
-          cname: "捕获",
-          icon: "audio",
-          detail: "捕获",
-          images: ["capture", "CaptureNewCard"],
+          name: 'customAssembly',
+          cname: '自定义',
+          icon: 'image',
+          detail: '自定义小组件封面和快捷方式',
+          images: ['customAssembly'],
+          size: ['2x2']
         },
         {
-          name: "Audio",
-          cname: "音频工具",
-          icon: "audio",
-          detail: "音频工具",
-          images: ["audio", "voice"],
-        },
-        {
-          name: "remote",
-          cname: "外部卡片",
-          icon: "game",
-          detail: "添加一个链接到外部网页的卡片，可以实现各种自定义功能。",
-          images: ["Remote"],
-          size: ["1x2"],
-        },
-        {
-          name: "clocks",
-          cname: "时钟",
-          icon: "game",
-          detail: "选择合适的时钟组件装点你的桌面",
-          images: ["clocks"],
-          size: ["1x1"],
-        },
-        {
-          name: "customAssembly",
-          cname: "自定义",
-          icon: "image",
-          detail: "自定义小组件封面和快捷方式",
-          images: ["customAssembly"],
-          size: ["2x2"],
-        },
+          name: 'signIn',
+          cname: '签到',
+          icon: '',
+          detail: '完成签到，获得奖励',
+          images: ['signIn'],
+          size: ['1x1']
+        }
       ],
       cardType: {},
       show: false,

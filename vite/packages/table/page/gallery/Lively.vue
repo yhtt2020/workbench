@@ -2,7 +2,7 @@
   <div class="rotate-center s-text" style="font-size: 2em;margin-bottom: 1em;display: none;">
     动态壁纸 {{ list.length }}
   </div>
-  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="flex-grow: 1;flex-shrink: 1">
+  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="flex-grow: 1;flex-shrink: 1;margin-top:2em;">
     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
 
       <a-col class="image-wrapper " v-for="item in displayList" :span="6" style="position: relative">
@@ -25,7 +25,7 @@
                :src="getCover(item)" style="position: relative">
         </div>
 
-        <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
+        <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 50">
           <div @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
@@ -306,7 +306,7 @@ export default {
 <style scoped>
 .play-icon {
   position: absolute;
-  z-index: 999;
+  z-index: 50;
   background: rgba(0, 0, 0, 0.51);
   text-align: center;
   width: 4em;

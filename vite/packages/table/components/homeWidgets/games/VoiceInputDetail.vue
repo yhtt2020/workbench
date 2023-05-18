@@ -2,14 +2,14 @@
   <!-- 音频输入设备的选项 -->
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
-      <div v-for="(item,index) in inputList" :class="selectIndex === index ? 's-item':''"
-        @click="selectAudio(item,index)" class="flex rounded-lg pointer items-center justify-center" style="padding: 7px 10px;">
+      <div v-for="(item,index) in inputList" :class="selectIndex === index ? 's-item':''" 
+        @click="selectAudio(item,index)" class="flex rounded-lg voice-item-hover  pointer items-center justify-center" style="padding: 7px 10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
             {{ item.name }}
           </span>
        </div>
     </vue-custom-scrollbar>
-    <div @click="backInput" class="flex items-center select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
+    <div @click="backInput" class="flex items-center select-active voice-item-hover justify-center rounded-lg py-3 my-2 pointer s-item w-full">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
       <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
     </div>
@@ -78,5 +78,8 @@ export default {
 }
 ::v-deep .ps__thumb-y{
   display: none !important;
+}
+.voice-item-hover:hover{
+  background:rgba(42, 42, 42, 0.8);
 }
 </style>

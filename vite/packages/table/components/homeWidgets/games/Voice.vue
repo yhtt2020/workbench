@@ -14,13 +14,14 @@
           </div> 
         </div>
         <div class="flex-1">
-          <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item" >
-            <Icon icon="sound" style="font-size: 2.286em;"></Icon>
+          <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item" >
+            <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
+            <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
       <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
-      <div @click="selectOutputVoice" class="flex mt-3 pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
         <div class="item-name">{{ outputContent }}</div>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
@@ -29,12 +30,13 @@
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
           <a-progress :percent="10" :showInfo="false"/>
         </div>
-        <div class="flex items-center rounded-full pointer justify-center px-3 py-3 s-item">
-          <Icon icon="maikefeng1" style="font-size: 2.286em;"></Icon>
+        <div @click="closeMicrophone" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item">
+          <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
+          <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
         </div>
       </div>
       <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-      <div @click="selectInputVoice"  class="flex mt-3 pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+      <div @click="selectInputVoice"  class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
         <span class="item-name">{{ inputContent }}</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
@@ -81,7 +83,9 @@ export default {
       outputShow:false,
       inputShow:false,
       outputContent:'扬声器1（High Definition Audio Device）',
-      inputContent:'Microphone1（High Definition Audio Device）'
+      inputContent:'Microphone1（High Definition Audio Device）',
+      muteShow:false,
+      microphoneShow:false,
     }
   },
   methods:{
@@ -98,6 +102,12 @@ export default {
     receiveInput(v){
       this.inputContent = v.name
       this.inputShow = false
+    },
+    clickMute(){
+      this.muteShow = !this.muteShow
+    },
+    closeMicrophone(){
+      this.microphoneShow = !this.microphoneShow
     }
   }
   
@@ -114,5 +124,21 @@ export default {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow: hidden;
+}
+:deep(.ant-slider-handle){
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(151, 151, 151, 1) !important;
+}
+:deep(.ant-slider-rail){
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+:deep(.ant-progress-inner){
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+:deep(.ant-progress-bg){
+  height: 9px !important;
+}
+.voice-hover:hover{
+  opacity: 0.8;
 }
 </style>

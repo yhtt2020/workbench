@@ -3,7 +3,7 @@
     <div ref="slider" class="keen-slider s-bg rounded-lg">
       <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
         <video class="w-full h-full rounded-lg" @ended="next"  controls="controls"   controlslist="nodownload  noremoteplayback noplaybackrate"
-        disablePictureInPicture   playsinline="" autoplay="" muted="" v-if="item.mp4">
+        disablePictureInPicture  ref="wheelVideo"  playsinline="" autoplay="" muted="" v-if="item.mp4">
           <source :src="item.mp4.max" class="w-full rounded-lg" type="video/mp4" id="bgVid">
         </video>
         <viewer :images="item.path_full" :options="options" class="w-full h-full rounded-lg object-cover " v-else>
@@ -48,6 +48,8 @@ function ThumbnailPlugin(main) {
     function addClickEvents() {
       slider.slides.forEach((slide, idx) => {
         slide.addEventListener("click", () => {
+          const wheelVideo = document.querySelectorAll('video')
+          wheelVideo[idx].play()
           main.moveToIdx(idx)
         })
       })
@@ -115,10 +117,13 @@ export default {
   methods:{
     prev() {
       this.slider.prev()
+      this.$refs.wheelVideo[this.slider.track.details.rel].pause()
     },
     next(){
       this.slider.next()
-    }
+      // 切换下一个,上一个视频暂停
+      this.$refs.wheelVideo[this.slider.track.details.rel].pause()
+    },
   },
   beforeDestroy() {
     if (this.slider) this.slider.destroy()
