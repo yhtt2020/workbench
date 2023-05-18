@@ -1,5 +1,5 @@
 <template>
-  <div class="rotate-center" style="margin-bottom: 1em">
+  <div class="rotate-center" style="margin-bottom: 1em;margin-top: 2em;">
     <span style="font-size: 2em;" class="s-text">我的收藏 {{ myPapers.length }}</span>
     <div class="pointer" style="float: right;font-size: 1em;">
       <div @click="playAll" class=" rounded-lg list-hover s-icon"

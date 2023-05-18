@@ -2,7 +2,7 @@
   <!-- <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
     必应壁纸
   </div> -->
-  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" >
+  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller"  style="margin-top: 1.5em;">
     <!--            <lightgallery id="container"-->
     <!--                          :settings="settings"-->
     <!--                          :onInit="onInit"-->

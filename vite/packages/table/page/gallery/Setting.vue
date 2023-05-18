@@ -1,12 +1,11 @@
 <template>
-  <div class="rotate-center s-text" style="font-size: 2em;margin-bottom: 1em">
-    锁屏设置
-
-  </div>
-  <div class="pointer s-icon" style="position: fixed;right: 2em;top: 4em">
-    <div  @click="resetPapersSettings" style="display: inline-block;margin-right: 1em">
-      <span><Icon style="font-size: 2em;vertical-align: top"
-                  icon="shuaxin"></Icon></span><span  style="font-size:1.2em" class="s-text"> 重置全部设置</span>
+  <div class="flex items-center justify-between" style="margin-top: 2em; margin-bottom: 1em;">
+    <div class="rotate-center s-text w-2/3" style="font-size: 2em;">锁屏设置</div>
+    <div class="pointer s-icon mr-6" @click="resetPapersSettings">
+      <div   style="display: inline-block;margin-right: 1em">
+        <span><Icon style="font-size: 2em;vertical-align: top"
+                    icon="shuaxin"></Icon></span><span  style="font-size:1.2em" class="s-text"> 重置全部设置</span>
+      </div>
     </div>
   </div>
   <vue-custom-scrollbar id="containerWrapper " :settings="settingsScroller" style="height: 80vh;">
