@@ -6,36 +6,65 @@
      <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
       当前游戏
      </div>
-     <div class="flex flex-col items-center change justify-center" v-if="testData.length === 0">
-      <a-empty :image="simpleImage"/>
-      <span class="s-item py-3 px-12 rounded-lg pointer">导入游戏</span>
-     </div>
-     <div class="mt-4 w-full my-game" v-else-if="myMiddleDetailShow === false">
-      <div  v-for="item in testData" class="my-game-item pointer relative">
-        <img :src="item.src" alt="" class="rounded-lg " @click="enterMiddleDetail(item)"  style="width: 100%; height:100%; object-fit: cover;">
-        <div class="small-title w-full truncate px-2 py-2" style="max-width:100px; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
-      </div>
-     </div>
-     <MyGameMiddleDetail  :middleDetail="middleDetail"  @close="updateShow " v-else></MyGameMiddleDetail>
+     <template v-if="defaultGameType.name === 'steam'">
+        <div class="mt-3 w-full flex" v-if="steamDetailShow === false">
+          <a-spin v-if="mySteamList === undefined" style="margin: 0 auto;"/>
+          <a-row :gutter="[16,16]" class="flex justify-center" v-else>
+            <a-col :span="10" @click="enterSteamDetail(item)" v-for="item in mySteamList" class="flex pointer s-item flex-col  rounded-lg  mx-4" style="width:253px;padding: 0;">
+              <div style="width:100%;height:119px;" class="rounded-t-lg" v-if="item.appinfo">
+                <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
+              </div>
+              <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+            </a-col>
+          </a-row>
+        </div>
+        <MySteamDetail :steamDetail="steamDetailList" v-else></MySteamDetail>
+     </template>
+     <template v-else>
+      <div class="flex flex-col items-center change justify-center" v-if="otherList.length === 0">
+        <a-empty :image="simpleImage"/>
+        <span class="s-item py-3 px-12 rounded-lg pointer">导入游戏</span>
+       </div>
+       <div class="mt-4 w-full my-game">
+        <div  v-for="item in otherList" class="my-game-item pointer relative">
+          <!--  @click="enterMiddleDetail(item)" -->
+          <img :src="item.src" alt="" class="rounded-lg "  style="width: 100%; height:100%; object-fit: cover;">
+          <div class="small-title w-full truncate px-2 py-2" style="max-width:100px; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
+        </div>
+       </div>
+     </template>
   </HomeComponentSlot>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
-    <div class="flex flex-col">
+    <div class="flex flex-col" v-if="openCpu === false">
+      
       <span class="mb-8" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 500">展示游戏</span>
-      <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">Steam游戏，按最近游玩时间顺序展示</span>
-      <span class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">其他游戏，按最近游玩时间顺序展示</span>
+      <span @click="getGameType(item)" v-for="item in showGameType" class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">
+         {{ item.title }}
+      </span>
+    </div>
+    <div class="flex justify-between" v-else>
+      <span>是否打开CPU</span>
+      <a-switch v-model:checked="CPUShow" />
     </div>
   </a-drawer>
 </template>
 
 <script>
+import { mapWritableState } from 'pinia'
+import { steamUserStore } from '../../../store/steamUser'
 import HomeComponentSlot from '../HomeComponentSlot.vue'
-import MyGameMiddleDetail from './MyGameMiddleDetail.vue'
+import HorizontalPanel from '../../HorizontalPanel.vue'
+import MySteamDetail from './MySteamDetail.vue'
+import _ from 'lodash-es'
 import { Empty } from 'ant-design-vue';
+
+
 export default {
   name:'MyGameMiddle',
   components:{
     HomeComponentSlot,
-    MyGameMiddleDetail
+    MySteamDetail,
+    HorizontalPanel
   },
   props:{
     customIndex: {
@@ -51,6 +80,26 @@ export default {
       default: () => {}
     }
   },
+  computed:{
+    ...mapWritableState(steamUserStore,['gameList']),
+    defaultGameType(){
+      if(this.customData && this.customData.name){
+        return this.customData
+      }  
+      return this.showGameType[0]
+    },
+    mySteamList(){
+      try{
+        const result = _.chunk(this.gameList,4)[0]
+        if(result){
+          return result
+        }
+      } catch(error) {
+        console.log(error);
+      }
+    }
+  },
+
   data(){
     return{
       options: {
@@ -60,59 +109,10 @@ export default {
         type: 'games',
       },
       myMiddleDetailShow:false,
-      testData:[
-        {
-          title:'小缇娜的奇幻之地',
-          src:'/img/test/1.png'
-         },
-         {
-          title:'无地之主3',
-          src:'/img/test/2.jpg'
-         },
-         {
-          title:'FIFA 23',
-          src:'/img/test/2.jpg'
-         },{
-          title:'双人成行',
-          src:'/img/test/1.png'
-         },
-         {
-          title:'艾尔登法环',
-          src:'/img/test/2.jpg'
-         },
-         {
-          title:'黑暗之魂3',
-          src:'/img/test/2.jpg'
-         },
-         {
-          title:'只狼',
-          src:'/img/test/1.png'
-         },
-         {
-          title:'生化危机3重制版',
-          src:'/img/test/1.png'
-         },
-         {
-          title:'地平线5',
-          src:'/img/test/1.png'
-         },
-         {
-          title:'大富翁11',
-          src:'/img/test/2.jpg'
-         },
-         {
-          title:'APEX',
-          src:'/img/test/2.jpg'
-         },
-         {
-          title:'Valorant',
-          src:'/img/test/1.png'
-         },
-         
-      ],
-      middleDetail:'',
       middleShow:false,
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      openCpu:false,
+      CPUShow:false,
+      steamDetailShow:false,
       gameMiddleBare:[
         {
           icon: 'shezhi1', title: '设置', fn: () => {
@@ -120,16 +120,43 @@ export default {
             this.$refs.gameMiddleSlot.visible = false
           }
         }
-      ]
+      ],
+      showGameType:[
+        {title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},
+        {title:'其他游戏，按最近游玩时间顺序展示',name:'other'}
+      ],
+      // 其他游戏列表
+      otherList:[
+        {title:'小缇娜的奇幻之地',src:'/img/test/1.png'},
+        {title:'无地之主3',src:'/img/test/2.jpg'},
+        {title:'FIFA 23',src:'/img/test/2.jpg'},
+        {title:'艾尔登法环',src:'/img/test/2.jpg'},
+        {title:'黑暗之魂3',src:'/img/test/2.jpg'},
+        {title:'只狼',src:'/img/test/1.png'},
+        {title:'生化危机3重制版', src:'/img/test/1.png'},
+        {title:'地平线5',src:'/img/test/1.png'},
+        {title:'大富翁11',src:'/img/test/2.jpg'},
+        {title:'APEX',src:'/img/test/2.jpg'},
+        {title:'Valorant',src:'/img/test/1.png'},
+        {title:'双人成行',src:'/img/test/1.png'},
+      ],
+      steamDetailList:[],
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   },
+
   methods:{
-    enterMiddleDetail(v){
-      this.myMiddleDetailShow = true
-      this.middleDetail = v
+    // 切换游戏类型展示
+    getGameType(item){
+      this.customData.name = item.name,
+      this.middleShow = false
     },
-    updateShow(v){
-      this.myMiddleDetailShow = v
+    // 进入steam类型详情
+    enterSteamDetail(item){
+      this.steamDetailShow = true
+      this.myMiddleDetailShow = true
+      this.openCpu = true
+      this.steamDetailList = item
     }
   }
 }
@@ -154,7 +181,6 @@ export default {
   align-items: center;
 }
 .my-game-item{
-  width: 100px;
   height: 100px;
   display: flex;
   align-items: center;
