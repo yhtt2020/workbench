@@ -1,18 +1,10 @@
 <template>
-  <div
-    @contextmenu.stop="showDrawer"
-    :class="classes"
-    :style="{
+  <div @contextmenu.stop="showDrawer" :class="classes" :style="{
       pointerEvents: editing ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-    }"
-    @click="onCPUIndex"
-    @mouseleave="onMouseOut"
-    @mouseenter="onMouseOver"
-  >
-    <div
-      style="
+    }" @click="onCPUIndex" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
+    <div style="
         position: absolute;
         top: 0;
         left: 0;
@@ -22,117 +14,61 @@
         z-index: 888;
         padding: 1em;
         backdrop-filter: blur(8px);
-      "
-      v-show="showTip"
-      v-if="
-        (options.type.includes('CPU') && runAida64 === false) ||
+      " v-show="showTip" v-if="(options.type.includes('CPU') && runAida64 === false) ||
         (options.type.includes('GPU') && runAida64 === false)
-      "
-    >
+        ">
       <div :class="options.noTitle === true ? 'no-title' : 'content-title'">
         <div class="left-title" v-if="options.noTitle !== true">
           <Icon :icon="options.icon" class="title-icon"></Icon>
           <div>{{ options.title }}</div>
         </div>
-        <div
-          class="right-title"
-          @click.stop="showDrawer"
-          @contextmenu.stop="showDrawer"
-        >
-          <Icon
-            icon="gengduo1"
-            class="title-icon"
-            style="cursor: pointer"
-          ></Icon>
+        <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+          <Icon icon="gengduo1" class="title-icon" style="cursor: pointer"></Icon>
         </div>
       </div>
-      <div
-        class="content-small text-lg absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center"
-      >
-        <span class="mb-2" style="font-size: 0.8em; line-height: 1.2"
-          >需要安装，如图配置AIDA64并运行</span
-        >
+      <div class="content-small text-lg absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <span class="mb-2" style="font-size: 0.8em; line-height: 1.2">需要安装，如图配置AIDA64并运行</span>
         <div class="mb-2">
           <AidaGuide></AidaGuide>
         </div>
 
-        <div
-          class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-lg"
-          @click="onDownAida"
-        >
+        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-lg"
+          @click="onDownAida">
           <span>立即下载</span>
         </div>
-        <div
-          v-if="options.type.includes('Four')"
-          class="flex flex-col items-center"
-        >
-          <span class="mb-2" style="font-size: 0.8em; line-height: 1.2"
-            >监控游戏「FPS」需要安装并运行RTSS</span
-          >
-          <div
-            class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-lg"
-            @click="onDownRTSS"
-          >
+        <div v-if="options.type.includes('Four')" class="flex flex-col items-center">
+          <span class="mb-2" style="font-size: 0.8em; line-height: 1.2">监控游戏「FPS」需要安装并运行RTSS</span>
+          <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-lg"
+            @click="onDownRTSS">
             <span>立即下载</span>
           </div>
         </div>
-        <span class="text-base text-neutral-300"
-          >如果已经启动请等待大约30秒</span
-        >
+        <span class="text-base text-neutral-300">如果已经启动请等待大约30秒</span>
       </div>
     </div>
 
-    <div
-      :class="options.noTitle === true ? 'no-title' : 'content-title'"
-      class="flex justify-between items-center"
-    >
+    <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex justify-between items-center">
       <div class="left-title" v-if="options.noTitle !== true">
         <Icon :icon="options.icon" class="title-icon"></Icon>
         <div class="w-2/3">{{ options.title }}</div>
       </div>
-      <div
-        class="right-title"
-        v-if="gameRegionShow === true"
-        @click.stop="showDrawer"
-        @contextmenu.stop="showDrawer"
-      >
+      <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor: pointer"></Icon>
       </div>
     </div>
     <slot :customIndex="customIndex"></slot>
   </div>
-  <a-drawer
-    :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }"
-    :width="120"
-    height="auto"
-    class="drawer"
-    :closable="true"
-    placement="bottom"
-    v-model:visible="visible"
-    @close="onClose"
-  >
-    <div
-      class="ml-4 mb-3 flex flex-row items-center"
-      v-if="sizeList && sizeList.length > 0"
-    >
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" height="auto" class="drawer"
+    :closable="true" placement="bottom" v-model:visible="visible" @close="onClose">
+    <div class="ml-4 mb-3 flex flex-row items-center" v-if="sizeList && sizeList.length > 0">
       <div class="mr-4">小组件尺寸</div>
-      <HorizontalPanel
-        :navList="sizeList"
-        v-model:selectType="sizeType"
-        bgColor="drawer-item-select-bg"
-      ></HorizontalPanel>
+      <HorizontalPanel :navList="sizeList" v-model:selectType="sizeType" bgColor="drawer-item-select-bg">
+      </HorizontalPanel>
     </div>
-    <hr
-      style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)"
-      class="ml-4 mr-4 my-8"
-      v-if="sizeList && sizeList.length > 0"
-    />
+    <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="ml-4 mr-4 my-8"
+      v-if="sizeList && sizeList.length > 0" />
     <div class="flex flex-row">
-      <div
-        class="option h-24 w-24 ml-4"
-        @click="item.fn()"
-        v-for="item in formulaBar"
-      >
+      <div class="option h-24 w-24 ml-4" @click="item.fn()" v-for="item in formulaBar">
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
@@ -140,21 +76,15 @@
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
       </div>
-      <div
-        class="option h-24 w-24 ml-4"
-        @click="onCopy"
-        v-if="options.type.includes('CPU') || options.type.includes('GPU')"
-      >
+      <div class="option h-24 w-24 ml-4" @click="onCopy"
+        v-if="options.type.includes('CPU') || options.type.includes('GPU')">
         <Icon class="icon" icon="fuzhi"></Icon>
         复制数据
       </div>
     </div>
   </a-drawer>
-  <textarea
-    id="textArea"
-    style="opacity: 0; height: 0; width: 0; position: absolute"
-    v-if="options.type.includes('CPU') || options.type.includes('GPU')"
-  ></textarea>
+  <textarea id="textArea" style="opacity: 0; height: 0; width: 0; position: absolute"
+    v-if="options.type.includes('CPU') || options.type.includes('GPU')"></textarea>
 </template>
 
 <script>
@@ -207,7 +137,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     size: {
       type: Object,
@@ -284,8 +214,8 @@ export default {
       handler() {
         this.increaseCustomComponents(
           this.$parent.customIndex ||
-            this.$parent.$parent.customIndex ||
-            this.$parent.$attrs.customIndex,
+          this.$parent.$parent.customIndex ||
+          this.$parent.$attrs.customIndex,
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
@@ -306,8 +236,8 @@ export default {
     removeCard() {
       this.removeCustomComponents(
         this.$parent.customIndex ||
-          this.$parent.$parent.customIndex ||
-          this.$parent.$attrs.customIndex
+        this.$parent.$parent.customIndex ||
+        this.$parent.$attrs.customIndex
       );
       this.visible = false;
     },

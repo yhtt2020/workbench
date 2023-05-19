@@ -265,6 +265,7 @@ import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/homeWidgets/clock/index.vue'
+import note from "../components/homeWidgets/note/index.vue"
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -514,6 +515,7 @@ export default {
     SteamFriends,
     CaptureNewCard,
     Clocks,
+    note
   },
   computed: {
     ...mapWritableState(cardStore, [
