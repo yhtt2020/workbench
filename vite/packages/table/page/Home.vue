@@ -607,7 +607,7 @@ export default {
     Audio,
     SteamFriends,
     CaptureNewCard,
-    clocks,
+    //clocks,
   },
   computed: {
     ...mapWritableState(cardStore, [
