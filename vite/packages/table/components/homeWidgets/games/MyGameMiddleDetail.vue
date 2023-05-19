@@ -1,5 +1,5 @@
 <template>
-  <div class="flex mt-4">
+  <div class="flex mt-4" v-if="cardSize.className === 'card double'">
     <div class="w-1/2 rounded-lg  relative mr-5">
        <img :src="middleDetail.src" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
        <span class="middle-tag rounded-md mr-2 mt-2">正在运行</span>
@@ -42,20 +42,62 @@
        </div>
     </div>
   </div>
+  <div class="flex flex-col mt-4 items-center justify-center" v-else>
+    <!-- <template>
+      
+    </template> -->
+    <div class="rounded-lg " style="width: 100px; height: 100px;margin-top: 40px;">
+      <img class="rounded-lg" :src="middleDetail.src" alt="" style="width: 100%;height: 100%; object-fit: cover;">
+    </div>  
+    <span class="mt-4" style="font-size: 18px; font-weight: 500; margin-bottom: 30px;">{{ middleDetail.title }}</span>
+    <!-- 后期根据正在运行的游戏数量进行判断,目前已多个为假数据模板 -->
+    <!-- <a-carousel arrows class="mt-5"  :dots="false"  :after-change="imgChang"  style="width: 144px;height: 115px;" effect="fade">
+      <template #prevArrow>
+       <div class="custom-slick-arrow" style=" z-index: 1;left: -60px">
+         <Icon icon="left-circle-fill" class="carousel-icon"></Icon>
+       </div>
+      </template>
+      <template #nextArrow>
+       <div class="custom-slick-arrow" style="right: -30px">
+         <Icon icon="right-circle-fill" class="carousel-icon"></Icon>
+       </div>
+      </template>
+      <img :src="item.src" v-for="item in detailList" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;" alt="">
+    </a-carousel> -->
+    <!-- <span class="mt-2" style="font-size: 18px; font-weight: 500; margin-bottom: 60px;">{{detailList[carouselIndex].title}}</span> -->
+
+    <div @click="openGameGuide" class="rounded-lg flex items-center pointer-active mb-3 s-item  pointer justify-center" style=" padding: 13px 80px;">
+      <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
+      <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>
+    </div>
+    <div @click="closeMyGameMiddleDetail" class="rounded-lg flex items-center pointer-active s-item  pointer justify-center" style=" padding: 13px 80px;">
+      <Icon icon="tuichu" style="font-size: 1.429em;"></Icon>
+      <span style="font-size: 16px; font-weight: 400;">关闭游戏</span>
+    </div>
+  </div>
 </template>
 
 <script>
-  export default {
+export default {
     name:'MyGameMiddleDetail',
     props:{
       middleDetail:{
+        type:Object,
+        default:()=>{}
+      },
+      cardSize:{
         type:Object,
         default:()=>{}
       }
     },
     methods:{
       closeMyGameMiddleDetail(){
-        this.$emit('close',false)
+        this.$emit('close')
+      },
+      // 打开游戏攻略
+      openGameGuide(){
+        // 后期需要params:{id}进行跳转
+        this.$router.push({name:'gameIntroduction'})
       }
     }
   }

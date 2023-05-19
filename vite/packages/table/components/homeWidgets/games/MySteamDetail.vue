@@ -95,8 +95,8 @@ export default {
       default:()=>{}
     },
     cardSize:{
-      type:Boolean,
-      default:false
+      type:Object,
+      default:()=>{}
     }
   },  
   data(){

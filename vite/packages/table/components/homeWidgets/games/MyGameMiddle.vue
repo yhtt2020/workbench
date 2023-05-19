@@ -33,16 +33,31 @@
         <MySteamDetail :steamDetail="steamDetailList" :cardSize="options" @closeDetail="closeGameDetail()" v-else></MySteamDetail>
      </template>
      <template v-else>
-      <div class="flex flex-col items-center change justify-center" v-if="otherList.length === 0">
-        <a-empty :image="simpleImage"/>
-        <span class="s-item py-3 px-12 rounded-lg pointer">导入游戏</span>
-       </div>
-       <div class="mt-4 w-full my-game">
-        <div  v-for="item in otherList" class="my-game-item pointer relative">
-          <!--  @click="enterMiddleDetail(item)" -->
-          <img :src="item.src" alt="" class="rounded-lg "  style="width: 100%; height:100%; object-fit: cover;">
-          <div class="small-title w-full truncate px-2 py-2" style="max-width:100px; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
+       <div v-if="options.className === 'card '">
+        <div class="flex flex-col items-center change justify-center" v-if="otherList.length === 0">
+          <a-empty :image="simpleImage"/>
+          <span class="s-item py-3 px-12 rounded-lg pointer">导入游戏</span>
         </div>
+        <div class="mt-4 w-full my-other-game" v-else-if="otherGameShow === false">
+          <div v-for="item in otherList.slice(0,6)" @click="enterOtherDetail(item)" class="my-item pointer relative">
+            <img :src="item.src" alt="" class="rounded-lg "  style="width: 100%; height:100%; object-fit: cover;">
+            <div class="small-title w-full truncate px-2 py-2" style="max-width:110px; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
+          </div>
+        </div>
+        <MyGameMiddleDetail :middleDetail="otherGameDetail" :cardSize="options"  @close="closeOther()" v-else ></MyGameMiddleDetail>
+       </div>
+       <div v-else>
+        <div class="flex flex-col items-center change justify-center" v-if="otherList.length === 0">
+          <a-empty :image="simpleImage"/>
+          <span class="s-item py-3 px-12 rounded-lg pointer">导入游戏</span>
+        </div>
+        <div class="mt-4 w-full my-game" v-else-if="otherGameShow === false">
+          <div  v-for="item in otherList" @click="enterOtherDetail(item)" class="my-game-item pointer relative">
+            <img :src="item.src" alt="" class="rounded-lg "  style="width: 100%; height:100%; object-fit: cover;">
+            <div class="small-title w-full truncate px-2 py-2" style="max-width:110px; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">{{ item.title }}</div>
+          </div>
+        </div> 
+        <MyGameMiddleDetail :middleDetail="otherGameDetail" :cardSize="options" @close="closeOther()" v-else ></MyGameMiddleDetail>
        </div>
      </template>
   </HomeComponentSlot>
@@ -67,6 +82,7 @@ import { steamUserStore } from '../../../store/steamUser'
 import HomeComponentSlot from '../HomeComponentSlot.vue'
 import HorizontalPanel from '../../HorizontalPanel.vue'
 import MySteamDetail from './MySteamDetail.vue'
+import MyGameMiddleDetail from './MyGameMiddleDetail.vue'
 import _ from 'lodash-es'
 import { Empty } from 'ant-design-vue';
 
@@ -76,7 +92,8 @@ export default {
   components:{
     HomeComponentSlot,
     MySteamDetail,
-    HorizontalPanel
+    HorizontalPanel,
+    MyGameMiddleDetail
   },
   props:{
     customIndex: {
@@ -162,7 +179,9 @@ export default {
       steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],
       defaultCardSize:{title:'2x2',className:'double',name:'2x2'},
       steamDetailList:[],
+      otherGameDetail:{},
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      otherGameShow:false,
     }
   },
 
@@ -205,6 +224,15 @@ export default {
         this.openCpu = false
         this.steamDetailShow = false
       }
+    },
+    // 进入其他游戏详情
+    enterOtherDetail(item){
+      this.otherGameShow = true,
+      this.otherGameDetail = item
+    },
+    // 模拟其他游戏关闭状态
+    closeOther(){
+      this.otherGameShow = false
     }
   }
 }
@@ -242,5 +270,19 @@ export default {
   filter: brightness(0.8);
   background: rgba(42, 42, 42, 0.25);
 }
-
+.my-other-game{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  justify-content: center;
+  align-items: center;  
+}
+.my-item{
+  width:100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:  0  auto;
+}
 </style>
