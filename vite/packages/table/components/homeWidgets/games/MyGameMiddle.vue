@@ -30,7 +30,7 @@
             </a-row> 
           </div>
         </div>
-        <MySteamDetail :steamDetail="steamDetailList" :cardSize="CPUShow" v-else></MySteamDetail>
+        <MySteamDetail :steamDetail="steamDetailList" :cardSize="options" @closeDetail="closeGameDetail()" v-else></MySteamDetail>
      </template>
      <template v-else>
       <div class="flex flex-col items-center change justify-center" v-if="otherList.length === 0">
@@ -55,7 +55,7 @@
       </span>
     </div>
     <div class="flex justify-between" v-else>
-      <span>是否打开CPU</span>
+      <span>性能显示</span>
       <a-switch v-model:checked="CPUShow" @change="isOpenCpu($event)"/>
     </div>
   </a-drawer>
@@ -170,6 +170,7 @@ export default {
     defaultCardSize:{
       handler(){
         this.options.className = 'card' + ' ' + this.defaultCardSize.className
+        this.$emit('customEvent')
       },
       immediate:true
     }
@@ -192,8 +193,17 @@ export default {
     isOpenCpu(e){
       if(!e){
         this.options.className = 'card' + ' ' + this.steamCardSize[0].className
+        this.$emit('customEvent')
       }else{
         this.options.className = 'card' + ' ' + this.steamCardSize[1].className
+        this.$emit('customEvent')
+      }
+    },
+    // 模拟游戏关闭状态
+    closeGameDetail(){
+      if(this.defaultCardSize.className === 'double' || this.defaultCardSize.className === ''){
+        this.openCpu = false
+        this.steamDetailShow = false
       }
     }
   }
