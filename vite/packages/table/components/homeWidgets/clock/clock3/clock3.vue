@@ -15,7 +15,7 @@ export default {
         width: 350,
         height: 350,
       },
-      L: 0, //基础半径
+      L: 0, //基础半径 
       timer: null,
     };
   },

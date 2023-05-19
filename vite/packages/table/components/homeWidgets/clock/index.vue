@@ -12,26 +12,22 @@
   </a-drawer>
 
   <teleport to="body">
-    <ClockFullScreen v-if="isClockFullScreen" :clock="customData.clockiD" @exit="isClockFullScreen = false"
-      @updateClockStyle="updateClockStyle">
+    <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
+      @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
     </ClockFullScreen>
   </teleport>
 </template>
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import clock1 from "./clock1/clock1.vue";
-import clock2 from "./clock2/clock2.vue";
-import clock3 from "./clock3/clock3.vue";
-import clock4 from "./clock4/clock4.vue";
-import clock5 from "./clock5/clock5.vue";
-import clock6 from "./clock6/clock6.vue";
-import ClockStyle from "./clockStyle/ClockStyle.vue";
-import ClockFullScreen from "./clockStyle/ClockFullScreen.vue"
 
+import ClockStyle from "./clockState/ClockStyle.vue";
+import ClockFullScreen from "./clockState/ClockFullScreen.vue"
+import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
 export default {
+  mixins: [mixin],
   props: {
     customIndex: {
       type: Number,
@@ -47,7 +43,7 @@ export default {
       options: {
         className: "card small",
         title: "时钟",
-        icon: "sound",
+        icon: "time-circle",
         type: "games",
       },
       isClockFullScreen: false,
@@ -67,18 +63,25 @@ export default {
   },
   components: {
     HomeComponentSlot,
-    clock1,
-    clock2,
-    clock3,
-    clock4,
-    clock5,
-    clock6,
+    // clock1,
+    // clock2,
+    // clock3,
+    // clock4,
+    // clock5,
+    // clock6,
     ClockStyle,
     ClockFullScreen
   },
   created() {
     if (!this.customData.clockiD) {
-      this.increaseCustomComponents(this.customIndex, { clockiD: "clock4" });
+      this.increaseCustomComponents(this.customIndex, {
+        clockiD: "clock4",
+      });
+    }
+    if (!this.customData.imgUrl) {
+      this.increaseCustomComponents(this.customIndex, {
+        imgUrl: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
+      });
     }
   },
   mounted() {
@@ -92,7 +95,11 @@ export default {
         clockiD: e,
       });
     },
-
+    updateImgUrl(url) {
+      this.increaseCustomComponents(this.customIndex, {
+        imgUrl: url,
+      });
+    },
     fullScreen() {
       this.isClockFullScreen = true
     },
@@ -112,6 +119,7 @@ export default {
         "日 " +
         this.week[cd.getDay()];
     },
+
   },
 };
 </script>

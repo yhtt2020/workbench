@@ -125,6 +125,7 @@ export default {
           images: ["GamesDiscount", "DiscountPercentage", "GameEpic"],
         },
         {
+
           name: "gameAssis",
           cname: "游戏助手",
           icon: "steam",
@@ -150,7 +151,7 @@ export default {
         {
           name: 'clocks',
           cname: '时钟',
-          icon: 'image',
+          icon: 'time-circle',
           detail: '选择合适的时钟组件装点你的桌面',
           images: ['clocks'],
           size: ['1x1']

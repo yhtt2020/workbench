@@ -68,7 +68,7 @@ export default {
     setFront(text) {
       this.frontTextFromData = text;
     },
-    // 设置后牌文字
+    //  设置后牌文字
     setBack(text) {
       this.backTextFromData = text;
     },

@@ -52,7 +52,7 @@ export default {
                 this.textContent = "12-Hour Format";
             }
 
-            // Update the time format immediately after toggling
+            // Update the time format immediately after toggling  
             this.setTime();
         }
     },

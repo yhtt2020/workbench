@@ -53,7 +53,7 @@ export default {
     },
   },
   destroyed() {
-    clearInterval(this.timerID);// 销毁定时器
+    clearInterval(this.timerID);// 销毁定时器 
   },
 };
 </script>

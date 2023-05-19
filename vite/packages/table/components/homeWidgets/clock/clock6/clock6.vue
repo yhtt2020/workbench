@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="clock6">
         <div class="full-time">
             <p id="time">{{ time }}</p>
             <p id="am-pm">{{ pmam }}</p>
@@ -86,7 +86,7 @@ export default {
     box-sizing: border-box;
 }
 
-.wrapper {
+.clock6 {
     display: flex;
     flex-direction: column;
     justify-content: center;

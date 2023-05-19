@@ -27,7 +27,7 @@
 import ModalList from "../../../comp/ModalList.vue";
 import { paperStore } from "../../../../store/paper";
 
-import { innerImg } from "./innerImg.ts"
+import { innerImg } from "../hooks/innerImg.ts"
 import { mapWritableState } from "pinia";
 export default {
   computed: {

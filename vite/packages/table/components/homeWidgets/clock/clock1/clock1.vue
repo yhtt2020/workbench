@@ -1,5 +1,5 @@
 <template>
-  <div class="FlipClock">
+  <div class="FlipClock clock1">
     <Flipper ref="flipperHour1" />
     <Flipper ref="flipperHour2" />
     <em>:</em>
