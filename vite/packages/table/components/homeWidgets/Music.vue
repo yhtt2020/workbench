@@ -1,57 +1,61 @@
 <template>
   <HomeComponentSlot :options="options" :customIndex="customIndex">
-    <div @click="enterMusic" class="pointer" style="text-align: center;padding:2em">
-      <a-avatar :size="100" :class="{'playing':status.music.playing}" style="border:3px solid #999"  :src="status.music.cover || 'https://a.apps.vip/icons/wyy.png'"></a-avatar>
+    <div
+      @click="enterMusic"
+      class="pointer"
+      style="text-align: center; padding: 2em"
+    >
+      <a-avatar
+        :size="100"
+        :class="{ playing: status.music.playing }"
+        style="border: 3px solid #999"
+        :src="status.music.cover || 'https://a.apps.vip/icons/wyy.png'"
+      ></a-avatar>
     </div>
     <a-row :gutter="10">
-      <a-col :span="12">
-      </a-col>
-      <a-col :span="12">
-      </a-col>
+      <a-col :span="12"> </a-col>
+      <a-col :span="12"> </a-col>
     </a-row>
   </HomeComponentSlot>
 </template>
-
 <script>
-import { appStore } from '../../store'
-import {mapWritableState} from 'pinia'
+import { appStore } from "../../store";
+import { mapWritableState } from "pinia";
 import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
-  name: 'Music',
+  name: "Music",
   props: {
     customIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     customData: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
-  data(){
+  data() {
     return {
-      options:{
-        className:'card small',
-        title:'网易云',
-        icon:'customerservice',
-        type:'music'
+      options: {
+        className: "card small",
+        title: "网易云",
+        icon: "customerservice",
+        type: "music",
       },
-    }
+    };
   },
-  components:{
-    HomeComponentSlot
+  components: {
+    HomeComponentSlot,
   },
-  computed:{
-    ...mapWritableState(appStore,['status'])
+  computed: {
+    ...mapWritableState(appStore, ["status"]),
   },
-  methods:{
-    enterMusic(){
-      this.$router.push('/music')
-    }
-  }
-}
+  methods: {
+    enterMusic() {
+      this.$router.push("/music");
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
