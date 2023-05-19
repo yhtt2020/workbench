@@ -147,10 +147,18 @@ export default {
         {
           name: 'signIn',
           cname: '签到',
-          icon: '',
+          icon: 'star',
           detail: '完成签到，获得奖励',
           images: ['signIn'],
-          size: ['1x1']
+          size: ['1x2']
+        },
+        {
+          name: 'singleDoubanFilm',
+          cname: '豆瓣电影',
+          icon: 'video',
+          detail: '查看最近正在上映的热门电影',
+          images: ['singleDoubanFilm'],
+          size: ['1x2']
         }
       ],
       cardType: {},
