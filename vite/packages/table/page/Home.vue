@@ -314,45 +314,6 @@
   </a-drawer>
 </template>
 <script>
-
-import Weather from '../components/homeWidgets/Weather.vue'
-import Calendar from '../components/homeWidgets/Calendar.vue'
-import Timer from '../components/homeWidgets/Timer.vue'
-import Music from '../components/homeWidgets/Music.vue'
-import Stock from '../components/homeWidgets/Stock.vue'
-import AddMore from '../components/homeWidgets/AddMore.vue'
-import Dou from '../components/homeWidgets/Dou.vue'
-import Fish from '../components/homeWidgets/Fish.vue'
-import CustomTimer from '../components/homeWidgets/CustomTimer.vue'
-import SmallCountdownDay from '../components/homeWidgets/SmallCountdownDay.vue'
-import Clock from '../components/homeWidgets/Clock.vue'
-import CountdownDay from '../components/homeWidgets/CountdownDay.vue'
-import { mapActions, mapWritableState } from 'pinia'
-import { cardStore } from '../store/card'
-import vuuri from '../components/vuuriHome/Vuuri.vue'
-import Widget from '../components/muuri/Widget.vue'
-import { message, Modal } from 'ant-design-vue'
-import CPULineChart from '../components/homeWidgets/supervisory/CPULineChart.vue'
-import CPUFourCard from '../components/homeWidgets/supervisory/CPUFourCard.vue'
-import InternalList from '../components/homeWidgets/supervisory/InternalList.vue'
-import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue'
-import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
-import GamesDiscount from '../components/homeWidgets/games/GamesDiscount.vue'
-import DiscountPercentage from '../components/homeWidgets/games/DiscountPercentage.vue'
-import MiddleWallpaper from '../components/homeWidgets/MiddleWallpaper.vue'
-import SmallWallpaper from '../components/homeWidgets/SmallWallpaper.vue'
-import MyGameSmall from '../components/homeWidgets/games/MyGameSmall.vue'
-import Capture from '../components/homeWidgets/games/Capture.vue'
-import AddCard from './app/card/AddCard.vue'
-import GradeNotice from './app/grade/GradeNotice.vue'
-import Voice from '../components/homeWidgets/games/Voice.vue'
-import Audio from '../components/homeWidgets/games/Audio.vue'
-import CaptureNewCard from '../components/homeWidgets/games/CaptureNewCard.vue'
-import { runExec } from '../js/common/exec'
-import { appStore } from '../store'
-import Remote from '../components/homeWidgets/custom/Remote.vue'
-import { weatherStore } from '../store/weather'
-import GameEpic from '../components/homeWidgets/games/GameEpic.vue'
 import Weather from "../components/homeWidgets/Weather.vue";
 import Calendar from "../components/homeWidgets/Calendar.vue";
 import Timer from "../components/homeWidgets/Timer.vue";
@@ -380,7 +341,6 @@ import DiscountPercentage from "../components/homeWidgets/games/DiscountPercenta
 import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/homeWidgets/SmallWallpaper.vue";
 import MyGameSmall from "../components/homeWidgets/games/MyGameSmall.vue";
-import MyGameMiddle from "../components/homeWidgets/games/MyGameMiddle.vue";
 import Capture from "../components/homeWidgets/games/Capture.vue";
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
@@ -645,7 +605,7 @@ export default {
     Audio,
     SteamFriends,
     CaptureNewCard,
-    clocks,
+    Clock,
   },
   computed: {
     ...mapWritableState(cardStore, [

@@ -134,7 +134,29 @@ export default {
           cname: "游戏助手",
           icon: "steam",
           detail: "各种游戏工具",
-          images: ["MyGameSmall", "MyGameMiddle", "SteamFriends"],
+          images: ["MyGameSmall", "SteamFriends"],
+        },
+        {
+          name: 'capture',
+          cname: '捕获',
+          icon: 'audio',
+          detail: '捕获',
+          images: ['capture', 'CaptureNewCard']
+        },
+        {
+          name: 'Audio',
+          cname: '音频工具',
+          icon: 'audio',
+          detail: '音频工具',
+          images: [ 'audio', 'voice']
+        },
+        {
+          name: 'remote',
+          cname: '外部卡片',
+          icon: 'game',
+          detail: '添加一个链接到外部网页的卡片，可以实现各种自定义功能。',
+          images: ['Remote'],
+          size: ['1x2']
         },
         {
           name: 'customAssembly',
@@ -151,7 +173,7 @@ export default {
           detail: '完成签到，获得奖励',
           images: ['signIn'],
           size: ['1x1']
-        }
+        },
       ],
       cardType: {},
       show: false,
