@@ -8,8 +8,10 @@
     <template #title>
       <div class="text-center">设置</div>
     </template>
+
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
+
   <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
     @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
   </ClockFullScreen>
@@ -17,14 +19,15 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-
 import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue"
 import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
+
+
 export default {
-  mixins: [mixin],
+  mixins: [mixin,],
   props: {
     customIndex: {
       type: Number,
