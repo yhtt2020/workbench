@@ -356,6 +356,7 @@ import GameEpic from "../components/homeWidgets/games/GameEpic.vue";
 import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
 import SignIn from "../components/homeWidgets/SignIn.vue"
 import SingleDoubanFilm from "../components/homeWidgets/SingleDoubanFilm.vue"
+import LargeSingleDoubanFilm from "../components/homeWidgets/LargeSingleDoubanFilm.vue"
 import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
@@ -605,6 +606,7 @@ export default {
     CustomAssembly,
     SignIn,
     SingleDoubanFilm,
+    LargeSingleDoubanFilm,
     Voice,
     Audio,
     SteamFriends,
