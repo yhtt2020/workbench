@@ -167,15 +167,15 @@ export default {
     if(mySize) this.defaultSize = {...this.mySize,...mySize}
     // if(myShow) this.CPUShow = myShow
   },
-  // watch:{
-  //   'defaultSize':{
-  //     handler(){
-  //       this.options.className = 'card' + ' ' + this.defaultSize.className
-  //       this.$emit('customEvent')
-  //     },
-  //     immediate:true,
-  //   }
-  // },
+  watch:{
+    'defaultSize':{
+      handler(){
+        this.options.className = 'card' + ' ' + this.defaultSize.className
+        this.$emit('customEvent')
+      },
+      immediate:true,
+    }
+  },
   methods:{
     ...mapActions(cardStore,['insetSteamSize']),
     getGameType(item){
