@@ -1,85 +1,80 @@
 <template>
   <div class="mt-3">
-    <template v-if="cardSize.className === 'card '">
-      <div class="flex flex-col items-center">
-        <div style="width:100%;height:118px;" class="relative">
-          <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
-          <span class="px-1.5 m-in-run">
-             正在运行
+    <div class="flex justify-between" v-if="cpuShow === true">
+      <div class="pr-4 flex flex-col relative" style="width:79.045%; border-right: 1px solid rgba(255,255,255,0.20);">
+        <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
+        <div class="in-run">正在运行</div>
+        <span class="py-4">{{steamDetail.appinfo.common.name}}</span>
+        <div class="flex">
+          <div class="flex flex-col mr-28">
+            <span class="show-time">最近游玩 : {{ getDateMyTime(steamDetail.time) }}</span>
+            <span class="show-time">M站评分 : {{ steamDetail.appinfo.common.metacritic_score }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="show-time">过去两周 : {{ twoWeekTime(steamDetail.time) }}</span>
+            <span class="show-time">总数 : {{ totalTime(steamDetail.time) }}</span>
+          </div>
+        </div>
+        <div class="flex justify-between mt-2">
+          <div @click="closeGame" class="flex items-center  detail-active s-item py-3 rounded-lg pointer px-15 justify-center">
+            <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
+            <span class="ml-2">关闭游戏</span>
+          </div>
+          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center">
+            <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
+            <span class="ml-2">游戏攻略</span>
+          </div>
+        </div>
+      </div>
+      <div class="pl-4 flex flex-col" style="width:21%;">
+        <div class="mb-8 flex s-item rounded-lg flex-col items-center justify-center" style="padding: 9px 6px 13px 5px;">
+          <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
+            {{  CPUGPUData.FPS.value }}
+          </span>
+          <span class="flex items-center">
+            <Icon icon="game" class="mr-1" style="font-size:1.2em;"></Icon>
+            FPS
           </span>
         </div>
-        <span class="my-3.5" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">{{steamDetail.appinfo.common.name}}</span>
-        <span class="show-time mb-1">最近游玩 : {{ getDateMyTime(steamDetail.time) }}小时</span>
-        <span class="show-time mb-1">过去两周 : {{ twoWeekTime(steamDetail.time) }}小时</span>
-        <span class="show-time mb-3.5">总数 : {{ totalTime(steamDetail.time) }}小时</span>
-        <div @click="closeGame" class="flex items-center mb-2  detail-active s-item py-3 rounded-lg pointer px-15 justify-center">
-          <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
-          <span class="ml-2">关闭游戏</span>
+        <div class="mb-7 flex s-item rounded-lg flex-col items-center justify-center " style="padding: 9px 6px 13px 5px;">
+          <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
+            {{  CPUGPUData.useCPU.value }}%
+          </span>
+          <span class="flex items-center">
+            <Icon icon="lvzhou_cpu" class="mr-1" style="font-size:1.2em;"></Icon>
+            CPU
+          </span>
         </div>
-        <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center">
-          <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
-          <span class="ml-2">游戏攻略</span>
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <div class="flex justify-between">
-        <div class="pr-4 flex flex-col relative" style="width:79.045%; border-right: 1px solid rgba(255,255,255,0.20);">
-          <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
-          <div class="in-run">正在运行</div>
-          <span class="py-4">{{steamDetail.appinfo.common.name}}</span>
-          <div class="flex">
-            <div class="flex flex-col mr-28">
-              <span class="show-time">最近游玩 : {{ getDateMyTime(steamDetail.time) }}</span>
-              <span class="show-time">M站评分 : {{ steamDetail.appinfo.common.metacritic_score }}</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="show-time">过去两周 : {{ twoWeekTime(steamDetail.time) }}</span>
-              <span class="show-time">总数 : {{ totalTime(steamDetail.time) }}</span>
-            </div>
-          </div>
-          <div class="flex justify-between mt-2">
-            <div @click="closeGame" class="flex items-center  detail-active s-item py-3 rounded-lg pointer px-15 justify-center">
-              <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
-              <span class="ml-2">关闭游戏</span>
-            </div>
-            <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center">
-              <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
-              <span class="ml-2">游戏攻略</span>
-            </div>
-          </div>
-        </div>
-        <div class="pl-4 flex flex-col" style="width:20%;">
-          <div class="mb-8 flex s-item rounded-lg flex-col items-center" style="padding: 9px 6px 13px 5px;">
-            <span style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;" class="text-center">
-              {{  CPUGPUData.FPS.value }}
-            </span>
-            <span class="flex items-center">
-              <Icon icon="game" class="mr-1" style="font-size:1.2em;"></Icon>
-              FPS
-            </span>
-          </div>
-          <div class="mb-7 flex s-item rounded-lg flex-col items-center" style="padding: 9px 6px 13px 5px;">
-            <span style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;" class="text-center">
-              {{  CPUGPUData.useCPU.value }}%
-            </span>
-            <span class="flex items-center">
-              <Icon icon="lvzhou_cpu" class="mr-1" style="font-size:1.2em;"></Icon>
-              CPU
-            </span>
-          </div>
-          <div class="flex s-item rounded-lg flex-col items-center" style="padding: 9px 6px 13px 5px;">
-            <span style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;" class="text-center">
-              {{  CPUGPUData.useGPU.value }} 
-            </span>
-            <span class="flex items-center">
-              <Icon icon="xianqia" class="mr-1" style="font-size:1.2em;"></Icon>
-              GPU
-            </span>
-          </div>
+        <div class="flex s-item rounded-lg flex-col items-center justify-center" style="padding: 9px 6px 13px 5px;">
+          <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
+            {{  CPUGPUData.useGPU.value }} 
+          </span>
+          <span class="flex items-center">
+            <Icon icon="xianqia" class="mr-1" style="font-size:1.2em;"></Icon>
+            GPU
+          </span>
         </div>
       </div>
-    </template>
+    </div>
+    <div class="mt-3 flex flex-col items-center relative" v-else>
+      <div style="height: 118px;" class="mb-3.5">
+        <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
+      </div>
+      <div class="m-in-run">正在运行</div>
+      <span class="truncate mb-2.5" style="max-width: 180px;">{{steamDetail.appinfo.common.name}}</span>
+      <span class="flex items-center mb-2.5 justify-center last-time">最近游玩 : {{getDateMyTime(steamDetail.time)}}</span>
+      <span class="flex items-center mb-2.5 justify-center last-time">过去两周 : {{twoWeekTime(steamDetail.time)}}</span>
+      <span class="flex items-center mb-2.5 justify-center last-time">总数 : {{twoWeekTime(steamDetail.time)}}</span>
+      <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex mb-2 w-full py-3 s-item detail-active  rounded-lg pointer items-center justify-center">
+        <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
+        <span class="ml-2">游戏攻略</span>
+      </div>
+      <div @click="closeGame" class="flex w-full items-center  detail-active s-item py-3 rounded-lg pointer justify-center">
+        <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
+        <span class="ml-2">关闭游戏</span>
+      </div>
+      
+    </div> 
   </div>
 </template>
 
@@ -94,9 +89,9 @@ export default {
       type:Object,
       default:()=>{}
     },
-    cardSize:{
-      type:Object,
-      default:()=>{}
+    cpuShow:{
+      type:Boolean,
+      default:true
     }
   },  
   data(){

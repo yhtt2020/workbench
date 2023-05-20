@@ -248,7 +248,6 @@ import DiscountPercentage from '../components/homeWidgets/games/DiscountPercenta
 import MiddleWallpaper from '../components/homeWidgets/MiddleWallpaper.vue'
 import SmallWallpaper from '../components/homeWidgets/SmallWallpaper.vue'
 import MyGameSmall from '../components/homeWidgets/games/MyGameSmall.vue'
-import MyGameMiddle from '../components/homeWidgets/games/MyGameMiddle.vue'
 import Capture from '../components/homeWidgets/games/Capture.vue'
 import AddCard from './app/card/AddCard.vue'
 import GradeNotice from './app/grade/GradeNotice.vue'
@@ -505,7 +504,6 @@ export default {
     SmallWallpaper,
     GameEpic,
     MyGameSmall,
-    MyGameMiddle,
     Capture,
     CustomAssembly,
     SignIn,

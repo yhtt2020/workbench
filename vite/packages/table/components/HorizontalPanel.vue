@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-row nav-list-container rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}">
-    <div v-for="(item,index) in navList" class=" w-40 h-full flex justify-center btn-active items-center relative rounded-lg pointer"
+  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}">
+    <div v-for="(item,index) in navList" class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
        @click.stop="clickNav(item,index)" :class="activeIndex===index?'s-item':''" >
        <span>{{ item.title }}</span>
        <div v-if="item.state === true" class="state-dot ml-2"></div>

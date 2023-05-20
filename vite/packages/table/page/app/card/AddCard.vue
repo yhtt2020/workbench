@@ -112,7 +112,7 @@ export default {
           cname: '游戏助手',
           icon: 'steam',
           detail: '各种游戏工具',
-          images: ['MyGameSmall', 'MyGameMiddle', 'SteamFriends']
+          images: ['MyGameSmall', 'SteamFriends']
         }, {
           name: 'capture',
           cname: '捕获',
