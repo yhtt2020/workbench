@@ -2,7 +2,7 @@
     <HomeComponentSlot :options="options" :customIndex="customIndex">
       <div class="flex" style="margin: 13px 10px 0;">
         <div style="width: 240px;height: 354px;margin-right: 16px;">
-          <img style="max-width:240px;" src="../../../../public/img/test/film.jpg" alt="">
+          <img style="max-width:240px;" src="../../../../../public/img/test/film.jpg" alt="">
         </div>
         <div class="film-content">
           <span style="color: rgba(255,255,255,0.85);font-size: 20px;font-weight: 600;">蚁人与黄蜂女：量子狂潮</span>
@@ -35,7 +35,7 @@
   </template>
   
   <script>
-  import HomeComponentSlot from "./HomeComponentSlot.vue";
+  import HomeComponentSlot from "../HomeComponentSlot.vue";
   export default {
     name: "LargeSingleDoubanFilm",
     components:{HomeComponentSlot},

@@ -159,6 +159,14 @@ export default {
           detail: '查看最近正在上映的热门电影',
           images: ['singleDoubanFilm','largeSingleDoubanFilm'],
           size: ['1x2']
+        },
+        {
+          name: 'manyDoubanFilm',
+          cname: '豆瓣电影',
+          icon: 'video',
+          detail: '查看最近正在上映的热门电影',
+          images: ['manyDoubanFilm','largeManyDoubanFilm'],
+          size: ['1x2']
         }
       ],
       cardType: {},
