@@ -1,212 +1,336 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
+    <HomeComponentSlot
+      :options="options"
+      :customIndex="customIndex"
+      :formulaBar="formulaBar"
+      ref="cardSlot"
+    >
+      <div
+        class="absolute top-4 left-4 w-24 h-5 pointer"
+        @click="openRight"
+      ></div>
+      <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
+        <div
+          class="w-full text-center"
+          style="margin-top: 20%"
+          v-if="imgList.length <= 0"
+        >
+          <a-empty :image="simpleImage" />
+          <div style="margin-top: 2em">
+            <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
+          </div>
+        </div>
+        <div class="h-full w-full pointer" v-else @click="goSource">
+          <video
+            class="fullscreen-video"
+            ref="wallpaperVideo"
+            style="border-radius: 8px; object-fit: cover"
+            playsinline=""
+            autoplay=""
+            muted=""
+            loop=""
+            v-if="currentImg.srcProtocol"
+          >
+            <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid" />
+          </video>
 
-  <HomeComponentSlot :options="options" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
-    <div class="absolute top-4 left-4  w-24 h-5 pointer" @click="openRight"></div>
-    <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
-      <div class=" w-full text-center  " style="margin-top:20%" v-if="imgList.length<=0">
-        <a-empty :image="simpleImage" />
-        <div style="margin-top: 2em">
-          <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
+          <img
+            :src="currentImg.middleSrc"
+            @load="imgLoad"
+            @error="imgError"
+            alt=""
+            class="h-full w-full"
+            style="border-radius: 8px; object-fit: cover"
+            v-else-if="currentImg.middleSrc"
+          />
+          <img
+            :src="currentImg.src"
+            @load="imgLoad"
+            alt=""
+            @error="imgError"
+            class="h-full w-full"
+            style="border-radius: 8px; object-fit: cover"
+            v-else
+          />
         </div>
       </div>
-      <div class="h-full w-full pointer" v-else @click="goSource">
-        <video class="fullscreen-video"   ref="wallpaperVideo" style="border-radius: 8px;object-fit: cover" playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
-        <source :src="currentImg.srcProtocol"  type="video/mp4" id="bgVid">
-        </video>
-
-      <img :src="currentImg.middleSrc" @load="imgLoad"  @error="imgError"  alt="" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else-if="currentImg.middleSrc">
-      <img :src="currentImg.src" @load="imgLoad" alt="" @error="imgError" class="h-full w-full" style="border-radius: 8px;object-fit: cover" v-else>
-
-    </div>
-    </div>
-    <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px" v-if="imgList.length>0">
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg"> <Icon class="icon"  icon="caret-left"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg"> <Icon class="icon"  icon="caret-right"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg"> <Icon class="icon " :class="randomFlag?'replace-it':''"  icon="reload"></Icon></div>
-      <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect" v-if="addressType.name!=='my'">
-        <Icon v-if="!isInMyPapers" icon="star"></Icon>
-        <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
+      <div
+        class="flex flex-row absolute bottom-4 justify-center"
+        style="width: 543px"
+        v-if="imgList.length > 0"
+      >
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4"
+          @click="lastImg"
+        >
+          <Icon class="icon" icon="caret-left"></Icon>
+        </div>
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4"
+          @click="nextImg"
+        >
+          <Icon class="icon" icon="caret-right"></Icon>
+        </div>
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4"
+          @click="randomImg"
+        >
+          <Icon
+            class="icon"
+            :class="randomFlag ? 'replace-it' : ''"
+            icon="reload"
+          ></Icon>
+        </div>
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4"
+          @click="collect"
+          v-if="addressType.name !== 'my'"
+        >
+          <Icon v-if="!isInMyPapers" icon="star"></Icon>
+          <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
+        </div>
+        <div
+          class="item-icon flex justify-center items-center pointer"
+          @click="settingImg"
+        >
+          <Icon class="icon" icon="desktop"></Icon>
+        </div>
       </div>
-      <div class="item-icon flex justify-center items-center pointer" @click="settingImg"> <Icon class="icon"  icon="desktop"></Icon></div>
-    </div>
-  </HomeComponentSlot>
+    </HomeComponentSlot>
   </a-spin>
-  <a-drawer :width="500"  v-model:visible="settingVisible" placement="right">
+  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">「壁纸」设置</div>
     </template>
     <div class="text-base">壁纸源</div>
-    <a-select style="background: rgba(42, 42, 42, 1);border: 1px solid rgba(255, 255, 255, 0.1);"
-              class="w-full h-10 rounded-lg mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
-              @change="pickFilterChange($event)"  :options="wallpaperOptions">
+    <a-select
+      style="
+        background: rgba(42, 42, 42, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      "
+      class="w-full h-10 rounded-lg mt-4 text-xs"
+      size="large"
+      :bordered="false"
+      v-model:value="pickFilterValue"
+      @change="pickFilterChange($event)"
+      :options="wallpaperOptions"
+    >
     </a-select>
   </a-drawer>
-
 </template>
 
 <script>
 import HomeComponentSlot from "./HomeComponentSlot.vue";
-import axios from 'axios';
-import {mapActions, mapWritableState} from "pinia";
-import {Empty, message} from 'ant-design-vue';
-import {paperStore} from "../../store/paper";
-import {appStore} from "../../store";
-import {cardStore} from "../../store/card";
-import {lively,lively2} from '../../js/data/livelyData'
-let fs = require('fs')
-let path = require('path')
+import axios from "axios";
+import { mapActions, mapWritableState } from "pinia";
+import { Empty, message } from "ant-design-vue";
+import { paperStore } from "../../store/paper";
+import { appStore } from "../../store";
+import { cardStore } from "../../store/card";
+import { lively, lively2 } from "../../js/data/livelyData";
+let fs = require("fs");
+let path = require("path");
 export default {
   name: "MiddleWallpaper",
-  components:{
-    HomeComponentSlot
+  components: {
+    HomeComponentSlot,
   },
-  props:{
-    customIndex:{
-      type:Number,
-      default:0
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0,
     },
-    customData:{
-      type:Object,
-      default:()=>{}
-    }
+    customData: {
+      type: Object,
+      default: () => {},
+    },
   },
-  data(){
+  data() {
     return {
-      imgSpin:false,
-      options:{
-        className:'card double',
-        title:'壁纸',
-        icon:'image',
-        type:'MiddleWallpaper',
+      imgSpin: false,
+      options: {
+        className: "card double",
+        title: "壁纸",
+        icon: "image",
+        type: "MiddleWallpaper",
       },
-      formulaBar:[{icon:'shezhi1',title:'设置',fn:()=>{this.settingVisible = true;this.$refs.cardSlot.visible = false}},],
-      pickFilterValue:'我的收藏',
-      wallpaperOptions: [
-        {value:'我的收藏',name:'my',path:''},
-        {value:'必应壁纸',name:'bing',path:'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'},
-        {value:'拾光壁纸',path:'https://api.nguaduot.cn/timeline/v2',name:'pickingPaper'},
-        {value:'贪食鬼',path:'https://api.nguaduot.cn/glutton/journal',name:'pickingPaper'},
-        {value:'贪吃蛇',path:'https://api.nguaduot.cn/glutton/snake',name:'pickingPaper'},
-        {value:'wallhaven',path:'https://api.nguaduot.cn/wallhaven/v2',name:'pickingPaper'},
-       // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
+      formulaBar: [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
+        },
       ],
-      settingVisible:false,
+      pickFilterValue: "我的收藏",
+      wallpaperOptions: [
+        { value: "我的收藏", name: "my", path: "" },
+        {
+          value: "必应壁纸",
+          name: "bing",
+          path: "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8",
+        },
+        {
+          value: "拾光壁纸",
+          path: "https://api.nguaduot.cn/timeline/v2",
+          name: "pickingPaper",
+        },
+        {
+          value: "贪食鬼",
+          path: "https://api.nguaduot.cn/glutton/journal",
+          name: "pickingPaper",
+        },
+        {
+          value: "贪吃蛇",
+          path: "https://api.nguaduot.cn/glutton/snake",
+          name: "pickingPaper",
+        },
+        {
+          value: "wallhaven",
+          path: "https://api.nguaduot.cn/wallhaven/v2",
+          name: "pickingPaper",
+        },
+        // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
+      ],
+      settingVisible: false,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
-      addressType:{
-        value:'我的收藏',
-        path:'',
-        name:'my'
+      addressType: {
+        value: "我的收藏",
+        path: "",
+        name: "my",
       },
-      imgList:[{src:''}],
-      currentImg:{
-        srcProtocol:null,
-        path:''
+      imgList: [{ src: "" }],
+      currentImg: {
+        srcProtocol: null,
+        path: "",
       },
-      imgIndex:0,
-      randomFlag:false,
+      imgIndex: 0,
+      randomFlag: false,
       list: [],
-
-    }
+    };
   },
-  methods:{
+  methods: {
     ...mapActions(paperStore, ["removeToMyPaper"]),
-    ...mapActions(appStore, ['setBackgroundImage']),
+    ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(cardStore, ["updateCustomComponents"]),
-    goGallery(){
-      this.$router.push({name:'my'})
+    goGallery() {
+      this.$router.push({ name: "my" });
     },
-    imgLoad(){
-      this.imgSpin = false
+    imgLoad() {
+      this.imgSpin = false;
     },
-    openRight(){
-      this.settingVisible = true
+    openRight() {
+      this.settingVisible = true;
     },
-    pickFilterChange(e){
-        this.addressType =this.wallpaperOptions.find(i => i.value === e)|| {
-          value:'我的收藏',
-          path:'',
-          name:'my'
-        }
-        this.updateCustomComponents(this.customIndex,this.addressType)
-      this.options.title =   this.addressType.value
-      if(this.addressType.name ==='pickingPaper'||this.addressType.name ==='bing') {
-        axios.get(this.addressType.path).then(res => {
-          this.imgList=[]
-          if(res.data.data){
-            let pickImage = res.data.data
-            this.count = res.data.count
-            let animations = ["ani-gray", "bowen", "ani-rotate"];
-            if(pickImage){
-              pickImage.forEach(img=>{
-                if(img.thumburl !== null){
-                let thumburl = ''
-                  let str=''
-                  let randomIndex = Math.floor(Math.random() * animations.length);
-                  if(img.thumburl.indexOf('@')!==-1){
-                   str =  img.thumburl.substring(img.thumburl.indexOf('@'),img.thumburl.length)
-                   thumburl =   img.thumburl.replace(str,'@1200w.webp')
+    pickFilterChange(e) {
+      this.addressType = this.wallpaperOptions.find((i) => i.value === e) || {
+        value: "我的收藏",
+        path: "",
+        name: "my",
+      };
+      this.updateCustomComponents(this.customIndex, this.addressType);
+      this.options.title = this.addressType.value;
+      if (
+        this.addressType.name === "pickingPaper" ||
+        this.addressType.name === "bing"
+      ) {
+        axios
+          .get(this.addressType.path)
+          .then((res) => {
+            this.imgList = [];
+            if (res.data.data) {
+              let pickImage = res.data.data;
+              this.count = res.data.count;
+              let animations = ["ani-gray", "bowen", "ani-rotate"];
+              if (pickImage) {
+                pickImage.forEach((img) => {
+                  if (img.thumburl !== null) {
+                    let thumburl = "";
+                    let str = "";
+                    let randomIndex = Math.floor(
+                      Math.random() * animations.length
+                    );
+                    if (img.thumburl.indexOf("@") !== -1) {
+                      str = img.thumburl.substring(
+                        img.thumburl.indexOf("@"),
+                        img.thumburl.length
+                      );
+                      thumburl = img.thumburl.replace(str, "@1200w.webp");
+                    }
+                    if (img.thumburl.indexOf("400") !== -1) {
+                      thumburl =
+                        img.thumburl.substring(0, img.thumburl.indexOf("400")) +
+                        "1200" +
+                        img.thumburl.slice(
+                          img.thumburl.indexOf("400") - img.thumburl.length + 3
+                        );
+                    }
+                    if (img.thumburl.indexOf("fw") !== -1) {
+                      str = img.thumburl.substring(
+                        img.thumburl.indexOf("fw"),
+                        img.thumburl.length
+                      );
+                      thumburl = img.thumburl.replace(str, "fw1200webp");
+                    }
+                    const image = {
+                      title: false,
+                      src: img.thumburl,
+                      path: img.imgurl,
+                      resolution: img.size,
+                      score: img.score,
+                      no: img.no,
+                      middleSrc: thumburl,
+                      animations: animations[randomIndex],
+                    };
+                    this.imgList.push(image);
                   }
-                  if(img.thumburl.indexOf('400')!==-1){
-                    thumburl =  img.thumburl.substring(0,img.thumburl.indexOf('400'))+'1200'+img.thumburl.slice(img.thumburl.indexOf('400')-img.thumburl.length+3)
-                  }
-                  if(img.thumburl.indexOf('fw')!==-1){
-                    str =  img.thumburl.substring(img.thumburl.indexOf('fw'),img.thumburl.length)
-                    thumburl =   img.thumburl.replace(str,'fw1200webp')
-                  }
-                  const image = {
-                    title:false,
-                    src:img.thumburl,
-                    path:img.imgurl,
-                    resolution:img.size,
-                    score:img.score,
-                    no:img.no,
-                    middleSrc:thumburl,
-                    animations: animations[randomIndex],
-                  }
-                  this.imgList.push(image)
-                }
-              })
+                });
+              }
+            } else {
+              let images = res.data.images;
+              let animations = ["ani-gray", "bowen", "ani-rotate"];
+              if (images) {
+                images.forEach((img) => {
+                  let random = Math.random();
+                  let randomIndex = Math.floor(
+                    Math.random() * animations.length
+                  );
+                  let image = {
+                    title: false, // img.title,
+                    src: "https://cn.bing.com" + img.url,
+                    path: "https://cn.bing.com" + img.url,
+                    animation: animations[randomIndex], //['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
+                  };
+                  this.imgList.push(image);
+                });
+              }
             }
-          }else{
-            let images = res.data.images
-            let animations = ['ani-gray', 'bowen', 'ani-rotate']
-            if (images) {
-              images.forEach(img => {
-                let random = Math.random()
-                let randomIndex = Math.floor((Math.random() * animations.length))
-                let image = {
-                  title: false,// img.title,
-                  src: 'https://cn.bing.com' + img.url,
-                  path: 'https://cn.bing.com' + img.url,
-                  animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
-                }
-                this.imgList.push(image)
-              })
-            }
-          }
-          this.initImg()
-        }).catch(err =>{
-          this.imgList = []
-          this.imgIndex = 0
-          this.imgSpin = false
-        })
-      }else if(this.addressType.name ==='my'){
-        this.imgList = this.myPapers
-        this.initImg()
+            this.initImg();
+          })
+          .catch((err) => {
+            this.imgList = [];
+            this.imgIndex = 0;
+            this.imgSpin = false;
+          });
+      } else if (this.addressType.name === "my") {
+        this.imgList = this.myPapers;
+        this.initImg();
       }
       // else if(this.addressType.name === 'lively'){
       //   this.imgList = this.list
       //   this.initImg()
       // }
     },
-    initImg(){
-      this.imgIndex = 0
-      this.setImg()
+    initImg() {
+      this.imgIndex = 0;
+      this.setImg();
     },
-    imgError(){
-      this.imgSpin = false
-      this.currentImg.src = '/img/homeComponent/smallWallpaper.png'
+    imgError() {
+      this.imgSpin = false;
+      this.currentImg.src = "/img/homeComponent/smallWallpaper.png";
     },
     // getVideo (item) {
     //
@@ -214,39 +338,34 @@ export default {
     //   filename = `https://up.apps.vip/lively/${filename}`
     //   return filename
     // },
-    setImg(){
-      this.imgSpin = true
-      if(this.imgList.length>0){
-        this.currentImg =  this.imgList[this.imgIndex]
-        this.$nextTick(()=>{
-          if(this.currentImg.srcProtocol){
-            this.$refs.wallpaperVideo.load()
-            this.$refs.wallpaperVideo.play().catch((err)=>{
-
-            })
-            this.imgSpin = false
+    setImg() {
+      this.imgSpin = true;
+      if (this.imgList.length > 0) {
+        this.currentImg = this.imgList[this.imgIndex];
+        this.$nextTick(() => {
+          if (this.currentImg.srcProtocol) {
+            this.$refs.wallpaperVideo.load();
+            this.$refs.wallpaperVideo.play().catch((err) => {});
+            this.imgSpin = false;
           }
-        })
-      }else{
-        this.currentImg= {
-          srcProtocol:null,
-          value:'我的收藏',
-          path:'',
-          name:'my'
-        }
-        this.imgSpin = false
-      }
-
-
-
-    },
-    lastImg(){
-      this.imgIndex-=1
-      if(this.imgIndex < 0){
-        this.imgIndex = this.imgList.length -1
+        });
+      } else {
+        this.currentImg = {
+          srcProtocol: null,
+          value: "我的收藏",
+          path: "",
+          name: "my",
+        };
+        this.imgSpin = false;
       }
     },
-   async nextImg(){
+    lastImg() {
+      this.imgIndex -= 1;
+      if (this.imgIndex < 0) {
+        this.imgIndex = this.imgList.length - 1;
+      }
+    },
+    async nextImg() {
       // if(this.imgIndex>=this.imgList.length-1){
       //   if(this.addressType.name ==='picking') {
       //
@@ -286,55 +405,50 @@ export default {
       //   }
       //
       // }
-      this.imgIndex+=1
-     if(this.imgIndex >= this.imgList.length){
-       this.imgIndex = 0
-     }
-    },
-    randomImg(){
-      if(this.randomFlag===true)return
-      this.randomFlag = true
-      setTimeout(()=>{
-        this.randomFlag = false
-        let nmb =  parseInt((Math.random()*(this.imgList.length)))
-        this.imgIndex === nmb ? this.randomImg():this.imgIndex = nmb
-      },500)
-
-    },
-    collect(){
-      if(this.addressType.name ==='PickingPaper'){
-        this.removeToMyPaper(this.imgList[this.imgIndex]);
-      }else if(this.addressType.name ==='bing'){
-        let image = {
-          src:this.imgList[this.imgIndex].src,
-          path:this.imgList[this.imgIndex].src
-        }
-        this.removeToMyPaper(image)
+      this.imgIndex += 1;
+      if (this.imgIndex >= this.imgList.length) {
+        this.imgIndex = 0;
       }
-
-
     },
-    settingImg(){
-      if(this.addressType.name ==='my'){
+    randomImg() {
+      if (this.randomFlag === true) return;
+      this.randomFlag = true;
+      setTimeout(() => {
+        this.randomFlag = false;
+        let nmb = parseInt(Math.random() * this.imgList.length);
+        this.imgIndex === nmb ? this.randomImg() : (this.imgIndex = nmb);
+      }, 500);
+    },
+    collect() {
+      if (this.addressType.name === "PickingPaper") {
+        this.removeToMyPaper(this.imgList[this.imgIndex]);
+      } else if (this.addressType.name === "bing") {
+        let image = {
+          src: this.imgList[this.imgIndex].src,
+          path: this.imgList[this.imgIndex].src,
+        };
+        this.removeToMyPaper(image);
+      }
+    },
+    settingImg() {
+      if (this.addressType.name === "my") {
         if (this.imgList[this.imgIndex].srcProtocol) {
           this.setBackgroundImage({
-            path:'',
-            runpath:`file://${this.imgList[this.imgIndex].src}`
-          })
-        }else{
-          if(!this.imgList[this.imgIndex].path){
-            this.imgList[this.imgIndex].path =  this.imgList[this.imgIndex].src
+            path: "",
+            runpath: `file://${this.imgList[this.imgIndex].src}`,
+          });
+        } else {
+          if (!this.imgList[this.imgIndex].path) {
+            this.imgList[this.imgIndex].path = this.imgList[this.imgIndex].src;
           }
 
-          this.setBackgroundImage(this.imgList[this.imgIndex])
+          this.setBackgroundImage(this.imgList[this.imgIndex]);
         }
-      }else if(this.addressType.name === 'lively'){
-        this.doStartDownload(this.imgList[this.imgIndex])
-      }else{
-        this.setBackgroundImage(this.imgList[this.imgIndex])
+      } else if (this.addressType.name === "lively") {
+        this.doStartDownload(this.imgList[this.imgIndex]);
+      } else {
+        this.setBackgroundImage(this.imgList[this.imgIndex]);
       }
-
-
     },
     // doStartDownload (item) {
     //   message.info('开始下载壁纸')
@@ -357,8 +471,8 @@ export default {
     //   })
     // },
   },
-  computed:{
-    ...mapWritableState(paperStore, ['myPapers','settings']),
+  computed: {
+    ...mapWritableState(paperStore, ["myPapers", "settings"]),
     isInMyPapers() {
       return (
         this.myPapers.findIndex((img) => {
@@ -366,8 +480,8 @@ export default {
         }) > -1
       );
     },
-    goSource(){
-      this.$router.push({name:this.addressType.name})
+    goSource() {
+      this.$router.push({ name: this.addressType.name });
     },
     // savePath(){
     //   if(!this.settings.savePath){
@@ -406,35 +520,34 @@ export default {
     //   }
     //   item.srcProtocol = url
     // })
-    this.$nextTick(()=>{
-      if(!this.customData.Code){
-        this.pickFilterChange('我的收藏')
-      }else{
-        this.pickFilterValue = this.customData.Code.value.value
-        this.pickFilterChange(this.customData.Code.value.value)
+    this.$nextTick(() => {
+      if (!this.customData.Code) {
+        this.pickFilterChange("我的收藏");
+      } else {
+        this.pickFilterValue = this.customData.Code.value.value;
+        this.pickFilterChange(this.customData.Code.value.value);
       }
-      this.setImg()
-    })
-
+      this.setImg();
+    });
   },
-  watch:{
-    imgIndex:{
-      handler(){
-       this.setImg()
+  watch: {
+    imgIndex: {
+      handler() {
+        this.setImg();
       },
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.item-icon{
+.item-icon {
   width: 100px;
   height: 56px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
-  .icon{
+  .icon {
     height: 36px;
     width: 36px;
   }
