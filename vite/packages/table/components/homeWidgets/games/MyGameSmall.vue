@@ -11,7 +11,7 @@
         <div class="flex items-center" v-if="detailShow === false">
           <a-spin v-if="gameList.length !== 9" style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
-           <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-3 flex flex-col s-item pointer rounded-lg">
+           <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
             <div style="height:118.53px;" v-if="item.appinfo">
               <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
             </div>
@@ -22,12 +22,13 @@
         <MySteamDetail :steamDetail="steamDetail" :cpuShow="CPUShow" @closeDetail="closeGame" v-else></MySteamDetail>
       </div>
       <div v-else>
-        <div class="my-other mt-4">
+        <div class="my-other mt-4" v-if="otherDetailShow === false">
           <div class="rounded-lg my-other-item pointer relative" v-for="item in otherGameList.slice(0,6)" @click="enterOtherGameDetail(item)"  style=" width: 100px; height: 100px;">
             <img :src="item.src" alt="" class="rounded-lg " style="width: 100%; height:100%; object-fit: cover;">
             <span class="small-title  truncate px-2 py-2" style="width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</span>
           </div>
         </div>
+        <MyGameSmallDetail :otherGame="otherData" :size="showSize"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
       </div>
     </template>
     <template v-else>
@@ -46,7 +47,13 @@
         <MySteamDetail :steamDetail="steamDetail" :cpuShow="CPUShow" @closeDetail="closeGame" v-else></MySteamDetail>
       </div>
       <div v-else>
-        其他游戏
+        <div class="my-other-lg mt-4" v-if="otherDetailShow === false">
+          <div class="rounded-lg my-other-item pointer relative" v-for="item in otherGameList" @click="enterOtherGameDetail(item)"  style=" width: 100px; height: 100px;">
+            <img :src="item.src" alt="" class="rounded-lg " style="width: 100%; height:100%; object-fit: cover;">
+            <span class="small-title  truncate px-2 py-2" style="width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</span>
+          </div>
+        </div>
+        <MyGameSmallDetail :otherGame="otherData" :size="showSize"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
       </div>
     </template>
   </HomeComponentSlot>
@@ -72,17 +79,20 @@
 import HomeComponentSlot from '../HomeComponentSlot.vue'
 import HorizontalPanel from '../../HorizontalPanel.vue';
 import MySteamDetail from './MySteamDetail.vue';
+import MyGameSmallDetail from './MyGameSmallDetail.vue';
 import { mapActions, mapWritableState } from 'pinia';
 import { cardStore } from '../../../store/card';
 import { steamUserStore } from '../../../store/steamUser';
 import { message } from "ant-design-vue";
 import _ from 'lodash-es'
+
 export default {
   name:'MyGameSmall',
   components:{
     HomeComponentSlot,
     HorizontalPanel,
     MySteamDetail,
+    MyGameSmallDetail
   },
   props:{
     customIndex: {
@@ -149,8 +159,7 @@ export default {
         {title:'双人成行',src:'/img/test/1.png'},
       ],
       otherData:{},
-
-
+      
     }
   },
   mounted(){
@@ -158,15 +167,15 @@ export default {
     if(mySize) this.defaultSize = {...this.mySize,...mySize}
     // if(myShow) this.CPUShow = myShow
   },
-  watch:{
-    'defaultSize':{
-      handler(){
-        this.options.className = 'card' + ' ' + this.defaultSize.className
-        this.$emit('customEvent')
-      },
-      immediate:true,
-    }
-  },
+  // watch:{
+  //   'defaultSize':{
+  //     handler(){
+  //       this.options.className = 'card' + ' ' + this.defaultSize.className
+  //       this.$emit('customEvent')
+  //     },
+  //     immediate:true,
+  //   }
+  // },
   methods:{
     ...mapActions(cardStore,['insetSteamSize']),
     getGameType(item){
@@ -174,6 +183,7 @@ export default {
     },
     saveSize(){
       this.insetSteamSize(this.customIndex,{mySize:this.defaultSize})
+      this.options.className = 'card' + ' ' + this.defaultSize.className
       message.success('保存成功')
       this.middleShow = false
     },
@@ -201,6 +211,10 @@ export default {
     },
     enterOtherGameDetail(item){
       this.otherDetailShow = true
+      this.otherData = item
+    },
+    closeOtherGame(){
+      this.otherDetailShow = false
     }
   }
 }
@@ -251,5 +265,13 @@ export default {
   font-size: 12px;
   font-weight: 600;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+.my-other-lg{
+  display: grid;
+  grid-template-columns: repeat(4, 0.23fr);
+  grid-gap: 20px;
+  justify-content: center;
+  align-items: center; 
+  margin: 12px auto 0 auto;
 }
 </style>
