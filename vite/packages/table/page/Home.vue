@@ -268,6 +268,10 @@ import { weatherStore } from "../store/weather";
 import GameEpic from "../components/homeWidgets/games/GameEpic.vue";
 import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
 import SignIn from "../components/homeWidgets/SignIn.vue"
+import SingleDoubanFilm from "../components/homeWidgets/douban/SingleDoubanFilm.vue"
+import LargeSingleDoubanFilm from "../components/homeWidgets/douban/LargeSingleDoubanFilm.vue"
+import ManyDoubanFilm from "../components/homeWidgets/douban/ManyDoubanFilm.vue"
+import LargeManyDoubanFilm from "../components/homeWidgets/douban/LargeManyDoubanFilm.vue"
 import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
@@ -433,6 +437,20 @@ const deskTemplate = {
       _$muuri_id: "d6f9dfae-8098-4da3-8f15-3913cb506bf7",
     },
   ],
+  douban: [
+    {
+      name: "manyDoubanFilm",
+      id: 1684568551293,
+      data: {},
+      _$muuri_id: "8105a85a-7263-46ed-9099-8d079cce9af1",
+    },
+    {
+      name: "manyDoubanFilm",
+      id: 1684568551293,
+      data: {},
+      _$muuri_id: "8105a85a-7263-46ed-9099-8d079cce9af1",
+    },
+  ],
   empty: [],
 };
 export default {
@@ -516,6 +534,10 @@ export default {
     Capture,
     CustomAssembly,
     SignIn,
+    SingleDoubanFilm,
+    LargeSingleDoubanFilm,
+    ManyDoubanFilm,
+    LargeManyDoubanFilm,
     Voice,
     Audio,
     SteamFriends,

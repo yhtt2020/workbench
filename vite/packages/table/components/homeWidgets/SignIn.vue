@@ -1,5 +1,8 @@
 <template>
     <HomeComponentSlot :options="options">
+      <div class="pointer" @click="activityDescription(illustrateUrl)"
+        style="position: absolute;left: 150px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">活动说明
+      </div>
       <template v-if="!newPeoplePage">
         <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;">
           <div>
@@ -45,21 +48,16 @@
       </template>
       <template v-else>
         <div class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
-          <span class="test" style="color: rgba(255,255,255,0.85);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
+          <span class="text-style" style="color: rgba(255,255,255,0.85);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
           <div class="mt-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日已为{{ completeLikes.length }}位社区新人点赞</div>
         </div>
         <div class="mt-3" style="height:178px; overflow:hidden;">
           <div class="text-center mb-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日新人</div>
           <div class="head-list">
-            <div v-for="item in newPeopleList" :key="item.id" style="margin:8px 14px;" @click="newLikes(item)">
-              <a-avatar :size="56">
-                <template #icon><UserOutlined /></template>
-              </a-avatar>
+            <div v-for="item in newPeopleList" class="h-14 w-14 s-item flex justify-center items-center" :key="item.id" style="margin:8px 14px;border-radius: 50%;" @click="newLikes(item)">
+              <a-avatar class="h-14 w-14" :class="item.headToggle ? 'h-8 w-8' : ''" :src="item.headSculpture" />
             </div>
           </div>
-        </div>
-        <div class="integral-modal" v-if="test">
-          <img class="modal-icon" src="../../../../public/img/test/s-good.png" alt="">
         </div>
         <div class="flex items-center justify-around">
           <div @click="signInBack"
@@ -92,7 +90,7 @@
         options:{
           className: 'card',
           title: '签到（开发中）',
-          icon: 'sound',
+          icon: 'star',
           type: 'signIn'
         },
         signInTitle:[{title:'今日签到榜',name:'today'},{title:'累积签到榜',name:'accrue'}],
@@ -125,15 +123,15 @@
         toggleModal: false,
         newPeoplePage: false,
         newPeopleList: [
-          {id: 1,headSculpture: '',username: '外太空的狗'},
-          {id: 2,headSculpture: '',username: '猫星人'},
-          {id: 3,headSculpture: '',username: '晒太阳的猫'},
-          {id: 4,headSculpture: '',username: '猪猪人'},
-          {id: 5,headSculpture: '',username: '彩虹马'},
-          {id: 6,headSculpture: '',username: 'yyq'}
+          {id: 1,headSculpture: '../../../../public/img/001.png',username: '外太空的狗'},
+          {id: 2,headSculpture: '../../../../public/img/001.png',username: '猫星人'},
+          {id: 3,headSculpture: '../../../../public/img/001.png',username: '晒太阳的猫'},
+          {id: 4,headSculpture: '../../../../public/img/001.png',username: '猪猪人'},
+          {id: 5,headSculpture: '../../../../public/img/001.png',username: '彩虹马'},
+          {id: 6,headSculpture: '../../../../public/img/001.png',username: 'yyq'}
         ],
         completeLikes: [],
-        test: false
+        illustrateUrl: 'https://www.yuque.com/tswork/mqon1y/kax12qz084vffcyp'
       }
     },
     methods:{
@@ -155,21 +153,25 @@
         if(this.completeLikes.length){
           if(!this.completeLikes.find(info => info.id === item.id)){
             this.completeLikes.push(item)
-            this.test = true
-            setTimeout(() => {
-              this.test = false
-            }, 500);
+            this.newPeopleList.forEach(i => {
+              if(i.id === item.id) {
+                i.headSculpture = '../../../../public/img/test/s-good.png'
+                i.headToggle = true
+              }
+            })
           }  
         }else{
           this.completeLikes.push(item)
-          this.test = true
-          setTimeout(() => {
-            this.test = false
-          }, 500);
+          this.newPeopleList.forEach(i => {
+            if(i.id === item.id) {
+              i.headSculpture = '../../../../public/img/test/s-good.png'
+              i.headToggle = true
+            }
+          })
         }
-        
-        console.log(this.completeLikes)
-       
+      },
+      activityDescription(url){
+        window.open(url, '_blank')
       }
     }
   }
@@ -247,7 +249,7 @@
     .set-type:nth-of-type(3)>span{
       background: #FAAA10;
     }
-    .test{
+    .text-style{
       word-break: normal;
       display: block;
       white-space: pre-wrap;
