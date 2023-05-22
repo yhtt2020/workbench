@@ -1,31 +1,25 @@
 import { cardStore } from "../../../../store/card";
 import { mapActions } from "pinia";
 export default {
-    data() {
-        return {
-            isActive: ""
-        }
-    },
     created() {
         if (!this.customData.cardSize) {
             this.increaseCustomComponents(this.customIndex, {
                 cardSize: "card",
             });
         }
-    },
-    mounted() {
         this.options.className = this.customData.cardSize
-        this.isActive = this.customData.cardSize
     },
     methods: {
         ...mapActions(cardStore, ["increaseCustomComponents"]),
-        __updateSize(e) {
+        __updateClassName(e) {
+            this.options.className = e
+        },
+        __updateDragSize(e) {
             this.increaseCustomComponents(this.customIndex, {
                 cardSize: e,
             });
             this.options.className = e
             this.isActive = e
-            this.callBack && this.callBack(e)
-        }
+        },
     }
 }
