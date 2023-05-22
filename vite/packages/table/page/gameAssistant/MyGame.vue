@@ -16,8 +16,8 @@
                  ref="gameScroll"     style="height: calc(100vh - 15.8em);padding-right: 5px;padding-left: 1em" class="pt-3 mr-3" @scroll="scrollList($event)">
 <div class="flex flex-row flex-wrap -ml-3 " v-if="gameType.name==='other'&&myGameList.length>0">
   <div class="pb-3 pl-3 game-list-local flex-shrink-0 my-game-content" v-for="(item,index) in myGameList" >
-    <div class="s-bg h-full w-full rounded-lg" style="padding-top: 70px" @click="openMyGame(item)">
-      <div class="relative   pointer mx-auto " style="height: 65px;width: 65px;" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @contextmenu="openOtherDetail(item)" @click="runGame">
+    <div class="s-bg h-full pointer w-full rounded-lg" style="padding-top: 70px" @click="openMyGame(item)">
+      <div class="relative    mx-auto " style="height: 65px;width: 65px;" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @contextmenu="openOtherDetail(item)" @click="runGame">
         <img :src="item.icon"  class="w-full h-full rounded-lg object-cover"  alt="">
       </div>
       <div class="w-full h-12  bottom-0  mt-4 text-center text-white" >{{item.name}}</div>
@@ -244,7 +244,8 @@ export default {
        files: JSON.parse(JSON.stringify(openPath)),
      });
      console.log(dropFiles)
-     this.myGameList.push(dropFiles[0])
+     this.myGameList.unshift(dropFiles[0])
+     this.modalVisibility=false
 
     },
     deleteGame(){
@@ -254,8 +255,9 @@ export default {
       runExec('start steam://nav/games/details/' + this.currentSteam.appinfo.appid)
     },
     playGame(){
-
-     runExec('"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch '+this.currentSteam.appinfo.appid+' +connect 1.2.3.4:27015')
+      const protocol='steam://run/'+this.currentSteam.appinfo.appid
+      require('electron').shell.openExternal(protocol)
+     // runExec('"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch '+this.currentSteam.appinfo.appid+' +connect 1.2.3.4:27015')
     },
     getDateMyTime(time){
       if(time){
