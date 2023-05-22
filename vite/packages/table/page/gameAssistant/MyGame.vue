@@ -63,32 +63,37 @@
 
 </div>
   <div v-else>
-    none
+    <div class="text-center mt-20">
+      <a-empty></a-empty>
+      <a-button v-if="gameType.name==='steam'" @click="goBind" type="primary">绑定Steam账号</a-button>
+      <a-button v-else @click="openModal" type="primary">导入外部游戏</a-button>
+    </div>
+
   </div>
 </vue-custom-scrollbar>
 </div>
 <Modal v-model:visible="modalVisibility"  v-show="modalVisibility" animationName="b-t" :blurFlag="true">
-  <div class="p-6">
-      <div class="flex flex-row items-center">
-        <Icon style="height: 26px;width: 26px" icon="steam"></Icon>
-        <div class="flex flex-col ml-4">
-          <span class="text-white">导入Steam游戏库</span>
-          <span>选择你本地的Steam本地库</span>
-        </div>
-      </div>
-    <div class="flex flex-row mt-4 mb-4">
-      <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center">选择游戏库</div>
-      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
-    </div>
-    <div class="flex flex-row items-center">
+  <div class="p-6" @click.stop>
+<!--      <div class="flex flex-row items-center">-->
+<!--        <Icon style="height: 26px;width: 26px" icon="steam"></Icon>-->
+<!--        <div class="flex flex-col ml-4">-->
+<!--          <span class="text-white">导入Steam游戏库</span>-->
+<!--          <span>选择你本地的Steam本地库</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    <div class="flex flex-row mt-4 mb-4">-->
+<!--      <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center">选择游戏库</div>-->
+<!--      <div @click="openModal" class="s-item pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>-->
+<!--    </div>-->
+    <div class="flex flex-row items-center" >
       <Icon style="height: 26px;width: 26px" icon="game"></Icon>
       <div class="flex flex-col ml-4">
         <span class="text-white" >自定义导入其他游戏</span>
-        <span>手动选择游戏安装目录</span>
+        <span>手动选择游戏运行文件</span>
       </div>
     </div>
     <div class="flex flex-row mt-4">
-      <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center"  @click.stop="openLocal">选择游戏库</div>
+      <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center"  @click.stop="openLocal">选择游戏</div>
       <div @click="openModal" class="s-item pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
     </div>
   </div>
@@ -187,7 +192,6 @@ export default {
       gameType:{title:'Steam游戏',name:'steam'},
       sortList:[{title:'最近游玩',name:'timer'},{title:'A-Z',name:'letter'}],
       sortType:{title:'最近游玩',name:'timer'},
-      myGameList:[],
       steamGameList:[],
       modalVisibility:false,
       gameRun:false,
@@ -202,16 +206,28 @@ export default {
   },
   mounted() {
   this.steamGameList = this.gameList
+    console.log(this.steamGameList,'steamgamelist')
   },
   computed:{
-    ...mapWritableState(steamUserStore, ['gameList']),
+    ...mapWritableState(steamUserStore, ['gameList','myGameList']),
     selectSteamList(){
-      return this.steamGameList.filter((i) =>{
-        return i.appinfo.common.name.includes(this.selectName)
-      })
+      if(this.selectName.trim()!==''){
+        this.steamGameList.filter((i) =>{
+          console.log()
+          if(i.appInfo){
+            return i.appinfo.common.name.toLowerCase().includes(this.selectName.toLowerCase())
+          }else{
+            return false
+          }
+        })
+      }else
+      return this.steamGameList
     }
   },
   methods:{
+    goBind(){
+      this.$router.push({name:'gameSetting'})
+    },
     openMyGame(item){
       require("electron").shell.openPath(item.path)
     },
@@ -221,6 +237,9 @@ export default {
         filters: [{ name: "全部", extensions: ["*"] }],
         properties: ["multiSelections"],
       });
+      if(!openPath){
+        return
+      }
      let dropFiles = await ipc.sendSync("getFilesIcon", {
        files: JSON.parse(JSON.stringify(openPath)),
      });
