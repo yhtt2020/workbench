@@ -139,7 +139,7 @@ export default {
       CPUShow:false,
       otherDetailShow:false,
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.middleShow = true;this.$refs.gameSmallSlot.visible = false } } ],
-      showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示',name:'other'}],
+      showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示(正在开发中)',name:'other'}],
       steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],
       defaultSize:{title:'1x2',className:'',name:'1x2'},
       steamDetail:{},
@@ -269,7 +269,7 @@ export default {
 .my-other-lg{
   display: grid;
   grid-template-columns: repeat(4, 0.23fr);
-  grid-gap: 20px;
+  grid-gap: 24px;
   justify-content: center;
   align-items: center; 
   margin: 12px auto 0 auto;
