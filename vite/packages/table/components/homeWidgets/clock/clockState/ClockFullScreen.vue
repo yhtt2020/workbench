@@ -1,35 +1,35 @@
 <template>
   <teleport to="body">
     <div class='popContainer' :style="{ backgroundImage: imgUrl }">
-      <div class="box">
-        <component :is="clock" />
-        <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
-          <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
-            <Icon class="icon" icon="caret-left"></Icon>
-          </div>
-          <div class="item-icon flex justify-center items-center pointer mr-4" @click="down()">
-            <Icon class="icon" icon="caret-right"></Icon>
-          </div>
-          <div class="item-icon flex justify-center items-center pointer mr-4" @click="random()">
-            <Icon class="icon" icon="reload"></Icon>
-          </div>
-          <div class="item-icon flex justify-center items-center pointer mr-4" @click="settingVisible = true">
-            <Icon class="icon" icon="setting"></Icon>
-          </div>
-          <div class="item-icon flex justify-center items-center pointer mr-4" @click="exit()">
-            <Icon class="icon" icon="tuichu"></Icon>
-          </div>
+    </div>
+    <div class="box">
+      <component :is="clock" />
+      <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
+          <Icon class="icon" icon="caret-left"></Icon>
+        </div>
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="down()">
+          <Icon class="icon" icon="caret-right"></Icon>
+        </div>
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="random()">
+          <Icon class="icon" icon="reload"></Icon>
+        </div>
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="settingVisible = true">
+          <Icon class="icon" icon="setting"></Icon>
+        </div>
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="exit()">
+          <Icon class="icon" icon="tuichu"></Icon>
         </div>
       </div>
-      <a-drawer style="z-index: 99999999999;scrollbar-width: none;" :width="500" v-model:visible="settingVisible"
-        placement="right">
-        <template #title>
-          <div class="text-center">设置</div>
-        </template>
-        <ClockBackground @img="img"></ClockBackground>
-        <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
-      </a-drawer>
     </div>
+    <a-drawer style="z-index: 99999999999;scrollbar-width: none;" :width="500" v-model:visible="settingVisible"
+      placement="right">
+      <template #title>
+        <div class="text-center">设置</div>
+      </template>
+      <ClockBackground @img="img"></ClockBackground>
+      <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
+    </a-drawer>
   </teleport>
 </template>
 
@@ -70,7 +70,7 @@ export default {
       optAction: false,
       settingVisible: false,
       autoTime: null,
-      src: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
+      src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg"
     };
   },
   methods: {
@@ -140,16 +140,26 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.5);
 
   // 背景的模糊大小通过下面的属性值大小来调制
-
-  backdrop-filter: blur(111220px);
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(5px);
+  filter: blur(5px);
+  transform: scale(1.2);
 
 }
 
 .box {
   z-index: 99911199;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .bottom {
@@ -214,7 +224,6 @@ export default {
 
   ::v-deep .clock1,
   .clock2,
-  .clock4,
   .clock5,
   .clock6 {
     transform: scale(1.7);
@@ -224,9 +233,21 @@ export default {
     transform: scale(1.2);
 
   }
+
+  ::v-deep .clock4 {
+    transform: scale(2.2);
+  }
 }
 
+@media (min-width:769px) and (max-width:1023px) {
+  ::v-deep .clock4 {
+    transform: scale(1.7);
+  }
+}
 
+// @media screen and (min-width:600px) and (max-width:900px){
+//   body {background-color:blue;}
+// }
 .item-icon {
   z-index: 9999999999999;
   width: 100px;

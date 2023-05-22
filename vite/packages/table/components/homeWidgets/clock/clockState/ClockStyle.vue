@@ -12,7 +12,7 @@
   <div class="clock-box">
     <clock4 @click="updateClockStyle('clock4')"></clock4>
   </div>
-  <div class="clock-box">
+  <div class="clock-box clock5 ">
     <clock5 @click="updateClockStyle('clock5')"></clock5>
   </div>
   <div class="clock-box">
@@ -40,6 +40,9 @@ export default {
   padding: 10px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .clock {
@@ -51,6 +54,17 @@ export default {
     position: absolute;
     top: -105px;
     left: 40px;
+  }
+}
+
+.clock5 {
+  height: 190px;
+  position: relative;
+
+  :deep(.clock5) {
+    transform: scale(0.6);
+    position: absolute;
+    top: -32px;
   }
 }
 </style>

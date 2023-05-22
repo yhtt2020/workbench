@@ -156,6 +156,14 @@ export default {
           images: ['clocks'],
           size: ['1x1']
         },
+        {
+          name: 'note',
+          cname: '桌面便签',
+          icon: 'time-circle',
+          detail: '可自由修改内容，调整大小的桌面便签',
+          images: ['note'],
+          size: ['1x2']
+        },
       ],
       cardType: {},
       show: false,

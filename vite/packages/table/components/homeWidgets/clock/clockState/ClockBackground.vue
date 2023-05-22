@@ -101,5 +101,6 @@ export default {
     top: -105px;
     left: 40px;
   }
+
 }
 </style>

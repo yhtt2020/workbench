@@ -273,8 +273,9 @@ import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 import {setSupervisoryData} from '../js/action/supervisory'
 import Clocks from '../components/homeWidgets/clock/index.vue'
-const {steamUser,steamSession,path,https,steamFs} = $models
-const {LoginSession, EAuthTokenPlatformType} = steamSession
+import note from "../components/homeWidgets/note/index.vue"
+const { steamUser, steamSession, path, https, steamFs } = $models
+const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
 let client = new steamUser({
   enablePicsCache: true,
@@ -520,6 +521,7 @@ export default {
     SteamFriends,
     CaptureNewCard,
     Clocks,
+    note
   },
   computed: {
     ...mapWritableState(cardStore, [

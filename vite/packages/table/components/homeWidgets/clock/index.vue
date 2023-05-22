@@ -10,12 +10,9 @@
     </template>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
-
-  <teleport to="body">
-    <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
-      @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
-    </ClockFullScreen>
-  </teleport>
+  <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
+    @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
+  </ClockFullScreen>
 </template>
 
 <script>
@@ -63,12 +60,6 @@ export default {
   },
   components: {
     HomeComponentSlot,
-    // clock1,
-    // clock2,
-    // clock3,
-    // clock4,
-    // clock5,
-    // clock6,
     ClockStyle,
     ClockFullScreen
   },
@@ -134,7 +125,7 @@ export default {
     position: absolute;
     top: -108px;
     left: -50px;
-    transform: scale(0.4, 0.4);
+    transform: scale(0.36, 0.36);
   }
 
   :deep(.gutter-box) {
