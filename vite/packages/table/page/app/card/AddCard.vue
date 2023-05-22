@@ -12,17 +12,12 @@
       </a-col>
     </a-row>
 
-    <a-input
-      v-model:value="selectContent"
-      class="no-drag"
-      placeholder="搜索"
-      style="
+    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索" style="
         height: 100%;
         width: 400px;
         border-radius: 12px;
         background: rgba(42, 42, 42, 0.6);
-      "
-    >
+      ">
       <template #prefix>
         <Icon icon="sousuo"></Icon>
       </template>
@@ -130,6 +125,7 @@ export default {
           images: ["GamesDiscount", "DiscountPercentage", "GameEpic"],
         },
         {
+
           name: "gameAssis",
           cname: "游戏助手",
           icon: "steam",
@@ -151,7 +147,15 @@ export default {
           detail: '完成签到，获得奖励',
           images: ['signIn'],
           size: ['1x1']
-        }
+        },
+        {
+          name: 'clocks',
+          cname: '时钟',
+          icon: 'time-circle',
+          detail: '选择合适的时钟组件装点你的桌面',
+          images: ['clocks'],
+          size: ['1x1']
+        },
       ],
       cardType: {},
       show: false,
@@ -168,7 +172,7 @@ export default {
     };
   },
 
-  mounted() {},
+  mounted() { },
   computed: {
     filterList() {
       return this.cardList.filter((i) => {

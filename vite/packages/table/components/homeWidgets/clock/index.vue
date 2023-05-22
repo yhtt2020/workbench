@@ -8,23 +8,26 @@
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    <ClockBackground></ClockBackground>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
+
+  <teleport to="body">
+    <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
+      @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
+    </ClockFullScreen>
+  </teleport>
 </template>
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import clock1 from "./clock1/clock1.vue";
-import clock2 from "./clock2/clock2.vue";
-import clock3 from "./clock3/clock3.vue";
-import clock4 from "./clock4/clock4.vue";
-import ClockStyle from "./clockStyle/ClockStyle.vue";
-import ClockBackground from "./clockStyle/ClockBackground.vue";
 
+import ClockStyle from "./clockState/ClockStyle.vue";
+import ClockFullScreen from "./clockState/ClockFullScreen.vue"
+import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
 export default {
+  mixins: [mixin],
   props: {
     customIndex: {
       type: Number,
@@ -40,10 +43,10 @@ export default {
       options: {
         className: "card small",
         title: "时钟",
-        icon: "sound",
+        icon: "time-circle",
         type: "games",
       },
-
+      isClockFullScreen: false,
       settingVisible: false,
       formulaBar: [
         {
@@ -60,16 +63,25 @@ export default {
   },
   components: {
     HomeComponentSlot,
-    clock1,
-    clock2,
-    clock3,
-    clock4,
+    // clock1,
+    // clock2,
+    // clock3,
+    // clock4,
+    // clock5,
+    // clock6,
     ClockStyle,
-    ClockBackground,
+    ClockFullScreen
   },
   created() {
     if (!this.customData.clockiD) {
-      this.increaseCustomComponents(this.customIndex, { clockiD: "clock4" });
+      this.increaseCustomComponents(this.customIndex, {
+        clockiD: "clock4",
+      });
+    }
+    if (!this.customData.imgUrl) {
+      this.increaseCustomComponents(this.customIndex, {
+        imgUrl: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
+      });
     }
   },
   mounted() {
@@ -77,19 +89,19 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
+
     updateClockStyle(e) {
       this.increaseCustomComponents(this.customIndex, {
         clockiD: e,
       });
     },
-
-    fullScreen() {
-      this.$router.push({
-        path: "/clock",
-        query: {
-          clock: this.customData.clockiD,
-        },
+    updateImgUrl(url) {
+      this.increaseCustomComponents(this.customIndex, {
+        imgUrl: url,
       });
+    },
+    fullScreen() {
+      this.isClockFullScreen = true
     },
     zeroPadding(num, digit) {
       let zero = "";
@@ -107,6 +119,7 @@ export default {
         "日 " +
         this.week[cd.getDay()];
     },
+
   },
 };
 </script>
@@ -137,6 +150,18 @@ export default {
     margin: 20px 2px;
     font-size: 58px;
     width: 55px;
+  }
+
+  :deep(.clock5) {
+    width: 90%;
+    height: 120px;
+    margin-top: 10px;
+
+    #seconds,
+    .a,
+    #toggle-button {
+      display: none;
+    }
   }
 }
 
