@@ -157,11 +157,11 @@ export default {
           size: ['1x1']
         },
         {
-          name: 'note',
+          name: 'notes',
           cname: '桌面便签',
           icon: 'time-circle',
           detail: '可自由修改内容，调整大小的桌面便签',
-          images: ['note'],
+          images: ['notes'],
           size: ['1x2']
         },
       ],

@@ -18,6 +18,11 @@
       选自壁纸收藏
     </div>
   </div>
+
+
+  <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
+  <a-slider v-model:value="blur" :max="100" :step="1" />
+
   <ModalList v-if="myImgShow" v-model:visible="myImgShow" title="我的收藏" :imgList="myPapers" @sendImg="sendImg"
     style="z-index: 99999"></ModalList>
   <input style="display: none" ref="fileRef" type="file" name="" id="" />
@@ -40,7 +45,14 @@ export default {
     return {
       myData: { title: "", link: undefined, img: {} },
       myImgShow: false,
+      blur: 10
     };
+  },
+  watch: {
+    //方法1
+    blur(newVal, oldVal) {
+      this.$emit("updateBlue", newVal)
+    }
   },
   methods: {
     openMy() {

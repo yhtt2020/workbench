@@ -1,8 +1,9 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' :style="{ backgroundImage: imgUrl }">
+    <div class='popContainer' :style="{ backgroundImage: imgUrl, filter: blur }">
     </div>
     <div class="box">
+      <!-- icon-drag -->
       <component :is="clock" />
       <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
         <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
@@ -27,8 +28,18 @@
       <template #title>
         <div class="text-center">设置</div>
       </template>
-      <ClockBackground @img="img"></ClockBackground>
+
+      <ClockBackground @img="img" @updateBlue="updateBlue"></ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
+      <div class="line-title">背景设置：</div>
+      <div class="line">
+        透明背景(透出系统桌面壁纸)：<a-switch></a-switch>
+      </div>
+      <div class="line">
+        <a-button type="primary" class="mr-3">背景设置</a-button>
+        <a-button>清除背景</a-button>
+      </div>
+
     </a-drawer>
   </teleport>
 </template>
@@ -70,7 +81,8 @@ export default {
       optAction: false,
       settingVisible: false,
       autoTime: null,
-      src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg"
+      src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
+      blur: "blur(100px)"
     };
   },
   methods: {
@@ -82,7 +94,10 @@ export default {
       document.removeEventListener("keydown", this.touchEvent, { capture: true });
       this.$emit('exit')
     },
+    updateBlue(e) {
+      console.log('e :>> ', e);
 
+    },
     touchEvent() {
       const that = this
       // console.log("操作中")
@@ -143,9 +158,8 @@ export default {
 
   // 背景的模糊大小通过下面的属性值大小来调制
   background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(5px);
-  filter: blur(5px);
+
+
   transform: scale(1.2);
 
 }
