@@ -74,7 +74,7 @@ const {steamUser,steamSession,path,https,steamFs} = $models
 let client = new steamUser({
   enablePicsCache: true
 });
-
+window.client = client
 
 const {appModel} = window.$models
 let startX,
@@ -336,6 +336,7 @@ export default {
           client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) =>{
             this.setUserData({name,country})
           });
+          client.gamesPlayed([1172470]);
           client.on('appOwnershipCached', () => {
             console.log('Game ownership cached');
             client.getUserOwnedApps(client.steamID.getSteamID64(),{includeFreeSub: true,includePlayedFreeGames:true},(err,data)=>{
