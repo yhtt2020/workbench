@@ -41,7 +41,6 @@ import GameDiscountDetail from "../page/gameAssistant/GameDiscountDetail.vue";
 import Message from "../page/social/Message.vue";
 import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
-import Clock from "../page/Clock.vue";
 import Inspector from "../page/app/Inspector.vue";
 export default [
   {
@@ -128,11 +127,6 @@ export default [
         path: "/music",
         name: "music",
         component: Music,
-      },
-      {
-        path: "/clock",
-        name: "clock",
-        component: Clock,
       },
       {
         path: "/weather",

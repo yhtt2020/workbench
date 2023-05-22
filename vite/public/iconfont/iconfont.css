@@ -1,5 +1,6 @@
 @font-face {
-  font-family: "bicon"; /* Project id 3693838 */
+  font-family: "bicon";
+  /* Project id 3693838 */
   src: url('iconfont.woff2?t=1665306852216') format('woff2');
 }
 
@@ -294,4 +295,3 @@
 .bicon-rizhi:before {
   content: "\e66a";
 }
-
