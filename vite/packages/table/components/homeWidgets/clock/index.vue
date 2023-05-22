@@ -1,14 +1,20 @@
 <template>
   <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" :formulaBar="formulaBar">
-    <div class="box">
-      <component :is="customData.clockiD" span="12" display="none" @click="fullScreen()" />
-    </div>
+
+    <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
+      :className="options.className">
+      <template #="{ row }">
+        <div class="box">
+          <component :is="customData.clockiD" span="12" display="none" @click="fullScreen()" />
+        </div>
+      </template>
+    </cardDrag>
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
-
+    <cardSize @__updateSize="__updateSize" :isActive="isActive"></cardSize>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
 
@@ -21,13 +27,20 @@
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue"
+
+
 import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
 
 
+import cardDrag from "../note/hooks/cardDrag.vue"
+import cardDragHook from "../note/hooks/cardDragHook"
+
+import cardSize from "../note/hooks/cardSize.vue"
+import cardSizeHook from "../note/hooks/cardSizeHook"
 export default {
-  mixins: [mixin,],
+  mixins: [mixin, cardDragHook, cardSizeHook],
   props: {
     customIndex: {
       type: Number,
@@ -64,9 +77,12 @@ export default {
   components: {
     HomeComponentSlot,
     ClockStyle,
-    ClockFullScreen
+    ClockFullScreen,
+    cardDrag,
+    cardSize
   },
   created() {
+
     if (!this.customData.clockiD) {
       this.increaseCustomComponents(this.customIndex, {
         clockiD: "clock4",
@@ -120,14 +136,14 @@ export default {
 
 <style lang="scss" scoped>
 .box {
-  height: 90%;
+  height: 100%;
   position: relative;
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   :deep(.clock3) {
     position: absolute;
-    top: -108px;
-    left: -50px;
     transform: scale(0.36, 0.36);
   }
 
@@ -136,7 +152,6 @@ export default {
   }
 
   :deep(.clock2) {
-    padding-top: 25px;
     margin-left: -6px;
   }
 

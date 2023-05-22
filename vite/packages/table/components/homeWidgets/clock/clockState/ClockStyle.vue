@@ -19,7 +19,6 @@
     <clock6 @click="updateClockStyle('clock6')"></clock6>
   </div>
 </template>
- 
 <script>
 import mixin from "../hooks/clockMixin.js"
 export default {

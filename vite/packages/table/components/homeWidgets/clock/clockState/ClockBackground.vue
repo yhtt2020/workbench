@@ -82,6 +82,7 @@ export default {
   line-height: 48px;
 }
 
+// 1
 .clock-box {
   margin: 10px 0;
   box-sizing: border-box;

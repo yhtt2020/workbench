@@ -11,11 +11,6 @@
 
 <script>
 export default {
-    data() {
-        return {
-
-        }
-    },
     methods: {
         updateSize(e) {
             this.$emit("__updateSize", e)
