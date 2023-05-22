@@ -9,7 +9,7 @@ export default {
     created() {
         if (!this.customData.cardSize) {
             this.increaseCustomComponents(this.customIndex, {
-                cardSize: "card",
+                cardSize: this.options.className,
             });
         }
     },
@@ -21,7 +21,7 @@ export default {
         ...mapActions(cardStore, ["increaseCustomComponents"]),
         __updateSize(e) {
             this.increaseCustomComponents(this.customIndex, {
-                cardSize: e,
+                cardSize: e
             });
             this.options.className = e
             this.isActive = e

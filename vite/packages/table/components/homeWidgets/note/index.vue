@@ -1,6 +1,6 @@
 <template>
     <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" :formulaBar="formulaBar">
-        <cardDrag @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
+        <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
             :className="options.className">
             <template #="{ row }">
                 <textarea :style="{ 'backgroundImage': background }" class="box" placeholder="输入卡片内容" v-model="text"
@@ -27,12 +27,13 @@
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue"
-import cardSizeHook from "./hooks/cardSizeHook"
-import cardDragHook from "./hooks/cardDragHook"
 import cardSize from "./hooks/cardSize.vue"
+import cardSizeHook from "./hooks/cardSizeHook"
+
 import cardDrag from "./hooks/cardDrag.vue"
+import cardDragHook from "./hooks/cardDragHook"
 export default {
-    mixins: [cardSizeHook, cardDragHook],
+    mixins: [cardDragHook, cardSizeHook],
     props: {
         customIndex: {
             type: Number,
@@ -51,7 +52,7 @@ export default {
             options: {
                 className: "card",
                 title: "桌面便签",
-                icon: "time-circle",
+                icon: "bianji",
                 type: "games"
             },
             settingVisible: false,
@@ -102,6 +103,7 @@ export default {
         this.text = this.customData.text
         this.background = this.customData.background
     },
+
     components: {
         HomeComponentSlot,
         cardSize,
@@ -129,12 +131,14 @@ export default {
     height: 100%;
     background-color: rgba(165, 42, 42, 0);
     border: 0px;
-    color: #000;
+    color: #fff;
     resize: none;
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
     padding: 12px;
+    font-size: 16px;
+
 }
 
 .box::-webkit-scrollbar {

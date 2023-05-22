@@ -1,8 +1,7 @@
 <template>
-    <div ref="textRef" style="margin-top: 8px; " :style="{ width: w, height: h }">
+    <div class="boxs" ref="textRef" style="margin-top: 8px; " :style="{ width: w, height: h }">
         <slot :row="1123"></slot>
         <div ref="dragRef" class="drag-boxs">
-            图标
         </div>
     </div>
 </template>
@@ -23,19 +22,21 @@ export default {
     },
     mounted() {
         this.drag()
-        this.callBack()
+        this.dragCallBack()
     },
     methods: {
-        callBack() {
-            if (this.className == "card double") {
+
+        dragCallBack(e) {
+            let className = e ?? this.className
+            if (className == "card double") {
                 this.w = `${542}px`
                 this.h = `${360}px`
             }
-            else if (this.className == "card") {
+            else if (className == "card") {
                 this.w = `${250}px`
                 this.h = `${360}px`
             }
-            else if (this.className == "card small") {
+            else if (className == "card small") {
                 this.w = `${250}px`
                 this.h = `${140}px`
             }
@@ -74,9 +75,7 @@ export default {
                 document.onmouseup = function () {
                     document.onmousemove = null;
                     document.onmouseup = null;
-                    that.callBack()
-                    that.$emit("__updateDragSize", that.className)
-
+                    that.dragCallBack()
                 };
             }, { capture: true })
         },
@@ -86,10 +85,17 @@ export default {
 
 <style lang="scss" scoped>
 .drag-boxs {
-    display: flex;
-    margin-top: -24px;
-    width: 100%;
+    width: 20px;
     height: 20px;
-    justify-content: end;
+    z-index: 99999999999999;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: 1px solid;
+}
+
+.boxs {
+    position: relative;
+    border: 1px solid red;
 }
 </style>
