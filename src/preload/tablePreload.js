@@ -26,7 +26,8 @@ window.$models = {
   steamSession:require('steam-session'),
   path:require('path'),
   https:require('https'),
-  steamFs:require('fs')
+  steamFs:require('fs'),
+  rpc:require('../rpc/rpc')
 }
 window.$models.appModel.initDb()
 

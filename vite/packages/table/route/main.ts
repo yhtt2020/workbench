@@ -41,6 +41,7 @@ import GameDiscountDetail from "../page/gameAssistant/GameDiscountDetail.vue";
 import Message from "../page/social/Message.vue";
 import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
+import Inspector from "../page/app/Inspector.vue";
 export default [
   {
     path: "/main",
@@ -58,6 +59,11 @@ export default [
             component: Hall,
           },
         ],
+      },
+      {
+        path: "/inspector",
+        name: "inspector",
+        component: Inspector,
       },
       {
         path: "",

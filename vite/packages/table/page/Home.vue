@@ -71,7 +71,7 @@
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
               <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
-                :customData="item.data" :editing="editing" :runAida64="runAida64" @customEvent="customEvent"></component>
+                :customData="item.data" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -246,7 +246,6 @@ import DiscountPercentage from "../components/homeWidgets/games/DiscountPercenta
 import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/homeWidgets/SmallWallpaper.vue";
 import MyGameSmall from "../components/homeWidgets/games/MyGameSmall.vue";
-import MyGameMiddle from "../components/homeWidgets/games/MyGameMiddle.vue";
 import Capture from "../components/homeWidgets/games/Capture.vue";
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
@@ -260,6 +259,10 @@ import { weatherStore } from "../store/weather";
 import GameEpic from "../components/homeWidgets/games/GameEpic.vue";
 import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
 import SignIn from "../components/homeWidgets/SignIn.vue"
+import SingleDoubanFilm from "../components/homeWidgets/douban/SingleDoubanFilm.vue"
+import LargeSingleDoubanFilm from "../components/homeWidgets/douban/LargeSingleDoubanFilm.vue"
+import ManyDoubanFilm from "../components/homeWidgets/douban/ManyDoubanFilm.vue"
+import LargeManyDoubanFilm from "../components/homeWidgets/douban/LargeManyDoubanFilm.vue"
 import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
@@ -426,6 +429,20 @@ const deskTemplate = {
       _$muuri_id: "d6f9dfae-8098-4da3-8f15-3913cb506bf7",
     },
   ],
+  douban: [
+    {
+      name: "manyDoubanFilm",
+      id: 1684568551293,
+      data: {},
+      _$muuri_id: "8105a85a-7263-46ed-9099-8d079cce9af1",
+    },
+    {
+      name: "manyDoubanFilm",
+      id: 1684568551293,
+      data: {},
+      _$muuri_id: "8105a85a-7263-46ed-9099-8d079cce9af1",
+    },
+  ],
   empty: [],
 };
 export default {
@@ -452,10 +469,9 @@ export default {
         currentItemId: -1,
       },
       scrollbar: Date.now(),
-      timer: null,
+      inspectorTimer: null,
       reserveTimer: null,
       custom: false,
-      runAida64: true,
       muuriOptions: {
         dragAutoScroll: {
           targets: [
@@ -506,10 +522,13 @@ export default {
     SmallWallpaper,
     GameEpic,
     MyGameSmall,
-    MyGameMiddle,
     Capture,
     CustomAssembly,
     SignIn,
+    SingleDoubanFilm,
+    LargeSingleDoubanFilm,
+    ManyDoubanFilm,
+    LargeManyDoubanFilm,
     Voice,
     Audio,
     SteamFriends,
@@ -521,7 +540,6 @@ export default {
     ...mapWritableState(cardStore, [
       "customComponents",
       "clockEvent",
-      "aidaData",
       "settings",
       "desks",
       "moved",
@@ -690,13 +708,10 @@ export default {
       }
     });
     this.navigationList = [];
-    this.startAida();
     //this.setAgreeTest(false)
   },
   unmounted() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+
     if (this.reserveTimer) {
       clearInterval(this.reserveTimer);
     }
@@ -713,7 +728,6 @@ export default {
     },
     runExec,
     ...mapActions(cardStore, [
-      "setAidaData",
       "getCurrentDesk",
       "addDesk",
       "switchToDesk",
@@ -722,7 +736,7 @@ export default {
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
-    setSupervisoryData,
+
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
     },
@@ -832,33 +846,6 @@ export default {
     },
     setCustom() {
       this.custom = false;
-    },
-    startAida() {
-      this.timer = setInterval(() => {
-        readAida64()
-          .then((res) => {
-            this.runAida64 = true;
-            const newData = this.setSupervisoryData(res);
-            this.setAidaData(newData);
-            // console.log(res)
-            //this.data=JSON.stringify(res, null, '\t')
-          })
-          .catch((err) => {
-            this.runAida64 = false;
-            clearInterval(this.timer);
-            this.reserveTimer = setInterval(() => {
-              readAida64()
-                .then((res) => {
-                  this.runAida64 = true;
-                  clearInterval(this.reserveTimer);
-                  this.startAida();
-                })
-                .catch((err) => { });
-            }, 10000);
-            const newData = this.setSupervisoryData(undefined);
-            this.setAidaData(newData);
-          });
-      }, 1000);
     },
   },
   watch: {

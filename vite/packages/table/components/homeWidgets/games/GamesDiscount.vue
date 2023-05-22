@@ -245,7 +245,6 @@ export default {
               localCache:true,
               localTtl:60
             }).then(res => {
-              console.log('steam数据',res)
               const resData = res.data[item.id]
               if (resData.success === true) {
                 const detailData = resData.data
