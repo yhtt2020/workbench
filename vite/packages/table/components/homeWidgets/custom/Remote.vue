@@ -1,15 +1,18 @@
 <template>
-<!--  <div class="card  gradient gradient&#45;&#45;14  content small" style="display: flex;flex-direction: column;align-content: center;align-items: center">-->
-<!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
-<!--  </div>-->
-  <HomeComponentSlot :customIndex="customIndex" :size="customSize" :options="options" :formulaBar="formulaBar" ref="remote" :custom-data="customData">
+  <!--  <div class="card  gradient gradient&#45;&#45;14  content small" style="display: flex;flex-direction: column;align-content: center;align-items: center">-->
+  <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
+  <!--  </div>-->
+  <HomeComponentSlot :customIndex="customIndex" :size="customSize" :options="options" :formulaBar="formulaBar"
+    ref="remote" :custom-data="customData">
     <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
-      <div v-if="!customData.url" style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
-        <a-button size="large" @click="this.panelVisible=true"  type="primary">
+      <div v-if="!customData.url"
+        style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
+        <a-button size="large" @click="this.panelVisible = true" type="primary">
           配置卡片</a-button>
       </div>
       <template v-else>
-        <iframe sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts" ref="myIframe" allowtransparency="true" :src="customData.url" style="width: 100%;height: 100%;border: none;border-radius: 8px">
+        <iframe sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts" ref="myIframe"
+          allowtransparency="true" :src="customData.url" style="width: 100%;height: 100%;border: none;border-radius: 8px">
         </iframe>
       </template>
     </div>
@@ -20,10 +23,11 @@
     </div>
     <div class="line">卡片尺寸：</div>
     <div class="line">
-      <a-input-number :min="1" :max="10" v-model:value="width"></a-input-number> x <a-input-number :min="1" :max="10" v-model:value="height"></a-input-number>
+      <a-input-number :min="1" :max="10" v-model:value="width"></a-input-number> x <a-input-number :min="1" :max="10"
+        v-model:value="height"></a-input-number>
     </div>
     <div class="line">
-      隐藏卡片外框： <a-switch v-model:checked="customData.hideFrame" ></a-switch>
+      隐藏卡片外框： <a-switch v-model:checked="customData.hideFrame"></a-switch>
     </div>
     <div class="mt-10">
       <a-button type="primary" @click="save" block>确定</a-button>
@@ -34,14 +38,14 @@
 
 <script>
 import HomeComponentSlot from '../HomeComponentSlot.vue'
-import {message} from 'ant-design-vue'
-function loadScript(src,id, callback) {
-  const s = document.createElement("script",id);
+import { message } from 'ant-design-vue'
+function loadScript(src, id, callback) {
+  const s = document.createElement("script", id);
   s.type = "text/javascript";
   s.src = src;
-  s.id=id
+  s.id = id
   s.onload = s.onreadystatechange = function () {
-    if (  !this.readyState ||  this.readyState === "loaded" ||  this.readyState === "complete"  ) {
+    if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
       callback && callback();
       s.onload = s.onreadystatechange = null;
     }
@@ -51,25 +55,25 @@ function loadScript(src,id, callback) {
 export default {
   name: 'Remote',
   components: { HomeComponentSlot },
-  props:{
-    customIndex:{
-      type:Number,
-      default:0
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0
     },
-    customData:{
-      type:Object,
-      default: ()=>{}
+    customData: {
+      type: Object,
+      default: () => { }
     },
 
   },
-  data(){
-    return{
-      url:'',
-      width:1,
-      height:2,
+  data() {
+    return {
+      url: '',
+      width: 1,
+      height: 2,
 
-      panelVisible:false,
-      id:Date.now().toString(),
+      panelVisible: false,
+      id: Date.now().toString(),
       options: {
         className: 'card small',
         title: '',
@@ -77,28 +81,29 @@ export default {
         type: 'remote',
         noTitle: true,
       },
-      formulaBar:[
+      formulaBar: [
         {
-          icon:"shezhi1",
-          title:'设置',
-          fn:()=>{
+          icon: "shezhi1",
+          title: '设置',
+          fn: () => {
             this.panelVisible = true;
             this.$refs.remote.visible = false
-          }}
+          }
+        }
       ],
     }
   },
-  methods:{
-    save(){
+  methods: {
+    save() {
       this.$refs.remote.visible = false
-      this.panelVisible=false
-      this.customData.width=this.width
-      this.customData.height=this.height
-      this.customData.url=this.url
+      this.panelVisible = stubFalse
+      this.customData.width = this.width
+      this.customData.height = this.height
+      this.customData.url = this.url
       message.success('修改成功')
 
     },
-    setUA(){
+    setUA() {
       //暂时没有办法实现此处展现为移动端的界面
     }
     //   let contentWindow=this.$refs.myIframe.contentWindow
@@ -125,21 +130,21 @@ export default {
     //   console.log(contentWindow.navigator.userAgent)
     // }
   },
-  computed:{
-    customSize(){
+  computed: {
+    customSize() {
       return {
-        width:(this.customData.width||1)*280+ (this.customData.width-1)*10+'px',
-        height:(this.customData.height||2)*205+ (this.customData.height-1)*10+'px'
+        width: (this.customData.width || 1) * 280 + (this.customData.width - 1) * 10 + 'px',
+        height: (this.customData.height || 2) * 205 + (this.customData.height - 1) * 10 + 'px'
       }
     }
   },
-  mounted () {
+  mounted() {
     // if(this.customData.url){
     //   this.setUA()
     // }
 
-    this.width=this.customData.width || 1
-    this.height=this.customData.height||2
+    this.width = this.customData.width || 1
+    this.height = this.customData.height || 2
     this.url = this.customData.url || ''
 
     // console.log('尝试载入')
@@ -153,12 +158,10 @@ export default {
     //   window.customElements.upgrade(document.getElementById('my'))
     // })
   },
-  unmounted () {
+  unmounted() {
     // document.getElementById(this.id).remove()
   }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

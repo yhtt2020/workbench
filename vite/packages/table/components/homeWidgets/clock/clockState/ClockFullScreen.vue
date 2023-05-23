@@ -1,9 +1,11 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' :style="{ backgroundImage: imgUrl }">
+    <div class='popContainer' :style="{ backgroundImage: imgUrl, filter: blurs }">
     </div>
     <div class="box">
-      <component :is="clock" />
+      <!-- icon-drag -->
+      <component :is="clock" v-if="clock !== 'clock3'" :key="clock" />
+      <clock3 v-if="clock == 'clock3'" key="clock3"></clock3>
       <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
         <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
           <Icon class="icon" icon="caret-left"></Icon>
@@ -18,7 +20,7 @@
           <Icon class="icon" icon="setting"></Icon>
         </div>
         <div class="item-icon flex justify-center items-center pointer mr-4" @click="exit()">
-          <Icon class="icon" icon="tuichu"></Icon>
+          <Icon class="icon" icon="guanbi2"></Icon>
         </div>
       </div>
     </div>
@@ -27,7 +29,8 @@
       <template #title>
         <div class="text-center">设置</div>
       </template>
-      <ClockBackground @img="img"></ClockBackground>
+
+      <ClockBackground @img="img" @updateBlur="updateBlur" :blur="blur"></ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
     </a-drawer>
   </teleport>
@@ -52,9 +55,14 @@ export default {
     imgUrl: {
       type: String,
       default: "",
+    },
+    blur: {
+      type: String,
+      default: 0,
     }
   },
   mounted() {
+    this.updateBlur(this.blur)
     this.touchEvent()
     //鼠标事件
     document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
@@ -70,7 +78,8 @@ export default {
       optAction: false,
       settingVisible: false,
       autoTime: null,
-      src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg"
+      src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
+      blurs: "blur(10px}"
     };
   },
   methods: {
@@ -82,7 +91,11 @@ export default {
       document.removeEventListener("keydown", this.touchEvent, { capture: true });
       this.$emit('exit')
     },
-
+    updateBlur(e) {
+      let a = parseInt(e / 2)
+      this.blurs = `blur(${a}px)`
+      this.$emit("updateBlur", e)
+    },
     touchEvent() {
       const that = this
       // console.log("操作中")
@@ -143,9 +156,10 @@ export default {
 
   // 背景的模糊大小通过下面的属性值大小来调制
   background-color: rgba(255, 255, 255, 0.3);
+
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(5px);
-  filter: blur(5px);
+
   transform: scale(1.2);
 
 }
@@ -246,9 +260,6 @@ export default {
   }
 }
 
-// @media screen and (min-width:600px) and (max-width:900px){
-//   body {background-color:blue;}
-// }
 .item-icon {
   z-index: 9999999999999;
   width: 100px;

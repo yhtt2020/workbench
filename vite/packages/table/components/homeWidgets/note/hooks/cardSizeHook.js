@@ -20,12 +20,23 @@ export default {
     methods: {
         ...mapActions(cardStore, ["increaseCustomComponents"]),
         __updateSize(e) {
-            this.increaseCustomComponents(this.customIndex, {
-                cardSize: e
-            });
-            this.options.className = e
-            this.isActive = e
-            this.callBack && this.callBack(e)
+
+            // this.callBack && this.callBack(e)
+            if (e == "card1") {
+                this.isActive = "card1"
+                this.options.className = "card"
+                this.increaseCustomComponents(this.customIndex, {
+                    cardSize: "card"
+                });
+            } else {
+                this.increaseCustomComponents(this.customIndex, {
+                    cardSize: e
+                });
+                this.options.className = e
+                this.isActive = e
+            }
+            this.reSizeInit && this.reSizeInit(e) // 更新窗口大小的回调函数
+            this.updateSize && this.updateSize(e)
         }
     }
 }

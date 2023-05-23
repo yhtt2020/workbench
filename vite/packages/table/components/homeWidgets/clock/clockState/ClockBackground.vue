@@ -18,6 +18,10 @@
       选自壁纸收藏
     </div>
   </div>
+
+  <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
+  <a-slider v-model:value="blurs" :max="100" :step="1" />
+
   <ModalList v-if="myImgShow" v-model:visible="myImgShow" title="我的收藏" :imgList="myPapers" @sendImg="sendImg"
     style="z-index: 99999"></ModalList>
   <input style="display: none" ref="fileRef" type="file" name="" id="" />
@@ -40,7 +44,23 @@ export default {
     return {
       myData: { title: "", link: undefined, img: {} },
       myImgShow: false,
+      blurs: 0
     };
+  },
+  props: {
+    blur: {
+      type: String,
+      default: 0,
+    }
+  },
+  mounted() {
+    this.blurs = this.blur
+  },
+  watch: {
+    //方法1
+    blurs(newVal, oldVal) {
+      this.$emit("updateBlur", newVal)
+    }
   },
   methods: {
     openMy() {

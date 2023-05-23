@@ -1,11 +1,10 @@
 <template>
-  <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" :formulaBar="formulaBar">
-
-    <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
-      :className="options.className">
+  <HomeComponentSlot :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
+    :formulaBar="formulaBar">
+    <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
-        <div class="box">
-          <component :is="customData.clockiD" span="12" display="none" @click="fullScreen()" />
+        <div class="box" @click="fullScreen()">
+          <component :is="customData.clockiD" display="none" />
         </div>
       </template>
     </cardDrag>
@@ -18,8 +17,9 @@
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
 
-  <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
-    @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
+  <ClockFullScreen @updateBlur="updateBlur" v-if="isClockFullScreen" :imgUrl="customData.imgUrl"
+    :clock="customData.clockiD" @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle"
+    @updateImgUrl="updateImgUrl" :blur="blur">
   </ClockFullScreen>
 </template>
 
@@ -61,6 +61,7 @@ export default {
       },
       isClockFullScreen: false,
       settingVisible: false,
+      isSnow: "block",
       formulaBar: [
         {
           icon: "shezhi1",
@@ -72,6 +73,7 @@ export default {
       ],
       // 时间配置
       week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
+      blur: 10
     };
   },
   components: {
@@ -82,7 +84,6 @@ export default {
     cardSize
   },
   created() {
-
     if (!this.customData.clockiD) {
       this.increaseCustomComponents(this.customIndex, {
         clockiD: "clock4",
@@ -93,13 +94,32 @@ export default {
         imgUrl: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
       });
     }
+    if (!this.customData.blur) {
+      this.increaseCustomComponents(this.customIndex, {
+        blur: 10,
+      });
+    }
   },
   mounted() {
+    this.blur = this.customData.blur
     this.updateTime();
+
   },
+
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
-
+    reSizeCB(e) {
+      let str = e.split(",")
+      if (str[0] > 285) {
+        console.log('1 :>> ', 1);
+      }
+    },
+    updateBlur(e) {
+      this.increaseCustomComponents(this.customIndex, {
+        blur: e,
+      });
+      this.blur = e
+    },
     updateClockStyle(e) {
       this.increaseCustomComponents(this.customIndex, {
         clockiD: e,
@@ -165,12 +185,6 @@ export default {
     width: 90%;
     height: 120px;
     margin-top: 10px;
-
-    #seconds,
-    .a,
-    #toggle-button {
-      display: none;
-    }
   }
 }
 
