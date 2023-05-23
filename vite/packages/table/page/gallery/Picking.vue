@@ -4,10 +4,9 @@
     <div class="w-80 h-12 bg-white bg-opacity-10 rounded-lg flex items-center ">
         <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
         <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
-            <a-select-option value="/timeline/v2">拾光</a-select-option>
-            <!-- <a-select-option value="/glutton/snake">贪吃蛇</a-select-option> -->
-            <a-select-option value="/glutton/journal">贪食鬼</a-select-option>
-            <a-select-option value="/wallhaven/v2">wallhaven</a-select-option>
+           <a-select-option v-for="item in paperSourceOption" :value="item.name">
+             {{ item.title }}
+           </a-select-option>
         </a-select>
     </div>
   </div>
@@ -81,19 +80,19 @@
   </div>
 </a-drawer>
 
-<a-drawer  v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag">
+<a-drawer  v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag" :footer-style="{ border:'none' }">
     <div class="flex w-full   justify-center items-center flex-col">
-        <div class="w-60" style="margin: 50%;">
+        <div class="flex-col flex justify-start mx-2 my-40">
           <div class="flex" style="margin-bottom: 12px;">
-            <span style="margin-right: 16px;">壁纸源</span>
-            <span>ONE ? 一个</span>
+            <span style="margin-right: 16px; color:rgba(255, 255, 255, 0.6); font-size: 16px; font-weight: 400;">壁纸源</span>
+            <span  style="color:rgba(255, 255, 255, 0.85); font-size: 16px; font-weight: 400;">{{defaultSynopsis.title}}</span>
           </div>
           <div class="flex" style="margin-bottom: 12px;">
-            <span style="margin-right: 30px;">简介</span>
-            <span>复杂的世界里，一个就够了</span>
+            <span style="color:rgba(255, 255, 255, 0.6);font-size: 16px; font-weight: 400;">简介</span>
+            <span class="ml-8" style="color:rgba(255, 255, 255, 0.85); font-size: 16px; font-weight: 400;">{{defaultSynopsis.synopsis}}</span>
           </div>
           <div class="flex items-center">
-            <span style="margin-right: 30px;">官网</span>
+            <span style="margin-right: 30px; color:rgba(255, 255, 255, 0.6);font-size: 16px; font-weight: 400;">官网</span>
             <span class="w-40 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="toOfficialWebsite">
               访问官网
             </span>
@@ -101,7 +100,7 @@
         </div>
     </div>
     <template #footer>
-      <span>「拾光壁纸」提供技术支持</span>
+      <span style="color:rgba(255, 255, 255, 0.6);font-size: 16px; font-weight: 400;">「拾光壁纸」提供技术支持</span>
     </template>
 </a-drawer>
 
@@ -175,6 +174,24 @@ export default defineComponent({
       visibleMenu:false,
       currentPaper:null,
       count:'',
+      paperSourceOption:[
+        {
+          title:'拾光',
+          name:'/timeline/v2',
+          synopsis:'时光如歌,岁月如诗'
+        },
+        {
+          title:'贪食鬼',
+          name:'/glutton/journal',
+          synopsis:'饕餮盛宴'
+        },
+        {
+          title:'wallhaven',
+          name:'/wallhaven/v2',
+          synopsis:'The best wallpapers on the Net'
+        }
+      ],
+      defaultSynopsis:{ title:'拾光', name:'/timeline/v2',  synopsis:'时光如歌,岁月如诗'}
     }
   },
   mounted() {
@@ -257,6 +274,10 @@ export default defineComponent({
 
     pickFilterChange(e){
       this.pickFilterValue = e
+      const index  = this.paperSourceOption.findIndex(v=>{
+        return v.name === e
+      })
+      this.defaultSynopsis = this.paperSourceOption[index]
       this.pickImageData  = []
       this.getPickingData(e,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
     },

@@ -1,22 +1,24 @@
 <template>
   <div class="mt-3">
-    <div class="flex justify-between" v-if="cpuShow === true">
-      <div class="pr-4 flex flex-col relative" style="width:79.045%; border-right: 1px solid rgba(255,255,255,0.20);">
-        <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloud等等的点点滴滴flare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
-        <div class="in-run">正在运行</div>
-        <span class="py-4">{{steamDetail.appinfo.common.name}}</span>
+    <div class="flex justify-between justify-center" v-if="cpuShow === true">
+      <div class="flex flex-col" style="width:73.53%;">
+        <div class=" relative" style="width:400px;height:188px;">
+          <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
+          <div class="in-run">正在运行</div>
+        </div>
+        <span class="my-4">{{steamDetail.appinfo.common.name}}</span>
         <div class="flex">
-          <div class="flex flex-col mr-28">
-            <span class="show-time">最近游玩 : {{ getDateMyTime(steamDetail.time) }}</span>
-            <span class="show-time">M站评分 : {{ steamDetail.appinfo.common.metacritic_score }}</span>
-          </div>
           <div class="flex flex-col">
-            <span class="show-time">过去两周 : {{ twoWeekTime(steamDetail.time) }}</span>
+            <span class="show-time mb-2">最近游玩 : {{ getDateMyTime(steamDetail.time) }}</span>
+            <span class="show-time">M站评分 : {{ steamDetail.appinfo.common.metacritic_score ? steamDetail.appinfo.common.metacritic_score : '-' }}</span>
+          </div>
+          <div class="flex flex-col ml-32">
+            <span class="show-time mb-2">过去两周 : {{ twoWeekTime(steamDetail.time) }}</span>
             <span class="show-time">总数 : {{ totalTime(steamDetail.time) }}</span>
           </div>
         </div>
         <div class="flex justify-between mt-2">
-          <div @click="closeGame" class="flex items-center  detail-active s-item py-3 rounded-lg pointer px-15 justify-center">
+          <div @click="closeGame" class="flex items-center mr-3  detail-active s-item  rounded-lg pointer  justify-center" style="padding: 13px 56.61px;">
             <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">关闭游戏</span>
           </div>
@@ -26,8 +28,9 @@
           </div>
         </div>
       </div>
-      <div class="pl-4 flex flex-col" style="width:21%;">
-        <div class="mb-8 flex s-item rounded-lg flex-col items-center justify-center" style="padding: 9px 6px 13px 5px;">
+      <a-divider type="vertical" style="height: 350px;background: rgba(255,255,255,0.05);" />
+      <div class="flex flex-col" style="width:20.405%;">
+        <div class="mb-2.5 flex s-item rounded-lg flex-col items-center justify-center" style="padding: 18px 6px;">
           <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
             {{  CPUGPUData.FPS.value }}
           </span>
@@ -36,7 +39,7 @@
             FPS
           </span>
         </div>
-        <div class="mb-7 flex s-item rounded-lg flex-col items-center justify-center " style="padding: 9px 6px 13px 5px;">
+        <div class="mb-2.5 flex s-item rounded-lg flex-col items-center justify-center " style="padding: 18px 6px;">
           <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
             {{  CPUGPUData.useCPU.value }}%
           </span>
@@ -45,7 +48,7 @@
             CPU
           </span>
         </div>
-        <div class="flex s-item rounded-lg flex-col items-center justify-center" style="padding: 9px 6px 13px 5px;">
+        <div class="flex s-item rounded-lg flex-col items-center justify-center" style="padding: 18px 6px;">
           <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
             {{  CPUGPUData.useGPU.value }}
           </span>
@@ -127,6 +130,10 @@ export default {
     }
   },
 
+  mounted(){
+    console.log(this.steamDetail);
+  },
+
   methods:{
     getDateMyTime(time){
       if(time){
@@ -176,8 +183,8 @@ export default {
 }
 .in-run{
   position: absolute;
-  top: 10px;
-  right: 25px;
+  top: 7px;
+  right: 10px;
   background: rgba(82,196,26,1);
   border-radius: 4px;
   padding: 3px 6px;
