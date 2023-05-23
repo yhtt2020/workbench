@@ -22,7 +22,7 @@
             <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">关闭游戏</span>
           </div>
-          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex s-item  detail-active  rounded-lg pointer items-center justify-center" style="padding: 13px 56.61px;">
+          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center"  style="padding: 13px 57px;">
             <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">游戏攻略</span>
           </div>
@@ -50,7 +50,7 @@
         </div>
         <div class="flex s-item rounded-lg flex-col items-center justify-center" style="padding: 18px 6px;">
           <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
-            {{  CPUGPUData.useGPU.value }} 
+            {{  CPUGPUData.useGPU.value }}
           </span>
           <span class="flex items-center">
             <Icon icon="xianqia" class="mr-1" style="font-size:1.2em;"></Icon>
@@ -76,8 +76,8 @@
         <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
         <span class="ml-2">关闭游戏</span>
       </div>
-      
-    </div> 
+
+    </div>
   </div>
 </template>
 
@@ -96,7 +96,7 @@ export default {
       type:Boolean,
       default:true
     }
-  },  
+  },
   data(){
     return{
       CPUGPUData:{
@@ -108,11 +108,11 @@ export default {
         up:0
       },
     }
-  }, 
+  },
   computed:{
     ...mapWritableState(cardStore,['aidaData']),
   },
- 
+
   watch:{
     'aidaData':{
       handler(){
@@ -129,7 +129,7 @@ export default {
       deep:true
     }
   },
-  
+
   mounted(){
     console.log(this.steamDetail);
   },
@@ -190,7 +190,7 @@ export default {
   padding: 3px 6px;
   font-size: 14px;
   color: rgba(255,255,255,0.85);
-  font-weight: 500;  
+  font-weight: 500;
 }
 .m-in-run{
   position: absolute;
