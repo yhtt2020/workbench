@@ -1,14 +1,7 @@
 <template>
-  <div
-    v-if="hide"
-    style="position: fixed; top: 0; bottom: 0; right: 0; left: 0"
-    @click="hideDesk"
-    @contextmenu="hideDesk"
-  ></div>
-  <div
-    v-if="!hide"
-    @contextmenu="showMenu"
-    style="
+  <div v-if="hide" style="position: fixed; top: 0; bottom: 0; right: 0; left: 0" @click="hideDesk"
+    @contextmenu="hideDesk"></div>
+  <div v-if="!hide" @contextmenu="showMenu" style="
       display: flex;
       align-items: flex-start;
       flex-direction: column;
@@ -17,35 +10,18 @@
       flex-shrink: 1;
       height: 100%;
       width: 100%;
-    "
-  >
+    ">
     <div class="text-left" v-if="desks.length > 1">
-      <HorizontalPanel
-        @changed="this.key = Date.now()"
-        :navList="desksList"
-        v-model:selectType="currentDeskIndex"
-      ></HorizontalPanel>
+      <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
+      </HorizontalPanel>
     </div>
     <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%">
-        <a-result
-          class="s-bg rounded-lg m-auto"
-          style="margin: auto"
-          status="success"
-          title="使用卡片桌面"
-          sub-title="您可以长按空白处、右键添加卡片。"
-        >
+        <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
+          sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button
-              @click="addCard"
-              class="mr-10"
-              key="console"
-              type="primary"
-              >添加第一张卡片</a-button
-            >
-            <a-button disabled key="buy" @click="learn"
-              >学习（课程暂未上线）</a-button
-            >
+            <a-button @click="addCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
+            <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
           </template>
 
           <div class="desc">
@@ -61,24 +37,16 @@
         </a-result>
       </div>
     </div>
-    <vue-custom-scrollbar
-      key="scrollbar"
-      id="scrollerBar"
-      @contextmenu.stop="showMenu"
-      :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%"
-    >
-      <div
-        style="
+    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+      <div style="
           white-space: nowrap;
           height: 100%;
           width: 100%;
           display: flex;
           align-items: center;
           align-content: center;
-        "
-        :style="{ 'padding-top': this.settings.marginTop + 'px' }"
-      >
+        " :style="{ 'padding-top': this.settings.marginTop + 'px' }">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -92,26 +60,14 @@
         <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
-        <vuuri
-          v-if="currentDesk.cards"
-          :get-item-margin="
-            () => {
-              return settings.cardMargin + 'px';
-            }
-          "
-          group-id="grid.id"
-          :drag-enabled="editing"
-          v-model="currentDesk.cards"
-          :key="key"
-          :style="{
-            zoom: (this.settings.cardZoom / 100).toFixed(2),
-            height: '100%',
-            width: '100%',
-          }"
-          class="grid home-widgets"
-          ref="grid"
-          :options="muuriOptions"
-        >
+        <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
+            return settings.cardMargin + 'px';
+          }
+          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
+      zoom: (this.settings.cardZoom / 100).toFixed(2),
+      height: '100%',
+      width: '100%',
+    }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
               <component
@@ -122,7 +78,6 @@
                 @touchend="touch"
                 :customData="item.data"
                 :editing="editing"
-                :runAida64="runAida64"
                 @customEvent="customEvent"
               ></component>
             </div>
@@ -132,47 +87,27 @@
     </vue-custom-scrollbar>
   </div>
   <transition name="fade">
-    <div
-      class="home-blur"
-      style="
+    <div class="home-blur" style="
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
         bottom: 0;
         z-index: 999;
-      "
-      v-if="custom"
-    >
+      " v-if="custom">
       <AddCard @setCustom="setCustom"></AddCard>
     </div>
   </transition>
 
-  <a-drawer
-    :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }"
-    :width="120"
-    :height="220"
-    class="drawer"
-    placement="bottom"
-    :visible="menuVisible"
-    @close="onClose"
-  >
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
+    placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
         <div @click="toggleEditing" class="btn">
-          <Icon
-            v-if="!this.editing"
-            style="font-size: 3em"
-            icon="bofang"
-          ></Icon>
-          <Icon
-            v-else
-            style="font-size: 3em; color: orange"
-            icon="tingzhi"
-          ></Icon>
+          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
+          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>
           <div>
-            <span v-if="!this.editing">调整布局</span
-            ><span v-else style="color: orange">停止调整</span>
+            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>
           </div>
         </div>
       </a-col>
@@ -218,33 +153,19 @@
     <div class="line-title">卡片设置：</div>
     <div class="line">
       卡片缩放：
-      <a-slider
-        :min="20"
-        :max="500"
-        v-model:value="settings.cardZoom"
-      ></a-slider>
+      <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
     </div>
     <div class="line">
       卡片空隙：(调大空隙可能变成瀑布流布局)
-      <a-slider
-        :min="5"
-        :max="30"
-        v-model:value="settings.cardMargin"
-      ></a-slider>
+      <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
     </div>
     <div class="line">
       距离顶部：
-      <a-slider
-        :min="0"
-        :max="200"
-        v-model:value="settings.marginTop"
-      ></a-slider>
+      <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
     <div class="line-title">背景设置：</div>
     <div class="line">
-      透明背景(透出系统桌面壁纸)：<a-switch
-        v-model:checked="appSettings.transparent"
-      ></a-switch>
+      透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
     </div>
     <div class="line" v-if="!appSettings.transparent">
       <a-button type="primary" class="mr-3" @click="goPaper">背景设置</a-button>
@@ -253,11 +174,7 @@
     <div v-if="!appSettings.transparent" class="line">
       <div class="line">
         背景模糊度：
-        <a-slider
-          v-model:value="backgroundSettings.backGroundImgBlur"
-          :max="100"
-          :step="1"
-        />
+        <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
       </div>
       <!--      <div class="line">-->
       <!--        遮罩浓度：-->
@@ -287,11 +204,7 @@
       <a-input-number v-model:value="appSettings.down.count"></a-input-number>
     </div>
   </a-drawer>
-  <div
-    class="home-blur fixed inset-0 p-12"
-    style="z-index: 999"
-    v-if="agreeTest === false"
-  >
+  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest === false">
     <GradeNotice></GradeNotice>
   </div>
   <a-drawer v-model:visible="addDeskVisible">
@@ -341,7 +254,6 @@ import DiscountPercentage from "../components/homeWidgets/games/DiscountPercenta
 import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/homeWidgets/SmallWallpaper.vue";
 import MyGameSmall from "../components/homeWidgets/games/MyGameSmall.vue";
-import MyGameMiddle from "../components/homeWidgets/games/MyGameMiddle.vue";
 import Capture from "../components/homeWidgets/games/Capture.vue";
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
@@ -361,9 +273,10 @@ import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 import {setSupervisoryData} from '../js/action/supervisory'
-const readAida64 = window.readAida64
-const {steamUser,steamSession,path,https,steamFs} = $models
-const {LoginSession, EAuthTokenPlatformType} = steamSession
+import Clocks from '../components/homeWidgets/clock/index.vue'
+import note from "../components/homeWidgets/note/index.vue"
+const { steamUser, steamSession, path, https, steamFs } = $models
+const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
 let client = new steamUser({
   enablePicsCache: true,
@@ -561,10 +474,9 @@ export default {
         currentItemId: -1,
       },
       scrollbar: Date.now(),
-      timer: null,
+      inspectorTimer: null,
       reserveTimer: null,
       custom: false,
-      runAida64: true,
       muuriOptions: {
         dragAutoScroll: {
           targets: [
@@ -615,7 +527,6 @@ export default {
     SmallWallpaper,
     GameEpic,
     MyGameSmall,
-    MyGameMiddle,
     Capture,
     CustomAssembly,
     SignIn,
@@ -624,13 +535,14 @@ export default {
     Voice,
     Audio,
     SteamFriends,
-    CaptureNewCard
+    CaptureNewCard,
+    Clocks,
+    note
   },
   computed: {
     ...mapWritableState(cardStore, [
       "customComponents",
       "clockEvent",
-      "aidaData",
       "settings",
       "desks",
       "moved",
@@ -799,13 +711,10 @@ export default {
       }
     });
     this.navigationList = [];
-    this.startAida();
     //this.setAgreeTest(false)
   },
   unmounted() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+
     if (this.reserveTimer) {
       clearInterval(this.reserveTimer);
     }
@@ -822,7 +731,6 @@ export default {
     },
     runExec,
     ...mapActions(cardStore, [
-      "setAidaData",
       "getCurrentDesk",
       "addDesk",
       "switchToDesk",
@@ -831,7 +739,7 @@ export default {
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
-    setSupervisoryData,
+
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
     },
@@ -941,33 +849,6 @@ export default {
     },
     setCustom() {
       this.custom = false;
-    },
-    startAida() {
-      this.timer = setInterval(() => {
-        readAida64()
-          .then((res) => {
-            this.runAida64 = true;
-            const newData = this.setSupervisoryData(res);
-            this.setAidaData(newData);
-            // console.log(res)
-            //this.data=JSON.stringify(res, null, '\t')
-          })
-          .catch((err) => {
-            this.runAida64 = false;
-            clearInterval(this.timer);
-            this.reserveTimer = setInterval(() => {
-              readAida64()
-                .then((res) => {
-                  this.runAida64 = true;
-                  clearInterval(this.reserveTimer);
-                  this.startAida();
-                })
-                .catch((err) => {});
-            }, 10000);
-            const newData = this.setSupervisoryData(undefined);
-            this.setAidaData(newData);
-          });
-      }, 1000);
     },
   },
   watch: {

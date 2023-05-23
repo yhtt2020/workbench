@@ -1,6 +1,6 @@
 <template>
 <HomeComponentSlot :options="options">
-  <div class="top-content">
+  <div @click="go"  class="top-content pointer">
     <div><span>{{CPUGPUData.useCPU.value}}%</span>
       <span>
       <Icon icon="cpu" class="icon" ></Icon>CPU</span>
@@ -48,10 +48,14 @@
 </template>
 
 <script>
-import {mapWritableState} from "pinia";
+import {mapWritableState,mapActions} from "pinia";
 import {cardStore} from "../../../store/card";
 import {filterObjKeys, netWorkDownUp} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import { inspectorStore } from '../../../store/inspector'
+
+const {rpc}=window.$models
+
 export default {
   name: "CPUFourCard",
   data(){
@@ -73,6 +77,7 @@ export default {
 
   }
   },
+
   // directives: {
   //   zoom: {
   //     created: (element) =>{
@@ -96,7 +101,7 @@ export default {
     HomeComponentSlot
   },
   computed:{
-    ...mapWritableState(cardStore, ["aidaData"]),
+    ...mapWritableState(inspectorStore, ["displayData"]),
     lastDown(){
       return this.CPUGPUData.down < 1000 ? this.CPUGPUData.down +'KB/S' : this.CPUGPUData.down<1024000?(this.CPUGPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.down/1024/1024).toFixed(2) + 'GB/S'
     },
@@ -104,10 +109,15 @@ export default {
       return this.CPUGPUData.up < 1000 ? this.CPUGPUData.up +'KB/S' : this.CPUGPUData.up<1024000?(this.CPUGPUData.up/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.up/1024/1024).toFixed(2) + 'GB/S'
     }
   },
+  methods:{
+    go(){
+      this.$router.push({name:'inspector'})
+    }
+  },
   watch: {
-    "aidaData": {
+    "displayData": {
       handler(newVal, oldVal) {
-        let { useGPU, useMemory, useCPU, FPS, down, up} = this.aidaData || {}
+        let { useGPU, useMemory, useCPU, FPS, down, up} = this.displayData || {}
         this.CPUGPUData = {
           useGPU:useGPU,
           useCPU:useCPU,

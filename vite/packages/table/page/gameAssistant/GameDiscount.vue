@@ -11,12 +11,12 @@
          <a-spin v-if="isLoading === true" style="margin-top: 2em;"></a-spin>
          <div  class="w-full flex justify-start flex-col">
           <div v-for="item in steamList" class="flex items-center s-bg  mt-3  flex-row  rounded-lg p-3" style="width: 100%;">
-            <div class="flex-none mr-3" style="width: 258px;height: 120px;">
+            <div @click="enterDiscountDetail(item)" class="pointer flex-none mr-3" style="width: 258px;height: 120px;">
               <img :src="item.image" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
             </div>
             <div class="flex-grow" >
               <div class="flex flex-col">
-                <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">{{item.name}}</span>
+                <span @click="enterDiscountDetail(item)" class="mb-2 pointer" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">{{item.name}}</span>
                 <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">{{item.brief}}</span>
                 <div class="flex items-center">
                    <span class="flex justify-center mr-3 rounded-lg items-center" style=" padding: 5px 14px; background: rgba(255, 77, 79, 1);color: rgba(255, 255, 255, 0.85);">-{{ item.percent }} %</span>
@@ -38,13 +38,13 @@
         <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
           <div  class="w-full flex justify-start flex-col">
             <div v-for="item in epicList"  class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 100%;">
-              <div class="flex-none mr-3" style="width: 258px;height: 120px;">
+              <div @click="openEpicStore" class="flex-none mr-3 pointer" style="width: 258px;height: 120px;">
                 <img :src="item.keyImages.url" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
               </div>
               <div class="flex-grow" >
                 <div class="flex flex-col">
                   <div>
-                    <span class="mb-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                    <span @click="openEpicStore" class="mb-2 pointer" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
                       {{ item.el.title }}
                     </span>
                     <span v-if="item.el.offerType === 'DLC'" class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">

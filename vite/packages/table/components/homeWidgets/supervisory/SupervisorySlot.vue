@@ -1,17 +1,20 @@
 <template>
-    <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}">
-      <div class="content-title">
-        <div class="left-title">
+  <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}">
+    <div class="content-title">
+      <div class="left-title">
         <Icon :icon="options.icon" class="title-icon"></Icon>
-        <div style="font-size: 1em">{{options.title}}</div>
+        <div style="font-size: 1em">{{ options.title }}</div>
       </div>
-        <div class="right-title" @click.stop="showDrawer">
-          <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-        </div>
+      <div class="right-title" @click.stop="showDrawer">
+        <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
       </div>
+    </div>
 
+    <div @click="go" class="pointer">
       <slot></slot>
     </div>
+
+  </div>
   <a-drawer
     :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
     backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
@@ -26,10 +29,12 @@
     <div style="display: flex;flex-direction: row;height: 100%">
 
       <div class="option" @click="removeCard">
-        <Icon class="icon" icon="guanbi2"></Icon>删除
+        <Icon class="icon" icon="guanbi2"></Icon>
+        删除
       </div>
       <div class="option" @click="onCopy">
-        <Icon class="icon" icon="fuzhi"></Icon>复制数据
+        <Icon class="icon" icon="fuzhi"></Icon>
+        复制数据
       </div>
     </div>
   </a-drawer>
@@ -37,60 +42,71 @@
 </template>
 
 <script>
-import {mapActions, mapWritableState} from "pinia";
-import {cardStore} from "../../../store/card";
-import {message} from "ant-design-vue";
+import { mapActions, mapWritableState } from 'pinia'
+import { cardStore } from '../../../store/card'
+import { message } from 'ant-design-vue'
+import { inspectorStore } from '../../../store/inspector'
 
 export default {
-  data(){
+  data () {
     return {
-      visible:false,
+      visible: false,
     }
   },
-  name: "SupervisorySlot",
-  props:{
+  name: 'SupervisorySlot',
+  props: {
     options: {
       type: Object,
       default: () => ({})
     },
-    editing:{
-      type:Boolean,
-      default:false
+    editing: {
+      type: Boolean,
+      default: false
     },
-    customIndex:{
-      type:Number,
-      default:0
+    customIndex: {
+      type: Number,
+      default: 0
     }
   },
-  computed:{
-    ...mapWritableState(cardStore, ["aidaData"]),
+  computed: {
+    ...mapWritableState(cardStore, ['aidaData']),
+
   },
-  methods:{
-    ...mapActions(cardStore, ["removeCustomComponents"]),
-    showDrawer()  {
-      this.visible = true;
+  mounted () {
+    this.startInspect()
+  },
+  unmounted () {
+    this.stopInspect()
+  },
+  methods: {
+    ...mapActions(cardStore, ['removeCustomComponents']),
+    ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
+    showDrawer () {
+      this.visible = true
     },
-    onClose() {
-      this.visible = false;
+    onClose () {
+      this.visible = false
     },
-    removeCard(){
+    removeCard () {
       this.removeCustomComponents(this.customIndex)
-      this.visible = false;
+      this.visible = false
     },
-    onCopy() {
-      if(this.aidaData) {
-      let textArea = document.getElementById('textArea')
-      textArea.innerText =JSON.stringify(this.aidaData);
-      console.log(textArea);
-      textArea.select()
-      document.execCommand('copy')
-      this.visible = false;
-     message.info('复制成功！')
-    }else{
+    onCopy () {
+      if (this.aidaData) {
+        let textArea = document.getElementById('textArea')
+        textArea.innerText = JSON.stringify(this.aidaData)
+        console.log(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        this.visible = false
+        message.info('复制成功！')
+      } else {
         message.info('复制失败，请检查是否启动过aida64！')
       }
+    },
+    go () {
+      this.$router.push({ name: 'inspector' })
     }
-
   }
 }
 </script>
