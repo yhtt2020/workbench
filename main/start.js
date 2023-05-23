@@ -55,12 +55,8 @@ app.on('session-created',async (ses)=>{
 
 function ensureDb(){
   const DB_ROOT= require(__dirname+'/src/util/dbUtil.js').getDbPath('db')
-  console.log('DB_ROOT=',DB_ROOT)
   const DB_PATH=path.dirname(DB_ROOT)
-  console.log('DB_PATH=',DB_PATH)
   const TPL_PATH=path.join(__dirname,'/db/tpl.sqlite')
-  console.log('TPL_PATH=',TPL_PATH)
-  console.log('__dirname=',__dirname)
   if(!fs.existsSync(DB_PATH)){
     fs.ensureDirSync(DB_PATH)
     if(!fs.existsSync(DB_ROOT)){
