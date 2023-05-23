@@ -2,7 +2,7 @@
   <div class="mt-3">
     <div class="flex justify-between" v-if="cpuShow === true">
       <div class="pr-4 flex flex-col relative" style="width:79.045%; border-right: 1px solid rgba(255,255,255,0.20);">
-        <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
+        <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloud等等的点点滴滴flare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
         <div class="in-run">正在运行</div>
         <span class="py-4">{{steamDetail.appinfo.common.name}}</span>
         <div class="flex">
@@ -47,7 +47,7 @@
         </div>
         <div class="flex s-item rounded-lg flex-col items-center justify-center" style="padding: 9px 6px 13px 5px;">
           <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
-            {{  CPUGPUData.useGPU.value }} 
+            {{  CPUGPUData.useGPU.value }}
           </span>
           <span class="flex items-center">
             <Icon icon="xianqia" class="mr-1" style="font-size:1.2em;"></Icon>
@@ -73,8 +73,8 @@
         <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
         <span class="ml-2">关闭游戏</span>
       </div>
-      
-    </div> 
+
+    </div>
   </div>
 </template>
 
@@ -93,7 +93,7 @@ export default {
       type:Boolean,
       default:true
     }
-  },  
+  },
   data(){
     return{
       CPUGPUData:{
@@ -105,11 +105,11 @@ export default {
         up:0
       },
     }
-  }, 
+  },
   computed:{
     ...mapWritableState(cardStore,['aidaData']),
   },
- 
+
   watch:{
     'aidaData':{
       handler(){
@@ -183,7 +183,7 @@ export default {
   padding: 3px 6px;
   font-size: 14px;
   color: rgba(255,255,255,0.85);
-  font-weight: 500;  
+  font-weight: 500;
 }
 .m-in-run{
   position: absolute;
