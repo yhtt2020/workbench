@@ -29,7 +29,6 @@ export default {
         callBack(e) {
             this.$refs.drag.dragCallBack(e)
             this.__updateDragSize(e)
-            this.$emit("customEvent")
         },
     },
 

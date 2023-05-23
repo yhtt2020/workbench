@@ -1,8 +1,12 @@
 <template>
     <div class="boxs" ref="textRef" style="margin-top: 8px; " :style="{ width: w, height: h }">
         <slot :row="1123"></slot>
-        <div ref="dragRef" class="drag-boxs">
-        </div>
+        <svg t="1684744355055" ref="dragRef" class="icon drag-boxs" viewBox="0 0 1024 1024" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" p-id="10063">
+            <path
+                d="M469.333333 256a85.333333 85.333333 0 1 1-85.333333-85.333333 85.333333 85.333333 0 0 1 85.333333 85.333333z m-85.333333 170.666667a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m256-341.333334a85.333333 85.333333 0 1 0-85.333333-85.333333 85.333333 85.333333 0 0 0 85.333333 85.333333z m0 85.333334a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z"
+                p-id="10064"></path>
+        </svg>
     </div>
 </template>
 
@@ -25,9 +29,9 @@ export default {
         this.dragCallBack()
     },
     methods: {
-
         dragCallBack(e) {
             let className = e ?? this.className
+            this.$emit("__updateDragSize", className)
             if (className == "card double") {
                 this.w = `${542}px`
                 this.h = `${360}px`

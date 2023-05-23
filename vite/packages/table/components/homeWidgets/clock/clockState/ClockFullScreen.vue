@@ -1,10 +1,11 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' :style="{ backgroundImage: imgUrl, filter: blur }">
+    <div class='popContainer' :style="{ backgroundImage: imgUrl, filter: blurs }">
     </div>
     <div class="box">
       <!-- icon-drag -->
-      <component :is="clock" />
+      <component :is="clock" v-if="clock !== 'clock3'" :key="clock" />
+      <clock3 v-if="clock == 'clock3'" key="clock3"></clock3>
       <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
         <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
           <Icon class="icon" icon="caret-left"></Icon>
@@ -19,7 +20,7 @@
           <Icon class="icon" icon="setting"></Icon>
         </div>
         <div class="item-icon flex justify-center items-center pointer mr-4" @click="exit()">
-          <Icon class="icon" icon="tuichu"></Icon>
+          <Icon class="icon" icon="guanbi2"></Icon>
         </div>
       </div>
     </div>
@@ -29,17 +30,8 @@
         <div class="text-center">设置</div>
       </template>
 
-      <ClockBackground @img="img" @updateBlue="updateBlue"></ClockBackground>
+      <ClockBackground @img="img" @updateBlur="updateBlur" :blur="blur"></ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
-      <div class="line-title">背景设置：</div>
-      <div class="line">
-        透明背景(透出系统桌面壁纸)：<a-switch></a-switch>
-      </div>
-      <div class="line">
-        <a-button type="primary" class="mr-3">背景设置</a-button>
-        <a-button>清除背景</a-button>
-      </div>
-
     </a-drawer>
   </teleport>
 </template>
@@ -63,9 +55,14 @@ export default {
     imgUrl: {
       type: String,
       default: "",
+    },
+    blur: {
+      type: String,
+      default: 0,
     }
   },
   mounted() {
+    this.updateBlur(this.blur)
     this.touchEvent()
     //鼠标事件
     document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
@@ -82,7 +79,7 @@ export default {
       settingVisible: false,
       autoTime: null,
       src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
-      blur: "blur(100px)"
+      blurs: "blur(10px}"
     };
   },
   methods: {
@@ -94,9 +91,10 @@ export default {
       document.removeEventListener("keydown", this.touchEvent, { capture: true });
       this.$emit('exit')
     },
-    updateBlue(e) {
-      console.log('e :>> ', e);
-
+    updateBlur(e) {
+      let a = parseInt(e / 2)
+      this.blurs = `blur(${a}px)`
+      this.$emit("updateBlur", e)
     },
     touchEvent() {
       const that = this
@@ -159,6 +157,8 @@ export default {
   // 背景的模糊大小通过下面的属性值大小来调制
   background-color: rgba(255, 255, 255, 0.3);
 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(5px);
 
   transform: scale(1.2);
 
@@ -260,9 +260,6 @@ export default {
   }
 }
 
-// @media screen and (min-width:600px) and (max-width:900px){
-//   body {background-color:blue;}
-// }
 .item-icon {
   z-index: 9999999999999;
   width: 100px;

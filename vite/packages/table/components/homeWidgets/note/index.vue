@@ -3,8 +3,8 @@
         <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
             :className="options.className">
             <template #="{ row }">
-                <textarea :style="{ 'backgroundImage': background }" class="box" placeholder="输入卡片内容" v-model="text"
-                    @blur="updateText">
+                <textarea :style="{ 'backgroundImage': background, color: colors }" class="box" placeholder="输入卡片内容"
+                    v-model="text" @blur="updateText">
                 </textarea>
             </template>
         </cardDrag>
@@ -97,11 +97,16 @@ export default {
                 text: "",
             });
         }
-
+        if (!this.customData.color) {
+            this.increaseCustomComponents(this.customIndex, {
+                colors: "#ffffff",
+            });
+        }
     },
     mounted() {
         this.text = this.customData.text
         this.background = this.customData.background
+        this.colors = this.customData.color
     },
 
     components: {
@@ -120,6 +125,17 @@ export default {
                 background: e,
             });
             this.background = e
+            if (e == "linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)") {
+                this.increaseCustomComponents(this.customIndex, {
+                    color: "#000000",
+                });
+                this.colors = "#000000"
+            } else {
+                this.increaseCustomComponents(this.customIndex, {
+                    color: "#ffffff",
+                });
+                this.colors = "#ffffff"
+            }
         },
     }
 }
@@ -131,14 +147,12 @@ export default {
     height: 100%;
     background-color: rgba(165, 42, 42, 0);
     border: 0px;
-    color: #fff;
     resize: none;
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
     padding: 12px;
     font-size: 16px;
-
 }
 
 .box::-webkit-scrollbar {
@@ -162,7 +176,6 @@ export default {
     opacity: 0.65;
     border-radius: 10px;
     margin: 9px;
-
 }
 
 .drag-boxs {
