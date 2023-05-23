@@ -480,7 +480,6 @@ export const cardStore = defineStore(
         const findCustom = currentDesk.cards.find(el => {
           return value === el.id
         })
-       console.log(findCustom)
 
         currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
       },

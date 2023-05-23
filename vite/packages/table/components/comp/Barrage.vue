@@ -1,51 +1,49 @@
-<template>
-
-</template>
+<template></template>
 
 <script>
 import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
-import {mapState} from 'pinia'
+import { mapState } from 'pinia'
 
 export default {
   name: 'Barrage',
-  data(){
-    return{
-      sendBarragesCount:{},//用于屏蔽弹幕的数组，最终会存入localStorage ,nanoid:times
-      filteredBarrages:[],//已经被屏蔽的
-      timer:null
+  data() {
+    return {
+      sendBarragesCount: {},//用于屏蔽弹幕的数组，最终会存入localStorage ,nanoid:times
+      filteredBarrages: [],//已经被屏蔽的
+      timer: null
     }
 
 
   },
-  computed:{
-    ...mapState(appStore,['settings'])
+  computed: {
+    ...mapState(appStore, ['settings'])
   },
-  async mounted () {
-    window.loadBarrage=this.changeUrl
-    this.timer=setInterval(()=>{
+  async mounted() {
+    window.loadBarrage = this.changeUrl
+    this.timer = setInterval(() => {
       this.changeUrl('table').then()
-    },60000)
+    }, 60000)
     // this.$router.afterEach((to, from) => {
     //   this.changeUrl('table').then()
     // })
     //禁用路由切换的时候的barrage请求
-    this.filteredBarrages =JSON.parse(localStorage.getItem('filteredBarrages')) || []
-    this.sendBarragesCount =JSON.parse(localStorage.getItem('sendBarragesCount')) || {}
+    this.filteredBarrages = JSON.parse(localStorage.getItem('filteredBarrages')) || []
+    this.sendBarragesCount = JSON.parse(localStorage.getItem('sendBarragesCount')) || {}
     let that = this
-    const settings=this.settings
+    const settings = this.settings
     const manager = Danmuku.create({
       container: document.body,
       interval: 1,
       times: [20, 25],
-      direction:settings.barrage.direction,
-      limit:settings.barrage.limit,
-      height:settings.barrage.height,
+      direction: settings.barrage.direction,
+      limit: settings.barrage.limit,
+      height: settings.barrage.height,
       hooks: {
-        send (manager, data) {
+        send(manager, data) {
         },
 
-        barrageCreate (barrage, node) {
+        barrageCreate(barrage, node) {
           if (!barrage.isSpecial) {
             // 设置弹幕内容和样式
             node.classList.add('barrage-style')
@@ -55,7 +53,7 @@ export default {
             }
           }
         },
-        barrageAppend (barrage, node) {
+        barrageAppend(barrage, node) {
           //node.textContent = barrage.data.content
           node.textContent = barrage.data.self ? '我：' + barrage.data.content : barrage.data.content
           let data = barrage.data
@@ -67,7 +65,7 @@ export default {
           }
           node.classList.add('barrage-style')
           node.onmouseenter = e => barrage.pause()
-          node.onmouseleave = e => {if ($manager.runing) barrage.resume()}
+          node.onmouseleave = e => { if ($manager.runing) barrage.resume() }
           node.onclick = e => {
             that.visibleBarrageOperation = true
             that.currentBarrageData = barrage.data
@@ -81,40 +79,40 @@ export default {
     //   limit:50
     // })
     manager.setOptions({
-      height:100
+      height: 100
     })
     tsbApi.barrage.init()
 
-    tsbApi.barrage.setOnUrlChanged((url)=>{
-      if(this.settings.barrage.browserLink){
+    tsbApi.barrage.setOnUrlChanged((url) => {
+      if (this.settings.barrage.browserLink) {
         this.changeUrl(url)
       }
     }) //挂载url变化事件
 
-    this.pageUrl ='table'// (await tsbApi.tabs.current()).sourceUrl
-    if(this.settings.enableBarrage){
+    this.pageUrl = 'table'// (await tsbApi.tabs.current()).sourceUrl
+    if (this.settings.enableBarrage) {
       //如果开启弹幕则加载第一次
       this.getList().then()
     }
 
     window.$manager = manager
-    window.$manager.reload=this.getList
-    window.$manager.sendChat=this.sendChat
-    this.manager=manager
-    window.addEventListener('resize',()=>{
+    window.$manager.reload = this.getList
+    window.$manager.sendChat = this.sendChat
+    this.manager = manager
+    window.addEventListener('resize', () => {
       console.log('rezied')
       manager.resize()
     })
     manager.start()
     manager.show()
   },
-  unmounted () {
+  unmounted() {
     clearInterval(this.timer)
   },
-  methods:{
+  methods: {
     async changeUrl(url) {
       this.pageUrl = url
-      if(this.settings.enableBarrage){
+      if (this.settings.enableBarrage) {
         //如果启用弹幕，才刷新
         await this.getList()
       }
@@ -122,47 +120,47 @@ export default {
     /**
      * 通过计数的方式进行弹幕的屏蔽
      */
-    filterBarrages(list){
-      let sendList= list.filter(barrage=>{
-        if(this.filteredBarrages.indexOf(barrage.nanoid)>-1)//已经被屏蔽了
+    filterBarrages(list) {
+      let sendList = list.filter(barrage => {
+        if (this.filteredBarrages.indexOf(barrage.nanoid) > -1)//已经被屏蔽了
         {
           return false
         }
-        if(!this.sendBarragesCount[barrage.nanoid]){
-          this.sendBarragesCount[barrage.nanoid]=1
-        }else{
+        if (!this.sendBarragesCount[barrage.nanoid]) {
+          this.sendBarragesCount[barrage.nanoid] = 1
+        } else {
           this.sendBarragesCount[barrage.nanoid]++
         }
-        if(this.sendBarragesCount[barrage.nanoid]>this.settings.barrage.repeat){
+        if (this.sendBarragesCount[barrage.nanoid] > this.settings.barrage.repeat) {
           this.filteredBarrages.push(barrage.nanoid)//加入屏蔽列表
           delete this.sendBarragesCount[barrage.nanoid] //移除屏蔽记录
           return false
         }
         return true//幸存下来的予以推送
       })
-      localStorage.setItem('filteredBarrages',JSON.stringify(this.filteredBarrages))
-      localStorage.setItem('sendBarragesCount',JSON.stringify(this.sendBarragesCount))
+      localStorage.setItem('filteredBarrages', JSON.stringify(this.filteredBarrages))
+      localStorage.setItem('sendBarragesCount', JSON.stringify(this.sendBarragesCount))
       //存入两个值
       return sendList
 
     },
-    async sendChat(messages){
+    async sendChat(messages) {
 
-      let barrages=[]
-      messages.forEach(mes=>{
-         if(mes.body===''){
-           return
-         }else{
-           if(!mes.avatar){
-             mes.avatar='https://up.apps.vip/logo/group.png?t=2'
-           }
-           barrages.push({
-             avatar:mes.avatar,
-             channel_type:-1,
-             content:'【消息】'+mes.title+'：'+mes.body,
-             nickname:mes.title,
-           })
-         }
+      let barrages = []
+      messages.forEach(mes => {
+        if (mes.body === '') {
+          return
+        } else {
+          if (!mes.avatar) {
+            mes.avatar = 'https://up.apps.vip/logo/group.png?t=2'
+          }
+          barrages.push({
+            avatar: mes.avatar,
+            channel_type: -1,
+            content: '【消息】' + mes.title + '：' + mes.body,
+            nickname: mes.title,
+          })
+        }
       })
       $manager.send(barrages)
     },
@@ -172,7 +170,7 @@ export default {
         let rs = await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, this.pageUrl)
         this.barrages = rs.data
         if (rs.status) {
-          if(this.settings.enableBarrage){
+          if (this.settings.enableBarrage) {
             //如果是设置了启用弹幕
             $manager.clear()
             $manager.send(this.filterBarrages(this.barrages))//进行前置过滤
@@ -180,11 +178,11 @@ export default {
           }
 
         } else {
-          message.error({content:'获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。',key:'barrage'})
+          message.error({ content: '获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。', key: 'barrage' })
         }
       } catch (e) {
         console.error(e)
-        message.error({content:'获取弹幕意外错误。',key:'barrage'})
+        message.error({ content: '获取弹幕意外错误。', key: 'barrage' })
       }
     },
   }
@@ -192,17 +190,18 @@ export default {
 </script>
 
 <style lang="scss">
-
-.barrage-style:hover{
-  border:2px solid rgba(255, 255, 255, 0.47);
+.barrage-style:hover {
+  border: 2px solid rgba(255, 255, 255, 0.47);
   background: #000;
 }
-.barrage-style:hover .barrage-btn-wrapper{
+
+.barrage-style:hover .barrage-btn-wrapper {
   display: block;
 }
-.barrage-opt-button{
+
+.barrage-opt-button {
   border-radius: 6px;
-  background:rgba(0, 0, 0, 0.5) ;
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 5px 8px;
   line-height: 18px;
@@ -211,9 +210,11 @@ export default {
   display: inline-block;
   cursor: pointer;
 }
-.barrage-opt-button:hover{
+
+.barrage-opt-button:hover {
   opacity: 0.8;
 }
+
 .barrage-style {
   -webkit-app-region: no-drag;
   user-select: none;

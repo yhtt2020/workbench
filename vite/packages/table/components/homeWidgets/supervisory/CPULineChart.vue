@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div class="content">
+    <div @click="go" class="content pointer">
       <div class="cpu">
         <div class="cpu-number">
           <div>
@@ -87,11 +87,12 @@
 import SupervisorySlot from "./SupervisorySlot.vue";
 import {CPUOption,GPUOption} from './echartOptions'
 import * as echarts from "echarts";
-import {mapWritableState} from "pinia";
+import {mapWritableState,mapActions} from "pinia";
 import {cardStore} from "../../../store/card";
 import {filterObjKeys, netWorkDownUp} from '../../../util'
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 import { appStore } from '../../../store'
+import { inspectorStore } from '../../../store/inspector'
 export default {
   data(){
     return {
@@ -123,7 +124,7 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['saving']),
-    ...mapWritableState(cardStore, ["aidaData"]),
+    ...mapWritableState(inspectorStore,['displayData']),
     lastDown(){
       return this.CPUData.down < 1000 ? this.CPUData.down +'KB/S' : this.CPUData.down<1024000?(this.CPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUData.down/1024/1024).toFixed(2) + 'GB/S'
     },
@@ -131,13 +132,10 @@ export default {
       return this.CPUData.up < 1000 ? this.CPUData.up +'KB/S' : this.CPUData.up<1024000?(this.CPUData.up/1024).toFixed(2) + 'MB/S':(this.CPUData.up/1024/1024).toFixed(2) + 'GB/S'
     }
   },
-  mounted() {
-    this.CPUEcharts();
-  },
   watch: {
-    "aidaData": {
+    "displayData": {
       handler(newVal, oldVal) {
-        let { useGPU, warmGPU, useMemory, useCPU, warmCPU, FPS, videoStorage, down, up} = this.aidaData || {}
+        let { useGPU, warmGPU, useMemory, useCPU, warmCPU, FPS, videoStorage, down, up} = this.displayData || {}
         this.CPUData = {
           useGPU:useGPU,
           useCPU:useCPU,
@@ -236,6 +234,9 @@ export default {
     },
   },
   methods:{
+    go(){
+      this.$router.push({name:'inspector'})
+    },
     CPUEcharts() {
       this.echartsInstance = echarts.init(this.$refs.cpuChart);
       this.echartsInstance.setOption({

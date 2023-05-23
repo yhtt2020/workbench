@@ -60,12 +60,40 @@ export default {
     },
   },
   destroyed() {
-    // 销毁定时器
-    clearInterval(this.timerID);
+
+    clearInterval(this.timerID);   //  销毁定时器
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "./clock2.css";
+.clock2 {
+  color: #ffffff;
+  text-align: center;
+  /* width: 100%;
+  height: 100%; */
+  text-shadow: 0 0 20px #a9a9a9, 0 0 10px rgba(31, 31, 31, 0.25);
+
+}
+
+.clock2 .time {
+  font-family: "sans-serif";
+  letter-spacing: 0.05em;
+  font-size: 60px;
+  padding: 0 0;
+  margin-top: -10px;
+  margin-bottom: 0;
+}
+
+.clock2 .date {
+  letter-spacing: 0.1em;
+  font-size: 15px;
+  margin-top: -15px;
+}
+
+.clock2 .name {
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  padding: 20px 0 0;
+}
 </style>
