@@ -12,17 +12,12 @@
       </a-col>
     </a-row>
 
-    <a-input
-      v-model:value="selectContent"
-      class="no-drag"
-      placeholder="搜索"
-      style="
+    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索" style="
         height: 100%;
         width: 400px;
         border-radius: 12px;
         background: rgba(42, 42, 42, 0.6);
-      "
-    >
+      ">
       <template #prefix>
         <Icon icon="sousuo"></Icon>
       </template>
@@ -122,6 +117,7 @@ export default {
           images: ["fish"],
           size: ["1x1"],
         },
+
         {
           name: "games",
           cname: "游戏折扣推荐",
@@ -130,11 +126,34 @@ export default {
           images: ["GamesDiscount", "DiscountPercentage", "GameEpic"],
         },
         {
+
           name: "gameAssis",
           cname: "游戏助手",
           icon: "steam",
           detail: "各种游戏工具",
-          images: ["MyGameSmall", "MyGameMiddle", "SteamFriends"],
+          images: ["MyGameSmall", "SteamFriends"],
+        },
+        {
+          name: 'capture',
+          cname: '捕获',
+          icon: 'audio',
+          detail: '捕获',
+          images: ['capture', 'CaptureNewCard']
+        },
+        {
+          name: 'Audio',
+          cname: '音频工具',
+          icon: 'audio',
+          detail: '音频工具',
+          images: [ 'audio', 'voice']
+        },
+        {
+          name: 'remote',
+          cname: '外部卡片',
+          icon: 'game',
+          detail: '添加一个链接到外部网页的卡片，可以实现各种自定义功能。',
+          images: ['Remote'],
+          size: ['1x2']
         },
         {
           name: 'customAssembly',
@@ -147,11 +166,43 @@ export default {
         {
           name: 'signIn',
           cname: '签到',
-          icon: '',
+          icon: 'star',
           detail: '完成签到，获得奖励',
           images: ['signIn'],
+          size: ['1x2']
+        },
+        {
+          name: 'singleDoubanFilm',
+          cname: '豆瓣电影',
+          icon: 'video',
+          detail: '查看最近正在上映的热门电影',
+          images: ['singleDoubanFilm','largeSingleDoubanFilm'],
+          size: ['1x2']
+        },
+        {
+          name: 'manyDoubanFilm',
+          cname: '豆瓣电影',
+          icon: 'video',
+          detail: '查看最近正在上映的热门电影',
+          images: ['manyDoubanFilm','largeManyDoubanFilm'],
+          size: ['1x2']
+        },
+        {
+          name: 'clocks',
+          cname: '时钟',
+          icon: 'time-circle',
+          detail: '选择合适的时钟组件装点你的桌面',
+          images: ['clocks'],
           size: ['1x1']
-        }
+        },
+        {
+          name: 'note',
+          cname: '桌面便签',
+          icon: 'time-circle',
+          detail: '可自由修改内容，调整大小的桌面便签',
+          images: ['note'],
+          size: ['1x2']
+        },
       ],
       cardType: {},
       show: false,
@@ -168,7 +219,7 @@ export default {
     };
   },
 
-  mounted() {},
+  mounted() { },
   computed: {
     filterList() {
       return this.cardList.filter((i) => {

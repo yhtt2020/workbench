@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div class="content">
+    <div @click="go" class="content pointer">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
           <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{GPUData.useGPU.value}}%</div>
@@ -34,10 +34,11 @@
 </template>
 
 <script>
-import {mapWritableState} from "pinia";
+import { mapActions, mapWritableState } from 'pinia'
 import {cardStore} from "../../../store/card";
 import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
+import { inspectorStore } from '../../../store/inspector'
 export default {
   name: "SmallGPUCard",
   data(){
@@ -60,15 +61,15 @@ export default {
     HomeComponentSlot
   },
   computed:{
-    ...mapWritableState(cardStore, ["aidaData"]),
+    ...mapWritableState(inspectorStore,['displayData']),
     GPUStorage() {
       return this.GPUData.videoStorage.value>0?(this.GPUData.videoStorage.value / 1000).toFixed(2):this.GPUData.videoStorage.value
     }
   },
   watch: {
-    "aidaData": {
+    "displayData": {
       handler(newVal, oldVal) {
-        let { useGPU, warmGPU, videoStorage} = this.aidaData || {}
+        let { useGPU, warmGPU, videoStorage} = this.displayData || {}
         this.GPUData = {
           useGPU:useGPU,
           warmGPU:warmGPU,
@@ -82,7 +83,10 @@ export default {
     },
   },
   methods:{
-    initCanvas
+    initCanvas,
+    go(){
+      this.$router.push({name:'inspector'})
+    }
   }
 }
 </script>

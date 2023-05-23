@@ -475,12 +475,11 @@ export const cardStore = defineStore(
         })
         currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {Code: {id: value, value: newData}}
       },
-     increaseCustomComponents(value, newData) {
+      increaseCustomComponents(value, newData) {
         let currentDesk = this.getCurrentDesk()
         const findCustom = currentDesk.cards.find(el => {
           return value === el.id
         })
-       console.log(findCustom)
 
         currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
       },
@@ -492,8 +491,13 @@ export const cardStore = defineStore(
         // this.customComponents.splice(customIndex,1);
 
       },
-      setDataEmpty() {
-
+      setDataEmpty() {},
+      insetSteamSize(value,newData){
+        let currentDesk = this.getCurrentDesk()
+        const findCustom = currentDesk.cards.find(el => {
+          return value === el.id
+        })
+        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
       }
     },
     persist: {

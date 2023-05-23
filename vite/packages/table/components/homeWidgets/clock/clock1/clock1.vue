@@ -1,5 +1,5 @@
 <template>
-  <div class="FlipClock">
+  <div class="FlipClock clock1">
     <Flipper ref="flipperHour1" />
     <Flipper ref="flipperHour2" />
     <em>:</em>
@@ -45,7 +45,7 @@ export default {
         this.flipObjs[i].setFront(nowTimeStr[i]);
       }
     },
-    // 开始计时
+    // 计时
     run() {
       this.timer = setInterval(() => {
         // 获取当前时间

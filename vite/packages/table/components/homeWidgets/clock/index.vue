@@ -1,30 +1,46 @@
 <template>
   <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" :formulaBar="formulaBar">
-    <div class="box">
-      <component :is="customData.clockiD" span="12" display="none" @click="fullScreen()" />
-    </div>
+
+    <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
+      :className="options.className">
+      <template #="{ row }">
+        <div class="box">
+          <component :is="customData.clockiD" span="12" display="none" @click="fullScreen()" />
+        </div>
+      </template>
+    </cardDrag>
   </HomeComponentSlot>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    <ClockBackground></ClockBackground>
+    <cardSize @__updateSize="__updateSize" :isActive="isActive"></cardSize>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
+
+  <ClockFullScreen v-if="isClockFullScreen" :imgUrl="customData.imgUrl" :clock="customData.clockiD"
+    @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl">
+  </ClockFullScreen>
 </template>
 
 <script>
 import HomeComponentSlot from "../HomeComponentSlot.vue";
-import clock1 from "./clock1/clock1.vue";
-import clock2 from "./clock2/clock2.vue";
-import clock3 from "./clock3/clock3.vue";
-import clock4 from "./clock4/clock4.vue";
-import ClockStyle from "./clockStyle/ClockStyle.vue";
-import ClockBackground from "./clockStyle/ClockBackground.vue";
+import ClockStyle from "./clockState/ClockStyle.vue";
+import ClockFullScreen from "./clockState/ClockFullScreen.vue"
 
+
+import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
+
+
+import cardDrag from "../note/hooks/cardDrag.vue"
+import cardDragHook from "../note/hooks/cardDragHook"
+
+import cardSize from "../note/hooks/cardSize.vue"
+import cardSizeHook from "../note/hooks/cardSizeHook"
 export default {
+  mixins: [mixin, cardDragHook, cardSizeHook],
   props: {
     customIndex: {
       type: Number,
@@ -40,10 +56,10 @@ export default {
       options: {
         className: "card small",
         title: "时钟",
-        icon: "sound",
+        icon: "time-circle",
         type: "games",
       },
-
+      isClockFullScreen: false,
       settingVisible: false,
       formulaBar: [
         {
@@ -60,16 +76,22 @@ export default {
   },
   components: {
     HomeComponentSlot,
-    clock1,
-    clock2,
-    clock3,
-    clock4,
     ClockStyle,
-    ClockBackground,
+    ClockFullScreen,
+    cardDrag,
+    cardSize
   },
   created() {
+
     if (!this.customData.clockiD) {
-      this.increaseCustomComponents(this.customIndex, { clockiD: "clock4" });
+      this.increaseCustomComponents(this.customIndex, {
+        clockiD: "clock4",
+      });
+    }
+    if (!this.customData.imgUrl) {
+      this.increaseCustomComponents(this.customIndex, {
+        imgUrl: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
+      });
     }
   },
   mounted() {
@@ -77,19 +99,19 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
+
     updateClockStyle(e) {
       this.increaseCustomComponents(this.customIndex, {
         clockiD: e,
       });
     },
-
-    fullScreen() {
-      this.$router.push({
-        path: "/clock",
-        query: {
-          clock: this.customData.clockiD,
-        },
+    updateImgUrl(url) {
+      this.increaseCustomComponents(this.customIndex, {
+        imgUrl: url,
       });
+    },
+    fullScreen() {
+      this.isClockFullScreen = true
     },
     zeroPadding(num, digit) {
       let zero = "";
@@ -107,21 +129,22 @@ export default {
         "日 " +
         this.week[cd.getDay()];
     },
+
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .box {
-  height: 90%;
+  height: 100%;
   position: relative;
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   :deep(.clock3) {
     position: absolute;
-    top: -108px;
-    left: -50px;
-    transform: scale(0.4, 0.4);
+    transform: scale(0.36, 0.36);
   }
 
   :deep(.gutter-box) {
@@ -129,7 +152,6 @@ export default {
   }
 
   :deep(.clock2) {
-    padding-top: 25px;
     margin-left: -6px;
   }
 
@@ -137,6 +159,18 @@ export default {
     margin: 20px 2px;
     font-size: 58px;
     width: 55px;
+  }
+
+  :deep(.clock5) {
+    width: 90%;
+    height: 120px;
+    margin-top: 10px;
+
+    #seconds,
+    .a,
+    #toggle-button {
+      display: none;
+    }
   }
 }
 

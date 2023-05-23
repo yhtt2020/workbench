@@ -22,7 +22,7 @@ export default {
       type: [Number, String],
       default: 0,
     },
-    // back paper text
+    // back paper  text
     // 后牌文字
     backText: {
       type: [Number, String],
@@ -68,7 +68,7 @@ export default {
     setFront(text) {
       this.frontTextFromData = text;
     },
-    // 设置后牌文字
+    //  设置后牌文字
     setBack(text) {
       this.backTextFromData = text;
     },

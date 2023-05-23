@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 .FlipClock {
   text-align: center;
 }
@@ -114,34 +115,42 @@
   0% {
     transform: perspective(160px) rotateX(0deg);
   }
+
   100% {
     transform: perspective(160px) rotateX(-180deg);
   }
 }
+
 @keyframes backFlipDown {
   0% {
     transform: perspective(160px) rotateX(180deg);
   }
+
   100% {
     transform: perspective(160px) rotateX(0deg);
   }
 }
+
 @keyframes frontFlipUp {
   0% {
     transform: perspective(160px) rotateX(0deg);
   }
+
   100% {
     transform: perspective(160px) rotateX(180deg);
   }
 }
+
 @keyframes backFlipUp {
   0% {
     transform: perspective(160px) rotateX(-180deg);
   }
+
   100% {
     transform: perspective(160px) rotateX(0deg);
   }
 }
+
 .M-Flipper .number0:before,
 .M-Flipper .number0:after {
   content: "0";
@@ -170,6 +179,7 @@
 .M-Flipper .number5:before,
 .M-Flipper .number5:after {
   content: "5";
+
 }
 
 .M-Flipper .number6:before,
