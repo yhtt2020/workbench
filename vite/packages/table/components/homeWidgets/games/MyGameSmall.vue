@@ -9,7 +9,7 @@
     <template v-if="showSize.className === ''">
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
-          <a-spin v-if="gameList.length !== 9" style="margin: 0 auto;"/>
+          <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
            <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
             <div style="height:118.53px;" v-if="item.appinfo">
@@ -34,7 +34,7 @@
     <template v-else>
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
-          <a-spin v-if="gameList.length !== 9" style="margin: 0 auto;"/>
+          <a-spin v-if="gameList.length !== gameList.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
             <div v-for="item in gameList.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
               <div style="height:118.53px;" v-if="item.appinfo">
