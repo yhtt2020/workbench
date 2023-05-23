@@ -1,7 +1,7 @@
 <template>
-    <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" :formulaBar="formulaBar">
-        <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
-            :className="options.className">
+    <HomeComponentSlot :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
+        :formulaBar="formulaBar">
+        <cardDrag ref="drag" @reSizeInit="reSizeInit">
             <template #="{ row }">
                 <textarea :style="{ 'backgroundImage': background, color: colors }" class="box" placeholder="输入卡片内容"
                     v-model="text" @blur="updateText">
@@ -32,6 +32,7 @@ import cardSizeHook from "./hooks/cardSizeHook"
 
 import cardDrag from "./hooks/cardDrag.vue"
 import cardDragHook from "./hooks/cardDragHook"
+
 export default {
     mixins: [cardDragHook, cardSizeHook],
     props: {
@@ -108,7 +109,6 @@ export default {
         this.background = this.customData.background
         this.colors = this.customData.color
     },
-
     components: {
         HomeComponentSlot,
         cardSize,

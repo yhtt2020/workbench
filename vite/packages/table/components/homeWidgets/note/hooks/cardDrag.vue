@@ -30,25 +30,33 @@ export default {
     },
     methods: {
         dragCallBack(e) {
-            let className = e ?? this.className
-            this.$emit("__updateDragSize", className)
-            if (className == "card double") {
+            if (e == "card1") {
+                this.w = `${540}px`
+                this.h = `${140}px`
+            } else if (e == "card double") {
                 this.w = `${542}px`
                 this.h = `${360}px`
             }
-            else if (className == "card") {
+            else if (e == "card") {
                 this.w = `${250}px`
                 this.h = `${360}px`
             }
-            else if (className == "card small") {
+            else if (e == "card small") {
                 this.w = `${250}px`
                 this.h = `${140}px`
+            } else if (e) {
+                let str = e.split(",")
+                let width = Math.ceil(str[0] / 280)
+                let height = Math.ceil(str[1] / 205)
+                this.w = width * 280 + (width - 1) * 10 - 30 + 'px'
+                this.h = height * 205 + (height - 1) * 10 - 60 + 'px'
             }
         },
         drag() {
             let that = this
             let a = this.$refs.textRef
             let dragRef = this.$refs.dragRef
+            let name = ""
             dragRef.addEventListener("mousedown", (el) => {
                 let oldX = el.clientX
                 let oldY = el.clientY
@@ -60,26 +68,24 @@ export default {
                     let y = e.clientY;
                     width = x - oldX + w
                     height = h - oldY + y
-                    if (width > 250 && width < 542) {
+                    if (width > 250 && height < 140) {
                         that.w = `${width}px`
-                        if (height > 140 && height < 360) that.h = `${height}px`
-                        that.$emit("__updateClassName", "card double")
-                        console.log('盒子宽度在2x2范围内 :>> ');
+                        if (height > 50 && height < 140) that.h = `${height}px`
+                        that.$emit("reSizeInit", "card1")
+                        name = "card1"
+
+                    } else {
+                        that.h = `${height}px`
+                        that.w = `${width}px`
+                        name = `${width},${height}`
+                        that.$emit("reSizeInit", `${width},${height}`)
                     }
-                    else if (width < 250 && height > 140) {
-                        if (height > 140 && height < 360) that.h = `${height}px`
-                        that.$emit("__updateClassName", "card")
-                        console.log('盒子宽度在1x2范围内 :>> ');
-                    }
-                    else if (width < 250 && height < 140) {
-                        that.$emit("__updateClassName", "card small")
-                        console.log('盒子宽度在1x1范围内 :>> ');
-                    }
+
                 }
                 document.onmouseup = function () {
                     document.onmousemove = null;
                     document.onmouseup = null;
-                    that.dragCallBack()
+                    that.dragCallBack(name)
                 };
             }, { capture: true })
         },
@@ -95,11 +101,9 @@ export default {
     position: absolute;
     bottom: 0;
     right: 0;
-    border: 1px solid;
 }
 
 .boxs {
     position: relative;
-    border: 1px solid red;
 }
 </style>

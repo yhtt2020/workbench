@@ -1,11 +1,10 @@
 <template>
-  <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options" :formulaBar="formulaBar">
-
-    <cardDrag ref="drag" @__updateClassName="__updateClassName" @__updateDragSize="__updateDragSize"
-      :className="options.className">
+  <HomeComponentSlot :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
+    :formulaBar="formulaBar">
+    <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <div class="box" @click="fullScreen()">
-          <component :is="customData.clockiD" span="12" display="none" />
+          <component :is="customData.clockiD" display="none" />
         </div>
       </template>
     </cardDrag>
@@ -62,6 +61,7 @@ export default {
       },
       isClockFullScreen: false,
       settingVisible: false,
+      isSnow: "block",
       formulaBar: [
         {
           icon: "shezhi1",
@@ -105,10 +105,16 @@ export default {
     this.updateTime();
 
   },
+
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
+    reSizeCB(e) {
+      let str = e.split(",")
+      if (str[0] > 285) {
+        console.log('1 :>> ', 1);
+      }
+    },
     updateBlur(e) {
-      console.log('拿到数据更新了 :>> ', e);
       this.increaseCustomComponents(this.customIndex, {
         blur: e,
       });
@@ -179,12 +185,6 @@ export default {
     width: 90%;
     height: 120px;
     margin-top: 10px;
-
-    #seconds,
-    .a,
-    #toggle-button {
-      display: none;
-    }
   }
 }
 
