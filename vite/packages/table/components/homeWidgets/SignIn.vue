@@ -12,7 +12,7 @@
           </div>
           <span v-if="false" style="color: rgba(255,255,255,0.60); font-size: 14px;">已连续签到2天</span>
         </div>
-        <div @click="signIn" class="middle-button sign-in-btn s-item" style="height: 42px;line-height: 42px"
+        <div @click="signIn" class="middle-button sign-in-btn s-item" style="height: 42px;line-height: 42px;color: white"
              :class="signedIn ? (completeLikes.length > 4 ? 'already' : 'new-people') : 'old-people'">
           {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '每日迎新') : '签到' }}
         </div>
