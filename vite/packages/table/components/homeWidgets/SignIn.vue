@@ -1,18 +1,18 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div class="pointer" @click="activityDescription(illustrateUrl)"
-         style="position: absolute;left: 150px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">
-      活动说明
-    </div>
+<!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
+<!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
+<!--      活动说明-->
+<!--    </div>-->
     <template v-if="!newPeoplePage">
       <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;">
         <div>
-          <div style="color: rgba(255,255,255,0.85); font-size: 16px; font-weight: 600;">
+          <div class="mt-2" style="color: rgba(255,255,255,0.85); font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}
           </div>
-          <span style="color: rgba(255,255,255,0.60); font-size: 14px;">已连续签到2天</span>
+          <span v-if="false" style="color: rgba(255,255,255,0.60); font-size: 14px;">已连续签到2天</span>
         </div>
-        <div @click="signIn" class="middle-button sign-in-btn s-item"
+        <div @click="signIn" class="middle-button sign-in-btn s-item" style="height: 42px;line-height: 42px"
              :class="signedIn ? (completeLikes.length > 4 ? 'already' : 'new-people') : 'old-people'">
           {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '每日迎新') : '签到' }}
         </div>
@@ -42,22 +42,23 @@
       </div>
       <div v-else class="flex flex-col overflow content-box pt-1">
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
-        <div v-for="item in accrueList" :key="item.id"
-             class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type"
-             style="margin: 6px 0 6px;">
-          <span class="ranking">{{ item.id }}</span>
-          <div class="flex-1 flex ml-3 items-center">
-            <a-avatar>
-              <template #icon>
-                <UserOutlined/>
-              </template>
-            </a-avatar>
-            <div class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 110px;">
-              {{ item.username }}
-            </div>
-          </div>
-          <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.accumulate }}</div>
-        </div>
+<!--        <div v-for="item in accrueList" :key="item.id"-->
+<!--             class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type"-->
+<!--             style="margin: 6px 0 6px;">-->
+<!--          <span class="ranking">{{ item.id }}</span>-->
+<!--          <div class="flex-1 flex ml-3 items-center">-->
+<!--            <a-avatar>-->
+<!--              <template #icon>-->
+<!--                <UserOutlined/>-->
+<!--              </template>-->
+<!--            </a-avatar>-->
+<!--            <div class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 110px;">-->
+<!--              {{ item.username }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.accumulate }}</div>-->
+<!--        </div>-->
+        <div class="text-center py-5">暂未开放，敬请期待</div>
         <!-- </vue-custom-scrollbar> -->
       </div>
       <div class="integral-modal s-bg" v-if="toggleModal">
@@ -100,9 +101,10 @@
 <script>
 import HomeComponentSlot from './HomeComponentSlot.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
-import { mapActions ,mapWritableState} from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { comStore } from '../../store/com'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'SingIn',
@@ -115,11 +117,13 @@ export default {
     return {
       options: {
         className: 'card',
-        title: '签到（开发中）',
+        title: '签到',
         icon: 'star',
         type: 'signIn'
       },
-      signInTitle: [{ title: '今日签到榜', name: 'today' }, { title: '累积签到榜', name: 'accrue' }],
+      signInTitle: [{ title: '今日已签', name: 'today' },
+        { title: '累签榜', name: 'accrue' }, { title: '连签榜', name: 'continued' }
+      ],
       signInType: { title: '今日签到榜', name: 'today' },
       // todayList: [],
       accrueList: [
@@ -153,12 +157,13 @@ export default {
   },
   async mounted () {
     this.updateTodayRank().then()
+    this.getSingInfo()
   },
-  computed:{
-    ...mapWritableState(comStore,['todayRank'])
+  computed: {
+    ...mapWritableState(comStore, ['todayRank'])
   },
   methods: {
-    ...mapActions(comStore, ['updateTodayRank']),
+    ...mapActions(comStore, ['updateTodayRank', 'doSign','getSignInfo']),
     async getTodayList () {
       // let rankResponse = await this.getTodayRank()
       // if(rankResponse.status===1){
@@ -175,13 +180,32 @@ export default {
       // }
       // console.log(rankResponse)
     },
-    signIn () {
+    getSingInfo(){
+      this.getSignInfo().then(data=>{
+        if(data){
+          if(data.status===1){
+            this.signedIn=true
+            return
+          }
+        }
+        this.signedIn=false
+      })
+    },
+    async signIn () {
       if (!this.signedIn) {
-        this.toggleModal = true
-        setTimeout(() => {
-          this.toggleModal = false
-        }, 1000)
-        this.signedIn = true
+
+        let doSign = await this.doSign()
+        if (doSign) {
+          this.updateTodayRank().then()
+          this.toggleModal = true
+          setTimeout(() => {
+            this.toggleModal = false
+          }, 1000)
+          this.signedIn = true
+        } else {
+          message.error('签到失败。')
+        }
+
       } else {
         this.newPeoplePage = true
       }
