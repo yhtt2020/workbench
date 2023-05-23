@@ -49,6 +49,24 @@ export const teamStore = defineStore("teamStore", {
         return true
       else return false
     },
+    myTeamNo(state){
+      let teamNo = 0
+      if (state.my.created) {
+        teamNo = state.my.created.no
+      } else if (state.my.joined.length > 0) {
+        teamNo = state.my.joined[0].no
+      }
+      return teamNo
+    },
+    myTeam(state){
+      let teamNo = {}
+      if (state.my.created) {
+        teamNo = state.my.created
+      } else if (state.my.joined.length > 0) {
+        teamNo = state.my.joined[0]
+      }
+      return teamNo
+    }
   },
   actions: {
     async getUserMedal(uid){
@@ -301,7 +319,7 @@ export const teamStore = defineStore("teamStore", {
     enabled: true,
     strategies: [
       {
-        paths: ['team', 'teamVisible'],
+        paths: ['team', 'teamVisible','my'],
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
         storage: dbStorage,

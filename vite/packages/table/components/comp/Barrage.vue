@@ -3,7 +3,8 @@
 <script>
 import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import { teamStore } from '../../store/team'
 
 export default {
   name: 'Barrage',
@@ -11,18 +12,24 @@ export default {
     return {
       sendBarragesCount: {},//用于屏蔽弹幕的数组，最终会存入localStorage ,nanoid:times
       filteredBarrages: [],//已经被屏蔽的
-      timer: null
+      timer: null,
+      barragesTeam:{}
     }
-
-
   },
   computed: {
-    ...mapState(appStore, ['settings'])
+    ...mapState(appStore, ['settings']),
+    ...mapState(teamStore, ['my','myTeamNo','myTeam']),
   },
   async mounted() {
-    window.loadBarrage = this.changeUrl
+    window.loadBarrage = this.loadAll
+    if(!this.my.created){
+      this.updateMy().then(()=>{
+        this.getTeamBarrage().then()
+      })
+    }
     this.timer = setInterval(() => {
       this.changeUrl('table').then()
+      this.getTeamBarrage().then()
     }, 60000)
     // this.$router.afterEach((to, from) => {
     //   this.changeUrl('table').then()
@@ -47,15 +54,25 @@ export default {
           if (!barrage.isSpecial) {
             // 设置弹幕内容和样式
             node.classList.add('barrage-style')
+
+
             if (barrage.data.self) {
               node.style.background = 'black'
               node.style.fontWeight = 'bold'
             }
+            if(barrage.data.type==='team'){
+              node.style.background = '#177ddc'
+              node.style.fontWeight = 'bold'
+            }
+
           }
         },
         barrageAppend(barrage, node) {
           //node.textContent = barrage.data.content
           node.textContent = barrage.data.self ? '我：' + barrage.data.content : barrage.data.content
+          if(barrage.data.type==='team'){
+            node.textContent ='[小队]'+node.textContent
+          }
           let data = barrage.data
           if (barrage.data.avatar) {
             let avatarEl = document.createElement('img')
@@ -110,11 +127,40 @@ export default {
     clearInterval(this.timer)
   },
   methods: {
+    ...mapActions(teamStore,['updateMy']),
+    async loadAll(url){
+      this.changeUrl(url).then()
+      this.getTeamBarrage().then()
+    },
     async changeUrl(url) {
       this.pageUrl = url
       if (this.settings.enableBarrage) {
         //如果启用弹幕，才刷新
         await this.getList()
+      }
+    },
+
+    async getTeamBarrage(){
+      console.log('获取我的小队弹幕',this.myTeamNo)
+      if (this.myTeamNo) {
+        console.log(this.myTeamNo,'')
+        tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
+          if (rs.status) {
+            console.log(rs,'取到的小队弹幕数据')
+            rs.data.forEach(item => {
+              item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
+              item.type='team'
+            })
+            this.barragesTeam = rs.data
+            if (this.settings.enableBarrage) {
+              console.log('发射弹幕：',this.barragesTeam)
+              //如果是设置了启用弹幕
+              $manager.send(this.filterBarrages(this.barragesTeam),undefined,true)//进行前置过滤
+              $manager.start()
+            }
+
+          }
+        })
       }
     },
     /**

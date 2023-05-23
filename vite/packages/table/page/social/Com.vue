@@ -7,20 +7,32 @@
 
     <vueCustomScrollbar v-if="currentTab.name==='com'" :settings="scrollbarSettings"
                         style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
-      <div class="card mr-3" style="height: 92% ;width: 300px;vertical-align: top;display: flex;flex-direction: column">
-        <div class="line-title">互动
-          <span style="float: right;font-weight: normal;font-size: 0.8em">
+      <div class="card mr-3"
+           style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column">
+        <div class="line-title">
+          <HorizontalPanel :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
+          <div v-if="currentChannel.name==='all'">
+            <span class="ml-2 mt-2" style="font-size: 14px">全网弹幕频道</span>
+            <span class="mt-2" style="float: right;font-weight: normal;font-size: 0.8em">
          <icon icon="yonghu"/>
         在线：{{ online || '-' }} 人
       </span>
+          </div>
+          <div class="pt-2" v-else>
+            <span class="ml-2" style="font-size: 14px;vertical-align: text-bottom">小队弹幕频道</span>
+            <span  style="float: right;font-weight: normal;font-size: 0.8em">
+              <a-avatar :size="20" class="mr-2" :src="myTeam.avatar"></a-avatar>{{myTeam.name}}
+
+      </span>
+          </div>
         </div>
-        <div class="mb-3" style="flex:1">
-          <div style="height: 100%">
+        <div class="mb-3" style="flex:1;height: 0;display: flex;">
+          <div>
             <vueCustomScrollbar :settings="scrollbarSettingsBarrage"
-                                style="height: 100%;white-space: nowrap">
+                                style="height:100%">
               <a-row class="mb-3" v-if="!hideAdmin" :gutter="[10,10]">
                 <a-col :span="4">
-                  <a-avatar src="/icons/logo128.png"></a-avatar>
+                  <a-avatar :size="36" src="/icons/logo128.png"></a-avatar>
                 </a-col>
                 <a-col :span="20">
                   <div class="barrage-name">
@@ -36,11 +48,11 @@
 
                 <template v-for="barrage in barrages">
                   <a-col :span="4">
-                    <a-avatar :src="barrage.avatar"></a-avatar>
+                    <a-avatar :size="36" :src="barrage.avatar"></a-avatar>
                   </a-col>
                   <a-col :span="20">
                     <div class="barrage-name">
-                      {{ barrage.nickname }} · {{ barrage.create_time_text }}
+                      <strong>{{ barrage.nickname }}</strong> · {{ barrage.create_time_text }}
                     </div>
                     <div class="barrage-content">
                       {{ barrage.content }}
@@ -54,10 +66,23 @@
             </vueCustomScrollbar>
           </div>
         </div>
-        <a-input @keyup.enter="postBarrage" v-model:value="postContent" placeholder="和大家说句话吧~"></a-input>
+        <div>
+
+          <a-input-group compact>
+
+            <a-input style="width:calc(100% - 60px)" @keyup.enter="postBarrage" v-model:value="postContent"
+                     :placeholder="'发送至'+currentChannel.title+'频道'">
+              <template #addonBefore>
+                <span>{{ currentChannel.title }}</span>
+              </template>
+            </a-input>
+            <a-button @click="postBarrage" type="primary">发送</a-button>
+          </a-input-group>
+        </div>
+
       </div>
       <div style="width: 280px" class="mr-3">
-        <SingIn :customIndex="1"  :customData="{}"></SingIn>
+        <SingIn :customIndex="1" :customData="{}"></SingIn>
       </div>
       <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top">
         <div class="card mb-3" style="width: 300px">
@@ -71,7 +96,6 @@
             </div>
           </div>
         </div>
-
 
 
       </div>
@@ -150,18 +174,38 @@ import vuuri from '../../components/vuuriHome/Vuuri.vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import SingIn from '../../components/homeWidgets/SignIn.vue'
+import { teamStore } from '../../store/team'
+import { mapState ,mapActions } from 'pinia'
 
 export default {
   name: 'Com',
   components: { SingIn, VueCustomScrollbar, HorizontalPanel, GradePanel, vuuri },
   data () {
     return {
+      channelList: [
+        {
+          title: '全网',
+          name: 'all'
+        }, {
+          title: '小队',
+          name: 'team'
+        }
+      ],
+      currentChannel: {
+        name: 'all',
+        title:'全网'
+      },
       comList: [
         { title: '社区', name: 'com' },
         { title: '版本更新', name: 'update' },
       ],
       currentTab: { name: 'com' },
-      barrages: [],
+      barragesAll: [],
+      barragesTeam: [],
+      sendToChannel: {
+        name: 'all',
+        title: '全网'
+      },
       postContent: '',
       scrollbarSettingsBarrage: {
         useBothWheelAxes: true,
@@ -179,12 +223,23 @@ export default {
       },
       online: 0,
       appVersion: '',
-      updateLog: []
+      updateLog: [],
+    }
+  },
+  computed: {
+    ...mapState(teamStore, ['my','myTeamNo','myTeam']),
+    barrages () {
+      if (this.currentChannel.name === 'all') {
+        return this.barragesAll
+      } else {
+        return this.barragesTeam
+      }
     }
   },
   mounted () {
     this.CONST = tsbApi.barrage.CONST
     this.loadBarrages().then()
+    this.loadTeamBarrage().then()
     this.getOnline().then()
     this.appVersion = tsbApi.runtime.appVersion
     axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
@@ -192,11 +247,30 @@ export default {
     })
   },
   methods: {
+    ...mapActions(teamStore,['updateMy']),
     checkUpdate () {
       ipc.send('checkUpdate')
     },
     openTab (url) {
       ipc.send('addTab', { url: url })
+    },
+    async loadTeamBarrage () {
+      console.log(this.my, 'wode小组')
+      await this.updateMy()
+      if (this.myTeamNo) {
+        console.log(this.myTeamNo,'')
+        tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
+          if (rs.status) {
+            rs.data.forEach(item => {
+              item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
+            })
+            this.barragesTeam = rs.data
+
+          }
+        })
+      } else {
+        this.barragesTeam = []
+      }
     },
     async loadBarrages () {
       tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, 'table').then(rs => {
@@ -204,7 +278,7 @@ export default {
           rs.data.forEach(item => {
             item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
           })
-          this.barrages = rs.data
+          this.barragesAll = rs.data
 
         }
       })
@@ -221,11 +295,20 @@ export default {
         message.error('请输入弹幕内容')
         return
       } else {
-        let data = {
-          channel_type: this.CONST.CHANNEL.PUBLIC,
-          content: this.postContent,
-          page_url: 'table',
+        let channelType=this.CONST.CHANNEL.PUBLIC
+        let pageUrl='table'
+        if(this.currentChannel.name!=='all'){
+          channelType=this.CONST.CHANNEL.TEAM
+          pageUrl=this.myTeamNo
         }
+
+        console.log(channelType,pageUrl)
+        let data = {
+          channel_type:channelType ,
+          content: this.postContent,
+          page_url: String(pageUrl),
+        }
+        console.log('添加 的daa',data)
         let rs = await tsbApi.barrage.add(data)
         if (rs.status) {
           this.postContent = ''
@@ -234,9 +317,10 @@ export default {
           }
           message.success('弹幕发送成功')
           setTimeout(() => {
-            window.loadBarrage('table')
-          }, 3000)
+           window.loadBarrage().then()
+          }, 1000)
         } else {
+          console.error(rs)
           message.error('弹幕发送失败，失败原因：' + rs)
         }
       }
