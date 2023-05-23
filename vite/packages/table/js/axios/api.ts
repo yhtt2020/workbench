@@ -163,13 +163,16 @@ export function startOfWeek(startDate,endDate) {
   const today = new Date();
   const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1));
   const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
-  console.log('本周起始日期',firstDayOfWeek);
-  console.log('本周结束日期',lastDayOfWeek);
+  // 本周的第一天是否大于startDate 和 最后一天是否大于endDate的情况
   if(firstDayOfWeek.getTime() > startDate.getTime() && lastDayOfWeek.getTime() > endDate.getTime()){
    return true
-  }else if(firstDayOfWeek.getTime() < startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime()){
+  }
+  // 本周的第一天是否小于startDate 最后一天是否小于endDate的情况
+  else if(firstDayOfWeek.getTime() < startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime()){
    return true
-  }else if(firstDayOfWeek.getTime() > startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime() ){
+  }
+  // 本周的第一天是否大于startDate 最后一天是否小于endDate的情况
+  else if(firstDayOfWeek.getTime() > startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime() ){
     return true
   }
 }
@@ -177,13 +180,18 @@ export function startOfWeek(startDate,endDate) {
 // 判断下周的方法
 export function startOfNextWeek(startDate,endDate) {
   const today = new Date();
-  const firstDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
-  const lastDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
+  const firstDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 14));
+  const lastDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 14));
+  // 下一周的第一天是否大于startDate 和 最后一天是否大于endDate的情况
   if(firstDayOfNextWeek.getTime() > startDate.getTime() && lastDayOfNextWeek.getTime() > endDate.getTime()){
     return true
-   }else if(firstDayOfNextWeek.getTime() < startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime()){
+  }
+  // 下一周的第一天是否小于startDate 最后一天是否小于endDate的情况
+  else if(firstDayOfNextWeek.getTime() < startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime()){
     return true
-   }else if(firstDayOfNextWeek.getTime() > startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime() ){
+  }
+  // 下一周的第一天是否大于startDate 最后一天是否小于endDate的情况
+  else if(firstDayOfNextWeek.getTime() > startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime() ){
     return true
    }
 }
