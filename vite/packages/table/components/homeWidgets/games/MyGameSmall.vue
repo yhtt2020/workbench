@@ -15,7 +15,7 @@
             <div style="height:118.53px;" v-if="item.appinfo">
               <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
             </div>
-            <span class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+            <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
            </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
               <div style="height:118.53px;" v-if="item.appinfo">
                 <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
                </div>
-               <span class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+               <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
             </div>
           </div>
         </div>

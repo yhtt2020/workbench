@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-3 darg">
+  <div class="pt-3 drag">
     <vue-custom-scrollbar :settings="settingsScroller" style="height:calc(100vh)">
       <div class="flex flex-row rounded-lg flex-wrap mr-4">
         <div class="pb-4 pl-4 game-list-item rounded-lg flex-shrink-0 my-game-content" v-for=" item in gameList ">
@@ -15,7 +15,7 @@
           </div>
         </div>
       </div>
-      <div class="set-button flex">
+      <div class="set-button flex no-drag">
         <div class="set-button-item s-bg mr-3 rounded-lg pointer">
          <Icon icon="bofang"></Icon>
         </div>
