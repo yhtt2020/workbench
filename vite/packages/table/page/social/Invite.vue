@@ -8,6 +8,7 @@
       <p>
         目前想天工作台仍然在测试阶段，并未面向大众公开下载使用。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。</p>
       <p>兑换比例方式：每200小时可兑换1枚邀请码，四舍五入（第1个邀请码在100小时释放，第2个在300小时） <br>
+        <strong style="color: red">邀请码机制仅用于老带新和互相帮扶，请勿销售邀请码或购买邀请码!</strong><br>
         您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong
           class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{ exchanged }}</strong>，剩余：<strong
           class="text-red-400">{{ leave }}</strong>。
