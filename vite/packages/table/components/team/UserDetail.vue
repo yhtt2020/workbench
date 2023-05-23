@@ -28,9 +28,9 @@
   </div>
   <div class="bg-mask rounded-lg m-3 p-3 mt-0" style="line-height: 2">
 <!--    升级效率：<strong>{{ effect }} %</strong>-->
-    小队在线时长：{{ online_h}} 小时 {{online_m}}分钟<br>
-    小队贡献：{{memberInfo.score}} 分<br>
-    平均每日在线：{{ daily_h }}小时{{daily_m}}分<br>
+<!--    小队在线时长：{{ online_h}} 小时 {{online_m}}分钟<br>-->
+<!--    小队贡献：{{memberInfo.score}} 分<br>-->
+<!--    平均每日在线：{{ daily_h }}小时{{daily_m}}分<br>-->
     加入时间：{{ memberInfo.updateTime }}<br>
     加入天数：{{joined_days}}天<br>
 <!--    下线时间：-<br>-->

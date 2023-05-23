@@ -24,7 +24,7 @@
           </a-col>
         </a-row>
         <div v-if="showDetail && teamDetail">
-          <TeamDetail @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
+          <TeamDetail @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
                       :teamLeader="teamLeader"></TeamDetail>
         </div>
         <div style="flex: 1;height:0" v-if="showBarrage ">

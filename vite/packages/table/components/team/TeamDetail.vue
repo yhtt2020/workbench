@@ -64,9 +64,13 @@ export default {
   },
   methods:{
     ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam','updateTeam']),
+    dismiss(){
+      Modal.error({content:'暂不支持解散小队',centered:true})
+    },
     goHall () {
-      this.closeDetail()
+
       this.$router.push({ name: 'hall' })
+      this.$emit('closeDetail')
     },
     receiveTeamEarnings(){
       this.$emit('onReceiveTeamEarnings')
