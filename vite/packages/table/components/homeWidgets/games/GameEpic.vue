@@ -82,6 +82,7 @@ export default {
             const startPromotions = el.promotions.promotionalOffers[0]
             const startDate = new Date(startPromotions.promotionalOffers[0].startDate)
             const endDate = new Date(startPromotions.promotionalOffers[0].endDate)
+            console.log(startOfWeek(startDate,endDate));
             return startOfWeek(startDate,endDate)
           }
         })
@@ -102,6 +103,7 @@ export default {
             const nextPromotions = el.promotions.upcomingPromotionalOffers[0]
             const nextStartDate = new Date(nextPromotions.promotionalOffers[0].startDate)
             const nextEndDate = new Date(nextPromotions.promotionalOffers[0].endDate)
+            console.log(startOfNextWeek(nextStartDate,nextEndDate));
             return startOfNextWeek(nextStartDate,nextEndDate)
           }
         })

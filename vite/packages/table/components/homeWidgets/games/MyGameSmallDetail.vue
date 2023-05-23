@@ -34,7 +34,7 @@
     </div>
   </div>
   <div v-else>
-    <div class="flex mt-4">
+    <div class="flex mt-2">
       <div class="w-1/2 rounded-lg  relative mr-5">
          <img :src="otherGame.src" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
          <span class="middle-tag rounded-md mr-2 mt-2">正在运行</span>
@@ -67,7 +67,7 @@
           <span class="font-color">M站评分</span>
           <span class="font-time">9.0</span>
          </div>
-         <div class="flex items-center rounded-lg pointer justify-center mb-3 px-3 py-3 s-item">
+         <div @click="openGameGuide" class="flex items-center rounded-lg pointer justify-center mb-3 px-3 py-3 s-item">
           <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
           <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>
          </div>
@@ -123,7 +123,7 @@ export default {
     },
     // 打开游戏攻略
     openGameGuide(){
-
+     this.$router.push({name:'gameIntroduction'})
     }
   }    
 }

@@ -165,7 +165,13 @@ export function startOfWeek(startDate,endDate) {
   const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
   console.log('本周起始日期',firstDayOfWeek);
   console.log('本周结束日期',lastDayOfWeek);
-  return firstDayOfWeek.getTime() < startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime()
+  if(firstDayOfWeek.getTime() > startDate.getTime() && lastDayOfWeek.getTime() > endDate.getTime()){
+   return true
+  }else if(firstDayOfWeek.getTime() < startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime()){
+   return true
+  }else if(firstDayOfWeek.getTime() > startDate.getTime() && lastDayOfWeek.getTime() < endDate.getTime() ){
+    return true
+  }
 }
 
 // 判断下周的方法
@@ -173,7 +179,13 @@ export function startOfNextWeek(startDate,endDate) {
   const today = new Date();
   const firstDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
   const lastDayOfNextWeek = new Date(today.setDate(today.getDate() - today.getDay() + 8));
-  return firstDayOfNextWeek.getTime() < startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime()
+  if(firstDayOfNextWeek.getTime() > startDate.getTime() && lastDayOfNextWeek.getTime() > endDate.getTime()){
+    return true
+   }else if(firstDayOfNextWeek.getTime() < startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime()){
+    return true
+   }else if(firstDayOfNextWeek.getTime() > startDate.getTime() && lastDayOfNextWeek.getTime() < endDate.getTime() ){
+    return true
+   }
 }
 
 // 计算剩余多少天
