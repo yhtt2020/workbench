@@ -6,7 +6,8 @@ class BarrageModel {
    BARRAGE_CONST={
     CHANNEL:{
       PUBLIC:10001,
-      GROUP:10002
+      GROUP:10002,
+      TEAM:10003,
     }
   }
   constructor () {
@@ -28,7 +29,7 @@ class BarrageModel {
     if (rs.code === 1000) {
       return standReturn.success(barrage)
     } else {
-      return standReturn.failure()
+      return standReturn.failure(rs)
     }
   }
   async delete(id){
