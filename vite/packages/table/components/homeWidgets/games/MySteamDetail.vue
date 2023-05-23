@@ -20,7 +20,7 @@
             <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">关闭游戏</span>
           </div>
-          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center">
+          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center"  style="padding: 13px 57px;">
             <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">游戏攻略</span>
           </div>
