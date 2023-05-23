@@ -7,7 +7,7 @@
     :formulaBar="formulaBar"
     >
       <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-        <div v-for="(item,index) in 4" :key="index" class="w-full  cursor-pointer" style="width: 116px;height: 171px;;position: relative;margin-bottom: 14px;">
+        <div v-for="(item,index) in 4" :key="index" class="w-full  cursor-pointer" style="width: 116px;height: 171px;position: relative;margin-bottom: 14px;">
           <img src="../../../../../public/img/test/film.jpg" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
           <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
             豆瓣：<span style="font-weight: 700;font-family: Oswald-Bold;">5.9</span>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="film-item" v-else-if="customData.width === 2">
-        <div v-for="item in 8" class="w-full rounded-t-lg  cursor-pointer mr-5" style="width: 116px;height: 171px;;position: relative;margin-bottom: 14px;">
+        <div v-for="(item,index) in 8" :key="index" class="w-full rounded-t-lg  cursor-pointer mr-5" style="width: 116px;height: 171px;position: relative;margin-bottom: 14px;">
           <img src="../../../../../public/img/test/film.jpg" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
           <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">豆瓣：<span style="font-weight: 700;font-family: Oswald-Bold;">5.9</span></div>
         </div>
@@ -24,10 +24,9 @@
 </template>
   
 <script>
-  import { mapActions } from 'pinia';
+  import { mapWritableState, mapActions } from 'pinia'
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import { douBanStore } from '../../../store/douBan';
-  import axios from 'axios';
   export default {
     name: "LargeManyDoubanFilm",
     components:{
@@ -57,26 +56,15 @@
         mySize: { title: "1x2", height:2,width:1,name:'1x2' },
       };
     },
-    methods: {
-      // ...mapActions(douBanStore,['getData'])
+    computed: {
+      ...mapWritableState(douBanStore, ['data']),
     },
-    // async mounted() {
-    //   let res = await sendRequest(`https://api.douban.com/v2/movie/in_theaters?apikey=0ab215a8b1977939201640fa14c66bab`,{})
-    //   console.log(res)
-    // },
+    methods: {
+      ...mapActions(douBanStore,['getData'])
+    },
     mounted() {
-      // this.getData()
-        //post请求
-      axios.post('https://api.douban.com/v2/movie/in_theaters', {
-        //此处是参数
-        apikey: '0ab215a8b1977939201640fa14c66bab'
-      })
-      .then(function (res) {
-        console.log(res);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      this.getData()
+      // console.log('data',this.data)  
     },
   };
 </script>

@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {compareTime, sendRequest} from '../js/axios/api'
+import axios from 'axios';
 
 // @ts-ignore
 export const douBanStore = defineStore("douBan", {
@@ -9,37 +10,46 @@ export const douBanStore = defineStore("douBan", {
   }),
   actions: {
     async getData() {
-      // console.log("!!!!!!!!!!!!!!!!1")
       // if (typeof this.data !== 'object') {
       //   this.data = {}
       // }
-      // //命中缓存
+      // // 命中缓存
       // const discountList = this.data
       // if (discountList) {
       //   if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
       //     console.log('命中缓存了')
-      //     console.log(this.data)
+      //     console.log("111", this.data)
       //     //无需做任何操作-
       //     return
       //   }
       // }
-      console.log('00000000000')
-      let res = await sendRequest(`https://api.douban.com/v2/movie/in_theaters?apikey=0ab215a8b1977939201640fa14c66bab`,{})
-      console.log(res)
-      // if (res && res.headers) {
-      //   const date = new Date(res.headers.Date)
-      //   const requestObj = {
-      //     expiresDate: date,
-      //     list: res.data.subjects
-      //   }
-      //   this.updateGameData(requestObj)
-      // }
+      // console.log('00000000000')
+      //post请求
+      axios.post('https://api.douban.com/v2/movie/in_theaters', {
+        //此处是参数
+        apikey: '0ab215a8b1977939201640fa14c66bab'
+      })
+      .then((res) => {
+        this.data = res
+        // if (res && res.headers) {
+        //   const date = new Date(res.headers.Date)
+        //   const requestObj = {
+        //     expiresDate: date,
+        //     list: res.data.subjects
+        //   }
+        //   this.updateGameData(requestObj)
+        // }
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     },
     // 通过时间更新数据
-    updateGameData( value) {
-      console.log('更新数据=', value)
-      this.data = value
-    },
+    // updateGameData( value) {
+    //   console.log('更新数据=', value)
+    //   this.data = value
+    // },
   },
   persist: {
     enabled: true,
