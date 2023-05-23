@@ -70,16 +70,8 @@
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component
-                :is="item.name"
-                :customIndex="item.id"
-                @touchstart="touch"
-                @touchmove="touch"
-                @touchend="touch"
-                :customData="item.data"
-                :editing="editing"
-                @customEvent="customEvent"
-              ></component>
+              <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
+                :customData="item.data" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -268,15 +260,14 @@ import GameEpic from "../components/homeWidgets/games/GameEpic.vue";
 import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
 import SignIn from "../components/homeWidgets/SignIn.vue"
 import SingleDoubanFilm from "../components/homeWidgets/douban/SingleDoubanFilm.vue"
-import LargeSingleDoubanFilm from "../components/homeWidgets/douban/LargeSingleDoubanFilm.vue"
 import ManyDoubanFilm from "../components/homeWidgets/douban/ManyDoubanFilm.vue"
-import LargeManyDoubanFilm from "../components/homeWidgets/douban/LargeManyDoubanFilm.vue"
 import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
-import {setSupervisoryData} from '../js/action/supervisory'
+import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/homeWidgets/clock/index.vue'
-import note from "../components/homeWidgets/note/index.vue"
+import Notes from "../components/homeWidgets/note/index.vue"
+const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -533,15 +524,13 @@ export default {
     CustomAssembly,
     SignIn,
     SingleDoubanFilm,
-    LargeSingleDoubanFilm,
     ManyDoubanFilm,
-    LargeManyDoubanFilm,
     Voice,
     Audio,
     SteamFriends,
     CaptureNewCard,
     Clocks,
-    note
+    Notes
   },
   computed: {
     ...mapWritableState(cardStore, [

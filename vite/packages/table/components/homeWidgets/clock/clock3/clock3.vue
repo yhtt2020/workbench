@@ -138,9 +138,14 @@ export default {
   },
   destroyed() {
     // 销毁定时器
+    console.log('销毁定时器 :>> ',);
     clearInterval(this.timer);
     this.timer = null;
   },
+  beforeDestroy() {
+    console.log('销毁定时器 :>> ');
+
+  }
 };
 </script>
 

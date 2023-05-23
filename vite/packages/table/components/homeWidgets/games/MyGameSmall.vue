@@ -9,7 +9,7 @@
     <template v-if="showSize.className === ''">
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
-          <a-spin v-if="gameList.length !== 9" style="margin: 0 auto;"/>
+          <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
            <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
             <div style="height:118.53px;" v-if="item.appinfo">
@@ -34,7 +34,7 @@
     <template v-else>
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
-          <a-spin v-if="gameList.length !== 9" style="margin: 0 auto;"/>
+          <a-spin v-if="gameList.length !== gameList.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
             <div v-for="item in gameList.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
               <div style="height:118.53px;" v-if="item.appinfo">
@@ -139,7 +139,7 @@ export default {
       CPUShow:false,
       otherDetailShow:false,
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.middleShow = true;this.$refs.gameSmallSlot.visible = false } } ],
-      showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示',name:'other'}],
+      showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示(正在开发中)',name:'other'}],
       steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],
       defaultSize:{title:'1x2',className:'',name:'1x2'},
       steamDetail:{},
@@ -167,15 +167,15 @@ export default {
     if(mySize) this.defaultSize = {...this.mySize,...mySize}
     // if(myShow) this.CPUShow = myShow
   },
-  // watch:{
-  //   'defaultSize':{
-  //     handler(){
-  //       this.options.className = 'card' + ' ' + this.defaultSize.className
-  //       this.$emit('customEvent')
-  //     },
-  //     immediate:true,
-  //   }
-  // },
+  watch:{
+    'defaultSize':{
+      handler(){
+        this.options.className = 'card' + ' ' + this.defaultSize.className
+        this.$emit('customEvent')
+      },
+      immediate:true,
+    }
+  },
   methods:{
     ...mapActions(cardStore,['insetSteamSize']),
     getGameType(item){
@@ -269,7 +269,7 @@ export default {
 .my-other-lg{
   display: grid;
   grid-template-columns: repeat(4, 0.23fr);
-  grid-gap: 20px;
+  grid-gap: 24px;
   justify-content: center;
   align-items: center; 
   margin: 12px auto 0 auto;

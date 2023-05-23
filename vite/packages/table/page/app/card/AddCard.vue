@@ -176,7 +176,7 @@ export default {
           cname: '豆瓣电影',
           icon: 'video',
           detail: '查看最近正在上映的热门电影',
-          images: ['singleDoubanFilm','largeSingleDoubanFilm'],
+          images: ['singleDoubanFilm'],
           size: ['1x2']
         },
         {
@@ -184,7 +184,7 @@ export default {
           cname: '豆瓣电影',
           icon: 'video',
           detail: '查看最近正在上映的热门电影',
-          images: ['manyDoubanFilm','largeManyDoubanFilm'],
+          images: ['manyDoubanFilm'],
           size: ['1x2']
         },
         {
@@ -196,11 +196,11 @@ export default {
           size: ['1x1']
         },
         {
-          name: 'note',
+          name: 'notes',
           cname: '桌面便签',
           icon: 'time-circle',
           detail: '可自由修改内容，调整大小的桌面便签',
-          images: ['note'],
+          images: ['notes'],
           size: ['1x2']
         },
       ],
