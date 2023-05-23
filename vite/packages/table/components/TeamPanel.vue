@@ -2,18 +2,19 @@
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden">
     <transition name="fade">
-      <div v-if="earningsShow" class="p-4"  style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
+      <div v-if="earningsShow" class="p-4"
+           style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
         <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
       </div>
     </transition>
     <transition name="fade">
-      <div v-if="showDetail && teamDetail"
-           style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
+      <div v-if="showDetail && (teamDetail||showBarrage)"
+           style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
              style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
           <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
         </div>
-        <a-row :gutter="20">
+        <a-row class="pointer" @click="showTeamDetail" :gutter="20">
           <a-col>
             <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
           </a-col>
@@ -22,52 +23,12 @@
             <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
           </a-col>
         </a-row>
-        <div class="bg-mask rounded-lg m-3 p-3" style="line-height: 2">
-          升级效率：<strong style="color: #48ef48" class="mr-3">{{ effect }} % </strong>  <span v-if="online-1>0">{{ online - 1 }} 位队友在线 *5%</span><span v-else>无队友在线</span>
-          <br>
-          <a-row>
-            <a-col>
-              小队等级：1级
-            </a-col>
-            <a-col>
-              <LevelIcon style="margin-top: -2px;margin-left: 5px" :level="1"></LevelIcon>
-            </a-col>
-          </a-row>
-          全网排名：-<br>
-          升级剩余时长：-<br>
-          累计在线时长：-<br>
-          小队人数上限：{{team.member_limit}}<br>
-          <a-divider></a-divider>
-          加入方式：{{team.join_type===0?'公开加入':'其他'}}<br>
-
-          成立时间：{{team.createTime}}
-          <div @click="receiveTeamEarnings" class="btn-active mt-4 h-12 flex justify-center cursor-pointer rounded-md  items-center text-white text-white" style="background: rgba(80,139,254, 1);font-size: 16px;font-weight: 400;">
-            <Icon icon="thunderbolt"></Icon>
-            <span>领取加速收益</span>
-          </div>
-
+        <div v-if="showDetail && teamDetail">
+          <TeamDetail @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
+                      :teamLeader="teamLeader"></TeamDetail>
         </div>
-
-        <div style="position: absolute;bottom: 0;margin-left:20px">
-          <a-row class="m-5" :gutter="10">
-            <a-col>
-              <div v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
-                   class="rounded-lg bg-mask px-6 py-3 pointer ">
-                <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-                退出小队
-              </div>
-              <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer ">
-                <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-                解散小队
-              </div>
-            </a-col>
-            <a-col>
-              <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="goHall">
-                <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-                小队大厅
-              </div>
-            </a-col>
-          </a-row>
+        <div style="flex: 1;height:0" v-if="showBarrage ">
+          <BarragePanel :defaultChannel="'team'"></BarragePanel>
         </div>
       </div>
     </transition>
@@ -88,7 +49,7 @@
 
         <div style="position: absolute;bottom: 0;left: 15px">
           <a-row class="m-5 mb-2" :gutter="10">
-            <a-col v-if="this.showUserInfo.uid!==userInfo.uid" >
+            <a-col v-if="this.showUserInfo.uid!==userInfo.uid">
               <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="exit">
                 <icon icon="tianjia2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                 加为好友
@@ -96,7 +57,8 @@
             </a-col>
             <a-col>
               <a-col>
-                <div class="rounded-lg bg-mask px-6 py-3 pointer " v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
+                <div class="rounded-lg bg-mask px-6 py-3 pointer "
+                     v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
                      @click="kick(this.showUserInfo.uid)">
                   <icon icon="shanchu" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
                   移出小队
@@ -110,9 +72,10 @@
 
 
     <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0">
-      <div v-if="!teamDetail" @click="showTeamDetail" class="p-2 pt-2 pb-5 p-3 truncate font-large text-center pointer"
+      <div v-if="!teamDetail" @click="showBarragePanel"
+           class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
-        <div class="mb-3">
+        <div>
           <a-avatar :size="50" shape="square" :src="team.avatar"></a-avatar>
         </div>
       </div>
@@ -164,10 +127,26 @@ import UserDetail from './team/UserDetail.vue'
 import UserAvatar from './small/UserAvatar.vue'
 import LevelIcon from './small/LevelIcon.vue'
 import HorizontalPanel from './HorizontalPanel.vue'
-import TeamDevote from "./team/TeamDevote.vue";
+import TeamDevote from './team/TeamDevote.vue'
+import TeamDetail from './team/TeamDetail.vue'
+import TeamBarrage from './comp/TeamBarrage.vue'
+import BarrageSender from './comp/BarrageSender.vue'
+import BarragePanel from './comp/BarragePanel.vue'
+
 export default {
   name: 'TeamPanel',
-  components: {TeamDevote, LevelIcon, UserAvatar, UserDetail, PlusOutlined,HorizontalPanel },
+  components: {
+    BarragePanel,
+    BarrageSender,
+    TeamBarrage,
+    TeamDetail,
+    TeamDevote,
+    LevelIcon,
+    UserAvatar,
+    UserDetail,
+    PlusOutlined,
+    HorizontalPanel
+  },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
     ...mapState(appStore, ['userInfo']),
@@ -178,9 +157,9 @@ export default {
           online++
         }
       })
-      if(online<=1){
+      if (online <= 1) {
         //防止用户数量穿透
-        online=1
+        online = 1
       }
       this.online = online
 
@@ -199,21 +178,21 @@ export default {
       },
       userDetail: false,
       showDetail: false,
+      showBarrage: true,
       teamDetail: false,
       showUid: 0,
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
       userInfoKey: Date.now(),
-      earningsShow:false,
-
+      earningsShow: false,
 
     }
   },
   mounted () {
     if (this.team.status) {
-      this.updateTeamShip(this.team.no,{
-        userCache:0
+      this.updateTeamShip(this.team.no, {
+        userCache: 0
       }).then()
       this.timer = setInterval(() => {
         console.info('定期更新小队信息')
@@ -226,12 +205,15 @@ export default {
   },
 
   methods: {
-    ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam','updateTeam']),
-    goHall () {
-      this.closeDetail()
-      this.$router.push({ name: 'hall' })
+    ...mapActions(teamStore, ['updateTeamShip', 'quitByNo', 'updateMy', 'closeTeam', 'updateTeam']),
+
+    showBarragePanel () {
+      this.userDetail=false
+      this.showDetail = true
+      this.showBarrage = true
     },
     showUserDetail (userInfo, memberInfo) {
+      this.showBarrage=false
       this.showUserMemberInfo = memberInfo
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
@@ -244,13 +226,13 @@ export default {
     },
     closeDetail () {
       this.userDetail = false
-
       this.teamDetail = false
       this.showDetail = false
       this.showUserInfo = {}
       this.earningsShow = false
     },
     showTeamDetail () {
+      this.showBarrage=false
       this.userDetail = false
       this.updateTeam(this.team.no).then()
       setTimeout(() => {
@@ -269,62 +251,35 @@ export default {
      *
      * @param uid
      */
-    kick(uid){
+    kick (uid) {
       Modal.confirm({
         content: '将队员移出队伍后，此人将无法再为小队做出贡献，但是历史贡献记录将被保留，其再次加入队伍后可继承。',
         centered: true,
         okText: '请离',
         onOk: async () => {
-          let rs = await this.quitByNo(this.team.no,uid)
+          let rs = await this.quitByNo(this.team.no, uid)
           if (rs.code === 1000) {
-            if(rs.data.status){
+            if (rs.data.status) {
               this.closeDetail()
               this.updateTeamShip(this.team.no).then()
               this.updateMy().then()
-              Modal.info({ content: '将队员请离队伍成功',centered:true })
-            }else{
+              Modal.info({ content: '将队员请离队伍成功', centered: true })
+            } else {
               this.updateMy().then()
-              Modal.error({content:'请离失败',centered:true})
+              Modal.error({ content: '请离失败', centered: true })
             }
 
-          }else{
+          } else {
             this.updateMy().then()
-            Modal.error({content:'请离意外失败',centered:true})
-          }
-        }
-      })
-    },
-    quit () {
-      Modal.confirm({
-        content: '退出小队后，您将无法再为小队做出贡献，但是历史贡献记录将被保留，以便您回到队伍后继承。',
-        centered: true,
-        okText: '退出',
-        onOk: async () => {
-          let rs = await this.quitByNo(this.team.no)
-          if (rs.code === 1000) {
-            if(rs.data.status){
-              this.cleanTeam()
-              this.updateMy().then()
-              Modal.info({ content: '退出小队成功',centered:true })
-            }else{
-              this.closeTeam()
-              this.updateMy().then()
-
-              Modal.error({content:'退出小队失败',centered:true})
-            }
-
-          }else{
-            this.updateMy().then()
-            this.closeTeam()
-            Modal.error({content:'退出小队意外失败',centered:true})
+            Modal.error({ content: '请离意外失败', centered: true })
           }
         }
       })
     },
     exit () {
       Modal.info({
-        content:'此功能暂未完成',
-        centered:true
+        content: '此功能暂未完成',
+        centered: true
       })
       // this.team = {
       //   status: false
@@ -332,7 +287,7 @@ export default {
       // this.teamVisible = false
     },
     // 点击领取收益弹出事件
-    receiveTeamEarnings(){
+    receiveTeamEarnings () {
       this.earningsShow = !this.earningsShow
     },
 
@@ -358,27 +313,32 @@ export default {
   -webkit-app-region: no-drag;
   transform: translateY(-50%);
 }
-.btn-active:active{
+
+.btn-active:active {
   filter: brightness(0.8);
-  background: rgba(80,139,254, 0.8);
+  background: rgba(80, 139, 254, 0.8);
 }
-.nav-list-container{
+
+.nav-list-container {
   background: rgba(255, 255, 255, 0.2) !important;
   border-radius: 8px !important;
 }
-.nav-list-container ::v-deep .s-item{
+
+.nav-list-container ::v-deep .s-item {
   border-radius: 6px !important;
 }
-.ant-divider-horizontal{
+
+.ant-divider-horizontal {
   margin: 16px 0 16px 0 !important;
 }
 
-.receive-active:active{
+.receive-active:active {
   filter: brightness(0.8);
-  background: rgba(0,0,0,0.40);
+  background: rgba(0, 0, 0, 0.40);
 }
-::v-deep .ant-avatar-image{
+
+::v-deep .ant-avatar-image {
   position: relative;
-  top:-5px;
+  top: -5px;
 }
 </style>
