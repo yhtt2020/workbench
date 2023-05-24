@@ -205,10 +205,10 @@ export default defineComponent({
         this.no = this.pickImageData.sort((a,b)=>{
           return  a.resolution - b.resolution  > b.resolution
         })[this.pickImageData.length-1].no
-        this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+        this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
       }
     })
-    this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+    this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
     this.getClassOption()
     this.getWallOption()
   },
@@ -241,13 +241,15 @@ export default defineComponent({
                 this.pickImageData.push(image)
               }
             })
-            this.$nextTick(() => {
-              this.isLoading = false;
-            });
             }
           }else{
             return
           }
+        })
+        .finally(()=>{
+          this.$nextTick(() => {
+            this.isLoading = false;
+          });
         })
       }
     },
@@ -279,7 +281,7 @@ export default defineComponent({
       })
       this.defaultSynopsis = this.paperSourceOption[index]
       this.pickImageData  = []
-      this.getPickingData(e,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+      this.getPickingData(e,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
     },
     // 重置筛选
     restFilter(){
@@ -329,7 +331,7 @@ export default defineComponent({
 
     closeFilter(){
       this.pickImageData = []
-      this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}`)
+      this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
     }
   },
   setup(){
@@ -373,7 +375,7 @@ export default defineComponent({
     }
     // 跳转至拾光壁纸官网
     const toOfficialWebsite = () =>{
-      ipc.send('addTab',{url:'https://app.nguaduot.cn/timeline'})
+      ipc.send('addTab',{url:'https://timeline.ink'})
     }
     // 获取分类参数
     const filterClassValue = (e) =>{
