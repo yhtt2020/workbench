@@ -5,9 +5,12 @@
     <em>:</em>
     <Flipper ref="flipperMinute1" />
     <Flipper ref="flipperMinute2" />
-    <em v-show="display != 'none'">:</em>
-    <Flipper ref="flipperSecond1" v-show="display != 'none'" />
-    <Flipper ref="flipperSecond2" v-show="display != 'none'" />
+    <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
+      <em>:</em>
+      <Flipper ref="flipperSecond1" />
+      <Flipper ref="flipperSecond2" />
+    </template>
+
   </div>
 </template>
 
@@ -19,9 +22,9 @@ export default {
     Flipper,
   },
   props: {
-    display: {
+    isSnow: {
       type: String,
-      default: "block",
+      default: true,
     },
   },
   data() {
@@ -117,6 +120,7 @@ export default {
     ];
     this.init();
     this.run();
+    console.log('this.isSnow :>> ', this.isSnow);
   },
 };
 </script>

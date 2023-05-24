@@ -4,7 +4,8 @@
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <div class="box" @click="fullScreen()">
-          <component :is="customData.clockiD" display="none" />
+          <component :is="customData.clockiD" :isSnow="isSnow"
+            :class="{ 'isClock5': isClock5 == true, 'isClock5w420': isClock5w420 == true }" />
         </div>
       </template>
     </cardDrag>
@@ -28,11 +29,9 @@ import HomeComponentSlot from "../HomeComponentSlot.vue";
 import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue"
 
-
 import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
-
 
 import cardDrag from "../note/hooks/cardDrag.vue"
 import cardDragHook from "../note/hooks/cardDragHook"
@@ -59,9 +58,6 @@ export default {
         icon: "time-circle",
         type: "games",
       },
-      isClockFullScreen: false,
-      settingVisible: false,
-      isSnow: "block",
       formulaBar: [
         {
           icon: "shezhi1",
@@ -71,9 +67,14 @@ export default {
           },
         },
       ],
-      // 时间配置
       week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
-      blur: 10
+      isClockFullScreen: false,
+      settingVisible: false,
+      isSnow: true,
+      blur: 10,
+      isClock5: false,
+      isClock5w420: false
+
     };
   },
   components: {
@@ -110,9 +111,31 @@ export default {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
     reSizeCB(e) {
       let str = e.split(",")
-      if (str[0] > 285) {
-        console.log('1 :>> ', 1);
-      }
+      let h = str[1]
+      let w = str[0]
+      if (this.customData.clockiD == "clock5") {
+        if (h > 220 && w > 420) {
+          this.isClock5 = false
+          this.isSnow = true
+        } else {
+          if (h < 220 && w > 420) {
+            this.isClock5w420 = true
+            this.isClock5 = true
+            this.isSnow = false
+          } else {
+            this.isClock5w420 = false
+            this.isClock5 = true
+            this.isSnow = false
+          }
+        }
+      } else if (this.customData.clockiD == "clock4") {
+        if (w < 400) {
+          this.isSnow = false
+        } else {
+          this.isSnow = true
+        }
+      } else if (str[0] > 290) this.isSnow = true
+      else this.isSnow = false
     },
     updateBlur(e) {
       this.increaseCustomComponents(this.customIndex, {
@@ -149,7 +172,6 @@ export default {
         "日 " +
         this.week[cd.getDay()];
     },
-
   },
 };
 </script>
@@ -163,49 +185,58 @@ export default {
   align-items: center;
 
   :deep(.clock3) {
-    position: absolute;
     transform: scale(0.36, 0.36);
   }
 
-  :deep(.gutter-box) {
-    height: 140px;
+  .isClock5w420 {
+    :deep(.clock5) {
+      .a {
+        display: block !important;
+      }
+
+      .time {
+        width: 100px !important;
+      }
+    }
   }
 
-  :deep(.clock2) {
-    margin-left: -6px;
+  .isClock5 {
+    :deep(.clock5) {
+      // width: 90%;
+      height: 120px;
+
+      .time {
+        margin-top: 10px;
+        width: 70px;
+        height: 100px;
+        line-height: 100px;
+        padding: 0;
+        text-align: center;
+        font-size: 40px;
+      }
+
+    }
   }
 
-  :deep(.M-Flipper) {
-    margin: 20px 2px;
-    font-size: 58px;
-    width: 55px;
+  .clock-box {
+    margin: 10px 0;
+    box-sizing: border-box;
+    position: relative;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
   }
 
-  :deep(.clock5) {
-    width: 90%;
-    height: 120px;
-    margin-top: 10px;
-  }
-}
+  .clock {
+    height: 150px;
+    position: relative;
 
-.clock-box {
-  margin: 10px 0;
-  box-sizing: border-box;
-  position: relative;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-}
-
-.clock {
-  height: 150px;
-  position: relative;
-
-  :deep(.clock3) {
-    transform: scale(0.34, 0.34);
-    position: absolute;
-    top: -105px;
-    left: 40px;
+    :deep(.clock3) {
+      transform: scale(0.34, 0.34);
+      position: absolute;
+      top: -105px;
+      left: 40px;
+    }
   }
 }
 </style>

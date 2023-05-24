@@ -68,18 +68,11 @@ export default {
                     let y = e.clientY;
                     width = x - oldX + w
                     height = h - oldY + y
-                    if (width > 250 && height < 140) {
-                        that.w = `${width}px`
-                        if (height > 50 && height < 140) that.h = `${height}px`
-                        that.$emit("reSizeInit", "card1")
-                        name = "card1"
+                    if (width > 254) that.w = `${width}px`
+                    that.h = `${height}px`
+                    name = `${width},${height}`
+                    that.$emit("reSizeInit", `${width},${height}`)
 
-                    } else {
-                        that.h = `${height}px`
-                        that.w = `${width}px`
-                        name = `${width},${height}`
-                        that.$emit("reSizeInit", `${width},${height}`)
-                    }
 
                 }
                 document.onmouseup = function () {
