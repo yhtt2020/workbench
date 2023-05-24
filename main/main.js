@@ -8,10 +8,64 @@ global.kdbxManager=new KdbxManager()
 const { config } = require(__dirname+'/server-config.js')
 global.serverConfig=config
 global.isExit=false
+var appIsReady = false
+let isInstallerRunning = false
+var mainMenu = null
+let sqlDb
 
+async function ready() {
+  console.log('触发ready')
+  settings.set('restartNow', false)
+  appIsReady = true
 
+  /* the installer launches the app to install registry items and shortcuts,
+  but if that's happening, we shouldn't display anything */
+  if (isInstallerRunning) {
+    return
+  }
 
+  //预先创建好快速启动窗口
+  //createLanuchBar()
+//app.lanuchBar.show()
 
+  // if (isDevelopmentMode) {
+  // 	session.defaultSession.loadExtension(
+  // 		path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
+  // 		// allowFileAccess is required to load the devtools extension on file:// URLs.
+  // 		{
+  // 			allowFileAccess: true
+  // 		}
+  // 	)
+  // }
+  //注册快捷键，用于展示启动界面
+  // globalShortcut.register('alt+space', () => {
+  // 	//注册全局快捷键
+  // 	//todo 判断一下注册失败
+  // 	console.log('Electron loves global shortcuts!')
+
+  // 	if (app.lanuchBar) {
+  // 		if(app.lanuchBar.isVisible()){
+  // 			app.lanuchBar.hide()  //如果已经存在，则隐藏
+  // 		}else{
+  // 			app.lanuchBar.show()
+  // 		}
+
+  // 	} else {
+  // 		createLanuchBar()
+  // 	}
+
+  // })
+
+  //todo before create
+  global.spaceManager = new SpaceManager()
+  await global.spaceManager.ensureDb()
+  mainMenu = buildAppMenu()
+  Menu.setApplicationMenu(mainMenu)
+  createDockMenu()
+  appStart()
+
+}
+await ready()
 
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
@@ -25,7 +79,7 @@ if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
 	process.exit()
 }
 
-let isInstallerRunning = false
+
 global.isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
  if (process.platform === 'win32')
 {
@@ -75,10 +129,10 @@ const browserPage = 'file://' + __dirname + '/index.html'
 
 global.mainWindow = null
 var mainWindowIsMinimized = false // workaround for https://github.com/minbrowser/min/issues/1074
-var mainMenu = null
+
 var secondaryMenu = null
 var isFocusMode = false
-var appIsReady = false
+
 var isToolbar = true
 
 const isFirstInstance = app.requestSingleInstanceLock()
@@ -482,57 +536,7 @@ app.on('window-all-closed', function() {
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
-app.on('ready', async function () {
-  settings.set('restartNow', false)
-  appIsReady = true
 
-  /* the installer launches the app to install registry items and shortcuts,
-  but if that's happening, we shouldn't display anything */
-  if (isInstallerRunning) {
-    return
-  }
-
-  //预先创建好快速启动窗口
-  //createLanuchBar()
-//app.lanuchBar.show()
-
-  // if (isDevelopmentMode) {
-  // 	session.defaultSession.loadExtension(
-  // 		path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
-  // 		// allowFileAccess is required to load the devtools extension on file:// URLs.
-  // 		{
-  // 			allowFileAccess: true
-  // 		}
-  // 	)
-  // }
-  //注册快捷键，用于展示启动界面
-  // globalShortcut.register('alt+space', () => {
-  // 	//注册全局快捷键
-  // 	//todo 判断一下注册失败
-  // 	console.log('Electron loves global shortcuts!')
-
-  // 	if (app.lanuchBar) {
-  // 		if(app.lanuchBar.isVisible()){
-  // 			app.lanuchBar.hide()  //如果已经存在，则隐藏
-  // 		}else{
-  // 			app.lanuchBar.show()
-  // 		}
-
-  // 	} else {
-  // 		createLanuchBar()
-  // 	}
-
-  // })
-
-  //todo before create
-  spaceManager = new SpaceManager()
-  await spaceManager.ensureDb()
-  mainMenu = buildAppMenu()
-  Menu.setApplicationMenu(mainMenu)
-  createDockMenu()
-  appStart()
-
-})
 function handleUrlOpen(url){
   if (mainWindow && !mainWindow.isDestroyed()) {
     //从应用准备好，改为主窗体准备好
@@ -584,7 +588,7 @@ app.on('activate', function( /* e, hasVisibleWindows */ ) {
     appStart()
 	}
 })
-let sqlDb
+
 /**
  * 启动应用，此方法会自动判断是否启动的时候显示选择空间的面板
  * @returns {Promise<void>}
@@ -592,6 +596,7 @@ let sqlDb
 async function appStart () {
   const { SqlDb } = require('./src/util/sqldb.js')
   sqlDb = new SqlDb()
+  console.log('触发appstart')
   initFav()
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {

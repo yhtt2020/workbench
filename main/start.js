@@ -75,12 +75,12 @@ function ensureDb(){
 ensureDb()
 
 
-global.settings.initSetting(()=>{
+
+global.settings.initSetting(async ()=>{
   //设置nanoid
   let clientId=settings.get('clientID')
   if(!clientId){
     clientId=require('nanoid').nanoid(8)
     settings.set('clientID',clientId)
   }
-
 

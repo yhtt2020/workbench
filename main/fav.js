@@ -3,8 +3,9 @@ const { shell } = require('electron')
 const fsExtra = require('fs-extra')
 const ElectronLog = require('electron-log')
 const wallpaper = require('wallpaper')
-const STORE_PATH_KEY = 'app.fav.storePath'
+
 async function initFav () {
+  const STORE_PATH_KEY = 'app.fav.storePath'
   const FAV_PACKAGE = 'com.thisky.fav'
   // 设置默认的本地收藏夹位置
   const defaultStorePath = await sqlDb.getConfig(STORE_PATH_KEY, path.join(app.getPath('userData'), '收藏夹.lab'))
@@ -216,9 +217,9 @@ async function initFav () {
       hash: 'popSaveToFolder',
       enableRemoteModule: true
     }
-    if (isDevelopmentMode) {
-      url = 'http://localhost:8080/#/popSaveToFolder'
-    }
+    // if (isDevelopmentMode) {
+    //   url = 'http://localhost:8080/#/popSaveToFolder'
+    // }
 
     const bounds = mainWindow.getBounds()
     const currentBounds = { width: 500, height: 500, x: bounds.x + bounds.width - 510, y: bounds.y + 85 }
