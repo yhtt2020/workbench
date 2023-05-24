@@ -3,11 +3,16 @@
     <div class="line-title">
       监控助手
     </div>
+    <div class="line">更新频率（秒）：<a-input-number v-model:value="frequent"></a-input-number></div>
+    <div class="line">
     使用数据源：
-    <a-radio-group v-model:value="dataSource">
-      <a-radio value="aida">Aida64</a-radio>
-      <a-radio value="python">内置</a-radio>
-    </a-radio-group>
+
+      <a-radio-group  v-model:value="dataSource">
+        <a-radio value="aida">Aida64</a-radio>
+        <a-radio value="python">内置</a-radio>
+      </a-radio-group>
+    </div>
+
     <div v-if="dataSource==='aida'">
       <div class="mt-5 s-bg p-3">
         <div class="line-title">Aida数据源使用说明 </div>
@@ -82,7 +87,7 @@ import { mapWritableState } from 'pinia'
 export default {
   name: 'Inspector',
   computed: {
-    ...mapWritableState(inspectorStore, ['dataSource'])
+    ...mapWritableState(inspectorStore, ['dataSource','frequent'])
   },
   methods:{
     go(){

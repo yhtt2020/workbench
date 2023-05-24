@@ -94,6 +94,7 @@ import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { screenStore } from '../store/screen'
 import {isMain} from '../js/common/screenUtils'
+import { inspectorStore } from '../store/inspector'
 
 export default {
   name: 'Code',
@@ -119,6 +120,7 @@ export default {
     this.initStore(paperStore, 'paper')
     this.initStore(deckStore, 'deck')
     this.initStore(screenStore, 'screen')
+    this.initStore(inspectorStore, 'inspector')
     if(isMain()){
       this.bindMainIPC()
     }else{

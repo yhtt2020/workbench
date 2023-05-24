@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {setSupervisoryData} from '../js/action/supervisory'
+import dbStorage from "./dbStorage";
 declare interface IDisplayData {
   useGPU: number,
   useCPU: number,
@@ -11,13 +12,16 @@ declare interface IDisplayData {
 
 const readAida64 = window.readAida64
 const {rpc}=window.$models
+// @ts-ignore
 export const inspectorStore = defineStore(
   "inspectorStore",
   {
     state: () => {
 
       return {
+        frequent:2,//2秒更新一次
         running:false,
+        runAida64:false,
         dataSource: 'aida',//aida 或者 python 默认aida
         displayData: {
           useGPU: 0,
@@ -38,7 +42,7 @@ export const inspectorStore = defineStore(
         this.displayData[key] = value
       },
       startInspect() {
-        if(this.runing){
+        if(this.running){
           return
         }
         this.running=true
@@ -54,9 +58,10 @@ export const inspectorStore = defineStore(
         this.inspectorTimer = setInterval(async () => {
           let fps = await rpc.inspector.getFPS()
           this.setDisplayValue('FPS', {value: fps})
-        }, 2000)
+        }, this.frequent*1000)
       },
       setupAida() {
+        console.log(this.frequent)
         //根据当前选择数据源，启动定时器
         this.inspectorTimer = setInterval(() => {
           readAida64()
@@ -83,15 +88,27 @@ export const inspectorStore = defineStore(
               const newData = setSupervisoryData(undefined);
               this.setDisplayData(newData);
             });
-        }, 1000);
+        }, this.frequent*1000);
       },
       stopInspect() {
         //终止定时器
         if (this.inspectorTimer) {
           clearInterval(this.inspectorTimer);
+          this.inspectorTimer=null
+          console.log('成功清理计时器')
           this.running=false
         }
       }
+    },
+    persist: {
+      enabled: true,
+      strategies: [{
+        // 自定义存储的 key，默认是 store.$id
+        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+        paths:['frequent','dataSource'],
+        storage: dbStorage,
+        // state 中的字段名，按组打包储存
+      }]
     }
   }
 )
