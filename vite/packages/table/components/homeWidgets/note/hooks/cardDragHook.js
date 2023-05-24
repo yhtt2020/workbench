@@ -64,6 +64,7 @@ export default {
                 let str = e.split(",")
                 this.width = Math.ceil(str[0] / 280)
                 this.height = Math.ceil(str[1] / 205)
+
             }
             this.increaseCustomComponents(this.customIndex, {
                 width: this.width,
@@ -73,7 +74,10 @@ export default {
             this.customData.height = this.height
 
             this.isActive = e
-            this.reSizeCB && this.reSizeCB(e)
+            this.reSizeCB && this.reSizeCB(e, {
+                width: this.width,
+                height: this.height,
+            })
         },
         updateSize(e) {
             this.$refs.drag.dragCallBack(e)

@@ -5,7 +5,8 @@
       <template #="{ row }">
         <div class="box" @click="fullScreen()">
           <component :is="customData.clockiD" :isSnow="isSnow"
-            :class="{ 'isClock5': isClock5 == true, 'isClock5w420': isClock5w420 == true }" />
+            :class="{ 'isClock5': isClock5 == true, 'isClock5w420': isClock5w420 == true }" :style="{ zoom: zoom }" />
+
         </div>
       </template>
     </cardDrag>
@@ -18,9 +19,9 @@
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
 
-  <ClockFullScreen @updateBlur="updateBlur" v-if="isClockFullScreen" :imgUrl="customData.imgUrl"
-    :clock="customData.clockiD" @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle"
-    @updateImgUrl="updateImgUrl" :blur="blur">
+  <ClockFullScreen @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" v-if="isClockFullScreen"
+    :imgUrl="customData.imgUrl" :clock="customData.clockiD" @exit="isClockFullScreen = false"
+    @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl" :blur="blur" :bgZoom="bgZoom">
   </ClockFullScreen>
 </template>
 
@@ -71,10 +72,20 @@ export default {
       isClockFullScreen: false,
       settingVisible: false,
       isSnow: true,
-      blur: 10,
-      isClock5: false,
-      isClock5w420: false
 
+      isClock5: false,
+      isClock5w420: false,
+      zoom: "100%",
+      zooms: {
+        "clock1": [55, 35, 35],
+        "clock2": [60, 66, 50],
+        "clock3": [150, 0, 150],
+        "clock4": [66, 0, 30],
+        "clock5": [50, 0, 25],
+        "clock6": [80, 0, 80],
+      },
+      bgZoom: 0,
+      blur: 10,
     };
   },
   components: {
@@ -100,16 +111,73 @@ export default {
         blur: 10,
       });
     }
+    if (!this.customData.bgZoom) {
+      this.increaseCustomComponents(this.customIndex, {
+        bgZoom: 0,
+      });
+    }
+
   },
   mounted() {
     this.blur = this.customData.blur
+    this.bgZoom = this.customData.bgZoom
     this.updateTime();
-
   },
 
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
-    reSizeCB(e) {
+    reSizeCB(e, i) {
+      let { width, height } = i
+      let zoomRatio = 0
+      let max = width > height ? width : height
+      if (height <= 1 || width <= 1) {
+        let zoom = 100 + zoomRatio
+        if (width <= 1) {
+          this.isSnow = false
+          zoom = 0
+        } else {
+          this.isSnow = true
+          zoomRatio = this.zooms[this.customData.clockiD][1]
+        }
+        this.zoom = `${zoom}%`
+      } else if ((width - height) > 1 || (height - width) > 1) {
+        this.isSnow = true
+        zoomRatio = this.zooms[this.customData.clockiD][0]
+        let h = height - width
+        let w = width - height
+        let x
+        if (h > w) {
+          switch (h) {
+            case 2: x = 1;
+              break;
+            case 3: x = 4;
+              break;
+            case 4: x = 2;
+              break;
+            default:
+              x = 0.5;
+          }
+          zoomRatio /= (h + x)
+        }
+        else {
+          zoomRatio /= (w * 0.25)
+          if (this.customData.clockiD == "clock5") zoomRatio /= 2.5
+        }
+        let zoom = 100 + (zoomRatio) * (max - 3)
+        this.zoom = `${zoom}%`
+      }
+      else {
+        this.isSnow = true
+        if (width > 2 && height > 2) {
+          zoomRatio = this.zooms[this.customData.clockiD][0]
+          let zoom = 100 + zoomRatio * (max - 2)
+          this.zoom = `${zoom}%`
+        } else if (width >= 2 || height <= 2) {
+          zoomRatio = this.zooms[this.customData.clockiD][2]
+          let zoom = 100 + zoomRatio
+          this.zoom = `${zoom}%`
+        }
+      }
       let str = e.split(",")
       let h = str[1]
       let w = str[0]
@@ -120,28 +188,29 @@ export default {
         } else {
           if (h < 220 && w > 420) {
             this.isClock5w420 = true
-            this.isClock5 = true
-            this.isSnow = false
           } else {
             this.isClock5w420 = false
-            this.isClock5 = true
-            this.isSnow = false
           }
-        }
-      } else if (this.customData.clockiD == "clock4") {
-        if (w < 400) {
+          this.isClock5 = true
           this.isSnow = false
-        } else {
-          this.isSnow = true
         }
-      } else if (str[0] > 290) this.isSnow = true
-      else this.isSnow = false
+      }
     },
     updateBlur(e) {
       this.increaseCustomComponents(this.customIndex, {
         blur: e,
       });
       this.blur = e
+      console.log('外部拿到结果了 :>> ', this.customData.blur);
+
+    },
+    updateBgZoom(e) {
+      this.increaseCustomComponents(this.customIndex, {
+        bgZoom: e,
+      });
+      this.bgZoom = e
+      console.log('外部拿到结果了 :>> ', this.customData.bgZoom);
+
     },
     updateClockStyle(e) {
       this.increaseCustomComponents(this.customIndex, {
@@ -185,7 +254,11 @@ export default {
   align-items: center;
 
   :deep(.clock3) {
-    transform: scale(0.36, 0.36);
+    transform: scale(0.35);
+  }
+
+  :deep(.clock2) {
+    transform: scale(1.2);
   }
 
   .isClock5w420 {

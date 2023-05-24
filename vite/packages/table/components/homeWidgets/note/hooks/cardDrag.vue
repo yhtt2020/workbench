@@ -69,11 +69,9 @@ export default {
                     width = x - oldX + w
                     height = h - oldY + y
                     if (width > 254) that.w = `${width}px`
-                    that.h = `${height}px`
+                    if (height > 140) that.h = `${height}px`
                     name = `${width},${height}`
                     that.$emit("reSizeInit", `${width},${height}`)
-
-
                 }
                 document.onmouseup = function () {
                     document.onmousemove = null;
