@@ -21,7 +21,8 @@
 
   <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
   <a-slider v-model:value="blurs" :max="100" :step="1" />
-
+  <div class="text-base" style="margin-bottom: 10px">调整时钟比例</div>
+  <a-slider v-model:value="zoom" :max="100" :step="1" />
   <ModalList v-if="myImgShow" v-model:visible="myImgShow" title="我的收藏" :imgList="myPapers" @sendImg="sendImg"
     style="z-index: 99999"></ModalList>
   <input style="display: none" ref="fileRef" type="file" name="" id="" />
@@ -44,22 +45,34 @@ export default {
     return {
       myData: { title: "", link: undefined, img: {} },
       myImgShow: false,
-      blurs: 0
+      blurs: 0,
+      zoom: 0
     };
   },
   props: {
     blur: {
       type: String,
       default: 0,
+    },
+    bgZoom: {
+      type: String,
+      default: 0,
     }
   },
   mounted() {
     this.blurs = this.blur
+    this.zoom = this.bgZoom
+    this.$emit("updateBlur", this.blurs)
+    this.$emit("updateBgZoom", this.zoom)
   },
   watch: {
-    //方法1
     blurs(newVal, oldVal) {
+      console.log('背景模糊度 :>> ', newVal);
       this.$emit("updateBlur", newVal)
+    },
+    zoom(newVal, oldVal) {
+      console.log('缩放度 :>> ', newVal);
+      this.$emit("updateBgZoom", newVal)
     }
   },
   methods: {

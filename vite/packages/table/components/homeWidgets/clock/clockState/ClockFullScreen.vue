@@ -3,9 +3,8 @@
     <div class='popContainer' :style="{ backgroundImage: imgUrl, filter: blurs }">
     </div>
     <div class="box">
-      <!-- icon-drag -->
-      <component :is="clock" v-if="clock !== 'clock3'" :key="clock" />
-      <clock3 v-if="clock == 'clock3'" key="clock3"></clock3>
+      <component :is="clock" v-if="clock !== 'clock3'" :key="clock" :style="{ zoom: zoom }" />
+      <clock3 v-if="clock == 'clock3'" key="clock3" :style="{ zoom: zoom }"></clock3>
       <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
         <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
           <Icon class="icon" icon="caret-left"></Icon>
@@ -30,7 +29,8 @@
         <div class="text-center">设置</div>
       </template>
 
-      <ClockBackground @img="img" @updateBlur="updateBlur" :blur="blur"></ClockBackground>
+      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur">
+      </ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
     </a-drawer>
   </teleport>
@@ -59,10 +59,16 @@ export default {
     blur: {
       type: String,
       default: 0,
-    }
+    },
+    bgZoom: {
+      type: String,
+      default: 0,
+    },
   },
   mounted() {
     this.updateBlur(this.blur)
+    this.updateBlur(this.bgZoom)
+    this.zoom = `${this.bgZoom + 100}%`
     this.touchEvent()
     //鼠标事件
     document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
@@ -79,7 +85,8 @@ export default {
       settingVisible: false,
       autoTime: null,
       src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
-      blurs: "blur(10px}"
+      blurs: "blur(10px}",
+      zoom: "100%",
     };
   },
   methods: {
@@ -92,9 +99,15 @@ export default {
       this.$emit('exit')
     },
     updateBlur(e) {
+      console.log('拖拽Blur更新数据 :>> ', e);
       let a = parseInt(e / 2)
       this.blurs = `blur(${a}px)`
       this.$emit("updateBlur", e)
+    },
+    updateBgZoom(e) {
+      console.log('拖拽BgZoom更新数据 :>> ', e);
+      this.zoom = `${e + 100}%`
+      this.$emit("updateBgZoom", e)
     },
     touchEvent() {
       const that = this
@@ -156,15 +169,11 @@ export default {
 
   // 背景的模糊大小通过下面的属性值大小来调制
   background-color: rgba(255, 255, 255, 0.3);
-
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(5px);
-
   transform: scale(1.2);
-
 }
 
-// 1
 .box {
   z-index: 99911199;
   position: fixed;
@@ -182,82 +191,6 @@ export default {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-}
-
-
-@media (max-width:768px) {
-
-  ::v-deep .clock1,
-  .clock2,
-  .clock3,
-  .clock4,
-  .clock5,
-  .clock6 {
-    transform: scale(0.7);
-  }
-
-  .bottom {
-    .item-icon {
-      width: 60px;
-      height: 40px;
-
-      .icon {
-        height: 20px;
-        width: 20px;
-      }
-    }
-  }
-}
-
-
-
-@media (max-height:500px) {
-
-  ::v-deep .clock1,
-  .clock2,
-  .clock3,
-  .clock4,
-  .clock5,
-  .clock6 {
-    transform: scale(0.4);
-  }
-
-  .bottom {
-    .item-icon {
-      width: 50px;
-      height: 40px;
-
-      .icon {
-        height: 20px;
-        width: 20px;
-      }
-    }
-  }
-}
-
-@media (min-width:1024px) {
-
-  ::v-deep .clock1,
-  .clock2,
-  .clock5,
-  .clock6 {
-    transform: scale(1.7);
-  }
-
-  ::v-deep .clock3 {
-    transform: scale(1.2);
-
-  }
-
-  ::v-deep .clock4 {
-    transform: scale(2.2);
-  }
-}
-
-@media (min-width:769px) and (max-width:1023px) {
-  ::v-deep .clock4 {
-    transform: scale(1.7);
-  }
 }
 
 .item-icon {

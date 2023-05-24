@@ -4,7 +4,9 @@
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <div class="box" @click="fullScreen()">
-          <component :is="customData.clockiD" display="none" />
+          <component :is="customData.clockiD" :isSnow="isSnow"
+            :class="{ 'isClock5': isClock5 == true, 'isClock5w420': isClock5w420 == true }" :style="{ zoom: zoom }" />
+
         </div>
       </template>
     </cardDrag>
@@ -17,9 +19,9 @@
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
 
-  <ClockFullScreen @updateBlur="updateBlur" v-if="isClockFullScreen" :imgUrl="customData.imgUrl"
-    :clock="customData.clockiD" @exit="isClockFullScreen = false" @updateClockStyle="updateClockStyle"
-    @updateImgUrl="updateImgUrl" :blur="blur">
+  <ClockFullScreen @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" v-if="isClockFullScreen"
+    :imgUrl="customData.imgUrl" :clock="customData.clockiD" @exit="isClockFullScreen = false"
+    @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl" :blur="blur" :bgZoom="bgZoom">
   </ClockFullScreen>
 </template>
 
@@ -28,11 +30,9 @@ import HomeComponentSlot from "../HomeComponentSlot.vue";
 import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue"
 
-
 import mixin from "./hooks/clockMixin.js"
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
-
 
 import cardDrag from "../note/hooks/cardDrag.vue"
 import cardDragHook from "../note/hooks/cardDragHook"
@@ -59,9 +59,6 @@ export default {
         icon: "time-circle",
         type: "games",
       },
-      isClockFullScreen: false,
-      settingVisible: false,
-      isSnow: "block",
       formulaBar: [
         {
           icon: "shezhi1",
@@ -71,9 +68,24 @@ export default {
           },
         },
       ],
-      // 时间配置
       week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
-      blur: 10
+      isClockFullScreen: false,
+      settingVisible: false,
+      isSnow: true,
+
+      isClock5: false,
+      isClock5w420: false,
+      zoom: "100%",
+      zooms: {
+        "clock1": [55, 35, 35],
+        "clock2": [60, 66, 50],
+        "clock3": [150, 0, 150],
+        "clock4": [66, 0, 30],
+        "clock5": [50, 0, 25],
+        "clock6": [80, 0, 80],
+      },
+      bgZoom: 0,
+      blur: 10,
     };
   },
   components: {
@@ -99,19 +111,89 @@ export default {
         blur: 10,
       });
     }
+    if (!this.customData.bgZoom) {
+      this.increaseCustomComponents(this.customIndex, {
+        bgZoom: 0,
+      });
+    }
+
   },
   mounted() {
     this.blur = this.customData.blur
+    this.bgZoom = this.customData.bgZoom
     this.updateTime();
-
   },
 
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
-    reSizeCB(e) {
+    reSizeCB(e, i) {
+      let { width, height } = i
+      let zoomRatio = 0
+      let max = width > height ? width : height
+      if (height <= 1 || width <= 1) {
+        let zoom = 100 + zoomRatio
+        if (width <= 1) {
+          this.isSnow = false
+          zoom = 0
+        } else {
+          this.isSnow = true
+          zoomRatio = this.zooms[this.customData.clockiD][1]
+        }
+        this.zoom = `${zoom}%`
+      } else if ((width - height) > 1 || (height - width) > 1) {
+        this.isSnow = true
+        zoomRatio = this.zooms[this.customData.clockiD][0]
+        let h = height - width
+        let w = width - height
+        let x
+        if (h > w) {
+          switch (h) {
+            case 2: x = 1;
+              break;
+            case 3: x = 4;
+              break;
+            case 4: x = 2;
+              break;
+            default:
+              x = 0.5;
+          }
+          zoomRatio /= (h + x)
+        }
+        else {
+          zoomRatio /= (w * 0.25)
+          if (this.customData.clockiD == "clock5") zoomRatio /= 2.5
+        }
+        let zoom = 100 + (zoomRatio) * (max - 3)
+        this.zoom = `${zoom}%`
+      }
+      else {
+        this.isSnow = true
+        if (width > 2 && height > 2) {
+          zoomRatio = this.zooms[this.customData.clockiD][0]
+          let zoom = 100 + zoomRatio * (max - 2)
+          this.zoom = `${zoom}%`
+        } else if (width >= 2 || height <= 2) {
+          zoomRatio = this.zooms[this.customData.clockiD][2]
+          let zoom = 100 + zoomRatio
+          this.zoom = `${zoom}%`
+        }
+      }
       let str = e.split(",")
-      if (str[0] > 285) {
-        console.log('1 :>> ', 1);
+      let h = str[1]
+      let w = str[0]
+      if (this.customData.clockiD == "clock5") {
+        if (h > 220 && w > 420) {
+          this.isClock5 = false
+          this.isSnow = true
+        } else {
+          if (h < 220 && w > 420) {
+            this.isClock5w420 = true
+          } else {
+            this.isClock5w420 = false
+          }
+          this.isClock5 = true
+          this.isSnow = false
+        }
       }
     },
     updateBlur(e) {
@@ -119,6 +201,16 @@ export default {
         blur: e,
       });
       this.blur = e
+      console.log('外部拿到结果了 :>> ', this.customData.blur);
+
+    },
+    updateBgZoom(e) {
+      this.increaseCustomComponents(this.customIndex, {
+        bgZoom: e,
+      });
+      this.bgZoom = e
+      console.log('外部拿到结果了 :>> ', this.customData.bgZoom);
+
     },
     updateClockStyle(e) {
       this.increaseCustomComponents(this.customIndex, {
@@ -149,7 +241,6 @@ export default {
         "日 " +
         this.week[cd.getDay()];
     },
-
   },
 };
 </script>
@@ -163,49 +254,62 @@ export default {
   align-items: center;
 
   :deep(.clock3) {
-    position: absolute;
-    transform: scale(0.36, 0.36);
-  }
-
-  :deep(.gutter-box) {
-    height: 140px;
+    transform: scale(0.35);
   }
 
   :deep(.clock2) {
-    margin-left: -6px;
+    transform: scale(1.2);
   }
 
-  :deep(.M-Flipper) {
-    margin: 20px 2px;
-    font-size: 58px;
-    width: 55px;
+  .isClock5w420 {
+    :deep(.clock5) {
+      .a {
+        display: block !important;
+      }
+
+      .time {
+        width: 100px !important;
+      }
+    }
   }
 
-  :deep(.clock5) {
-    width: 90%;
-    height: 120px;
-    margin-top: 10px;
+  .isClock5 {
+    :deep(.clock5) {
+      // width: 90%;
+      height: 120px;
+
+      .time {
+        margin-top: 10px;
+        width: 70px;
+        height: 100px;
+        line-height: 100px;
+        padding: 0;
+        text-align: center;
+        font-size: 40px;
+      }
+
+    }
   }
-}
 
-.clock-box {
-  margin: 10px 0;
-  box-sizing: border-box;
-  position: relative;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-}
+  .clock-box {
+    margin: 10px 0;
+    box-sizing: border-box;
+    position: relative;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+  }
 
-.clock {
-  height: 150px;
-  position: relative;
+  .clock {
+    height: 150px;
+    position: relative;
 
-  :deep(.clock3) {
-    transform: scale(0.34, 0.34);
-    position: absolute;
-    top: -105px;
-    left: 40px;
+    :deep(.clock3) {
+      transform: scale(0.34, 0.34);
+      position: absolute;
+      top: -105px;
+      left: 40px;
+    }
   }
 }
 </style>
