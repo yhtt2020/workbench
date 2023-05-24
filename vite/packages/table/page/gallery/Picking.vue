@@ -186,6 +186,11 @@ export default defineComponent({
           synopsis:'饕餮盛宴'
         },
         {
+          title:'贪吃蛇',
+          name:'/snake/v2',
+          synopsis:''
+        },
+        {
           title:'wallhaven',
           name:'/wallhaven/v2',
           synopsis:'The best wallpapers on the Net'
