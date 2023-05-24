@@ -129,7 +129,6 @@ export default {
     async getMyCircle ( options) {
       const result = await groupApi.getMyCircle(options)
       if (result.code === 1000) {
-        console.log(this.myData.myCircle)
         this.myData.myCircle=result.data
       }
     },

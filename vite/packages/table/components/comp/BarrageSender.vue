@@ -12,7 +12,7 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import { teamStore } from '../../store/team'
 
 export default {
@@ -32,6 +32,7 @@ export default {
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
   },
   methods:{
+    ...mapActions(teamStore,['updateMy']),
     async postBarrage () {
       if (!this.postContent) {
         message.error('请输入弹幕内容')
@@ -42,15 +43,19 @@ export default {
         if(this.currentChannel.name!=='all'){
           channelType=this.CONST.CHANNEL.TEAM
           pageUrl=this.myTeamNo
+          if(String(pageUrl).trim()===''){
+            await this.updateMy()
+            if(String(pageUrl).trim()===''){
+              message.error('小队号错误，无法发送弹幕')
+            }
+            return
+          }
         }
-
-        console.log(channelType,pageUrl)
         let data = {
           channel_type:channelType ,
           content: this.postContent,
           page_url: String(pageUrl),
         }
-        console.log('添加 的daa',data)
         let rs = await tsbApi.barrage.add(data)
         if (rs.status) {
           this.postContent = ''

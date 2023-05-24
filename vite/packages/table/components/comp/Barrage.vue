@@ -117,7 +117,6 @@ export default {
     window.$manager.sendChat = this.sendChat
     this.manager = manager
     window.addEventListener('resize', () => {
-      console.log('rezied')
       manager.resize()
     })
     manager.start()
@@ -141,19 +140,15 @@ export default {
     },
 
     async getTeamBarrage(){
-      console.log('获取我的小队弹幕',this.myTeamNo)
       if (this.myTeamNo) {
-        console.log(this.myTeamNo,'')
         tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
           if (rs.status) {
-            console.log(rs,'取到的小队弹幕数据')
             rs.data.forEach(item => {
               item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
               item.type='team'
             })
             this.barragesTeam = rs.data
             if (this.settings.enableBarrage) {
-              console.log('发射弹幕：',this.barragesTeam)
               //如果是设置了启用弹幕
               $manager.send(this.filterBarrages(this.barragesTeam),undefined,true)//进行前置过滤
               $manager.start()

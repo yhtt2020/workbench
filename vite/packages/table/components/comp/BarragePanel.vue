@@ -3,7 +3,7 @@
     <div><HorizontalPanel  :height="44" :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
     </div>
     <div style="flex: 1;height:0;padding-top: 10px"><TeamBarrage :key="key" :barrages="barrages"></TeamBarrage></div>
-    <div class="mt-2"><BarrageSender @loadAllBarrages="loadAllBarrages" @loadTeamBarrages="loadTeamBarrage" :currentChannel="currentChannel"></BarrageSender></div>
+    <div class="mt-2"><BarrageSender @loadAllBarrages="loadAllBarrages" @loadTeamBarrage="loadTeamBarrage" :currentChannel="currentChannel"></BarrageSender></div>
   </div>
 </template>
 
@@ -78,7 +78,6 @@ export default {
       })
     },
     async loadTeamBarrage () {
-      console.log(this.my, 'wode小组')
       await this.updateMy()
       if (this.myTeamNo) {
         tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {

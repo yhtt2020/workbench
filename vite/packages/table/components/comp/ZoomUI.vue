@@ -84,7 +84,6 @@ export default {
       this.oldZoom=this.settings.zoomFactor
       this.newZoom = this.oldZoom
       this.inputZoom=this.oldZoom
-      console.log(this.settings.zoomFactor)
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)
       setTimeout(() => {
         this.getSize()

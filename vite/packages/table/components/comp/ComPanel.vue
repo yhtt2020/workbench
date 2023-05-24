@@ -54,7 +54,6 @@ export default {
     ...mapState(appStore,['userInfo'])
   },
   mounted () {
-    console.log(this.userInfo)
 
   },
   methods:{
