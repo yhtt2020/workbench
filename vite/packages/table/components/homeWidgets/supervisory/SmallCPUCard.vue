@@ -67,6 +67,13 @@ export default {
   computed:{
     ...mapWritableState(inspectorStore,['displayData']),
     ...mapWritableState(appStore,['saving'])
+  }, mounted () {
+    console.log('尝试启动监控')
+    this.startInspect()
+  },
+  unmounted () {
+    console.log('尝试终止监控')
+    this.stopInspect()
   },
   watch: {
     "displayData": {
@@ -85,6 +92,7 @@ export default {
     },
   },
   methods:{
+    ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     initCanvas,
     go(){
       this.$router.push({name:'inspector'})

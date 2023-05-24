@@ -99,6 +99,13 @@ export default {
  // },
   components:{
     HomeComponentSlot
+  }, mounted () {
+    console.log('尝试启动监控')
+    this.startInspect()
+  },
+  unmounted () {
+    console.log('尝试终止监控')
+    this.stopInspect()
   },
   computed:{
     ...mapWritableState(inspectorStore, ["displayData"]),
@@ -110,6 +117,7 @@ export default {
     }
   },
   methods:{
+    ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     go(){
       this.$router.push({name:'inspector'})
     }

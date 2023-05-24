@@ -132,6 +132,15 @@ export default {
       return this.CPUData.up < 1000 ? this.CPUData.up +'KB/S' : this.CPUData.up<1024000?(this.CPUData.up/1024).toFixed(2) + 'MB/S':(this.CPUData.up/1024/1024).toFixed(2) + 'GB/S'
     }
   },
+  mounted () {
+    this.CPUEcharts();
+    console.log('尝试启动监控')
+    this.startInspect()
+  },
+  unmounted () {
+    console.log('尝试终止监控')
+    this.stopInspect()
+  },
   watch: {
     "displayData": {
       handler(newVal, oldVal) {
@@ -234,6 +243,7 @@ export default {
     },
   },
   methods:{
+    ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     go(){
       this.$router.push({name:'inspector'})
     },
