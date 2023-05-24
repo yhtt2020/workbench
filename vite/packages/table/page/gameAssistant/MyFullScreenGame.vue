@@ -1,8 +1,8 @@
 <template>
   <div class="pt-3 drag">
-    <vue-custom-scrollbar :settings="settingsScroller" style="height:calc(100vh)">
+    <Vue3SeamlessScroll :list="screenList" v-model="isScrolling" :copyNum="2" :hover="true" :wheel="true">
       <div class="flex flex-row rounded-lg flex-wrap mr-4">
-        <div class="pb-4 pl-4 game-list-item rounded-lg flex-shrink-0 my-game-content" v-for=" item in gameList ">
+        <div class="pb-4 pl-4 game-list-item rounded-lg flex-shrink-0 my-game-content" v-for=" item in screenList ">
           <div class="relative  w-auto h-full rounded-lg s-bg  pointer flex flex-col ">
             <div class="rounded-lg" :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
               <img v-if="item.appinfo" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appinfo.appid+'/header.jpg'" class="w-full h-full rounded-t-lg object-cover"  alt="">
@@ -15,28 +15,36 @@
           </div>
         </div>
       </div>
-      <div class="set-button flex no-drag">
-        <div class="set-button-item s-bg mr-3 rounded-lg pointer">
-         <Icon icon="bofang"></Icon>
-        </div>
-        <div  @click="openSheZhi" class="set-button-item s-bg mr-3 rounded-lg pointer">
-          <Icon icon="shezhi"></Icon>
-        </div>
-        <div @click="closeFullScreen"  class="set-button-item s-bg rounded-lg pointer">
-          <Icon icon="desktop"></Icon>
-        </div>
-     </div>
-    </vue-custom-scrollbar>
+    </Vue3SeamlessScroll>
+    <div class="set-button flex no-drag">
+      <div @click="stopScroll" class="set-button-item s-bg mr-3 rounded-lg pointer">
+       <Icon icon="bofang" v-if="isScrolling  === false"></Icon>
+       <Icon icon="pause" v-else></Icon>
+      </div>
+      <div @click="openSheZhi" class="set-button-item s-bg mr-3 rounded-lg pointer">
+        <Icon icon="shezhi"></Icon>
+      </div>
+      <div @click="closeFullScreen"  class="set-button-item s-bg rounded-lg pointer">
+        <Icon icon="desktop"></Icon>
+      </div>
+    </div> 
   </div>
 
-  <a-drawer v-model:visible="screenVisible" title="设置">
-    <div class="flex justify-between mb-8">
+  <a-drawer v-model:visible="screenVisible" title="设置" :width="500">
+    <div class="flex justify-between mb-4">
       <span>显示游戏时长</span>
       <a-switch v-model:checked="showTime" />
     </div>
+    <!-- 该功能暂时没有合适方法,后期再补充 -->
+    <!-- <div class="flex justify-between flex-col mb-4">
+      <span>缩放比</span>
+      <a-slider v-model:value="scaleValue"  />
+    </div> -->
     <div class="mb-4">排序方式</div>
     <div class="flex flex-col">
-      <div v-for="item in sortList" class="w-full h-full rounded-lg px-4 py-4 s-item flex justify-center mb-4">
+      <div  v-for="item in sortList" @click="tabSort(item)" 
+       :class="sortType.name === item.name ? 'drawer-item-bg':''"
+       class="w-full h-full rounded-lg pointer px-4 py-4 s-item flex justify-center mb-4">
         {{ item.title }}
       </div>
     </div>
@@ -47,10 +55,13 @@
 import {mapWritableState} from 'pinia'
 import {steamUserStore} from "../../store/steamUser";
 import HorizontalPanel from "../../components/HorizontalPanel.vue";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import { appStore } from '../../store'
 export default {
   name:'MyFullScreenGame',
   components:{
-    HorizontalPanel
+    HorizontalPanel,
+    Vue3SeamlessScroll
   },
   data(){
     return{
@@ -64,14 +75,25 @@ export default {
       showTime:true,
       screenVisible:false,
       sortList:[{title:'最近游玩',name:'timer'},{title:'A-Z',name:'letter'}],
+      sortType:{title:'最近游玩',name:'timer'},
+      isScrolling:false,
+      screenList:[],
+      // scaleValue:15,  // 暂时没有合适方法,后期补充
     }
   },
+
+  mounted(){
+    this.screenList = this.gameList
+  },
+
   computed:{
-    ...mapWritableState(steamUserStore,['gameList','myGameList'])
+    ...mapWritableState(steamUserStore,['gameList','myGameList']),
+    ...mapWritableState(appStore,['settings'])
   },
   methods:{
     closeFullScreen(){
       this.$emit('close')
+      this.isScrolling = false
     },
     twoWeekTime(time){
       return time? ( time.playtime_2weeks / 60 ).toFixed(1): 0
@@ -81,8 +103,37 @@ export default {
     },
     openSheZhi(){
       this.screenVisible = true
-    }
-   
+    },
+    stopScroll(){
+      this.isScrolling = !this.isScrolling
+    },
+    tabSort(item){
+      this.sortType = item
+      this.screenVisible = false
+    } 
+  },
+  watch:{
+    'sortType':{
+      handler(){
+        if(this.sortType.name === 'letter'){
+          this.screenList.sort((a, b) => a.appinfo.common.name.localeCompare(b.appinfo.common.name));
+        }else{
+          this.screenList.sort((a, b) => {
+            if (a.time === undefined && a.time === undefined) {
+              return 0;
+            } else if (a.time === undefined) {
+              return 1;
+            } else if (b.time === undefined) {
+              return -1;
+            }
+            else if (a.time !== b.time) {
+              return b.time.rtime_last_played - a.time.rtime_last_played;
+            }
+          });
+        }
+      },
+      immediate:true
+    },
   }
 }
 </script>
@@ -206,5 +257,17 @@ export default {
 .set-button-item{
   font-size: 2em;
   padding: 6px 14px;
+}
+
+
+:deep(.ant-slider-handle){
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(151, 151, 151, 1) !important;
+}
+:deep(.ant-slider-rail){
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+:deep(.ant-slider-track){
+  background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
 }
 </style>
