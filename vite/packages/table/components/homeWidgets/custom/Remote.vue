@@ -96,7 +96,7 @@ export default {
   methods: {
     save() {
       this.$refs.remote.visible = false
-      this.panelVisible = stubFalse
+      this.panelVisible = false
       this.customData.width = this.width
       this.customData.height = this.height
       this.customData.url = this.url
