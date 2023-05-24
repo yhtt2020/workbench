@@ -51,16 +51,21 @@ export const teamStore = defineStore("teamStore", {
     },
     myTeamNo(state){
       let teamNo = 0
-      if (state.my.created) {
+      if (state.my.created.hasOwnProperty('no')) {
+        //自己是队长
         teamNo = state.my.created.no
-      } else if (state.my.joined.length > 0) {
-        teamNo = state.my.joined[0].no
+      } else {
+        //是队员
+        if (state.my.joined.length > 0) {
+          teamNo = state.my.joined[0].team_no
+        }
       }
+      console.log(state.my.joined)
       return teamNo
     },
     myTeam(state){
       let teamNo = {}
-      if (state.my.created) {
+      if (Object.keys(state.my.created).length>0) {
         teamNo = state.my.created
       } else if (state.my.joined.length > 0) {
         teamNo = state.my.joined[0]
