@@ -5,11 +5,16 @@
                 <div id="hours" class="time">{{ hours }}</div>
                 <div class="time-separator">:</div>
                 <div id="minutes" class="time">{{ minutes }}</div>
-                <div class="time-separator a">:</div>
-                <div id="seconds" class="time">{{ seconds }}</div>
+                <div class="time-separator a" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">:</div>
+                <div id="seconds" class="time a" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ seconds
+                }}
+                </div>
             </div>
             <div id="timezone" class="timezone"></div>
-            <button id="toggle-button" class="toggle-button" @click="toggleFormat()">{{ textContent }}</button>
+            <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
+                <button id="toggle-button" class="toggle-button" @click="toggleFormat()">{{ textContent }}</button>
+            </template>
+
         </div>
     </div>
 </template>
@@ -24,6 +29,12 @@ export default {
             timerID: 0,
             textContent: "12-Hour Format"
         }
+    },
+    props: {
+        isSnow: {
+            type: String,
+            default: true,
+        },
     },
     mounted() {
         this.timerID = setInterval(this.setTime, 1000);
@@ -89,8 +100,7 @@ export default {
 .time {
     font-size: 3rem;
     font-weight: bold;
-    padding: 0.5rem;
-    margin: 0.5rem;
+    padding: 1rem;
     border-radius: 1rem;
     background-color: #fff;
     color: #141414;
@@ -103,6 +113,7 @@ export default {
     padding: 0.5rem;
     margin: 0.5rem;
     color: #141414;
+
 }
 
 .timezone {

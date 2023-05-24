@@ -3,8 +3,8 @@
         :formulaBar="formulaBar">
         <cardDrag ref="drag" @reSizeInit="reSizeInit">
             <template #="{ row }">
-                <textarea :style="{ 'backgroundImage': background, color: colors }" class="box" placeholder="输入卡片内容"
-                    v-model="text" @blur="updateText">
+                <textarea spellcheck="false" :style="{ 'backgroundImage': background, color: colors }" class="box"
+                    placeholder="输入卡片内容" v-model="text" @blur="updateText">
                 </textarea>
             </template>
         </cardDrag>

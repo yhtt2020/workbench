@@ -1,7 +1,7 @@
 <template>
   <div class="clock2">
-    <p class="time">{{ time }}</p>
-    <p class="date" v-if="display == 'block'">{{ date }}</p>
+    <p class="time">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></p>
+    <p class="date" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ date }}</p>
   </div>
 </template>
 
@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       time: "",
+      min: "",
       date: "",
       timerID: 0,
       week: [
@@ -24,9 +25,9 @@ export default {
     };
   },
   props: {
-    display: {
+    isSnow: {
       type: String,
-      default: "block",
+      default: true,
     },
   },
   mounted() {
@@ -46,8 +47,8 @@ export default {
       this.time =
         this.zeroPadding(cd.getHours(), 2) +
         ":" +
-        this.zeroPadding(cd.getMinutes(), 2) +
-        ":" +
+        this.zeroPadding(cd.getMinutes(), 2)
+      this.min = ":" +
         this.zeroPadding(cd.getSeconds(), 2);
       this.date =
         this.zeroPadding(cd.getFullYear(), 4) +

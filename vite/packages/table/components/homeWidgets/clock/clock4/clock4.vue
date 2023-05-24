@@ -1,17 +1,10 @@
 <template>
-  <div class="gutter-example clock4">
+  <div class="clock4">
     <a-row :gutter="16">
-      <a-col class="gutter-row" :span="span">
-        <div class="gutter-box">{{ hours }}</div>
-      </a-col>
-      <a-col class="gutter-row" :span="span">
-        <div class="gutter-box">{{ min }}</div>
-      </a-col>
-      <template v-if="span == 8">
-        <a-col class="gutter-row" :span="8">
-          <div class="gutter-box">{{ second }}</div>
-          {{ date }}
-        </a-col>
+      <div class="gutter-box">{{ hours }}</div>
+      <div class="gutter-box">{{ min }}</div>
+      <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
+        <div class="gutter-box">{{ second }}</div>
       </template>
     </a-row>
   </div>
@@ -28,9 +21,9 @@ export default {
     };
   },
   props: {
-    span: {
-      type: Number,
-      default: 8,
+    isSnow: {
+      type: String,
+      default: true,
     },
   },
   mounted() {
@@ -59,6 +52,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.clock4 {
+  // padding: 10px;
+  width: 100%;
+  // height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .gutter-box {
   color: #fff;
   font-family: Impact;
@@ -68,9 +70,10 @@ export default {
   line-height: 138px;
   text-align: center;
   height: 138px;
-  width: 120px;
+  width: 110px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
+  margin: 8px;
 }
 </style>

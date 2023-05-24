@@ -74,7 +74,10 @@ export default {
             this.customData.height = this.height
 
             this.isActive = e
-            this.reSizeCB && this.reSizeCB(e)
+            this.reSizeCB && this.reSizeCB(e, {
+                width: this.width,
+                height: this.height,
+            })
         },
         updateSize(e) {
             this.$refs.drag.dragCallBack(e)
