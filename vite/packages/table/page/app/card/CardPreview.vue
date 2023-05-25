@@ -58,6 +58,11 @@ export default {
     cardType: {
       type: Object,
       default: () => { }
+    },
+    desk:{
+      type:Object,
+      required:true,
+      default:()=>{}
     }
   },
 
@@ -80,15 +85,15 @@ export default {
     },
 
     addCard () {
-      this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{} });
+      this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now(),data:{} },this.desk);
       this.$emit("addSuccess")
-      this.$router.push({
-        name: "home",
-        params: {
-          name: this.cardType.images[this.carouselIndex],
-          cname: this.cardType.cname,
-        },
-      });
+      // this.$router.push({
+      //   name: "home",
+      //   params: {
+      //     name: this.cardType.images[this.carouselIndex],
+      //     cname: this.cardType.cname,
+      //   },
+      // });
       message.info("添加成功！");
     }
   }

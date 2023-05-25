@@ -59,7 +59,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="visibleAdd">
-      <AddCard @setCustom="setCustom"></AddCard>
+      <AddCard :desk="currentDesk" @onBack="()=>{this.visibleAdd=false}"></AddCard>
     </div>
   </transition>
 </template>

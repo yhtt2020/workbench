@@ -87,7 +87,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="custom">
-      <AddCard @setCustom="setCustom"></AddCard>
+      <AddCard @onBack="setCustom" :desk="currentDesk"></AddCard>
     </div>
   </transition>
 
