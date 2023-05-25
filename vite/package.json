@@ -20,6 +20,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "ant-design-vue": "^3.2.9",
     "autoprefixer": "^10.4.14",
+    "cheerio": "^1.0.0-rc.12",
     "codemirror": "^6.0.1",
     "echarts": "^5.4.1",
     "html2canvas": "^1.4.1",
@@ -48,6 +49,7 @@
     "vue-router": "4",
     "vue-tippy": "v6",
     "vue3-resize": "^0.2.0",
+    "vue3-seamless-scroll": "^2.0.1",
     "vuex": "^4.0.2",
     "xgplayer": "^2.32.2"
   },
