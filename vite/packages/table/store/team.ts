@@ -51,6 +51,9 @@ export const teamStore = defineStore("teamStore", {
     },
     myTeamNo(state){
       let teamNo = 0
+      if(typeof state.my.created==='undefined'){
+        return 0
+      }
       if (state.my.created.hasOwnProperty('no')) {
         //自己是队长
         teamNo = state.my.created.no
@@ -65,6 +68,9 @@ export const teamStore = defineStore("teamStore", {
     },
     myTeam(state){
       let teamNo = {}
+      if(typeof state.my.created==='undefined'){
+        return teamNo
+      }
       if (Object.keys(state.my.created).length>0) {
         teamNo = state.my.created
       } else if (state.my.joined.length > 0) {
