@@ -29,7 +29,6 @@ export default {
     },
     methods: {
         dragCallBack(e) {
-            console.log('111 :>> ', 111);
             if (e == "card1") {
                 this.w = `${540}px`
                 this.h = `${140}px`
@@ -68,11 +67,12 @@ export default {
                     let y = e.clientY;
                     width = x - oldX + w
                     height = h - oldY + y
-                    if (width > 254) that.w = `${width}px`
+                    if (width > 250) that.w = `${width}px`
                     if (height > 140) that.h = `${height}px`
                     name = `${width},${height}`
-                    let a = height > 140 ? height : 140
-                    that.$emit("reSizeInit", `${width},${a}`)
+                    height = height > 140 ? height : 140
+                    width = width > 250 ? width : 250
+                    that.$emit("reSizeInit", `${width},${height}`)
                 }
                 document.onmouseup = function () {
                     document.onmousemove = null;
@@ -93,6 +93,12 @@ export default {
     position: absolute;
     bottom: 0;
     right: 0;
+    color: #a09898;
+    cursor: move;
+}
+
+.drag-boxs:hover {
+    color: #fff;
 }
 
 .boxs {
