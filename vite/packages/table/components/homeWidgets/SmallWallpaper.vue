@@ -101,10 +101,10 @@ export default {
       wallpaperOptions: [
         { value: '我的收藏', name: 'my', path: '' },
         { value: '必应壁纸', name: 'bing', path: 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8' },
-        { value: '拾光壁纸', path: 'https://api.nguaduot.cn/timeline/v2', name: 'PickingPaper' },
-        { value: '贪食鬼', path: 'https://api.nguaduot.cn/glutton/journal', name: 'PickingPaper' },
-        { value: '贪吃蛇', path: 'https://api.nguaduot.cn/glutton/snake', name: 'PickingPaper' },
-        { value: 'wallhaven', path: 'https://api.nguaduot.cn/wallhaven/v2', name: 'PickingPaper' },
+        { value: '拾光壁纸', path: 'https://api.nguaduot.cn/timeline/v2?client=thisky', name: 'PickingPaper' },
+        { value: '贪食鬼', path: 'https://api.nguaduot.cn/glutton/v2?client=thisky', name: 'PickingPaper' },
+        { value: '贪吃蛇', path: 'https://api.nguaduot.cn/snake/v2?client=thisky', name: 'PickingPaper' },
+        { value: 'wallhaven', path: 'https://api.nguaduot.cn/wallhaven/v2?client=thisky', name: 'PickingPaper' },
         // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       settingVisible: false,
