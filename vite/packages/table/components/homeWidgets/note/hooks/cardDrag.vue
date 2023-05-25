@@ -26,10 +26,10 @@ export default {
     },
     mounted() {
         this.drag()
-        // this.dragCallBack()
     },
     methods: {
         dragCallBack(e) {
+            console.log('111 :>> ', 111);
             if (e == "card1") {
                 this.w = `${540}px`
                 this.h = `${140}px`
@@ -46,8 +46,8 @@ export default {
                 this.h = `${140}px`
             } else if (e) {
                 let str = e.split(",")
-                let width = Math.ceil(str[0] / 280)
-                let height = Math.ceil(str[1] / 205)
+                let width = Math.round(str[0] / 280)
+                let height = Math.round(str[1] / 205)
                 this.w = width * 280 + (width - 1) * 10 - 30 + 'px'
                 this.h = height * 205 + (height - 1) * 10 - 60 + 'px'
             }
@@ -71,7 +71,8 @@ export default {
                     if (width > 254) that.w = `${width}px`
                     if (height > 140) that.h = `${height}px`
                     name = `${width},${height}`
-                    that.$emit("reSizeInit", `${width},${height}`)
+                    let a = height > 140 ? height : 140
+                    that.$emit("reSizeInit", `${width},${a}`)
                 }
                 document.onmouseup = function () {
                     document.onmousemove = null;
