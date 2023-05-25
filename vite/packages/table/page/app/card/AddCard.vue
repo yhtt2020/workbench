@@ -172,19 +172,11 @@ export default {
           size: ['1x2']
         },
         {
-          name: 'singleDoubanFilm',
+          name: 'Film',
           cname: '豆瓣电影',
           icon: 'video',
           detail: '查看最近正在上映的热门电影',
-          images: ['singleDoubanFilm'],
-          size: ['1x2']
-        },
-        {
-          name: 'manyDoubanFilm',
-          cname: '豆瓣电影',
-          icon: 'video',
-          detail: '查看最近正在上映的热门电影',
-          images: ['manyDoubanFilm'],
+          images: ['singleFilm','manyFilm'],
           size: ['1x2']
         },
         {
