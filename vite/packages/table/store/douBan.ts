@@ -12,7 +12,7 @@ export const filmStore = defineStore("film", {
     async getData() {
       let res = await sendRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
         localCache:true,
-        localTtl:12*60*60
+        localTtl:60
       })
       res.data.movieList.forEach(item => {
         item.img = item.img.replace('2500x2500','240x354')
