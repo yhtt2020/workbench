@@ -1,16 +1,15 @@
 <template>
   <div class="ml-3" style="width: 98%;height: 100%">
-    <div style="width: 200px">
+    <div style="width: 200px" >
       <HorizontalPanel :navList="comList" v-model:selectType="currentTab" :height="44"
                        class="mt-3"></HorizontalPanel>
     </div>
-
     <vueCustomScrollbar v-if="currentTab.name==='com'" :settings="scrollbarSettings"
                         style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
       <div class="card mr-3"
            style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column">
         <div class="line-title">
-          <HorizontalPanel :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
+          <HorizontalPanel v-if="Number(this.myTeamNo)>0" :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
           <div v-if="currentChannel.name==='all'">
             <span class="ml-2 mt-2" style="font-size: 14px">全网弹幕频道</span>
             <span class="mt-2" style="float: right;font-weight: normal;font-size: 0.8em">
