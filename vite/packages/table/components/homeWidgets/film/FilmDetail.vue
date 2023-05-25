@@ -31,20 +31,20 @@
           </span>
         </div>
       </div>
-      <div v-else>{{ detailMovie.msg }}</div>
+      <DataStatu></DataStatu>
      </HomeComponentSlot>
 </template>
   
 <script>
   import HomeComponentSlot from "../HomeComponentSlot.vue";
-  import { mapWritableState, mapActions } from 'pinia'
-  import { filmStore } from '../../../store/douBan';
+  import DataStatu from "../DataStatu.vue"
   import { sendRequest } from '../../../js/axios/api'
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
     components:{
-      HomeComponentSlot
+      HomeComponentSlot,
+      DataStatu
     },
     props: {
       customIndex:{
@@ -73,7 +73,7 @@
         detailMovie: {
           img: ''
         },
-        pageToggle: true
+        pageToggle: true,
       };
     },
     methods: {
@@ -146,26 +146,6 @@
     right: 0;
     border-radius: 0px 8px 0px 8px;
   }
-
-
-
-  .star_rate{
-    display: flex;
-}
-.movie_score{
-    width: 3.382vw;
-    height: 3.382vw;
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin-right: 0.753vw;
-}
-.score_text{
-    font-size: 2.899vw;
-    color: #ff6600;
-    margin-top: 0.242vw;
-    margin-left: 1.558vw;
-}
-
 </style>
 
 

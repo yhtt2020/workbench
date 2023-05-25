@@ -11,11 +11,13 @@
       <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
         <div v-for="item in filmArrange" :key="item.id" 
         @click="btnDetail(item.id)" 
-        class="w-full  cursor-pointer one-film" 
-        >
+        class="w-full  cursor-pointer one-film">
           <img :src="item.img" alt="" class="rounded-lg img-film">
-          <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
+          <div class="right-top text-center bg-black bg-opacity-70">
+          <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
             猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+          </span>
+          <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
           </div>
         </div>
       </div>
@@ -23,8 +25,11 @@
         <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
         class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
           <img :src="item.img" alt="" class="rounded-lg img-film">
-          <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+          <div class="right-top text-center bg-black bg-opacity-70">
+            <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+              猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+            </span>
+            <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
           </div>
         </div>
       </div>
@@ -128,6 +133,10 @@
     top: 0;
     right: 0;
     border-radius: 0px 8px 0px 8px;
+    width: 68px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 13px;
   }
   .film-item{
       padding: 12px 0 0 18px;
@@ -142,8 +151,8 @@
       position: relative;
       margin-bottom: 14px;
       .img-film{
-        width: 116px;
-        height: 171px;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
       }
     }

@@ -6,8 +6,12 @@
       @click="btnDetail(singleFilm.id)"
       >
         <img :src="singleFilm.img" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
-        <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-          猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.sc }}</span>
+        <div class="right-top text-center bg-black bg-opacity-70" 
+        style="font-weight: 600;font-family: PingFangSC-Semibold;">
+          <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.sc}}</span>
+          </span>
+          <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.comingDate }}</span>
         </div>
       </div>
     </HomeComponentSlot>
@@ -60,11 +64,10 @@
       btnDetail(id){
         this.detailId = id
         this.detailToggle = true
-        // this.$router.push({name:'FilmDetail',params:{id}})
       },
       refreshPage(){
         this.singleFilm = _.sampleSize(this.filmList,1)[0]
-        // console.log(this.singleFilm)
+        console.log(this.singleFilm)
       }
     },
     async mounted() {
@@ -110,24 +113,11 @@
     top: 0;
     right: 0;
     border-radius: 0px 8px 0px 8px;
+    width: 68px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 13px;
   }
-  .star_rate{
-    display: flex;
-}
-.movie_score{
-    width: 3.382vw;
-    height: 3.382vw;
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin-right: 0.753vw;
-}
-.score_text{
-    font-size: 2.899vw;
-    color: #ff6600;
-    margin-top: 0.242vw;
-    margin-left: 1.558vw;
-}
-
 </style>
 
 

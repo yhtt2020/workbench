@@ -12,9 +12,14 @@ export const filmStore = defineStore("film", {
     async getData() {
       let res = await sendRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
         localCache:true,
-        localTtl:60
+        localTtl:12*60*60
       })
+      res.data.movieList.forEach(item => {
+        item.img = item.img.replace('2500x2500','240x354')
+        item.comingDate = item.comingTitle.split(' ')[0]
+      });
       this.data = res.data.movieList
+      // console.log("data",this.data)
     },
     
   },
