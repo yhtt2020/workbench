@@ -99,7 +99,7 @@
         this.getDoubanList()
       },
       btnDetail(id){
-        console.log(id)
+        // console.log(id)
         this.detailId = id
         this.detailToggle = true
       }

@@ -87,7 +87,7 @@
           localCache:true,
           localTtl:60
         })
-        console.log('detail',detail)
+        // console.log('detail',detail)
         if(detail.data.code){
           this.pageToggle = false
           this.detailMovie = detail.data
@@ -95,8 +95,7 @@
         }else{
           this.detailMovie = detail.data.detailMovie
         }
-        console.log(detail)
-        console.log("!@#",detail.data.detailMovie)
+        // console.log("!@#",detail.data.detailMovie)
         // this.detailMovie = detail.data.detailMovie
       },
       stripDay(url){

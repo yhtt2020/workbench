@@ -64,15 +64,14 @@
       },
       refreshPage(){
         this.singleFilm = _.sampleSize(this.filmList,1)[0]
-        console.log(this.singleFilm)
+        // console.log(this.singleFilm)
       }
     },
     async mounted() {
       await this.getData()
       this.filmList = this.data
       this.singleFilm = _.sampleSize(this.filmList,1)[0]
-      console.log("singleFilm",this.singleFilm)
-      // console.log(this.singleFilm)
+      // console.log("singleFilm",this.singleFilm)
     },
   };
 </script>
