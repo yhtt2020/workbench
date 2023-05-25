@@ -62,16 +62,12 @@ export default {
   mounted() {
     this.blurs = this.blur
     this.zoom = this.bgZoom
-    this.$emit("updateBlur", this.blurs)
-    this.$emit("updateBgZoom", this.zoom)
   },
   watch: {
     blurs(newVal, oldVal) {
-      console.log('背景模糊度 :>> ', newVal);
       this.$emit("updateBlur", newVal)
     },
     zoom(newVal, oldVal) {
-      console.log('缩放度 :>> ', newVal);
       this.$emit("updateBgZoom", newVal)
     }
   },

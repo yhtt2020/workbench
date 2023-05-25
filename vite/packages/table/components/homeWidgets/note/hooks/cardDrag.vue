@@ -26,7 +26,7 @@ export default {
     },
     mounted() {
         this.drag()
-        this.dragCallBack()
+        // this.dragCallBack()
     },
     methods: {
         dragCallBack(e) {

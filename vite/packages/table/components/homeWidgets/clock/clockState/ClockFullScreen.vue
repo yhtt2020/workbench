@@ -66,8 +66,7 @@ export default {
     },
   },
   mounted() {
-    this.updateBlur(this.blur)
-    this.updateBlur(this.bgZoom)
+    this.blurs = `blur(${parseInt(this.blur / 2)}px)`
     this.zoom = `${this.bgZoom + 100}%`
     this.touchEvent()
     //鼠标事件
@@ -99,13 +98,10 @@ export default {
       this.$emit('exit')
     },
     updateBlur(e) {
-      console.log('拖拽Blur更新数据 :>> ', e);
-      let a = parseInt(e / 2)
-      this.blurs = `blur(${a}px)`
+      this.blurs = `blur(${parseInt(e / 2)}px)`
       this.$emit("updateBlur", e)
     },
     updateBgZoom(e) {
-      console.log('拖拽BgZoom更新数据 :>> ', e);
       this.zoom = `${e + 100}%`
       this.$emit("updateBgZoom", e)
     },
