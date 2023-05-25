@@ -5,37 +5,44 @@
     :customIndex="customIndex"
     :custom-data="customData"
     :formulaBar="formulaBar"
+    v-if="!detailToggle"
     >
       <div class="pointer title-refresh" @click="refreshPage"></div>
       <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-        <div v-for="item in filmArrange" :key="item.id" @click="btnDoubanFilm(item.id)" class="w-full  cursor-pointer one-film" >
+        <div v-for="item in filmArrange" :key="item.id" 
+        @click="btnDetail(item.id)" 
+        class="w-full  cursor-pointer one-film" 
+        >
           <img :src="item.img" alt="" class="rounded-lg img-film">
           <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-            豆瓣：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
           </div>
         </div>
       </div>
       <div class="film-item" v-else-if="customData.width === 2">
-        <div v-for="item in filmArrange" :key="item.id" @click="btnDoubanFilm(item.id)"
+        <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
         class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
           <img :src="item.img" alt="" class="rounded-lg img-film">
           <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-            豆瓣：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
           </div>
         </div>
       </div>
     </HomeComponentSlot> 
+    <FilmDetail v-if="detailToggle" :detailId="detailId"></FilmDetail>
 </template>
   
 <script>
   import { mapWritableState, mapActions } from 'pinia'
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import { filmStore } from '../../../store/douBan';
+  import FilmDetail from './FilmDetail.vue'
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
     components:{
-      HomeComponentSlot
+      HomeComponentSlot,
+      FilmDetail
     },
     props: {
       customIndex:{
@@ -61,7 +68,9 @@
         mySize: { title: "1x2", height:2,width:1,name:'1x2' },
         filmList: [],
         filmPart: [],
-        filmArrange: []
+        filmArrange: [],
+        detailToggle: false,
+        detailId: -1
       };
     },
     computed: {
@@ -89,8 +98,10 @@
         this.filmPart = _.sampleSize(this.filmList, 8)
         this.getDoubanList()
       },
-      btnDoubanFilm(id){
-        // console.log(id)
+      btnDetail(id){
+        console.log(id)
+        this.detailId = id
+        this.detailToggle = true
       }
     },
     mounted() {
@@ -131,8 +142,8 @@
       position: relative;
       margin-bottom: 14px;
       .img-film{
-        width:100%;
-        height:100%;
+        width: 116px;
+        height: 171px;
         object-fit: cover;
       }
     }

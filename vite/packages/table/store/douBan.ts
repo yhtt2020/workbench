@@ -15,6 +15,7 @@ export const filmStore = defineStore("film", {
         localTtl:60
       })
       this.data = res.data.movieList
+      console.log("data",this.data)
     },
     
   },

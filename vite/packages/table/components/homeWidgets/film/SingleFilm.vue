@@ -5,9 +5,9 @@
       style="width: 240px;height: 354px;margin: 13px auto 0;position: relative;"
       @click="btnDetail(singleFilm.id)"
       >
-        <img :src="singleFilm.img" alt="" class="rounded-lg" style="width:100%;heigth:100%;object-fit: cover;">
+        <img :src="singleFilm.img" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
         <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-          豆瓣：<span style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.sc }}</span>
+          猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.sc }}</span>
         </div>
       </div>
     </HomeComponentSlot>
@@ -64,12 +64,14 @@
       },
       refreshPage(){
         this.singleFilm = _.sampleSize(this.filmList,1)[0]
+        console.log(this.singleFilm)
       }
     },
-    mounted() {
-      this.getData()
+    async mounted() {
+      await this.getData()
       this.filmList = this.data
       this.singleFilm = _.sampleSize(this.filmList,1)[0]
+      console.log("singleFilm",this.singleFilm)
       // console.log(this.singleFilm)
     },
   };
@@ -110,9 +112,6 @@
     right: 0;
     border-radius: 0px 8px 0px 8px;
   }
-
-
-
   .star_rate{
     display: flex;
 }
