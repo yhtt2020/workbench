@@ -34,7 +34,7 @@
         </div>
       </div>
     </HomeComponentSlot> 
-    <FilmDetail v-if="detailToggle" :detailId="detailId"></FilmDetail>
+    <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
 </template>
   
 <script>
@@ -107,6 +107,10 @@
         // console.log(id)
         this.detailId = id
         this.detailToggle = true
+      },
+      detailBack(val){
+        this.detailToggle = val
+        console.log("返回了")
       }
     },
     mounted() {

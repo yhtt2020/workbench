@@ -3,7 +3,7 @@
         <div class="box-block">
             <img :src="imgDisplay" alt="">
             <span>{{ textPrompt }}</span>
-            <div class="block-btn">{{ btnText }}</div>
+            <div class="block-btn" @click="jumpPage">{{ btnText }}</div>
         </div>
     </div>
 </template>
@@ -35,7 +35,12 @@
       return {
         
       };
-    }
+    },
+    methods: {
+      jumpPage(){
+          this.$emit('notData',false)
+        }
+    },
   };
 </script>
   

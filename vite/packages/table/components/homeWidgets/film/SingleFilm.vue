@@ -15,7 +15,7 @@
         </div>
       </div>
     </HomeComponentSlot>
-    <FilmDetail v-if="detailToggle" :detailId="detailId"></FilmDetail>
+    <FilmDetail v-if="detailToggle" :detailId="detailId" @detailBack="detailBack"></FilmDetail>
 </template>
   
 <script>
@@ -68,6 +68,10 @@
       refreshPage(){
         this.singleFilm = _.sampleSize(this.filmList,1)[0]
         // console.log(this.singleFilm)
+      },
+      detailBack(val){
+        this.detailToggle = val
+        console.log("返回了")
       }
     },
     async mounted() {

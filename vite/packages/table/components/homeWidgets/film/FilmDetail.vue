@@ -1,7 +1,7 @@
 <template>
     <HomeComponentSlot :options="options" :customIndex="customIndex" :custom-data="customData">
       <div class="flex" style="margin: 13px 10px 0;" v-if="pageToggle">
-        <div class="cursor-pointer" style="width: 240px;height: 354px;margin-right: 16px;">
+        <div class="cursor-pointer" style="width: 240px;height: 354px;margin-right: 16px;" v-if="fatherWidth == 2">
           <img :src="detailMovie.img" style="width: 100%;height: 100%;object-fit: cover;" class="rounded-lg" alt="">
         </div>
         
@@ -23,15 +23,21 @@
               <span style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ detailMovie.wish }}人评价</span>
             </div>
           </div>
-          <span class="change pointer rounded-lg s-item  flex items-center justify-center" 
-          style="padding:13px 70px;color: rgba(255,255,255,0.85);font-size: 16px;"
-          @click="stripDay(detailMovie.shareInfo.url)"
-          >
-          猫眼条日
-          </span>
+          <div class="flex items-center justify-around">
+            <div @click="discountBack(false)"
+                 class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
+              <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
+            </div>
+            <span class="change pointer rounded-lg s-item  flex items-center justify-center" 
+            style="padding:13px 50px;color: rgba(255,255,255,0.85);font-size: 16px;"
+            @click="stripDay(detailMovie.shareInfo.url)"
+            >
+            猫眼电影
+            </span>
+          </div>
         </div>
       </div>
-      <DataStatu></DataStatu>
+      <DataStatu v-else-if="!pageToggle" @notData="notData"></DataStatu>
      </HomeComponentSlot>
 </template>
   
@@ -60,12 +66,16 @@
       detailId: {
         type: Number,
         default: 0
-      }
+      },
+      fatherWidth: {
+        type: Number,
+        default: 0
+      },
     },
     data() {
       return {
         options:{
-          className:'card double',
+          className:'card',
           title:'正在热映 (开发中)',
           icon:'video',
           type:'singleDoubanFilm'
@@ -87,7 +97,9 @@
           localCache:true,
           localTtl:60
         })
-        // console.log('detail',detail)
+
+        console.log('detail',detail)
+        // let detail = {data:{code: 406}}
         if(detail.data.code){
           this.pageToggle = false
           this.detailMovie = detail.data
@@ -100,6 +112,13 @@
       },
       stripDay(url){
         window.open(url, '_blank')
+      },
+      notData(val){
+        // this.pageToggle = val
+        this.$emit('detailBack',val)
+      },
+      discountBack(val){
+        this.$emit('detailBack',val)
       }
     },
     async mounted() {
@@ -107,6 +126,7 @@
       if(this.detailMovie.code !== 406){
         await this.setDoubanDetail()
       }
+      console.log(this.fatherWidth)
       
     },
   };
