@@ -210,10 +210,10 @@ export default defineComponent({
         this.no = this.pickImageData.sort((a,b)=>{
           return  a.resolution - b.resolution  > b.resolution
         })[this.pickImageData.length-1].no
-        this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
+        this.getPickingData(this.pickFilterValue)
       }
     })
-    this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
+    this.getPickingData(this.pickFilterValue)
     this.getClassOption()
     this.getWallOption()
   },
@@ -221,11 +221,18 @@ export default defineComponent({
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     // 获取拾光壁纸数据
-    getPickingData(vl,vP){
-      const apiUrl = `https://api.nguaduot.cn${vl}?${vP}`
+    getPickingData(e){
+      const api = 'https://api.nguaduot.cn'
+      const cate = this.pickFilterValue === '/wallhaven/v2' ? this.wallValue :
+                   this.pickFilterValue === '/timeline/v2' ? this.classValue : ''
+      const  order = this.filterValue
+      const no = this.no
+      const dateTime = this.dateTime
+      const score = this.score
+      const url = `${api}${e}?${cate === '' ? '': `cate=${cate}`}&order=${order}&no=${no}&date=${dateTime}&score=${score}&client=thisky`
       if(!this.isLoading){
         this.isLoading = true
-        axios.get(apiUrl).then(async res=>{
+        axios.get(url).then(async res=>{
           if(res.data.data.length !== 1){
             let pickImage = res.data.data
             this.count = res.data.count
@@ -286,7 +293,7 @@ export default defineComponent({
       })
       this.defaultSynopsis = this.paperSourceOption[index]
       this.pickImageData  = []
-      this.getPickingData(e,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
+      this.getPickingData(e)
     },
     // 重置筛选
     restFilter(){
@@ -336,7 +343,7 @@ export default defineComponent({
 
     closeFilter(){
       this.pickImageData = []
-      this.getPickingData(this.pickFilterValue,`${this.pickFilterValue === '/wallhaven/v2' ? `cate=${this.wallValue}&`: this.pickFilterValue === '/timeline/v2' ? `cate=${this.classValue}&` : ''}order=${this.filterValue}&no=${this.no}&date=${this.dateTime}&score=${this.score}&client=thisky`)
+      this.getPickingData(this.pickFilterValue)
     }
   },
   setup(){
