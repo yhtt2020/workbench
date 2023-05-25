@@ -74,7 +74,7 @@ export default {
             this.customData.height = this.height
 
             this.isActive = e
-            this.reSizeCB && this.reSizeCB(e, {
+            this.onReSize && this.onReSize(e, {
                 width: this.width,
                 height: this.height,
             })

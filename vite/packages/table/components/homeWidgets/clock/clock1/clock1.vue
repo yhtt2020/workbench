@@ -120,7 +120,6 @@ export default {
     ];
     this.init();
     this.run();
-    console.log('this.isSnow :>> ', this.isSnow);
   },
 };
 </script>

@@ -72,20 +72,21 @@ export default {
       isClockFullScreen: false,
       settingVisible: false,
       isSnow: true,
-
       isClock5: false,
       isClock5w420: false,
       zoom: "100%",
       zooms: {
+        // 无限拉伸是0, 1*1是1 2*2是2
         "clock1": [55, 35, 35],
         "clock2": [60, 66, 50],
-        "clock3": [150, 0, 150],
-        "clock4": [66, 0, 30],
+        "clock3": [150, 0, 80],
+        "clock4": [40, 0, 30],
         "clock5": [50, 0, 25],
         "clock6": [80, 0, 80],
       },
       bgZoom: 0,
       blur: 10,
+      size: {}
     };
   },
   components: {
@@ -96,27 +97,14 @@ export default {
     cardSize
   },
   created() {
-    if (!this.customData.clockiD) {
-      this.increaseCustomComponents(this.customIndex, {
-        clockiD: "clock4",
-      });
-    }
+    if (!this.customData.clockiD) { this.increaseCustomComponents(this.customIndex, { clockiD: "clock4", }) }
     if (!this.customData.imgUrl) {
       this.increaseCustomComponents(this.customIndex, {
         imgUrl: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
-      });
+      })
     }
-    if (!this.customData.blur) {
-      this.increaseCustomComponents(this.customIndex, {
-        blur: 10,
-      });
-    }
-    if (!this.customData.bgZoom) {
-      this.increaseCustomComponents(this.customIndex, {
-        bgZoom: 0,
-      });
-    }
-
+    if (!this.customData.blur) { this.increaseCustomComponents(this.customIndex, { blur: 10 }) }
+    if (!this.customData.bgZoom) { this.increaseCustomComponents(this.customIndex, { bgZoom: 0 }) }
   },
   mounted() {
     this.blur = this.customData.blur
@@ -126,20 +114,22 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
-    reSizeCB(e, i) {
+    onReSize(e, i) {
       let { width, height } = i
+      this.size = e
       let zoomRatio = 0
       let max = width > height ? width : height
+      let zoom
+
       if (height <= 1 || width <= 1) {
-        let zoom = 100 + zoomRatio
+        zoom = 100 + zoomRatio
         if (width <= 1) {
           this.isSnow = false
           zoom = 0
         } else {
           this.isSnow = true
-          zoomRatio = this.zooms[this.customData.clockiD][1]
+          // zoom = this.zooms[this.customData.clockiD][1]
         }
-        this.zoom = `${zoom}%`
       } else if ((width - height) > 1 || (height - width) > 1) {
         this.isSnow = true
         zoomRatio = this.zooms[this.customData.clockiD][0]
@@ -161,32 +151,27 @@ export default {
         }
         else {
           zoomRatio /= (w * 0.25)
-          if (this.customData.clockiD == "clock5") zoomRatio /= 2.5
+          zoomRatio /= 3
         }
-        let zoom = 100 + (zoomRatio) * (max - 3)
-        this.zoom = `${zoom}%`
+        zoom = 100 + (zoomRatio) * (max - 3)
       }
       else {
         this.isSnow = true
         if (width > 2 && height > 2) {
           zoomRatio = this.zooms[this.customData.clockiD][0]
-          let zoom = 100 + zoomRatio * (max - 2)
-          this.zoom = `${zoom}%`
+          zoom = 100 + zoomRatio * (max - 2)
         } else if (width >= 2 || height <= 2) {
           zoomRatio = this.zooms[this.customData.clockiD][2]
-          let zoom = 100 + zoomRatio
-          this.zoom = `${zoom}%`
+          zoom = 100 + zoomRatio
         }
       }
-      let str = e.split(",")
-      let h = str[1]
-      let w = str[0]
+      this.zoom = `${zoom}%`
       if (this.customData.clockiD == "clock5") {
-        if (h > 220 && w > 420) {
+        if (height > 1 && width > 1) {
           this.isClock5 = false
           this.isSnow = true
         } else {
-          if (h < 220 && w > 420) {
+          if (height <= 1 && width > 1) {
             this.isClock5w420 = true
           } else {
             this.isClock5w420 = false
@@ -195,13 +180,13 @@ export default {
           this.isSnow = false
         }
       }
+
     },
     updateBlur(e) {
       this.increaseCustomComponents(this.customIndex, {
         blur: e,
       });
       this.blur = e
-      console.log('外部拿到结果了 :>> ', this.customData.blur);
 
     },
     updateBgZoom(e) {
@@ -209,10 +194,10 @@ export default {
         bgZoom: e,
       });
       this.bgZoom = e
-      console.log('外部拿到结果了 :>> ', this.customData.bgZoom);
 
     },
     updateClockStyle(e) {
+      this.updateSize(this.size)
       this.increaseCustomComponents(this.customIndex, {
         clockiD: e,
       });
@@ -261,6 +246,10 @@ export default {
     transform: scale(1.2);
   }
 
+  :deep(.clock5) {
+    transform: scale(0.85);
+  }
+
   .isClock5w420 {
     :deep(.clock5) {
       .a {
@@ -275,7 +264,6 @@ export default {
 
   .isClock5 {
     :deep(.clock5) {
-      // width: 90%;
       height: 120px;
 
       .time {
