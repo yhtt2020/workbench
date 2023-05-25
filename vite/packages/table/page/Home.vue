@@ -267,7 +267,6 @@ import HorizontalPanel from '../components/HorizontalPanel.vue'
 import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/homeWidgets/clock/index.vue'
 import Notes from "../components/homeWidgets/note/index.vue"
-const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);

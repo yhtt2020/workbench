@@ -1,13 +1,27 @@
 <template>
-  <div class="s-bg p-5 rounded-xl m-3" style="width: 95%;height: 100%">
-    欢迎来到大型施工现场。本工地正在进行地基施工。请带好安全帽，注意脚下和头顶安全。
+  <div class=" p-5 rounded-xl m-3" style="width: 95%;height: 100%">
+    <Desk :currentDesk="currentDesk" :settings="currentDesk.settings"></Desk>
   </div>
+
 </template>
 
 <script>
-  export default {
-    
+import { steamUserStore } from '../../store/steamUser'
+import Desk from '../../components/desk/Desk.vue'
+import {mapWritableState} from 'pinia'
+export default {
+  components: { Desk },
+  computed: {
+    ...mapWritableState(steamUserStore, ['desks'])
+  }, data () {
+      return {
+        currentDesk:{}
+      }
+  },
+  mounted () {
+    this.currentDesk=this.desks[0]
   }
+}
 </script>
 
 <style lang="scss" scoped>
