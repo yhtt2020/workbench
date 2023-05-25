@@ -62,9 +62,9 @@ export default {
                 this.height = 1
             } else if (e) {
                 let str = e.split(",")
-                this.width = Math.ceil(str[0] / 280)
-                this.height = Math.ceil(str[1] / 205)
-
+                let a = str[0] / 280
+                this.width = Math.round(str[0] / 280)
+                this.height = Math.round(str[1] / 205)
             }
             this.increaseCustomComponents(this.customIndex, {
                 width: this.width,

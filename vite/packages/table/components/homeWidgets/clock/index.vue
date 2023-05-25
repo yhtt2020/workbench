@@ -86,7 +86,7 @@ export default {
       },
       bgZoom: 0,
       blur: 10,
-      size: {}
+      widthHeightObj: {},
     };
   },
   components: {
@@ -114,13 +114,14 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
-    onReSize(e, i) {
+    onReSize(e, i, clock, widthHeightObj) {
+      clock = clock ?? this.customData.clockiD
+      i = widthHeightObj ?? i
       let { width, height } = i
-      this.size = e
+      this.widthHeightObj = i
       let zoomRatio = 0
       let max = width > height ? width : height
       let zoom
-
       if (height <= 1 || width <= 1) {
         zoom = 100 + zoomRatio
         if (width <= 1) {
@@ -132,7 +133,7 @@ export default {
         }
       } else if ((width - height) > 1 || (height - width) > 1) {
         this.isSnow = true
-        zoomRatio = this.zooms[this.customData.clockiD][0]
+        zoomRatio = this.zooms[clock][0]
         let h = height - width
         let w = width - height
         let x
@@ -158,15 +159,15 @@ export default {
       else {
         this.isSnow = true
         if (width > 2 && height > 2) {
-          zoomRatio = this.zooms[this.customData.clockiD][0]
+          zoomRatio = this.zooms[clock][0]
           zoom = 100 + zoomRatio * (max - 2)
         } else if (width >= 2 || height <= 2) {
-          zoomRatio = this.zooms[this.customData.clockiD][2]
+          zoomRatio = this.zooms[clock][2]
           zoom = 100 + zoomRatio
         }
       }
       this.zoom = `${zoom}%`
-      if (this.customData.clockiD == "clock5") {
+      if (clock == "clock5") {
         if (height > 1 && width > 1) {
           this.isClock5 = false
           this.isSnow = true
@@ -197,7 +198,7 @@ export default {
 
     },
     updateClockStyle(e) {
-      this.updateSize(this.size)
+      this.onReSize(0, 0, e, this.widthHeightObj)
       this.increaseCustomComponents(this.customIndex, {
         clockiD: e,
       });
