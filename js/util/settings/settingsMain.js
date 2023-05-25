@@ -83,8 +83,9 @@ var settings = {
       {
         if (!global.settings.init) {
           global.settings = settings
-          await settings.initialize()
-          if (cb) cb()
+          settings.initialize().then(async () => {
+            if (cb) await cb()
+          })
         }
       }
     })
