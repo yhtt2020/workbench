@@ -1,5 +1,5 @@
 <template>
-  <div v-if="currentDesk.cards">
+  <div style="height: 100%" v-if="currentDesk.cards">
     <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
@@ -29,8 +29,8 @@
           height: 100%;
           width: 100%;
           display: flex;
-          align-items: center;
-          align-content: center;
+          align-items: flex-start;
+          align-content: flex-start;
         " :style="{ 'padding-top': this.settings.marginTop + 'px' }">
         <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
             return settings.cardMargin + 'px';
@@ -62,17 +62,107 @@
       <AddCard :desk="currentDesk" @onBack="()=>{this.visibleAdd=false}"></AddCard>
     </div>
   </transition>
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
+            placement="bottom" :visible="menuVisible" @close="onClose">
+    <a-row style="margin-top: 1em" :gutter="[20, 20]">
+      <a-col>
+        <div @click="toggleEditing" class="btn">
+          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
+          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>
+          <div>
+            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>
+          </div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="addCard" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>添加卡片</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="showSetting" class="btn">
+          <Icon style="font-size: 3em" icon="shezhi1"></Icon>
+          <div><span>设置</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="clear" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div><span>清空卡片</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="showAddDeskForm" class="btn">
+          <Icon style="font-size: 3em" icon="desktop"></Icon>
+          <div><span>添加桌面</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="delDesk" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div><span>删除桌面</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="hideDesk" class="btn">
+          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
+          <div><span>隐藏桌面</span></div>
+        </div>
+      </a-col>
+    </a-row>
+  </a-drawer>
 </template>
 
 <script>
 
-import vuuri from '../vuuriHome/Vuuri.vue'
 import Muuri from 'muuri'
 import AddCard from '../../page/app/card/AddCard.vue'
+import Vuuri from '../vuuri/Vuuri.vue'
+
+import CPULineChart from "../homeWidgets/supervisory/CPULineChart.vue";
+import CPUFourCard from "../homeWidgets/supervisory/CPUFourCard.vue";
+import InternalList from "../homeWidgets/supervisory/InternalList.vue";
+import SmallCPUCard from "../homeWidgets/supervisory/SmallCPUCard.vue";
+import SmallGPUCard from "../homeWidgets/supervisory/SmallGPUCard.vue";
+import GamesDiscount from "../homeWidgets/games/GamesDiscount.vue";
+import DiscountPercentage from "../homeWidgets/games/DiscountPercentage.vue";
+import MiddleWallpaper from "../homeWidgets/MiddleWallpaper.vue";
+import SmallWallpaper from "../homeWidgets/SmallWallpaper.vue";
+import MyGameSmall from "../homeWidgets/games/MyGameSmall.vue";
+import Capture from "../homeWidgets/games/Capture.vue";
+import Voice from "../homeWidgets/games/Voice.vue";
+import Audio from "../homeWidgets/games/Audio.vue";
+import CaptureNewCard from "../homeWidgets/games/CaptureNewCard.vue";
+import Remote from "../homeWidgets/custom/Remote.vue";
+import GameEpic from "../homeWidgets/games/GameEpic.vue";
+import CustomAssembly from "../homeWidgets/custom/CustomAssembly.vue";
+import SignIn from "../homeWidgets/SignIn.vue"
+import SingleFilm from "../homeWidgets/film/SingleFilm.vue"
+import ManyFilm from "../homeWidgets/film/ManyFilm.vue"
+import SteamFriends from '../homeWidgets/games/SteamFriends.vue'
+import Weather from "../homeWidgets/Weather.vue";
+import Calendar from "../homeWidgets/Calendar.vue";
+import Timer from "../homeWidgets/Timer.vue";
+import Music from "../homeWidgets/Music.vue";
+import Stock from "../homeWidgets/Stock.vue";
+import Dou from "../homeWidgets/Dou.vue";
+import Fish from "../homeWidgets/Fish.vue";
+import CustomTimer from "../homeWidgets/CustomTimer.vue";
+import SmallCountdownDay from "../homeWidgets/SmallCountdownDay.vue";
+import Clock from "../homeWidgets/Clock.vue";
+import CountdownDay from "../homeWidgets/CountdownDay.vue";
+
 
 export default {
   name: 'Desk',
-  components: { AddCard },
+  components: { Vuuri, AddCard,CPUFourCard,CPULineChart,InternalList,
+    SmallCPUCard,SmallGPUCard ,DiscountPercentage,GamesDiscount,GameEpic,
+    Music,Stock,Dou,Fish,CustomTimer,SmallCountdownDay,Clock,CountdownDay,
+    Calendar,Timer,Weather,SteamFriends,Remote,SignIn,SingleFilm,ManyFilm,
+    CaptureNewCard,Voice,Audio,Capture,CustomAssembly,MyGameSmall,SmallWallpaper,
+    MiddleWallpaper
+  },
   props:
     {
       currentDesk: {
@@ -114,6 +204,7 @@ export default {
   ,
   data () {
     return {
+      menuVisible:false,
       visibleAdd:false,
       editing: false,
       scrollbarSettings: {
@@ -129,11 +220,23 @@ export default {
   methods:{
     addCard(){
       this.visibleAdd=true
-    }
+    },
+    onClose() {
+      this.menuVisible = false;
+    },
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.grid {
+  position: relative;
+  display: inline-block;
+  width: 43em;
+  border-radius: 4px;
+  vertical-align: top;
+  left: 0;
+  right: 0;
+  margin-right: 1em;
+}
 </style>

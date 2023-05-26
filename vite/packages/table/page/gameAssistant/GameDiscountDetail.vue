@@ -63,9 +63,9 @@
     </div>
   </vue-custom-scrollbar>
 
-  <HorizontalDrawer 
+  <HorizontalDrawer
   :drawerTitle="drawerTitle" ref="regionDrawer" :rightSelect="rightSelect"
-  @getArea="getArea" 
+  @getArea="getArea"
   ></HorizontalDrawer>
 </template>
 
@@ -73,6 +73,7 @@
 import { regionRange,sendRequest } from '../../js/axios/api';
 import WheelCastingUnit from '../../components/WheelCastingUnit.vue'
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
+import browser from '../../js/common/browser'
 export default {
     name:'GameDiscountDetail',
     props:{
@@ -127,7 +128,7 @@ export default {
     },
     methods:{
       goBack(){
-        this.$router.push({name:'recommend'}) 
+        this.$router.push({name:'recommend'})
       },
       getDetailVal(){
         if(this.id !== undefined){
@@ -158,7 +159,7 @@ export default {
         }
       },
       enterSteamStore(){
-        window.ipc.send('addTab', { url: `https://store.steampowered.com/app/${this.id}` })
+        browser.openInUserSelect(`https://store.steampowered.com/app/${this.id}`)
       },
       acquisitionDate(val){
         const expireDate = new Date(parseInt(val)*1000)
@@ -183,7 +184,7 @@ export default {
 .btn-active:active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
-} 
+}
 ::v-deep .ps__thumb-y{
   display: none !important;
 }

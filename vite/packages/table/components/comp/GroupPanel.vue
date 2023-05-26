@@ -73,6 +73,7 @@
 import { appStore } from '../../store'
 import {mapWritableState} from 'pinia'
 import GradeSmallTip from "../GradeSmallTip.vue";
+import browser from '../../js/common/browser'
 const {groupApi} = window.$apis
 export default {
   name: 'GroupPanel',
@@ -113,10 +114,10 @@ export default {
   },
   methods: {
     look(){
-      ipc.send('addTab',{url:'https://s.apps.vip/groups'})
+      browser.openInInner('https://s.apps.vip/groups')
     },
     go(url){
-      ipc.send('addTab',{url})
+      browser.openInInner(url)
     },
     createGroup(){
       ipc.send('osxCreateCircle')

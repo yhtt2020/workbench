@@ -141,6 +141,7 @@ import { mapActions, mapState } from "pinia";
 import {message,Modal} from 'ant-design-vue'
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import {appStore} from "../../store";
+import browser from '../../js/common/browser'
 
 export default defineComponent({
   name:'Picking',
@@ -387,7 +388,7 @@ export default defineComponent({
     }
     // 跳转至拾光壁纸官网
     const toOfficialWebsite = () =>{
-      ipc.send('addTab',{url:'https://timeline.ink'})
+      browser.openInUserSelect('https://timeline.ink')
     }
     // 获取分类参数
     const filterClassValue = (e) =>{

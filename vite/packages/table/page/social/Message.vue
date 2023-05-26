@@ -180,6 +180,7 @@ import { mapActions, mapState } from 'pinia'
 import _ from 'lodash-es'
 import UserCard from '../../components/small/UserCard.vue'
 import { ExportOutlined } from '@ant-design/icons-vue'
+import browser from '../../js/common/browser'
 
 export default {
   name: 'Message',
@@ -297,8 +298,7 @@ export default {
       if(!url){
         return
       }
-      ipc.send('addTab', { url: url })
-
+      browser.openInInner(url)
 
     },
     clickInteract (item) {
@@ -327,17 +327,17 @@ export default {
     },
     // 推送消息列表查看详情点击事件
     openDetail () {
-      ipc.send('addTab', { url: this.detailUrl })
+      browser.openInInner(this.detailUrl)
     },
     setCurrentSubTab(tab){
       this.currentSubTab=tab
     },
     clickDetail(item){
       console.log(item)
-      ipc.send('addTab', { url: 'https://s.apps.vip/post/' + item.tid})
+      browser.openInInner('https://s.apps.vip/post/' + item.tid)
     },
     goYuan(){
-      ipc.send('addTab', { url: 'https://s.apps.vip/user/message'})
+      browser.openInInner('https://s.apps.vip/user/message')
     }
   }
 }

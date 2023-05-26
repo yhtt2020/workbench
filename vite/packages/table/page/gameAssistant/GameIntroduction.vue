@@ -6,7 +6,7 @@
     <a-select-option v-for="item in gameName" :value="item.title">{{item.title}}</a-select-option>
   </a-select>
   <HorizontalPanel  :navList="introductionSubList" v-model:selectType="introductionType"></HorizontalPanel>
-  <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="defaultSortType.name" 
+  <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="defaultSortType.name"
     @change="selectHotType($event)"
     class="w-60 h-12 ml-3 rounded-lg s-bg text-xs right-nav" size="large" :bordered="false" >
     <a-select-option v-for="item in sortType" :value="item.name">{{item.title}}</a-select-option>
@@ -20,8 +20,8 @@
 
 <template v-if="introductionType.name==='video'">
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em" class="mt-3 mr-3 s-bg rounded-lg" >
-    <div class="flex flex-row flex-wrap -ml-3 " >
-      <div class="pb-3 pl-3 game-list-item flex-shrink-0" v-for="(item,index) in gameVideoList">
+    <div class="flex flex-row flex-wrap -ml-3  p-3" >
+      <div  @click="openUrl(item.url.replace('//','https://'))" class="pb-3  pl-3 game-list-item flex-shrink-0" v-for="(item,index) in gameVideoList">
         <div class=" rounded-lg w-auto pointer "   style="height: 65.5%" >
           <img :src="item.image" class="w-full h-full rounded-lg object-cover"  alt="">
         </div>
@@ -44,7 +44,7 @@
   </vue-custom-scrollbar>
 </template>
 
-  
+
   <a-drawer :width="500"  v-model:visible="drawerVisible" placement="right">
     <template #title>
       <div class="text-center" v-if="drawerType==='search'">搜索</div>
@@ -69,6 +69,7 @@
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import { sendRequest } from '../../js/axios/api';
 import cheerio from 'cheerio'
+import browser from '../../js/common/browser'
 export default {
   name: "GameIntroduction",
   components:{
@@ -117,14 +118,14 @@ export default {
       this.drawerVisible = true
     },
     goBil(){
-      ipc.send('addTab',{url:'https://www.bilibili.com/'})
+      browser.openInUserSelect('https://www.bilibili.com/')
     },
     goYm(){
-      ipc.send('addTab',{url:'https://www.gamersky.com/'})
+      browser.openInUserSelect('https://www.gamersky.com/')
     },
     // 初始化数据
     async loadIllustratedData(){
-      const order = this.defaultSortType !== '' ? `order=${this.defaultSortType.name}` : '' 
+      const order = this.defaultSortType !== '' ? `order=${this.defaultSortType.name}` : ''
       try {
         const result =  await sendRequest(`https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}&${order}`,
         {},{localCache:true,localTtl:60*12*60})
@@ -134,7 +135,7 @@ export default {
         dom('.bili-video-card').each((i,el)=>{
           const docFirst = dom(el).children().eq(1)
           const linkUrl = docFirst.children().eq(0).attr('href')
-          const newDateTime = docFirst.children().eq(1).text().split('·')[1] 
+          const newDateTime = docFirst.children().eq(1).text().split('·')[1]
           const title = docFirst.children().eq(1).children().eq(0).children().eq(0).children().eq(0).attr('title')
           const author = docFirst.children().eq(1).children().eq(0).children().eq(1).children().eq(0).children().text().split('·')[0]
           const image  = docFirst.children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(2).attr('src')
@@ -158,7 +159,7 @@ export default {
         dom('.bili-video-card').each((i,el)=>{
           const docFirst = dom(el).children().eq(1)
           const linkUrl = docFirst.children().eq(0).attr('href')
-          const newDateTime = docFirst.children().eq(1).text().split('·')[1] 
+          const newDateTime = docFirst.children().eq(1).text().split('·')[1]
           const title = docFirst.children().eq(1).children().eq(0).children().eq(0).children().eq(0).attr('title')
           const author = docFirst.children().eq(1).children().eq(0).children().eq(1).children().eq(0).children().text().split('·')[0]
           const image  = docFirst.children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(2).attr('src')
@@ -189,7 +190,11 @@ export default {
         console.warn(error)
       }
     },
-  
+
+    openUrl(url){
+      browser.openInUserSelect(url)
+    },
+
     selectHotType(e){
       // this.defaultSearchType.name = e
       // this.loadIllustratedData()

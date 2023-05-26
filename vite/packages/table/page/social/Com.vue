@@ -175,6 +175,7 @@ import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import SingIn from '../../components/homeWidgets/SignIn.vue'
 import { teamStore } from '../../store/team'
 import { mapState ,mapActions } from 'pinia'
+import browser from '../../js/common/browser'
 
 export default {
   name: 'Com',
@@ -251,7 +252,7 @@ export default {
       ipc.send('checkUpdate')
     },
     openTab (url) {
-      ipc.send('addTab', { url: url })
+      browser.openInInner( url )
     },
     async loadTeamBarrage () {
       console.log(this.my, 'wode小组')
@@ -325,7 +326,7 @@ export default {
       }
     },
     goUrl (url) {
-      ipc.send('addTab', { url: url })
+      browser.openInInner( url )
     },
   }
 }

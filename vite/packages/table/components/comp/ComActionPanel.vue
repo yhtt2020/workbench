@@ -44,6 +44,7 @@
 
 <script>
 import {IdcardFilled,GoldFilled,BellFilled,ApiFilled,LockFilled,ScheduleFilled} from '@ant-design/icons-vue'
+import browser from '../../js/common/browser'
 export default {
   name: 'ComActionPanel',
   components:{
@@ -51,10 +52,10 @@ export default {
   },
   methods:{
     edit(){
-      ipc.send('addTab',{url:"https://s.apps.vip/user/info"})
+      browser.openInInner("https://s.apps.vip/user/info")
     },
     go(url){
-      ipc.send('addTab',{url:url})
+      browser.openInInner(url)
     }
   }
 }

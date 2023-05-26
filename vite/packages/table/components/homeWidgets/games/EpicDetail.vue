@@ -21,6 +21,7 @@
 
 <script>
 import { remainderDay } from "../../../js/axios/api"
+import browser from '../../../js/common/browser'
 export default {
   name:'EpicDetail',
   props:{
@@ -44,7 +45,7 @@ export default {
       this.$emit('update:backShow',this.backShow)
     },
     onClickOffice(){
-      window.ipc.send('addTab',{url:`https://store.epicgames.com/zh-CN`})
+      browser.openInUserSelect(`https://store.epicgames.com/zh-CN`)
     }
   }
 }

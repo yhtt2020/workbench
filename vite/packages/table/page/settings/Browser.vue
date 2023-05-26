@@ -3,22 +3,32 @@
    内置浏览器设置
  </div>
   <div class="line">
-    默认打开网页使用：此配置项暂未生效
-    <a-radio-group disabled v-model:value="settings.openUrlBrowser">
-      <a-radio value="builtin">内嵌浏览器</a-radio>
+    <a-radio-group v-model:value="openUrlBrowser">
+      <a-radio value="inner">内嵌浏览器</a-radio>
       <a-radio value="system">系统默认浏览器</a-radio>
     </a-radio-group>
   </div>
 </template>
 
 <script>
-import { appStore } from '../../store'
-import {mapWritableState} from 'pinia'
 
 export default {
   name: 'Browser',
-  computed:{
-    ...mapWritableState(appStore,['settings'])
+  data(){
+    return {
+      openUrlBrowser:'inner'
+    }
+  },
+  async mounted () {
+    this.openUrlBrowser = await tsbApi.settings.get('openUrlBrowser') || 'inner'
+    console.log(this.openUrlBrowser)
+  },
+  watch:{
+    openUrlBrowser:{
+      handler(){
+        tsbApi.settings.set('openUrlBrowser',this.openUrlBrowser)
+      }
+    }
   }
 }
 </script>

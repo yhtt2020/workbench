@@ -69,13 +69,13 @@ import {app} from "electron";
 import {Modal} from 'ant-design-vue'
 import {steamUserStore} from "./store/steamUser";
 import {screenStore} from './store/screen'
-
+import browser from './js/common/browser';
 const {steamUser,steamSession,path,https,steamFs} = $models
 let client = new steamUser({
   enablePicsCache: true
 });
 window.client = client
-
+window.browser= browser
 const {appModel} = window.$models
 let startX,
   startY,

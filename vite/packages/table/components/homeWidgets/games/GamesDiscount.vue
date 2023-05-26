@@ -44,13 +44,13 @@
 
             </div>
           </div>
-      
+
           <div class="flex items-center justify-between">
             <div class="s-item change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
               <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
               <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
               <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
-            </div> 
+            </div>
             <span style="padding:13px 26px;" class="s-item rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
           </div>
         </div>
@@ -87,7 +87,7 @@
                  class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
             </div>
-            <span class="change pointer rounded-lg s-item  flex items-center justify-center" 
+            <span class="change pointer rounded-lg s-item  flex items-center justify-center"
             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
              @click="enterGameDetail(detailList.steam_appid)"
             >
@@ -115,6 +115,7 @@ import { steamStore } from '../../../store/steam'
 import { cardStore } from '../../../store/card'
 import Template from '../../../../user/pages/Template.vue'
 import { regionRange } from '../../../js/axios/api'
+import browser from '../../../js/common/browser'
 export default {
   name: 'GamesDiscount',
   props: {
@@ -266,7 +267,7 @@ export default {
       window.localStorage.removeItem('detail')
     },
     openSteam (id) {
-      window.ipc.send('addTab', { url: `https://store.steampowered.com/app/${id}` })
+      browser.openInUserSelect(`https://store.steampowered.com/app/${id}` )
     },
     async getRegion () {
 

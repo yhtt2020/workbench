@@ -97,6 +97,7 @@ import { message } from 'ant-design-vue'
 import {runExec} from '../js/common/exec'
 import Template from '../../user/pages/Template.vue'
 import {NotificationOutlined,FolderOpenOutlined} from '@ant-design/icons-vue'
+import browser from '../js/common/browser'
 let { fs }=window.$models
 export default {
   name: 'Apps',
@@ -438,7 +439,7 @@ export default {
 
     },
     becomeDeveloper(){
-      ipc.send('addTab',{url:'https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug'})
+      browser.openInUserSelect('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')
     },
     openDir(){
       require('electron').shell.openPath(require('path').join(window.globalArgs['user-data-dir'],'download'))
