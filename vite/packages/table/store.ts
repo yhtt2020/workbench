@@ -1,15 +1,21 @@
 import {defineStore} from "pinia";
-import * as util from "util";
-import {nanoid} from 'nanoid'
-import {myStore} from './util.js'
 import dbStorage from "./store/dbStorage";
-// import _ from 'lodash-es';
-// const {appModel, devAppModel} = window.$models
-
-
+import  {sUrl} from './consts'
+const userCardUrl=sUrl('/app/com/userCard')
+import axios from 'axios'
+import {getConfig} from "./js/axios/serverApi";
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
+
+    //用户信息卡片
+    userCardVisible:false,
+    userCardUid:0,
+    userCardUserInfo:{
+      certification:[]
+    },
+
+
     userInfo: false,
     lvInfo: {},
     myData: {
@@ -75,6 +81,35 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
+    async showUserCard(uid) {
+      this.userCardUid = Number(uid)
+      let response  = await this.getUserCard(uid)
+      if(response.code===200){
+        const data=response.data
+        this.userCardUserInfo={
+          uid:uid,
+          nickname:data.user.nickname,
+          avatar:data.user.avatar_128,
+          signature:data.user.signature,
+          certification:data.user.all_certification_entity_pc||[]
+        }
+        this.userCardVisible = true
+        console.log(data,'获取到的用户卡片信息=')
+      }
+
+    },
+
+    /**
+     * 获取用户小卡片
+     * @param uid
+     */
+    async getUserCard(uid){
+      let response = await axios.post(userCardUrl,{uid:uid},await getConfig())
+      if(response.data.code===1000){
+        return response.data.data
+      }
+    },
+
     setBackgroundImage(value){
       this.backgroundImage = value
     },
