@@ -1,43 +1,53 @@
 <template>
     <HomeComponentSlot :options="options" :customIndex="customIndex" :custom-data="customData">
-      <div class="flex" style="margin: 13px 10px 0;" v-if="pageToggle">
-        <div class="cursor-pointer" style="width: 240px;height: 354px;margin-right: 16px;" v-if="fatherWidth == 2">
-          <img :src="detailMovie.img" style="width: 100%;height: 100%;object-fit: cover;" class="rounded-lg" alt="">
-        </div>
-        
-        <div style="width:284px;">
-          <div class="film-content">
-            <span style="color: rgba(255,255,255,0.85);font-size: 20px;font-weight: 600;">{{ detailMovie.title }}</span>
-            <div>主演：<span>{{ detailMovie.members }}</span></div>
-            <div>类型：<span>{{ detailMovie.filmType }}</span></div>
-            <div>制片国家/地区: <span>{{ detailMovie.src }}</span></div>
-            <div>语言：<span>{{ detailMovie.oriLang }}</span></div>
-            <div>上映时间：<span>{{ detailMovie.pubDesc }}</span></div>
-          </div>
-          <div class="items-center mb-2" style="display:flex;height:72px;">
-            <span style="font-size: 48px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.sc }}</span>
-            <div>
-              <div style="font-size:20px;position: relative;top: 5px;">
-                <a-rate v-model:value="detailMovie.starRating" allow-half disabled/>
-              </div>
-              <span style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ detailMovie.wish }}人评价</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-around">
-            <div @click="discountBack(false)"
-                 class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
-              <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
-            </div>
-            <span class="change pointer rounded-lg s-item  flex items-center justify-center" 
-            style="padding:13px 50px;color: rgba(255,255,255,0.85);font-size: 16px;"
-            @click="stripDay(detailMovie.shareInfo.url)"
-            >
-            猫眼电影
-            </span>
-          </div>
-        </div>
+      <div class="example" v-if="isLoading">
+        <a-spin />
       </div>
-      <DataStatu v-else-if="!pageToggle" @notData="notData"></DataStatu>
+      <div v-else>
+        <div class="flex" style="margin-top: 13px;" v-if="pageToggle">
+          <div class="cursor-pointer" style="width: 240px;height: 354px;margin-right: 16px;" v-if="fatherWidth == 2">
+            <!-- <img :src="detailMovie.image" style="width: 100%;height: 100%;object-fit: cover;" class="rounded-lg" alt="" /> -->
+            <a-image :src="detailMovie.img" width="240px" height="354px" style="object-fit: cover;" class="rounded-lg" alt="" />
+          </div>
+          <div :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
+            <div style="height:304px;">
+              <div class="film-content" :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
+              <div style="font-family: PingFangSC-Semibold;font-size: 20px;color: rgba(255,255,255,0.85);font-weight: 600;margin-bottom: 8px;">
+                {{ detailMovie.nm }}
+              </div>
+              <span style="color: rgba(255,255,255,0.85);font-size: 20px;font-weight: 600;">{{ detailMovie.title }}</span>
+              <div>主演：<span>{{ detailMovie.members }}</span></div>
+              <div>导演：<span>{{ detailMovie.dir }}</span></div>
+              <div>类型：<span>{{ detailMovie.filmType }}</span></div>
+              <div>制片国家/地区: <span>{{ detailMovie.src }}</span></div>
+              <div>语言：<span>{{ detailMovie.language }}</span></div>
+              <div>上映：<span>{{ detailMovie.pubDesc }}</span></div>
+            </div>
+            <div v-if="detailMovie.sc" class="items-center s-item mt-2 mb-3 rounded-lg pl-4" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
+              <span class="mr-4" style="font-size: 16px;color: rgba(255,255,255,0.60);" v-if="fatherWidth == 2">猫眼</span>
+              <span style="font-size: 32px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.sc }}</span>
+              <span style="font-size:20px;position: relative;top: -3px;">
+                <a-rate v-model:value="detailMovie.starRating" allow-half disabled/>
+              </span>
+            </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div @click="discountBack(false)"
+                  class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
+                <Icon icon="xiangzuo" style="font-size: 20px;color: rgba(255, 255, 255, 0.85);"></Icon>
+              </div>
+              <span class="change pointer rounded-lg s-item  flex items-center justify-center" 
+              style="color: rgba(255,255,255,0.85);font-size: 16px;"
+              @click="stripDay(detailMovie.shareInfo.url)"
+              :style="fatherWidth == 2 ? 'padding: 13px 80px;' : 'padding:13px 62px;'"
+              >
+              猫眼电影
+              </span>
+            </div>
+          </div>
+        </div>
+        <DataStatu v-else-if="!pageToggle" @notData="notData"></DataStatu>
+      </div>
      </HomeComponentSlot>
 </template>
   
@@ -80,16 +90,17 @@
           icon:'video',
           type:'singleDoubanFilm'
         },
-        detailMovie: {
-          img: ''
-        },
+        detailMovie: {},
         pageToggle: true,
+        isLoading: false
       };
     },
     methods: {
       setDoubanDetail(){
+        this.detailMovie.image = this.detailMovie.img.replace('2500x2500','240x354')
         this.detailMovie.members = this.detailMovie.star.replace(/,/g,' / ')
         this.detailMovie.filmType = this.detailMovie.cat.replace(/,/g,' / ')
+        this.detailMovie.language = this.detailMovie.oriLang.replace(/,/g,' / ')
         this.detailMovie.starRating = this.detailMovie.sc / 2
       },
       async getfilmDetail(){
@@ -98,7 +109,7 @@
           localTtl:60
         })
 
-        console.log('detail',detail)
+        // console.log('detail',detail)
         // let detail = {data:{code: 406}}
         if(detail.data.code){
           this.pageToggle = false
@@ -107,11 +118,11 @@
         }else{
           this.detailMovie = detail.data.detailMovie
         }
-        // console.log("!@#",detail.data.detailMovie)
-        // this.detailMovie = detail.data.detailMovie
       },
       stripDay(url){
-        window.open(url, '_blank')
+        // window.open(url, '_blank')
+        // console.log(url)
+        browser.openInUserSelect(url)
       },
       notData(val){
         // this.pageToggle = val
@@ -119,38 +130,47 @@
       },
       discountBack(val){
         this.$emit('detailBack',val)
-      }
+      },
     },
     async mounted() {
+      this.isLoading = true
       await this.getfilmDetail()
       if(this.detailMovie.code !== 406){
         await this.setDoubanDetail()
       }
-      console.log(this.fatherWidth)
-      
+      setTimeout(() => {
+        this.isLoading = false
+      })
     },
   };
 </script>
   
 <style scoped lang="scss">
   .film-content{
-      height: 224px;
+      height: 230px;
+      width:250px;
+      font-weight: 400;
       div{
-        font-size: 16px;
         color: rgba(255,255,255,0.60);
         line-height: 32px;
-        font-weight: 400;
+        font-size: 16px;
         word-break: normal;
-        display: block;
-        white-space: pre-wrap;
+        white-space: nowrap;
         word-wrap: break-word;
+        text-overflow: ellipsis;
+        overflow: hidden;
         span{
-          font-size: 16px;
           color: rgba(255,255,255,0.85);
           line-height: 32px;
-          font-weight: 400;
+          font-size: 16px;
         }
       }
+    }
+    .size-min{
+      width: 250px;
+    }
+    .size-max{
+      width: 282px;
     }
   .title-refresh{
     position: absolute;
@@ -165,6 +185,18 @@
     top: 0;
     right: 0;
     border-radius: 0px 8px 0px 8px;
+  }
+  .example {
+    width: 100%;
+    height: 354px;
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>
 

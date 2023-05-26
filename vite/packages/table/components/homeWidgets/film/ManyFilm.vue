@@ -6,30 +6,38 @@
     :custom-data="customData"
     :formulaBar="formulaBar"
     v-if="!detailToggle"
-    >
-      <div class="pointer title-refresh" @click="refreshPage"></div>
-      <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-        <div v-for="item in filmArrange" :key="item.id" 
-        @click="btnDetail(item.id)" 
-        class="w-full  cursor-pointer one-film">
-          <img :src="item.img" alt="" class="rounded-lg img-film">
-          <div class="right-top text-center bg-black bg-opacity-70">
-          <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
-          </span>
-          <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
-          </div>
-        </div>
+    > 
+      <div v-if="isLoading">
+        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
       </div>
-      <div class="film-item" v-else-if="customData.width === 2">
-        <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
-        class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
-          <img :src="item.img" alt="" class="rounded-lg img-film">
-          <div class="right-top text-center bg-black bg-opacity-70">
+      <div v-else>
+        <div class="pointer title-refresh" @click="refreshPage"></div>
+        <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
+          <div v-for="item in filmArrange" :key="item.id" 
+          @click="btnDetail(item.id)" 
+          class="w-full  cursor-pointer one-film"
+          style="display:hiddle;">
+            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+            <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
+            <div class="right-top text-center bg-black bg-opacity-70">
             <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
               猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
             </span>
             <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="film-item" v-else-if="customData.width === 2">
+          <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
+          class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
+            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+            <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
+            <div class="right-top text-center bg-black bg-opacity-70">
+              <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+              </span>
+              <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -75,7 +83,8 @@
         filmPart: [],
         filmArrange: [],
         detailToggle: false,
-        detailId: -1
+        detailId: -1,
+        isLoading: false
       };
     },
     computed: {
@@ -104,20 +113,26 @@
         this.getDoubanList()
       },
       btnDetail(id){
-        // console.log(id)
         this.detailId = id
         this.detailToggle = true
       },
       detailBack(val){
         this.detailToggle = val
-        console.log("返回了")
       }
     },
-    mounted() {
-      this.getData()
+    async mounted() {
+      this.isLoading = true
+      await this.getData()
+      // console.log("data",this.data)
       this.filmList = this.data
+      if(this.filmList){
+        this.isLoading = false
+      }
       this.filmPart = _.sampleSize(this.filmList, 8)
       this.getDoubanList()
+      // setTimeout(() => {
+      //   this.isLoading = false
+      // })
     },
   };
 </script>
