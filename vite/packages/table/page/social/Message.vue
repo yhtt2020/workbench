@@ -1,6 +1,6 @@
 <template>
   <div class="ml-4">
-    <a-row class="card flex auto-height s-bg " style="width:100%;max-width:70em;padding: 1em;" :gutter="20">
+    <a-row class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em;" :gutter="20">
 <a-col :span="24">
   <div class="message-title flex items-center justify-between mb-4">
     <div class="flex items-center">
@@ -10,7 +10,7 @@
     <a-button type="primary" @click="goYuan" style="font-size: 16px; font-weight: 400;float: right">前往元社区查收</a-button>
   </div>
 </a-col>
-      <a-col  :md="24" :lg="14" style="flex:1">
+      <a-col  :md="24"  style="flex:1">
 
         <!-- 消息分类的tab -->
         <HorizontalPanel @changed="navChanged" :navList="category" v-model:selectType="categoryType"
@@ -28,14 +28,14 @@
               </div>
               <!-- 数据空状态 -->
               <a-list :data-source="[]" v-if="interact.length === 0"></a-list>
-              <div v-else v-for="item in  interact" @click="clickInteract(item)"
-                   class="px-4 pointer interact-hover rounded-lg py-4  flex items-center">
+              <div v-else v-for="item in  interact"
+                   class="px-4  interact-hover rounded-lg py-4  flex items-center">
                 <div>
-                  <a-avatar v-if="item.user" :size="40" :src="item.user.avatar_128" class="avatar-list"></a-avatar>
+                  <a-avatar  @click.stop="showUserCard(item.from_uid)" v-if="item.user" :size="50" :src="item.user.avatar_128" class="avatar-list pointer"></a-avatar>
                 </div>
-                <div class="flex flex-col ml-4" style="flex:1">
+                <div  class="flex flex-col ml-4 " style="flex:1">
                   <div class="flex">
-                 <span class="pr-1 truncate  interact-name"
+                 <span @click="clickInteract(item)" class="pr-1 truncate pointer interact-name"
                        style="max-width: 84px; font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
                    {{ item.title }}
                  </span>
@@ -44,7 +44,7 @@
                    {{ item.dynamic }}
                  </span>
                   </div>
-                  <div class="truncate " style="width: 98%"><span
+                  <div @click="clickInteract(item)" class="truncate pointer" style="width: 98%"><span
                     class="w-100 interact-content">{{ item.content }}</span></div>
                   <span class="create-time mt-2">{{ item.create_time }}</span>
                 </div>
@@ -56,17 +56,17 @@
           <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4" style="height: calc(100vh - 18em)">
             <!-- 数据空状态 -->
             <a-list :data-source="[]" v-if="newFollower.length === 0"/>
-            <div v-else v-for="item in  newFollower" @click="clickInteract(item)"
-                 class="px-4 rounded-lg interact-hover pointer py-4  flex items-center">
+            <div v-else v-for="item in  newFollower"
+                 class="px-4 rounded-lg interact-hover  py-4  flex items-center">
               <div>
-                <a-avatar :size="40" :src="item.user.avatar_64" class="avatar-list"></a-avatar>
+                <a-avatar @click="showUserCard(item.from_uid)" :size="50" :src="item.user.avatar_64" class="avatar-list pointer"></a-avatar>
               </div>
               <div class="flex flex-col ml-4">
                 <div class="flex">
-                 <span class="pr-1 truncatepush-theme">
+                 <span @click="clickInteract(item)" style="font-size: 16px" class="pr-1 truncatepush-theme pointer">
                   {{ item.user.nickname }}
                 </span>
-                  <span class="pr-1 truncate dynamic">
+                  <span @click="clickInteract(item)" class="pr-1 truncate dynamic pointer">
                   关注了你
                 </span>
                   <span class="truncate w-52 interact-content"></span>
@@ -159,12 +159,7 @@
               查看消息详情
             </div>
           </div>
-          <div class="rounded-md  px-4 py-3" style="background: rgba(17,17,17,0.18)">
-            <div class="line-title">
-              来源用户
-            </div>
-            <UserCard :userInfo="selectedUserInfo" :uid="selectedUid"></UserCard>
-          </div>
+
 
 
         </div>
@@ -181,6 +176,7 @@ import _ from 'lodash-es'
 import UserCard from '../../components/small/UserCard.vue'
 import { ExportOutlined } from '@ant-design/icons-vue'
 import browser from '../../js/common/browser'
+import { appStore } from '../../store'
 
 export default {
   name: 'Message',
@@ -244,6 +240,7 @@ export default {
   methods: {
     ...mapActions(messageStore, ['getNewFollower', 'getSystemNotice', 'getCustomNotice', 'getPush',
       'getComment', 'getInteract']),
+    ...mapActions(appStore,['showUserCard']),
     navChanged () {
       console.log(this.categoryType)
       switch (this.categoryType.name) {
@@ -304,19 +301,7 @@ export default {
     clickInteract (item) {
       console.log('点击',item)
       this.detailUrl = this.getUrl(item)
-      console.log(window.getComputedStyle(document.getElementById('userDetail')).maxWidth,
-        window.getComputedStyle(document.getElementById('userDetail')).maxWidth==='100%')
-      if(window.getComputedStyle(document.getElementById('userDetail')).maxWidth==='100%'){
-        this.openDetail()
-        return
-      }
-      if (item.from_uid) {
-        this.selectedUid = Number(item.from_uid)
-        this.selectedUserInfo = {
-          nickname: item.user.nickname,
-          avatar: item.user.avatar_64
-        }
-      }
+      this.openDetail()
     },
     // 系统消息列表点击事件
     systemItemClick () {},

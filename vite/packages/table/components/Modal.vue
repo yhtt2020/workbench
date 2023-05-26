@@ -1,6 +1,6 @@
 <template>
 <div class="fixed inset-0" :class="blurFlag?'home-blur':''" style="z-index: 999" @click="closeModal">
-  <div class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg " style="transform-origin: 0 0" :class="className">
+  <div @click.stop class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg " style="transform-origin: 0 0" :class="className">
     <slot></slot>
   </div>
 </div>

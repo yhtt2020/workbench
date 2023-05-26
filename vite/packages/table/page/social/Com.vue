@@ -20,7 +20,7 @@
           <div class="pt-2" v-else>
             <span class="ml-2" style="font-size: 14px;vertical-align: text-bottom">小队弹幕频道</span>
             <span  style="float: right;font-weight: normal;font-size: 0.8em">
-              <a-avatar :size="20" class="mr-2" :src="myTeam.avatar"></a-avatar>{{myTeam.name}}
+              <a-avatar  :size="20" class="mr-2" :src="myTeam.avatar"></a-avatar>{{myTeam.name}}
 
       </span>
           </div>
@@ -47,7 +47,7 @@
 
                 <template v-for="barrage in barrages">
                   <a-col :span="4">
-                    <a-avatar :size="36" :src="barrage.avatar"></a-avatar>
+                    <a-avatar class="pointer"  @click="showUserCard(barrage.uid)" :size="36" :src="barrage.avatar"></a-avatar>
                   </a-col>
                   <a-col :span="20">
                     <div class="barrage-name">
@@ -176,6 +176,7 @@ import SingIn from '../../components/homeWidgets/SignIn.vue'
 import { teamStore } from '../../store/team'
 import { mapState ,mapActions } from 'pinia'
 import browser from '../../js/common/browser'
+import { appStore } from '../../store'
 
 export default {
   name: 'Com',
@@ -247,6 +248,8 @@ export default {
     })
   },
   methods: {
+    ...mapActions(appStore,['showUserCard']),
+
     ...mapActions(teamStore,['updateMy']),
     checkUpdate () {
       ipc.send('checkUpdate')
