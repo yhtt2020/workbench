@@ -7,8 +7,8 @@
     :formulaBar="formulaBar"
     v-if="!detailToggle"
     > 
-      <div v-if="isLoading">
-        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
+      <div class="example" v-if="isLoading">
+        <a-spin />
       </div>
       <div v-else>
         <div class="pointer title-refresh" @click="refreshPage"></div>
@@ -182,6 +182,17 @@
       width: 200px;
       height: 40px;
       // background:red;
+    }
+    .example {
+      width: 100%;
+      height: 328px;
+      text-align: center;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      padding: 30px 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 </style>
   

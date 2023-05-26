@@ -122,7 +122,7 @@
       stripDay(url){
         // window.open(url, '_blank')
         // console.log(url)
-        browser.openInUserSelect(url)
+        // browser.openInUserSelect(url)
       },
       notData(val){
         // this.pageToggle = val
@@ -188,12 +188,11 @@
   }
   .example {
     width: 100%;
-    height: 354px;
+    height: 328px;
     text-align: center;
     border-radius: 4px;
     margin-bottom: 20px;
     padding: 30px 50px;
-    margin: 20px 0;
     display: flex;
     justify-content: center;
     align-items: center;

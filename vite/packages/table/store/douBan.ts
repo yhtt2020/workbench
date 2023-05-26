@@ -9,18 +9,6 @@ export const filmStore = defineStore("film", {
   }),
   actions: {
     async getData() {
-      // 命中缓存
-      // console.log("111", this.data)
-      // debugger
-      // const discountList = this.data
-      // if (discountList) {
-      //   if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
-      //     console.log('命中缓存了')
-      //     console.log("222", this.data)
-      //     //无需做任何操作-
-      //     return
-      //   }
-      // }
       let res = await sendRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
         localCache:true,
         localTtl:60
@@ -30,20 +18,6 @@ export const filmStore = defineStore("film", {
         item.comingDate = item.comingTitle.split(' ')[0]
       });
       this.data = res.data.movieList
-      // console.log("data",this.data)
-      // if (res && res.headers) {
-      //     const date = new Date(res.headers.Date)
-      //     const requestObj = {
-      //       expiresDate: date,
-      //       list: res.data.subjects
-      //     }
-      //     this.updateGameData(requestObj)
-      //   }
-    },
-    // 通过时间更新数据
-    updateGameData( value) {
-      console.log('更新数据=', value)
-      this.data = value
     },
   },
   persist: {
