@@ -59,7 +59,6 @@
    <slot>
      <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
    </slot>
-<!--   <UserCard :uid="userCardUid"></UserCard>-->
  </Modal>
 </template>
 
@@ -100,7 +99,7 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
-      videoPath: ''
+      videoPath: '',
     };
   },
   async mounted() {

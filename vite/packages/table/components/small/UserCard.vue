@@ -59,15 +59,7 @@ export default {
   watch: {
     'uid': {
       async handler () {
-        this.getUserMedal(this.uid).then(result => {
-          if (result) {
-            console.log('或得到的勋章', result)
-            this.medals = result
-          } else {
-            this.medals = []
-          }
-        })
-
+        this.updateUserMedal()
         this.grade = await this.getMemberGrade(this.uid)
         this.key = Date.now()
       }
@@ -86,18 +78,20 @@ export default {
     }
   },
   async mounted () {
-    this.getUserMedal(this.uid).then(result => {
-      if (result) {
-        console.log('或得到的勋章', result)
-        this.medals = result
-      } else {
-        this.medals = []
-      }
-    })
+    this.updateUserMedal()
     this.grade = await this.getMemberGrade(this.uid)
   },
   methods: {
     ...mapActions(teamStore, ['getMemberGrade', 'getUserMedal', 'getUserCard']),
+    updateUserMedal(){
+      this.getUserMedal(this.uid).then(result => {
+        if (result) {
+          this.medals = result
+        } else {
+          this.medals = []
+        }
+      })
+    }
   },
 }
 </script>

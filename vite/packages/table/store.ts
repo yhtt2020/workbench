@@ -81,8 +81,13 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
-    async showUserCard(uid) {
+    async showUserCard(uid,userInfo=null) {
       this.userCardUid = Number(uid)
+      if(userInfo){
+        //如果存在用户数据，则使用此数据显示卡片
+        this.userCardUserInfo=userInfo
+        this.userCardVisible = true
+      }
       let response  = await this.getUserCard(uid)
       if(response.code===200){
         const data=response.data
@@ -94,9 +99,7 @@ export const appStore = defineStore('appStore', {
           certification:data.user.all_certification_entity_pc||[]
         }
         this.userCardVisible = true
-        console.log(data,'获取到的用户卡片信息=')
       }
-
     },
 
     /**
