@@ -1,12 +1,12 @@
 <template>
-  <HomeComponentSlot  :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :formulaBar="gameMiddleBare">
+  <HomeComponentSlot :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :formulaBar="gameMiddleBare">
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
       我的游戏
     </div>
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
       当前游戏
     </div>
-    <template v-if="showSize.className === ''">
+    <template v-if="customData.width === 1 && customData.height === 2">
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
           <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
@@ -19,7 +19,7 @@
            </div>
           </div>
         </div>
-        <MySteamDetail :steamDetail="steamDetail" :cpuShow="CPUShow" @closeDetail="closeGame" v-else></MySteamDetail>
+        <MySteamDetail :steamDetail="steamDetail" :size="customData" :cpuShow="CPUShow" @closeDetail="closeGame" v-else></MySteamDetail>
       </div>
       <div v-else>
         <div class="my-other mt-4" v-if="otherDetailShow === false">
@@ -28,7 +28,7 @@
             <span class="small-title  truncate px-2 py-2" style="width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</span>
           </div>
         </div>
-        <MyGameSmallDetail :otherGame="otherData" :size="showSize"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
+        <MyGameSmallDetail :otherGame="otherData" :size="customData"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
       </div>
     </template>
     <template v-else>
@@ -44,7 +44,7 @@
             </div>
           </div>
         </div>
-        <MySteamDetail :steamDetail="steamDetail" :cpuShow="CPUShow" @closeDetail="closeGame" v-else></MySteamDetail>
+        <MySteamDetail :steamDetail="steamDetail" :size="customData"  @closeDetail="closeGame" v-else></MySteamDetail>
       </div>
       <div v-else>
         <div class="my-other-lg mt-4" v-if="otherDetailShow === false">
@@ -53,24 +53,20 @@
             <span class="small-title  truncate px-2 py-2" style="width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</span>
           </div>
         </div>
-        <MyGameSmallDetail :otherGame="otherData" :size="showSize"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
+        <MyGameSmallDetail :otherGame="otherData" :size="customData"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
       </div>
     </template>
   </HomeComponentSlot>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
-    <template #extra v-if="openCpu === false">
+    <template #extra>
       <div class="flex justify-center items-center rounded-lg h-10 drawer-item-bg w-16  pointer" @click="saveSize">保存</div>
     </template> 
-    <div class="flex flex-col" v-if="openCpu === false">
+    <div class="flex flex-col">
       <HorizontalPanel :navList="steamCardSize"  class="nav-list-container mb-3" bg-color="drawer-item-select-bg" v-model:selectType="defaultSize" ></HorizontalPanel>
       <span class="mb-8" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 500">展示游戏</span>
       <span @click="getGameType(item)" v-for="item in showGameType" class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
-    </div>
-    <div class="flex justify-between" v-else>
-      <span>性能显示</span>
-      <a-switch v-model:checked="CPUShow" @change="isOpenCpu($event)"/>
     </div>
   </a-drawer>
 </template>
@@ -138,6 +134,7 @@ export default {
       detailShow:false,
       CPUShow:false,
       otherDetailShow:false,
+      sizeList:[{title:'1x2',width:1,height:2,name:'1x2'},{title:'2x2',width:2,height:2,name:'2x2'}],
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.middleShow = true;this.$refs.gameSmallSlot.visible = false } } ],
       showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示(正在开发中)',name:'other'}],
       steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],

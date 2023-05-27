@@ -6,30 +6,43 @@
     :custom-data="customData"
     :formulaBar="formulaBar"
     v-if="!detailToggle"
-    >
-      <div class="pointer title-refresh" @click="refreshPage"></div>
-      <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-        <div v-for="item in filmArrange" :key="item.id" 
-        @click="btnDetail(item.id)" 
-        class="w-full  cursor-pointer one-film" 
-        >
-          <img :src="item.img" alt="" class="rounded-lg img-film">
-          <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+    > 
+      <div class="example" v-if="isLoading">
+        <a-spin />
+      </div>
+      <div v-else>
+        <div class="pointer title-refresh" @click="refreshPage"></div>
+        <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
+          <div v-for="item in filmArrange" :key="item.id" 
+          @click="btnDetail(item.id)" 
+          class="w-full  cursor-pointer one-film"
+          style="display:hiddle;">
+            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+            <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
+            <div class="right-top text-center bg-black bg-opacity-70">
+            <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+              猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+            </span>
+            <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="film-item" v-else-if="customData.width === 2">
-        <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
-        class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
-          <img :src="item.img" alt="" class="rounded-lg img-film">
-          <div class="right-top w-20 h-6 text-center bg-black bg-opacity-70" style="font-weight: 600;">
-            猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+        <div class="film-item" v-else-if="customData.width === 2">
+          <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
+          class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
+            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+            <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
+            <div class="right-top text-center bg-black bg-opacity-70">
+              <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+              </span>
+              <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+            </div>
           </div>
         </div>
       </div>
     </HomeComponentSlot> 
-    <FilmDetail v-if="detailToggle" :detailId="detailId"></FilmDetail>
+    <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
 </template>
   
 <script>
@@ -70,7 +83,8 @@
         filmPart: [],
         filmArrange: [],
         detailToggle: false,
-        detailId: -1
+        detailId: -1,
+        isLoading: false
       };
     },
     computed: {
@@ -99,16 +113,26 @@
         this.getDoubanList()
       },
       btnDetail(id){
-        // console.log(id)
         this.detailId = id
         this.detailToggle = true
+      },
+      detailBack(val){
+        this.detailToggle = val
       }
     },
-    mounted() {
-      this.getData()
+    async mounted() {
+      this.isLoading = true
+      await this.getData()
+      // console.log("data",this.data)
       this.filmList = this.data
+      if(this.filmList){
+        this.isLoading = false
+      }
       this.filmPart = _.sampleSize(this.filmList, 8)
       this.getDoubanList()
+      // setTimeout(() => {
+      //   this.isLoading = false
+      // })
     },
   };
 </script>
@@ -128,6 +152,10 @@
     top: 0;
     right: 0;
     border-radius: 0px 8px 0px 8px;
+    width: 68px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 13px;
   }
   .film-item{
       padding: 12px 0 0 18px;
@@ -142,8 +170,8 @@
       position: relative;
       margin-bottom: 14px;
       .img-film{
-        width: 116px;
-        height: 171px;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
       }
     }
@@ -154,6 +182,17 @@
       width: 200px;
       height: 40px;
       // background:red;
+    }
+    .example {
+      width: 100%;
+      height: 328px;
+      text-align: center;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      padding: 30px 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 </style>
   
