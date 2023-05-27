@@ -14,14 +14,15 @@
             <div class="right-top text-center bg-black bg-opacity-70" 
             style="font-weight: 600;font-family: PingFangSC-Semibold;">
               <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.sc}}</span>
+                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.score}}</span>
               </span>
               <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.comingDate }}</span>
             </div>
           </div>
         </div>
       </div>
-      <DataStatu v-else imgDisplay="../../../../public/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
+      
+      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
     </HomeComponentSlot>
     <FilmDetail v-if="detailToggle" :detailId="detailId" @detailBack="detailBack"></FilmDetail>
 </template>
@@ -82,19 +83,24 @@
       },
       detailBack(val){
         this.detailToggle = val
-      }
+      },
+      
     },
     async mounted() {
       this.isLoading = true
       await this.getData()
-      this.filmList = this.data || []
-      if(!this.filmList.length){
+      if(!this.data){
         this.pageToggle = false
+      }else{
+        this.filmList = this.data.list || []
+        if(!this.filmList.length){
+          this.pageToggle = false
+        }
+        setTimeout(() => {
+          this.isLoading = false
+        })
+        this.singleFilm = _.sampleSize(this.filmList,1)[0]
       }
-      setTimeout(() => {
-        this.isLoading = false
-      })
-      this.singleFilm = _.sampleSize(this.filmList,1)[0]
     },
   };
 </script>

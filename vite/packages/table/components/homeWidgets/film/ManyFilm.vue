@@ -22,7 +22,7 @@
               <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
               <div class="right-top text-center bg-black bg-opacity-70">
               <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.score}}</span>
               </span>
               <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
               </div>
@@ -35,7 +35,7 @@
               <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
               <div class="right-top text-center bg-black bg-opacity-70">
                 <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.score}}</span>
                 </span>
                 <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
               </div>
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <DataStatu v-else imgDisplay="../../../../public/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
+      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
     </HomeComponentSlot> 
     <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
 </template>
@@ -129,15 +129,19 @@
     async mounted() {
       this.isLoading = true
       await this.getData()
-      this.filmList = this.data || []
-      if(!this.filmList.length){
+      if(!this.data){
         this.pageToggle = false
+      }else{
+        this.filmList = this.data.list || []
+        if(!this.filmList.length){
+          this.pageToggle = false
+        }
+        this.filmPart = _.sampleSize(this.filmList, 8)
+        this.getDoubanList()
       }
       setTimeout(() => {
         this.isLoading = false
       })
-      this.filmPart = _.sampleSize(this.filmList, 8)
-      this.getDoubanList()
     },
   };
 </script>

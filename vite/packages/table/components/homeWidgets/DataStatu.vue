@@ -16,7 +16,7 @@
     props: {
       imgDisplay: {
         type: String,
-        default: "../../../../public/img/test/not-data.png",
+        default: "/img/test/not-data.png",
       },
       textPrompt: {
         type: String,
