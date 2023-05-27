@@ -145,7 +145,7 @@ export default {
           cname: '音频工具',
           icon: 'audio',
           detail: '音频工具',
-          images: [ 'audio', 'voice']
+          images: ['audio', 'voice']
         },
         {
           name: 'remote',
@@ -176,7 +176,7 @@ export default {
           cname: '豆瓣电影',
           icon: 'video',
           detail: '查看最近正在上映的热门电影',
-          images: ['singleDoubanFilm','largeSingleDoubanFilm'],
+          images: ['singleDoubanFilm', 'largeSingleDoubanFilm'],
           size: ['1x2']
         },
         {
@@ -184,7 +184,7 @@ export default {
           cname: '豆瓣电影',
           icon: 'video',
           detail: '查看最近正在上映的热门电影',
-          images: ['manyDoubanFilm','largeManyDoubanFilm'],
+          images: ['manyDoubanFilm', 'largeManyDoubanFilm'],
           size: ['1x2']
         },
         {
