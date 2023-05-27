@@ -1,6 +1,7 @@
 <template>
-  <div class=" p-5 rounded-xl m-3" style="width: 95%;height: 100%">
-    <Desk :currentDesk="currentDesk" :settings="currentDesk.settings"></Desk>
+  <div class="rounded-xl px-5" style="width: 95%;height: 100%">
+    暂不可用，敬请期待
+    <Desk v-if="false" :currentDesk="currentDesk" :settings="currentDesk.settings"></Desk>
   </div>
 
 </template>

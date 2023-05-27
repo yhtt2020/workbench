@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
-    :formulaBar="formulaBar">
+    :formulaBar="formulaBar" ref="homelSlotRef">
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <div class="box" @click="fullScreen()">
@@ -64,7 +64,8 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.settingVisible = true;
+            this.$refs.homelSlotRef.visible = false
+            this.settingVisible = true
           },
         },
       ],

@@ -62,7 +62,6 @@ export default {
                 this.height = 1
             } else if (e) {
                 let str = e.split(",")
-                let a = str[0] / 280
                 this.width = Math.round(str[0] / 280)
                 this.height = Math.round(str[1] / 205)
             }

@@ -1,7 +1,6 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' :style="{ backgroundImage: imgUrl, filter: blurs }">
-    </div>
+    <img class='popContainer' :style="{ filter: blurs }" :src="imgUrl" alt="">
     <div class="box">
       <component :is="clock" v-if="clock !== 'clock3'" :key="clock" :style="{ zoom: zoom }" />
       <clock3 v-if="clock == 'clock3'" key="clock3" :style="{ zoom: zoom }"></clock3>
@@ -28,7 +27,6 @@
       <template #title>
         <div class="text-center">设置</div>
       </template>
-
       <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur">
       </ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
@@ -66,6 +64,7 @@ export default {
     },
   },
   mounted() {
+    window.addEventListener("keyup", this.esc)
     this.blurs = `blur(${parseInt(this.blur / 2)}px)`
     this.zoom = `${this.bgZoom + 100}%`
     this.touchEvent()
@@ -89,6 +88,9 @@ export default {
     };
   },
   methods: {
+    esc(e) {
+      if (e.keyCode === 27) this.exit()
+    },
     exit() {
       document.removeEventListener("mousemove", this.touchEvent, { capture: true });
       document.removeEventListener("mousedown", this.touchEvent, { capture: true });
@@ -113,6 +115,7 @@ export default {
       this.autoTime = setTimeout(function () {
         that.optAction = true //页面无操作后3秒，重时开启定时器
         // console.log("无操作")
+        that.settingVisible = false
       }, 3000)
     },
 
@@ -120,8 +123,7 @@ export default {
       this.$emit("updateClockStyle", e);
     },
     img(img) {
-      let src = `url(${img})`
-      this.$emit("updateImgUrl", src)
+      this.$emit("updateImgUrl", img)
     },
     random() {
       let randNum = Math.floor(Math.random() * 5) + 1;
@@ -162,7 +164,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  width: 100%;
+  height: 100%;
   // 背景的模糊大小通过下面的属性值大小来调制
   background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);

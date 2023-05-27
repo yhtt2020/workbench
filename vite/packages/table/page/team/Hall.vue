@@ -28,7 +28,7 @@
       <a-avatar :size="50" :src="selectTeam.avatar"></a-avatar> <strong class="text-lg ml-5">{{selectTeam.name}}</strong>
       <div class="mt-3" v-if="selectTeam.leaderInfo">
         队长：
-        <div class="mt-2 ml-2"><a-avatar class="mr-3" :size="40" :src="selectTeam.leaderInfo.data.userInfo.avatar"></a-avatar>{{selectTeam.leaderInfo.data.userInfo.nickname}}</div>
+        <div class="mt-2 ml-2"><a-avatar @click.stop="showUserCard(selectTeam.leaderInfo.data.uid,selectTeam.leaderInfo.data.userInfo)"  class="mr-3 pointer" :size="40" :src="selectTeam.leaderInfo.data.userInfo.avatar"></a-avatar>{{selectTeam.leaderInfo.data.userInfo.nickname}}</div>
       </div>
 
       <div v-if="selectTeam.members.data.length">
@@ -36,7 +36,7 @@
          队员：
        </div>
         <div class="mb-3 ml-3" :span="4" v-for="member in selectTeam.members.data">
-          <a-avatar class="mr-2" v-if="member.userInfo" :src="member.userInfo.avatar"></a-avatar> {{member.userInfo.nickname}}
+          <a-avatar class="mr-2 pointer" @click="showUserCard(member.userInfo.uid,member.userInfo)" v-if="member.userInfo" :src="member.userInfo.avatar"></a-avatar> {{member.userInfo.nickname}}
         </div>
       </div>
     </div>
@@ -57,6 +57,7 @@ import TeamList from '../../components/team/TeamList.vue'
 import { mapActions ,mapWritableState,mapGetters,mapState} from 'pinia'
 import { teamStore } from '../../store/team'
 import { Modal } from 'ant-design-vue'
+import { appStore } from '../../store'
 
 export default {
   name: 'Hall',
@@ -96,6 +97,7 @@ export default {
   },
   methods: {
     ...mapActions(teamStore, ['getTeamList','updateMy','joinByNo']),
+    ...mapActions(appStore,['showUserCard']),
     random(){
       let randomNums=[]
       while (1) {

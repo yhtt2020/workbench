@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {Modal} from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import {mapWritableState,mapActions} from 'pinia'
 import {UsergroupAddOutlined} from '@ant-design/icons-vue'
 import CreateTeam from "./CreateTeam.vue";
@@ -106,6 +106,10 @@ export default {
       })
     },
     async join () {
+      if(!this.teamNo.no){
+        message.error('请在左侧输入小队号。')
+        return
+      }
       let rs= await this.joinByNo(this.teamNo)
       console.log(rs,'最终rs')
       if(rs.code===1000){

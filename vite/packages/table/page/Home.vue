@@ -90,7 +90,18 @@
       <AddCard @onBack="setCustom" :desk="currentDesk"></AddCard>
     </div>
   </transition>
-
+  <transition name="fade">
+    <div class="home-blur" style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 999;
+      " v-if="show">
+      <NewAddCard @setCustoms="setCustoms"></NewAddCard>
+    </div>
+  </transition>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -137,6 +148,12 @@
         <div @click="hideDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
           <div><span>隐藏桌面</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="newAddCard" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>新添加卡片（开发中）</span></div>
         </div>
       </a-col>
     </a-row>
@@ -267,6 +284,8 @@ import HorizontalPanel from '../components/HorizontalPanel.vue'
 import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/homeWidgets/clock/index.vue'
 import Notes from "../components/homeWidgets/note/index.vue"
+import NewAddCard from "./app/card/NewAddCard.vue";
+const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -432,6 +451,7 @@ export default {
   name: "Home",
   data() {
     return {
+      show: false,
       newDesk: {
         name: "",
         template: "daily",
@@ -515,7 +535,8 @@ export default {
     SteamFriends,
     CaptureNewCard,
     Clocks,
-    Notes
+    Notes,
+    NewAddCard
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -809,6 +830,10 @@ export default {
       this.custom = true;
       this.menuVisible = false;
     },
+    newAddCard() {
+      this.show = true;
+      this.menuVisible = false;
+    },
     showMenu() {
       this.menuVisible = true;
     },
@@ -827,6 +852,8 @@ export default {
     },
     setCustom() {
       this.custom = false;
+    }, setCustoms() {
+      this.show = false;
     },
   },
   watch: {
