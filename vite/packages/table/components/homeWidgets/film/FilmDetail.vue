@@ -108,9 +108,6 @@
           localCache:true,
           localTtl:60
         })
-
-        // console.log('detail',detail)
-        // let detail = {data:{code: 406}}
         if(detail.data.code){
           this.pageToggle = false
           this.detailMovie = detail.data
@@ -122,7 +119,7 @@
       stripDay(url){
         // window.open(url, '_blank')
         // console.log(url)
-        // browser.openInUserSelect(url)
+        browser.openInUserSelect(url)
       },
       notData(val){
         // this.pageToggle = val

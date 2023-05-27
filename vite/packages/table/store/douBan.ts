@@ -13,11 +13,16 @@ export const filmStore = defineStore("film", {
         localCache:true,
         localTtl:60
       })
-      res.data.movieList.forEach(item => {
-        item.img = item.img.replace('2500x2500','240x354')
-        item.comingDate = item.comingTitle.split(' ')[0]
-      });
-      this.data = res.data.movieList
+      if(res.data.code){
+        this.data = res.data.movieList
+        return
+      }else{
+        res.data.movieList.forEach(item => {
+          item.img = item.img.replace('2500x2500','240x354')
+          item.comingDate = item.comingTitle.split(' ')[0]
+        });
+        this.data = res.data.movieList
+      }
     },
   },
   persist: {

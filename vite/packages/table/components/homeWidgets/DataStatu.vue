@@ -3,7 +3,7 @@
         <div class="box-block">
             <img :src="imgDisplay" alt="">
             <span>{{ textPrompt }}</span>
-            <div class="block-btn" @click="jumpPage">{{ btnText }}</div>
+            <div class="block-btn" v-if="btnToggle" @click="jumpPage">{{ btnText }}</div>
         </div>
     </div>
 </template>
@@ -30,6 +30,10 @@
         type: String,
         default: '返回'
       },
+      btnToggle: {
+        type: Boolean,
+        default: true
+      }
     },
     data() {
       return {

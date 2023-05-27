@@ -7,40 +7,43 @@
     :formulaBar="formulaBar"
     v-if="!detailToggle"
     > 
-      <div class="example" v-if="isLoading">
-        <a-spin />
-      </div>
-      <div v-else>
-        <div class="pointer title-refresh" @click="refreshPage"></div>
-        <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-          <div v-for="item in filmArrange" :key="item.id" 
-          @click="btnDetail(item.id)" 
-          class="w-full  cursor-pointer one-film"
-          style="display:hiddle;">
-            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
-            <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-            <div class="right-top text-center bg-black bg-opacity-70">
-            <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-              猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
-            </span>
-            <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
-            </div>
-          </div>
+      <div v-if="pageToggle">
+        <div class="example" v-if="isLoading">
+          <a-spin />
         </div>
-        <div class="film-item" v-else-if="customData.width === 2">
-          <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
-          class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
-            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
-            <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-            <div class="right-top text-center bg-black bg-opacity-70">
+        <div v-else>
+        <div class="pointer title-refresh" @click="refreshPage"></div>
+          <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
+            <div v-for="item in filmArrange" :key="item.id" 
+            @click="btnDetail(item.id)" 
+            class="w-full  cursor-pointer one-film"
+            style="display:hiddle;">
+              <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+              <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
+              <div class="right-top text-center bg-black bg-opacity-70">
               <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
                 猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
               </span>
               <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="film-item" v-else-if="customData.width === 2">
+            <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
+            class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
+              <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+              <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
+              <div class="right-top text-center bg-black bg-opacity-70">
+                <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.sc}}</span>
+                </span>
+                <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <DataStatu v-else imgDisplay="../../../../public/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
     </HomeComponentSlot> 
     <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
 </template>
@@ -49,13 +52,15 @@
   import { mapWritableState, mapActions } from 'pinia'
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import { filmStore } from '../../../store/douBan';
+  import DataStatu from "../DataStatu.vue"
   import FilmDetail from './FilmDetail.vue'
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
     components:{
       HomeComponentSlot,
-      FilmDetail
+      FilmDetail,
+      DataStatu
     },
     props: {
       customIndex:{
@@ -84,7 +89,8 @@
         filmArrange: [],
         detailToggle: false,
         detailId: -1,
-        isLoading: false
+        isLoading: false,
+        pageToggle: true,
       };
     },
     computed: {
@@ -123,16 +129,15 @@
     async mounted() {
       this.isLoading = true
       await this.getData()
-      // console.log("data",this.data)
-      this.filmList = this.data
-      if(this.filmList){
-        this.isLoading = false
+      this.filmList = this.data || []
+      if(!this.filmList.length){
+        this.pageToggle = false
       }
+      setTimeout(() => {
+        this.isLoading = false
+      })
       this.filmPart = _.sampleSize(this.filmList, 8)
       this.getDoubanList()
-      // setTimeout(() => {
-      //   this.isLoading = false
-      // })
     },
   };
 </script>
