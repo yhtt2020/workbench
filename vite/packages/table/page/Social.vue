@@ -17,6 +17,7 @@ import ComActionPanel from '../components/comp/ComActionPanel.vue'
 import GroupPanel from '../components/comp/GroupPanel.vue'
 
 import SecondPanel from '../components/SecondPanel.vue'
+import browser from '../js/common/browser'
 
 export default {
   name: 'Social',
@@ -86,7 +87,7 @@ export default {
   },
   methods: {
     goUrl(url){
-      ipc.send('addTab',{url:url})
+      browser.openInInner(url)
     },
     changeTab (data) {
       this.$router.push(data.menu.route)

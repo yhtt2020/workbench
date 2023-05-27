@@ -1,10 +1,10 @@
 <template>
   <a-row class="mt-5" style="width: 100%;">
     <a-col :xxl="6" :xl="8" :lg="12" v-for="team in list">
-      <div class="m-3 s-bg rounded-lg p-1 pointer" @click="onAction(team)">
-        <a-row :gutter="10">
+      <div class="m-3 s-bg rounded-lg p-1 " >
+        <a-row :gutter="10" class="pointer" @click="onAction(team)">
           <a-col :span="8" class="text-center">
-            <a-avatar :src="team.avatar" class="m-5 rounded-lg" shape="square" :size="55"></a-avatar>
+            <a-avatar  :src="team.avatar" class="m-5 rounded-lg" shape="square" :size="55"></a-avatar>
           </a-col>
           <a-col :span="16" class="">
             <div class="mt-5 truncate">
@@ -21,11 +21,11 @@
         <div class="m-5 ml-6 mt-1 mb-3">
           <a-row :gutter="40">
             <a-col :span="4">
-              <a-avatar v-if="team.leaderInfo" style="border: 1px solid rgba(255,255,255,0.73)"
+              <a-avatar class="pointer" @click.stop="showUserCard(team.leaderInfo.data.userInfo.uid,team.leaderInfo.data.userInfo)" v-if="team.leaderInfo" style="border: 1px solid rgba(255,255,255,0.73)"
                         :src="team.leaderInfo.data.userInfo.avatar"></a-avatar>
             </a-col>
             <a-col :span="4" v-for="member in team.members.data">
-              <a-avatar v-if="member.userInfo" :src="member.userInfo.avatar"></a-avatar>
+              <a-avatar class="pointer" @click.stop="showUserCard(member.userInfo.uid,member.userInfo)" v-if="member.userInfo" :src="member.userInfo.avatar"></a-avatar>
             </a-col>
           </a-row>
         </div>
@@ -36,6 +36,8 @@
 <script>
 
 import OnlineTag from '../small/OnlineTag.vue'
+import { mapActions } from 'pinia'
+import { appStore } from '../../store'
 
 export default {
   name: 'TeamList',
@@ -46,6 +48,7 @@ export default {
     return {}
   },
   methods: {
+    ...mapActions(appStore,['showUserCard']),
     onAction (team) {
       this.$emit('showAction', { team })
     }

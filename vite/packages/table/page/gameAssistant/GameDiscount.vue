@@ -70,7 +70,7 @@
                  </div>
                 </div>
               </div>
-              <div class="flex-none btn-active ml-4 h-12 py-3 pointer px-8 s-bg rounded-md" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;" 
+              <div class="flex-none btn-active ml-4 h-12 py-3 pointer px-8 s-bg rounded-md" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;"
                 @click="openEpicStore"
               >
                 打开epic商城
@@ -88,6 +88,7 @@
 import { sendRequest,regionRange,remainderDay } from '../../js/axios/api';
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
+import browser from '../../js/common/browser'
 export default {
   name: "GameDiscount",
   components:{
@@ -252,7 +253,7 @@ export default {
       })
     },
     openEpicStore(){
-      window.ipc.send('addTab',{url:'https://store.epicgames.com/zh-CN/'})
+      browser.openInUserSelect('https://store.epicgames.com/zh-CN/')
     }
   },
 }

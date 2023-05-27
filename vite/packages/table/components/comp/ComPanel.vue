@@ -39,6 +39,7 @@
 import { appStore } from '../../store'
 import {mapState} from 'pinia'
 import {SendOutlined,UserAddOutlined,EyeOutlined,EditOutlined} from '@ant-design/icons-vue '
+import browser from '../../js/common/browser'
 
 export default {
   name: 'ComPanel',
@@ -58,7 +59,7 @@ export default {
   },
   methods:{
     go(url){
-      ipc.send('addTab',{url:url})
+      browser.openInInner(url)
     }
   }
 }

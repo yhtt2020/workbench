@@ -54,6 +54,12 @@
        style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
     {{screenDetail.title || '主屏'}}
   </div>
+
+ <Modal style="z-index:999999999999999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t" :blurFlag="true">
+   <slot>
+     <UserCard  :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
+   </slot>
+ </Modal>
 </template>
 
 <script lang="ts">
@@ -62,20 +68,19 @@ import {mapActions, mapState, mapWritableState} from "pinia";
 import {cardStore} from "./store/card"
 import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
-import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
-import {app} from "electron";
-import {Modal} from 'ant-design-vue'
 import {steamUserStore} from "./store/steamUser";
 import {screenStore} from './store/screen'
-
+import browser from './js/common/browser';
+import UserCard from "./components/small/UserCard.vue";
+import Modal from './components/Modal.vue'
 const {steamUser,steamSession,path,https,steamFs} = $models
 let client = new steamUser({
   enablePicsCache: true
 });
 window.client = client
-
+window.browser= browser
 const {appModel} = window.$models
 let startX,
   startY,
@@ -86,7 +91,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {Barrage},
+  components: {Modal, UserCard, Barrage},
   data() {
     return {
       touchDownRoutes: ["home", "lock"], //支持下滑的页面的白名单
@@ -94,7 +99,7 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
-      videoPath: ''
+      videoPath: '',
     };
   },
   async mounted() {
@@ -170,11 +175,11 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible','userCardUid','userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
     ...mapWritableState(screenStore, ['taggingScreen','screenDetail']),
-    ...mapWritableState(steamUserStore, ['steamLoginData'])
+    ...mapWritableState(steamUserStore, ['steamLoginData']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),

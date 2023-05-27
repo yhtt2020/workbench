@@ -23,16 +23,16 @@
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
         <div v-if="!todayRank.length" class="not-sign h-full flex justify-center items-center">还没有人签到，快来抢第一
         </div>
-        <div v-else v-for="item in todayRank" :key="item.id"
+        <div  v-else v-for="item in todayRank" :key="item.id"
              class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
           <div class="flex-1 flex ml-3 items-center">
-            <a-avatar :src="item.avatar">
+            <a-avatar @click="showCard(item.uid)" :src="item.avatar">
               <template #icon>
                 <UserOutlined/>
               </template>
             </a-avatar>
-            <div class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 120px;">
+            <div @click="showCard(item.uid)" class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 120px;">
               {{ item.nickname }}
             </div>
           </div>
@@ -105,6 +105,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { comStore } from '../../store/com'
 import { message } from 'ant-design-vue'
+import { appStore } from '../../store'
 
 export default {
   name: 'SingIn',
@@ -164,6 +165,7 @@ export default {
   },
   methods: {
     ...mapActions(comStore, ['updateTodayRank', 'doSign','getSignInfo']),
+    ...mapActions(appStore,['showUserCard']),
     async getTodayList () {
       // let rankResponse = await this.getTodayRank()
       // if(rankResponse.status===1){
@@ -190,6 +192,9 @@ export default {
         }
         this.signedIn=false
       })
+    },
+    showCard(uid){
+      this.showUserCard(uid)
     },
     async signIn () {
       if (!this.signedIn) {

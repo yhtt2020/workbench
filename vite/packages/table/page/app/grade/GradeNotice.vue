@@ -23,6 +23,7 @@
 import { message } from 'ant-design-vue';
 import {mapActions} from "pinia";
 import {appStore} from "../../../store";
+import browser from '../../../js/common/browser'
 export default {
   name: "GradeNotice",
   data(){
@@ -39,7 +40,7 @@ export default {
       this.known=!this.known
     },
     openAgree(){
-      ipc.send('addTab',{url:'   https://www.yuque.com/tswork/mqon1y/hwzcb49pgegupggz'})
+      browser.openInUserSelect('https://www.yuque.com/tswork/mqon1y/hwzcb49pgegupggz')
     },
     next(){
       if(this.known === false){

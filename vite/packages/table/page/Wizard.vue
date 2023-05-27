@@ -184,6 +184,7 @@ import { message } from 'ant-design-vue'
 import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
 import ZoomUI from '../components/comp/ZoomUI.vue'
 import AutoRun from '../components/comp/AutoRun.vue'
+import browser from '../js/common/browser'
 const { settings } = window.$models
 export default {
   name: 'Wizard',
@@ -330,7 +331,7 @@ export default {
       },300)
     },
     openVideo(){
-      ipc.send('addTab',{url:'https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click'})
+      browser.openInUserSelect('https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click')
     },
     setTableKeys (args) {
       let rs = ipc.sendSync('setTableShortcut', { shortcut: args.keys })

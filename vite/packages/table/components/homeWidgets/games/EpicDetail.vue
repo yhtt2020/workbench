@@ -3,7 +3,7 @@
     <div class="epic-detail-image rounded-lg">
       <img :src="detailOptions.image" alt="" class="rounded-lg">
     </div>
-    <span class="mt-2" style="font-size: 16px;font-weight: 500;">{{ detailOptions.name }}</span>
+    <span class="mt-2 truncate" style="max-width:252px;font-size: 16px;font-weight: 500;">{{ detailOptions.name }}</span>
     <span class="content-introduction h-12" style="font-size: 16px; font-weight: 400;">{{detailOptions.illustrate}}</span>
     <span class="line-through mt-1" style="color: rgba(151, 151, 151, 1);">￥{{detailOptions.price}}.00</span>
     <div class="flex justify-between items-center">
@@ -21,6 +21,7 @@
 
 <script>
 import { remainderDay } from "../../../js/axios/api"
+import browser from '../../../js/common/browser'
 export default {
   name:'EpicDetail',
   props:{
@@ -44,7 +45,7 @@ export default {
       this.$emit('update:backShow',this.backShow)
     },
     onClickOffice(){
-      window.ipc.send('addTab',{url:`https://store.epicgames.com/zh-CN`})
+      browser.openInUserSelect(`https://store.epicgames.com/zh-CN`)
     }
   }
 }

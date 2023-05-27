@@ -175,22 +175,22 @@ export default {
         },
         {
           value: "拾光壁纸",
-          path: "https://api.nguaduot.cn/timeline/v2",
+          path: "https://api.nguaduot.cn/timeline/v2?client=thisky",
           name: "pickingPaper",
         },
         {
           value: "贪食鬼",
-          path: "https://api.nguaduot.cn/glutton/journal",
+          path: "https://api.nguaduot.cn/glutton/v2?client=thisky",
           name: "pickingPaper",
         },
         {
           value: "贪吃蛇",
-          path: "https://api.nguaduot.cn/glutton/snake",
+          path: "https://api.nguaduot.cn/snake/v2?client=thisky",
           name: "pickingPaper",
         },
         {
           value: "wallhaven",
-          path: "https://api.nguaduot.cn/wallhaven/v2",
+          path: "https://api.nguaduot.cn/wallhaven/v2?client=thisky",
           name: "pickingPaper",
         },
         // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
@@ -237,6 +237,7 @@ export default {
         this.addressType.name === "pickingPaper" ||
         this.addressType.name === "bing"
       ) {
+        console.log(this.addressType.path);
         axios
           .get(this.addressType.path)
           .then((res) => {

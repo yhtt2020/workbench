@@ -95,6 +95,7 @@ import { weatherStore } from '../store/weather'
 import { screenStore } from '../store/screen'
 import {isMain} from '../js/common/screenUtils'
 import { inspectorStore } from '../store/inspector'
+import { teamStore } from '../store/team'
 
 export default {
   name: 'Code',
@@ -113,6 +114,7 @@ export default {
   },
   async mounted () {
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
+    //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
     this.initStore(appStore, 'appStore')
     this.initStore(codeStore, 'code')
     this.initStore(cardStore, 'cardStore')
@@ -120,7 +122,8 @@ export default {
     this.initStore(paperStore, 'paper')
     this.initStore(deckStore, 'deck')
     this.initStore(screenStore, 'screen')
-    this.initStore(inspectorStore, 'inspector')
+    this.initStore(teamStore, 'teamStore')
+    this.initStore(inspectorStore, 'inspectorStore')
     if(isMain()){
       this.bindMainIPC()
     }else{
@@ -247,6 +250,7 @@ export default {
     },
 
     async afterLaunch () {
+      console.log('afterLaunch')
       //执行分屏的启动操作
       this.onTableStarted().then()
       if (!this.settings.zoomFactor) {

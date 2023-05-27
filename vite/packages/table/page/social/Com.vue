@@ -1,16 +1,15 @@
 <template>
   <div class="ml-3" style="width: 98%;height: 100%">
-    <div style="width: 200px">
+    <div style="width: 200px" >
       <HorizontalPanel :navList="comList" v-model:selectType="currentTab" :height="44"
                        class="mt-3"></HorizontalPanel>
     </div>
-
     <vueCustomScrollbar v-if="currentTab.name==='com'" :settings="scrollbarSettings"
                         style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
       <div class="card mr-3"
            style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column">
         <div class="line-title">
-          <HorizontalPanel :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
+          <HorizontalPanel v-if="Number(this.myTeamNo)>0" :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
           <div v-if="currentChannel.name==='all'">
             <span class="ml-2 mt-2" style="font-size: 14px">全网弹幕频道</span>
             <span class="mt-2" style="float: right;font-weight: normal;font-size: 0.8em">
@@ -21,7 +20,7 @@
           <div class="pt-2" v-else>
             <span class="ml-2" style="font-size: 14px;vertical-align: text-bottom">小队弹幕频道</span>
             <span  style="float: right;font-weight: normal;font-size: 0.8em">
-              <a-avatar :size="20" class="mr-2" :src="myTeam.avatar"></a-avatar>{{myTeam.name}}
+              <a-avatar  :size="20" class="mr-2" :src="myTeam.avatar"></a-avatar>{{myTeam.name}}
 
       </span>
           </div>
@@ -48,7 +47,7 @@
 
                 <template v-for="barrage in barrages">
                   <a-col :span="4">
-                    <a-avatar :size="36" :src="barrage.avatar"></a-avatar>
+                    <a-avatar class="pointer"  @click="showUserCard(barrage.uid)" :size="36" :src="barrage.avatar"></a-avatar>
                   </a-col>
                   <a-col :span="20">
                     <div class="barrage-name">
@@ -176,6 +175,8 @@ import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import SingIn from '../../components/homeWidgets/SignIn.vue'
 import { teamStore } from '../../store/team'
 import { mapState ,mapActions } from 'pinia'
+import browser from '../../js/common/browser'
+import { appStore } from '../../store'
 
 export default {
   name: 'Com',
@@ -247,12 +248,14 @@ export default {
     })
   },
   methods: {
+    ...mapActions(appStore,['showUserCard']),
+
     ...mapActions(teamStore,['updateMy']),
     checkUpdate () {
       ipc.send('checkUpdate')
     },
     openTab (url) {
-      ipc.send('addTab', { url: url })
+      browser.openInInner( url )
     },
     async loadTeamBarrage () {
       console.log(this.my, 'wode小组')
@@ -326,7 +329,7 @@ export default {
       }
     },
     goUrl (url) {
-      ipc.send('addTab', { url: url })
+      browser.openInInner( url )
     },
   }
 }

@@ -1,4 +1,5 @@
 import ActionExecutor from './actionExecutor'
+import browser from "../common/browser";
 /**
  * 处理浏览器动作的类
  */
@@ -11,7 +12,7 @@ class BrowserAction extends ActionExecutor {
         if (args.position === 'builtin') {
           //内置浏览器
           if (args.tab === 'current') {
-            ipc.send('addTab', {url: args.url})
+            browser.openInInner(args.url)
             result = 1
           } else if (args.tab === 'new') {
             //创建新标签组并打开

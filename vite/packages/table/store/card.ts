@@ -461,11 +461,11 @@ export const cardStore = defineStore(
         }
         this.clockFlag = !this.clockFlag
       },
-      addCustomComponents(value) {
+      addCustomComponents(value,desk) {
         //if (this.customComponents.includes(value)) return;
-        let desk = this.desks.find(item => {
-          return item.nanoid === this.currentDeskIndex.name
-        })
+        // let desk = this.desks.find(item => {
+        //   return item.nanoid === this.currentDeskIndex.name
+        // })
         desk.cards.push(value)
       },
       updateCustomComponents(value, newData) {

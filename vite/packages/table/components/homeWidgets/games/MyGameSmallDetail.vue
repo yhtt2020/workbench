@@ -1,5 +1,5 @@
 <template>
-  <div v-if="size.className === ''">
+  <div v-if="size.width === 1 && size.height === 2">
     <div class="flex flex-col items-center justify-center" >
       <!-- 后期根据正在运行的游戏数量进行判断,目前已多个为假数据模板 -->
       <!-- <template>
@@ -27,7 +27,11 @@
         <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>
       </div>
-      <div @click="closeGame" class="rounded-lg flex items-center pointer-active s-item  pointer justify-center" style=" padding: 13px 80px;">
+      <div @click="startGame" v-if="isStartGame === false"  class="rounded-lg flex items-center pointer-active s-item  pointer justify-center" style="background: rgba(82, 196, 26, 1);padding: 13px 80px;">
+        <Icon icon="tuichu" style="font-size: 1.429em;"></Icon>
+        <span style="font-size: 16px; font-weight: 400;">开始游戏</span>
+      </div>
+      <div @click="closeGame" v-else class="rounded-lg flex items-center pointer-active s-item  pointer justify-center" style=" padding: 13px 80px;">
         <Icon icon="tuichu" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">关闭游戏</span>
       </div>
@@ -37,7 +41,7 @@
     <div class="flex mt-2">
       <div class="w-1/2 rounded-lg  relative mr-5">
          <img :src="otherGame.src" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
-         <span class="middle-tag rounded-md mr-2 mt-2">正在运行</span>
+         <span class="middle-tag rounded-md mr-2 mt-2" v-if="isStartGame === true">正在运行</span>
          <div class="detail-name w-full flex items-center rounded-b-lg px-4 py-2" style="font-size: 18px;font-weight: 600;">
             {{ otherGame.title }}
          </div>
@@ -71,7 +75,11 @@
           <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
           <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>
          </div>
-         <div @click="closeGame" class="flex items-center  rounded-lg pointer s-item justify-center px-3 py-3" >
+         <div @click="startGame" v-if="isStartGame === false" style="background: rgba(82, 196, 26, 1);" class="flex items-center  rounded-lg pointer  justify-center px-3 py-3" >
+          <Icon icon="game" style="font-size: 1.429em;"></Icon>
+          <span style="font-size: 16px; font-weight: 400;">打开游戏</span>
+         </div>
+         <div @click="closeGame" v-else class="flex items-center  rounded-lg pointer s-item justify-center px-3 py-3" >
           <Icon icon="tuichu" style="font-size: 1.429em;"></Icon>
           <span style="font-size: 16px; font-weight: 400;">关闭游戏</span>
          </div>
@@ -110,7 +118,8 @@ export default {
           src:'/img/test/1.png'
         },
       ],
-      carouselIndex:0
+      carouselIndex:0,
+      isStartGame:false
     }
   },
   methods:{
@@ -124,6 +133,9 @@ export default {
     // 打开游戏攻略
     openGameGuide(){
      this.$router.push({name:'gameIntroduction'})
+    },
+    startGame(){
+      this.isStartGame  = !this.isStartGame
     }
   }    
 }

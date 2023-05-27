@@ -455,6 +455,7 @@ import Template from '../../../../user/pages/Template.vue'
 import OnlineChart from './OnlineChart.vue'
 import html2canvas from 'html2canvas'
 import viewer from 'viewerjs'
+import browser from '../../../js/common/browser'
 
 export default {
   name: 'Dashboard',
@@ -640,7 +641,7 @@ export default {
       tableApi.watch.stopTask(this.task)
     },
     openUrl () {
-      ipc.send('addTab', { url: this.task.url })
+      browser.openInUserSelect(this.task.url)
     },
     share () {
       Modal.info({

@@ -25,7 +25,7 @@
   </div>
   <vue-custom-scrollbar key="scrollbar" id="addScroll" :settings="scrollbarSettings"
     style="position:relative;  border-radius: 8px;height: 100vh">
-    <CardPreview :cardType="item" v-for="item in filterList" @addSuccess="onBack"></CardPreview>
+    <CardPreview :desk="desk" :cardType="item" v-for="item in filterList" @addSuccess="onBack"></CardPreview>
     <div style="height: 650px"></div>
   </vue-custom-scrollbar>
 </template>
@@ -38,6 +38,8 @@ import CardPreview from './CardPreview.vue'
 export default {
   name: "AddCard",
   components: { CardPreview },
+  props:['desk'],
+  emits:['onBack'],
   data() {
     return {
       cardList: [
@@ -145,7 +147,7 @@ export default {
           cname: '音频工具',
           icon: 'audio',
           detail: '音频工具',
-          images: [ 'audio', 'voice']
+          images: ['audio', 'voice']
         },
         {
           name: 'remote',
@@ -252,7 +254,7 @@ export default {
       this.show = true;
     },
     onBack() {
-      this.$emit("setCustom", false);
+      this.$emit("onBack", false);
     },
   },
 };
