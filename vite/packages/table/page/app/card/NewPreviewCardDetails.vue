@@ -5,9 +5,9 @@
             <div class="btn no-drag" @click="onBack">
                 <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
             </div>
-            <div class="card-box" v-for="(item, index) in cardDetails.images">
-                <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item + '.png'" alt="">
-                <div class="size">{{ cardDetails.sizes[index] }}</div>
+            <div class="card-box" v-for="(item, index) in cardDetails.option">
+                <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item.name + '.png'" alt="">
+                <div class="size">{{ item.size }}</div>
                 <div class="add-btn no-drag" @click="addCard(item, index)">
                     <div class="icons">
                         <Icon icon="tianjia2" style="color: #000;font-size: 12px;"></Icon>

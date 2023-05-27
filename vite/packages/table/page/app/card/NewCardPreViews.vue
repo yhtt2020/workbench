@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="left">
-                <img ref="imgRef" :src="'/public/img/addCard/' + item.images[0] + '.png'" alt="" :key="item.images[index]">
+                <img ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
             </div>
             <div class="right">
                 <div class="title">{{ item.cname }}</div>
@@ -76,7 +76,6 @@ export default {
                 let img = this.$refs.imgRef
                 let width = img[index].naturalWidth
                 let height = img[index].naturalHeight
-                console.log('img :>> ', img[index], 'width :>> ', width, 'height :>> ', height);
 
                 if (width > height) img[index].setAttribute("class", "img-w");
                 else img[index].setAttribute("class", "img-h");
@@ -93,9 +92,8 @@ export default {
             }, 0)
         },
         addCard(item) {
-            // console.log('this.carouselIndex 这里设置默认为0,选第几张来切换 :>> ', this.carouselIndex);
-            // console.log('this.cardType.images 这是item .name :>> ', this.cardType.images);
-            if (item.images[1] != undefined) {
+
+            if (item.option[1] != undefined) {
                 this.cardDetails = item
                 this.isCardDetails = true
             } else {
@@ -104,12 +102,12 @@ export default {
         },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex
-            this.addCustomComponents({ name: item.images[index], id: Date.now(), data: {} });
+            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} });
             this.$emit("addSuccess")
             this.$router.push({
                 name: "home",
                 params: {
-                    name: item.images[index],
+                    name: item.option[index].name,
                     cname: item.cname,
                 },
             });
