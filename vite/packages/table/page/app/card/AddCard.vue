@@ -147,7 +147,7 @@ export default {
           cname: '音频工具',
           icon: 'audio',
           detail: '音频工具',
-          images: [ 'audio', 'voice']
+          images: ['audio', 'voice']
         },
         {
           name: 'remote',
