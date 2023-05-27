@@ -55,9 +55,9 @@
     {{screenDetail.title || '主屏'}}
   </div>
 
- <Modal v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t" :blurFlag="true">
+ <Modal style="z-index:999999999999999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t" :blurFlag="true">
    <slot>
-     <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
+     <UserCard  :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
    </slot>
  </Modal>
 </template>
