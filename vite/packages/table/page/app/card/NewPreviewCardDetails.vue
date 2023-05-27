@@ -32,7 +32,8 @@ export default {
         },
         onBack() {
             this.$emit("closeCardDetails", false)
-        }
+        },
+
     }
 }
 </script>

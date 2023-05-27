@@ -18,11 +18,13 @@
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>
                     <div class="data-box">
-                        999
+                        {{ item.download }}
                     </div>
                     <Icon icon="shijian" class="icons" style=" color: #52C41A; margin: 0; width: 20px;"></Icon>
 
-                    <div class="data-box">5月24日</div>
+                    <div class="data-box">{{ formatTimestamp(item.time) }}
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,6 +70,13 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
+        formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const formattedDate = `${month}-${day}`;
+            return formattedDate;
+        },
         closeCardDetails() {
             this.isCardDetails = false
         },
@@ -86,7 +95,6 @@ export default {
                 let width = img[index].naturalWidth
                 let height = img[index].naturalHeight
 
-                console.log('width :>> ', width, 'height :>> ', height);
                 if (width > height) img[index].setAttribute("class", "img-w");
                 else img[index].setAttribute("class", "img-h");
             }, 0)
@@ -180,15 +188,6 @@ export default {
             zoom: 10%;
         }
 
-        // .img-h {
-        //     height: 120px;
-        //     width: 80px;
-        // }
-
-        // .img-w {
-        //     width: 120px;
-        //     height: 88px;
-        // }
     }
 
     .right {
@@ -206,12 +205,15 @@ export default {
         }
 
         .text {
+            display: flex;
+            align-items: center;
             font-family: PingFangSC-Regular;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.60);
             font-weight: 400;
             margin: 2px 0;
             width: 78%;
+            height: 55px;
         }
 
         .icon {
