@@ -17,20 +17,26 @@
             <span class="show-time">总数 : {{ totalTime(steamDetail.time) }}</span>
           </div>
         </div>
-        <div class="flex justify-between mt-2">
-          <div @click="startGame" v-if="isRunGame === false" class="flex items-center mr-3  detail-active s-item  rounded-lg pointer  justify-center" style="background: rgba(82,196,26,1);padding: 13px 56.61px;">
+
+        <div class="flex mt-2">
+          <div class="flex items-center detail-active mr-3 s-item pointer px-3 rounded-lg" @click="backGameList">
+            <Icon icon="xiangzuo" style="font-size: 1.8em;"></Icon>
+          </div>
+          <div @click="startGame" v-if="isRunGame === false" class="flex items-center mr-3  detail-active s-item  rounded-lg pointer  justify-center" style="background: rgba(82,196,26,1);padding: 13px 40px;">
             <Icon icon="game" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">开始游戏</span>
           </div>
-          <div @click="closeGame" v-else class="flex items-center mr-3  detail-active s-item  rounded-lg pointer  justify-center" style="padding: 13px 56.61px;">
+          <div @click="closeGame" v-else class="flex items-center mr-3  detail-active s-item  rounded-lg pointer  justify-center" style="padding: 13px 40px;">
             <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">关闭游戏</span>
           </div>
-          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center"  style="padding: 13px 57px;">
+          <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center"  style="padding: 13px 40px;">
             <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">游戏攻略</span>
           </div>
+         
         </div>
+        
       </div>
       <a-divider type="vertical" style="height: 350px;background: rgba(255,255,255,0.05);" />
       <div class="flex flex-col" style="width:20.405%;">
@@ -63,22 +69,29 @@
         </div>
       </div>
     </div>
-    <div class="mt-3 flex flex-col items-center relative" v-else>
+    <div class="mt-3 flex flex-col  relative" v-else>
       <div style="height: 118px;" class="mb-3.5">
         <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appinfo.appid}/header.jpg`" alt="">
       </div>
       <div class="m-in-run" v-if="isRunGame === true">正在运行</div>
-      <span class="truncate mb-2.5" style="max-width: 180px;">{{steamDetail.appinfo.common.name}}</span>
+      <div class="flex items-center justify-center">
+        <span class="truncate mb-2.5 " style="max-width: 180px;">{{steamDetail.appinfo.common.name}}</span>
+      </div>
       <span class="flex items-center mb-2.5 justify-center last-time">最近游玩 : {{getDateMyTime(steamDetail.time)}}</span>
       <span class="flex items-center mb-2.5 justify-center last-time">过去两周 : {{twoWeekTime(steamDetail.time)}}</span>
       <span class="flex items-center mb-2.5 justify-center last-time">总数 : {{twoWeekTime(steamDetail.time)}}</span>
-      <div @click="guidelineJump(steamDetail.appinfo.appid)" class="flex mb-2 w-full py-3 s-item detail-active  rounded-lg pointer items-center justify-center">
-        <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
-        <span class="ml-2">游戏攻略</span>
+      <div class="flex items-center">
+        <div @click="backGameList" class="flex items-center detail-active mb-2 mr-3 s-item rounded-lg pointer" style="padding: 13px 12px;">
+          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+        </div>
+        <div @click="guidelineJump(steamDetail.appinfo.appid)" style="padding:12px 35px;" class="flex mb-2  w-full s-item detail-active  rounded-lg pointer items-center justify-center">
+          <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
+          <span class="ml-2">游戏攻略</span>
+        </div>
       </div>
       <div @click="startGame" v-if="isRunGame === false" style="background: rgba(82,196,26,1);" class="flex w-full items-center  detail-active s-item py-3 rounded-lg pointer justify-center">
         <Icon icon="game" style="font-size: 1.2em;"></Icon>
-        <span class="ml-2">关闭游戏</span>
+        <span class="ml-2">开始游戏</span>
       </div>
       <div @click="closeGame" v-else class="flex w-full items-center  detail-active s-item py-3 rounded-lg pointer justify-center">
         <Icon icon="tuichu" style="font-size: 1.2em;"></Icon>
@@ -165,10 +178,12 @@ export default {
     // 关闭游戏
     closeGame(){
       this.isRunGame = false
-      this.$emit('closeDetail')
     },
     startGame(){
      this.isRunGame = true
+    },
+    backGameList(){
+      this.$emit('closeDetail')
     }
   }
 }

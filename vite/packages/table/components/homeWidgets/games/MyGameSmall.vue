@@ -6,7 +6,7 @@
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
       当前游戏
     </div>
-    <template v-if="customData.width === 1 && customData.height === 2">
+    <template v-if="showSize.width === 1 && showSize.height === 2">
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
           <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
@@ -58,13 +58,13 @@
     </template>
   </HomeComponentSlot>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
-    <template #extra>
+    <!-- <template #extra>
       <div class="flex justify-center items-center rounded-lg h-10 drawer-item-bg w-16  pointer" @click="saveSize">保存</div>
-    </template> 
+    </template>  -->
     <div class="flex flex-col">
-      <HorizontalPanel :navList="steamCardSize"  class="nav-list-container mb-3" bg-color="drawer-item-select-bg" v-model:selectType="defaultSize" ></HorizontalPanel>
+      <!-- <HorizontalPanel :navList="sizeList"  class="nav-list-container mb-3" bg-color="drawer-item-select-bg" v-model:selectType="defaultSize" ></HorizontalPanel> -->
       <span class="mb-8" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 500">展示游戏</span>
-      <span @click="getGameType(item)" v-for="item in showGameType" class="mb-4  text-center pointer change drawer-item-bg rounded-lg show-game-time py-3">
+      <span   v-for="(item,index) in showGameType"  @click="getGameType(item,index)" :class="steamIndex === index ? 'drawer-item-bg':''" class="mb-4  text-center pointer change s-item  rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
     </div>
@@ -79,7 +79,7 @@ import MyGameSmallDetail from './MyGameSmallDetail.vue';
 import { mapActions, mapWritableState } from 'pinia';
 import { cardStore } from '../../../store/card';
 import { steamUserStore } from '../../../store/steamUser';
-import { message } from "ant-design-vue";
+// import { message } from "ant-design-vue";
 import _ from 'lodash-es'
 
 export default {
@@ -107,10 +107,10 @@ export default {
   computed:{
     ...mapWritableState(steamUserStore,['gameList']),
     showSize(){
-      if(this.customData && this.customData.mySize){
-        return this.customData.mySize
+      if(this.customData && this.customData.width && this.customData.height){
+        return {width:this.customData.width,height:this.customData.height}
       }
-      return this.steamCardSize[0]
+      return this.sizeList[0]
     },
     defaultGame(){
       if(this.customData && this.customData.name){
@@ -131,14 +131,15 @@ export default {
       myDetailShow:false,
       middleShow:false,
       openCpu:false,
+      steamIndex:0,
       detailShow:false,
       CPUShow:false,
       otherDetailShow:false,
       sizeList:[{title:'1x2',width:1,height:2,name:'1x2'},{title:'2x2',width:2,height:2,name:'2x2'}],
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.middleShow = true;this.$refs.gameSmallSlot.visible = false } } ],
       showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示(正在开发中)',name:'other'}],
-      steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],
-      defaultSize:{title:'1x2',className:'',name:'1x2'},
+      // steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],
+      // defaultSize:{title:'2x2',width:2,height:2,name:'2x2'},
       steamDetail:{},
 
       otherGameList:[
@@ -159,52 +160,34 @@ export default {
       
     }
   },
-  mounted(){
-    const {mySize,myShow} = this.customData
-    if(mySize) this.defaultSize = {...this.mySize,...mySize}
-    // if(myShow) this.CPUShow = myShow
-  },
   watch:{
     'defaultSize':{
       handler(){
-        this.options.className = 'card' + ' ' + this.defaultSize.className
-        this.$emit('customEvent')
+        // // console.log(this.defaultSize);
+        // this.increaseCustomComponents(this.$parent.copiedItems[0].id,{
+        //   width:this.defaultSize.width,
+        //   height:this.defaultSize.height
+        // })
+        // this.defaultSize = this.defaultSize
+        // this.$emit('customEvent')
       },
       immediate:true,
     }
   },
   methods:{
-    ...mapActions(cardStore,['insetSteamSize']),
-    getGameType(item){
+    ...mapActions(cardStore,['increaseCustomComponents']),
+    getGameType(item,index){
       this.customData.name = item.name
-    },
-    saveSize(){
-      this.insetSteamSize(this.customIndex,{mySize:this.defaultSize})
-      this.options.className = 'card' + ' ' + this.defaultSize.className
-      message.success('保存成功')
-      this.middleShow = false
+      this.steamIndex = index
     },
     enterMyGameDetail(item){
       this.steamDetail = item
       this.myDetailShow = true
       this.detailShow = true
-      this.openCpu = true
-      this.CPUShow = true
-      this.options.className = 'card' + ' ' + this.steamCardSize[1].className
-    },
-    isOpenCpu(e){
-      // this.insetSteamSize(this.customIndex,{myShow:e})
-      if(!e){
-        this.options.className = 'card' + ' ' + this.steamCardSize[0].className
-      }else{
-        this.options.className = 'card' + ' ' + this.steamCardSize[1].className
-      }
     },
     closeGame(){
-      this.options.className = 'card' + ' ' + this.showSize.className
       this.detailShow = false
       this.myDetailShow = false
-      this.openCpu = false
     },
     enterOtherGameDetail(item){
       this.otherDetailShow = true
