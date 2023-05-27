@@ -28,7 +28,8 @@
         </div>
         <div class="box" style="  opacity: 0;"></div>
     </div>
-    <NewPreviewCardDetails v-if="isCardDetails" @closeCardDetails="closeCardDetails" :CardDetails="CardDetails">
+    <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
+        :cardDetails="cardDetails">
     </NewPreviewCardDetails>
 </template>
 
@@ -49,7 +50,7 @@ export default {
             navLists: [],
             carouselIndex: 0,
             isCardDetails: false,
-            CardDetails: {}
+            cardDetails: {}
 
         }
     },
@@ -76,22 +77,24 @@ export default {
             // console.log('this.carouselIndex 这里设置默认为0,选第几张来切换 :>> ', this.carouselIndex);
             // console.log('this.cardType.images 这是item .name :>> ', this.cardType.images);
             if (item.images[1] != undefined) {
-                this.CardDetails = this.item
+                this.cardDetails = item
                 this.isCardDetails = true
-
             } else {
-                this.addCustomComponents({ name: item.images[this.carouselIndex], id: Date.now(), data: {} });
-                this.$emit("addSuccess")
-                this.$router.push({
-                    name: "home",
-                    params: {
-                        name: item.images[this.carouselIndex],
-                        cname: item.cname,
-                    },
-                });
-                message.info("添加成功！");
+                this.addCardAchieve(item)
             }
-
+        },
+        addCardAchieve(item, i) {
+            let index = i ?? this.carouselIndex
+            this.addCustomComponents({ name: item.images[index], id: Date.now(), data: {} });
+            this.$emit("addSuccess")
+            this.$router.push({
+                name: "home",
+                params: {
+                    name: item.images[index],
+                    cname: item.cname,
+                },
+            });
+            message.info("添加成功！");
         }
     },
 }
