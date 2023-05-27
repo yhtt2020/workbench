@@ -5,7 +5,7 @@
       </div>
       <div v-else>
         <div class="flex" style="margin-top: 13px;" v-if="pageToggle">
-          <div class="cursor-pointer" style="width: 240px;height: 354px;margin-right: 16px;" v-if="fatherWidth == 2">
+          <div class="cursor-pointer" style="width: 240px;height: 354px;margin: 0 16px 0 5px;" v-if="fatherWidth == 2">
             <a-image :src="detailMovie.img" width="240px" height="354px" style="object-fit: cover;" class="rounded-lg" alt="" />
           </div>
           <div :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
@@ -53,7 +53,7 @@
 <script>
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import DataStatu from "../DataStatu.vue"
-  import { sendRequest } from '../../../js/axios/api'
+  import { cacheRequest } from '../../../js/axios/api'
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
@@ -107,9 +107,9 @@
         }
       },
       async getfilmDetail(){
-        let detail = await sendRequest(`https://m.maoyan.com/ajax/detailmovie?movieId=${this.detailId}`,{},{
+        let detail = await cacheRequest(`https://m.maoyan.com/ajax/detailmovie?movieId=${this.detailId}`,{},{
           localCache:true,
-          localTtl:60
+          localTtl:60*60*12
         })
         if(detail.data.code){
           this.pageToggle = false
@@ -124,7 +124,6 @@
         window.browser.openInUserSelect(url)
       },
       notData(val){
-        // this.pageToggle = val
         this.$emit('detailBack',val)
       },
       discountBack(val){
@@ -163,7 +162,7 @@
       }
     }
     .size-min{
-      width: 250px;
+      width: 252px;
     }
     .size-max{
       width: 282px;

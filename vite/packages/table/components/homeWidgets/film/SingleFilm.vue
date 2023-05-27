@@ -96,11 +96,11 @@
         if(!this.filmList.length){
           this.pageToggle = false
         }
-        setTimeout(() => {
-          this.isLoading = false
-        })
         this.singleFilm = _.sampleSize(this.filmList,1)[0]
       }
+      setTimeout(() => {
+        this.isLoading = false
+      })
     },
   };
 </script>

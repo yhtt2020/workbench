@@ -167,7 +167,7 @@
     font-size: 13px;
   }
   .film-item{
-      padding: 12px 0 0 18px;
+      padding: 12px 0 0 20px;
       display: grid;
       grid-template-columns: repeat(4, 0.225fr);
       justify-content: center;
@@ -190,7 +190,6 @@
       top:10px;
       width: 200px;
       height: 40px;
-      // background:red;
     }
     .example {
       width: 100%;

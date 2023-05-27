@@ -20,7 +20,7 @@ export const filmStore = defineStore("film", {
         }
       let res = await sendRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
         localCache:true,
-        localTtl:60
+        localTtl:60*60*12
       })
       if(res.data.code){
         this.data = res.data
