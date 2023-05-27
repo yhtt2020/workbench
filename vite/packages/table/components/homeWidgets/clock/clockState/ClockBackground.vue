@@ -8,19 +8,19 @@
     ">
     支持直接复制粘贴图片到此处
   </div>
-  <div class="flex flex-row justify-between items-center mt-6" style="margin: 12px 0">
-    <div class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base"
+  <div class="flex flex-row justify-between items-center mt-6 drag" style="margin: 12px 0">
+    <div class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base no-drag"
       @click="importFile">
       选择图片
     </div>
-    <div class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base"
+    <div class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base no-drag"
       @click="openMy">
       选自壁纸收藏
     </div>
   </div>
 
   <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
-  <a-slider v-model:value="blurs" :max="100" :step="1" />
+  <a-slider v-model:value="blurs" :max="100" :step="1" class="no-drag" />
   <div class="text-base" style="margin-bottom: 10px">调整时钟比例</div>
   <a-slider v-model:value="zoom" :max="100" :step="1" />
   <ModalList v-if="myImgShow" v-model:visible="myImgShow" title="我的收藏" :imgList="myPapers" @sendImg="sendImg"

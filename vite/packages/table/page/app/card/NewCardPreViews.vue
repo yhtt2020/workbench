@@ -1,19 +1,19 @@
 <template>
-    <div class="main-box">
-        <div class="box" v-for="item in  navLists ">
-            <div class="add" @click="addCard(item)">
+    <div class="main-box ">
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
+            <div class="add no-drag" @click="addCard(item)">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
                 </div>
             </div>
-            <div class="left" @click="lookImg(item.images)">
-                <img class="img2" :src="'../../../../../public/img/addCard/' + item.images[0] + '.png'" alt="">
+            <div class="left">
+                <img ref="imgRef" :src="'/public/img/addCard/' + item.images[0] + '.png'" alt="" :key="item.images[index]">
             </div>
             <div class="right">
                 <div class="title">{{ item.cname }}</div>
                 <div class="text">{{ item.detail }}</div>
                 <div class="icon">
-                    <div class="icon-box" v-for=" i  in  item.sizes " :key="i">{{ i }}</div>
+                    <div class="icon-box" v-for="  i   in   item.sizes  " :key="i">{{ i }}</div>
                 </div>
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>
@@ -51,11 +51,12 @@ export default {
             carouselIndex: 0,
             isCardDetails: false,
             cardDetails: {}
-
         }
     },
     components: {
         NewPreviewCardDetails
+    },
+    mounted() {
     },
     watch: {
         navList: {
@@ -70,8 +71,26 @@ export default {
         closeCardDetails() {
             this.isCardDetails = false
         },
-        lookImg(img) {
-            // console.log('img :>> ', img);
+        addImgClass(index) {
+            this.$nextTick(() => {
+                let img = this.$refs.imgRef
+                let width = img[index].naturalWidth
+                let height = img[index].naturalHeight
+                console.log('img :>> ', img[index], 'width :>> ', width, 'height :>> ', height);
+
+                if (width > height) img[index].setAttribute("class", "img-w");
+                else img[index].setAttribute("class", "img-h");
+            })
+
+            setTimeout(() => {
+                let img = this.$refs.imgRef
+                let width = img[index].naturalWidth
+                let height = img[index].naturalHeight
+
+                console.log('width :>> ', width, 'height :>> ', height);
+                if (width > height) img[index].setAttribute("class", "img-w");
+                else img[index].setAttribute("class", "img-h");
+            }, 0)
         },
         addCard(item) {
             // console.log('this.carouselIndex 这里设置默认为0,选第几张来切换 :>> ', this.carouselIndex);
@@ -135,6 +154,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
 
         .icons {
             background: #fff;
@@ -158,15 +178,19 @@ export default {
         align-items: center;
         width: 180px;
 
-        .img1 {
-            height: 120px;
-            width: 80px;
+        img {
+            zoom: 10%;
         }
 
-        .img2 {
-            width: 120px;
-            height: 88px;
-        }
+        // .img-h {
+        //     height: 120px;
+        //     width: 80px;
+        // }
+
+        // .img-w {
+        //     width: 120px;
+        //     height: 88px;
+        // }
     }
 
     .right {
@@ -225,7 +249,7 @@ export default {
             }
 
             .data-box {
-                // margin-right: 12px;
+                margin-right: 12px;
             }
         }
     }

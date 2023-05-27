@@ -11,7 +11,13 @@ export const navList = [
                 cname: "系统性能监控",
                 detail: "同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。",
                 sizes: ["2*2", "2x4"],
+                // option: [
                 images: [
+                    // {
+                    //     name: "",
+                    //     img: "",
+                    //     size: [2, 2]
+                    // },
                     "CPULineChart",
                     "CPUFourCard",
                     "SmallCPUCard",

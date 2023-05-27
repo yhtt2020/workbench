@@ -1,14 +1,14 @@
 <template>
     <teleport to="body">
         <div class='popContainer'></div>
-        <div class="box">
-            <div class="btn" @click="onBack">
+        <div class="box  drag">
+            <div class="btn no-drag" @click="onBack">
                 <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
             </div>
             <div class="card-box" v-for="(item, index) in cardDetails.images">
-                <img class="img2" :src="'../../../../../public/img/addCard/' + item + '.png'" alt="">
+                <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item + '.png'" alt="">
                 <div class="size">{{ cardDetails.sizes[index] }}</div>
-                <div class="add-btn" @click="addCard(item, index)">
+                <div class="add-btn no-drag" @click="addCard(item, index)">
                     <div class="icons">
                         <Icon icon="tianjia2" style="color: #000;font-size: 12px;"></Icon>
                     </div>立即添加
@@ -51,11 +51,12 @@ export default {
     width: 100%;
     height: 100%;
     // 背景的模糊大小通过下面的属性值大小来调制
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(19, 19, 19, 0.65);
+    // background: #1a1a1a;
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(50px);
     transform: scale(1.2);
-    opacity: 1.9;
+    // opacity: 1.6;
 
 }
 
@@ -74,7 +75,7 @@ export default {
     .btn {
         position: absolute;
         z-index: 99919199;
-
+        cursor: pointer;
         top: 20px;
         left: 20px;
         background: rgba(0, 0, 0, 0.30);
@@ -121,6 +122,7 @@ export default {
         .add-btn {
             display: flex;
             justify-content: center;
+            cursor: pointer;
 
             align-items: center;
             background: rgba(0, 0, 0, 0.30);
