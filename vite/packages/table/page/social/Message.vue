@@ -31,7 +31,7 @@
               <div v-else v-for="item in  interact"
                    class="px-4  interact-hover rounded-lg py-4  flex items-center">
                 <div>
-                  <a-avatar  @click.stop="showUserCard(item.from_uid)" v-if="item.user" :size="50" :src="item.user.avatar_128" class="avatar-list pointer"></a-avatar>
+                  <a-avatar  @click.stop="showCard(item)" v-if="item.user" :size="50" :src="item.user.avatar_128" class="avatar-list pointer"></a-avatar>
                 </div>
                 <div  class="flex flex-col ml-4 " style="flex:1">
                   <div class="flex">
@@ -59,14 +59,14 @@
             <div v-else v-for="item in  newFollower"
                  class="px-4 rounded-lg interact-hover  py-4  flex items-center">
               <div>
-                <a-avatar @click="showUserCard(item.from_uid)" :size="50" :src="item.user.avatar_64" class="avatar-list pointer"></a-avatar>
+                <a-avatar @click="showCard(item)" :size="50" :src="item.user.avatar_64" class="avatar-list pointer"></a-avatar>
               </div>
               <div class="flex flex-col ml-4">
                 <div class="flex">
-                 <span @click="clickInteract(item)" style="font-size: 16px" class="pr-1 truncatepush-theme pointer">
+                 <span @click="showCard(item)" style="font-size: 16px" class="pr-1 truncatepush-theme pointer">
                   {{ item.user.nickname }}
                 </span>
-                  <span @click="clickInteract(item)" class="pr-1 truncate dynamic pointer">
+                  <span @click="showCard(item)" class="pr-1 truncate dynamic pointer">
                   关注了你
                 </span>
                   <span class="truncate w-52 interact-content"></span>
@@ -298,8 +298,18 @@ export default {
       browser.openInInner(url)
 
     },
+    showCard(item){
+      console.log(item,'item=')
+      if (item.from_uid) {
+        this.selectedUid = Number(item.from_uid)
+        this.selectedUserInfo = {
+          nickname: item.user.nickname,
+          avatar: item.user.avatar_64
+        }
+      }
+      this.showUserCard(this.selectedUid,this.selectedUserInfo)
+    },
     clickInteract (item) {
-      console.log('点击',item)
       this.detailUrl = this.getUrl(item)
       this.openDetail()
     },
@@ -318,7 +328,6 @@ export default {
       this.currentSubTab=tab
     },
     clickDetail(item){
-      console.log(item)
       browser.openInInner('https://s.apps.vip/post/' + item.tid)
     },
     goYuan(){
