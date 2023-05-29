@@ -1,28 +1,30 @@
 <template>
-    <div class="main-box">
-        <div class="box" v-for="item in  navLists ">
-            <div class="add" @click="addCard(item)">
+    <div class="main-box ">
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
+            <div class="add no-drag" @click="addCard(item)">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
                 </div>
             </div>
-            <div class="left" @click="lookImg(item.images)">
-                <img class="img2" :src="'../../../../../public/img/addCard/' + item.images[0] + '.png'" alt="">
+            <div class="left">
+                <img ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
             </div>
             <div class="right">
                 <div class="title">{{ item.cname }}</div>
                 <div class="text">{{ item.detail }}</div>
                 <div class="icon">
-                    <div class="icon-box" v-for=" i  in  item.sizes " :key="i">{{ i }}</div>
+                    <div class="icon-box" v-for="  i   in   item.sizes  " :key="i">{{ i }}</div>
                 </div>
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>
                     <div class="data-box">
-                        999
+                        {{ item.download }}
                     </div>
                     <Icon icon="shijian" class="icons" style=" color: #52C41A; margin: 0; width: 20px;"></Icon>
 
-                    <div class="data-box">5月24日</div>
+                    <div class="data-box">{{ formatTimestamp(item.time) }}
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,11 +53,12 @@ export default {
             carouselIndex: 0,
             isCardDetails: false,
             cardDetails: {}
-
         }
     },
     components: {
         NewPreviewCardDetails
+    },
+    mounted() {
     },
     watch: {
         navList: {
@@ -67,16 +70,38 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
+        formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const formattedDate = `${month}-${day}`;
+            return formattedDate;
+        },
         closeCardDetails() {
             this.isCardDetails = false
         },
-        lookImg(img) {
-            // console.log('img :>> ', img);
+        addImgClass(index) {
+            this.$nextTick(() => {
+                let img = this.$refs.imgRef
+                let width = img[index].naturalWidth
+                let height = img[index].naturalHeight
+
+                if (width > height) img[index].setAttribute("class", "img-w");
+                else img[index].setAttribute("class", "img-h");
+            })
+
+            setTimeout(() => {
+                let img = this.$refs.imgRef
+                let width = img[index].naturalWidth
+                let height = img[index].naturalHeight
+
+                if (width > height) img[index].setAttribute("class", "img-w");
+                else img[index].setAttribute("class", "img-h");
+            }, 0)
         },
         addCard(item) {
-            // console.log('this.carouselIndex 这里设置默认为0,选第几张来切换 :>> ', this.carouselIndex);
-            // console.log('this.cardType.images 这是item .name :>> ', this.cardType.images);
-            if (item.images[1] != undefined) {
+
+            if (item.option[1] != undefined) {
                 this.cardDetails = item
                 this.isCardDetails = true
             } else {
@@ -85,12 +110,12 @@ export default {
         },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex
-            this.addCustomComponents({ name: item.images[index], id: Date.now(), data: {} });
+            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} });
             this.$emit("addSuccess")
             this.$router.push({
                 name: "home",
                 params: {
-                    name: item.images[index],
+                    name: item.option[index].name,
                     cname: item.cname,
                 },
             });
@@ -135,6 +160,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
 
         .icons {
             background: #fff;
@@ -158,15 +184,10 @@ export default {
         align-items: center;
         width: 180px;
 
-        .img1 {
-            height: 120px;
-            width: 80px;
+        img {
+            zoom: 10%;
         }
 
-        .img2 {
-            width: 120px;
-            height: 88px;
-        }
     }
 
     .right {
@@ -184,12 +205,15 @@ export default {
         }
 
         .text {
+            display: flex;
+            align-items: center;
             font-family: PingFangSC-Regular;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.60);
             font-weight: 400;
             margin: 2px 0;
             width: 78%;
+            height: 55px;
         }
 
         .icon {
@@ -225,7 +249,7 @@ export default {
             }
 
             .data-box {
-                // margin-right: 12px;
+                margin-right: 12px;
             }
         }
     }

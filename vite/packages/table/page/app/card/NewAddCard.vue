@@ -1,24 +1,23 @@
 <template>
-  <div class="controller">
+  <div class="controller drag">
     <div class="header">
       <div class="left">
-        <div class="btn" @click="onBack">
+        <div class="btn no-drag" @click="onBack">
           <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
         </div>
-        <a-input v-model:value="selectContent" class="search" placeholder="搜索">
+        <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
           <template #prefix>
             <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
           </template>
         </a-input>
         <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" @change="searchChange($event)"
-          class="select w-56 h-auto rounded-lg  text-xs s-item select" size="large" :options="searchOptions"
+          class=" no-drag select w-56 h-auto rounded-lg  text-xs s-item select" size="large" :options="searchOptions"
           :bordered="false" v-model:value="searchValue">
-
         </a-select>
       </div>
       <div class="right">添加到
         <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" @change="getRegion($event)"
-          class="w-56 h-auto rounded-lg  text-xs s-item select" size="large" :bordered="false"
+          class="no-drag w-56 h-auto rounded-lg  text-xs s-item select" size="large" :bordered="false"
           v-model:value="searchValue">
           <a-select-option style="background:rgba(0, 0, 0, 0.1);" v-for="item in searchOptions" :value="item.value">{{
             item.name
@@ -28,17 +27,18 @@
     </div>
     <div class="mian">
       <div class="left">
-        <div class="nav" @click="updateNavIndex(index)" v-for="(item, index) in navList" :key="item.name">{{ item.cname }}
+        <div class="no-drag nav" @click="updateNavIndex(index)" v-for="(item, index) in navList" :key="item.name">{{
+          item.cname }}
         </div>
       </div>
-      <div class="right">
+      <div class="right no-drag">
         <div class="warn" v-if="navIndex == 8">以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～</div>
-        <template v-if="navList[navIndex].children !== null">
-          <NewCardPreViews :navList="navList[navIndex].children" @addSuccess="onBack"></NewCardPreViews>
-        </template>
+        <NewCardPreViews v-if="navList[navIndex].children !== null" :navList="navList[navIndex].children"
+          @addSuccess="onBack">
+        </NewCardPreViews>
         <template v-else>
           <div class="warn-box">
-            <img src="../../../../../public/img/state/warn.png" alt="">
+            <img src="/public/img/state/warn.png" alt="">
             <div>暂无数据</div>
           </div>
         </template>
@@ -57,20 +57,78 @@ export default {
     return {
       navIndex: 1,
       navList,
+      baseNavList: null,
+      selectContent: "",
       searchValue: "默认排序",
       searchOptions: [
         { value: "默认排序", name: "默认排序" },
-        { value: "默认排序", name: "下载次数由高到低" },
-        { value: "默认排序", name: "更新时间" },
+        { value: "下载次数", name: "下载次数" },
+        { value: "更新时间", name: "更新时间" },
       ]
     };
   },
 
-  mounted() { },
+  mounted() {
+    // 这里是预留给api请求到时间和下载数据添加数据使用
+    this.baseNavList = navList.map((item) => {
+      if (item.children != null) {
+        let children = []
+        item.children.forEach((i) => {
+          children.push({
+            ...i,
+            download: Math.floor(Math.random() * 10000) + 1,
+            time: this.getTimes()
+          })
+        })
+        return {
+          cname: item.cname,
+          children
+        }
+      } else return item
+    })
+    this.navList = this.baseNavList
+
+
+
+  },
   computed: {
 
   },
+  watch: {
+    selectContent(newV, oldV) {
+      if (newV == "" || newV == null) {
+        this.navList = this.baseNavList
+        this.navIndex = 1
+        return
+      }
+      let data = []
+      this.navList = this.baseNavList
+      let arr = []
+      this.navList.filter((item) => {
+        if (item.children != null) {
+          item.children.forEach((i) => {
+            if (i.cname.includes(newV) || i.detail.includes(newV)) arr.push(i)
+          })
+        }
+      })
+      if (arr != false) {
+        data.push({
+          cname: "全部数据",
+          children: arr
+        })
+        this.navIndex = 0
+        this.navList = data
+      }
+    }
+
+  },
   methods: {
+    getTimes() {
+      const currentTime = Date.now();
+      const startDate = new Date('2000-01-01T00:00:00Z').getTime();
+      const randomTimestamp = Math.floor(Math.random() * (currentTime - startDate)) + startDate;
+      return randomTimestamp;
+    },
     onBack() {
       this.$emit("setCustoms", false);
     },
@@ -78,7 +136,17 @@ export default {
       this.navIndex = index
     },
     searchChange(e) {
-      console.log('e :>> ', e);
+      // 没测试通过
+      if (e == "下载次数") {
+        let a = this.baseNavList.map((item) => {
+          if (item.children) {
+            const sortedChildren = item.children.sort((a, b) => b.download - a.download);
+            return { ...item, children: sortedChildren };
+          }
+          return item;
+        });
+        this.navList = a
+      }
     }
   },
 };
@@ -90,6 +158,7 @@ export default {
   height: 100%;
   box-sizing: border-box;
   padding: 24px;
+  // opacity: 0.6;
 
   .header {
     display: flex;
