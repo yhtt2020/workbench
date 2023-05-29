@@ -1,19 +1,35 @@
 <template>
     <div class="main-box ">
         <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
-            <div class="add no-drag" @click="addCard(item)">
+            <div class="add no-drag" @click="addCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
                 </div>
             </div>
+            <div class="add no-drag" @click="addCard(item)" v-else>
+                <div class="text" style="color: #fff;">
+                    · · ·
+                </div>
+            </div>
             <div class="left no-drag" @click="fullScreen(item)">
-                <img ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
+                <template v-if="item.option.length > 1">
+                    <div class="top">
+                        <img ref="imgRef" :class="{ 'zoom': item.option[0].name == 'middleWallpaper' }" class="img"
+                            :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
+                    </div>
+                    <div class="bottom">
+                        <img ref="imgRef" :class="{ 'zoom': i.name == 'middleWallpaper' }" v-for="i in item.option"
+                            :src="'/public/img/addCard/' + i.name + '.png'" alt="" class="img">
+                    </div>
+                </template>
+                <img v-else ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
+
             </div>
             <div class="right">
                 <div class="title">{{ item.cname }}</div>
                 <div class="text">{{ item.detail }}</div>
                 <div class="icon">
-                    <div class="icon-box" v-for="  i   in   item.sizes  " :key="i">{{ i }}</div>
+                    <div class="icon-box" v-for="i in item.sizes" :key="i">{{ i }}</div>
                 </div>
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>
@@ -21,9 +37,7 @@
                         {{ item.download }}
                     </div>
                     <Icon icon="shijian" class="icons" style=" color: #52C41A; margin: 0; width: 20px;"></Icon>
-
                     <div class="data-box">{{ formatTimestamp(item.time) }}
-
                     </div>
                 </div>
             </div>
@@ -90,10 +104,10 @@ export default {
         },
         formatTimestamp(timestamp) {
             const date = new Date(timestamp);
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const formattedDate = `${month}-${day}`;
-            return formattedDate;
+            const year = date.getFullYear().toString();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
         },
         closeCardDetails() {
             this.isCardDetails = false
@@ -141,7 +155,6 @@ export default {
     flex-wrap: wrap;
     margin: 0 auto;
     width: 100%;
-    // margin-bottom: 30px;
     align-content: flex-start;
     justify-content: center;
 }
@@ -182,6 +195,12 @@ export default {
             justify-content: center;
             align-items: center;
         }
+
+        .text {
+            font-size: 20px !important;
+            display: flex;
+            align-items: center;
+        }
     }
 
     .left {
@@ -192,10 +211,48 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         width: 180px;
+        cursor: pointer;
 
         img {
-            zoom: 10%;
+            zoom: 11%;
+            // height: 55%;
+        }
+
+        .top {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .img {
+                zoom: 0.07 !important;
+            }
+
+            .zoom {
+                zoom: 0.05 !important;
+            }
+        }
+
+        .bottom {
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.30);
+            border-radius: 0px 0px 0px 12px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+
+            .zoom {
+                zoom: 0.02 !important;
+            }
+
+            .img {
+                zoom: 0.04;
+                border-radius: 5px;
+            }
         }
 
     }
@@ -224,6 +281,8 @@ export default {
             margin: 2px 0;
             width: 78%;
             height: 55px;
+
+
         }
 
         .icon {
@@ -234,17 +293,19 @@ export default {
             margin-top: 10px;
 
             .icon-box {
-                background: rgba(255, 255, 255, 0.40);
-                border-radius: 4px;
-                font-family: PingFangSC-Medium;
-                font-size: 14px;
-                color: rgba(255, 255, 255, 0.50);
-                font-weight: 500;
                 padding: 0 10px 0 10px;
                 margin-right: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                opacity: 0.4;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-family: PingFangSC-Medium;
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 500;
+                background: rgba(255, 255, 255, 0.2);
             }
         }
 
@@ -259,7 +320,7 @@ export default {
             }
 
             .data-box {
-                margin-right: 12px;
+                margin: 0 4px;
             }
         }
     }

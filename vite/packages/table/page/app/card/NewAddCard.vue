@@ -18,17 +18,20 @@
             }}</a-select-option>
           </a-select>
         </div>
-        <div class="right">添加到
+        <div class="right">
         </div>
       </div>
       <div class="mian">
         <div class="left">
-          <div class="no-drag nav" @click="updateNavIndex(index)" v-for="( item, index ) in  navList " :key="item.name">{{
-            item.cname }}
+          <div class="no-drag nav" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
+            v-for="( item, index ) in  navList " :key="item.name">{{
+              item.cname }}
           </div>
         </div>
         <div class="right no-drag">
-          <div class="warn" v-if="navIndex == 8">以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～</div>
+          <div class="warn" v-if="navIndex == 8">
+            <div class="icon">i</div> 以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
+          </div>
           <NewCardPreViews v-if="navList[navIndex].children !== null" :navList="navList[navIndex].children"
             @addSuccess="onBack" :search="searchValue">
           </NewCardPreViews>
@@ -147,9 +150,9 @@ export default {
   width: 100%;
   height: 100%;
   // 背景的模糊大小通过下面的属性值大小来调制
-  background-color: rgba(19, 19, 19, 0.65);
+  background-color: rgba(19, 19, 19, 0.35);
   // background: #1a1a1a;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(60px);
   -webkit-backdrop-filter: blur(50px);
   transform: scale(1.2);
   opacity: 1.6;
@@ -235,7 +238,6 @@ export default {
       padding-bottom: 40px;
 
       .nav {
-        background: rgba(0, 0, 0, 0.30);
         width: 112px;
         height: 56px;
         border-radius: 12px;
@@ -244,6 +246,11 @@ export default {
         align-items: center;
         margin-bottom: 16px;
         cursor: pointer;
+      }
+
+      .active {
+        background: rgba(0, 0, 0, 0.30);
+
       }
     }
 
@@ -258,6 +265,7 @@ export default {
       overflow: auto;
       display: flex;
       flex-wrap: wrap;
+      flex-direction: column;
 
       .warn {
         background: rgba(0, 0, 0, 0.30);
@@ -267,6 +275,20 @@ export default {
         box-sizing: border-box;
         padding-left: 20px;
         height: 48px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        .icon {
+          width: 21px;
+          height: 21px;
+          background: #508BFE;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 10px;
+        }
       }
 
       .warn-box {

@@ -10,7 +10,7 @@ export const navList = [
                 name: "supervisory",
                 cname: "系统性能监控",
                 detail: "同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。",
-                sizes: ["2*2", "2x4"],
+                sizes: ["2*2", "2x4", "4种样式"],
                 option: [
                     {
                         name: "CPULineChart",
@@ -59,18 +59,18 @@ export const navList = [
                     },
                 ],
             },
-            {
-                cname: "单图标组件",
-                detail: "单图标模式小组件，支持自由拖放和分组。",
-                sizes: ["1x1"],
-                option: [
-                    {
-                        name: "",
-                        size: ""
-                    },
-                ],
-                // 未完成
-            },
+            // 未完成
+            // {
+            //     cname: "单图标组件",
+            //     detail: "单图标模式小组件，支持自由拖放和分组。",
+            //     sizes: ["1x1"],
+            //     option: [
+            //         {
+            //             name: "",
+            //             size: ""
+            //         },
+            //     ],
+            // },
             {
                 name: "weather",
                 cname: "天气",
@@ -84,23 +84,23 @@ export const navList = [
                 ],
 
             },
-            {
-                cname: "股票",
-                detail: "查看关注的股票报价并跟踪其表现。",
-                sizes: ["2x2", "4x4"],
-                option: [
-                    {
-                        name: "",
-                        size: ""
-                    },
-                ],
-                // 未完成
-            },
+            // 未完成
+            // {
+            //     cname: "股票",
+            //     detail: "查看关注的股票报价并跟踪其表现。",
+            //     sizes: ["2x2", "4x4"],
+            //     option: [
+            //         {
+            //             name: "",
+            //             size: ""
+            //         },
+            //     ],
+            // },
             {
                 name: 'Audio',
                 cname: "音频",
                 detail: "快速调整音量大小，音频设备选择，一键开启静音模式。",
-                sizes: ["2x4"],
+                sizes: ["2x4", "2种样式"],
                 option: [
                     {
                         name: "audio",
@@ -138,7 +138,7 @@ export const navList = [
                 name: 'clocks',
                 cname: "时钟",
                 detail: "桌面时钟，支持多种时钟样式选择，一键进入全屏桌搭模式。",
-                sizes: ["自定义大小"],
+                sizes: ["自定义大小", "6种样式", "全屏模式"],
                 option: [
                     {
                         name: "clocks",
@@ -158,17 +158,18 @@ export const navList = [
                     },
                 ],
             },
-            {
-                cname: "待办",
-                detail: "同步你的待办助手数据，展现在工作台桌面。",
-                sizes: ["2x2", "2x4"],
-                option: [
-                    {
-                        name: "",
-                        size: ""
-                    },
-                ],
-            },
+            // 未完成
+            // {
+            //     cname: "待办",
+            //     detail: "同步你的待办助手数据，展现在工作台桌面。",
+            //     sizes: ["2x2", "2x4"],
+            //     option: [
+            //         {
+            //             name: "",
+            //             size: ""
+            //         },
+            //     ],
+            // },
             {
                 name: "countdownDay",
                 cname: "倒数日",
