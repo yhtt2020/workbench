@@ -214,7 +214,6 @@ export default {
         const result = res.data.data.Catalog.searchStore.elements
         const resultArr = []
         result.forEach(el=>{
-          console.log(el);
           if(el.price.totalPrice.discountPrice === 0){
             // 取出epic图片
             const fIndex = el.keyImages.findIndex(keyImg=>{
