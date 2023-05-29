@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
-// import {sendRequest} from "../js/axios/api"
 import {compareTime, sendRequest} from '../js/axios/api'
 // @ts-ignore
 export const filmStore = defineStore("film", {
@@ -9,15 +8,48 @@ export const filmStore = defineStore("film", {
   }),
   actions: {
     async getData() {
+        if (typeof this.data !== 'object') {
+          this.data = {}
+        }
+        const discountList = this.data
+        if (discountList.list) {
+          if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
+            // console.log('命中缓存了')
+            return
+          }
+        }
       let res = await sendRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
         localCache:true,
-        localTtl:60
+        localTtl:60*60*12
       })
-      res.data.movieList.forEach(item => {
-        item.img = item.img.replace('2500x2500','240x354')
-        item.comingDate = item.comingTitle.split(' ')[0]
-      });
-      this.data = res.data.movieList
+      if(res.data.code){
+        this.data = res.data
+        return
+      }else{
+        if (res && res.headers) {
+          const date = new Date(res.headers.Date)
+          const requestObj = {
+            expiresDate: date,
+            list: res.data.movieList
+          }
+          this.updateGameData(requestObj)
+        }
+        this.data.list.forEach(item => {
+          item.img = item.img.replace('2500x2500','240x354')
+          item.comingDate = item.comingTitle.split(' ')[0]
+          item.score = this.priceFormat(item.sc)
+        });
+      }
+    },
+    priceFormat(num){
+      if(!isNaN(num)){
+        return ( (num + '').indexOf('.') != -1 ) ? num: num.toFixed(1);   
+      }
+    },
+    //  通过时间更新数据
+    updateGameData( value) {
+      // console.log('更新数据=', value)
+      this.data = value
     },
   },
   persist: {
