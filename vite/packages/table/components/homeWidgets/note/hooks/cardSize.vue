@@ -2,10 +2,11 @@
     <div class="text-base" style="margin: 12px 0">小组件尺寸</div>
     <div class="box">
         <div class="bg"></div>
-        <div class="item" :class="{ active: isActive == 'card small' }" @click="updateSize('card small')"> 1 x 1 </div>
-        <div class="item" :class="{ active: isActive == 'card' }" @click="updateSize('card')"> 1 x 2</div>
-        <div class="item" :class="{ active: isActive == 'card1' }" @click="updateSize('card1')"> 2 x 1</div>
-        <div class="item" :class="{ active: isActive == 'card double' }" @click="updateSize('card double')"> 2 x 2
+        <div class="item no-drag" :class="{ active: isActive == 'card small' }" @click="updateSize('card small')"> 1 x 1
+        </div>
+        <div class="item no-drag" :class="{ active: isActive == 'card' }" @click="updateSize('card')"> 1 x 2</div>
+        <div class="item no-drag" :class="{ active: isActive == 'card1' }" @click="updateSize('card1')"> 2 x 1</div>
+        <div class="item no-drag" :class="{ active: isActive == 'card double' }" @click="updateSize('card double')"> 2 x 2
         </div>
     </div>
 </template>
@@ -57,7 +58,7 @@ export default {
         color: #fff !important;
         line-height: 42px;
         padding: 0 2px;
-
+        cursor: pointer;
     }
 }
 

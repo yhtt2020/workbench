@@ -3,7 +3,7 @@
         <div class="box-block">
             <img :src="imgDisplay" alt="">
             <span>{{ textPrompt }}</span>
-            <div class="block-btn" @click="jumpPage">{{ btnText }}</div>
+            <div class="block-btn" v-if="btnToggle" @click="jumpPage">{{ btnText }}</div>
         </div>
     </div>
 </template>
@@ -16,7 +16,7 @@
     props: {
       imgDisplay: {
         type: String,
-        default: "../../../../public/img/test/not-data.png",
+        default: "/img/test/not-data.png",
       },
       textPrompt: {
         type: String,
@@ -30,6 +30,10 @@
         type: String,
         default: '返回'
       },
+      btnToggle: {
+        type: Boolean,
+        default: true
+      }
     },
     data() {
       return {

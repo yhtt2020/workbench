@@ -1,9 +1,9 @@
 <template>
   <HomeComponentSlot :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
     :formulaBar="formulaBar" ref="homelSlotRef">
-    <cardDrag ref="drag" @reSizeInit="reSizeInit">
+    <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
-        <div class="box" @click="fullScreen()">
+        <div class="box no-drag" @click="fullScreen()">
           <component :is="customData.clockiD" :isSnow="isSnow"
             :class="{ 'isClock5': isClock5 == true, 'isClock5w420': isClock5w420 == true }" :style="{ zoom: zoom }" />
 
@@ -239,6 +239,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   :deep(.clock3) {
     transform: scale(0.35);

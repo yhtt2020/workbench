@@ -1,24 +1,28 @@
 <template>
     <HomeComponentSlot :options="options" v-if="!detailToggle">
-      <div v-if="isLoading">
-        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
-      </div>
-      <div v-else>
-        <div class="pointer title-refresh" @click="refreshPage"></div>
-        <div class="w-full  cursor-pointer" 
-        style="width: 240px;height: 354px;margin: 13px auto 0;position: relative;"
-        @click="btnDetail(singleFilm.id)"
-        >
-          <a-image :preview="false" :src="singleFilm.img" width="240px" height="354px" alt="" class="rounded-lg" style="object-fit: cover;" />
-          <div class="right-top text-center bg-black bg-opacity-70" 
-          style="font-weight: 600;font-family: PingFangSC-Semibold;">
-            <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-              猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.sc}}</span>
-            </span>
-            <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.comingDate }}</span>
+      <div v-if="pageToggle">
+        <div v-if="isLoading">
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
+        </div>
+        <div v-else>
+          <div class="pointer title-refresh" @click="refreshPage"></div>
+          <div class="w-full  cursor-pointer" 
+          style="width: 240px;height: 354px;margin: 13px auto 0;position: relative;"
+          @click="btnDetail(singleFilm.id)"
+          >
+            <a-image :preview="false" :src="singleFilm.img" width="240px" height="354px" alt="" class="rounded-lg" style="object-fit: cover;" />
+            <div class="right-top text-center bg-black bg-opacity-70" 
+            style="font-weight: 600;font-family: PingFangSC-Semibold;">
+              <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.score}}</span>
+              </span>
+              <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.comingDate }}</span>
+            </div>
           </div>
         </div>
       </div>
+      
+      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
     </HomeComponentSlot>
     <FilmDetail v-if="detailToggle" :detailId="detailId" @detailBack="detailBack"></FilmDetail>
 </template>
@@ -26,6 +30,7 @@
 <script>
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import FilmDetail from './FilmDetail.vue'
+  import DataStatu from "../DataStatu.vue"
   import { mapWritableState, mapActions } from 'pinia'
   import { filmStore } from '../../../store/douBan';
   import _ from 'lodash-es';
@@ -33,7 +38,8 @@
     name: "ManyFilm",
     components:{
       HomeComponentSlot,
-      FilmDetail
+      FilmDetail,
+      DataStatu
     },
     props: {
       customIndex:{
@@ -59,7 +65,8 @@
         singleFilm: {},
         detailToggle: false,
         detailId: -1,
-        isLoading: false
+        isLoading: false,
+        pageToggle: true,
       };
     },
     computed: {
@@ -73,24 +80,27 @@
       },
       refreshPage(){
         this.singleFilm = _.sampleSize(this.filmList,1)[0]
-        // console.log(this.singleFilm)
       },
       detailBack(val){
         this.detailToggle = val
-      }
+      },
+      
     },
     async mounted() {
       this.isLoading = true
       await this.getData()
-      this.filmList = this.data
-      if(this.filmList){
-        this.isLoading = false
+      if(!this.data){
+        this.pageToggle = false
+      }else{
+        this.filmList = this.data.list || []
+        if(!this.filmList.length){
+          this.pageToggle = false
+        }
+        this.singleFilm = _.sampleSize(this.filmList,1)[0]
       }
-      this.singleFilm = _.sampleSize(this.filmList,1)[0]
       setTimeout(() => {
         this.isLoading = false
       })
-      // console.log("singleFilm",this.singleFilm)
     },
   };
 </script>

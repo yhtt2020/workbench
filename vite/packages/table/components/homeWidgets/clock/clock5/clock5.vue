@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container drag">
         <div class="clock5">
             <div class="time-wrapper">
                 <div id="hours" class="time">{{ hours }}</div>
@@ -12,7 +12,7 @@
             </div>
             <div id="timezone" class="timezone"></div>
             <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
-                <button id="toggle-button" class="toggle-button" @click="toggleFormat()">{{ textContent }}</button>
+                <button id="toggle-button" class="toggle-button no-drag" @click="toggleFormat()">{{ textContent }}</button>
             </template>
 
         </div>
