@@ -6,7 +6,7 @@
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
                 </div>
             </div>
-            <div class="left">
+            <div class="left no-drag" @click="fullScreen(item)">
                 <img ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
             </div>
             <div class="right">
@@ -71,22 +71,14 @@ export default {
         search: {
             immediate: true,
             handler(newV, oldV) {
-                if (newV == "下载次数") {
-                    this.navLists = this.mySort(this.navLists, "download")
-                } else if (newV == "更新时间") {
-                    this.navLists = this.mySort(this.navLists, "time")
-                } else {
-                    console.log('this.navList :>> ', this.navList);
-                    this.navLists = this.navList
-                }
+                if (newV == "下载次数") this.navLists = this.mySort(this.navLists, "download")
+                else if (newV == "更新时间") this.navLists = this.mySort(this.navLists, "time")
+                else this.navLists = this.navList
             }
         },
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
-        downloadSort() {
-
-        },
         mySort(data, property, asc) {
             let datas = [...data]
             return datas.sort(function (a, b) {
@@ -114,23 +106,17 @@ export default {
                 if (width > height) img[index].setAttribute("class", "img-w");
                 else img[index].setAttribute("class", "img-h");
             })
-
-            setTimeout(() => {
-                let img = this.$refs.imgRef
-                let width = img[index].naturalWidth
-                let height = img[index].naturalHeight
-
-                if (width > height) img[index].setAttribute("class", "img-w");
-                else img[index].setAttribute("class", "img-h");
-            }, 0)
         },
         addCard(item) {
             if (item.option[1] != undefined) {
-                this.cardDetails = item
-                this.isCardDetails = true
+                this.fullScreen(item)
             } else {
                 this.addCardAchieve(item)
             }
+        },
+        fullScreen(item) {
+            this.cardDetails = item
+            this.isCardDetails = true
         },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex

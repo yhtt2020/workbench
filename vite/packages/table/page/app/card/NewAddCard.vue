@@ -1,54 +1,47 @@
 <template>
-  <!-- <teleport to="body"> -->
-  <!-- <div class='popContainer'></div> -->
-  <div class="controller drag">
-    <div class="header">
-      <div class="left">
-        <div class="btn no-drag" @click="onBack">
-          <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
-        </div>
-        <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
-          <template #prefix>
-            <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
-          </template>
-        </a-input>
-        <a-select style="border: 1px solid rgba(255, 255, 255, 0.1); z-index: 99999999;" v-model:value="searchValue"
-          class=" no-drag select w-56 h-auto rounded-lg  text-xs s-item select" size="large" @change="handleChange">
-          <a-select-option v-for="item in searchOptions" :value="item.value">{{ item.name }}</a-select-option>
-        </a-select>
-      </div>
-      <div class="right">添加到
-        <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" @change="getRegion($event)"
-          class="no-drag w-56 h-auto rounded-lg  text-xs s-item select" size="large" :bordered="false"
-          v-model:value="searchValue">
-          <a-select-option style="background:rgba(0, 0, 0, 0.1); z-index: 9999999999;" v-for="item in searchOptions"
-            :value="item.value">{{
-              item.name
-            }}</a-select-option>
-        </a-select>
-      </div>
-    </div>
-    <div class="mian">
-      <div class="left">
-        <div class="no-drag nav" @click="updateNavIndex(index)" v-for="(item, index) in navList" :key="item.name">{{
-          item.cname }}
-        </div>
-      </div>
-      <div class="right no-drag">
-        <div class="warn" v-if="navIndex == 8">以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～</div>
-        <NewCardPreViews v-if="navList[navIndex].children !== null" :navList="navList[navIndex].children"
-          @addSuccess="onBack" :search="searchValue">
-        </NewCardPreViews>
-        <template v-else>
-          <div class="warn-box">
-            <img src="/public/img/state/warn.png" alt="">
-            <div>暂无数据</div>
+  <teleport to="body">
+    <div class='popContainer'></div>
+    <div class="controller drag">
+      <div class="header">
+        <div class="left">
+          <div class="btn no-drag" @click="onBack">
+            <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
           </div>
-        </template>
+          <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
+            <template #prefix>
+              <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
+            </template>
+          </a-input>
+          <a-select style=" z-index: 99999999; position: relative;" v-model:value="searchValue" class=" no-drag select"
+            size="large" @change="handleChange" :dropdownStyle="{ 'z-index': 999999999999 }">
+            <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{ item.name
+            }}</a-select-option>
+          </a-select>
+        </div>
+        <div class="right">添加到
+        </div>
+      </div>
+      <div class="mian">
+        <div class="left">
+          <div class="no-drag nav" @click="updateNavIndex(index)" v-for="( item, index ) in  navList " :key="item.name">{{
+            item.cname }}
+          </div>
+        </div>
+        <div class="right no-drag">
+          <div class="warn" v-if="navIndex == 8">以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～</div>
+          <NewCardPreViews v-if="navList[navIndex].children !== null" :navList="navList[navIndex].children"
+            @addSuccess="onBack" :search="searchValue">
+          </NewCardPreViews>
+          <template v-else>
+            <div class="warn-box">
+              <img src="/public/img/state/warn.png" alt="">
+              <div>暂无数据</div>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- </teleport> -->
+  </teleport>
 </template>
 
 <script>
@@ -63,7 +56,7 @@ export default {
       navList,
       baseNavList: null,
       selectContent: "",
-      searchValue: "",
+      searchValue: "默认排序",
       searchOptions: [
         { value: "默认排序", name: "默认排序" },
         { value: "下载次数", name: "下载次数" },
@@ -136,19 +129,6 @@ export default {
     updateNavIndex(index) {
       this.navIndex = index
     },
-    searchChange(e) {
-      // 没测试通过
-      if (e == "下载次数") {
-        let a = this.baseNavList.map((item) => {
-          if (item.children) {
-            const sortedChildren = item.children.sort((a, b) => b.download - a.download);
-            return { ...item, children: sortedChildren };
-          }
-          return item;
-        });
-        this.navList = a
-      }
-    }
   },
 };
 </script>
@@ -156,10 +136,10 @@ export default {
 <style lang="scss" scoped>
 .popContainer {
   position: fixed;
-  // top: 0;
-  // left: 0;
-  // right: 0;
-  // bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 999;
   display: flex;
   justify-content: center;
@@ -187,7 +167,12 @@ export default {
   height: 100%;
   box-sizing: border-box;
   padding: 24px;
+
   // opacity: 0.6;
+  :deep(.ant-select-selector) {
+    border: none !important;
+    box-shadow: none !important;
+  }
 
   .header {
     display: flex;
@@ -203,6 +188,9 @@ export default {
         align-items: center;
         text-align: center;
         font-size: 16px;
+        background: rgba(0, 0, 0, 0.30);
+        border-radius: 12px;
+        margin-left: 10px;
       }
 
       .btn {
