@@ -85,7 +85,7 @@ export default {
     this.step=1
   },
   methods:{
-    ...mapActions(teamStore,['joinByNo','updateTeamShip']),
+    ...mapActions(teamStore,['joinByNo','updateTeamShip','updateMy']),
     created(){
       this.$emit(
         'update:visible',false
@@ -106,7 +106,7 @@ export default {
       })
     },
     async join () {
-      if(!this.teamNo.no){
+      if(!this.teamNo){
         message.error('请在左侧输入小队号。')
         return
       }
@@ -117,6 +117,7 @@ export default {
         if(result.status){
           this.team=result.data
           Modal.success({content:'加入小队成功。',centered:true})
+          await this.updateMy(0)
           this.$emit(
             'update:visible',false
           )
