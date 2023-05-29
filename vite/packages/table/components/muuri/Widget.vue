@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     handleDelete () {
-      console.log('删除')
       //this.$parent.handleDelete(this.uniqueKey);
     },
     handleResize () {

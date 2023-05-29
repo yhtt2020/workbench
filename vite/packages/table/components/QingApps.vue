@@ -35,7 +35,6 @@ export default {
   },
   async mounted () {
     this.apps=await appModel.getAllApps()
-    console.log( this.apps)
   },
   methods:{
     executeApp(app){

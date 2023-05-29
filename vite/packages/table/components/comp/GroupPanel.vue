@@ -146,7 +146,7 @@ export default {
           this.myData.joinedCircle=data
         }
       } catch (e) {
-        console.log(e)
+        console.warn(e)
       }
     },
   }

@@ -96,7 +96,6 @@ export default {
     if(this.data){
       this.$nextTick(()=>{
         this.activeTab=this.data.group.name
-        console.log(this.data.group.name)
         this.$nextTick(()=>{
           this.$refs[this.activeTab][0].setActionData(this.data)
         })
@@ -124,7 +123,6 @@ export default {
         return
       }
       this.$emit('click',actionData)
-      console.log(actionData)
     }
   }
 }

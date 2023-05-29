@@ -44,7 +44,6 @@ export default {
   components: [],
   mounted () {
     let medal = this.medal
-    console.log(medal, '勋章关系')
     this.title = medal.medal.alias
     this.summary = medal.medal.summary
     this.getReason = medal.reason

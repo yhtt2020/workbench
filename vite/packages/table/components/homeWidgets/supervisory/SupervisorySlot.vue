@@ -73,11 +73,9 @@ export default {
 
   },
   mounted () {
-    console.log('尝试启动监控')
     this.startInspect()
   },
   unmounted () {
-    console.log('尝试终止监控')
     this.stopInspect()
   },
   methods: {
@@ -97,7 +95,6 @@ export default {
       if (this.aidaData) {
         let textArea = document.getElementById('textArea')
         textArea.innerText = JSON.stringify(this.aidaData)
-        console.log(textArea)
         textArea.select()
         document.execCommand('copy')
         this.visible = false

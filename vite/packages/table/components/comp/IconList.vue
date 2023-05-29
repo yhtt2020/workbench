@@ -100,7 +100,6 @@ export default {
       // ipc.send('closeSelf')
     },
     selectIcon(icon,iconList) {
-      console.log('click')
       this.changed=true
       let selectedIcon={
         list:iconList.key,
@@ -110,7 +109,6 @@ export default {
       }
       this.selectedIcon=selectedIcon
       this.$emit('onSelect',selectedIcon)
-      console.log('emited')
       // if(this.args.text){
       //   return
       // }else{

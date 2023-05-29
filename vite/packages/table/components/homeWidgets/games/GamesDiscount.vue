@@ -283,7 +283,6 @@ export default {
       this.gameVisible = false
       this.customData.id = this.defaultRegion
       // 获取国家地区名称参数
-      console.log(this.region.id,'当前的国家')
       await this.getData(this.region.id).catch(()=>this.fail=true).finally(()=>{
         this.key=Date.now()
         this.isLoading = false

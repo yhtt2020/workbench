@@ -84,7 +84,6 @@ export default {
           let rs = await this.quitByNo(this.team.no)
           if (rs.code === 1000) {
             if(rs.data.status){
-              console.log(rs.data)
               this.updateMy().then()
               await this.closeTeam()
               Modal.info({ content: '退出小队成功',centered:true })

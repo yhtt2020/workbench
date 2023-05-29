@@ -68,11 +68,9 @@ export default {
     ...mapWritableState(inspectorStore,['displayData']),
     ...mapWritableState(appStore,['saving'])
   }, mounted () {
-    console.log('尝试启动监控')
     this.startInspect()
   },
   unmounted () {
-    console.log('尝试终止监控')
     this.stopInspect()
   },
   watch: {

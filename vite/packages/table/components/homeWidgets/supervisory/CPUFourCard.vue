@@ -100,11 +100,9 @@ export default {
   components:{
     HomeComponentSlot
   }, mounted () {
-    console.log('尝试启动监控')
     this.startInspect()
   },
   unmounted () {
-    console.log('尝试终止监控')
     this.stopInspect()
   },
   computed:{

@@ -65,7 +65,6 @@ export default {
   async mounted () {
     this.getUserMedal(this.userInfo.uid).then(result=>{
       if(result){
-        console.log('或得到的勋章',result)
         this.medals=result
       }else{
         this.medals=[]

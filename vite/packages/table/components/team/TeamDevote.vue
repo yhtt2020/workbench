@@ -93,14 +93,12 @@ export default {
     memberDevoteDisplay(){
       let display=JSON.parse(JSON.stringify(this.teamMembers))
       display.unshift(JSON.parse(JSON.stringify(this.teamLeader)))
-      console.log('membersDevote=',this.membersDevote)
 
       display.map(user=>{
         user.devote = this.membersDevote[user.uid]||0
       })
 
 
-      console.log(display,'需要显示的数据')
       return display.filter(member=>{
         return Number(member.uid)!== Number(this.userInfo.uid)
       })

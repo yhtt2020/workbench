@@ -111,7 +111,6 @@ export default {
         return
       }
       let rs= await this.joinByNo(this.teamNo)
-      console.log(rs,'最终rs')
       if(rs.code===1000){
         let result=rs.data
         if(result.status){
@@ -133,7 +132,6 @@ export default {
       // })
     },
     hide(){
-      console.log(this.step)
       if(this.step!==1){
 
         this.step=1
