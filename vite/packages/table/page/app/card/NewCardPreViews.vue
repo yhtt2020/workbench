@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="box" style="  opacity: 0;"></div>
+        <div class="box" style="  opacity: 0;height: 1px;"></div>
     </div>
     <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
         :cardDetails="cardDetails">
@@ -46,6 +46,9 @@ export default {
             type: Object,
             default: true,
         },
+        search: {
+            type: String
+        }
     },
     data() {
         return {
@@ -58,18 +61,41 @@ export default {
     components: {
         NewPreviewCardDetails
     },
-    mounted() {
-    },
     watch: {
         navList: {
             immediate: true,
             handler() {
                 this.navLists = JSON.parse(JSON.stringify(this.navList))
             }
-        }
+        },
+        search: {
+            immediate: true,
+            handler(newV, oldV) {
+                if (newV == "下载次数") {
+                    this.navLists = this.mySort(this.navLists, "download")
+                } else if (newV == "更新时间") {
+                    this.navLists = this.mySort(this.navLists, "time")
+                } else {
+                    console.log('this.navList :>> ', this.navList);
+                    this.navLists = this.navList
+                }
+            }
+        },
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
+        downloadSort() {
+
+        },
+        mySort(data, property, asc) {
+            let datas = [...data]
+            return datas.sort(function (a, b) {
+                a = a[property]
+                b = b[property]
+                if (asc) return a - b
+                else return b - a
+            })
+        },
         formatTimestamp(timestamp) {
             const date = new Date(timestamp);
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -85,7 +111,6 @@ export default {
                 let img = this.$refs.imgRef
                 let width = img[index].naturalWidth
                 let height = img[index].naturalHeight
-
                 if (width > height) img[index].setAttribute("class", "img-w");
                 else img[index].setAttribute("class", "img-h");
             })
@@ -100,7 +125,6 @@ export default {
             }, 0)
         },
         addCard(item) {
-
             if (item.option[1] != undefined) {
                 this.cardDetails = item
                 this.isCardDetails = true
@@ -131,7 +155,7 @@ export default {
     flex-wrap: wrap;
     margin: 0 auto;
     width: 100%;
-    margin-bottom: 30px;
+    // margin-bottom: 30px;
     align-content: flex-start;
     justify-content: center;
 }
