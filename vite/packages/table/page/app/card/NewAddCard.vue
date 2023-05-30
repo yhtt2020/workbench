@@ -36,9 +36,11 @@
             @addSuccess="onBack" :search="searchValue">
           </NewCardPreViews>
           <template v-else>
-            <div class="warn-box">
-              <img src="/public/img/state/warn.png" alt="">
-              <div>暂无数据</div>
+            <div class="warn-boxs">
+              <div class="warn-box">
+                <img src="/public/img/state/warn.png" alt="">
+                <div>暂无数据</div>
+              </div>
             </div>
           </template>
         </div>
@@ -244,7 +246,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: 16px;
         cursor: pointer;
       }
 
@@ -264,8 +265,8 @@ export default {
       height: 100%;
       overflow: auto;
       display: flex;
-      flex-wrap: wrap;
-      flex-direction: column;
+      // flex-wrap: wrap;
+      flex-direction: column !important;
 
       .warn {
         background: rgba(0, 0, 0, 0.30);
@@ -289,6 +290,14 @@ export default {
           align-items: center;
           margin-right: 10px;
         }
+      }
+
+      .warn-boxs {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       .warn-box {

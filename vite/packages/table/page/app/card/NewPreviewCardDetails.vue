@@ -5,7 +5,9 @@
             <div class="main">
                 <div class="card-box" v-for="(item, index) in cardDetails.option">
                     <div class="img"> <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item.name + '.png'"
-                            alt=""></div>
+                            alt=""
+                            :style="[{ zoom: item.name == 'MyGameSmall' || item.name == 'middleWallpaper' ? '16%' : '25%' }]">
+                    </div>
                     <div class="size">{{ item.size }}</div>
                     <div class="add-btn no-drag" @click="addCard(item, index)">
                         <div class="icons">

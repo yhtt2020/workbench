@@ -69,12 +69,10 @@ export default {
     }
   },
   mounted() {
-    console.log('全屏挂载收到数据阶段 :>> ', this.blur);
     window.addEventListener("keyup", this.esc)
     this.blurs = `blur(${parseInt(this.blur / 2)}px)`
     this.zoom = `${this.bgZoom + 100}%`
     this.touchEvent()
-    console.log('111 :>> ', 111);
 
     //鼠标事件
     document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
@@ -109,7 +107,6 @@ export default {
     },
     updateBlur(e) {
       this.blurs = `blur(${parseInt(e / 2)}px)`
-      console.log('全屏拿到最新的数据e :>> ', e);
       this.$emit("updateBlur", e)
     },
     updateBgZoom(e) {
