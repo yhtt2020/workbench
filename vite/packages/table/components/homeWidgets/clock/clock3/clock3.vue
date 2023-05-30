@@ -15,7 +15,7 @@ export default {
         width: 350,
         height: 350,
       },
-      L: 0, //基础半径 
+      L: 0, //基础半径
       timer: null,
     };
   },
@@ -138,13 +138,10 @@ export default {
   },
   destroyed() {
     // 销毁定时器
-    console.log('销毁定时器 :>> ',);
     clearInterval(this.timer);
     this.timer = null;
   },
   beforeDestroy() {
-    console.log('销毁定时器 :>> ');
-
   }
 };
 </script>

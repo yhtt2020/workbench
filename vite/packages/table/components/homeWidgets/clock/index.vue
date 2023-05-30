@@ -1,9 +1,9 @@
 <template>
   <HomeComponentSlot :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
     :formulaBar="formulaBar" ref="homelSlotRef">
-    <cardDrag ref="drag" @reSizeInit="reSizeInit">
+    <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
-        <div class="box" @click="fullScreen()">
+        <div class="box no-drag" @click="fullScreen()">
           <component :is="customData.clockiD" :isSnow="isSnow"
             :class="{ 'isClock5': isClock5 == true, 'isClock5w420': isClock5w420 == true }" :style="{ zoom: zoom }" />
 
@@ -21,7 +21,7 @@
 
   <ClockFullScreen @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" v-if="isClockFullScreen"
     :imgUrl="customData.imgUrl" :clock="customData.clockiD" @exit="isClockFullScreen = false"
-    @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl" :blur="blur" :bgZoom="bgZoom">
+    @updateClockStyle="updateClockStyle" @updateImgUrl="updateImgUrl" :blur="customData.blurs" :bgZoom="bgZoom">
   </ClockFullScreen>
 </template>
 
@@ -86,7 +86,6 @@ export default {
         "clock6": [80, 0, 80],
       },
       bgZoom: 0,
-      blur: 10,
       widthHeightObj: {},
     };
   },
@@ -101,14 +100,15 @@ export default {
     if (!this.customData.clockiD) { this.increaseCustomComponents(this.customIndex, { clockiD: "clock4", }) }
     if (!this.customData.imgUrl) {
       this.increaseCustomComponents(this.customIndex, {
-        imgUrl: "url(https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg)"
+        imgUrl: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg"
       })
     }
-    if (!this.customData.blur) { this.increaseCustomComponents(this.customIndex, { blur: 10 }) }
+    if (this.customData.blurs == undefined) {
+      this.increaseCustomComponents(this.customIndex, { blurs: 10 })
+    }
     if (!this.customData.bgZoom) { this.increaseCustomComponents(this.customIndex, { bgZoom: 0 }) }
   },
   mounted() {
-    this.blur = this.customData.blur
     this.bgZoom = this.customData.bgZoom
     this.updateTime();
   },
@@ -186,10 +186,9 @@ export default {
     },
     updateBlur(e) {
       this.increaseCustomComponents(this.customIndex, {
-        blur: e,
+        blurs: e,
       });
       this.blur = e
-
     },
     updateBgZoom(e) {
       this.increaseCustomComponents(this.customIndex, {
@@ -239,6 +238,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   :deep(.clock3) {
     transform: scale(0.35);
@@ -247,6 +247,7 @@ export default {
   :deep(.clock2) {
     transform: scale(1.2);
   }
+
 
   :deep(.clock5) {
     transform: scale(0.85);

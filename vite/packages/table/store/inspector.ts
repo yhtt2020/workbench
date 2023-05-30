@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {setSupervisoryData} from '../js/action/supervisory'
 import dbStorage from "./dbStorage";
+import audio from "../js/common/audio";
 declare interface IDisplayData {
   useGPU: number,
   useCPU: number,
@@ -19,6 +20,8 @@ export const inspectorStore = defineStore(
     state: () => {
 
       return {
+        audioTest:0,//音频测试
+
         frequent:2,//2秒更新一次
         running:false,
         runAida64:false,
@@ -98,6 +101,20 @@ export const inspectorStore = defineStore(
           console.log('成功清理计时器')
           this.running=false
         }
+      },
+      startListenAudioTest(){
+        audio.startListen((vol)=>{
+          console.info('更新数据')
+          this.audioTest=vol
+        },()=>{
+          console.info('监听成功')
+        },
+          ()=>{
+          console.warn('监听失败')
+          })
+      },
+      stopListenerAudioTest(){
+        audio.disconnect()
       }
     },
     persist: {

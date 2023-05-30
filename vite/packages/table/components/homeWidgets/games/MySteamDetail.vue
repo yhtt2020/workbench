@@ -152,7 +152,6 @@ export default {
   },
 
   mounted(){
-    console.log(this.steamDetail);
   },
 
   methods:{

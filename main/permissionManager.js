@@ -225,13 +225,18 @@ function pagePermissionCheckHandler (webContents, permission, requestingOrigin, 
 function devicePermissionHandler (details) {
   return true
 }
-
-app.once('ready', function () {
-  session.defaultSession.setPermissionRequestHandler(pagePermissionRequestHandler)
-  session.defaultSession.setPermissionCheckHandler(pagePermissionCheckHandler)
-  session.defaultSession.setDevicePermissionHandler(devicePermissionHandler)
-})
-
+//
+// app.once('ready', function () {
+//   session.defaultSession.setPermissionRequestHandler(pagePermissionRequestHandler)
+//   session.defaultSession.setPermissionCheckHandler(pagePermissionCheckHandler)
+//   session.defaultSession.setDevicePermissionHandler(devicePermissionHandler)
+// })
+// console.log('挂载到defaultsession')
+// console.log(session.defaultSession)
+session.defaultSession.setPermissionRequestHandler(pagePermissionRequestHandler)
+session.defaultSession.setPermissionCheckHandler(pagePermissionCheckHandler)
+session.defaultSession.setDevicePermissionHandler(devicePermissionHandler)
+session.get
 app.on('session-created', function (session) {
   session.setPermissionRequestHandler(pagePermissionRequestHandler)
   session.setPermissionCheckHandler(pagePermissionCheckHandler)

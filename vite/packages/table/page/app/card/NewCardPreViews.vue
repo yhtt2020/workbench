@@ -1,32 +1,48 @@
 <template>
-    <div class="main-box">
-        <div class="box" v-for="item in  navLists ">
-            <div class="add" @click="addCard(item)">
+    <div class="main-box ">
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
+            <div class="add no-drag" @click="addCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
                 </div>
             </div>
-            <div class="left" @click="lookImg(item.images)">
-                <img class="img2" :src="'../../../../../public/img/addCard/' + item.images[0] + '.png'" alt="">
+            <div class="add no-drag" @click="addCard(item)" v-else>
+                <div class="text" style="color: #fff;">
+                    · · ·
+                </div>
+            </div>
+            <div class="left no-drag" @click="fullScreen(item)">
+                <template v-if="item.option.length > 1">
+                    <div class="top">
+                        <img ref="imgRef" :class="{ 'zoom': item.option[0].name == 'middleWallpaper' }" class="img"
+                            :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
+                    </div>
+                    <div class="bottom">
+                        <img ref="imgRef" :class="{ 'zoom': i.name == 'middleWallpaper' }" v-for="i in item.option"
+                            :src="'/public/img/addCard/' + i.name + '.png'" alt="" class="img">
+                    </div>
+                </template>
+                <img v-else ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt=""
+                    :style="[{ zoom: item.option[0].name == 'MyGameSmall' ? '7%' : '11%' }]">
             </div>
             <div class="right">
                 <div class="title">{{ item.cname }}</div>
                 <div class="text">{{ item.detail }}</div>
                 <div class="icon">
-                    <div class="icon-box" v-for=" i  in  item.sizes " :key="i">{{ i }}</div>
+                    <div class="icon-box" v-for="i in item.sizes" :key="i">{{ i }}</div>
                 </div>
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>
                     <div class="data-box">
-                        999
+                        {{ item.download }}
                     </div>
                     <Icon icon="shijian" class="icons" style=" color: #52C41A; margin: 0; width: 20px;"></Icon>
-
-                    <div class="data-box">5月24日</div>
+                    <div class="data-box">{{ formatTimestamp(item.time) }}
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="box" style="  opacity: 0;"></div>
+        <div class="box" style="  opacity: 0;height: 1px;"></div>
     </div>
     <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
         :cardDetails="cardDetails">
@@ -44,6 +60,9 @@ export default {
             type: Object,
             default: true,
         },
+        search: {
+            type: String
+        }
     },
     data() {
         return {
@@ -51,7 +70,6 @@ export default {
             carouselIndex: 0,
             isCardDetails: false,
             cardDetails: {}
-
         }
     },
     components: {
@@ -63,34 +81,65 @@ export default {
             handler() {
                 this.navLists = JSON.parse(JSON.stringify(this.navList))
             }
-        }
+        },
+        search: {
+            immediate: true,
+            handler(newV, oldV) {
+                if (newV == "下载次数") this.navLists = this.mySort(this.navLists, "download")
+                else if (newV == "更新时间") this.navLists = this.mySort(this.navLists, "time")
+                else this.navLists = this.navList
+            }
+        },
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
+        mySort(data, property, asc) {
+            let datas = [...data]
+            return datas.sort(function (a, b) {
+                a = a[property]
+                b = b[property]
+                if (asc) return a - b
+                else return b - a
+            })
+        },
+        formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear().toString();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        },
         closeCardDetails() {
             this.isCardDetails = false
         },
-        lookImg(img) {
-            // console.log('img :>> ', img);
+        addImgClass(index) {
+            this.$nextTick(() => {
+                let img = this.$refs.imgRef
+                let width = img[index].naturalWidth
+                let height = img[index].naturalHeight
+                if (width > height) img[index].setAttribute("class", "img-w");
+                else img[index].setAttribute("class", "img-h");
+            })
         },
         addCard(item) {
-            // console.log('this.carouselIndex 这里设置默认为0,选第几张来切换 :>> ', this.carouselIndex);
-            // console.log('this.cardType.images 这是item .name :>> ', this.cardType.images);
-            if (item.images[1] != undefined) {
-                this.cardDetails = item
-                this.isCardDetails = true
+            if (item.option[1] != undefined) {
+                this.fullScreen(item)
             } else {
                 this.addCardAchieve(item)
             }
         },
+        fullScreen(item) {
+            this.cardDetails = item
+            this.isCardDetails = true
+        },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex
-            this.addCustomComponents({ name: item.images[index], id: Date.now(), data: {} });
+            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} });
             this.$emit("addSuccess")
             this.$router.push({
                 name: "home",
                 params: {
-                    name: item.images[index],
+                    name: item.option[index].name,
                     cname: item.cname,
                 },
             });
@@ -106,7 +155,6 @@ export default {
     flex-wrap: wrap;
     margin: 0 auto;
     width: 100%;
-    margin-bottom: 30px;
     align-content: flex-start;
     justify-content: center;
 }
@@ -135,6 +183,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
 
         .icons {
             background: #fff;
@@ -144,6 +193,12 @@ export default {
             font-size: 12px !important;
             display: flex;
             justify-content: center;
+            align-items: center;
+        }
+
+        .text {
+            font-size: 20px !important;
+            display: flex;
             align-items: center;
         }
     }
@@ -156,17 +211,50 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         width: 180px;
+        cursor: pointer;
 
-        .img1 {
+        img {
+            zoom: 11%;
+            // height: 55%;
+        }
+
+        .top {
+            width: 100%;
             height: 120px;
-            width: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .img {
+                zoom: 0.07 !important;
+            }
+
+            .zoom {
+                zoom: 0.05 !important;
+            }
         }
 
-        .img2 {
-            width: 120px;
-            height: 88px;
+        .bottom {
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.30);
+            border-radius: 0px 0px 0px 12px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+
+            .zoom {
+                zoom: 0.02 !important;
+            }
+
+            .img {
+                zoom: 0.04;
+                border-radius: 5px;
+            }
         }
+
     }
 
     .right {
@@ -184,12 +272,17 @@ export default {
         }
 
         .text {
+            display: flex;
+            align-items: center;
             font-family: PingFangSC-Regular;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.60);
             font-weight: 400;
             margin: 2px 0;
             width: 78%;
+            height: 55px;
+
+
         }
 
         .icon {
@@ -200,17 +293,19 @@ export default {
             margin-top: 10px;
 
             .icon-box {
-                background: rgba(255, 255, 255, 0.40);
-                border-radius: 4px;
-                font-family: PingFangSC-Medium;
-                font-size: 14px;
-                color: rgba(255, 255, 255, 0.50);
-                font-weight: 500;
                 padding: 0 10px 0 10px;
                 margin-right: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                opacity: 0.4;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-family: PingFangSC-Medium;
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 500;
+                background: rgba(255, 255, 255, 0.2);
             }
         }
 
@@ -225,7 +320,7 @@ export default {
             }
 
             .data-box {
-                // margin-right: 12px;
+                margin: 0 4px;
             }
         }
     }

@@ -1,12 +1,12 @@
 global.tableWin = null
-let { app, ipcMain: ipc ,Notification} = require('electron')
+let { app, ipcMain: ipc, Notification, session } = require('electron')
 const path = require('path')
-const fs=require('fs')
+const fs = require('fs')
 const TableScreenManager = require('./tableScreenManager')
-ipc.on('recoverSuccess',()=>{
+ipc.on('recoverSuccess', () => {
   new Notification({
-    title:'数据迁移成功',
-    body :'数据迁移成功，您可正常使用。'
+    title: '数据迁移成功',
+    body: '数据迁移成功，您可正常使用。'
   }).show()
 })
 
@@ -25,8 +25,6 @@ ipc.on('recoverSuccess',()=>{
  * #工作台开发环境end
  */
 
-
-
 class TableManager {
   window //主屏的窗体
   windows //分屏的窗体
@@ -34,20 +32,21 @@ class TableManager {
 
   tableScreenManager
 
-static alive(){
-  return global.tableWin && !global.tableWin.window.isDestroyed()
-}
+  static alive () {
+    return global.tableWin && !global.tableWin.window.isDestroyed()
+  }
 
   async init () {
+
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
-      let showInTaskbar=settings.get('showInTaskBar')
-      if(showInTaskbar===undefined){
-        showInTaskbar=true
+      let showInTaskbar = settings.get('showInTaskBar')
+      if (showInTaskbar === undefined) {
+        showInTaskbar = true
       }
       global.tableWin = {}//因为启动需要时间，如果不先设置一个变量，容易导致重复启动。
       global.tableWin = await windowManager.create({
-        name:'table',
+        name: 'table',
         windowOption: {
           alwaysOnTop: false,
           width: 1098,
@@ -56,8 +55,8 @@ static alive(){
           minWidth: 800,
           minHeight: 480,
           frame: false,
-          skipTaskbar:!showInTaskbar,
-          transparent:true,
+          skipTaskbar: !showInTaskbar,
+          transparent: true,
           //backgroundColor: '#fff',
         },
         webPreferences: {
@@ -65,14 +64,16 @@ static alive(){
           devTools: true,
           preload: require('path').join(__dirname, '../../src/preload/tablePreload.js'),
           nodeIntegration: true,
+          enableBlinkFeatures:['unsafely-treat-insecure-origin-as-secure'],
           sandbox: false,
           contextIsolation: false,
           additionalArguments: [
-            '--app-path='+app.getPath('exe'),
-            '--app-dir_name='+__dirname,
+            '--app-path=' + app.getPath('exe'),
+            '--app-dir_name=' + __dirname,
           ]
         }
       })
+
       tableWin.window.webContents.session.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (d, c) => {
         if (d.responseHeaders['X-Frame-Options']) {
           delete d.responseHeaders['X-Frame-Options']
@@ -84,59 +85,69 @@ static alive(){
       this.window = tableWin.window
       if (tableWinSetting) {
         this.window.setBounds(tableWinSetting.bounds)
-        setTimeout(()=>{
+        setTimeout(() => {
           if (tableWinSetting.isMaximized) {
             this.window.maximize()
           }
-        },1000)
+        }, 1000)
       }
 
-      tableWin.window.webContents.loadURL(render.getUrl('table.html',{},'table.com'))
+      tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
+      tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+        let allowedPermissions = ["audioCapture",'media']; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
+        if (allowedPermissions.includes(permission)) {
+          callback(true); // Approve permission request
+        } else {
+          console.error(
+            `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
+          );
 
+          callback(false); // Deny
+        }
+      });
 
       tableWin.window.on('close', () => {
         this.saveBounds()
         global.tableWin = null
       })
 
-      tableWin.window.on('resized',()=>{
+      tableWin.window.on('resized', () => {
         this.saveBounds()
       })
 
-      tableWin.window.on('enter-html-full-screen',()=>{
+      tableWin.window.on('enter-html-full-screen', () => {
         this.saveBounds()
       })
 
-      tableWin.window.on('leave-html-full-screen',()=>{
+      tableWin.window.on('leave-html-full-screen', () => {
         this.saveBounds()
       })
 
-
-      tableWin.window.on('blur',()=>{
+      tableWin.window.on('blur', () => {
         this.saveBounds()
       })
 
-      tableWin.window.webContents.on('content-bounds-updated',()=>{
+      tableWin.window.webContents.on('content-bounds-updated', () => {
         this.saveBounds()
       })
 
-      tableWin.window.on('session-end',()=>{
+      tableWin.window.on('session-end', () => {
         this.saveBounds()
       })
 
-      tableWin.window.on('moved',()=>{
+      tableWin.window.on('moved', () => {
         this.saveBounds()
       })
-      tableWin.window.on('leave-full-screen',()=>{
+      tableWin.window.on('leave-full-screen', () => {
         this.saveBounds()
       })
-      tableWin.window.on('enter-full-screen',()=>{
+      tableWin.window.on('enter-full-screen', () => {
         this.saveBounds()
       })
 
     } else {
-      if(tableWin.window){
+      if (tableWin.window) {
         if (tableWin.window.isFocused()) {
           tableWin.window.hide()
         } else {
@@ -145,14 +156,14 @@ static alive(){
         }
       }
     }
-    if(!this.tableScreenManager){
-      this.tableScreenManager=new TableScreenManager()
+    if (!this.tableScreenManager) {
+      this.tableScreenManager = new TableScreenManager()
       this.tableScreenManager.bindIPC()
     }
     global.tableAppManager.setTableWin(tableWin.window)//更新tablewin
   }
 
-  saveBounds(){
+  saveBounds () {
     let tableWinSetting = {
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized()
@@ -164,7 +175,7 @@ static alive(){
     this.saveBounds()
     global.tableAppManager.closeAllApp()
     global.tableWin.window.close()
-    global.tableWin=null
+    global.tableWin = null
   }
 
   send (channel, args) {
@@ -177,9 +188,9 @@ static alive(){
 app.whenReady().then(() => {
   let transWin = null
 
-  settings.listen('showInTaskBar',(value)=>{
+  settings.listen('showInTaskBar', (value) => {
     //监听showInTaskBar
-    if(TableManager.alive()){
+    if (TableManager.alive()) {
       global.tableWin.window.setSkipTaskbar(!value)
     }
   })
@@ -217,7 +228,7 @@ app.whenReady().then(() => {
     let result = []
     let path = require('path')
     for (let file of files) {
-      try{
+      try {
         let link = null
         if (file.endsWith('.lnk')) {
           link = require('electron').shell.readShortcutLink(file)
@@ -229,8 +240,8 @@ app.whenReady().then(() => {
           path: link ? link.target : file,
           icon: icon.toDataURL()
         })
-      }catch (e) {
-        console.warn('存在失败的',e,file)
+      } catch (e) {
+        console.warn('存在失败的', e, file)
       }
 
     }
@@ -247,7 +258,7 @@ app.whenReady().then(() => {
       //read directory
       let files = fs.readdirSync(_dir)
       files.forEach(_file => {
-        try{
+        try {
           let _p = _dir + '/' + _file
           //changes slashing for file paths
           let _path = _p.replace(/\\\\/g, '/')
@@ -260,8 +271,8 @@ app.whenReady().then(() => {
             path: _path,
             ext: path.parse(_path).ext
           })
-        }catch (e) {
-          console.warn('存在失败的',e,_file)
+        } catch (e) {
+          console.warn('存在失败的', e, _file)
         }
         //console.log(_file);
 
@@ -273,7 +284,7 @@ app.whenReady().then(() => {
     let filepaths = getDesktopFiles(app.getPath('desktop'))
 
     for (let file of filepaths) {
-      try{
+      try {
         let icon = await app.getFileIcon(file.path)
         apps.push({
           name: file.name,
@@ -282,8 +293,8 @@ app.whenReady().then(() => {
           icon: icon.toDataURL()
         })
 
-      }catch (e) {
-        console.warn('存在导入失败的',e,file)
+      } catch (e) {
+        console.warn('存在导入失败的', e, file)
       }
 
     }

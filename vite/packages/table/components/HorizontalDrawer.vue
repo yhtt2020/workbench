@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="detailDisplay" :title="drawerTitle" @close="onClose"
   :bodyStyle="{textAlign:'left',overflow:'hidden',}" placement="right"  width="500"
-  > 
+  >
    <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
     <div class="w-full h-12 flex items-center  justify-center pointer my-4 rounded-lg drawer-item-bg"
       v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'active':''" @click="selectedAreaSuit(item,index)"
@@ -52,11 +52,10 @@ export default {
     selectedAreaSuit(item,index){
       this.$emit('getArea',item)
       this.defaultGameIndex = index
-      this.detailDisplay = false 
+      this.detailDisplay = false
     },
     posRegion(){
       if(this.selectRegion){
-        console.log(this.selectRegion);
         if(this.selectRegion && this.rightSelect.length > 0){
           this.defaultGameIndex = this.rightSelect.findIndex(el=>{
             return el.id === this.selectRegion

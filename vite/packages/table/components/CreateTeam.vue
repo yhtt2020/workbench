@@ -66,7 +66,6 @@ export default {
   methods: {
     ...mapActions(teamStore, ['create']),
     async doCreate () {
-      console.log('发起创建小队请求')
       if (this.avatar.trim() === '') {
         message.error('必须选择一个头像')
         return

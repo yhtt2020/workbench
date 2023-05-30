@@ -6,12 +6,12 @@
           <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
-          </div> 
+          </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
               <a-slider v-model:value="audioValue" :tooltip-visible="false" />
             </div>
-          </div> 
+          </div>
         </div>
         <div class="flex-1">
           <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item" >
@@ -28,7 +28,7 @@
       <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
       <div class="flex">
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
-          <a-progress :percent="10" :showInfo="false"/>
+          <a-progress :percent="audioTest" :showInfo="false"/>
         </div>
         <div @click="closeMicrophone" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item">
           <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
@@ -41,7 +41,7 @@
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
-    <VoiceOutputDetail v-if="outputShow" @updateOutput="receiveOutput"></VoiceOutputDetail> 
+    <VoiceOutputDetail v-if="outputShow" @updateOutput="receiveOutput"></VoiceOutputDetail>
     <VoiceInputDetail v-if="inputShow" @updateInput="receiveInput"></VoiceInputDetail>
   </HomeComponentSlot>
 </template>
@@ -50,6 +50,8 @@
 import HomeComponentSlot from '../HomeComponentSlot.vue'
 import VoiceInputDetail from './VoiceInputDetail.vue'
 import VoiceOutputDetail from './VoiceOutputDetail.vue'
+import { mapActions, mapWritableState } from 'pinia'
+import { inspectorStore } from '../../../store/inspector'
 export default {
   name:'Voice',
   components:{
@@ -88,9 +90,17 @@ export default {
       microphoneShow:false,
     }
   },
+  computed:{
+    ...mapWritableState(inspectorStore,['audioTest'])
+  },
+  mounted () {
+    this.startListenAudioTest()
+  },
   methods:{
+    ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
     selectOutputVoice(){
       this.outputShow = true
+      console.log('开始监听')
     },
     selectInputVoice(){
       this.inputShow = true
@@ -109,8 +119,11 @@ export default {
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
     }
+  },
+  unmounted () {
+    this.stopListenerAudioTest()
   }
-  
+
 }
 </script>
 

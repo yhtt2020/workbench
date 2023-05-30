@@ -3,8 +3,8 @@
         :formulaBar="formulaBar" ref="homelSlotRef">
         <cardDrag ref="drag" @reSizeInit="reSizeInit">
             <template #="{ row }">
-                <textarea spellcheck="false" :style="{ 'backgroundImage': background, color: colors }" class="box"
-                    placeholder="输入卡片内容" v-model="text" @blur="updateText">
+                <textarea spellcheck="false" :style="{ 'backgroundImage': background, color: colors }"
+                    class="test box no-drag" placeholder="输入卡片内容" v-model="text" @blur="updateText">
                 </textarea>
             </template>
         </cardDrag>
@@ -143,6 +143,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.test {
+    color: var(--color) !important;
+}
+
 .box {
     width: 100%;
     height: 100%;
@@ -176,6 +180,7 @@ export default {
     height: 56px;
     opacity: 0.65;
     border-radius: 10px;
+    cursor: pointer;
     margin: 9px;
 }
 

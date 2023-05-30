@@ -63,7 +63,7 @@ export default {
     ...mapState(appStore, ['userInfo']),
   },
   methods:{
-    ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam','updateTeam']),
+    ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam','updateTeam','cleanTeam']),
     dismiss(){
       Modal.error({content:'暂不支持解散小队',centered:true})
     },
@@ -84,16 +84,14 @@ export default {
           let rs = await this.quitByNo(this.team.no)
           if (rs.code === 1000) {
             if(rs.data.status){
-              this.cleanTeam()
               this.updateMy().then()
+              await this.closeTeam()
               Modal.info({ content: '退出小队成功',centered:true })
             }else{
               await this.closeTeam()
               this.updateMy().then()
-
               Modal.error({content:'退出小队失败',centered:true})
             }
-
           }else{
             this.updateMy().then()
             await this.closeTeam()

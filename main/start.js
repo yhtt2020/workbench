@@ -16,8 +16,10 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
+//app.commandLine.appendSwitch('unsafely-treat-insecure-origin-as-secure',"table.com:1600")
+
 electron.protocol.registerSchemesAsPrivileged([
-  { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
+  { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true,secure:true,allowServiceWorkers:true,stream:true,supportFetchAPI:true} } //将tsbapp注册为标准协议，以支持localStorage
 ])
 global.___dirname=__dirname
 global.ipcMessageMain=require('./src/main/ipcMessageMain.js')

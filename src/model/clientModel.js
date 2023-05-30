@@ -1,7 +1,8 @@
 const settings = require('../../js/util/settings/settings.js')
 const { nanoid }=require('nanoid')
 const clientModel={
-  get(){
+  async get(){
+    await settings.initialize()
     let client={id:'',name:''}
     client.id= settings.get('clientID')
     client.name=settings.get('clientName')

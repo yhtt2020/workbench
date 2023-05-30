@@ -5,8 +5,7 @@
       </div>
       <div v-else>
         <div class="flex" style="margin-top: 13px;" v-if="pageToggle">
-          <div class="cursor-pointer" style="width: 240px;height: 354px;margin-right: 16px;" v-if="fatherWidth == 2">
-            <!-- <img :src="detailMovie.image" style="width: 100%;height: 100%;object-fit: cover;" class="rounded-lg" alt="" /> -->
+          <div class="cursor-pointer" style="width: 240px;height: 354px;margin: 0 16px 0 5px;" v-if="fatherWidth == 2">
             <a-image :src="detailMovie.img" width="240px" height="354px" style="object-fit: cover;" class="rounded-lg" alt="" />
           </div>
           <div :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
@@ -25,7 +24,7 @@
             </div>
             <div v-if="detailMovie.sc" class="items-center s-item mt-2 mb-3 rounded-lg pl-4" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
               <span class="mr-4" style="font-size: 16px;color: rgba(255,255,255,0.60);" v-if="fatherWidth == 2">猫眼</span>
-              <span style="font-size: 32px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.sc }}</span>
+              <span style="font-size: 32px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.score }}</span>
               <span style="font-size:20px;position: relative;top: -3px;">
                 <a-rate v-model:value="detailMovie.starRating" allow-half disabled/>
               </span>
@@ -54,7 +53,7 @@
 <script>
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import DataStatu from "../DataStatu.vue"
-  import { sendRequest } from '../../../js/axios/api'
+  import { cacheRequest } from '../../../js/axios/api'
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
@@ -69,9 +68,7 @@
       },
       customData: {
         type: Object,
-        default: () => {
-          
-        },
+        default: () => {},
       },
       detailId: {
         type: Number,
@@ -96,36 +93,37 @@
       };
     },
     methods: {
-      setDoubanDetail(){
+      setDetail(){
         this.detailMovie.image = this.detailMovie.img.replace('2500x2500','240x354')
         this.detailMovie.members = this.detailMovie.star.replace(/,/g,' / ')
         this.detailMovie.filmType = this.detailMovie.cat.replace(/,/g,' / ')
         this.detailMovie.language = this.detailMovie.oriLang.replace(/,/g,' / ')
-        this.detailMovie.starRating = this.detailMovie.sc / 2
+        this.detailMovie.score = this.priceFormat(this.detailMovie.sc)
+        this.detailMovie.starRating = this.detailMovie.score / 2
+      },
+      priceFormat(num){
+        if(!isNaN(num)){
+          return ( (num + '').indexOf('.') != -1 ) ? num: num.toFixed(1);   
+        }
       },
       async getfilmDetail(){
-        let detail = await sendRequest(`https://m.maoyan.com/ajax/detailmovie?movieId=${this.detailId}`,{},{
+        let detail = await cacheRequest(`https://m.maoyan.com/ajax/detailmovie?movieId=${this.detailId}`,{},{
           localCache:true,
-          localTtl:60
+          localTtl:60*60*12
         })
-
-        // console.log('detail',detail)
-        // let detail = {data:{code: 406}}
         if(detail.data.code){
           this.pageToggle = false
           this.detailMovie = detail.data
           return
         }else{
           this.detailMovie = detail.data.detailMovie
+          await this.setDetail()
         }
       },
       stripDay(url){
-        // window.open(url, '_blank')
-        // console.log(url)
-        // browser.openInUserSelect(url)
+        window.browser.openInUserSelect(url)
       },
       notData(val){
-        // this.pageToggle = val
         this.$emit('detailBack',val)
       },
       discountBack(val){
@@ -135,9 +133,6 @@
     async mounted() {
       this.isLoading = true
       await this.getfilmDetail()
-      if(this.detailMovie.code !== 406){
-        await this.setDoubanDetail()
-      }
       setTimeout(() => {
         this.isLoading = false
       })
@@ -167,7 +162,7 @@
       }
     }
     .size-min{
-      width: 250px;
+      width: 252px;
     }
     .size-max{
       width: 282px;

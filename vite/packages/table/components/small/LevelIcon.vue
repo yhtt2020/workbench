@@ -38,9 +38,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.level)
     this.calcGrade(this.level)
-    console.log(this.grade)
   },
   methods:{
     calcGrade(lv){

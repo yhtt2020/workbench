@@ -237,7 +237,6 @@ export default {
         this.addressType.name === "pickingPaper" ||
         this.addressType.name === "bing"
       ) {
-        console.log(this.addressType.path);
         axios
           .get(this.addressType.path)
           .then((res) => {

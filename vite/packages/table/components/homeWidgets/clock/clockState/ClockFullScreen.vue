@@ -1,23 +1,23 @@
 <template>
   <teleport to="body">
-    <img class='popContainer' :style="{ filter: blurs }" :src="imgUrl" alt="">
+    <img class='popContainer ' :style="{ filter: blurs }" :src="imgUrl" alt="">
     <div class="box">
       <component :is="clock" v-if="clock !== 'clock3'" :key="clock" :style="{ zoom: zoom }" />
       <clock3 v-if="clock == 'clock3'" key="clock3" :style="{ zoom: zoom }"></clock3>
       <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="up()">
+        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="up()">
           <Icon class="icon" icon="caret-left"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="down()">
+        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="down()">
           <Icon class="icon" icon="caret-right"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="random()">
+        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="random()">
           <Icon class="icon" icon="reload"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="settingVisible = true">
+        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="settingVisible = true">
           <Icon class="icon" icon="setting"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="exit()">
+        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="exit()">
           <Icon class="icon" icon="guanbi2"></Icon>
         </div>
       </div>
@@ -63,11 +63,17 @@ export default {
       default: 0,
     },
   },
+  watch: {
+    blur(a, b) {
+      this.updateBlur(a)
+    }
+  },
   mounted() {
     window.addEventListener("keyup", this.esc)
     this.blurs = `blur(${parseInt(this.blur / 2)}px)`
     this.zoom = `${this.bgZoom + 100}%`
     this.touchEvent()
+
     //鼠标事件
     document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
     document.addEventListener('mousedown', this.touchEvent, { capture: true });//鼠标按下

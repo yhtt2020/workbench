@@ -48,7 +48,6 @@ export default {
       let failure = []
       let unknown = []
       if (item.actions) {
-        console.log(item.actions)
         for (const action of item.actions) {
           let handler = new ActionHandler(action)
           let result = await handler.doAction()

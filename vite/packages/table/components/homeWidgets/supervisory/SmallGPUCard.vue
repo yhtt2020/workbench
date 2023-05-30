@@ -66,11 +66,9 @@ export default {
       return this.GPUData.videoStorage.value>0?(this.GPUData.videoStorage.value / 1000).toFixed(2):this.GPUData.videoStorage.value
     }
   }, mounted () {
-    console.log('尝试启动监控')
     this.startInspect()
   },
   unmounted () {
-    console.log('尝试终止监控')
     this.stopInspect()
   },
   watch: {

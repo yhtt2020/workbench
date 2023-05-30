@@ -106,7 +106,6 @@ export default {
       this.$emit('closeChangeApp')
     },
     openApp(item){
-      console.log(item)
       ipc.send('executeApp', { app: JSON.parse(JSON.stringify(item)) })
     },
     closeAll(){

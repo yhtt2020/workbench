@@ -19,8 +19,8 @@ let runtime={
     id:'',
     name:''
   },
-  initialize(){
-    runtime.client=clientModel.get()
+  async initialize(){
+    runtime.client=await clientModel.get()
     runtime.clientId=runtime.client.id  //兼容老版本，仍然提供这个变量
     runtime.clientName=runtime.client.name //兼容老版本，仍然提供这个变量
 
@@ -32,5 +32,5 @@ let runtime={
   },
 }
 
-runtime.initialize()
+runtime.initialize().then()
 module.exports=runtime
