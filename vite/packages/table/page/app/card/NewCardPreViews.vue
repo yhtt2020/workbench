@@ -22,8 +22,8 @@
                             :src="'/public/img/addCard/' + i.name + '.png'" alt="" class="img">
                     </div>
                 </template>
-                <img v-else ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
-
+                <img v-else ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt=""
+                    :style="[{ zoom: item.option[0].name == 'MyGameSmall' ? '7%' : '11%' }]">
             </div>
             <div class="right">
                 <div class="title">{{ item.cname }}</div>

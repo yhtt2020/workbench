@@ -248,6 +248,7 @@ export default {
     transform: scale(1.2);
   }
 
+
   :deep(.clock5) {
     transform: scale(0.85);
   }
