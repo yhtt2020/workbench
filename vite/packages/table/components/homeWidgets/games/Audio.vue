@@ -7,12 +7,12 @@
           <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
-          </div> 
+          </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
               <a-slider v-model:value="audioValue" :tooltip-visible="false" />
             </div>
-          </div> 
+          </div>
         </div>
         <div class="flex-1">
           <div @click="closeVolume" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item" >
@@ -29,14 +29,14 @@
           </span>
         </div>
       </vue-custom-scrollbar>
-     
+
     </div>
     <div v-else class="mt-4">
       <div class="flex flex-col">
         <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输入检测</span>
         <div class="flex">
           <div style="width: 180px;" class="mr-4 flex items-center justify-center">
-            <a-progress :percent="10" :showInfo="false"/>
+            <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
           <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item">
             <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === false"></Icon>
@@ -58,6 +58,10 @@
 <script>
 import HomeComponentSlot from '../HomeComponentSlot.vue'
 import HorizontalPanel from '../../HorizontalPanel.vue';
+import audio from '../../../js/common/audio'
+import { inspectorStore } from '../../../store/inspector'
+import {mapWritableState,mapActions} from 'pinia'
+
 export default {
   name:'Audio',
   components:{
@@ -76,6 +80,18 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
+    }
+  },
+  computed:{
+    ...mapWritableState(inspectorStore,['audioTest'])
+  },
+  watch:{
+    'audioType':{
+      handler(newValue,oldValue){
+        if(newValue.name==='input'){
+         this.startListenAudioTest()
+        }
+      }
     }
   },
   data(){
@@ -143,6 +159,7 @@ export default {
     }
   },
   methods:{
+    ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
     // 选中输入设备
     selectInputDevice(item,index){
       this.inputIndex = index
@@ -159,6 +176,9 @@ export default {
     closeVolume(){
       this.muteShow = !this.muteShow
     }
+  },
+  unmounted () {
+    this.stopListenerAudioTest()
   }
 }
 </script>
