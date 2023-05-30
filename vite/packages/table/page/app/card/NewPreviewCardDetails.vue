@@ -1,19 +1,24 @@
 <template>
     <teleport to="body">
         <div class='popContainer'></div>
-        <div class="box  drag">
+        <div class="boxs card">
+            <div class="main">
+                <div class="card-box" v-for="(item, index) in cardDetails.option">
+                    <div class="img"> <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item.name + '.png'"
+                            alt=""></div>
+                    <div class="size">{{ item.size }}</div>
+                    <div class="add-btn no-drag" @click="addCard(item, index)">
+                        <div class="icons">
+                            <Icon icon="tianjia2" style="color: #000;font-size: 12px;"></Icon>
+                        </div>立即添加
+                    </div>
+                </div>
+            </div>
             <div class="btn no-drag" @click="onBack">
                 <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
             </div>
-            <div class="card-box" v-for="(item, index) in cardDetails.option">
-                <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item.name + '.png'" alt="">
-                <div class="size">{{ item.size }}</div>
-                <div class="add-btn no-drag" @click="addCard(item, index)">
-                    <div class="icons">
-                        <Icon icon="tianjia2" style="color: #000;font-size: 12px;"></Icon>
-                    </div>立即添加
-                </div>
-            </div>
+
+
         </div>
     </teleport>
 </template>
@@ -53,24 +58,20 @@ export default {
     height: 100%;
     // 背景的模糊大小通过下面的属性值大小来调制
     background-color: rgba(19, 19, 19, 0.65);
-    // background: #1a1a1a;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(50px);
     -webkit-backdrop-filter: blur(50px);
-    transform: scale(1.2);
-    // opacity: 1.6;
-
 }
 
-.box {
-    z-index: 99911199;
+.boxs {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    z-index: 99911199;
 
 
     .btn {
@@ -89,60 +90,91 @@ export default {
         margin-right: 20px;
     }
 
+    .main::-webkit-scrollbar {
+        display: none;
+    }
 
-
-    .card-box {
-        width: 400px;
-        height: 496px;
-        background: rgba(0, 0, 0, 0.30);
-        border-radius: 12px;
-        margin: 0 12px;
+    .main {
+        height: 100%;
+        width: 70%;
+        margin: 20px auto 0;
+        overflow: auto;
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
         justify-content: center;
-        flex-direction: column;
 
-        img {
-            width: 200px;
-            height: 300px;
-            margin-bottom: 25px;
-        }
-
-        .size {
-            opacity: 0.6;
-            padding: 4px 10px;
-            background: rgba(255, 255, 255, 0.40);
-            border-radius: 4px;
-            font-family: PingFangSC-Medium;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 1);
-            font-weight: 500;
-            margin-bottom: 25px;
-        }
-
-        .add-btn {
-            display: flex;
-            justify-content: center;
-            cursor: pointer;
-
-            align-items: center;
+        .card-box {
+            width: 400px;
+            height: 496px;
             background: rgba(0, 0, 0, 0.30);
             border-radius: 12px;
-            width: 142px;
-            height: 48px;
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
 
-            .icons {
-                margin-right: 10px;
-                border-radius: 50%;
-                background-color: #fff;
-                width: 16px;
-                height: 16px;
+            .img {
+                img {
+                    zoom: 25%;
+                }
+
+                margin-bottom: 25px;
+
+            }
+
+            .size {
+                opacity: 0.6;
+                padding: 4px 10px;
+                background: rgba(255, 255, 255, 0.40);
+                border-radius: 4px;
+                font-family: PingFangSC-Medium;
+                font-size: 14px;
+                color: rgba(255, 255, 255, 1);
+                font-weight: 500;
+                margin-bottom: 25px;
+            }
+
+            .add-btn {
                 display: flex;
-                align-items: center;
                 justify-content: center;
+                cursor: pointer;
+
+                align-items: center;
+                background: rgba(0, 0, 0, 0.30);
+                border-radius: 12px;
+                width: 142px;
+                height: 48px;
+
+                .icons {
+                    margin-right: 10px;
+                    border-radius: 50%;
+                    background-color: #fff;
+                    width: 16px;
+                    height: 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
             }
         }
     }
+
+}
+
+.box {
+    z-index: 99911199;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+
 }
 </style>
 
