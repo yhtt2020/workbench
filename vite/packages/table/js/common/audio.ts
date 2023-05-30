@@ -51,7 +51,7 @@ const audio={
           }
         }
         //显示音量值
-        console.log('执行回调')
+       // console.log('执行回调')
        // mystatus.innerHTML = "您的音量值：" + Math.round(maxVal * 100);
         handler(Math.round(maxVal * 100))
         // if (maxVal > .5) {
@@ -86,6 +86,45 @@ const audio={
       window.closeRecorder()
 
     }
+  },
+
+  getDevices(cb){
+
+    navigator.mediaDevices.enumerateDevices().then((list) => {
+      console.log("list:", list);
+
+      list.forEach((li)=>{
+        if(li.deviceId!=='default' && li.deviceId!=='communications'){
+          li.display=true
+        }else{
+          li.display=false
+        }
+      })
+      let defaultOutput
+      let outputs=list.filter(li=>{
+        if(li.deviceId==='default' && li.kind==='audiooutput'){
+          defaultOutput=li
+        }
+        return li.kind==='audiooutput'
+      })
+
+      let defaultInput
+      let inputs=list.filter(li=>{
+        if(li.deviceId==='default' && li.kind==='audioinput'){
+          defaultInput=li
+        }
+        return li.kind==='audioinput'
+      })
+
+      console.log(inputs,'inputs=')
+      console.log(outputs,'outputs=')
+      cb({
+        outputs:outputs,
+        inputs:inputs,
+        defaultOutput,
+        defaultInput
+      })
+    })
   }
 }
 export default audio
