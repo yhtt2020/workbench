@@ -191,7 +191,7 @@ const spaceModel = {
       }
       space.type='cloud'
       currentSpace.userInfo=await userModel.get({uid:currentSpace.uid})
-      let client=require('./clientModel').get()
+      let client=await require('./clientModel').get()
       currentSpace.userInfo.clientId=client.id
       currentSpace.userInfo.clientName=client.name
 

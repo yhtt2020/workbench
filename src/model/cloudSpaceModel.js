@@ -97,7 +97,7 @@ const cloudSpaceModel={
    */
   async getUserInfo(uid){
     let userInfo=await userModel.get({uid})
-    let client=require('./clientModel').get()
+    let client=await require('./clientModel').get()
     userInfo.clientId=client.id
     userInfo.clientName=client.name
     cloudSpaceModel.user=userInfo
