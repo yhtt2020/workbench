@@ -3,7 +3,7 @@
     <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
-                  sub-title="您可以长按空白处、右键添加卡片。">
+          sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
             <a-button @click="addCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
             <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
@@ -14,7 +14,7 @@
               <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
             </p>
             <p>
-              <close-circle-outlined :style="{ color: 'red' }"/>
+              <close-circle-outlined :style="{ color: 'red' }" />
               从社区获得分享代码（此功能暂未上线，请耐心等待）
               <a>从社区导入 &gt;</a>
             </p>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-                          style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -43,7 +43,7 @@
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
               <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
-                         :customData="item.data" :editing="editing" @customEvent="customEvent"></component>
+                :customData="item.data" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -59,11 +59,11 @@
         bottom: 0;
         z-index: 999;
       " v-if="visibleAdd">
-      <AddCard :desk="currentDesk" @onBack="()=>{this.visibleAdd=false}"></AddCard>
+      <AddCard :desk="currentDesk" @onBack="() => { this.visibleAdd = false }"></AddCard>
     </div>
   </transition>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
-            placement="bottom" :visible="menuVisible" @close="onClose">
+    placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
         <div @click="toggleEditing" class="btn">
@@ -110,6 +110,12 @@
           <div><span>隐藏桌面</span></div>
         </div>
       </a-col>
+      <a-col>
+        <div @click="newAddCard" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>新添加卡片（开发中）</span></div>
+        </div>
+      </a-col>
     </a-row>
   </a-drawer>
 </template>
@@ -152,60 +158,59 @@ import CustomTimer from "../homeWidgets/CustomTimer.vue";
 import SmallCountdownDay from "../homeWidgets/SmallCountdownDay.vue";
 import Clock from "../homeWidgets/Clock.vue";
 import CountdownDay from "../homeWidgets/CountdownDay.vue";
-
-
 export default {
   name: 'Desk',
-  components: { Vuuri, AddCard,CPUFourCard,CPULineChart,InternalList,
-    SmallCPUCard,SmallGPUCard ,DiscountPercentage,GamesDiscount,GameEpic,
-    Music,Stock,Dou,Fish,CustomTimer,SmallCountdownDay,Clock,CountdownDay,
-    Calendar,Timer,Weather,SteamFriends,Remote,SignIn,SingleFilm,ManyFilm,
-    CaptureNewCard,Voice,Audio,Capture,CustomAssembly,MyGameSmall,SmallWallpaper,
+  components: {
+    Vuuri, AddCard, CPUFourCard, CPULineChart, InternalList,
+    SmallCPUCard, SmallGPUCard, DiscountPercentage, GamesDiscount, GameEpic,
+    Music, Stock, Dou, Fish, CustomTimer, SmallCountdownDay, Clock, CountdownDay,
+    Calendar, Timer, Weather, SteamFriends, Remote, SignIn, SingleFilm, ManyFilm,
+    CaptureNewCard, Voice, Audio, Capture, CustomAssembly, MyGameSmall, SmallWallpaper,
     MiddleWallpaper
   },
   props:
-    {
-      currentDesk: {
-        type: Object,
-        required: true,
-        default: () => {
-          return { cards: [] }
-        }
-
-      },
-      muuriOptions: {
-        type: Object,
-        required: false,
-        default: () => {
-          return {
-            dragAutoScroll: {
-              targets: [
-                {
-                  element: '#scrollerBar>div',
-                },
-              ],
-              handle: null,
-              threshold: 50,
-              safeZone: 0.2,
-              speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
-              sortDuringScroll: true,
-              smoothStop: false,
-              onStart: null,
-              onStop: null,
-            },
-          }
-        }
-      },
-      settings: {
-        type: Object,
-        required: true
+  {
+    currentDesk: {
+      type: Object,
+      required: true,
+      default: () => {
+        return { cards: [] }
       }
+
+    },
+    muuriOptions: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {
+          dragAutoScroll: {
+            targets: [
+              {
+                element: '#scrollerBar>div',
+              },
+            ],
+            handle: null,
+            threshold: 50,
+            safeZone: 0.2,
+            speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+            sortDuringScroll: true,
+            smoothStop: false,
+            onStart: null,
+            onStop: null,
+          },
+        }
+      }
+    },
+    settings: {
+      type: Object,
+      required: true
     }
+  }
   ,
-  data () {
+  data() {
     return {
-      menuVisible:false,
-      visibleAdd:false,
+      menuVisible: false,
+      visibleAdd: false,
       editing: false,
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -217,9 +222,9 @@ export default {
       },
     }
   },
-  methods:{
-    addCard(){
-      this.visibleAdd=true
+  methods: {
+    addCard() {
+      this.visibleAdd = true
     },
     onClose() {
       this.menuVisible = false;

@@ -33,7 +33,7 @@
             <div class="icon">i</div> 以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
           <NewCardPreViews v-if="navList[navIndex].children !== null" :navList="navList[navIndex].children"
-            @addSuccess="onBack" :search="searchValue">
+            @addSuccess="onBack" :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
             <div class="warn-boxs">
@@ -55,6 +55,7 @@ import { navList } from "./navList"
 export default {
   name: "AddCard",
   components: { NewCardPreViews },
+  props: ['desk'],
   data() {
     return {
       navIndex: 1,
