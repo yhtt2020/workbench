@@ -35,49 +35,32 @@
   </template>
   <template v-else>
     <div class="flex mx-7">
-        <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: calc(100vh - 15.8em)">
-          <div  class="w-full flex justify-start flex-col">
-            <div v-for="item in epicList"  class="flex items-center s-bg cursor-pointer mt-3  flex-row  rounded-lg p-3" style="width: 100%;">
-              <div @click="openEpicStore" class="flex-none mr-3 pointer" style="width: 258px;height: 120px;">
-                <img :src="item.keyImages.url" alt="" class="rounded-md"  style="width:100%;height: 100%;object-fit: cover;box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.3);">
+      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller"  style="height: calc(100vh - 15.8em);padding-right: 5px;padding-left: 1em" class="pt-3 mr-3">
+       <div class="flex flex-row flex-wrap -ml-3 ">
+        <div class="pb-3 pl-3 game-list-local flex-shrink-0 my-game-content" v-for="(item) in epicList" @click="openEpicStore">
+         <div class="s-bg h-full pointer w-full rounded-lg">
+          <div class="relative    mx-auto " style="height: 272px;width: 484px;">
+            <img  :src="item.keyImages.url"  class="w-full h-full rounded-lg object-cover"  alt="">
+          </div>
+          <div class="flex flex-col ">
+            <span  class="mb-2 pointer px-3 my-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+              {{ item.el.title === 'Mystery Game' ? '神秘游戏' : item.el.title }}
+            </span>
+            <div v-if="item.el.promotions !== null" class="px-3 mb-3">
+              <div v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex item-center">
+                <span class="px-2 py-1 mr-2 rounded-md free-font">现在免费</span>
+                <span class="py-1">截止时间: {{ deadline(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}</span>
               </div>
-              <div class="flex-grow" >
-                <div class="flex flex-col">
-                  <div>
-                    <span @click="openEpicStore" class="mb-2 pointer" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                      {{ item.el.title }}
-                    </span>
-                    <span v-if="item.el.offerType === 'DLC'" class="ml-4 s-bg px-2 py-1 rounded-lg" style="font-size: 14px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                       {{ item.el.offerType }}
-                    </span>
-                  </div>
-                  <span class="content-introduction" style="margin-bottom: 7px;font-size: 16px;font-weight: 400;">
-                    {{ item.el.description }}
-                  </span>
-                  <div class="flex items-center">
-                    <template v-if="item.el.promotions !== null">
-                      <span v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex justify-center mr-3 reset-day rounded-lg items-center" >
-                        剩余{{ remainderDay(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}天
-                      </span>
-                      <span v-else class="mr-3 rounded-lg px-4 py-1 s-bg" style="font-size: 16px; font-weight: 600;">
-                        下周预告
-                      </span>
-                    </template>
-                    <span class="mr-3" style="color:rgba(255, 77, 79, 1);font-size: 18px;font-weight: 600;">
-                      {{ item.el.price.totalPrice.fmtPrice.intermediatePrice ==='0' ? '免费领取' : item.el.price.totalPrice.fmtPrice.intermediatePrice }}
-                    </span>
-                    <span class="line-through " style="font-size: 14px;font-weight: 400;">{{ item.el.price.totalPrice.fmtPrice.originalPrice }}</span>
-                 </div>
-                </div>
-              </div>
-              <div class="flex-none btn-active ml-4 h-12 py-3 pointer px-8 s-bg rounded-md" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;"
-                @click="openEpicStore"
-              >
-                打开epic商城
+              <div v-if="item.el.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
+                <span class="px-1  mr-2 rounded-md next-notice">下周预告</span>
+                <span class="py-1">开始时间: {{ deadline(item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
               </div>
             </div>
           </div>
-        </vue-custom-scrollbar>
+         </div>
+        </div>
+       </div>
+      </vue-custom-scrollbar>
     </div>
   </template>
   <router-view></router-view>
@@ -253,7 +236,18 @@ export default {
       })
     },
     openEpicStore(){
-      browser.openInUserSelect('https://store.epicgames.com/zh-CN/')
+      browser.openInUserSelect(`https://store.epicgames.com/zh-CN`)
+    },
+
+    deadline(value){
+      const date = new Date(`${value}`);
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      const ampm = hour >= 12 ? '下午' : '上午'; // 判断上午或下午
+      const formattedDate = `${month}月${day}日 ${ampm} ${hour % 12}:${minute.toString().padStart(2, '0')}`;
+      return formattedDate
     }
   },
 }
@@ -294,6 +288,18 @@ export default {
 .btn-active{
   filter: brightness(0.8);
   background:rgba(42, 42, 42, 0.25);
+}
+
+.free-font{
+  background: #508BFE;
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
+}
+.next-notice{
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
 }
 
 </style>

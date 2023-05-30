@@ -6,11 +6,11 @@
     <a-select-option v-for="item in gameName" :value="item.title">{{item.title}}</a-select-option>
   </a-select>
   <HorizontalPanel  :navList="introductionSubList" v-model:selectType="introductionType"></HorizontalPanel>
-  <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="defaultSortType.name"
+  <!-- <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="defaultSortType.name"
     @change="selectHotType($event)"
     class="w-60 h-12 ml-3 rounded-lg s-bg text-xs right-nav" size="large" :bordered="false" >
     <a-select-option v-for="item in sortType" :value="item.name">{{item.title}}</a-select-option>
-  </a-select>
+  </a-select> -->
   </div>
   <div class="flex flex-row ml-3">
     <div @click="openDrawer('search')" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
@@ -21,17 +21,41 @@
 <template v-if="introductionType.name==='video'">
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em" class="mt-3 mr-3 s-bg rounded-lg" >
     <div class="flex flex-row flex-wrap -ml-3  p-3" >
-      <div  @click="openUrl(item.url.replace('//','https://'))" class="pb-3  pl-3 game-list-item flex-shrink-0" v-for="(item,index) in gameVideoList">
-        <div class=" rounded-lg w-auto pointer "   style="height: 65.5%" >
-          <img :src="item.image" class="w-full h-full rounded-lg object-cover"  alt="">
+      <div  @click="openUrl(item.arcurl)" class="pb-3  pl-3 game-list-item flex-shrink-0" v-for="(item,index) in gameVideoList">
+        <div class=" rounded-lg w-auto pointer mb-2"   style="height: 65.5%;position: relative;" >
+          <img :src="`https:${item.pic}`" class="w-full h-full rounded-lg object-cover"  alt="">
+          <div class="bfl px-4 mb-1 flex justify-between" >
+            <div class="flex">
+              <div class="flex items-center justify-center">
+                <Icon icon="play-square" class="text-color" style="font-size: 1.2em;"></Icon>
+                <!-- <span class="ml-1 text-color">{{item.play.toString().slice(0,2)+ '.' + item.play.toString().slice(0,4).slice(3)}}万</span> -->
+              </div>
+              <div class="mx-2">
+                <Icon icon="detail" class="text-color" style="font-size: 1.2em;"></Icon>
+                <span class="ml-1 text-color">{{item.danmaku}}</span>
+              </div>
+            </div>
+            <div class="text-color">{{item.duration}}</div>
+          </div>
         </div>
-        <div class="text-white " style="overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;  ">{{item.title}}</div>
-        <div class="flex flex-row justify-between items-center">
+        <div class="text-white mb-2 px-1 pointer" @click="openUrl(item.arcurl)" style="overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;  ">
+          {{item.title.replace(/<em[^>]*>/g, '').replace(/<\/em>/g, '')}}
+        </div>
+        <div class="flex flex-row justify-between items-center px-2">
           <div>{{item.author}}</div>
-          <div>{{item.date}}</div>
+          <div>{{ changeTime(item.senddate)}}</div>
         </div>
       </div>
     </div>
+    <!-- <div class="flex items-center justify-center mb-5">
+    <a-pagination v-model:current="current" :total="1176" :pageSizeOptions="['42']" defaultPageSize="42" @change="getPage($event)">
+        <template #itemRender="{ type, originalElement }">
+          <a v-if="type === 'prev'" class="px-1 py-1 page-ination mx-5">上一页</a>
+          <a v-else-if="type === 'next'" class="mx-5">下一页</a>
+          <component :is="originalElement" v-else></component>
+        </template>
+      </a-pagination>
+    </div> -->
   </vue-custom-scrollbar>
 </template>
 <template v-else>
@@ -45,7 +69,7 @@
 </template>
 
 
-  <a-drawer :width="500"  v-model:visible="drawerVisible" placement="right">
+<a-drawer :width="500"  v-model:visible="drawerVisible" placement="right">
     <template #title>
       <div class="text-center" v-if="drawerType==='search'">搜索</div>
       <div class="text-center" v-else>说明</div>
@@ -62,14 +86,16 @@
       <div class="mt-3">图文攻略数据均来自「游民星空」，本应用不提供任何攻略数据</div>
       <div class="drawer-item-bg h-10 rounded-lg w-20 mx-auto flex justify-center items-center mt-3 pointer" @click="goYm">访问官网</div>
     </div>
-  </a-drawer>
+</a-drawer>
 </template>
 
 <script>
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
-import { sendRequest } from '../../js/axios/api';
+// import { sendRequest } from '../../js/axios/api';
 import cheerio from 'cheerio'
 import browser from '../../js/common/browser'
+import axios from 'axios'
+
 export default {
   name: "GameIntroduction",
   components:{
@@ -89,8 +115,7 @@ export default {
       introductionType:{title:'视频攻略',name:'video'},
       searchData:'',
       gameName:[
-        {title:'副屏'},
-        {title:'小缇娜的奇幻之地'}
+        {title:'FIFA 23'}
       ],
       sortType:[
         {title:'综合排序',name:''},
@@ -100,10 +125,11 @@ export default {
         {title:'最多收藏',name:'stow'}
       ],
       defaultSortType:{title:'综合排序',name:''},
-      defaultRunGame:{title:'副屏'},
+      defaultRunGame: {title:'FIFA 23'} ,
       introductionSubList:[{title:'视频攻略',name:'video'},{title:'图文攻略',name:'textImg'}],
       gameVideoList:[],
-      gameIntroductionList:[]
+      gameIntroductionList:[],
+      current:1,
     }
   },
 
@@ -125,60 +151,50 @@ export default {
     },
     // 初始化数据
     async loadIllustratedData(){
-      const order = this.defaultSortType !== '' ? `order=${this.defaultSortType.name}` : ''
-      try {
-        const result =  await sendRequest(`https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}&${order}`,
-        {},{localCache:true,localTtl:60*12*60})
-        console.log(result.data);
-        const html = result.data
-        const dom = cheerio.load(html)
-        dom('.bili-video-card').each((i,el)=>{
-          const docFirst = dom(el).children().eq(1)
-          const linkUrl = docFirst.children().eq(0).attr('href')
-          const newDateTime = docFirst.children().eq(1).text().split('·')[1]
-          const title = docFirst.children().eq(1).children().eq(0).children().eq(0).children().eq(0).attr('title')
-          const author = docFirst.children().eq(1).children().eq(0).children().eq(1).children().eq(0).children().text().split('·')[0]
-          const image  = docFirst.children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(2).attr('src')
-          if(author !== '' && newDateTime !== undefined){
-            console.log({url:linkUrl,image,newDateTime,author,title});
-            this.gameVideoList.push({url:linkUrl,image,newDateTime,author,title})
-          }
-        })
-      } catch (error) {
-        console.warn(error)
+      // https://api.bilibili.com/x/web-interface/search/all/v2?page=1&keyword=${encodeURIComponent(this.defaultRunGame.title)}
+      const synUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}&search_source=1`
+      // const synUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}`
+      const now = (Date.now() + '').substr(-8)
+      // const url = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}&search_source=1&order=${this.defaultSortType.name}`
+      const url =  `https://search.bilibili.com/all?vt=${now}&keyword=${encodeURIComponent(this.defaultRunGame.title)}&search_source=1&order=${this.defaultSortType.name}`
+      if(this.defaultSortType.name === ''){
+        this.dataRequest(synUrl)
+      }else{
+        this.dataRequest(url)
       }
     },
 
-    // 搜索接口
+    // 搜索接口  
     async searchVideoData(){
       this.gameVideoList = []
-      try {
-        const result =  await sendRequest(`https://search.bilibili.com/all?keyword=${encodeURIComponent(this.searchData)}`,{},{localCache:true,localTtl:60*12*60})
-        const html = result.data
-        const dom = cheerio.load(html)
-        dom('.bili-video-card').each((i,el)=>{
-          const docFirst = dom(el).children().eq(1)
-          const linkUrl = docFirst.children().eq(0).attr('href')
-          const newDateTime = docFirst.children().eq(1).text().split('·')[1]
-          const title = docFirst.children().eq(1).children().eq(0).children().eq(0).children().eq(0).attr('title')
-          const author = docFirst.children().eq(1).children().eq(0).children().eq(1).children().eq(0).children().text().split('·')[0]
-          const image  = docFirst.children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(2).attr('src')
-          console.log({url:linkUrl,image,newDateTime,author,title});
-          if(author !== '' && newDateTime !== undefined){
-            this.gameVideoList.push({url:linkUrl,image,newDateTime,author,title})
-          }
-        })
-      } catch (error) {
-        console.warn(error);
-      }
+      const url = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.searchData)}`
+      this.dataRequest(url)
+      // try {
+      //   const result =  await sendRequest(`https://search.bilibili.com/all?keyword=${encodeURIComponent(this.searchData)}`,{})
+      //   const html = result.data
+      //   const dom = cheerio.load(html)
+      //   dom('.bili-video-card').each((i,el)=>{
+      //     const docFirst = dom(el).children().eq(1)
+      //     const linkUrl = docFirst.children().eq(0).attr('href')
+      //     const newDateTime = docFirst.children().eq(1).text().split('·')[1]
+      //     const title = docFirst.children().eq(1).children().eq(0).children().eq(0).children().eq(0).attr('title')
+      //     const author = docFirst.children().eq(1).children().eq(0).children().eq(1).children().eq(0).children().text().split('·')[0]
+      //     const image  = docFirst.children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(2).attr('src')
+      //     if(author !== '' && newDateTime !== undefined){
+      //       this.gameVideoList.push({url:linkUrl,image,newDateTime,author,title})
+      //     }
+      //   })
+      // } catch (error) {
+      //   console.warn(error);
+      // }
     },
 
     // 游戏图文攻略数据获取
     async getGameIllustrated(){
       this.gameIntroductionList = []
-      try {
-        const illResult = await sendRequest(`https://so.gamersky.com/all/handbook?s=FIFA+23&p=3`,{},{localCache:true,localTtl:60*12*60})
-        const html = illResult.data
+      const url = `https://so.gamersky.com/all/handbook?s=${this.defaultRunGame.title}`
+      axios.get(url).then(res=>{
+        const html = res.data
         const dom = cheerio.load(html)
         dom('.t2').children().each((i,el)=>{
           const href = dom(el).eq(0).attr('href')
@@ -186,9 +202,20 @@ export default {
           // console.log({href,title});
           this.gameIntroductionList.push({href,title})
         })
-      } catch (error) {
-        console.warn(error)
-      }
+      })
+      // try {
+      //   // const illResult = await sendRequest(`https://so.gamersky.com/all/handbook?s=FIFA+23&p=3`)
+      //   const html = illResult.data
+      //   const dom = cheerio.load(html)
+      //   dom('.t2').children().each((i,el)=>{
+      //     const href = dom(el).eq(0).attr('href')
+      //     const title = dom(el).eq(0).text()
+      //     // console.log({href,title});
+      //     this.gameIntroductionList.push({href,title})
+      //   })
+      // } catch (error) {
+      //   console.warn(error)
+      // }
     },
 
     openUrl(url){
@@ -197,7 +224,43 @@ export default {
 
     selectHotType(e){
       // this.defaultSearchType.name = e
-      // this.loadIllustratedData()
+      this.loadIllustratedData()
+    },
+
+    //数据请求
+    dataRequest(url){
+      // console.log('地址',url);
+      axios.get(url).then(res =>{
+          const htmlText = res.data
+          // 使用正则表达式匹配 <script> 标签中的 JavaScript 代码
+          const regex = /<script.*?>((.|\n)*?)<\/script>/gi;
+          const matches = htmlText.match(regex)[12];
+          const startIndex = matches.indexOf('(');
+          const endIndex = matches.lastIndexOf(')');
+          const jsonString = matches.substring(startIndex, endIndex + 1);
+          const data = window.eval(jsonString).index.searchAllResponse.result[10].data
+          data.forEach(el=>{
+            if(el.title !== ''){
+              this.gameVideoList.push(el)
+            }
+          })
+      })
+    },
+    // 日期转换
+    changeTime(newDate){
+      const nowTime = new Date(parseInt(newDate)*1000)
+      return nowTime.toLocaleDateString()
+    },
+    getPage(e){
+      // console.log('页码',e);
+      const url = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}&search_source=3&page=${e}&o=36`
+      // const url = `https://api.bilibili.com/x/web-interface/search/all/v2?page=${e}&keyword=${encodeURIComponent(this.defaultRunGame.title)}`
+      // console.log(url);
+      // axios.get(url).then(res=>{
+      //   console.log(res);
+      // })
+      // console.log(url);
+      this.dataRequest(url)
     }
   },
 }
@@ -272,4 +335,23 @@ export default {
     width: calc(100% / 12);
   }
 }
+.bfl{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color:rgba(255, 255, 255, 0.85) !important;
+}
+
+:deep(.ant-pagination-options){
+  display: none;
+}
+
+/*
+
+.page-ination{
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.6);
+}
+*/
 </style>
