@@ -187,7 +187,7 @@ export default {
     console.log(this.userInfo)
   },
   computed: {
-    ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles']),
+    ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles', 'style']),
     ...mapWritableState(appStore, ['userInfo'])
   },
   methods: {
@@ -196,8 +196,11 @@ export default {
     styleSwitch() {
       if (this.styles) {
         document.documentElement.classList.add('light-mode');
+        this.style = 'light-mode'
       } else {
         document.documentElement.classList.remove('light-mode');
+        this.style = ''
+
       }
     },
 

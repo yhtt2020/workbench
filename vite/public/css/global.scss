@@ -18,15 +18,20 @@
 
     --active-font-color: #000;
     --no-active-background-color: #A6A9AE;
-    ;
     --no-active-font-color: #000;
 
-    body {
-        background: #F3F3F5 !important;
-    }
+
 
     .active {
         background: #fff;
         color: #000 !important;
+    }
+}
+
+.light-nobg-mode {
+    --background-color: rgba(240 240 240);
+
+    body {
+        background: rgba(229 229 229) !important;
     }
 }

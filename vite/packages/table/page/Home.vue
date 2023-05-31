@@ -552,7 +552,8 @@ export default {
       "agreeTest",
       "backgroundSettings",
       "backgroundImage",
-      "styles"
+      "styles",
+      "style"
     ]),
 
     ...mapWritableState(appStore, {
@@ -745,8 +746,10 @@ export default {
       this.setBackgroundImage({ path: "" });
       if (this.styles == true) {
         document.documentElement.classList.add('light-nobg-mode');
+        this.style = 'light-nobg-mode'
       } else {
-        document.documentElement.classList.remove('light-nobg-mode');
+        document.documentElement.classList.add('dark-nobg-mode');
+        this.style = 'dark-nobg-mode'
       }
     },
     initGrids() {

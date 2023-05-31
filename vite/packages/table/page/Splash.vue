@@ -163,7 +163,7 @@ export default {
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'styles']),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
   },
   methods: {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
@@ -256,12 +256,8 @@ export default {
 
     async afterLaunch() {
       console.log('afterLaunch')
-      if (this.styles == true) {
-        document.documentElement.classList.add('light-mode');
-      } else {
-        document.documentElement.classList.remove('light-mode');
-      }
-
+      console.log('this.style :>> ', this.style);
+      document.documentElement.classList.add(this.style);
 
       //执行分屏的启动操作
       this.onTableStarted().then()

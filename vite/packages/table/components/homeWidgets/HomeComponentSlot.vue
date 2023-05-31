@@ -5,7 +5,7 @@
       pointerEvents: editing ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-      backgroundColor: 'var(--background-color)',
+      background: 'var(--background-color)',
     }" @click="onCPUIndex" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
     <div style="
         position: absolute;
