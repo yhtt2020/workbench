@@ -62,8 +62,14 @@ export default {
         },
         search: {
             type: String
+        },
+        desk: {
+            type: Object,
+            required: true,
+            default: () => { }
         }
     },
+
     data() {
         return {
             navLists: [],
@@ -134,7 +140,7 @@ export default {
         },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex
-            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} });
+            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} }, this.desk);
             this.$emit("addSuccess")
             this.$router.push({
                 name: "home",
