@@ -1,7 +1,7 @@
 <template>
- <div class="line-title">
-   内置浏览器设置
- </div>
+  <div class="line-title">
+    内置浏览器设置
+  </div>
   <div class="line">
     <a-radio-group v-model:value="openUrlBrowser">
       <a-radio value="inner">内嵌浏览器</a-radio>
@@ -14,25 +14,23 @@
 
 export default {
   name: 'Browser',
-  data(){
+  data() {
     return {
-      openUrlBrowser:'inner'
+      openUrlBrowser: 'inner'
     }
   },
-  async mounted () {
+  async mounted() {
     this.openUrlBrowser = await tsbApi.settings.get('openUrlBrowser') || 'inner'
     console.log(this.openUrlBrowser)
   },
-  watch:{
-    openUrlBrowser:{
-      handler(){
-        tsbApi.settings.set('openUrlBrowser',this.openUrlBrowser)
+  watch: {
+    openUrlBrowser: {
+      handler() {
+        tsbApi.settings.set('openUrlBrowser', this.openUrlBrowser)
       }
     }
   }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

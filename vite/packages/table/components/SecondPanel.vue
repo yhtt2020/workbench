@@ -1,16 +1,17 @@
 <template>
-  <div class="second-panel  mt-3"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
-    <div  style="margin-bottom:2em;" v-if="gallery === true">
-      <div :onClick="goHome"  class="second-panel-back s-icon" >
+  <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
+    id="secondPanel">
+    <div style="margin-bottom:2em;" v-if="gallery === true">
+      <div :onClick="goHome" class="second-panel-back s-icon">
         <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>
         <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">返回</span>
       </div>
     </div>
-    <div @click="change($event,menu)" class="menu relative s-icon" :class="{'s-bg':current(menu)}"
-         v-for="(menu) in menus">
+    <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'active': current(menu) }"
+      v-for="(menu) in menus">
       <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
       <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">{{ menu.title }}</span>
-      <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title==='动态壁纸'"></GradeSmallTip>
+      <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
     </div>
   </div>
 </template>
@@ -32,8 +33,8 @@ export default {
   emits: [
     'changeTab'
   ],
-  components:{GradeSmallTip},
-  data () {
+  components: { GradeSmallTip },
+  data() {
     return {
       panel: {},
       activeIndex: '',
@@ -46,24 +47,24 @@ export default {
       },
     }
   },
-  mounted () {
+  mounted() {
     this.panel = document.getElementById('secondPanel')
     this.activeIndex = this.menus[0].index
     //this.panel.style.marginTop = -this.panel.offsetHeight / 2-20 + 'px'
   },
-  computed:{
+  computed: {
 
   },
   methods: {
-    current(menu){
-      if(menu.route){
-        return this.$route.name===menu.route.name || this.$route.path===menu.route.path
-      }else{
-        return this.activeIndex===menu.index
+    current(menu) {
+      if (menu.route) {
+        return this.$route.name === menu.route.name || this.$route.path === menu.route.path
+      } else {
+        return this.activeIndex === menu.index
       }
 
     },
-    change (e, menu) {
+    change(e, menu) {
       this.activeIndex = menu.index
       this.$emit('changeTab', {
         index: menu.index,
@@ -78,20 +79,16 @@ export default {
 <style scoped lang="scss">
 .second-panel {
   padding-left: 0 !important;
-  &.small{
 
-  }
+  &.small {}
+
   height:auto;
   border-radius: 6px;
 
   .menu {
-    &:hover {
+    &:hover {}
 
-    }
-
-    &.active {
-
-    }
+    &.active {}
 
     width: 8em;
     padding-left: 1em;
@@ -103,7 +100,8 @@ export default {
     margin-bottom: 0.5em;
   }
 }
-.second-panel-back{
+
+.second-panel-back {
   width: 8em;
   padding-left: 1em;
   font-size: 1.3em;
@@ -114,5 +112,4 @@ export default {
   margin-bottom: 0.5em;
 
 }
-
 </style>

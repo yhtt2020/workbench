@@ -1,14 +1,14 @@
 <template>
-
   <div style="display: flex;width: 100%">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-                          style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
+      style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
       <div style="width: auto;    white-space: nowrap;">
-        <div
-          class="s-bg"
-          style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
+        <div class="s-bg" :style="{
+            color: 'var(--font-color)',
+            backgroundColor: 'var(--background-color)',
+          }" style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
           <h3>快速开关功能</h3>
-          <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center">
+          <a-row :gutter="[20, 20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
               <div class="btn relative ">
                 弹幕
@@ -27,25 +27,37 @@
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="btn relative">
                 节能模式<br>
-                <a-switch @click.stop="()=>{}" v-model:checked="saving"></a-switch>
+                <a-switch @click.stop="() => { }" v-model:checked="saving"></a-switch>
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br>
-                <a-switch @click.stop="()=>{}" v-model:checked="simple"></a-switch>
+                <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
+              </div>
+            </a-col>
+            <a-col v-if="isMain()" :span="12">
+              <div style="cursor: help" class="btn relative test">
+                浅色模式<br>
+                <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
+                <a-switch @click="styleSwitch()" v-model:checked="styles"></a-switch>
               </div>
             </a-col>
           </a-row>
+
+
           <div>
           </div>
         </div>
         <div style="display: inline-block;vertical-align: top">
-          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg">
+          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg" :style="{
+              color: 'var(--font-color)',
+              backgroundColor: 'var(--background-color)',
+            }">
             <h3>屏幕设置</h3>
             <a-row style="font-size: 1.2em;text-align: center">
               <a-col v-if="isMain()" :span="6">
-                <div  @click="setTouch" class="btn">
+                <div @click="setTouch" class="btn">
                   <Icon icon="Touch" style="font-size: 2em"></Icon>
                   <div>
                     设置触摸屏
@@ -60,25 +72,28 @@
                   </div>
                 </div>
               </a-col>
-              <a-col  :span="6">
+              <a-col :span="6">
                 <div @click="chooseScreen" class="btn">
                   <Icon icon="touping" style="font-size: 2em"></Icon>
                   <div> 选择屏幕</div>
                 </div>
               </a-col>
-<!--              <a-col :span="6">-->
-<!--                <div v-if="isMain()"  @click="subscreen" class="btn">-->
-<!--                  <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>-->
-<!--                  <div > 分屏设置</div>-->
-<!--                </div>-->
-<!--              </a-col>-->
+              <!--              <a-col :span="6">-->
+              <!--                <div v-if="isMain()"  @click="subscreen" class="btn">-->
+              <!--                  <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>-->
+              <!--                  <div > 分屏设置</div>-->
+              <!--                </div>-->
+              <!--              </a-col>-->
             </a-row>
             <div>
             </div>
           </div>
-          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg">
+          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg" :style="{
+              color: 'var(--font-color)',
+              backgroundColor: 'var(--background-color)',
+            }">
 
-            <a-row   style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
+            <a-row style="font-size: 1.2em;text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
                 <div @click="wizard" class="btn">
                   <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
@@ -99,19 +114,19 @@
                   <div> 壁纸</div>
                 </div>
               </a-col>
-              <a-col  :span="6">
+              <a-col :span="6">
                 <div @click="basic" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 基础设置</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()"  :span="6">
+              <a-col v-if="isMain()" :span="6">
                 <div @click="verifyCode" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 验证激活码</div>
                 </div>
               </a-col>
-              <a-col  v-if="userInfo && userInfo.uid===4 && isMain()" :span="6">
+              <a-col v-if="userInfo && userInfo.uid === 4 && isMain()" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 生成激活码</div>
@@ -130,14 +145,8 @@
 
 
 
-  <a-modal
-    v-model:visible="visibleChooseScreen"
-    :title="null"
-    width="100%"
-    :footer="null"
-    wrap-class-name="full-modal"
-    @ok="()=>{this.visibleChooseScreen=false}"
-  >
+  <a-modal v-model:visible="visibleChooseScreen" :title="null" width="100%" :footer="null" wrap-class-name="full-modal"
+    @ok="() => { this.visibleChooseScreen = false }">
     <div style="zoom: 1.5;font-size: 16px;padding-top: 5em;text-align: center">
       <div style="width: 500px;overflow: visible;display: inline-block">
         <ChooseScreen></ChooseScreen>
@@ -151,17 +160,17 @@
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
-import { message,Modal } from 'ant-design-vue'
-import {mapActions} from 'pinia'
+import { message, Modal } from 'ant-design-vue'
+import { mapActions } from 'pinia'
 import { codeStore } from '../store/code'
 import SecondPanel from '../components/SecondPanel.vue'
 import GradeSmallTip from "../components/GradeSmallTip.vue";
-import {isMain} from '../js/common/screenUtils'
+import { isMain } from '../js/common/screenUtils'
 
 export default {
   name: 'Setting',
-  components: { SecondPanel, ChooseScreen,GradeSmallTip },
-  data () {
+  components: { SecondPanel, ChooseScreen, GradeSmallTip },
+  data() {
     return {
       visibleChooseScreen: false,
       scrollbarSettings: {
@@ -174,76 +183,84 @@ export default {
 
     }
   },
-  mounted () {
+  mounted() {
     console.log(this.userInfo)
   },
   computed: {
-    ...mapWritableState(appStore, ['settings','saving','simple']),
-    ...mapWritableState(appStore,['userInfo'])
+    ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles']),
+    ...mapWritableState(appStore, ['userInfo'])
   },
   methods: {
     ...mapActions(codeStore, ['verify', 'create']),
-    isMain:isMain,
-    tipSaving(){
+    isMain: isMain,
+    styleSwitch() {
+      if (this.styles) {
+        document.documentElement.classList.add('dark-mode');
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+      }
+    },
+
+    tipSaving() {
       Modal.info({
-        content:'使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。',
-        centered:true
+        content: '使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。',
+        centered: true
       })
     },
-    tipSimple(){
+    tipSimple() {
       Modal.info({
-        content:'使用极简模式后，将隐藏一些娱乐、社交类的功能，例如小队功能、聊天功能。',
-        centered:true
+        content: '使用极简模式后，将隐藏一些娱乐、社交类的功能，例如小队功能、聊天功能。',
+        centered: true
       })
     },
 
-    async verifyCode () {
-      this.$router.push({name:'splash'})
+    async verifyCode() {
+      this.$router.push({ name: 'splash' })
     },
-    async createCodes () {
-      this.create().then(rs=>{
+    async createCodes() {
+      this.create().then(rs => {
         message.success('生成激活码10个')
       })
     },
-    async setTouch () {
+    async setTouch() {
       await tsbApi.window.setAlwaysOnTop(false)
       let cp = require('child_process')
       cp.exec('MultiDigiMon.exe -touch', async (err) => {
         await tsbApi.window.setAlwaysOnTop(true)
       })
     },
-    async setPen () {
+    async setPen() {
       await tsbApi.window.setAlwaysOnTop(false)
       let cp = require('child_process')
       cp.exec('MultiDigiMon.exe -pen', async (err) => {
         await tsbApi.window.setAlwaysOnTop(true)
       })
     },
-    subscreen(){
-      this.$router.push({name:'subscreen'})
+    subscreen() {
+      this.$router.push({ name: 'subscreen' })
     },
-    chooseScreen () {
+    chooseScreen() {
       this.visibleChooseScreen = true
     },
-    wizard () {
+    wizard() {
       this.$router.push('/wizard')
     },
-    barrage () {
+    barrage() {
       this.$router.push({
         name: 'barrageSetting'
       })
     },
-    papersSettings () {
+    papersSettings() {
       this.$router.push({
-        name:'my'
+        name: 'my'
       })
     },
-    basic () {
+    basic() {
       this.$router.push({
         name: 'common'
       })
     },
-    switchBarrage (value) {
+    switchBarrage(value) {
       if (value) {
         window.$manager.show()
       } else {
@@ -254,6 +271,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

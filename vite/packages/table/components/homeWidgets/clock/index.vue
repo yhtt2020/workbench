@@ -289,6 +289,7 @@ export default {
     padding: 10px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
+
   }
 
   .clock {

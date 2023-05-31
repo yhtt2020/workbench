@@ -1,26 +1,24 @@
 <template>
-  <div  v-if="this.grids.length===0" class="p-5" style="max-height: 100%">
-    <a-result  class="s-bg rounded-lg " style=""
-               status="success"
-               title="使用快捷指令"
-               sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
-    >
+  <!-- :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" -->
+  <div v-if="this.grids.length === 0" class="p-5" style="max-height: 100%">
+    <a-result class="s-bg rounded-lg " style="" status="success" title="使用快捷指令"
+      sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
+      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
       <template #extra>
         <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
         <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
       </template>
-
       <div class="desc">
         <p style="font-size: 16px">
           <strong>您也可以通过多种方式导入别人分享的方案：</strong>
         </p>
         <p>
-          <close-circle-outlined :style="{ color: 'red' }"/>
+          <close-circle-outlined :style="{ color: 'red' }" />
           使用分享代码导入
           <a @click="toggleImport">导入代码 &gt;</a>
         </p>
         <p>
-          <close-circle-outlined :style="{ color: 'red' }"/>
+          <close-circle-outlined :style="{ color: 'red' }" />
           从社区获得分享代码（此功能暂未上线，请耐心等待）
           <a>从社区导入 &gt;</a>
         </p>
@@ -36,7 +34,7 @@
     <a-row>
       <a-col :span="12">
         当前选中的组：
-        <span style="color: grey" v-if="selectedGrids.length===0">请选择希望分享的组!</span>
+        <span style="color: grey" v-if="selectedGrids.length === 0">请选择希望分享的组!</span>
         <a-tag v-for="grid in selectedGrids">
           {{ grid.title }}
         </a-tag>
@@ -54,24 +52,25 @@
       </a-col>
     </a-row>
   </div>
-  <div :class="{sharing:sharing}">
-    <vue-custom-scrollbar @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
-                          style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+  <div :class="{ sharing: sharing }">
+    <vue-custom-scrollbar @contextmenu.stop="showMenu(-1, undefined, 'wrapper')" :settings="scrollbarSettings"
+      style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
       <div style="width: auto;white-space: nowrap">
-        <div @contextmenu.stop="showMenu(grid.id)" :style="{width:getWidth(grid.cols)}" style="display: inline-block"
-             v-for="(grid,index) in grids">
+        <div @contextmenu.stop="showMenu(grid.id)" :style="{ width: getWidth(grid.cols) }" style="display: inline-block"
+          v-for="(grid, index) in            grids           ">
           <h3 class="pointer text-more" v-if="sharing">
             <a-checkbox v-model:checked="selectedGridIds[grid.id]">{{ grid.title }}</a-checkbox>
           </h3>
           <template v-else>
             <h3 class="pointer text-more" v-if="editing">
-            <span v-if="editing"><span style="margin-left: 0.8em"><left-square-outlined v-if="index!==0"
-                                                                                        @click.stop="moveGrid(-1,index)"
-                                                                                        class="mr-3"/> <right-square-outlined
-              v-if="index!==this.grids.length-1" @click.stop="moveGrid(1,index)"/></span>
-            <span  class="pl-5"></span> {{ grid.title }}</span></h3>
-            <h3 @click.stop="showEditTitle(grid)" style="padding-left: 0.8em;margin-bottom: 0em" v-else class="pointer text-more">
+              <span v-if="editing"><span style="margin-left: 0.8em"><left-square-outlined v-if="index !== 0"
+                    @click.stop="moveGrid(-1, index)" class="mr-3" /> <right-square-outlined
+                    v-if="index !== this.grids.length - 1" @click.stop="moveGrid(1, index)" /></span>
+                <span class="pl-5"></span> {{ grid.title }}</span>
+            </h3>
+            <h3 @click.stop="showEditTitle(grid)" style="padding-left: 0.8em;margin-bottom: 0em" v-else
+              class="pointer text-more">
               {{ grid.title }}
             </h3>
           </template>
@@ -81,30 +80,22 @@
             <!--           v-for="(board,index) in decks">-->
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
             <!--      </div>-->
-            <div :style={width:getVuuriWidth(grid.cols)}
-                 style="text-align: center;padding-top: 0.3em;padding-bottom: 0.3em"
-                 v-if="grid.children.length===0 && editing===false" class="grid">
+            <div :style="{ width: getVuuriWidth(grid.cols) }"
+              style="text-align: center;padding-top: 0.3em;padding-bottom: 0.3em"
+              v-if="grid.children.length === 0 && editing === false" class="grid">
               <a-button block size="large" style="max-width: calc(100% - 0.6em)" type="primary" @click.stop="add(grid)">
-                <plus-outlined/>
+                <plus-outlined />
                 添加
               </a-button>
             </div>
 
 
-            <vuuri v-show="grid.children.length!==0|| editing" :style={width:getVuuriWidth(grid.cols)} :key="key"
-                   :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
-                   style="min-height: 3em"
-                   item-key="id"
-                   class="grid s-bg"
-                   :get-item-width="getIconSize" :get-item-height="getIconSize"
-                   v-model="grid.children">
+            <vuuri v-show="grid.children.length !== 0 || editing" :style="{ width: getVuuriWidth(grid.cols) }" :key="key"
+              :drag-enabled="editing" group-id="grid.id" :ref="'grid' + grid.id" style="min-height: 3em" item-key="id"
+              class="grid s-bg" :get-item-width="getIconSize" :get-item-height="getIconSize" v-model="grid.children">
               <template #item="{ item }">
-                <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')" :item="item"
-                        :uniqueKey="String(item.id)"
-                        :title="item.title"
-                        :showDelete="true"
-                        :resizable="true"
-                >
+                <Widget @contextmenu.stop="showMenu(item.id, { item, grid }, 'item')" :item="item"
+                  :uniqueKey="String(item.id)" :title="item.title" :showDelete="true" :resizable="true">
                   <DeckItem :id="item.id" :item="item"></DeckItem>
                 </Widget>
               </template>
@@ -125,13 +116,7 @@
 
     </vue-custom-scrollbar>
   </div>
-  <a-drawer
-    title="设置分享信息"
-    placement="right"
-    :closable="true"
-    v-model:visible="shareMenuComVisible"
-    @close="onClose"
-  >
+  <a-drawer title="设置分享信息" placement="right" :closable="true" v-model:visible="shareMenuComVisible" @close="onClose">
     <div class="line">
       分享标题：
       <a-input v-model:value="shareData.title"></a-input>
@@ -146,13 +131,7 @@
     </div>
 
   </a-drawer>
-  <a-drawer
-    title="导出方案"
-    placement="right"
-    :closable="true"
-    v-model:visible="shareMenuJsonVisible"
-    @close="onClose"
-  >
+  <a-drawer title="导出方案" placement="right" :closable="true" v-model:visible="shareMenuJsonVisible" @close="onClose">
     <div class="line">
       请将下方文本发送给其他用户，其他用户粘贴导入后即可导入成功。<br>
       注意：代码超过聊天工具可发送文本长度，可选择保存为文件，以发送文件方式分享。
@@ -170,13 +149,7 @@
     </div>
 
   </a-drawer>
-  <a-drawer
-    title="修改组设置"
-    placement="right"
-    :closable="true"
-    v-model:visible="editGridVisible"
-    @close="onClose"
-  >
+  <a-drawer title="修改组设置" placement="right" :closable="true" v-model:visible="editGridVisible" @close="onClose">
     <div class="line">
       <a-row :gutter="5">
         <a-col>
@@ -202,16 +175,10 @@
     <div class="line">
       设置组宽度：
       <a-input-number style="width:130px" :min="1" step="1" addon-before="列数" v-model:value="currentGrid.cols"
-                      :defalut-value="2"></a-input-number>
+        :defalut-value="2"></a-input-number>
     </div>
   </a-drawer>
-  <a-drawer
-    title="导入方案"
-    placement="right"
-    :closable="true"
-    v-model:visible="importMenuJsonVisible"
-    @close="onClose"
-  >
+  <a-drawer title="导入方案" placement="right" :closable="true" v-model:visible="importMenuJsonVisible" @close="onClose">
     <div class="line">
       导入的方案将被添加到最前面，您可以使用编辑布局自行调整位置。
     </div>
@@ -220,52 +187,41 @@
     </div>
     <div class="line">
       <a-textarea placeholder="在此处粘贴分享代码，点击导入分享代码即可完成导入。" style="width: 100%;height: 22em"
-                  v-model:value="importJsonTxt"></a-textarea>
+        v-model:value="importJsonTxt"></a-textarea>
     </div>
     <div class="line">
-      <a-button :disabled="this.importJsonTxt===''" class="mr-5" type="primary" @click="importCode">导入分享代码
+      <a-button :disabled="this.importJsonTxt === ''" class="mr-5" type="primary" @click="importCode">导入分享代码
       </a-button>
       <a-button @click="importFile">导入文件</a-button>
     </div>
 
   </a-drawer>
-  <a-drawer
-    :title="null"
-    placement="bottom"
-    :closable="true"
-    v-model:visible="menuVisible"
-    @close="onClose"
-  >
+  <a-drawer :title="null" placement="bottom" :closable="true" v-model:visible="menuVisible" @close="onClose">
     <div style="display: none">
-      <Widget
-        :uniqueKey="newItem.id"
-        :title="newItem.title"
-        :showDelete="true"
-        :resizable="true"
-      >
+      <Widget :uniqueKey="newItem.id" :title="newItem.title" :showDelete="true" :resizable="true">
         <DeckItem :id="newItem.id" :item="newItem"></DeckItem>
       </Widget>
     </div>
     <a-row :gutter="20">
-      <a-col v-if="menuType==='grid'">
+      <a-col v-if="menuType === 'grid'">
         <div @click="add()" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>添加按钮</div>
         </div>
       </a-col>
-      <a-col v-if="menuType==='item'">
+      <a-col v-if="menuType === 'item'">
         <div @click="edit()" class="btn">
           <Icon style="font-size: 3em" icon="shenqing"></Icon>
           <div>编辑按钮</div>
         </div>
       </a-col>
-      <a-col v-if="menuType==='item'">
+      <a-col v-if="menuType === 'item'">
         <div @click="clone()" class="btn">
           <Icon style="font-size: 3em" icon="fuzhi"></Icon>
           <div>复制按钮</div>
         </div>
       </a-col>
-      <a-col v-if="menuType==='item'">
+      <a-col v-if="menuType === 'item'">
         <div @click="remove()" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div>删除按钮</div>
@@ -275,19 +231,20 @@
       <a-col>
         <div @click="addBoard" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjiawenjianjia"></Icon>
-          <div v-if="superiorLimit<=grids.length">已达上限</div>
+          <div v-if="superiorLimit <= grids.length">已达上限</div>
           <div v-else>添加分组</div>
-          <div class="absolute inset-0" style="border-radius: 6px;background: rgba(42, 42, 42, 0.6)" v-show="superiorLimit<=grids.length" @click.stop="limitTip"></div>
+          <div class="absolute inset-0" style="border-radius: 6px;background: rgba(42, 42, 42, 0.6)"
+            v-show="superiorLimit <= grids.length" @click.stop="limitTip"></div>
           <GradeSmallTip powerType="quickInstructions" ref="smallTip"></GradeSmallTip>
         </div>
       </a-col>
-      <a-col v-if="menuType==='grid'">
+      <a-col v-if="menuType === 'grid'">
         <div @click="toggleEditGrid()" class="btn">
           <Icon style="font-size: 3em" icon="shenqing"></Icon>
           <div>编辑分组</div>
         </div>
       </a-col>
-      <a-col v-if="menuType==='grid'">
+      <a-col v-if="menuType === 'grid'">
         <div @click="removeGrid(this.currentGridId)" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div>删除分组</div>
@@ -302,7 +259,7 @@
 
 
     </a-row>
-    <a-row style="margin-top: 1em" :gutter="[20,20]">
+    <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
@@ -335,20 +292,13 @@
     </a-row>
 
   </a-drawer>
-  <a-modal :key="addKey"
-           v-model:visible="visibleAdd"
-           :title="null"
-           width="800px"
-           centered
-           height="500px"
-           wrap-class-name="lg-modal"
-           :footer="null"
-  >
+  <a-modal :key="addKey" v-model:visible="visibleAdd" :title="null" width="800px" centered height="500px"
+    wrap-class-name="lg-modal" :footer="null">
     <DeckAdd :data="this.currentItem" @add="doAdd"></DeckAdd>
   </a-modal>
 
-  <Prompt @cancel="this.visiblePromptTitle=false" content="请输入分组标题" title="编辑组标题" placeholder="输入标题"
-          :visible="visiblePromptTitle" @change-value="changeTitle"></Prompt>
+  <Prompt @cancel="this.visiblePromptTitle = false" content="请输入分组标题" title="编辑组标题" placeholder="输入标题"
+    :visible="visiblePromptTitle" @change-value="changeTitle"></Prompt>
 </template>
 
 <script>
@@ -366,7 +316,7 @@ import { Modal } from 'ant-design-vue'
 import BackBtn from '../components/comp/BackBtn.vue'
 import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import GradeSmallTip from "../components/GradeSmallTip.vue";
-import {powerState} from '../js/watch/grade'
+import { powerState } from '../js/watch/grade'
 import _ from 'lodash-es'
 
 export default {
@@ -382,7 +332,7 @@ export default {
     LeftSquareOutlined, RightSquareOutlined, PlusOutlined,
     GradeSmallTip
   },
-  data () {
+  data() {
     return {
       //分享相关的组
       selectedGridIds: {},//分享选中的组
@@ -425,13 +375,13 @@ export default {
       cloneMap: [],
       menuVisible: false,
       visibleAdd: false,
-      superiorLimit:10
+      superiorLimit: 10
     }
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
     ...mapWritableState(deckStore, ['grids', 'editing', 'settings']),
-    selectedGrids () {
+    selectedGrids() {
       let selectedIds = Object.keys(this.selectedGridIds).filter(key => {
         return this.selectedGridIds[key]
       })
@@ -441,9 +391,9 @@ export default {
       })
     }
   },
-  mounted () {
-    const {superiorLimit}=this.powerState('quickInstructions',lv)
-    this.superiorLimit=superiorLimit
+  mounted() {
+    const { superiorLimit } = this.powerState('quickInstructions', lv)
+    this.superiorLimit = superiorLimit
     //进来之后就把存储的部分和初始化部分完全脱钩，这样，可以随意变更按钮，并即时存储，而不会影响到我们界面上的部分。
     //this.displayGrids=_.cloneDeep(this.grids)
     //window.gridsSave=_.cloneDeep(this.grids)
@@ -453,24 +403,24 @@ export default {
   },
   methods: {
     powerState,
-    limitTip(){
+    limitTip() {
       this.$refs.smallTip.clickTip()
-      this.$refs.smallTip.limitFlag=true
+      this.$refs.smallTip.limitFlag = true
     },
-    toggleEditGrid () {
+    toggleEditGrid() {
       if (!this.currentGrid.cols) {
         this.currentGrid.cols = 2
       }
       this.editGridVisible = true
     },
-    getWidth (col) {
+    getWidth(col) {
       if (!col) {
         col = 2
       }
       return col * 90 + 25 + 'px'
 
     },
-    getVuuriWidth (col) {
+    getVuuriWidth(col) {
       if (!col) {
         col = 2
       }
@@ -478,7 +428,7 @@ export default {
 
     },
     ...mapActions(deckStore, ['initGrids']),
-    importCode () {
+    importCode() {
       if (this.importJsonTxt === '') {
         message.error('请粘贴分享代码后导入。')
         return
@@ -500,7 +450,7 @@ export default {
       }
 
     },
-    async importFile () {
+    async importFile() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: '选择导入的代码',
         filters: [{ name: 'deck存档', extensions: ['deck'] }],
@@ -510,13 +460,13 @@ export default {
       }
       this.importJsonTxt = require('fs').readFileSync(openPath[0], 'utf-8')
     },
-    copyCode () {
+    copyCode() {
       require('electron').clipboard.writeText(this.getShareJson())
       this.toggleSharing()
       this.shareMenuJsonVisible = false
       message.success('已为您复制到剪切板，赶紧去分享给其他小伙伴吧！')
     },
-    async saveFile () {
+    async saveFile() {
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
         defaultPath: '我的分享.deck',
@@ -543,7 +493,7 @@ export default {
         }
       })
     },
-    ensureShare () {
+    ensureShare() {
       if (this.selectedGrids.length === 0) {
         message.error('您至少选择一个组。')
         return
@@ -554,24 +504,24 @@ export default {
         this.shareMenuJsonVisible = true
       }
     },
-    getShareJson () {
+    getShareJson() {
       return JSON.stringify(this.selectedGrids)
     },
-    clean(){
+    clean() {
       Modal.confirm({
-        centered:true,
-        content:'是否删除全部指令？此操作不可还原。',
-        okText:'清空',
-        onOk:()=>{
-          this.grids=[]
+        centered: true,
+        content: '是否删除全部指令？此操作不可还原。',
+        okText: '清空',
+        onOk: () => {
+          this.grids = []
         }
       })
     },
-    toggleImport () {
+    toggleImport() {
       this.importJsonTxt = ''
       this.importMenuJsonVisible = !this.importMenuJsonVisible
     },
-    toggleSharing () {
+    toggleSharing() {
       if (this.editing) {
         //互斥
         this.toggleEditing()
@@ -581,7 +531,7 @@ export default {
       this.fullScreen = this.sharing
       this.menuVisible = false
     },
-    toggleEditing () {
+    toggleEditing() {
       if (this.sharing) {
         //互斥
         this.toggleSharing()
@@ -600,7 +550,7 @@ export default {
      * @param step
      * @param index
      */
-    moveGrid (step, index) {
+    moveGrid(step, index) {
       let tmp = this.grids[index]
       this.grids.splice(index, 1)
       if (step === -1) {
@@ -609,11 +559,11 @@ export default {
         this.grids.splice(index + 1, 0, tmp)
       }
     },
-    showEditTitle (grid) {
+    showEditTitle(grid) {
       this.visiblePromptTitle = true
       this.editGrid = grid
     },
-    changeTitle (title) {
+    changeTitle(title) {
       if (title.value.length > 0) {
         this.editGrid.title = title.value
         this.visiblePromptTitle = false
@@ -622,7 +572,7 @@ export default {
       }
 
     },
-    changeSize (size) {
+    changeSize(size) {
       this.settings.iconSize = size
       this.menuVisible = false
       Object.keys(this.$refs).forEach(key => {
@@ -633,12 +583,12 @@ export default {
     /**
      * 手动刷新全部Grids
      */
-    updateAllGrids () {
+    updateAllGrids() {
       Object.keys(this.$refs).forEach(key => {
         this.$refs[key][0].update()
       })
     },
-    getIconSize () {
+    getIconSize() {
       let width = 80
       switch (this.settings.iconSize) {
         case 'small':
@@ -656,10 +606,10 @@ export default {
       return width + 'px'
     },
 
-    onClose () {
+    onClose() {
       this.menuVisible = false
     },
-    remove () {
+    remove() {
       Modal.confirm({
         content: '确定删除按钮【' + this.currentItem.title + '】？此操作不可还原。请谨慎操作。',
         okText: '确认删除',
@@ -672,11 +622,11 @@ export default {
       })
 
     },
-    edit () {
+    edit() {
       this.addKey = Date.now()
       this.visibleAdd = true
     },
-    clone () {
+    clone() {
       let cloneItem = _.cloneDeep(this.currentItem)
       cloneItem.id = window.$models.nanoid.nanoid(8)
       this.currentGrid.children.unshift(cloneItem)
@@ -687,7 +637,7 @@ export default {
       this.key += 1
       message.success('复制按钮成功')
     },
-    add (currentGrid) {
+    add(currentGrid) {
       if (currentGrid) {
         this.currentGrid = currentGrid
         this.currentGridId = currentGrid.id
@@ -697,7 +647,7 @@ export default {
       this.visibleAdd = true
       // this.currentGrid.card(document.getElementById('newItem').cloneNode(true))
     },
-    showMenu (id, data, type = 'grid') {
+    showMenu(id, data, type = 'grid') {
       this.menuVisible = true
       if (type === 'grid') {
         this.menuType = 'grid'
@@ -715,7 +665,7 @@ export default {
         this.menuType = 'wrapper'
       }
     },
-    removeGrid (id) {
+    removeGrid(id) {
       Modal.confirm({
         content: '是否确认删除分组？此操作无法恢复。',
         okText: '确认删除',
@@ -731,8 +681,8 @@ export default {
       })
 
     },
-    addBoard () {
-      if(this.superiorLimit<=this.grids.length){
+    addBoard() {
+      if (this.superiorLimit <= this.grids.length) {
         this.limitTip()
         return
       }
@@ -749,7 +699,7 @@ export default {
       // })
       this.menuVisible = false
     },
-    doAdd (button) {
+    doAdd(button) {
       this.visibleAdd = false
       this.menuVisible = false
       if (!this.currentItem) {
@@ -775,6 +725,7 @@ export default {
   background-color: #fafafa;
   padding-bottom: 5px;
 }
+
 .grid {
   position: relative;
   width: 18em;
@@ -794,7 +745,7 @@ export default {
   /* any styles to card on the muuri grid */
 }
 
-:deep(.muuri-item ) {
+:deep(.muuri-item) {
   /* any styles to card on the item container */
   /* only to override positioning */
   margin: 5px;
@@ -803,21 +754,16 @@ export default {
     /* card any markup you like */
   }
 
-  &.muuri-item-dragging {
-  }
+  &.muuri-item-dragging {}
 
-  &.muuri-item-releasing {
-  }
+  &.muuri-item-releasing {}
 
-  &.muuri-item-hidden {
-  }
+  &.muuri-item-hidden {}
 }
 
 .muuri-item-placeholder {
   /* shadow element behind the dragging element */
 }
-
-
 </style>
 <style lang="scss">
 .full-modal {
@@ -851,5 +797,4 @@ export default {
   padding: 4em;
   padding-top: 0em;
 }
-
 </style>

@@ -1,38 +1,33 @@
 <template>
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
-       :class="settings.down.type+'flake'"></div>
+    :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale">
-    <div class="a-container " :class="{ dark:settings? settings.darkMod:'','horse_run':this.settings.houserun }">
+    <div class="a-container " :class="{ dark: settings ? settings.darkMod : '', 'horse_run': this.settings.houserun }">
       <router-view></router-view>
     </div>
     <Barrage></Barrage>
   </a-config-provider>
   <a-modal v-model:visible="visible" centered @ok="handleOk" @cancel="handleOk">
     <template #modalRender="{}">
-      <div
-        style="
+      <div style="
           height: 14.7em;
           background: #2e2e2e;
           padding: 1em;
           text-align: center;
           border-radius: 2em;
           margin-top: 5em;
-        "
-        v-if="clockEvent[0]"
-      >
+        " v-if="clockEvent[0]">
         <div style="font-size: 3em; margin-top: 0.5em">
           {{ clockEvent[0].dateValue.hours }}:{{
             clockEvent[0].dateValue.minutes
           }}
         </div>
-        <div
-          style="
+        <div style="
             font-size: 1.5em;
             margin-top: 0.5em;
             overflow: hidden;
             text-overflow: ellipsis;
-          "
-        >
+          ">
           {{ clockEvent[0].eventValue }}
         </div>
       </div>
@@ -51,37 +46,38 @@
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
 
   <div v-if="taggingScreen" class="px-10 rounded-lg"
-       style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
-    {{screenDetail.title || '主屏'}}
+    style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
+    {{ screenDetail.title || '主屏' }}
   </div>
 
- <Modal style="z-index:999999999999999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t" :blurFlag="true">
-   <slot>
-     <UserCard  :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
-   </slot>
- </Modal>
+  <Modal style="z-index:999999999999999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t"
+    :blurFlag="true">
+    <slot>
+      <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
+    </slot>
+  </Modal>
 </template>
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {mapActions, mapState, mapWritableState} from "pinia";
-import {cardStore} from "./store/card"
-import {appStore} from "./store";
+import { mapActions, mapState, mapWritableState } from "pinia";
+import { cardStore } from "./store/card"
+import { appStore } from "./store";
 import Barrage from "./components/comp/Barrage.vue";
-import {codeStore} from "./store/code";
-import {appsStore} from "./store/apps";
-import {steamUserStore} from "./store/steamUser";
-import {screenStore} from './store/screen'
+import { codeStore } from "./store/code";
+import { appsStore } from "./store/apps";
+import { steamUserStore } from "./store/steamUser";
+import { screenStore } from './store/screen'
 import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
-const {steamUser,steamSession,path,https,steamFs} = $models
+const { steamUser, steamSession, path, https, steamFs } = $models
 let client = new steamUser({
   enablePicsCache: true
 });
 window.client = client
-window.browser= browser
-const {appModel} = window.$models
+window.browser = browser
+const { appModel } = window.$models
 let startX,
   startY,
   moveEndX,
@@ -91,7 +87,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {Modal, UserCard, Barrage},
+  components: { Modal, UserCard, Barrage },
   data() {
     return {
       touchDownRoutes: ["home", "lock"], //支持下滑的页面的白名单
@@ -102,8 +98,15 @@ export default {
       videoPath: '',
     };
   },
-  async mounted() {
 
+  async mounted() {
+    setTimeout(() => {
+      if (this.styles == true) {
+        document.documentElement.classList.add('dark-mode');
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+      }
+    }, 1000)
     //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
     //  if (!this.init) {
     //    console.log(this.init)
@@ -138,7 +141,7 @@ export default {
 
     window.restore = () => {
       this.settings.zoomFactor = 100
-      tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100).then()
+      tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
 
 
@@ -146,9 +149,9 @@ export default {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}
       for (const app of args.runningApps) {
-        this.runningAppsInfo[app] = await appModel.get({nanoid: app})
+        this.runningAppsInfo[app] = await appModel.get({ nanoid: app })
         this.runningAppsInfo[app].windowId = args.windows[args.runningApps.indexOf(app)]
-        ipc.send('getAppRunningInfo', {nanoid: app})
+        ipc.send('getAppRunningInfo', { nanoid: app })
       }
     })
 
@@ -175,17 +178,17 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
-    ...mapWritableState(appStore, ['userCardVisible','userCardUid','userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'styles', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo','runningTableApps',]),
-    ...mapWritableState(screenStore, ['taggingScreen','screenDetail']),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),
+    ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
-    ...mapActions(steamUserStore, ['setUserData','setSteamLoginData','setGameList','addGameDetail']),
+    ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail']),
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -327,33 +330,33 @@ export default {
       immediate: true,
       deep: true
     },
-    "steamLoginData.refreshToken":{
-      handler(){
-        if(this.steamLoginData.refreshToken === ''){
+    "steamLoginData.refreshToken": {
+      handler() {
+        if (this.steamLoginData.refreshToken === '') {
           client.logOff();
           client.once('disconnected', () => {
           });
           return
         }
-        client.logOn({"refreshToken":this.steamLoginData.refreshToken})
-        client.on('loggedOn', (res,err) =>{
+        client.logOn({ "refreshToken": this.steamLoginData.refreshToken })
+        client.on('loggedOn', (res, err) => {
           client.setPersona(steamUser.EPersonaState.Online);
-          client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) =>{
-            this.setUserData({name,country})
+          client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) => {
+            this.setUserData({ name, country })
           });
           client.gamesPlayed([1172470]);
           client.on('appOwnershipCached', () => {
             console.log('Game ownership cached');
-            client.getUserOwnedApps(client.steamID.getSteamID64(),{includeFreeSub: true,includePlayedFreeGames:true},(err,data)=>{
-              if(err) console.log(err)
+            client.getUserOwnedApps(client.steamID.getSteamID64(), { includeFreeSub: true, includePlayedFreeGames: true }, (err, data) => {
+              if (err) console.log(err)
               this.setGameList(data.apps)
             })
-            client.getProductInfo(client.getOwnedApps({excludeFree: false}),[],(err,data)=>{
-              if(err) console.log(err)
+            client.getProductInfo(client.getOwnedApps({ excludeFree: false }), [], (err, data) => {
+              if (err) console.log(err)
               const list = []
-              Object.keys(data).forEach(i=>{
-                if(data[i].appinfo.common){
-                  if(data[i].appinfo.common.type === 'Game'&&data[i].appinfo.common.oslist&&data[i].appinfo.common.small_capsule||data[i].appinfo.common.type === 'game'&&data[i].appinfo.common.oslist&&data[i].appinfo.common.small_capsule){
+              Object.keys(data).forEach(i => {
+                if (data[i].appinfo.common) {
+                  if (data[i].appinfo.common.type === 'Game' && data[i].appinfo.common.oslist && data[i].appinfo.common.small_capsule || data[i].appinfo.common.type === 'game' && data[i].appinfo.common.oslist && data[i].appinfo.common.small_capsule) {
                     list.push(data[i])
                   }
                 }

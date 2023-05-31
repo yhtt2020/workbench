@@ -32,6 +32,7 @@ import $ from "jquery";
 import dayjs from 'dayjs';
 import routes from './route/route'
 
+import "../../public/css/global.scss"
 dayjs.locale('zh-cn');
 
 const app = createApp(App)

@@ -1,6 +1,6 @@
 <template>
   <div v-if="showRestore" class="no-drag"
-       style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76)">
+    style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76)">
     <div class="mb-3">当前窗口分辨率：{{ currentWidth }} * {{ currentHeight }}，将于{{ timeout }}秒后还原</div>
     <a-button @click="restore" class="ml-3">还原</a-button>
     <a-button @click="reset" class="ml-3">重置</a-button>
@@ -15,19 +15,25 @@
   </div>
   <div class="line">
 
-    分辨率：<span :class="{'unfit':fitWidth.status!==0}"><Icon icon="kuandu"/>宽 {{ currentWidth }} <template
-    v-if="fitWidth.status!==0">（<Icon icon="tishi-xianxing"/>
+    分辨率：<span :class="{ 'unfit': fitWidth.status !== 0 }">
+      <Icon icon="kuandu" />宽 {{ currentWidth }} <template v-if="fitWidth.status !== 0">（
+        <Icon icon="tishi-xianxing" />
 
-             <span v-if="fitWidth.status===-1">低</span><span
-      v-if="fitWidth.status===1">高</span>于推荐值）</template></span>
-    <Icon icon="guanbi1"/>
+        <span v-if="fitWidth.status === -1">低</span><span v-if="fitWidth.status === 1">高</span>于推荐值）
+      </template>
+    </span>
+    <Icon icon="guanbi1" />
 
 
-    <span :class="{'unfit':fitHeight.status!==0}"><Icon icon="gaodu"/>
-            高 {{ currentHeight }}  <template v-if="fitHeight.status!==0">（<Icon icon="tishi-xianxing"/>
+    <span :class="{ 'unfit': fitHeight.status !== 0 }">
+      <Icon icon="gaodu" />
+      高 {{ currentHeight }} <template v-if="fitHeight.status !== 0">（
+        <Icon icon="tishi-xianxing" />
 
-                <span v-if="fitHeight.status===-1">低</span><span
-          v-if="fitHeight.status===1">高</span>于推荐值{{ fitHeight.suggest }}）</template></span>
+        <span v-if="fitHeight.status === -1">低</span><span v-if="fitHeight.status === 1">高</span>于推荐值{{ fitHeight.suggest
+        }}）
+      </template>
+    </span>
 
     <a-slider @afterChange="setZoomFactor" :min="30" :max="500" v-model:value="newZoom"></a-slider>
   </div>
@@ -39,7 +45,7 @@ import { appStore } from '../../store'
 
 export default {
   name: 'ZoomUI',
-  data () {
+  data() {
     return {
       timer: null,
       inputZoom: 100,
@@ -51,7 +57,7 @@ export default {
       timeout: 10,
     }
   },
-  async mounted () {
+  async mounted() {
     this.newZoom = await tsbApi.window.getZoomFactor() * 100
     this.oldZoom = this.newZoom
     this.inputZoom = +(this.newZoom).toFixed(0)
@@ -59,19 +65,19 @@ export default {
     this.getSize()
   },
   methods: {
-    inputEnter(){
-      if(!this.inputZoom){
-        this.inputZoom=30
+    inputEnter() {
+      if (!this.inputZoom) {
+        this.inputZoom = 30
       }
-      this.newZoom=this.inputZoom
+      this.newZoom = this.inputZoom
       this.setZoomFactor(this.inputZoom)
     },
-    async reset () {
-      this.showRestore=false
+    async reset() {
+      this.showRestore = false
       await tsbApi.window.setZoomFactor(1)
       setTimeout(() => {
         this.clearTimer()
-        this.timeout=10
+        this.timeout = 10
         this.settings.zoomFactor = 100
         this.newZoom = 100
         this.oldZoom = 100
@@ -79,30 +85,30 @@ export default {
         this.getSize()
       }, 300)
     },
-    async restore () {
+    async restore() {
 
-      this.oldZoom=this.settings.zoomFactor
+      this.oldZoom = this.settings.zoomFactor
       this.newZoom = this.oldZoom
-      this.inputZoom=this.oldZoom
-      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)
+      this.inputZoom = this.oldZoom
+      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)
       setTimeout(() => {
         this.getSize()
       }, 300)
     },
-    sure () {
+    sure() {
       this.clearTimer()
       this.settings.zoomFactor = this.newZoom
-      this.oldZoom=this.settings.zoomFactor
-      this.newZoom=this.settings.zoomFactor
-      this.timeout=10
-      this.showRestore=false
+      this.oldZoom = this.settings.zoomFactor
+      this.newZoom = this.settings.zoomFactor
+      this.timeout = 10
+      this.showRestore = false
     },
-    clearTimer () {
+    clearTimer() {
       clearInterval(this.timer)
       this.timer = null
       this.timeout = 10
     },
-    setTimer () {
+    setTimer() {
       if (this.timer) {
         this.clearTimer()
       }
@@ -118,14 +124,14 @@ export default {
         }, 1000)
       }
     },
-    getSize () {
+    getSize() {
       this.currentWidth = document.body.offsetWidth
       this.currentHeight = document.body.offsetHeight
     },
-    async setZoomFactor (zoom = this.newZoom) {
-      zoom= +zoom.toFixed(0)
-      this.inputZoom=zoom
-      this.oldZoom=this.settings.zoomFactor
+    async setZoomFactor(zoom = this.newZoom) {
+      zoom = +zoom.toFixed(0)
+      this.inputZoom = zoom
+      this.oldZoom = this.settings.zoomFactor
       await tsbApi.window.setZoomFactor(+zoom / 100)
       this.showRestore = true
       this.setTimer()
@@ -138,7 +144,7 @@ export default {
   computed: {
 
     ...mapWritableState(appStore, ['settings']),
-    fitWidth () {
+    fitWidth() {
       const width = Number(this.currentWidth)
       if (width < 800) {
         return {
@@ -160,7 +166,7 @@ export default {
         }
       }
     },
-    fitHeight () {
+    fitHeight() {
       const height = Number(this.currentHeight)
       if (height < 480) {
         return {
@@ -186,6 +192,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
