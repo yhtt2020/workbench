@@ -367,7 +367,23 @@ export default {
             node: true,
             security: true
           }
-        }
+        },
+        {
+          icon: '/img/game.png',
+          name: '剪贴板（正在开发中）',
+          summary: '',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'clipboard',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'clipboard',
+            })
+          }
+        },
+        
       ]
     }
   },
