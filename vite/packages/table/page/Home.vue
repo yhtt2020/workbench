@@ -552,6 +552,7 @@ export default {
       "agreeTest",
       "backgroundSettings",
       "backgroundImage",
+      "styles"
     ]),
 
     ...mapWritableState(appStore, {
@@ -742,6 +743,11 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
+      if (this.styles == true) {
+        document.documentElement.classList.add('light-nobg-mode');
+      } else {
+        document.documentElement.classList.remove('light-nobg-mode');
+      }
     },
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);

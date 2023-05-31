@@ -195,9 +195,9 @@ export default {
     isMain: isMain,
     styleSwitch() {
       if (this.styles) {
-        document.documentElement.classList.add('dark-mode');
+        document.documentElement.classList.add('light-mode');
       } else {
-        document.documentElement.classList.remove('dark-mode');
+        document.documentElement.classList.remove('light-mode');
       }
     },
 

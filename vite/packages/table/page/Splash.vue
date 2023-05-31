@@ -257,10 +257,12 @@ export default {
     async afterLaunch() {
       console.log('afterLaunch')
       if (this.styles == true) {
-        document.documentElement.classList.add('dark-mode');
+        document.documentElement.classList.add('light-mode');
       } else {
-        document.documentElement.classList.remove('dark-mode');
+        document.documentElement.classList.remove('light-mode');
       }
+
+
       //执行分屏的启动操作
       this.onTableStarted().then()
       if (!this.settings.zoomFactor) {
