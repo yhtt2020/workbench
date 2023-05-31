@@ -30,7 +30,7 @@ export default {
     props: {
         cardDetails: {
             type: Object
-        }
+        },
     },
     methods: {
         addCard(item, index) {

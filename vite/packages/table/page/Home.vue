@@ -99,7 +99,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="show">
-      <NewAddCard @setCustoms="setCustoms"></NewAddCard>
+      <NewAddCard @setCustoms="setCustoms" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"

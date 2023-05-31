@@ -42,6 +42,7 @@ import Message from "../page/social/Message.vue";
 import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
 import Inspector from "../page/app/Inspector.vue";
+import Clipboard from "../page/clipboard/Clipboard.vue"
 export default [
   {
     path: "/main",
@@ -276,6 +277,11 @@ export default [
           },
         ],
       },
+      {
+        path:'/clipboard',
+        name:'clipboard',
+        component:Clipboard
+      }
     ],
   },
 ];
