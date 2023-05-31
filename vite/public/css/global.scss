@@ -1,0 +1,32 @@
+// 默认主题颜色
+:root {
+    --font-color: #fff;
+    --background-color: rgb(26, 26, 26, 0.65);
+    --no-active-background-color: rgb(26, 26, 26, 0.65);
+
+    .active {
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+    }
+}
+
+// 白天主题颜色
+.light-mode {
+    --font-color: #000 !important;
+    --background-color: rgba(204, 204, 204, 0.75);
+    --active-background-color: #fff;
+
+    --active-font-color: #000;
+    --no-active-background-color: #A6A9AE;
+    ;
+    --no-active-font-color: #000;
+
+    body {
+        background: #F3F3F5 !important;
+    }
+
+    .active {
+        background: #fff;
+        color: #000 !important;
+    }
+}
