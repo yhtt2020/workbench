@@ -14,17 +14,18 @@
           <Icon icon="desktop"></Icon>
         </div>
       </div>
-    
+
     </div>
     <vue-custom-scrollbar :settings="settingsScroller"
                      ref="gameScroll"     style="height: calc(100vh - 15.8em);padding-right: 5px;padding-left: 1em" class="pt-3 mr-3" @scroll="scrollList($event)">
     <div class="flex flex-row flex-wrap -ml-3 " v-if="gameType.name==='other'&&myGameList.length>0">
+<!--   导入的外部游戏，非steam   -->
       <div class="pb-3 pl-3 game-list-local flex-shrink-0 my-game-content" v-for="(item,index) in myGameList" >
-        <div class="s-bg h-full pointer w-full rounded-lg" style="padding-top: 70px" @click="openMyGame(item)">
-          <div class="relative    mx-auto " style="height: 65px;width: 65px;" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @contextmenu="openOtherDetail(item)" @click="runGame">
+        <div class="s-bg h-full pointer w-full rounded-lg" style="padding-top:30px" @click="openMyGame(item)" @contextmenu="openOtherDetail(item)">
+          <div class="relative    mx-auto " style="height: 65px;width: 65px;" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose"  >
             <img :src="item.icon"  class="w-full h-full rounded-lg object-cover"  alt="">
           </div>
-          <div class="w-full h-12  bottom-0  mt-4 text-center text-white" >{{item.name}}</div>
+          <div class="w-full h-12  bottom-0  mt-4 text-center text-white truncate px-3"  >{{item.name}}</div>
         </div>
       </div>
     </div>
@@ -54,7 +55,7 @@
         <div :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
           <img v-if="item.appinfo" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appinfo.appid+'/header.jpg'" class="w-full h-full  object-cover"  alt="">
         </div>
-    
+
     <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
         <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
           <span class="text-more text-white text-base " style="font-weight: 400">{{item.appinfo?.common.name}}</span>
@@ -62,9 +63,9 @@
           <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
         </div>
       </div>
-    
+
     </div>
-    
+
     </div>
       <div v-else>
         <div class="text-center mt-20">
@@ -72,7 +73,7 @@
           <a-button v-if="gameType.name==='steam'" @click="goBind" type="primary">绑定Steam账号</a-button>
           <a-button v-else @click="openModal" type="primary">导入外部游戏</a-button>
         </div>
-    
+
       </div>
     </vue-custom-scrollbar>
     </div>
@@ -124,18 +125,18 @@
         </div>
       </Modal>
       <Modal v-model:visible="otherShow" v-show="otherShow" animationName="bounce-in" :blurFlag="true">
+<!--   外部游戏详情弹窗     -->
         <div class="pt-12 pb-8 px-8">
           <div class="w-24 h-24 mx-auto">
-            <img :src="currentSteam.src" class="w-full h-full rounded-lg object-cover" alt="">
+            <img :src="currentGame.icon" class="w-full h-full rounded-lg object-cover" alt="">
           </div>
-          <div class=" w-full h-12  flex items-center justify-center mt-3" >{{currentSteam.title}}</div>
+          <div class=" w-full h-12  flex items-center justify-center mt-3" >{{currentGame.name}}</div>
           <div class="flex flex-col  justify-between">
-    
             <div class="flex flex-row  mt-3">
-              <div class="pointer s-item w-44 flex justify-center items-center rounded-lg mr-3"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
-              <div class="pointer s-item w-10 h-10 flex justify-center items-center rounded-lg"><Icon style=""   icon="delete"></Icon></div>
+              <div @click="showMyGameDir" class="pointer s-item w-44 flex justify-center items-center rounded-lg mr-3"><Icon style=""  class="mr-2" icon="folder-open"></Icon>安装路径</div>
+              <div @click="deleteMyGame" class="pointer s-item w-10 h-10 flex justify-center items-center rounded-lg"><Icon  icon="delete"></Icon></div>
             </div>
-            <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg mt-3"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+            <div @click="openMyGame(currentGame)"  class="pointer s-item flex h-10 justify-center items-center rounded-lg mt-3"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
           </div>
         </div>
       </Modal>
@@ -177,7 +178,7 @@ import { appStore } from "../../store";
 import {steamUserStore} from "../../store/steamUser";
 import {getDateTime} from '../../util'
 import {runExec} from '../../js/common/exec'
-
+import {Modal as AntModal} from 'ant-design-vue'
 export default {
   name: "MyGame",
   components:{
@@ -210,6 +211,9 @@ export default {
       currentSteam:{
         src:'',
         lastTime:0,
+      },
+      currentGame:{
+
       },
       hoverIndex:-1,
       screenShow:false,
@@ -252,16 +256,36 @@ export default {
       if(!openPath){
         return
       }
+      console.log(openPath,'openPath')
      let dropFiles = await ipc.sendSync("getFilesIcon", {
        files: JSON.parse(JSON.stringify(openPath)),
      });
      console.log(dropFiles)
-     this.myGameList.unshift(dropFiles[0])
      this.modalVisibility=false
-
+     dropFiles.forEach(game=>{
+       this.myGameList.unshift(game)
+     })
     },
     deleteGame(){
       runExec('uninstall '+ this.currentSteam.appinfo.appid)
+    },
+    showMyGameDir(){
+      require('electron').shell.showItemInFolder(this.currentGame.path)
+    },
+    deleteMyGame(){
+      AntModal.confirm({
+        centered:true,
+        content:'是否确认删除游戏？此操作不可还原。',
+        onOk:()=>{
+          this.otherShow=false
+          let foundIndex= this.myGameList.findIndex(li=>{
+            return li===this.currentGame
+          })
+          this.myGameList.splice(foundIndex,1)
+
+        }
+      })
+
     },
     openDetail(){
       runExec('start steam://nav/games/details/' + this.currentSteam.appinfo.appid)
@@ -308,13 +332,15 @@ export default {
     runGame(){
       this.gameRun=!this.gameRun
     },
+
     openSteamDetail(item){
       this.currentSteam = item
       this.steamShow = true
     },
     openOtherDetail(item){
-      this.currentSteam = item
-      this.otherShow = true
+      console.log(item)
+      this.currentGame=item
+      this.otherShow=true
     },
     openScreen(){
       this.fullScreen = true
@@ -385,6 +411,7 @@ export default {
 }
 .game-list-local{
   max-width: 300px;
+  max-height: 170px;
   aspect-ratio: 231/300;
 }
 @media screen and (max-width: 840px){
