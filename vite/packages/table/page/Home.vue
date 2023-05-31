@@ -20,7 +20,7 @@
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="addCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
+            <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
             <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
           </template>
 
@@ -102,9 +102,15 @@
       <NewAddCard @setCustoms="setCustoms" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
+      <a-col>
+        <div @click="newAddCard" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>添加卡片</span></div>
+        </div>
+      </a-col>
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
@@ -114,12 +120,7 @@
           </div>
         </div>
       </a-col>
-      <a-col>
-        <div @click="addCard" class="btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>添加卡片</span></div>
-        </div>
-      </a-col>
+
       <a-col>
         <div @click="showSetting" class="btn">
           <Icon style="font-size: 3em" icon="shezhi1"></Icon>
@@ -132,6 +133,10 @@
           <div><span>清空卡片</span></div>
         </div>
       </a-col>
+
+
+    </a-row>
+    <a-row style="margin-top: 2em" :gutter="[20, 20]">
       <a-col>
         <div @click="showAddDeskForm" class="btn">
           <Icon style="font-size: 3em" icon="desktop"></Icon>
@@ -148,12 +153,6 @@
         <div @click="hideDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
           <div><span>隐藏桌面</span></div>
-        </div>
-      </a-col>
-      <a-col>
-        <div @click="newAddCard" class="btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>新添加卡片（开发中）</span></div>
         </div>
       </a-col>
     </a-row>

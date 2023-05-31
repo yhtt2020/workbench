@@ -235,6 +235,7 @@ export default {
 
             .img {
                 zoom: 0.07 !important;
+              object-fit: contain;
             }
 
             .zoom {
@@ -258,6 +259,7 @@ export default {
             .img {
                 zoom: 0.04;
                 border-radius: 5px;
+               object-fit: contain;
             }
         }
 
