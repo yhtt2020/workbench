@@ -100,13 +100,7 @@ export default {
   },
 
   async mounted() {
-    setTimeout(() => {
-      if (this.styles == true) {
-        document.documentElement.classList.add('dark-mode');
-      } else {
-        document.documentElement.classList.remove('dark-mode');
-      }
-    }, 1000)
+
     //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
     //  if (!this.init) {
     //    console.log(this.init)
@@ -178,7 +172,7 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
-    ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'styles', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),

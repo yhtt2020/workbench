@@ -1,17 +1,18 @@
 <template>
-  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333" class="no-drag"
-       v-if="launching">
+  <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333"
+    class="no-drag" v-if="launching">
     <div style="margin: auto;">
       <div class="animate-bounce mb-5 ">
         <a-avatar :size="60"
-                  src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
+          src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
       </div>
       <div style="font-size: 1.2em;">
         <svg style="vertical-align: text-bottom" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
         </svg>
         欢迎回来，又是元气满满的一天！
       </div>
@@ -23,7 +24,7 @@
     <div class="no-drag" style="width: 600px;margin: auto">
       <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台抢鲜体验</h3>
       <p>目前我们仍处于早期阶段，必须使用邀请码方可体验产品。
-        <a-button @click="()=>{this.showTip=!this.showTip}">什么是抢鲜体验？</a-button>
+        <a-button @click="() => { this.showTip = !this.showTip }">什么是抢鲜体验？</a-button>
       </p>
       <div v-if="showTip" class="p-5 mb-3" style="background: #3b3b3b;border-radius: 8px;border-width: 2px">
         <p style="font-weight: bold">
@@ -63,8 +64,11 @@
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
           <div v-if="!myCode" class="mt-3 mb-3">请输入激活码激活账号。</div>
-          <p v-if="myCode" class="mt-2">检测到您已使用过激活码：<span style="user-select: text;font-weight: bold">{{ myCode }}</span>，可直接填入发车。如遇已激活但无法验证的情况，请确认网络（如梯子），并退出重试，若多次重试仍不可验证，请更新版本，联系QQ<span style="user-select: text;font-weight: bold">276905621</span>，重新领码。
-            <a-button type="primary" @click="code=myCode" size="small" class="ml-3">填入</a-button> 当前版本：<span style="user-select: text;font-weight: bold">{{version}}</span>
+          <p v-if="myCode" class="mt-2">检测到您已使用过激活码：<span style="user-select: text;font-weight: bold">{{ myCode
+          }}</span>，可直接填入发车。如遇已激活但无法验证的情况，请确认网络（如梯子），并退出重试，若多次重试仍不可验证，请更新版本，联系QQ<span
+              style="user-select: text;font-weight: bold">276905621</span>，重新领码。
+            <a-button type="primary" @click="code = myCode" size="small" class="ml-3">填入</a-button> 当前版本：<span
+              style="user-select: text;font-weight: bold">{{ version }}</span>
           </p>
           <p>
             <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>
@@ -74,7 +78,8 @@
       </div>
 
       <div class="flex">
-        <a-button class="m-3" :loading="loading" @click="checkCode" :disabled="code===''" block type="primary" size="large">
+        <a-button class="m-3" :loading="loading" @click="checkCode" :disabled="code === ''" block type="primary"
+          size="large">
           激活 ! 发车
         </a-button> <a-button size="large" class="m-3" v-if="myCode" @click="verifyAgain">验证</a-button>
       </div>
@@ -93,13 +98,13 @@ import { deckStore } from '../store/deck'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { screenStore } from '../store/screen'
-import {isMain} from '../js/common/screenUtils'
+import { isMain } from '../js/common/screenUtils'
 import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 
 export default {
   name: 'Code',
-  data () {
+  data() {
     return {
       showTip: false,
       loading: false,
@@ -108,11 +113,11 @@ export default {
       storeReadyTimer: null,
       launched: false,
       modal: null,
-      timeoutHandler:null,
-      version:tsbApi.runtime.appVersion
+      timeoutHandler: null,
+      version: tsbApi.runtime.appVersion
     }
   },
-  async mounted () {
+  async mounted() {
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
     this.initStore(appStore, 'appStore')
@@ -124,9 +129,9 @@ export default {
     this.initStore(screenStore, 'screen')
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
-    if(isMain()){
+    if (isMain()) {
       this.bindMainIPC()
-    }else{
+    } else {
       this.bindSubIPC()
     }
 
@@ -134,7 +139,7 @@ export default {
 
     this.bindUserInfoResponse()
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.storeReadyTimer = setInterval(() => {
         if (!this.launching) {
           return
@@ -151,38 +156,38 @@ export default {
           this.afterLaunch().then()
         }
       }, 1000)
-    },100)
+    }, 100)
 
     this.getUserInfo()
     this.sortClock()
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo','backgroundImage']),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'styles']),
   },
   methods: {
-    ...mapActions(cardStore, ['sortClock','sortCountdown']),
-    ...mapActions(screenStore,['bindMainIPC','bindSubIPC','onTableStarted']),
+    ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
+    ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
     ...mapActions(appStore, ['getUserInfo', 'setUser']),
-    timeout(){
-      this.timeoutHandler=setTimeout(()=>{
+    timeout() {
+      this.timeoutHandler = setTimeout(() => {
         Modal.error({
-          content:'服务器连接超时。无法验证激活信息。请稍后再试。',
-          key:'error',
-          okText:'重试',
-          centered:true,
-          onOk:()=>{
+          content: '服务器连接超时。无法验证激活信息。请稍后再试。',
+          key: 'error',
+          okText: '重试',
+          centered: true,
+          onOk: () => {
             window.location.reload()
           }
         })
-      },5000)
+      }, 5000)
     },
-    enter(){
+    enter() {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       this.$router.replace({ name: 'home' })
     },
-    bindUserInfoResponse(){
+    bindUserInfoResponse() {
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
         this.tipped = false
@@ -208,38 +213,38 @@ export default {
         if (this.$route.name === 'splash') {
           let rs = await this.verify(userInfo.uid)
           if (rs) {
-            this.$router.replace({ name:'home' })
+            this.$router.replace({ name: 'home' })
           } else {
             Modal.error({
               content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
               centered: true,
-              onOk: () => {}
+              onOk: () => { }
             })
           }
         }
         this.setUser(userInfo)
       })
     },
-    async verifyAgain () {
+    async verifyAgain() {
       if (!this.userInfo) {
         message.info('请登录后重试')
         return
       } else {
-        let rs=await this.verify(this.userInfo.uid)
+        let rs = await this.verify(this.userInfo.uid)
         if (rs) {
           message.success('欢迎回来')
-          this.$router.replace({ name:'home' })
+          this.$router.replace({ name: 'home' })
         } else {
           Modal.error({
             content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
             centered: true,
-            onOk: () => {}
+            onOk: () => { }
           })
         }
 
       }
     },
-    initStore (store, name) {
+    initStore(store, name) {
       if (!window.loadedStore) {
         window.loadedStore = {}
       }
@@ -249,8 +254,13 @@ export default {
       store()
     },
 
-    async afterLaunch () {
+    async afterLaunch() {
       console.log('afterLaunch')
+      if (this.styles == true) {
+        document.documentElement.classList.add('dark-mode');
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+      }
       //执行分屏的启动操作
       this.onTableStarted().then()
       if (!this.settings.zoomFactor) {
@@ -258,42 +268,42 @@ export default {
       }
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
-     // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
-     //   document.body.style.background = '#191919'
-     //
-     //
-     // }else if(this.backgroundImage.runpath){
-     //
-     // }else{
-     //   document.body.style.background=  ''
-     //   document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
-     // }
+        // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
+        //   document.body.style.background = '#191919'
+        //
+        //
+        // }else if(this.backgroundImage.runpath){
+        //
+        // }else{
+        //   document.body.style.background=  ''
+        //   document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
+        // }
       }
       this.verify(this.userInfo.uid).then(rs => {
         //只要提供了uid，就能基于uid验证
         if (!rs) {
-         // this.enter()
+          // this.enter()
           this.launching = false
           return
         } else {
           this.enter()
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         Modal.error({
-          content:'服务器连接超时。无法验证激活信息。请稍后再试。',
-          key:'error',
-          okText:'重试',
-          centered:true,
-          onOk:()=>{
+          content: '服务器连接超时。无法验证激活信息。请稍后再试。',
+          key: 'error',
+          okText: '重试',
+          centered: true,
+          onOk: () => {
             window.location.reload()
           }
         })
-      }).finally(()=>{
+      }).finally(() => {
         this.launching = false
       })
 
     },
-    checkCode () {
+    checkCode() {
       this.loading = true
       let hash = this.getSerialHash()
       if (this.code === '') {
@@ -314,14 +324,14 @@ export default {
           this.myCode = this.code
           let timer = setTimeout(() => {
             this.modal.destroy()
-            this.$router.replace({ name:'wizard' })
+            this.$router.replace({ name: 'wizard' })
           }, 10000)
           this.modal = Modal.success({
             centered: true,
             content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
               clearTimeout(timer)
-              this.$router.replace({ name:'wizard'  })
+              this.$router.replace({ name: 'wizard' })
             },
             okText: '发车'
           })
@@ -332,7 +342,7 @@ export default {
         message.error('服务器无响应，请稍后再试')
       })
     },
-    gradeTableGenerate (num) {
+    gradeTableGenerate(num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {
         let arrLef = 0
@@ -349,7 +359,7 @@ export default {
       delete lvSys['lv0']
       return lvSys
     },
-    login () {
+    login() {
       tsbApi.user.login((data) => {
         this.getUserInfo()
       })
