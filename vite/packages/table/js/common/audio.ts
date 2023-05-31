@@ -7,6 +7,9 @@ const audio={
       onError('已经监听了')
     }
     window.listenningAudioInput=true
+    if(typeof navigator.getUserMedia ==='undefined'){
+      return
+    }
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
     if (!navigator.getUserMedia) {
       if(onError)
@@ -89,7 +92,9 @@ const audio={
   },
 
   getDevices(cb){
-
+    if(typeof navigator.getUserMedia ==='undefined'){
+      return
+    }
     navigator.mediaDevices.enumerateDevices().then((list) => {
       console.log("list:", list);
 
