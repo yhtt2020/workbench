@@ -1,7 +1,6 @@
 <template>
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden">
-    <transition name="fade">
       <div v-if="showDetail"
            style="width:350px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
@@ -49,9 +48,6 @@
           </a-col>
         </a-row>
       </div>
-    </transition>
-
-    <transition name="fade">
       <div v-if="userDetail"
            style="width:300px;height: 500px;background: rgba(0,0,0,0.09);position: relative">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
@@ -61,7 +57,7 @@
         <vue-custom-scrollbar :settings="outerSettings"
                               style="position:relative;height:calc(100% - 60px);  ">
           <div class="mb-10">
-            <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo"></UserDetail>
+            <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo" :joinedTime="showUserMemberInfo.joinedTime"></UserDetail>
           </div>
         </vue-custom-scrollbar>
 
@@ -86,9 +82,6 @@
           </a-row>
         </div>
       </div>
-    </transition>
-
-
     <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0">
       <div v-if="!teamDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
@@ -231,12 +224,17 @@ export default {
       this.showDetail = true
     },
     showUserDetail (userInfo, memberInfo) {
-      this.showDetail = false
-      this.userDetail=true
       this.showUserMemberInfo = memberInfo
+      if(this.showUserMemberInfo.uid===this.teamLeader.uid){
+        this.showUserMemberInfo.joinedTime=this.team.createTime
+      }else{
+        this.showUserMemberInfo.joinedTime=memberInfo.updateTime
+      }
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
       this.userInfoKey = Date.now()
+      this.showDetail = false
+      this.userDetail=true
     },
     closeDetail () {
       this.userDetail = false
