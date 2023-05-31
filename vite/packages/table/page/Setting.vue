@@ -194,12 +194,26 @@ export default {
     ...mapActions(codeStore, ['verify', 'create']),
     isMain: isMain,
     styleSwitch() {
+      if (this.style) document.documentElement.classList.remove(this.style);
+      let name
+      if (this.style == "light-nobg-mode" || this.style == 'dark-nobg-mode') {
+        name = this.style
+      }
       if (this.styles) {
-        document.documentElement.classList.add('light-mode');
-        this.style = 'light-mode'
+        if (name) {
+          document.documentElement.classList.add("light-nobg-mode")
+          this.style = "light-nobg-mode"
+        } else {
+          document.documentElement.classList.add("light-model");
+          this.style = "light-model"
+        }
       } else {
-        document.documentElement.classList.remove('light-mode');
-        this.style = ''
+
+        if (name) {
+          document.documentElement.classList.add("dark-nobg-mode")
+          this.style = "dark-nobg-mode"
+        } else this.style = ''
+
 
       }
     },

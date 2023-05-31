@@ -744,6 +744,7 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
+      if (this.style) document.documentElement.classList.remove(this.style);
       if (this.styles == true) {
         document.documentElement.classList.add('light-nobg-mode');
         this.style = 'light-nobg-mode'

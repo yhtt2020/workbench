@@ -92,8 +92,9 @@
     <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
     <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
     <!--    </div>-->
+    <!-- 快速搜索 底部栏区域 -->
     <div class=" flex flex-row  items-center pl-6 s-bg"
-      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }"
+      :style="{ backgroundColor: 'var(--no-active-background-color)', color: 'var(--font-color)' }"
       style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
       <div style="overflow: hidden;overflow-x: auto;" class="flex flex-row items-center  flex-nowrap scroll-content mr-6"
         ref="content">
