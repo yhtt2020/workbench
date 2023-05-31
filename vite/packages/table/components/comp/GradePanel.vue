@@ -43,7 +43,7 @@
               ><span>
                                    全球排名:<span style="font-size: 20px;"> {{ badge.rank }}</span>
 </span></div>
-              <div v-else> 超过{{ (grade.percentage).toFixed(2) }}%的用户</div>
+              <div v-else> 超过{{ (grade.percentage*100).toFixed(2) }}%的用户</div>
 
             </div>
           </a-col>

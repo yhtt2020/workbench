@@ -15,7 +15,7 @@ export const powerList = [
       0:'静态壁纸',1:'静态壁纸',2:'动态壁纸',3:'动态壁纸',5:'动态壁纸',10:'动态壁纸'}
   },
   {icon:'smile',name:'barrage',alias:'弹幕',detail: {
-      0:'发弹幕',1:'发弹幕',2:'发弹幕',3:'发弹幕',5:'关闭弹幕',10:'关闭弹幕'}
+      0:'发弹幕',1:'发弹幕',2:'发弹幕',3:'发弹幕',5:'发弹幕',10:'发弹幕'}
   },
   {icon:'thunderbolt',name:'quickInstructions',alias:'快捷指令',detail: {
       0:'5组',1:'5组',2:'自定义指令',3:'自定义指令',5:'10组',10:'10组'},superiorLimit:{
@@ -34,13 +34,14 @@ export const powerList = [
     }
   },
   {icon:'appstore',name:'bottomNavigation',alias:'自定义底部导航',detail:{
-      2:' ',3:' ',5:' ',10:' '}
+     0:'可编辑',1:'可编辑', 2:'可编辑',3:'可编辑',5:'可编辑',10:'可编辑'}
   },
   {icon:'pause',name:'sideNavigation',alias:'自定义侧边导航',detail:{
       3:' ',5:' ',10:' '
     },noOnline:true},
   {icon:'comment',name:'closeChat',alias:'轻聊',detail:{
-      5:'关闭聊天',10:'关闭聊天'}
+    0:'创建群聊',    1:'创建群聊',    2:'创建群聊',    3:'创建群聊',
+      5:' ',10:' '}
   },
   {icon:'desktop',name:'mainWallpaper',alias:'主页面壁纸',detail:{
       0:'限时体验',1:'限时体验',2:'限时体验',3:'限时体验',5:'限时体验',10:'限时体验'
