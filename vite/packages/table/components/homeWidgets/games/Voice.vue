@@ -52,6 +52,7 @@ import VoiceInputDetail from './VoiceInputDetail.vue'
 import VoiceOutputDetail from './VoiceOutputDetail.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { inspectorStore } from '../../../store/inspector'
+import audio from '../../../js/common/audio'
 export default {
   name:'Voice',
   components:{
