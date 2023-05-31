@@ -2,40 +2,58 @@
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden">
     <transition name="fade">
-      <div v-if="earningsShow" class="p-4"
-           style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
-        <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
-      </div>
-    </transition>
-    <transition name="fade">
-      <div v-if="showDetail && (teamDetail||showBarrage)"
-           style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column">
+      <div v-if="showDetail"
+           style="width:350px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
              style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
           <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
         </div>
-        <a-row class="pointer" @click="showTeamDetail" :gutter="20">
-          <a-col>
-            <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
+        <a-row style="height: 100%">
+          <a-col :span="4">
+            <ul class="nav-list">
+              <li @click="currentTab='barrage'" :class="{'nav-active':currentTab==='barrage'}">
+                <div><icon icon="xiaoxi"></icon></div>
+              </li>
+              <li @click="currentTab='devote'" :class="{'nav-active':currentTab==='devote'}">
+                <div><icon icon="thunderbolt"></icon></div>
+              </li>
+              <li @click="currentTab='info'" :class="{'nav-active':currentTab==='info'}">
+                <div><icon icon="tishi-xianxing"></icon></div>
+              </li>
+
+
+            </ul>
           </a-col>
-          <a-col>
-            <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
-            <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
+          <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
+            <a-row class="pointer" @click="showTeamDetail" :gutter="20">
+
+              <a-col>
+                <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
+              </a-col>
+              <a-col>
+                <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
+                <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
+              </a-col>
+            </a-row>
+            <div v-if="showDetail && currentTab==='info'">
+              <TeamDetail @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
+                          :teamLeader="teamLeader"></TeamDetail>
+            </div>
+            <div style="flex: 1;height:0" v-if="showDetail && currentTab==='barrage' ">
+              <BarragePanel :defaultChannel="'team'"></BarragePanel>
+            </div>
+            <div v-if="showDetail && currentTab==='devote'"
+                 style="height: 100%;position: relative;width: 100%">
+              <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
+            </div>
           </a-col>
         </a-row>
-        <div v-if="showDetail && teamDetail">
-          <TeamDetail @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
-                      :teamLeader="teamLeader"></TeamDetail>
-        </div>
-        <div style="flex: 1;height:0" v-if="showBarrage ">
-          <BarragePanel :defaultChannel="'team'"></BarragePanel>
-        </div>
       </div>
     </transition>
 
     <transition name="fade">
-      <div v-if="showDetail && userDetail"
-           style="width:300px;height: 100%;background: rgba(0,0,0,0.09);position: relative">
+      <div v-if="userDetail"
+           style="width:300px;height: 500px;background: rgba(0,0,0,0.09);position: relative">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
              style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
           <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
@@ -169,6 +187,7 @@ export default {
   data () {
     return {
       online: 0,
+      currentTab:'barrage',
       outerSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -210,19 +229,14 @@ export default {
     showBarragePanel () {
       this.userDetail=false
       this.showDetail = true
-      this.showBarrage = true
     },
     showUserDetail (userInfo, memberInfo) {
-      this.showBarrage=false
+      this.showDetail = false
+      this.userDetail=true
       this.showUserMemberInfo = memberInfo
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
       this.userInfoKey = Date.now()
-      this.teamDetail = false
-      setTimeout(() => {
-        this.userDetail = true
-        this.showDetail = true
-      }, 0)
     },
     closeDetail () {
       this.userDetail = false
@@ -288,7 +302,7 @@ export default {
     },
     // 点击领取收益弹出事件
     receiveTeamEarnings () {
-      this.earningsShow = !this.earningsShow
+      this.currentTab = 'devote'
     },
 
   }
@@ -340,5 +354,36 @@ export default {
 ::v-deep .ant-avatar-image {
   position: relative;
   top: -5px;
+}
+.nav-list{
+  height: 100%;
+  border-right: 1px solid #555;
+  padding-left: 0;
+  li{
+    list-style: none;
+    font-size: 26px;
+    text-align: center;
+    padding-left: 10px;
+    padding-top: 10px;
+    text-align: center;
+    cursor: pointer;
+    &>div{
+      padding:4px 8px 4px 8px;
+      width: 42px;
+      height: 42px;
+    }
+    svg{
+      margin-top: -13px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    &:hover,&.nav-active{
+      &>div{
+        background: #222;
+        border-radius: 10px;
+      }
+
+    }
+  }
 }
 </style>
