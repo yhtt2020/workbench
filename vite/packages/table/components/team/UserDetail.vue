@@ -65,7 +65,9 @@ export default {
   watch:{
     'userInfo':{
       handler(){
-        this.updateUserInfo().then()
+        this.updateUserInfo().then(()=>{
+          this.key=Date.now()
+        })
       }
     }
   },
