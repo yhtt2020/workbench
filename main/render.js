@@ -435,6 +435,10 @@ global.render = {
         mimeType = 'application/json'
       }else if(extension==='.mp3'){
         mimeType = 'audio/mpeg'
+      }else if(extension==='.png'){
+        mimeType = 'image/png'
+      }else if(extension==='.jpg'){
+        mimeType = 'image/jpeg'
       }
       response({ mimeType, data })
     })

@@ -234,7 +234,7 @@
         <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑</span></div>
-          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
+<!--          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>-->
         </div>
       </a-col>
     </a-row>

@@ -2,13 +2,15 @@
   <!-- 音频输出设备选项 -->
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
-       <div v-for="(item,index) in outputList" :class="selectIndex === index ? 's-item':''"
-        @click="selectAudio(item,index)" class="flex pointer rounded-lg btn-active voice-item-hover  items-center justify-center " style="padding: 7px  10px;">
+      <template v-for="(item,index) in outputList">
+        <div v-if="item.display"  :class="selectIndex === index ? 's-item':''"
+             @click="selectAudio(item,index)" class="flex pointer rounded-lg btn-active voice-item-hover  items-center justify-center " style="padding: 7px  10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
-            {{ item.name }}
+            {{ item.label }}
           </span>
-       </div>
-    </vue-custom-scrollbar> 
+        </div>
+      </template>
+    </vue-custom-scrollbar>
     <div @click="backOutput" class="flex items-center voice-item-hover select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
       <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
@@ -17,36 +19,13 @@
 </template>
 
 <script>
+  import audio from '../../../js/common/audio'
+
   export default {
     name:'VoiceOutputDetail',
     data(){
       return{
-        outputList:[
-         {
-          name:'扬声器1（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器2（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器3（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器4（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器5（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器6（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器7（High Definition Audio Device）'
-         },
-         {
-          name:'扬声器8（High Definition Audio Device）'
-         }
-        ],
+        outputList:[],
         settingsScroller: {
          useBothWheelAxes: true,
          swipeEasing: true,
@@ -55,8 +34,16 @@
          wheelPropagation: true
         },
         selectIndex:0,
-        defaultItem:{ name:'扬声器1（High Definition Audio Device）'},
+        defaultItem:{},
       }
+    },
+    mounted () {
+      audio.getDevices(devices=>{
+        this.outputList=devices.outputs
+        this.defaultItem=this.outputList.find(li=>{
+          return li.deviceId==='default'
+        })
+      })
     },
     methods:{
       selectAudio(item,index){

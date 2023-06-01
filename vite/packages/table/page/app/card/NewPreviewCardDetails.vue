@@ -4,7 +4,7 @@
         <div class="boxs card">
             <div class="main">
                 <div class="card-box" v-for="(item, index) in cardDetails.option">
-                    <div class="img"> <img class="img2" ref="imgRef" :src="'/public/img/addCard/' + item.name + '.png'"
+                    <div class="img"> <img class="img2" ref="imgRef" :src="getImg(item.name)"
                             alt=""
                             :style="[{ zoom: item.name == 'MyGameSmall' || item.name == 'middleWallpaper' ? '16%' : '25%' }]">
                     </div>
@@ -30,9 +30,12 @@ export default {
     props: {
         cardDetails: {
             type: Object
-        }
+        },
     },
     methods: {
+      getImg(url){
+        return '/img/addCard/' +url + '.png'
+      },
         addCard(item, index) {
             this.onBack()
             this.$emit("addCardAchieve", this.cardDetails, index)

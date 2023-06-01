@@ -2,12 +2,14 @@
   <!-- 音频输入设备的选项 -->
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
-      <div v-for="(item,index) in inputList" :class="selectIndex === index ? 's-item':''" 
-        @click="selectAudio(item,index)" class="flex rounded-lg voice-item-hover  pointer items-center justify-center" style="padding: 7px 10px;">
+      <template v-for="(item,index) in inputList" >
+        <div v-if="item.display" :class="selectIndex === index ? 's-item':''"
+             @click="selectAudio(item,index)" class="flex rounded-lg voice-item-hover  pointer items-center justify-center" style="padding: 7px 10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
-            {{ item.name }}
+            {{ item.label }}
           </span>
-       </div>
+        </div>
+      </template>
     </vue-custom-scrollbar>
     <div @click="backInput" class="flex items-center select-active voice-item-hover justify-center rounded-lg py-3 my-2 pointer s-item w-full">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
@@ -17,30 +19,13 @@
 </template>
 
 <script>
+import audio from '../../../js/common/audio'
+
 export default {
   name:'VoiceInputDetail',
   data(){
     return{
-      inputList:[
-        {
-          name:'Microphone1（High Definition Audio Device）'
-        },
-        {
-          name:'Microphone2（High Definition Audio Device）'
-        },
-        {
-          name:'Microphone3（High Definition Audio Device）'
-        },
-        {
-          name:'Microphone4（High Definition Audio Device）'
-        },
-        {
-          name:'Microphone5（High Definition Audio Device）'
-        },
-        {
-          name:'Microphone6（High Definition Audio Device）'
-        },
-      ],
+      inputList:[],
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -49,8 +34,17 @@ export default {
         wheelPropagation: true
       },
       selectIndex:0,
-      defaultItem:{name:'Microphone1（High Definition Audio Device）'},
+      defaultItem:{},
     }
+  },
+  mounted () {
+    audio.getDevices(devices=>{
+      console.log('取到的devices',devices)
+      this.inputList=devices.inputs
+      this.defaultItem=this.inputList.find(li=>{
+        return li.deviceId==='default'
+      })
+    })
   },
   methods:{
     selectAudio(item,index){
@@ -60,7 +54,7 @@ export default {
     backInput(){
       this.$emit('updateInput',this.defaultItem)
     }
-  } 
+  }
 }
 </script>
 

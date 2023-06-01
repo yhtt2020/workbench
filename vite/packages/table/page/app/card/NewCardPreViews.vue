@@ -15,14 +15,14 @@
                 <template v-if="item.option.length > 1">
                     <div class="top">
                         <img ref="imgRef" :class="{ 'zoom': item.option[0].name == 'middleWallpaper' }" class="img"
-                            :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt="">
+                            :src="getImg(item.option[0].name )" alt="">
                     </div>
                     <div class="bottom">
                         <img ref="imgRef" :class="{ 'zoom': i.name == 'middleWallpaper' }" v-for="i in item.option"
-                            :src="'/public/img/addCard/' + i.name + '.png'" alt="" class="img">
+                            :src="getImg(i.name )" alt="" class="img">
                     </div>
                 </template>
-                <img v-else ref="imgRef" :src="'/public/img/addCard/' + item.option[0].name + '.png'" alt=""
+                <img v-else ref="imgRef" :src="getImg(item.option[0].name )" alt=""
                     :style="[{ zoom: item.option[0].name == 'MyGameSmall' ? '7%' : '11%' }]">
             </div>
             <div class="right">
@@ -62,8 +62,14 @@ export default {
         },
         search: {
             type: String
+        },
+        desk: {
+            type: Object,
+            required: true,
+            default: () => { }
         }
     },
+
     data() {
         return {
             navLists: [],
@@ -93,6 +99,9 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
+      getImg(url){
+          return '/img/addCard/' + url + '.png'
+      },
         mySort(data, property, asc) {
             let datas = [...data]
             return datas.sort(function (a, b) {
@@ -134,7 +143,7 @@ export default {
         },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex
-            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} });
+            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} }, this.desk);
             this.$emit("addSuccess")
             this.$router.push({
                 name: "home",
@@ -229,6 +238,7 @@ export default {
 
             .img {
                 zoom: 0.07 !important;
+              object-fit: contain;
             }
 
             .zoom {
@@ -252,6 +262,7 @@ export default {
             .img {
                 zoom: 0.04;
                 border-radius: 5px;
+               object-fit: contain;
             }
         }
 

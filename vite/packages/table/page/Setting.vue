@@ -14,14 +14,12 @@
                 弹幕
                 <br>
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
-                <GradeSmallTip powerType="barrage" lastPowerType="关闭弹幕"></GradeSmallTip>
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
               <div class="btn relative">
                 聊天<br>
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
-                <GradeSmallTip powerType="closeChat"></GradeSmallTip>
               </div>
             </a-col>
             <a-col :span="12">

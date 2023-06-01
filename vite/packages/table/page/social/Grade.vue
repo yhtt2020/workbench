@@ -12,8 +12,8 @@
         </div>
         <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
           <div>1. 保持在线状态即可升级</div>
-          <div>2. 目前有「{{leveList.length}}」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
-          <div>3. 「组队升级功能」开发中～</div>
+          <div>2. 目前有「{{leveList.length}}」个不同的等级权益，等级还能优先体验新功能</div>
+          <div>3. 通过加入「小队」最高可获得20%升级加速</div>
         </div>
       </div>
     </div>
@@ -46,8 +46,8 @@
       </div>
       <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2" style="background: rgba(42, 42, 42, 1);">
         <div>1. 保持在线状态即可升级</div>
-        <div>2. 目前有「{{leveList.length}}」个不同的等级权益，保持高等级状态还能优先体验新功能</div>
-        <div>3. 「组队升级功能」开发中～</div>
+        <div>2. 目前有「{{leveList.length}}」个不同的等级权益，高等级还能优先体验新功能</div>
+        <div>3. 通过加入「小队」最高可获得20%升级加速</div>
       </div>
     </div>
   </div>
