@@ -748,7 +748,7 @@ cheerio@^1.0.0-rc.12:
 
 codemirror@^6.0.1:
   version "6.0.1"
-  resolved "https://registry.npmmirror.com/codemirror/-/codemirror-6.0.1.tgz"
+  resolved "https://registry.npmmirror.com/codemirror/-/codemirror-6.0.1.tgz#62b91142d45904547ee3e0e0e4c1a79158035a29"
   integrity sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
