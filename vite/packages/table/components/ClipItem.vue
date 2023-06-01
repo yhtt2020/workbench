@@ -217,7 +217,7 @@ export default {
     },
     defaultClickClip(item){
       if(item.intr === 'Space'){
-        this.$emit('openPreview',{preview:true,item,content:this.clip})
+        this.$emit('openPreview',{preview:true,item,content:this.clip,copy:this.copyList})
       }
     },
     selectItem(item){

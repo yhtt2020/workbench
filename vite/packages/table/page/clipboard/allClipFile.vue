@@ -25,9 +25,31 @@
              </div>
           </div>
          </div>
-         <div class="w-1/4 px-6  pt-6 flex flex-col items-center justify-between mb-6">
-            <div>123</div>
-            <div class="h-12">456</div>
+         <div class="w-1/4 px-6  pt-6 flex flex-col justify-between mb-6" v-if="previewObj.type === 'text'">
+          <div class="flex flex-col">
+            <div class="flex justify-between mb-6">
+              <span class="preview-type">类型</span>
+              <span class="preview-text">{{previewObj.title}}</span>
+            </div>
+            <div class="flex justify-between mb-6">
+              <span class="preview-type">时间</span>
+              <span class="preview-text">{{ previewObj.time }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="preview-type">大小</span>
+              <span class="preview-text">{{previewObj.capacity}}</span>
+            </div>
+          </div>
+          <div>
+             <div v-for="item in copy" class="s-bg mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+                <span class="preview-text">{{item.title}}</span>
+                <span class="preview-type">{{item.intr}}</span>
+             </div>
+          </div>
+         </div>
+         <div class="w-1/4 px-6  pt-6 flex flex-col items-center justify-between mb-6" v-if="previewObj.type === 'image'">
+          <div>123</div>
+          <div class="h-12">456</div> 
          </div>
       </div>
     </div>
@@ -45,13 +67,15 @@ export default {
     return{
       allList, 
       allClipShow:false,  
-      previewObj:null   
+      previewObj:null,
+      copy:null,   
     }
   },
   methods:{
     getClipShow(v){
       this.allClipShow = v.preview
       this.previewObj = v.content
+      this.copy = v.copy
     },
     closePreview(){
       this.allClipShow = false
@@ -84,5 +108,28 @@ export default {
   font-size: 14px;
   color: rgba(255,255,255,0.60);
   font-weight: 500;
+}
+
+.preview-type{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: rgba(255,255,255,0.60);
+  font-weight: 400;
+}
+.preview-text{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 400;
+}
+
+.button-active{
+  &:active{
+    filter: brightness(0.8);
+    background: rgba(42, 42, 42, 0.25);
+  }
+  &:hover{
+    background: rgba(42, 42, 42, 0.25);
+  }
 }
 </style>
