@@ -74,9 +74,14 @@ export default {
 
 <style scoped lang="scss">
 .box {
-
   :deep(.icon) {
-    fill: var(--font-color)
+    fill: var(--no-active-font-color)
+  }
+}
+
+.active {
+  :deep(.icon) {
+    fill: var(--active-font-color) !important
   }
 }
 
