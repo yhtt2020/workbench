@@ -100,7 +100,11 @@ export default {
   },
 
   async mounted() {
-
+    const value = window.localStorage.getItem("style")
+    document.documentElement.classList.add(JSON.parse(value!));
+    // if (value) {
+    //   return JSON.parse(value)
+    // }
     //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
     //  if (!this.init) {
     //    console.log(this.init)

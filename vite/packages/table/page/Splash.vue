@@ -256,8 +256,7 @@ export default {
 
     async afterLaunch() {
       console.log('afterLaunch')
-      console.log('this.style :>> ', this.style);
-      document.documentElement.classList.add(this.style);
+
 
       //执行分屏的启动操作
       this.onTableStarted().then()

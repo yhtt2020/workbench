@@ -203,16 +203,24 @@ export default {
         if (name) {
           document.documentElement.classList.add("light-nobg-mode")
           this.style = "light-nobg-mode"
+          window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"))
         } else {
           document.documentElement.classList.add("light-model");
           this.style = "light-model"
+          window.localStorage.setItem("style", JSON.stringify("light-model"))
+
         }
       } else {
 
         if (name) {
           document.documentElement.classList.add("dark-nobg-mode")
           this.style = "dark-nobg-mode"
-        } else this.style = ''
+          window.localStorage.setItem("style", JSON.stringify("dark-nobg-mode"))
+
+        } else {
+          this.style = ''
+          window.localStorage.setItem("style", JSON.stringify(""))
+        }
 
 
       }
