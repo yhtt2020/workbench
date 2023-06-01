@@ -116,73 +116,67 @@ export default {
   methods: {
     ...mapActions(cardStore, ["increaseCustomComponents"]),
     onReSize(e, i, clock, widthHeightObj) {
-      clock = clock ?? this.customData.clockiD
-      i = widthHeightObj ?? i
-      let { width, height } = i
-      this.widthHeightObj = i
-      let zoomRatio = 0
-      let max = width > height ? width : height
-      let zoom
-      if (height <= 1 || width <= 1) {
-        zoom = 100 + zoomRatio
-        if (width <= 1) {
-          this.isSnow = false
-          zoom = 0
-        } else {
-          this.isSnow = true
-          // zoom = this.zooms[this.customData.clockiD][1]
-        }
-      } else if ((width - height) > 1 || (height - width) > 1) {
-        this.isSnow = true
-        zoomRatio = this.zooms[clock][0]
-        let h = height - width
-        let w = width - height
-        let x
-        if (h > w) {
-          switch (h) {
-            case 2: x = 1;
-              break;
-            case 3: x = 4;
-              break;
-            case 4: x = 2;
-              break;
-            default:
-              x = 0.5;
-          }
-          zoomRatio /= (h + x)
-        }
-        else {
-          zoomRatio /= (w * 0.25)
-          zoomRatio /= 3
-        }
-        zoom = 100 + (zoomRatio) * (max - 3)
-      }
-      else {
-        this.isSnow = true
-        if (width > 2 && height > 2) {
-          zoomRatio = this.zooms[clock][0]
-          zoom = 100 + zoomRatio * (max - 2)
-        } else if (width >= 2 || height <= 2) {
-          zoomRatio = this.zooms[clock][2]
-          zoom = 100 + zoomRatio
-        }
-      }
-      this.zoom = `${zoom}%`
-      if (clock == "clock5") {
-        if (height > 1 && width > 1) {
-          this.isClock5 = false
-          this.isSnow = true
-        } else {
-          if (height <= 1 && width > 1) {
-            this.isClock5w420 = true
-          } else {
-            this.isClock5w420 = false
-          }
-          this.isClock5 = true
-          this.isSnow = false
-        }
-      }
+      // 默认值处理，如果clock和widthHeightObj为空，则使用默认值
+      clock = clock || this.customData.clockiD;
+      i = widthHeightObj || i;
 
+      // 从widthHeightObj中获取width和height
+      const { width, height } = i;
+
+      // 保存widthHeightObj
+      this.widthHeightObj = i;
+
+      let zoomRatio = 0;
+      let max = Math.max(width, height);
+      let zoom = 0;
+
+      // 根据width和height的值进行不同的处理
+      if (height <= 1 || width <= 1) {
+        // 当width或height小于等于1时，不显示雪，并设置zoom为0或zooms中的对应值
+        this.isSnow = width > 1;
+        zoom = this.isSnow ? this.zooms[clock][1] : 0;
+      } else if (Math.abs(width - height) > 1) {
+        // 当width和height相差大于1时，显示雪，并计算zoomRatio和zoom的值
+        this.isSnow = true;
+        zoomRatio = this.zooms[clock][0];
+
+        if (height > width) {
+          // 根据height和width的差值选择不同的zoomRatio计算方式
+          const h = height - width;
+          const x = h === 2 ? 1 : h === 3 ? 4 : h === 4 ? 2 : 0.5;
+          zoomRatio /= h + x;
+        } else {
+          zoomRatio /= width * 0.25;
+          zoomRatio /= 3;
+        }
+
+        zoom = 100 + zoomRatio * (max - 3);
+      } else {
+        // 其他情况显示雪，并计算zoomRatio和zoom的值
+        this.isSnow = true;
+
+        if (width > 2 && height > 2) {
+          // 当width和height都大于2时，使用zooms中的对应值计算zoom
+          zoomRatio = this.zooms[clock][0];
+          zoom = 100 + zoomRatio * (max - 2);
+        } else if (width >= 2 || height <= 2) {
+          // 当width大于等于2或height小于等于2时，使用zooms中的对应值计算zoom
+          zoomRatio = this.zooms[clock][2];
+          zoom = 100 + zoomRatio;
+        }
+      }
+      // 设置zoom的值
+      this.zoom = `${zoom}%`;
+      if (clock === "clock5") {
+        if (height > 1 && width > 1) {
+          this.isClock5 = false;
+          this.isSnow = true;
+        } else {
+          this.isClock5w420 = height <= 1 && width > 1;
+          this.isClock5 = true;
+          this.isSnow = false;
+        }
+      }
     },
     updateBlur(e) {
       this.increaseCustomComponents(this.customIndex, {

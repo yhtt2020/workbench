@@ -744,13 +744,14 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
-      if (this.style) document.documentElement.classList.remove(this.style);
+      document.documentElement.classList.remove("style");
       if (this.styles == true) {
         document.documentElement.classList.add('light-nobg-mode');
-        this.style = 'light-nobg-mode'
+        window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"));
       } else {
         document.documentElement.classList.add('dark-nobg-mode');
-        this.style = 'dark-nobg-mode'
+        window.localStorage.setItem("style", JSON.stringify("dark-nobg-mode"));
+
       }
     },
     initGrids() {

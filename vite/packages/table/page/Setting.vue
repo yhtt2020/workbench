@@ -194,35 +194,21 @@ export default {
     ...mapActions(codeStore, ['verify', 'create']),
     isMain: isMain,
     styleSwitch() {
-      if (this.style) document.documentElement.classList.remove(this.style);
-      let name
-      if (this.style == "light-nobg-mode" || this.style == 'dark-nobg-mode') {
-        name = this.style
+      const value = JSON.parse(window.localStorage.getItem("style"));
+      let name = null;
+      if (value === "light-nobg-mode" || value === 'dark-nobg-mode') {
+        if (value == "light-nobg-mode") name = 'dark-nobg-mode'
+        else name = 'light-nobg-mode'
       }
+      document.documentElement.classList.remove(value);
       if (this.styles) {
-        if (name) {
-          document.documentElement.classList.add("light-nobg-mode")
-          this.style = "light-nobg-mode"
-          window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"))
-        } else {
-          document.documentElement.classList.add("light-mode");
-          this.style = "light-mode"
-          window.localStorage.setItem("style", JSON.stringify("light-mode"))
-
-        }
+        name = name || "light-mode";
+        document.documentElement.classList.add(name);
+        window.localStorage.setItem("style", JSON.stringify(name));
       } else {
-
-        if (name) {
-          document.documentElement.classList.add("dark-nobg-mode")
-          this.style = "dark-nobg-mode"
-          window.localStorage.setItem("style", JSON.stringify("dark-nobg-mode"))
-
-        } else {
-          this.style = ''
-          window.localStorage.setItem("style", JSON.stringify(""))
-        }
-
-
+        name = name || "dark-mode";
+        document.documentElement.classList.add(name);
+        window.localStorage.setItem("style", JSON.stringify(name));
       }
     },
 
