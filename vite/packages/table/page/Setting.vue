@@ -205,9 +205,9 @@ export default {
           this.style = "light-nobg-mode"
           window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"))
         } else {
-          document.documentElement.classList.add("light-model");
-          this.style = "light-model"
-          window.localStorage.setItem("style", JSON.stringify("light-model"))
+          document.documentElement.classList.add("light-mode");
+          this.style = "light-mode"
+          window.localStorage.setItem("style", JSON.stringify("light-mode"))
 
         }
       } else {
