@@ -94,8 +94,8 @@
     <!--    </div>-->
     <!-- 快速搜索 底部栏区域 -->
     <div class=" flex flex-row  items-center pl-6 s-bg"
-      :style="{ backgroundColor: 'var(--no-active-background-color)', color: 'var(--font-color)' }"
-      style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
+      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }"
+      style=" border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
       <div style="overflow: hidden;overflow-x: auto;" class="flex flex-row items-center  flex-nowrap scroll-content mr-6"
         ref="content">
         <div v-if="navigationList.length <= 0" style="height: 56px;">
@@ -117,18 +117,16 @@
       </div>
 
       <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-        <div @click="appChange" v-if="isMain"
-          style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
-          class="flex justify-center items-center  h-2/3 pointer">
-
+        <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--font-color);width: 72px"
+          class="flex justify-center items-center  h-2/3 pointer ">
           <template v-if="!showScreen">
-            <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px"></Icon>
+            <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
             <span
               style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{
                 runningApps.length + runningTableApps.length }}</span>
           </template>
           <template v-else>
-            <Icon icon="touping" style="width: 40px;height: 40px;color: white;margin-left: 2px;"></Icon>
+            <Icon icon="touping" style="width: 40px;height: 40px;margin-left: 2px;"></Icon>
             <span
               style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{
                 runningScreen }}</span>
@@ -141,9 +139,9 @@
 
     </div>
     <template v-if="!simple && isMain">
-      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8">
+      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8;">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
-          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0">
+          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0;">
           <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
           </a-avatar>
@@ -657,6 +655,12 @@ export default {
 </script>
 <style></style>
 <style lang="scss" scoped>
+.bottom-panel {
+  :deep(.icon) {
+    fill: var(--font-color)
+  }
+}
+
 .common-panel {
   margin-bottom: 0;
 }
