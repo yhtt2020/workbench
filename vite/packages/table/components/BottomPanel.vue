@@ -1,8 +1,8 @@
 <template>
   <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
     @contextmenu.stop="showMenu">
-    <div :style="{ backgroundColor: 'var(--background-color)' }" v-if="isMain" class="common-panel user s-bg"
-      style="display: inline-block;vertical-align: top">
+    <div  :style="{ backgroundColor: 'var(--background-color)' }" v-if="isMain" class="common-panel user s-bg"
+      style="display: inline-block;vertical-align: top;margin-top: 0">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div v-else :style="{ width: settings.enableChat && !simple ? '23em' : (simple ? '4.5em' : '11em') }">
+      <div v-else :style="{ width: settings.enableChat && !simple ? '23em' : (simple ? '4.5em' : '11em') }" >
         <a-row class="pointer" @click="social">
           <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24"
             style="padding: 0.6em;position:relative;">
