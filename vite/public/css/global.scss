@@ -1,0 +1,76 @@
+// 默认夜晚主题 这是模板
+:root {
+    --font-color: #fff; // 主字体颜色 使用在
+    --background-color: rgb(26, 26, 26, 0.65); // 主背景颜色
+    --no-active-font-color: rgb(26, 26, 26, 0.65); // 未选中字体颜色
+    --no-active-background-color: rgb(26, 26, 26, 0.65); // 未选中背景颜色
+    --active-font-color: #fff; // 选中字体颜色
+    --active-background-color: rgba(0, 0, 0, 0.3); // 选中背景颜色
+
+    // 有部分地方能直接接管active的状态
+    .active {
+        color: var(--active-font-color) !important;
+        fill: var(--active-font-color) !important;
+        background: var(--active-background-color) !important;
+    }
+
+    body {
+        background: #fff !important;
+    }
+}
+
+// 白天主题
+.light-mode {
+    --font-color: #000 !important;
+    --background-color: rgba(204, 204, 204, 0.75);
+    --no-active-background-color: rgba(204, 204, 204, 0.75);
+    --no-active-font-color: rgba(0, 0, 0, 0.45);
+    --active-font-color: #000;
+    --active-background-color: #fff;
+
+    .active {
+        color: var(--active-font-color) !important;
+        fill: var(--active-font-color) !important;
+        background: var(--active-background-color) !important;
+    }
+}
+
+// 白天无背景主题
+.light-nobg-mode {
+    --font-color: #000 !important;
+    --background-color: rgba(240 240 240);
+    --no-active-background-color: rgba(240, 240, 240, 1.10);
+    --no-active-font-color: rgba(0, 0, 0, 0.45);
+    --active-font-color: #000;
+    --active-background-color: #fff;
+
+    .active {
+        color: var(--active-font-color) !important;
+        fill: var(--active-font-color) !important;
+        background: var(--active-background-color) !important;
+    }
+
+    body {
+        background: rgba(229 229 229) !important;
+    }
+}
+
+// 夜晚无背景主题
+.dark-nobg-mode {
+    --font-color: #fff !important;
+    --background-color: rgba(46, 46, 46, 1) !important;
+    --no-active-font-color: rgba(255, 255, 255, 0.60);
+    --no-active-background-color: rgba(64, 64, 64, 1);
+    --active-font-color: #fff;
+    --active-background-color: rgba(0, 0, 0, 0.3);
+
+    .active {
+        color: var(--active-font-color);
+        fill: var(--active-font-color);
+        background: rgba(0, 0, 0, .6) !important;
+    }
+
+    body {
+        background: rgba(25, 25, 25) !important;
+    }
+}

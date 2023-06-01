@@ -1,7 +1,8 @@
 <template>
   <div style="display: flex" class="h-full">
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
-    <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em" class="s-bg">
+    <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em;"
+      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" class="s-bg">
       <router-view></router-view>
     </div>
 
@@ -10,7 +11,7 @@
 
 <script>
 import SecondPanel from '../../components/SecondPanel.vue'
-import {isMain} from '../../js/common/screenUtils'
+import { isMain } from '../../js/common/screenUtils'
 
 const menus = [
   {
@@ -71,13 +72,13 @@ const subMenus = [
 export default {
   name: 'Basic',
   components: { SecondPanel },
-  data () {
+  data() {
     return {
-      menus:isMain()?menus:subMenus,
+      menus: isMain() ? menus : subMenus,
       currentMenu: 'common'
     }
   },
-  mounted () {
+  mounted() {
     // this.$router.replace({
     //       name:'key'
     //     })
@@ -86,21 +87,21 @@ export default {
     //   name:'key'
     // })
   },
-  computed:{
+  computed: {
     isMain
   },
   methods: {
-    change (tab) {
+    change(tab) {
       console.log(tab)
       this.$router.push(tab.menu.route)
     },
-    setMenu (menu) {
+    setMenu(menu) {
       this.currentMenu = menu.name
       if (menu.route) {
         this.$router.push(menu.route)
       }
     },
-    setKeyStatus (keyCode, status) {
+    setKeyStatus(keyCode, status) {
       switch (keyCode) {
         case 16:
           this.shift = status
@@ -128,7 +129,8 @@ export default {
   .item {
     cursor: pointer;
 
-    &.active, &:hover {
+    &.active,
+    &:hover {
       background: rgba(145, 145, 145, 0.81);
       color: rgba(255, 255, 255, 0.65);
     }
@@ -139,5 +141,4 @@ export default {
     margin: 0.5em;
   }
 }
-
 </style>

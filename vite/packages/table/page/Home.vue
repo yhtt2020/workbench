@@ -102,6 +102,7 @@
       <NewAddCard @setCustoms="setCustoms" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
+  <!-- :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" -->
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -550,6 +551,8 @@ export default {
       "agreeTest",
       "backgroundSettings",
       "backgroundImage",
+      "styles",
+      "style"
     ]),
 
     ...mapWritableState(appStore, {
@@ -740,6 +743,15 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
+      document.documentElement.classList.remove("style");
+      if (this.styles == true) {
+        document.documentElement.classList.add('light-nobg-mode');
+        window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"));
+      } else {
+        document.documentElement.classList.add('dark-nobg-mode');
+        window.localStorage.setItem("style", JSON.stringify("dark-nobg-mode"));
+
+      }
     },
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);

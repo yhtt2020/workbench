@@ -1,7 +1,8 @@
 <template>
   <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
-       @contextmenu.stop="showMenu">
-    <div v-if="isMain" class="common-panel user s-bg" style="display: inline-block;vertical-align: top">
+    @contextmenu.stop="showMenu">
+    <div :style="{ backgroundColor: 'var(--background-color)' }" v-if="isMain" class="common-panel user s-bg"
+      style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -11,14 +12,15 @@
           </div>
         </div>
       </div>
-      <div v-else :style="{width:settings.enableChat && !simple?'23em':(simple?'4.5em':'11em')}">
+
+      <div v-else :style="{ width: settings.enableChat && !simple ? '23em' : (simple ? '4.5em' : '11em') }">
         <a-row class="pointer" @click="social">
-          <a-col class="user-info" :span="settings.enableChat && !simple?10:24"
-                 style="padding: 0.6em;position:relative;">
+          <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24"
+            style="padding: 0.6em;position:relative;">
             <a-row style="text-align: left" :gutter="10">
               <a-col>
-                <a-badge  style="border:none;" :count="totalCount">
-                <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
+                <a-badge style="border:none;" :count="totalCount">
+                  <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
                 </a-badge>
               </a-col>
               <a-col v-if="!simple" @click.stop="goMy()" style="position: relative">
@@ -27,17 +29,16 @@
                   <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
                   <span>
                     <a-tooltip>
-                  <a-progress strokeColor="#666" trailColor="#4d4d4d" :percent="lvInfo.percentage" :showInfo="false"
-                              style="width:4em"/>
-                  <template #title>
-                    <thunderbolt-filled class="thunder" style="color: rgba(255,140,44,0.98);vertical-align: middle"/>
-  <span
-    style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{
-      lvInfo.remainHour
-    }}小时{{ lvInfo.remainMinute }}分后升级</span>
-                  </template>
-                </a-tooltip>
-              </span>
+                      <a-progress strokeColor="#666" trailColor="#4d4d4d" :percent="lvInfo.percentage" :showInfo="false"
+                        style="width:4em" />
+                      <template #title>
+                        <thunderbolt-filled class="thunder" style="color: rgba(255,140,44,0.98);vertical-align: middle" />
+                        <span style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{
+                          lvInfo.remainHour
+                        }}小时{{ lvInfo.remainMinute }}分后升级</span>
+                      </template>
+                    </a-tooltip>
+                  </span>
 
                 </div>
 
@@ -59,8 +60,8 @@
 
           </a-col>
           <a-col class="chat" v-if="settings.enableChat && !simple" :span="14"
-                 style="text-align: left;padding-top: 0.5em;line-height: 1.75">
-            <div style="font-size: 13px;" v-if="messages.length===0">
+            style="text-align: left;padding-top: 0.5em;line-height: 1.75">
+            <div style="font-size: 13px;" v-if="messages.length === 0">
               <div class="pointer ml-3" @click.stop="enterIM">
                 <a-row :gutter="10">
                   <a-col :span="6" class="pt-2">
@@ -77,7 +78,7 @@
               </div>
             </div>
             <div class="pointer" @click.stop="enterIM">
-              <div v-for="message in messages" class="text-more">{{ message.title }}：{{ message.body }}</div>
+              <div v-for=" message  in  messages " class="text-more">{{ message.title }}：{{ message.body }}</div>
             </div>
           </a-col>
         </a-row>
@@ -91,19 +92,21 @@
     <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
     <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
     <!--    </div>-->
+    <!-- 快速搜索 底部栏区域 -->
     <div class=" flex flex-row  items-center pl-6 s-bg"
-         style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
-      <div style="overflow: hidden;overflow-x: auto;"
-           class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
-        <div v-if="navigationList.length<=0" style="height: 56px;">
-
+      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }"
+      style=" border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
+      <div style="overflow: hidden;overflow-x: auto;" class="flex flex-row items-center  flex-nowrap scroll-content mr-6"
+        ref="content">
+        <div v-if="navigationList.length <= 0" style="height: 56px;">
         </div>
-        <a-tooltip v-else :title="item.name" v-for="item in navigationList">
-          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block"
-               @click="clickNavigation(item)" >
-            <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
-                 class="s-item flex justify-center items-center rounded-lg">
-              <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+        <a-tooltip v-else :title="item.name" v-for=" item  in  navigationList ">
+          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" @click="clickNavigation(item)">
+            <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
+              class="s-item flex justify-center items-center rounded-lg">
+
+              <Icon :icon="item.icon" class="test" :style="{ fill: 'var(--font-color)' }"
+                style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);color: #000;"></Icon>
             </div>
             <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
               <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
@@ -113,17 +116,20 @@
 
       </div>
 
-      <a-tooltip :title="showScreen?'运行中的分屏':'运行中的应用'">
-        <div  @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid rgba(255, 255, 255, 0.2);width: 72px"
-              class="flex justify-center items-center  h-2/3 pointer">
-
-          <template v-if="!showScreen ">
-            <Icon icon="fuzhi" style="width: 40px;height: 40px;color: white;margin-left: 5px;margin-bottom: 3px" ></Icon>
-            <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{runningApps.length+runningTableApps.length}}</span>
+      <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
+        <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--font-color);width: 72px"
+          class="flex justify-center items-center  h-2/3 pointer ">
+          <template v-if="!showScreen">
+            <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
+            <span
+              style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{
+                runningApps.length + runningTableApps.length }}</span>
           </template>
           <template v-else>
-            <Icon icon="touping" style="width: 40px;height: 40px;color: white;margin-left: 2px;" ></Icon>
-            <span style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{runningScreen}}</span>
+            <Icon icon="touping" style="width: 40px;height: 40px;margin-left: 2px;"></Icon>
+            <span
+              style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{
+                runningScreen }}</span>
           </template>
 
         </div>
@@ -133,9 +139,9 @@
 
     </div>
     <template v-if="!simple && isMain">
-      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8">
+      <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8;">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
-             style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0">
+          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0;">
           <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
           </a-avatar>
@@ -146,7 +152,7 @@
         </div>
       </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-           style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0">
+        style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0">
         <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
         </a-avatar>
@@ -213,23 +219,15 @@
 
   </div>
   <div id="trans" v-show="visibleTrans"
-       style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
-    <a-button @click="visibleTrans=false" style="position:fixed;left: 10px;top: 10px">取消</a-button>
+    style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
+    <a-button @click="visibleTrans = false" style="position:fixed;left: 10px;top: 10px">取消</a-button>
     <iframe id="transFrame" style="width:100vw;height: 100vh;border: none">
 
     </iframe>
   </div>
-  <a-drawer
-    :contentWrapperStyle="{backgroundColor:'#1F1F1F',height:'11em'}"
-    :width="120"
-    :height="120"
-    class="drawer"
-    :closable="false"
-    placement="bottom"
-    :visible="menuVisible"
-    @close="onClose"
-  >
-    <a-row style="margin-top: 1em" :gutter="[20,20]">
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
+    class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
+    <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
         <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
@@ -246,7 +244,7 @@
     </div>
   </transition>
 
-  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag " @click="closeChangeApp">
+  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
     <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
@@ -263,7 +261,7 @@ import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
 import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
-import {isMain} from '../js/common/screenUtils'
+import { isMain } from '../js/common/screenUtils'
 
 const { messageModel } = window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
@@ -290,9 +288,9 @@ export default {
     ScrolX,
     GradeSmallTip
   },
-  data () {
+  data() {
     return {
-      tab:'screen',
+      tab: 'screen',
 
       lastTime: 0,
       visibleTrans: false,
@@ -300,7 +298,7 @@ export default {
       //显示小组提示
       showTeamTip: false,
       teamKey: Date.now(),
-      updateMessageTimer:null,
+      updateMessageTimer: null,
 
       timer: null,
       messages: [],
@@ -315,24 +313,24 @@ export default {
         wheelPropagation: true,
       },
       changeFlag: false,
-      timerRunning:false,
-      showScreen:false
+      timerRunning: false,
+      showScreen: false
       //screenWidth: document.body.clientWidth
     }
   },
-  unmounted () {
+  unmounted() {
 
     let that = this
     window.removeEventListener('resize', that.checkScroll)
     clearInterval(this.updateMessageTimer)
-    if(this.timerRunning){
+    if (this.timerRunning) {
       clearInterval(this.timerRunning)
     }
   },
-  mounted () {
-    this.timerRunning=setInterval(()=>{
-      this.showScreen=!this.showScreen
-    },5000)
+  mounted() {
+    this.timerRunning = setInterval(() => {
+      this.showScreen = !this.showScreen
+    }, 5000)
     // let inserted=localStorage.getItem('insertBird')
     // if(!inserted){
     //   this.navigationList.unshift( {
@@ -354,9 +352,9 @@ export default {
     // }
     this.getMessageIndex().then()
     //每3分钟刷新一次消息
-    this.updateMessageTimer=setInterval(()=>{
+    this.updateMessageTimer = setInterval(() => {
       this.getMessageIndex().then()
-    },180000)
+    }, 180000)
     let that = this
     this.checkScroll()
     // const that = this
@@ -383,18 +381,18 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
-    ...mapWritableState(appsStore,['runningApps','runningTableApps']),
+    ...mapWritableState(appsStore, ['runningApps', 'runningTableApps']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
-    ...mapWritableState(screenStore,['screens']),
+    ...mapWritableState(screenStore, ['screens']),
     ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
-    ...mapWritableState(messageStore,['messageIndex','totalCount']),
-    isMain(){
+    ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
+    isMain() {
       return isMain()
     },
-    runningScreen(){
-      let count=0
-      this.screens.forEach(s=>{
-        if(s.running){
+    runningScreen() {
+      let count = 0
+      this.screens.forEach(s => {
+        if (s.running) {
           count++
         }
       })
@@ -403,7 +401,7 @@ export default {
   },
   watch: {
     navigationList: {
-      handler () {
+      handler() {
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -421,8 +419,8 @@ export default {
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
-    ...mapActions(messageStore,['getMessageIndex']),
-    async toggleTeam () {
+    ...mapActions(messageStore, ['getMessageIndex']),
+    async toggleTeam() {
       await this.updateMy(0)
       if (this.team.status === false) {
         this.teamKey = Date.now()
@@ -432,10 +430,10 @@ export default {
       }
 
     },
-    closeDrawer () {
+    closeDrawer() {
       this.menuVisible = false
     },
-    checkScroll () {
+    checkScroll() {
       this.$nextTick(() => {
         if (this.$refs.content.offsetHeight - this.$refs.content.clientHeight > 0) {
           this.$refs.content.style.marginTop = '17px'
@@ -444,43 +442,43 @@ export default {
         }
       })
     },
-    goMy () {
+    goMy() {
       this.$router.push({ name: 'socialMy' })
     },
     ...mapActions(appStore, ['setUser']),
-    setFull (value) {
+    setFull(value) {
       this.full = value
     },
-    appChange () {
-      if(this.showScreen){
-        this.tab='screen'
+    appChange() {
+      if (this.showScreen) {
+        this.tab = 'screen'
         this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
-      }else{
-        this.tab='apps'
+      } else {
+        this.tab = 'apps'
         this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       }
       this.changeFlag = true
     },
-    closeChangeApp () {
-      this.routeParams.url && setTimeout(() => {this.$router.push({ name: 'app', params: this.routeParams })}, 400)
+    closeChangeApp() {
+      this.routeParams.url && setTimeout(() => { this.$router.push({ name: 'app', params: this.routeParams }) }, 400)
       this.changeFlag = false
     },
-    showMenu () {
+    showMenu() {
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
-    onClose () {
+    onClose() {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
-    editNavigation () {
+    editNavigation() {
       this.quick = true
       this.menuVisible = false
     },
-    setQuick () {
+    setQuick() {
       this.quick = false
     },
-    setMinute () {
+    setMinute() {
       setInterval(() => {
         this.$refs.minute.classList.add('move')
         this.lvInfo.remainMinute--
@@ -501,7 +499,7 @@ export default {
         }, 1000)
       }, 60000)
     },
-    async loadMessages () {
+    async loadMessages() {
       this.messages = await messageModel.allList()
       this.messages.forEach(mes => {
         //修正一下登录小助手的
@@ -537,36 +535,36 @@ export default {
         this.messages.splice(2)
       }
     },
-    login () {
+    login() {
       tsbApi.user.login((data) => {
         ipc.send('getDetailUserInfo')
       })
     },
 
-    openSetting () {
+    openSetting() {
       this.$router.push({ name: 'setting' })
     },
-    openStatus () {
+    openStatus() {
       if (this.$route.path === '/status') {
         this.$router.go(-1)
       } else {
         this.$router.push({ path: '/status' })
       }
     },
-    social () {
-      if(this.totalCount){
+    social() {
+      if (this.totalCount) {
         this.$router.push({ name: 'message' })
-      }else{
+      } else {
         this.$router.push({ path: '/social/' })
       }
     },
-    power () {
+    power() {
       this.$router.push({ path: '/power' })
     },
-    lock () {
+    lock() {
       this.$router.push({ path: '/lock' })
     },
-    transFile () {
+    transFile() {
       //this.visibleTrans=true
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
       // console.log('发送消息')
@@ -583,7 +581,7 @@ export default {
       })
 
     },
-    async setFullScreen () {
+    async setFullScreen() {
       // await tsbApi.window.isFullScreen()
       if (this.full) {
         this.full = false
@@ -594,7 +592,7 @@ export default {
       }
 
     },
-    enterIM () {
+    enterIM() {
       this.$router.push({
         name: 'app',
         params: {
@@ -610,7 +608,7 @@ export default {
         }
       })
     },
-    clickNavigation (item) {
+    clickNavigation(item) {
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
@@ -655,13 +653,18 @@ export default {
   }
 }
 </script>
-<style>
-
-</style>
+<style></style>
 <style lang="scss" scoped>
-.common-panel{
+.bottom-panel {
+  :deep(.icon) {
+    fill: var(--font-color)
+  }
+}
+
+.common-panel {
   margin-bottom: 0;
 }
+
 .btn {
   text-align: center;
 }
@@ -779,9 +782,11 @@ export default {
     top: 20px;
     opacity: 100;
   }
+
   to {
     top: -10px;
     opacity: 0;
+
   }
 }
 

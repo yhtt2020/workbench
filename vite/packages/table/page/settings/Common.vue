@@ -1,13 +1,11 @@
 <template>
-
-
   <div class="line-title  ">界面缩放</div>
   <ZoomUI></ZoomUI>
 
   <template v-if="isMain">
     <div class="line-title">使用习惯</div>
     <div class="line">
-      <AutoRun/>
+      <AutoRun />
     </div>
     <div class="line">
       双击托盘菜单默认打开：
@@ -21,7 +19,6 @@
       <a-switch v-model:checked="showInTaskBar"></a-switch>
     </div>
   </template>
-
 </template>
 
 <script>
@@ -29,40 +26,40 @@ import ZoomUI from '../../components/comp/ZoomUI.vue'
 import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
 import AutoRun from '../../components/comp/AutoRun.vue'
-import {isMain} from '../../js/common/screenUtils'
+import { isMain } from '../../js/common/screenUtils'
 import Template from '../../../user/pages/Template.vue'
 
 export default {
   name: 'Common',
   components: { Template, AutoRun, ZoomUI },
-  data () {
+  data() {
     return {
       trayOpen: '',
-      showInTaskBar:false,
+      showInTaskBar: false,
     }
   },
   computed: {
     ...mapWritableState(appStore, ['settings']),
     isMain
   },
-  async mounted () {
+  async mounted() {
     this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
-    let showInTaskBar= await tsbApi.settings.get('showInTaskBar')
-    if(showInTaskBar===undefined){
-      this.showInTaskBar=true
-    }else{
-      this.showInTaskBar=showInTaskBar
+    let showInTaskBar = await tsbApi.settings.get('showInTaskBar')
+    if (showInTaskBar === undefined) {
+      this.showInTaskBar = true
+    } else {
+      this.showInTaskBar = showInTaskBar
     }
 
   },
-  watch:{
-    'trayOpen':{
-      handler:async (value) => {
+  watch: {
+    'trayOpen': {
+      handler: async (value) => {
         await tsbApi.settings.set('trayOpen', value)
       }
     },
-    'showInTaskBar':{
-      handler:async (value) => {
+    'showInTaskBar': {
+      handler: async (value) => {
         await tsbApi.settings.set('showInTaskBar', value)
       }
     }

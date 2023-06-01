@@ -3,24 +3,24 @@
     <span style="font-size: 2em;" class="s-text">我的收藏 {{ myPapers.length }}</span>
     <div class="pointer" style="float: right;font-size: 1em;">
       <div @click="playAll" class=" rounded-lg list-hover s-icon"
-           style="display: inline-block;margin-right: 1em;padding: 10px;">
-    <span>
-      <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
-    </span>
+        style="display: inline-block;margin-right: 1em;padding: 10px;">
+        <span>
+          <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
+        </span>
         <span style="font-size:1.2em" class="s-text">轮播全部</span>
       </div>
       <div @click="playActive" class="rounded-lg list-hover s-icon"
-           style="display: inline-block; margin-right: 1em;padding: 10px;">
-      <span>
-        <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
-      </span>
+        style="display: inline-block; margin-right: 1em;padding: 10px;">
+        <span>
+          <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
+        </span>
         <span style="font-size:1.2em" class="s-text">激活壁纸（ {{ activePapers.length }} ）</span>
       </div>
-      <div @click="this.visibleImport=true" class=" rounded-lg list-hover s-icon"
-           style="display: inline-block;margin-right: 1em;padding: 10px;">
-     <span>
-      <Icon style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
-     </span>
+      <div @click="this.visibleImport = true" class=" rounded-lg list-hover s-icon"
+        style="display: inline-block;margin-right: 1em;padding: 10px;">
+        <span>
+          <Icon style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
+        </span>
         <span style="font-size:1.2em;" class="s-text">导入</span>
       </div>
     </div>
@@ -28,25 +28,25 @@
 
 
   <div style="flex-grow: 1;flex-shrink: 1;height: 0">
-    <div v-if="myPapers.length===0">
+    <div v-if="myPapers.length === 0">
       <a-empty style="margin-top: 3em" description=""></a-empty>
       <a-button type="primary" @click="go">去挑选心仪的壁纸</a-button>
     </div>
 
     <vue-custom-scrollbar id="containerWrapper" v-else :settings="settingsScroller"
-                          style="flex-shrink: 1;flex-grow: 1;height: 100%">
+      style="flex-shrink: 1;flex-grow: 1;height: 100%">
       <viewer :images="myPapers" :options="options">
-        <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+        <a-row :gutter="[20, 20]" id="bingImages" style="margin-right: 1em">
           <a-col class="image-wrapper" v-for="img in myPapers" :span="6" style="">
             <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution"
-                 class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src"
-                 style="position: relative">
+              class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src"
+              style="position: relative">
             <div @click="previewVideo(img)" v-if="fileImageExtension(img) === true" class="play-icon pointer" style="">
               <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
             </div>
             <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
               <div @click.stop="addToActive(img)" class="bottom-actions pointer"
-                   :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+                :style="{ background: isInActive(img) ? 'rgba(255,0,0,0.66)' : '' }">
                 <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
                 <Icon v-else style="" icon="yiwancheng"></Icon>
               </div>
@@ -96,7 +96,7 @@
   </a-drawer>
 
   <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999"
-       id="previwer">
+    id="previwer">
     <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
       <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
         <Icon icon="guanbi1" style="font-size: 2em"></Icon>
@@ -104,8 +104,6 @@
     </div>
     <div id="my-mse"></div>
   </div>
-
-
 </template>
 
 <script>
@@ -124,12 +122,12 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'My',
-  components: { Import,GradeSmallTip },
+  components: { Import, GradeSmallTip },
   computed: {
     ...mapWritableState(paperStore, ['settings', 'activePapers', 'myPapers']),
-    ...mapWritableState(appStore, ['backgroundImage']),
+    ...mapWritableState(appStore, ['backgroundImage', 'styles']),
   },
-  data () {
+  data() {
     return {
       visibleMenu: false,
       visibleImport: false,
@@ -150,7 +148,7 @@ export default defineComponent({
       },
     }
   },
-  mounted () {
+  mounted() {
     if (this.settings.savePath) {
       this.getLoadLively()
       this.loadStaticPaper()
@@ -168,19 +166,19 @@ export default defineComponent({
   methods: {
     ...mapActions(paperStore, ['addToActive', 'addToMyPaper', 'addToStaticPaper']),
     ...mapActions(appStore, ['setBackgroundImage']),
-    go(){
-      this.$router.push({name:'pickingPaper'})
+    go() {
+      this.$router.push({ name: 'pickingPaper' })
     },
     // 获取本地视频目录数据
-    getLoadLively () {
+    getLoadLively() {
       fs.pathExists(path.join(this.settings.savePath, 'lively')).then((exists) => {
         if (exists) {
           const videos = fs.readdirSync(path.join(this.settings.savePath, 'lively'))
           videos.filter(v => {
-            let videoPath=path.join(this.settings.savePath, 'lively', v)
-            const filename=path.basename(videoPath,'.mp4')
+            let videoPath = path.join(this.settings.savePath, 'lively', v)
+            const filename = path.basename(videoPath, '.mp4')
             const livelyItem = {
-              src:videoPath ,
+              src: videoPath,
               path: `https://up.apps.vip/lively/${filename}.jpg`,
               srcProtocol: 'file://' + path.join(this.settings.savePath, 'lively', v),
             }
@@ -192,7 +190,7 @@ export default defineComponent({
       })
     },
     // 获取本地图片数据
-    loadStaticPaper () {
+    loadStaticPaper() {
       const staticDir = path.join(path.join(this.settings.savePath), 'static')
       // 判断文件目录是否存在
       fs.pathExists(staticDir).then((exists) => {
@@ -219,7 +217,7 @@ export default defineComponent({
       })
     },
 
-    setDesktopPaper () {
+    setDesktopPaper() {
       Modal.confirm({
         content: '确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',
         okText: '设置桌面壁纸',
@@ -230,33 +228,44 @@ export default defineComponent({
         }
       })
     },
-    download(){
+    download() {
 
     },
 
-    showMenu (item) {
+    showMenu(item) {
       this.currentPaper = item
       this.visibleMenu = true
     },
-    setAppPaper () {
+    setAppPaper() {
+      // 1 清除样式
+      const value = JSON.parse(window.localStorage.getItem("style"));
+      document.documentElement.classList.remove(value);
+      // 2 判断白天黑夜 
+      if (this.styles) {
+        document.documentElement.classList.add("light-mode");
+        window.localStorage.setItem("style", JSON.stringify("light-mode"));
+      } else {
+        document.documentElement.classList.add('dark-mode');
+        window.localStorage.setItem("style", JSON.stringify('dark-mode'));
+      }
       message.info('正在为您设置背景')
       if (this.currentPaper.srcProtocol) {
         this.setBackgroundImage({
-          path:'',
-          runpath:`file://${this.currentPaper.src}`
+          path: '',
+          runpath: `file://${this.currentPaper.src}`
         })
-      }else{
-        if(!this.currentPaper.path){
-          this.currentPaper.path =  this.currentPaper.src
+      } else {
+        if (!this.currentPaper.path) {
+          this.currentPaper.path = this.currentPaper.src
         }
-        console.log(this.currentPaper,'this.currentPaper')
+        console.log(this.currentPaper, 'this.currentPaper')
 
         this.setBackgroundImage(this.currentPaper)
       }
 
       this.visibleMenu = false
     },
-    playAll () {
+    playAll() {
       const imageArr = []
       this.myPapers.map(el => {
         if (this.fileImageExtension(el)) {
@@ -285,7 +294,7 @@ export default defineComponent({
       })
     },
 
-    playActive () {
+    playActive() {
       const playArr = []
       this.activePapers.map(el => {
         if (this.fileImageExtension(el)) {
@@ -312,7 +321,7 @@ export default defineComponent({
     },
 
     // 获取文件时间
-    async getFileCreatedTime (filePath) {
+    async getFileCreatedTime(filePath) {
       try {
         const stats = await fs.stat(filePath)
         return stats.birthtime
@@ -322,7 +331,7 @@ export default defineComponent({
     },
 
     // 时间转换
-    changeTime (msec) {
+    changeTime(msec) {
       let datetime = new Date(msec)
       let year = datetime.getFullYear()
       let month = datetime.getMonth()
@@ -333,14 +342,14 @@ export default defineComponent({
       return year + '/' + ((month + 1) >= 10 ? (month + 1) : '0' + (month + 1)) + '/' + ((date + 1) < 10 ? '0' + date : date) + ' ' + ((hour + 1) < 10 ? '0' + hour : hour) + ':' + ((minute + 1) < 10 ? '0' + minute : minute) + ':' + ((second + 1) < 10 ? '0' + second : second)
     },
 
-    isInActive (image) {
+    isInActive(image) {
       return this.activePapers.findIndex(img => {
         return image.src === img.src
       }) > -1
     },
 
     // 删除壁纸
-    del () {
+    del() {
       const imageExtensions = ['jpg', 'jpeg', 'gif', 'bmp', 'png']
       if (this.fileImageExtension(this.currentPaper)) {
         this.activePapers.filter(img => {
@@ -373,11 +382,11 @@ export default defineComponent({
     },
 
     // 删除有问题的图片
-    deleteAll (img) {
+    deleteAll(img) {
       this.myPapers.indexOf(img) !== -1 ? this.myPapers.splice(this.myPapers.indexOf(img), 1) : ''
     },
 
-    closePreview () {
+    closePreview() {
       this.previewVideoVisible = false
       if (window.$xgplayer) {
         window.$xgplayer.destroy()
@@ -385,7 +394,7 @@ export default defineComponent({
       }
     },
     // 判断文件是否为图片
-    fileImageExtension (filePath) {
+    fileImageExtension(filePath) {
       const fileExtensions = filePath.src.split('.').pop()
       const extensions = ['mp4', 'mpeg', 'avi', 'rmvb']
       if (extensions.indexOf(fileExtensions) !== -1) {
@@ -395,7 +404,7 @@ export default defineComponent({
       }
     },
     // 视频播放
-    previewVideo (img) {
+    previewVideo(img) {
       $('#actions').show()
       this.timer = setTimeout(() => {
         $('#actions').fadeOut()
@@ -418,7 +427,7 @@ export default defineComponent({
         autoplay: true
       })
     },
-    closePreview () {
+    closePreview() {
       this.previewVideoVisible = false
       if (window.$xgplayer) {
         window.$xgplayer.destroy()

@@ -15,7 +15,6 @@ function getSign():string{
  */
 function isMain(){
   let sign=getSign()
-  console.log(sign)
   return sign === 'table.com';
 }
 

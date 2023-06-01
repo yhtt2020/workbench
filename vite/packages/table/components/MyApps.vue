@@ -1,8 +1,9 @@
 <template>
-  <vue-custom-scrollbar @contextmenu.stop="menuVisible=true" :settings="outerSettings"
-                        style="position:relative;height:calc(100vh - 14em);  ">
-    <a-dropdown @contextmenu.stop="()=>{}" v-for="app in myApps" :trigger="['contextmenu']">
+  <vue-custom-scrollbar @contextmenu.stop="menuVisible = true" :settings="outerSettings"
+    style="position:relative;height:calc(100vh - 14em);  ">
+    <a-dropdown @contextmenu.stop="() => { }" v-for="app in myApps" :trigger="['contextmenu']">
       <div @click="open(app)" class="app">
+
         <a-avatar :size="50" shape="square" :src="app.icon"></a-avatar>
         <br>
         <div class="name text-more">
@@ -24,7 +25,7 @@
 
   </vue-custom-scrollbar>
   <a-drawer :height="250" v-model:visible="menuVisible" placement="bottom">
-    <a-row style="margin-top: 1em" :gutter="[20,20]">
+    <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
         <div @click="clear" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
@@ -40,10 +41,10 @@ import { mapWritableState, mapActions, mapState } from 'pinia'
 import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import { appsStore } from '../store/apps'
-const {fs} = window.$models
+const { fs } = window.$models
 export default {
   name: 'MyApps',
-  data () {
+  data() {
     return {
       menuVisible: false,
       outerSettings: {
@@ -61,15 +62,15 @@ export default {
   },
   methods: {
     ...mapActions(appsStore, ['deleteApp']),
-    open (app) {
+    open(app) {
       // if(fs.lstatSync(app.path).isDirectory()){
       //   require('electron').shell.openPath(app.path.replaceAll('/','\\'))
       // }else{
       //   require('electron').shell.openPath(app.path)
       // }
-      require('electron').shell.openPath( require('path').normalize(app.path))
+      require('electron').shell.openPath(require('path').normalize(app.path))
     },
-    deleteAnApp (app) {
+    deleteAnApp(app) {
       Modal.confirm({
         content: '是否删除应用快捷方式？此操作不会删除物理文件。',
         onOk: () => {
@@ -79,11 +80,11 @@ export default {
         }
       })
     },
-    showInFolder (app) {
+    showInFolder(app) {
       require('electron').shell.showItemInFolder(app.path)
     },
-    clear () {
-      this.menuVisible=false
+    clear() {
+      this.menuVisible = false
       Modal.confirm({
         centered: true,
         content: '清空全部应用快捷方式？此操作不可还原。',
@@ -99,7 +100,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .app {
   display: inline-block;
   width: 5em;

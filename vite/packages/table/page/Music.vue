@@ -1,7 +1,8 @@
 <template>
-  <div
-    class="music-player-wrapper s-bg m-3"
-    style="
+  <div :style="{
+    color: 'var(--font-color)',
+    backgroundColor: 'var(--background-color)'
+  }" class="music-player-wrapper s-bg m-3" style="
       text-align: center;
       display: flex;
       align-items: center;
@@ -10,25 +11,13 @@
       border-radius: 8px;
       margin: auto;
       margin-top: 1em;
-    "
-  >
+    ">
     <a-row :gutter="[20]" style="width: 100%">
-      <a-col
-        :span="showPrompt ? 12 : 24"
-        style="display: flex; align-items: center; justify-content: center"
-      >
-        <div
-          class="music-player"
-          style="width: 400px; height: 410px; display: inline-block"
-        >
+      <a-col :span="showPrompt ? 12 : 24" style="display: flex; align-items: center; justify-content: center">
+        <div class="music-player" style="width: 400px; height: 410px; display: inline-block">
           <div class="pointer" @click="enterMusic">
-            <a-avatar
-              :class="{ playing: status.music.playing }"
-              :size="120"
-              :src="status.music.cover"
-              style="margin: 16px; border: 3px solid #6b6b6b"
-              >点击选歌播放</a-avatar
-            >
+            <a-avatar :class="{ playing: status.music.playing }" :size="120" :src="status.music.cover"
+              style="margin: 16px; border: 3px solid #6b6b6b">点击选歌播放</a-avatar>
           </div>
           <div style="font-size: 1.8em">{{ status.music.title }}</div>
           <div style="font-size: 1.1em; color: #7c7c7c" class="singer">
@@ -40,42 +29,19 @@
           <div style="font-size: 1.5em">
             {{ status.music.progress }} / {{ status.music.total }}
           </div>
-          <div
-            :style="{ zoom: tab === 'player' ? 1 : 0.5 }"
-            style="text-align: center; margin-top: 0.8em"
-          >
+          <div :style="{ zoom: tab === 'player' ? 1 : 0.5 }" style="text-align: center; margin-top: 0.8em">
             <div style="width: 250px; margin: auto">
               <a-row>
-                <a-col
-                  @click="doAction('prev')"
-                  :span="8"
-                  style="padding-top: 1em"
-                >
+                <a-col @click="doAction('prev')" :span="8" style="padding-top: 1em">
                   <Icon class="player-icon" icon="shangyishou"></Icon>
                 </a-col>
-                <a-col
-                  @click="doAction('pause')"
-                  v-if="status.music.playing"
-                  :span="8"
-                >
-                  <Icon
-                    class="player-icon"
-                    style="font-size: 6em"
-                    icon="zanting"
-                  ></Icon>
+                <a-col @click="doAction('pause')" v-if="status.music.playing" :span="8">
+                  <Icon class="player-icon" style="font-size: 6em" icon="zanting"></Icon>
                 </a-col>
                 <a-col @click="doAction('play')" v-else :span="8">
-                  <Icon
-                    class="player-icon"
-                    style="font-size: 6em"
-                    icon="bofang"
-                  ></Icon>
+                  <Icon class="player-icon" style="font-size: 6em" icon="bofang"></Icon>
                 </a-col>
-                <a-col
-                  @click="doAction('next')"
-                  :span="8"
-                  style="padding-top: 1em"
-                >
+                <a-col @click="doAction('next')" :span="8" style="padding-top: 1em">
                   <Icon class="player-icon" icon="xiayishou"></Icon>
                 </a-col>
               </a-row>
@@ -83,31 +49,24 @@
           </div>
         </div>
       </a-col>
-      <a-col
-        :span="12"
-        v-if="showPrompt"
-        style="align-items: center; display: flex"
-      >
-        <div
-          style="
+      <a-col :span="12" v-if="showPrompt" style="align-items: center; display: flex">
+        <div style="
             background: rgba(0, 0, 0, 0.11);
             border-radius: 1em;
             height: 360px;
             display: flex;
             align-items: center;
-          "
-        >
+          ">
           <div v-html="prompt" id="prompt" class="listlyric j-flag"></div>
         </div>
       </a-col>
     </a-row>
   </div>
 
-  <div
-    @click="togglePrompt"
-    style="position: absolute; right: 3em; top: 43vh; z-index: 99"
-  >
-    <Icon icon="zimu" style="font-size: 4em"></Icon>
+  <div @click="togglePrompt" style="position: absolute; right: 3em; top: 43vh; z-index: 99">
+    <Icon icon="zimu" style="font-size: 4em" :style="{
+        color: 'var(--font-color)',
+      }"></Icon>
   </div>
 </template>
 
@@ -284,8 +243,7 @@ export default {
   vertical-align: middle;
 }
 
-.prompt {
-}
+.prompt {}
 
 .app-content {
   background: #3b3b3b;
@@ -331,6 +289,7 @@ export default {
     zoom: 0.8;
   }
 }
+
 @media screen and (min-height: 618px) and (max-height: 800px) {
   .music-player-wrapper {
     zoom: 1;

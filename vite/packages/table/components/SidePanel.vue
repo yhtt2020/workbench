@@ -1,44 +1,42 @@
 <template>
-  <ul class="side-panel common-panel s-bg" style=" z-index: 999;
-  width: 6em;">
-    <li class="active">
-      <PanelButton :active="tab==='home'" @click="goTab('main','home')" icon="shouye1" title="主页"></PanelButton>
+  <!-- 快速搜索 左侧栏区域 -->
+  <ul class="box side-panel common-panel s-bg" style=" z-index: 999;
+  width: 6em;" :style="{ backgroundColor: 'var(--no-active-background-color)' }">
+    <li class="" style="color:#000">
+      <PanelButton :active="tab === 'home'" @click="goTab('main', 'home')" icon="shouye1" title="主页">
+      </PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="yingyongzhongxin"
-                   title="应用"></PanelButton>
+      <PanelButton :active="tab === 'apps'" @click="goTab('apps')" icon="yingyongzhongxin" title="应用"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='game'" @click="goGame()"
-                   iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="youxishoubing"
-                   title="游戏"></PanelButton>
+      <PanelButton :active="tab === 'game'" @click="goGame()" iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;"
+        icon="youxishoubing" title="游戏"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='music'" @click="goTab('music')"
-                   iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="yinle1"
-                   title="音乐"></PanelButton>
+      <PanelButton :active="tab === 'music'" @click="goTab('music')"
+        iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="yinle1" title="音乐"></PanelButton>
     </li>
 
-<!--    <li>-->
-<!--      <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>-->
-<!--    </li>-->
+    <!--    <li>-->
+    <!--      <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>-->
+    <!--    </li>-->
     <li>
-      <PanelButton :active="tab==='deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
+      <PanelButton :active="tab === 'deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
     </li>
   </ul>
-
 </template>
 
 <script>
 export default {
   name: 'SidePanel',
-  data () {
+  data() {
     return {
       tab: 'home'
     }
   },
   methods: {
-    goTab (tab, name) {
+    goTab(tab, name) {
       if (!name) {
         name = tab
       }
@@ -47,27 +45,27 @@ export default {
         path: '/' + tab
       })
     },
-    goGame(){
-      this.tab='game'
+    goGame() {
+      this.tab = 'game'
       this.$router.push({
-        name:'gameIndex'
+        name: 'gameIndex'
       })
     },
-    goApp () {
+    goApp() {
       this.goTab('todo')
       this.$router.push({
-          name: 'app',
-          params:
-            {
-              fullScreen: false,
-              theme: 'transparent',
-              name: 'todo',
-              url: 'https://a.apps.vip/todo',
-              background: true,
-              node: true,
-              security: true
-            }
+        name: 'app',
+        params:
+        {
+          fullScreen: false,
+          theme: 'transparent',
+          name: 'todo',
+          url: 'https://a.apps.vip/todo',
+          background: true,
+          node: true,
+          security: true
         }
+      }
       )
     }
   }
@@ -75,6 +73,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.box {
+  :deep(.icon) {
+    fill: var(--no-active-font-color)
+  }
+}
+
+.active {
+  :deep(.icon) {
+    fill: var(--active-font-color) !important
+  }
+}
+
 .item {
   margin: 8px;
 }
