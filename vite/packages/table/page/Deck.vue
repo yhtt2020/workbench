@@ -1,12 +1,13 @@
 <template>
   <!-- :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" -->
-  <div v-if="this.grids.length === 0" class="p-5" style="max-height: 100%">
+  <div v-if="this.grids.length === 0" class=" box p-5" style="max-height: 100%">
     <a-result class="s-bg rounded-lg " style="" status="success" title="使用快捷指令"
       sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
       :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
       <template #extra>
         <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
-        <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+        <a-button disabled key="buy" @click="learn"
+          style="color:var(--no-active-font-color);background-color: var(--no-active-background-color)">学习（课程暂未上线）</a-button>
       </template>
       <div class="desc">
         <p style="font-size: 16px">
@@ -719,6 +720,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.box {
+  :deep(.ant-result-subtitle) {
+    color: var(--font-color);
+  }
+
+  :deep(.ant-result-title) {
+    color: var(--font-color);
+  }
+}
+
 .ant-result-content {
   margin-top: 24px;
   padding: 15px;
