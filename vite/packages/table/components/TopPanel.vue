@@ -9,7 +9,7 @@
     </a-col>
     <a-col :span="8" style="text-align: center">
       <div @click="openGlobalSearch" class="input-box no-drag pointer"
-        :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
+        :style="{ backgroundColor: 'var(--background-color)', color: 'var(--no-active-font-color)' }">
         <Icon icon="sousuo"></Icon> 搜索 网页内容、标签
         <!--        <span style="float: right; padding-right: 10px">-->
         <!--          <span style="margin-right: 3px" class="key-button">Alt</span-->

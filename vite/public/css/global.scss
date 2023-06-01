@@ -58,9 +58,9 @@
 // 夜晚无背景主题
 .dark-nobg-mode {
     --font-color: #fff !important;
-    --background-color: linear-gradient(-33deg, #545454 100%, #404040 100%, #2A2A2A 100%) !important;
+    --background-color: rgba(46, 46, 46, 1) !important;
     --no-active-font-color: rgba(255, 255, 255, 0.60);
-    --no-active-background-color: rgba(63 63 63);
+    --no-active-background-color: rgba(64, 64, 64, 1);
     --active-font-color: #fff;
     --active-background-color: rgba(0, 0, 0, 0.3);
 
