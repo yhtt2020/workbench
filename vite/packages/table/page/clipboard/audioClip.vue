@@ -1,6 +1,6 @@
 <template>
   <div>
-    音频剪贴板正在开发中(施工中)
+    音频剪贴板正在建成中
   </div>
 </template>
 

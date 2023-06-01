@@ -44,6 +44,7 @@
   </a-drawer>
 
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
+  
 </template>
 
 <script>
