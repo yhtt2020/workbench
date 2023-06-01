@@ -35,7 +35,7 @@
                   class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
                 <Icon icon="xiangzuo" style="font-size: 20px;color: rgba(255, 255, 255, 0.85);"></Icon>
               </div>
-              <span class="change pointer rounded-lg s-item  flex items-center justify-center" 
+              <span class="change pointer rounded-lg s-item  flex items-center justify-center"
               style="color: rgba(255,255,255,0.85);font-size: 16px;"
               @click="stripDay(detailMovie.shareInfo.url)"
               :style="fatherWidth == 2 ? 'padding: 13px 80px;' : 'padding:13px 62px;'"
@@ -49,7 +49,7 @@
       </div>
      </HomeComponentSlot>
 </template>
-  
+
 <script>
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import DataStatu from "../DataStatu.vue"
@@ -83,7 +83,7 @@
       return {
         options:{
           className:'card',
-          title:'正在热映 (开发中)',
+          title:'正在热映',
           icon:'video',
           type:'singleDoubanFilm'
         },
@@ -103,7 +103,7 @@
       },
       priceFormat(num){
         if(!isNaN(num)){
-          return ( (num + '').indexOf('.') != -1 ) ? num: num.toFixed(1);   
+          return ( (num + '').indexOf('.') != -1 ) ? num: num.toFixed(1);
         }
       },
       async getfilmDetail(){
@@ -139,7 +139,7 @@
     },
   };
 </script>
-  
+
 <style scoped lang="scss">
   .film-content{
       height: 230px;
@@ -195,4 +195,3 @@
 </style>
 
 
-  
