@@ -1,4 +1,5 @@
 <template>
+  <!-- 快速搜索 我的应用 轻应用 应用市场 菜单 -->
   <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
     id="secondPanel">
     <div style="margin-bottom:2em;" v-if="gallery === true">

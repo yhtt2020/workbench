@@ -1,5 +1,6 @@
 <template>
-  <div style="display: flex;height: 100%">
+  <!-- 快速搜索 我的应用 轻应用 应用市场 主页 -->
+  <div style="display: flex;height: 100%;">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab">
     </SecondPanel>
     <div v-show="currentIndex === 'my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg"
@@ -34,7 +35,7 @@
             </div>
           </div>
           <a-row :gutter="[30, 20]">
-            <template v-for="app in storeApps">
+            <template v-for="app in   storeApps  ">
               <a-col :span="3">
                 <div class="text-left" style="position:absolute;z-index: 9;">
                   <a-tag color="#ff5500cc" v-if="app.data.type === 'system'">系统</a-tag>
@@ -46,7 +47,10 @@
                 </a-avatar>
               </a-col>
               <a-col :span="5">
-                <div class="app-name  font-bold text-white" style="text-align: left">{{ app.name }}
+                <div class="app-name  font-bold text-white" style="text-align: left,"
+                  :style="{ color: 'var(--font-color)' }">
+                  {{ app.name
+                  }}
 
                 </div>
 
