@@ -28,7 +28,7 @@
             <div class="flex">
               <div class="flex items-center justify-center">
                 <Icon icon="play-square" class="text-color" style="font-size: 1.2em;"></Icon>
-                <!-- <span class="ml-1 text-color">{{item.play.toString().slice(0,2)+ '.' + item.play.toString().slice(0,4).slice(3)}}万</span> -->
+                <span class="ml-1 text-color">{{item.play.toString().slice(0,2)+ '.' + item.play.toString().slice(0,4).slice(3)}}万</span>
               </div>
               <div class="mx-2">
                 <Icon icon="detail" class="text-color" style="font-size: 1.2em;"></Icon>
