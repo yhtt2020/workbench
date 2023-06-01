@@ -7,14 +7,14 @@
       <div class="line-title">
         基础设置
       </div>
-      <div v-if="screen.key!=='main'" class="line">
+      <div v-if="screen.key !== 'main'" class="line">
         名称：
         <a-input class="ml-3" v-model:value="screen.title" style="width: 250px"></a-input>
       </div>
       <div class="line">
         默认进入页面： <a-button type="primary" size="small">选择</a-button>
       </div>
-      <template v-if="screen.key!=='main'">
+      <template v-if="screen.key !== 'main'">
         <div class="line">
           开机自启动：
           <a-switch v-model:checked="screen.settings.autoRun"></a-switch>
@@ -27,16 +27,11 @@
         系统功能设置
       </div>
       <template v-if="this.currentTip && this.tips[this.currentTip]">
-        <a-alert class="mb-3"
-                 v-if=" this.tips[this.currentTip].status"
-                 :message="this.tips[this.currentTip].content"
-                 type="info"
-                 closable
-                 :after-close="closeTip(this.currentTip)"
-        />
+        <a-alert class="mb-3" v-if="this.tips[this.currentTip].status" :message="this.tips[this.currentTip].content"
+          type="info" closable :after-close="closeTip(this.currentTip)" />
       </template>
 
-      <template v-if="screen.key!=='main'">
+      <template v-if="screen.key !== 'main'">
         <div v-if="screen.apps" class="line">
           独立底部导航栏：
           <a-switch v-model:checked="screen.apps.bottomPanel"></a-switch>
@@ -59,10 +54,10 @@
 </template>
 
 <script lang="ts">
-import {screenStore} from '../../store/screen'
-import {mapWritableState, mapActions} from 'pinia'
-import {nanoid} from 'nanoid'
-import {Modal} from 'ant-design-vue'
+import { screenStore } from '../../store/screen'
+import { mapWritableState, mapActions } from 'pinia'
+import { nanoid } from 'nanoid'
+import { Modal } from 'ant-design-vue'
 
 export default {
   name: 'subScreen',
@@ -73,24 +68,24 @@ export default {
     }
   },
   mounted() {
-     this.resetTips()
+    this.resetTips()
     this.getTip()
   },
   methods: {
-    ...mapActions(screenStore, ['reset','tips','currentTip','resetTips']),
-    getTip(){
-      this.currentTip=''
-      console.log(Object.keys(this.tips),'this.tips')
-      Object.keys(this.tips).forEach(key=>{
-        if(this.tips[key].status){
-          this.currentTip=key
+    ...mapActions(screenStore, ['reset', 'tips', 'currentTip', 'resetTips']),
+    getTip() {
+      this.currentTip = ''
+      console.log(Object.keys(this.tips), 'this.tips')
+      Object.keys(this.tips).forEach(key => {
+        if (this.tips[key].status) {
+          this.currentTip = key
           return false
         }
       })
       console.log(this.currentTip)
     },
-    closeTip(tag){
-      this.tips[tag].status=false
+    closeTip(tag) {
+      this.tips[tag].status = false
       this.getTip()
     },
     onEdit(targetKey: string | MouseEvent, action: string) {
@@ -105,8 +100,8 @@ export default {
         key: nanoid(6),
         title: '分屏',
         closable: true,
-        settings:{
-          autoRun:false
+        settings: {
+          autoRun: false
         },
         apps: {
           deck: false
@@ -131,6 +126,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

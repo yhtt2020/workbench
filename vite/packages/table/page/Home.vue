@@ -744,7 +744,8 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
-      document.documentElement.classList.remove("style");
+      const value = JSON.parse(window.localStorage.getItem("style"));
+      document.documentElement.classList.remove(value);
       if (this.styles == true) {
         document.documentElement.classList.add('light-nobg-mode');
         window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"));

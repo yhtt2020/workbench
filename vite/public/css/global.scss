@@ -22,7 +22,7 @@
 // 白天主题
 .light-mode {
     --font-color: #000 !important;
-    --background-color: rgba(204, 204, 204, 0.75);
+    --background-color: rgba(195, 196, 197, 0.85);
     --no-active-background-color: rgba(204, 204, 204, 0.75);
     --no-active-font-color: rgba(0, 0, 0, 0.45);
     --active-font-color: #000;
@@ -38,11 +38,11 @@
 // 白天无背景主题
 .light-nobg-mode {
     --font-color: #000 !important;
-    --background-color: rgba(240 240 240);
-    --no-active-background-color: rgba(240, 240, 240, 1.10);
+    --background-color: rgba(240, 240, 240, 0.85);
     --no-active-font-color: rgba(0, 0, 0, 0.45);
+    --no-active-background-color: rgba(240, 240, 240, 0.85);
     --active-font-color: #000;
-    --active-background-color: #fff;
+    --active-background-color: #FFFFFF;
 
     .active {
         color: var(--active-font-color) !important;

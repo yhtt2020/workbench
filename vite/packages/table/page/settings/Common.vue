@@ -10,8 +10,8 @@
     <div class="line">
       双击托盘菜单默认打开：
       <a-radio-group v-model:value="trayOpen">
-        <a-radio value="worktable">工作台</a-radio>
-        <a-radio value="browser">浏览器</a-radio>
+        <a-radio value="worktable" style="color: var(--font-color)">工作台</a-radio>
+        <a-radio value="browser" style="color: var(--font-color)">浏览器</a-radio>
       </a-radio-group>
     </div>
     <div class="line">
