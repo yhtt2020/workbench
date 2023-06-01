@@ -62,28 +62,38 @@ export default {
       medals:[]
     }
   },
-  async mounted () {
-    this.getUserMedal(this.userInfo.uid).then(result=>{
-      if(result){
-        this.medals=result
-      }else{
-        this.medals=[]
+  watch:{
+    'userInfo':{
+      handler(){
+        this.updateUserInfo().then()
       }
-    })
-    this.grade = await this.getMemberGrade(this.userInfo.uid)
-    this.joined_days=Number(((new Date().getTime()-(new Date(this.joinedTime).getTime()))/(24*60*60*1000)).toFixed(0))
-    if(this.joined_days===0){
-      //不足一天按1天计
-      this.joined_days=1
     }
-    this.daily_minutes=this.memberInfo.online_minutes/Number(this.joined_days).toFixed(0)
-    this.online_h=(this.memberInfo.online_minutes/60).toFixed(0)
-    this.online_m=(this.memberInfo.online_minutes%60).toLocaleString('us')
-    this.daily_h=(this.daily_minutes/60).toFixed(0)
-    this.daily_m=(this.daily_minutes%60).toFixed(0)
+  },
+  async mounted () {
+      this.updateUserInfo().then()
   },
   methods:{
-    ...mapActions(teamStore,['getMemberGrade','getUserMedal'])
+    ...mapActions(teamStore,['getMemberGrade','getUserMedal']),
+    async updateUserInfo () {
+      this.getUserMedal(this.userInfo.uid).then(result => {
+        if (result) {
+          this.medals = result
+        } else {
+          this.medals = []
+        }
+      })
+      this.grade = await this.getMemberGrade(this.userInfo.uid)
+      this.joined_days = Number(((new Date().getTime() - (new Date(this.joinedTime).getTime())) / (24 * 60 * 60 * 1000)).toFixed(0))
+      if (this.joined_days === 0) {
+        //不足一天按1天计
+        this.joined_days = 1
+      }
+      this.daily_minutes = this.memberInfo.online_minutes / Number(this.joined_days).toFixed(0)
+      this.online_h = (this.memberInfo.online_minutes / 60).toFixed(0)
+      this.online_m = (this.memberInfo.online_minutes % 60).toLocaleString('us')
+      this.daily_h = (this.daily_minutes / 60).toFixed(0)
+      this.daily_m = (this.daily_minutes % 60).toFixed(0)
+    }
   },
 
 }

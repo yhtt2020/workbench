@@ -232,7 +232,7 @@ export default {
       }
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
-      this.userInfoKey = Date.now()
+      // this.userInfoKey = Date.now()
       this.showDetail = false
       this.userDetail=true
     },
@@ -247,10 +247,8 @@ export default {
       this.showBarrage=false
       this.userDetail = false
       this.updateTeam(this.team.no).then()
-      setTimeout(() => {
-        this.teamDetail = true
-        this.showDetail = true
-      })
+      this.teamDetail = true
+      this.showDetail = true
 
     },
     cleanTeam () {

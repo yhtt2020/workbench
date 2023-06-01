@@ -40,6 +40,7 @@ export default {
     }
   },
   mounted () {
+    this.loading=true
     this.CONST = tsbApi.barrage.CONST
     if(this.defaultChannel==='team'){
       this.channelList=this.channelList.reverse()
@@ -53,6 +54,7 @@ export default {
   watch:{
     currentChannel:{
       handler(){
+        this.loading=true
         this.key=Date.now()
       }
     }
@@ -70,7 +72,9 @@ export default {
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async loadAllBarrages () {
+      this.loading=true
       tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, 'table').then(rs => {
+        this.loading=false
         if (rs.status) {
           rs.data.forEach(item => {
             item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
@@ -83,7 +87,9 @@ export default {
     async loadTeamBarrage () {
       await this.updateMy()
       if (this.myTeamNo) {
+        this.loading=true
         tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
+          this.loading=false
           if (rs.status) {
             rs.data.forEach(item => {
               item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
