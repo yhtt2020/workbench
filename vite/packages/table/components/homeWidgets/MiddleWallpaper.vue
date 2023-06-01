@@ -1,99 +1,42 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <HomeComponentSlot
-      :options="options"
-      :customIndex="customIndex"
-      :formulaBar="formulaBar"
-      ref="cardSlot"
-    >
-      <div
-        class="absolute top-4 left-4 w-24 h-5 pointer"
-        @click="openRight"
-      ></div>
+    <HomeComponentSlot :options="options" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
+      <div class="absolute top-4 left-4 w-24 h-5 pointer" @click="openRight"></div>
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
-        <div
-          class="w-full text-center"
-          style="margin-top: 20%"
-          v-if="imgList.length <= 0"
-        >
+        <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
           <a-empty :image="simpleImage" />
           <div style="margin-top: 2em">
             <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
           </div>
         </div>
         <div class="h-full w-full pointer" v-else @click="goSource">
-          <video
-            class="fullscreen-video"
-            ref="wallpaperVideo"
-            style="border-radius: 8px; object-fit: cover"
-            playsinline=""
-            autoplay=""
-            muted=""
-            loop=""
-            v-if="currentImg.srcProtocol"
-          >
+          <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
+            playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
             <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid" />
           </video>
 
-          <img
-            :src="currentImg.middleSrc"
-            @load="imgLoad"
-            @error="imgError"
-            alt=""
-            class="h-full w-full"
-            style="border-radius: 8px; object-fit: cover"
-            v-else-if="currentImg.middleSrc"
-          />
-          <img
-            :src="currentImg.src"
-            @load="imgLoad"
-            alt=""
-            @error="imgError"
-            class="h-full w-full"
-            style="border-radius: 8px; object-fit: cover"
-            v-else
-          />
+          <img :src="currentImg.middleSrc" @load="imgLoad" @error="imgError" alt="" class="h-full w-full"
+            style="border-radius: 8px; object-fit: cover" v-else-if="currentImg.middleSrc" />
+          <img :src="currentImg.src" @load="imgLoad" alt="" @error="imgError" class="h-full w-full"
+            style="border-radius: 8px; object-fit: cover" v-else />
         </div>
       </div>
-      <div
-        class="flex flex-row absolute bottom-4 justify-center"
-        style="width: 543px"
-        v-if="imgList.length > 0"
-      >
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4"
-          @click="lastImg"
-        >
+      <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px" v-if="imgList.length > 0">
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg">
           <Icon class="icon" icon="caret-left"></Icon>
         </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4"
-          @click="nextImg"
-        >
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg">
           <Icon class="icon" icon="caret-right"></Icon>
         </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4"
-          @click="randomImg"
-        >
-          <Icon
-            class="icon"
-            :class="randomFlag ? 'replace-it' : ''"
-            icon="reload"
-          ></Icon>
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg">
+          <Icon class="icon" :class="randomFlag ? 'replace-it' : ''" icon="reload"></Icon>
         </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4"
-          @click="collect"
-          v-if="addressType.name !== 'my'"
-        >
+        <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect"
+          v-if="addressType.name !== 'my'">
           <Icon v-if="!isInMyPapers" icon="star"></Icon>
           <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
         </div>
-        <div
-          class="item-icon flex justify-center items-center pointer"
-          @click="settingImg"
-        >
+        <div class="item-icon flex justify-center items-center pointer" @click="settingImg">
           <Icon class="icon" icon="desktop"></Icon>
         </div>
       </div>
@@ -104,18 +47,11 @@
       <div class="text-center">「壁纸」设置</div>
     </template>
     <div class="text-base">壁纸源</div>
-    <a-select
-      style="
+    <a-select style="
         background: rgba(42, 42, 42, 1);
         border: 1px solid rgba(255, 255, 255, 0.1);
-      "
-      class="w-full h-10 rounded-lg mt-4 text-xs"
-      size="large"
-      :bordered="false"
-      v-model:value="pickFilterValue"
-      @change="pickFilterChange($event)"
-      :options="wallpaperOptions"
-    >
+      " class="w-full h-10 rounded-lg mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
+      @change="pickFilterChange($event)" :options="wallpaperOptions">
     </a-select>
   </a-drawer>
 </template>
@@ -143,7 +79,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -345,7 +281,7 @@ export default {
         this.$nextTick(() => {
           if (this.currentImg.srcProtocol) {
             this.$refs.wallpaperVideo.load();
-            this.$refs.wallpaperVideo.play().catch((err) => {});
+            this.$refs.wallpaperVideo.play().catch((err) => { });
             this.imgSpin = false;
           }
         });
@@ -547,6 +483,7 @@ export default {
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
+
   .icon {
     height: 36px;
     width: 36px;

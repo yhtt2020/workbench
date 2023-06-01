@@ -19,6 +19,13 @@
     }
 }
 
+body {
+    :deep(.ant-select-selection-item) {
+        border: 1px solid red !important;
+        color: red;
+    }
+}
+
 // 白天主题
 .light-mode {
     --font-color: #000 !important;

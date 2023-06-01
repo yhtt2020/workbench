@@ -1,25 +1,29 @@
 <template>
   <div class="main" style="text-align: center;padding-top: 3em">
-    <BackBtn></BackBtn>
-    <div @click="exit" class="power-btn">退出</div>
-    <div style="margin:auto;width: 51em;text-align: center">
+    <BackBtn style="color: var(--font-color);background-color: var(--background-color)"></BackBtn>
+    <div @click="exit" class="power-btn" style="color: var(--font-color);background-color: var(--background-color)">退出
+    </div>
+    <div style="margin:auto;width: 51em;text-align: center; ">
       <a-row>
         <a-col>
-          <div @click="shutdown" class="power-btn">关机</div>
-          <div @click="logout" class="power-btn">注销</div>
+          <div @click="shutdown" style="color: var(--font-color);background-color: var(--background-color)"
+            class="power-btn">关机</div>
+          <div @click="logout" style="color: var(--font-color);background-color: var(--background-color)"
+            class="power-btn">注销</div>
         </a-col>
         <a-col>
-          <div @click="reboot" class="power-btn">重启</div>
-          <div @click="sleep" class="power-btn">休眠</div>
+          <div @click="reboot" style="color: var(--font-color);background-color: var(--background-color)"
+            class="power-btn">重启</div>
+          <div @click="sleep" style="color: var(--font-color);background-color: var(--background-color)"
+            class="power-btn">休眠</div>
         </a-col>
       </a-row>
     </div>
 
 
-    <br/>
+    <br />
 
   </div>
-
 </template>
 
 <script>
@@ -33,18 +37,18 @@ export default {
   components: { BackBtn },
   methods: {
 
-    exit () {
-      if(isMain()){
+    exit() {
+      if (isMain()) {
         ipc.send('exitTable')
-      }else{
-        ipc.send('closeScreen',{fullDomain:getSign()})
+      } else {
+        ipc.send('closeScreen', { fullDomain: getSign() })
       }
 
     },
-    shutdown () {
+    shutdown() {
       Modal.confirm({
         content: '关闭系统？请保存文件后确认。',
-        onOk () {
+        onOk() {
           let shell = 'shutdown -s -t 00'
           if (require('os').platform() != 'win32') {
             shell = 'shutdown now'
@@ -57,10 +61,10 @@ export default {
         }
       })
     },
-    logout () {
+    logout() {
       Modal.confirm({
         content: '注销系统？',
-        onOk () {
+        onOk() {
           let shell = 'shutdown -l'
           let command = execShell(shell, (err, stdout, stderr) => {
             if (err || stderr) {
@@ -70,18 +74,18 @@ export default {
         }
       })
     },
-    sleep () {
+    sleep() {
       Modal.confirm({
         content: '休眠系统？',
-        onOk () {
+        onOk() {
           runNir('standby')
         }
       })
     },
-    reboot () {
+    reboot() {
       Modal.confirm({
         content: '重启系统？请保存文件后确认。',
-        onOk () {
+        onOk() {
           let shell = 'shutdown -r -t 0'
           if (require('os').platform() != 'win32') {
             shell = 'shutdown -r now'

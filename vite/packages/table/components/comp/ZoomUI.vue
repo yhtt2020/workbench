@@ -10,7 +10,8 @@
 
   <div class="line">
     缩放比例（输入后回车确认）：
-    <a-input-number :min="30" :max="500" @pressEnter="inputEnter" v-model:value="inputZoom"></a-input-number>
+    <a-input-number style="color: var(--font-color);" :min="30" :max="500" @pressEnter="inputEnter"
+      v-model:value="inputZoom"></a-input-number>
     %<br>
   </div>
   <div class="line">
