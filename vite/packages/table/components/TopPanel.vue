@@ -17,8 +17,8 @@
         <!--        </span>-->
       </div>
     </a-col>
-    <a-col :span="8" style="text-align: right" class="s-text">
-      <span style="color: grey; font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
+    <a-col :span="8" style="text-align: right;color: var(--no-active-font-color)" class="s-text">
+      <span style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
         {{ lockTimeoutDisplay }}后锁屏
       </span>
       <span class="no-drag" v-if="!loading">{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{

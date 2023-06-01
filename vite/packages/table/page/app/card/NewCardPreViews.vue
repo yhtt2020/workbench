@@ -1,6 +1,6 @@
 <template>
     <div class="main-box ">
-        <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name" style="color: var(--font-color);">
             <div class="add no-drag" @click="addCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
@@ -26,8 +26,8 @@
                     :style="[{ zoom: item.option[0].name == 'MyGameSmall' ? '7%' : '11%' }]">
             </div>
             <div class="right">
-                <div class="title">{{ item.cname }}</div>
-                <div class="text">{{ item.detail }}</div>
+                <div class="title" style="color: var(--font-color);">{{ item.cname }}</div>
+                <div class="text" style="color: var(--no-active-font-color);">{{ item.detail }}</div>
                 <div class="icon">
                     <div class="icon-box" v-for="i in item.sizes" :key="i">{{ i }}</div>
                 </div>

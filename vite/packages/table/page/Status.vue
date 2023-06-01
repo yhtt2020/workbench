@@ -1,11 +1,12 @@
 <template>
-  <div v-if="loaded">
+  <div v-if="loaded" style="">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-                          style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+      style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
       <div style="width: auto;   ">
         <div style="display: inline-block;vertical-align: top">
-          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
-            <h3>音量</h3>
+          <div
+            style="margin: 2em;padding:2em;border-radius: 0.5em;width: 40em;background-color:var(--background-color) ; color: var(--font-color);">
+            <h3 style="color: var(--font-color)">音量</h3>
             <a-row>
               <a-col :span="3">
                 <div style="cursor: pointer" v-if="!muted" @click="setMuted">
@@ -16,15 +17,16 @@
                 </div>
               </a-col>
               <a-col id="scroller" :span="21">
-                <a-slider @touchstart.stop="()=>{log('1')}" @touchmove.stop="()=>{log('2')}"
-                          @touchend.stop="()=>{log('3')}" @after-change="setVol" v-model:value="vol"></a-slider>
+                <a-slider @touchstart.stop="() => { log('1') }" @touchmove.stop="() => { log('2') }"
+                  @touchend.stop="() => { log('3') }" @after-change="setVol" v-model:value="vol"></a-slider>
               </a-col>
             </a-row>
             <div>
             </div>
           </div>
-          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
-            <h3>屏幕亮度</h3>
+          <div
+            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;background-color:var(--background-color) ; color: var(--font-color);">
+            <h3 style="color: var(--font-color)">屏幕亮度</h3>
             <a-row>
               <a-col :span="3">
                 <div>
@@ -45,13 +47,14 @@
           </div>
         </div>
 
-        <div style="display: inline-block;">
-          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top">
-            <h3>音频输出设备</h3>
-            <div v-for="audio in audioList">
-              <div @click="setAudio(audio)" class="audio" :class="{'active':audio.isDefaultForMultimedia}">
+        <div style="display: inline-block; ">
+          <div
+            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--background-color) ; color: var(--font-color);">
+            <h3 style="color: var(--font-color)">音频输出设备</h3>
+            <div v-for=" audio in audioList">
+              <div @click="setAudio(audio)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia }">
                 <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon>
-                {{ audio.name }} ({{ audio.deviceName }}) <span v-if="audio.deviceId==='default'">当前</span>
+                {{ audio.name }} ({{ audio.deviceName }}) <span v-if="audio.deviceId === 'default'">当前</span>
               </div>
             </div>
             <div>
@@ -63,12 +66,12 @@
         </div>
         <div style="display: inline-block;vertical-align: top">
           <div
-            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;">
-            <h3>音频输入设备</h3>
+            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--background-color) ; color: var(--font-color);">
+            <h3 style="color: var(--font-color)">音频输入设备</h3>
             <div v-for="audio in micList">
-              <div @click="setAudio(audio)" class="audio" :class="{'active':audio.deviceId==='default'}">
+              <div @click="setAudio(audio)" class="audio" :class="{ 'active': audio.deviceId === 'default' }">
                 <Icon icon="maikefeng" style="font-size: 1.2em"></Icon>
-                {{ audio.label }} <span v-if="audio.deviceId==='default'">当前</span>
+                {{ audio.label }} <span v-if="audio.deviceId === 'default'">当前</span>
               </div>
             </div>
 
@@ -80,7 +83,6 @@
       </div>
     </vue-custom-scrollbar>
   </div>
-
 </template>
 
 <script>
@@ -92,7 +94,7 @@ import { listOutputs, setAsDefault } from '../js/ext/audio/audio'
 
 export default {
   name: 'Status',
-  data () {
+  data() {
     return {
       muted: false,
       vol: 50,
@@ -111,7 +113,7 @@ export default {
       },
     }
   },
-  async mounted () {
+  async mounted() {
 
     // $('#scroller').on('touchstart',()=>{
     //
@@ -159,14 +161,14 @@ export default {
     }, 2000)
 
   },
-  beforeUnmount () {
+  beforeUnmount() {
     clearInterval(this.timer)
   },
   methods: {
-    log (info) {
+    log(info) {
       console.log(info)
     },
-    async getSpeakerList () {
+    async getSpeakerList() {
       listOutputs().then((devices) => {
         let list = []
         devices.forEach((device) => {
@@ -180,27 +182,27 @@ export default {
           console.log(err.name + ': ' + err.message)
         })
     },
-    async getVals () {
+    async getVals() {
       this.muted = await loudness.getMuted()
       this.vol = await loudness.getVolume()
       this.bright = (await brightness.get()) * 100
     },
-    async setVol () {
+    async setVol() {
       await loudness.setVolume(Number(this.vol))
       this.gua()
     },
-    async setBright () {
+    async setBright() {
       console.log(this.bright)
       await brightness.set((Number(this.bright) / 100))
       console.log((Number(this.bright) / 100).toFixed(1))
     },
-    async setAudio (audio) {
+    async setAudio(audio) {
       await setAsDefault(audio)
       audio.isDefaultForMultimedia = true
       this.gua()
       // navigator.mediaDevices.selectAudioOutput()
     },
-    async gua () {
+    async gua() {
       let audioSpeaker = document.getElementById('speakerAudio')
       await this.getSpeakerList()
       // console.log(audioSpeaker)
@@ -213,16 +215,16 @@ export default {
       //  this.shell('setdefaultsounddevice "'+audio.label+'"')
       audioSpeaker.play()
     },
-    async setMuted () {
+    async setMuted() {
       await loudness.setMuted(true)
       this.muted = true
     },
-    async cancelMuted () {
+    async cancelMuted() {
       await loudness.setMuted(false)
       this.muted = false
       this.gua()
     },
-    async shell (cmd, cb) {
+    async shell(cmd, cb) {
       let rs = await ipc.invoke('shell', { cmd })
       if (rs) {
         cb(rs)
