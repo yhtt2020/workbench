@@ -1,9 +1,9 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
                       style="padding: 15px;height: 100%">
-    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto">
+    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto;background-color: var(--background-color);color: var(--font-color)" >
       <div class="line-title">
-        邀请好友
+         邀请好友
       </div>
       <p>
         目前想天工作台仍然在测试阶段，并未面向大众公开下载使用。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。</p>
