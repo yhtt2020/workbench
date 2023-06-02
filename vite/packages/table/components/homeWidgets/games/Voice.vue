@@ -53,7 +53,7 @@ import VoiceOutputDetail from './VoiceOutputDetail.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { inspectorStore } from '../../../store/inspector'
 import audio from '../../../js/common/audio'
-import { getDefaultVolume, setDefaultVolume } from '../../../js/ext/audio/audio'
+import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../../js/ext/audio/audio'
 export default {
   name:'Voice',
   components:{
@@ -77,6 +77,7 @@ export default {
   },
   data(){
     return{
+      defaultMic:{},
       defaultOutput:{},
       options: {
         className: 'card',
@@ -90,7 +91,7 @@ export default {
       outputContent:'扬声器1（High Definition Audio Device）',
       inputContent:'Microphone1（High Definition Audio Device）',
       muteShow:false,
-      microphoneShow:false,
+      microphoneShow:true,
     }
   },
   computed:{
@@ -98,6 +99,9 @@ export default {
   },
   async mounted () {
     this.defaultOutput = await getDefaultVolume()
+    this.defaultMic=await getDefaultMic()
+    this.muteShow=!this.defaultOutput.muted
+    this.microphoneShow=!this.defaultMic.muted
     this.startListenAudioTest()
   },
   methods:{
@@ -126,6 +130,7 @@ export default {
     },
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
+      setMicVolume({muted:!this.microphoneShow})
     },
     changeVolume(){
       setDefaultVolume({

@@ -41,7 +41,7 @@
             <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
           <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item">
-            <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === false"></Icon>
+            <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
             <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
@@ -66,7 +66,13 @@ import audio from '../../../js/common/audio'
 import { inspectorStore } from '../../../store/inspector'
 import {mapWritableState,mapActions} from 'pinia'
 import Template from '../../../../user/pages/Template.vue'
-import  { getDefaultVolume,setDefaultVolume } from '../../../js/ext/audio/audio.ts'
+import {
+  getDefaultMic,
+  getDefaultVolume,
+  listInputs,
+  setDefaultVolume,
+  setMicVolume
+} from '../../../js/ext/audio/audio.ts'
 export default {
   name:'Audio',
   components:{
@@ -98,6 +104,10 @@ export default {
   },
   async mounted () {
     this.defaultOutput = await getDefaultVolume()
+    this.defaultMic=await getDefaultMic()
+    this.muteShow=!this.defaultOutput.muted
+    this.microphoneShow=!this.defaultMic.muted
+
     audio.getDevices(devices => {
       console.log('取到的devices', devices)
       this.devices = devices
@@ -125,6 +135,7 @@ export default {
       },
       devices:[],
       defaultOutput:{},
+      defaultMic:{},
       audioTitle:[{title:'输出',name:'output'},{title:'输入',name:'input'}],
       audioType:{title:'输出',name:'output'},
       audioValue:50,
@@ -156,6 +167,7 @@ export default {
     // 关闭麦克风逻辑
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
+      setMicVolume({muted:!this.microphoneShow})
     },
     // 关闭音量逻辑
     closeVolume(){

@@ -24,6 +24,43 @@ interface CommandOutput {
   exitCode: number | null;
 }
 
+export interface AudioInput {
+  /**
+   * The ID of the output, used for subsequent calls that control the output
+   */
+  id: string;
+
+  /**
+   * The name of the output
+   */
+  name: string;
+
+  /**
+   * The name of the output device
+   */
+  deviceName: string;
+
+  /**
+   * Whether this output is the default for multimedia
+   */
+  isDefaultForMultimedia: boolean;
+
+  /**
+   * Whether this output is the default for communications
+   */
+  isDefaultForCommunications: boolean;
+
+  /**
+   * Whether this output is muted
+   */
+  isMuted: boolean;
+
+  /**
+   * The current volume of the output, in the range [0, 100]
+   */
+  volume: number;
+}
+
 export interface AudioOutput {
   /**
    * The ID of the output, used for subsequent calls that control the output
@@ -102,23 +139,20 @@ function execAsPromised(
   });
 }
 
-/**
- * Get a list of currently active (connected and non-disabled) audio outputs on the system.
- */
-export async function listOutputs(): Promise<AudioOutput[]> {
+async function listDevices(type = 'Render') {
   const {
     exitCode,
     stdout,
   } = await execAsPromised(
-    'SoundVolumeView /stab "" | GetNir "Item ID, Name, Device Name, Default Multimedia, Default Communications, Muted, Volume Percent" "Type=Device && Direction=Render && DeviceState=Active"',
+    `SoundVolumeView /SaveFileEncoding 3 /stab "" | GetNir "Item ID, Name, Device Name, Default Multimedia, Default Communications, Muted, Volume Percent" "Type=Device && Direction=${type} && DeviceState=Active"`,
     {cwd: binDir}
   );
 
-  const outputs: AudioOutput[] = [];
+  const outputs: AudioOutput | AudioInput[] = [];
 
   if (exitCode === 0 && stdout.length > 0) {
     const entries = stdout.split('\r\n');
-
+    console.log(entries, '存储下的entries')
     for (const entry of entries) {
       const [
         id,
@@ -134,8 +168,8 @@ export async function listOutputs(): Promise<AudioOutput[]> {
         id: id ?? '',
         name: name ?? '',
         deviceName: deviceName ?? '',
-        isDefaultForMultimedia: isDefaultForMultimedia === 'Render',
-        isDefaultForCommunications: isDefaultForCommunications === 'Render',
+        isDefaultForMultimedia: isDefaultForMultimedia === type,
+        isDefaultForCommunications: isDefaultForCommunications === type,
         isMuted: isMuted === 'Yes',
         volume: Number((volume ?? '0').replace('%', '')),
       });
@@ -145,6 +179,16 @@ export async function listOutputs(): Promise<AudioOutput[]> {
   return outputs;
 }
 
+/**
+ * Get a list of currently active (connected and non-disabled) audio outputs on the system.
+ */
+export async function listOutputs(): Promise<AudioOutput[]> {
+  return await listDevices()
+}
+
+export async function listInputs(): Promise<AudioInput[]> {
+  return await listDevices('Capture')
+}
 
 /**
  * 获得默认音频的情况
@@ -160,7 +204,19 @@ export async function getDefaultVolume() {
     muted: defaultOutput.isMuted
   }
 }
-
+/**
+ * 获得默认麦克风的情况
+ */
+export async function getDefaultMic() {
+  let inputs = await listInputs()
+  let defaultMic = inputs.find(li => {
+    return li.isDefaultForMultimedia
+  })
+  return {
+    volume: defaultMic.volume,
+    muted: defaultMic.isMuted
+  }
+}
 /**
  * 设置默认音频输出的音量
  * @param setting  volume , mute
@@ -170,7 +226,7 @@ export function setDefaultVolume(setting) {
     let defaultOutput = outputs.find(li => {
       return li.isDefaultForMultimedia
     })
-    if (setting.volume!==undefined) {
+    if (setting.volume !== undefined) {
       setVolume(defaultOutput, setting.volume)
     }
     if (setting.muted !== undefined) {
@@ -182,7 +238,27 @@ export function setDefaultVolume(setting) {
     }
   })
 }
-
+/**
+ * 设置默认音频输出的音量
+ * @param setting  volume , mute
+ */
+export function setMicVolume(setting) {
+  listInputs().then(outputs => {
+    let defaultMic = outputs.find(li => {
+      return li.isDefaultForMultimedia
+    })
+    // if (setting.volume !== undefined) {
+    //   setVolume(defaultOutput, setting.volume)
+    // }
+    if (setting.muted !== undefined) {
+      if (setting.muted === true) {
+        mute(defaultMic)
+      } else {
+        unmute(defaultMic)
+      }
+    }
+  })
+}
 
 /**
  * Get the id of the given output and check that it is valid
@@ -207,7 +283,7 @@ function getValidId(output: AudioOutput | string): string {
 export async function setVolume(output: AudioOutput | string, volume: number) {
   const id = getValidId(output);
 
-  if (typeof volume !== 'number' ) {
+  if (typeof volume !== 'number') {
     throw new Error('invalid volume: ' + volume);
   }
 
@@ -228,7 +304,7 @@ export async function setVolume(output: AudioOutput | string, volume: number) {
  * @param output The output or id of the output
  * @throws       Throws when output id is invalid
  */
-export async function mute(output: AudioOutput | string) {
+export async function mute(output: AudioOutput|AudioInput | string) {
   const id = getValidId(output);
 
   await execAsPromised(`SoundVolumeView /SetVolume /Mute ${id}`, {
@@ -242,7 +318,7 @@ export async function mute(output: AudioOutput | string) {
  * @param output The output or id of the output
  * @throws       Throws when output id is invalid
  */
-export async function unmute(output: AudioOutput | string) {
+export async function unmute(output: AudioOutput|AudioInput | string) {
   const id = getValidId(output);
 
   await execAsPromised(`SoundVolumeView /SetVolume /Unmute ${id}`, {
