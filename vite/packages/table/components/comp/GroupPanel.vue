@@ -1,14 +1,14 @@
 <template>
-  <h3>我的团队 <a-button class="relative" style="float: right;border-radius: 8px;border: none" type="primary" @click="createGroup">创建团队
+  <h3 style="color:var(--font-color)">我的团队 <a-button class="relative" style="float: right;border-radius: 8px;border: none;" type="primary" @click="createGroup">创建团队
     <GradeSmallTip powerType="group" lastPowerType="创建团队"></GradeSmallTip></a-button></h3>
   <a-tabs v-model:activeKey="activeKey">
     <template #rightExtra>
-      <a-button @click="look" style="border-radius: 8px;">寻找圈子</a-button>
+      <a-button @click="look" style="border-radius: 8px;color:var(--font-color)">寻找圈子</a-button>
     </template>
     <a-empty v-if="privateGroup.length===0">
 
     </a-empty>
-    <a-tab-pane key="public" tab="公开">
+    <a-tab-pane key="public" tab="公开" style="color:var(--font-color)">
       <vue-custom-scrollbar :settings="innerSettings" style="height: 19em">
       <a-row :gutter="[20,20]">
         <a-col class="pointer" @click="go('https://s.apps.vip/forum?id='+circle.id)" :span="12" v-for="circle in this.publicGroup">
@@ -154,5 +154,11 @@ export default {
 </script>
 
 <style scoped>
+:deep(.ant-tabs-tab-btn) {
+  color: var(--font-color) !important;
+}
+:deep(.ant-empty-description) {
+  color: var(--font-color) !important;
 
+}
 </style>
