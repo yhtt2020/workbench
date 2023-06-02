@@ -5,11 +5,11 @@
         <div class="flex-1 flex flex-col mr-4">
           <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
+            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ defaultOutput.volume  }}%</span>
           </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
-              <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+              <a-slider v-model:value="defaultOutput.volume"  @afterChange="changeVolume()"  :tooltip-visible="false" />
             </div>
           </div>
         </div>
@@ -53,6 +53,7 @@ import VoiceOutputDetail from './VoiceOutputDetail.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { inspectorStore } from '../../../store/inspector'
 import audio from '../../../js/common/audio'
+import { getDefaultVolume, setDefaultVolume } from '../../../js/ext/audio/audio'
 export default {
   name:'Voice',
   components:{
@@ -76,6 +77,7 @@ export default {
   },
   data(){
     return{
+      defaultOutput:{},
       options: {
         className: 'card',
         title: '音频',
@@ -94,7 +96,8 @@ export default {
   computed:{
     ...mapWritableState(inspectorStore,['audioTest'])
   },
-  mounted () {
+  async mounted () {
+    this.defaultOutput = await getDefaultVolume()
     this.startListenAudioTest()
   },
   methods:{
@@ -116,14 +119,24 @@ export default {
     },
     clickMute(){
       this.muteShow = !this.muteShow
+      setDefaultVolume({
+        volume:this.defaultOutput.volume,
+        muted:!this.muteShow
+      })
     },
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
+    },
+    changeVolume(){
+      setDefaultVolume({
+        volume:this.defaultOutput.volume
+      })
     }
   },
   unmounted () {
     this.stopListenerAudioTest()
-  }
+  },
+
 
 }
 </script>

@@ -1,7 +1,9 @@
 import {getResPath, getResPathJoin} from "../../common/exec";
-const  path = require('path');
-const { exec, ChildProcess } =require('child_process');
-const iconv=window.iconv
+import {setMuted} from "loudness";
+
+const path = require('path');
+const {exec, ChildProcess} = require('child_process');
+const iconv = window.iconv
 //此类将外部的一个项目提取到了项目当中，进行了简化，防止这个包打包之后因为路径问题而无法使用。
 //https://github.com/JosephusPaye/win-audio-outputs
 
@@ -63,8 +65,9 @@ export interface AudioOutput {
  * The path to the binary directory, where the executables are.
  */
 //const binDir = path.join(__dirname, '..', 'bin');
-const binDir=getResPathJoin('nir')
+const binDir = getResPathJoin('nir')
 console.log(binDir)
+
 /**
  * A Promise wrapper around child_process.exec()
  */
@@ -77,14 +80,14 @@ function execAsPromised(
 ): Promise<CommandOutput> {
   return new Promise((resolve, reject) => {
     const child = exec(
-     'chcp 65001 &'+ command,
-      { cwd: options?.cwd ,encoding: 'binary'},
+      'chcp 65001 &' + command,
+      {cwd: options?.cwd, encoding: 'binary'},
       (err, stdout, stderr) => {
         if (err) {
           reject(err);
         }
-        let outDecode= iconv.decode(Buffer.from(stdout, "binary"), 'utf-8')
-        let errDecode= iconv.decode(Buffer.from(stderr, "binary"), 'utf-8')
+        let outDecode = iconv.decode(Buffer.from(stdout, "binary"), 'utf-8')
+        let errDecode = iconv.decode(Buffer.from(stderr, "binary"), 'utf-8')
         resolve({
           stdout: outDecode,
           stderr: errDecode,
@@ -108,7 +111,7 @@ export async function listOutputs(): Promise<AudioOutput[]> {
     stdout,
   } = await execAsPromised(
     'SoundVolumeView /stab "" | GetNir "Item ID, Name, Device Name, Default Multimedia, Default Communications, Muted, Volume Percent" "Type=Device && Direction=Render && DeviceState=Active"',
-    { cwd: binDir }
+    {cwd: binDir}
   );
 
   const outputs: AudioOutput[] = [];
@@ -142,6 +145,45 @@ export async function listOutputs(): Promise<AudioOutput[]> {
   return outputs;
 }
 
+
+/**
+ * 获得默认音频的情况
+ */
+export async function getDefaultVolume() {
+  let outputs = await listOutputs()
+
+  let defaultOutput = outputs.find(li => {
+    return li.isDefaultForMultimedia
+  })
+  return {
+    volume: defaultOutput.volume,
+    muted: defaultOutput.isMuted
+  }
+}
+
+/**
+ * 设置默认音频输出的音量
+ * @param setting  volume , mute
+ */
+export function setDefaultVolume(setting) {
+  listOutputs().then(outputs => {
+    let defaultOutput = outputs.find(li => {
+      return li.isDefaultForMultimedia
+    })
+    if (setting.volume!==undefined) {
+      setVolume(defaultOutput, setting.volume)
+    }
+    if (setting.muted !== undefined) {
+      if (setting.muted === true) {
+        mute(defaultOutput)
+      } else {
+        unmute(defaultOutput)
+      }
+    }
+  })
+}
+
+
 /**
  * Get the id of the given output and check that it is valid
  */
@@ -165,7 +207,7 @@ function getValidId(output: AudioOutput | string): string {
 export async function setVolume(output: AudioOutput | string, volume: number) {
   const id = getValidId(output);
 
-  if (!volume || typeof volume !== 'number') {
+  if (typeof volume !== 'number' ) {
     throw new Error('invalid volume: ' + volume);
   }
 
