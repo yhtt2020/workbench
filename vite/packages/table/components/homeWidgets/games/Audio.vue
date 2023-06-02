@@ -6,11 +6,11 @@
         <div class="flex-1 flex flex-col mr-4">
           <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
+            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ defaultOutput.volume }}%</span>
           </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
-              <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+              <a-slider v-model:value="defaultOutput.volume" @afterChange="changeVolume()" :tooltip-visible="false" />
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
             <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
           <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item">
-            <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === false"></Icon>
+            <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
             <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
@@ -66,7 +66,13 @@ import audio from '../../../js/common/audio'
 import { inspectorStore } from '../../../store/inspector'
 import {mapWritableState,mapActions} from 'pinia'
 import Template from '../../../../user/pages/Template.vue'
-
+import {
+  getDefaultMic,
+  getDefaultVolume,
+  listInputs,
+  setDefaultVolume,
+  setMicVolume
+} from '../../../js/ext/audio/audio.ts'
 export default {
   name:'Audio',
   components:{
@@ -83,10 +89,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    confirmCCData: {
-      type: Function,
-      default: () => {}
-    }
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest'])
@@ -100,20 +102,25 @@ export default {
       }
     }
   },
-  mounted () {
-    audio.getDevices(devices=>{
-      console.log('取到的devices',devices)
-      this.devices=devices
-      this.inputList=devices.inputs
-      this.inputList.forEach(li=>{
-        if(li.groupId===devices.defaultInput.groupId){
-          li.default=true
+  async mounted () {
+    this.defaultOutput = await getDefaultVolume()
+    this.defaultMic=await getDefaultMic()
+    this.muteShow=!this.defaultOutput.muted
+    this.microphoneShow=!this.defaultMic.muted
+
+    audio.getDevices(devices => {
+      console.log('取到的devices', devices)
+      this.devices = devices
+      this.inputList = devices.inputs
+      this.inputList.forEach(li => {
+        if (li.groupId === devices.defaultInput.groupId) {
+          li.default = true
         }
       })
-      this.outputList=devices.outputs
-      this.outputList.forEach(li=>{
-        if(li.groupId===devices.defaultOutput.groupId){
-          li.default=true
+      this.outputList = devices.outputs
+      this.outputList.forEach(li => {
+        if (li.groupId === devices.defaultOutput.groupId) {
+          li.default = true
         }
       })
     })
@@ -127,6 +134,8 @@ export default {
         type: 'games',
       },
       devices:[],
+      defaultOutput:{},
+      defaultMic:{},
       audioTitle:[{title:'输出',name:'output'},{title:'输入',name:'input'}],
       audioType:{title:'输出',name:'output'},
       audioValue:50,
@@ -158,10 +167,20 @@ export default {
     // 关闭麦克风逻辑
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
+      setMicVolume({muted:!this.microphoneShow})
     },
     // 关闭音量逻辑
     closeVolume(){
       this.muteShow = !this.muteShow
+      setDefaultVolume({
+        volume:this.defaultOutput.volume,
+        muted:!this.muteShow
+      })
+    },
+    changeVolume(){
+      setDefaultVolume({
+        volume:this.defaultOutput.volume
+      })
     }
   },
   unmounted () {
