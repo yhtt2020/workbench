@@ -29,9 +29,7 @@ class Updater {
       const notification = new Notification(content)
       notification.show()
       this.showedError = true
-      sendIPCToMainWindow(mainWindow, 'addTab', {
-        url: 'https://www.apps.vip/#download'
-      })
+      require('electron').shell.openExternal('https://www.apps.vip/#download') //更改为打开系统默认浏览器
     }
   }
 
