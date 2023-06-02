@@ -1,7 +1,7 @@
 <template>
   <!-- 快速搜索 左侧栏区域 -->
   <ul class="box side-panel common-panel s-bg" style=" z-index: 999;
-  width: 6em;" :style="{ backgroundColor: 'var(--no-active-background-color)' }">
+  width: 6em;" :style="{ backgroundColor: 'var(--background-color)' }">
     <li class="" style="color:#000">
       <PanelButton :active="tab === 'home'" @click="goTab('main', 'home')" icon="shouye1" title="主页">
       </PanelButton>
@@ -22,7 +22,7 @@
     <!--      <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>-->
     <!--    </li>-->
     <li>
-      <PanelButton :active="tab === 'deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
+      <PanelButton class="box" :active="tab === 'deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
     </li>
   </ul>
 </template>
@@ -73,6 +73,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.box :hover {
+ :deep(.icon) {
+  fill: var(--active-font-color) !important;
+
+ }
+}
 .box {
   :deep(.icon) {
     fill: var(--no-active-font-color)

@@ -8,10 +8,10 @@
         <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">返回</span>
       </div>
     </div>
-    <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'active': current(menu) }"
+    <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'active-menu-item': current(menu) }"
       v-for="(menu) in menus">
       <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
-      <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">{{ menu.title }}</span>
+      <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="s-text">{{ menu.title }}</span>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
     </div>
   </div>
@@ -78,6 +78,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.s-text {
+    text-shadow: none
+}
 .second-panel {
   padding-left: 0 !important;
 
