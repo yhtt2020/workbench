@@ -1,11 +1,10 @@
 <template>
-  <!-- color: 'var(--font-color)',
-  backgroundColor: 'var(--background-color)', -->
   <div @contextmenu.stop="showDrawer" :class="classes" :style="{
       pointerEvents: editing ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
       background: 'var(--background-color)',
+      color: 'var(--font-color)'
     }" @click="onCPUIndex" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
     <div style="
         position: absolute;

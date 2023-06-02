@@ -174,7 +174,7 @@
       <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
     <div class="line-title">背景设置：</div>
-    <div class="line">
+    <div class="line" @click="background()">
       透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
     </div>
     <div class="line" v-if="!appSettings.transparent">
@@ -722,6 +722,28 @@ export default {
     }
   },
   methods: {
+    background() {
+   
+
+      if (this.appSettings.transparent) {
+        window.localStorage.setItem("transparent", JSON.stringify("true"));
+        document.documentElement.classList.add("transparent");
+        // document.body.style.background = "none"
+        // let bodyStyle = document.body.style
+        // bodyStyle
+        console.log('true :>> ', true);
+
+      } else {
+        console.log('true :>> ', false);
+        window.localStorage.setItem("transparent", JSON.stringify("false"));
+        document.documentElement.classList.remove("transparent");
+
+      }
+      // const value = JSON.parse(window.localStorage.getItem("style"));
+      // document.documentElement.classList.remove(value);
+      // if (this.styles == true) {
+      //   document.documentElement.classList.add('light-nobg-mode');
+    },
     customEvent() {
       this.$refs.grid.update();
     },

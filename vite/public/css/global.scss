@@ -16,6 +16,7 @@
 
     body {
         // background: #fff !important;
+        background: none !important;
     }
 }
 
@@ -59,6 +60,8 @@ body {
 
     body {
         background: rgba(229 229 229) !important;
+        // background: none !important;
+        // background: none !important;
     }
 }
 
@@ -79,5 +82,11 @@ body {
 
     body {
         background: rgba(25, 25, 25) !important;
+    }
+}
+
+.transparent {
+    body {
+        background: none !important;
     }
 }
