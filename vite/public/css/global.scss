@@ -60,17 +60,15 @@ body {
 
     body {
         background: rgba(229 229 229) !important;
-        // background: none !important;
-        // background: none !important;
     }
 }
 
 // 夜晚无背景主题
 .dark-nobg-mode {
     --font-color: #fff !important;
-    --background-color: rgba(46, 46, 46, 1) !important;
+    --background-color: rgba(46, 46, 46, 0.9) !important;
     --no-active-font-color: rgba(255, 255, 255, 0.60);
-    --no-active-background-color: rgba(64, 64, 64, 1);
+    --no-active-background-color: rgba(64, 64, 64, 0.9);
     --active-font-color: #fff;
     --active-background-color: rgba(0, 0, 0, 0.3);
 
