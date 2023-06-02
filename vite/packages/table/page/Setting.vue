@@ -34,9 +34,9 @@
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
-            <a-col v-if="isMain()" :span="12">
+            <a-col v-if="isMain()" :span="24">
               <div style="cursor: help;" class="btn relative test">
-                浅色模式<br>
+                浅色模式【开发中】<br>
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
                 <a-switch @click="styleSwitch()" v-model:checked="styles"></a-switch>
               </div>
