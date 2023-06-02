@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 100%;display: flex;justify-content: center;align-content: center;flex-direction: column">
-    <div @click.stop style="background: #111;border: 1px solid #333" class="p-3 rounded-md mt-3">
+  <div style="height: 100%;display: flex;justify-content: center;align-content: center;flex-direction: column;">
+    <div @click.stop style="background: #111;border: 1px solid #333;background-color: var(--background-color);" class="p-3 rounded-md mt-3">
 
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
@@ -16,9 +16,9 @@
               style="left: 50%;top:50%;font-size: 24px;width: 100px;transform: translateY(-60%) translateX(-50%);text-align: center;line-height: 30px;border-radius: 4px;background: none"
               class="p-2 screen-title">{{ screen.title }}</span>
       </div>
-      <div class="text-right ">
-        <a-button @click="addScreen" class="mr-3">创建</a-button>
-        <a-button @click="tagScreen">辨别</a-button>
+      <div class="text-right " >
+        <a-button @click="addScreen" class="mr-3" style="color:var(--font-color)">创建</a-button>
+        <a-button @click="tagScreen" style="color:var(--font-color)">辨别</a-button>
       </div>
     </div>
     <div class="p-3" @click.stop>
