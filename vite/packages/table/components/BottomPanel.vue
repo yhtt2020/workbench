@@ -102,7 +102,7 @@
         </div>
         <a-tooltip v-else :title="item.name" v-for=" item  in  navigationList ">
           <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" @click="clickNavigation(item)">
-            <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
+            <div style="width: 56px;height:56px; background: var(--active-background-color) !important;" v-if="item.type === 'systemApp'"
               class="s-item flex justify-center items-center rounded-lg">
 
               <Icon :icon="item.icon" class="test" :style="{ fill: 'var(--font-color)' }"
@@ -244,7 +244,8 @@
     </div>
   </transition>
 
-  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
+  <div class="home-blur fixed inset-0" style="z-index: 999;background: var(--mask-background-color);" v-if="changeFlag" @click="closeChangeApp">
+
     <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>

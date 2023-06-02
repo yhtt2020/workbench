@@ -10,32 +10,32 @@
           <h3>快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
-              <div class="btn relative ">
+              <div class="btn relative " >
                 弹幕
                 <br>
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
-              <div class="btn relative">
+              <div class="btn relative"  >
                 聊天<br>
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
               </div>
             </a-col>
             <a-col :span="12">
-              <div style="cursor: help" @click="tipSaving" class="btn relative">
+              <div style="cursor: help;" @click="tipSaving" class="btn relative">
                 节能模式<br>
                 <a-switch @click.stop="() => { }" v-model:checked="saving"></a-switch>
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
-              <div style="cursor: help" @click="tipSimple" class="btn relative">
+              <div style="cursor: help;" @click="tipSimple" class="btn relative">
                 极简模式<br>
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
-              <div style="cursor: help" class="btn relative test">
+              <div style="cursor: help;" class="btn relative test">
                 浅色模式<br>
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
                 <a-switch @click="styleSwitch()" v-model:checked="styles"></a-switch>
@@ -55,7 +55,7 @@
             <h3>屏幕设置</h3>
             <a-row style="font-size: 1.2em;text-align: center">
               <a-col v-if="isMain()" :span="6">
-                <div @click="setTouch" class="btn">
+                <div @click="setTouch" class="btn" >
                   <Icon icon="Touch" style="font-size: 2em"></Icon>
                   <div>
                     设置触摸屏
@@ -71,7 +71,7 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <div @click="chooseScreen" class="btn">
+                <div @click="chooseScreen" class="btn" >
                   <Icon icon="touping" style="font-size: 2em"></Icon>
                   <div> 选择屏幕</div>
                 </div>
@@ -93,13 +93,13 @@
 
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
-                <div @click="wizard" class="btn">
+                <div @click="wizard" class="btn" >
                   <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
                   <div> 配置向导</div>
                 </div>
               </a-col>
               <a-col :span="6">
-                <div @click="barrage" class="btn">
+                <div @click="barrage" class="btn" >
                   <Icon icon="danmushezhi" style="font-size: 2em"></Icon>
                   <div> 弹幕设置</div>
                 </div>
@@ -107,7 +107,7 @@
 
               </a-col>
               <a-col :span="6">
-                <div @click="papersSettings" class="btn">
+                <div @click="papersSettings" class="btn"  >
                   <Icon icon="banner" style="font-size: 2em"></Icon>
                   <div> 壁纸</div>
                 </div>
@@ -280,4 +280,12 @@ export default {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.btn {
+ background: var(--active-background-color);
+}
+.btn:hover {
+color: var(--font-color);
+background: var( --hover-background-color);
+}
+</style>
