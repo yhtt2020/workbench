@@ -1,20 +1,19 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="padding: 15px;white-space: nowrap">
-
+                      style="padding: 15px;white-space: nowrap;">
 
 
 
     <div class="mr-3" style="width: 400px;display: inline-block;vertical-align: top;white-space: pre-wrap">
-      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em">
+      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background-color: var(--background-color);color: var(--font-color);">
         <ComPanel></ComPanel>
       </div>
-      <div class="card half" style="width: 400px;padding: 1em;display: inline-block">
+      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;background-color: var(--background-color);color: var(--font-color);">
         <ComActionPanel></ComActionPanel>
       </div>
     </div>
 
-    <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em">
+    <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background-color: var(--background-color);color: var(--font-color);">
       <GroupPanel></GroupPanel>
     </div>
 
