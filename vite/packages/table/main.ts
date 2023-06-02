@@ -24,6 +24,14 @@ import 'viewerjs/dist/viewer.css'
 
 import piniaPersist from "./js/ext/pinia-plugin-persist/index";
 
+import { CodeMirror } from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/base16-light.css'
+import 'codemirror/theme/monokai.css'
+import 'codemirror/mode/properties/properties.js'
+import 'codemirror/mode/javascript/javascript'
+
+
 import "viewerjs/dist/viewer.css";
 import VueViewer from "v-viewer";
 
@@ -73,5 +81,6 @@ app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
+app.component('CodeMirror',CodeMirror)
 export default router;
 

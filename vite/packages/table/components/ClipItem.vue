@@ -7,15 +7,13 @@
           <span class="ml-2">{{clip.title}}</span>
         </div>
         <div class="flex justify-between pt-1">
-          <span class="">{{clip.time}}</span>
-          <span>{{clip.capacity}}</span>
+          <span class="clip-time">{{clip.time}}</span>
+          <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
       <div style="padding: 51px 13px;" class="flex-1">
-        <!-- <textarea name="" id="" cols="30" rows="10" class="s-bg w-full" v-if="clip.content">
-          {{  clip.content  }}
-        </textarea> -->
-        <span ref="codeEditor">{{ clip.content  }}</span>
+        <span ref="codeEditor" class="clip-con" v-if="defaultTextType.name === 'text'">{{ clip.content  }}</span>
+        <codemirror :value="clip.content" :options="clipOptions"  v-else></codemirror>
       </div>
       <div class="h-12 s-item rounded-b-md flex ">
           <div v-for="(item) in textType"  :class="defaultTextType.name === item.name ? 's-bg':''" 
@@ -30,21 +28,21 @@
     <template v-else-if="clip.type === 'text' && textShow === true">
       <vue-custom-scrollbar :settings="settingsScroller">
         <div class="px-4 flex flex-col mt-3.5" v-if="codeShow === false">
-          <div class="w-full flex items-center mb-3">
-            <div @click="backClip" class="s-bg rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
+          <div class="w-full flex items-center justify-between mb-3">
+            <div @click="backClip" class="s-item rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
             </div>
-            <div class="s-item py-3 rounded-lg ml-3" style="padding: 0 106px;">
-              <span class="w-4" style="line-height: 48px;">操作</span>
+            <div class="py-3 flex items-center  rounded-lg ml-3 w-40">
+              <span>操作</span>
             </div>
           </div>
-          <div v-for="item in copyList" @click.self="defaultClickClip(item)" class="s-bg mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+          <div v-for="item in copyList" @click.self="defaultClickClip(item)" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
             <span>{{item.title}}</span>
             <span>{{item.intr}}</span>
           </div>
         </div>
         <div v-else class="px-4 flex flex-col mt-3.5">
-          <div v-for="item in codeLanguage" class="s-bg mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3"
+          <div v-for="item in codeLanguage" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3"
             @click="clickCodeLanguage(item)"
           >
             <span>{{item.title}}</span>
@@ -60,8 +58,8 @@
           <span class="ml-2">{{clip.title}}</span>
         </div>
         <div class="flex justify-between pt-1">
-          <span class="">{{clip.time}}</span>
-          <span>{{clip.capacity}}</span>
+          <span class="clip-time">{{clip.time}}</span>
+          <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
       <div style="padding: 51px 13px;" class="flex-1">
@@ -74,15 +72,15 @@
     </template>
     <template v-else-if="clip.type === 'file' && fileShow === true">
       <div class="px-4 flex flex-col mt-3.5">
-        <div class="w-full flex items-center mb-3">
-          <div @click="backClip" class="s-bg rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
+        <div class="w-full flex items-center justify-between mb-3">
+          <div @click="backClip" class="s-item rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
-          <div class="s-item py-3 rounded-lg ml-3" style="padding: 0 106px;">
-            <span class="w-4" style="line-height: 48px;">操作</span>
+          <div class="py-3 flex items-center  rounded-lg ml-3 w-40">
+            <span>操作</span>
           </div>
         </div>
-        <div v-for="item in fileCopyList" @click="backClip" class="s-bg mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+        <div v-for="item in fileCopyList" @click="backClip" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
           <span>{{item.title}}</span>
           <span>{{item.intr}}</span>
         </div>
@@ -96,8 +94,8 @@
           <span class="ml-2">{{clip.title}}</span>
         </div>
         <div class="flex justify-between pt-1">
-          <span class="">{{clip.time}}</span>
-          <span>{{clip.capacity}}</span>
+          <span class="clip-time">{{clip.time}}</span>
+          <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
       <div style="padding: 46px 13px;" class="flex-1">
@@ -111,15 +109,15 @@
     <template v-else-if="clip.type === 'image' && imageShow === true">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:398px;">
         <div class="px-4 flex flex-col mt-2.5">
-          <div class="w-full flex items-center mb-3">
-            <div @click="backClip" class="s-bg rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
+          <div class="w-full flex items-center  justify-between mb-3">
+            <div @click="backClip" class="s-item rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
             </div>
-            <div class="s-item py-3 rounded-lg ml-3" style="padding: 0 106px;">
-              <span class="w-4" style="line-height: 48px;">操作</span>
+            <div class="py-3 flex items-center  rounded-lg ml-3 w-40">
+              <span>操作</span>
             </div>
           </div>
-          <div v-for="item in imgCopyList" @click="defaultClickClip(item)" class="s-bg mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+          <div v-for="item in imgCopyList" @click="defaultClickClip(item)" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
             <span>{{item.title}}</span>
             <span>{{item.intr}}</span>
           </div>
@@ -131,7 +129,10 @@
 </template>
 
 <script>
+import codemirror from 'vue-codemirror/src/codemirror.vue'
+
 export default {
+  components: { codemirror },
   props:{
     clip:{
       type:Object,
@@ -191,7 +192,18 @@ export default {
         {title:'C#'},
         {title:'PHP'},
         {title:'Swift'}
-      ]
+      ],
+      clipCode:'',
+      clipOptions:{
+        tabSize: 4, // tabsize默认为4
+				styleActiveLine: true,
+				lineNumbers: true, // 代码行数字
+				line: true,
+				mode: 'javascript', // 选择代码语言
+			  extraKeys: {"Ctrl": "autocomplete"},   // 自动提示配置 
+				lineWrapping: true,    // 自动换行
+				theme: 'monokai' // 主题根据需要自行配置
+      }
     }
   },
 
@@ -201,8 +213,9 @@ export default {
         this.defaultTextType = this.defaultTextType
       },
       immediate:true,
-    }
+    },
   },
+
 
   methods:{
     textButton(){
@@ -222,6 +235,8 @@ export default {
     },
     selectItem(item){
       this.defaultTextType = item
+      this.clipOptions.mode = item.title
+      // this.clipCode = item.title
     },
     openCode(){
       this.textShow = true
@@ -231,6 +246,7 @@ export default {
       this.textShow = false
       this.codeShow = false
       this.defaultTextType.title = item.title
+
     }
   }
 }
@@ -240,14 +256,21 @@ export default {
 .button-active{
   &:active{
     filter: brightness(0.8);
-    background: rgba(42, 42, 42, 0.25);
+    background: rgba(42, 42, 42, 0.8);
   }
   &:hover{
-    background: rgba(42, 42, 42, 0.25);
+    background: rgba(42, 42, 42, 0.8);
   }
 }
 :deep(.ps__thumb-y){
   display: none !important;
 }
 
+.clip-time{
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: rgba(255,255,255,0.40);
+  text-align: center;
+  font-weight: 500;
+}
 </style>

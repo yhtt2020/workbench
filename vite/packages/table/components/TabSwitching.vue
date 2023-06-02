@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap tab-item">
-    <div v-for="(item,index) in navList" class="flex items-center  pointer p-3 mr-2 rounded-lg" @click="clickNav(item,index)" :class="navIndex === index ? 's-bg':''">
-        <Icon :icon="item.icon" style="font-size: 1.25em;"></Icon>
+    <div v-for="(item,index) in navList" class="flex items-center  s-text  pointer p-3 mr-2 rounded-lg" @click="clickNav(item,index)" :class="navIndex === index ? 's-bg':''">
+        <Icon :icon="item.icon" class="s-text" style="font-size: 1.25em;"></Icon>
         <span class="ml-2">{{item.title}}</span>
     </div>
   </div>
