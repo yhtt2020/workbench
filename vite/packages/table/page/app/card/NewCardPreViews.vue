@@ -11,7 +11,7 @@
                     · · ·
                 </div>
             </div>
-            <div class="left no-drag" @click="fullScreen(item)">
+            <div class="left no-drag" @click="fullScreen(item)" style="background: var(--no-active-font-color);">
                 <template v-if="item.option.length > 1">
                     <div class="top">
                         <img ref="imgRef" :class="{ 'zoom': item.option[0].name == 'middleWallpaper' }" class="img"
