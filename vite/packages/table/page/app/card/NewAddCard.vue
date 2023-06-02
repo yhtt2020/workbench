@@ -78,11 +78,15 @@ export default {
       if (item.children != null) {
         let children = []
         item.children.forEach((i) => {
+          console.log(i)
+          i.time=new Date(i.time).getTime()
+          console.log(i.time)
           children.push({
             ...i,
             download: Math.floor(Math.random() * 10000) + 1,
-            time: this.getTimes()
+           // time: this.getTimes()
           })
+
         })
         return {
           cname: item.cname,
@@ -126,7 +130,7 @@ export default {
     },
     getTimes() {
       const currentTime = Date.now();
-      const startDate = new Date('2000-01-01T00:00:00Z').getTime();
+      const startDate = new Date('2023-01-01T00:00:00Z').getTime();
       const randomTimestamp = Math.floor(Math.random() * (currentTime - startDate)) + startDate;
       return randomTimestamp;
     },
@@ -249,6 +253,7 @@ export default {
         justify-content: center;
         align-items: center;
         cursor: pointer;
+
       }
 
       .active {
@@ -309,7 +314,7 @@ export default {
         flex-direction: column;
         width: 320px;
         height: 320px;
-        opacity: 0.65;
+        //opacity: 0.65;
         border-radius: 12px;
         background: rgba(26, 26, 26, 1);
         box-shadow: 0px 0px 3.12px 0px rgba(0, 0, 0, 0.06), 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2), 0px 0px 20px 0px rgba(0, 0, 0, 0.4);

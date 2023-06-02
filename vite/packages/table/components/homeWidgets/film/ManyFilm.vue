@@ -1,12 +1,12 @@
 <template>
-    <HomeComponentSlot 
-    :sizeList="sizeList" 
-    :options="options" 
+    <HomeComponentSlot
+    :sizeList="sizeList"
+    :options="options"
     :customIndex="customIndex"
     :custom-data="customData"
     :formulaBar="formulaBar"
     v-if="!detailToggle"
-    > 
+    >
       <div v-if="pageToggle">
         <div class="example" v-if="isLoading">
           <a-spin />
@@ -14,8 +14,8 @@
         <div v-else>
         <div class="pointer title-refresh" @click="refreshPage"></div>
           <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-            <div v-for="item in filmArrange" :key="item.id" 
-            @click="btnDetail(item.id)" 
+            <div v-for="item in filmArrange" :key="item.id"
+            @click="btnDetail(item.id)"
             class="w-full  cursor-pointer one-film"
             style="display:hiddle;">
               <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
@@ -44,10 +44,10 @@
         </div>
       </div>
       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
-    </HomeComponentSlot> 
+    </HomeComponentSlot>
     <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
 </template>
-  
+
 <script>
   import { mapWritableState, mapActions } from 'pinia'
   import HomeComponentSlot from "../HomeComponentSlot.vue";
@@ -70,7 +70,7 @@
       customData: {
         type: Object,
         default: () => {
-          
+
         },
       },
     },
@@ -79,7 +79,7 @@
         sizeList:[{title:'1x2',height:2,width:1,name:'1x2'},{title:'2x2',height:2,width:2,name:'2x2'},],
         options:{
           className:'card',
-          title:'正在热映 (开发中)',
+          title:'正在热映',
           icon:'video',
           type:'singleFilm'
         },
@@ -145,7 +145,7 @@
     },
   };
 </script>
-  
+
 <style scoped lang="scss">
   .film-box{
     display: flex;
@@ -155,7 +155,7 @@
   .film-box>div:nth-child(odd){
     margin-right: 16px;
   }
-  
+
   .right-top{
     position: absolute;
     top: 0;
@@ -203,4 +203,3 @@
       align-items: center;
     }
 </style>
-  

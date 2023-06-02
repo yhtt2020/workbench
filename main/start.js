@@ -82,7 +82,10 @@ global.settings.initSetting(async ()=>{
   //设置nanoid
   let clientId=settings.get('clientID')
   if(!clientId){
+    console.warn('发现还不存在clientID设置项目，执行初始化')
     clientId=require('nanoid').nanoid(8)
     settings.set('clientID',clientId)
   }
+
+
 

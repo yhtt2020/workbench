@@ -1,8 +1,8 @@
 <template>
-  <div class="px-5 py-2" style="display: flex;flex-direction: column;height: 100%">
+  <div class="px-3 py-2" style="display: flex;flex-direction: column;height: 100%">
     <div><HorizontalPanel  :height="44" :navList="channelList" v-model:select-type="currentChannel"></HorizontalPanel>
     </div>
-    <div style="flex: 1;height:0;padding-top: 10px"><TeamBarrage :key="key" :barrages="barrages"></TeamBarrage></div>
+    <div style="flex: 1;height:0;padding-top: 10px"><TeamBarrage :loading="loading" :key="key" :barrages="barrages"></TeamBarrage></div>
     <div class="mt-2"><BarrageSender @loadAllBarrages="loadAllBarrages" @loadTeamBarrage="loadTeamBarrage" :currentChannel="currentChannel"></BarrageSender></div>
   </div>
 </template>
@@ -20,6 +20,7 @@ export default {
   props:['channels','defaultChannel'],
   data(){
     return {
+      loading:false,
       channelList: [
         {
           title: '全网',
@@ -39,17 +40,21 @@ export default {
     }
   },
   mounted () {
+    this.loading=true
     this.CONST = tsbApi.barrage.CONST
     if(this.defaultChannel==='team'){
       this.channelList=this.channelList.reverse()
       this.currentChannel={name:'team',title:'小队'}
     }
     this.loadAllBarrages().then()
-    this.loadTeamBarrage().then()
+    this.loadTeamBarrage().then(()=>{
+      this.loading =false
+    })
   },
   watch:{
     currentChannel:{
       handler(){
+        this.loading=true
         this.key=Date.now()
       }
     }
@@ -67,7 +72,9 @@ export default {
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async loadAllBarrages () {
+      this.loading=true
       tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, 'table').then(rs => {
+        this.loading=false
         if (rs.status) {
           rs.data.forEach(item => {
             item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
@@ -80,7 +87,9 @@ export default {
     async loadTeamBarrage () {
       await this.updateMy()
       if (this.myTeamNo) {
+        this.loading=true
         tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
+          this.loading=false
           if (rs.status) {
             rs.data.forEach(item => {
               item.create_time_text = tsbApi.util.friendlyDate(item.create_time)

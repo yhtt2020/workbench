@@ -230,6 +230,7 @@ app.whenReady().then(() => {
     for (let file of files) {
       try {
         let link = null
+        let title=path.basename(file)
         if (file.endsWith('.lnk')) {
           link = require('electron').shell.readShortcutLink(file)
         }
@@ -238,7 +239,8 @@ app.whenReady().then(() => {
           name: path.parse(file).name,
           ext: path.parse(file).ext,
           path: link ? link.target : file,
-          icon: icon.toDataURL()
+          icon: icon.toDataURL(),
+          title:title
         })
       } catch (e) {
         console.warn('存在失败的', e, file)

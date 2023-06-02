@@ -114,31 +114,7 @@ function openBrowser(){
 }
 let tray = null
 app.whenReady().then(() => {
-  async function uploadCumulativeTime () {
-    try {
-      let clientId=settings.get('clientID')
-      if(!clientId){
-        clientId=require('nanoid').nanoid(8)
-        settings.set('clientID',clientId)
-      }
-      const userInfo = await userModel.getCurrent()
-      const options = {
-        uid: userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0, // 用户uid
-        client_id: clientId // 设备号
-      }
 
-      await baseApi.init()
-      baseApi.axios('/app/open/usageStats/cumulativeTime', options, 'post').catch(e => {
-        console.warn('上传在线时长失败', e)
-      }).then((rs) => {
-        console.log('提交在线时长成功',rs)
-      })
-    } catch (e) {
-      console.warn('上传在线时间意外错误', e)
-    }
-  }
-
-  setInterval(uploadCumulativeTime, 1000 * 60) // 每分钟上报在线时间
 
   ipc.on('getMemory', (event, args) => {
     var obj = Object.keys(viewMap)

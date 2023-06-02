@@ -43,7 +43,7 @@ style:"", // 指定样式
       houserun:false,//rgb跑马灯
       zoomFactor:100,//缩放比
       openUrlBrowser: 'builtin',//默认打开浏览器
-      enableChat: true,//主界面显示聊天
+      enableChat: false,//主界面显示聊天
       preventLock: false,//阻止锁屏
 
       enableBarrage: true, //启用弹幕

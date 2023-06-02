@@ -6,12 +6,12 @@
         </div>
         <div v-else>
           <div class="pointer title-refresh" @click="refreshPage"></div>
-          <div class="w-full  cursor-pointer" 
+          <div class="w-full  cursor-pointer"
           style="width: 240px;height: 354px;margin: 13px auto 0;position: relative;"
           @click="btnDetail(singleFilm.id)"
           >
             <a-image :preview="false" :src="singleFilm.img" width="240px" height="354px" alt="" class="rounded-lg" style="object-fit: cover;" />
-            <div class="right-top text-center bg-black bg-opacity-70" 
+            <div class="right-top text-center bg-black bg-opacity-70"
             style="font-weight: 600;font-family: PingFangSC-Semibold;">
               <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
                 猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.score}}</span>
@@ -21,12 +21,12 @@
           </div>
         </div>
       </div>
-      
+
       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
     </HomeComponentSlot>
     <FilmDetail v-if="detailToggle" :detailId="detailId" @detailBack="detailBack"></FilmDetail>
 </template>
-  
+
 <script>
   import HomeComponentSlot from "../HomeComponentSlot.vue";
   import FilmDetail from './FilmDetail.vue'
@@ -49,7 +49,7 @@
       customData: {
         type: Object,
         default: () => {
-          
+
         },
       }
     },
@@ -57,7 +57,7 @@
       return {
         options:{
           className:'card',
-          title:'正在热映 (开发中)',
+          title:'正在热映',
           icon:'video',
           type:'singleFilm'
         },
@@ -84,7 +84,7 @@
       detailBack(val){
         this.detailToggle = val
       },
-      
+
     },
     async mounted() {
       this.isLoading = true
@@ -104,7 +104,7 @@
     },
   };
 </script>
-  
+
 <style scoped lang="scss">
   .film-content{
       width: 284px;
@@ -147,4 +147,3 @@
 </style>
 
 
-  

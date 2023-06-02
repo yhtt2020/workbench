@@ -1,76 +1,79 @@
 <template>
   <template v-if="team">
-    <HorizontalPanel :navList="incomeTitle" v-model:selectType="defaultIncome"></HorizontalPanel>
-    <div v-if="defaultIncome.name === 'MIC'" class="mt-4 flex flex-col">
-      <div class="flex justify-between items-center h-12" style="display: block;">
-<!--        <span style="font-size: 16px;font-weight: 400;">累计收益: 0 分钟</span>-->
-        <span  @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3 ">
+    <div class="px-3 py-2">
+      <HorizontalPanel :navList="incomeTitle" v-model:selectType="defaultIncome"></HorizontalPanel>
+      <div v-if="defaultIncome.name === 'MIC'" class="mt-3  flex flex-col">
+        <div class="flex justify-between items-center h-12" style="display: block;">
+          <!--        <span style="font-size: 16px;font-weight: 400;">累计收益: 0 分钟</span>-->
+          <span  @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3 ">
                 一键领取
               </span>
-      </div>
-      <a-divider style="height: 1px;background: rgba(255,255,255,0.10);" />
-      <div class="flex-shrink" style="height:320px">
-        <a-empty style="margin-top: 3em" description="" v-if="memberDevoteDisplay.length===0">
-        </a-empty>
-        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:100%;  ">
-          <div class="flex" style="width: 100%;flex-direction: column">
+        </div>
+        <a-divider style="height: 1px;background: rgba(255,255,255,0.10);" />
+        <div class="flex-shrink" style="height:265px">
+          <a-empty style="margin-top: 3em" description="" v-if="memberDevoteDisplay.length===0">
+          </a-empty>
+          <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:100%;  ">
+            <div class="flex" style="width: 100%;flex-direction: column">
               <div class="text-center   mt-3  mb-3"   v-for="user in memberDevoteDisplay">
                 <a-row style="width: 100%">
                   <a-col :span="8">
                     <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===teamLeader.uid?'队长':'队员'" ></UserAvatar>
                   </a-col>
-                  <a-col :span="8" class="text-center">
+                  <a-col :span="9" class="text-center">
                     <div class=" pt-3 " style=" font-size: 14px; color: rgba(255,255,255,0.85);font-weight: 500;">
                       {{ user.devote.toFixed(2) }} 分钟</div>
                   </a-col>
-                  <a-col :span="8" v-if="user.devote">
-                    <div @click="doExchangeDevote(user.uid)" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;"  class=" rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>
+                  <a-col :span="7" v-if="user.devote">
+                    <div @click="doExchangeDevote(user.uid)" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;"  class=" rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-3 pr-3 pt-2 pb-2">领取</div>
                   </a-col>
                 </a-row>
+              </div>
             </div>
+          </vue-custom-scrollbar>
+        </div>
+        <div class="flex items-center rounded-lg py-1" style="background: rgba(0,0,0,0.30);">
+          <a-col class="mr-4">
+            <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
+          </a-col>
+          <div>
+            待领取总计：{{total.toFixed(2)}} 分钟
           </div>
-        </vue-custom-scrollbar>
-      </div>
-      <div class="flex items-center rounded-lg py-1" style="background: rgba(0,0,0,0.30);">
-        <a-col class="mr-4">
-          <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
-        </a-col>
-        <div>
-          待领取总计：{{total.toFixed(2)}} 分钟
         </div>
       </div>
+      <div v-else class="mt-4 flex flex-col text-center">
+        暂不可用，请等待更新
+        <!--      <div class="flex items-center justify-between mt-6">-->
+        <!--        <span class="pl-4">队员</span>-->
+        <!--        <span>今日贡献</span>-->
+        <!--        <span class="pr-4">累计贡献</span>-->
+        <!--      </div>-->
+        <!--      <a-divider style="height: 1px; background-color: rgba(255,255,255,0.10);" />-->
+        <!--      <div class="flex-shrink" style="height:330px">-->
+        <!--        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:100%;  ">-->
+        <!--          <div   class="text-center flex items-center  mb-3 mt-2 pointer pt-2" v-if="teamLeader.userInfo">-->
+        <!--            <UserAvatar   :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" style="margin-left:12px;"></UserAvatar>-->
+        <!--            <div style="margin-left:35px;font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>-->
+        <!--            <div @click="captainContribute" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-6 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>-->
+        <!--          </div>-->
+        <!--          <div class="text-center flex items-center justify-between mb-3 pointer  pt-2"   v-for="user in teamMembers">-->
+        <!--            <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''" style="margin-left:12px;"></UserAvatar>-->
+        <!--            <div class="ml-7" style="margin-left:35px; font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>-->
+        <!--            <div @click="captainContribute" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-6 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>-->
+        <!--          </div>-->
+        <!--        </vue-custom-scrollbar>-->
+        <!--      </div>-->
+        <!--      <div class="flex items-center rounded-lg py-1" style="background: rgba(0,0,0,0.30);">-->
+        <!--        <a-col class="mr-4">-->
+        <!--          <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>-->
+        <!--        </a-col>-->
+        <!--        <div>-->
+        <!--          总计贡献:2000 分钟-->
+        <!--        </div>-->
+        <!--      </div>-->
+      </div>
     </div>
-    <div v-else class="mt-4 flex flex-col text-center">
-      暂不可用，请等待更新
-<!--      <div class="flex items-center justify-between mt-6">-->
-<!--        <span class="pl-4">队员</span>-->
-<!--        <span>今日贡献</span>-->
-<!--        <span class="pr-4">累计贡献</span>-->
-<!--      </div>-->
-<!--      <a-divider style="height: 1px; background-color: rgba(255,255,255,0.10);" />-->
-<!--      <div class="flex-shrink" style="height:330px">-->
-<!--        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:100%;  ">-->
-<!--          <div   class="text-center flex items-center  mb-3 mt-2 pointer pt-2" v-if="teamLeader.userInfo">-->
-<!--            <UserAvatar   :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'" :avatar="teamLeader.userInfo.avatar" style="margin-left:12px;"></UserAvatar>-->
-<!--            <div style="margin-left:35px;font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>-->
-<!--            <div @click="captainContribute" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-6 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>-->
-<!--          </div>-->
-<!--          <div class="text-center flex items-center justify-between mb-3 pointer  pt-2"   v-for="user in teamMembers">-->
-<!--            <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===userInfo.uid?'我':''" style="margin-left:12px;"></UserAvatar>-->
-<!--            <div class="ml-7" style="margin-left:35px; font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;">200分钟</div>-->
-<!--            <div @click="captainContribute" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;" class="ml-6 rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3">领取</div>-->
-<!--          </div>-->
-<!--        </vue-custom-scrollbar>-->
-<!--      </div>-->
-<!--      <div class="flex items-center rounded-lg py-1" style="background: rgba(0,0,0,0.30);">-->
-<!--        <a-col class="mr-4">-->
-<!--          <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>-->
-<!--        </a-col>-->
-<!--        <div>-->
-<!--          总计贡献:2000 分钟-->
-<!--        </div>-->
-<!--      </div>-->
-    </div>
+
   </template>
 
 </template>

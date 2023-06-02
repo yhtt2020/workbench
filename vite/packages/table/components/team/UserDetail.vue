@@ -31,7 +31,7 @@
 <!--    小队在线时长：{{ online_h}} 小时 {{online_m}}分钟<br>-->
 <!--    小队贡献：{{memberInfo.score}} 分<br>-->
 <!--    平均每日在线：{{ daily_h }}小时{{daily_m}}分<br>-->
-    加入时间：{{ memberInfo.updateTime }}<br>
+    加入时间：{{joinedTime }}<br>
     加入天数：{{joined_days}}天<br>
 <!--    下线时间：-<br>-->
 <!--    离被自动请离还有：1小时<br>-->
@@ -48,7 +48,7 @@ import Medal from './Medal.vue'
 export default {
   name: 'UserDetail',
   components: { Medal, OnlineMedal, OnlineGradeDisplay },
-  props:['userInfo','isLeader','memberInfo'],
+  props:['userInfo','isLeader','memberInfo','joinedTime'],
   data(){
     return{
       grade:{},
@@ -62,28 +62,40 @@ export default {
       medals:[]
     }
   },
-  async mounted () {
-    this.getUserMedal(this.userInfo.uid).then(result=>{
-      if(result){
-        this.medals=result
-      }else{
-        this.medals=[]
+  watch:{
+    'userInfo':{
+      handler(){
+        this.updateUserInfo().then(()=>{
+          this.key=Date.now()
+        })
       }
-    })
-    this.grade = await this.getMemberGrade(this.userInfo.uid)
-    this.joined_days=Number(((new Date().getTime()-(new Date(this.memberInfo.updateTime).getTime()))/(24*60*60*1000)).toFixed(0))
-    if(this.joined_days===0){
-      //不足一天按1天计
-      this.joined_days=1
     }
-    this.daily_minutes=this.memberInfo.online_minutes/Number(this.joined_days).toFixed(0)
-    this.online_h=(this.memberInfo.online_minutes/60).toFixed(0)
-    this.online_m=(this.memberInfo.online_minutes%60).toLocaleString('us')
-    this.daily_h=(this.daily_minutes/60).toFixed(0)
-    this.daily_m=(this.daily_minutes%60).toFixed(0)
+  },
+  async mounted () {
+      this.updateUserInfo().then()
   },
   methods:{
-    ...mapActions(teamStore,['getMemberGrade','getUserMedal'])
+    ...mapActions(teamStore,['getMemberGrade','getUserMedal']),
+    async updateUserInfo () {
+      this.getUserMedal(this.userInfo.uid).then(result => {
+        if (result) {
+          this.medals = result
+        } else {
+          this.medals = []
+        }
+      })
+      this.grade = await this.getMemberGrade(this.userInfo.uid)
+      this.joined_days = Number(((new Date().getTime() - (new Date(this.joinedTime).getTime())) / (24 * 60 * 60 * 1000)).toFixed(0))
+      if (this.joined_days === 0) {
+        //不足一天按1天计
+        this.joined_days = 1
+      }
+      this.daily_minutes = this.memberInfo.online_minutes / Number(this.joined_days).toFixed(0)
+      this.online_h = (this.memberInfo.online_minutes / 60).toFixed(0)
+      this.online_m = (this.memberInfo.online_minutes % 60).toLocaleString('us')
+      this.daily_h = (this.daily_minutes / 60).toFixed(0)
+      this.daily_m = (this.daily_minutes % 60).toFixed(0)
+    }
   },
 
 }
