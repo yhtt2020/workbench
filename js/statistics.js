@@ -1,4 +1,4 @@
-const settings = require('util/settings/settings.js')
+const settings = window.settings
 const statsh = require('util/statsh/statsh.js')
 const axios = require('../src/util/axios')
 const { db } = require('./util/database');
@@ -6,7 +6,6 @@ const { db } = require('./util/database');
 const userStatsModel = require('../pages/util/model/userStatsModel')
 const standAloneAppModel = require('../src/model/appModel.js')
 const userModel = require("../src/model/userModel");
-
 const statistics = {
   envGetters: [],
   registerGetter: function (key, fn) {
@@ -133,6 +132,7 @@ const statistics = {
 
   initialize: async function () {
     await userStatsModel.initialize()
+    // await settings.initialize()
 
     //初次安装的用户需要往dexie的system表中插入此数据，否则第一次上传会报错
     if(await db.system.count() === 0) {
@@ -201,12 +201,17 @@ const statistics = {
 
     /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
     settings.listen('collectUsageStats', function (value) {
+      console.log(settings.get('clientID'),'在统计中获得的settings clientId')
       if (value === false) {
         // disabling stats collection should reset client ID
         // settings.set('clientID', undefined)
         return
       } else if (!settings.get('clientID')) {
-        settings.set('clientID', require('nanoid').nanoid(8))
+        console.log(settings,'执行到了找不到clientId的逻辑，后面部分已被屏蔽')
+        //暂时屏蔽掉初始化ClientID的操作
+        // let newClientId=require('nanoid').nanoid(8)
+        // console.log('强制初始化clientId',newClientId)
+        // settings.set('clientID', newClientId)
       }
     })
 

@@ -13,7 +13,11 @@ window.fs = require('fs')
 window.EventEmitter = require('events')
 window.ipc = electron.ipcRenderer
 window.Dexie = require('dexie')
-
+window.settings= require('util/settings/settings.js')
+window.settings.initialize(()=>{
+  //设置完成后再启动统计
+  require('statistics.js').initialize()
+})
 
 if (navigator.platform === 'MacIntel') {
 	document.body.classList.add('mac')
@@ -202,15 +206,13 @@ require('passwordManager/passwordCapture.js').initialize()
 require('passwordManager/passwordViewer.js').initialize()
 
 require('userscripts.js').initialize()
-require('statistics.js').initialize()
+
 require('taskOverlay/taskOverlay.js').initialize()
 require('pageTranslations.js').initialize()
 require('sessionRestore.js').initialize().then(()=>{
   require('bookmarkConverter.js').initialize()
   require('newTabPage.js').initialize()
-
 // default searchbar plugins
-
   require('searchbar/placesPlugin.js').initialize()
   require('searchbar/instantAnswerPlugin.js').initialize()
   require('searchbar/openTabsPlugin.js').initialize()
@@ -237,6 +239,4 @@ require('sessionRestore.js').initialize().then(()=>{
   ipc.on('importBookMarks',function(){
     searchbar.openURL('!importbookmarks', null)
   })
-
-
 })

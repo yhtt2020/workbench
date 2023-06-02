@@ -45,9 +45,8 @@ var settings = {
     await settings.loadFromDb()
     settings.runChangeCallbacks()
   },
-  initialize: async function () {
+  initialize: async function (cb) {
     await settings.loadFromDb()
-
     settings.runChangeCallbacks()
 
     ipc.on('settingChanged', function (e, key, value) {
@@ -58,6 +57,9 @@ var settings = {
     ipc.on('returnIsDefaultBrowser', function (e, value) {
       //console.log(value)
     })
+    if(cb){
+      cb()
+    }
   }
 }
 settingModel.initDb().then(async ()=>{
