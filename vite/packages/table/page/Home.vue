@@ -727,7 +727,7 @@ export default {
         window.localStorage.setItem("transparent", JSON.stringify("true"));
         document.documentElement.classList.add("transparent");
       } else {
-        window.localStorage.setItem("transparent", JSON.stringify("false"));
+        window.localStorage.removeItem("transparent")
         document.documentElement.classList.remove("transparent");
       }
     },

@@ -102,10 +102,10 @@ export default {
   async mounted() {
     const value = window.localStorage.getItem("style")
     document.documentElement.classList.add(JSON.parse(value!));
-    const transparent = window.localStorage.getItem("transparent")
-    if (JSON.parse(transparent!)) {
+    let transparent = window.localStorage.getItem("transparent")
+    transparent = JSON.parse(transparent!)
+    if (transparent == "true") {
       document.documentElement.classList.add("transparent");
-      
     }
 
     // if (value) {
