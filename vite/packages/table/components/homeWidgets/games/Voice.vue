@@ -20,12 +20,12 @@
           </div>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
+      <span class="mt-2" style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输出</span>
       <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
-        <div class="item-name">{{ outputContent }}</div>
+        <div class="item-name">{{ defaultOutput.name }}（{{defaultOutput.deviceName}}）</div>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
-      <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
+      <span class="mt-2" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
       <div class="flex">
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
           <a-progress :percent="audioTest" :showInfo="false"/>
@@ -35,9 +35,9 @@
           <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-      <div @click="selectInputVoice"  class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
-        <span class="item-name">{{ inputContent }}</span>
+      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输入</span>
+      <div @click="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+        <span class="item-name">{{ defaultMic.name }}（{{defaultMic.deviceName}}）</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
@@ -88,9 +88,9 @@ export default {
       audioValue:50,
       outputShow:false,
       inputShow:false,
-      outputContent:'扬声器1（High Definition Audio Device）',
-      inputContent:'Microphone1（High Definition Audio Device）',
-      muteShow:false,
+      outputContent:'',
+      inputContent:'',
+      muteShow:true,
       microphoneShow:true,
     }
   },

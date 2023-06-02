@@ -21,12 +21,12 @@
           </div>
         </div>
       </div>
-      <span class="mt-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">默认输出</span>
+      <span class="mt-2 mb-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
         <template v-for="(item,index) in outputList">
-        <div v-if="item.display"  :class="item.default ? 's-item' :''" @click="selectOutputDevice(item,index)" class="w-full flex btn-active voice-hover  items-center rounded-lg  pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
+        <div   :class="item.isDefaultForMultimedia ? 's-item' :''" @click="selectDefaultDevice(item,outputList)" class="w-full py-1 flex btn-active voice-hover  items-center rounded-lg  pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
-            {{ item.label }}
+            {{ item.name }}（{{item.deviceName}}）
           </span>
         </div>
         </template>
@@ -46,12 +46,12 @@
           </div>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-      <vue-custom-scrollbar :settings="settingsScroller" style="height:200px;">
+      <span class="mt-2 " style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输入</span>
+      <vue-custom-scrollbar class="mt-2" :settings="settingsScroller" style="height:200px;">
         <template v-for="(item,index) in inputList">
-        <div v-if="item.display" :class="item.default ? 's-item' :''" class="w-full voice-hover pointer voice-hover rounded-lg flex items-center  my-1" @click="selectInputDevice(item,index)" style="padding: 7px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
+        <div :class="item.isDefaultForMultimedia ? 's-item' :''" class="w-full py-1 voice-hover pointer voice-hover rounded-lg flex items-center  py-2 px-2" @click="selectDefaultDevice(item,inputList)" style=" color: rgba(255, 255, 255, 1);font-size: 15px;font-weight: 200;">
           <span class="item-name">
-            {{ item.label }}
+            {{ item.name }}（{{item.deviceName}}）
           </span>
         </div>
         </template>
@@ -69,7 +69,7 @@ import Template from '../../../../user/pages/Template.vue'
 import {
   getDefaultMic,
   getDefaultVolume,
-  listInputs,
+  listInputs, listOutputs, setAsDefault,
   setDefaultVolume,
   setMicVolume
 } from '../../../js/ext/audio/audio.ts'
@@ -103,27 +103,28 @@ export default {
     }
   },
   async mounted () {
+    this.outputList=await listOutputs()
+    this.inputList=await listInputs()
     this.defaultOutput = await getDefaultVolume()
     this.defaultMic=await getDefaultMic()
     this.muteShow=!this.defaultOutput.muted
     this.microphoneShow=!this.defaultMic.muted
 
-    audio.getDevices(devices => {
-      console.log('取到的devices', devices)
-      this.devices = devices
-      this.inputList = devices.inputs
-      this.inputList.forEach(li => {
-        if (li.groupId === devices.defaultInput.groupId) {
-          li.default = true
-        }
-      })
-      this.outputList = devices.outputs
-      this.outputList.forEach(li => {
-        if (li.groupId === devices.defaultOutput.groupId) {
-          li.default = true
-        }
-      })
-    })
+    // audio.getDevices(devices => {
+    //   this.devices = devices
+    //   this.inputList = devices.inputs
+    //   this.inputList.forEach(li => {
+    //     if (li.groupId === devices.defaultInput.groupId) {
+    //       li.default = true
+    //     }
+    //   })
+    //   this.outputList = devices.outputs
+    //   this.outputList.forEach(li => {
+    //     if (li.groupId === devices.defaultOutput.groupId) {
+    //       li.default = true
+    //     }
+    //   })
+    // })
   },
   data(){
     return{
@@ -158,11 +159,14 @@ export default {
     ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
     // 选中输入设备
     selectInputDevice(item,index){
-      this.inputIndex = index
+      item.isDefaultForMultimedia=true
+
     },
     // 选中输出设备
-    selectOutputDevice(item,index){
-      this.outputIndex = index
+    selectDefaultDevice(item,list){
+      list.forEach(li=>{li.isDefaultForMultimedia=false})
+      item.isDefaultForMultimedia=true
+      setAsDefault(item)
     },
     // 关闭麦克风逻辑
     closeMicrophone(){

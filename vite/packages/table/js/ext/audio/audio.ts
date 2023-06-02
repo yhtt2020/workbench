@@ -117,7 +117,7 @@ function execAsPromised(
 ): Promise<CommandOutput> {
   return new Promise((resolve, reject) => {
     const child = exec(
-      'chcp 65001 &' + command,
+      '' + command,
       {cwd: options?.cwd, encoding: 'binary'},
       (err, stdout, stderr) => {
         if (err) {
@@ -152,7 +152,6 @@ async function listDevices(type = 'Render') {
 
   if (exitCode === 0 && stdout.length > 0) {
     const entries = stdout.split('\r\n');
-    console.log(entries, '存储下的entries')
     for (const entry of entries) {
       const [
         id,
@@ -200,6 +199,8 @@ export async function getDefaultVolume() {
     return li.isDefaultForMultimedia
   })
   return {
+    name:defaultOutput.name,
+    deviceName:defaultOutput.deviceName,
     volume: defaultOutput.volume,
     muted: defaultOutput.isMuted
   }
@@ -213,6 +214,8 @@ export async function getDefaultMic() {
     return li.isDefaultForMultimedia
   })
   return {
+    name:defaultMic.name,
+    deviceName:defaultMic.deviceName,
     volume: defaultMic.volume,
     muted: defaultMic.isMuted
   }
@@ -340,7 +343,7 @@ const DefaultTypes = {
  * @throws       Throws when output id or default type is invalid
  */
 export async function setAsDefault(
-  output: AudioOutput | string,
+  output: AudioOutput|AudioInput | string,
   type: 'all' | 'multimedia' | 'communications' = 'multimedia'
 ) {
   const id = getValidId(output);
