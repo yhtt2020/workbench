@@ -396,7 +396,7 @@ const sessionRestore = {
               spaceId: currentSpace.spaceId,
               modal: true,
               title: '无法读入云端空间',
-              description: '云端空间已被其他设备抢占，导致无法成功取得空间使用权。',
+              description: '云端空间已被其他设备抢占，导致无法成功取得空间使用权。请重新登录空间。',
               fatal: true
             })
             return
