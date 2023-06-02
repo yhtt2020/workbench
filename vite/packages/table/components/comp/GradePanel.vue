@@ -1,5 +1,5 @@
 <template>
-  <div style="color: white;padding-left: 20px;padding-right: 20px;margin-top: 10px">
+  <div style="padding-left: 20px;padding-right: 20px;margin-top: 10px;color: var(--font-color)">
     <a-row>
       <a-col :span="24">
         <a-row>
@@ -36,7 +36,7 @@
             </a-row>
           </a-col>
           <a-col :span="10">
-            <div class="p-1" style="line-height: 2;background: #333;border-radius: 8px;text-align: center">
+            <div class="p-1" style="line-height: 2;background: #333;border-radius: 8px;text-align: center;background-color: var(--active-background-color);">
               在线等级: <span style="font-size: 18px">{{ grade.lv }}</span>级
               <div v-if="badge.rank < 300"
                    style="border-radius: 6px;line-height: 18px;padding-bottom:7px"
@@ -61,6 +61,7 @@
             <div class="text-grey mt-2" style="line-height: 2">累计在线时长:
               {{ grade.cumulativeHours }}小时{{ grade.cumulativeMinutes }}分
             </div>
+            <!-- 快速搜索 等级权益 排名 -->
             <div class="badge-box" :style="{'border-color':this.getBadge().color}">
               <a-row>
                 <a-col :span="6">

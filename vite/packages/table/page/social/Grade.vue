@@ -2,7 +2,7 @@
   <vueCustomScrollbar :settings="scrollbarSettings" style="height: 100%;padding: 15px;">
     <div class="w-full h-full flex justify-center flex-row flex-wrap">
       <div class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
-        <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4">
+        <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" style="background-color: var(--background-color);">
           <GradePanel @openGradeTip="openGradeTip"></GradePanel>
         </div>
         <div class="rounded-lg flex-1 w-full  tip-card px-5 text-white" style="background: rgba(33, 33, 33, 1);">
@@ -22,17 +22,20 @@
         <div class="flex flex-row">
           <div class="mt-6 mr-4" style="width: 160px">
             <a-steps direction="vertical" :current="abilityGrade" ref="step" :progressDot="true">
-              <a-step :title="'Lv ' + item" description="null" @click="clickStep(index)"
-                v-for="(item, index) in leveList" />
+              <a-step :title="'Lv ' + item" description="null" @click="clickStep(index)" class="left-box"
+                v-for="(item, index) in leveList" style="color:var(--font-color);"/>
             </a-steps>
           </div>
           <div class="flex flex-wrap justify-between  bottom-card w-full">
-            <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
+            <!-- <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
               style="width: calc(50% - 8px);"
-              :style="item.detail[[leveList[clickGrade]]] ? 'background: rgba(42, 42, 42, 1)' : 'background: rgba(42, 42, 42, 1);opacity: 0.6;'">
+              :style="item.detail[[leveList[clickGrade]]] ? 'background: rgba(42, 42, 42, 1)' : 'background: rgba(42, 42, 42, 1);opacity: 0.6;'"> -->
+              <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
+              style="width: calc(50% - 8px);"
+              :style="item.detail[[leveList[clickGrade]]] ? 'background: var(--active-background-color)' : 'background: var(--active-background-color);opacity: 0.6;'">
               <Icon :icon="item.icon" style="width: 24px;height: 24px;" class="mr-4 ml-2 text-white"></Icon>
               <div style="width: calc(100% - 50px)">
-                <div class="text-white text-more w-full">{{ item.alias }}</div>
+                <div class="text-white text-more w-full" style="color: var(--font-color);" >{{ item.alias }}</div>
                 <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full">
                   {{ item.detail[[leveList[clickGrade]]] }}</div>
               </div>
@@ -108,7 +111,7 @@ export default {
       for (let i = 0; i < this.$refs.step.$el.children.length; i++) {
         this.$refs.step.$el.children[i].children[0].children[2].children[0].style.background = ''
       }
-      this.$refs.step.$el.children[e].children[0].children[2].children[0].style.background = 'rgba(42, 42, 42, 1)'
+      this.$refs.step.$el.children[e].children[0].children[2].children[0].style.background = 'var(--active-background-color)'
       this.clickGrade = e
     }
   }
@@ -116,6 +119,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.left-box {
+  :deep(.ant-steps-item-title) {
+    color: var(--font-color) !important;
+  }
+}
 @media screen and (min-width: 1492.9px) {
   .top-card {
     min-height: 572px;
