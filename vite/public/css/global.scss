@@ -6,47 +6,55 @@
     --no-active-background-color: rgb(26, 26, 26, 0.65); // 未选中背景颜色
     --active-font-color: #b7b7b7; // 选中字体颜色
     --active-background-color: rgba(0, 0, 0, 0.3); // 选中背景颜色
-
+    --hover-background-color:rgba(0, 0, 0, 0.2) !important;
+    --mask-background-color:rgba(0,0,0,0.2);
+    --mask-item-background-color:rgba(255, 255, 255,0.3);
     // 有部分地方能直接接管active的状态
     .active {
         color: var(--active-font-color) !important;
         fill: var(--active-font-color) !important;
         background: var(--active-background-color) !important;
     }
-
+    .active-menu-item {
+        color: var(--active-font-color) !important;
+        fill: var(--active-font-color) !important;
+        background: rgba(255, 255, 255, 0.5) !important;
+    }
     body {
         // background: #fff !important;
-        background: none !important;
+        // background: none !important;
     }
 }
 
-body {
-    :deep(.ant-select-selection-item) {
-        border: 1px solid red !important;
-        color: red;
-    }
-}
 
 // 白天主题
 .light-mode {
     --font-color: #000 !important;
-    --background-color: rgba(195, 196, 197, 0.85);
+    --background-color: rgba(255, 255, 255, 0.5);
     --no-active-background-color: rgba(204, 204, 204, 0.75);
     --no-active-font-color: rgba(0, 0, 0, 0.45);
-    --active-font-color: #000;
-    --active-background-color: #fff;
-
+    --active-font-color: rgba(0, 0, 0, 0.85) !important;
+    --active-background-color: rgba(0, 0, 0, 0.1) !important;
+    --hover-background-color:rgba(0, 0, 0, 0.2) !important;
+    --mask-background-color:rgba(0,0,0,0.2);
+    --mask-item-background-color:rgba(255, 255, 255,0.3);
     .active {
         color: var(--active-font-color) !important;
         fill: var(--active-font-color) !important;
         background: var(--active-background-color) !important;
+    }
+    
+    .active-menu-item {
+        color: var(--active-font-color) !important;
+        fill: var(--active-font-color) !important;
+        background: rgba(255, 255, 255, 0.5) !important;
     }
 }
 
 // 白天无背景主题
 .light-nobg-mode {
     --font-color: #000 !important;
-    --background-color: rgba(240, 240, 240, 0.85);
+    --background-color: rgba(255, 255, 255, 0.5);
     --no-active-font-color: rgba(0, 0, 0, 0.45);
     --no-active-background-color: rgba(240, 240, 240, 0.85);
     --active-font-color: #000;
