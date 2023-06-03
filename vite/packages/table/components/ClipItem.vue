@@ -15,7 +15,7 @@
       <div class="flex-1 px-5 py-14 " v-if="defaultTextType.name === 'text'">
         <span class="clip-con" >{{ clip.content  }}</span>
       </div>
-      <div v-else class="flex-1 px-5">
+      <div v-else class="flex-1 px-5 py-0.5">
         <codemirror :value="clip.content" :options="clipOptions" ></codemirror>
       </div>
 
@@ -204,7 +204,10 @@ export default {
         tabSize: 4, // 默认为4
 				mode: 'javascript', // 选择代码语言
 				lineWrapping: true,    // 自动换行
+        styleActiveLine: true,
+				lineNumbers: true, // 代码行数字
         scrollbarStyle: null, // 将滚动条样式设置为 null
+        line: true,
 				theme: 'monokai' // 主题根据需要自行配置
       }
     }
@@ -276,6 +279,15 @@ export default {
 }
 :deep(.CodeMirror){
   height:292px;
+}
+:deep(.cm-s-monokai.CodeMirror){
+  background: rgba(42, 42, 42, 0.8) !important;
+  border-radius: 12px;
+  padding: 0 4px ;
+  font-family: PingFangSC-Medium !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,0.4) !important;
+  font-weight: 500 !important;
 }
 
 </style>
