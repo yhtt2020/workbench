@@ -63,7 +63,29 @@ async function ready() {
   Menu.setApplicationMenu(mainMenu)
   createDockMenu()
   appStart()
+  //每分钟执行提交在线时长
+  async function uploadCumulativeTime () {
+    try {
+      let clientId=settings.get('clientID')
+      console.log('上传进度传入clientID',clientId)
+      const userInfo = await userModel.getCurrent()
+      const options = {
+        uid: userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0, // 用户uid
+        client_id: clientId // 设备号
+      }
 
+      await baseApi.init()
+      baseApi.axios('/app/open/usageStats/cumulativeTime', options, 'post').catch(e => {
+        console.warn('上传在线时长失败', e)
+      }).then((rs) => {
+        console.log('提交在线时长成功',rs)
+      })
+    } catch (e) {
+      console.warn('上传在线时间意外错误', e)
+    }
+  }
+
+  setInterval(uploadCumulativeTime, 1000 * 60) // 每分钟上报在线时间
 }
 await ready()
 

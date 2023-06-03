@@ -1,10 +1,11 @@
 <template>
-  <div style="height: 100%;display: flex;justify-content: center;align-content: center;flex-direction: column">
-    <div @click.stop style="background: #111;border: 1px solid #333" class="p-3 rounded-md mt-3">
+        <a-button @click="addScreen" class="mr-3 no-dark" style="color:var(--font-color)">创建</a-button>
+  <div style="height: 100%;display: flex;justify-content: center;align-content: center;flex-direction: column;">
+    <div @click.stop style="background: #111;border: 1px solid #333;background-color: var(--background-color);" class="p-3 rounded-md mt-3">
 
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
-           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative">
+           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative;">
         <a-image v-if="screen.key!=='main'" :preview="false"
                  fallback="/public/icons/main.png"
                  class="screen-preview" :width="120" :height="70" :src="'file://'+screen.capture"></a-image>
@@ -13,12 +14,12 @@
                  class="screen-preview" :width="120" :height="70" src="/public/icons/main.png"></a-image>
         <span v-if="screen.key!=='main'" style="" class="p-2 screen-title">{{ screen.title }}</span>
         <span v-else
-              style="left: 50%;top:50%;font-size: 24px;width: 100px;transform: translateY(-60%) translateX(-50%);text-align: center;line-height: 30px;border-radius: 4px;background: none"
+              style="left: 50%;top:50%;font-size: 24px;width: 100px;transform: translateY(-60%) translateX(-50%);text-align: center;line-height: 30px;border-radius: 4px;background: none;"
               class="p-2 screen-title">{{ screen.title }}</span>
       </div>
-      <div class="text-right ">
-        <a-button @click="addScreen" class="mr-3">创建</a-button>
-        <a-button @click="tagScreen">辨别</a-button>
+      <div class="text-right " >
+        <a-button @click="addScreen" class="mr-3 no-dark" style="color:var(--font-color)">创建</a-button>
+        <a-button @click="tagScreen" style="color:var(--font-color)">辨别</a-button>
       </div>
     </div>
     <div class="p-3" @click.stop>
@@ -34,7 +35,7 @@
       <template v-if="currentScreen.key!=='main'">
         <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center;">
           <a-col :span="5">
-            <div class="btn relative ">
+            <div class="btn relative " >
               <a-switch @change="toggleScreen" v-model:checked="currentScreen.running"></a-switch>
               <div class="mt-3">
                 启用分屏
@@ -118,6 +119,7 @@ export default {
   methods: {
     ...mapActions(screenStore, ['startupScreen', 'tagScreen', 'stopScreen', 'add']),
     addScreen () {
+      console.log('11234 :>> ', 11234);
       let s = this.add()
       this.select(s.key)
     },
@@ -182,6 +184,9 @@ export default {
 }
 </script>
 <style lang="scss">
+.btn {
+background: var(--mask-item-background-color);color: var(--font-color);
+}
 .screen.die {
   .ant-image-img {
     filter: grayscale(100%);

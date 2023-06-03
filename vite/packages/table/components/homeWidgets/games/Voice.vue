@@ -5,11 +5,11 @@
         <div class="flex-1 flex flex-col mr-4">
           <div class="flex my-1 justify-between">
             <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ audioValue  }}%</span>
+            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ defaultOutput.volume  }}%</span>
           </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
-              <a-slider v-model:value="audioValue" :tooltip-visible="false" />
+              <a-slider v-model:value="defaultOutput.volume"  @afterChange="changeVolume()"  :tooltip-visible="false" />
             </div>
           </div>
         </div>
@@ -20,12 +20,12 @@
           </div>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
+      <span class="mt-2" style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输出</span>
       <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
-        <div class="item-name">{{ outputContent }}</div>
+        <div class="item-name">{{ defaultOutput.name }}（{{defaultOutput.deviceName}}）</div>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
-      <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
+      <span class="mt-2" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
       <div class="flex">
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
           <a-progress :percent="audioTest" :showInfo="false"/>
@@ -35,9 +35,9 @@
           <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-      <div @click="selectInputVoice"  class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
-        <span class="item-name">{{ inputContent }}</span>
+      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输入</span>
+      <div @click="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+        <span class="item-name">{{ defaultMic.name }}（{{defaultMic.deviceName}}）</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
@@ -53,6 +53,7 @@ import VoiceOutputDetail from './VoiceOutputDetail.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { inspectorStore } from '../../../store/inspector'
 import audio from '../../../js/common/audio'
+import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../../js/ext/audio/audio'
 export default {
   name:'Voice',
   components:{
@@ -76,6 +77,8 @@ export default {
   },
   data(){
     return{
+      defaultMic:{},
+      defaultOutput:{},
       options: {
         className: 'card',
         title: '音频',
@@ -85,16 +88,20 @@ export default {
       audioValue:50,
       outputShow:false,
       inputShow:false,
-      outputContent:'扬声器1（High Definition Audio Device）',
-      inputContent:'Microphone1（High Definition Audio Device）',
-      muteShow:false,
-      microphoneShow:false,
+      outputContent:'',
+      inputContent:'',
+      muteShow:true,
+      microphoneShow:true,
     }
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest'])
   },
-  mounted () {
+  async mounted () {
+    this.defaultOutput = await getDefaultVolume()
+    this.defaultMic=await getDefaultMic()
+    this.muteShow=!this.defaultOutput.muted
+    this.microphoneShow=!this.defaultMic.muted
     this.startListenAudioTest()
   },
   methods:{
@@ -116,14 +123,25 @@ export default {
     },
     clickMute(){
       this.muteShow = !this.muteShow
+      setDefaultVolume({
+        volume:this.defaultOutput.volume,
+        muted:!this.muteShow
+      })
     },
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
+      setMicVolume({muted:!this.microphoneShow})
+    },
+    changeVolume(){
+      setDefaultVolume({
+        volume:this.defaultOutput.volume
+      })
     }
   },
   unmounted () {
     this.stopListenerAudioTest()
-  }
+  },
+
 
 }
 </script>

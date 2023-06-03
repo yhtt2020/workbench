@@ -3,10 +3,10 @@
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
       <template v-for="(item,index) in outputList">
-        <div v-if="item.display"  :class="selectIndex === index ? 's-item':''"
-             @click="selectAudio(item,index)" class="flex pointer rounded-lg btn-active voice-item-hover  items-center justify-center " style="padding: 7px  10px;">
+        <div  :class="item.isDefaultForMultimedia ? 's-item':''"
+             @click="selectAudio(item,outputList)" class="flex pointer rounded-lg btn-active voice-item-hover  items-center  " style="padding: 7px  10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
-            {{ item.label }}
+            {{ item.name }}（{{item.deviceName}}）
           </span>
         </div>
       </template>
@@ -20,6 +20,7 @@
 
 <script>
   import audio from '../../../js/common/audio'
+  import { listOutputs, setAsDefault } from '../../../js/ext/audio/audio'
 
   export default {
     name:'VoiceOutputDetail',
@@ -37,18 +38,20 @@
         defaultItem:{},
       }
     },
-    mounted () {
-      audio.getDevices(devices=>{
-        this.outputList=devices.outputs
-        this.defaultItem=this.outputList.find(li=>{
-          return li.deviceId==='default'
-        })
-      })
+    async mounted () {
+      this.outputList = await listOutputs()
+      // audio.getDevices(devices => {
+      //   this.outputList = devices.outputs
+      //   this.defaultItem = this.outputList.find(li => {
+      //     return li.deviceId === 'default'
+      //   })
+      // })
     },
     methods:{
-      selectAudio(item,index){
-        this.selectIndex = index
-        this.defaultItem = item
+      selectAudio(item,list){
+        list.forEach(li=>{li.isDefaultForMultimedia=false})
+        item.isDefaultForMultimedia=true
+        setAsDefault(item)
       },
       backOutput(){
         this.$emit('updateOutput',this.defaultItem)

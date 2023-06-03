@@ -3,10 +3,10 @@
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
       <template v-for="(item,index) in inputList" >
-        <div v-if="item.display" :class="selectIndex === index ? 's-item':''"
-             @click="selectAudio(item,index)" class="flex rounded-lg voice-item-hover  pointer items-center justify-center" style="padding: 7px 10px;">
+        <div  :class="item.isDefaultForMultimedia ? 's-item':''"
+             @click="selectAudio(item,inputList)" class="flex rounded-lg voice-item-hover  pointer items-center " style="padding: 7px 10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
-            {{ item.label }}
+            {{ item.name }}（{{item.deviceName}}）
           </span>
         </div>
       </template>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import audio from '../../../js/common/audio'
+import { listInputs, setAsDefault } from '../../../js/ext/audio/audio'
 
 export default {
   name:'VoiceInputDetail',
@@ -37,19 +37,14 @@ export default {
       defaultItem:{},
     }
   },
-  mounted () {
-    audio.getDevices(devices=>{
-      console.log('取到的devices',devices)
-      this.inputList=devices.inputs
-      this.defaultItem=this.inputList.find(li=>{
-        return li.deviceId==='default'
-      })
-    })
+  async mounted () {
+    this.inputList = await listInputs()
   },
   methods:{
-    selectAudio(item,index){
-      this.selectIndex = index
-      this.defaultItem = item
+    selectAudio(item,list){
+      list.forEach(li=>{li.isDefaultForMultimedia=false})
+      item.isDefaultForMultimedia=true
+      setAsDefault(item)
     },
     backInput(){
       this.$emit('updateInput',this.defaultItem)

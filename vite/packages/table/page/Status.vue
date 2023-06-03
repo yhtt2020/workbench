@@ -52,7 +52,7 @@
             style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--background-color) ; color: var(--font-color);">
             <h3 style="color: var(--font-color)">音频输出设备</h3>
             <div v-for=" audio in audioList">
-              <div @click="setAudio(audio)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia }">
+              <div @click="setAudio(audio,audioList)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia }">
                 <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon>
                 {{ audio.name }} ({{ audio.deviceName }}) <span v-if="audio.deviceId === 'default'">当前</span>
               </div>
@@ -69,9 +69,9 @@
             style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--background-color) ; color: var(--font-color);">
             <h3 style="color: var(--font-color)">音频输入设备</h3>
             <div v-for="audio in micList">
-              <div @click="setAudio(audio)" class="audio" :class="{ 'active': audio.deviceId === 'default' }">
+              <div @click="setAudio(audio,micList)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia}">
                 <Icon icon="maikefeng" style="font-size: 1.2em"></Icon>
-                {{ audio.label }} <span v-if="audio.deviceId === 'default'">当前</span>
+                {{ audio.name }}（{{audio.deviceName}}） <span v-if="audio.deviceId === 'default'">当前</span>
               </div>
             </div>
 
@@ -90,7 +90,7 @@ const loudness = window.loudness
 const brightness = window.brightness
 import { getResPathJoin } from '../js/common/exec'
 // const {listOutputs,setAsDefault} =require('@josephuspaye/win-audio-outputs')
-import { listOutputs, setAsDefault } from '../js/ext/audio/audio'
+import { listInputs, listOutputs, setAsDefault } from '../js/ext/audio/audio'
 
 export default {
   name: 'Status',
@@ -114,6 +114,7 @@ export default {
     }
   },
   async mounted() {
+    this.micList=await listInputs()
 
     // $('#scroller').on('touchstart',()=>{
     //
@@ -196,10 +197,10 @@ export default {
       await brightness.set((Number(this.bright) / 100))
       console.log((Number(this.bright) / 100).toFixed(1))
     },
-    async setAudio(audio) {
+    async setAudio(audio,list) {
       await setAsDefault(audio)
+      list.forEach(li=>{li.isDefaultForMultimedia=false})
       audio.isDefaultForMultimedia = true
-      this.gua()
       // navigator.mediaDevices.selectAudioOutput()
     },
     async gua() {

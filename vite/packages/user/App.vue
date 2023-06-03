@@ -37,6 +37,14 @@ export default {
     this.loaded = true
     if (window.globalArgs['tip']) {
       this.tip = window.globalArgs['tip']
+      console.log('提示信息是=',this.tip)
+    }
+    if(window.globalArgs['modal']==='true'){
+      Modal.warn({
+        title:window.globalArgs['title'],
+        content:window.globalArgs['description'],
+        centered:true
+      })
     }
     if(this.tip.indexOf('重新登录')>-1){
       //掉登录

@@ -1,7 +1,7 @@
 <template>
   <!-- 仅供改样式快速搜索：菜单切换 -->
   <div class="flex flex-row rounded-lg p-1" :class="bgColor"
-    :style="{ backgroundColor: 'var(--background-color)', color: 'var(--no-active-font-color)', height: itemHeight }">
+    :style="{ backgroundColor: 'var(--background-color)', color: 'var(--active-font-color)', height: itemHeight }">
 
 
     <!-- <div v-for="(item, index) in navList"

@@ -3,6 +3,24 @@ export const navList = [
     cname: '推荐',
     children: [
       {
+        name: 'Audio',
+        cname: '音频',
+        detail: '快速调整音量大小，音频设备选择，一键开启静音模式。',
+        sizes: ['2x4', '2种样式'],
+        option: [
+          {
+            name: 'audio',
+            size: '2x4',
+          },
+          {
+            name: 'voice',
+            size: '2x2',
+
+          },
+        ],
+        time: '2023/5/31'
+      },
+      {
         name: 'countdownDay',
         cname: '倒数日',
         detail: '记录关于你的纪念日、考试日等重要的日子。',
@@ -287,10 +305,30 @@ export const navList = [
       },
     ],
   },
-  { cname: '系统', children: null },
+  { cname: '系统', children: [
+      {
+        name: 'Audio',
+        cname: '音频',
+        detail: '快速调整音量大小，音频设备选择，一键开启静音模式。',
+        sizes: ['2x4', '2种样式'],
+        option: [
+          {
+            name: 'audio',
+            size: '2x4',
+          },
+          {
+            name: 'voice',
+            size: '2x2',
+
+          },
+        ],
+        time: '2023/5/31'
+      },
+    ] },
   {
     cname: '游戏',
     children: [
+
       {
         name: 'games',
         cname: 'Steam特惠',
@@ -334,7 +372,24 @@ export const navList = [
         time: '2023/5/31'
 
       },
+      {
+        name: 'Audio',
+        cname: '音频',
+        detail: '快速调整音量大小，音频设备选择，一键开启静音模式。',
+        sizes: ['2x4', '2种样式'],
+        option: [
+          {
+            name: 'audio',
+            size: '2x4',
+          },
+          {
+            name: 'voice',
+            size: '2x2',
 
+          },
+        ],
+        time: '2023/5/31'
+      },
     ],
   },
   {
@@ -442,24 +497,7 @@ export const navList = [
   },
   {
     cname: '施工中', children: [
-      {
-        name: 'Audio',
-        cname: '音频(开发中)',
-        detail: '快速调整音量大小，音频设备选择，一键开启静音模式。',
-        sizes: ['2x4', '2种样式'],
-        option: [
-          {
-            name: 'audio',
-            size: '2x4',
-          },
-          {
-            name: 'voice',
-            size: '2x2',
 
-          },
-        ],
-        time: '2023/5/31'
-      },
       {
         name: 'capture',
         cname: '捕获(开发中)',

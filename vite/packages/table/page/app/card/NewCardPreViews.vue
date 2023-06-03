@@ -1,6 +1,6 @@
 <template>
     <div class="main-box ">
-        <div class="box" v-for="(item, index) in   navLists  " :key="item.name" style="color: var(--font-color);">
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name" style="color: var(--font-color);background-color: var(--no-active-background-color);">
             <div class="add no-drag" @click="addCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
@@ -11,7 +11,7 @@
                     · · ·
                 </div>
             </div>
-            <div class="left no-drag" @click="fullScreen(item)">
+            <div class="left no-drag" @click="fullScreen(item)" style="background: var(--no-active-font-color);">
                 <template v-if="item.option.length > 1">
                     <div class="top">
                         <img ref="imgRef" :class="{ 'zoom': item.option[0].name == 'middleWallpaper' }" class="img"
@@ -28,8 +28,8 @@
             <div class="right">
                 <div class="title" style="color: var(--font-color);">{{ item.cname }}</div>
                 <div class="text" style="color: var(--no-active-font-color);">{{ item.detail }}</div>
-                <div class="icon">
-                    <div class="icon-box" v-for="i in item.sizes" :key="i">{{ i }}</div>
+                <div class="icon" >
+                    <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--no-active-font-color);background-color: var(--active-background-color);">{{ i }}</div>
                 </div>
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>

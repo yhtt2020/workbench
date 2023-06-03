@@ -173,7 +173,7 @@
       <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
     <div class="line-title">背景设置：</div>
-    <div class="line">
+    <div class="line" @click="setTransparent()">
       透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
     </div>
     <div class="line" v-if="!appSettings.transparent">
@@ -721,6 +721,15 @@ export default {
     }
   },
   methods: {
+    setTransparent() {
+      if (this.appSettings.transparent) {
+        window.localStorage.setItem("transparent", JSON.stringify("true"));
+        document.documentElement.classList.add("transparent");
+      } else {
+        window.localStorage.removeItem("transparent")
+        document.documentElement.classList.remove("transparent");
+      }
+    },
     customEvent() {
       this.$refs.grid.update();
     },

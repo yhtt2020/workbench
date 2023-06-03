@@ -13,9 +13,11 @@
             </template>
           </a-input>
           <a-select style=" z-index: 99999999; position: relative;" v-model:value="searchValue" class=" no-drag select"
-            size="large" @change="handleChange" :dropdownStyle="{ 'z-index': 999999999999 }">
-            <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{ item.name
-            }}</a-select-option>
+                    size="large" @change="handleChange" :dropdownStyle="{ 'z-index': 999999999999 }">
+            <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{
+                item.name
+              }}
+            </a-select-option>
           </a-select>
         </div>
         <div class="right">
@@ -24,16 +26,18 @@
       <div class="mian">
         <div class="left">
           <div class="no-drag nav" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
-            v-for="( item, index ) in  navList " :key="item.name">{{
-              item.cname }}
+               v-for="( item, index ) in  baseNavList " :key="item.name">{{
+              item.cname
+            }}
           </div>
         </div>
         <div class="right no-drag">
           <div class="warn" v-if="navIndex == 8">
-            <div class="icon">i</div> 以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
+            <div class="icon">i</div>
+            以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-          <NewCardPreViews v-if="navList[navIndex].children !== null" :navList="navList[navIndex].children"
-            @addSuccess="onBack" :search="searchValue" :desk="desk">
+          <NewCardPreViews v-if="baseNavList[navIndex].children !== null" :navList="baseNavList[navIndex].children"
+                           @addSuccess="onBack" :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
@@ -52,39 +56,58 @@
 
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
-import { navList } from "./navList"
+import { navList as NavList } from './navList'
+import _ from 'lodash-es'
+
 export default {
-  name: "AddCard",
+  name: 'AddCard',
   components: { NewCardPreViews },
   props: ['desk'],
-  data() {
+  data () {
     return {
       navIndex: 1,
-      navList,
-      baseNavList: null,
-      selectContent: "",
-      searchValue: "默认排序",
+      apiList: [],
+      selectContent: '',
+      searchValue: '默认排序',
+      baseNavList: NavList,
       searchOptions: [
-        { value: "默认排序", name: "默认排序" },
-        { value: "下载次数", name: "下载次数" },
-        { value: "更新时间", name: "更新时间" },
+        { value: '默认排序', name: '默认排序' },
+        { value: '下载次数', name: '下载次数' },
+        { value: '更新时间', name: '更新时间' },
       ]
-    };
+    }
   },
 
-  mounted() {
+  mounted () {
     // 这里是预留给api请求到时间和下载数据添加数据使用
+    let navList = _.cloneDeep(NavList)
+
+    let items = []
+    navList.map(li => {
+      return items.push(...li.children)
+    })
+    //取得全部不重复的数组元素
+    items = _.uniqBy(items, (li) => {return li.name})
+    navList.splice(1, 0,
+      {
+        cname: '全部',
+        children: items
+      })
+    // navList = this.baseNavList
+
+    navList.forEach(li => {
+      li.cname = li.cname + `（${li.children.length}）`
+    })
     this.baseNavList = navList.map((item) => {
       if (item.children != null) {
         let children = []
         item.children.forEach((i) => {
-          console.log(i)
-          i.time=new Date(i.time).getTime()
+          i.time = new Date(i.time).getTime()
           console.log(i.time)
           children.push({
             ...i,
             download: Math.floor(Math.random() * 10000) + 1,
-           // time: this.getTimes()
+            // time: this.getTimes()
           })
 
         })
@@ -92,13 +115,18 @@ export default {
           cname: item.cname,
           children
         }
-      } else return item
+      } else
+        return item
     })
-    this.navList = this.baseNavList
+  },
+  computed: {
+    displayList () {
+      // return this.apiList.filter
+    }
   },
   watch: {
-    selectContent(newV, oldV) {
-      if (newV == "" || newV == null) {
+    selectContent (newV, oldV) {
+      if (newV == '' || newV == null) {
         this.navList = this.baseNavList
         this.navIndex = 1
         return
@@ -115,7 +143,7 @@ export default {
       })
       if (arr != false) {
         data.push({
-          cname: "全部数据",
+          cname: '全部数据',
           children: arr
         })
         this.navIndex = 0
@@ -125,23 +153,23 @@ export default {
 
   },
   methods: {
-    handleChange(value) {
-      console.log(`selected ${value}`);
+    handleChange (value) {
+      console.log(`selected ${value}`)
     },
-    getTimes() {
-      const currentTime = Date.now();
-      const startDate = new Date('2023-01-01T00:00:00Z').getTime();
-      const randomTimestamp = Math.floor(Math.random() * (currentTime - startDate)) + startDate;
-      return randomTimestamp;
+    getTimes () {
+      const currentTime = Date.now()
+      const startDate = new Date('2023-01-01T00:00:00Z').getTime()
+      const randomTimestamp = Math.floor(Math.random() * (currentTime - startDate)) + startDate
+      return randomTimestamp
     },
-    onBack() {
-      this.$emit("setCustoms", false);
+    onBack () {
+      this.$emit('setCustoms', false)
     },
-    updateNavIndex(index) {
+    updateNavIndex (index) {
       this.navIndex = index
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
