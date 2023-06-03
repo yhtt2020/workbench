@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <vue-custom-scrollbar :settings="settingsScroller" class="mx-4 my-2 py-4">
+  <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mx-4 my-2 py-4">
     <router-view></router-view>
   </vue-custom-scrollbar>
 

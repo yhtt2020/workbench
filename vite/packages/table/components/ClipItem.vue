@@ -11,20 +11,26 @@
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
-      <div class="flex-1 px-5 py-14 ">
-        <span ref="codeEditor" class="clip-con" v-if="defaultTextType.name === 'text'">{{ clip.content  }}</span>
-        <codemirror :value="clip.content" :options="clipOptions"  v-else></codemirror>
+
+      <div class="flex-1 px-5 py-14 " v-if="defaultTextType.name === 'text'">
+        <span class="clip-con" >{{ clip.content  }}</span>
       </div>
+      <div v-else class="flex-1 ">
+        <codemirror :value="clip.content" :options="clipOptions" ></codemirror>
+      </div>
+
       <div class="h-12 s-item rounded-b-md flex ">
           <div v-for="(item) in textType"  :class="defaultTextType.name === item.name ? 's-bg':''" 
            class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item)"
            @dblclick="openCode"
           >
             <Icon :icon="item.icon"></Icon>
-            <span class="ml-2">{{item.title}}</span>
+            <span class="mx-2">{{item.title}}</span>
+            <Icon icon="gengduo1" v-if="item.title !== '纯文本' && item.title !=='代码块'"></Icon>
           </div>
       </div>
     </template>
+
     <template v-else-if="clip.type === 'text' && textShow === true">
       <vue-custom-scrollbar :settings="settingsScroller">
         <div class="px-4 flex flex-col mt-3.5" v-if="codeShow === false">
@@ -70,6 +76,7 @@
       </div>
       <!-- <div class="h-12 s-item rounded-b-md"></div> -->
     </template>
+
     <template v-else-if="clip.type === 'file' && fileShow === true">
       <div class="px-4 flex flex-col mt-3.5">
         <div class="w-full flex items-center justify-between mb-3">
@@ -106,6 +113,7 @@
       </div>
       <!-- <div class="h-12 s-item rounded-b-md"></div> -->
     </template>
+
     <template v-else-if="clip.type === 'image' && imageShow === true">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:398px;">
         <div class="px-4 flex flex-col mt-2.5">
@@ -184,27 +192,28 @@ export default {
       ],
       defaultTextType:{title:'纯文本',icon:'ziyuan',name:'text'},
       codeLanguage:[
-        {title:'Python'},
-        {title:'JavaScript'},
-        {title:'Java'},
-        {title:'C++'},
-        {title:'C#'},
-        {title:'PHP'},
-        {title:'Swift'}
+        {title:'Python',name:'python'},
+        {title:'JavaScript',name:'javascript'},
+        // {title:'Java'},
+        // {title:'C++'},
+        // {title:'C#'},
+        // {title:'PHP',name:'php'},
+        {title:'Swift',name:'swift'}
       ],
-      clipCode:'',
       clipOptions:{
         tabSize: 4, // tabsize默认为4
-				styleActiveLine: true,
-				lineNumbers: true, // 代码行数字
-				line: true,
+				// styleActiveLine: true,
+				// lineNumbers: true, // 代码行数字
+				// line: true,
 				mode: 'javascript', // 选择代码语言
-			  extraKeys: {"Ctrl": "autocomplete"},   // 自动提示配置 
+			  // extraKeys: {"Ctrl": "autocomplete"},   // 自动提示配置 
 				lineWrapping: true,    // 自动换行
+        scrollbarStyle: null, // 将滚动条样式设置为 null
 				theme: 'monokai' // 主题根据需要自行配置
       }
     }
   },
+
 
   watch:{
     'defaultTextType':{
@@ -214,7 +223,6 @@ export default {
       immediate:true,
     },
   },
-
 
   methods:{
     textButton(){
@@ -234,8 +242,6 @@ export default {
     },
     selectItem(item){
       this.defaultTextType = item
-      this.clipOptions.mode = item.title
-      // this.clipCode = item.title
     },
     openCode(){
       this.textShow = true
@@ -245,7 +251,7 @@ export default {
       this.textShow = false
       this.codeShow = false
       this.defaultTextType.title = item.title
-
+      this.clipOptions.mode = item.name
     }
   }
 }
@@ -272,4 +278,8 @@ export default {
   text-align: center;
   font-weight: 500;
 }
+:deep(.CodeMirror){
+  height:292px;
+}
+
 </style>

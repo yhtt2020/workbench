@@ -30,7 +30,8 @@ import 'codemirror/theme/base16-light.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/properties/properties.js'
 import 'codemirror/mode/javascript/javascript'
-
+import 'codemirror/mode/python/python'
+import 'codemirror/mode/swift/swift'
 
 import "viewerjs/dist/viewer.css";
 import VueViewer from "v-viewer";
