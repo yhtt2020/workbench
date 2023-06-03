@@ -1,7 +1,7 @@
 <template>
-  <div @contextmenu="textButton" class="flex flex-col justify-between">
+  <div @contextmenu="textButton" class="flex flex-col">
     <template v-if="clip.type === 'text' && textShow === false" >
-      <div class="flex flex-col  rounded-t-md s-item px-5 py-3">
+      <div class="flex flex-col clip-top rounded-t-md s-item px-5 py-3 mb-4">
         <div class="flex items-center">
           <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
           <span class="ml-2">{{clip.title}}</span>
@@ -11,7 +11,7 @@
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
-      <div style="padding: 51px 13px;" class="flex-1">
+      <div class="flex-1 px-5 py-14 ">
         <span ref="codeEditor" class="clip-con" v-if="defaultTextType.name === 'text'">{{ clip.content  }}</span>
         <codemirror :value="clip.content" :options="clipOptions"  v-else></codemirror>
       </div>
@@ -62,13 +62,13 @@
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
-      <div style="padding: 51px 13px;" class="flex-1">
+      <div class="flex-1 px-5 py-14">
         <div v-if="clip.picIcon" class="flex flex-col items-center justify-center"> 
           <Icon :icon="clip.picIcon" style="font-size: 9.15em;"></Icon>
           <span class="pt-6">{{clip.name}}</span>
         </div>
       </div>
-      <div class="h-12 s-item rounded-b-md"></div>
+      <!-- <div class="h-12 s-item rounded-b-md"></div> -->
     </template>
     <template v-else-if="clip.type === 'file' && fileShow === true">
       <div class="px-4 flex flex-col mt-3.5">
@@ -88,7 +88,7 @@
     </template>
 
     <template v-if="clip.type === 'image' && imageShow === false">
-      <div class="flex flex-col  rounded-t-md s-item px-5 py-3">
+      <div class="flex flex-col  rounded-t-md s-item px-5 py-3 mb-3">
         <div class="flex items-center">
           <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
           <span class="ml-2">{{clip.title}}</span>
@@ -98,13 +98,13 @@
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
-      <div style="padding: 46px 13px;" class="flex-1">
+      <div class="flex-1 px-5 py-14 mb-3">
         <div style="width:100%;height:185px;" class="rounded-lg flex flex-col " v-if="clip.imgUrl">
           <img :src="clip.imgUrl" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
           <span class="pt-5 text-center">{{ clip.name }}</span>
         </div>
       </div>
-      <div class="h-12 s-item rounded-b-md"></div>
+      <!-- <div class="h-12 s-item rounded-b-md"></div> -->
     </template>
     <template v-else-if="clip.type === 'image' && imageShow === true">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:398px;">
@@ -124,7 +124,6 @@
         </div>
       </vue-custom-scrollbar>
     </template>
-
   </div>
 </template>
 

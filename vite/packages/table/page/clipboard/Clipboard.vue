@@ -72,7 +72,7 @@ export default {
         {title:'文本',icon:'text-align-left',name:'文本', textname:'text', typeName:'textClip'},
         {title:'图片',icon:'image',name:'图片',textname:'image', typeName:'imageClip'},
         {title:'文件',icon:'file',name:'文件', textname:'file', typeName:'fileClip'},
-        {title:'视频',icon:'video',name:'视频', textname:'video', typeName:'audioClip'},
+        {title:'视频',icon:'video',name:'视频', textname:'video', typeName:'videoClip'},
         {title:'音频',icon:'erji1',name:'音频', textname:'audio', typeName:'audioClip'}
       ],
       defaultCutType: {title:'全部',icon:'appstore',name:'all'},

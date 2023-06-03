@@ -1,7 +1,7 @@
 <template>
   <div  class="flex">
-    <div v-for="item in fileList" style="width:338px;" class="mr-3 flex flex-col s-bg rounded-md">
-      <ClipItem :clip="item"></ClipItem>
+    <div v-for="(item,index) in fileList" :key="index"  :class="{'active':selectedIndex === index}"  class="mr-3 flex flex-col s-bg rounded-md">
+      <ClipItem :clip="item" style="width:332px;height: 412px;"></ClipItem>
     </div>
   </div>
 </template>
@@ -15,12 +15,35 @@ export default {
   },
   data(){
     return{
-      fileList
+      fileList,
+      selectedIndex:0,
     }
-  }
+  },
+  mounted(){
+    window.addEventListener('keydown',this.listKeyDown)
+  },
+  methods:{
+    // 键盘切换状态
+    listKeyDown(e){
+      const keyCode = e.keyCode
+      if(keyCode === 37 && this.selectedIndex > 0){
+        this.selectedIndex --
+      }else if(keyCode === 39 && this.selectedIndex < this.fileList.length - 1){
+        this.selectedIndex ++ 
+      }
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('keydown')
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
+.active{
+  border: 6px solid rgba(80,139,254,1);
+}
+.s-bg{
+  box-shadow:none !important;
+}
 </style>

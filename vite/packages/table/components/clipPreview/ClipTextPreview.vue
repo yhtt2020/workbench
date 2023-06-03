@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="home-blur preview-container" v-if="textShow">
-      <div class="flex">
+      <div class="flex h-full">
         <div class="w-3/4 flex flex-col" style="border-right: 1px solid  rgba(255,255,255,0.10);">
          <div @click="closePreview"  class="w-12 h-12 no-drag button-active  s-item  ml-5 mt-6 flex pointer items-center justify-center rounded-lg">
            <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
@@ -69,7 +69,12 @@
              <span class="truncate preview-type" style="max-width: 242px;">{{textPreview.imgUrl}}</span>
            </div>
          </div>
-         <div class="h-12">456</div> 
+         <div>
+          <div v-for="item in imageCopy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+            <span class="preview-text">{{item.title}}</span>
+            <span class="preview-type">{{item.intr}}</span>
+          </div>
+         </div> 
         </div>
      </div>
     </div>
@@ -95,7 +100,15 @@ export default {
         {title:'打开链接',intr:'Ctrl + O'},
         {title:'添加到收藏',intr:'Ctrl + S'},
         {title:'删除',intr:'Delete'}
-      ],   
+      ],  
+      imageCopy:[
+        {title:'复制',intr:'Ctrl + C'},
+        {title:'打开',intr:'Ctrl + O'},
+        {title:'复制路径',intr:'Ctrl + Alt + C'},
+        {title:'在资源管理器中打开',intr:'Ctrl + Enter'},
+        {title:'添加到收藏',intr:'Ctrl + S'},
+        {title:'删除',intr:'Delete'}
+      ] 
     }
   },
   methods:{

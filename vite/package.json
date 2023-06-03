@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@codemirror/lang-javascript": "^6.1.8",
+    "@codemirror/lang-json": "^6.0.1",
     "@lk77/vue3-color": "^3.0.6",
     "@popperjs/core": "^2.11.7",
     "@types/node": "^18.0.0",
