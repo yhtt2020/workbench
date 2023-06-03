@@ -32,6 +32,8 @@ import 'codemirror/mode/properties/properties.js'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/swift/swift'
+import 'codemirror/mode/clike/clike'
+
 
 import "viewerjs/dist/viewer.css";
 import VueViewer from "v-viewer";

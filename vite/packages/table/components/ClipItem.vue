@@ -15,7 +15,7 @@
       <div class="flex-1 px-5 py-14 " v-if="defaultTextType.name === 'text'">
         <span class="clip-con" >{{ clip.content  }}</span>
       </div>
-      <div v-else class="flex-1 ">
+      <div v-else class="flex-1 px-5">
         <codemirror :value="clip.content" :options="clipOptions" ></codemirror>
       </div>
 
@@ -194,19 +194,15 @@ export default {
       codeLanguage:[
         {title:'Python',name:'python'},
         {title:'JavaScript',name:'javascript'},
-        // {title:'Java'},
-        // {title:'C++'},
-        // {title:'C#'},
-        // {title:'PHP',name:'php'},
+        {title:'Java',name:'text/x-java'},
+        {title:'C++',name:'text/x-c++src'},
+        {title:'C#',name:'text/x-csharp'},
+        // {title:'PHP',name:'application/x-httpd-php'},
         {title:'Swift',name:'swift'}
       ],
       clipOptions:{
-        tabSize: 4, // tabsize默认为4
-				// styleActiveLine: true,
-				// lineNumbers: true, // 代码行数字
-				// line: true,
+        tabSize: 4, // 默认为4
 				mode: 'javascript', // 选择代码语言
-			  // extraKeys: {"Ctrl": "autocomplete"},   // 自动提示配置 
 				lineWrapping: true,    // 自动换行
         scrollbarStyle: null, // 将滚动条样式设置为 null
 				theme: 'monokai' // 主题根据需要自行配置
