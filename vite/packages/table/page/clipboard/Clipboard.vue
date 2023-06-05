@@ -19,9 +19,13 @@
       </div>
     </div>
   </div>
-
   <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mx-4 my-2 py-4">
-    <router-view></router-view>
+    <div v-if="defaultClipType.name === 'collect'">
+      <div class="flex items-center justify-center">
+        <a-empty :image="simpleImage" />
+      </div>
+    </div>
+    <router-view v-else></router-view>
   </vue-custom-scrollbar>
 
   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
@@ -52,6 +56,7 @@ import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 import TabSwitching from '../../components/TabSwitching.vue';
+import { Empty } from 'ant-design-vue';
 export default {
   name:'Clipboard',
   components:{
@@ -93,10 +98,12 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      simpleImage:'/public/img/test/not-data.png',
     }
   },
   mounted(){
     this.$router.push({name:'allClip'})
+    // console.log(this.simpleImage);
   },
   methods:{
     //打开设置操作
