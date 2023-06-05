@@ -2,7 +2,7 @@
   <h3 style="margin-bottom: 1em;color:var(--primary-text) "><a-avatar src="https://up.apps.vip/logo/yuan.png"></a-avatar> 元社区
 
     <div style="float: right">
-      <a-button @click="go('https://s.apps.vip')" style="color:var(--font-color)">
+      <a-button @click="go('https://s.apps.vip')" style="color:var(--primary-text)">
         <Icon icon="yichu"> </Icon> 前往元社区
       </a-button>
     </div>

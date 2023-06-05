@@ -3,9 +3,9 @@
   <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
     id="secondPanel">
     <div style="margin-bottom:2em;" v-if="gallery === true">
-      <div :onClick="goHome" class="second-panel-back s-icon">
+      <div :onClick="goHome" class="second-panel-back s-icon" style="color:var(--primary-text)">
         <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>
-        <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">返回</span>
+        <span style="margin-left: 0.5em;font-size: 1em;" class="s-text" >返回</span>
       </div>
     </div>
     <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'active': current(menu) }"

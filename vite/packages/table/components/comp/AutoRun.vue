@@ -1,5 +1,5 @@
 <template>
-  <span style="font-weight: bold;color: white;color: var(--font-color)">开机自启动：</span><a-switch @change="setAutoRun"
+  <span style="font-weight: bold;color: white;color: var(--primary-text)">开机自启动：</span><a-switch @change="setAutoRun"
     v-model:checked="isAutoRun"></a-switch> 可能会被安全软件拦截，请允许
 </template>
 <script>

@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
     <div class='popContainer'></div>
-    <div class="controller drag" style="color: var(--font-color);background-color:var(--background-color);">
+    <div class="controller drag" style="color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="header">
         <div class="left">
           <div class="btn no-drag" @click="onBack">
@@ -38,7 +38,7 @@
           <template v-else>
 
             <div class="warn-boxs">
-              <div class="warn-box" style="color: var(--font-color);background-color:var(--background-color);">
+              <div class="warn-box" style="color: var(--primary-text);background-color:var(--primary-bg);">
                 <img src="/public/img/state/warn.png" alt="">
                 <div>暂无数据</div>
               </div>

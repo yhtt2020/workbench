@@ -1,5 +1,5 @@
 <template>
-  <h3 style="color:var(--font-color)">我的团队 <a-button class="relative" style="float: right;border-radius: 8px;border: none;" type="primary" @click="createGroup">创建团队
+  <h3 style="color:var(--primary-text)">我的团队 <a-button class="relative" style="float: right;border-radius: 8px;border: none;" type="primary" @click="createGroup">创建团队
     <GradeSmallTip powerType="group" lastPowerType="创建团队"></GradeSmallTip></a-button></h3>
   <a-tabs v-model:activeKey="activeKey">
     <template #rightExtra>

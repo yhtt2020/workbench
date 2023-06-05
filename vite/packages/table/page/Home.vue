@@ -102,7 +102,6 @@
       <NewAddCard @setCustoms="setCustoms" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
-  <!-- :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" -->
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
