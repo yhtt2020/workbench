@@ -6,7 +6,7 @@
         <!-- 快速搜索 快速开关功能 -->
         <div class="s-bg"
           style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block;color: var(--primary-text);background: var(--primary-bg);">
-          <h3>快速开关功能</h3>
+          <h3 style="color: var(--primary-text);">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
               <div class="btn relative ">
@@ -50,7 +50,7 @@
           <div
             style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
             class="s-bg">
-            <h3>屏幕设置</h3>
+            <h3 style="color: var(--primary-text);">屏幕设置</h3>
             <a-row style="font-size: 1.2em;text-align: center">
               <a-col v-if="isMain()" :span="6">
                 <div @click="setTouch" class="btn">

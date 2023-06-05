@@ -1,91 +1,58 @@
-// 默认夜晚主题 这是模板
 :root {
-    --font-color: #fff; // 主字体颜色 使用在
-    --background-color: rgba(26, 26, 26, 0.65); // 主背景颜色
-    --no-active-font-color: #6e6e6e; // 未选中字体颜色
-    --no-active-background-color: rgb(26, 26, 26, 0.65); // 未选中背景颜色
-    --active-font-color: #b7b7b7; // 选中字体颜色
-    --active-background-color: rgba(0, 0, 0, 0.3); // 选中背景颜色
-
-    // 有部分地方能直接接管active的状态
-    .active {
-        color: var(--active-font-color) !important;
-        fill: var(--active-font-color) !important;
-        background: var(--active-background-color) !important;
-    }
+    // 背景
+    --main-bg: rgba(25, 25, 25, 1) !important;
+    --primary-bg: rgba(26, 26, 26, 0.65) !important; // 主要背景颜色
+    --secondary-bg: rgb(26, 26, 26, 0.65)!important; // 次要背景颜色
+    --active-bg: rgba(0, 0, 0, 0.3) !important; // 主要激活背景颜色 使用在需要激活的背景
+    --active-secondary-bg: rgba(255, 255, 255, 0.1) !important; // 次要激活背景颜色 替换作用
+    --active-transparent-bg: rgba(0, 0, 0, 0.3) !important;
+    --primary-transparent-bg: rgba(0, 0, 10, 1) !important;
+    --modal-bg: rgba(33, 33, 33, 1) !important;
+    --mask-bg: rgba(0, 0, 0, 65) !important;
+    // 分割线
+    --divider: rgba(255, 255, 255, 0.5) !important;
+    // 文字
+    --main-text:#fff;
+    --primary-text: #b7b7b7 !important; // 主要字体
+    --secondary-text:   #6e6e6e !important; // 未激活字体
+    
+    --tertiary-text: rgba(255, 255, 255, 0.4) !important;
 
     body {
-        // background: #fff !important;
-        background: none !important;
+        // background: var(--main-bg) !important;
+    }
+
+    .active {
+        color: var(--primary-text) !important;
+        background: var(--active-bg) !important;
     }
 }
 
-body {
-    :deep(.ant-select-selection-item) {
-        border: 1px solid red !important;
-        color: red;
-    }
-}
-
-// 白天主题
 .light-mode {
-    --font-color: #000 !important;
-    --background-color: rgba(195, 196, 197, 0.85);
-    --no-active-background-color: rgba(204, 204, 204, 0.75);
-    --no-active-font-color: rgba(0, 0, 0, 0.45);
-    --active-font-color: #000;
-    --active-background-color: #fff;
-
-    .active {
-        color: var(--active-font-color) !important;
-        fill: var(--active-font-color) !important;
-        background: var(--active-background-color) !important;
-    }
-}
-
-// 白天无背景主题
-.light-nobg-mode {
-    --font-color: #000 !important;
-    --background-color: rgba(240, 240, 240, 0.85);
-    --no-active-font-color: rgba(0, 0, 0, 0.45);
-    --no-active-background-color: rgba(240, 240, 240, 0.85);
-    --active-font-color: #000;
-    --active-background-color: #FFFFFF;
-
-    .active {
-        color: var(--active-font-color) !important;
-        fill: var(--active-font-color) !important;
-        background: var(--active-background-color) !important;
-    }
-
+    // 背景
+    --main-bg: rgba(229 229 229)  !important;
+    --primary-bg: rgba(255,255,255,0.85) !important;
+    --primary-transparent-bg: rgba(0, 0, 0, 0.5) !important;
+    --modal-bg: rgba(0, 0, 0, 1) !important;
+    --active-bg: rgba(0, 0, 0, 0.1) !important;
+    --active-transparent-bg: rgba(0, 0, 0, 0.1) !important;
+    --active-secondary-bg: rgba(200, 200, 200, 0.7) !important;
+    --mask-bg: rgba(255, 255, 255, 0.1) !important;
+    // 分割线
+    --divider: rgba(230, 230, 230, 1) !important;
+    // 文字
+    --primary-text: rgba(0, 0, 0, 0.85) !important;
+    --secondary-text: rgba(0, 0, 0, 0.6) !important;
+    --tertiary-text: rgba(0, 0, 0, 0.4) !important;
+    --main-text:#000 !important;
     body {
-        background: rgba(229 229 229) !important;
+        background: var(--main-bg) !important;
     }
 }
 
-// 夜晚无背景主题
-.dark-nobg-mode {
-    --font-color: #fff !important;
-    --background-color: rgba(46, 46, 46, 0.9) !important;
-    --no-active-font-color: rgba(255, 255, 255, 0.60);
-    --no-active-background-color: rgba(64, 64, 64, 0.9);
-    --active-font-color: #fff;
-    --active-background-color: rgba(0, 0, 0, 0.3);
-
-    .active {
-        color: var(--active-font-color);
-        fill: var(--active-font-color);
-        background: rgba(0, 0, 0, .6) !important;
-    }
-
-    body {
-        background: rgba(25, 25, 25) !important;
-    }
-}
 
 .transparent {
     body {
-        background: none !important;
         background-color: transparent !important;
         background: transparent !important;
     }

@@ -118,7 +118,7 @@
       </div>
 
       <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-        <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;fill: red;"
+        <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;"
           class="flex justify-center items-center  h-2/3 pointer ">
           <template v-if="!showScreen">
             <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
@@ -142,18 +142,18 @@
     <template v-if="!simple && isMain">
       <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8;">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
-          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0; background: var(--primary-bg);color: var(--primary-text);">
+          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0; ">
           <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
           </a-avatar>
-          <div class="mb-0 mt-0"> 小队
+          <div class="mb-0 mt-0" > 小队
             <div v-if="true" style="display: inline-block;position: relative">
             </div>
           </div>
         </div>
       </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-        style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0">
+        style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0;color:var(--primary-text);background: var(--primary-bg);">
         <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
         </a-avatar>

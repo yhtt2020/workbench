@@ -10,7 +10,7 @@
     <a-col :span="8" style="text-align: center">
       <!-- 快速搜索 头部 搜索栏 -->
       <div @click="openGlobalSearch" class="input-box no-drag pointer"
-        style="{ background: : var(--primary-bg), color: 'var(--no-active-font-color)' }">
+        style=" background: var( --primary-bg); color: var(--secondary-text)">
         <Icon icon="sousuo"></Icon> 搜索 网页内容、标签
         <!--        <span style="float: right; padding-right: 10px">-->
         <!--          <span style="margin-right: 3px" class="key-button">Alt</span-->
@@ -18,7 +18,7 @@
         <!--        </span>-->
       </div>
     </a-col>
-    <a-col :span="8" style="text-align: right;color: var(--no-active-font-color)" class="s-text">
+    <a-col :span="8" style="text-align: right;color: var(--secondary-text)" class="s-text">
       <span style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
         {{ lockTimeoutDisplay }}后锁屏
       </span>
