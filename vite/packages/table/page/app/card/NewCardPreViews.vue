@@ -1,7 +1,6 @@
 <template>
     <div class="main-box ">
-        <div class="box" v-for="(item, index) in   navLists  " :key="item.name"
-         >
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
             <div class="add no-drag" @click="addCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
@@ -12,24 +11,24 @@
                     · · ·
                 </div>
             </div>
-            <div class="left no-drag" @click="fullScreen(item)" >
+            <div class="left no-drag" @click="fullScreen(item)"
+                style="background: var(   --active-bg);">
                 <template v-if="item.option.length > 1">
-                    <div class="top">
-                        <img :style="[{ zoom: item.option[0].zoom +'%' }]" :src="getImg(item.option[0].name)" alt="">
+                    <div class="top" style="background: var(--active-bg);">
+                        <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="">
                     </div>
                     <div class="bottom">
-                        <img v-for="i in item.option"
-                            :src="getImg(i.name)" alt="">
+                        <img v-for="i in item.option" :src="getImg(i.name)" alt="">
                     </div>
                 </template>
-                <img v-else :src="getImg(item.option[0].name)" alt="" :style="[{ zoom: item.option[0].zoom +'%'}]">
+                <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
+                    :style="[{ zoom: item.option[0].zoom + '%' }]">
             </div>
             <div class="right">
-                <div class="title" >{{ item.cname }}</div>
-                <div class="text">{{ item.detail }}</div>
+                <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
+                <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
                 <div class="icon">
-                    <div class="icon-box" v-for="i in item.sizes" :key="i"
-                      >{{ i }}
+                    <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--secondary-text)">{{ i }}
                     </div>
                 </div>
                 <div class="data">
@@ -328,6 +327,7 @@ export default {
 
             .data-box {
                 margin: 0 4px;
+                color: var(--primary-text)
             }
         }
     }

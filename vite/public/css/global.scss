@@ -2,7 +2,7 @@
     // 背景
     --main-bg: rgba(25, 25, 25, 1) !important;
     --primary-bg: rgba(26, 26, 26, 0.65) !important; // 主要背景颜色
-    --secondary-bg: rgb(26, 26, 26, 0.65)!important; // 次要背景颜色
+    --secondary-bg: rgb(26, 26, 26, 0.65) !important; // 次要背景颜色
     --active-bg: rgba(0, 0, 0, 0.3) !important; // 主要激活背景颜色 使用在需要激活的背景
     --active-secondary-bg: rgba(255, 255, 255, 0.1) !important; // 次要激活背景颜色 替换作用
     --active-transparent-bg: rgba(0, 0, 0, 0.3) !important;
@@ -12,10 +12,10 @@
     // 分割线
     --divider: rgba(255, 255, 255, 0.5) !important;
     // 文字
-    --main-text:#fff;
+    --main-text: #fff;
     --primary-text: #b7b7b7 !important; // 主要字体
-    --secondary-text:   #6e6e6e !important; // 未激活字体
-    
+    --secondary-text: #6e6e6e !important; // 未激活字体
+
     --tertiary-text: rgba(255, 255, 255, 0.4) !important;
 
     body {
@@ -24,14 +24,16 @@
 
     .active {
         color: var(--primary-text) !important;
+        fill: var(--primary-text) !important;
         background: var(--active-bg) !important;
     }
 }
 
 .light-mode {
     // 背景
-    --main-bg: rgba(229 229 229)  !important;
-    --primary-bg: rgba(255,255,255,0.85) !important;
+    --main-bg: rgba(229 229 229) !important;
+    --primary-bg: rgba(255, 255, 255, 0.85) !important;
+    --secondary-bg: rgba(255, 255, 255, 0.85) !important; // 次要背景颜色
     --primary-transparent-bg: rgba(0, 0, 0, 0.5) !important;
     --modal-bg: rgba(0, 0, 0, 1) !important;
     --active-bg: rgba(0, 0, 0, 0.1) !important;
@@ -42,9 +44,16 @@
     --divider: rgba(230, 230, 230, 1) !important;
     // 文字
     --primary-text: rgba(0, 0, 0, 0.85) !important;
-    --secondary-text: rgba(0, 0, 0, 0.6) !important;
+    --secondary-text: rgba(0, 0, 0, 0.45) !important;
     --tertiary-text: rgba(0, 0, 0, 0.4) !important;
-    --main-text:#000 !important;
+    --main-text: #000 !important;
+
+    .active {
+        color: var(--primary-text) !important;
+        fill: var(--primary-text) !important;
+        background: var(--active-bg) !important;
+    }
+
     body {
         background: var(--main-bg) !important;
     }

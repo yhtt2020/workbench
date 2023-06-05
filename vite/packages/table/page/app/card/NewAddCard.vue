@@ -1,13 +1,13 @@
 <template>
   <teleport to="body">
-    <div class='popContainer'></div>
+    <div class='popContainer' style="background: var(--main-bg);"></div>
     <div class="controller drag" style="color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="header">
         <div class="left">
-          <div class="btn no-drag" @click="onBack">
+          <div class="btn no-drag" @click="onBack" style="color:var(--primary-text);background: var(--secondary-bg);  border: 1px solid red;">
             <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
           </div>
-          <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
+          <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索" >
             <template #prefix>
               <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
             </template>
@@ -23,7 +23,7 @@
       </div>
       <div class="mian">
         <div class="left">
-          <div class="no-drag nav" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
+          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
             v-for="( item, index ) in  navList " :key="item.name">{{
               item.cname }}
           </div>
