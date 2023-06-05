@@ -238,7 +238,7 @@ export default {
           const startIndex = matches.indexOf('(');
           const endIndex = matches.lastIndexOf(')');
           const jsonString = matches.substring(startIndex, endIndex + 1);
-          const data = window.eval(jsonString).index.searchAllResponse.result[10].data
+          const data = window.eval(jsonString).index.searchAllResponse.result[11].data
           data.forEach(el=>{
             if(el.title !== ''){
               this.gameVideoList.push(el)
