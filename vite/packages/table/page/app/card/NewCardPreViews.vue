@@ -23,7 +23,7 @@
                     </div>
                 </template>
                 <img v-else ref="imgRef" :src="getImg(item.option[0].name )" alt=""
-                    :style="[{ zoom: item.option[0].name == 'MyGameSmall' ? '7%' : '11%' }]">
+                    :style="[{ zoom: item.option[0].zoom? item.option[0].zoom : '11%' }]">
             </div>
             <div class="right">
                 <div class="title" style="color: var(--font-color);">{{ item.cname }}</div>
