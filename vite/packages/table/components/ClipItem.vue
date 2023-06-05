@@ -1,33 +1,34 @@
 <template>
   <div @contextmenu="textButton" class="flex flex-col">
     <template v-if="clip.type === 'text' && textShow === false" >
-      <div class="flex flex-col clip-top rounded-t-md s-item px-5 py-3 mb-4">
-        <div class="flex items-center">
-          <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
-          <span class="ml-2">{{clip.title}}</span>
-        </div>
-        <div class="flex justify-between pt-1">
-          <span class="clip-time">{{clip.time}}</span>
-          <span class="clip-time">{{clip.capacity}}</span>
-        </div>
-      </div>
-
-      <div class="flex-1 px-5 py-14 " v-if="defaultTextType.name === 'text'">
-        <span class="clip-con" >{{ clip.content  }}</span>
-      </div>
-      <div v-else class="flex-1 px-5 py-0.5">
-        <codemirror :value="clip.content" :options="clipOptions" ></codemirror>
-      </div>
-
-      <div class="h-12 s-item rounded-b-md flex ">
-          <div v-for="(item) in textType"  :class="defaultTextType.name === item.name ? 's-bg':''" 
-           class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item)"
-           @dblclick="openCode"
-          >
-            <Icon :icon="item.icon"></Icon>
-            <span class="mx-2">{{item.title}}</span>
-            <Icon icon="gengduo1" v-if="item.title !== '纯文本' && item.title !=='代码块'"></Icon>
+      <div class="flex flex-col justify-between  ">
+        <div class="flex justify-between s-item p-3 rounded-t-md flex-col">
+          <div class="flex items-center">
+            <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
+            <span class="ml-2">{{clip.title}}</span>
           </div>
+          <div class="flex justify-between pt-1">
+            <span class="clip-time">{{clip.time}}</span>
+            <span class="clip-time">{{clip.capacity}}</span>
+          </div>
+        </div>
+        <div class="flex items-center clip-text-center justify-center pt-6 pb-10">
+          <div style="height: 240px;" class="px-5 flex items-center justify-center"  v-if="defaultTextType.name === 'text'">
+            <span class="clip-con">{{ clip.content  }}</span>
+          </div>
+          <div v-else class="flex px-4" style="height: 240px;">
+            <codemirror :value="clip.content" :options="clipOptions" ></codemirror>
+          </div>
+        </div>
+        <div class="h-12 flex p-1 s-item rounded-b-md">
+          <div v-for="(item) in textType"  :class="defaultTextType.name === item.name ? 's-item':''" 
+          class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item)"
+         >
+           <Icon :icon="item.icon" style="font-size: 1.25em;"></Icon>
+           <span class="mx-2">{{item.title}}</span>
+           <Icon icon="gengduo1" class="pointer" v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
+         </div>
+        </div>
       </div>
     </template>
 
@@ -68,7 +69,7 @@
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
-      <div class="flex-1 px-5 py-14">
+      <div class="flex-1 flex items-center justify-center  px-5 py-14">
         <div v-if="clip.picIcon" class="flex flex-col items-center justify-center"> 
           <Icon :icon="clip.picIcon" style="font-size: 9.15em;"></Icon>
           <span class="pt-6">{{clip.name}}</span>
@@ -137,9 +138,10 @@
 
 <script>
 import codemirror from 'vue-codemirror/src/codemirror.vue'
+import HorzontanlPanelIcon from './HorzontanlPanelIcon.vue'
 
 export default {
-  components: { codemirror },
+  components: { codemirror,HorzontanlPanelIcon },
   props:{
     clip:{
       type:Object,
@@ -208,10 +210,10 @@ export default {
         scrollbarStyle: null, // 将滚动条样式设置为 null
         line: true,
 				theme: 'monokai' // 主题根据需要自行配置
-      }
+      },
+      item:{}
     }
   },
-
 
   watch:{
     'defaultTextType':{
@@ -220,6 +222,10 @@ export default {
       },
       immediate:true,
     },
+  },
+  
+  mounted(){
+    window.addEventListener('keydown',this.clipKeyDown)
   },
 
   methods:{
@@ -234,12 +240,16 @@ export default {
       this.fileShow = false
     },
     defaultClickClip(item){
+      this.item = item
       if(item.intr === 'Space'){
         this.$emit('openPreview',{preview:true,item,content:this.clip,copy:this.copyList})
       }
     },
     selectItem(item){
       this.defaultTextType = item
+      if(item.name === 'dm'){
+        this.openCode()
+      }
     },
     openCode(){
       this.textShow = true
@@ -250,6 +260,17 @@ export default {
       this.codeShow = false
       this.defaultTextType.title = item.title
       this.clipOptions.mode = item.name
+    },
+    clipKeyDown(e){
+      if(e.keyCode === 32){
+        this.$emit('openPreview',{preview:true,content:this.clip,copy:this.copyList})
+      }
+      if(e.ctrlKey && e.key === 'c'){
+        console.log('复制');
+      }
+      if(e.ctrlKey && e.key === 's'){
+        console.log('收藏');
+      }
     }
   }
 }
@@ -277,7 +298,7 @@ export default {
   font-weight: 500;
 }
 :deep(.CodeMirror){
-  height:292px;
+  height:240px;
 }
 :deep(.cm-s-monokai.CodeMirror){
   background: none !important;
@@ -287,5 +308,7 @@ export default {
   color: rgba(255,255,255,0.4) !important;
   font-weight: 500 !important;
 }
-
+.clip-con{
+  color: rgba(255,255,255,1);
+}
 </style>

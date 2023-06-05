@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="flex">
-      <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+      <div @click="clipSearch" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="sousuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet">
@@ -49,6 +49,15 @@
 
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
   
+  <a-drawer :width="500"  v-model:visible="drawerVisible" title="搜索" placement="right">
+    <!--  v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchVideoData" placeholder="搜索"  style="
+    border-radius: 12px;background: rgba(42, 42, 42, 0.6);" v-if="drawerType==='search'" -->
+    <a-input>
+      <template #prefix>
+        <Icon icon="sousuo"></Icon>
+      </template>
+    </a-input>
+  </a-drawer>
 </template>
 
 <script>
@@ -99,6 +108,7 @@ export default {
         wheelPropagation: true
       },
       simpleImage:'/public/img/test/not-data.png',
+      drawerVisible:false,
     }
   },
   mounted(){
@@ -116,6 +126,9 @@ export default {
     getClipItem(v){
       this.defaultCutType = v
       this.$router.push({name:v.typeName})
+    },
+    clipSearch(){
+      this.drawerVisible = true
     }
   },
   watch:{

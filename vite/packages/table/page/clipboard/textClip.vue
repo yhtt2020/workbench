@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <div v-for="(item,index) in textList" :key="index" :class="{'active':selectedIndex === index}" class="mr-3 flex flex-col s-bg rounded-md">
+    <div v-for="(item,index) in textList" :key="index" :class="{'active-clip':selectedIndex === index}" class="mr-3 flex flex-col s-bg rounded-md">
       <ClipItem :clip="item" @openPreview="getClipShow" style="width:332px;height: 412px;"></ClipItem>
     </div>
   </div>
@@ -51,10 +51,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.active{
+.active-clip{
   border: 6px solid rgba(80,139,254,1);
   &:deep(.clip-top){
     margin-bottom: 0 !important;
+  }
+  &:deep(.clip-text-center){
+    padding-bottom: 28px !important;
   }
 }
 .s-bg{
