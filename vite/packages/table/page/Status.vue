@@ -6,7 +6,7 @@
         <div style="display: inline-block;vertical-align: top">
           <div
             style="margin: 2em;padding:2em;border-radius: 0.5em;width: 40em;background-color:var(--primary-bg) ; color: var(--primary-text);">
-            <h3 style="color: var(--font-color)">音量</h3>
+            <h3 style="color: var(--primary-text)">音量</h3>
             <a-row>
               <a-col :span="3">
                 <div style="cursor: pointer" v-if="!muted" @click="setMuted">
@@ -26,7 +26,7 @@
           </div>
           <div
             style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;background-color:var(--primary-bg) ; color: var(--primary-text);">
-            <h3 style="color: var(--font-color)">屏幕亮度</h3>
+            <h3 style="color: var(--primary-text)">屏幕亮度</h3>
             <a-row>
               <a-col :span="3">
                 <div>
@@ -50,7 +50,7 @@
         <div style="display: inline-block; ">
           <div
             style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--primary-bg) ; color: var(--primary-text);">
-            <h3 style="color: var(--font-color)">音频输出设备</h3>
+            <h3 style="color: var(--primary-text)">音频输出设备</h3>
             <div v-for=" audio in audioList">
               <div @click="setAudio(audio)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia }">
                 <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon>
@@ -67,7 +67,7 @@
         <div style="display: inline-block;vertical-align: top">
           <div
             style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--primary-bg) ; color: var(--primary-text);">
-            <h3 style="color: var(--font-color)">音频输入设备</h3>
+            <h3 style="color: var(--primary-text)">音频输入设备</h3>
             <div v-for="audio in micList">
               <div @click="setAudio(audio)" class="audio" :class="{ 'active': audio.deviceId === 'default' }">
                 <Icon icon="maikefeng" style="font-size: 1.2em"></Icon>

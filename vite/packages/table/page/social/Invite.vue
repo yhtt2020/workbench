@@ -1,7 +1,7 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
                       style="padding: 15px;height: 100%">
-    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto;background-color: var(--background-color);color: var(--font-color)" >
+    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto;background-color: var(--primary-bg);color: var(--prtext  )" >
       <div class="line-title">
          邀请好友
       </div>
