@@ -1,9 +1,7 @@
 <template>
-  <!-- 仅供改样式快速搜索：菜单切换 -->
+  <!-- 快速搜索 头部 菜单切换 -->
   <div class="flex flex-row rounded-lg p-1" :class="bgColor"
-    :style="{ backgroundColor: 'var(--background-color)', color: 'var(--active-font-color)', height: itemHeight }">
-
-
+    :style="{  height: itemHeight }" style="background: var(--primary-bg);color: var(--primary-text);">
     <!-- <div v-for="(item, index) in navList"
       class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
       @click.stop="clickNav(item, index)" :class="activeIndex === index ? 's-item' : ''"> -->

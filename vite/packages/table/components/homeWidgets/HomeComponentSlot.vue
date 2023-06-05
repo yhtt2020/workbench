@@ -1,10 +1,10 @@
 <template>
-  <div @contextmenu.stop="showDrawer" :class="classes" :style="{
+  <!-- 快速搜索 组件卡片外框 -->
+  <div @contextmenu.stop="showDrawer" :class="classes" style=" background: var( --primary-bg); color: var(--primary-text)" :style="{
       pointerEvents: editing ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-      background: 'var(--background-color)',
-      color: 'var(--font-color)'
+
     }" @click="onCPUIndex" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
     <div style="
         position: absolute;

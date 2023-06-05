@@ -1,8 +1,9 @@
 <template>
   <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
     @contextmenu.stop="showMenu">
-    <div  :style="{ backgroundColor: 'var(--background-color)' }" v-if="isMain" class="common-panel user s-bg"
-      style="display: inline-block;vertical-align: top;margin-top: 0">
+    <!-- 快速搜索 底部 用户栏 -->
+    <div  v-if="isMain" class="common-panel user s-bg"
+      style="display: inline-block;vertical-align: top;margin-top: 0;background: var(--primary-bg);color: var(--primary-text);">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -23,6 +24,7 @@
                   <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
                 </a-badge>
               </a-col>
+              <!-- 等级 -->
               <a-col v-if="!simple" @click.stop="goMy()" style="position: relative">
                 <span ref="minute" class="tip">+1</span>
                 <div style="padding-top: 0.2em;">
@@ -94,19 +96,18 @@
     <!--    </div>-->
     <!-- 快速搜索 底部栏区域 -->
     <div class=" flex flex-row  items-center pl-6 s-bg"
-      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }"
-      style=" border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
+      style=" border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px;background: var(--primary-bg);color: var(--primary-text);">
       <div style="overflow: hidden;overflow-x: auto;" class="flex flex-row items-center  flex-nowrap scroll-content mr-6"
         ref="content">
         <div v-if="navigationList.length <= 0" style="height: 56px;">
         </div>
         <a-tooltip v-else :title="item.name" v-for=" item  in  navigationList ">
-          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" @click="clickNavigation(item)">
-            <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
+          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;" @click="clickNavigation(item)">
+            <div style="width: 56px;height:56px;background: var(--active-bg);" v-if="item.type === 'systemApp'"
               class="s-item flex justify-center items-center rounded-lg">
 
-              <Icon :icon="item.icon" class="test" :style="{ fill: 'var(--font-color)' }"
-                style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);color: #000;"></Icon>
+              <Icon :icon="item.icon" class="test"
+                style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);fill: var(--primary-text)"></Icon>
             </div>
             <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
               <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
@@ -117,7 +118,7 @@
       </div>
 
       <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-        <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--font-color);width: 72px"
+        <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;fill: red;"
           class="flex justify-center items-center  h-2/3 pointer ">
           <template v-if="!showScreen">
             <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
@@ -141,7 +142,7 @@
     <template v-if="!simple && isMain">
       <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8;">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
-          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0;">
+          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0; background: var(--primary-bg);color: var(--primary-text);">
           <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
           </a-avatar>
@@ -157,7 +158,7 @@
 
         </a-avatar>
         <div class="mb-0 mt-0"> 小队
-          <div v-if="true" style="display: inline-block;position: relative">
+          <div v-if="true" style="display: inline-block;position: relative;">
           </div>
         </div>
       </div>
@@ -657,7 +658,7 @@ export default {
 <style lang="scss" scoped>
 .bottom-panel {
   :deep(.icon) {
-    fill: var(--font-color)
+    fill: var(--primary-text);
   }
 }
 
