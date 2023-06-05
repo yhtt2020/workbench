@@ -101,6 +101,7 @@ import { screenStore } from '../store/screen'
 import { isMain } from '../js/common/screenUtils'
 import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
+import { steamUserStore } from '../store/steamUser'
 
 export default {
   name: 'Code',
@@ -170,6 +171,7 @@ export default {
     ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
     ...mapActions(appStore, ['getUserInfo', 'setUser']),
+    ...mapActions(steamUserStore,['bindClientEvents']),
     timeout() {
       this.timeoutHandler = setTimeout(() => {
         Modal.error({
@@ -257,6 +259,7 @@ export default {
     async afterLaunch() {
       console.log('afterLaunch')
 
+      this.bindClientEvents()
 
       //执行分屏的启动操作
       this.onTableStarted().then()
