@@ -10,7 +10,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   password: '',
   showUnreadMessage: true,
   lockTimeout: 1800,
-  interval: 3,
+  interval: 30,
   savePath: '',
   tipLock: true//在状态栏提示多久锁屏
 }
