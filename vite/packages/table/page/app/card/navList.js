@@ -363,6 +363,20 @@ export const navList = [
         time: '2023/5/31'
       },
       {
+        name: 'myFriends',
+        cname: 'Steam好友',
+        detail: '同步展示你的Steam好友在线状态。',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'SteamFriends',
+            size: '2x2',
+
+          },
+        ],
+        time: '2023/6/5'
+      },
+      {
         name: 'games',
         cname: 'Epic喜加一',
         detail: '查看本周Epic免费游戏，下周神秘游戏预告。',
@@ -520,20 +534,7 @@ export const navList = [
         ],
         time: '2023/5/31'
       },
-      {
-        name: 'gameAssis',
-        cname: 'Steam好友(开发中)',
-        detail: '同步展示你的Steam好友在线状态。',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'SteamFriends',
-            size: '2x2',
 
-          },
-        ],
-        time: '2023/5/31'
-      },
     ]
   },
 ]
