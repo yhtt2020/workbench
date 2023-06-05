@@ -1,22 +1,33 @@
 <template>
   <transition name="fade">
-    <div class="home-blur preview-container" v-if="textShow">
+    <div class="preview-container" v-if="textShow">
       <div class="flex h-full">
         <div class="w-3/4 flex flex-col" style="border-right: 1px solid  rgba(255,255,255,0.10);">
          <div @click="closePreview"  class="w-12 h-12 no-drag button-active  s-item  ml-5 mt-6 flex pointer items-center justify-center rounded-lg">
            <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
          </div> 
-         <div class="w-full flex items-center justify-center" style="margin: 25% 0;" v-if="textPreview.type==='text'">
+         <div class="w-full flex items-center justify-center" style="margin: 25% 0;" v-if="textPreview.type==='text' && defaultClipText.name === 'text'">
            <span class="preview-content">{{textPreview.content}}</span>
          </div>
+         <div v-else-if="textPreview.type==='text' && defaultClipText.name === 'codeBlock'" class="w-full flex my-auto items-center justify-center">
+          <codemirror :value="textPreview.content" :options="clipOptions" ></codemirror>
+         </div>
+
          <div v-if="textPreview.type === 'image'" style="margin:8% 0;" class="w-full flex items-center justify-center">
            <div style="width:800px;height: 450px;" class="rounded-lg">
              <img :src="textPreview.imgUrl" class="rounded-lg" style="width:100%;height: 100%; object-fit: cover;" alt="">
            </div>
          </div>
          <div class="w-full flex items-center justify-center my-6">
-           <div class="h-12" v-if="textPreview.type === 'text'">
-             123
+           <div class="h-12 flex" v-if="textPreview.type === 'text'">
+            <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText"></HorzontanlPanelIcon>
+            <div class="ml-3 py-3 px-9 flex button-active items-center rounded-lg s-item pointer"
+             v-if="defaultClipText.name === 'codeBlock'"
+             @click="openCateDrawer"
+            >
+              <span class="pr-2">{{defaultCate.name}}</span>
+              <Icon icon="xiangxia"></Icon>
+            </div>
            </div>
          </div>
         </div>
@@ -79,10 +90,24 @@
      </div>
     </div>
   </transition>
+  <HorizontalDrawer :drawerTitle="drawerTitle"  
+  v-model:selectRegion="defaultCate.id"
+  @getArea="getArea"
+  :rightSelect="languageCate" ref="regionDrawer">
+
+  </HorizontalDrawer>
 </template>
 
 <script>
+import codemirror from 'vue-codemirror/src/codemirror.vue';
+import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue';
+import HorizontalDrawer from '../HorizontalDrawer.vue';
 export default {
+  components:{
+    codemirror,
+    HorzontanlPanelIcon,
+    HorizontalDrawer
+  },
   props:{
     textShow:{
       type:Boolean,
@@ -108,12 +133,55 @@ export default {
         {title:'在资源管理器中打开',intr:'Ctrl + Enter'},
         {title:'添加到收藏',intr:'Ctrl + S'},
         {title:'删除',intr:'Delete'}
-      ] 
+      ],
+      clipText:[
+        {
+          title:'纯文本',name:'text'
+        },
+        {
+          title:'代码块',name:'codeBlock'
+        }
+      ],
+      defaultClipText:{title:'纯文本',name:'text'}, 
+      clipOptions:{
+        tabSize: 4, // 默认为4
+				mode: 'swift', // 选择代码语言
+				lineWrapping: true,    // 自动换行
+        styleActiveLine: true,
+        scrollbarStyle: null, // 将滚动条样式设置为 null
+        line: true,
+				theme: 'monokai' // 主题根据需要自行配置
+      },
+      languageCate:[
+        {name:'Python',id:'python'},
+        {name:'Javascript',id:'javascript'},
+        {name:'Java',id:'text/x-java'},
+        {name:'C++',id:'text/x-c++src'},
+        {name:'C#',id:'text/x-csharp'},
+        {name:'Swift',id:'swift'}
+      ],
+      defaultCate:{name:'Swift',id:'swift'},
+      drawerTitle:'语言模式'
     }
   },
   methods:{
     closePreview(){
       this.$emit('closeText',false)
+    },
+    openCateDrawer(){
+      this.$refs.regionDrawer.openDrawer()
+    },
+    getArea(v){
+      this.defaultCate = v
+      this.clipOptions.mode = v.id
+    }
+  },
+  watch:{
+    'defaultClipText':{
+      handler(){
+        this.defaultClipText = this.defaultClipText
+      },
+      immediate:true,
     }
   }   
 }
@@ -126,12 +194,10 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 1000;
   background-color: rgba(19, 19, 19, 0.35);
   backdrop-filter: blur(60px);
 }
-
-
 .button-active{
   &:active{
     filter: brightness(0.8);
@@ -148,7 +214,6 @@ export default {
   color: rgba(255,255,255,0.60);
   font-weight: 500;
 }
-
 .preview-type{
   font-family: PingFangSC-Regular;
   font-size: 16px;
@@ -160,5 +225,15 @@ export default {
   font-size: 16px;
   color: rgba(255,255,255,0.85);
   font-weight: 400;
+}
+
+:deep(.cm-s-monokai.CodeMirror){
+  background: rgba(42, 42, 42, 0.8) !important;
+  border-radius: 12px;
+  padding: 20px !important;
+  font-family: PingFangSC-Medium !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,0.4) !important;
+  font-weight: 500 !important;
 }
 </style>
