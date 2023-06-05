@@ -81,7 +81,7 @@ export default {
 
 
 .item:hover {
-  background: var( --active-secondary-bg) !important;
+  background: var( --active-bg) !important;
   :deep(.icon) {
     fill: var(--primary-text) !important
   }

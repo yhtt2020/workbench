@@ -167,6 +167,14 @@ export default {
 </style>
 
 <style>
+.s-icon svg {
+ filter: none  !important;
+}
+
+.s-text {
+    text-shadow: none;
+}
+
 .spl-pane > * {
   filter: grayscale(0) blur(0);
   transform: rotate(0deg);

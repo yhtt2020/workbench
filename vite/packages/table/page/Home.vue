@@ -754,11 +754,11 @@ export default {
       const value = JSON.parse(window.localStorage.getItem("style"));
       document.documentElement.classList.remove(value);
       if (this.styles == true) {
-        document.documentElement.classList.add('light-nobg-mode');
-        window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"));
+        document.documentElement.classList.add('light-model');
+        window.localStorage.setItem("style", JSON.stringify("light-model"));
       } else {
-        document.documentElement.classList.add('dark-nobg-mode');
-        window.localStorage.setItem("style", JSON.stringify("dark-nobg-mode"));
+        document.documentElement.classList.add('dark-model');
+        window.localStorage.setItem("style", JSON.stringify("dark-model"));
 
       }
     },

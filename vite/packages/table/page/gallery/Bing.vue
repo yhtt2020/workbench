@@ -138,4 +138,8 @@ export default {
 
 <style scoped lang="scss">
 @import 'justifiedGallery/dist/css/justifiedGallery.min.css';
+
+.s-text {
+  text-shadow: none;
+}
 </style>

@@ -191,17 +191,13 @@ export default {
     styleSwitch() {
       const value = JSON.parse(window.localStorage.getItem("style"));
       let name = null;
-      if (value === "light-nobg-mode" || value === 'dark-nobg-mode') {
-        if (value == "light-nobg-mode") name = 'dark-nobg-mode'
-        else name = 'light-nobg-mode'
-      }
       document.documentElement.classList.remove(value);
       if (this.styles) {
-        name = name || "light-mode";
+        name =  "light-model";
         document.documentElement.classList.add(name);
         window.localStorage.setItem("style", JSON.stringify(name));
       } else {
-        name = name || "dark-mode";
+        name =  "dark-model";
         document.documentElement.classList.add(name);
         window.localStorage.setItem("style", JSON.stringify(name));
       }
@@ -279,7 +275,7 @@ export default {
 
 <style scoped lang="scss">
 .btn {
-  // background: var();
+  background: var( --active-bg);
 }
 .btn:hover {
   color: var(--primary-text);

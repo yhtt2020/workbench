@@ -78,6 +78,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.s-text {
+    text-shadow:none !important; 
+}
 .second-panel {
   padding-left: 0 !important;
 

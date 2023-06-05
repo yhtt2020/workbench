@@ -33,10 +33,10 @@
               <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
               style="width: calc(50% - 8px);"
               :style="item.detail[[leveList[clickGrade]]] ? 'background: var(--active-bg)' : 'background: var(--active-bg);opacity: 0.6;'">
-              <Icon :icon="item.icon" style="width: 24px;height: 24px;" class="mr-4 ml-2 text-white"></Icon>
+              <Icon :icon="item.icon" style="width: 24px;height: 24px;color: var(--primary-text);" class="mr-4 ml-2 text-white"></Icon>
               <div style="width: calc(100% - 50px)">
                 <div class="text-white text-more w-full" style="color: var(--main-text);" >{{ item.alias }}</div>
-                <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full">
+                <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full" style="color: var(--secondary-text);" >
                   {{ item.detail[[leveList[clickGrade]]] }}</div>
               </div>
               <div class="grade-tip" style="color: rgba(255, 255, 255, 0.85);" v-if="item.noOnline">即将上线</div>

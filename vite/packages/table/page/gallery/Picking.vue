@@ -432,6 +432,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.s-icon svg {
+ filter: none  !important;
+}
+
+.s-text {
+    text-shadow: none;
+}
 .filter-item:nth-of-type(3) {
   border: none !important;
 }

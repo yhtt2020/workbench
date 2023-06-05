@@ -1,6 +1,6 @@
 <template>
  <div style="color:var(--primary-text)">
-  <h2 class="s-text" >弹幕设置</h2>
+  <h2 class="s-text"  style="color:var(--primary-text)">弹幕设置</h2>
   <div style="padding: 1em;width: 30em">
     <div class="line">
 
@@ -21,7 +21,7 @@
       与内嵌浏览器当前页面联动：<a-switch v-model:checked="settings.barrage.browserLink"></a-switch>
     </div>
     <div class="line">
-      <div @click="refresh" class="btn s-item">
+      <div @click="refresh" class="btn s-item" style="color:var(--primary-text);background: var(--active-bg);">
         <Icon icon="shuaxin"></Icon> 刷新测试
       </div>
     </div>
