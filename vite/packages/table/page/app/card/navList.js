@@ -71,6 +71,7 @@ export const navList = [
           {
             name: 'middleWallpaper',
             size: '4x4',
+            zoom:1
           },
           {
             name: 'smallWallpaper',
@@ -340,6 +341,10 @@ export const navList = [
             size: '2x4',
 
           },
+          {
+            name: 'DiscountPercentage',
+            size: '2x4',
+          },
         ],
         time: '2023/5/31'
       },
@@ -352,7 +357,7 @@ export const navList = [
           {
             name: 'MyGameSmall',
             size: '2x2',
-
+            zoom:'7%'
           },
         ],
         time: '2023/5/31'
@@ -435,7 +440,6 @@ export const navList = [
           }, {
             name: 'largeSingleDoubanFilm',
             size: '2x4',
-
           },
         ],
         time: '2023/5/31'
