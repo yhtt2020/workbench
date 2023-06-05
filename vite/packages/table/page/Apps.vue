@@ -1,12 +1,12 @@
 <template>
-  <!-- 快速搜索 我的应用 轻应用 应用市场 主页 -->
-  <div style="display: flex;height: 100%;">
+  <!-- 快速搜索 应用 主页 -->
+  <div style="display: flex;height: 100%;color: var(--primary-text)">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab">
     </SecondPanel>
     <div v-show="currentIndex === 'my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg"
-      style="margin: 1em" :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
+      style="margin: 1em;background: var(--primary-bg);" >
       <div v-if="myApps.length === 0" style="font-size: 2em;padding-top: 6em;text-align: center;">
-        <Icon :style="{ color: 'var(--font-color)' }" style="font-size: 2em;vertical-align: middle"
+        <Icon  style="font-size: 2em;vertical-align: middle;"
           icon="line-dragdroptuofang"></Icon>
         将应用拖放到此处，即可用于快捷启动
       </div>
