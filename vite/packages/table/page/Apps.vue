@@ -17,12 +17,12 @@
         <MyApps></MyApps>
       </div>
     </div>
-    <div class="app-content s-bg" style="margin: 1em" v-if="currentIndex === 'qing'">
-      <QingApps :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)', borderRadius: '5px' }">
+    <div class="app-content s-bg" style="margin: 1em;background: var(--primary-bg);" v-if="currentIndex === 'qing'">
+      <QingApps >
       </QingApps>
     </div>
-    <div class="app-content s-bg" v-if="currentIndex === 'store'" style="margin:1em;padding: 1em"
-      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
+    <div class="app-content s-bg" v-if="currentIndex === 'store'" style="margin:1em;padding: 1em;background: var(--primary-bg);"
+  >
       <vue-custom-scrollbar :settings="settings" style="position:relative;height:100%;  border-radius: 8px;">
         <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center ">
           <div style="margin-bottom: 1em;font-size: 1.5em">
