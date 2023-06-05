@@ -102,6 +102,7 @@ import { isMain } from '../js/common/screenUtils'
 import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
+import { captureStore } from '../store/capture'
 
 export default {
   name: 'Code',
@@ -130,6 +131,7 @@ export default {
     this.initStore(screenStore, 'screen')
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
+    captureStore()//仅触发一下载入
     if (isMain()) {
       this.bindMainIPC()
     } else {
@@ -147,6 +149,8 @@ export default {
         }
         if (Object.keys(window.loadedStore).some(key => {
           let check = !window.loadedStore[key]
+          if(window.loadedStore[key]===false)
+            console.log(key,'=',window.loadedStore[key])
           return check
         })) {
           //未全部搞定
@@ -172,6 +176,7 @@ export default {
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
     ...mapActions(appStore, ['getUserInfo', 'setUser']),
     ...mapActions(steamUserStore,['bindClientEvents']),
+    ...mapActions(captureStore,['bindCaptureIPC']),
     timeout() {
       this.timeoutHandler = setTimeout(() => {
         Modal.error({
@@ -257,6 +262,7 @@ export default {
     },
 
     async afterLaunch() {
+      this.bindCaptureIPC()
       console.log('afterLaunch')
 
       this.bindClientEvents()

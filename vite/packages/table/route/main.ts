@@ -49,6 +49,7 @@ import ImageClip from "../page/clipboard/imageClip.vue"
 import FileClip from "../page/clipboard/fileClip.vue"
 import VideoClip from "../page/clipboard/videoClip.vue"
 import AudioClip from "../page/clipboard/audioClip.vue"
+import GameMedia from "../page/gameAssistant/GameMedia.vue";
 export default [
   {
     path: "/main",
@@ -159,6 +160,11 @@ export default [
             path: "/gameCommunity",
             name: "gameCommunity",
             component: GameCommunity,
+          },
+          {
+            path: "/gameMedia",
+            name: "gameMedia",
+            component: GameMedia,
           },
           {
             path: "/gameDiscount",
