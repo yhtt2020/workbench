@@ -1,5 +1,5 @@
 <template>
-  <!-- 快速搜索 我的应用 轻应用 应用市场 菜单 -->
+  <!-- 快速搜索 基础设置->基础设置 菜单 -->
   <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
     id="secondPanel">
     <div style="margin-bottom:2em;" v-if="gallery === true">
@@ -9,7 +9,7 @@
       </div>
     </div>
     <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'active': current(menu) }"
-      v-for="(menu) in menus">
+      v-for="(menu) in menus" style="color:var(--primary-text)">
       <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
       <span style="margin-left: 0.5em;font-size: 1em;" class="s-text">{{ menu.title }}</span>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
