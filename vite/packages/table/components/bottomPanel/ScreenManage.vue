@@ -4,7 +4,7 @@
 
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
-           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative">
+                           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative">
         <a-image v-if="screen.key!=='main'" :preview="false"
                  fallback="/public/icons/main.png"
                  class="screen-preview" :width="120" :height="70" :src="'file://'+screen.capture"></a-image>

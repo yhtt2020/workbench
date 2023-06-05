@@ -4,8 +4,8 @@
   </div>
   <div class="line">
     <a-radio-group v-model:value="openUrlBrowser">
-      <a-radio value="inner" style="color: var(--font-color)">内嵌浏览器</a-radio>
-      <a-radio value="system" style="color: var(--font-color)">系统默认浏览器</a-radio>
+      <a-radio value="inner" style="color: var(--primary-text)">内嵌浏览器</a-radio>
+      <a-radio value="system" style="color: var(--primary-text)">系统默认浏览器</a-radio>
     </a-radio-group>
   </div>
 </template>

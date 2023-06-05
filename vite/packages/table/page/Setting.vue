@@ -3,10 +3,9 @@
     <vue-custom-scrollbar :settings="scrollbarSettings"
       style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
       <div style="width: auto;    white-space: nowrap;">
-        <div class="s-bg" :style="{
-            color: 'var(--font-color)',
-            backgroundColor: 'var(--background-color)',
-          }" style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
+        <!-- 快速搜索 快速开关功能 -->
+        <div class="s-bg"
+          style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block;color: var(--primary-text);background: var(--primary-bg);">
           <h3>快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
@@ -48,10 +47,9 @@
           </div>
         </div>
         <div style="display: inline-block;vertical-align: top">
-          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg" :style="{
-              color: 'var(--font-color)',
-              backgroundColor: 'var(--background-color)',
-            }">
+          <div
+            style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
+            class="s-bg">
             <h3>屏幕设置</h3>
             <a-row style="font-size: 1.2em;text-align: center">
               <a-col v-if="isMain()" :span="6">
@@ -86,10 +84,9 @@
             <div>
             </div>
           </div>
-          <div style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;" class="s-bg" :style="{
-              color: 'var(--font-color)',
-              backgroundColor: 'var(--background-color)',
-            }">
+          <div
+            style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
+            class="s-bg">
 
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
@@ -280,4 +277,11 @@ export default {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.btn {
+  // background: var();
+}
+.btn:hover {
+  color: var(--primary-text);
+  background: var(--active-secondary-bg);
+}</style>

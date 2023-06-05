@@ -1,7 +1,7 @@
 <template>
   <a-input-group compact style="min-width: 120px">
     <a-input :placeholder="placeholder" @click="toggleListenKey()"
-      style="width: calc(100% - 200px);min-width: 200px;color: var(--font-color)" placeholder="按下快捷键" size="large"
+      style="width: calc(100% - 200px);min-width: 200px;color: var(--primary-text)" placeholder="按下快捷键" size="large"
       :value="value">
     </a-input>
     <a-button @click="toggleListenKey()" size="large" type="primary">
