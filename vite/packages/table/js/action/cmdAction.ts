@@ -16,12 +16,10 @@ class CmdAction extends ActionExecutor {
       }
     })
     let message=[]
-    console.log(cleanLines,'cleanlines')
     try{
       switch (action.name) {
         case 'nircmd':
           for(let i=0;i<=cleanLines.length;i++){
-            console.log('do' ,cleanLines[i])
             message.push(await runNir(cleanLines[i]))
           }
           result=1
@@ -54,12 +52,10 @@ class CmdAction extends ActionExecutor {
 
       }
     }catch (e) {
-      console.log('执行报错了',e)
+      console.error('执行报错了',e)
       message=e
       result=0
     }
-
-    console.log(message,'message')
     return {
       message:message,
       status: result

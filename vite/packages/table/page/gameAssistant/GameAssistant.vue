@@ -69,6 +69,15 @@ export default {
             name:'GameCapture'
           },
         },
+        {
+          index: 'media',
+          title: '高光时刻',
+          icon: 'record-circle-line',
+          route:
+          {
+              name: 'gameMedia'
+          }
+        },
         // {
         //   index: 'm',
         //   title: '社区',

@@ -1,6 +1,6 @@
 <template>
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
-    :class="settings.down.type + 'flake'"></div>
+       :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale">
     <div class="a-container " :class="{ dark: settings ? settings.darkMod : '', 'horse_run': this.settings.houserun }">
       <router-view></router-view>
@@ -46,12 +46,12 @@
   <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
 
   <div v-if="taggingScreen" class="px-10 rounded-lg"
-    style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
+       style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
     {{ screenDetail.title || '主屏' }}
   </div>
 
   <Modal style="z-index:999999999999999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t"
-    :blurFlag="true">
+         :blurFlag="true">
     <slot>
       <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
     </slot>

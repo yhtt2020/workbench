@@ -103,7 +103,6 @@ export interface AudioOutput {
  */
 //const binDir = path.join(__dirname, '..', 'bin');
 const binDir = getResPathJoin('nir')
-console.log(binDir)
 
 /**
  * A Promise wrapper around child_process.exec()

@@ -71,6 +71,7 @@ export const navList = [
           {
             name: 'middleWallpaper',
             size: '4x4',
+            zoom:1
           },
           {
             name: 'smallWallpaper',
@@ -340,6 +341,10 @@ export const navList = [
             size: '2x4',
 
           },
+          {
+            name: 'DiscountPercentage',
+            size: '2x4',
+          },
         ],
         time: '2023/5/31'
       },
@@ -352,10 +357,24 @@ export const navList = [
           {
             name: 'MyGameSmall',
             size: '2x2',
-
+            zoom:'7%'
           },
         ],
         time: '2023/5/31'
+      },
+      {
+        name: 'myFriends',
+        cname: 'Steam好友',
+        detail: '同步展示你的Steam好友在线状态。',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'SteamFriends',
+            size: '2x2',
+
+          },
+        ],
+        time: '2023/6/5'
       },
       {
         name: 'games',
@@ -435,7 +454,6 @@ export const navList = [
           }, {
             name: 'largeSingleDoubanFilm',
             size: '2x4',
-
           },
         ],
         time: '2023/5/31'
@@ -516,20 +534,7 @@ export const navList = [
         ],
         time: '2023/5/31'
       },
-      {
-        name: 'gameAssis',
-        cname: 'Steam好友(开发中)',
-        detail: '同步展示你的Steam好友在线状态。',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'SteamFriends',
-            size: '2x2',
 
-          },
-        ],
-        time: '2023/5/31'
-      },
     ]
   },
 ]

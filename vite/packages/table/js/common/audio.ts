@@ -96,7 +96,6 @@ const audio={
       return
     }
     navigator.mediaDevices.enumerateDevices().then((list) => {
-      console.log("list:", list);
 
       list.forEach((li)=>{
         if(li.deviceId!=='default' && li.deviceId!=='communications'){
@@ -121,8 +120,6 @@ const audio={
         return li.kind==='audioinput'
       })
 
-      console.log(inputs,'inputs=')
-      console.log(outputs,'outputs=')
       cb({
         outputs:outputs,
         inputs:inputs,

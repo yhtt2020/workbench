@@ -1,93 +1,102 @@
 <template>
   <transition name="fade">
     <div class="preview-container" v-if="textShow">
-      <div class="flex h-full">
-        <div class="w-3/4 flex flex-col" style="border-right: 1px solid  rgba(255,255,255,0.10);">
-         <div @click="closePreview"  class="w-12 h-12 no-drag button-active  s-item  ml-5 mt-6 flex pointer items-center justify-center rounded-lg">
-           <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
-         </div> 
-         <div class="w-full flex items-center justify-center" style="margin: 25% 0;" v-if="textPreview.type==='text' && defaultClipText.name === 'text'">
-           <span class="preview-content">{{textPreview.content}}</span>
-         </div>
-         <div v-else-if="textPreview.type==='text' && defaultClipText.name === 'codeBlock'" class="w-full flex my-auto items-center justify-center">
-          <codemirror :value="textPreview.content" :options="clipOptions" ></codemirror>
-         </div>
+      <div class="flex h-full items-center justify-between p-5">
+        <div class="left-preview flex flex-col h-full justify-between">
+            <div>
+              <div @click="closePreview"  class="w-12 h-12 no-drag close-button button-active  s-item  flex pointer items-center justify-center rounded-lg">
+                <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
+              </div> 
+            </div>
+            <div class="flex items-center justify-center px-3"  v-if="textPreview.type==='text'">
+              <div class="w-full flex items-center justify-center"  v-if="textPreview.type==='text' && defaultClipText.name === 'text'">
+                <span class="preview-content">{{textPreview.content}}</span>
+              </div>
+              <div v-else-if="textPreview.type==='text' && defaultClipText.name === 'codeBlock'" class="w-full flex my-auto items-center justify-center">
+               <codemirror :value="textPreview.content" :options="clipOptions" ></codemirror>
+              </div>
+            </div>
 
-         <div v-if="textPreview.type === 'image'" style="margin:8% 0;" class="w-full flex items-center justify-center">
-           <div style="width:800px;height: 450px;" class="rounded-lg">
-             <img :src="textPreview.imgUrl" class="rounded-lg" style="width:100%;height: 100%; object-fit: cover;" alt="">
-           </div>
-         </div>
-         <div class="w-full flex items-center justify-center my-6">
-           <div class="h-12 flex" v-if="textPreview.type === 'text'">
-            <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText"></HorzontanlPanelIcon>
-            <div class="ml-3 py-3 px-9 flex button-active items-center rounded-lg s-item pointer"
-             v-if="defaultClipText.name === 'codeBlock'"
-             @click="openCateDrawer"
-            >
-              <span class="pr-2">{{defaultCate.name}}</span>
-              <Icon icon="xiangxia"></Icon>
+            <div v-if="textPreview.type === 'image'" style="height: 100%;" class="w-full flex items-center justify-center">
+              <div  class="rounded-lg image-content" style="height: 80%;">
+                <img :src="textPreview.imgUrl" class="rounded-lg" style="width:100%; height: 100%;object-fit: cover;" alt="">
+              </div>
             </div>
-           </div>
-         </div>
-        </div>
-        <div class="w-1/4 px-6  pt-6 flex flex-col justify-between mb-6" v-if="textPreview.type === 'text'">
-         <div class="flex flex-col">
-           <div class="flex justify-between mb-6">
-             <span class="preview-type">类型</span>
-             <span class="preview-text">{{textPreview.title}}</span>
-           </div>
-           <div class="flex justify-between mb-6">
-             <span class="preview-type">时间</span>
-             <span class="preview-text">{{textPreview.time }}</span>
-           </div>
-           <div class="flex justify-between">
-             <span class="preview-type">大小</span>
-             <span class="preview-text">{{textPreview.capacity}}</span>
-           </div>
-         </div>
-         <div>
-            <div v-for="item in copy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
-             <span class="preview-text">{{item.title}}</span>
-             <span class="preview-type">{{item.intr}}</span>
+
+            <div class="w-full flex items-center justify-center px-3">
+              <div class="h-12 flex" v-if="textPreview.type === 'text'">
+                <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText"></HorzontanlPanelIcon>
+                <div class="ml-3 py-3 px-9 flex button-active items-center rounded-lg s-item pointer"
+                 v-if="defaultClipText.name === 'codeBlock'"
+                 @click="openCateDrawer"
+                >
+                  <span class="pr-2">{{defaultCate.name}}</span>
+                  <Icon icon="xiangxia"></Icon>
+                </div>
+              </div>
             </div>
-         </div>
         </div>
-        <div class="w-1/4 px-6  pt-6 flex flex-col  justify-between mb-6" v-if="textPreview.type === 'image'">
-         <div class="flex flex-col">
-           <div class="flex item-center justify-between mb-3">
-             <span class="preview-type">名称</span>
-             <span class="preview-type">{{textPreview.name}}</span>
-           </div>
-           <div class="flex item-center justify-between mb-3">
-             <span class="preview-type">类型</span>
-             <span class="preview-type">{{textPreview.title}}</span>
-           </div>
-           <div class="flex item-center justify-between mb-3">
-             <span class="preview-type">时间</span>
-             <span class="preview-type">{{textPreview.time}}</span>
-           </div>
-           <div class="flex item-center justify-between mb-3">
-             <span class="preview-type">大小</span>
-             <span class="preview-type">{{textPreview.capacity}}</span>
-           </div>
-           <div class="flex item-center justify-between mb-3">
-             <span class="preview-type">格式</span>
-             <span class="preview-type">{{textPreview.fileType}}</span>
-           </div>
-           <div class="flex item-center justify-between mb-3">
-             <span class="preview-type">路径</span>
-             <span class="truncate preview-type" style="max-width: 242px;">{{textPreview.imgUrl}}</span>
-           </div>
-         </div>
-         <div>
-          <div v-for="item in imageCopy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
-            <span class="preview-text">{{item.title}}</span>
-            <span class="preview-type">{{item.intr}}</span>
+        <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="py-4" style="height: 100vh;">
+          <div class="right-preview h-full flex flex-col justify-between pl-6"  v-if="textPreview.type === 'text'">
+          <div class="flex flex-col">
+            <div class="flex justify-between mb-6">
+              <span class="preview-type">类型</span>
+              <span class="preview-text">{{textPreview.title}}</span>
+            </div>
+            <div class="flex justify-between mb-6">
+              <span class="preview-type">时间</span>
+              <span class="preview-text">{{textPreview.time }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="preview-type">大小</span>
+              <span class="preview-text">{{textPreview.capacity}}</span>
+            </div>
           </div>
-         </div> 
+          <div>
+            <div v-for="item in copy" style="max-width:352px;" class="s-item mb-2 pointer button-active justify-between flex rounded-lg px-4 py-3">
+              <span class="preview-text">{{item.title}}</span>
+              <span class="preview-type">{{item.intr}}</span>
+            </div>
+          </div>
         </div>
-     </div>
+          <div class="right-preview h-full flex flex-col justify-between pl-6"  v-if="textPreview.type === 'image'">
+            <div class="flex flex-col">
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">名称</span>
+                <span class="preview-type">{{textPreview.name}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">类型</span>
+                <span class="preview-type">{{textPreview.title}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">时间</span>
+                <span class="preview-type">{{textPreview.time}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">大小</span>
+                <span class="preview-type">{{textPreview.capacity}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">格式</span>
+                <span class="preview-type">{{textPreview.fileType}}</span>
+              </div>
+              <div class="flex flex-col item-center justify-between mb-3">
+                <span class="preview-type mb-2">路径</span>
+                <span class="preview-type break-words break-normal" style="max-width: 352px;">{{textPreview.imgUrl}}</span>
+              </div>
+            </div>
+            <div>
+              <div v-for="item in imageCopy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+                <span class="preview-text">{{item.title}}</span>
+                <span class="preview-type">{{item.intr}}</span>
+              </div>
+            </div>
+          </div>
+        </vue-custom-scrollbar>
+        
+      </div>
+     
     </div>
   </transition>
   <HorizontalDrawer :drawerTitle="drawerTitle"  
@@ -161,7 +170,14 @@ export default {
         {name:'Swift',id:'swift'}
       ],
       defaultCate:{name:'Swift',id:'swift'},
-      drawerTitle:'语言模式'
+      drawerTitle:'语言模式',
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX:true,
+        wheelPropagation: true
+      },
     }
   },
   methods:{
@@ -235,5 +251,35 @@ export default {
   font-size: 14px !important;
   color: rgba(255,255,255,0.4) !important;
   font-weight: 500 !important;
+}
+.right-preview{
+  width: 352px;
+}
+.left-preview{
+  flex: 1;
+}
+
+.close-button{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+}
+:deep(.ps__thumb-y){
+  display: none !important;
+}
+
+.image-content{
+  
+}
+
+
+@media screen and (max-width:800px) {
+ /*
+  .image-content{
+    width:calc(100% / 2);
+    height:calc(100% / 2);
+  }
+ **/
 }
 </style>

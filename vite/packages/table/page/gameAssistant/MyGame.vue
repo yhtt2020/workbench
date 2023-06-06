@@ -109,7 +109,7 @@
             <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appinfo.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
           </div>
           <div class="  p-4">
-            <div class="text-white" >{{currentSteam.appinfo.common.name}}</div>
+            <div style="user-select: text" class="text-white" >{{currentSteam.appinfo.common.name}} {{currentSteam.appinfo.appid}}</div>
             <div class="flex flex-row flex-wrap w-80">
               <div class="w-1/2 mt-3">上次游玩：{{getDateMyTime(currentSteam.time)}}</div>
               <div class="w-1/2 mt-3">总时长：{{totalTime(currentSteam.time)}}小时</div>
