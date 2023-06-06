@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :formulaBar="detailBar" ref="detailSlot" :customData="customData">
+  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData">
     <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px">{{ region.name }}
     </div>

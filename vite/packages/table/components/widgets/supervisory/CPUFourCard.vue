@@ -1,5 +1,5 @@
 <template>
-<Widget :options="options">
+<Widget :options="options" :menu-list="menuList">
   <div @click="go"  class="top-content pointer">
     <div><span>{{CPUGPUData.useCPU.value}}%</span>
       <span>
@@ -49,11 +49,10 @@
 
 <script>
 import {mapWritableState,mapActions} from "pinia";
-import {cardStore} from "../../../store/card";
 import {filterObjKeys, netWorkDownUp} from "../../../util";
 import Widget from "../../card/Widget.vue";
 import { inspectorStore } from '../../../store/inspector'
-
+import {message} from 'ant-design-vue'
 const {rpc}=window.$models
 
 export default {
@@ -74,6 +73,16 @@ export default {
         down:0,
         up:0
       },
+      menuList:[
+        {
+          title:'复制数据',
+          icon:'fuzhi',
+          fn:()=>{
+            require('electron').clipboard.writeText(JSON.stringify(this.aidaData))
+            message.success('复制成功')
+          }
+        }
+      ]
 
   }
   },
@@ -106,7 +115,7 @@ export default {
     this.stopInspect()
   },
   computed:{
-    ...mapWritableState(inspectorStore, ["displayData"]),
+    ...mapWritableState(inspectorStore, ["displayData",'aidaData']),
     lastDown(){
       return this.CPUGPUData.down < 1000 ? this.CPUGPUData.down +'KB/S' : this.CPUGPUData.down<1024000?(this.CPUGPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.down/1024/1024).toFixed(2) + 'GB/S'
     },

@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customData="customData" :customIndex="customIndex" :formulaBar="detailBar" ref="captureNewSlot">
+  <Widget :options="options" :customData="customData" :customIndex="customIndex" :menuList="detailBar" ref="captureNewSlot">
     <div class="flex justify-center items-center mx-5 my-7">
       <div class="flex justify-center pointer  items-center mr-6 flex-col ml-6">
           <span class="px-4 py-4 voice-hover rounded-full btn-active mb-3 s-item">

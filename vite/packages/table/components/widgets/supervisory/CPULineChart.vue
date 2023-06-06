@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options">
+  <Widget :options="options" :menu-list="menuList">
     <div @click="go" class="content pointer">
       <div class="cpu">
         <div class="cpu-number">
@@ -93,6 +93,7 @@ import {filterObjKeys, netWorkDownUp} from '../../../util'
 import Widget from "../../card/Widget.vue";
 import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
+import { message } from 'ant-design-vue'
 export default {
   data(){
     return {
@@ -114,7 +115,17 @@ export default {
       CPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       GPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       echartsInstance:null,
-      echartsGPUInstance:null
+      echartsGPUInstance:null,
+      menuList:[
+        {
+          title:'复制数据',
+          icon:'fuzhi',
+          fn:()=>{
+            require('electron').clipboard.writeText(JSON.stringify(this.aidaData))
+            message.success('复制成功')
+          }
+        }
+      ]
     }
   },
 
@@ -124,7 +135,7 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['saving']),
-    ...mapWritableState(inspectorStore,['displayData']),
+    ...mapWritableState(inspectorStore,['displayData','aidaData']),
     lastDown(){
       return this.CPUData.down < 1000 ? this.CPUData.down +'KB/S' : this.CPUData.down<1024000?(this.CPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUData.down/1024/1024).toFixed(2) + 'GB/S'
     },

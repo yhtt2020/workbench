@@ -1,6 +1,6 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :formulaBar="formulaBar" ref="cardSlot">
+    <Widget :options="options" :customIndex="customIndex" :menuList="formulaBar" ref="cardSlot">
       <div class="absolute top-4 left-4 w-24 h-5 pointer" @click="openRight"></div>
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
         <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
@@ -91,7 +91,7 @@ export default {
         icon: "image",
         type: "MiddleWallpaper",
       },
-      formulaBar: [
+      menuList: [
         {
           icon: "shezhi1",
           title: "设置",

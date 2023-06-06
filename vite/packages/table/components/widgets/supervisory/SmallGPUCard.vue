@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options">
+  <Widget :options="options" :menu-list="menuList">
     <div @click="go" class="content pointer">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -39,6 +39,7 @@ import {cardStore} from "../../../store/card";
 import {filterObjKeys,initCanvas} from "../../../util";
 import Widget from "../../card/Widget.vue";
 import { inspectorStore } from '../../../store/inspector'
+import { message } from 'ant-design-vue'
 export default {
   name: "SmallGPUCard",
   data(){
@@ -55,13 +56,23 @@ export default {
         videoStorage:{value:0}
       },
       GPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
+      menuList:[
+        {
+          title:'复制数据',
+          icon:'fuzhi',
+          fn:()=>{
+            require('electron').clipboard.writeText(JSON.stringify(this.aidaData))
+            message.success('复制成功')
+          }
+        }
+      ]
     }
   },
   components:{
     Widget
   },
   computed:{
-    ...mapWritableState(inspectorStore,['displayData']),
+    ...mapWritableState(inspectorStore,['displayData','aidaData']),
     GPUStorage() {
       return this.GPUData.videoStorage.value>0?(this.GPUData.videoStorage.value / 1000).toFixed(2):this.GPUData.videoStorage.value
     }

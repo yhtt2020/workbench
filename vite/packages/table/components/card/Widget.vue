@@ -5,72 +5,37 @@
       height: customSize.height,
       background: 'var(--background-color)',
       color: 'var(--font-color)'
-    }" @click="onCPUIndex" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
-    <div style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 12px;
-        z-index: 888;
-        padding: 1em;
-        backdrop-filter: blur(8px);
-      " v-show="showTip" v-if="(options.type.includes('CPU') && runAida64 === false) ||
-        (options.type.includes('GPU') && runAida64 === false)
-        ">
-      <div :class="options.noTitle === true ? 'no-title' : 'content-title'">
+    }"  @mouseleave="onMouseOut" @mouseenter="onMouseOver">
+
+    <!--标题栏start-->
+    <slot name="title">
+      <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex justify-between items-center">
         <div class="left-title" v-if="options.noTitle !== true">
           <Icon :icon="options.icon" class="title-icon"></Icon>
-          <div>{{ options.title }}</div>
+          <div class="w-2/3">{{ options.title }}</div>
         </div>
         <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
-          <Icon icon="gengduo1" class="title-icon" style="cursor: pointer"></Icon>
+          <Icon icon="gengduo1" class="title-icon pointer"></Icon>
         </div>
       </div>
-      <div class="content-small text-lg absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center">
-        <span class="mb-2" style="font-size: 0.8em; line-height: 1.2">需要安装，如图配置AIDA64并运行</span>
-        <div class="mb-2">
-          <AidaGuide></AidaGuide>
-        </div>
-
-        <div class="slot-btn bg-gray-700 pointer mb-2 h-8 w-24 flex justify-center items-center rounded-lg"
-          @click="onDownAida">
-          <span>立即下载</span>
-        </div>
-        <div v-if="options.type.includes('Four')" class="flex flex-col items-center">
-          <span class="mb-2" style="font-size: 0.8em; line-height: 1.2">监控游戏「FPS」需要安装并运行RTSS</span>
-          <div class="slot-btn bg-gray-700 pointer mb-2 h-10 w-24 flex justify-center items-center rounded-lg"
-            @click="onDownRTSS">
-            <span>立即下载</span>
-          </div>
-        </div>
-        <span class="text-base text-neutral-300">如果已经启动请等待大约30秒</span>
-      </div>
-    </div>
-
-    <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex justify-between items-center">
-      <div class="left-title" v-if="options.noTitle !== true">
-        <Icon :icon="options.icon" class="title-icon"></Icon>
-        <div class="w-2/3">{{ options.title }}</div>
-      </div>
-      <div class="right-title" v-if="gameRegionShow === true" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
-        <Icon icon="gengduo1" class="title-icon" style="cursor: pointer"></Icon>
-      </div>
-    </div>
+    </slot>
+    <!-- 标题栏end   -->
+    <!--  主体内容插槽start  -->
     <slot :customIndex="customIndex"></slot>
+    <!--  主题内容插槽end  -->
   </div>
+  <!-- 右上角抽屉菜单start -->
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" height="auto" class="drawer"
-    :closable="true" placement="bottom" v-model:visible="visible" @close="onClose">
+            :closable="true" placement="bottom" v-model:visible="menuVisible" @close="onClose">
     <div class="ml-4 mb-3 flex flex-row items-center" v-if="sizeList && sizeList.length > 0">
       <div class="mr-4">小组件尺寸</div>
       <HorizontalPanel :navList="sizeList" v-model:selectType="sizeType" bgColor="drawer-item-select-bg">
       </HorizontalPanel>
     </div>
     <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="ml-4 mr-4 my-8"
-      v-if="sizeList && sizeList.length > 0" />
+        v-if="sizeList && sizeList.length > 0"/>
     <div class="flex flex-row">
-      <div class="option h-24 w-24 ml-4" @click="item.fn()" v-for="item in formulaBar">
+      <div class="option h-24 w-24 ml-4" @click="item.fn()" v-for="item in menuList">
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
@@ -78,69 +43,53 @@
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
       </div>
-      <div class="option h-24 w-24 ml-4" @click="onCopy"
-        v-if="options.type.includes('CPU') || options.type.includes('GPU')">
-        <Icon class="icon" icon="fuzhi"></Icon>
-        复制数据
-      </div>
+<!--      <div class="option h-24 w-24 ml-4" @click="onCopy"-->
+<!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
+<!--        <Icon class="icon" icon="fuzhi"></Icon>-->
+<!--        复制数据-->
+<!--      </div>-->
     </div>
   </a-drawer>
-  <textarea id="textArea" style="opacity: 0; height: 0; width: 0; position: absolute"
-    v-if="options.type.includes('CPU') || options.type.includes('GPU')"></textarea>
+  <!-- 右上角抽屉菜单end -->
+  <!--额外插槽，用于扩展一些不可见的扩展元素start-->
+  <slot name="extra">
+  </slot>
+  <!--额外插槽，用于扩展一些不可见的扩展元素end-->
 </template>
 
-<script>
-import { mapActions, mapWritableState } from "pinia";
-import { cardStore } from "../../store/card";
-import { message } from "ant-design-vue";
+<script lang="ts">
+import {mapActions, mapWritableState} from "pinia";
+import {cardStore} from "../../store/card";
 import AidaGuide from "../widgets/supervisory/AidaGuide.vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import _ from "lodash-es";
+import {PropType} from "vue";
+
+//组件选项
+declare interface IOption {
+  //类型，字符串
+  type: string,
+  //是否显示卡片标题
+  noTitle: boolean
+}
+
+//菜单项
+declare interface IMenuItem {
+  //标题
+  title: string,
+  //函数
+  fn: () => void,
+  //图标
+  icon: string,
+}
 
 export default {
-  components: { AidaGuide, HorizontalPanel },
-  data() {
-    return {
-      visible: false,
-      showTip: false,
-      settingVisible: false,
-      gameRegionShow: false,
-      regionName: "",
-      epicShow: true,
-      sizeType: { title: "", height: undefined, width: undefined, name: "" },
-    };
-  },
+  components: {AidaGuide, HorizontalPanel},
+
   name: "Widget",
 
   props: {
-    sizeList: {
-      type: Array,
-      default: () => [],
-    },
-    options: {
-      type: Object,
-      default: () => ({}),
-    },
-    formulaBar: {
-      type: Array,
-      default: () => [],
-    },
-    editing: {
-      type: Boolean,
-      default: false,
-    },
-    customIndex: {
-      type: Number,
-      default: 0,
-    },
-    runAida64: {
-      type: Boolean,
-      default: true,
-    },
-    customData: {
-      type: Object,
-      default: () => { },
-    },
+    //卡片尺寸，这个属性优先级高于下方的sizeList
     size: {
       type: Object,
       default: {
@@ -148,10 +97,49 @@ export default {
         height: undefined,
       },
     },
-  },
+    //可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
+    sizeList: {
+      type: Array,
+      default: () => [],
+    },
+    //选项
+    options: {
+      type: Object as PropType<IOption>,
+      default: () => ({}),
+    },
+    //右上角菜单项
+    menuList: {
+      type: Array as PropType<IMenuItem>,
+      default: () => [],
+    },
+    //是否编辑中，如果为是，则屏蔽鼠标事件，使卡片无法被点击，一般用于调整布局
+    editing: {
+      type: Boolean,
+      default: false,
+    },
+    //组件索引
+    customIndex: {
+      type: Number,
+      default: 0,
+    },
+    //组件自定义数据，每个卡片独立，并存入桌面数据当中
+    customData: {
+      type: Object,
+      default: () => {
+      },
+    },
 
+  },
+  data() {
+    return {
+      //右上角抽屉菜单可见与否的控制
+      menuVisible: false,
+      //当前设置的组件尺寸数据，对应着props里的sizeList
+      sizeType: {title: "", height: undefined, width: undefined, name: ""},
+    };
+  },
   computed: {
-    ...mapWritableState(cardStore, ["aidaData", "customComponents"]),
+    ...mapWritableState(cardStore, ["customComponents"]),
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },
@@ -233,7 +221,7 @@ export default {
       "increaseCustomComponents",
     ]),
     showDrawer() {
-      this.visible = true;
+      this.menuVisible = true;
     },
     removeCard() {
       this.removeCustomComponents(
@@ -241,57 +229,13 @@ export default {
         this.$parent.$parent.customIndex ||
         this.$parent.$attrs.customIndex
       );
-      this.visible = false;
+      this.menuVisible = false;
     },
     onSetup() {
-      switch (this.options.title) {
-        case "壁纸":
-          this.settingVisible = true;
-          break;
-      }
-      this.visible = false;
-    },
-    onGameSet() {
-      this.gameVisible = true;
-    },
-    onCPUIndex() {
-      if (
-        this.options.type.includes("CPU") ||
-        this.options.type.includes("GPU")
-      ) {
-        // this.$router.push('CPUIndex')
-      }
-    },
-    onDownAida() {
-      ipc.send("addTab", { url: "https://www.aida64.com/" });
-    },
-    onDownRTSS() {
-      ipc.send("addTab", {
-        url: "https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html",
-      });
-    },
-    onMouseOver() {
-      this.showTip = true;
-      this.gameRegionShow = true;
-    },
-    onMouseOut() {
-      this.showTip = false;
-      this.gameRegionShow = false;
-    },
-    onCopy() {
-      if (this.aidaData) {
-        let textArea = document.getElementById("textArea");
-        textArea.innerText = JSON.stringify(this.aidaData);
-        textArea.select();
-        document.execCommand("copy");
-        this.visible = false;
-        message.info("复制成功！");
-      } else {
-        message.info("复制失败，请检查是否启动过aida64！");
-      }
+      this.menuVisible = false;
     },
     onClose() {
-      this.visible = false;
+      this.menuVisible = false;
     },
   },
 };

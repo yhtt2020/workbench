@@ -1,7 +1,7 @@
 <template>
 
   <Widget  :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex"
-                     :formulaBar="formulaBar" ref="cardSlot">
+                     :menuList="formulaBar" ref="cardSlot">
     <div class="small-wallpaper">
       <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
         <div class=" w-full   " style="margin-top: 15%;text-align: center" v-if="imgList.length<=0">
@@ -91,7 +91,7 @@ export default {
         type: 'MiddleWallpaper',
         noTitle: true,
       },
-      formulaBar: [{
+      menuList: [{
         icon: 'shezhi1', title: '设置', fn: () => {
           this.settingVisible = true
           this.$refs.cardSlot.visible = false

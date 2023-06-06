@@ -2,7 +2,7 @@
   <Widget
     :customIndex="customIndex"
     :options="options"
-    :formulaBar="formulaBar"
+    :menuList="formulaBar"
     ref="customAssembly"
     :custom-data="customData"
   >
@@ -355,7 +355,7 @@ export default {
         ...navigationData.coolAppList,
         ...navigationData.systemAppList,
       ],
-      formulaBar: [
+      menuList: [
         {
           icon: "shezhi1",
           title: "设置",

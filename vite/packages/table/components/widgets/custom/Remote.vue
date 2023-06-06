@@ -2,7 +2,7 @@
   <!--  <div class="card  gradient gradient&#45;&#45;14  content small" style="display: flex;flex-direction: column;align-content: center;align-items: center">-->
   <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
   <!--  </div>-->
-  <Widget :customIndex="customIndex" :size="customSize" :options="options" :formulaBar="formulaBar"
+  <Widget :customIndex="customIndex" :size="customSize" :options="options" :menuList="formulaBar"
     ref="remote" :custom-data="customData">
     <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
       <div v-if="!customData.url"
@@ -81,7 +81,7 @@ export default {
         type: 'remote',
         noTitle: true,
       },
-      formulaBar: [
+      menuList: [
         {
           icon: "shezhi1",
           title: '设置',

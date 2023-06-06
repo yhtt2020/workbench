@@ -1,6 +1,6 @@
 <template>
     <Widget :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
-        :formulaBar="formulaBar" ref="homelSlotRef">
+        :menuList="formulaBar" ref="homelSlotRef">
         <cardDrag ref="drag" @reSizeInit="reSizeInit">
             <template #="{ row }">
                 <textarea spellcheck="false" :style="{ 'backgroundImage': background, color: colors }"
@@ -57,7 +57,7 @@ export default {
                 type: "games"
             },
             settingVisible: false,
-            formulaBar: [
+            menuList: [
                 {
                     icon: "shezhi1",
                     title: "设置",

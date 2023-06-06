@@ -1,5 +1,5 @@
 <template>
-  <Widget :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :formulaBar="gameMiddleBare">
+  <Widget :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare">
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
       我的游戏
     </div>

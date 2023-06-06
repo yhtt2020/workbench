@@ -22,6 +22,7 @@ export const inspectorStore = defineStore(
       return {
         audioTest:0,//音频测试
 
+        aidaData:{},
         frequent:2,//2秒更新一次
         running:false,
         runAida64:false,
@@ -71,6 +72,7 @@ export const inspectorStore = defineStore(
             .then((res) => {
               this.runAida64 = true;
               const newData = setSupervisoryData(res);
+              this.aidaData=res
               this.setDisplayData(newData);
               // console.log(res)
               //this.data=JSON.stringify(res, null, '\t')

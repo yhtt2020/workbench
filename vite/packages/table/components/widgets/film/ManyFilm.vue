@@ -4,7 +4,7 @@
     :options="options"
     :customIndex="customIndex"
     :custom-data="customData"
-    :formulaBar="formulaBar"
+    :menuList="formulaBar"
     v-if="!detailToggle"
     >
       <div v-if="pageToggle">

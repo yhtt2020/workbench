@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options">
+  <Widget :options="options" :menu-list="menuList">
     <div @click="go" class="content pointer">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -43,6 +43,7 @@ import {filterObjKeys,initCanvas} from "../../../util";
 import Widget from "../../card/Widget.vue";
 import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
+import { message } from 'ant-design-vue'
 export default {
   name: "SmallCPUCard",
   data(){
@@ -59,13 +60,23 @@ export default {
         useMemory:{value:0},
       },
       CPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
+      menuList:[
+        {
+          title:'复制数据',
+          icon:'fuzhi',
+          fn:()=>{
+            require('electron').clipboard.writeText(JSON.stringify(this.aidaData))
+            message.success('复制成功')
+          }
+        }
+      ]
     }
   },
   components:{
     Widget
   },
   computed:{
-    ...mapWritableState(inspectorStore,['displayData']),
+    ...mapWritableState(inspectorStore,['displayData','aidaData']),
     ...mapWritableState(appStore,['saving'])
   }, mounted () {
     this.startInspect()

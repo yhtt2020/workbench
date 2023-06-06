@@ -1,6 +1,6 @@
 <template>
   <Widget :customData="customData" :size="reSize" :customIndex="customIndex" :options="options"
-    :formulaBar="formulaBar" ref="homelSlotRef">
+    :menuList="formulaBar" ref="homelSlotRef">
     <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
@@ -59,7 +59,7 @@ export default {
         icon: "time-circle",
         type: "games",
       },
-      formulaBar: [
+      menuList: [
         {
           icon: "shezhi1",
           title: "设置",
