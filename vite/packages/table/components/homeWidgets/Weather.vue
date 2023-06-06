@@ -10,8 +10,8 @@
             <Icon style=" width: 5em;  height: 5em;  margin-right: 10px;   vertical-align: middle; " icon="icon_qingtian"></Icon>
           </a-col>
         </div>
-        <div style="text-align: center">
-          <div class="btn" @click.stop="add" style=" font-size: 1.3em; font-weight: bold; margin-top: 1em; width: 12em; display: inline-block; " >
+        <div style="text-align: center;" >
+          <div class="btn" @click.stop="add" style=" background:var(--primary-bg);color:var(--primary-text);font-size: 1.3em; font-weight: bold; margin-top: 1em; width: 12em; display: inline-block; " >
             <Icon icon="tianjia1"></Icon>
             添加城市
           </div>

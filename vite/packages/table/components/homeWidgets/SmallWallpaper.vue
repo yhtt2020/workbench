@@ -346,7 +346,8 @@ export default {
   width: 56px;
   height: 56px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--primary-bg);
+  color: var(--primary-text);
   backdrop-filter: blur(20px);
 
   .icon {

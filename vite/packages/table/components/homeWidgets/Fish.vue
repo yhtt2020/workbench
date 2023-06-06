@@ -3,13 +3,13 @@
     <div style="display: flex;flex-direction: column">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
         <div ref="fish" @click="click" class="fish"
-             style="display: flex;align-items: center;align-content: center;height: 205px;width: 100%;justify-content: center;position: relative;cursor: pointer">
+             style="display: flex;align-items: center;align-content: center;height: 205px;width: 100%;justify-content: center;position: relative;cursor: pointer;">
           <img ref="wooden" class="wooden" :src="fish" style="width: 120px;height:120px;margin-top: -30px">
           <img ref="bing" class="bing " :src="bing"
                style="width: 80px;height: 80px;position: absolute;margin-top: -20px">
-          <span class="tip"> 功德 +1</span>
+          <span class="tip" style="color: var(--primary-text);"> 功德 +1</span>
           <div style="position: absolute;bottom:35px">
-            <div><span class="mr-4">今日 {{ getToday }}</span> 总 {{ getTotal }}</div>
+            <div style="color: var(--primary-text);"><span class="mr-4">今日 {{ getToday }}</span> 总 {{ getTotal }}</div>
           </div>
         </div>
       </div>

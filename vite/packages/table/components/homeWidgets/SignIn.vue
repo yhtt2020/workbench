@@ -5,9 +5,9 @@
 <!--      活动说明-->
 <!--    </div>-->
     <template v-if="!newPeoplePage">
-      <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;">
+      <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;color:var(--primary-text);">
         <div>
-          <div class="mt-2" style="color: rgba(255,255,255,0.85); font-size: 16px; font-weight: 600;">
+          <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}
           </div>
           <span v-if="false" style="color: rgba(255,255,255,0.60); font-size: 14px;">已连续签到2天</span>
@@ -32,11 +32,11 @@
                 <UserOutlined/>
               </template>
             </a-avatar>
-            <div @click="showCard(item.uid)" class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 120px;">
+            <div @click="showCard(item.uid)" class="ml-3 truncate" style="color: var(--primary-text);font-size: 16px;max-width: 120px;">
               {{ item.nickname }}
             </div>
           </div>
-          <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.time }}</div>
+          <div style="color:var(--primary-text);font-size: 16px;">{{ item.time }}</div>
         </div>
         <!-- </vue-custom-scrollbar> -->
       </div>

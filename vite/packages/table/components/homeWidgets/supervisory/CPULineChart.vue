@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options">
-    <div @click="go" class="content pointer">
+    <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div class="cpu">
         <div class="cpu-number">
           <div>

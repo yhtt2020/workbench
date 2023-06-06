@@ -23,15 +23,15 @@
      ></Icon>
    </div>
   </div>
-  <div class="card  gradient gradient--14 content small" v-else-if="clockEvent.length <= 0">
+  <div class="card  gradient gradient--14 content small" v-else-if="clockEvent.length <= 0" style="color:var(--primary-text);background: var(--primary-bg);">
     <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
       <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
     </div>
     <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
     <a-empty :description="null" :image="simpleImage" />
-    <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
+    <a-button type="primary" style="background: var(--primary-bg);border: none;color:var(--primary-text)" @click="onSetup">立即添加</a-button>
   </div>
-  <div class="card  gradient gradient--14 content small" v-else>
+  <div class="card  gradient gradient--14 content small" v-else style="color:var(--primary-text);background: var(--primary-bg);">
     <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
       <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
     </div>
