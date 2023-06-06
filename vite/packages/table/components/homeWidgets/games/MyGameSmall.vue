@@ -61,10 +61,10 @@
     <!-- <template #extra>
       <div class="flex justify-center items-center rounded-lg h-10 drawer-item-bg w-16  pointer" @click="saveSize">保存</div>
     </template>  -->
-    <div class="flex flex-col">
+    <div class="flex flex-col" style="color:var(--primary-text)">
       <!-- <HorizontalPanel :navList="sizeList"  class="nav-list-container mb-3" bg-color="drawer-item-select-bg" v-model:selectType="defaultSize" ></HorizontalPanel> -->
-      <span class="mb-8" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 500">展示游戏</span>
-      <span   v-for="(item,index) in showGameType"  @click="getGameType(item,index)" :class="steamIndex === index ? 'drawer-item-bg':''" class="mb-4  text-center pointer change s-item  rounded-lg show-game-time py-3">
+      <span class="mb-8" style="font-size: 16px;font-weight: 500;">展示游戏</span>
+      <span   v-for="(item,index) in showGameType"  @click="getGameType(item,index)" :class="steamIndex === index ? 'active':''" class="mb-4  text-center pointer change s-item  rounded-lg show-game-time py-3" style="color:var(--primary-text);background: var(--primary-bg);">
          {{ item.title }}
       </span>
     </div>

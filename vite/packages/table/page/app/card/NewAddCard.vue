@@ -4,16 +4,17 @@
     <div class="controller drag" style="color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="header">
         <div class="left">
-          <div class="btn no-drag" @click="onBack" style="color:var(--primary-text);background: var(--secondary-bg);  border: 1px solid red;">
+          <div class="btn no-drag" @click="onBack" style="color:var(--primary-text);background: var(--active-bg);  ">
             <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
           </div>
-          <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索" >
+          <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
             <template #prefix>
               <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
             </template>
           </a-input>
           <a-select style=" z-index: 99999999; position: relative;" v-model:value="searchValue" class=" no-drag select"
-            size="large" @change="handleChange" :dropdownStyle="{ 'z-index': 999999999999 }">
+            size="large" @change="handleChange"
+            :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--active-bg)' }">
             <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{ item.name
             }}</a-select-option>
           </a-select>
@@ -23,8 +24,8 @@
       </div>
       <div class="mian">
         <div class="left">
-          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
-            v-for="( item, index ) in  navList " :key="item.name">{{
+          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'active': navIndex == index }"
+            @click="updateNavIndex(index)" v-for="( item, index ) in  navList " :key="item.name">{{
               item.cname }}
           </div>
         </div>
@@ -79,12 +80,12 @@ export default {
         let children = []
         item.children.forEach((i) => {
           console.log(i)
-          i.time=new Date(i.time).getTime()
+          i.time = new Date(i.time).getTime()
           console.log(i.time)
           children.push({
             ...i,
             download: Math.floor(Math.random() * 10000) + 1,
-           // time: this.getTimes()
+            // time: this.getTimes()
           })
 
         })
@@ -200,6 +201,7 @@ export default {
         text-align: center;
         font-size: 16px;
         background: rgba(0, 0, 0, 0.30);
+        background: var(--active-bg) !important;
         border-radius: 12px;
         margin-left: 10px;
       }
@@ -216,13 +218,18 @@ export default {
       }
 
       .search {
-        background: rgba(0, 0, 0, 0.30);
+        background: var(--active-bg);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         width: 400px;
         height: 48px;
         padding-left: 20px;
         font-size: 18px;
+       
+        color: var(--primary-text);
+        input{
+          color: var(--primary-text);
+        }
       }
 
       .select {

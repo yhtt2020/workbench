@@ -2,7 +2,7 @@
   <div id="display" class="s-bg p-3 m-3 rounded-lg" style="height:calc(100vh - 12em);background: var(--primary-bg); ">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit" :destroyInactiveTabPane="true">
-      <a-tab-pane v-for="city in cities" :key="city.id" :tab="city.name">
+      <a-tab-pane v-for="city in cities" :key="city.id" :tab="city.name" > 
 
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 17em);  ">
           <div class="section" style="text-align: center">
@@ -47,7 +47,7 @@
             <div class="section">
               多日预报
             </div>
-            <a-row style="text-align: center">
+            <a-row style="text-align: center;color:var(--primary-text)">
               <a-col :span="3" v-for="w in city.d7.daily">
 
                 {{ getMonthAndDay(w.fxDate) }}<br>
@@ -57,9 +57,7 @@
                 {{ w.windScaleDay }}级
               </a-col>
             </a-row>
-
             <WeatherChart :daily="city.d7.daily"></WeatherChart>
-
           </div>
         </vue-custom-scrollbar>
       </a-tab-pane>

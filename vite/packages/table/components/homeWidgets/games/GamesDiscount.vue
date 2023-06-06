@@ -2,14 +2,14 @@
   <HomeComponentSlot :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex"
                      :customData="customData" :formulaBar="gameBare" ref="gameSlot">
     <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showRegionSelect"
-         style="position: absolute;left: 45px;top:10px">{{ region.name }}
+         style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ region.name }}
     </div>
     <a-spin v-if="isLoading === true"
             style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
       <a-result :status="null" title="请确认网络" style="margin-top: 3em">
         <template #extra>
-          <a-button key="console" type="primary" @click="retry">重试</a-button>
+          <a-button key="console" type="primary" @click="retry" style="background: var(--primary-bg);color:var(--primary-text)">重试</a-button>
         </template>
       </a-result>
 
@@ -46,17 +46,16 @@
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="s-item change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;">
-              <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
-              <Icon icon="reload" style="font-size: 1.429em;color: rgba(255, 255, 255, 0.85);" v-else></Icon>
-              <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
+            <div class="s-item change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;background: var(--primary-bg);color:var(--primary-text)">
+              <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
+              <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
+              <span style="margin-left: 1em;">换一换</span>
             </div>
-            <span style="padding:13px 26px;" class="s-item rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
+            <span style="padding:13px 26px;background: var(--primary-bg);" class="s-item rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
           </div>
         </div>
       </template>
       <template v-else-if="gameShow === true">
-
         <div class="flex flex-grow flex-col" style="margin-top: 14px;" >
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
             <img class="rounded-lg" :src="detailList.header_image" alt="">
