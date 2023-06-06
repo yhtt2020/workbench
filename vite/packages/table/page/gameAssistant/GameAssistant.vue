@@ -61,6 +61,14 @@ export default {
             name: 'recommend'
           }
         },
+        {
+          index:'z',
+          title:'捕获',
+          icon:'video',
+          route:{
+            name:'GameCapture'
+          },
+        },
         // {
         //   index: 'm',
         //   title: '社区',
