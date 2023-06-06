@@ -3,6 +3,10 @@ let { app, ipcMain: ipc, Notification, session } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const TableScreenManager = require('./tableScreenManager')
+const ScreenCaptureManager = require('./screenCaptureManager')
+//测试
+const screenCaptureManager = new ScreenCaptureManager()
+
 ipc.on('recoverSuccess', () => {
   new Notification({
     title: '数据迁移成功',
@@ -64,7 +68,7 @@ class TableManager {
           devTools: true,
           preload: require('path').join(__dirname, '../../src/preload/tablePreload.js'),
           nodeIntegration: true,
-          enableBlinkFeatures:['unsafely-treat-insecure-origin-as-secure'],
+          enableBlinkFeatures: ['unsafely-treat-insecure-origin-as-secure'],
           sandbox: false,
           contextIsolation: false,
           additionalArguments: [
@@ -94,18 +98,18 @@ class TableManager {
 
       tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
       tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-        let allowedPermissions = ["audioCapture",'media']; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+        let allowedPermissions = ['audioCapture', 'media'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
         if (allowedPermissions.includes(permission)) {
-          callback(true); // Approve permission request
+          callback(true) // Approve permission request
         } else {
           console.error(
             `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
-          );
+          )
 
-          callback(false); // Deny
+          callback(false) // Deny
         }
-      });
+      })
 
       tableWin.window.on('close', () => {
         this.saveBounds()
@@ -230,7 +234,7 @@ app.whenReady().then(() => {
     for (let file of files) {
       try {
         let link = null
-        let title=path.basename(file)
+        let title = path.basename(file)
         if (file.endsWith('.lnk')) {
           link = require('electron').shell.readShortcutLink(file)
         }
@@ -240,7 +244,7 @@ app.whenReady().then(() => {
           ext: path.parse(file).ext,
           path: link ? link.target : file,
           icon: icon.toDataURL(),
-          title:title
+          title: title
         })
       } catch (e) {
         console.warn('存在失败的', e, file)
@@ -313,6 +317,39 @@ app.whenReady().then(() => {
 
   ipc.on('exitTable', () => {
     global.tableManager.close()
+  })
+
+  ipc.on('getRecordSource', () => {
+    console.log('ipc获得陆平原')
+    screenCaptureManager.getSource().then(sources => {
+      console.log('获取到源了')
+      require('fs-extra').ensureDirSync(path.join(app.getPath('userData'), 'tmp'))
+      let returnData = sources.map(s => {
+        let file = path.join(app.getPath('userData'), 'tmp', 'capture_' + s.id.replaceAll(':', '_') + '.jpg')
+        let icon = path.join(app.getPath('userData'), 'tmp', 'capture_' + s.id.replaceAll(':', '_') + '_icon.png')
+        try {
+          fs.writeFileSync(file, s.thumbnail.toJPEG(100))
+          if (s.appIcon) {
+            fs.writeFileSync(icon, s.appIcon.toPNG())
+          }
+        } catch (e) {
+          console.warn('保存缩略图失败', e)
+        }
+        return {
+          name: s.name,
+          type:s.id.startsWith('screen')?'screen':'window',
+          id: s.id,
+          src: file,
+          icon: icon
+        }
+      })
+      console.log(returnData,'最终返回的=')
+      global.tableManager.send('gotRecordSource', {
+        sources: returnData
+      })
+    }).catch((err) => {
+      console.warn('获得录屏源失败', err)
+    })
   })
 })
 

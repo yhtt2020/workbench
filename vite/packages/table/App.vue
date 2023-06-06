@@ -60,24 +60,20 @@
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import { mapActions, mapState, mapWritableState } from "pinia";
-import { cardStore } from "./store/card"
-import { appStore } from "./store";
+import {mapActions, mapState, mapWritableState} from "pinia";
+import {cardStore} from "./store/card"
+import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
-import { codeStore } from "./store/code";
-import { appsStore } from "./store/apps";
-import { steamUserStore } from "./store/steamUser";
-import { screenStore } from './store/screen'
+import {codeStore} from "./store/code";
+import {appsStore} from "./store/apps";
+import {steamUserStore} from "./store/steamUser";
+import {screenStore} from './store/screen'
 import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
-const { steamUser, steamSession, path, https, steamFs } = $models
-let client = new steamUser({
-  enablePicsCache: true
-});
-window.client = client
+
 window.browser = browser
-const { appModel } = window.$models
+const {appModel} = window.$models
 let startX,
   startY,
   moveEndX,
@@ -87,7 +83,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: { Modal, UserCard, Barrage },
+  components: {Modal, UserCard, Barrage},
   data() {
     return {
       touchDownRoutes: ["home", "lock"], //支持下滑的页面的白名单
@@ -153,9 +149,9 @@ export default {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}
       for (const app of args.runningApps) {
-        this.runningAppsInfo[app] = await appModel.get({ nanoid: app })
+        this.runningAppsInfo[app] = await appModel.get({nanoid: app})
         this.runningAppsInfo[app].windowId = args.windows[args.runningApps.indexOf(app)]
-        ipc.send('getAppRunningInfo', { nanoid: app })
+        ipc.send('getAppRunningInfo', {nanoid: app})
       }
     })
 
@@ -192,7 +188,7 @@ export default {
     ...mapActions(appStore, ['setMusic', 'reset']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
-    ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail']),
+    ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -336,43 +332,7 @@ export default {
     },
     "steamLoginData.refreshToken": {
       handler() {
-        if (this.steamLoginData.refreshToken === '') {
-          client.logOff();
-          client.once('disconnected', () => {
-          });
-          return
-        }
-        client.logOn({ "refreshToken": this.steamLoginData.refreshToken })
-        client.on('loggedOn', (res, err) => {
-          client.setPersona(steamUser.EPersonaState.Online);
-          client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) => {
-            this.setUserData({ name, country })
-          });
-          client.gamesPlayed([1172470]);
-          client.on('appOwnershipCached', () => {
-            console.log('Game ownership cached');
-            client.getUserOwnedApps(client.steamID.getSteamID64(), { includeFreeSub: true, includePlayedFreeGames: true }, (err, data) => {
-              if (err) console.log(err)
-              this.setGameList(data.apps)
-            })
-            client.getProductInfo(client.getOwnedApps({ excludeFree: false }), [], (err, data) => {
-              if (err) console.log(err)
-              const list = []
-              Object.keys(data).forEach(i => {
-                if (data[i].appinfo.common) {
-                  if (data[i].appinfo.common.type === 'Game' && data[i].appinfo.common.oslist && data[i].appinfo.common.small_capsule || data[i].appinfo.common.type === 'game' && data[i].appinfo.common.oslist && data[i].appinfo.common.small_capsule) {
-                    list.push(data[i])
-                  }
-                }
-              })
-              this.addGameDetail(list)
-            })
-
-          });
-          client.on('error', async function (err) {
-            console.log(err)
-          })
-        })
+        this.onRefreshToken()
       },
       immediate: true,
     }
