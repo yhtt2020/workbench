@@ -1,9 +1,9 @@
 <template>
   <a-input-group compact>
-    <a-input style="width:calc(100% - 70px)" @keyup.enter="postBarrage" v-model:value="postContent"
+    <a-input style="width:calc(100% - 70px);" @keyup.enter="postBarrage" v-model:value="postContent"
              :placeholder="'发送至'+currentChannel.title+'频道'">
       <template #addonBefore>
-        <span>{{ currentChannel.title }}</span>
+        <span style="color:var(--primary-text)">{{ currentChannel.title }}</span>
       </template>
     </a-input>
     <a-button @click="postBarrage" type="primary">发送</a-button>

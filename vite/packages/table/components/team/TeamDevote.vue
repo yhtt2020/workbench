@@ -1,6 +1,6 @@
 <template>
   <template v-if="team">
-    <div class="px-3 py-2" style="border: 1px solid red;">
+    <div class="px-3 py-2" >
       <HorizontalPanel :navList="incomeTitle" v-model:selectType="defaultIncome"></HorizontalPanel>
       <div v-if="defaultIncome.name === 'MIC'" class="mt-3  flex flex-col">
         <div class="flex justify-between items-center h-12" style="display: block;">
@@ -32,7 +32,7 @@
             </div>
           </vue-custom-scrollbar>
         </div>
-        <div class="flex items-center rounded-lg py-1" style="background: rgba(0,0,0,0.30);">
+        <div class="flex items-center rounded-lg py-1" style="background:var(--primary-bg);">
           <a-col class="mr-4">
             <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
           </a-col>

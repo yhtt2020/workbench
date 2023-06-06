@@ -28,6 +28,7 @@
         background: var(--active-bg) !important;
     }
 }
+
 .dark-model {
     // 背景
     --main-bg: rgba(25, 25, 25, 1) !important;
@@ -94,5 +95,24 @@
     body {
         background-color: transparent !important;
         background: transparent !important;
+    }
+}
+
+.ant-drawer-header,
+.ant-drawer-wrapper-body {
+    background: var(--main-bg) !important;
+    color: var(--primary-text) !important;
+
+    .text-center {
+        color: var(--primary-text) !important;
+    }
+
+    .ant-drawer-close {
+        background: var(--primary-bg);
+        color: var(--primary-text) !important;
+    }
+    .btn ,.option {
+        color: var(--primary-text) !important;
+        background: var(--active-bg);
     }
 }

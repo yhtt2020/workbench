@@ -1,6 +1,6 @@
 <template>
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
-       style="overflow: hidden;background-color: var(--primary-bg);">
+       style="overflow: hidden;background-color: var(--primary-bg);color: var(--primary-text)">
       <div v-if="showDetail"
            style="width:350px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
@@ -9,7 +9,7 @@
         </div>
         <a-row style="height: 100%">
           <a-col :span="4">
-            <ul class="nav-list" style="">
+            <ul class="nav-list">
              
               <li @click="currentTab='barrage'" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
@@ -30,7 +30,7 @@
               <a-col>
                 <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
               </a-col>
-              <a-col>
+              <a-col >
                 <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
                 <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
               </a-col>
@@ -122,7 +122,7 @@
         </div>
         <div class="text-center pb-2" title="邀请"
              v-if="team.leader===userInfo.uid && team.member_count < team.member_limit">
-          <a-avatar :size="50">
+          <a-avatar :size="50"  style="color:var(--primary-text) !important">
             <PlusOutlined/>
           </a-avatar>
         </div>
@@ -361,7 +361,7 @@ export default {
 }
 .nav-list{
   height: 100%;
-  border-right: 1px solid #555;
+  border-right: 1px solid var(--divider);
   padding-left: 0;
   li{
     list-style: none;
@@ -383,7 +383,7 @@ export default {
     }
     &:hover,&.nav-active{
       &>div{
-        background: #222;
+        background: var(--active-bg);
         border-radius: 10px;
       }
 

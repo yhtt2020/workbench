@@ -164,9 +164,9 @@ export default {
   bottom: 0;
   background-color: #fff;
   z-index: 99999;
+  // background-size: cover;
   background-repeat: no-repeat;
-  background-size: cover;
-  background-size: 100% 100%;
+  // background-size: 100% 100%;
   display: flex;
   justify-content: center;
   align-items: center;

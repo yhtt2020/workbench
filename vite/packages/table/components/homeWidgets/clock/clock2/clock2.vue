@@ -69,7 +69,7 @@ export default {
 
 <style lang="scss" scoped>
 .clock2 {
-  color: #ffffff;
+  color: var(--primary-text);
   text-align: center;
   /* width: 100%;
   height: 100%; */
