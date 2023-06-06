@@ -449,10 +449,10 @@ export const navList = [
         sizes: ['2x2', '2x4'],
         option: [
           {
-            name: 'singleDoubanFilm',
+            name: 'SingleFilm',
             size: '2x2',
           }, {
-            name: 'largeSingleDoubanFilm',
+            name: 'ManyFilm',
             size: '2x4',
           },
         ],
