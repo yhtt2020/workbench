@@ -163,6 +163,11 @@ export default [
             component: GameCommunity,
           },
           {
+            path: "/gameMedia",
+            name: "gameMedia",
+            component: GameMedia,
+          },
+          {
             path: "/gameDiscount",
             name: "recommend",
             component: GameDiscount,
