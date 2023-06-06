@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="flex">
-      <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+      <div @click="clipSearch" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="sousuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet">
@@ -19,9 +19,13 @@
       </div>
     </div>
   </div>
-
-  <vue-custom-scrollbar :settings="settingsScroller" class="mx-4 my-2 py-4">
-    <router-view></router-view>
+  <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mx-4 my-2 py-4">
+    <div v-if="defaultClipType.name === 'collect'">
+      <div class="flex items-center justify-center">
+        <a-empty :image="simpleImage" />
+      </div>
+    </div>
+    <router-view v-else></router-view>
   </vue-custom-scrollbar>
 
   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
@@ -45,6 +49,15 @@
 
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
   
+  <a-drawer :width="500"  v-model:visible="drawerVisible" title="搜索" placement="right">
+    <!--  v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchVideoData" placeholder="搜索"  style="
+    border-radius: 12px;background: rgba(42, 42, 42, 0.6);" v-if="drawerType==='search'" -->
+    <a-input>
+      <template #prefix>
+        <Icon icon="sousuo"></Icon>
+      </template>
+    </a-input>
+  </a-drawer>
 </template>
 
 <script>
@@ -52,6 +65,7 @@ import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 import TabSwitching from '../../components/TabSwitching.vue';
+import { Empty } from 'ant-design-vue';
 export default {
   name:'Clipboard',
   components:{
@@ -72,7 +86,7 @@ export default {
         {title:'文本',icon:'text-align-left',name:'文本', textname:'text', typeName:'textClip'},
         {title:'图片',icon:'image',name:'图片',textname:'image', typeName:'imageClip'},
         {title:'文件',icon:'file',name:'文件', textname:'file', typeName:'fileClip'},
-        {title:'视频',icon:'video',name:'视频', textname:'video', typeName:'audioClip'},
+        {title:'视频',icon:'video',name:'视频', textname:'video', typeName:'videoClip'},
         {title:'音频',icon:'erji1',name:'音频', textname:'audio', typeName:'audioClip'}
       ],
       defaultCutType: {title:'全部',icon:'appstore',name:'all'},
@@ -93,10 +107,13 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      simpleImage:'/public/img/test/not-data.png',
+      drawerVisible:false,
     }
   },
   mounted(){
     this.$router.push({name:'allClip'})
+    // console.log(this.simpleImage);
   },
   methods:{
     //打开设置操作
@@ -109,6 +126,9 @@ export default {
     getClipItem(v){
       this.defaultCutType = v
       this.$router.push({name:v.typeName})
+    },
+    clipSearch(){
+      this.drawerVisible = true
     }
   },
   watch:{
