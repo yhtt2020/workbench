@@ -2,49 +2,136 @@
   <transition name="fade">
     <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
       <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
-      <span>返回</span>
     </div>
   </transition>
   <transition name="fade">
-  <div class="content flex flex-col" v-show="!editFlag">
-    <span>快捷导航栏</span>
-    <span>点击添加更多快捷方式，支持长按拖拽排序，左右滑动查看更多</span>
-    <div class="nav-list">
+    <div class="box-content" v-show="!editFlag" id="boxContent">
+      <!-- <SideNavigation></SideNavigation> -->
+      <div class="box-center">
+        <div style="width: 100px;" >
+          <div class="side-nav" v-show="leftNav" id="leftBox">
+            <div style="width: 73px;overflow: hidden;" class="flex flex-col  items-center w-full">
+            <div style="overflow: hidden;" id="sideNavList"
+            class="flex flex-col items-center  flex-nowrap scroll-content" ref="sideContent">
+              <div v-for="item in sideNavigationList" :key="item.name" style="margin: 20px 0;">
+                <a-dropdown  :trigger="['contextmenu']"> 
+                  <div v-if="item.type==='systemApp'" style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
+                    <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+                  </div>
+                  <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
+                </a-dropdown>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer" @click="addEdit('left')"></Icon>
+          </div>
+        </div>
+      </div>
+      <div class="center-text">
+        <div class="con-center" v-show="navText && !promptModal">
+          <span>导航栏</span>
+          <span>点击添加更多快捷方式，支持长按拖拽排序，滑动查看更多；左侧导航和底部导航支持设置为隐蔽，但至少保留一个为显示状态，已保证功能完整。</span>
+          <span>以下功能需要在导航栏上至少各保留一个，以保障功能完整</span>
+          <span>点击拖动图标到目标导航栏</span>
+          <div class="main-nav" id="mainList">
+            <div v-for="item in mainNavList" :key="item.name">
+              <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
+                <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+                <span class="mt-2">{{ item.name }}</span>
+              </div>
+              <div class="add-toggle" v-if="item.addNav">已添加</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-toggle" v-show="navText && !promptModal">
+            <div class="left-point">
+              <span class="mb-4"><Icon icon="arrowleft"></Icon>左侧</span>
+              <div>
+                <!-- <a-switch v-model:checked="leftNav" @change="navToggle(sideNavigationList,'left')"/> -->
+                <a-switch v-model:checked="leftNav" @change="navToggle('left')"/>
+              </div>
+            </div>
+            <div class="foot-point">
+              <span class="mb-4"><Icon icon="arrowdown"></Icon>底部</span>
+              <div>
+                <a-switch v-model:checked="footNav" @change="navToggle('foot')"/>
+              </div>
+            </div>
+            <div class="right-point">
+              <span class="mb-4">右侧<Icon icon="arrowright"></Icon></span>
+              <div>
+                <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
+              </div>
+            </div>
+          </div>
+        <div class="prompt-modal " v-show="promptModal ">
+          <div class="p-5 s-bg flex flex-col justify-center items-center" style="border-radius:16px">
+            <div>
+              <Icon icon="tishi-xianxing" style="font-size: 16px;color: orange"></Icon>
+              <span class="ml-3">提示</span>
+            </div>
+            <span class="my-5">在导航栏中至少保留一个
+              <span v-for="item in delMainItem" :key="item.name">
+                「{{ item.name }}」
+              </span>
+              入口，以保持功能完整性。</span>
+            <!-- <span class="my-5">在导航栏中至少保留一个「{{delMainItem.name}}」入口，以保持功能完整性。</span> -->
+            <div class="modal-btn">
+              <div class="mr-3 rounded-lg" @click="promptModal = false">好的</div>
+              <!-- <div @click="delMainCore">移除</div> -->
+            </div>
+          </div>
+        </div>
+        <div class="del-icon" id="delIcon" v-show="!navText && !promptModal">拖到此处删除图标</div>
+      </div>
+      <div style="width:100px;" class="flex justify-end">
+        <div class="side-nav" v-show="rightNav" id="rightBox">
+          <div style="width: 73px;overflow: hidden;" class="flex flex-col  items-center w-full">
+            <div style="overflow: hidden;" id="rightNavList"
+            class="flex flex-col items-center  flex-nowrap scroll-content" ref="rightContent">
+              <div v-for="item in rightNavigationList" :key="item.name" class="my-5 width: 56px;height: 56px;">
+                <a-dropdown  :trigger="['contextmenu']"> 
+                  <div v-if="item.type==='systemApp'" style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
+                    <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+                  </div>
+                  <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
+                </a-dropdown>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer" @click="addEdit('right')"></Icon>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="box-foot" v-show="footNav" id="footBox">
         <div style="height: 73px;overflow: hidden;" class="flex flex-row  items-center pl-2 w-full">
-        <div style="overflow: hidden;overflow-x: auto;" id="navList"
+          <div style="overflow: hidden;" id="navList"
              class="flex flex-row items-center  flex-nowrap scroll-content mr-2" ref="content">
-        <div v-for="(item,index) in navigationList" class="mr-6" :key="navigationList.name">
-          <a-dropdown  :trigger="['contextmenu']">
-                <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: rgba(33, 33, 33, 1);border-radius: 12px" v-if="item.type==='systemApp'">
-                  <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
-                </div>
-              <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item @click="deleteEdit(index)">删除</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+            <div v-for="item in footNavigationList" style="margin: 4px 18px" :key="item.name">
+              <a-dropdown  :trigger="['contextmenu']">
+                    <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: rgba(33, 33, 33, 1);border-radius: 12px" v-if="item.type==='systemApp'">
+                      <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+                    </div>
+                  <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
+              </a-dropdown>
+            </div>
+          </div>
         </div>
+        <div>
+          <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);position:relative;top:2px;"  class="pointer mr-8" @click="addEdit('foot')"></Icon>
         </div>
-    </div>
-      <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer mr-2" @click="addEdit"></Icon>
-      <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);" class="flex justify-center items-center  h-2/3 pointer w-20">
-        <Icon icon="appstore-fill" style="width: 48px;height: 48px;"></Icon>
+        <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);" class="flex justify-center items-center pointer  pl-6 mr-6">
+          <Icon icon="appstore-fill" style="width: 48px;height: 48px;"></Icon>
+        </div>
       </div>
     </div>
-  </div>
   </transition>
-<!--  <div v-show="rubbish" class="absolute bottom-10 h-1/4 w-1/3 left-1/2 -translate-x-1/2 border-dashed rounded-xl " id="navListRubbish">-->
-<!--    </div>-->
-
-<!--  <div v-show="rubbish" class="absolute h-1/4 w-1/3 bottom-10 left-1/2 -translate-x-1/2 flex justify-center items-center">-->
-<!--    <Icon icon="delete-fill" style="width:18px;height:18px;" class="mr-2"></Icon>-->
-<!--    拖到此处删除-->
-<!--  </div>-->
 
   <transition name="fade">
-  <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem" @load="addNav">
+  <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
     <div v-show="nowClassify!=='localApp'" class="h-full">
       <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索"  style="background: rgba(42, 42, 42, 0.6);">
         <template #prefix>
@@ -52,10 +139,9 @@
         </template>
       </a-input>
       <vue-custom-scrollbar  key="scrollbar"  :settings="rightScrollbarSettings"
-                             class="relative"
-                             style="height: calc(100% - 40px);padding: 5px 0">
+        class="relative" style="height: calc(100% - 40px);padding: 5px 0">
         <listItem v-for="(item,index) in filterList" :item="item"
-                  class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+        class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
       </vue-custom-scrollbar>
     </div>
     <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500  h-full">
@@ -69,6 +155,7 @@
       <ScrolX :height="66">
         <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
           <div v-for="(item,index) in dropList" class="flex  ml-4">
+            {{ item }}
             <a-badge>
               <template #count>
                 <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)" class="pointer"></Icon>
@@ -92,10 +179,12 @@ import vuuri from "../vuuriHome/Vuuri.vue";
 import listItem from "./listItem.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
+import {navStore} from "../../store/nav";
 import ScrolX from '../ScrolX.vue'
 import Sortable from 'sortablejs';
 import navigationData from '../../js/data/tableData'
 import Classification from "../comp/Classification.vue";
+import SideNavigation from "../SideNavigation.vue"
 const {appModel}=window.$models
 export default {
   name: "EditNavigation",
@@ -128,11 +217,24 @@ export default {
       ClassifyData:[
         ...navigationData.coolAppList,...navigationData.systemAppList
         ],
-      dropList:[]
+      dropList:[],
+      leftNav: true,
+      footNav: true,
+      promptModal: false,
+      selectNav: '',
+      navText: true,
+      rightNav: true,
+      mainNavList: [],
+      // sumNavList: [],
+      darggingCore: false,
+      delMainIndex: -1,
+      delMainItem: [],
+      delNavType: ''
     }
   },
   computed:{
-    ...mapWritableState(cardStore, ['navigationList','routeParams']),
+    ...mapWritableState(cardStore, ['routeParams']),
+    ...mapWritableState(navStore, ['mainNavigationList','sideNavigationList','footNavigationList','rightNavigationList']),
     filterList(){
       return this.ClassifyData.filter(i =>{return i.type === this.nowClassify&&i.name.includes(this.selectContent)})
     }
@@ -141,24 +243,73 @@ export default {
     vuuri,
     ScrolX,
     listItem,
-    Classification
+    Classification,
+    SideNavigation
   },
   created() {
     this.loadDeskIconApps()
   },
   mounted() {
+    this.mainNavigationList =  [
+      {
+        type:'systemApp',
+        icon:'home',
+        name:'主页',
+        event:'home',
+      },
+      {
+        type:'systemApp',
+        icon:'thunderbolt',
+        name:'快捷指令',
+        event:'deck',
+      },
+      {
+        type:'systemApp',
+        icon:'tuichu',
+        name:'电源',
+        event:'power',
+        fn:()=>{vm.$router.push({ path: '/power' })}
+      },
+      {
+        type:'systemApp',
+        icon:'setting',
+        name:'基础设置',
+        event:'setting',
+        fn:()=>{  vm.$router.push({ name: 'setting' })}
+      },
+      {
+        type:'systemApp',
+        icon:'yingyongzhongxin',
+        name:'应用管理',
+        event:'apps',
+      },
+    ]
     this.checkScroll()
     let that = this
+    this.mainNav()
     window.addEventListener('resize',
       that.checkScroll
     )
-    let content = this.$refs.content
-    content.addEventListener('wheel',(event) => {
-      event.preventDefault();
-      content.scrollLeft += event.deltaY
+    // let content = this.$refs.content
+    // content.addEventListener('wheel',(event) => {
+    //   event.preventDefault();
+    //   content.scrollLeft += event.deltaY
+    // });
+    let boxContent = document.getElementById('boxContent')
+    boxContent.addEventListener('ondragover',() => {
+      ev.preventDefault()
     })
+    boxContent.addEventListener('drop',() => {
+      this.darggingCore = false
+    })
+    this.scrollNav('content','scrollLeft')
+    this.scrollNav('sideContent','scrollTop')
+    this.scrollNav('rightContent','scrollTop')
     this.$nextTick(()=>{
       this.rowDrop()
+      this.colDrop()
+      this.rightDrop()
+      this.mainDrop()
     })
   },
   unmounted() {
@@ -166,31 +317,305 @@ export default {
       window.removeEventListener('resize', that.checkScroll)
   },
   methods:{
-    ...mapActions(cardStore, ['setNavigationList','sortNavigationList','removeNavigationList']),
-     rowDrop()  {
-       let that = this
-       let drop = document.getElementById('navList')
-       let dropRubbish = document.getElementById('navListRubbish')
-       Sortable.create(drop, {
-        group: 'navigation',
+    scrollNav(refVal,scrollDirection){
+      let content = this.$refs[refVal]
+        content.addEventListener('wheel',(event) => {
+        event.preventDefault();
+        content[scrollDirection] += event.deltaY
+      });
+    },
+    navToggle(type){
+      this.delMainItem = []
+      switch (type) {
+        case 'left':
+          for (const i in this.mainNavList) {
+            this.sideNavigationList.forEach(item => {
+              if(item.name === this.mainNavList[i].name){
+                if(this.footNav && this.rightNav){
+                  let sumNav = this.footNavigationList.concat(this.rightNavigationList)
+                  if(!sumNav.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.leftNav = true
+                  }
+                }else if(this.footNav && !this.rightNav){
+                  if(!this.footNavigationList.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.leftNav = true
+                  }
+                }else if(!this.footNav && this.rightNav){
+                  if(!this.rightNavigationList.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.leftNav = true
+                  }
+                }else{
+                   this.delMainItem.push(item)
+                   this.promptModal = true
+                   this.leftNav = true
+                }
+              }
+            })
+          }
+          break;
+        case 'foot':
+          for (const i in this.mainNavList) {
+            this.footNavigationList.forEach(item => {
+              if(item.name === this.mainNavList[i].name){
+                // let sumNav = this.sideNavigationList.concat(this.rightNavigationList)
+                // if(!sumNav.find(f => f.name === item.name)){
+                //   this.delMainItem.push(item)
+                //   this.promptModal = true
+                //   this.footNav = true
+                // }
+                if(this.leftNav && this.rightNav){
+                  let sumNav = this.sideNavigationList.concat(this.rightNavigationList)
+                  if(!sumNav.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.footNav = true
+                  }
+                }else if(this.leftNav && !this.rightNav){
+                  if(!this.sideNavigationList.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.footNav = true
+                  }
+                }else if(!this.leftNav && this.rightNav){
+                  if(!this.rightNavigationList.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.footNav = true
+                  }
+                }else{
+                  this.delMainItem.push(item)
+                  this.promptModal = true
+                  this.footNav = true
+                }
+            
+              }
+            })
+          }
+          break;
+        case 'right':
+          for (const i in this.mainNavList) {
+            this.rightNavigationList.forEach(item => {
+              if(item.name === this.mainNavList[i].name){
+                if(this.leftNav && this.footNav){
+                  let sumNav = this.sideNavigationList.concat(this.footNavigationList)
+                  if(!sumNav.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.rightNav = true
+                  }
+                }else if(this.leftNav && !this.footNav){
+                  if(!this.sideNavigationList.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.rightNav = true
+                  }
+                }else if(!this.leftNav && this.footNav){
+                  if(!this.footNavigationList.find(f => f.name === item.name)){
+                    this.delMainItem.push(item)
+                    this.promptModal = true
+                    this.rightNav = true
+                  }
+                }else{
+                   this.delMainItem.push(item)
+                   this.promptModal = true
+                  this.rightNav = true
+                }
+              }
+            })
+          }
+          break;
+      }
+    },
+    // navToggle(navList,type){
+    //   this.delMainItem = []
+    //   for (const i in this.mainNavList) {
+    //     navList.forEach(item => {
+    //       if(item.name === this.mainNavList[i].name){
+    //         this.delMainItem.push(item)
+    //         this.promptModal = true
+    //       }
+    //     })
+    //   }
+    //   switch (type) {
+    //     case 'left':
+    //       this.leftNav = !this.leftNav
+    //       break;
+    //     case 'foot':
+    //       this.footNav = !this.footNav
+    //       break;
+    //     case 'right':
+    //       this.rightNav = !this.rightNav
+    //       break;
+    //   }
+    // },
+    ...mapActions(navStore, ['setFootNavigationList','sortFootNavigationList','removeFootNavigationList','setSideNavigationList','sortSideNavigationList','removeSideNavigationList','setRightNavigationList','sortRightNavigationList','removeRightNavigationList']),
+    mainNav(addItem,type){
+      this.mainNavList = this.mainNavigationList
+      let sumNavList = this.sideNavigationList.concat(this.footNavigationList,this.rightNavigationList)
+      if(type){
+        this.mainNavList.forEach(item => {
+          if(item.name === addItem.name){
+            if(type === 'add'){
+              item.addNav = true
+            }else if(type === 'del'){
+              item.addNav = false
+            }
+          }
+        })
+      }else{
+        for (const i in this.mainNavList) {
+          let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+          this.mainNavList[i].addNav = stateNav
+        }
+      }
+      // else if(type === 'del'){
+      //   this.mainNavList.forEach(item => {
+      //     if(item.name === addItem.name){
+      //       item.addNav = false
+      //     }
+      //   })
+      // }
+      // for (const i in this.mainNavList) {
+      //   let stateNav = this.sumNavList.some(item => {
+      //     return item.name === this.mainNavList[i].name
+      //   })
+      //   this.mainNavList[i].addNav = stateNav
+      // }
+      // this.mainNavList.forEach(item => {
+      //   if(item.name === addItem.name){
+      //     item.addNav = true
+      //   }
+      // })
+    },
+    mainDrop(){
+      let that = this
+      let main = document.getElementById('mainList')
+      Sortable.create(main,{
+        sort: false,
         animation: 150,
-     onUpdate:function(event){
+        removeCloneOnHide: true,
+        forceFallback: false,
+        onStart(evt) {
+          that.darggingCore = true
+          that.draggingArea('leftBox',evt.oldIndex,that.sideNavigationList,that.setSideNavigationList)
+          that.draggingArea('rightBox',evt.oldIndex,that.rightNavigationList,that.setRightNavigationList)
+          that.draggingArea('footBox',evt.oldIndex,that.footNavigationList,that.setFootNavigationList)
+        },
+      })
+    },
+    draggingArea(id,oldIndex,NavigationList,setNavigationList){
+      let that = this
+      let slider = document.getElementById(id)
+      slider.ondragover= function (ev) {
+        ev.preventDefault()
+      }
+      slider.ondrop=() =>{
+        if(that.darggingCore){
+          if(!NavigationList.find(j => j.name === that.mainNavigationList[oldIndex].name)){
+            setNavigationList(that.mainNavigationList[oldIndex])
+            that.mainNav()
+          }
+        }
+      }
+    },
+    delNavigation(sumList,oneNav,index,delMethod,type){
+      this.delMainItem = []
+      if(!this.mainNavList.find(item => item.name === oneNav.name)){
+        delMethod(index)
+      }else{
+        if(sumList.find(item => item.name === oneNav.name)){
+          delMethod(index)
+        }else{
+          this.promptModal = true
+          this.delNavType = type
+          this.delMainIndex = index
+          this.delMainItem.push(oneNav)
+        }
+      }
+    },
+    delMainCore(){
+      if(this.delNavType === 'delFoot'){
+        this.removeFootNavigationList(this.delMainIndex)
+      }else if(this.delNavType === 'delLeft'){
+        this.removeSideNavigationList(this.delMainIndex)
+      }else if(this.delNavType === 'delRight'){
+        this.removeRightNavigationList(this.delMainIndex)
+      }
+      this.promptModal = false
+      this.delMainIndex = -1
+      this.mainNav(this.delMainItem[0],'del')
+      this.navText = true
+    },
+    rowDrop()  {
+      let that = this
+      let drop = document.getElementById('navList')
+      Sortable.create(drop, {
+        sort: true,
+        animation: 150,
+        onStart: function(event){
+          that.navText = false
+          if(!this.navText){
+            let delIcon = document.getElementById('delIcon')
+            delIcon.ondragover= function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop=function (ev) {
+            let oneNav = that.footNavigationList[event.oldIndex]
+            let sumList = []
+            if(that.leftNav && that.rightNav){
+              sumList = that.sideNavigationList.concat(that.rightNavigationList)
+            }else if(that.leftNav && !that.rightNav){
+              sumList = that.sideNavigationList
+            }else if(!that.leftNav && that.rightNav){
+              sumList = that.rightNavigationList
+            }
+            that.delNavigation(sumList,oneNav,event.oldIndex,that.removeFootNavigationList,'delFoot')
+            
+            // let oneNav = that.footNavigationList[event.oldIndex]
+            // that.delMainItem = []
+            // if(!that.mainNavList.find(item => item.name === oneNav.name)){
+            //   that.removeFootNavigationList(event.oldIndex)
+            // }else{
+            //   if(sumList.find(item => item.name === oneNav.name)){
+            //     that.removeFootNavigationList(event.oldIndex)
+            //   }else{
+            //     that.promptModal = true
+            //     that.delNavType = 'delFoot'
+            //     that.delMainIndex = event.oldIndex
+            //     that.delMainItem.push(oneNav)
+            //   }
+            // }
+            // that.mainNav()
+            // that.navText = true
+          }
+        },
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let  newItem = drop.children[newIndex]
+          let  oldItem = drop.children[oldIndex]
 
-       let newIndex = event.newIndex,
-         oldIndex = event.oldIndex
-     let  newItem = drop.children[newIndex]
-     let  oldItem = drop.children[oldIndex]
-
-       // 先删除移动的节点
-       drop.removeChild(newItem)
-       // 再插入移动的节点到原有节点，还原了移动的操作
-       if(newIndex > oldIndex) {
-         drop.insertBefore(newItem,oldItem)
-       } else {
-         drop.insertBefore(newItem,oldItem.nextSibling)
-       }
-       that.sortNavigationList(event)
-     },
+          // 先删除移动的节点
+          drop.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if(newIndex > oldIndex) {
+            drop.insertBefore(newItem,oldItem)
+          } else {
+            drop.insertBefore(newItem,oldItem.nextSibling)
+          }
+          that.sortFootNavigationList(event)
+          that.mainNav()
+        },
+        onEnd: function(event){
+          that.navText = true
+        }
          // onChoose: function (/**Event*/evt) {
          //   that.rubbish=true
          // },
@@ -201,17 +626,113 @@ export default {
          //     that.removeNavigationList(event)
          // },
       });
-       // Sortable.create(dropRubbish, {
-       //   group: 'navigation',
-       //   animation: 150,
-       //   onAdd: function (/**Event*/evt) {
-       //     let newIndex = evt.newIndex,
-       //       oldIndex = evt.oldIndex
-       //     let  newItem = dropRubbish.children[newIndex]
-       //     dropRubbish.removeChild(newItem)
-       //
-       //   },
-       // });
+    },
+    colDrop(){
+      let that = this;
+      let side = document.getElementById('sideNavList')
+      Sortable.create(side, {
+        sort: true,
+        animation: 150,
+        direction: 'vertical',
+        scroll: false,
+        delay: 0,
+        onStart: function(event){
+          that.navText = false
+          if(!this.navText){
+            let delIcon = document.getElementById('delIcon')
+            delIcon.ondragover= function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop=function (ev) {
+            let oneNav = that.sideNavigationList[event.oldIndex]
+            let sumList = []
+            if(that.footNav && that.rightNav){
+              sumList = that.footNavigationList.concat(that.rightNavigationList)
+            }else if(that.footNav && !that.rightNav){
+              sumList = that.footNavigationList
+            }else if(!that.footNav && that.rightNav){
+              sumList = that.rightNavigationList
+            }
+            that.delNavigation(sumList,oneNav,event.oldIndex,that.removeSideNavigationList,'delLeft')
+            // that.removeSideNavigationList(event.oldIndex)
+            // that.mainNav()
+            // that.navText = true
+
+            // for(let i = 0; i < that.sideNavigationList; i++){
+            //   if(that.sideNavigationList[i].name === that.sideNavigationList[event.oldIndex]){
+            //   }
+            // }
+          }
+        },
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let  newItem = side.children[newIndex]
+          let  oldItem = side.children[oldIndex]
+          // 先删除移动的节点
+          side.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if(newIndex > oldIndex) {
+            side.insertBefore(newItem,oldItem)
+          } else {
+            side.insertBefore(newItem,oldItem.nextSibling)
+          }
+          that.sortSideNavigationList(event)
+        },
+        onEnd: function(event){
+          that.navText = true
+        }
+      });
+    },
+    rightDrop(){
+      let that = this;
+      let right = document.getElementById('rightNavList')
+      Sortable.create(right, {
+        sort: true,
+        animation: 150,
+        direction: 'vertical',
+        delay: 0,
+        onStart: function(event){
+          that.navText = false
+          if(!this.navText){
+            let delIcon = document.getElementById('delIcon')
+            delIcon.ondragover= function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop=function (ev) {
+            let oneNav = that.rightNavigationList[event.oldIndex]
+            let sumList = []
+            if(that.leftNav && that.rightNav){
+              sumList = that.footNavigationList.concat(that.sideNavigationList)
+            }else if(that.leftNav && !that.footNav){
+              sumList = that.sideNavigationList
+            }else if(!that.leftNav && that.footNav){
+              sumList = that.footNavigationList
+            }
+            that.delNavigation(sumList,oneNav,event.oldIndex,that.removeRightNavigationList,'delRight')
+          }
+        },
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let  newItem = right.children[newIndex]
+          let  oldItem = right.children[oldIndex]
+          // 先删除移动的节点
+          right.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if(newIndex > oldIndex) {
+            right.insertBefore(newItem,oldItem)
+          } else {
+            right.insertBefore(newItem,oldItem.nextSibling)
+          }
+          that.sortRightNavigationList(event)
+        },
+        onEnd: function(event){
+          that.navText = true
+        }
+      });
     },
     checkScroll(){
       this.$nextTick(()=>{
@@ -220,10 +741,19 @@ export default {
         }else{
           this.$refs.content.style.marginTop='0px'
         }
+
+        // if(this.$refs.sideContent.offsetWidth-this.$refs.sideContent.clientWidth>0){
+        //   this.$refs.sideContent.style.marginLeft='17px'
+        // }else{
+        //   this.$refs.sideContent.style.marginLeft='0px'
+        // }
+
+        // if(this.$refs.rightContent.offsetHeight-this.$refs.rightContent.clientHeight>0){
+        //   this.$refs.rightContent.style.marginTop='17px'
+        // }else{
+        //   this.$refs.rightContent.style.marginTop='0px'
+        // }
       })
-    },
-    deleteEdit(index){
-      this.removeNavigationList(index)
     },
     deleteDropList(index){
       this.dropList.splice(index,1)
@@ -239,7 +769,6 @@ export default {
       this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
       this.dropList.push(...this.dropFiles)
     },
-
     clickItem(item){
        this.activeRightItem = 0;
        this.nowClassify = item.name;
@@ -260,8 +789,10 @@ export default {
       this.$emit('setQuick')
       this.routeParams.url&& setTimeout(()=>{this.$router.push({name: 'app', params: this.routeParams})},400)
     },
-    addEdit(){
+    addEdit(val){
+      this.selectNav = val
       this.editFlag = true;
+      this.nowClassify = 'systemApp'
     },
     closeAdd(){
       this.editFlag = false;
@@ -269,35 +800,93 @@ export default {
     clickRightListItem(item,index){
       this.activeRightItem = index
       this.editFlag = false;
-     if(item instanceof Array){
-       for (let i = 0; i < item.length; i++) {
-         if(!this.navigationList.find(j => j.name===item[i].name))
-         this.setNavigationList(item[i])
-       }
-       this.dropList=[];
-     } else{
-       for (let i = 0; i < this.navigationList.length; i++) {
-         if(this.navigationList[i].name ===item.name)return
-       }
-       this.setNavigationList(item)
-       this.$nextTick(() => {
-         let scrollElem = this.$refs.content;
-         scrollElem.scrollTo({ left: scrollElem .scrollWidth, behavior: 'smooth' });
-       });
-     }
-    },
-    addNav(){
-      console.log('loadnav')
+      if( this.selectNav === 'foot'){
+        if(item instanceof Array){
+          for (let i = 0; i < item.length; i++) {
+            if(!this.footNavigationList.find(j => j.name===item[i].name)){
+              this.mainNav(item[i],'add')
+              item[i].addNav = true
+              this.setFootNavigationList(item[i])
+            }
+          }
+          this.dropList=[];
+        } else{
+          for (let i = 0; i < this.footNavigationList.length; i++) {
+            if(this.footNavigationList[i].name ===item.name)return
+          }
+          this.mainNav(item,'add')
+          item.addNav = true
+          this.setFootNavigationList(item)
+          this.$nextTick(() => {
+            let scrollElem = this.$refs.content;
+            scrollElem.scrollTo({ left: scrollElem .scrollWidth, behavior: 'smooth' });
+          });
+        }
+      }else if(this.selectNav === 'left'){
+        if(item instanceof Array){
+          for (let i = 0; i < item.length; i++) {
+            if(!this.sideNavigationList.find(j => j.name===item[i].name)){
+              this.mainNav(item[i],'add')
+              item[i].addNav = true
+              this.setSideNavigationList(item[i])
+            }
+          }
+            this.dropList=[];
+          } else{
+            for (let i = 0; i < this.sideNavigationList.length; i++) {
+              if(this.sideNavigationList[i].name ===item.name)return
+            }
+            this.mainNav(item,'add')
+            item.addNav = true
+            this.setSideNavigationList(item)
+            this.$nextTick(() => {
+              let scrollElem = this.$refs.sideContent;
+              scrollElem.scrollTo({ top: scrollElem .scrollHeigth, behavior: 'smooth' });
+            });
+          }
+      }else if(this.selectNav === 'right'){
+        if(item instanceof Array){
+          for (let i = 0; i < item.length; i++) {
+            if(!this.rightNavigationList.find(j => j.name===item[i].name)){
+              this.mainNav(item[i],'add')
+              item[i].addNav = true
+              this.setRightNavigationList(item[i])
+            }
+          }
+            this.dropList=[];
+          } else{
+            for (let i = 0; i < this.rightNavigationList.length; i++) {
+              if(this.rightNavigationList[i].name ===item.name)return
+            }
+            this.mainNav(item,'add')
+            item.addNav = true
+            this.setRightNavigationList(item)
+          }
+      }
     }
   },
   watch: {
-    navigationList : {
+    footNavigationList : {
       handler(){
         this.checkScroll()
       },
       immediate: true,
       deep:true
     },
+    sideNavigationList : {
+      handler(){
+        this.checkScroll()
+      },
+      immediate: true,
+      deep:true
+    },
+    // rightNavigationList : {
+    //   handler(){
+    //     this.checkScroll()
+    //   },
+    //   immediate: true,
+    //   deep:true
+    // },
   },
 }
 </script>
@@ -315,6 +904,183 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
+.box-content{
+  // background: red;
+  height: 100%;
+  .box-center{
+    height: 70%;
+    // background: pink;
+    margin:32px 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .side-nav{
+      border-radius: 12px;
+      width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-radius: 12px;
+      background: rgb(40, 40, 40);
+      max-height: 508px;
+      overflow: hidden;
+      padding: 24px 0 24px;
+    }
+    .center-text{
+      // width: 90%;
+      width: 1056px;
+      margin: 0 10px;
+      // background: yellow;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+  }
+  .box-foot{
+    position:absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    // padding-left: 24px;
+    min-width: 827px;
+    width: 70%;
+    height: 80px;
+    border-radius: 12px;
+    background: rgb(40, 40, 40);
+    box-sizing: border-box;
+  }
+}
+.con-center{
+  width: 512px;
+  display: flex;
+  flex-direction: column;
+  // background: greenyellow;
+  // justify-content: center;
+  // align-items: center;
+  >span:nth-child(1),
+  >span:nth-child(3){
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: PingFangSC-Medium;
+  }
+  >span:nth-child(2),
+  >span:nth-child(4){
+    margin: 8px 0 16px;
+    // width: 65%;
+    // text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+  }
+}
+.main-nav{
+  height: 112px;
+  padding: 12px;
+  background: #212121;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  >div{
+    width: 88px;
+    height: 88px;
+    background: #2A2A2A;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .add-toggle{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    // background: rgba(0, 0, 0, 0.5);
+    // background: rgba(255,255,255,0.50);
+  }
+}
+.nav-toggle{
+  background: red;
+  >div{
+    display: flex;
+    flex-direction: column;
+    padding: 24px 44px;
+    text-align: center;
+    background: #212121;
+    border-radius: 12px;
+  }
+}
+.left-point{
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.right-point{
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.foot-point{
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.prompt-modal{
+  position: relative;
+  top: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // height: 200px;
+  width: 380px;
+  margin: 0 auto;
+  .modal-btn{
+    display: flex;
+    color: white;
+    >div{
+      padding: 8px 50px;
+      // background: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.30);
+    }
+  }
+}
+.del-icon{
+  background: black;
+  width:100%;
+  height: 100%;
+  opacity: 0.5;
+  background: #2A2A2A;
+  border: 1px dashed rgba(255,255,255,0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 500;
+}
+
+
+
 
 .grid {
   position: relative;
@@ -328,51 +1094,16 @@ export default {
 }
 .back{
   margin-top: 24px;
-  margin-left: 24px;
-  font-size: 18px;
-  font-weight: 400;
-  width: 100px;
+  margin-left: 12px;
+  width: 80px;
   height: 48px;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 19px 0 10px;
-  align-items: center;
   border-radius: 12px;
   background: rgba(42, 42, 42, 1);
-}
-.content{
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
-
+  display: flex;
+  justify-content: center;
   align-items: center;
-  width: 100%;
-  >span:nth-child(1){
-    font-size: 18px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
-  }
-  >span:nth-child(2){
-    margin-top: 6px;
-    font-size: 18px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  .nav-list{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 30px;
-    padding-left: 24px;
-    min-width: 731px;
-    width: 70%;
-    height: 80px;
-    border-radius: 12px;
-    background: rgb(40, 40, 40);
-  }
 }
+
 .add-navigation{
   padding: 16px;
   position: absolute;
@@ -425,7 +1156,7 @@ export default {
         }
         .active{
           border-radius: 12px;
-          background: rgba(42, 42, 42, 1);
+          // background: rgba(42, 42, 42, 1);
         }
       }
 

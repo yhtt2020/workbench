@@ -142,6 +142,17 @@ export default {
       event:'home',
     },
     {
+      "type": "systemApp",
+      "icon": "youxishoubing",
+      "name": "游戏",
+      "event": "agme"
+    },{
+        "type": "systemApp",
+        "icon": "yinle1",
+        "name": "音乐",
+        "event": "apps"
+    },
+    {
       type:'systemApp',
       icon:'lock',
       name:'锁定屏幕',
@@ -212,12 +223,6 @@ export default {
       icon:'yingyongzhongxin',
       name:'应用管理',
       event:'apps',
-    },
-    {
-      type:'systemApp',
-      icon:'yinle1',
-      name:'音乐',
-      event:'music',
     },
     {
       type:'systemApp',

@@ -95,10 +95,10 @@
          style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
       <div style="overflow: hidden;overflow-x: auto;"
            class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
-        <div v-if="navigationList.length<=0" style="height: 56px;">
+        <div v-if="footNavigationList.length<=0" style="height: 56px;">
 
         </div>
-        <a-tooltip v-else :title="item.name" v-for="item in navigationList">
+        <a-tooltip v-else :title="item.name" v-for="item in footNavigationList">
           <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block"
                @click="clickNavigation(item)" >
             <div style="width: 56px;height:56px;" v-if="item.type==='systemApp'"
@@ -220,6 +220,28 @@
     </iframe>
   </div>
   <a-drawer
+    :contentWrapperStyle="{backgroundColor:'#212121',height:'216px'}"
+    class="drawer"
+    :closable="true"
+    placement="bottom"
+    :visible="menuVisible"
+    @close="onClose"
+  >
+    <a-row>
+      <a-col>
+        <div @click="editNavigation" class="btn relative">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>编辑导航</span></div>
+          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
+        </div>
+        <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
+          <Icon style="font-size: 3em" :icon="item.icon"></Icon>
+          <div><span>{{ item.name }}</span></div>
+        </div>
+      </a-col>
+    </a-row>
+  </a-drawer>
+  <!-- <a-drawer
     :contentWrapperStyle="{backgroundColor:'#1F1F1F',height:'11em'}"
     :width="120"
     :height="120"
@@ -238,7 +260,7 @@
         </div>
       </a-col>
     </a-row>
-  </a-drawer>
+  </a-drawer> -->
 
   <transition name="fade">
     <div class="home-blur fixed inset-0" style="z-index: 999" v-if="quick">
@@ -256,6 +278,7 @@
 import PanelButton from './PanelButton.vue'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
+import { navStore } from '../store/nav'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
@@ -386,7 +409,9 @@ export default {
     ...mapWritableState(appsStore,['runningApps','runningTableApps']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore,['screens']),
-    ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
+    ...mapWritableState(cardStore, ['routeParams']),
+    ...mapWritableState(navStore, ['footNavigationList','builtInFeatures']),
+    // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(messageStore,['messageIndex','totalCount']),
     isMain(){
       return isMain()
@@ -402,7 +427,7 @@ export default {
     }
   },
   watch: {
-    navigationList: {
+    footNavigationList: {
       handler () {
         this.checkScroll()
         // this.$nextTick(()=>{
@@ -664,6 +689,13 @@ export default {
 }
 .btn {
   text-align: center;
+  margin-right: 24px;
+  background: #2A2A2A;
+  border-radius: 12px;
+  width: 100px;
+  height: 100px;
+  padding-top: 16px;
+  line-height: 30px;
 }
 
 .status-text {

@@ -96,6 +96,7 @@ import { screenStore } from '../store/screen'
 import {isMain} from '../js/common/screenUtils'
 import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
+import { navStore } from "../store/nav"
 
 export default {
   name: 'Code',
@@ -124,6 +125,7 @@ export default {
     this.initStore(screenStore, 'screen')
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
+    this.initStore(navStore, 'navStore')
     if(isMain()){
       this.bindMainIPC()
     }else{
