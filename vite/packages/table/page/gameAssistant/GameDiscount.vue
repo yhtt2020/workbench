@@ -11,7 +11,7 @@
         <a-spin v-if="isLoading === true" class="" style="margin-top: 2em;"></a-spin>
         <div class="flex items-center flex-col justify-center" v-else>
           <div class="flex steam-item steam-sw-item">
-            <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item.id)" class="steam-mw s-bg pointer rounded-lg mb-3 mr-4">
+            <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" class="steam-mw s-bg pointer rounded-lg mb-3 mr-4">
               <div style="height:228px;">
                 <img :src="item.header_image" alt="" class="rounded-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="flex flex-wrap steam-sw-item ">
-            <div class="steam-sw  mb-3 mr-2 s-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item.id)">
+            <div class="steam-sw  mb-3 mr-2 s-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)">
               <div class="epic-sh mb-3">
                 <img :src="item.header_image" alt="" class="rounded-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
@@ -129,7 +129,7 @@ export default {
 
     // 进入详情
     enterDiscountDetail(val){
-      this.$router.push({name:'GameDiscountDetail',params:{id:val}})
+      this.$router.push({name:'GameDiscountDetail',params:{id:val.id,exTime:val.discount_expiration}})
     },
 
     // 获取默认的加载数据

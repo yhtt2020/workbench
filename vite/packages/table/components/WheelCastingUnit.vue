@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import "keen-slider/keen-slider.min.css"
 import KeenSlider from "keen-slider"
+import "keen-slider/keen-slider.min.css"
 
 function ThumbnailPlugin(main) {
   return (slider) => {
@@ -48,9 +48,9 @@ function ThumbnailPlugin(main) {
     function addClickEvents() {
       slider.slides.forEach((slide, idx) => {
         slide.addEventListener("click", () => {
+          main.moveToIdx(idx)
           const wheelVideo = document.querySelectorAll('video')
           wheelVideo[idx].play()
-          main.moveToIdx(idx)
         })
       })
     }
@@ -89,7 +89,7 @@ export default {
   },
   mounted() {
     setTimeout(()=>{
-      this.slider = new KeenSlider(this.$refs.slider,)
+      this.slider = new KeenSlider(this.$refs.slider)
       this.thumbnail = new KeenSlider(
        this.$refs.thumbnail,
        {
@@ -101,7 +101,7 @@ export default {
        },
        [ThumbnailPlugin(this.slider)]
       )
-    },100)
+    },50)
   },
   data(){
     return{

@@ -16,7 +16,7 @@
     </div>
   </div>
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
-    <div class="detail-container">
+    <div class="detail-container" style="height: 700px;">
       <WheelCastingUnit :screenshots="detailScreenshots" :movies="detailMovies"></WheelCastingUnit>
       <div class="flex flex-col min-width ml-4 rounded-lg px-4 py-4 s-bg">
         <span style="font-size: 16px; font-weight: 400;color: rgba(255, 255, 255, 0.85);">{{ detailData.description }}</span>
@@ -130,30 +130,26 @@ export default {
       goBack(){
         this.$router.push({name:'recommend'})
       },
-      getDetailVal(){
+      async getDetailVal(){
         if(this.id !== undefined){
-          sendRequest(`https://store.steampowered.com/api/appdetails?appids=${this.id}&cc=${this.defaultDetailRegion.id}&l=${this.defaultDetailRegion.id}`,{},{
-            localCache:true,
-            localTtl:60*12*60
-          }).then(res=>{
-            const result = res.data[this.id].data
-            const newLanguages = result.supported_languages.replaceAll('<strong>*</strong>','')
-            this.detailData = {
-              name:result.name,
-              language:newLanguages.split('<br>')[0],
-              publishers:result.publishers[0],
-              developers:result.developers[0],
-              releaseDate:result.release_date.date,
-              genres:result.genres,
-              percent:result.price_overview.discount_percent,
-              description:result.short_description,
-              newPrice:result.price_overview.final_formatted,
-              oldPrice:result.price_overview.initial_formatted
-            }
-            this.detailMovies = result.movies // 详情图片和视频数组拼接方便后期渲染
-            this.detailScreenshots = result.screenshots
-            this.gameIntroduction = result.detailed_description
-          })
+          const res = await sendRequest(`https://store.steampowered.com/api/appdetails?appids=${this.id}&cc=${this.defaultDetailRegion.id}&l=${this.defaultDetailRegion.id}`,{},{localCache:true,localTtl:60*12*60})
+          const result = res.data[this.id].data
+          const newLanguages = result.supported_languages.replaceAll('<strong>*</strong>','')
+          this.detailData = {
+            name:result.name,
+            language:newLanguages.split('<br>')[0],
+            publishers:result.publishers[0],
+            developers:result.developers[0],
+            releaseDate:result.release_date.date,
+            genres:result.genres,
+            percent:result.price_overview.discount_percent,
+            description:result.short_description,
+            newPrice:result.price_overview.final_formatted,
+            oldPrice:result.price_overview.initial_formatted
+          }
+          this.detailMovies = result.movies // 详情图片和视频数组拼接方便后期渲染
+          this.detailScreenshots = result.screenshots
+          this.gameIntroduction = result.detailed_description
         }else{
           this.$router.push({name:'gameDiscount'})
         }

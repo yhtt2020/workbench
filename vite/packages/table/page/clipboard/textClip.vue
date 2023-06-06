@@ -1,41 +1,66 @@
 <template>
   <div class="flex">
-    <div v-for="item in textList" style="width:338px;" class="mr-3 flex flex-col s-bg rounded-md">
-      <div class="flex flex-col  rounded-t-md s-item px-5 py-3">
-        <div class="flex items-center">
-          <Icon :icon="item.icon" style="font-size: 1.5em;"></Icon>
-          <span class="ml-2">{{item.title}}</span>
-        </div>
-        <div class="flex justify-between pt-1">
-          <span class="">{{item.time}}</span>
-          <span>{{item.capacity}}</span>
-        </div>
-      </div>
-      <div style="padding: 46px 13px;width:299px;" class="flex-1">
-        <span v-if="item.content">{{ item.content }}</span>
-        <div v-if="item.picIcon" class="flex flex-col items-center justify-center"> 
-          <Icon :icon="item.picIcon" style="font-size: 9.15em;"></Icon>
-          <span class="pt-6">{{item.name}}</span>
-        </div>
-      </div>
-      <div class="s-item h-12  rounded-b-md"> 
-         
-      </div>
+    <div v-for="(item,index) in textList" :key="index" :class="{'active-clip':selectedIndex === index}" class="mr-3 flex flex-col s-bg rounded-md">
+      <ClipItem :clip="item" @openPreview="getClipShow" style="width:332px;height: 412px;"></ClipItem>
     </div>
   </div>
+  <ClipTextPreview :textShow="allClipShow" :textPreview="previewObj" @closeText="allClipShow = false"></ClipTextPreview>
 </template>
 
 <script>
+import ClipItem from '../../components/ClipItem.vue'
+import ClipTextPreview from '../../components/clipPreview/ClipTextPreview.vue'
 import { textList } from '../../js/data/clipboardData'
 export default {
+  components:{
+    ClipItem,
+    ClipTextPreview
+  },
   data(){
     return{
       textList,
+      allClipShow:false,
+      previewObj:null,
+      selectedIndex:0,
     }
-  }    
+  },
+  mounted(){
+    window.addEventListener('keydown',this.listKeyDown)
+  },
+
+  methods:{
+    getClipShow(v){
+      this.allClipShow = v.preview
+      this.previewObj = v.content
+    },
+    // 键盘切换状态
+    listKeyDown(e){
+      const keyCode = e.keyCode
+      if(keyCode === 37 && this.selectedIndex > 0){
+        this.selectedIndex --
+      }else if(keyCode === 39 && this.selectedIndex < this.textList.length - 1){
+        this.selectedIndex ++ 
+      }
+    }
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('keydown')
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
+.active-clip{
+  border: 6px solid rgba(80,139,254,1);
+  &:deep(.clip-top){
+    margin-bottom: 0 !important;
+  }
+  &:deep(.clip-text-center){
+    padding-bottom: 28px !important;
+  }
+}
+.s-bg{
+  box-shadow:none !important;
+}
 </style>
