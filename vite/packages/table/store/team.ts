@@ -63,7 +63,6 @@ export const teamStore = defineStore("teamStore", {
           teamNo = state.my.joined[0].team_no
         }
       }
-      console.log(state.my.joined)
       return teamNo
     },
     myTeam(state){
@@ -210,7 +209,6 @@ export const teamStore = defineStore("teamStore", {
         if (teamResult.data.status) {
 
           this.team = teamResult.data.data
-          console.log(this.team)
         } else {
           this.team = {
             status: false

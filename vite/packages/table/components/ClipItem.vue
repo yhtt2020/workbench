@@ -21,12 +21,12 @@
           </div>
         </div>
         <div class="h-12 flex p-1 s-item rounded-b-md">
-          <div v-for="(item) in textType"  :class="defaultTextType.name === item.name ? 's-item':''" 
-          class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item)"
+          <div v-for="(item,index) in textType"  :class="defaultTextType.name === item.name ? 's-item':''" 
+          class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item,index)"
          >
            <Icon :icon="item.icon" style="font-size: 1.25em;"></Icon>
            <span class="mx-2">{{item.title}}</span>
-           <Icon icon="gengduo1" class="pointer" v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
+           <Icon icon="gengduo1" class="pointer" @click="openCode" v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
          </div>
         </div>
       </div>
@@ -108,7 +108,7 @@
       </div>
       <div class="flex-1 px-5 py-14 mb-3">
         <div style="width:100%;height:185px;" class="rounded-lg flex flex-col " v-if="clip.imgUrl">
-          <img :src="clip.imgUrl" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
+          <img :src="clip.imgUrl" alt="" class="rounded-lg w-full h-full  object-cover"  >
           <span class="pt-5 text-center">{{ clip.name }}</span>
         </div>
       </div>
@@ -122,7 +122,7 @@
             <div @click="backClip" class="s-item rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
               <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
             </div>
-            <div class="py-3 flex items-center  rounded-lg ml-3 w-40">
+            <div class="py-3 flex items-center rounded-lg ml-3 w-40">
               <span>操作</span>
             </div>
           </div>
@@ -247,9 +247,6 @@ export default {
     },
     selectItem(item){
       this.defaultTextType = item
-      if(item.name === 'dm'){
-        this.openCode()
-      }
     },
     openCode(){
       this.textShow = true
@@ -262,14 +259,32 @@ export default {
       this.clipOptions.mode = item.name
     },
     clipKeyDown(e){
+      // 打开预览快捷键功能
       if(e.keyCode === 32){
         this.$emit('openPreview',{preview:true,content:this.clip,copy:this.copyList})
       }
+      // 复制快捷键功能
       if(e.ctrlKey && e.key === 'c'){
         console.log('复制');
       }
+      // 收藏快捷键功能
       if(e.ctrlKey && e.key === 's'){
         console.log('收藏');
+      }
+      // 打开链接快捷键
+      if(e.ctrlKey && e.key === 'o'){
+        console.log('打开链接');
+      }
+      // 删除快捷键
+      if(e.keyCode === 46){
+        console.log('删除');
+      }
+      // 复制路径快捷键
+      if(e.ctrlKey && e.altKey && e.key === 'c'){
+        console.log('复制路径');
+      }
+      if(e.ctrlKey && e.keyCode === 13){
+        console.log('打开资源管理器');
       }
     }
   }
@@ -311,4 +326,5 @@ export default {
 .clip-con{
   color: rgba(255,255,255,1);
 }
+
 </style>

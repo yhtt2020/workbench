@@ -1,18 +1,28 @@
 <template>
-  <HomeComponentSlot :options="options" :customData="customData" :customIndex="customIndex">
-      <div class="mt-5 my-friends">
-        <div v-for="item in avatarList" class="pointer avatar-item">
-          <a-avatar shape="square" :size="48" :src="item.url"  class="mb-4 rounded-md" style="border:3px solid rgba(82, 196, 26, 1);"></a-avatar>
-        </div>
+  <HomeComponentSlot :options="options" :customData="customData" :customIndex="customIndex" style="overflow: hidden">
+    <a-empty v-if="myFriends.length===0" style="margin-top: 10px" description="您还没有好友或未绑定Steam">
+
+    </a-empty>
+    <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 90%">
+      <div class="mt-5 my-friends"  >
+          <div v-for="item in myFriends" class=" avatar-item">
+            <a-popover :content="item.player_name">
+              <a-avatar shape="square" :size="48" :src="item.avatar_url_medium"  class="mb-4 rounded-md" style="border:3px solid rgba(82, 196, 26, 1);"></a-avatar>
+            </a-popover>
+          </div>
       </div>
+    </vue-custom-scrollbar>
   </HomeComponentSlot>
 </template>
-
 <script>
 import HomeComponentSlot from '../HomeComponentSlot.vue'
+import { steamUserStore } from '../../../store/steamUser'
+import {mapState}from 'pinia'
+import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 export default {
   name:'SteamFriends',
   components:{
+    VueCustomScrollbar,
     HomeComponentSlot
   },
   props:{
@@ -31,33 +41,23 @@ export default {
   },
   data(){
     return{
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
       options: {
         className: 'card small',
         title: 'Steam好友',
         icon: 'steam',
         type: 'games',
-      },
-      avatarList:[
-        {
-          url:'https://img.js.design/assets/img/62d55fffcd17e6382247fd75.png'
-        },
-        {
-          url:'https://img.js.design/assets/img/63be28cdfff5f0030255a405.png'
-        },
-        {
-          url:'https://img.js.design/assets/img/6204c84966d3a142bc89492b.png'
-        },
-        {
-          url:'https://img.js.design/assets/img/63be28cdfff5f0030255a405.png'
-        },
-        {
-          url:'https://img.js.design/assets/img/61934e73d2c3fe6c76e06328.png',
-        },
-        {
-          url:'https://img.js.design/assets/img/61934e6b3404f55df2bb23af.png',
-        }
-      ]
+      }
     }
+  },
+  computed:{
+    ...mapState(steamUserStore,['myFriends'])
   }
 }
 </script>

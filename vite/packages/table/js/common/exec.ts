@@ -29,7 +29,6 @@ export function getResPathJoin(...paths) {
 export async function runExec(cmdStr, cmdPath) {
   let promise = new Promise((resolve, reject) => {
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-    console.log('执行cmd', cmdStr)
     workerProcess = exec(cmdStr, {cwd: cmdPath,encoding:'buffer'})
     // 不受child_process默认的缓冲区大小的使用方法，没参数也要写上{}：workerProcess = exec(cmdStr, {})
 
