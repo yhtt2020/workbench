@@ -19,7 +19,7 @@
     --tertiary-text: rgba(255, 255, 255, 0.4) !important;
 
     body {
-        // background: var(--main-bg) !important;
+        background: var(--main-bg) !important;
     }
 
     .active {
@@ -50,7 +50,7 @@
     --tertiary-text: rgba(255, 255, 255, 0.4) !important;
 
     body {
-        // background: var(--main-bg) !important;
+        background: var(--main-bg) !important;
     }
 
     .active {
@@ -111,8 +111,29 @@
         background: var(--primary-bg);
         color: var(--primary-text) !important;
     }
-    .btn ,.option {
+
+    .btn,
+    .option {
         color: var(--primary-text) !important;
         background: var(--active-bg);
+    }
+}
+
+.ant-table-content {
+    .ant-table-thead>tr>th {
+        background: var(--secondary-bg);
+        color: var(--primary-text) !important;
+        border-bottom: 1px solid var(--divider);
+    }
+
+    .ant-table-tbody>tr>td {
+        background: var(--secondary-bg);
+        color: var(--primary-text) !important;
+        border-bottom: 1px solid var(--divider);
+    }
+
+    .ant-table-tbody>tr.ant-table-row:hover>td,
+    .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+        background: var(--primary-bg);
     }
 }

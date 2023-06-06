@@ -5,12 +5,12 @@
         <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" style="background-color: var(--primary-bg);">
           <GradePanel @openGradeTip="openGradeTip"></GradePanel>
         </div>
-        <div class="rounded-lg flex-1 w-full  tip-card px-5 text-white" style="background: rgba(33, 33, 33, 1);">
+        <div class="rounded-lg flex-1 w-full  tip-card px-5 text-white" style="background: var(--primary-bg);">
           <div class="flex items-center -ml-4 mt-3">
             <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
           </div>
           <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2"
-            style="background: rgba(42, 42, 42, 1);">
+            style="background: var(--active-bg);color:var(--primary-text)">
             <div>1. 保持在线状态即可升级</div>
             <div>2. 目前有「{{leveList.length}}」个不同的等级权益，高等级还能优先体验新功能</div>
             <div>3. 通过加入「小队」最高可获得20%升级加速</div>
