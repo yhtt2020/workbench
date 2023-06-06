@@ -1,19 +1,18 @@
 <template>
   <HomeComponentSlot :options="options">
     <div class="absolute  left-4 top-4 h-6 w-16 pointer"   @click="moveToday"></div>
-    <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);" class="my-calendar">
-      <Calendar  :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
-
+    <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
+      <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
       </Calendar>
     </div>
 
 
-      <a-row class="festival mt-4 s-item" style="border-radius: 12px;height: 60px">
-        <a-col :span="11" class="flex flex-row items-center pl-2 py-2">
+      <a-row class="festival mt-4 s-item" style="border-radius: 12px;height: 60px;background: var(--primary-bg);color:var(--primary-text)">
+        <a-col :span="11" class="flex flex-row items-center pl-2 py-2" >
           <div class="round-dot mr-3"></div>
-          <div class="flex flex-col">
+          <div class="flex flex-col" s>
             <span>端午节</span>
-            <span style="color: rgba(255, 255, 255, 0.4);font-size: 12px;">农历五月初五</span>
+            <span style="font-size: 12px;">农历五月初五</span>
           </div>
 
         </a-col>
@@ -87,6 +86,15 @@ export default {
 }
 </script>
 <style>
+:deep(.vc-weekdays) {
+  color: red !important;
+
+
+}
+.vc-weekday  {
+  color: var(--primary-text) !important;
+
+}
 .ant-picker-calendar .ant-picker-panel {
   border-top: none;
   background: none;
