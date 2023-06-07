@@ -44,7 +44,7 @@
     </div>
     <span class="plain-font pb-6">历史记录容量</span>
     <HorizontalPanel class="mt-6 mb-6" :navList="historyCapacity"  bg-color="drawer-item-select-bg" v-model:selectType="defaultCapacity"></HorizontalPanel>
-    <div class="w-full flex items-center plain-font s-item pointer justify-center rounded-lg py-3">清除剪贴板记录</div>
+    <div class="w-full flex items-center plain-font set-button pointer justify-center rounded-lg py-3">清除剪贴板记录</div>
   </a-drawer>
 
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
@@ -52,7 +52,7 @@
   <a-drawer :width="500"  v-model:visible="drawerVisible" title="搜索" placement="right">
     <!--  v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchVideoData" placeholder="搜索"  style="
     border-radius: 12px;background: rgba(42, 42, 42, 0.6);" v-if="drawerType==='search'" -->
-    <a-input>
+    <a-input placeholder="搜索" class="no-drag h-10 w-full" v-model:value="searchData" >
       <template #prefix>
         <Icon icon="sousuo"></Icon>
       </template>
@@ -109,6 +109,7 @@ export default {
       },
       simpleImage:'/public/img/test/not-data.png',
       drawerVisible:false,
+      searchData:'' //搜索
     }
   },
   mounted(){
@@ -129,7 +130,8 @@ export default {
     },
     clipSearch(){
       this.drawerVisible = true
-    }
+    },
+    
   },
   watch:{
     'defaultCutType':{
