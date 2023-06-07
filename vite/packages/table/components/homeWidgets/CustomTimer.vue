@@ -86,14 +86,11 @@ export default {
 }
 </script>
 <style>
-:deep(.vc-weekdays) {
+/* :deep(.vc-weekdays) {
   color: red !important;
-
-
-}
-.vc-weekday  {
+} */
+.vc-weekday ,.vc-header >.vc-title{
   color: var(--primary-text) !important;
-
 }
 .ant-picker-calendar .ant-picker-panel {
   border-top: none;

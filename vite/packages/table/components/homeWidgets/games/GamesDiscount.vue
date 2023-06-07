@@ -24,8 +24,8 @@
               <img :src="item.header_image" alt="" class=" rounded-md"
                    style="width:140px;height:65px; object-fit: cover;">
               <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
-                <div class="name truncate" style="width: 100%; margin-bottom: 10px;">{{ item.name }}</div>
-                <span class="line-through text-white text-opacity-60" style="font-size: 10px;">
+                <div class="name truncate" style="width: 100%; margin-bottom: 10px;color: var(--primary-text);">{{ item.name }}</div>
+                <span class="line-through text-white text-opacity-60" style="font-size: 10px;color: var(--secondary-text);">
                 {{ currencyFormat(item.original_price, item.currency) }}
               </span>
                 <div class="flex w-full justify-between ">

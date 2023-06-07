@@ -42,34 +42,34 @@
       <div class="w-1/2 rounded-lg  relative mr-5">
          <img :src="otherGame.src" alt="" class="rounded-lg" style="width: 100%;height: 100%;object-fit: cover;">
          <span class="middle-tag rounded-md mr-2 mt-2" v-if="isStartGame === true">正在运行</span>
-         <div class="detail-name w-full flex items-center rounded-b-lg px-4 py-2" style="font-size: 18px;font-weight: 600;">
+         <div class="detail-name w-full flex items-center rounded-b-lg px-4 py-2" style="font-size: 18px;font-weight: 600;color: var(--primary-text);">
             {{ otherGame.title }}
          </div>
       </div>
-      <div class="w-1/2 flex flex-col">
+      <div class="w-1/2 flex flex-col" style="color:var(--primary-text) ">
+         <div class="flex mb-4 justify-between" >
+            <span class="font-color" style="color:var(--primary-text) ">本次游玩</span>
+            <span class="font-time" style="color:var(--primary-text) ">3小时</span>
+         </div>
+         <div class="flex  mb-4 justify-between">
+          <span class="font-color" style="color:var(--primary-text) ">总时长</span>
+          <span class="font-time" style="color:var(--primary-text) ">128小时</span>
+         </div>
+         <div class="flex  mb-4 justify-between">
+          <span class="font-color" style="color:var(--primary-text) ">近两周</span>
+          <span class="font-time" style="color:var(--primary-text) ">9小时</span>
+         </div>
+         <div class="flex  mb-4 justify-between">
+          <span class="font-color" style="color:var(--primary-text) ">成就</span>
+          <span class="font-time" style="color:var(--primary-text) ">12/29</span>
+         </div>
+         <div class="flex  mb-4 justify-between">
+          <span class="font-color" style="color:var(--primary-text) ">Steam在线</span>
+          <span class="font-time" style="color:var(--primary-text) ">1,343,344</span>
+         </div>
          <div class="flex mb-4 justify-between">
-            <span class="font-color">本次游玩</span>
-            <span class="font-time">3小时</span>
-         </div>
-         <div class="flex  mb-4 justify-between">
-          <span class="font-color">总时长</span>
-          <span class="font-time">128小时</span>
-         </div>
-         <div class="flex  mb-4 justify-between">
-          <span class="font-color">近两周</span>
-          <span class="font-time">9小时</span>
-         </div>
-         <div class="flex  mb-4 justify-between">
-          <span class="font-color">成就</span>
-          <span class="font-time">12/29</span>
-         </div>
-         <div class="flex  mb-4 justify-between">
-          <span class="font-color">Steam在线</span>
-          <span class="font-time">1,343,344</span>
-         </div>
-         <div class="flex mb-4 justify-between">
-          <span class="font-color">M站评分</span>
-          <span class="font-time">9.0</span>
+          <span class="font-color" style="color:var(--primary-text) ">M站评分</span>
+          <span class="font-time" style="color:var(--primary-text) ">9.0</span>
          </div>
          <div @click="openGameGuide" class="flex items-center rounded-lg pointer justify-center mb-3 px-3 py-3 s-item">
           <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
