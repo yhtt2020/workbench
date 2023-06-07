@@ -1,6 +1,6 @@
 <template>
     <div class="main-box ">
-        <div class="box" v-for="(item, index) in   navLists  " :key="item.name" style="color: var(--font-color);background-color: var(--no-active-background-color);">
+        <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
             <div class="add no-drag" @click="addCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                     <Icon icon="tianjia2" style="color: #000;"></Icon>
@@ -11,25 +11,25 @@
                     · · ·
                 </div>
             </div>
-            <div class="left no-drag" @click="fullScreen(item)" style="background: var(--no-active-font-color);">
+            <div class="left no-drag" @click="fullScreen(item)"
+                style="background: var(   --active-bg);">
                 <template v-if="item.option.length > 1">
-                    <div class="top">
-                        <img ref="imgRef" :class="{ 'zoom': item.option[0].name == 'middleWallpaper' }" class="img"
-                            :src="getImg(item.option[0].name )" alt="">
+                    <div class="top" style="background: var(--active-bg);">
+                        <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="">
                     </div>
                     <div class="bottom">
-                        <img ref="imgRef" :class="{ 'zoom': i.name == 'middleWallpaper' }" v-for="i in item.option"
-                            :src="getImg(i.name )" alt="" class="img">
+                        <img v-for="i in item.option" :src="getImg(i.name)" alt="">
                     </div>
                 </template>
-                <img v-else ref="imgRef" :src="getImg(item.option[0].name )" alt=""
-                    :style="[{ zoom: item.option[0].zoom? item.option[0].zoom : '11%' }]">
+                <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
+                    :style="[{ zoom: item.option[0].zoom + '%' }]">
             </div>
             <div class="right">
-                <div class="title" style="color: var(--font-color);">{{ item.cname }}</div>
-                <div class="text" style="color: var(--no-active-font-color);">{{ item.detail }}</div>
-                <div class="icon" >
-                    <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--no-active-font-color);background-color: var(--active-background-color);">{{ i }}</div>
+                <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
+                <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
+                <div class="icon">
+                    <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--secondary-text)">{{ i }}
+                    </div>
                 </div>
                 <div class="data">
                     <Icon icon="xiazai" class="icons" style=" color: #508BFE; margin: 0; width: 20px;"></Icon>
@@ -99,9 +99,9 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ["addCustomComponents"]),
-      getImg(url){
-          return '/img/addCard/' + url + '.png'
-      },
+        getImg(url) {
+            return '/img/addCard/' + url + '.png'
+        },
         mySort(data, property, asc) {
             let datas = [...data]
             return datas.sort(function (a, b) {
@@ -224,11 +224,6 @@ export default {
         width: 180px;
         cursor: pointer;
 
-        img {
-            zoom: 11%;
-            // height: 55%;
-        }
-
         .top {
             width: 100%;
             height: 120px;
@@ -236,9 +231,9 @@ export default {
             justify-content: center;
             align-items: center;
 
-            .img {
+            img {
                 zoom: 0.07 !important;
-              object-fit: contain;
+                object-fit: contain;
             }
 
             .zoom {
@@ -259,10 +254,10 @@ export default {
                 zoom: 0.02 !important;
             }
 
-            .img {
+            img {
                 zoom: 0.04;
                 border-radius: 5px;
-               object-fit: contain;
+                object-fit: contain;
             }
         }
 
@@ -332,6 +327,7 @@ export default {
 
             .data-box {
                 margin: 0 4px;
+                color: var(--primary-text)
             }
         }
     }

@@ -1,25 +1,23 @@
 <template>
-  <!-- :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" -->
   <div v-if="this.grids.length === 0" class=" box p-5" style="max-height: 100%">
-    <a-result class="s-bg rounded-lg " style="" status="success" title="使用快捷指令"
-      sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
-      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
+    <a-result class="s-bg rounded-lg " style="background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用快捷指令"
+      sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。">
       <template #extra>
         <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
         <a-button disabled key="buy" @click="learn"
-          style="color:var(--no-active-font-color);background-color: var(--no-active-background-color)">学习（课程暂未上线）</a-button>
+          style="color:var( --secondary-text); ">学习（课程暂未上线）</a-button>
       </template>
       <div class="desc">
         <p style="font-size: 16px">
           <strong>您也可以通过多种方式导入别人分享的方案：</strong>
         </p>
         <p>
-          <close-circle-outlined :style="{ color: 'red' }" />
+          <close-circle-outlined />
           使用分享代码导入
           <a @click="toggleImport">导入代码 &gt;</a>
         </p>
         <p>
-          <close-circle-outlined :style="{ color: 'red' }" />
+          <close-circle-outlined  />
           从社区获得分享代码（此功能暂未上线，请耐心等待）
           <a>从社区导入 &gt;</a>
         </p>
@@ -722,11 +720,11 @@ export default {
 <style scoped lang="scss">
 .box {
   :deep(.ant-result-subtitle) {
-    color: var(--font-color);
+    color: var(--primary-text);
   }
 
   :deep(.ant-result-title) {
-    color: var(--font-color);
+    color: var(--primary-text);
   }
 }
 

@@ -1,11 +1,11 @@
 <template>
-        <a-button @click="addScreen" class="mr-3 no-dark" style="color:var(--font-color)">创建</a-button>
+  <!-- 快速搜索 分屏 -->
   <div style="height: 100%;display: flex;justify-content: center;align-content: center;flex-direction: column;">
-    <div @click.stop style="background: #111;border: 1px solid #333;background-color: var(--background-color);" class="p-3 rounded-md mt-3">
+    <div @click.stop style="background: #111;border: 1px solid #333;background-color:var(--primary-bg) ; color: var(--primary-text);" class="p-3 rounded-md mt-3">
 
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
-           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative;">
+                           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative;">
         <a-image v-if="screen.key!=='main'" :preview="false"
                  fallback="/public/icons/main.png"
                  class="screen-preview" :width="120" :height="70" :src="'file://'+screen.capture"></a-image>
@@ -18,8 +18,8 @@
               class="p-2 screen-title">{{ screen.title }}</span>
       </div>
       <div class="text-right " >
-        <a-button @click="addScreen" class="mr-3 no-dark" style="color:var(--font-color)">创建</a-button>
-        <a-button @click="tagScreen" style="color:var(--font-color)">辨别</a-button>
+        <a-button @click="addScreen" class="mr-3 no-dark" style="color:var(--primary-text)">创建</a-button>
+        <a-button @click="tagScreen" style="color:var(--primary-text)">辨别</a-button>
       </div>
     </div>
     <div class="p-3" @click.stop>

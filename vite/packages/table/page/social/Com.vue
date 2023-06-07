@@ -6,7 +6,7 @@
     <vueCustomScrollbar v-if="currentTab.name === 'com'" :settings="scrollbarSettings"
       style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
       <div class="card mr-3"
-        style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column;background-color: var(--background-color);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--font-color)">
+        style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column;background-color: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
         <div class="line-title" style="">
           <HorizontalPanel v-if="Number(this.myTeamNo) > 0" :navList="channelList" v-model:select-type="currentChannel">
           </HorizontalPanel>
@@ -33,10 +33,10 @@
                   <a-avatar :size="36" src="/icons/logo128.png"></a-avatar>
                 </a-col>
                 <a-col :span="20">
-                  <div class="barrage-name" style="color:var(--no-active-font-color)">
+                  <div class="barrage-name" style="color:var(--secondary-text)">
                     弹幕管理员
                   </div>
-                  <div class="barrage-content" style="color:var(--font-color)">
+                  <div class="barrage-content" style="color:var(--primary-text)">
                     欢迎使用想天工作台弹幕功能，请文明发言。
                   </div>
                 </a-col>
@@ -51,10 +51,10 @@
                   </a-col>
                   <a-col :span="20">
                     <div class="barrage-name">
-                      <strong style="color:var(--no-active-font-color)">{{ barrage.nickname }}</strong> · {{
+                      <strong style="color:var(--secondary-text)">{{ barrage.nickname }}</strong> · {{
                         barrage.create_time_text }}
                     </div>
-                    <div class="barrage-content" style="color:var(--font-color)">
+                    <div class="barrage-content" style="color:var(--primary-text)">
                       {{ barrage.content }}
                     </div>
                     <div class="barrage-time">
@@ -86,7 +86,7 @@
       </div>
       <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top;">
         <div class="card mb-3"
-          style="width: 300px;background-color: var(--background-color);color: var(--font-color);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);">
+          style="width: 300px;background-color: var(--primary-bg);color: var(--primary-text);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);">
           <div>
             反馈问题？提交Bug？进入想天浏览器官方版块。
             <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">
@@ -106,7 +106,7 @@
     <vue-custom-scrollbar v-else :settings="scrollbarSettings"
       style="height: 90%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden">
       <div class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
-        <div class="card mb-3" style="width: 300px; background-color: var(--background-color); color: var(--font-color)">
+        <div class="card mb-3" style="width: 300px; background-color: var(--primary-bg); color: var(--primary-text)">
           <div>
             当前版本：<br>
 
@@ -119,7 +119,7 @@
             <a-button class="mt-3" block type="primary" @click="checkUpdate">检查更新</a-button>
           </div>
         </div>
-        <div class="card mb-3" style="width: 300px;background-color: var(--background-color); color: var(--font-color)">
+        <div class="card mb-3" style="width: 300px;background-color: var(--primary-bg); color: var(--primary-text)">
           <div class="line-title">
             成为开发者：
           </div>
@@ -132,7 +132,7 @@
                   </a-button>
                 </a-col>
                 <a-col :span="12">
-                  <a-button style="background-color:var(--no-active-background-color);color: var(--font-color);"
+                  <a-button style="background-color:var(--primary-bg);color: var( --primary-text);"
                     @click="openTab('https://www.yuque.com/tswork/mqon1y/ldt3ll8lqoedpo07')" block>前端实习
                   </a-button>
                 </a-col>
@@ -142,7 +142,7 @@
         </div>
       </div>
       <div style="height: 100%;display: inline-block;">
-        <div class="line font-bold text-white" style="color: var(--font-color)">更新日志：</div>
+        <div class="line font-bold text-white" style="color: var(--primary-text)">更新日志：</div>
         <vuuri v-model="updateLog" style="height: 100%">
           <template #item="{ item }">
             <div class="card mb-3 " style="width: 400px;background: rgba(13,62,227,0.8);color:white;height: auto">
@@ -174,7 +174,7 @@ import { Server } from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
-import SingIn from '../../components/homeWidgets/SignIn.vue'
+import SingIn from '../../components/widgets/SignIn.vue'
 import { teamStore } from '../../store/team'
 import { mapState, mapActions } from 'pinia'
 import browser from '../../js/common/browser'

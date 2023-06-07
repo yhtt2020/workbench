@@ -1,6 +1,6 @@
 <template>
   <div v-if="showRestore" class="no-drag"
-    style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76)">
+    style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76);">
     <div class="mb-3">当前窗口分辨率：{{ currentWidth }} * {{ currentHeight }}，将于{{ timeout }}秒后还原</div>
     <a-button @click="restore" class="ml-3">还原</a-button>
     <a-button @click="reset" class="ml-3">重置</a-button>
@@ -8,9 +8,10 @@
 
   </div>
 
-  <div class="line">
+  <div class="line" >
     缩放比例（输入后回车确认）：
-    <a-input-number style="color: var(--font-color);" :min="30" :max="500" @pressEnter="inputEnter"
+    <!-- 后期可删 -->
+    <a-input-number style="color: var(--primary-text);" :min="30" :max="500" @pressEnter="inputEnter"
       v-model:value="inputZoom"></a-input-number>
     %<br>
   </div>
@@ -193,4 +194,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

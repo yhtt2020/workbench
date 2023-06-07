@@ -1,52 +1,53 @@
 <template>
-  <div id="display" class="s-bg p-3 m-3 rounded-lg" style="height:calc(100vh - 12em); ">
+  <div id="display" class="s-bg p-3 m-3 rounded-lg" style="height:calc(100vh - 12em);background: var(--primary-bg); ">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit" :destroyInactiveTabPane="true">
-      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name">
+      <a-tab-pane v-for="city in cities" :key="city.id" :tab="city.name" > 
 
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 17em);  ">
           <div class="section" style="text-align: center">
             <div style="width: 40em;display: inline-block">
               <a-row style="">
 
-              <a-col :span="8" style="font-size: 2.5em">
-                <i  :class="'qi-'+city.now.icon+'-fill'"></i> {{city.now.text}}
-              </a-col>
-              <a-col :span="8">
-                <div style="font-size: 2em"> {{city.now.temp}} ℃</div>
-                <div>
-                  风力 {{city.now.windScale}}级
-                </div>
-              </a-col>
-              <a-col :span="8">
-                <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon>  {{ getObsTime(city.now.obsTime)}} 发布
-              </a-col>
-            </a-row>
+                <a-col :span="8" style="font-size: 2.5em">
+                  <i :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.text }}
+                </a-col>
+                <a-col :span="8">
+                  <div style="font-size: 2em"> {{ city.now.temp }} ℃</div>
+                  <div>
+                    风力 {{ city.now.windScale }}级
+                  </div>
+                </a-col>
+                <a-col :span="8">
+                  <Icon icon="position"></Icon> {{ city.adm2 }}-{{ city.name }}<br>
+                  <Icon style="margin-left: 2em" icon="shijian"></Icon> {{ getObsTime(city.now.obsTime) }} 发布
+                </a-col>
+              </a-row>
+            </div>
           </div>
-       </div>
-        <div class="card auto-height" style="padding: 0.1em 1.2em 1em;display: block;width: 100%">
-          <div class="section">
-            24小时天气
+          <div class="card auto-height" style="padding: 0.1em 1.2em 1em;display: block;width: 100%">
+            <div class="section">
+              24小时天气
+            </div>
+            <vue-custom-scrollbar :settings="innerSettings" style="position:relative;width: 100%  ">
+              <a-row style="width: 150em;margin-bottom: 0.7em">
+                <a-col style="text-align: center;color: var(--primary-text);" :span="1" v-for="w in city.h24.hourly">
+                  {{ getdHours(w.fxTime) }}:00
+                  <br>
+                  <i style="font-size: 1.2em" :class="'qi-' + w.icon + '-fill'"></i> {{ w.text }}
+                  <br>
+                  {{ w.temp }}℃
+                </a-col>
+              </a-row>
+            </vue-custom-scrollbar>
           </div>
-          <vue-custom-scrollbar :settings="innerSettings" style="position:relative;width: 100%  ">
-          <a-row style="width: 150em;margin-bottom: 0.7em">
-            <a-col style="text-align: center" :span="1" v-for="w in city.h24.hourly">
-              {{getdHours(w.fxTime)}}:00
-              <br>
-              <i style="font-size: 1.2em" :class="'qi-'+w.icon+'-fill'"></i> {{w.text}}
-              <br>
-              {{w.temp}}℃
-            </a-col>
-          </a-row>
-          </vue-custom-scrollbar>
-        </div>
 
           <div class="card auto-height"
-               style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em;display: block;width: 100%">
+            style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em;display: block;width: 100%">
             <div class="section">
               多日预报
             </div>
-            <a-row style="text-align: center">
+            <a-row style="text-align: center;color:var(--primary-text)">
               <a-col :span="3" v-for="w in city.d7.daily">
 
                 {{ getMonthAndDay(w.fxDate) }}<br>
@@ -56,20 +57,19 @@
                 {{ w.windScaleDay }}级
               </a-col>
             </a-row>
-
             <WeatherChart :daily="city.d7.daily"></WeatherChart>
-
           </div>
         </vue-custom-scrollbar>
       </a-tab-pane>
     </a-tabs>
 
-    <a-empty class="mt-20" v-if="cities.length===0" description="请先添加城市"></a-empty>
+    <a-empty class="mt-20" v-if="cities.length === 0" description="请先添加城市"></a-empty>
 
   </div>
   <a-drawer v-model:visible="visibleAdd">
-    <h3>添加城市</h3>
-    <a-input-search id="searchInput" ref="searchInput" v-model:value="words" @search="onSearch" placeholder="输入城市搜索">
+    <h3 style="color:var(--primary-text)">添加城市</h3>
+    <a-input-search id="searchInput" ref="searchInput" v-model:value="words"
+      @search="onSearch" placeholder="输入城市搜索">
 
     </a-input-search>
 
@@ -90,7 +90,7 @@ import { weatherStore } from '../../store/weather'
 export default {
   name: 'Weather',
   components: { WeatherChart },
-  data () {
+  data() {
     return {
       outerSettings: {
         useBothWheelAxes: true,
@@ -114,7 +114,7 @@ export default {
 
     }
   },
-  mounted () {
+  mounted() {
     this.fixData()
 
     $("#display").on("touchend", (e) => { e.stopPropagation() })
@@ -134,21 +134,21 @@ export default {
     ...mapWritableState(weatherStore, ['cities', 'lastUpdateTime']),
   },
   methods: {
-    ...mapActions(weatherStore, ['getNow', 'get24h', 'get7d', 'search', 'addCity', 'removeCity', 'reloadCityWeatherAll', 'get','fixData']),
-    getMonthAndDay (time) {
+    ...mapActions(weatherStore, ['getNow', 'get24h', 'get7d', 'search', 'addCity', 'removeCity', 'reloadCityWeatherAll', 'get', 'fixData']),
+    getMonthAndDay(time) {
       let format = this.getDateTime(new Date(time))
       return format.month + '/' + format.day
     },
-    getdHours (time) {
+    getdHours(time) {
       let format = this.getDateTime(new Date(time))
       return format.hours
     },
-    getObsTime (time) {
+    getObsTime(time) {
       let format = this.getDateTime(new Date(time))
       return format.month + '-' + format.day + ' ' + format.hours + ":" + format.minutes
     },
     getDateTime,
-    onEdit (cityId, action) {
+    onEdit(cityId, action) {
       if (action === 'add') {
         this.visibleAdd = true
       } else {
@@ -156,7 +156,7 @@ export default {
       }
     },
 
-    async add (city) {
+    async add(city) {
       try {
         city = await this.reloadCityWeatherAll(city)
       } catch (e) {
@@ -169,7 +169,7 @@ export default {
       this.visibleAdd = false
     },
 
-    async onSearch () {
+    async onSearch() {
       let rs = await this.search(this.words)
       if (rs) {
         this.searchList = rs
@@ -183,6 +183,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+:deep(.anticon svg) {
+  color: var(--primary-text) !important;
+}
+:deep(.ant-input) {
+  color: var(--primary-text) !important;
+}
 .frame {
   width: 100%;
   border: none;
@@ -206,6 +212,7 @@ export default {
   margin-top: 1em;
   font-size: 1.2em;
   margin-bottom: 1em;
+  color: var(--primary-text);
 }
 </style>
 <style>

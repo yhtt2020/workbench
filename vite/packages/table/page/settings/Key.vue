@@ -13,7 +13,7 @@
       呼出/隐藏全局搜索快捷键
     </div>
     <div class="line">
-      <key-input placeholder="呼出/隐藏全局搜索快捷键" title="全局搜索" name="search" :value="shortKeysSearch"
+      <key-input placeholder="呼出/隐藏全局搜索快捷键12" title="全局搜索" name="search" :value="shortKeysSearch"
         @changeKeys="setSearchKeys"></key-input>
     </div>
   </div>
@@ -70,4 +70,5 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+</style>

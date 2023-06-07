@@ -1,5 +1,5 @@
 <template>
-  <h3 style="margin-bottom: 1em;color:var(--font-color)">我的社区</h3>
+  <h3 style="margin-bottom: 1em;color:var(--primary-text)">我的社区</h3>
   <div>
     <a-row class="com-actions" :gutter="[20,20]">
       <a-col :span="8">

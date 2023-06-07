@@ -102,7 +102,6 @@
       <NewAddCard @setCustoms="setCustoms" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
-  <!-- :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }" -->
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -236,54 +235,54 @@
   </a-drawer>
 </template>
 <script>
-import Weather from "../components/homeWidgets/Weather.vue";
-import Calendar from "../components/homeWidgets/Calendar.vue";
-import Timer from "../components/homeWidgets/Timer.vue";
-import Music from "../components/homeWidgets/Music.vue";
-import Stock from "../components/homeWidgets/Stock.vue";
-import AddMore from "../components/homeWidgets/AddMore.vue";
-import Dou from "../components/homeWidgets/Dou.vue";
-import Fish from "../components/homeWidgets/Fish.vue";
-import CustomTimer from "../components/homeWidgets/CustomTimer.vue";
-import SmallCountdownDay from "../components/homeWidgets/SmallCountdownDay.vue";
-import Clock from "../components/homeWidgets/Clock.vue";
-import CountdownDay from "../components/homeWidgets/CountdownDay.vue";
+import Weather from "../components/widgets/Weather.vue";
+import Calendar from "../components/widgets/Calendar.vue";
+import Timer from "../components/widgets/Timer.vue";
+import Music from "../components/widgets/Music.vue";
+import Stock from "../components/widgets/Stock.vue";
+import AddMore from "../components/widgets/AddMore.vue";
+import Dou from "../components/widgets/Dou.vue";
+import Fish from "../components/widgets/Fish.vue";
+import CustomTimer from "../components/widgets/CustomTimer.vue";
+import SmallCountdownDay from "../components/widgets/SmallCountdownDay.vue";
+import Clock from "../components/widgets/Clock.vue";
+import CountdownDay from "../components/widgets/CountdownDay.vue";
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../store/card";
 import vuuri from "../components/vuuriHome/Vuuri.vue";
 import Widget from "../components/muuri/Widget.vue";
 import { message, Modal } from "ant-design-vue";
-import CPULineChart from "../components/homeWidgets/supervisory/CPULineChart.vue";
-import CPUFourCard from "../components/homeWidgets/supervisory/CPUFourCard.vue";
-import InternalList from "../components/homeWidgets/supervisory/InternalList.vue";
-import SmallCPUCard from "../components/homeWidgets/supervisory/SmallCPUCard.vue";
-import SmallGPUCard from "../components/homeWidgets/supervisory/SmallGPUCard.vue";
-import GamesDiscount from "../components/homeWidgets/games/GamesDiscount.vue";
-import DiscountPercentage from "../components/homeWidgets/games/DiscountPercentage.vue";
-import MiddleWallpaper from "../components/homeWidgets/MiddleWallpaper.vue";
-import SmallWallpaper from "../components/homeWidgets/SmallWallpaper.vue";
-import MyGameSmall from "../components/homeWidgets/games/MyGameSmall.vue";
-import Capture from "../components/homeWidgets/games/Capture.vue";
+import CPULineChart from "../components/widgets/supervisory/CPULineChart.vue";
+import CPUFourCard from "../components/widgets/supervisory/CPUFourCard.vue";
+import InternalList from "../components/widgets/supervisory/InternalList.vue";
+import SmallCPUCard from "../components/widgets/supervisory/SmallCPUCard.vue";
+import SmallGPUCard from "../components/widgets/supervisory/SmallGPUCard.vue";
+import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
+import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
+import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
+import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
+import MyGameSmall from "../components/widgets/games/MyGameSmall.vue";
+import Capture from "../components/widgets/games/Capture.vue";
 import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
-import Voice from "../components/homeWidgets/games/Voice.vue";
-import Audio from "../components/homeWidgets/games/Audio.vue";
-import CaptureNewCard from "../components/homeWidgets/games/CaptureNewCard.vue";
+import Voice from "../components/widgets/games/Voice.vue";
+import Audio from "../components/widgets/games/Audio.vue";
+import CaptureNewCard from "../components/widgets/games/CaptureNewCard.vue";
 import { runExec } from "../js/common/exec";
 import { appStore } from "../store";
-import Remote from "../components/homeWidgets/custom/Remote.vue";
+import Remote from "../components/widgets/custom/Remote.vue";
 import { weatherStore } from "../store/weather";
-import GameEpic from "../components/homeWidgets/games/GameEpic.vue";
-import CustomAssembly from "../components/homeWidgets/custom/CustomAssembly.vue";
-import SignIn from "../components/homeWidgets/SignIn.vue"
-import SingleFilm from "../components/homeWidgets/film/SingleFilm.vue"
-import ManyFilm from "../components/homeWidgets/film/ManyFilm.vue"
-import SteamFriends from '../components/homeWidgets/games/SteamFriends.vue'
+import GameEpic from "../components/widgets/games/GameEpic.vue";
+import CustomAssembly from "../components/widgets/custom/CustomAssembly.vue";
+import SignIn from "../components/widgets/SignIn.vue"
+import SingleFilm from "../components/widgets/film/SingleFilm.vue"
+import ManyFilm from "../components/widgets/film/ManyFilm.vue"
+import SteamFriends from '../components/widgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
 import { setSupervisoryData } from '../js/action/supervisory'
-import Clocks from '../components/homeWidgets/clock/index.vue'
-import Notes from "../components/homeWidgets/note/index.vue"
+import Clocks from '../components/widgets/clock/index.vue'
+import Notes from "../components/widgets/note/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
@@ -755,11 +754,11 @@ export default {
       const value = JSON.parse(window.localStorage.getItem("style"));
       document.documentElement.classList.remove(value);
       if (this.styles == true) {
-        document.documentElement.classList.add('light-nobg-mode');
-        window.localStorage.setItem("style", JSON.stringify("light-nobg-mode"));
+        document.documentElement.classList.add('light-model');
+        window.localStorage.setItem("style", JSON.stringify("light-model"));
       } else {
-        document.documentElement.classList.add('dark-nobg-mode');
-        window.localStorage.setItem("style", JSON.stringify("dark-nobg-mode"));
+        document.documentElement.classList.add('dark-model');
+        window.localStorage.setItem("style", JSON.stringify("dark-model"));
 
       }
     },

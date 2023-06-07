@@ -1,7 +1,7 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings"
                       style="padding: 15px;height: 100%">
-    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto;background-color: var(--background-color);color: var(--font-color)" >
+    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto;background-color: var(--primary-bg);color: var(--primary-text )" >
       <div class="line-title">
          邀请好友
       </div>
@@ -12,7 +12,7 @@
         您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong
           class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{ exchanged }}</strong>，剩余：<strong
           class="text-red-400">{{ leave }}</strong>。
-        <a-button type="primary" @click="confirmExchange" :disabled="leave===0">兑换1枚</a-button>
+        <a-button type="primary" @click="confirmExchange" :disabled="leave===0" style="color:var(--main-text)">兑换1枚</a-button>
       </p>
 
       <a-table :pagination="false" :dataSource="codes" :columns="columns">

@@ -29,7 +29,7 @@ export const navList = [
           {
             name: 'countdownDay',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -43,7 +43,7 @@ export const navList = [
           {
             name: 'clocks',
             size: '自定义大小',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -57,7 +57,7 @@ export const navList = [
           {
             name: 'weather',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -71,12 +71,12 @@ export const navList = [
           {
             name: 'middleWallpaper',
             size: '4x4',
-            zoom:1
+            zoom: '5'
           },
           {
             name: 'smallWallpaper',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -90,7 +90,7 @@ export const navList = [
           {
             name: 'notes',
             size: '自定义大小',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -104,7 +104,7 @@ export const navList = [
           {
             name: 'fish',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -123,21 +123,22 @@ export const navList = [
           {
             name: 'CPULineChart',
             size: '2*4',
+            zoom: '11'
           },
           {
             name: 'CPUFourCard',
             size: '2*4',
-
+            zoom: '11'
           },
           {
             name: 'SmallCPUCard',
             size: '2*2',
-
+            zoom: '11'
           },
           {
             name: 'SmallGPUCard',
             size: '2*2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -151,11 +152,12 @@ export const navList = [
           {
             name: 'middleWallpaper',
             size: '4x4',
+            zoom: '5'
           },
           {
             name: 'smallWallpaper',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -170,7 +172,7 @@ export const navList = [
           {
             name: 'notes',
             size: '自定义大小',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -196,7 +198,7 @@ export const navList = [
           {
             name: 'weather',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -230,7 +232,7 @@ export const navList = [
           {
             name: 'clocks',
             size: '自定义大小',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -244,7 +246,7 @@ export const navList = [
           {
             name: 'timer',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -270,7 +272,7 @@ export const navList = [
           {
             name: 'countdownDay',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -284,7 +286,7 @@ export const navList = [
           {
             name: 'customTimer',
             size: '2x4',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -299,7 +301,7 @@ export const navList = [
           {
             name: 'clock',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -339,7 +341,7 @@ export const navList = [
           {
             name: 'GamesDiscount',
             size: '2x4',
-
+            zoom: '11'
           },
           {
             name: 'DiscountPercentage',
@@ -357,7 +359,7 @@ export const navList = [
           {
             name: 'MyGameSmall',
             size: '2x2',
-            zoom:'7%'
+            zoom: '7'
           },
         ],
         time: '2023/5/31'
@@ -385,7 +387,7 @@ export const navList = [
           {
             name: 'GameEpic',
             size: '2x4',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -400,6 +402,7 @@ export const navList = [
           {
             name: 'audio',
             size: '2x4',
+
           },
           {
             name: 'voice',
@@ -423,7 +426,7 @@ export const navList = [
           {
             name: 'music',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -437,7 +440,7 @@ export const navList = [
           {
             name: 'fish',
             size: '2x2',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -449,11 +452,13 @@ export const navList = [
         sizes: ['2x2', '2x4'],
         option: [
           {
-            name: 'singleDoubanFilm',
+            name: 'SingleFilm',
             size: '2x2',
+            zoom: '11'
           }, {
-            name: 'largeSingleDoubanFilm',
+            name: 'ManyFilm',
             size: '2x4',
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -472,7 +477,7 @@ export const navList = [
           {
             name: 'signIn',
             size: '2x4',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -492,7 +497,7 @@ export const navList = [
           {
             name: 'customAssembly',
             size: '自定义大小',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -506,7 +511,7 @@ export const navList = [
           {
             name: 'Remote',
             size: '自定义大小',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
@@ -515,7 +520,6 @@ export const navList = [
   },
   {
     cname: '施工中', children: [
-
       {
         name: 'capture',
         cname: '捕获(开发中)',
@@ -525,11 +529,12 @@ export const navList = [
           {
             name: 'capture',
             size: '2x2',
+            zoom: '11'
           },
           {
             name: 'CaptureNewCard',
             size: '4x4',
-
+            zoom: '11'
           },
         ],
         time: '2023/5/31'
