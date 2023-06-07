@@ -49,6 +49,7 @@ import ImageClip from "../page/clipboard/imageClip.vue"
 import FileClip from "../page/clipboard/fileClip.vue"
 import VideoClip from "../page/clipboard/videoClip.vue"
 import AudioClip from "../page/clipboard/audioClip.vue"
+import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
 export default [
   {
@@ -187,6 +188,11 @@ export default [
             component: GameDiscountDetail,
             props: true,
           },
+          {
+            path:"/GameCapture",
+            name:'GameCapture',
+            component:GameCapture,
+          }
         ],
       },
 
