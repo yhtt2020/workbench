@@ -157,6 +157,11 @@ export default {
 :deep(.ant-tabs-tab-btn) {
   color: var(--primary-text) !important;
 }
+
+:deep(.ant-tabs-tab) {
+  background: none !important;
+
+}
 :deep(.ant-empty-description) {
   color: var(--primary-text) !important;
 
