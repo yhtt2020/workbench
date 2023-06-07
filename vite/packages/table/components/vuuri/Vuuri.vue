@@ -498,6 +498,9 @@ export default {
 </script>
 
 <style scoped>
+* {
+  color:red !important;
+}
 .muuri-grid {
   position: relative;
 }

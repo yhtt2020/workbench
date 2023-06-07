@@ -3,7 +3,7 @@
   <div style="
       font-family: PingFangSC-Regular;
       font-size: 16px;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--secondary-text);
       font-weight: 400;
     ">
     支持直接复制粘贴图片到此处
@@ -98,6 +98,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.flex {
+  background: var(--primary-bg);
+  border-radius: 5px;
+}
 .gutter-box {
   background-color: #fff;
   background: #2a2a2a;

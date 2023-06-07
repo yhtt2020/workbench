@@ -8,8 +8,9 @@
       </div>
     </a-col>
     <a-col :span="8" style="text-align: center">
+      <!-- 快速搜索 头部 搜索栏 -->
       <div @click="openGlobalSearch" class="input-box no-drag pointer"
-           :style="{ backgroundColor: 'var(--background-color)', color: 'var(--no-active-font-color)' }">
+           style=" background: var( --primary-bg); color: var(--secondary-text)">
         <Icon icon="sousuo"></Icon>
         搜索 网页内容、标签
         <!--        <span style="float: right; padding-right: 10px">-->
@@ -18,7 +19,7 @@
         <!--        </span>-->
       </div>
     </a-col>
-    <a-col :span="8" style="text-align: right;color: var(--no-active-font-color)" class="s-text">
+    <a-col :span="8" style="text-align: right;color: var(--secondary-text)" class="s-text">
       <div style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end">
 
 

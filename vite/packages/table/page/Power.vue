@@ -1,20 +1,20 @@
 <template>
   <div class="main" style="text-align: center;padding-top: 3em">
-    <BackBtn style="color: var(--font-color);background-color: var(--background-color)"></BackBtn>
-    <div @click="exit" class="power-btn" style="color: var(--font-color);background-color: var(--background-color)">退出
+    <BackBtn style="background-color:var(--primary-bg) ; color: var(--primary-text);"></BackBtn>
+    <div @click="exit" class="power-btn" style="background-color:var(--primary-bg) ; color: var(--primary-text);">退出
     </div>
     <div style="margin:auto;width: 51em;text-align: center; ">
       <a-row>
         <a-col>
-          <div @click="shutdown" style="color: var(--font-color);background-color: var(--background-color)"
+          <div @click="shutdown" style="background-color:var(--primary-bg) ; color: var(--primary-text);"
             class="power-btn">关机</div>
-          <div @click="logout" style="color: var(--font-color);background-color: var(--background-color)"
+          <div @click="logout" style="background-color:var(--primary-bg) ; color: var(--primary-text);"
             class="power-btn">注销</div>
         </a-col>
         <a-col>
-          <div @click="reboot" style="color: var(--font-color);background-color: var(--background-color)"
+          <div @click="reboot" style="background-color:var(--primary-bg) ; color: var(--primary-text);"
             class="power-btn">重启</div>
-          <div @click="sleep" style="color: var(--font-color);background-color: var(--background-color)"
+          <div @click="sleep" style="background-color:var(--primary-bg) ; color: var(--primary-text);"
             class="power-btn">休眠</div>
         </a-col>
       </a-row>

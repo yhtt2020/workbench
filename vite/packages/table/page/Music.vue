@@ -1,8 +1,5 @@
 <template>
-  <div :style="{
-    color: 'var(--font-color)',
-    backgroundColor: 'var(--background-color)'
-  }" class="music-player-wrapper s-bg m-3" style="
+  <div class="music-player-wrapper s-bg m-3" style="
       text-align: center;
       display: flex;
       align-items: center;
@@ -11,6 +8,8 @@
       border-radius: 8px;
       margin: auto;
       margin-top: 1em;
+      color: var(--primary-text);
+      background: var(--primary-bg);
     ">
     <a-row :gutter="[20]" style="width: 100%">
       <a-col :span="showPrompt ? 12 : 24" style="display: flex; align-items: center; justify-content: center">
@@ -64,9 +63,7 @@
   </div>
 
   <div @click="togglePrompt" style="position: absolute; right: 3em; top: 43vh; z-index: 99">
-    <Icon icon="zimu" style="font-size: 4em" :style="{
-        color: 'var(--font-color)',
-      }"></Icon>
+    <Icon icon="zimu" style="font-size: 4em;color: var(--primary-text);"></Icon>
   </div>
 </template>
 

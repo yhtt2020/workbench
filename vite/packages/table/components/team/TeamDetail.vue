@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-mask rounded-lg m-3 p-3" style="line-height: 2">
+  <div class="bg-mask rounded-lg m-3 p-3" style="line-height: 2;background: var(--primary-bg);color: var(--primary-text)">
     升级效率：<strong style="color: #48ef48" class="mr-3">{{ effect }} % </strong>  <span v-if="online-1>0">{{ online - 1 }} 位队友在线 *5%</span><span v-else>无队友在线</span>
     <br>
     <a-row>
@@ -25,21 +25,21 @@
 
   </div>
 
-  <div style="position: absolute;bottom: 0;margin-left:20px">
+  <div style="position: absolute;bottom: 0;margin-left:20px;color: var(--primary-text);">
     <a-row class="m-5" :gutter="10">
       <a-col>
-        <div v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
-             class="rounded-lg bg-mask px-6 py-3 pointer ">
+        <div  v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
+             class="rounded-lg bg-mask px-6 py-3 pointer " >
           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           退出小队
         </div>
-        <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer ">
+        <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer " style="background: var(--primary-bg);">
           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           解散小队
         </div>
       </a-col>
       <a-col>
-        <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="goHall">
+        <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="goHall" style="background: var(--primary-bg);">
           <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           小队大厅
         </div>

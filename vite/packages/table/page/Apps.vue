@@ -1,12 +1,12 @@
 <template>
-  <!-- 快速搜索 我的应用 轻应用 应用市场 主页 -->
-  <div style="display: flex;height: 100%;">
+  <!-- 快速搜索 应用 主页 -->
+  <div style="display: flex;height: 100%;color: var(--primary-text)">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab">
     </SecondPanel>
     <div v-show="currentIndex === 'my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg"
-      style="margin: 1em" :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
+      style="margin: 1em;background: var(--primary-bg);" >
       <div v-if="myApps.length === 0" style="font-size: 2em;padding-top: 6em;text-align: center;">
-        <Icon :style="{ color: 'var(--font-color)' }" style="font-size: 2em;vertical-align: middle"
+        <Icon  style="font-size: 2em;vertical-align: middle;"
           icon="line-dragdroptuofang"></Icon>
         将应用拖放到此处，即可用于快捷启动
       </div>
@@ -17,12 +17,12 @@
         <MyApps></MyApps>
       </div>
     </div>
-    <div class="app-content s-bg" style="margin: 1em" v-if="currentIndex === 'qing'">
-      <QingApps :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)', borderRadius: '5px' }">
+    <div class="app-content s-bg" style="margin: 1em;background: var(--primary-bg);" v-if="currentIndex === 'qing'">
+      <QingApps >
       </QingApps>
     </div>
-    <div class="app-content s-bg" v-if="currentIndex === 'store'" style="margin:1em;padding: 1em"
-      :style="{ backgroundColor: 'var(--background-color)', color: 'var(--font-color)' }">
+    <div class="app-content s-bg" v-if="currentIndex === 'store'" style="margin:1em;padding: 1em;background: var(--primary-bg);"
+  >
       <vue-custom-scrollbar :settings="settings" style="position:relative;height:100%;  border-radius: 8px;">
         <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center ">
           <div style="margin-bottom: 1em;font-size: 1.5em">

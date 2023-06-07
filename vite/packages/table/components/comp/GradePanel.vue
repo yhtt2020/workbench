@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-left: 20px;padding-right: 20px;margin-top: 10px;color: var(--font-color)">
+  <div style="padding-left: 20px;padding-right: 20px;margin-top: 10px;color: var(--primary-text)">
     <a-row>
       <a-col :span="24">
         <a-row>
@@ -36,7 +36,7 @@
             </a-row>
           </a-col>
           <a-col :span="10">
-            <div class="p-1" style="line-height: 2;background: #333;border-radius: 8px;text-align: center;background-color: var(--active-background-color);">
+            <div class="p-1" style="line-height: 2;background: #333;border-radius: 8px;text-align: center;background-color: var(--active-bg);">
               在线等级: <span style="font-size: 18px">{{ grade.lv }}</span>级
               <div v-if="badge.rank < 300"
                    style="border-radius: 6px;line-height: 18px;padding-bottom:7px"

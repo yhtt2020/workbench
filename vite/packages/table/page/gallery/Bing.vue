@@ -27,7 +27,7 @@
 
     </div>
     <template v-for="dayImages  in bingImages">
-      <div style="color: var(--font-color);text-align: left;font-size: 20px;font-weight: bold;"
+      <div style="color: var(--primary-text);text-align: left;font-size: 20px;font-weight: bold;"
         class="mt-3 mb-3 text-white s-text"> - 第 {{ dayImages.day }} 天 -</div>
       <PaperList :list="dayImages.images"></PaperList>
     </template>
@@ -138,4 +138,8 @@ export default {
 
 <style scoped lang="scss">
 @import 'justifiedGallery/dist/css/justifiedGallery.min.css';
+
+.s-text {
+  text-shadow: none;
+}
 </style>

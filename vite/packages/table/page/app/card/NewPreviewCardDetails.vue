@@ -4,9 +4,8 @@
         <div class="boxs card">
             <div class="main">
                 <div class="card-box" v-for="(item, index) in cardDetails.option">
-                    <div class="img"> <img class="img2" ref="imgRef" :src="getImg(item.name)"
-                            alt=""
-                            :style="[{ zoom: item.name == 'MyGameSmall' || item.name == 'middleWallpaper' ? '16%' : '25%' }]">
+                    <div class="img"> <img  ref="imgRef" :src="getImg(item.name)" alt=""
+                            :style="[{ zoom: item.zoom * 1.8 + '%' }]">
                     </div>
                     <div class="size">{{ item.size }}</div>
                     <div class="add-btn no-drag" @click="addCard(item, index)">
@@ -33,9 +32,9 @@ export default {
         },
     },
     methods: {
-      getImg(url){
-        return '/img/addCard/' +url + '.png'
-      },
+        getImg(url) {
+            return '/img/addCard/' + url + '.png'
+        },
         addCard(item, index) {
             this.onBack()
             this.$emit("addCardAchieve", this.cardDetails, index)
@@ -164,9 +163,7 @@ export default {
             }
         }
     }
-
 }
-
 .box {
     z-index: 99911199;
     position: fixed;
@@ -177,9 +174,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-
-
-
 }
 </style>
 

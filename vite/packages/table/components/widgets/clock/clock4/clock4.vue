@@ -65,14 +65,14 @@ export default {
   color: #fff;
   font-family: Impact;
   font-size: 64px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 900;
   line-height: 138px;
   text-align: center;
   height: 138px;
   width: 110px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--primary-bg);
   border-radius: 12px;
   margin: 8px;
 }

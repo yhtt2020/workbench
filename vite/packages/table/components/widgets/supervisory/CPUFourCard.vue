@@ -1,6 +1,6 @@
 <template>
 <Widget :options="options" :menu-list="menuList">
-  <div @click="go"  class="top-content pointer">
+  <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.value}}%</span>
       <span>
       <Icon icon="cpu" class="icon" ></Icon>CPU</span>
@@ -163,7 +163,7 @@ export default {
     width: 120px;
     margin-top: 12px;
     height: 120px;
-    background: #2B2B2B;
+    background: var(--primary-bg);
     display: flex;
     flex-direction: column;
     justify-content: center;

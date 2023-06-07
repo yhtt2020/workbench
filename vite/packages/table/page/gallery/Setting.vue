@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between" style="margin-top: 2em; margin-bottom: 1em;color: var(--font-color);">
+  <div class="flex items-center justify-between" style="margin-top: 2em; margin-bottom: 1em;color: var(--primary-text);">
     <div class="rotate-center s-text w-2/3" style="font-size: 2em;">锁屏设置</div>
     <div class="pointer s-icon mr-6" @click="resetPapersSettings">
       <div style="display: inline-block;margin-right: 1em">
@@ -11,7 +11,7 @@
   </div>
   <vue-custom-scrollbar id="containerWrapper " :settings="settingsScroller" style="height: 80vh;">
     <div class="card auto-height s-bg"
-      style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em;color: var(--font-color);background-color:var(--background-color);">
+      style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em;color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="line-title ">基础设置</div>
       <div class="line" v-if="!settings.enable">
         如果您的显示器为OLed面板，建议启用锁屏壁纸，且轮播不少于3张壁纸，以防止烧屏。
@@ -22,14 +22,14 @@
       <div v-if="settings.enable">
         <div class="line">
           进入锁屏时间： <a-input-number default-value="300" v-model:value="settings.lockTimeout"
-            style="color: var(--font-color);"></a-input-number> 秒
+            style="color: var(--primary-text);"></a-input-number> 秒
         </div>
         <div class="line">
-          在状态栏提示还有多久自动锁屏：<a-switch v-model:checked="settings.tipLock" style="color: var(--font-color);"></a-switch>
+          在状态栏提示还有多久自动锁屏：<a-switch v-model:checked="settings.tipLock" style="color: var(--primary-text);"></a-switch>
         </div>
         <div class="line">
 
-          壁纸保存位置：<a-input placeholder="请选择壁纸保存地址" @click="showSaveDialog" style="width: 15em;color: var(--font-color);"
+          壁纸保存位置：<a-input placeholder="请选择壁纸保存地址" @click="showSaveDialog" style="width: 15em;color: var(--primary-text);"
             v-model:value="settings.savePath"></a-input>
         </div>
         <!--          <div class="line">-->
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="card auto-height s-bg" v-if="settings.enable"
-      style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em;color: var(--font-color);background-color:var(--background-color);">
+      style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em;color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="line-title">
         锁屏显示设置
       </div>
@@ -60,17 +60,17 @@
       </div>
     </div>
     <div class="card auto-height s-bg" v-if="settings.enable"
-      style="display: inline-block;width: 30em;padding: 1em;text-align: left;margin-left: 2em;color: var(--font-color);background-color:var(--background-color);">
+      style="display: inline-block;width: 30em;padding: 1em;text-align: left;margin-left: 2em;color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="line-title">
         轮播设置
       </div>
       <div class="line">
         默认轮播模式：<a-radio-group v-model:value="settings.playType"><a-radio value="my"
-            style="color: var(--font-color);">轮播我的收藏</a-radio> <a-radio value="active"
-            style="color: var(--font-color);">轮播激活壁纸</a-radio></a-radio-group>
+            style="color: var(--primary-text);">轮播我的收藏</a-radio> <a-radio value="active"
+            style="color: var(--primary-text);">轮播激活壁纸</a-radio></a-radio-group>
       </div>
       <div class="line">
-        切换图片时间间隔： <a-input-number default-value="3" v-model:value="settings.interval" style="color: var(--font-color);">
+        切换图片时间间隔： <a-input-number default-value="3" v-model:value="settings.interval" style="color: var(--primary-text);">
         </a-input-number> 秒
       </div>
     </div>

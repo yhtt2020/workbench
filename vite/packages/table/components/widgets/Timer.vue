@@ -6,14 +6,15 @@
            width: 56px;
             height: 56px;
             vertical-align: middle;
-            color: black;
+            color: var(--primary-text);
           "
             icon="fanqie1"
           ></Icon>
-          <div style="margin-top:20px;font-size: 18px;font-weight: 400;color: rgba(255, 255, 255, 0.85);">今日番茄：0</div>
+          <div style="margin-top:20px;font-size: 18px;font-weight: 400;">今日番茄：0</div>
           <div
             class="middle-button timer-btn s-item"
             @click="start"
+            style="background: var(--primary-bg);"
           >
             立即开始
           </div>

@@ -1,10 +1,10 @@
 <template>
-  <div @contextmenu.stop="showDrawer" :class="classes" :style="{
+  <div @contextmenu.stop="showDrawer" :class="classes"
+       style=" background: var( --primary-bg); color: var(--primary-text)"
+       :style="{
       pointerEvents: editing ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-      background: 'var(--background-color)',
-      color: 'var(--font-color)'
     }"  @mouseleave="onMouseOut" @mouseenter="onMouseOver">
 
     <!--标题栏start-->

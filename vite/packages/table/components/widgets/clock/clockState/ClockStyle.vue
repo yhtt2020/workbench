@@ -38,6 +38,7 @@ export default {
   position: relative;
   padding: 10px;
   background: rgba(0, 0, 0, 0.3);
+  background: var(--primary-bg);
   border-radius: 12px;
   display: flex;
   justify-content: center;

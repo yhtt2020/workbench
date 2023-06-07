@@ -1,5 +1,5 @@
 <template>
-  <div class="rotate-center" style="margin-bottom: 1em;margin-top: 2em;color: var(--font-color);">
+  <div class="rotate-center" style="margin-bottom: 1em;margin-top: 2em;color: var(--primary-text);">
     <span style="font-size: 2em;" class="s-text">我的收藏 {{ myPapers.length }}</span>
     <div class="pointer" style="float: right;font-size: 1em;">
       <div @click="playAll" class=" rounded-lg list-hover s-icon"
@@ -242,11 +242,11 @@ export default defineComponent({
       document.documentElement.classList.remove(value);
       // 2 判断白天黑夜 
       if (this.styles) {
-        document.documentElement.classList.add("light-mode");
-        window.localStorage.setItem("style", JSON.stringify("light-mode"));
+        document.documentElement.classList.add("light-model");
+        window.localStorage.setItem("style", JSON.stringify("light-model"));
       } else {
-        document.documentElement.classList.add('dark-mode');
-        window.localStorage.setItem("style", JSON.stringify('dark-mode'));
+        document.documentElement.classList.add('dark-model');
+        window.localStorage.setItem("style", JSON.stringify('dark-model'));
       }
       message.info('正在为您设置背景')
       if (this.currentPaper.srcProtocol) {
@@ -440,6 +440,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.s-icon svg {
+ filter: none
+}
+
+.s-text {
+    text-shadow: none;
+}
 .play-icon {
   position: absolute;
   z-index: 999;

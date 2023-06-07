@@ -1,7 +1,7 @@
 <template>
-  <!-- 快速搜索 左侧栏区域 -->
+  <!-- 快速搜索 最外层 左侧菜单 -->
   <ul class="box side-panel common-panel s-bg" style=" z-index: 999;
-  width: 6em;" :style="{ backgroundColor: 'var(--background-color)' }">
+  width: 6em; background: var(--primary-bg)">
     <li class="" style="color:#000">
       <PanelButton :active="tab === 'home'" @click="goTab('main', 'home')" icon="shouye1" title="主页">
       </PanelButton>
@@ -81,13 +81,21 @@ export default {
 }
 .box {
   :deep(.icon) {
-    fill: var(--no-active-font-color)
+    fill: var(--secondary-text);
+  }
+}
+
+
+.item:hover {
+  background: var( --active-bg) !important;
+  :deep(.icon) {
+    fill: var(--primary-text) !important
   }
 }
 
 .active {
   :deep(.icon) {
-    fill: var(--active-font-color) !important
+    fill: var(--primary-text) !important
   }
 }
 

@@ -3,7 +3,7 @@
     <div class="w-96 h-12 flex items-center">
       <div class="w-80 h-12 bg-white bg-opacity-10 rounded-lg flex items-center ">
         <div class="w-20 h-12 flex items-center justify-center"
-          style="border-right: 1px solid rgba(255, 255, 255, 0.1);color: var(--font-color);">
+          style="border-right: 1px solid rgba(255, 255, 255, 0.1);color: var(--primary-text);">
           壁纸源</div>
         <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
           <a-select-option v-for="item in  paperSourceOption " :value="item.name" style="color: var(--font - color)">
@@ -12,7 +12,7 @@
         </a-select>
       </div>
     </div>
-    <div class="w-48 h-12 flex items-center justify-end" style="margin-right: 1em;color:var(--font-color);">
+    <div class="w-48 h-12 flex items-center justify-end" style="margin-right: 1em;color:var(--primary-text);">
       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center s-icon" @click="openFilter">
         <Icon icon="filter" style="font-size: 1.715em;"></Icon>
         <span style="font-size: 1.15em; " class="s-text">筛选</span>
@@ -432,6 +432,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.s-icon svg {
+ filter: none  !important;
+}
+
+.s-text {
+    text-shadow: none;
+}
 .filter-item:nth-of-type(3) {
   border: none !important;
 }
