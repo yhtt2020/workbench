@@ -50,13 +50,12 @@
       </a-col>
       <a-col :span="12" v-if="showPrompt" style="align-items: center; display: flex">
         <div style="
-            background: rgba(0, 0, 0, 0.11);
+            background: var(--primary-bg);
             border-radius: 1em;
-            height: 360px;
             display: flex;
             align-items: center;
           ">
-          <div v-html="prompt" id="prompt" class="listlyric j-flag"></div>
+          <div v-html="prompt" id="prompt" class="listlyric j-flag" style="color:var(--primary-text)"></div>
         </div>
       </a-col>
     </a-row>
@@ -240,8 +239,14 @@ export default {
   vertical-align: middle;
 }
 
-.prompt {}
+// :deep(.listlyric) {
+// background: var(--primary-bg);
+// margin: 0 !important;
+//   p {
+//     color: var(--primary-text) !important;
 
+//   }
+// }
 .app-content {
   background: #3b3b3b;
   height: calc(100vh - 2em);

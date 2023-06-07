@@ -1,12 +1,12 @@
 <template>
   <HomeComponentSlot :customData="customData" :customIndex="customIndex" :options="options">
     <HorizontalPanel :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
-    <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col">
+    <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col" style="color: var(--primary-text);">
       <div class="flex">
         <div class="flex-1 flex flex-col mr-4">
           <div class="flex my-1 justify-between">
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ defaultOutput.volume }}%</span>
+            <span style=" font-size: 14px;font-weight: 400;">音量</span>
+            <span style=" font-size: 14px;font-weight: 400;">{{ defaultOutput.volume }}%</span>
           </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
@@ -15,13 +15,13 @@
           </div>
         </div>
         <div class="flex-1">
-          <div @click="closeVolume" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item" >
+          <div @click="closeVolume" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item" style="background: var(--primary-bg);"> 
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
-      <span class="mt-2" style="color: rgba(255, 255, 255, 0.6);font-size: 14px;font-weight: 400;">默认输出</span>
+      <span class="mt-2" style="font-size: 14px;font-weight: 400;">默认输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
         <template v-for="(item,index) in outputList">
         <div v-if="item.display"  :class="item.default ? 's-item' :''" @click="selectOutputDevice(item,index)" class="w-full flex btn-active voice-hover  items-center rounded-lg  pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
@@ -33,20 +33,20 @@
       </vue-custom-scrollbar>
 
     </div>
-    <div v-else class="mt-4">
+    <div v-else class="mt-4" style="color: var(--primary-text);">
       <div class="flex flex-col">
-        <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">输入检测</span>
+        <span style="font-size: 14px;font-weight: 400;">输入检测</span>
         <div class="flex">
           <div style="width: 180px;" class="mr-4 flex items-center justify-center">
             <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
-          <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item">
+          <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item" style="background: var(--primary-bg);">
             <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
             <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
+      <span style="font-size: 14px;font-weight: 400;">默认输入</span>
       <vue-custom-scrollbar :settings="settingsScroller" style="height:200px;">
         <template v-for="(item,index) in inputList">
         <div v-if="item.display" :class="item.default ? 's-item' :''" class="w-full voice-hover pointer voice-hover rounded-lg flex items-center  my-1" @click="selectInputDevice(item,index)" style="padding: 7px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">

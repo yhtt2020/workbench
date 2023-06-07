@@ -3,6 +3,7 @@
     class="vue-muuri-item item pointer"
     :class="getClass"
     :id="this.uniqueKey"
+ 
   >
 <!--    <div v-show="editing" class="vue-muuri-header">-->
 <!--&lt;!&ndash;      <span class="text-more">{{ title }}</span>&ndash;&gt;-->
@@ -21,7 +22,7 @@
 <!--      &lt;!&ndash;        <Icon icon="quanping_huaban"></Icon>&ndash;&gt;-->
 <!--      &lt;!&ndash;      </span>&ndash;&gt;-->
 <!--    </div>-->
-    <div class="vue-muuri-item-content">
+    <div class="vue-muuri-item-content" >
       <slot></slot>
     </div>
     <ResizeObserver v-show="editing" @notify="handleResize"></ResizeObserver>

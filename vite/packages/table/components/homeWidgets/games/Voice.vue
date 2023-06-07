@@ -1,11 +1,11 @@
 <template>
   <HomeComponentSlot :customIndex="customIndex" :customData="customData" :options="options">
-    <div class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false ">
+    <div class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
       <div class="flex">
         <div class="flex-1 flex flex-col mr-4">
-          <div class="flex my-1 justify-between">
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">音量</span>
-            <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">{{ defaultOutput.volume  }}%</span>
+          <div class="flex my-1 justify-between" >
+            <span style=" font-size: 14px;font-weight: 400;">音量</span>
+            <span style=" font-size: 14px;font-weight: 400;">{{ defaultOutput.volume  }}%</span>
           </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
@@ -14,29 +14,29 @@
           </div>
         </div>
         <div class="flex-1">
-          <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item" >
+          <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item"  style="background: var(--primary-bg)" >
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输出</span>
-      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+      <span style=" font-size: 14px;font-weight: 400;">默认输出</span>
+      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px;background: var(--primary-bg)">
         <div class="item-name">{{ outputContent }}</div>
-        <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
+        <Icon icon="xiangxia" style="font-size: 1.5em"></Icon>
       </div>
-      <span class="mt-1" style="color: rgba(255, 255, 255, 0.5); font-size: 14px;font-weight: 400;">输入检测</span>
+      <span class="mt-1" style="font-size: 14px;font-weight: 400;">输入检测</span>
       <div class="flex">
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
           <a-progress :percent="audioTest" :showInfo="false"/>
         </div>
-        <div @click="closeMicrophone" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item">
+        <div @click="closeMicrophone" style="background: var(--primary-bg)" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item">
           <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
-          <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
+          <Icon icon="mic-off" style="font-size: 2.286em" v-else></Icon>
         </div>
       </div>
-      <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;font-weight: 400;">默认输入</span>
-      <div @click="selectInputVoice"  class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px">
+      <span style="font-size: 14px;font-weight: 400;">默认输入</span>
+      <div @click="selectInputVoice"  class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px;background: var(--primary-bg)">
         <span class="item-name">{{ inputContent }}</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>

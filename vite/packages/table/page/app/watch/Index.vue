@@ -1,12 +1,12 @@
 <template>
-  <h1 style="text-align: center">
+  <h1 style="text-align: center;color:var(--primary-text)">
     数据监控小助手
   </h1>
 
   <div>
     <a-tabs v-model:activeKey="currentTab" destroy-inactive-tab-pane="false">
       <a-tab-pane key="running" tab="运行中">
-        <a-empty v-if="runningTasks.length===0" style="margin-top: 3em"
+        <a-empty v-if="runningTasks.length===0" style="margin-top: 3em;color:var(--primary-text)"
                  description="当前还没有正在监控中的任务"></a-empty>
         <div v-else>
           <vue-custom-scrollbar :settings="scrollbarSettings"
@@ -15,18 +15,18 @@
                    :getItemHeight="()=>{return '500px'}" class="monitor"
                    v-model="runningTasks">
               <template #item="{ item }">
-                <Widget :uniqueKey="item.nanoid">
-                  <div @contextmenu.stop="showMenu(item)"   @click="goDashboard(item.nanoid)" class="p-2 bili-card">
+                <Widget :uniqueKey="item.nanoid" >
+                  <div @contextmenu.stop="showMenu(item)"   @click="goDashboard(item.nanoid)" class="p-2 bili-card" style="background: var(--primary-bg);color: var(--primary-text);">
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
-                      {{ item.title || '-' }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
+                 {{ item.title || '-' }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
                     </div>
                     <div class="mb-3">
                       <a-row>
                         <a-col :span="10">
                           <img v-if="item.data.cover" class="bili-cover" :src="fixHttp(item.data.cover+'@320w_200h')"/>
-                          <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em">
+                          <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em;background: var(--primary-bg);color: var(--primary-text);">
                             首次运行后<br/>自动获取
                           </a-avatar>
                         </a-col>
@@ -75,7 +75,7 @@
                     <div class="mb-4" v-if="item.stage">
                      <BiliStage :stage="item.stage"></BiliStage>
                     </div>
-                    <div class="text-xs action-button">
+                    <div class="text-xs action-button" style="background: var(--primary-bg);color: var(--primary-text);">
                       <a-row>
                         <a-col :span="6">
                           已运行<br>
@@ -107,21 +107,21 @@
         </div>
       </a-tab-pane>
       <a-tab-pane key="other" tab="未运行">
-        <a-empty v-if="stoppedTasks.length===0" style="margin-top: 3em"
+        <a-empty v-if="stoppedTasks.length===0" style="margin-top: 3em;color:var(--primary-text)"
                  description="当前没有待机状态的任务"></a-empty>
         <div v-else>
           <vue-custom-scrollbar :settings="scrollbarSettings"
-                                style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+                                style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em);">
             <Vuuri :key="stoppedTasksKey" :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}"
                    :getItemHeight="()=>{return '500px'}" class="monitor"
                    v-model="stoppedTasks">
               <template #item="{ item }">
-                <Widget :uniqueKey="item.id">
-                  <div @contextmenu.stop="showMenu(item)" @click="goDashboard(item.nanoid)" class="p-2 bili-card">
+                <Widget :uniqueKey="item.id" >
+                  <div @contextmenu.stop="showMenu(item)" @click="goDashboard(item.nanoid)" class="p-2 bili-card" style="background: var(--primary-bg);color: var(--primary-text);">
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
-                      {{ item.title }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
+                   233   {{ item.title }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
                     </div>
                     <div class="mb-3">
                       <a-row>
@@ -175,7 +175,7 @@
                     <div class="mb-4" v-if="item.stage">
                       <BiliStage :stage="item.stage"></BiliStage>
                     </div>
-                    <div class="text-xs action-button">
+                    <div class="text-xs action-button" style="background: var(--primary-bg);color: var(--primary-text);">
                       <a-row>
                         <a-col :span="6">
                           已运行<br>
@@ -685,6 +685,9 @@ export default {
 </script>
 
 <style scoped>
+:deep(.ant-tabs-tab) {
+  background: none !important;
+}
 .line {
   margin-bottom: 1em;
   padding-left: 1em;

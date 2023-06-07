@@ -41,7 +41,7 @@
                 <div class="flex flex-col ml-4 " style="flex:1">
                   <div class="flex">
                     <span @click="clickInteract(item)" class="pr-1 truncate pointer interact-name"
-                      style="max-width: 84px; font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 600;">
+                      style="max-width: 84px; font-size: 16px;color: var(--main-text);font-weight: 600;">
                       {{ item.title }}
                     </span>
                     <span class="pr-1 truncate  dynamic"
@@ -49,9 +49,9 @@
                       {{ item.dynamic }}
                     </span>
                   </div>
-                  <div @click="clickInteract(item)" class="truncate pointer" style="width: 98%"><span
-                      class="w-100 interact-content">{{ item.content }}</span></div>
-                  <span class="create-time mt-2">{{ item.create_time }}</span>
+                  <div @click="clickInteract(item)" class="truncate pointer" style="width: 98%;"><span
+                      class="w-100 interact-content" style="color: var(--main-text)">{{ item.content }}</span></div>
+                  <span class="create-time mt-2"  style="color: var(--secondary-text)">{{ item.create_time }}</span>
                 </div>
               </div>
             </vueCustomScrollbar>
@@ -353,7 +353,7 @@ export default {
 
 .interact-hover {
   &:hover {
-    background: rgba(0, 0, 0, 0.30);
+    background: var(--active-bg);
   }
 
   &:active {
