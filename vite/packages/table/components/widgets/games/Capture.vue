@@ -1,5 +1,5 @@
 <template>
-   <Widget :options="options" :customData="customData" :customIndex="customIndex">
+   <Widget :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
       <div class="flex justify-center items-center mx-5 my-8">
           <div class="flex justify-center pointer  items-center mr-6 flex-col ml-6">
               <span class="px-4 voice-hover py-4 btn-active rounded-full mb-3" style="background: rgba(32, 32, 32, 1);">
@@ -43,6 +43,9 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
+    },
+    desk:{
+      type:Object
     }
   },
   data(){

@@ -318,6 +318,9 @@ export default {
       type: Object,
       default: () => {},
     },
+    desk:{
+      type:Object
+    }
   },
   data() {
     return {
@@ -385,7 +388,7 @@ export default {
     this.loadDeskIconApps();
   },
   methods: {
-    ...mapActions(cardStore, ["increaseCustomComponents"]),
+    ...mapActions(cardStore, ["updateCustomComponents"]),
     async loadDeskIconApps() {
       const lightApps = await appModel.getAllApps();
       for (let i = 0; i < lightApps.length; i++) {
@@ -542,11 +545,11 @@ export default {
         message.warning("未添加小组件封面");
         return;
       }
-      this.increaseCustomComponents(this.customIndex, {
+      this.updateCustomComponents(this.customIndex, {
         showName: this.showName,
         mySize: this.mySize,
         myData: this.myData,
-      });
+      },this.desk);
       message.success("保存成功");
       this.panelVisible = false;
     },

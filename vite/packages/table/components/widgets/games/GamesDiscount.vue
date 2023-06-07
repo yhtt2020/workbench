@@ -1,6 +1,6 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex"
-                     :customData="customData" :menuList="gameBare" ref="gameSlot">
+                     :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk">
     <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ region.name }}
     </div>
@@ -129,6 +129,9 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
+    },
+    desk:{
+      type:Object
     }
   },
   components: {

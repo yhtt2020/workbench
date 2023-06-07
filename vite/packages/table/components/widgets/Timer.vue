@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex">
+  <Widget :options="options" :customIndex="customIndex" :desk="desk">
         <div class="timer-content ">
           <Icon
             style="
@@ -34,6 +34,9 @@ export default {
     customData: {
       type: Object,
       default: () => {}
+    },
+    desk: {
+      type: Object,
     }
   },
   data(){

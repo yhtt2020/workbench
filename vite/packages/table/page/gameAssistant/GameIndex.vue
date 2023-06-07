@@ -1,7 +1,6 @@
 <template>
-  <div class="rounded-xl px-5" style="width: 95%;height: 100%">
-    暂不可用，敬请期待
-    <Desk v-if="false" :currentDesk="currentDesk" :settings="currentDesk.settings"></Desk>
+  <div class="rounded-xl px-5" style="width: 100%;height: 100%">
+    <Desk v-if="true" :currentDesk="currentDesk" :settings="currentDesk.settings"></Desk>
   </div>
 
 </template>
@@ -16,7 +15,14 @@ export default {
     ...mapWritableState(steamUserStore, ['desks'])
   }, data () {
       return {
-        currentDesk:{}
+        currentDesk:{
+          cards:[],
+          settings:{
+            cardZoom: 100,
+            marginTop: 0,
+            cardMargin: 5//卡片间隙
+          }
+        }
       }
   },
   mounted () {

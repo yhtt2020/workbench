@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex">
+  <Widget :options="options" :customIndex="customIndex" :desk="desk">
     <div
       @click="enterMusic"
       class="pointer"
@@ -33,6 +33,9 @@ export default {
       type: Object,
       default: () => {},
     },
+    desk:{
+      type:Object
+    }
   },
   data() {
     return {

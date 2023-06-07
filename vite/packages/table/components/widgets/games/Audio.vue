@@ -1,5 +1,5 @@
 <template>
-  <Widget :customData="customData" :customIndex="customIndex" :options="options">
+  <Widget :customData="customData" :customIndex="customIndex" :options="options" :desk="desk">
     <HorizontalPanel :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
     <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col">
       <div class="flex">
@@ -89,6 +89,9 @@ export default {
       type: Object,
       default: () => {}
     },
+    desk:{
+      type:Object
+    }
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest'])

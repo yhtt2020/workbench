@@ -11,18 +11,18 @@ export default {
         }
     },
     created() {
-        // 初始化类名
-        if (!this.customData.dragCardSize) {
-            this.increaseCustomComponents(this.customIndex, {
-                dragCardSize: this.options.className,
-            });
-        }
-        // 初始化卡片宽高
-        if (!this.customData.width && !this.customData.height) {
-            this.reSizeInit(this.options.className)
-        }
+
     },
     mounted() {
+      // 初始化类名
+      if (!this.customData.dragCardSize) {
+        this.customData.dragCardSize=this.options.className
+        this.reSizeInit(this.options.className)
+      }
+      // 初始化卡片宽高
+      if (!this.customData.width && !this.customData.height) {
+        this.reSizeInit(this.options.className)
+      }
         // 使用卡片类名
         this.dragCardSize = this.customData.dragCardSize
         // 使用卡片宽高
@@ -41,12 +41,12 @@ export default {
         }
     },
     methods: {
-        ...mapActions(cardStore, ["increaseCustomComponents"]),
+        ...mapActions(cardStore, ["updateCustomComponents"]),
         // 初始化宽高
         reSizeInit(e) {
-            this.increaseCustomComponents(this.customIndex, {
+            this.updateCustomComponents(this.customIndex, {
                 dragCardSize: e,
-            });
+            },this.desk);
             this.dragCardSize = e
             if (e == "card double") {
                 this.width = 2
@@ -65,10 +65,10 @@ export default {
                 this.width = Math.round(str[0] / 280)
                 this.height = Math.round(str[1] / 205)
             }
-            this.increaseCustomComponents(this.customIndex, {
+            this.updateCustomComponents(this.customIndex, {
                 width: this.width,
                 height: this.height
-            });
+            },this.desk);
             this.customData.width = this.width
             this.customData.height = this.height
 

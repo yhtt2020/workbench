@@ -22,7 +22,7 @@
                     </div>
                 </template>
                 <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
-                    :style="[{ zoom: item.option[0].zoom + '%' }]">
+                    :style="[{ zoom: item.option[0].zoom?item.option[0].zoom + '%':'11%' }]">
             </div>
             <div class="right">
                 <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
@@ -55,6 +55,7 @@ import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import NewPreviewCardDetails from "./NewPreviewCardDetails.vue"
 export default {
+    emits:['close','addSuccess'],
     props: {
         navList: {
             type: Object,
@@ -143,15 +144,8 @@ export default {
         },
         addCardAchieve(item, i) {
             let index = i ?? this.carouselIndex
-            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), data: {} }, this.desk);
+            this.addCustomComponents({ name: item.option[index].name, id: Date.now(), customData: {} }, this.desk);
             this.$emit("addSuccess")
-            this.$router.push({
-                name: "home",
-                params: {
-                    name: item.option[index].name,
-                    cname: item.cname,
-                },
-            });
             message.info("添加成功！");
         }
     },

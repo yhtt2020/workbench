@@ -70,8 +70,8 @@
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
-                :customData="item.data" :editing="editing" @customEvent="customEvent"></component>
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
+                :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -98,8 +98,8 @@
         left: 0;
         bottom: 0;
         z-index: 999;
-      " v-if="show">
-      <NewAddCard @setCustoms="setCustoms" :desk="currentDesk"></NewAddCard>
+      " v-if="visibleAdd">
+      <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
@@ -236,7 +236,6 @@
 </template>
 <script>
 import Weather from "../components/widgets/Weather.vue";
-import Calendar from "../components/widgets/Calendar.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";
 import Stock from "../components/widgets/Stock.vue";
@@ -450,7 +449,7 @@ export default {
   name: "Home",
   data() {
     return {
-      show: false,
+      visibleAdd: false,
       newDesk: {
         name: "",
         template: "daily",
@@ -500,7 +499,6 @@ export default {
     AddMore,
     Stock,
     Music,
-    Calendar,
     Weather,
     Timer,
     CustomTimer,
@@ -570,6 +568,14 @@ export default {
         return desk.nanoid === this.currentDeskIndex.name;
       });
       if (find) {
+        find.cards.forEach((e) => {
+          if (!e.data) {
+            e.data = {};
+          }
+          if(!e.customData){
+            e.customData={}
+          }
+        });
         return find;
       } else {
         return {
@@ -705,11 +711,17 @@ export default {
     }
   },
   created() {
-    this.customComponents.forEach((e) => {
-      if (!e.data) {
-        e.data = {};
-      }
-    });
+    if(this.currentDesk.cards.length){
+      this.currentDesk.cards.forEach((e) => {
+        if (!e.data) {
+          e.data = {};
+        }
+        if(!e.customData){
+          e.customData={}
+        }
+      });
+    }
+
     this.navigationList = [];
     //this.setAgreeTest(false)
   },
@@ -720,6 +732,9 @@ export default {
     }
   },
   methods: {
+    hideAddCard(){
+      this.visibleAdd=false
+    },
     setTransparent() {
       if (this.appSettings.transparent) {
         window.localStorage.setItem("transparent", JSON.stringify("true"));
@@ -775,7 +790,7 @@ export default {
       this.addDeskVisible = true;
     },
     doAddDesk() {
-      if (this.newDesk.name.trim() === "") {
+      if (this.newDesk.name.trim() ===  "") {
         message.error("请输入新桌面名称");
         return;
       }
@@ -851,7 +866,7 @@ export default {
       this.menuVisible = false;
     },
     newAddCard() {
-      this.show = true;
+      this.visibleAdd = true;
       this.menuVisible = false;
     },
     showMenu() {
@@ -873,7 +888,7 @@ export default {
     setCustom() {
       this.custom = false;
     }, setCustoms() {
-      this.show = false;
+      this.visibleAdd = false;
     },
   },
   watch: {

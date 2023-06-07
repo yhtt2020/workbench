@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options">
+  <Widget :options="options" :desk="desk">
     <div class="absolute  left-4 top-4 h-6 w-16 pointer"   @click="moveToday"></div>
     <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
@@ -38,6 +38,7 @@ import { Calendar  } from 'v-calendar';
 import 'v-calendar/style.css';
 export default {
   name: 'CustomTimer',
+  props:['desk'],
   data () {
     return {
       status: 'pause',

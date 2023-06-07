@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex">
+  <Widget :options="options" :customIndex="customIndex" :desk="desk">
     <div
     class="content"
     v-if="myCountdownDay.length <= 0"
@@ -67,6 +67,9 @@ export default {
     customIndex:{
       type:Number,
       default:0
+    },
+    desk:{
+      type:Object
     }
   },
   components:{Widget},

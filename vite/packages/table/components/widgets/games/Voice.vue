@@ -1,5 +1,5 @@
 <template>
-  <Widget :customIndex="customIndex" :customData="customData" :options="options">
+  <Widget :customIndex="customIndex" :customData="customData" :options="options" :desk="desk">
     <div class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false ">
       <div class="flex">
         <div class="flex-1 flex flex-col mr-4">
@@ -73,6 +73,9 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
+    },
+    desk:{
+      type:Object
     }
   },
   data(){

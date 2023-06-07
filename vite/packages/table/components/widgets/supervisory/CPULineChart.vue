@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :menu-list="menuList">
+  <Widget :options="options" :menu-list="menuList" :desk="desk">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div class="cpu">
         <div class="cpu-number">
@@ -95,6 +95,7 @@ import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
 export default {
+  props:['desk'],
   data(){
     return {
       options:{

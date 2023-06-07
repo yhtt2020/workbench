@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex">
+  <Widget :options="options" :customIndex="customIndex" :desk="desk">
     <HorizontalPanel :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
     <template v-if="epicType.name === 'week'">
       <div class="w-full" v-if="detailShow === false">
@@ -52,6 +52,9 @@ export default {
       type: Number,
       default: 0
     },
+    desk:{
+      type:Object
+    }
   },
   data () {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options">
+  <Widget :options="options" :desk="desk">
 <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
 <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
 <!--      活动说明-->
@@ -114,6 +114,7 @@ export default {
     HorizontalPanel,
     UserOutlined
   },
+  props:['desk'],
   data () {
     return {
       options: {

@@ -1,7 +1,7 @@
 <template>
 
   <Widget  :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex"
-                     :menuList="formulaBar" ref="cardSlot">
+                     :menuList="formulaBar" ref="cardSlot" :desk="desk">
     <div class="small-wallpaper">
       <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
         <div class=" w-full   " style="margin-top: 15%;text-align: center" v-if="imgList.length<=0">
@@ -80,6 +80,9 @@ export default {
     customData: {
       type: Object,
       default: () => {}
+    },
+    desk:{
+      type:Object
     }
   },
   data () {
@@ -136,7 +139,7 @@ export default {
     },
     pickFilterChange (e) {
       this.addressType = this.wallpaperOptions.find(i => i.value === e)
-      this.updateCustomComponents(this.customIndex, this.addressType)
+      this.updateCustomComponents(this.customIndex, this.addressType,this.desk)
       if (this.addressType.path !== '') {
         axios.get(this.addressType.path, {}).then(res => {
           this.imgList = []

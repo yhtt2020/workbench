@@ -37,8 +37,8 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-          <NewCardPreViews v-if="baseNavList[navIndex].children !== null" :navList="baseNavList[navIndex].children"
-                           @addSuccess="onBack" :search="searchValue" :desk="desk">
+          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null" :navList="baseNavList[navIndex].children"
+                            :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
@@ -104,7 +104,6 @@ export default {
         let children = []
         item.children.forEach((i) => {
           i.time = new Date(i.time).getTime()
-          console.log(i.time)
           children.push({
             ...i,
             download: Math.floor(Math.random() * 10000) + 1,
@@ -164,7 +163,7 @@ export default {
       return randomTimestamp
     },
     onBack () {
-      this.$emit('setCustoms', false)
+      this.$emit('close')
     },
     updateNavIndex (index) {
       this.navIndex = index

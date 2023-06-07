@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :menu-list="menuList">
+  <Widget :options="options" :menu-list="menuList" :desk="desk">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -74,6 +74,11 @@ export default {
   },
   components:{
     Widget
+  },
+  props:{
+    desk:{
+      type:Object
+    }
   },
   computed:{
     ...mapWritableState(inspectorStore,['displayData','aidaData']),

@@ -1,5 +1,5 @@
 <template>
-  <Widget :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="formulaBar" ref="cardSlot">
+  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="formulaBar" ref="cardSlot">
     <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDay.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
@@ -143,6 +143,9 @@ export default {
     customData:{
       type:Object,
       default:()=>{}
+    },
+    desk:{
+      type:Object
     }
   },
   components:{

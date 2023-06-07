@@ -104,7 +104,11 @@ export default {
     customIndex:{
       type:Number,
       default:0
+    },
+    desk:{
+      type:Object
     }
+
   },
   data() {
     return {
