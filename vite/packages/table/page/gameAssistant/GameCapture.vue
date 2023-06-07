@@ -479,7 +479,7 @@ import {AreaChartOutlined} from '@ant-design/icons-vue'
 import HorizontalCapture from '../../components/HorizontalCaptrue.vue'
 import { inspectorStore } from '../../store/inspector'
 import * as echarts from "echarts";
-import { FPSOption } from '../../components/homeWidgets/supervisory/echartOptions'
+import { FPSOption } from '../../components/widgets/supervisory/echartOptions'
 
 export default {
   name:'GameCapture',
