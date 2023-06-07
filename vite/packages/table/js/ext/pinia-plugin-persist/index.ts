@@ -12,9 +12,12 @@ export const updateStorage = async (strategy: PersistStrategy, store: Store) => 
       finalObj[key] = store.$state[key]
       return finalObj
     }, {} as PartialState)
-    await storage.setItem(storeKey, JSON.stringify(partialState))
+    console.log('需要写入',storeKey,partialState)
+    let time=Date.now()
+     storage.setItem(storeKey, JSON.stringify(partialState))
+    console.log('写入耗时',Date.now()-time+'ms')
   } else {
-    await storage.setItem(storeKey, JSON.stringify(store.$state))
+     storage.setItem(storeKey, JSON.stringify(store.$state))
   }
 }
 

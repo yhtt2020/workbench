@@ -78,7 +78,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(cardStore, ["addCustomComponents"]),
+    ...mapActions(cardStore, ["addCard"]),
     imgChang(i) {
       this.carouselIndex = i;
     },
@@ -88,7 +88,7 @@ export default {
     },
 
     addCard() {
-      this.addCustomComponents({ name: this.cardType.images[this.carouselIndex], id: Date.now(), data: {} },this.desk);
+      this.addCard({ name: this.cardType.images[this.carouselIndex], id: Date.now(), data: {} },this.desk);
       this.$emit("addSuccess")
       // this.$router.push({
       //   name: "home",

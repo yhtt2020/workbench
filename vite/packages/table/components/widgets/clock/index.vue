@@ -35,11 +35,11 @@ import mixin from './hooks/clockMixin.js'
 import { cardStore } from '../../../store/card.ts'
 import { mapActions } from 'pinia'
 
-import cardDrag from '../note/hooks/cardDrag.vue'
-import cardDragHook from '../note/hooks/cardDragHook'
+import cardDrag from '../../card/hooks/cardDrag.vue'
+import cardDragHook from '../../card/hooks/cardDragHook'
 
-import cardSize from '../note/hooks/cardSize.vue'
-import cardSizeHook from '../note/hooks/cardSizeHook'
+import cardSize from '../../card/hooks/cardSize.vue'
+import cardSizeHook from '../../card/hooks/cardSizeHook'
 
 export default {
   mixins: [mixin, cardDragHook, cardSizeHook],
@@ -121,14 +121,14 @@ export default {
       setData.bgZoom = 0
     }
     if(Object.keys(setData).length){
-      this.updateCustomComponents(this.customIndex,setData,this.desk)
+      this.updateCustomData(this.customIndex,setData,this.desk)
     }
     this.bgZoom = this.customData.bgZoom
     this.updateTime()
   },
 
   methods: {
-    ...mapActions(cardStore, ['updateCustomComponents']),
+    ...mapActions(cardStore, ['updateCustomData']),
     onReSize (e, i, clock, widthHeightObj) {
       clock = clock ?? this.customData.clockId
       i = widthHeightObj ?? i
@@ -200,13 +200,13 @@ export default {
 
     },
     updateBlur (e) {
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         blurs: e,
       }, this.desk)
       this.blur = e
     },
     updateBgZoom (e) {
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         bgZoom: e,
       }, this.desk)
       this.bgZoom = e
@@ -214,12 +214,12 @@ export default {
     },
     updateClockStyle (e) {
       this.onReSize(0, 0, e, this.widthHeightObj)
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         clockId: e,
       }, this.desk)
     },
     updateImgUrl (url) {
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         imgUrl: url,
       }, this.desk)
     },

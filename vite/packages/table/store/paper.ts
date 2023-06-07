@@ -23,7 +23,7 @@ export const paperStore = defineStore('paper', {
     settings: DEFAULT_PAPERS_SETTINGS,
 
 
-    lockTimeout: 1800,//锁屏延迟，默认改为半小时
+
   }),
   actions:{
     /**

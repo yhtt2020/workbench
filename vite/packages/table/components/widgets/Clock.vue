@@ -124,7 +124,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(cardStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCard"]),
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
     onContextMenuClick(e) {
 
@@ -145,7 +145,7 @@ export default {
       });
     },
     removeClock(){
-      this.removeCustomComponents(this.customIndex)
+      this.removeCard(this.customIndex)
       this.dCountDown()
       this.visible = false;
     },

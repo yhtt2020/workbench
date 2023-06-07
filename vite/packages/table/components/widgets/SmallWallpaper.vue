@@ -129,7 +129,7 @@ export default {
   methods: {
     ...mapActions(paperStore, ['removeToMyPaper']),
     ...mapActions(appStore, ['setBackgroundImage']),
-    ...mapActions(cardStore, ['updateCustomComponents']),
+    ...mapActions(cardStore, ['updateCustomData']),
     goGallery(){
       this.$router.push({name:'my'})
     },
@@ -139,7 +139,7 @@ export default {
     },
     pickFilterChange (e) {
       this.addressType = this.wallpaperOptions.find(i => i.value === e)
-      this.updateCustomComponents(this.customIndex, this.addressType,this.desk)
+      this.updateCustomData(this.customIndex, this.addressType,this.desk)
       if (this.addressType.path !== '') {
         axios.get(this.addressType.path, {}).then(res => {
           this.imgList = []

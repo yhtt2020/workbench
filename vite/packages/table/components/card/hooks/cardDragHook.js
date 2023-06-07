@@ -1,4 +1,4 @@
-import { cardStore } from "../../../../store/card";
+import { cardStore } from "../../../store/card";
 import { mapActions } from "pinia";
 export default {
     data() {
@@ -41,10 +41,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions(cardStore, ["updateCustomComponents"]),
+        ...mapActions(cardStore, ["updateCustomData"]),
         // 初始化宽高
         reSizeInit(e) {
-            this.updateCustomComponents(this.customIndex, {
+            this.updateCustomData(this.customIndex, {
                 dragCardSize: e,
             },this.desk);
             this.dragCardSize = e
@@ -65,7 +65,7 @@ export default {
                 this.width = Math.round(str[0] / 280)
                 this.height = Math.round(str[1] / 205)
             }
-            this.updateCustomComponents(this.customIndex, {
+            this.updateCustomData(this.customIndex, {
                 width: this.width,
                 height: this.height
             },this.desk);

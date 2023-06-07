@@ -39,7 +39,7 @@
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
-      <div class="option h-24 w-24 ml-4" @click="removeCard">
+      <div class="option h-24 w-24 ml-4" @click="doRemoveCard">
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
       </div>
@@ -212,7 +212,7 @@ export default {
   watch: {
     sizeType: {
       handler() {
-        this.updateCustomComponents(
+        this.updateCustomData(
           this.$parent.customIndex ||
           this.$parent.$parent.customIndex ||
           this.$parent.$attrs.customIndex,
@@ -232,14 +232,14 @@ export default {
 
   methods: {
     ...mapActions(cardStore, [
-      "removeCustomComponents",
-      "updateCustomComponents",
+      "removeCard",
+      "updateCustomData",
     ]),
     showDrawer() {
       this.menuVisible = true;
     },
-    removeCard() {
-      this.removeCustomComponents(
+    doRemoveCard() {
+      this.removeCard(
         this.$parent.customIndex ||
         this.$parent.$parent.customIndex ||
         this.$parent.$attrs.customIndex,

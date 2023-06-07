@@ -217,7 +217,7 @@ export default {
   },
   methods: {
     ...mapActions(steamStore, ['setGameDetail', 'updateGameData', 'setGameData', 'getData','getRandomList']),
-    ...mapActions(cardStore, ['updateCustomComponents']),
+    ...mapActions(cardStore, ['updateCustomData']),
     currencyFormat,
     showRegionSelect () {
       this.$refs.regionDrawer.openDrawer()

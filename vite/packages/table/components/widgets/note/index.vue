@@ -27,11 +27,11 @@
 
 <script>
 import Widget from '../../card/Widget.vue'
-import cardSize from './hooks/cardSize.vue'
-import cardSizeHook from './hooks/cardSizeHook'
+import cardSize from '../../card/hooks/cardSize.vue'
+import cardSizeHook from '../../card/hooks/cardSizeHook'
 
-import cardDrag from './hooks/cardDrag.vue'
-import cardDragHook from './hooks/cardDragHook'
+import cardDrag from '../../card/hooks/cardDrag.vue'
+import cardDragHook from '../../card/hooks/cardDragHook'
 
 export default {
   mixins: [cardDragHook, cardSizeHook],
@@ -109,7 +109,7 @@ export default {
       setData.colors= '#ffffff'
     }
     if(Object.keys(setData)){
-      this.updateCustomComponents(this.customIndex,setData,this.desk)
+      this.updateCustomData(this.customIndex,setData,this.desk)
     }
   },
   mounted () {
@@ -124,22 +124,22 @@ export default {
   },
   methods: {
     updateText () {
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         text: this.text,
       },this.desk)
     },
     updateBackground (e) {
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         background: e,
       },this.desk)
       this.background = e
       if (e == 'linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)') {
-        this.updateCustomComponents(this.customIndex, {
+        this.updateCustomData(this.customIndex, {
           color: '#000000',
         },this.desk)
         this.colors = '#000000'
       } else {
-        this.updateCustomComponents(this.customIndex, {
+        this.updateCustomData(this.customIndex, {
           color: '#ffffff',
         },this.desk)
         this.colors = '#ffffff'

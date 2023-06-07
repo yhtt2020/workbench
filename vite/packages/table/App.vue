@@ -71,6 +71,7 @@ import {screenStore} from './store/screen'
 import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
+import {timerStore} from "./store/timer";
 
 window.browser = browser
 const {appModel} = window.$models
@@ -177,7 +178,8 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
+    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
+    ...mapWritableState(timerStore,["appDate"]),
     ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),

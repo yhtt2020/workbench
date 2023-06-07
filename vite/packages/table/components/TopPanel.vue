@@ -57,6 +57,7 @@ import { mapWritableState, mapState, mapActions } from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { isMain } from '../js/common/screenUtils'
+import { timerStore } from '../store/timer'
 
 export default {
   name: 'TopPanel',
@@ -72,7 +73,8 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['status']),
     ...mapState(weatherStore, ['cities']),
-    ...mapWritableState(paperStore, ['settings', 'lockTimeout']),
+    ...mapWritableState(paperStore, ['settings']),
+    ...mapWritableState(timerStore,['lockTimeout']),
     isMain,
     lockTimeoutDisplay () {
       // if(this.lockTimeout>=60){

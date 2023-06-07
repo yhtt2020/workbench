@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
+import {timerStore} from "./timer";
 
 // @ts-ignore
 export const cardStore = defineStore(
@@ -62,7 +63,6 @@ export const cardStore = defineStore(
           },
           "type": 'noOver'
         }],
-        appDate: {},
         clockEvent: [],
         customComponents: [],
         aidaData: null,
@@ -368,7 +368,7 @@ export const cardStore = defineStore(
         this.aidaData = value;
       },
       setAppDate(value) {
-        this.appDate = value;
+        timerStore().appDate = value;
       },
 
       addCountdownDay(value) {
@@ -391,10 +391,10 @@ export const cardStore = defineStore(
         });
         const a = this.countdownDay.filter((value) => {
           return (
-            value.dateValue.year > this.appDate.year ||
-            (value.dateValue.year === this.appDate.year &&
-              value.dateValue.month > this.appDate.month) || (value.dateValue.year === this.appDate.year &&
-              value.dateValue.day >= this.appDate.day && value.dateValue.month === this.appDate.month)
+            value.dateValue.year > timerStore().appDate.year ||
+            (value.dateValue.year === timerStore().appDate.year &&
+              value.dateValue.month > timerStore().appDate.month) || (value.dateValue.year === timerStore().appDate.year &&
+              value.dateValue.day >= timerStore().appDate.day && value.dateValue.month === timerStore().appDate.month)
           );
         });
         for (let i = 0; i < a.length; i++) {
@@ -409,8 +409,8 @@ export const cardStore = defineStore(
       addClock(value) {
         this.clockEvent.push(value);
 
-        // if(this.clockEvent[this.clockEvent.length-1].clockType==='每天'&&this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.hours===this.appDate.hours&&
-        //   this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.minutes===this.appDate.minutes){
+        // if(this.clockEvent[this.clockEvent.length-1].clockType==='每天'&&this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.hours===timerStore().appDate.hours&&
+        //   this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.minutes===timerStore().appDate.minutes){
         //   this.everySortClock()
         // }else{
         this.sortClock();
@@ -419,8 +419,8 @@ export const cardStore = defineStore(
       },
       sortClock() {
         for (let i = 0; i < this.clockEvent.length; i++) {
-          if (this.clockEvent[i].dateValue.hours !== this.appDate.hours && this.clockEvent[i].flag === true ||
-            this.clockEvent[i].dateValue.minutes !== this.appDate.minutes && this.clockEvent[i].flag === true)
+          if (this.clockEvent[i].dateValue.hours !== timerStore().appDate.hours && this.clockEvent[i].flag === true ||
+            this.clockEvent[i].dateValue.minutes !== timerStore().appDate.minutes && this.clockEvent[i].flag === true)
             this.clockEvent[i].flag = undefined;
         }
         this.clockEvent.sort((v1, v2) => {
@@ -433,9 +433,9 @@ export const cardStore = defineStore(
         });
         const a = this.clockEvent.filter((value) => {
           return (
-            (value.dateValue.hours > this.appDate.hours) ||
-            (value.dateValue.hours === this.appDate.hours &&
-              value.dateValue.minutes >= this.appDate.minutes)
+            (value.dateValue.hours > timerStore().appDate.hours) ||
+            (value.dateValue.hours === timerStore().appDate.hours &&
+              value.dateValue.minutes >= timerStore().appDate.minutes)
           );
         });
         const b = this.clockEvent.filter((value) => {
@@ -461,7 +461,7 @@ export const cardStore = defineStore(
         }
         this.clockFlag = !this.clockFlag
       },
-      addCustomComponents(value,desk) {
+      addCard(value, desk) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
         //   return item.nanoid === this.currentDeskIndex.name
@@ -474,7 +474,7 @@ export const cardStore = defineStore(
        * @param newData 变更的数据，可一次性变更多个来提升性能
        * @param desk 当前的桌面
        */
-      updateCustomComponents(customIndex, newData,desk) {
+      updateCustomData(customIndex, newData, desk) {
         if(!desk){
           throw '未提交desk参数，此参数必须提供'
         }
@@ -487,17 +487,10 @@ export const cardStore = defineStore(
         }
         findCard.customData =  {...findCard.customData,...newData}
       },
-      increaseCustomComponents(value, newData) {
+      removeCard(customIndex, desk) {
         let currentDesk = this.getCurrentDesk()
-        const findCustom = currentDesk.cards.find(el => {
-          return value === el.id
-        })
-
-        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
-      },
-      removeCustomComponents(customIndex) {
-        let currentDesk = this.getCurrentDesk()
-        currentDesk.cards.splice(currentDesk.cards.findIndex(item => {
+        desk=desk||currentDesk
+        desk.cards.splice(currentDesk.cards.findIndex(item => {
           return item.id === customIndex
         }), 1)
         // this.customComponents.splice(customIndex,1);

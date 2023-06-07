@@ -53,12 +53,12 @@
     <div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content " v-for="(item,index) in selectSteamList">
       <div  class="relative  w-auto h-full s-bg  pointer flex flex-col " style="border-radius: 12px" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @click="openSteamDetail(item)">
         <div :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
-          <img v-if="item.appinfo" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appinfo.appid+'/header.jpg'" class="w-full h-full  object-cover"  alt="">
+          <img v-if="item" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appid+'/header.jpg'" class="w-full h-full  object-cover"  alt="">
         </div>
 
     <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
         <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
-          <span class="text-more text-white text-base " style="font-weight: 400">{{item.appinfo?.common.name}}</span>
+          <span class="text-more text-white text-base " style="font-weight: 400">{{item.name}}</span>
           <span :style="showTime?'':'display:none'"  class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
           <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
         </div>
@@ -104,17 +104,17 @@
       </div>
     </Modal>
       <Modal v-model:visible="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
-        <div class=" flex flex-col" style="border-radius: 12px" v-if="currentSteam.appinfo">
-          <div class=" relative" style="height: 188px;width: 400px" v-if="currentSteam.appinfo">
-            <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appinfo.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
+        <div class=" flex flex-col" style="border-radius: 12px" v-if="currentSteam">
+          <div class=" relative" style="height: 188px;width: 400px" v-if="currentSteam">
+            <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
           </div>
           <div class="  p-4">
-            <div style="user-select: text" class="text-white" >{{currentSteam.appinfo.common.name}} {{currentSteam.appinfo.appid}}</div>
+            <div style="user-select: text" class="text-white" >{{currentSteam.name}} {{currentSteam.appid}}</div>
             <div class="flex flex-row flex-wrap w-80">
               <div class="w-1/2 mt-3">上次游玩：{{getDateMyTime(currentSteam.time)}}</div>
               <div class="w-1/2 mt-3">总时长：{{totalTime(currentSteam.time)}}小时</div>
               <div class="w-1/2 mt-3">近两周：{{twoWeekTime(currentSteam.time)}}小时</div>
-              <div class="w-1/2 mt-3">M站评分：{{currentSteam.appinfo.common.metacritic_score||'无'}}</div>
+              <div class="w-1/2 mt-3">M站评分：{{currentSteam.metacritic_score||'无'}}</div>
             </div>
               <div class="flex flex-row justify-between mt-3 text-white">
                 <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64" @click="playGame"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
@@ -173,7 +173,7 @@
 import HorizontalPanel from "../../components/HorizontalPanel.vue";
 import Modal from '../../components/Modal.vue'
 import MyFullScreenGame from './MyFullScreenGame.vue';
-import {mapWritableState} from "pinia";
+import {mapWritableState,mapActions} from "pinia";
 import { appStore } from "../../store";
 import {steamUserStore} from "../../store/steamUser";
 import {getDateTime} from '../../util'
@@ -220,8 +220,12 @@ export default {
     }
   },
   mounted() {
-  this.steamGameList = this.gameList
-    console.log(this.steamGameList,'steamgamelist')
+    this.steamGameList = this.gameList
+    console.log(this.gameList[0])
+    if(this.gameList[0].appinfo){
+      console.log('重新格式化')
+      this.setGameList(this.gameList)
+    }
   },
   computed:{
     ...mapWritableState(steamUserStore, ['gameList','myGameList']),
@@ -229,9 +233,8 @@ export default {
     selectSteamList(){
       if(this.selectName.trim()!==''){
         this.steamGameList.filter((i) =>{
-          console.log()
           if(i.appInfo){
-            return i.appinfo.common.name.toLowerCase().includes(this.selectName.toLowerCase())
+            return i.name.toLowerCase().includes(this.selectName.toLowerCase())
           }else{
             return false
           }
@@ -241,6 +244,7 @@ export default {
     }
   },
   methods:{
+    ...mapActions(steamUserStore,['setGameList']),
     goBind(){
       this.$router.push({name:'gameSetting'})
     },
@@ -267,7 +271,7 @@ export default {
      })
     },
     deleteGame(){
-      runExec('uninstall '+ this.currentSteam.appinfo.appid)
+      runExec('uninstall '+ this.currentSteam.appid)
     },
     showMyGameDir(){
       require('electron').shell.showItemInFolder(this.currentGame.path)
@@ -288,10 +292,10 @@ export default {
 
     },
     openDetail(){
-      runExec('start steam://nav/games/details/' + this.currentSteam.appinfo.appid)
+      runExec('start steam://nav/games/details/' + this.currentSteam.appid)
     },
     playGame(){
-      const protocol='steam://run/'+this.currentSteam.appinfo.appid
+      const protocol='steam://run/'+this.currentSteam.appid
       require('electron').shell.openExternal(protocol)
      // runExec('"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch '+this.currentSteam.appinfo.appid+' +connect 1.2.3.4:27015')
     },

@@ -388,7 +388,7 @@ export default {
     this.loadDeskIconApps();
   },
   methods: {
-    ...mapActions(cardStore, ["updateCustomComponents"]),
+    ...mapActions(cardStore, ["updateCustomData"]),
     async loadDeskIconApps() {
       const lightApps = await appModel.getAllApps();
       for (let i = 0; i < lightApps.length; i++) {
@@ -545,7 +545,7 @@ export default {
         message.warning("未添加小组件封面");
         return;
       }
-      this.updateCustomComponents(this.customIndex, {
+      this.updateCustomData(this.customIndex, {
         showName: this.showName,
         mySize: this.mySize,
         myData: this.myData,

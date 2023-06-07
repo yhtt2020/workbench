@@ -162,7 +162,7 @@ export default {
   },
   computed:{
     ...mapWritableState(steamStore,["data","dataDetail",'getData']),
-    ...mapWritableState(cardStore,["customComponents","updateCustomComponents"]),
+    ...mapWritableState(cardStore,["customComponents","updateCustomData"]),
     region () {
       if (this.customData && this.customData.id) {
         let found = this.regionRange.find(re => {

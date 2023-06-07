@@ -105,6 +105,19 @@ export const steamUserStore = defineStore("steamUser", {
     },
     setGameList(value) {
       this.gameList = value
+      this.gameList= value.map(game=>{
+        //此处映射需要用到的字段，以简化数据库存入，提升性能
+        return {
+          name:game.appInfo?.common.name,
+          time:{
+            playtime_2weeks:game.time?.playtime_2weeks,
+            playtime_forever:game.time?.playtime_forever,
+            rtime_last_played:game.time?.rtime_last_played
+          },
+          metacritic_score:game.appinfo.common.metacritic_score,
+          appid:game.appinfo.appid,
+        }
+      })
     },
     addGameDetail(value) {
       value.forEach((e) => {
@@ -113,7 +126,7 @@ export const steamUserStore = defineStore("steamUser", {
           e.time = obj
         }
       })
-      this.gameList = value
+      this.setGameList(value)
       this.gameList.sort((a, b) => {
         if (a.time === undefined && a.time === undefined) {
           return 0;

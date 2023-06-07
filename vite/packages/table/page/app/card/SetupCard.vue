@@ -280,7 +280,7 @@ export default {
     ...mapActions(cardStore, [
       "addCountdownDay",
       "addClock",
-      "addCustomComponents",
+      "addCard",
       "removeCountdownDay",
       "removeClock",
     ]),

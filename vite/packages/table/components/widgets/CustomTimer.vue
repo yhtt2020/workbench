@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     onPanelChange (value, mode) {},
-    ...mapActions(cardStore, ['removeCustomComponents']),
+    ...mapActions(cardStore, ['removeCard']),
    async moveToday(){
     await  this.$refs.calendar.move(new Date());
     },
@@ -80,7 +80,7 @@ export default {
       this.visible = false
     },
     removeCalendar () {
-      this.removeCustomComponents(this.customIndex)
+      this.removeCard(this.customIndex)
       this.visible = false
     }
   },

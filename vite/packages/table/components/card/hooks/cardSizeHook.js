@@ -1,4 +1,4 @@
-import { cardStore } from '../../../../store/card'
+import { cardStore } from '../../../store/card'
 import { mapActions } from 'pinia'
 
 export default {
@@ -22,17 +22,17 @@ export default {
 
   },
   methods: {
-    ...mapActions(cardStore, ['updateCustomComponents']),
+    ...mapActions(cardStore, ['updateCustomData']),
     __updateSize (e) {
       // this.callBack && this.callBack(e)
       if (e == 'card1') {
         this.isActive = 'card1'
         this.options.className = 'card'
-        this.updateCustomComponents(this.customIndex, {
+        this.updateCustomData(this.customIndex, {
           cardSize: 'card'
         }, this.desk)
       } else {
-        this.updateCustomComponents(this.customIndex, {
+        this.updateCustomData(this.customIndex, {
           cardSize: e
         }, this.desk)
         this.options.className = e
