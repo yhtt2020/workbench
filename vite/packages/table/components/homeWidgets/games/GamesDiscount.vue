@@ -60,14 +60,14 @@
           <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
             <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
-          <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;">{{ detailList.name }}</div>
-          <span class="content-introduction text-white text-opacity-60">{{ detailList.short_description }}</span>
+          <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;color: var(--primary-text);">{{ detailList.name }}</div>
+          <span class="content-introduction text-white text-opacity-60" style="color: var(--secondary-text);">{{ detailList.short_description }}</span>
           <div class="flex" style="margin-bottom: 10px;">
-          <span class="discount-description rounded-md bg-white bg-opacity-20 "
+          <span class="discount-description rounded-md bg-white bg-opacity-20 " style="color: var(--secondary-text);"
                 v-for="item in detailList.genres">{{ item.description }}</span>
           </div>
           <span v-if="detailList.price_overview.initial_formatted" class="line-through text-white text-opacity-60"
-                style="font-size: 12px;">
+                style="font-size: 12px;color: var(--secondary-text);">
             {{ detailList.price_overview.initial_formatted }}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
@@ -83,17 +83,17 @@
           </div>
           <div class="flex items-center justify-around">
             <div @click="discountBack"
-                 class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
-              <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
+                 class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center" style="color: var(--primary-text);background: var(--primary-bg);">
+              <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
             </div>
             <span class="change pointer rounded-lg s-item  flex items-center justify-center"
-            style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+            style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);"
              @click="enterGameDetail(detailList.steam_appid)"
             >
               详情
             </span>
             <span class="change pointer rounded-lg s-item  flex items-center justify-center"
-             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+             style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);"
              @click="openSteam(detailList.steam_appid)">购买</span>
           </div>
         </div>

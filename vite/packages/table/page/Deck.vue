@@ -189,9 +189,9 @@
         v-model:value="importJsonTxt"></a-textarea>
     </div>
     <div class="line">
-      <a-button :disabled="this.importJsonTxt === ''" class="mr-5" type="primary" @click="importCode">导入分享代码
+      <a-button :disabled="this.importJsonTxt === ''" class="mr-5" type="primary" @click="importCode" style="background: var(--primary-bg);color: var(--primary-text);">导入分享代码
       </a-button>
-      <a-button @click="importFile">导入文件</a-button>
+      <a-button @click="importFile"  style="background: var(--primary-bg);color: var(--primary-text);">导入文件</a-button>
     </div>
 
   </a-drawer>

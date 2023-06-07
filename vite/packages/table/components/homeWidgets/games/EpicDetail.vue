@@ -8,7 +8,7 @@
     <span class="line-through mt-1" style="color: rgba(151, 151, 151, 1);">￥{{detailOptions.price}}.00</span>
     <div class="flex justify-between items-center">
       <span style="color: rgba(255, 77, 79, 1);">免费领取</span>
-      <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;">剩余{{ detailType.name === 'week' ? remainderDay(detailOptions.weekDate) : remainderDay(detailOptions.nextWeekDate)  }}天</span>
+      <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;color: #fff;">剩余{{ detailType.name === 'week' ? remainderDay(detailOptions.weekDate) : remainderDay(detailOptions.nextWeekDate)  }}天</span>
     </div>
     <div class="flex justify-between mt-2">
         <span @click="epicBack" class="w-12 h-12 s-item cursor-pointer epic-back flex items-center rounded-lg justify-center" style="color: var(--primary-text);background: var(--primary-bg);">

@@ -103,7 +103,7 @@
       <a-input
         v-model:value="myData.title"
         class="rounded-lg mt-6 drawer-item-bg"
-        style="height: 48px;background: var(--primary-bg);color: var(--primary-text);"
+        style="height: 48px;background: var(--primary-bg);color: var(--primary-text);border: 0px;"
         placeholder=""
       >
       </a-input>

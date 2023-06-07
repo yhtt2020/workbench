@@ -11,8 +11,7 @@
                     · · ·
                 </div>
             </div>
-            <div class="left no-drag" @click="fullScreen(item)"
-                style="background: var(   --active-bg);">
+            <div class="left no-drag" @click="fullScreen(item)" style="background: var(--active-bg);">
                 <template v-if="item.option.length > 1">
                     <div class="top" style="background: var(--active-bg);">
                         <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="">
@@ -24,7 +23,7 @@
                 <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
                     :style="[{ zoom: item.option[0].zoom + '%' }]">
             </div>
-            <div class="right">
+            <div class="right" style="">
                 <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
                 <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
                 <div class="icon">
@@ -169,11 +168,12 @@ export default {
 }
 
 .box {
+    border: 1px solid;
     width: 542px;
     height: 184px;
     display: flex;
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.30);
+    // background: rgba(0, 0, 0, 0.30);
     position: relative;
     margin: 18px;
     margin-left: 0;
@@ -213,9 +213,9 @@ export default {
     }
 
     .left {
-        margin: 0;
-        height: 184px;
-        background: rgba(0, 0, 0, 0.30);
+        // margin: 0;
+        height: 182px;
+        // background: rgba(0, 0, 0, 0.30);
         border-radius: 12px 0px 0px 12px;
         display: flex;
         justify-content: center;
@@ -223,6 +223,7 @@ export default {
         flex-direction: column;
         width: 180px;
         cursor: pointer;
+        background: var(--primary-bg) !important;
 
         .top {
             width: 100%;
@@ -243,7 +244,7 @@ export default {
 
         .bottom {
             width: 100%;
-            height: 60px;
+            height: 62px;
             background: rgba(0, 0, 0, 0.30);
             border-radius: 0px 0px 0px 12px;
             display: flex;
@@ -267,6 +268,9 @@ export default {
         box-sizing: border-box;
         padding: 10px;
         width: 358px;
+        background: var(--active-bg);
+        border-radius: 0 5px 0 5px;
+
 
         .title {
             font-family: PingFangSC-Medium;
