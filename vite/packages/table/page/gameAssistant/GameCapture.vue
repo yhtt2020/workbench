@@ -419,9 +419,9 @@
         <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
         <template v-if="defaultLastCap.name === 'screenCap'">
           <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
-            <div class="flex flex-row flex-wrap content-game ">
-              <div class="game-list-item px-3 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
-                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;height:120px;">
+            <div class="flex flex-row flex-wrap content-game">
+              <div class="game-list-item px-1 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
+                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;">
                   <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
                 </div>
               </div>
@@ -431,8 +431,8 @@
         <template v-else>
           <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
             <div class="flex flex-row flex-wrap content-game ">
-              <div class="game-list-item px-3 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
-                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;height:120px;">
+              <div class="game-list-item px-2 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
+                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;">
                   <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
                 </div>
               </div>
@@ -892,33 +892,21 @@ export default {
   }
 }
 
-
-
-/**
-@media screen and (max-width: 840px) {
-  .max-capture{
-    display: flex !important;
-    flex-direction: column !important;
-    .cap-right{
-      margin-left: 0 !important;
-      max-width: 512px !important;
-    }
-    .cap-left{
-      margin-bottom: 12px !important; 
-    }
-  }
+.game-list-item{
+  max-width: 231px;
 }
-**/
 
+/*
 .game-list-item{
   max-width: 231px;
 }
 .game-list-local{
-  max-width: 300px;
-  max-height: 170px;
+  max-width: 231px;
+  max-height: 120px;
   aspect-ratio: 231/300;
 }
-@media screen and (min-width: 1060px) and (max-width: 1140px){
+*/
+@media screen and (max-width: 1071px){
   .game-list-item{
     width: calc(100% / 1);
   }
@@ -926,68 +914,77 @@ export default {
     width: calc(100% / 1);
   }
 }
-@media screen and (min-width: 1140px) and (max-width: 1340px){
+@media screen and (min-width: 1072px) and (max-width: 1309px){
   .game-list-item{
     width: calc(100% / 2);
   }
   .game-list-local{
-    width: calc(100% / 5);
+    width: calc(100% / 2);
   }
 }
-@media screen and (min-width: 1340px) and (max-width: 1512px){
+
+@media screen and (min-width: 1310px) and (max-width: 1550px){
   .game-list-item{
     width: calc(100% / 3);
   }
   .game-list-local{
-    width: calc(100% / 6);
+    width: calc(100% / 3);
   }
 }
 
-@media screen and (min-width: 1512px) and (max-width: 1600px){
-  .game-list-item{
-    width: calc(100% / 4);
-  }
-  .game-list-local{
-    width: calc(100% / 7);
-  }
-}
-@media screen and (min-width: 1601px) and (max-width: 1750px){
+@media screen and (min-width: 1551px) and (max-width: 1790px){
   .game-list-item{
     width: calc(100% / 5);
   }
   .game-list-local{
+    width: calc(100% / 6);
+  }
+}
+
+@media screen and (min-width: 1740px) and (max-width: 2040px){
+  .game-list-item{
+    width: calc(100% / 6);
+  }
+  .game-list-local{
+    width: calc(100% / 7);
+  }
+}
+@media screen and (min-width: 2040px) and (max-width: 2340px){
+  .game-list-item{
+    width: calc(100% / 7);
+  }
+  .game-list-local{
     width: calc(100% / 8);
   }
 }
-@media screen and (min-width: 1750px) and (max-width: 1850px){
+@media screen and (min-width: 2340px) and (max-width: 2640px){
   .game-list-item{
-    width: calc(100% / 6);
+    width: calc(100% / 8);
   }
   .game-list-local{
     width: calc(100% / 9);
   }
 }
-@media screen and (min-width: 1850px) and (max-width: 1950px){
-  .game-list-item{
-    width: calc(100% / 7);
-  }
-}
-@media screen and (min-width: 1950px) and (max-width: 2050px){
-  .game-list-item{
-    width: calc(100% / 8);
-  }
-}
-@media screen and (min-width: 2050px) and (max-width: 2150px){
+@media screen and (min-width: 2640px) and (max-width: 2940px){
   .game-list-item{
     width: calc(100% / 9);
   }
 }
-@media screen and (min-width: 3540px) and (max-width: 3840px){
+@media screen and (min-width: 2940px) and (max-width: 3240px){
   .game-list-item{
     width: calc(100% / 10);
   }
 }
-
+@media screen and (min-width: 3240px) and (max-width: 3540px){
+  .game-list-item{
+    width: calc(100% / 11);
+  }
+}
+@media screen and (min-width: 3540px) and (max-width: 3840px){
+  .game-list-item{
+    width: calc(100% / 12);
+  }
+}
 
 ::v-deep .ant-slider-track{
   background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
