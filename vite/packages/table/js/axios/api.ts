@@ -82,7 +82,7 @@ export const regionRange= [
  * @param cacheOptions
  */
 export const sendRequest = async (url, params,cacheOptions={}) => {
-  return await  serverCache.get(url,{cache:true,ttl:60,...cacheOptions},{params}) // axios.get(url, {params})
+  return await  serverCache.get(url,{cache:true,ttl:6*60*60,...cacheOptions},{params}) // axios.get(url, {params})
   // return axios
   //   .get(url, {params})
   //   .then((response) => {
@@ -108,7 +108,7 @@ export const sendRequest = async (url, params,cacheOptions={}) => {
 };
 export const cacheRequest = async (url, params,cacheOptions={}) => {
   return await  serverCache.get(url,{cache:true,ttl:60*60*12,...cacheOptions},{params})
-  
+
 };
 
 // 判断时间是否大于12h
@@ -187,7 +187,7 @@ export function startOfNextWeek(startDate,endDate) {
   const nextWeekFirstDay = new Date(today.setDate(today.getDate() - today.getDay() + 7));
   // 在下周第一天的基础上加7天来获取下周最后一天
   const nextWeekLastDay = new Date(today.setDate(today.getDate() - today.getDay() + 7) + 7);
-  
+
   // 下一周的第一天是否大于startDate 和 最后一天是否大于endDate的情况
   if(nextWeekFirstDay.getTime() > startDate.getTime() && nextWeekLastDay.getTime() > endDate.getTime()){
     return true

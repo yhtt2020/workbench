@@ -12,10 +12,10 @@
           <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
            <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
-            <div style="height:118.53px;" v-if="item.appinfo">
-              <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
+            <div style="height:118.53px;" >
+              <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
             </div>
-            <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+            <span  class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.name}}</span>
            </div>
           </div>
         </div>
@@ -37,10 +37,10 @@
           <a-spin v-if="gameList.length !== gameList.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
             <div v-for="item in gameList.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
-              <div style="height:118.53px;" v-if="item.appinfo">
-                <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
+              <div style="height:118px;">
+                <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
                </div>
-               <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+               <span  class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.name}}</span>
             </div>
           </div>
         </div>
@@ -89,6 +89,9 @@ export default {
     HorizontalPanel,
     MySteamDetail,
     MyGameSmallDetail
+  },
+  mounted(){
+    console.log(this.gameList,'gamelki')
   },
   props:{
     customIndex: {
@@ -178,7 +181,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(cardStore,['increaseCustomComponents']),
+    // ...mapActions(cardStore,['increaseCustomComponents']),
     getGameType(item,index){
       this.customData.name = item.name
       this.steamIndex = index
