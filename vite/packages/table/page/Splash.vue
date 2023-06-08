@@ -103,6 +103,7 @@ import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
+import { navStore } from "../store/nav"
 
 export default {
   name: 'Code',
@@ -133,6 +134,8 @@ export default {
     this.initStore(inspectorStore, 'inspectorStore')
     captureStore()//仅触发一下载入
     if (isMain()) {
+    this.initStore(navStore, 'navStore')
+    if(isMain()){
       this.bindMainIPC()
     } else {
       this.bindSubIPC()

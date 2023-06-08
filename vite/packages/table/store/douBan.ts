@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
-import {compareTime, sendRequest} from '../js/axios/api'
+import {compareTime, cacheRequest} from '../js/axios/api'
 // @ts-ignore
 export const filmStore = defineStore("film", {
   state: () => ({
@@ -18,7 +18,7 @@ export const filmStore = defineStore("film", {
             return
           }
         }
-      let res = await sendRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
+      let res = await cacheRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
         localCache:true,
         localTtl:60*60*12
       })
