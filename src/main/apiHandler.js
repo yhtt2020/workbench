@@ -310,14 +310,11 @@ class ApiHandler {
       }
     })
     ApiHandler.onWindow('isFullScreen', (event, args, instance) => {
-      console.log('检测是否是全屏')
       if (instance.type === 'view') {
         event.returnValue = false //view的话，统一返回false
       } else if (instance.type === 'frameWindow') {
-        console.log(instance.frame.isFullScreen(),'frameisFullScreen')
         event.returnValue = instance.frame.isFullScreen()
       } else if (instance.type === 'window') {
-        console.log( instance.window.isFullScreen(),'fwindowisFullScreen')
         event.returnValue = instance.window.isFullScreen()
       }
     })
