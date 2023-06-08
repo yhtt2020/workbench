@@ -420,7 +420,7 @@
         <template v-if="defaultLastCap.name === 'screenCap'">
           <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
             <div class="flex flex-row flex-wrap content-game">
-              <div class="game-list-item px-1 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
+              <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
                 <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;">
                   <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
                 </div>
@@ -431,7 +431,7 @@
         <template v-else>
           <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
             <div class="flex flex-row flex-wrap content-game ">
-              <div class="game-list-item px-2 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
+              <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
                 <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;">
                   <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
                 </div>
