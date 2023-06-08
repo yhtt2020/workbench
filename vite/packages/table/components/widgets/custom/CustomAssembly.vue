@@ -2,7 +2,7 @@
   <Widget
     :customIndex="customIndex"
     :options="options"
-    :menuList="formulaBar"
+    :menuList="menuList"
     ref="customAssembly"
     :custom-data="customData"
   >
