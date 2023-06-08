@@ -39,7 +39,7 @@
           <template v-else>
 
             <div class="warn-boxs">
-              <CardState :state="'null'" class="warn-box"  style="width: 320px;height: 320px;"></CardState>
+              <CardState :state="'null'" @onClick="onClick" style="width: 320px;height: 320px;"></CardState>
             </div>
           </template>
         </div>
@@ -125,6 +125,9 @@ export default {
 
   },
   methods: {
+    onClick() {
+      console.log('222 :>> ', 222);
+    },
     handleChange(value) {
       console.log(`selected ${value}`);
     },
