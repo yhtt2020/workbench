@@ -233,7 +233,7 @@ export default {
 <style lang="scss">
 .barrage-style:hover {
   border: 2px solid rgba(255, 255, 255, 0.47);
-  background: #000;
+  background: var(--active-bg);
 }
 
 .barrage-style:hover .barrage-btn-wrapper {
@@ -260,8 +260,8 @@ export default {
   -webkit-app-region: no-drag;
   user-select: none;
   border-radius: 100px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  background: var(--primary-bg);
+  color: var(--primary-text);
   padding: 3px 15px;
   padding-right: 15px;
   vertical-align: middle;

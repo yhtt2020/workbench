@@ -1,5 +1,6 @@
 import {createApp} from 'vue'
 import Antd from 'ant-design-vue';
+// import 'ant-design-vue/dist/antd.less';
 import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
 import 'vcolorpicker/lib/style.css';
@@ -33,6 +34,7 @@ import dayjs from 'dayjs';
 import routes from './route/route'
 
 import "../../public/css/global.scss"
+import "../../public/css/antd.scss"
 dayjs.locale('zh-cn');
 
 const app = createApp(App)
