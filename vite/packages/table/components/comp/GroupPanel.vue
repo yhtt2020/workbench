@@ -17,7 +17,7 @@
              <a-avatar shape="square" :src="circle.logo_src_pc_46"></a-avatar>
            </a-col>
            <a-col :span="18">
-             <div class="text-more">
+             <div class="text-more" style="color:var(--primary-text)">
                {{circle.name}}
              </div>
            </a-col>
@@ -156,6 +156,11 @@ export default {
 <style scoped>
 :deep(.ant-tabs-tab-btn) {
   color: var(--primary-text) !important;
+}
+
+:deep(.ant-tabs-tab) {
+  background: none !important;
+
 }
 :deep(.ant-empty-description) {
   color: var(--primary-text) !important;

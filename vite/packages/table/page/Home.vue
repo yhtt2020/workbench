@@ -16,12 +16,12 @@
       </HorizontalPanel>
     </div>
     <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
-      <div style="width: 100%">
-        <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
-          sub-title="您可以长按空白处、右键添加卡片。">
+      <div style="width: 100%;">
+        <a-result class="s-bg rounded-lg m-auto" style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success"
+          title="使用卡片桌面" sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
             <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
-            <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+            <a-button disabled key="buy" @click="learn" style="background: var( --active-bg);color: var( --secondary-text);">学习（课程暂未上线）</a-button>
           </template>
 
           <div class="desc">
@@ -923,6 +923,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+:deep(.ant-result-title) {
+  color: var(--primary-text);
+}
+:deep(.ant-result-subtitle) {
+  color:var(--secondary-text)
+}
 .grid {
   position: relative;
   display: inline-block;

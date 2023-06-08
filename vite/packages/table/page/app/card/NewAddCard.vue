@@ -173,6 +173,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+body {
+  background: red !important;
+}
 .popContainer {
   position: fixed;
   top: 0;
@@ -186,12 +189,11 @@ export default {
   width: 100%;
   height: 100%;
   // 背景的模糊大小通过下面的属性值大小来调制
-  background-color: rgba(19, 19, 19, 0.35);
-  // background: #1a1a1a;
+  // background-color: rgba(19, 19, 19, 0.35);
+  // background: red;
   backdrop-filter: blur(60px);
   -webkit-backdrop-filter: blur(50px);
   transform: scale(1.2);
-  opacity: 1.6;
 
 }
 
@@ -207,7 +209,6 @@ export default {
   box-sizing: border-box;
   padding: 24px;
 
-  // opacity: 0.6;
   :deep(.ant-select-selector) {
     border: none !important;
     box-shadow: none !important;

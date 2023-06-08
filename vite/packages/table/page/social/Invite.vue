@@ -30,11 +30,11 @@
             <span style="padding-left: 2px;padding-right: 2px" class="mr-3" :style="{background:isMarked(record.key)?'#35ad03':'transparent',textDecoration:record.status===2?'line-through':'none'}">
               {{ record.key }}
             </span>
-            <a-tag class="pointer" @click="copy(record.key)">复制</a-tag> <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
+            <a-tag class="pointer" @click="copy(record.key)" >复制</a-tag> <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
           </template>
           <template v-else-if="column.key === 'status'">
-            <a-tag color="green" v-if="record.status===1">有效</a-tag>
-            <a-tag color="geekblue" v-else-if="record.status===2">已使用</a-tag>
+            <a-tag color="green" v-if="record.status===1"  style="color: #6abe39 ">有效</a-tag>
+            <a-tag color="geekblue" v-else-if="record.status===2" >已使用</a-tag>
           </template>
           <template v-else-if="column.key==='index'">
             {{codes.length-index}}

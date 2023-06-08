@@ -40,7 +40,8 @@
         }}</span>
     </div>
   </div>
-  <div class="fixed inset-0 home-blur" style="z-index: 999999999999" v-if="visible">
+  <div class="fixed inset-0 home-blur" style="z-index: 999999999999;" v-if="visible" >
+
     <div v-if="clockEvent[0]"
          class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
          style="width: 480px;height: 320px;background:  #282828">

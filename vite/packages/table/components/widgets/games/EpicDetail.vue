@@ -3,18 +3,18 @@
     <div class="epic-detail-image rounded-lg">
       <img :src="detailOptions.image" alt="" class="rounded-lg">
     </div>
-    <span class="mt-2 truncate" style="max-width:252px;font-size: 16px;font-weight: 500;">{{ detailOptions.name }}</span>
-    <span class="content-introduction h-12" style="font-size: 16px; font-weight: 400;">{{detailOptions.illustrate}}</span>
+    <span class="mt-2 truncate" style="max-width:252px;font-size: 16px;font-weight: 500;color: var(--primary-text);">{{ detailOptions.name }}</span>
+    <span class="content-introduction h-12" style="font-size: 16px; font-weight: 400;color: var(--secondary-text);">{{detailOptions.illustrate}}</span>
     <span class="line-through mt-1" style="color: rgba(151, 151, 151, 1);">￥{{detailOptions.price}}.00</span>
     <div class="flex justify-between items-center">
       <span style="color: rgba(255, 77, 79, 1);">免费领取</span>
-      <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;">剩余{{ detailType.name === 'week' ? remainderDay(detailOptions.weekDate) : remainderDay(detailOptions.nextWeekDate)  }}天</span>
+      <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;color: #fff;">剩余{{ detailType.name === 'week' ? remainderDay(detailOptions.weekDate) : remainderDay(detailOptions.nextWeekDate)  }}天</span>
     </div>
     <div class="flex justify-between mt-2">
-        <span @click="epicBack" class="w-12 h-12 s-item cursor-pointer epic-back flex items-center rounded-lg justify-center">
+        <span @click="epicBack" class="w-12 h-12 s-item cursor-pointer epic-back flex items-center rounded-lg justify-center" style="color: var(--primary-text);background: var(--primary-bg);">
            <Icon icon="xiangzuo" class="text-xl"></Icon>
         </span>
-        <span @click="onClickOffice" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);">领取</span>
+        <span @click="onClickOffice" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);">领取</span>
     </div>
  </div>
 </template>

@@ -63,7 +63,7 @@
       <div
         class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3"
         v-if="showName"
-        style="border-radius: 0 0 8px 8px"
+        style="border-radius: 0 0 8px 8px;color: var(--primary-text);"
       >
         {{ myData.title }}
       </div>
@@ -79,7 +79,7 @@
     <template #extra>
       <div
         class="flex justify-center items-center rounded-lg h-10 drawer-item-bg w-16 pointer"
-        @click="saveData"
+        @click="saveData" style="background: var(--primary-bg);color:var(--primary-text)"
       >
         保存
       </div>
@@ -103,7 +103,7 @@
       <a-input
         v-model:value="myData.title"
         class="rounded-lg mt-6 drawer-item-bg"
-        style="height: 48px"
+        style="height: 48px;background: var(--primary-bg);color: var(--primary-text);border: 0px;"
         placeholder=""
       >
       </a-input>
@@ -115,13 +115,13 @@
       >
         <div
           class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base"
-          @click="importFile"
+          @click="importFile" style="background: var(--primary-bg);color: var(--primary-text);"
         >
           选择图片
         </div>
         <div
           class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base"
-          @click="openMy"
+          @click="openMy" style="background: var(--primary-bg);color: var(--primary-text);"
         >
           选自壁纸收藏
         </div>
@@ -163,21 +163,21 @@
         </div>
       </div>
       <div class="mt-6 text-base">快捷方式</div>
-      <div class="mt-2 text-base" style="color: rgba(255, 255, 255, 0.4)">
+      <div class="mt-2 text-base" style="color: var(--secondary-text)">
         支持选择Windows应用的快捷方式来作为小组件的点击启动目标
       </div>
       <div class="flex flex-row justify-between items-center mt-6">
         <div
           class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer"
           @click="customClick"
-          v-if="!myData.link"
+          v-if="!myData.link"  style="background: var(--primary-bg);color: var(--primary-text);"
         >
           本地应用
         </div>
         <div
           class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer"
           v-if="!myData.link"
-          @click="showAppNav"
+          @click="showAppNav"  style="background: var(--primary-bg);color: var(--primary-text);"
         >
           选自应用导航
         </div>

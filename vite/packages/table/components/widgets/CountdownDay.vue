@@ -46,7 +46,7 @@
           >
             <div
               class="event-list px-4 mb-3 s-item"
-              style="background: rgba(42, 42, 42, 1);"
+              style="background: var(--primary-bg);color: var(--primary-text);"
               v-for="(item,index) in countdownDay"
             >
               <a-dropdown :trigger="['contextmenu']" class="w-full">
@@ -54,8 +54,8 @@
               <div class="flex flex-row items-center">
                 <div class="round-dot mr-4"></div>
                 <div class="event-title">
-                  <span class="text-more" style="color: rgba(255, 255, 255, 0.85);font-size: 16px;">{{ item.eventValue }}</span>
-                  <span class="event" style="color: rgba(255, 255, 255, 0.4);font-size: 12px;"
+                  <span class="text-more" style="font-size: 16px;">{{ item.eventValue }}</span>
+                  <span class="event" style="font-size: 12px;"
                   >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
                       item.dateValue.day
                     }}</span
@@ -63,7 +63,7 @@
                 </div>
               </div>
               <span
-                style="color: rgba(255, 255, 255, 0.85);font-size: 18px;"><span v-if="item.type">还有</span>
+                style="font-size: 18px;"><span v-if="item.type">还有</span>
         <span v-else>已过</span> {{
                   differenceDay(item)
                 }} 天</span
@@ -79,8 +79,8 @@
           >
         </div>
         <div class="flex flex-row items-center w-full justify-center mt-4">
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeDrawer">取消</div>
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="goAddEvent">添加事件</div>
+          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: var(--primary-bg);color: var(--primary-text);" @click="closeDrawer">取消</div>
+          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: var(--primary-bg);color: var(--primary-text);" @click="goAddEvent">添加事件</div>
         </div>
       </div>
     <div v-else>

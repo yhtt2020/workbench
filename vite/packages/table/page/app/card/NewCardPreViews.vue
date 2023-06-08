@@ -11,10 +11,10 @@
           · · ·
         </div>
       </div>
-      <div class="left no-drag" @click="fullScreen(item)"
-           style="background: var(   --active-bg);">
+      <div class="left no-drag" @click="fullScreen(item)">
+
         <template v-if="item.option.length > 1">
-          <div class="top" style="background: var(--active-bg);">
+          <div class="top" >
             <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="">
           </div>
           <div class="bottom">
@@ -24,11 +24,11 @@
         <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
              :style="[{ zoom: item.option[0].zoom?item.option[0].zoom + '%':'11%' }]">
       </div>
-      <div class="right">
+      <div class="right"style="">
         <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
-          <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--secondary-text)">{{ i }}
+          <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--secondary-text);background: var(--active-bg);">{{ i }}
           </div>
         </div>
         <div class="data">
@@ -168,12 +168,12 @@ export default {
   height: 184px;
   display: flex;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.30);
+  background: var(--active-bg);
   position: relative;
   margin: 18px;
   margin-left: 0;
   margin-top: 0;
-
+    border-radius: 10px;
 
   .add {
     position: absolute;
@@ -208,23 +208,23 @@ export default {
   }
 
   .left {
-    margin: 0;
-    height: 184px;
-    background: rgba(0, 0, 0, 0.30);
+    //margin: 0;
+    height: 182px;
+    //background: rgba(0, 0, 0, 0.30);
     border-radius: 12px 0px 0px 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     width: 180px;
-    cursor: pointer;
+    cursor: pointer;background: var(--active-bg);
 
     .top {
-      width: 100%;
+      background: var(--active-bg) !important;width: 100%;
       height: 120px;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: center;border-radius: 10px 0 0 0;
 
       img {
         zoom: 0.07 !important;
@@ -238,8 +238,8 @@ export default {
 
     .bottom {
       width: 100%;
-      height: 60px;
-      background: rgba(0, 0, 0, 0.30);
+      height: 62px;
+      // background: var(--primary-bg) !important;
       border-radius: 0px 0px 0px 12px;
       display: flex;
       justify-content: space-around;
@@ -263,7 +263,7 @@ export default {
     padding: 10px;
     width: 358px;
 
-    .title {
+    border-radius: 0 12px 12px 0px;.title {
       font-family: PingFangSC-Medium;
       font-size: 18px;
       color: rgba(255, 255, 255, 0.85);
