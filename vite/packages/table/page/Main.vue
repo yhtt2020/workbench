@@ -7,9 +7,9 @@
     </div>
     <div :class="{ 'mt-3': !fullScreen }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
-      <div v-if="!fullScreen" style="display: flex;align-content: center;align-items: center">
+      <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center">
         <!--左侧栏区域        -->
-        <SidePanel></SidePanel>
+        <SidePanel :sideNavigationList="sideNavigationList"></SidePanel>
       </div>
       <div
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden">
@@ -22,6 +22,10 @@
           <TeamPanel></TeamPanel>
         </div>
       </Transition>
+      <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
+        <!--右侧栏区域        -->
+        <SidePanel :sideNavigationList="rightNavigationList"></SidePanel>
+      </div>
     </div>
     <div style="flex: 0;">
       <BottomPanel v-if="!fullScreen"></BottomPanel>
@@ -38,6 +42,7 @@ import { appStore } from '../store'
 import TeamPanel from "../components/TeamPanel.vue";
 import { teamStore } from '../store/team'
 import { isMain } from '../js/common/screenUtils'
+import {navStore} from "../store/nav";
 
 export default {
   name: 'Main',
@@ -50,6 +55,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
+    ...mapWritableState(navStore,['sideNavigationList','rightNavigationList','navigationToggle']),
     isMain
   },
   data() {

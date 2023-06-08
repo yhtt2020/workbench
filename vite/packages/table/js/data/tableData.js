@@ -5,7 +5,7 @@ const sendThis = ( _this )=> {
 export default {
   sendThis,
   navigationClassify :[
-    {name:'systemApp',cname:'我的应用'},
+    {name:'systemApp',cname:'系统应用'},
     {name:'coolApp',cname:'酷应用'},
     {name:'tableApp',cname:'Windows应用'},
     {name:'localApp',cname:'自定义应用'},
@@ -142,6 +142,17 @@ export default {
       event:'home',
     },
     {
+      "type": "systemApp",
+      "icon": "youxishoubing",
+      "name": "游戏",
+      "event": "gameIndex"
+    },{
+        "type": "systemApp",
+        "icon": "yinle1",
+        "name": "音乐",
+        "event": "music"
+    },
+    {
       type:'systemApp',
       icon:'lock',
       name:'锁定屏幕',
@@ -212,12 +223,6 @@ export default {
       icon:'yingyongzhongxin',
       name:'应用管理',
       event:'apps',
-    },
-    {
-      type:'systemApp',
-      icon:'yinle1',
-      name:'音乐',
-      event:'music',
     },
     {
       type:'systemApp',

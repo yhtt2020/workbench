@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
+import {timerStore} from "./timer";
 
 // @ts-ignore
 export const cardStore = defineStore(
@@ -62,240 +63,239 @@ export const cardStore = defineStore(
           },
           "type": 'noOver'
         }],
-        appDate: {},
         clockEvent: [],
         customComponents: [],
         aidaData: null,
-        navigationList: [
-          {
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            type:'coolApp',
-            name: 'Mlappy Bird',
-            summary: '和小伙伴们一起飞。',
-            needInstall: false,
-            data: {
-              theme: '#030c13',
-              name: 'mlappyBird',
-              url: 'http://bird.apps.vip/?',
-              background: false,
-              type:'game',
-              scale:160
-            }
-          },
-          {
-            "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
-            "name": "微信",
-            "type": "coolApp",
-            "summary": "在副屏上使用网页版微信聊天。（已适配小屏）",
-            "needInstall": false,
-            "data": {
-              "theme": "#2e3238",
-              "name": "weixin",
-              "url": "https://wx.qq.com",
-              "preload": "weixin",
-              "background": true,
-              "node": false,
-              "security": true
-            }
-          },
-          {
-            "icon": "https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png",
-            "name": "网页数据监控小助手",
-            "type": "coolApp",
-            "summary": "一个用于检测网页数据的工具，可以实时监测一个网页数据动态，并组织成可视化的报表，目前支持B站视频数据追踪。",
-            "needInstall": false,
-            "data": {
-              "fullScreen": false,
-              "theme": "#030c13",
-              "name": "watch",
-              "type": "system",
-              "route": "{\"name\":\"watch\"}"
-            }
-          },
-          {
-            "nanoid": "2GpOXkUi",
-            "appid": "MiXNpK",
-            "name": "应用市场",
-            "author": null,
-            "package": "com.thisky.appStore",
-            "preload": "/pages/appStore/preload.js",
-            "logo": "https://up.apps.vip/logo/favicon.svg",
-            "summary": "应用市场，助您发现更大的世界。",
-            "site": null,
-            "type": "lightApp",
-            "url": "https://a.apps.vip/d.appStore/index.html",
-            "circle": null,
-            "theme_color": "#3c78d8",
-            "user_theme_color": "#3c78d8",
-            "create_time": 1680576621883,
-            "update_time": 1680576621883,
-            "account_avatar": "",
-            "order": 0,
-            "use_count": 0,
-            "last_execute_time": 1680576621883,
-            "settings": {
-              "bounds": {
-                "width": 1180,
-                "height": 864
-              },
-              "showInSideBar": true
-            },
-            "unread_count": 0,
-            "file_assign": null,
-            "auth": null,
-            "is_new": false,
-            "attribute": {
-              "isOfficial": 1,
-              "integration": 2
-            },
-            "window": {
-              "defaultType": "frameWindow",
-              "frameWindow": {
-                "enable": true,
-                "width": 1180,
-                "height": 864,
-                "controllers": {
-                  "goBack": false,
-                  "goForward": false,
-                  "refresh": true,
-                  "home": false
-                }
-              },
-              "window": {},
-              "attach": {}
-            },
-            "open_source": null,
-            "csv_url": null,
-            "os_summary": null,
-            "is_debug": null,
-            "is_fav": null,
-            "capture": "",
-            "isSystemApp": true,
-            "userSettings": {
-              "auth": {
-                "base": {
-                  "webSecure": false,
-                  "node": false
-                },
-                "api": {},
-                "ability": {}
-              },
-              "window": "{\"defaultType\":\"frameWindow\",\"frameWindow\":{\"enable\":true,\"width\":1180,\"height\":864,\"controllers\":{\"goBack\":false,\"goForward\":false,\"refresh\":true,\"home\":false}},\"window\":{},\"attach\":{}}",
-              "optimize": {
-                "autoRun": false,
-                "keepRunning": false,
-                "showInSideBar": false
-              }
-            },
-            "origin": {
-              "nanoid": "2GpOXkUi",
-              "appid": "MiXNpK",
-              "name": "应用市场",
-              "author": null,
-              "package": "com.thisky.appStore",
-              "preload": "/pages/appStore/preload.js",
-              "logo": "https://up.apps.vip/logo/favicon.svg",
-              "summary": "应用市场，助您发现更大的世界。",
-              "site": null,
-              "type": "web",
-              "url": "https://a.apps.vip/d.appStore/index.html",
-              "circle": null,
-              "theme_color": "#3c78d8",
-              "user_theme_color": "",
-              "create_time": 1680576621883,
-              "update_time": 1680576621883,
-              "account_avatar": "",
-              "order": 0,
-              "use_count": 0,
-              "last_execute_time": 1680576621883,
-              "settings": {
-                "bounds": {
-                  "width": 1180,
-                  "height": 864
-                },
-                "showInSideBar": true
-              },
-              "unread_count": 0,
-              "file_assign": null,
-              "auth": null,
-              "is_new": false,
-              "attribute": {
-                "isOfficial": 1,
-                "integration": 2
-              },
-              "window": {
-                "defaultType": "frameWindow",
-                "frameWindow": {
-                  "enable": true,
-                  "width": 1180,
-                  "height": 864,
-                  "controllers": {
-                    "goBack": false,
-                    "goForward": false,
-                    "refresh": true,
-                    "home": false
-                  }
-                },
-                "window": {},
-                "attach": {}
-              },
-              "open_source": null,
-              "csv_url": null,
-              "os_summary": null,
-              "is_debug": null,
-              "is_fav": null,
-              "capture": "",
-              "isSystemApp": true,
-              "userSettings": {
-                "auth": {
-                  "base": {
-                    "webSecure": false,
-                    "node": false
-                  },
-                  "api": {},
-                  "ability": {}
-                },
-                "window": "{\"defaultType\":\"frameWindow\",\"frameWindow\":{\"enable\":true,\"width\":1180,\"height\":864,\"controllers\":{\"goBack\":false,\"goForward\":false,\"refresh\":true,\"home\":false}},\"window\":{},\"attach\":{}}",
-                "optimize": {
-                  "autoRun": false,
-                  "keepRunning": false,
-                  "showInSideBar": false
-                }
-              }
-            },
-            "icon": "https://up.apps.vip/logo/favicon.svg"
-          },
-          {
-            "type": "systemApp",
-            "icon": "lock",
-            "name": "锁定屏幕",
-            "event": "lock"
-          },
-          {
-            "type": "systemApp",
-            "icon": "setting",
-            "name": "基础设置",
-            "event": "setting"
-          },
-          {
-            "type": "systemApp",
-            "icon": "fullscreen",
-            "name": "全屏显示",
-            "event": "fullscreen"
-          },
-          {
-            "type": "systemApp",
-            "icon": "laptop",
-            "name": "设备设置",
-            "event": "status"
-          },
-          {
-            "type": "systemApp",
-            "icon": "tuichu",
-            "name": "电源",
-            "event": "power"
-          }
-        ],
+        // navigationList: [
+        //   {
+        //     icon: 'http://a.apps.vip/icons/flappy.jpg',
+        //     type:'coolApp',
+        //     name: 'Mlappy Bird',
+        //     summary: '和小伙伴们一起飞。',
+        //     needInstall: false,
+        //     data: {
+        //       theme: '#030c13',
+        //       name: 'mlappyBird',
+        //       url: 'http://bird.apps.vip/?',
+        //       background: false,
+        //       type:'game',
+        //       scale:160
+        //     }
+        //   },
+        //   {
+        //     "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
+        //     "name": "微信",
+        //     "type": "coolApp",
+        //     "summary": "在副屏上使用网页版微信聊天。（已适配小屏）",
+        //     "needInstall": false,
+        //     "data": {
+        //       "theme": "#2e3238",
+        //       "name": "weixin",
+        //       "url": "https://wx.qq.com",
+        //       "preload": "weixin",
+        //       "background": true,
+        //       "node": false,
+        //       "security": true
+        //     }
+        //   },
+        //   {
+        //     "icon": "https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png",
+        //     "name": "网页数据监控小助手",
+        //     "type": "coolApp",
+        //     "summary": "一个用于检测网页数据的工具，可以实时监测一个网页数据动态，并组织成可视化的报表，目前支持B站视频数据追踪。",
+        //     "needInstall": false,
+        //     "data": {
+        //       "fullScreen": false,
+        //       "theme": "#030c13",
+        //       "name": "watch",
+        //       "type": "system",
+        //       "route": "{\"name\":\"watch\"}"
+        //     }
+        //   },
+        //   {
+        //     "nanoid": "2GpOXkUi",
+        //     "appid": "MiXNpK",
+        //     "name": "应用市场",
+        //     "author": null,
+        //     "package": "com.thisky.appStore",
+        //     "preload": "/pages/appStore/preload.js",
+        //     "logo": "https://up.apps.vip/logo/favicon.svg",
+        //     "summary": "应用市场，助您发现更大的世界。",
+        //     "site": null,
+        //     "type": "lightApp",
+        //     "url": "https://a.apps.vip/d.appStore/index.html",
+        //     "circle": null,
+        //     "theme_color": "#3c78d8",
+        //     "user_theme_color": "#3c78d8",
+        //     "create_time": 1680576621883,
+        //     "update_time": 1680576621883,
+        //     "account_avatar": "",
+        //     "order": 0,
+        //     "use_count": 0,
+        //     "last_execute_time": 1680576621883,
+        //     "settings": {
+        //       "bounds": {
+        //         "width": 1180,
+        //         "height": 864
+        //       },
+        //       "showInSideBar": true
+        //     },
+        //     "unread_count": 0,
+        //     "file_assign": null,
+        //     "auth": null,
+        //     "is_new": false,
+        //     "attribute": {
+        //       "isOfficial": 1,
+        //       "integration": 2
+        //     },
+        //     "window": {
+        //       "defaultType": "frameWindow",
+        //       "frameWindow": {
+        //         "enable": true,
+        //         "width": 1180,
+        //         "height": 864,
+        //         "controllers": {
+        //           "goBack": false,
+        //           "goForward": false,
+        //           "refresh": true,
+        //           "home": false
+        //         }
+        //       },
+        //       "window": {},
+        //       "attach": {}
+        //     },
+        //     "open_source": null,
+        //     "csv_url": null,
+        //     "os_summary": null,
+        //     "is_debug": null,
+        //     "is_fav": null,
+        //     "capture": "",
+        //     "isSystemApp": true,
+        //     "userSettings": {
+        //       "auth": {
+        //         "base": {
+        //           "webSecure": false,
+        //           "node": false
+        //         },
+        //         "api": {},
+        //         "ability": {}
+        //       },
+        //       "window": "{\"defaultType\":\"frameWindow\",\"frameWindow\":{\"enable\":true,\"width\":1180,\"height\":864,\"controllers\":{\"goBack\":false,\"goForward\":false,\"refresh\":true,\"home\":false}},\"window\":{},\"attach\":{}}",
+        //       "optimize": {
+        //         "autoRun": false,
+        //         "keepRunning": false,
+        //         "showInSideBar": false
+        //       }
+        //     },
+        //     "origin": {
+        //       "nanoid": "2GpOXkUi",
+        //       "appid": "MiXNpK",
+        //       "name": "应用市场",
+        //       "author": null,
+        //       "package": "com.thisky.appStore",
+        //       "preload": "/pages/appStore/preload.js",
+        //       "logo": "https://up.apps.vip/logo/favicon.svg",
+        //       "summary": "应用市场，助您发现更大的世界。",
+        //       "site": null,
+        //       "type": "web",
+        //       "url": "https://a.apps.vip/d.appStore/index.html",
+        //       "circle": null,
+        //       "theme_color": "#3c78d8",
+        //       "user_theme_color": "",
+        //       "create_time": 1680576621883,
+        //       "update_time": 1680576621883,
+        //       "account_avatar": "",
+        //       "order": 0,
+        //       "use_count": 0,
+        //       "last_execute_time": 1680576621883,
+        //       "settings": {
+        //         "bounds": {
+        //           "width": 1180,
+        //           "height": 864
+        //         },
+        //         "showInSideBar": true
+        //       },
+        //       "unread_count": 0,
+        //       "file_assign": null,
+        //       "auth": null,
+        //       "is_new": false,
+        //       "attribute": {
+        //         "isOfficial": 1,
+        //         "integration": 2
+        //       },
+        //       "window": {
+        //         "defaultType": "frameWindow",
+        //         "frameWindow": {
+        //           "enable": true,
+        //           "width": 1180,
+        //           "height": 864,
+        //           "controllers": {
+        //             "goBack": false,
+        //             "goForward": false,
+        //             "refresh": true,
+        //             "home": false
+        //           }
+        //         },
+        //         "window": {},
+        //         "attach": {}
+        //       },
+        //       "open_source": null,
+        //       "csv_url": null,
+        //       "os_summary": null,
+        //       "is_debug": null,
+        //       "is_fav": null,
+        //       "capture": "",
+        //       "isSystemApp": true,
+        //       "userSettings": {
+        //         "auth": {
+        //           "base": {
+        //             "webSecure": false,
+        //             "node": false
+        //           },
+        //           "api": {},
+        //           "ability": {}
+        //         },
+        //         "window": "{\"defaultType\":\"frameWindow\",\"frameWindow\":{\"enable\":true,\"width\":1180,\"height\":864,\"controllers\":{\"goBack\":false,\"goForward\":false,\"refresh\":true,\"home\":false}},\"window\":{},\"attach\":{}}",
+        //         "optimize": {
+        //           "autoRun": false,
+        //           "keepRunning": false,
+        //           "showInSideBar": false
+        //         }
+        //       }
+        //     },
+        //     "icon": "https://up.apps.vip/logo/favicon.svg"
+        //   },
+        //   {
+        //     "type": "systemApp",
+        //     "icon": "lock",
+        //     "name": "锁定屏幕",
+        //     "event": "lock"
+        //   },
+        //   {
+        //     "type": "systemApp",
+        //     "icon": "setting",
+        //     "name": "基础设置",
+        //     "event": "setting"
+        //   },
+        //   {
+        //     "type": "systemApp",
+        //     "icon": "fullscreen",
+        //     "name": "全屏显示",
+        //     "event": "fullscreen"
+        //   },
+        //   {
+        //     "type": "systemApp",
+        //     "icon": "laptop",
+        //     "name": "设备设置",
+        //     "event": "status"
+        //   },
+        //   {
+        //     "type": "systemApp",
+        //     "icon": "tuichu",
+        //     "name": "电源",
+        //     "event": "power"
+        //   }
+        // ],
         routeParams: {},
         clockFlag: false,
       };
@@ -353,22 +353,22 @@ export const cardStore = defineStore(
       setRouteParams(value) {
         this.routeParams = value
       },
-      removeNavigationList(index) {
-        this.navigationList.splice(index, 1)
-      },
-      sortNavigationList(evt) {
-        let temp = this.navigationList[evt.oldIndex]
-        this.navigationList.splice(evt.oldIndex, 1)
-        this.navigationList.splice(evt.newIndex, 0, temp)
-      },
-      setNavigationList(item) {
-        this.navigationList.push(item)
-      },
+      // removeNavigationList(index) {
+      //   this.navigationList.splice(index, 1)
+      // },
+      // sortNavigationList(evt) {
+      //   let temp = this.navigationList[evt.oldIndex]
+      //   this.navigationList.splice(evt.oldIndex, 1)
+      //   this.navigationList.splice(evt.newIndex, 0, temp)
+      // },
+      // setNavigationList(item) {
+      //   this.navigationList.push(item)
+      // },
       setAidaData(value) {
         this.aidaData = value;
       },
       setAppDate(value) {
-        this.appDate = value;
+        timerStore().appDate = value;
       },
 
       addCountdownDay(value) {
@@ -391,10 +391,10 @@ export const cardStore = defineStore(
         });
         const a = this.countdownDay.filter((value) => {
           return (
-            value.dateValue.year > this.appDate.year ||
-            (value.dateValue.year === this.appDate.year &&
-              value.dateValue.month > this.appDate.month) || (value.dateValue.year === this.appDate.year &&
-              value.dateValue.day >= this.appDate.day && value.dateValue.month === this.appDate.month)
+            value.dateValue.year > timerStore().appDate.year ||
+            (value.dateValue.year === timerStore().appDate.year &&
+              value.dateValue.month > timerStore().appDate.month) || (value.dateValue.year === timerStore().appDate.year &&
+              value.dateValue.day >= timerStore().appDate.day && value.dateValue.month === timerStore().appDate.month)
           );
         });
         for (let i = 0; i < a.length; i++) {
@@ -409,8 +409,8 @@ export const cardStore = defineStore(
       addClock(value) {
         this.clockEvent.push(value);
 
-        // if(this.clockEvent[this.clockEvent.length-1].clockType==='每天'&&this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.hours===this.appDate.hours&&
-        //   this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.minutes===this.appDate.minutes){
+        // if(this.clockEvent[this.clockEvent.length-1].clockType==='每天'&&this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.hours===timerStore().appDate.hours&&
+        //   this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.minutes===timerStore().appDate.minutes){
         //   this.everySortClock()
         // }else{
         this.sortClock();
@@ -419,8 +419,8 @@ export const cardStore = defineStore(
       },
       sortClock() {
         for (let i = 0; i < this.clockEvent.length; i++) {
-          if (this.clockEvent[i].dateValue.hours !== this.appDate.hours && this.clockEvent[i].flag === true ||
-            this.clockEvent[i].dateValue.minutes !== this.appDate.minutes && this.clockEvent[i].flag === true)
+          if (this.clockEvent[i].dateValue.hours !== timerStore().appDate.hours && this.clockEvent[i].flag === true ||
+            this.clockEvent[i].dateValue.minutes !== timerStore().appDate.minutes && this.clockEvent[i].flag === true)
             this.clockEvent[i].flag = undefined;
         }
         this.clockEvent.sort((v1, v2) => {
@@ -433,9 +433,9 @@ export const cardStore = defineStore(
         });
         const a = this.clockEvent.filter((value) => {
           return (
-            (value.dateValue.hours > this.appDate.hours) ||
-            (value.dateValue.hours === this.appDate.hours &&
-              value.dateValue.minutes >= this.appDate.minutes)
+            (value.dateValue.hours > timerStore().appDate.hours) ||
+            (value.dateValue.hours === timerStore().appDate.hours &&
+              value.dateValue.minutes >= timerStore().appDate.minutes)
           );
         });
         const b = this.clockEvent.filter((value) => {
@@ -461,31 +461,36 @@ export const cardStore = defineStore(
         }
         this.clockFlag = !this.clockFlag
       },
-      addCustomComponents(value,desk) {
+      addCard(value, desk) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
         //   return item.nanoid === this.currentDeskIndex.name
         // })
         desk.cards.push(value)
       },
-      updateCustomComponents(value, newData) {
-        let currentDesk = this.getCurrentDesk()
-        const findCustom = currentDesk.cards.find(el => {
-          return value === el.id
+      /**
+       * 更新组件的customData，多个值的变更请一次性提交，newData为对象
+       * @param customIndex 组件的customIndex索引
+       * @param newData 变更的数据，可一次性变更多个来提升性能
+       * @param desk 当前的桌面
+       */
+      updateCustomData(customIndex, newData, desk) {
+        if(!desk){
+          throw '未提交desk参数，此参数必须提供'
+        }
+        let currentDesk =desk// || this.getCurrentDesk()
+        const findCard = currentDesk.cards.find(el => {
+          return customIndex === el.id
         })
-        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {Code: {id: value, value: newData}}
+        if(!findCard){
+          throw '未找到需要设置的组件'
+        }
+        findCard.customData =  {...findCard.customData,...newData}
       },
-      increaseCustomComponents(value, newData) {
+      removeCard(customIndex, desk) {
         let currentDesk = this.getCurrentDesk()
-        const findCustom = currentDesk.cards.find(el => {
-          return value === el.id
-        })
-
-        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
-      },
-      removeCustomComponents(customIndex) {
-        let currentDesk = this.getCurrentDesk()
-        currentDesk.cards.splice(currentDesk.cards.findIndex(item => {
+        desk=desk||currentDesk
+        desk.cards.splice(currentDesk.cards.findIndex(item => {
           return item.id === customIndex
         }), 1)
         // this.customComponents.splice(customIndex,1);

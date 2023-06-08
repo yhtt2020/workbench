@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex">
+  <Widget :options="options" :customIndex="customIndex" :desk="desk">
     <div
     class="content"
     v-if="myCountdownDay.length <= 0"
@@ -61,12 +61,16 @@ import { cardStore } from "../../store/card";
 import { transDate } from "../../../../src/util/dateTime";
 import Widget from "../card/Widget.vue";
 import {timeStamp} from "../../util";
+import { timerStore } from '../../store/timer'
 export default {
   name: "SmallCountdownDay",
   props:{
     customIndex:{
       type:Number,
       default:0
+    },
+    desk:{
+      type:Object
     }
   },
   components:{Widget},
@@ -90,7 +94,8 @@ export default {
    this.selectMy()
   },
   computed: {
-    ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
+    ...mapWritableState(cardStore, [ "countdownDay"]),
+    ...mapWritableState(timerStore,['appDate']),
     differenceDay(){
       return  transDate(
         this.appDate.year + "-" +this.appDate.month + "-" + this.appDate.day,

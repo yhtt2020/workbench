@@ -95,13 +95,13 @@
     <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
     <!--    </div>-->
     <!-- 快速搜索 底部栏区域 -->
-    <div class=" flex flex-row  items-center pl-6 s-bg"
+    <div v-show="navigationToggle[2]" class=" flex flex-row  items-center pl-6 s-bg"
       style=" border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px;background: var(--primary-bg);color: var(--primary-text);">
       <div style="overflow: hidden;overflow-x: auto;" class="flex flex-row items-center  flex-nowrap scroll-content mr-6"
         ref="content">
-        <div v-if="navigationList.length <= 0" style="height: 56px;">
+        <div v-if="footNavigationList.length <= 0" style="height: 56px;">
         </div>
-        <a-tooltip v-else :title="item.name" v-for=" item  in  navigationList ">
+        <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList ">
           <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;" @click="clickNavigation(item)">
             <div style="width: 56px;height:56px;background: var(--active-bg);" v-if="item.type === 'systemApp'"
               class="s-item flex justify-center items-center rounded-lg">
@@ -226,18 +226,39 @@
 
     </iframe>
   </div>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
+  <a-drawer
+    :contentWrapperStyle="{backgroundColor:'#212121',height:'216px'}"
+    class="drawer"
+    :closable="true"
+    placement="bottom"
+    :visible="menuVisible"
+    @close="onClose"
+  >
+    <a-row>
+      <a-col>
+        <div @click="editNavigation" class="btn relative">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>编辑导航</span></div>
+        </div>
+        <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
+          <Icon style="font-size: 3em" :icon="item.icon"></Icon>
+          <div><span>{{ item.name }}</span></div>
+        </div>
+      </a-col>
+    </a-row>
+  </a-drawer>
+  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
     class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
         <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑</span></div>
-<!--          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>-->
+         <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
       </a-col>
     </a-row>
-  </a-drawer>
+  </a-drawer> -->
 
   <transition name="fade">
     <div class="home-blur fixed inset-0" style="z-index: 999" v-if="quick">
@@ -256,6 +277,7 @@
 import PanelButton from './PanelButton.vue'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
+import { navStore } from '../store/nav'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
@@ -275,6 +297,7 @@ import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
 import { screenStore } from '../store/screen'
+import { toggleFullScreen } from '../js/common/common'
 
 export default {
   name: 'BottomPanel',
@@ -372,6 +395,7 @@ export default {
     let content = this.$refs.content
     content.addEventListener('wheel', (event) => {
       event.preventDefault()
+      // console.log('wheel',event)
       content.scrollLeft += event.deltaY
     })
     this.setMinute()
@@ -386,7 +410,9 @@ export default {
     ...mapWritableState(appsStore, ['runningApps', 'runningTableApps']),
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore, ['screens']),
-    ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
+    ...mapWritableState(cardStore, ['routeParams']),
+    ...mapWritableState(navStore, ['footNavigationList','builtInFeatures','navigationToggle']),
+    // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     isMain() {
       return isMain()
@@ -402,7 +428,7 @@ export default {
     }
   },
   watch: {
-    navigationList: {
+    footNavigationList: {
       handler() {
         this.checkScroll()
         // this.$nextTick(()=>{
@@ -468,6 +494,9 @@ export default {
     showMenu() {
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
+    },
+    hideMenu(){
+      this.menuVisible=false
     },
     onClose() {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
@@ -545,8 +574,10 @@ export default {
 
     openSetting() {
       this.$router.push({ name: 'setting' })
+      this.hideMenu()
     },
     openStatus() {
+      this.hideMenu()
       if (this.$route.path === '/status') {
         this.$router.go(-1)
       } else {
@@ -611,16 +642,12 @@ export default {
       })
     },
     clickNavigation(item) {
+      this.hideMenu()
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
-            if (this.full) {
-              this.full = false
-              tsbApi.window.setFullScreen(false)
-            } else {
-              this.full = true
-              tsbApi.window.setFullScreen(true)
-            }
+            toggleFullScreen()
+            this.full = !this.full;
           } else if (item.event === '/status') {
             if (this.$route.path === '/status') {
               this.$router.go(-1)
@@ -669,6 +696,13 @@ export default {
 
 .btn {
   text-align: center;
+  margin-right: 24px;
+  background: #2A2A2A;
+  border-radius: 12px;
+  width: 100px;
+  height: 100px;
+  padding-top: 16px;
+  line-height: 30px;
 }
 
 .status-text {

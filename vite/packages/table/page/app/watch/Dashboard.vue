@@ -47,14 +47,14 @@
       </a-row>
     </div>
     <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 21em);  ">
-      <div id="report" style="max-width: 900px;margin:auto;background: #323232">
+      <div id="report" style="max-width: 900px;margin:auto;background: var(--primary-bg);color:var(--primary-text)">
         <div class="p-3">
           <a-row class="mb-5" :gutter="[20,10]">
             <a-col :md="5">
               <img crossorigin="anonymous" class="cover" :src="fixHttp(data.cover+'@320w_200h')">
             </a-col>
             <a-col :md="18">
-              <div class="mb-2" style="color:#999"><span data-html2canvas-ignore>任务：{{ task.title }} </span>&nbsp;
+              <div class="mb-2" style=""><span data-html2canvas-ignore>任务：{{ task.title }} </span>&nbsp;
                 &nbsp;发布于 {{
                   data.pudate || '-'
                 }}
@@ -63,7 +63,7 @@
                 <a-row>
                   <a-col :span="6" class="pt-7 text-center">
                     <div
-                      style="background: #555;line-height:30px;width: 100px;border-radius: 6px;display: inline-block">
+                      style="background: var(--primary-bg);line-height:30px;width: 100px;border-radius: 6px;display: inline-block">
                       <Icon title="播放" icon="bofang"></Icon>
                       总播放
                       <div>
@@ -102,7 +102,7 @@
                       <a-col :span="8">
                         <Icon title="转发" icon="fenxiang"></Icon>
                         分享<br>
-                        <span class="text-white ml-2">{{ format(data.share) }}</span>
+                        <span class="text-white ml-2" >{{ format(data.share) }}</span>
                       </a-col>
                     </a-row>
                   </a-col>
@@ -128,8 +128,8 @@
         </div>
 
 
-        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4">
+        <div style="background: var(--primary-bg);color: var(--primary-text);" class="p-4 rounded-md mb-5">
+          <h3 class="mb-4" style="color: var(--primary-text);">
             <icon icon="diannao"/>
             实时票房
           </h3>
@@ -244,8 +244,8 @@
         </div>
 
 
-        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4">
+        <div  style="background: var(--primary-bg);color: var(--primary-text);"  class="p-4 rounded-md mb-5">
+          <h3 class="mb-4" style="color: var(--primary-text);">
             <Icon icon="gupiao"/>
             热度走势
           </h3>
@@ -667,7 +667,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .cover {
   width: 160px;
   height: 100px;
@@ -684,5 +684,9 @@ export default {
   display: inline-block;
   margin-top: 0.3em;
   font-weight: bold;
+}
+
+.text-white {
+  color: var(--primary-text) !important;
 }
 </style>

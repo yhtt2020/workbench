@@ -1,11 +1,11 @@
 <template>
-  <Widget :options="options">
+  <Widget :options="options" :desk="desk">
 <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
 <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
 <!--      活动说明-->
 <!--    </div>-->
     <template v-if="!newPeoplePage">
-      <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;color:var(--primary-text);">
+      <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;color:var(--primary-text);background: var(--primary-bg);">
         <div>
           <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}
@@ -114,6 +114,7 @@ export default {
     HorizontalPanel,
     UserOutlined
   },
+  props:['desk'],
   data () {
     return {
       options: {

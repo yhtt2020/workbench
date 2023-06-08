@@ -1,21 +1,21 @@
 <template>
   <div class="text-base" style="margin: 12px 0">时钟样式</div>
-  <div class="clock-box no-drag">
+  <div class="clock-box no-drag pointer">
     <clock1 @click="updateClockStyle('clock1')"></clock1>
   </div>
-  <div class="clock-box no-drag">
+  <div class="clock-box no-drag pointer">
     <clock2 @click="updateClockStyle('clock2')"></clock2>
   </div>
-  <div class="clock-box clock no-drag">
+  <div class="clock-box clock no-drag pointer">
     <clock3 @click="updateClockStyle('clock3')"></clock3>
   </div>
-  <div class="clock-box no-drag">
+  <div class="clock-box no-drag pointer">
     <clock4 @click="updateClockStyle('clock4')"></clock4>
   </div>
-  <div class="clock-box clock5 no-drag ">
+  <div class="clock-box clock5 no-drag pointer">
     <clock5 @click="updateClockStyle('clock5')"></clock5>
   </div>
-  <div class="clock-box no-drag">
+  <div class="clock-box no-drag pointer">
     <clock6 @click="updateClockStyle('clock6')"></clock6>
   </div>
 </template>
@@ -23,6 +23,7 @@
 import mixin from "../hooks/clockMixin.js"
 export default {
   mixins: [mixin],
+  emits:['updateClockStyle'],
   methods: {
     updateClockStyle(e) {
       this.$emit("updateClockStyle", e);

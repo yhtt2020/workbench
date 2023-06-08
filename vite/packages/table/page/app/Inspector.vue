@@ -1,5 +1,5 @@
 <template>
-  <div class="s-bg p-10 rounded-lg m-3">
+  <div class="s-bg p-10 rounded-lg m-3" style="color:var(--primary-text);background: var(--primary-bg);">
     <div class="line-title">
       监控助手
     </div>
@@ -13,8 +13,8 @@
       </a-radio-group>
     </div>
 
-    <div v-if="dataSource==='aida'">
-      <div class="mt-5 s-bg p-3">
+    <div v-if="dataSource==='aida'" >
+      <div class="mt-5 s-bg p-3" style="background: var(--primary-bg); border-radius: 8px;">
         <div class="line-title">Aida数据源使用说明 </div>
 
         <span class="text-base "
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div v-else>
-      <div class="line-title mt-3">
+      <div class="line-title mt-3" > 
         暂不支持内置数据源
       </div>
     </div>

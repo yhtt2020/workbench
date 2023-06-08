@@ -71,6 +71,9 @@ import {screenStore} from './store/screen'
 import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
+import {timerStore} from "./store/timer";
+import {Modal as antModal} from 'ant-design-vue'
+import {toggleFullScreen} from "./js/common/common";
 
 window.browser = browser
 const {appModel} = window.$models
@@ -96,13 +99,21 @@ export default {
   },
 
   async mounted() {
-    const value = window.localStorage.getItem("style")
-    document.documentElement.classList.add(JSON.parse(value!));
+    let style = window.localStorage.getItem("style")
+    style = JSON.parse(style!)
+    if (style== "light-model") {
+      document.documentElement.classList.add('light-model');
+    } else {
+      document.documentElement.classList.add('dark-model');
+      window.localStorage.setItem("style", JSON.stringify("dark-model"));
+    }
     let transparent = window.localStorage.getItem("transparent")
     transparent = JSON.parse(transparent!)
     if (transparent == "true") {
       document.documentElement.classList.add("transparent");
     }
+
+    window.addEventListener("keydown", this.KeyDown, true)// 监听按键事件
 
     // if (value) {
     //   return JSON.parse(value)
@@ -177,7 +188,8 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "appDate", "clockFlag"]),
+    ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
+    ...mapWritableState(timerStore, ["appDate"]),
     ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),
@@ -189,6 +201,13 @@ export default {
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
+    KeyDown(event) {
+      if (event.keyCode === 122) {
+        toggleFullScreen()
+        event.preventDefault()
+        event.stopPropagation()
+      }
+    },
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -231,9 +250,7 @@ export default {
       this.visible = false;
       this.removeClock(0);
       this.$refs.clock.pause();
-    },
-
-
+    }
   },
   watch: {
     'settings.transparent': {

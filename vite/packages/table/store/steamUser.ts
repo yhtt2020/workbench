@@ -16,7 +16,11 @@ export const steamUserStore = defineStore("steamUser", {
       name: '主桌面',
       nanoid: nanoid(4),
       cards: [],
-      settings: {}
+      settings: {
+        cardZoom: 100,
+        marginTop: 0,
+        cardMargin: 5//卡片间隙
+      }
     }
     ],
 
@@ -27,26 +31,27 @@ export const steamUserStore = defineStore("steamUser", {
     },
     userData: {},
     gameList: [],
+    originGameList: [],
     myGameList: [],
-    myFriends:[],
+    myFriends: [],
 
     //好友列表
     friendsList: [],
   }),
   actions: {
-    bindClientEvents(){
+    bindClientEvents() {
       console.log('绑定steamClient事件')
-      client.on('friendsList',()=>{
+      client.on('friendsList', () => {
         console.log('获取到我的好友')
         console.log(client.myFriends)
-        console.log(this.myFriends,'我的好友列表=')
-        client.getPersonas(Object.keys(client.myFriends),(err,users)=>{
-          console.log('返回了我的好友',err,users)
-          if(err){
+        console.log(this.myFriends, '我的好友列表=')
+        client.getPersonas(Object.keys(client.myFriends), (err, users) => {
+          console.log('返回了我的好友', err, users)
+          if (err) {
             console.error(err)
             return
           }
-          this.myFriends=users
+          this.myFriends = users
         })
       })
     },
@@ -72,7 +77,8 @@ export const steamUserStore = defineStore("steamUser", {
             includePlayedFreeGames: true
           }, (err, data) => {
             if (err) console.log(err)
-            this.setGameList(data.apps)
+            console.log(data.apps, '获取到的游戏库存改变后的数据=')
+            this.originGameList = data.apps
           })
           client.getProductInfo(client.getOwnedApps({excludeFree: false}), [], (err, data) => {
             if (err) console.log(err)
@@ -101,15 +107,37 @@ export const steamUserStore = defineStore("steamUser", {
     },
     setGameList(value) {
       this.gameList = value
+      let list = value.filter(li => {
+        return !!li.appinfo
+      })
+      this.gameList = list.map(game => {
+        //此处映射需要用到的字段，以简化数据库存入，提升性能
+        console.log(game)
+        let formattedGame = {
+          name: game.appinfo.common.name,
+          metacritic_score: game.appinfo?.common.metacritic_score,
+          appid: game.appinfo.appid,
+          time:game.time
+        }
+        return formattedGame
+      })
     },
     addGameDetail(value) {
+      console.log(value, 'addGameDetailreturn')
       value.forEach((e) => {
-        const obj = this.gameList.find(i => i.appid == e.appinfo.appid)
+        const obj = this.originGameList.find(i => i.appid == e.appinfo.appid)
         if (obj) {
-          e.time = obj
+          e.time = {
+            playtime_2weeks: obj.playtime_2weeks,
+            playtime_forever: obj.playtime_forever,
+            playtime_linux_forever: obj.playtime_linux_forever,
+            playtime_mac_forever: obj.playtime_mac_forever,
+            playtime_windows_forever: obj.playtime_windows_forever,
+            rtime_last_played: obj.rtime_last_played
+          }
         }
       })
-      this.gameList = value
+      this.setGameList(value)
       this.gameList.sort((a, b) => {
         if (a.time === undefined && a.time === undefined) {
           return 0;
@@ -136,7 +164,7 @@ export const steamUserStore = defineStore("steamUser", {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['steamLoginData', 'gameList', 'desks', 'friendList', 'myGameList'],
+      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

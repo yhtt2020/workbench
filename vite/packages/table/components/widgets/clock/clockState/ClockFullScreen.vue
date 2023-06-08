@@ -45,6 +45,7 @@ export default {
     ClockStyle,
     ClockBackground
   },
+  emits:['updateBgZoom','updateBlur','updateClockStyle'],
   props: {
     clock: {
       type: String,
@@ -77,7 +78,7 @@ export default {
     //鼠标事件
     document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
     document.addEventListener('mousedown', this.touchEvent, { capture: true });//鼠标按下
-    //触摸事件  
+    //触摸事件
     document.addEventListener('touchstart', this.touchEvent, { capture: true }); //手指放到屏幕上时触发
     document.addEventListener('touchmove', this.touchEvent, { capture: true });//手指在屏幕上滑动式触发
     //键盘事件
@@ -116,7 +117,7 @@ export default {
     touchEvent() {
       const that = this
       // console.log("操作中")
-      that.optAction = false //让判断条件为true 
+      that.optAction = false //让判断条件为true
       clearTimeout(this.autoTime) //清除自动刷新页面定时器
       this.autoTime = setTimeout(function () {
         that.optAction = true //页面无操作后3秒，重时开启定时器

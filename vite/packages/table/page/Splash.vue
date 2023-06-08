@@ -103,6 +103,7 @@ import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
+import { navStore } from "../store/nav"
 
 export default {
   name: 'Code',
@@ -133,38 +134,41 @@ export default {
     this.initStore(inspectorStore, 'inspectorStore')
     captureStore()//仅触发一下载入
     if (isMain()) {
-      this.bindMainIPC()
-    } else {
-      this.bindSubIPC()
+      this.initStore(navStore, 'navStore')
+      if (isMain()) {
+        this.bindMainIPC()
+      } else {
+        this.bindSubIPC()
+      }
+
+      window.loadedStore['userInfo'] = false
+
+      this.bindUserInfoResponse()
+
+      setTimeout(() => {
+        this.storeReadyTimer = setInterval(() => {
+          if (!this.launching) {
+            return
+          }
+          if (Object.keys(window.loadedStore).some(key => {
+            let check = !window.loadedStore[key]
+            if (window.loadedStore[key] === false)
+              console.log(key, '=', window.loadedStore[key])
+            return check
+          })) {
+            //未全部搞定
+            return
+          } else {
+            //已经全部搞定
+            clearInterval(this.storeReadyTimer)
+            this.afterLaunch().then()
+          }
+        }, 1000)
+      }, 100)
+
+      this.getUserInfo()
+      this.sortClock()
     }
-
-    window.loadedStore['userInfo'] = false
-
-    this.bindUserInfoResponse()
-
-    setTimeout(() => {
-      this.storeReadyTimer = setInterval(() => {
-        if (!this.launching) {
-          return
-        }
-        if (Object.keys(window.loadedStore).some(key => {
-          let check = !window.loadedStore[key]
-          if(window.loadedStore[key]===false)
-            console.log(key,'=',window.loadedStore[key])
-          return check
-        })) {
-          //未全部搞定
-          return
-        } else {
-          //已经全部搞定
-          clearInterval(this.storeReadyTimer)
-          this.afterLaunch().then()
-        }
-      }, 1000)
-    }, 100)
-
-    this.getUserInfo()
-    this.sortClock()
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),

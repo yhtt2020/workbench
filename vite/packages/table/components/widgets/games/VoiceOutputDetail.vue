@@ -11,9 +11,9 @@
         </div>
       </template>
     </vue-custom-scrollbar>
-    <div @click="backOutput" class="flex items-center voice-item-hover select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
+    <div @click="backOutput" style="background: var(--primary-bg);color: var(--primary-text);" class="flex items-center voice-item-hover select-active justify-center rounded-lg py-3 my-2 pointer s-item w-full">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
-      <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
+      <span class="text-center" style="font-size: 16px; font-weight: 400;">返回</span>
     </div>
   </div>
 </template>

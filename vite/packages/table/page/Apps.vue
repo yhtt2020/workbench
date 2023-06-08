@@ -47,7 +47,7 @@
                 </a-avatar>
               </a-col>
               <a-col :span="5">
-                <div class="app-name  font-bold text-white" style="text-align: left,"
+                <div class="app-name  font-bold text-white" style="text-align: left;"
                   :style="{ color: 'var(--font-color)' }">
                   {{ app.name
                   }}
@@ -89,7 +89,7 @@
                   </div>
                 </tempalate>
                 <template v-else>
-                  <div @click="executeApp(app.data)" class="btn">
+                  <div @click="executeApp(app.data)" class="btn" >
                     打开
                   </div>
                 </template>
@@ -532,6 +532,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.btn {
+  background: var(--primary-bg);
+}
 .app-content {
   flex-shrink: 1;
   flex-grow: 1;

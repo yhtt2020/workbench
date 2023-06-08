@@ -19,9 +19,9 @@
         <!--        </span>-->
       </div>
     </a-col>
-    <a-col :span="6" style="text-align: right;color: var(--secondary-text);" class="s-text">
-      <div class="mr-3" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end">
-        <div class="no-drag" v-if="!loading">
+    <a-col :span="8" style="text-align: right;color: var(--secondary-text);" class="s-text">
+      <div :style="{marginRight:showWindowController?'220px':0}" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end">
+        <div class="no-drag truncate" v-if="!loading">
             <span style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
         <!-- {{ lockTimeoutDisplay }}后锁屏 -->
       </span>{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{
@@ -32,29 +32,30 @@
           <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
         </span>
         </div>
+        <div class="flex s-item px-3 py-2 btn-container rounded-bl-lg">
+          <div @click="closeLargeScreen" class="flex mr-3 p-2 rounded-md items-center btn-top-active pointer no-drag">
+            <MinusOutlined style="font-size: 1.5em;color:rgba(255,255,255,0.25);"></MinusOutlined>
+          </div>
+          <div @click="fixedButton" class="flex pointer p-2 rounded-md btn-top-active mr-3 items-center no-drag">
+            <Icon icon="Pushpin" style="font-size: 1.5em;color:rgba(255,255,255,0.25);"></Icon>
+          </div>
+          <div @click="openLargeScreen" class="flex pointer p-2 rounded-md btn-top-active mr-3 items-center no-drag">
+            <BorderOutlined style="font-size: 1.5em;color:rgba(255,255,255,0.25);"></BorderOutlined>
+          </div>
+          <div @click="closeScreen" class="flex p-2 btn-top-active rounded-md pointer items-center no-drag">
+            <Icon icon="guanbi" style="font-size: 1.5em;color:rgba(255,255,255,0.25);"></Icon>
+          </div>
+        </div>
       </div>
-    </a-col>
-    <a-col  style="text-align: right;" >
-      <div class="flex s-item no-drag px-2 py-2 btn-container rounded-bl-lg">
-        <div @click="closeLargeScreen" class="flex mr-1 p-2 rounded-md items-center btn-top-active pointer no-drag">
-          <MinusOutlined style="font-size: 1.5em;color:rgba(255,255,255,0.25);"></MinusOutlined>
-        </div>
-        <div @click="fixedButton" class="flex pointer p-2 rounded-md btn-top-active mr-1 items-center no-drag">
-          <Icon icon="Pushpin" style="font-size: 1.75em;color:rgba(255,255,255,0.35);"></Icon>
-        </div>
-        <div @click="openLargeScreen" class="flex pointer p-2 rounded-md btn-top-active mr-1 items-center no-drag">
-          <BorderOutlined style="font-size: 1.75em;color:rgba(255,255,255,0.35);"></BorderOutlined>
-        </div>
-        <div @click="closeScreen" class="flex p-2 btn-top-active rounded-md pointer items-center no-drag">
-          <Icon icon="guanbi" style="font-size: 1.75em;color:rgba(255,255,255,0.35);"></Icon>
-        </div>
-      </div> 
     </a-col>
 
   </a-row>
   <a-row style="height: 1em;cursor: move" class="drag text-right" v-else>
 
   </a-row>
+  <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg ">
+    <WindowController></WindowController>
+  </div>
 </template>
 
 <script>
@@ -64,14 +65,14 @@ import { cardStore } from '../store/card'
 import { mapWritableState, mapState, mapActions } from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
-import { isMain } from '../js/common/screenUtils'
-import { MinusOutlined,BorderOutlined } from '@ant-design/icons-vue'
+import { getSign, isMain } from '../js/common/screenUtils'
+import { timerStore } from '../store/timer'
+import WindowController from './WindowController.vue'
 
 export default {
   name: 'TopPanel',
   components:{
-    MinusOutlined,
-    BorderOutlined
+    WindowController,
   },
   data () {
     return {
@@ -79,13 +80,14 @@ export default {
       dateTime: {},
       timer: null,
       lockTimer: null,
-      showLockTip: false,
+      showLockTip: false
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['status']),
+    ...mapWritableState(appStore, ['status','showWindowController']),
     ...mapState(weatherStore, ['cities']),
-    ...mapWritableState(paperStore, ['settings', 'lockTimeout']),
+    ...mapWritableState(paperStore, ['settings']),
+    ...mapWritableState(timerStore,['lockTimeout']),
     isMain,
     lockTimeoutDisplay () {
       // if(this.lockTimeout>=60){
@@ -132,7 +134,7 @@ export default {
       return this.cities.length > 0
     },
   },
-  mounted () {
+  async mounted () {
     window.onblur = () => {
       this.setLockTimer()
     }
@@ -187,15 +189,6 @@ export default {
         name: 'music',
       })
     },
-
-    // 关闭按钮
-    closeScreen(){},
-    // 窗口放大
-    openLargeScreen(){},
-    // 关闭窗口放大
-    closeLargeScreen(){},
-    // 固定
-    fixedButton(){},
   },
 }
 </script>
@@ -213,19 +206,8 @@ export default {
 }
 .btn-container{
   position: fixed;
-  top: 0;
   right: 0;
-}
-
-.btn-top-active{
-  &:hover{
-    color: rgba(255, 255, 255, 0.85) !important;
-    background: rgba(42, 42, 42, 0.2);
-  }
-  &:active{
-    filter: brightness(0.8);
-    background: rgba(42, 42, 42, 0.2);
-    color: rgba(255, 255, 255, 0.5) !important;
-  }
+  top: 0;
+  overflow: hidden;
 }
 </style>

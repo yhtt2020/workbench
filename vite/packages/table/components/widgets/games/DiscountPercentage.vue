@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData">
+  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk">
     <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px">{{ region.name }}
     </div>
@@ -21,7 +21,6 @@
             </div>
           </swiper-slide>
         </swiper>
-
         <!-- <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
           <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
           <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
@@ -112,6 +111,9 @@ export default {
     confirmCCData:{
       type:Function,
       default:()=>{}
+    },
+    desk:{
+      type:Object
     }
   },
   components:{
@@ -159,7 +161,7 @@ export default {
   },
   computed:{
     ...mapWritableState(steamStore,["data","dataDetail",'getData']),
-    ...mapWritableState(cardStore,["customComponents","updateCustomComponents"]),
+    ...mapWritableState(cardStore,["customComponents","updateCustomData"]),
     region () {
       if (this.customData && this.customData.id) {
         let found = this.regionRange.find(re => {

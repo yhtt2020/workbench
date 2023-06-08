@@ -1,13 +1,13 @@
 <template>
-  <div class="card  gradient gradient--14  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;">
+  <div class="card  gradient gradient--14  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;background: var(--primary-bg);">
     <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
       <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
     </div>
-    <div style="text-align: center; font-size: 1.5em">计时</div>
+    <div style="text-align: center; font-size: 1.5em;color: var(--primary-text);">计时</div>
     <div style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</div>
    <div style="display: flex;align-items: center;justify-content: space-between;padding: 0 6em;" >
      <Icon
-       style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+       style="width: 3em; height: 3em;cursor:pointer;color: var(--primary-text);"
        icon="zanting"
        @click="closeCountDown" v-show="!countDownBtn"
      ></Icon>
@@ -17,7 +17,7 @@
        @click="startCountDown" v-show="countDownBtn"
      ></Icon>
      <Icon
-       style="width: 2em; height: 2em;cursor:pointer"
+       style="width: 2em; height: 2em;cursor:pointer;color: var(--primary-text);"
        icon="guanbi1"
        @click="deleteCountDown"
      ></Icon>
@@ -81,9 +81,9 @@
        </div>
     </div>
   </a-drawer>
-    <a-modal v-model:visible="custom" title="" @ok="()=>{}" :footer="null" style="font-size: 8px" :maskClosable="false">
-      <div style="display: flex;flex-direction: column;align-items: center">
-        <div style="color: white;">自定义倒计时</div>
+    <a-modal v-model:visible="custom" title="" @ok="()=>{}" :footer="null" style="font-size: 8px;color: var(--primary-text);" :maskClosable="false">
+      <div style="display: flex;flex-direction: column;align-items: center;">
+        <div style="">自定义倒计时</div>
         <a-space direction="vertical" style="margin: 14px"  :popupStyle="{zIndex:9999999999999}">
           <a-time-picker v-model:value="value1" size="large" :popupStyle="{zIndex:9999999999999}"/>
         </a-space>
@@ -104,7 +104,11 @@ export default {
     customIndex:{
       type:Number,
       default:0
+    },
+    desk:{
+      type:Object
     }
+
   },
   data() {
     return {
@@ -120,7 +124,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(cardStore, ["removeCustomComponents"]),
+    ...mapActions(cardStore, ["removeCard"]),
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
     onContextMenuClick(e) {
 
@@ -141,7 +145,7 @@ export default {
       });
     },
     removeClock(){
-      this.removeCustomComponents(this.customIndex)
+      this.removeCard(this.customIndex)
       this.dCountDown()
       this.visible = false;
     },

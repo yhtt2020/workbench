@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customData="customData" :customIndex="customIndex" style="overflow: hidden">
+  <Widget :options="options" :customData="customData" :customIndex="customIndex" style="overflow: hidden" :desk="desk">
     <a-empty v-if="myFriends.length===0" style="margin-top: 10px" description="您还没有好友或未绑定Steam">
 
     </a-empty>
@@ -37,6 +37,9 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
+    },
+    desk:{
+      type:Object
     }
   },
   data(){

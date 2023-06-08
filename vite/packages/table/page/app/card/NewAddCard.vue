@@ -37,16 +37,13 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-          <NewCardPreViews v-if="baseNavList[navIndex].children !== null" :navList="baseNavList[navIndex].children"
-                           @addSuccess="onBack" :search="searchValue" :desk="desk">
+          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null" :navList="baseNavList[navIndex].children"
+                            :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
             <div class="warn-boxs">
-              <div class="warn-box" style="color: var(--primary-text);background-color:var(--primary-bg);">
-                <img src="/public/img/state/warn.png" alt="">
-                <div>暂无数据</div>
-              </div>
+              <CardState :state="'null'" @onClick="onClick" style="width: 320px;height: 320px;"></CardState>
             </div>
           </template>
         </div>
@@ -57,12 +54,13 @@
 
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
-import { navList as NavList } from './navList'
+import { navList } from "./navList"
+import CardState from '../../../components/homeWidgets/cardState/cardState.vue';
 import _ from 'lodash-es'
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews },
+  components: { NewCardPreViews,CardState },
   props: ['desk'],
   data () {
     return {
@@ -104,7 +102,6 @@ export default {
         let children = []
         item.children.forEach((i) => {
           i.time = new Date(i.time).getTime()
-          console.log(i.time)
           children.push({
             ...i,
             download: Math.floor(Math.random() * 10000) + 1,
@@ -154,6 +151,9 @@ export default {
 
   },
   methods: {
+    onClick() {
+      console.log('222 :>> ', 222);
+    },
     handleChange (value) {
       console.log(`selected ${value}`)
     },
@@ -164,7 +164,7 @@ export default {
       return randomTimestamp
     },
     onBack () {
-      this.$emit('setCustoms', false)
+      this.$emit('close')
     },
     updateNavIndex (index) {
       this.navIndex = index
@@ -174,6 +174,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+body {
+  background: red !important;
+}
 .popContainer {
   position: fixed;
   top: 0;
@@ -187,12 +190,11 @@ export default {
   width: 100%;
   height: 100%;
   // 背景的模糊大小通过下面的属性值大小来调制
-  background-color: rgba(19, 19, 19, 0.35);
-  // background: #1a1a1a;
+  // background-color: rgba(19, 19, 19, 0.35);
+  // background: red;
   backdrop-filter: blur(60px);
   -webkit-backdrop-filter: blur(50px);
   transform: scale(1.2);
-  opacity: 1.6;
 
 }
 
@@ -208,7 +210,6 @@ export default {
   box-sizing: border-box;
   padding: 24px;
 
-  // opacity: 0.6;
   :deep(.ant-select-selector) {
     border: none !important;
     box-shadow: none !important;
@@ -342,26 +343,7 @@ export default {
         align-items: center;
       }
 
-      .warn-box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        width: 320px;
-        height: 320px;
-        //opacity: 0.65;
-        border-radius: 12px;
-        background: rgba(26, 26, 26, 1);
-        box-shadow: 0px 0px 3.12px 0px rgba(0, 0, 0, 0.06), 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2), 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(100px);
-        margin: 0 auto;
 
-        img {
-          width: 80px;
-          height: 80px;
-          margin-bottom: 20px;
-        }
-      }
     }
   }
 }

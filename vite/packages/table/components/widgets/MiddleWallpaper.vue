@@ -73,6 +73,9 @@ export default {
     Widget,
   },
   props: {
+    desk:{
+      type:Object,
+    },
     customIndex: {
       type: Number,
       default: 0,
@@ -151,7 +154,7 @@ export default {
   methods: {
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ["setBackgroundImage"]),
-    ...mapActions(cardStore, ["updateCustomComponents"]),
+    ...mapActions(cardStore, ["updateCustomData"]),
     goGallery() {
       this.$router.push({ name: "my" });
     },
@@ -167,7 +170,7 @@ export default {
         path: "",
         name: "my",
       };
-      this.updateCustomComponents(this.customIndex, this.addressType);
+      this.updateCustomData(this.customIndex, this.addressType,this.desk);
       this.options.title = this.addressType.value;
       if (
         this.addressType.name === "pickingPaper" ||

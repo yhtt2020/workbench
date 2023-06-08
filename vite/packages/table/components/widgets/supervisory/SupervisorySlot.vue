@@ -79,7 +79,7 @@ export default {
     this.stopInspect()
   },
   methods: {
-    ...mapActions(cardStore, ['removeCustomComponents']),
+    ...mapActions(cardStore, ['removeCard']),
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     showDrawer () {
       this.visible = true
@@ -88,7 +88,7 @@ export default {
       this.visible = false
     },
     removeCard () {
-      this.removeCustomComponents(this.customIndex)
+      this.removeCard(this.customIndex)
       this.visible = false
     },
     onCopy () {

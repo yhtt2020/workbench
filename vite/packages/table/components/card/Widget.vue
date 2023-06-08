@@ -5,10 +5,10 @@
       pointerEvents: editing ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-    }"  @mouseleave="onMouseOut" @mouseenter="onMouseOver">
+    }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
 
     <!--标题栏start-->
-    <slot name="title">
+    <slot name="cardTitle">
       <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex justify-between items-center">
         <div class="left-title" v-if="options.noTitle !== true">
           <Icon :icon="options.icon" class="title-icon"></Icon>
@@ -39,15 +39,15 @@
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
-      <div class="option h-24 w-24 ml-4" @click="removeCard">
+      <div class="option h-24 w-24 ml-4" @click="doRemoveCard">
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
       </div>
-<!--      <div class="option h-24 w-24 ml-4" @click="onCopy"-->
-<!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
-<!--        <Icon class="icon" icon="fuzhi"></Icon>-->
-<!--        复制数据-->
-<!--      </div>-->
+      <!--      <div class="option h-24 w-24 ml-4" @click="onCopy"-->
+      <!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
+      <!--        <Icon class="icon" icon="fuzhi"></Icon>-->
+      <!--        复制数据-->
+      <!--      </div>-->
     </div>
   </a-drawer>
   <!-- 右上角抽屉菜单end -->
@@ -60,7 +60,6 @@
 <script lang="ts">
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
-import AidaGuide from "../widgets/supervisory/AidaGuide.vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import _ from "lodash-es";
 import {PropType} from "vue";
@@ -84,7 +83,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {AidaGuide, HorizontalPanel},
+  components: {HorizontalPanel},
 
   name: "Widget",
 
@@ -128,6 +127,10 @@ export default {
       default: () => {
       },
     },
+    desk: {
+      type: Object,
+      required: true
+    }
 
   },
   data() {
@@ -159,16 +162,18 @@ export default {
       };
     },
     classes() {
+      //默认的对象
       let defaultClass = {
         gradient: true,
         "gradient--14": true,
       };
+      //如果存在hideFrame的设置
       if (this.customData && this.customData.hideFrame) {
         defaultClass = {};
       }
-
       let classNameObject = {};
       if (Object.keys(defaultClass).length > 0) {
+        //取出className，并分割出一个类的数组
         if (this.options.className) {
           this.options.className.split(" ").map((c) => {
             classNameObject[c] = true;
@@ -187,47 +192,58 @@ export default {
       this.$parent.customData ||
       this.$parent.$attrs.customData ||
       this.$parent.$parent.customData;
-    if (customData.width && customData.height) {
-      this.sizeType = {
-        title: customData.width + "x" + customData.height,
-        height: customData.height,
-        width: customData.width,
-        name: customData.width + "x" + customData.height,
-      };
-      // this.$parent.$attrs.onCustomEvent()
-      // console.log(this.$parent.$attrs.onCustomEvent)
+    if (customData) {
+      if (customData.width && customData.height) {
+        this.sizeType = {
+          title: customData.width + "x" + customData.height,
+          height: customData.height,
+          width: customData.width,
+          name: customData.width + "x" + customData.height,
+        };
+        // this.$parent.$attrs.onCustomEvent()
+        // console.log(this.$parent.$attrs.onCustomEvent)
+      }
+    } else {
+
     }
+
   },
 
   watch: {
     sizeType: {
       handler() {
-        this.increaseCustomComponents(
+        this.updateCustomData(
           this.$parent.customIndex ||
           this.$parent.$parent.customIndex ||
           this.$parent.$attrs.customIndex,
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
-          }
+          },
+          this.desk
         );
       },
     },
+    size: {
+      handler(newVal) {
+      }
+    }
   },
 
   methods: {
     ...mapActions(cardStore, [
-      "removeCustomComponents",
-      "increaseCustomComponents",
+      "removeCard",
+      "updateCustomData",
     ]),
     showDrawer() {
       this.menuVisible = true;
     },
-    removeCard() {
-      this.removeCustomComponents(
+    doRemoveCard() {
+      this.removeCard(
         this.$parent.customIndex ||
         this.$parent.$parent.customIndex ||
-        this.$parent.$attrs.customIndex
+        this.$parent.$attrs.customIndex,
+        this.desk
       );
       this.menuVisible = false;
     },

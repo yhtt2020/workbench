@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :menu-list="menuList">
+  <Widget :options="options" :menu-list="menuList" :desk="desk">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -42,6 +42,7 @@ import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
 export default {
   name: "SmallGPUCard",
+  props:['desk'],
   data(){
     return {
       options:{

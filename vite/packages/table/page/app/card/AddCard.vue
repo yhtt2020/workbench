@@ -232,7 +232,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(cardStore, ["addCustomComponents"]),
+    ...mapActions(cardStore, ["addCard"]),
     addAssembly(item) {
       switch (item.name) {
         case "customTimer":

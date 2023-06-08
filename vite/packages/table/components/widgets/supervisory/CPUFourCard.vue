@@ -1,5 +1,5 @@
 <template>
-<Widget :options="options" :menu-list="menuList">
+<Widget :options="options" :menu-list="menuList" :desk="desk">
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.value}}%</span>
       <span>
@@ -57,6 +57,11 @@ const {rpc}=window.$models
 
 export default {
   name: "CPUFourCard",
+  props:{
+    desk:{
+      type:Object
+    }
+  },
   data(){
     return {
       options:{

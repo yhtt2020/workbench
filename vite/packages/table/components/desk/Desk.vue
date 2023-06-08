@@ -1,11 +1,11 @@
 <template>
-  <div style="height: 100%" v-if="currentDesk.cards">
-    <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
-      <div style="width: 100%">
+  <div style="height: 100%;width: 100%" v-if="currentDesk.cards">
+    <div  style="width: 100%;height: 100%" class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
+      <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="addCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
+            <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
             <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
           </template>
 
@@ -14,7 +14,6 @@
               <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
             </p>
             <p>
-              <close-circle-outlined :style="{ color: 'red' }" />
               从社区获得分享代码（此功能暂未上线，请耐心等待）
               <a>从社区导入 &gt;</a>
             </p>
@@ -29,8 +28,8 @@
           height: 100%;
           width: 100%;
           display: flex;
-          align-items: flex-start;
-          align-content: flex-start;
+          align-items: center;
+          align-content: center;
         " :style="{ 'padding-top': this.settings.marginTop + 'px' }">
         <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
             return settings.cardMargin + 'px';
@@ -42,8 +41,8 @@
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
-                :customData="item.data" :editing="editing" @customEvent="customEvent"></component>
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
+                :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -59,7 +58,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="visibleAdd">
-      <AddCard :desk="currentDesk" @onBack="() => { this.visibleAdd = false }"></AddCard>
+      <NewAddCard @close="hideAddCard" @addSuccess="hideAddCard" :desk="currentDesk" @onBack="() => { this.visibleAdd = false }"></NewAddCard>
     </div>
   </transition>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
@@ -75,7 +74,7 @@
         </div>
       </a-col>
       <a-col>
-        <div @click="addCard" class="btn">
+        <div @click="newAddCard" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>添加卡片</span></div>
         </div>
@@ -110,12 +109,6 @@
           <div><span>隐藏桌面</span></div>
         </div>
       </a-col>
-      <a-col>
-        <div @click="newAddCard" class="btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>新添加卡片（开发中）</span></div>
-        </div>
-      </a-col>
     </a-row>
   </a-drawer>
 </template>
@@ -123,8 +116,7 @@
 <script>
 
 import Muuri from 'muuri'
-import AddCard from '../../page/app/card/AddCard.vue'
-import Vuuri from '../vuuri/Vuuri.vue'
+import Vuuri from '../vuuriHome/Vuuri.vue'
 
 import CPULineChart from "../widgets/supervisory/CPULineChart.vue";
 import CPUFourCard from "../widgets/supervisory/CPUFourCard.vue";
@@ -148,7 +140,7 @@ import SingleFilm from "../widgets/film/SingleFilm.vue"
 import ManyFilm from "../widgets/film/ManyFilm.vue"
 import SteamFriends from '../widgets/games/SteamFriends.vue'
 import Weather from "../widgets/Weather.vue";
-import Calendar from "../widgets/Calendar.vue";
+import Clocks from '../widgets/clock/index.vue'
 import Timer from "../widgets/Timer.vue";
 import Music from "../widgets/Music.vue";
 import Stock from "../widgets/Stock.vue";
@@ -158,15 +150,17 @@ import CustomTimer from "../widgets/CustomTimer.vue";
 import SmallCountdownDay from "../widgets/SmallCountdownDay.vue";
 import Clock from "../widgets/Clock.vue";
 import CountdownDay from "../widgets/CountdownDay.vue";
+import Notes from '../widgets/note/index.vue'
+import NewAddCard from "../../page/app/card/NewAddCard.vue";
 export default {
   name: 'Desk',
   components: {
-    Vuuri, AddCard, CPUFourCard, CPULineChart, InternalList,
+    Vuuri, CPUFourCard, CPULineChart, InternalList,
     SmallCPUCard, SmallGPUCard, DiscountPercentage, GamesDiscount, GameEpic,
     Music, Stock, Dou, Fish, CustomTimer, SmallCountdownDay, Clock, CountdownDay,
-    Calendar, Timer, Weather, SteamFriends, Remote, SignIn, SingleFilm, ManyFilm,
+    Timer, Weather, SteamFriends, Remote, SignIn, SingleFilm, ManyFilm,
     CaptureNewCard, Voice, Audio, Capture, CustomAssembly, MyGameSmall, SmallWallpaper,
-    MiddleWallpaper
+    MiddleWallpaper,NewAddCard,Clocks,Notes
   },
   props:
   {
@@ -203,12 +197,21 @@ export default {
     },
     settings: {
       type: Object,
-      required: true
+      required: false,
+      default:{
+        cardZoom: 100,
+        marginTop: 0,
+        cardMargin: 5//卡片间隙
+      }
     }
   }
   ,
+  mounted () {
+    console.log(this.currentDesk.cards)
+  },
   data() {
     return {
+      key:Date.now(),
       menuVisible: false,
       visibleAdd: false,
       editing: false,
@@ -223,16 +226,63 @@ export default {
     }
   },
   methods: {
-    addCard() {
-      this.visibleAdd = true
+    newAddCard() {
+      this.visibleAdd = true;
+      this.menuVisible = false;
+    },
+    hideAddCard(){
+      this.visibleAdd=false
     },
     onClose() {
       this.menuVisible = false;
     },
+    showMenu(){
+      this.menuVisible = true;
+    }
   }
 }
 </script>
 
+<style scoped lang="scss">
+.grid {
+  position: relative;
+  display: inline-block;
+  border-radius: 4px;
+  vertical-align: top;
+  left: 0;
+  right: 0;
+  margin-right: 1em;
+  height: 100%;
+  width: 100%;
+}
+</style>
+<style lang="scss">
+.home-widgets {
+  .muuri-item {
+    padding: 0;
+  }
+
+  /**
+  .muuri-item {
+  }
+  */
+
+  .card {
+    position: relative;
+    border: 0;
+    height: 420px;
+
+    &.small {
+      height: 204px;
+    }
+
+    &.double {
+      width: 572px;
+      height: 420px;
+    }
+  }
+}
+</style>
 <style scoped lang="scss">
 .grid {
   position: relative;
@@ -243,5 +293,29 @@ export default {
   left: 0;
   right: 0;
   margin-right: 1em;
+}
+
+.btn {
+  text-align: center;
+}
+
+@media screen and (min-height: 1020px) and (max-height: 1600px) {
+  #scrollerBar {
+    height: 880px;
+
+    .grid {
+      height: 880px;
+    }
+  }
+}
+
+@media screen and (max-height: 1021px) {
+  #scrollerBar {
+    height: 438px;
+
+    .grid {
+      height: 438px;
+    }
+  }
 }
 </style>

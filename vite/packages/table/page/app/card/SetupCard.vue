@@ -1,10 +1,11 @@
 <template>
-  <div class="title">
+  <!-- 快速搜索 闹钟 设置 -->
+  <div class="title" style="color:var(--primary-text)">
     <Icon
       style="width: 5%; height: 2em; margin-right: 1%; vertical-align: middle"
       icon="shezhi1"
     ></Icon>
-    <span style="margin-left: -1em">「{{ title }}」设置</span>
+    <span style="margin-left: -1em" >「{{ title }}」设置</span>
   </div>
   <div class="card content" v-if="cardType === 'countdownDay'" >
     <a-row>
@@ -155,9 +156,9 @@
       <a-col :span="10" style="border-right: 1px solid #454545; height: calc(100vh - 16em)">
         <vue-custom-scrollbar
           :settings="outerSettings"
-          style="position: relative; height: calc(100vh - 16em)"
+          style="position: relative; height: calc(100vh - 16em);color: var(--primary-text);"
           class="scroll"
-        >   <a-row> <a-col>闹钟名字 </a-col></a-row>
+        >   <a-row> <a-col >闹钟名字 </a-col></a-row>
         <a-row>
           <a-col>
             <a-input v-model:value="eventValue" placeholder="请输入"
@@ -177,7 +178,7 @@
 
 
           <a-radio-group v-model:value="clockType" button-style="solid">
-            <a-radio-button value="不重复">不重复</a-radio-button>
+            <a-radio-button value="不重复" style="color:var(--primary-text)">不重复</a-radio-button>
             <a-radio-button value="每天">每天</a-radio-button>
           </a-radio-group>
 
@@ -194,7 +195,7 @@
       </a-col>
       <a-col :span="14">
         <a-row>
-          <a-col> 已设置的{{ title }}</a-col></a-row
+          <a-col style="color:var(--primary-text)"> 已设置的{{ title }}</a-col></a-row
         >
         <vue-custom-scrollbar
           :settings="outerSettings"
@@ -205,13 +206,13 @@
             <div
               class="event-list"
               v-for="(item, index) in clockEvent"
-              style="background-color: #3b3b3b"
+              style="background-color: var(--primary-bg);color: var(--primary-text);"
             >
               <a-dropdown :trigger="['contextmenu']">
                 <div class="card-list">
                   <div class="event-title">
                     <span class="text-more">{{ item.eventValue }}</span>
-                    <span class="event">{{ item.clockType }}</span>
+                    <span class="event" style="color:var(--secondary-text)">{{ item.clockType }}</span>
                   </div>
                   <span
                     >{{ item.dateValue.hours }}:{{
@@ -280,7 +281,7 @@ export default {
     ...mapActions(cardStore, [
       "addCountdownDay",
       "addClock",
-      "addCustomComponents",
+      "addCard",
       "removeCountdownDay",
       "removeClock",
     ]),

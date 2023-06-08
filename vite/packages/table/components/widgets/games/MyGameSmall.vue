@@ -1,5 +1,5 @@
 <template>
-  <Widget :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare">
+  <Widget :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare" :desk="desk">
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
       我的游戏
     </div>
@@ -12,10 +12,10 @@
           <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
            <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
-            <div style="height:118.53px;" v-if="item.appinfo">
-              <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
+            <div style="height:118.53px;" >
+              <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
             </div>
-            <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+            <span  class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.name}}</span>
            </div>
           </div>
         </div>
@@ -37,10 +37,10 @@
           <a-spin v-if="gameList.length !== gameList.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
             <div v-for="item in gameList.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
-              <div style="height:118.53px;" v-if="item.appinfo">
-                <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appinfo.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
+              <div style="height:118px;">
+                <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
                </div>
-               <span v-if="item.appinfo" class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.appinfo.common.name}}</span>
+               <span  class="px-3 py-3 w-full truncate" style="max-width:207px;">{{item.name}}</span>
             </div>
           </div>
         </div>
@@ -90,6 +90,9 @@ export default {
     MySteamDetail,
     MyGameSmallDetail
   },
+  mounted(){
+    console.log(this.gameList,'gamelki')
+  },
   props:{
     customIndex: {
       type: Number,
@@ -102,6 +105,9 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
+    },
+    desk:{
+      type:Object
     }
   },
   computed:{
@@ -175,7 +181,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(cardStore,['increaseCustomComponents']),
+    // ...mapActions(cardStore,['increaseCustomComponents']),
     getGameType(item,index){
       this.customData.name = item.name
       this.steamIndex = index
