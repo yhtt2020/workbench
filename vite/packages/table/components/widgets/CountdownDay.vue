@@ -133,6 +133,7 @@ import { transDate } from "../../../../src/util/dateTime";
 import Widget from "../card/Widget.vue";
 import {message} from "ant-design-vue";
 import {timeStamp} from "../../util";
+import { timerStore } from '../../store/timer'
 export default {
   name: "CountdownDay",
   props:{
@@ -179,7 +180,8 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
+    ...mapWritableState(cardStore, [ "countdownDay"]),
+    ...mapWritableState(timerStore,['appDate'])
   },
   mounted() {
       this.sortCountdown()

@@ -61,6 +61,7 @@ import { cardStore } from "../../store/card";
 import { transDate } from "../../../../src/util/dateTime";
 import Widget from "../card/Widget.vue";
 import {timeStamp} from "../../util";
+import { timerStore } from '../../store/timer'
 export default {
   name: "SmallCountdownDay",
   props:{
@@ -93,7 +94,8 @@ export default {
    this.selectMy()
   },
   computed: {
-    ...mapWritableState(cardStore, ["appDate", "countdownDay"]),
+    ...mapWritableState(cardStore, [ "countdownDay"]),
+    ...mapWritableState(timerStore,['appDate']),
     differenceDay(){
       return  transDate(
         this.appDate.year + "-" +this.appDate.month + "-" + this.appDate.day,
