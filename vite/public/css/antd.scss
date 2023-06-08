@@ -102,8 +102,6 @@
     background: var(--primary-bg) !important;
 }
 
-.ant-tag,
-.ant-tag-green {
-    background: var(--primary-bg) !important;
-    color: var(--main-text);
+.ant-empty-description {
+    color: var(--primary-text) !important;
 }

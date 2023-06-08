@@ -535,6 +535,7 @@ export default {
 .btn {
   background: var(--primary-bg);
 }
+
 .app-content {
   flex-shrink: 1;
   flex-grow: 1;

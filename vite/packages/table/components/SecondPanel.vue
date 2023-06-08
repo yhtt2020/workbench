@@ -78,6 +78,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.active-menu-item {
+  background: var(--active-bg);
+}
 .s-text {
     text-shadow:none !important;
 }
