@@ -184,7 +184,7 @@ import ScrolX from '../ScrolX.vue'
 import Sortable from 'sortablejs';
 import navigationData from '../../js/data/tableData'
 import Classification from "../comp/Classification.vue";
-import SideNavigation from "../SideNavigation.vue"
+// import SideNavigation from "../SideNavigation.vue"
 const {appModel}=window.$models
 export default {
   name: "EditNavigation",
