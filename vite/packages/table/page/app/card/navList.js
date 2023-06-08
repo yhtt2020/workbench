@@ -308,7 +308,8 @@ export const navList = [
       },
     ],
   },
-  { cname: '系统', children: [
+  {
+    cname: '系统', children: [
       {
         name: 'Audio',
         cname: '音频',
@@ -327,7 +328,8 @@ export const navList = [
         ],
         time: '2023/5/31'
       },
-    ] },
+    ]
+  },
   {
     cname: '游戏',
     children: [
@@ -539,7 +541,20 @@ export const navList = [
         ],
         time: '2023/5/31'
       },
-
+      {
+        name: 'myIcons',
+        cname: '图标组件',
+        detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
+        sizes: ['自定义大小'],
+        option: [
+          {
+            name: 'myIcons',
+            size: '自定义大小',
+            zoom: '11'
+          },
+        ],
+        time: '2023/5/31'
+      },
     ]
   },
 ]

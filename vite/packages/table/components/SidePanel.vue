@@ -2,25 +2,20 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <div class="box common-panel s-bg py-2 scroll-content"
-  style=" background: var(--primary-bg); z-index: 999;width: 6em;max-height: 100%;overflow: hidden;"
-  ref="sideContent" @contextmenu.stop="showMenu">
+    style=" background: var(--primary-bg); z-index: 999;width: 6em;max-height: 100%;overflow: hidden;" ref="sideContent"
+    @contextmenu.stop="showMenu">
     <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
-      <div class="flex felx-col justify-center items-center item-nav" :class="{'active-back':current(item)}">
-        <div class="icon-color" v-if="item.type==='systemApp'">
-          <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;color:rgba(255, 255, 255, 0.4);" :class="{'active-color':current(item)}"></Icon>
+      <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
+        <div class="icon-color" v-if="item.type === 'systemApp'">
+          <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;color:rgba(255, 255, 255, 0.4);"
+            :class="{ 'active-color': current(item) }"></Icon>
         </div>
         <a-avatar v-else :size="37" shape="square" :src="item.icon"></a-avatar>
       </div>
     </div>
   </div>
-  <a-drawer
-    :contentWrapperStyle="{backgroundColor:'#212121',height:'216px'}"
-    class="drawer"
-    :closable="true"
-    placement="bottom"
-    :visible="menuVisible"
-    @close="onClose"
-  >
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+    placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
         <div @click="editNavigation" class="btn relative">
@@ -69,28 +64,28 @@ export default {
     ...mapWritableState(navStore, ['builtInFeatures']),
     ...mapWritableState(cardStore, ['routeParams']),
   },
-  mounted(){
-    this.scrollNav('sideContent','scrollTop')
+  mounted() {
+    this.scrollNav('sideContent', 'scrollTop')
   },
   methods: {
-    current(item){
+    current(item) {
       // console.log(item)
       // console.log("route123",this.$route)
-      if(item.data?.name){
-        return this.$route.params.name===item.data.name
-      }else if(item.event){
-        return this.$route.name===item.event
-      }else{
+      if (item.data?.name) {
+        return this.$route.params.name === item.data.name
+      } else if (item.event) {
+        return this.$route.name === item.event
+      } else {
         return false
       }
     },
-    clickNavigation (item) {
+    clickNavigation(item) {
       // console.log("item",item)
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
             if (this.full) {
-      this.full = false
+              this.full = false
               tsbApi.window.setFullScreen(false)
             } else {
               this.full = true
@@ -103,8 +98,8 @@ export default {
               this.$router.push({ path: '/status' })
             }
           } else if (item.data) {
-      this.$router.push({
-        name: 'app',
+            this.$router.push({
+              name: 'app',
               params: item.data
             })
           } else {
@@ -112,12 +107,12 @@ export default {
           }
           break
         case 'coolApp':
-      this.$router.push({
-        name: 'app',
-        params:item.data
+          this.$router.push({
+            name: 'app',
+            params: item.data
           })
-        break
-          case 'localApp':
+          break
+        case 'localApp':
           require('electron').shell.openPath(item.path)
           break
         case 'lightApp':
@@ -127,29 +122,29 @@ export default {
           require('electron').shell.openPath(item.path)
       }
     },
-    scrollNav(refVal,scrollDirection){
+    scrollNav(refVal, scrollDirection) {
       let content = this.$refs[refVal]
-        content.addEventListener('wheel',(event) => {
+      content.addEventListener('wheel', (event) => {
         event.preventDefault();
         // console.log(event)
         content[scrollDirection] += event.deltaY
       });
     },
-    closeDrawer () {
-      this.menuVisible = false
-          },
-    editNavigation () {
-          this.quick = true
+    closeDrawer() {
       this.menuVisible = false
     },
-    showMenu () {
-          this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
-          this.menuVisible = true
-          },
-    setQuick () {
+    editNavigation() {
+      this.quick = true
+      this.menuVisible = false
+    },
+    showMenu() {
+      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      this.menuVisible = true
+    },
+    setQuick() {
       this.quick = false
-          },
-        onClose () {
+    },
+    onClose() {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     }
@@ -158,12 +153,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.box :hover {
- :deep(.icon) {
-  fill: var(--active-font-color) !important;
 
- }
-}
+
 .box {
   :deep(.icon) {
     fill: var(--secondary-text);
@@ -172,13 +163,13 @@ export default {
 
 
 .item:hover {
-  background: var( --active-bg) !important;
+  background: var(--active-bg) !important;
   :deep(.icon) {
     fill: var(--primary-text) !important
   }
 }
 
-.active {
+.active-back {
   :deep(.icon) {
     fill: var(--primary-text) !important
   }
@@ -187,25 +178,33 @@ export default {
 .item {
   margin: 8px;
 }
-.item-nav{
-  width:68px;
+
+.item-nav {
+  width: 68px;
   height: 68px;
   margin: 16px auto;
   cursor: pointer;
   border-radius: 6px;
 }
-.item-nav:hover{
-  background: rgba(255, 255, 255, 0.08);
+
+.item-nav:hover {
+  background: var(--active-bg) !important;
 }
-.icon-color:hover{
-   color:rgba(255, 255, 255, 0.8) !important;
+
+.icon-color:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
-.active-back{
-  background: rgba(255, 255, 255, 0.08);
+
+.active-back {
+  background: var(--active-bg) !important;
+  color: var(--primary-text) !important;
+  fill: var(--primary-text) !important;
 }
-.active-color{
-  color:rgba(255, 255, 255, 0.8) !important;
+
+.active-color {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
+
 .btn {
   text-align: center;
   margin-right: 24px;
@@ -216,6 +215,7 @@ export default {
   padding-top: 16px;
   line-height: 30px;
 }
+
 @media screen and (max-height: 510px) {
   .side-panel {
     zoom: 0.82;
@@ -233,5 +233,4 @@ export default {
   .side-panel {
     zoom: 0.9;
   }
-}
-</style>
+}</style>

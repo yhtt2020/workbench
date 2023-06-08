@@ -87,9 +87,9 @@ export default {
 }
 </script>
 <style>
-/* :deep(.vc-weekdays) {
-  color: red !important;
-} */
+.vc-arrow {
+  color: var(--primary-text) !important;
+}
 .vc-weekday ,.vc-header >.vc-title{
   color: var(--primary-text) !important;
 }
