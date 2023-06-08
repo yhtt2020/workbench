@@ -91,7 +91,7 @@
     <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
     <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
     <!--    </div>-->
-    <div class=" flex flex-row  items-center pl-6 s-bg"
+    <div v-show="navigationToggle[2]" class=" flex flex-row  items-center pl-6 s-bg"
          style="border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px">
       <div style="overflow: hidden;overflow-x: auto;"
            class="flex flex-row items-center  flex-nowrap scroll-content mr-6" ref="content">
@@ -395,6 +395,7 @@ export default {
     let content = this.$refs.content
     content.addEventListener('wheel', (event) => {
       event.preventDefault()
+      // console.log('wheel',event)
       content.scrollLeft += event.deltaY
     })
     this.setMinute()
@@ -410,7 +411,7 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore,['screens']),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(navStore, ['footNavigationList','builtInFeatures']),
+    ...mapWritableState(navStore, ['footNavigationList','builtInFeatures','navigationToggle']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(messageStore,['messageIndex','totalCount']),
     isMain(){

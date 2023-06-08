@@ -284,12 +284,12 @@ export const navStore = defineStore("nav", {
             "type": "systemApp",
             "icon": "youxishoubing",
             "name": "游戏",
-            "event": "agme"
+            "event": "gameIndex"
         },{
             "type": "systemApp",
             "icon": "yinle1",
             "name": "音乐",
-            "event": "apps"
+            "event": "music"
         },{
             "type": "systemApp",
             "icon": "kuaijie1",
@@ -329,7 +329,9 @@ export const navStore = defineStore("nav", {
         "name": "电源",
         "event": "power"
       }
-    ]
+    ],
+    // navigationToggle: [true,false,true]
+    navigationToggle: [true,false,true]
   }),
   actions: {
     removeFootNavigationList(index) {
@@ -377,6 +379,19 @@ export const navStore = defineStore("nav", {
       }
       this.rightNavigationList.push(itemNav)
     },
+    setNavigationToggle(type,val){
+      switch (type) {
+        case 'left':
+          this.navigationToggle[0] = val
+          break;
+        case 'right':
+            this.navigationToggle[1] = val
+            break;
+        case 'foot':
+          this.navigationToggle[2] = val
+          break;
+      }
+    }
   },
   persist: {
     enabled: true,
@@ -384,7 +399,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['mainNavigationList','sideNavigationList','footNavigationList','rightNavigationList','builtInFeatures'],
+      paths: ['mainNavigationList','sideNavigationList','footNavigationList','rightNavigationList','builtInFeatures','navigationToggle'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

@@ -218,12 +218,12 @@ export default {
         ...navigationData.coolAppList,...navigationData.systemAppList
         ],
       dropList:[],
-      leftNav: true,
-      footNav: true,
+      leftNav: false,
+      rightNav: false,
+      footNav: false,
       promptModal: false,
       selectNav: '',
       navText: true,
-      rightNav: true,
       mainNavList: [],
       // sumNavList: [],
       darggingCore: false,
@@ -234,7 +234,7 @@ export default {
   },
   computed:{
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(navStore, ['mainNavigationList','sideNavigationList','footNavigationList','rightNavigationList']),
+    ...mapWritableState(navStore, ['mainNavigationList','sideNavigationList','footNavigationList','rightNavigationList','navigationToggle']),
     filterList(){
       return this.ClassifyData.filter(i =>{return i.type === this.nowClassify&&i.name.includes(this.selectContent)})
     }
@@ -250,46 +250,11 @@ export default {
     this.loadDeskIconApps()
   },
   mounted() {
-    this.mainNavigationList =  [
-      {
-        type:'systemApp',
-        icon:'home',
-        name:'主页',
-        event:'home',
-      },
-      {
-        type:'systemApp',
-        icon:'thunderbolt',
-        name:'快捷指令',
-        event:'deck',
-      },
-      {
-        type:'systemApp',
-        icon:'tuichu',
-        name:'电源',
-        event:'power',
-        fn:()=>{vm.$router.push({ path: '/power' })}
-      },
-      {
-        type:'systemApp',
-        icon:'setting',
-        name:'基础设置',
-        event:'setting',
-        fn:()=>{  vm.$router.push({ name: 'setting' })}
-      },
-      {
-        type:'systemApp',
-        icon:'yingyongzhongxin',
-        name:'应用管理',
-        event:'apps',
-      },
-    ]
-    this.checkScroll()
+    this.leftNav = this.navigationToggle[0]
+    this.rightNav = this.navigationToggle[1]
+    this.footNav = this.navigationToggle[2]
     let that = this
     this.mainNav()
-    window.addEventListener('resize',
-      that.checkScroll
-    )
     // let content = this.$refs.content
     // content.addEventListener('wheel',(event) => {
     //   event.preventDefault();
@@ -311,10 +276,6 @@ export default {
       this.rightDrop()
       this.mainDrop()
     })
-  },
-  unmounted() {
-    let that = this
-      window.removeEventListener('resize', that.checkScroll)
   },
   methods:{
     scrollNav(refVal,scrollDirection){
@@ -392,6 +353,7 @@ export default {
                   this.delMainItem.push(item)
                   this.promptModal = true
                   this.footNav = true
+                  this.setNavigationToggle(type,true)
                 }
             
               }
@@ -454,7 +416,7 @@ export default {
     //       break;
     //   }
     // },
-    ...mapActions(navStore, ['setFootNavigationList','sortFootNavigationList','removeFootNavigationList','setSideNavigationList','sortSideNavigationList','removeSideNavigationList','setRightNavigationList','sortRightNavigationList','removeRightNavigationList']),
+    ...mapActions(navStore, ['setFootNavigationList','sortFootNavigationList','removeFootNavigationList','setSideNavigationList','sortSideNavigationList','removeSideNavigationList','setRightNavigationList','sortRightNavigationList','removeRightNavigationList','setNavigationToggle']),
     mainNav(addItem,type){
       this.mainNavList = this.mainNavigationList
       let sumNavList = this.sideNavigationList.concat(this.footNavigationList,this.rightNavigationList)
@@ -655,30 +617,22 @@ export default {
               sumList = that.rightNavigationList
             }
             that.delNavigation(sumList,oneNav,event.oldIndex,that.removeSideNavigationList,'delLeft')
-            // that.removeSideNavigationList(event.oldIndex)
-            // that.mainNav()
-            // that.navText = true
-
-            // for(let i = 0; i < that.sideNavigationList; i++){
-            //   if(that.sideNavigationList[i].name === that.sideNavigationList[event.oldIndex]){
-            //   }
-            // }
           }
         },
         onUpdate:function(event){
-          let newIndex = event.newIndex,
-            oldIndex = event.oldIndex
-          let  newItem = side.children[newIndex]
-          let  oldItem = side.children[oldIndex]
-          // 先删除移动的节点
-          side.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if(newIndex > oldIndex) {
-            side.insertBefore(newItem,oldItem)
-          } else {
-            side.insertBefore(newItem,oldItem.nextSibling)
-          }
-          that.sortSideNavigationList(event)
+          // let newIndex = event.newIndex,
+          //   oldIndex = event.oldIndex
+          // let  newItem = side.children[newIndex]
+          // let  oldItem = side.children[oldIndex]
+          // // 先删除移动的节点
+          // side.removeChild(newItem)
+          // // 再插入移动的节点到原有节点，还原了移动的操作
+          // if(newIndex > oldIndex) {
+          //   side.insertBefore(newItem,oldItem)
+          // } else {
+          //   side.insertBefore(newItem,oldItem.nextSibling)
+          // }
+          // that.sortSideNavigationList(event)
         },
         onEnd: function(event){
           that.navText = true
@@ -733,27 +687,6 @@ export default {
           that.navText = true
         }
       });
-    },
-    checkScroll(){
-      this.$nextTick(()=>{
-        if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
-          this.$refs.content.style.marginTop='17px'
-        }else{
-          this.$refs.content.style.marginTop='0px'
-        }
-
-        // if(this.$refs.sideContent.offsetWidth-this.$refs.sideContent.clientWidth>0){
-        //   this.$refs.sideContent.style.marginLeft='17px'
-        // }else{
-        //   this.$refs.sideContent.style.marginLeft='0px'
-        // }
-
-        // if(this.$refs.rightContent.offsetHeight-this.$refs.rightContent.clientHeight>0){
-        //   this.$refs.rightContent.style.marginTop='17px'
-        // }else{
-        //   this.$refs.rightContent.style.marginTop='0px'
-        // }
-      })
     },
     deleteDropList(index){
       this.dropList.splice(index,1)
@@ -866,27 +799,15 @@ export default {
     }
   },
   watch: {
-    footNavigationList : {
-      handler(){
-        this.checkScroll()
-      },
-      immediate: true,
-      deep:true
+    leftNav(newVal){
+      this.setNavigationToggle('left',newVal)
     },
-    sideNavigationList : {
-      handler(){
-        this.checkScroll()
-      },
-      immediate: true,
-      deep:true
+    rightNav(newVal){
+      this.setNavigationToggle('right',newVal)
     },
-    // rightNavigationList : {
-    //   handler(){
-    //     this.checkScroll()
-    //   },
-    //   immediate: true,
-    //   deep:true
-    // },
+    footNav(newVal){
+      this.setNavigationToggle('foot',newVal)
+    }
   },
 }
 </script>
