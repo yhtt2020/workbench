@@ -224,11 +224,27 @@ class ApiHandler {
       }
     })
 
+    ApiHandler.onWindow('isMaximized', (event, args, instance) => {
+      if (instance.type === 'view') {
+        event.returnValue = false //view的话，统一返回false
+      } else if (instance.type === 'frameWindow') {
+        event.returnValue = instance.frame.isMaximized()
+      } else if (instance.type === 'window') {
+        event.returnValue = instance.window.isMaximized()
+      }
+    })
     ApiHandler.onWindow('maximize', (event, args, instance) => {
       if (instance.type === 'frameWindow') {
         instance.frame.maximize()
       } else if (instance.type === 'window') {
         instance.window.maximize()
+      }
+    })
+    ApiHandler.onWindow('unmaximize', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
+        instance.frame.unmaximize()
+      } else if (instance.type === 'window') {
+        instance.window.unmaximize()
       }
     })
     ApiHandler.onWindow('minimize', (event, args, instance) => {
@@ -291,6 +307,18 @@ class ApiHandler {
         instance.frame.setFullScreen(args)
       } else if (instance.type === 'window') {
         instance.window.setFullScreen(args)
+      }
+    })
+    ApiHandler.onWindow('isFullScreen', (event, args, instance) => {
+      console.log('检测是否是全屏')
+      if (instance.type === 'view') {
+        event.returnValue = false //view的话，统一返回false
+      } else if (instance.type === 'frameWindow') {
+        console.log(instance.frame.isFullScreen(),'frameisFullScreen')
+        event.returnValue = instance.frame.isFullScreen()
+      } else if (instance.type === 'window') {
+        console.log( instance.window.isFullScreen(),'fwindowisFullScreen')
+        event.returnValue = instance.window.isFullScreen()
       }
     })
     ApiHandler.onWindow('attach', (event, args, instance) => {

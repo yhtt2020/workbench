@@ -275,6 +275,7 @@ import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
 import { screenStore } from '../store/screen'
+import { toggleFullScreen } from '../js/common/common'
 
 export default {
   name: 'BottomPanel',
@@ -614,13 +615,8 @@ export default {
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
-            if (this.full) {
-              this.full = false
-              tsbApi.window.setFullScreen(false)
-            } else {
-              this.full = true
-              tsbApi.window.setFullScreen(true)
-            }
+            toggleFullScreen()
+            this.full = !this.full;
           } else if (item.event === '/status') {
             if (this.$route.path === '/status') {
               this.$router.go(-1)

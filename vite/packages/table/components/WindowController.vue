@@ -1,0 +1,89 @@
+<template>
+  <div @click="fixed" :class="{active:alwaysTop}" class="flex pointer   btn-top-active  items-center no-drag">
+    <Icon icon="Pushpin" style="font-size: 1.2em;zoom:1.1"></Icon>
+  </div>
+  <div @click="minimize" class="flex  items-center btn-top-active pointer no-drag">
+    <MinusOutlined style="font-size: 1.2em;"></MinusOutlined>
+  </div>
+
+  <div @click="maximize" class="flex pointer   btn-top-active  items-center no-drag" >
+    <BorderOutlined style="font-size: 1.2em;zoom:0.9"></BorderOutlined>
+  </div>
+  <div @click="close" class="flex btn-top-active  pointer items-center no-drag">
+    <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
+  </div>
+</template>
+
+<script>
+import { getSign, isMain } from '../js/common/screenUtils'
+
+import { MinusOutlined, BorderOutlined } from '@ant-design/icons-vue'
+
+export default {
+  name: 'WindowController',
+  components: {
+    MinusOutlined,
+    BorderOutlined
+  },
+  data () {
+    return {
+      alwaysTop: false,
+    }
+  },
+  async mounted () {
+    this.alwaysTop = await tsbApi.window.isAlwaysOnTop()
+  },
+  methods: {
+    // 关闭按钮
+    close () {
+      if (isMain()) {
+        ipc.send('exitTable')
+      } else {
+        ipc.send('closeScreen', { fullDomain: getSign() })
+      }
+    },
+    // 窗口放大
+    async maximize () {
+      if (await tsbApi.window.isMaximized()) {
+        console.log('取消最大化')
+        tsbApi.window.unMaximize()
+      } else {
+        console.log('最大化')
+        tsbApi.window.maximize()
+      }
+    },
+    // 关闭窗口放大
+    minimize () {
+      tsbApi.window.minimize()
+    },
+    // 固定
+    fixed () {
+      this.alwaysTop=!this.alwaysTop
+      tsbApi.window.setAlwaysOnTop(this.alwaysTop)
+    },
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.btn-top-active {
+  text-align: center;
+  width: 55px;
+  display: inline-block;
+  padding: 8px  ;
+  line-height: 20px;
+  background: rgba(42, 42, 42, 0.8);
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.5) !important;
+    background: #1f1f1f !important;
+  }
+
+  &:active,&.active {
+    & svg{
+      color:white !important;
+    }
+    background: #1f1f1f !important;
+  }
+}
+</style>

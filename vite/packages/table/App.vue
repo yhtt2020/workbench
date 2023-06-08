@@ -72,6 +72,8 @@ import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
 import {timerStore} from "./store/timer";
+import {Modal as antModal} from 'ant-design-vue'
+import {toggleFullScreen} from "./js/common/common";
 
 window.browser = browser
 const {appModel} = window.$models
@@ -104,6 +106,8 @@ export default {
     if (transparent == "true") {
       document.documentElement.classList.add("transparent");
     }
+
+    window.addEventListener("keydown", this.KeyDown, true)// 监听按键事件
 
     // if (value) {
     //   return JSON.parse(value)
@@ -179,7 +183,7 @@ export default {
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
-    ...mapWritableState(timerStore,["appDate"]),
+    ...mapWritableState(timerStore, ["appDate"]),
     ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),
@@ -191,6 +195,13 @@ export default {
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
+    KeyDown(event) {
+      if (event.keyCode === 122) {
+        toggleFullScreen()
+        event.preventDefault()
+        event.stopPropagation()
+      }
+    },
     bindTouchEvents() {
       $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -233,9 +244,7 @@ export default {
       this.visible = false;
       this.removeClock(0);
       this.$refs.clock.pause();
-    },
-
-
+    }
   },
   watch: {
     'settings.transparent': {

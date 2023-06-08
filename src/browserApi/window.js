@@ -26,7 +26,10 @@ const windowApi = {
   maximize(){
     send('maximize')
   },
-  unmaximize:()=>{
+  async isMaximized(){
+    return await sendSync('isMaximized')
+  },
+  unMaximize:()=>{
     send('unmaximize')
   },
   async getBounds(){
@@ -37,6 +40,9 @@ const windowApi = {
   },
   setFullScreen(flag){
     send('setFullScreen',flag)
+  },
+  async isFullScreen(){
+    return await sendSync('isFullScreen')
   },
   async getSize(){
     return await sendSync('getSize')

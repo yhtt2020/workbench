@@ -33,9 +33,15 @@
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
-            <a-col v-if="isMain()" :span="24">
+            <a-col :span="12">
+              <div style="cursor: help;"  class="btn relative">
+                窗口控制<br>
+                <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
+              </div>
+            </a-col>
+            <a-col :span="12">
               <div style="cursor: help;" class="btn relative test">
-                浅色模式【开发中】<br>
+                浅色模式<br>
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
                 <a-switch @click="styleSwitch()" v-model:checked="styles"></a-switch>
               </div>
@@ -182,7 +188,7 @@ export default {
     console.log(this.userInfo)
   },
   computed: {
-    ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles', 'style']),
+    ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles', 'style','showWindowController']),
     ...mapWritableState(appStore, ['userInfo'])
   },
   methods: {

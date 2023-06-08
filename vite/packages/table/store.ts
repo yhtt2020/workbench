@@ -1,7 +1,8 @@
 import {defineStore} from "pinia";
 import dbStorage from "./store/dbStorage";
-import  {sUrl} from './consts'
-const userCardUrl=sUrl('/app/com/userCard')
+import {sUrl} from './consts'
+
+const userCardUrl = sUrl('/app/com/userCard')
 import axios from 'axios'
 import {getConfig} from "./js/axios/serverApi";
 // @ts-ignore
@@ -9,10 +10,10 @@ export const appStore = defineStore('appStore', {
   state: () => ({
 
     //用户信息卡片
-    userCardVisible:false,
-    userCardUid:0,
-    userCardUserInfo:{
-      certification:[]
+    userCardVisible: false,
+    userCardUid: 0,
+    userCardUserInfo: {
+      certification: []
     },
 
 
@@ -22,26 +23,28 @@ export const appStore = defineStore('appStore', {
       myCircle: [],
       joinedCircle: []
     },
-style:"", // 指定样式
-    styles:false,  // 浅色切换功能
-    saving:true,//性能模式
+    style: "", // 指定样式
+    styles: false,  // 浅色切换功能
+    saving: true,//性能模式
 
-    simple:false,//极简模式
-    agreeTest:false,
+    simple: false,//极简模式
+    agreeTest: false,
 
     init: false, //是否已经初始化
 
     fullScreen: false, //是否是全屏模式
 
+    showWindowController:true,//窗口全屏，这个和上面的全屏不是同一个，区别是这个只影响窗体在系统层面上的最大化。
+
     settings: {
-      transparent:false,//透明背景
-      down:{
-        enable:false,
-        count:100,
-        type:'rain'
+      transparent: false,//透明背景
+      down: {
+        enable: false,
+        count: 100,
+        type: 'rain'
       },
-      houserun:false,//rgb跑马灯
-      zoomFactor:100,//缩放比
+      houserun: false,//rgb跑马灯
+      zoomFactor: 100,//缩放比
       openUrlBrowser: 'builtin',//默认打开浏览器
       enableChat: false,//主界面显示聊天
       preventLock: false,//阻止锁屏
@@ -68,12 +71,12 @@ style:"", // 指定样式
         title: ''
       }
     },
-    backgroundSettings:{
-      backGroundImgBlur:0,
-      backGroundImgLight:0.3,
+    backgroundSettings: {
+      backGroundImgBlur: 0,
+      backGroundImgLight: 0.3,
     },
-    backgroundImage:{
-      path:''
+    backgroundImage: {
+      path: ''
     }
 
 
@@ -81,22 +84,22 @@ style:"", // 指定样式
   getters: {},
 
   actions: {
-    async showUserCard(uid,userInfo=null) {
+    async showUserCard(uid, userInfo = null) {
       this.userCardUid = Number(uid)
-      if(userInfo){
+      if (userInfo) {
         //如果存在用户数据，则使用此数据显示卡片
-        this.userCardUserInfo=userInfo
+        this.userCardUserInfo = userInfo
         this.userCardVisible = true
       }
-      let response  = await this.getUserCard(uid)
-      if(response.code===200){
-        const data=response.data
-        this.userCardUserInfo={
-          uid:uid,
-          nickname:data.user.nickname,
-          avatar:data.user.avatar_128,
-          signature:data.user.signature,
-          certification:data.user.all_certification_entity_pc||[]
+      let response = await this.getUserCard(uid)
+      if (response.code === 200) {
+        const data = response.data
+        this.userCardUserInfo = {
+          uid: uid,
+          nickname: data.user.nickname,
+          avatar: data.user.avatar_128,
+          signature: data.user.signature,
+          certification: data.user.all_certification_entity_pc || []
         }
         this.userCardVisible = true
       }
@@ -106,17 +109,17 @@ style:"", // 指定样式
      * 获取用户小卡片
      * @param uid
      */
-    async getUserCard(uid){
-      let response = await axios.post(userCardUrl,{uid:uid},await getConfig())
-      if(response.data.code===1000){
+    async getUserCard(uid) {
+      let response = await axios.post(userCardUrl, {uid: uid}, await getConfig())
+      if (response.data.code === 1000) {
         return response.data.data
       }
     },
 
-    setBackgroundImage(value){
+    setBackgroundImage(value) {
       this.backgroundImage = value
     },
-    setAgreeTest(value){
+    setAgreeTest(value) {
       this.agreeTest = value
     },
     reset() {
@@ -136,7 +139,7 @@ style:"", // 指定样式
       this.status.music.cover = status.cover.replace("34y34", "120y120"); //修正封面
     },
 
-    getUserInfo(){
+    getUserInfo() {
       ipc.send('getDetailUserInfo')
     },
 
@@ -145,7 +148,7 @@ style:"", // 指定样式
      * @param userInfo
      */
     setUser(userInfo) {
-      userInfo.onlineGradeExtra.cumulativeMinutes =Number(userInfo.onlineGradeExtra.minutes) - Number(userInfo.onlineGradeExtra.cumulativeHours) * 60
+      userInfo.onlineGradeExtra.cumulativeMinutes = Number(userInfo.onlineGradeExtra.minutes) - Number(userInfo.onlineGradeExtra.cumulativeHours) * 60
       userInfo.onlineGradeExtra.cumulativeMinute = userInfo.onlineGradeExtra.minutes
       userInfo.onlineGradeIcons = {}
       userInfo.onlineGradeIcons.crown = []
@@ -153,7 +156,8 @@ style:"", // 指定样式
       userInfo.onlineGradeIcons.moon = []
       userInfo.onlineGradeIcons.star = []
 
-      userInfo.uid=Number(userInfo.uid)
+      userInfo.uid = Number(userInfo.uid)
+
       function handleGrade(name) {
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
@@ -171,7 +175,7 @@ style:"", // 指定样式
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths:['status','settings','init','agreeTest','backgroundSettings','backgroundImage','saving','simple','styles','style'],
+      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'backgroundImage', 'saving', 'simple', 'styles', 'style','windowFullScreen'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
