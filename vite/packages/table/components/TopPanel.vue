@@ -1,13 +1,13 @@
 <template>
   <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
-    <a-col :span="8">
+    <a-col :span="7">
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic"
            v-if="status.music && status.music.title">
         <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>
     </a-col>
-    <a-col :span="8" style="text-align: center">
+    <a-col :span="6" style="text-align: center">
       <!-- 快速搜索 头部 搜索栏 -->
       <div @click="openGlobalSearch" class="input-box no-drag pointer"
            style=" background: var( --primary-bg); color: var(--secondary-text)">
@@ -32,7 +32,6 @@
           <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
         </span>
         </div>
-
       </div>
     </a-col>
 
