@@ -34,6 +34,16 @@
           <span>点击添加更多快捷方式，支持长按拖拽排序，滑动查看更多；左侧导航和底部导航支持设置为隐蔽，但至少保留一个为显示状态，已保证功能完整。</span>
           <span>以下功能需要在导航栏上至少各保留一个，以保障功能完整</span>
           <span>点击拖动图标到目标导航栏</span>
+          <span class="flex justify-center items-center mb-2">侧边栏图标替换：
+            <span class="mr-4 flex justify-center items-center">
+              <Icon icon="home" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+              <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
+              <Icon icon="shouye1" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+            </span>
+            <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+            <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
+            <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+          </span>
           <div class="main-nav" id="mainList">
             <div v-for="item in mainNavList" :key="item.name">
               <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
@@ -184,6 +194,7 @@ import ScrolX from '../ScrolX.vue'
 import Sortable from 'sortablejs';
 import navigationData from '../../js/data/tableData'
 import Classification from "../comp/Classification.vue";
+import { message } from 'ant-design-vue';
 // import SideNavigation from "../SideNavigation.vue"
 const {appModel}=window.$models
 export default {
@@ -229,7 +240,7 @@ export default {
       darggingCore: false,
       delMainIndex: -1,
       delMainItem: [],
-      delNavType: ''
+      delNavType: '',
     }
   },
   computed:{
@@ -482,6 +493,8 @@ export default {
           if(!NavigationList.find(j => j.name === that.mainNavigationList[oldIndex].name)){
             setNavigationList(that.mainNavigationList[oldIndex])
             that.mainNav()
+          }else{
+            message.info('已添加',1);
           }
         }
       }
@@ -620,19 +633,19 @@ export default {
           }
         },
         onUpdate:function(event){
-          // let newIndex = event.newIndex,
-          //   oldIndex = event.oldIndex
-          // let  newItem = side.children[newIndex]
-          // let  oldItem = side.children[oldIndex]
-          // // 先删除移动的节点
-          // side.removeChild(newItem)
-          // // 再插入移动的节点到原有节点，还原了移动的操作
-          // if(newIndex > oldIndex) {
-          //   side.insertBefore(newItem,oldItem)
-          // } else {
-          //   side.insertBefore(newItem,oldItem.nextSibling)
-          // }
-          // that.sortSideNavigationList(event)
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let  newItem = side.children[newIndex]
+          let  oldItem = side.children[oldIndex]
+          // 先删除移动的节点
+          side.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if(newIndex > oldIndex) {
+            side.insertBefore(newItem,oldItem)
+          } else {
+            side.insertBefore(newItem,oldItem.nextSibling)
+          }
+          that.sortSideNavigationList(event)
         },
         onEnd: function(event){
           that.navText = true
@@ -658,7 +671,7 @@ export default {
           delIcon.ondrop=function (ev) {
             let oneNav = that.rightNavigationList[event.oldIndex]
             let sumList = []
-            if(that.leftNav && that.rightNav){
+            if(that.leftNav && that.footNav){
               sumList = that.footNavigationList.concat(that.sideNavigationList)
             }else if(that.leftNav && !that.footNav){
               sumList = that.sideNavigationList
@@ -849,8 +862,8 @@ export default {
       padding: 24px 0 24px;
     }
     .center-text{
-      // width: 90%;
-      width: 1056px;
+      width: 90%;
+      // width: 1056px;
       margin: 0 10px;
       // background: yellow;
       height: 100%;

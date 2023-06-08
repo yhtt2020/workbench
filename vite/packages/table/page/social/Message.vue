@@ -41,16 +41,16 @@
                 <div class="flex flex-col ml-4 " style="flex:1">
                   <div class="flex">
                     <span @click="clickInteract(item)" class="pr-1 truncate pointer interact-name"
-                      style="max-width: 84px; font-size: 16px;color: var(--main-text);font-weight: 600;">
+                      style="max-width: 84px; font-size: 16px;color: var(--primary-text);font-weight: 600;">
                       {{ item.title }}
                     </span>
                     <span class="pr-1 truncate  dynamic"
-                      style="font-size: 16px;color: rgba(255,255,255,0.60);font-weight: 400;">
+                      style="font-size: 16px;color:  var(--primary-text);font-weight: 400;">
                       {{ item.dynamic }}
                     </span>
                   </div>
                   <div @click="clickInteract(item)" class="truncate pointer" style="width: 98%;"><span
-                      class="w-100 interact-content" style="color: var(--main-text)">{{ item.content }}</span></div>
+                      class="w-100 interact-content" style="color: var(--primary-text)">{{ item.content }}</span></div>
                   <span class="create-time mt-2"  style="color: var(--secondary-text)">{{ item.create_time }}</span>
                 </div>
               </div>
@@ -61,7 +61,7 @@
           <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4" style="height: calc(100vh - 18em)">
             <!-- 数据空状态 -->
             <a-list :data-source="[]" v-if="newFollower.length === 0" />
-            <div v-else v-for="item in  newFollower" class="px-4 rounded-lg interact-hover  py-4  flex items-center">
+            <div v-else v-for="item in  newFollower" class="px-4 rounded-lg interact-hover  py-4  flex items-center" style="color: var(--primary-text)">
               <div>
                 <a-avatar @click="showCard(item)" :size="50" :src="item.user.avatar_64"
                   class="avatar-list pointer"></a-avatar>
@@ -82,12 +82,12 @@
           </vueCustomScrollbar>
         </template>
         <template v-if="categoryType.name === 'system'">
-          <div>
+          <div >
             <vueCustomScrollbar :settings="scrollbarSettings" class="pt-4" style="height: calc(100vh - 18em)">
               <!-- 数据空状态 -->
               <a-list :data-source="[]" v-if="systemNotice.length === 0" />
               <div v-else v-for="item in systemNotice" @click="openSystem(item)"
-                class="px-4 pointer interact-hover rounded-lg py-4  flex items-center">
+                class="px-4 pointer interact-hover rounded-lg py-4  flex items-center" style="color: var(--primary-text)">
                 <div style="min-width: 40px;max-width:40px;flex:1"
                   class="w-10 h-10 flex items-center  justify-center s-bg rounded-full">
                   <Icon icon="bell" style="font-size: 1.429em;"></Icon>
@@ -112,7 +112,7 @@
             <!-- 数据空状态 -->
             <a-list :data-source="[]" v-if="push.length === 0" />
             <div v-else v-for="item in push" @click="clickDetail(item)"
-              class="px-4 rounded-lg interact-hover pointer py-4  flex  flex-col">
+              class="px-4 rounded-lg interact-hover pointer py-4  flex  flex-col" style="color: var(--primary-text)">
               <span class="push-theme">
                 {{ item.title }}
               </span>
@@ -135,7 +135,7 @@
               <!-- 数据空状态 -->
               <a-list :data-source="[]" v-if="customNotice.length === 0" />
               <div v-else v-for="item in customNotice" @click="clickDetail(item)"
-                class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center">
+                class="px-4 pointer interact-hover rounded-lg py-4 mb-3 flex items-center" style="color: var(--primary-text)">
                 <div style="width: 120px" class="w-10 h-10 flex items-center  justify-center s-bg rounded-full">
                   <Icon icon="bell" style="font-size: 1.429em;"></Icon>
                 </div>
@@ -348,7 +348,7 @@ export default {
 }
 
 ::v-deep .ant-empty-description {
-  display: none !important;
+  // display: none !important;                                                                                                              
 }
 
 .interact-hover {
@@ -366,30 +366,32 @@ export default {
   max-width: 84px;
   font-size: 16px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
 }
 
 .interact-content {
   font-size: 16px;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
+
 }
 
 .create-time {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.40);
+  color: var(--secondary-text);
+
   font-weight: 400;
 }
 
 .dynamic {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.40);
+  color: var(--secondary-text);
   font-weight: 400;
 }
 
 .push-theme {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 600;
 }
 
