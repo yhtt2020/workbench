@@ -293,7 +293,9 @@
              @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
             >
               <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-              <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
+              <div class="px-4 py-3">
+                <span class="truncate" style="max-width:150px;">{{ item.name}} </span>
+              </div>
             </div>
           </div> 
         </vue-custom-scrollbar>
@@ -309,7 +311,9 @@
              @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
             >
               <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-              <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
+              <div class="px-4 py-3">
+                <span class="truncate" style="max-width:207px;">{{ item.name}} </span>
+              </div>
             </div>
           </div> 
         </vue-custom-scrollbar>
@@ -321,11 +325,13 @@
           </div>
           <div class="flex justify-between flex-wrap" v-else>
             <div v-for="(item,index) in  recordLogger" 
-             class="flex flex-col s-bg rounded-lg mb-4 pointer record-game-item"
+             class="flex flex-col justify-between s-bg rounded-lg mb-4 pointer record-game-item"
              @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
             >
               <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-              <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
+              <div class="px-4 py-3">
+                <span class="truncate" style="max-width:207px;">{{ item.name}} </span>
+              </div>
             </div>
           </div>
         </vue-custom-scrollbar>
@@ -413,18 +419,22 @@
         <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
         <template v-if="defaultLastCap.name === 'screenCap'">
           <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
-            <div class="flex flex-wrap items-center justify-center">
-              <div v-for="item in recordFullScreenData" class="flex pointer rounded-lg sp-w mr-3 mb-3">
-                <img :src="item.url" class="w-full h-full rounded-lg object-cover" alt="">
+            <div class="flex flex-row flex-wrap content-game ">
+              <div class="game-list-item px-3 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
+                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;height:120px;">
+                  <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
+                </div>
               </div>
             </div>
           </vue-custom-scrollbar>
         </template>
         <template v-else>
           <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
-            <div class="flex flex-wrap items-center justify-center">
-              <div v-for="item in recordGameData" class="flex pointer rounded-lg sp-w mr-3 mb-3">
-                <img :src="item.url" class="w-full h-full rounded-lg object-cover" alt="">
+            <div class="flex flex-row flex-wrap content-game ">
+              <div class="game-list-item px-3 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
+                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;height:120px;">
+                  <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
+                </div>
               </div>
             </div>
           </vue-custom-scrollbar>
@@ -435,14 +445,14 @@
 
   <a-drawer width="500"  title="设置" :bodyStyle="{ overflow: 'hidden' }" :placement="right" v-model:visible="recordSetShow" @close="recordSetShow = false">
     <div class="flex flex-col scroll-container">
-      <div class="flex flex-col s-item rounded-md p-2 mb-3">
+      <div class="flex flex-col s-item rounded-md p-4 mb-3">
         <div class="flex items-center mb-3">
           <div class="pointer" @click="closeSound">
             <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
             <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
           </div>
           <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
-          <div style="width:331px;">
+          <div style="width:310px;">
             <a-slider v-model:value="systemSound"></a-slider>
           </div>
         </div>
@@ -452,7 +462,7 @@
             <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
           </div>
           <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
-          <div style="width:331px;">
+          <div style="width:310px;">
             <a-slider v-model:value="systemMicrophone"></a-slider>
           </div>
         </div>
@@ -464,20 +474,20 @@
       <span class="mb-3 fps-t">截屏快捷键</span>
       <div class="flex items-center  mb-3">
         <span class="rounded-lg p-2 s-item mr-3 w-2/3">{{ shortcutKey }}</span>
-        <span class="mr-2 s-item rounded-lg p-2 drawer-active btn-text pointer">更换按键</span>
-        <span class="mr-3 rounded-lg s-item btn-text drawer-active p-2 pointer">重置</span>
+        <span class="mr-3 s-item rounded-lg p-2 drawer-active btn-text pointer">更换按键</span>
+        <span class="rounded-lg s-item btn-text drawer-active p-2 pointer">重置</span>
       </div>
       <span class="mb-3 fps-t">录制快捷键</span>
       <div class="flex items-center mb-3">
         <span class="w-2/3 p-2 s-item rounded-lg mr-3">{{ recordKey }}</span>
-        <span class="mr-2 s-item p-2 rounded-lg btn-text drawer-active pointer">更换按键</span>
-        <span class="mr-3 rounded-lg p-2 s-item btn-text drawer-active pointer">重置</span>
+        <span class="mr-3 s-item p-2 rounded-lg btn-text drawer-active pointer">更换按键</span>
+        <span class="rounded-lg p-2 s-item btn-text drawer-active pointer">重置</span>
       </div>
       <span class="mb-3 fps-t">是否启用麦克风录制快捷键</span>
       <div class="flex items-center mb-3">
         <span class="w-2/3 p-2 s-item rounded-lg mr-3">{{ microphoneKey }}</span>
-        <span class="mr-2 s-item p-2 rounded-lg btn-text drawer-active pointer">更换按键</span>
-        <span class="mr-3 rounded-lg p-2 s-item btn-text drawer-active pointer">重置</span>
+        <span class="mr-3 s-item p-2 rounded-lg btn-text drawer-active pointer">更换按键</span>
+        <span class="rounded-lg p-2 s-item btn-text drawer-active pointer">重置</span>
       </div>
     </div>
   </a-drawer>
@@ -771,10 +781,13 @@ export default {
   width: 64px;
   height: 64px;
 }
+/*
 .sp-w{
-  width: 213px;
+  max-width: 213px;
   height: 120px;
 }
+*/
+
 .f-w{
   width: 265px;
 }
@@ -880,6 +893,7 @@ export default {
 }
 
 
+
 /**
 @media screen and (max-width: 840px) {
   .max-capture{
@@ -895,6 +909,84 @@ export default {
   }
 }
 **/
+
+.game-list-item{
+  max-width: 231px;
+}
+.game-list-local{
+  max-width: 300px;
+  max-height: 170px;
+  aspect-ratio: 231/300;
+}
+@media screen and (min-width: 1060px) and (max-width: 1140px){
+  .game-list-item{
+    width: calc(100% / 1);
+  }
+  .game-list-local{
+    width: calc(100% / 1);
+  }
+}
+@media screen and (min-width: 1140px) and (max-width: 1340px){
+  .game-list-item{
+    width: calc(100% / 2);
+  }
+  .game-list-local{
+    width: calc(100% / 5);
+  }
+}
+@media screen and (min-width: 1340px) and (max-width: 1512px){
+  .game-list-item{
+    width: calc(100% / 3);
+  }
+  .game-list-local{
+    width: calc(100% / 6);
+  }
+}
+
+@media screen and (min-width: 1512px) and (max-width: 1600px){
+  .game-list-item{
+    width: calc(100% / 4);
+  }
+  .game-list-local{
+    width: calc(100% / 7);
+  }
+}
+@media screen and (min-width: 1601px) and (max-width: 1750px){
+  .game-list-item{
+    width: calc(100% / 5);
+  }
+  .game-list-local{
+    width: calc(100% / 8);
+  }
+}
+@media screen and (min-width: 1750px) and (max-width: 1850px){
+  .game-list-item{
+    width: calc(100% / 6);
+  }
+  .game-list-local{
+    width: calc(100% / 9);
+  }
+}
+@media screen and (min-width: 1850px) and (max-width: 1950px){
+  .game-list-item{
+    width: calc(100% / 7);
+  }
+}
+@media screen and (min-width: 1950px) and (max-width: 2050px){
+  .game-list-item{
+    width: calc(100% / 8);
+  }
+}
+@media screen and (min-width: 2050px) and (max-width: 2150px){
+  .game-list-item{
+    width: calc(100% / 9);
+  }
+}
+@media screen and (min-width: 3540px) and (max-width: 3840px){
+  .game-list-item{
+    width: calc(100% / 10);
+  }
+}
 
 
 ::v-deep .ant-slider-track{
