@@ -3,8 +3,8 @@
     <div class="text-white ">
       <span class="mr-2">运行中的应用</span> <span class="mr-5">{{runningApps.length + runningTableApps.length}}</span>
       <a-button class="mr-3" :type="type==='all'?'primary':'default'" @click.stop="setType('all')">全部</a-button>
-      <a-button class="mr-3" :type="type==='qing'?'primary':'default'" @click.stop="setType('qing')">轻应用</a-button> <a-button :type="type==='table'?'primary':'default'" @click.stop="setType('table')">工作台应用</a-button></div>
-    <div @click.stop="closeAll()" class="h-10 w-28 bg-gray-800 rounded-lg flex justify-evenly items-center pointer">
+      <a-button class="mr-3" :type="type==='qing'?'primary':'default'" @click.stop="setType('qing')"  style="background: var(--primary-bg);color: var(--primary-text);">轻应用</a-button> <a-button :type="type==='table'?'primary':'default'" @click.stop="setType('table')"  style="background: var(--primary-bg);color: var(--primary-text);">工作台应用</a-button></div>
+    <div @click.stop="closeAll()" class="h-10 w-28 bg-gray-800 rounded-lg flex justify-evenly items-center pointer" style="background: var(--primary-bg);color: var(--primary-text);">
       <Icon icon="minus-circle-fill "  ></Icon>全部关闭</div>
   </div>
   <vue-custom-scrollbar  :settings="settings"

@@ -117,7 +117,7 @@ export default {
             // 设置弹幕内容和样式
             node.classList.add('barrage-style')
             if (barrage.data.self) {
-              node.style.background = 'black'
+              // node.style.background = 'black'
               node.style.fontWeight = 'bold'
             }
           }
@@ -586,8 +586,8 @@ export default {
   -webkit-app-region: no-drag;
   user-select: none;
   border-radius: 100px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  background: var(--primary-bg) !important;
+  color: var(--primary-text) !important;
   padding: 3px 15px;
   padding-right: 15px;
   vertical-align: middle;

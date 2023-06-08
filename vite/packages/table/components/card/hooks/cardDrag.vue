@@ -1,5 +1,5 @@
 <template>
-    <div class="boxs" ref="textRef" style="margin-top: 8px; " :style="{ width: w, height: h }">
+    <div class="boxs no-drag" ref="textRef" style="margin-top: 8px; " :style="{ width: w, height: h }">
         <slot :row="1123"></slot>
         <svg t="1684744355055" ref="dragRef" class="icon drag-boxs no-drag" viewBox="0 0 1024 1024" version="1.1"
             xmlns="http://www.w3.org/2000/svg" p-id="10063">

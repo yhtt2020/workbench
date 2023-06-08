@@ -127,7 +127,7 @@
                       <a-row>
                         <a-col :span="10">
                           <img v-if="item.data.cover" class="bili-cover" :src="fixHttp(item.data.cover+'@320w_200h')"/>
-                          <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em">
+                          <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em;color: var(--primary-text);">
                             首次运行后<br/>自动获取
                           </a-avatar>
                         </a-col>

@@ -43,10 +43,7 @@
           <template v-else>
 
             <div class="warn-boxs">
-              <div class="warn-box" style="color: var(--primary-text);background-color:var(--primary-bg);">
-                <img src="/public/img/state/warn.png" alt="">
-                <div>暂无数据</div>
-              </div>
+              <CardState :state="'null'" @onClick="onClick" style="width: 320px;height: 320px;"></CardState>
             </div>
           </template>
         </div>
@@ -57,12 +54,13 @@
 
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
-import { navList as NavList } from './navList'
+import { navList } from "./navList"
+import CardState from '../../../components/homeWidgets/cardState/cardState.vue';
 import _ from 'lodash-es'
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews },
+  components: { NewCardPreViews,CardState },
   props: ['desk'],
   data () {
     return {
@@ -153,6 +151,9 @@ export default {
 
   },
   methods: {
+    onClick() {
+      console.log('222 :>> ', 222);
+    },
     handleChange (value) {
       console.log(`selected ${value}`)
     },
@@ -342,26 +343,7 @@ body {
         align-items: center;
       }
 
-      .warn-box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        width: 320px;
-        height: 320px;
-        //opacity: 0.65;
-        border-radius: 12px;
-        background: rgba(26, 26, 26, 1);
-        box-shadow: 0px 0px 3.12px 0px rgba(0, 0, 0, 0.06), 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2), 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(100px);
-        margin: 0 auto;
 
-        img {
-          width: 80px;
-          height: 80px;
-          margin-bottom: 20px;
-        }
-      }
     }
   }
 }

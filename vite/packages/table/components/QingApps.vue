@@ -102,7 +102,8 @@ export default {
   border-radius: 0.2em;
 
   &:hover {
-    background: rgba(12, 12, 12, 0.25);
+    background: var(--primary-bg);
+    border-radius: 10px;
   }
 
   .name {
