@@ -20,11 +20,11 @@
             style="display:hiddle;">
               <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
               <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="right-top text-center bg-black bg-opacity-70">
-              <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+              <div class="right-top text-center bg-black bg-opacity-70"  style="background: var(--primary-bg) !important;">
+              <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;color: var(--primary-text);">
                 猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.score}}</span>
               </span>
-              <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+              <span v-else style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);">{{ item.comingDate }}</span>
               </div>
             </div>
           </div>
@@ -33,11 +33,11 @@
             class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
               <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
               <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="right-top text-center bg-black bg-opacity-70">
+              <div class="right-top text-center bg-black bg-opacity-70" style="background: red !important;">
                 <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.score}}</span>
+                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);background: red;">{{item.score}}</span>
                 </span>
-                <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ item.comingDate }}</span>
+                <span v-else style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);">{{ item.comingDate }}</span>
               </div>
             </div>
           </div>

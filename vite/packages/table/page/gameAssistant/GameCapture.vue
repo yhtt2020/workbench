@@ -1,5 +1,5 @@
 <template>
-  <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="min-capture" style="height: calc(80vh - 12.8em);">
+  <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="min-capture" style="height: calc(80vh - 12.8em);">
     <div class="max-container px-4">
       <div class="s-bg capture-container rounded-md p-4 mr-4">
         <div class="flex mb-3">
@@ -134,7 +134,7 @@
           <template v-if="selectIndex === 'f'">
             <div class="flex">
                <div class="mr-6 w-full">
-                 <!-- <div id="fps" ref="fpsChart" class="echarts"></div> -->
+                 <div id="fps" ref="fpsChart" class="echarts"></div>
                </div>
                <div class="flex flex-col justify-between w-2/3">
                  <div class="flex justify-between mb-5">
@@ -209,31 +209,40 @@
         </vue-custom-scrollbar>
       </div>
     </div>
-  </vue-custom-scrollbar>
+  </vue-custom-scrollbar> -->
 
-  <div class="flex px-4 max-capture">
-    <div class="s-bg capture-container rounded-md p-4 mr-4">
-      <div class="flex mb-3">
-        <div @click="startScreenshot" 
-         class="cp-w cp-orange-active cp-orange flex pointer flex-col rounded-lg items-center justify-center mr-3"
-        > 
-          <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
-           <div class="rounded-full orange-full flex items-center justify-center cp-lw">
-            <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
-           </div>
-          </div>
-          <div class="cp-text">截取屏幕</div>
+  <div class="px-4 max-capture flex">
+    <div class="s-bg rounded-md cap-left px-4 py-2">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center">
+           <Icon icon="video" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
+           <span class="title-color ml-3">捕获</span>
         </div>
-        <div @click="startRecording" class="cp-w cp-red-active orange-red-1 pointer flex flex-col rounded-lg items-center justify-center mr-3">
-          <div class="w-20 h-20 flex orange-red-2  items-center rounded-full justify-center mb-3">
-            <div class="rounded-full orange-red-full flex items-center justify-center cp-lw">
+        <div class="flex items-center pointer justify-center" @click="openRecordSet">
+          <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
+        </div>
+      </div>
+      <div class="flex mb-3">
+         <div class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3"  @click="startScreenshot" >
+          <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
+            <div class="rounded-full cp-orange-full flex items-center justify-center cp-lw">
+             <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
+            </div>
+           </div>
+           <div class="cp-text">截取屏幕</div>
+         </div>
+
+         <div @click="startRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
+          <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
+            <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
               <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
             </div>
           </div>
           <div class="cp-text">开始录制</div>
-        </div>
-        <div @click="startMonitoring">
-          <div  class="cp-w s-item  pointer flex flex-col rounded-lg items-center justify-center " v-if="isMonitor === false">
+         </div>
+
+         <div @click="startMonitoring">
+          <div class="cp-w s-item  pointer  flex-col rounded-lg " v-if="isMonitor === false">
             <div class="w-20 h-20 flex  items-center rounded-full justify-center mb-3">
               <div class="rounded-full dark-blue-full flex items-center justify-center cp-lw">
                 <AreaChartOutlined style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></AreaChartOutlined>
@@ -241,7 +250,7 @@
             </div>
             <div class="cp-text" >开启监控</div>
           </div>
-          <div  class="cp-w s-item dark-blue-1 pointer flex flex-col rounded-lg items-center justify-center "  v-else>
+          <div  class="cp-w s-item dark-blue-1 pointer  flex-col rounded-lg"  v-else>
             <div class="w-20 h-20 flex dark-blue-2 items-center rounded-full justify-center mb-3">
               <div class="rounded-full dark-blue-full flex items-center justify-center cp-lw">
                 <AreaChartOutlined style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></AreaChartOutlined>
@@ -249,89 +258,86 @@
             </div>
             <div class="cp-text">关闭监控</div>
           </div> 
+         </div>
+      </div>
+      <div class="s-item rounded-md p-4 mb-3" v-if="isHeight === true">
+        <div class="flex items-center mb-5">
+          <div class="pointer" @click="closeSound">
+            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
+            <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
+          </div>
+          <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
+          <div style="width:331px;">
+            <a-slider v-model:value="systemSound"></a-slider>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="pointer" @click="closeMicrophone">
+            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="microphoneShow"></Icon>
+            <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
+          </div>
+          <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
+          <div style="width:331px;">
+            <a-slider v-model:value="systemMicrophone"></a-slider>
+          </div>
         </div>
       </div>
-      <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(78vh - 11.8em);">
-        <div class="flex flex-col mb-3">
-          <div class="flex justify-between mb-3">
-            <div class="flex items-center justify-center">
-              <Icon icon="setting" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
-              <span class="record-set ml-1">录制设置</span>
-            </div>
-            <div class="flex items-center pointer justify-center"  @click="openRecordSet">
-              <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
-            </div> 
+      <HorizontalCapture :navList="captureType" v-model:selectType="defaultRecordingType" class="mb-4"></HorizontalCapture>
+      <template v-if="defaultRecordingType.name === 'recordGame'">
+        <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:55vh;">
+          <div v-if="recordGameData.length === 0">
+            <a-empty :image="simpleImage" />
           </div>
-        </div>
-        <div class="s-item rounded-md p-4 mb-3">
-          <div class="flex items-center mb-5">
-            <div class="pointer" @click="closeSound">
-              <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
-              <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
-            </div>
-            <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
-            <div style="width:331px;">
-              <a-slider v-model:value="systemSound"></a-slider>
-            </div>
-          </div>
-          <div class="flex items-center">
-            <div class="pointer" @click="closeMicrophone">
-              <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="microphoneShow"></Icon>
-              <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
-            </div>
-            <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
-            <div style="width:331px;">
-              <a-slider v-model:value="systemMicrophone"></a-slider>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <HorizontalCapture :navList="captureType" v-model:selectType="defaultRecordingType" class="mb-4"></HorizontalCapture>
-          <template v-if="defaultRecordingType.name === 'recordGame'">
-            <div v-if="recordGameData.length === 0">
-              <a-empty :image="simpleImage" />
-            </div>
-            <div class="flex justify-between flex-wrap" v-else>
-              <div v-for="(item,index) in recordGameData" class="flex flex-col s-bg rounded-lg mb-4  record-game-item"
-               @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
-              >
-                <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-                <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
-              </div>
-            </div> 
-          </template>
-          <template v-if="defaultRecordingType.name === 'recordFullScreen'">
-            <div v-if="recordGameData.length === 0">
-              <a-empty :image="simpleImage" />
-            </div>
-            <div class="flex justify-between flex-wrap" v-else>
-              <div v-for="(item,index) in  recordFullScreenData" 
-               class="flex flex-col s-bg rounded-lg mb-4  record-game-item"
-               @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
-              >
-                <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-                <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
+          <div class="flex justify-between flex-wrap" v-else>
+            <div v-for="(item,index) in recordGameData" class="flex pointer flex-col s-bg rounded-lg mb-4  record-game-item"
+             @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
+            >
+              <img :src="item.url" class="w-full rounded-lg h-full object-cover">
+              <div class="px-4 py-3">
+                <span class="truncate" style="max-width:150px;">{{ item.name}} </span>
               </div>
             </div>
-          </template>
-          <template v-if="defaultRecordingType.name === 'logger'">
-            <div v-if="recordLogger.length === 0">
-              <a-empty :image="simpleImage" />
-            </div>
-            <div class="flex justify-between flex-wrap" v-else>
-              <div v-for="(item,index) in  recordLogger" 
-               class="flex flex-col s-bg rounded-lg mb-4  record-game-item"
-               @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
-              >
-                <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-                <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
+          </div> 
+        </vue-custom-scrollbar>
+      </template>
+      <template v-if="defaultRecordingType.name === 'recordFullScreen'">
+        <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:55vh;">
+          <div v-if="recordGameData.length === 0">
+            <a-empty :image="simpleImage" />
+          </div>
+          <div class="flex justify-between flex-wrap" v-else>
+            <div v-for="(item,index) in  recordFullScreenData" 
+             class="flex flex-col s-bg rounded-lg mb-4 pointer record-game-item"
+             @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
+            >
+              <img :src="item.url" class="w-full rounded-lg h-full object-cover">
+              <div class="px-4 py-3">
+                <span class="truncate" style="max-width:207px;">{{ item.name}} </span>
               </div>
             </div>
-          </template>
-        </div>
-      </vue-custom-scrollbar>
+          </div> 
+        </vue-custom-scrollbar>
+      </template>
+      <template v-if="defaultRecordingType.name === 'logger'">
+        <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(78vh - 11.8em);">
+          <div v-if="recordLogger.length === 0">
+            <a-empty :image="simpleImage" />
+          </div>
+          <div class="flex justify-between flex-wrap" v-else>
+            <div v-for="(item,index) in  recordLogger" 
+             class="flex flex-col justify-between s-bg rounded-lg mb-4 pointer record-game-item"
+             @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
+            >
+              <img :src="item.url" class="w-full rounded-lg h-full object-cover">
+              <div class="px-4 py-3">
+                <span class="truncate" style="max-width:207px;">{{ item.name}} </span>
+              </div>
+            </div>
+          </div>
+        </vue-custom-scrollbar>
+      </template>
     </div>
-    <div class="w-full ml-3  flex flex-col">
+    <div class="ml-3 rounded-md w-full flex flex-col cap-right">
       <div class="s-bg rounded-md mb-3 p-3" v-if="isMonitor === true">
         <div class="flex  justify-between justify-center mb-3">
           <div class="flex items-center ">
@@ -343,119 +349,145 @@
           </div>
         </div>
         <template v-if="selectIndex === 'f'">
-           <div class="flex">
-              <div class="mr-6 w-full">
-                <div id="fps" ref="fpsChart" class="echarts"></div>
-              </div>
-              <div class="flex flex-col justify-between w-2/3">
-                <div class="flex justify-between mb-5">
-                  <span class="fps-sm">实时</span>
-                  <span class="fps-hz">144hz</span>
-                </div>
-                <div class="flex justify-between mb-5">
-                  <span class="fps-sm">平均</span>
-                  <span class="fps-hz">99hz</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span class="fps-sm">1%LOW</span>
-                  <span class="fps-hz">87hz</span>
-                </div>
-              </div>
-           </div>
-        </template>
-        <template v-else-if="selectIndex === 'p'">
-          <div class="flex justify-between">
-            <div class="px-5 flex flex-col s-bg py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">{{CPUGPUData.useCPU.value}}%</div>
-              <div class="flex items-center justify-center">
-                <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-                <span class="ml-2 fps-t">CPU</span>
-              </div>
-            </div>
-            <div class="px-5 flex flex-col s-bg py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">{{CPUGPUData.useGPU.value}}</div>
-              <div class="flex items-center justify-center">
-                <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-                <span class="ml-2 fps-t">GPU</span>
-              </div>
-            </div>
-            <div class="px-5 flex flex-col s-bg py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">144</div>
-              <div class="flex items-center justify-center">
-                <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-                <span class="ml-2 fps-t">FPS</span>
-              </div>
+          <div class="flex">
+             <div class="mr-6 w-full">
+               <div id="fps" ref="fpsChart" class="echarts"></div>
+             </div>
+             <div class="flex flex-col justify-between w-2/3">
+               <div class="flex justify-between mb-5">
+                 <span class="fps-sm">实时</span>
+                 <span class="fps-hz">144hz</span>
+               </div>
+               <div class="flex justify-between mb-5">
+                 <span class="fps-sm">平均</span>
+                 <span class="fps-hz">99hz</span>
+               </div>
+               <div class="flex justify-between mb-2">
+                 <span class="fps-sm">1%LOW</span>
+                 <span class="fps-hz">87hz</span>
+               </div>
+             </div>
+          </div>
+       </template>
+
+       <template v-else-if="selectIndex === 'p'">
+        <div class="flex justify-between">
+          <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+            <div class="fps-text flex items-center  justify-center">{{CPUGPUData.useCPU.value}}%</div>
+            <div class="flex items-center justify-center">
+              <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+              <span class="ml-2 fps-t">CPU</span>
             </div>
           </div>
+          <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+            <div class="fps-text flex items-center  justify-center">{{CPUGPUData.useGPU.value}}</div>
+            <div class="flex items-center justify-center">
+              <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+              <span class="ml-2 fps-t">GPU</span>
+            </div>
+          </div>
+          <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+            <div class="fps-text flex items-center  justify-center">144</div>
+            <div class="flex items-center justify-center">
+              <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+              <span class="ml-2 fps-t">FPS</span>
+            </div>
+          </div>
+        </div>
+       </template>
+
+       <template v-else>
+        <div class="s-bg flex flex-col py-8 rounded-lg items-center">
+          <div class="fps-text pb-4">144</div>
+          <div class="flex items-center justify-center">
+             <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+             <span class="ml-3 fps-t">FPS</span>
+          </div>
+        </div>
+       </template>
+      </div>
+      <div class="grow s-bg rounded-md p-3">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center justify-center">
+            <Icon icon="video" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+            <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;">最近截屏和录制</span>
+          </div>
+          <div class="flex items-center pointer justify-center"  @click="openRecordSet">
+            <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
+          </div> 
+        </div>
+        <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
+        <template v-if="defaultLastCap.name === 'screenCap'">
+          <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
+            <div class="flex flex-row flex-wrap content-game ">
+              <div class="game-list-item px-3 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
+                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;height:120px;">
+                  <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
+                </div>
+              </div>
+            </div>
+          </vue-custom-scrollbar>
         </template>
         <template v-else>
-          <div class="s-bg flex flex-col py-8 rounded-lg items-center">
-            <div class="fps-text pb-4">144</div>
-            <div class="flex items-center justify-center">
-               <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-               <span class="ml-3 fps-t">FPS</span>
+          <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
+            <div class="flex flex-row flex-wrap content-game ">
+              <div class="game-list-item px-3 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
+                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;height:120px;">
+                  <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
+                </div>
+              </div>
             </div>
-          </div>
+          </vue-custom-scrollbar>
         </template>
       </div>
-      <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(74vh - 11.8em);">
-        <div class="s-bg rounded-md p-3">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center justify-center">
-              <Icon icon="video" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-              <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;">最近截屏和录制</span>
-            </div>
-            <div class="flex items-center pointer justify-center"  @click="openRecordSet">
-              <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
-            </div> 
-          </div>
-          <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
-          <template v-if="defaultLastCap.name === 'screenCap'">
-            <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(62vh - 11.8em);">
-              <div class="flex flex-wrap items-center justify-center">
-                <div v-for="item in recordFullScreenData" class="flex rounded-lg sp-w mr-3 mb-3">
-                  <img :src="item.url" class="w-full h-full rounded-lg object-cover" alt="">
-                </div>
-              </div>
-            </vue-custom-scrollbar>
-          </template>
-          <template v-else>
-            <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(62vh - 11.8em);">
-              <div class="flex flex-wrap items-center justify-center">
-                <div v-for="item in recordFullScreenData" class="flex rounded-lg sp-w mr-3 mb-3">
-                  <img :src="item.url" class="w-full h-full rounded-lg object-cover" alt="">
-                </div>
-              </div>
-            </vue-custom-scrollbar>
-          </template>
-        </div>
-      </vue-custom-scrollbar>
     </div>
   </div>
 
-  <a-drawer width="500"  title="设置" :placement="right" v-model:visible="recordSetShow">
-    <div class="flex flex-col">
-      <span class="mb-6">我的截屏保存地址</span>
-      <span class="text-center mb-6 py-3 drawer-item-bg rounded-lg">{{ screenShotAddress }}</span>
-      <span class="mb-6">我的录制保存地址</span>
-      <span class="text-center mb-6 py-3 drawer-item-bg rounded-lg">设置保存地址</span>
-      <span class="mb-6">截屏快捷键</span>
-      <div class="flex items-center  mb-6">
-        <span class="shortcut-key rounded-lg mr-3">{{ shortcutKey }}</span>
-        <span class="mr-3 drawer-item-bg rounded-lg btn-active voice-hover replace-key pointer">更换按键</span>
-        <span class="mr-3 rounded-lg drawer-item-bg btn-active voice-hover replace-key pointer">重置</span>
+  <a-drawer width="500"  title="设置" :bodyStyle="{ overflow: 'hidden' }" :placement="right" v-model:visible="recordSetShow" @close="recordSetShow = false">
+    <div class="flex flex-col scroll-container">
+      <div class="flex flex-col s-item rounded-md p-4 mb-3">
+        <div class="flex items-center mb-3">
+          <div class="pointer" @click="closeSound">
+            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
+            <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
+          </div>
+          <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
+          <div style="width:310px;">
+            <a-slider v-model:value="systemSound"></a-slider>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="pointer" @click="closeMicrophone">
+            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="microphoneShow"></Icon>
+            <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
+          </div>
+          <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
+          <div style="width:310px;">
+            <a-slider v-model:value="systemMicrophone"></a-slider>
+          </div>
+        </div>
       </div>
-      <span class="mb-6">录制快捷键</span>
-      <div class="flex items-center mb-6">
-        <span class="shortcut-key rounded-lg mr-3">{{ recordKey }}</span>
-        <span class="mr-3 drawer-item-bg rounded-lg voice-hover btn-active replace-key pointer">更换按键</span>
-        <span class="mr-3 rounded-lg drawer-item-bg voice-hover btn-active replace-key pointer">重置</span>
+      <span class="mb-3 fps-t">我的截屏保存地址</span>
+      <span class="text-center mb-3 py-3 s-item rounded-lg">{{ screenShotAddress }}</span>
+      <span class="mb-3 fps-t">我的录制保存地址</span>
+      <span class="text-center mb-3 py-3 s-item rounded-lg">设置保存地址</span>
+      <span class="mb-3 fps-t">截屏快捷键</span>
+      <div class="flex items-center  mb-3">
+        <span class="rounded-lg p-2 s-item mr-3 w-2/3">{{ shortcutKey }}</span>
+        <span class="mr-3 s-item rounded-lg p-2 drawer-active btn-text pointer">更换按键</span>
+        <span class="rounded-lg s-item btn-text drawer-active p-2 pointer">重置</span>
       </div>
-      <span class="mb-6">是否启用麦克风录制快捷键</span>
-      <div class="flex items-center mb-6">
-        <span class="shortcut-key rounded-lg mr-3">{{ microphoneKey }}</span>
-        <span class="mr-3 rounded-lg drawer-item-bg voice-hover btn-active replace-key pointer">更换按键</span>
-        <span class="mr-3 rounded-lg drawer-item-bg voice-hover btn-active replace-key pointer">重置</span>
+      <span class="mb-3 fps-t">录制快捷键</span>
+      <div class="flex items-center mb-3">
+        <span class="w-2/3 p-2 s-item rounded-lg mr-3">{{ recordKey }}</span>
+        <span class="mr-3 s-item p-2 rounded-lg btn-text drawer-active pointer">更换按键</span>
+        <span class="rounded-lg p-2 s-item btn-text drawer-active pointer">重置</span>
+      </div>
+      <span class="mb-3 fps-t">是否启用麦克风录制快捷键</span>
+      <div class="flex items-center mb-3">
+        <span class="w-2/3 p-2 s-item rounded-lg mr-3">{{ microphoneKey }}</span>
+        <span class="mr-3 s-item p-2 rounded-lg btn-text drawer-active pointer">更换按键</span>
+        <span class="rounded-lg p-2 s-item btn-text drawer-active pointer">重置</span>
       </div>
     </div>
   </a-drawer>
@@ -489,7 +521,7 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(inspectorStore,['displayData'])
+    ...mapWritableState(inspectorStore,['displayData']),
   },
  
   data(){
@@ -500,6 +532,7 @@ export default {
       recordSetShow:false,
       isMonitor:false,
       setShow:false,
+      isHeight:true,
       systemMicrophone:20, // 麦克风
       captureType:[
         {title:'录游戏',name:'recordGame'},
@@ -515,6 +548,10 @@ export default {
         wheelPropagation: true
       },
       recordGameData:[
+        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
+        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
+        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
+        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
         {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
         {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
         {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
@@ -569,7 +606,7 @@ export default {
   },
 
   mounted() {
-    
+    window.addEventListener('resize',this.pageResize)
   },
 
   watch: {
@@ -718,108 +755,97 @@ export default {
         })
       })
     },
-  }
+    pageResize(){
+      if(window.innerHeight <= 700){
+        this.isHeight = false
+      }else{
+        this.isHeight = true
+      }
+    }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.max-container{
-  display: flex;
-}
-.capture-container{
+.cap-left{
   max-width: 512px;
-  .cp-w{
-    max-width: 150px;
-    padding: 13px 35px; 
-  }
-  .cp-orange-active{
-    &:active{
-      filter: brightness(0.8);
-      background: rgba(250,173,20,0.25);
-    }
-    &:hover{
-      background: rgba(250,173,20,0.25);
-    }
-  }
-  .cp-red-active{
-    &:active{
-      filter: brightness(0.8);
-      background: rgba(255,77,79,0.25);
-    }
-    &:hover{
-      background: rgba(255,77,79,0.25);
-    }
-  }
-  .cp-blue-active{
-    &:active{
-      filter: brightness(0.8);
-      background:rgba(80,139,254, 0.25);
-    }
-    &:hover{
-      background:rgba(80,139,254, 0.25);
-    }
-  }
-  .cp-orange{
-    background: rgba(250,173,20,0.1);
-    .cp-orange-2{
-      background: rgba(250,173,20,0.2);
-      .orange-full{
-        background: rgba(250,173,20,1);
-      }
-    }
-  }
-  .orange-red-1{
-    background: rgba(255,77,79,0.1);
-    .orange-red-2{
-      background: rgba(255,77,79,0.2);
-      .orange-red-full{
-        background: rgba(255,77,79,1);
-      }
-    }
-  }
-  .dark-blue-1{
-    background:rgba(80,139,254, 0.1);
-    .dark-blue-2{
-      background:rgba(80,139,254, 0.2);
-      .dark-blue-full{
-        background:rgba(80,139,254, 1);
-      }
-    }
-  }
-  .dark-blue-full{
-    background:rgba(80,139,254, 1);
-  }
+}
+.cp-w{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 140px;
+}
+.cp-lw{
+  width: 64px;
+  height: 64px;
+}
+/*
+.sp-w{
+  max-width: 213px;
+  height: 120px;
+}
+*/
 
-  .cp-lw{
-    width: 64px;
-    height: 64px;
+.f-w{
+  width: 265px;
+}
+.echarts {
+  margin-top: 1em;
+  height: 110px;
+  width: calc(100%);
+}
+.cpu-w{
+  width: 138px;
+}
+
+// 橘黄色
+.cp-orange-1{
+  background: rgba(250,173,20,0.1);
+  .cp-orange-2{
+    background: rgba(250,173,20,0.2);
+    .cp-orange-full{
+      background: rgba(250,173,20,1);
+    }
   }
-  .cp-text{
-    font-size: 16px;
-    color: rgba(255,255,255,0.85);
-    font-weight: 500;
+}
+// 橘红色
+.cp-red-1{
+  background: rgba(255,77,79,0.1);
+  .cp-red-2{
+    background: rgba(255,77,79,0.2);
+    .cp-red-full{
+      background: rgba(255,77,79,1);
+    }
   }
 }
-.min-capture{
-  display: none;
+// 蓝色
+.dark-blue-1{
+  background:rgba(80,139,254, 0.1);
+  .dark-blue-2{
+    background:rgba(80,139,254, 0.2);
+    .dark-blue-full{
+      background:rgba(80,139,254, 1);
+    }
+  }
 }
-.s-active{
-  border: 3px solid rgba(80,139,254,1);
+.dark-blue-full{
+  background:rgba(80,139,254, 1);
 }
-:deep(.nav-item){
-  width: 50%;  
-}
-.monitor-text{
+
+// 各种字体样式
+.title-color{
   font-family: PingFangSC-Regular;
   font-size: 16px;
   color: rgba(255,255,255,0.85);
   font-weight: 400;
 }
-.fps-text{
-  font-family: Oswald-Medium;
-  font-size: 36px;
+.fps-hz{
+  font-family: Oswald-SemiBold;
+  font-size: 24px;
   color: rgba(255,255,255,0.85);
-  font-weight: 500;
+  font-weight: 600;
 }
 .fps-t{
   font-family: PingFangSC-Medium;
@@ -827,72 +853,138 @@ export default {
   color: rgba(255,255,255,0.85);
   font-weight: 500;
 }
-.cpu-w{
-  width: 138px;
-}
-.f-w{
-  width: 265px;
-}
-
-.echarts {
-  margin-top: 1em;
-  height: 110px;
-  width: calc(100%);
-}
-
-.fps-hz{
-  font-family: Oswald-SemiBold;
-  font-size: 24px;
+.fps-text{
+  font-family: Oswald-Medium;
+  font-size: 36px;
   color: rgba(255,255,255,0.85);
-  font-weight: 600;
+  font-weight: 500;
 }
-
-.fps-sm{
-  font-family: PingFangSC-Regular;
-  font-size: 16px;
-  color: rgba(255,255,255,0.60);
-  font-weight: 400;
-}
-
-.sp-w{
-  width: 213px;
-  height: 120px;
-}
-
-.shortcut-key{
-  width: 270px;
-  padding: 12px 12px;
-  border: 1px solid rgba(255,255,255,0.1);
+.btn-text{
+  font-family: PingFangSC-Medium;
   font-size: 14px;
-  color: rgba(255,255,255,0.85);
-  font-weight: 400;
-}
-.replace-key{
-  padding: 13px 12px;
-}
-.voice-hover:hover{
-  opacity: 0.5;
+  color: rgba(255,255,255,0.75);
+  font-weight: 500;
 }
 
-@media screen and (max-width:840px) {
-  .max-container{
+.record-game-item{
+  max-width: 234px;
+}
+.scroll-container{
+  height: 80vh;
+  overflow-y: scroll;
+  &::-webkit-scrollbar{
+    width: 0 !important;
+  }
+
+}
+
+:deep(.nav-item){
+  width: 50%;  
+}
+
+.drawer-active{
+  &:hover{
+    background: rgba(0, 0, 0, 0.2);
+  }
+  &:active{
+    filter: brightness(0.8);
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+
+
+/**
+@media screen and (max-width: 840px) {
+  .max-capture{
     display: flex !important;
     flex-direction: column !important;
+    .cap-right{
+      margin-left: 0 !important;
+      max-width: 512px !important;
+    }
+    .cap-left{
+      margin-bottom: 12px !important; 
+    }
   }
-  .capture-container{
-    margin-bottom: 16px !important; 
-    margin-right: 0 !important;
+}
+**/
+
+.game-list-item{
+  max-width: 231px;
+}
+.game-list-local{
+  max-width: 300px;
+  max-height: 170px;
+  aspect-ratio: 231/300;
+}
+@media screen and (min-width: 1060px) and (max-width: 1140px){
+  .game-list-item{
+    width: calc(100% / 1);
   }
-  .min-capture{
-    display: block !important;
+  .game-list-local{
+    width: calc(100% / 1);
   }
-  .max-capture{
-    display: none !important;
+}
+@media screen and (min-width: 1140px) and (max-width: 1340px){
+  .game-list-item{
+    width: calc(100% / 2);
   }
-  .echarts {
-    margin-top: 1em;
-    height: 110px;
-    width: calc(100%);
+  .game-list-local{
+    width: calc(100% / 5);
+  }
+}
+@media screen and (min-width: 1340px) and (max-width: 1512px){
+  .game-list-item{
+    width: calc(100% / 3);
+  }
+  .game-list-local{
+    width: calc(100% / 6);
+  }
+}
+
+@media screen and (min-width: 1512px) and (max-width: 1600px){
+  .game-list-item{
+    width: calc(100% / 4);
+  }
+  .game-list-local{
+    width: calc(100% / 7);
+  }
+}
+@media screen and (min-width: 1601px) and (max-width: 1750px){
+  .game-list-item{
+    width: calc(100% / 5);
+  }
+  .game-list-local{
+    width: calc(100% / 8);
+  }
+}
+@media screen and (min-width: 1750px) and (max-width: 1850px){
+  .game-list-item{
+    width: calc(100% / 6);
+  }
+  .game-list-local{
+    width: calc(100% / 9);
+  }
+}
+@media screen and (min-width: 1850px) and (max-width: 1950px){
+  .game-list-item{
+    width: calc(100% / 7);
+  }
+}
+@media screen and (min-width: 1950px) and (max-width: 2050px){
+  .game-list-item{
+    width: calc(100% / 8);
+  }
+}
+@media screen and (min-width: 2050px) and (max-width: 2150px){
+  .game-list-item{
+    width: calc(100% / 9);
+  }
+}
+@media screen and (min-width: 3540px) and (max-width: 3840px){
+  .game-list-item{
+    width: calc(100% / 10);
   }
 }
 
@@ -908,14 +1000,7 @@ export default {
 :deep(.ant-slider-rail){
   background: rgba(255, 255, 255, 0.4) !important;
 }
-:deep(.ps__thumb-y){
-  display: none !important;
-}
-.record-game-item{
-  max-width: 234px;
-}
 :deep(.ps__rail-y){
   display: none !important;
 }
-
 </style>

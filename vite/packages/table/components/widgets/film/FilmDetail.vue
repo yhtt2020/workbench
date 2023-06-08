@@ -4,7 +4,7 @@
         <a-spin />
       </div>
       <div v-else>
-        <div class="flex" style="margin-top: 13px;" v-if="pageToggle">
+        <div class="flex" style="margin-top: 13px;color: var(--primary-text);" v-if="pageToggle">
           <div class="cursor-pointer" style="width: 240px;height: 354px;margin: 0 16px 0 5px;" v-if="fatherWidth == 2">
             <a-image :src="detailMovie.img" width="240px" height="354px" style="object-fit: cover;" class="rounded-lg" alt="" />
           </div>
@@ -22,7 +22,7 @@
               <div>语言：<span>{{ detailMovie.language }}</span></div>
               <div>上映：<span>{{ detailMovie.pubDesc }}</span></div>
             </div>
-            <div v-if="detailMovie.sc" class="items-center s-item mt-2 mb-3 rounded-lg pl-4" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
+            <div v-if="detailMovie.sc" class="items-center s-item mt-2 mb-3 rounded-lg pl-4" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'"  >
               <span class="mr-4" style="font-size: 16px;color: rgba(255,255,255,0.60);" v-if="fatherWidth == 2">猫眼</span>
               <span style="font-size: 32px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.score }}</span>
               <span style="font-size:20px;position: relative;top: -3px;">
