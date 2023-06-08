@@ -24,7 +24,7 @@
         <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
              :style="[{ zoom: item.option[0].zoom?item.option[0].zoom + '%':'11%' }]">
       </div>
-      <div class="right"style="">
+      <div class="right" style="">
         <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
