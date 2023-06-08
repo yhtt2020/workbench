@@ -110,7 +110,7 @@ export default {
   cursor: pointer;
 
   &:hover {
-    background: #969696;
+    background: var(--primary-bg);
     border-radius: 4px;
 
   }

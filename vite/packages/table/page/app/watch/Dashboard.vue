@@ -73,7 +73,7 @@
 
                   </a-col>
                   <a-col :offset="2">
-                    <a-row class="text-l tops" :gutter="[10,15]">
+                    <a-row class="text-l" :gutter="[10,15]">
                       <a-col :span="8">
                         <Icon title="点赞" icon="dianzan"></Icon>
                         点赞<br/>
@@ -128,8 +128,8 @@
         </div>
 
 
-        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4">
+        <div style="background: var(--primary-bg);color: var(--primary-text);" class="p-4 rounded-md mb-5">
+          <h3 class="mb-4" style="color: var(--primary-text);">
             <icon icon="diannao"/>
             实时票房
           </h3>
@@ -244,8 +244,8 @@
         </div>
 
 
-        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4">
+        <div  style="background: var(--primary-bg);color: var(--primary-text);"  class="p-4 rounded-md mb-5">
+          <h3 class="mb-4" style="color: var(--primary-text);">
             <Icon icon="gupiao"/>
             热度走势
           </h3>
@@ -685,9 +685,8 @@ export default {
   margin-top: 0.3em;
   font-weight: bold;
 }
-.tops {
-  .text-white {
-  color: greenyellow !important;
-}
+
+.text-white {
+  color: var(--primary-text) !important;
 }
 </style>
