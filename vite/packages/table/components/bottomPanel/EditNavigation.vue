@@ -244,7 +244,7 @@ export default {
     ScrolX,
     listItem,
     Classification,
-    SideNavigation
+    // SideNavigation
   },
   created() {
     this.loadDeskIconApps()
