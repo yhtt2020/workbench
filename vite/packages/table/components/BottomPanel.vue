@@ -239,7 +239,6 @@
         <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑导航</span></div>
-          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
         <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
           <Icon style="font-size: 3em" :icon="item.icon"></Icon>
@@ -255,7 +254,7 @@
         <div @click="editNavigation" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑</span></div>
-<!--          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>-->
+         <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
       </a-col>
     </a-row>
@@ -496,6 +495,9 @@ export default {
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
+    hideMenu(){
+      this.menuVisible=false
+    },
     onClose() {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
@@ -572,8 +574,10 @@ export default {
 
     openSetting() {
       this.$router.push({ name: 'setting' })
+      this.hideMenu()
     },
     openStatus() {
+      this.hideMenu()
       if (this.$route.path === '/status') {
         this.$router.go(-1)
       } else {
@@ -638,6 +642,7 @@ export default {
       })
     },
     clickNavigation(item) {
+      this.hideMenu()
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
