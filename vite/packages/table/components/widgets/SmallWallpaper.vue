@@ -1,7 +1,7 @@
 <template>
 
   <Widget  :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex"
-                     :menuList="formulaBar" ref="cardSlot" :desk="desk">
+                     :menuList="menuList" ref="cardSlot" :desk="desk">
     <div class="small-wallpaper">
       <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
         <div class=" w-full   " style="margin-top: 15%;text-align: center" v-if="imgList.length<=0">
