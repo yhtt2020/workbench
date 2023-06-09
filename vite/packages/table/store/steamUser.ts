@@ -12,6 +12,12 @@ window.client = client
 // @ts-ignore
 export const steamUserStore = defineStore("steamUser", {
   state: () => ({
+    runningGame:{
+      appid:'0',
+      title:'-',
+      name:'-'
+    },
+    recentGameList:[],
     desks: [{
       name: '主桌面',
       nanoid: nanoid(4),
@@ -23,7 +29,6 @@ export const steamUserStore = defineStore("steamUser", {
       }
     }
     ],
-
     steamLoginData: {
       accessToken: '',
       refreshToken: '',
