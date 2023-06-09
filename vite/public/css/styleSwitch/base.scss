@@ -1,0 +1,41 @@
+.transparent {
+    body {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
+}
+
+.xt-bg {
+    background: var(--primary-bg) !important;
+}
+
+.xt-bg-2 {
+    background: var(--secondary-bg) !important;
+}
+
+.xt-active {
+    background: var(--active-bg) !important;
+}
+
+.xt-model {
+    background: var(--model-bg) !important;
+}
+
+.xt-mask {
+    background: var(--mask-bg) !important;
+}
+
+.xt-text {
+    color: var(--primary-text) !important;
+}
+
+.xt-text-2 {
+    color: var(--secondary-text) !important;
+}
+
+.xt-divider {
+    border: 1px solid var(--divider);
+}
+.xt-border {
+    border: 1px solid var(--divider);
+}

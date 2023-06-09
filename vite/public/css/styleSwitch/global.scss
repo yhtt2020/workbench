@@ -4,6 +4,7 @@
     --primary-bg: rgba(26, 26, 26, 0.65) !important; // 主要背景颜色
     --secondary-bg: rgb(26, 26, 26, 0.65) !important; // 次要背景颜色
     --active-bg: rgba(0, 0, 0, 0.3) !important; //激活背景颜色 使用在需要激活的背景
+    --active-secondary-bg: rgba(0, 0, 0, 0.3) !important; //激活背景颜色 使用在需要激活的背景
     --modal-bg: rgba(33, 33, 33, 1) !important;
     --mask-bg: rgba(0, 0, 0, 65) !important;
     --divider: rgba(255, 255, 255, 0.5) !important; // 分割线
@@ -45,44 +46,4 @@
         fill: var(--primary-text) !important;
         background: var(--active-bg) !important;
     }
-}
-
-
-.transparent {
-    body {
-        background-color: transparent !important;
-        background: transparent !important;
-    }
-}
-
-.xt-bg {
-    background: var(--primary-bg) !important;
-}
-
-.xt-bg-2 {
-    background: var(--secondary-bg) !important;
-}
-
-.xt-active {
-    background: var(--active-bg) !important;
-}
-
-.xt-model {
-    background: var(--model-bg) !important;
-}
-
-.xt-mask {
-    background: var(--mask-bg) !important;
-}
-
-.xt-text {
-    color: var(--primary-text) !important;
-}
-
-.xt-text-2 {
-    color: var(--secondary-text) !important;
-}
-
-.xt-divider {
-    border: 1px solid var(--divider);
 }

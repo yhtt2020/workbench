@@ -6,7 +6,7 @@
       style="display: inline-block;vertical-align: top;margin-top: 0;background: var(--primary-bg);color: var(--primary-text);">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
-          <a-avatar :size="54">未登录</a-avatar>
+          <a-avatar :size="54" class="xt-text">未登录</a-avatar>
           <div>
           </div>
           <div>

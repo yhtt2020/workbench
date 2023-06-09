@@ -1,23 +1,22 @@
-@import "./global.scss";
 
 
 .ant-drawer-header,
 .ant-drawer-wrapper-body {
-    background: var(--main-bg) !important;
-    color: var(--primary-text) !important;
+    background: var(--main-bg) ;
+    color: var(--primary-text) ;
 
     .text-center {
-        color: var(--primary-text) !important;
+        color: var(--primary-text);
     }
 
     .ant-drawer-close {
         background: var(--primary-bg);
-        color: var(--primary-text) !important;
+        color: var(--primary-text) ;
     }
 
     .btn,
     .option {
-        color: var(--primary-text) !important;
+        color: var(--primary-text) ;
         background: var(--active-bg);
     }
 }
@@ -25,13 +24,13 @@
 .ant-table-content {
     .ant-table-thead>tr>th {
         background: var(--secondary-bg);
-        color: var(--primary-text) !important;
+        color: var(--primary-text) ;
         border-bottom: 1px solid var(--divider);
     }
 
     .ant-table-tbody>tr>td {
         background: var(--secondary-bg);
-        color: var(--primary-text) !important;
+        color: var(--primary-text) ;
         border-bottom: 1px solid var(--divider);
     }
 
@@ -42,7 +41,7 @@
 }
 
 .ant-select {
-    background: var(--primary-bg) !important;
+    background: var(--primary-bg);
 }
 
 .ant-select-selector,
@@ -51,13 +50,13 @@
 }
 
 .ant-tabs-tab {
-    color: var(--secondary-text) !important;
-    background: var(--primary-bg) !important;
+    color: var(--secondary-text) ;
+    background: var(--primary-bg);
 }
 
 .ant-tabs-tab-active {
     .ant-tabs-tab-btn {
-        color: var(--primary-text) !important;
+        color: var(--primary-text) ;
     }
 }
 
@@ -68,7 +67,7 @@
 .ant-picker-input,
 .ant-input-number-input-wrap {
     input {
-        color: var(--primary-text) !important;
+        color: var(--primary-text) ;
     }
 }
 
@@ -77,33 +76,33 @@
 .ant-radio-wrapper,
 .ant-modal-close-x,
 .ant-drawer-title {
-    color: var(--primary-text) !important;
+    color: var(--primary-text);
 
 }
 
 .ant-input {
     &::placeholder {
-        color: var(--secondary-text) !important;
+        color: var(--secondary-text) ;
     }
 }
 
 
 .round-dot {
-    background: var(--primary-text) !important;
+    background: var(--primary-text) ;
 }
 
 .ant-picker {
     .ant-picker-suffix {
-        color: var(--primary-text) !important
+        color: var(--primary-text) 
     }
 }
 
 .ant-table-cell>.ant-tag-green {
-    background: var(--primary-bg) !important;
+    background: var(--primary-bg) ;
 }
 
 .ant-empty-description {
-    color: var(--primary-text) !important;
+    color: var(--primary-text) ;
 }
 
 .ant-modal-body {
