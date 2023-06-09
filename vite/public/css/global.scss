@@ -6,18 +6,19 @@
     --active-bg: rgba(0, 0, 0, 0.3) !important; //激活背景颜色 使用在需要激活的背景
     --modal-bg: rgba(33, 33, 33, 1) !important;
     --mask-bg: rgba(0, 0, 0, 65) !important;
-    --divider: rgba(255, 255, 255, 0.5) !important;    // 分割线
+    --divider: rgba(255, 255, 255, 0.5) !important; // 分割线
     --primary-text: #b7b7b7 !important; // 主要字体
     --secondary-text: #6e6e6e !important; // 未激活字体
     --main-text: #fff;
+
     body {
         background: var(--main-bg) !important;
     }
 
     .active {
-        color: var(--primary-text) ;
-        fill: var(--primary-text) ;
-        background: var(--active-bg) ;
+        color: var(--primary-text);
+        fill: var(--primary-text);
+        background: var(--active-bg);
     }
 }
 
@@ -38,6 +39,7 @@
     body {
         background: var(--main-bg) !important;
     }
+
     .active {
         color: var(--primary-text) !important;
         fill: var(--primary-text) !important;
@@ -51,4 +53,36 @@
         background-color: transparent !important;
         background: transparent !important;
     }
+}
+
+.xt-bg {
+    background: var(--primary-bg) !important;
+}
+
+.xt-bg-2 {
+    background: var(--secondary-bg) !important;
+}
+
+.xt-active {
+    background: var(--active-bg) !important;
+}
+
+.xt-model {
+    background: var(--model-bg) !important;
+}
+
+.xt-mask {
+    background: var(--mask-bg) !important;
+}
+
+.xt-text {
+    color: var(--primary-text) !important;
+}
+
+.xt-text-2 {
+    color: var(--secondary-text) !important;
+}
+
+.xt-divider {
+    border: 1px solid var(--divider);
 }

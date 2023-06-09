@@ -5,6 +5,14 @@
             <div class="item" v-for="item in 13">{{ item }}</div>
         </div>
     </Widget>
+    <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+        <template #title>
+            <div class="text-center">设置</div>
+        </template>
+       
+        <div class="text-base" style="margin: 12px 0">背景色</div>
+        <div class="text-base" style="margin: 12px 0">图标</div>
+    </a-drawer>
 </template>
 
 <script>
@@ -29,11 +37,22 @@ export default {
     data() {
         return {
             options: {
-                className: 'card double',
-                title: '图标组件',
-                icon: 'time-circle',
+                className: 'card small',
+                // title: '图标组件',
+                // icon: 'time-circle',
                 type: 'games',
             },
+            menuList: [
+                {
+                    icon: 'shezhi1',
+                    title: '设置',
+                    fn: () => {
+                        this.$refs.homelSlotRef.visible = false
+                        this.settingVisible = true
+                    }
+                }
+            ],
+            settingVisible:false
         }
     },
 }
@@ -42,15 +61,19 @@ export default {
 <style lang="scss" scoped>
 .controller {
     border: 1px solid red;
-    width: 100%;
-    height: 356px;
+    width: 98%;
+    margin: 0 auto;
+    margin-top: -23px;
+    // height: 356px;
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    overflow: hidden;
 
     .item {
-        width: 18%;
-        height: 108px;
+        width: 48%;
+        height: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
