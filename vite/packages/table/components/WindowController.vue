@@ -87,7 +87,5 @@ export default {
   &:hover {
     background: var(--active-bg) !important;
   }
-
- 
 }
 </style>
