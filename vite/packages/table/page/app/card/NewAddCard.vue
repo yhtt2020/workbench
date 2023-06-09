@@ -68,7 +68,7 @@ export default {
       apiList: [],
       selectContent: '',
       searchValue: '默认排序',
-      baseNavList: NavList,
+      baseNavList: navList,
       searchOptions: [
         { value: '默认排序', name: '默认排序' },
         { value: '下载次数', name: '下载次数' },
@@ -79,7 +79,7 @@ export default {
 
   mounted () {
     // 这里是预留给api请求到时间和下载数据添加数据使用
-    let navList = _.cloneDeep(NavList)
+    let navList = _.cloneDeep(this.baseNavList)
 
     let items = []
     navList.map(li => {
@@ -152,7 +152,6 @@ export default {
   },
   methods: {
     onClick() {
-      console.log('222 :>> ', 222);
     },
     handleChange (value) {
       console.log(`selected ${value}`)
