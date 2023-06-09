@@ -26,7 +26,7 @@
          >
            <Icon :icon="item.icon" style="font-size: 1.25em;"></Icon>
            <span class="mx-2">{{item.title}}</span>
-           <Icon icon="gengduo1" class="pointer" @click="openCode" v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
+           <Icon icon="gengduo1" class="pointer"  v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
          </div>
         </div>
       </div>
@@ -36,8 +36,8 @@
       <vue-custom-scrollbar :settings="settingsScroller">
         <div class="px-4 flex flex-col mt-3.5" v-if="codeShow === false">
           <div class="w-full flex items-center justify-between mb-3">
-            <div @click="backClip" class="s-item rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
-              <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+            <div @click="backClip" class="s-item rounded-lg h-12 px-13 py-3 flex items-center button-active pointer justify-center">
+              <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
             </div>
             <div class="py-3 flex items-center  rounded-lg ml-3 w-40">
               <span>操作</span>
@@ -49,6 +49,14 @@
           </div>
         </div>
         <div v-else class="px-4 flex flex-col mt-3.5">
+          <div class="w-full flex items-center justify-between mb-3">
+            <div @click="backClip" class="s-item rounded-lg h-12 px-13 py-3 flex items-center button-active pointer justify-center">
+              <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
+            </div>
+            <div class="py-3 flex items-center  rounded-lg ml-3 w-40">
+              <span>语言</span>
+            </div>
+          </div>
           <div v-for="item in codeLanguage" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3"
             @click="clickCodeLanguage(item)"
           >
@@ -158,6 +166,7 @@ export default {
       imageShow:false,
       previewShow:false,
       codeShow:false,
+      firstSwitch:true,
       copyList:[
         {title:'复制',intr:'Ctrl + C'},
         {title:'打开链接',intr:'Ctrl + O'},
@@ -196,13 +205,14 @@ export default {
         }
       ],
       defaultTextType:{title:'纯文本',icon:'ziyuan',name:'text'},
+
       codeLanguage:[
         {title:'Python',name:'python'},
         {title:'JavaScript',name:'javascript'},
         {title:'Java',name:'text/x-java'},
         {title:'C++',name:'text/x-c++src'},
         {title:'C#',name:'text/x-csharp'},
-        // {title:'PHP',name:'application/x-httpd-php'},
+        // {title:'PHP'},
         {title:'Swift',name:'swift'}
       ],
       clipOptions:{
@@ -274,6 +284,7 @@ export default {
       this.textShow = false
       this.imageShow = false
       this.fileShow = false
+      this.codeShow = false
     },
     defaultClickClip(item){
       this.item = item
@@ -281,8 +292,18 @@ export default {
         this.$emit('openPreview',{preview:true,item,content:this.clip,copy:this.copyList})
       }
     },
-    selectItem(item){
-      this.defaultTextType = item
+    selectItem(item,index){
+      if(this.firstSwitch){  // 判断是否第一次切换
+        this.defaultTextType = item
+        this.firstSwitch = false
+      }else{
+        if(index === 1){  // 切换以后下标是否为1
+          this.$emit('tabClick',this.openCode())
+        }else{  // 再次切换为第一项
+          this.defaultTextType = item
+          this.firstSwitch = true
+        }
+      }
     },
     openCode(){
       this.textShow = true
@@ -362,5 +383,8 @@ export default {
 .clip-con{
   color: rgba(255,255,255,1);
 }
-
+.px-13{
+  padding-left:14px;
+  padding-right: 14px;
+}
 </style>
