@@ -105,3 +105,10 @@
 .ant-empty-description {
     color: var(--primary-text) !important;
 }
+
+.ant-modal-body {
+    background: var(--modal-bg);
+    .ant-modal-confirm-content {
+        color: var(--primary-text);
+    }
+}

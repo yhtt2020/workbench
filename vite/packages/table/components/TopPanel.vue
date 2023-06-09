@@ -1,7 +1,7 @@
 <template>
   <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="7">
-      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic"
+      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);" @click="enterMusic"
            v-if="status.music && status.music.title">
         <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
@@ -20,7 +20,7 @@
       </div>
     </a-col>
     <a-col :span="8" style="text-align: right;color: var(--secondary-text);" class="s-text">
-      <div :style="{marginRight:showWindowController?'220px':0}" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end">
+      <div :style="{marginRight:showWindowController?'220px':0}" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="no-drag truncate" v-if="!loading">
             <span style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
         <!-- {{ lockTimeoutDisplay }}后锁屏 -->
