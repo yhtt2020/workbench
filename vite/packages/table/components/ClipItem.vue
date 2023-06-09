@@ -386,6 +386,7 @@ export default {
       if(e.ctrlKey && e.keyCode === 13){
         console.log('打开资源管理器');
       }
+    },
     // 点击视频显示操作页面
     openVideoControls(){
       this.videoShow = true
