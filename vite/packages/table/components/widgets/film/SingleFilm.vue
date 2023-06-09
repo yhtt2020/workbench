@@ -12,11 +12,11 @@
           >
             <a-image :preview="false" :src="singleFilm.img" width="240px" height="354px" alt="" class="rounded-lg" style="object-fit: cover;" />
             <div class="right-top text-center bg-black bg-opacity-70"
-            style="font-weight: 600;font-family: PingFangSC-Semibold;">
-              <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
+            style="font-weight: 600;font-family: PingFangSC-Semibold;background:var(--primary-bg) !important;">
+              <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;color: var(--primary-text);">
                 猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.score}}</span>
               </span>
-              <span v-else style="font-weight: 700;font-family: Oswald-Bold;">{{ singleFilm.comingDate }}</span>
+              <span v-else style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);">{{ singleFilm.comingDate }}</span>
             </div>
           </div>
         </div>

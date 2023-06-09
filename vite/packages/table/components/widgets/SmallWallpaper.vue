@@ -324,11 +324,11 @@ export default {
   },
   mounted () {
     this.$nextTick(()=>{
-      if(!this.customData.Code){
+      if(!this.customData){
         this.pickFilterChange('我的收藏')
       }else{
-        this.pickFilterValue = this.customData.Code.value.value
-        this.pickFilterChange(this.customData.Code.value.value)
+        this.pickFilterValue = this.customData.value
+        this.pickFilterChange(this.customData.value)
       }
       this.setImg()
     })
