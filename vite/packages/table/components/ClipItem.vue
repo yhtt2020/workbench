@@ -98,17 +98,17 @@
     <template v-if="clip.type === 'image' && imageShow === false">
       <div class="flex flex-col  rounded-t-md s-item px-5 py-3 mb-3">
         <div class="flex items-center">
-          <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
-          <span class="ml-2">{{clip.title}}</span>
+          <Icon :icon="type.icon" style="font-size: 1.5em;"></Icon>
+          <span class="ml-2">{{type.title}}</span>
         </div>
         <div class="flex justify-between pt-1">
-          <span class="clip-time">{{clip.time}}</span>
+          <span class="clip-time">{{clip.timeText}}</span>
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
       <div class="flex-1 px-5 py-14 mb-3">
-        <div style="width:100%;height:185px;" class="rounded-lg flex flex-col " v-if="clip.imgUrl">
-          <img :src="clip.imgUrl" alt="" class="rounded-lg w-full h-full  object-cover"  >
+        <div style="width:100%;height:185px;" class="rounded-lg flex flex-col " v-if="img">
+          <a-image :src="img" alt="" class="rounded-lg w-full h-full  object-cover"  ></a-image>
           <span class="pt-5 text-center">{{ clip.name }}</span>
         </div>
       </div>
@@ -139,6 +139,7 @@
 <script>
 import codemirror from 'vue-codemirror/src/codemirror.vue'
 import HorzontanlPanelIcon from './HorzontanlPanelIcon.vue'
+import {toRaw} from "vue";
 
 export default {
   components: { codemirror,HorzontanlPanelIcon },
@@ -151,6 +152,7 @@ export default {
   data(){
     return{
       type:{},
+      img:{},
       textShow:false,
       fileShow:false,
       imageShow:false,
@@ -217,6 +219,11 @@ export default {
   },
 
   watch:{
+    'clip':{
+      handler(){
+        this.refresh()
+      }
+    },
     'defaultTextType':{
       handler(){
         this.defaultTextType = this.defaultTextType
@@ -227,18 +234,33 @@ export default {
 
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
-    this.clip.timeText=tsbApi.util.friendlyDate(this.clip.time)
-    this.type=this.getType(this.clip.type)
-    this.capacity=this.clip.content.length+'个字符'
+
   },
 
+
   methods:{
+    refresh(){
+      this.clip.timeText=tsbApi.util.friendlyDate(this.clip.time)
+      this.type=this.getType(this.clip.type)
+      this.capacity=this.clip.content.length+'个字符'
+      if(this.clip.type==='image'){
+        console.log('是图片，要转换')
+        this.img=toRaw(this.clip.content).toDataURL()
+        console.log(this.img,'图片地址')
+      }
+
+    },
     getType(type) {
       switch (type) {
         case 'text':
           return {
             icon: 'text-align-left',
             title: '文本'
+          }
+        case 'image':
+          return {
+            icon:'image',
+            title:'图片'
           }
       }
 

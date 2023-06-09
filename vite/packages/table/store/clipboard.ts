@@ -37,12 +37,12 @@ export const clipboardStore = defineStore("clipboardStore", {
       console.log('监测到新[文本]剪切板内容', text)
     },
     imageChange(image: any, beforeImage: any) {
-      let items = {
+      let item = {
         type: 'image',
         content: image,
         time: Date.now()
       }
-      this.items.push(image)
+      this.items.push(item)
       console.log('监测到[图片]新剪切板内容', image)
     }
   }

@@ -1,3 +1,5 @@
+import {toRaw} from "vue";
+
 const {clipboard, nativeImage} =require('electron')
 declare interface Options{
   duration:number,
@@ -83,6 +85,16 @@ export class ClipboardObserver {
    * @returns
    */
   isDiffImage(beforeImage: any, afterImage: any): boolean {
-    return afterImage && !afterImage.isEmpty() && beforeImage.toDataURL() !== afterImage.toDataURL();
+    if(!beforeImage){
+      return false
+    }
+    let hasAfterImage= afterImage && !afterImage.isEmpty()
+    if(!hasAfterImage){
+      return false
+    }
+    let beforeURL=toRaw(beforeImage).toDataURL()
+    let afterURL= afterImage.toDataURL()
+    let diff=beforeURL !==afterURL
+    return diff
   }
 }
