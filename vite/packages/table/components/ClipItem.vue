@@ -4,12 +4,12 @@
       <div class="flex flex-col justify-between  ">
         <div class="flex justify-between s-item p-3 rounded-t-md flex-col">
           <div class="flex items-center">
-            <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
-            <span class="ml-2">{{clip.title}}</span>
+            <Icon :icon="type.icon" style="font-size: 1.5em;"></Icon>
+            <span class="ml-2">{{type.title}}</span>
           </div>
           <div class="flex justify-between pt-1">
-            <span class="clip-time">{{clip.time}}</span>
-            <span class="clip-time">{{clip.capacity}}</span>
+            <span class="clip-time">{{clip.timeText}}</span>
+            <span class="clip-time">{{capacity}}</span>
           </div>
         </div>
         <div class="flex items-center clip-text-center justify-center pt-6 pb-10">
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="h-12 flex p-1 s-item rounded-b-md">
-          <div v-for="(item,index) in textType"  :class="defaultTextType.name === item.name ? 's-item':''" 
+          <div v-for="(item,index) in textType"  :class="defaultTextType.name === item.name ? 's-item':''"
           class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item,index)"
          >
            <Icon :icon="item.icon" style="font-size: 1.25em;"></Icon>
@@ -66,11 +66,11 @@
         </div>
         <div class="flex justify-between pt-1">
           <span class="clip-time">{{clip.time}}</span>
-          <span class="clip-time">{{clip.capacity}}</span>
+          <span class="clip-time">{{capacity}}</span>
         </div>
       </div>
       <div class="flex-1 flex items-center justify-center  px-5 py-14">
-        <div v-if="clip.picIcon" class="flex flex-col items-center justify-center"> 
+        <div v-if="clip.picIcon" class="flex flex-col items-center justify-center">
           <Icon :icon="clip.picIcon" style="font-size: 9.15em;"></Icon>
           <span class="pt-6">{{clip.name}}</span>
         </div>
@@ -150,6 +150,7 @@ export default {
   },
   data(){
     return{
+      type:{},
       textShow:false,
       fileShow:false,
       imageShow:false,
@@ -223,12 +224,25 @@ export default {
       immediate:true,
     },
   },
-  
+
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
+    this.clip.timeText=tsbApi.util.friendlyDate(this.clip.time)
+    this.type=this.getType(this.clip.type)
+    this.capacity=this.clip.content.length+'个字符'
   },
 
   methods:{
+    getType(type) {
+      switch (type) {
+        case 'text':
+          return {
+            icon: 'text-align-left',
+            title: '文本'
+          }
+      }
+
+    },
     textButton(){
       this.textShow = true
       this.fileShow = true

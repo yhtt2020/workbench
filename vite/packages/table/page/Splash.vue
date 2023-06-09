@@ -107,6 +107,7 @@ import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
 import { navStore } from '../store/nav'
+import {clipboardStore} from "../store/clipboard";
 
 export default {
   name: 'Code',
@@ -137,7 +138,7 @@ export default {
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
     captureStore()//仅触发一下载入
-
+    clipboardStore()
     if (isMain()) {
       this.bindMainIPC()
     } else {
@@ -273,6 +274,11 @@ export default {
       console.log('afterLaunch')
 
       this.bindClientEvents()
+
+      if(clipboardStore().enable){
+        clipboardStore().prepare()
+        clipboardStore().start()
+      }
 
       //执行分屏的启动操作
       this.onTableStarted().then()
