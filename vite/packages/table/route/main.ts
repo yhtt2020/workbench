@@ -51,6 +51,7 @@ import VideoClip from "../page/clipboard/videoClip.vue"
 import AudioClip from "../page/clipboard/audioClip.vue"
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
+import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue"
 export default [
   {
     path: "/main",
@@ -331,6 +332,11 @@ export default [
             component:AudioClip
           },
         ]
+      },
+      {
+        path:'/shortcutKey',
+        name:'shortcutKey',
+        component:ShortcutKey,
       }
     ],
   },
