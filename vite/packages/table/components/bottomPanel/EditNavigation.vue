@@ -6,7 +6,6 @@
   </transition>
   <transition name="fade">
     <div class="box-content" v-show="!editFlag" id="boxContent">
-      <!-- <SideNavigation></SideNavigation> -->
       <div class="box-center">
         <div style="width: 100px;" >
           <div class="side-nav" v-show="leftNav" id="leftBox">
@@ -70,6 +69,7 @@
             </div>
             <div class="right-point">
               <span class="mb-4">右侧<Icon icon="arrowright"></Icon></span>
+              
               <div>
                 <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
               </div>
@@ -86,7 +86,6 @@
                 「{{ item.name }}」
               </span>
               入口，以保持功能完整性。</span>
-            <!-- <span class="my-5">在导航栏中至少保留一个「{{delMainItem.name}}」入口，以保持功能完整性。</span> -->
             <div class="modal-btn">
               <div class="mr-3 rounded-lg" @click="promptModal = false">好的</div>
               <!-- <div @click="delMainCore">移除</div> -->
@@ -195,19 +194,11 @@ import Sortable from 'sortablejs';
 import navigationData from '../../js/data/tableData'
 import Classification from "../comp/Classification.vue";
 import { message } from 'ant-design-vue';
-// import SideNavigation from "../SideNavigation.vue"
 const {appModel}=window.$models
 export default {
   name: "EditNavigation",
   data(){
     return {
-      scrollbarSettings: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: true,
-        suppressScrollX: false,
-        wheelPropagation: true,
-      },
       rightScrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -220,7 +211,6 @@ export default {
       editFlag:false,
       activeItem:0,
       activeRightItem:0,
-      rubbish:false,
       nowClassify:'systemApp',
       navClassify:[
         ...navigationData.navigationClassify
@@ -236,11 +226,12 @@ export default {
       selectNav: '',
       navText: true,
       mainNavList: [],
-      // sumNavList: [],
+      //主要功能拖动
       darggingCore: false,
-      delMainIndex: -1,
+      // delMainIndex: -1,
+      //删除主要功能数据
       delMainItem: [],
-      delNavType: '',
+      // delNavType: '',
     }
   },
   computed:{
@@ -254,8 +245,7 @@ export default {
     vuuri,
     ScrolX,
     listItem,
-    Classification,
-    // SideNavigation
+    Classification
   },
   created() {
     this.loadDeskIconApps()
@@ -264,13 +254,7 @@ export default {
     this.leftNav = this.navigationToggle[0]
     this.rightNav = this.navigationToggle[1]
     this.footNav = this.navigationToggle[2]
-    let that = this
     this.mainNav()
-    // let content = this.$refs.content
-    // content.addEventListener('wheel',(event) => {
-    //   event.preventDefault();
-    //   content.scrollLeft += event.deltaY
-    // });
     let boxContent = document.getElementById('boxContent')
     boxContent.addEventListener('ondragover',() => {
       ev.preventDefault()
@@ -282,13 +266,14 @@ export default {
     this.scrollNav('sideContent','scrollTop')
     this.scrollNav('rightContent','scrollTop')
     this.$nextTick(()=>{
-      this.rowDrop()
-      this.colDrop()
-      this.rightDrop()
+      this.dragSort('navList',this.sortFootNavigationList,'foot')
+      this.dragSort('sideNavList',this.sortSideNavigationList,'left')
+      this.dragSort('rightNavList',this.sortRightNavigationList,'right')
       this.mainDrop()
     })
   },
   methods:{
+    //导航栏滚动
     scrollNav(refVal,scrollDirection){
       let content = this.$refs[refVal]
         content.addEventListener('wheel',(event) => {
@@ -296,18 +281,24 @@ export default {
         content[scrollDirection] += event.deltaY
       });
     },
+    //导航栏显示与隐藏
     navToggle(type){
       this.delMainItem = []
       switch (type) {
         case 'left':
           for (const i in this.mainNavList) {
             this.sideNavigationList.forEach(item => {
+              //判断当前导航栏是否含有主要功能
               if(item.name === this.mainNavList[i].name){
+                //判断其他导航栏是否关闭
                 if(this.footNav && this.rightNav){
+                  //获取其他两个导航栏的数据
                   let sumNav = this.footNavigationList.concat(this.rightNavigationList)
+                  //其他导航栏是否含有此功能
                   if(!sumNav.find(f => f.name === item.name)){
                     this.delMainItem.push(item)
                     this.promptModal = true
+                    //其他导航栏没有，则当前导航栏不能关闭
                     this.leftNav = true
                   }
                 }else if(this.footNav && !this.rightNav){
@@ -335,12 +326,6 @@ export default {
           for (const i in this.mainNavList) {
             this.footNavigationList.forEach(item => {
               if(item.name === this.mainNavList[i].name){
-                // let sumNav = this.sideNavigationList.concat(this.rightNavigationList)
-                // if(!sumNav.find(f => f.name === item.name)){
-                //   this.delMainItem.push(item)
-                //   this.promptModal = true
-                //   this.footNav = true
-                // }
                 if(this.leftNav && this.rightNav){
                   let sumNav = this.sideNavigationList.concat(this.rightNavigationList)
                   if(!sumNav.find(f => f.name === item.name)){
@@ -405,28 +390,6 @@ export default {
           break;
       }
     },
-    // navToggle(navList,type){
-    //   this.delMainItem = []
-    //   for (const i in this.mainNavList) {
-    //     navList.forEach(item => {
-    //       if(item.name === this.mainNavList[i].name){
-    //         this.delMainItem.push(item)
-    //         this.promptModal = true
-    //       }
-    //     })
-    //   }
-    //   switch (type) {
-    //     case 'left':
-    //       this.leftNav = !this.leftNav
-    //       break;
-    //     case 'foot':
-    //       this.footNav = !this.footNav
-    //       break;
-    //     case 'right':
-    //       this.rightNav = !this.rightNav
-    //       break;
-    //   }
-    // },
     ...mapActions(navStore, ['setFootNavigationList','sortFootNavigationList','removeFootNavigationList','setSideNavigationList','sortSideNavigationList','removeSideNavigationList','setRightNavigationList','sortRightNavigationList','removeRightNavigationList','setNavigationToggle']),
     mainNav(addItem,type){
       this.mainNavList = this.mainNavigationList
@@ -447,25 +410,8 @@ export default {
           this.mainNavList[i].addNav = stateNav
         }
       }
-      // else if(type === 'del'){
-      //   this.mainNavList.forEach(item => {
-      //     if(item.name === addItem.name){
-      //       item.addNav = false
-      //     }
-      //   })
-      // }
-      // for (const i in this.mainNavList) {
-      //   let stateNav = this.sumNavList.some(item => {
-      //     return item.name === this.mainNavList[i].name
-      //   })
-      //   this.mainNavList[i].addNav = stateNav
-      // }
-      // this.mainNavList.forEach(item => {
-      //   if(item.name === addItem.name){
-      //     item.addNav = true
-      //   }
-      // })
     },
+    //主要功能拖拽
     mainDrop(){
       let that = this
       let main = document.getElementById('mainList')
@@ -482,6 +428,12 @@ export default {
         },
       })
     },
+    /**添加页面主要功能
+     * id 容器id
+     * oldIndex 主要功能拖拽过来的索引
+     * NavigationList 当前导航栏的数据
+     * setNavigationList 当前导航栏排序的方法
+     */
     draggingArea(id,oldIndex,NavigationList,setNavigationList){
       let that = this
       let slider = document.getElementById(id)
@@ -499,37 +451,29 @@ export default {
         }
       }
     },
-    delNavigation(sumList,oneNav,index,delMethod,type){
-      this.delMainItem = []
-      if(!this.mainNavList.find(item => item.name === oneNav.name)){
-        delMethod(index)
-      }else{
-        if(sumList.find(item => item.name === oneNav.name)){
-          delMethod(index)
-        }else{
-          this.promptModal = true
-          this.delNavType = type
-          this.delMainIndex = index
-          this.delMainItem.push(oneNav)
-        }
-      }
-    },
-    delMainCore(){
-      if(this.delNavType === 'delFoot'){
-        this.removeFootNavigationList(this.delMainIndex)
-      }else if(this.delNavType === 'delLeft'){
-        this.removeSideNavigationList(this.delMainIndex)
-      }else if(this.delNavType === 'delRight'){
-        this.removeRightNavigationList(this.delMainIndex)
-      }
-      this.promptModal = false
-      this.delMainIndex = -1
-      this.mainNav(this.delMainItem[0],'del')
-      this.navText = true
-    },
-    rowDrop()  {
+    //没有主要功能仍可以删除
+    // delMainCore(){
+    //   if(this.delNavType === 'delFoot'){
+    //     this.removeFootNavigationList(this.delMainIndex)
+    //   }else if(this.delNavType === 'delLeft'){
+    //     this.removeSideNavigationList(this.delMainIndex)
+    //   }else if(this.delNavType === 'delRight'){
+    //     this.removeRightNavigationList(this.delMainIndex)
+    //   }
+    //   this.promptModal = false
+    //   this.delMainIndex = -1
+    //   this.mainNav(this.delMainItem[0],'del')
+    //   this.navText = true
+    // },
+
+    /**拖拽排序
+     * largeDragId 容器id
+     * sortNavigationList 导航排序的方法
+     * type 要删除的类型传给删除函数
+     */
+    dragSort(largeDragId,sortNavigationList,type){
       let that = this
-      let drop = document.getElementById('navList')
+      let drop = document.getElementById(largeDragId)
       Sortable.create(drop, {
         sort: true,
         animation: 150,
@@ -540,35 +484,9 @@ export default {
             delIcon.ondragover= function (ev) {
               ev.preventDefault()
             }
-          }
-          delIcon.ondrop=function (ev) {
-            let oneNav = that.footNavigationList[event.oldIndex]
-            let sumList = []
-            if(that.leftNav && that.rightNav){
-              sumList = that.sideNavigationList.concat(that.rightNavigationList)
-            }else if(that.leftNav && !that.rightNav){
-              sumList = that.sideNavigationList
-            }else if(!that.leftNav && that.rightNav){
-              sumList = that.rightNavigationList
+            delIcon.ondrop=function (ev) {
+              that.delAbility(event.oldIndex,type)
             }
-            that.delNavigation(sumList,oneNav,event.oldIndex,that.removeFootNavigationList,'delFoot')
-            
-            // let oneNav = that.footNavigationList[event.oldIndex]
-            // that.delMainItem = []
-            // if(!that.mainNavList.find(item => item.name === oneNav.name)){
-            //   that.removeFootNavigationList(event.oldIndex)
-            // }else{
-            //   if(sumList.find(item => item.name === oneNav.name)){
-            //     that.removeFootNavigationList(event.oldIndex)
-            //   }else{
-            //     that.promptModal = true
-            //     that.delNavType = 'delFoot'
-            //     that.delMainIndex = event.oldIndex
-            //     that.delMainItem.push(oneNav)
-            //   }
-            // }
-            // that.mainNav()
-            // that.navText = true
           }
         },
         onUpdate:function(event){
@@ -585,121 +503,76 @@ export default {
           } else {
             drop.insertBefore(newItem,oldItem.nextSibling)
           }
-          that.sortFootNavigationList(event)
+          sortNavigationList(event)
           that.mainNav()
         },
         onEnd: function(event){
           that.navText = true
         }
-         // onChoose: function (/**Event*/evt) {
-         //   that.rubbish=true
-         // },
-         // onUnchoose: function(/**Event*/evt) {
-         //    that.rubbish=false
-         // },
-         // onRemove: function (/**Event*/event) {
-         //     that.removeNavigationList(event)
-         // },
       });
     },
-    colDrop(){
-      let that = this;
-      let side = document.getElementById('sideNavList')
-      Sortable.create(side, {
-        sort: true,
-        animation: 150,
-        direction: 'vertical',
-        scroll: false,
-        delay: 0,
-        onStart: function(event){
-          that.navText = false
-          if(!this.navText){
-            let delIcon = document.getElementById('delIcon')
-            delIcon.ondragover= function (ev) {
-              ev.preventDefault()
-            }
+    delAbility(index,type){
+      let oneNav = {};
+      let sumList = []
+      switch (type) {
+        case 'left':
+          oneNav = this.sideNavigationList[index]
+          //判断另外两个导航栏是否关闭
+          if(this.footNav && this.rightNav){
+            //获取其他两个导航栏的数据
+            sumList = this.footNavigationList.concat(this.rightNavigationList)
+          }else if(this.footNav && !this.rightNav){
+            sumList = this.footNavigationList
+          }else if(!this.footNav && this.rightNav){
+            sumList = this.rightNavigationList
           }
-          delIcon.ondrop=function (ev) {
-            let oneNav = that.sideNavigationList[event.oldIndex]
-            let sumList = []
-            if(that.footNav && that.rightNav){
-              sumList = that.footNavigationList.concat(that.rightNavigationList)
-            }else if(that.footNav && !that.rightNav){
-              sumList = that.footNavigationList
-            }else if(!that.footNav && that.rightNav){
-              sumList = that.rightNavigationList
-            }
-            that.delNavigation(sumList,oneNav,event.oldIndex,that.removeSideNavigationList,'delLeft')
+          this.delNavigation(sumList,oneNav,index,this.removeSideNavigationList,'delLeft')
+          break;
+        case 'right':
+          oneNav = this.rightNavigationList[index]
+          if(this.leftNav && this.footNav){
+            sumList = this.footNavigationList.concat(this.sideNavigationList)
+          }else if(this.leftNav && !this.footNav){
+            sumList = this.sideNavigationList
+          }else if(!this.leftNav && this.footNav){
+            sumList = this.footNavigationList
           }
-        },
-        onUpdate:function(event){
-          let newIndex = event.newIndex,
-            oldIndex = event.oldIndex
-          let  newItem = side.children[newIndex]
-          let  oldItem = side.children[oldIndex]
-          // 先删除移动的节点
-          side.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if(newIndex > oldIndex) {
-            side.insertBefore(newItem,oldItem)
-          } else {
-            side.insertBefore(newItem,oldItem.nextSibling)
+          this.delNavigation(sumList,oneNav,index,this.removeRightNavigationList,'delRight')
+          break;
+        case 'foot':
+           oneNav = this.footNavigationList[index]
+          if(this.leftNav && this.rightNav){
+            sumList = this.sideNavigationList.concat(this.rightNavigationList)
+          }else if(this.leftNav && !this.rightNav){
+            sumList = this.sideNavigationList
+          }else if(!this.leftNav && this.rightNav){
+            sumList = this.rightNavigationList
           }
-          that.sortSideNavigationList(event)
-        },
-        onEnd: function(event){
-          that.navText = true
-        }
-      });
+          this.delNavigation(sumList,oneNav,index,this.removeFootNavigationList,'delFoot')
+          break;
+      }
     },
-    rightDrop(){
-      let that = this;
-      let right = document.getElementById('rightNavList')
-      Sortable.create(right, {
-        sort: true,
-        animation: 150,
-        direction: 'vertical',
-        delay: 0,
-        onStart: function(event){
-          that.navText = false
-          if(!this.navText){
-            let delIcon = document.getElementById('delIcon')
-            delIcon.ondragover= function (ev) {
-              ev.preventDefault()
-            }
-          }
-          delIcon.ondrop=function (ev) {
-            let oneNav = that.rightNavigationList[event.oldIndex]
-            let sumList = []
-            if(that.leftNav && that.footNav){
-              sumList = that.footNavigationList.concat(that.sideNavigationList)
-            }else if(that.leftNav && !that.footNav){
-              sumList = that.sideNavigationList
-            }else if(!that.leftNav && that.footNav){
-              sumList = that.footNavigationList
-            }
-            that.delNavigation(sumList,oneNav,event.oldIndex,that.removeRightNavigationList,'delRight')
-          }
-        },
-        onUpdate:function(event){
-          let newIndex = event.newIndex,
-            oldIndex = event.oldIndex
-          let  newItem = right.children[newIndex]
-          let  oldItem = right.children[oldIndex]
-          // 先删除移动的节点
-          right.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if(newIndex > oldIndex) {
-            right.insertBefore(newItem,oldItem)
-          } else {
-            right.insertBefore(newItem,oldItem.nextSibling)
-          }
-          that.sortRightNavigationList(event)
-        },
-        onEnd: function(event){
-          that.navText = true
+    /**删除功能的方法
+     * sumList 其他导航栏的数据
+     * oneNav 需要删除的功能
+     * index 当前功能的索引
+     * delMethod  store里删除的方法
+     * type 删除类型
+     */
+    delNavigation(sumList,oneNav,index,delMethod,type){
+      this.delMainItem = []
+      if(!this.mainNavList.find(item => item.name === oneNav.name)){
+        delMethod(index)
+      }else{
+        if(sumList.find(item => item.name === oneNav.name)){
+          delMethod(index)
+        }else{
+          this.promptModal = true
+          this.delNavType = type
+          this.delMainIndex = index
+          this.delMainItem.push(oneNav)
         }
-      });
+      }
     },
     deleteDropList(index){
       this.dropList.splice(index,1)
@@ -719,6 +592,7 @@ export default {
        this.activeRightItem = 0;
        this.nowClassify = item.name;
     },
+    //获取添加导航的数据
     async loadDeskIconApps () {
      const lightApps=await appModel.getAllApps()
       for (let i = 0; i < lightApps.length; i++) {
@@ -743,22 +617,30 @@ export default {
     closeAdd(){
       this.editFlag = false;
     },
+    //添加导航功能
     clickRightListItem(item,index){
       this.activeRightItem = index
       this.editFlag = false;
       if( this.selectNav === 'foot'){
         if(item instanceof Array){
           for (let i = 0; i < item.length; i++) {
+            //判断功能是否已添加
             if(!this.footNavigationList.find(j => j.name===item[i].name)){
               this.mainNav(item[i],'add')
               item[i].addNav = true
               this.setFootNavigationList(item[i])
+            }else{
+              message.info('已添加',1)
             }
           }
           this.dropList=[];
         } else{
           for (let i = 0; i < this.footNavigationList.length; i++) {
-            if(this.footNavigationList[i].name ===item.name)return
+            //判断功能是否已添加
+            if(this.footNavigationList[i].name ===item.name){
+              message.info('已添加',1)
+              return
+            }
           }
           this.mainNav(item,'add')
           item.addNav = true
@@ -775,12 +657,17 @@ export default {
               this.mainNav(item[i],'add')
               item[i].addNav = true
               this.setSideNavigationList(item[i])
+            }else{
+              message.info('已添加',1)
             }
           }
             this.dropList=[];
           } else{
             for (let i = 0; i < this.sideNavigationList.length; i++) {
-              if(this.sideNavigationList[i].name ===item.name)return
+              if(this.sideNavigationList[i].name ===item.name){
+                message.info('已添加',1)
+                return
+              }
             }
             this.mainNav(item,'add')
             item.addNav = true
@@ -797,12 +684,17 @@ export default {
               this.mainNav(item[i],'add')
               item[i].addNav = true
               this.setRightNavigationList(item[i])
+            }else{
+              message.info('已添加',1)
             }
           }
             this.dropList=[];
           } else{
             for (let i = 0; i < this.rightNavigationList.length; i++) {
-              if(this.rightNavigationList[i].name ===item.name)return
+              if(this.rightNavigationList[i].name ===item.name){
+                message.info('已添加',1)
+                return
+              }
             }
             this.mainNav(item,'add')
             item.addNav = true
@@ -839,11 +731,9 @@ export default {
 </style>
 <style lang="scss" scoped>
 .box-content{
-  // background: red;
   height: 100%;
   .box-center{
     height: 70%;
-    // background: pink;
     margin:32px 12px 14px;
     display: flex;
     align-items: center;
@@ -865,7 +755,6 @@ export default {
       width: 90%;
       // width: 1056px;
       margin: 0 10px;
-      // background: yellow;
       height: 100%;
       display: flex;
       justify-content: center;
@@ -894,9 +783,6 @@ export default {
   width: 512px;
   display: flex;
   flex-direction: column;
-  // background: greenyellow;
-  // justify-content: center;
-  // align-items: center;
   >span:nth-child(1),
   >span:nth-child(3){
     display: block;
@@ -944,8 +830,6 @@ export default {
     justify-content: center;
     align-items: center;
     border-radius: 16px;
-    // background: rgba(0, 0, 0, 0.5);
-    // background: rgba(255,255,255,0.50);
   }
 }
 .nav-toggle{
@@ -991,7 +875,6 @@ export default {
     color: white;
     >div{
       padding: 8px 50px;
-      // background: rgba(255, 255, 255, 0.6);
       border-radius: 12px;
       background: rgba(0, 0, 0, 0.30);
     }
@@ -1090,7 +973,6 @@ export default {
         }
         .active{
           border-radius: 12px;
-          // background: rgba(42, 42, 42, 1);
         }
       }
 
