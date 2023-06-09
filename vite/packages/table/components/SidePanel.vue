@@ -1,8 +1,8 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <div class="box common-panel s-bg py-2 scroll-content"
-    style=" background: var(--primary-bg); z-index: 999;width: 6em;max-height: 100%;overflow: hidden;" ref="sideContent"
+  <div class="box common-panel s-bg  scroll-content"
+    style=" background: var(--primary-bg); z-index: 999;width: 6em;max-height: 100%;overflow: hidden;padding-top: 0;padding-bottom: 0" ref="sideContent"
     @contextmenu.stop="showMenu">
     <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
       <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">

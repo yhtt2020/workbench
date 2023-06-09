@@ -4,12 +4,12 @@
       <div class="flex flex-col justify-between  ">
         <div class="flex justify-between s-item p-3 rounded-t-md flex-col">
           <div class="flex items-center">
-            <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
-            <span class="ml-2">{{clip.title}}</span>
+            <Icon :icon="type.icon" style="font-size: 1.5em;"></Icon>
+            <span class="ml-2">{{type.title}}</span>
           </div>
           <div class="flex justify-between pt-1">
-            <span class="clip-time">{{clip.time}}</span>
-            <span class="clip-time">{{clip.capacity}}</span>
+            <span class="clip-time">{{clip.timeText}}</span>
+            <span class="clip-time">{{capacity}}</span>
           </div>
         </div>
         <div class="flex items-center clip-text-center justify-center pt-6 pb-10">
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="h-12 flex p-1 s-item rounded-b-md">
-          <div v-for="(item,index) in textType"  :class="defaultTextType.name === item.name ? 's-item':''" 
+          <div v-for="(item,index) in textType"  :class="defaultTextType.name === item.name ? 's-item':''"
           class="py-3 rounded-lg pointer w-1/2 flex items-center justify-center" @click.stop="selectItem(item,index)"
          >
            <Icon :icon="item.icon" style="font-size: 1.25em;"></Icon>
@@ -74,11 +74,11 @@
         </div>
         <div class="flex justify-between pt-1">
           <span class="clip-time">{{clip.time}}</span>
-          <span class="clip-time">{{clip.capacity}}</span>
+          <span class="clip-time">{{capacity}}</span>
         </div>
       </div>
       <div class="flex-1 flex items-center justify-center  px-5 py-14">
-        <div v-if="clip.picIcon" class="flex flex-col items-center justify-center"> 
+        <div v-if="clip.picIcon" class="flex flex-col items-center justify-center">
           <Icon :icon="clip.picIcon" style="font-size: 9.15em;"></Icon>
           <span class="pt-6">{{clip.name}}</span>
         </div>
@@ -106,17 +106,17 @@
     <template v-if="clip.type === 'image' && imageShow === false">
       <div class="flex flex-col  rounded-t-md s-item px-5 py-3 mb-3">
         <div class="flex items-center">
-          <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
-          <span class="ml-2">{{clip.title}}</span>
+          <Icon :icon="type.icon" style="font-size: 1.5em;"></Icon>
+          <span class="ml-2">{{type.title}}</span>
         </div>
         <div class="flex justify-between pt-1">
-          <span class="clip-time">{{clip.time}}</span>
+          <span class="clip-time">{{clip.timeText}}</span>
           <span class="clip-time">{{clip.capacity}}</span>
         </div>
       </div>
       <div class="flex-1 px-5 py-14 mb-3">
-        <div style="width:100%;height:185px;" class="rounded-lg flex flex-col " v-if="clip.imgUrl">
-          <img :src="clip.imgUrl" alt="" class="rounded-lg w-full h-full  object-cover"  >
+        <div style="width:100%;height:185px;" class="rounded-lg flex flex-col " v-if="img">
+          <a-image :src="img" alt="" class="rounded-lg w-full h-full  object-cover"  ></a-image>
           <span class="pt-5 text-center">{{ clip.name }}</span>
         </div>
       </div>
@@ -188,6 +188,7 @@
 <script>
 import codemirror from 'vue-codemirror/src/codemirror.vue'
 import HorzontanlPanelIcon from './HorzontanlPanelIcon.vue'
+import {toRaw} from "vue";
 
 export default {
   components: { codemirror,HorzontanlPanelIcon },
@@ -199,6 +200,8 @@ export default {
   },
   data(){
     return{
+      type:{},
+      img:{},
       textShow:false,
       fileShow:false,
       imageShow:false,
@@ -268,6 +271,11 @@ export default {
   },
 
   watch:{
+    'clip':{
+      handler(){
+        this.refresh()
+      }
+    },
     'defaultTextType':{
       handler(){
         this.defaultTextType = this.defaultTextType
@@ -275,12 +283,40 @@ export default {
       immediate:true,
     },
   },
-  
+
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
+
   },
 
+
   methods:{
+    refresh(){
+      this.clip.timeText=tsbApi.util.friendlyDate(this.clip.time)
+      this.type=this.getType(this.clip.type)
+      this.capacity=this.clip.content.length+'个字符'
+      if(this.clip.type==='image'){
+        console.log('是图片，要转换')
+        this.img=toRaw(this.clip.content).toDataURL()
+        console.log(this.img,'图片地址')
+      }
+
+    },
+    getType(type) {
+      switch (type) {
+        case 'text':
+          return {
+            icon: 'text-align-left',
+            title: '文本'
+          }
+        case 'image':
+          return {
+            icon:'image',
+            title:'图片'
+          }
+      }
+
+    },
     textButton(){
       this.textShow = true
       this.fileShow = true
@@ -350,7 +386,6 @@ export default {
       if(e.ctrlKey && e.keyCode === 13){
         console.log('打开资源管理器');
       }
-    },
     // 点击视频显示操作页面
     openVideoControls(){
       this.videoShow = true
