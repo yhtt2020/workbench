@@ -141,6 +141,47 @@
         </div>
       </vue-custom-scrollbar>
     </template>
+
+    <template v-if="clip.type === 'video' && videoShow === false">
+      <div class="flex flex-col  rounded-t-md s-item px-5 py-3 mb-3">
+        <div class="flex items-center">
+          <Icon :icon="clip.icon" style="font-size: 1.5em;"></Icon>
+          <span class="ml-2">{{clip.title}}</span>
+        </div>
+        <div class="flex justify-between pt-1">
+          <span class="clip-time">{{clip.time}}</span>
+          <span class="clip-time">{{clip.capacity}}</span>
+        </div>
+      </div>
+      <div class="flex-1 px-5 py-14 mb-3" @click="openVideoControls">
+        <div style="width:100%;height:185px;" class="rounded-lg relative flex flex-col " v-if="clip.iurl">
+          <img :src="clip.iurl" alt="" class="rounded-lg w-full h-full  object-cover"  >
+          <div class="bf-button pointer s-item rounded-full">
+            <Icon icon="bofang" style="font-size: 4em;"></Icon>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template v-else-if="clip.type === 'video' && videoShow === true">
+      <vue-custom-scrollbar :settings="settingsScroller" style="height:398px;">
+        <div class="px-4 flex flex-col mt-2.5">
+          <div class="w-full flex items-center  justify-between mb-3">
+            <div @click="backClip" class="s-item rounded-lg h-12  px-4 py-3 flex items-center button-active pointer justify-center">
+              <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+            </div>
+            <div class="py-3 flex items-center rounded-lg ml-3 w-40">
+              <span>操作</span>
+            </div>
+          </div>
+          <div v-for="item in imgCopyList" @click="defaultClickClip(item)" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+            <span>{{item.title}}</span>
+            <span>{{item.intr}}</span>
+          </div>
+        </div>
+      </vue-custom-scrollbar>
+    </template>
+
   </div>
 </template>
 
@@ -163,6 +204,7 @@ export default {
       imageShow:false,
       previewShow:false,
       codeShow:false,
+      videoShow:false,
       firstSwitch:true,
       copyList:[
         {title:'复制',intr:'Ctrl + C'},
@@ -249,6 +291,7 @@ export default {
       this.imageShow = false
       this.fileShow = false
       this.codeShow = false
+      this.videoShow = false
     },
     defaultClickClip(item){
       this.item = item
@@ -307,7 +350,11 @@ export default {
       if(e.ctrlKey && e.keyCode === 13){
         console.log('打开资源管理器');
       }
-    }
+    },
+    // 点击视频显示操作页面
+    openVideoControls(){
+      this.videoShow = true
+    },
   }
 }
 </script>
@@ -325,7 +372,6 @@ export default {
 :deep(.ps__thumb-y){
   display: none !important;
 }
-
 .clip-time{
   font-family: PingFangSC-Medium;
   font-size: 14px;
@@ -350,5 +396,11 @@ export default {
 .px-13{
   padding-left:14px;
   padding-right: 14px;
+}
+.bf-button{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 </style>

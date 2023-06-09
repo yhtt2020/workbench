@@ -114,3 +114,51 @@ export const fileList = [
     type:'file'
   }, 
 ]
+
+export const videoList = [
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/energy-field-74933.mp4',
+    iurl:'https://up.apps.vip/lively/energy-field-74933.jpg',type:'video',
+    time:'1分钟前',capacity:'38.0MB',name:'占位视频',
+  },
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/ink-67358.mp4',
+    iurl:'https://up.apps.vip/lively/ink-67358.jpg',type:'video',
+    capacity:'141MB',time:'5分钟前',name:'占位视频',
+  }, 
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/mylivewallpapers.com-Tropical-Waterfall.mp4',
+    iurl:'https://up.apps.vip/lively/mylivewallpapers.com-Tropical-Waterfall.jpg',type:'video',
+    capacity:'123KB',time:'2小时前',name:'占位视频',
+  },
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/energy-field-74933.mp4',
+    iurl:'https://up.apps.vip/lively/energy-field-74933.jpg',type:'video',
+    time:'1分钟前',capacity:'38.0MB',name:'占位视频',
+  },
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/ink-67358.mp4',
+    iurl:'https://up.apps.vip/lively/ink-67358.jpg',type:'video',
+    capacity:'141MB',time:'5分钟前',name:'占位视频',
+  }, 
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/mylivewallpapers.com-Tropical-Waterfall.mp4',
+    iurl:'https://up.apps.vip/lively/mylivewallpapers.com-Tropical-Waterfall.jpg',type:'video',
+    capacity:'123KB',time:'2小时前',name:'占位视频',
+  },
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/energy-field-74933.mp4',
+    iurl:'https://up.apps.vip/lively/energy-field-74933.jpg',type:'video',
+    time:'1分钟前',capacity:'38.0MB',name:'占位视频',
+  },
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/ink-67358.mp4',
+    iurl:'https://up.apps.vip/lively/ink-67358.jpg',type:'video',
+    capacity:'141MB',time:'5分钟前',name:'占位视频',
+  }, 
+  {
+    title:'视频',icon:'video',url:'https://up.apps.vip/lively/mylivewallpapers.com-Tropical-Waterfall.mp4',
+    iurl:'https://up.apps.vip/lively/mylivewallpapers.com-Tropical-Waterfall.jpg',type:'video',
+    capacity:'123KB',time:'2小时前',name:'占位视频',
+  }
+]

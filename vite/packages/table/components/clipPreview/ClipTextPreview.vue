@@ -23,6 +23,10 @@
               </div>
             </div>
 
+            <div v-if="textPreview.type === 'video'" class="w-full  p-3 rounded-lg flex items-center justify-center">
+              <div id="clip-video" class="rounded-lg"></div>
+            </div>
+
             <div class="w-full flex items-center justify-center px-3">
               <div class="h-12 flex items-center justify-center" v-if="textPreview.type === 'text'">
                 <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText" class="left-panel"></HorzontanlPanelIcon>
@@ -58,7 +62,7 @@
               <span class="preview-type">{{item.intr}}</span>
             </div>
           </div>
-        </div>
+          </div>
           <div class="right-preview h-full flex flex-col justify-between pl-6"  v-if="textPreview.type === 'image'">
             <div class="flex flex-col">
               <div class="flex item-center justify-between mb-3">
@@ -93,6 +97,40 @@
               </div>
             </div>
           </div>
+          <div class="right-preview h-full flex flex-col justify-between pl-6" v-if="textPreview.type === 'video'">
+            <div class="flex flex-col">
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">名称</span>
+                <span class="preview-type">{{textPreview.name}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">类型</span>
+                <span class="preview-type">{{textPreview.title}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">格式</span>
+                <span class="preview-type">{{ textPreview.url.slice(-3).toUpperCase()}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">时间</span>
+                <span class="preview-type">{{textPreview.time}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">大小</span>
+                <span class="preview-type">{{textPreview.capacity}}</span>
+              </div>
+              <div class="flex flex-col item-center justify-between mb-3">
+                <span class="preview-type mb-2">路径</span>
+                <span class="preview-type break-words break-normal" style="max-width: 352px;">{{textPreview.url}}</span>
+              </div>
+            </div>
+            <div>
+              <div v-for="item in imageCopy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+                <span class="preview-text">{{item.title}}</span>
+                <span class="preview-type">{{item.intr}}</span>
+              </div>
+            </div>
+          </div>
         </vue-custom-scrollbar>
         
       </div>
@@ -111,6 +149,7 @@
 import codemirror from 'vue-codemirror/src/codemirror.vue';
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue';
 import HorizontalDrawer from '../HorizontalDrawer.vue';
+import Player from 'xgplayer/dist/simple_player'
 export default {
   components:{
     codemirror,
@@ -180,9 +219,19 @@ export default {
       },
     }
   },
+
+  updated(){
+    if(this.textPreview.type === 'video'){
+      this.loadVideo()
+    }
+  },
+
   methods:{
     closePreview(){
       this.$emit('closeText',false)
+      if (window.$xgplayer) {
+        window.$xgplayer.destroy()
+      }
     },
     openCateDrawer(){
       this.$refs.regionDrawer.openDrawer()
@@ -190,10 +239,23 @@ export default {
     getArea(v){
       this.defaultCate = v
       this.clipOptions.mode = v.id
-    }
+    },
+    loadVideo(){
+      let url = this.textPreview.url
+      window.$xgplayer = new Player({
+        id: 'clip-video',
+        url: url,
+        // fitVideoSize: 'fixWidth',
+        fitVideoSize: 'fixWidth',
+        // width:300,
+        // height:300,
+        // loop: true,
+        fluid: true,
+        videoInit: true,
+        autoplay: true
+      })
+    },
   },
-
-
 
   watch:{
     'defaultClipText':{
