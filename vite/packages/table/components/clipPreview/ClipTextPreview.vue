@@ -4,7 +4,7 @@
       <div class="flex h-full items-center justify-between p-5">
         <div class="left-preview flex flex-col h-full justify-between">
             <div>
-              <div @click="closePreview"  class="w-12 h-12 no-drag close-button button-active  s-item  flex pointer items-center justify-center rounded-lg">
+              <div @click="closePreview"  class="w-12 h-12 no-drag button-active  s-item  flex pointer items-center justify-center rounded-lg">
                 <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
               </div> 
             </div>
@@ -16,16 +16,16 @@
                <codemirror :value="textPreview.content" :options="clipOptions" ></codemirror>
               </div>
             </div>
-
-            <div v-if="textPreview.type === 'image'" style="height: 100%;" class="w-full flex items-center justify-center">
-              <div  class="rounded-lg image-content" style="height: 80%;">
+            
+            <div v-if="textPreview.type === 'image'" class="w-full flex items-center justify-center">
+              <div  class="rounded-lg image-content p-3">
                 <img :src="textPreview.imgUrl" class="rounded-lg" style="width:100%; height: 100%;object-fit: cover;" alt="">
               </div>
             </div>
 
             <div class="w-full flex items-center justify-center px-3">
-              <div class="h-12 flex" v-if="textPreview.type === 'text'">
-                <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText"></HorzontanlPanelIcon>
+              <div class="h-12 flex items-center justify-center" v-if="textPreview.type === 'text'">
+                <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText" class="left-panel"></HorzontanlPanelIcon>
                 <div class="ml-3 py-3 px-9 flex button-active items-center rounded-lg s-item pointer"
                  v-if="defaultClipText.name === 'codeBlock'"
                  @click="openCateDrawer"
@@ -145,10 +145,10 @@ export default {
       ],
       clipText:[
         {
-          title:'纯文本',name:'text'
+          title:'纯文本',name:'text',icon:'ziyuan'
         },
         {
-          title:'代码块',name:'codeBlock'
+          title:'代码块',name:'codeBlock',icon:'daima'
         }
       ],
       defaultClipText:{title:'纯文本',name:'text'}, 
@@ -192,6 +192,9 @@ export default {
       this.clipOptions.mode = v.id
     }
   },
+
+
+
   watch:{
     'defaultClipText':{
       handler(){
@@ -270,16 +273,31 @@ export default {
 }
 
 .image-content{
-  
+  max-width: 800px;
 }
 
 
-@media screen and (max-width:800px) {
- /*
-  .image-content{
-    width:calc(100% / 2);
-    height:calc(100% / 2);
+@media screen and (max-width:840px) {
+  .left-preview{
+    width: calc(100% / 2);
   }
- **/
+  .left-panel{
+    width: calc(100% / 1.75);
+  }
+  .image-content{
+    width: calc(100% / 1);
+  }
+}
+
+@media screen and (min-width:840px)  and (max-width: 1140px) {
+  .image-content{
+    width: calc(100% / 1);
+  }
+}
+
+@media screen and (min-width:1140px)  and (max-width: 1240px) {
+  .image-content{
+    width: calc(100% / 1.36);
+  }
 }
 </style>
