@@ -21,7 +21,7 @@
         </a-result>
       </div>
     </div>
-    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+    <vue-custom-scrollbar  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
       style="position: relative; border-radius: 8px; width: 100%; height: 100%">
       <div style="
           white-space: nowrap;
@@ -31,7 +31,7 @@
           align-items: center;
           align-content: center;
         " :style="{ 'padding-top': this.settings.marginTop + 'px' }">
-        <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
+        <vuuri  v-if="currentDesk.cards && !hide" :get-item-margin="() => {
             return settings.cardMargin + 'px';
           }
           " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
@@ -91,22 +91,26 @@
           <div><span>清空卡片</span></div>
         </div>
       </a-col>
+<!--      <a-col>-->
+<!--        <div @click="showAddDeskForm" class="btn">-->
+<!--          <Icon style="font-size: 3em" icon="desktop"></Icon>-->
+<!--          <div><span>添加桌面</span></div>-->
+<!--        </div>-->
+<!--      </a-col>-->
+<!--      <a-col>-->
+<!--        <div @click="delDesk" class="btn">-->
+<!--          <Icon style="font-size: 3em" icon="shanchu"></Icon>-->
+<!--          <div><span>删除桌面</span></div>-->
+<!--        </div>-->
+<!--      </a-col>-->
       <a-col>
-        <div @click="showAddDeskForm" class="btn">
-          <Icon style="font-size: 3em" icon="desktop"></Icon>
-          <div><span>添加桌面</span></div>
-        </div>
-      </a-col>
-      <a-col>
-        <div @click="delDesk" class="btn">
-          <Icon style="font-size: 3em" icon="shanchu"></Icon>
-          <div><span>删除桌面</span></div>
-        </div>
-      </a-col>
-      <a-col>
-        <div @click="hideDesk" class="btn">
+        <div v-if="!hide" @click="hideDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
           <div><span>隐藏桌面</span></div>
+        </div>
+        <div v-else @click="showDesk" class="btn">
+          <Icon style="font-size: 3em" icon="yanjing"></Icon>
+          <div><span>显示桌面</span></div>
         </div>
       </a-col>
     </a-row>
@@ -152,6 +156,9 @@ import Clock from "../widgets/Clock.vue";
 import CountdownDay from "../widgets/CountdownDay.vue";
 import Notes from '../widgets/note/index.vue'
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
+import {message, Modal} from "ant-design-vue";
+import {mapWritableState} from "pinia";
+import {appStore} from "../../store";
 export default {
   name: 'Desk',
   components: {
@@ -209,8 +216,12 @@ export default {
   mounted () {
     console.log(this.currentDesk.cards)
   },
+  computed: {
+    ...mapWritableState(appStore, ['fullScreen']),
+  },
   data() {
     return {
+      hide:false,
       key:Date.now(),
       menuVisible: false,
       visibleAdd: false,
@@ -226,6 +237,39 @@ export default {
     }
   },
   methods: {
+    toggleEditing() {
+      this.editing = !this.editing;
+      if (this.editing) {
+        message.info("您可以直接拖拽图标调整位置，支持跨组调整");
+      } else {
+        message.info("已关闭拖拽调整");
+      }
+      this.menuVisible = false;
+      this.key = Date.now();
+    },
+    hideDesk() {
+      this.hide = !this.hide;
+      this.menuVisible = false;
+    },
+    showDesk() {
+      this.hide = !this.hide;
+      this.menuVisible = false;
+    },
+    clear() {
+      this.menuVisible = false;
+      let desk = this.currentDesk;
+      if (desk) {
+        Modal.confirm({
+          centered: true,
+          content: "清空当前桌面的全部卡片？此操作不可还原。",
+          onOk: () => {
+            desk.cards = [];
+            this.menuVisible = false;
+          },
+          okText: "清空卡片",
+        });
+      }
+    },
     newAddCard() {
       this.visibleAdd = true;
       this.menuVisible = false;
