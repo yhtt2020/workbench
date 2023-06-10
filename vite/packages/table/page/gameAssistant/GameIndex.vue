@@ -30,7 +30,7 @@
       <div class="s-bg p-5 rounded-md" style="margin: auto;width: 400px;margin-top: 40px">
         <p>
           <a-image class="rounded-md" :preview="false" :src="getCover(selectDeskGame.appid)"></a-image>
-          <div class="mt-3 mb-3 text-lg font-bold">{{ selectDeskGame.name }}-{{ selectDeskGame.appid }}</div>
+          <div class="mt-3 mb-3 text-lg font-bold">{{ selectDeskGame.chineseName }}-{{ selectDeskGame.appid }}</div>
           此游戏还没有创建桌面，当您为游戏单独创建桌面后，游戏运行中，会自动为您切换至此桌面。
           点击下方按钮为此游戏创建独立桌面。
         </p>
