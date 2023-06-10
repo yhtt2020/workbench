@@ -1,7 +1,11 @@
 <template>
   <div class="flex items-center clip-container justify-between pr-5 mx-4">
     <div class="flex">
+      <!-- tab切换开始 -->
       <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
+      <!-- tab切换结束 -->
+
+      <!-- 导航栏筛选开始 -->
       <TabSwitching :navList="cutType" v-model:activeType="defaultCutType"></TabSwitching>
       <div class="all-button" style="display: none;">
         <div class="flex items-center s-bg button-active p-3 pointer rounded-md mr-3" @click="openClipType">
@@ -9,7 +13,11 @@
           <span class="ml-1">{{ defaultCutType.title }}</span>
         </div>
       </div>
+      <!-- 导航栏筛选结束 -->
+
     </div>
+
+    <!-- 搜索按钮和设置按钮开始 -->
     <div class="flex">
       <div @click="clipSearch"
            class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
@@ -19,17 +27,22 @@
         <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
+     <!-- 搜索按钮和设置按钮结束 -->
+
   </div>
-  <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                        class="mx-4 my-2 py-4">
+
+  <!-- 剪贴板列表展示区域开始 -->
+  <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mx-4 my-2 py-4">
     <div v-if="defaultClipType.name === 'collect'">
       <div class="flex items-center justify-center">
         <a-empty :image="simpleImage"/>
       </div>
     </div>
-    <router-view v-else></router-view>
+    <AllClipFile :clipList="clipContent" v-else></AllClipFile>
   </vue-custom-scrollbar>
+  <!-- 剪贴板列表展示区域结束 -->
 
+  <!-- 设置右侧弹窗开始 -->
   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
     <div class="flex items-center justify-between mb-6">
       <div class="flex flex-col">
@@ -50,18 +63,21 @@
     <div class="w-full flex items-center plain-font set-button pointer justify-center rounded-lg py-3">清除剪贴板记录
     </div>
   </a-drawer>
+  <!-- 设置右侧弹窗结束 -->
+
 
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
 
+  <!-- 搜索右侧抽屉开始 -->
   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
-    <!--  v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchVideoData" placeholder="搜索"  style="
-    border-radius: 12px;background: rgba(42, 42, 42, 0.6);" v-if="drawerType==='search'" -->
     <a-input placeholder="搜索" class="no-drag h-10 w-full" v-model:value="searchData">
       <template #prefix>
         <Icon icon="sousuo"></Icon>
       </template>
     </a-input>
   </a-drawer>
+ <!-- 搜索右侧抽屉结束 -->
+
 </template>
 
 <script>
@@ -69,9 +85,14 @@ import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 import TabSwitching from '../../components/TabSwitching.vue';
+import AllClipFile from './allClipFile.vue';
 import {Empty} from 'ant-design-vue';
 import {mapWritableState,mapActions} from "pinia";
 import {clipboardStore} from "../../store/clipboard";
+import _ from 'lodash-es'
+
+// 引入模拟数据 后期对接数据需要删除 以免影响测试
+import { fileList } from '../../js/data/clipboardData';
 
 export default {
   name: 'Clipboard',
@@ -79,34 +100,43 @@ export default {
     HorzontanlPanelIcon,
     TabSwitching,
     HorizontalPanel,
-    HorizontalDrawer
+    HorizontalDrawer,
+    AllClipFile
   },
   data() {
     return {
+      // 历史和收藏切换数组
       clipType: [
         {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
         {title: '收藏', icon: 'star', name: 'collect'}
       ],
+      // 历史和收藏切换数组默认值
       defaultClipType: {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
+      // 导航栏筛选分类
       cutType: [
-        {title: '全部', icon: 'appstore', name: '全部', textname: 'all', typeName: 'allClip'},
-        {title: '文本', icon: 'text-align-left', name: '文本', textname: 'text', typeName: 'textClip'},
-        {title: '图片', icon: 'image', name: '图片', textname: 'image', typeName: 'imageClip'},
-        {title: '文件', icon: 'file', name: '文件', textname: 'file', typeName: 'fileClip'},
-        {title: '视频', icon: 'video', name: '视频', textname: 'video', typeName: 'videoClip'},
-        {title: '音频', icon: 'erji1', name: '音频', textname: 'audio', typeName: 'audioClip'}
+        {title: '全部', icon: 'appstore', typename: 'all',name:'全部'},
+        {title: '文本', icon: 'text-align-left', typename: 'text',name:'文本'},
+        {title: '图片', icon: 'image', typename: 'image',name:'图片'},
+        {title: '文件', icon: 'file', typename: 'file',name:'文件'},
+        {title: '视频', icon: 'video', typename: 'video',name:'视频'},
+        {title: '音频', icon: 'erji1', typename: 'audio',name:'音频'}
       ],
-      defaultCutType: {title: '全部', icon: 'appstore', name: 'all'},
+      // 导航栏筛选分类默认值
+      defaultCutType: {title: '全部', icon: 'appstore', name: '全部',typename:'all'},
+      // 控制设置抽屉打开
       setShow: false,
-      checkedShow: true,
+
       instruct: 'CTRL + ALT + V',
+
       historyCapacity: [
         {title: '1天', name: 'day'},
         {title: '1周', name: 'week'},
         {title: '1月', name: 'month'},
         {title: '不限制', name: 'unlimited'}
       ],
+
       defaultCapacity: {title: '1天', name: 'day'},
+
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -114,17 +144,41 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+
       simpleImage: '/public/img/test/not-data.png',
+
       drawerVisible: false,
+
       searchData: '' //搜索
     }
   },
   computed: {
-    ...mapWritableState(clipboardStore, ['enable', 'clipboardObserver','items'])
-  },
-  mounted() {
-    this.$router.push({name: 'allClip'})
-    // console.log(this.simpleImage);
+    ...mapWritableState(clipboardStore, ['enable', 'clipboardObserver','items']),
+    clipContent(){
+      switch(this.defaultCutType.typename){
+        case 'all': // 默认全部
+          return this.items;
+        case 'text':   // 筛选文本
+          if(this.items.length !== 0){
+            const list = _.filter(this.items, function(o) { return  o.type === 'text' });
+            return list
+          }
+          break;
+        case 'image':  // 筛选图片
+          if(this.items.length !== 0){
+            const list = _.filter(this.items,function(o) { return  o.type === 'image' })
+            console.log(list);
+            return list
+          }
+          break;
+        case 'file':  // 筛选文件  
+           return fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
+        case 'video': // 筛选视频
+          break;
+        case 'audio': // 筛选音频
+          break;
+      }
+    }
   },
   methods: {
     ...mapActions(clipboardStore,['start','stop','isRunning','prepare']),
@@ -137,7 +191,6 @@ export default {
     },
     getClipItem(v) {
       this.defaultCutType = v
-      this.$router.push({name: v.typeName})
     },
     clipSearch() {
       this.drawerVisible = true
@@ -159,16 +212,15 @@ export default {
           }
         }
       }
-    }
-  },
-  'defaultCutType': {
-    handler() {
-      this.defaultCutType = this.defaultCutType
-      this.$router.push({name: this.defaultCutType.typeName})
     },
-    immediate: true,
+    // 监听导航栏筛选切换
+    'defaultCutType': {
+      handler() {
+        this.defaultCutType = this.defaultCutType
+      },
+      immediate: true,
+    },
   },
-
 }
 </script>
 

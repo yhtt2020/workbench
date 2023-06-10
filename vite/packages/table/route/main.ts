@@ -43,12 +43,6 @@ import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
 import Inspector from "../page/app/Inspector.vue";
 import Clipboard from "../page/clipboard/Clipboard.vue"
-import AllClipFile from "../page/clipboard/allClipFile.vue"
-import TextClip from "../page/clipboard/textClip.vue"
-import ImageClip from "../page/clipboard/imageClip.vue"
-import FileClip from "../page/clipboard/fileClip.vue"
-import VideoClip from "../page/clipboard/videoClip.vue"
-import AudioClip from "../page/clipboard/audioClip.vue"
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
 export default [
@@ -299,38 +293,6 @@ export default [
         path:'/clipboard',
         name:'clipboard',
         component:Clipboard,
-        children:[
-          {
-            path:'',
-            name:'allClip',
-            component:AllClipFile
-          },
-          {
-            path:'',
-            name:'textClip',
-            component:TextClip
-          },
-          {
-            path:'',
-            name:'imageClip',
-            component:ImageClip
-          },
-          {
-            path:'',
-            name:'fileClip',
-            component:FileClip
-          },
-          {
-            path:'',
-            name:'videoClip',
-            component:VideoClip
-          },
-          {
-            path:'',
-            name:'audioClip',
-            component:AudioClip
-          },
-        ]
       }
     ],
   },
