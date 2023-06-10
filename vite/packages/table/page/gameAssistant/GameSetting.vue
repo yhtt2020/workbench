@@ -11,6 +11,26 @@
     </div>
   </div>
   <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+    <Icon style="height: 36px;width: 36px" icon="shijian3dian"></Icon>
+    <div class="flex flex-col ml-4 w-2/3">
+      <span class="text-white">最近游玩的游戏记录</span>
+      <span>清空游玩记录不会删除对应的游戏桌面。</span>
+    </div>
+    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clearRecent">
+      清空记录
+    </div>
+  </div>
+  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+    <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>
+    <div class="flex flex-col ml-4 w-2/3">
+      <span class="text-white">游戏桌面</span>
+      <span>每个游戏的独立桌面</span>
+    </div>
+    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">
+      删除全部桌面
+    </div>
+  </div>
+  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
     <Icon style="height: 36px;width: 36px" icon="position"></Icon>
     <div class="flex flex-col ml-4 w-2/3">
       <span class="text-white">折扣地区</span>
@@ -63,7 +83,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'pinia'
+import {mapState, mapActions, mapWritableState} from 'pinia'
 import { Modal as antModal } from 'ant-design-vue'
 import Modal from '../../components/Modal.vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
@@ -161,10 +181,30 @@ export default {
     console.log(session)
   },
   computed: {
-    ...mapState(steamUserStore, ['steamLoginData', 'userData'])
+    ...mapState(steamUserStore, ['steamLoginData', 'userData']),
+    ...mapWritableState(steamUserStore,['recentGameList','desks'])
   },
   methods: {
     ...mapActions(steamUserStore, ['setSteamLoginData', 'setUserData']),
+    clearRecent(){
+      antModal.confirm({
+        centered:true,
+        content:'确认清空游玩记录？此操作并不会删除对应的游戏桌面。但不可恢复。',
+        onOk:()=>{
+          this.recentGameList=[]
+        }
+      })
+    },
+    removeAllDesk(){
+      antModal.confirm({
+        centered:true,
+        content:'确认删除全部的桌面？此操作非常危险，一旦操作就无法撤销！',
+        onOk:()=>{
+          this.desks={}
+        },
+        okText:'确认删除'
+      })
+    },
     clickBind () {
       if (this.steamLoginData.refreshToken === '') {
         this.modalVisibility = true
