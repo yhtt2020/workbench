@@ -2,7 +2,7 @@
   <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="8">
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
-           v-if="runningGame">
+           v-if="runningGame.appid">
         <a-avatar :size="24" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
       </div>
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic"

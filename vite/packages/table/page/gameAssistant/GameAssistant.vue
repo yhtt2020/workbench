@@ -27,8 +27,8 @@ export default {
       menus: [
         {
           index: 'm',
-          title: '游戏助手',
-          icon: 'game',
+          title: '游戏桌面',
+          icon: 'desktop',
           route:
           {
             name: 'gameIndex'

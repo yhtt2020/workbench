@@ -1,23 +1,35 @@
 <template>
-  <div class="flex flex-row px-5">
-    <a-select
-      placeholder="-"
-      style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="selectDeskId"
-      class="w-60 h-12 rounded-lg mr-3 text-xs s-bg right-nav" size="large" :bordered="false">
-      <a-select-option value="0">
+  <div class="  px-5">
+    <div class="game-tabs flex flex-row mb-3">
+      <div @click="setSelectDeskId('0')" :class="{'tab-active':selectDeskId==='0'}" class="pr-3 game-tab s-bg  ">
+        <icon icon="desktop"></icon>
         主桌面
-      </a-select-option>
-      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>
-    </a-select>
+      </div>
+      <div  :class="{'tab-active':selectDeskId===item.appid}" @click="setSelectDeskId(item.appid)" style="width: 140px;" class="truncate pr-3 game-tab s-bg" v-for="(item,index) in recentGameList.slice(0,3)">
+        <a-avatar class="mr-1" :size="24" :src="getClientIcon(item.appid,item.clientIcon)"></a-avatar>
+        <span class="">{{ item.chineseName }}</span>
+      </div>
+      <div @click="showMore" v-if="recentGameList.length>3" class="game-tab s-bg">
+        <icon icon="gengduo1"></icon>
+        更多
+      </div>
+    </div>
+
+    <!--    <a-select-->
+    <!--      placeholder="-"-->
+    <!--      style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="selectDeskId"-->
+    <!--      class="w-60 h-12 rounded-lg mr-3 text-xs s-bg right-nav" size="large" :bordered="false">-->
+    <!--      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>-->
+    <!--    </a-select>-->
   </div>
   <div class="rounded-xl px-5" style="width: 100%;height: 100%">
     <template v-if="desks[selectDeskGame.appid] || selectDeskId==='0' && desks[selectDeskGame.appid] ">
       <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>
     <div v-else>
-      <div style="margin: auto;width: 400px;margin-top: 40px">
+      <div class="s-bg p-5 rounded-md" style="margin: auto;width: 400px;margin-top: 40px">
         <p>
-          <a-image :preview="false" :src="getCover(selectDeskGame.appid)"></a-image>
+          <a-image class="rounded-md" :preview="false" :src="getCover(selectDeskGame.appid)"></a-image>
           <div class="mt-3 mb-3 text-lg font-bold">{{ selectDeskGame.name }}-{{ selectDeskGame.appid }}</div>
           此游戏还没有创建桌面，当您为游戏单独创建桌面后，游戏运行中，会自动为您切换至此桌面。
           点击下方按钮为此游戏创建独立桌面。
@@ -27,19 +39,22 @@
 
     </div>
   </div>
+  <GameListDrawer :activeId="selectDeskId" :items="recentGameList.slice(3)" @visibleChanged="" @valueChanged="(event)=>{this.selectDeskId=event.appid}" v-model:visible="recentVisible"></GameListDrawer>
+
 </template>
 
 <script>
 import {steamUserStore} from '../../store/steamUser'
 import Desk from '../../components/desk/Desk.vue'
 import {mapWritableState} from 'pinia'
-import {getCover} from "../../js/common/game";
+import {getClientIcon, getCover} from "../../js/common/game";
 import {nanoid} from "nanoid";
+import GameListDrawer from "../../components/game/GameListDrawer.vue";
 
 export default {
-  components: {Desk},
+  components: {GameListDrawer, Desk},
   computed: {
-    ...mapWritableState(steamUserStore, ['desks', 'runningGame', 'recentGameList']),
+    ...mapWritableState(steamUserStore, ['desks', 'runningGame','recentGameList']),
     selectDeskGame() {
       let found = this.recentGameList.find(g => {
         return g.appid === this.selectDeskId
@@ -56,6 +71,7 @@ export default {
   },
   data() {
     return {
+      recentVisible: false,
       selectDeskId: '0',
       currentDesk: {
         cards: [],
@@ -83,13 +99,17 @@ export default {
           }
         }
     }
-    if(this.$route.params['appid']){
+    if (this.$route.params['appid']) {
       console.log('定位')
-      this.selectDeskId=this.$route.params['appid']
+      this.selectDeskId = this.$route.params['appid']
     }
   },
   methods: {
+    getClientIcon,
     getCover,
+    setSelectDeskId(id){
+      this.selectDeskId=id
+    },
     createDesk() {
       this.desks[this.selectDeskGame.appid] = {
         name: this.selectDeskGame.name,
@@ -101,11 +121,32 @@ export default {
           cardMargin: 5//卡片间隙
         }
       }
+    },
+    showMore() {
+      this.recentVisible = true
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.game-tabs {
+  .game-tab {
+    cursor: pointer;
 
+    &.tab-active, &:hover {
+      opacity: 1;
+      font-weight: bold;
+    }
+
+    opacity: 0.5;
+    line-height: 42px;
+    font-size: 15px;
+    padding-left: 20px;
+    min-width: 150px;
+    border-radius: 4px;
+    margin-right: 10px;
+    text-align: center;
+  }
+}
 </style>
