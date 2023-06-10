@@ -58,7 +58,7 @@
 
     <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
         <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
-          <span class="text-more text-white text-base " style="font-weight: 400">{{item.name}}</span>
+          <span class="text-more text-white text-base " style="font-weight: 400">{{item.chineseName}}</span>
           <span :style="showTime?'':'display:none'"  class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
           <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
         </div>
@@ -109,7 +109,7 @@
             <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
           </div>
           <div class="  p-4">
-            <div style="user-select: text" class="text-white" >{{currentSteam.name}} {{currentSteam.appid}}</div>
+            <div style="user-select: text" class="text-white" ><a-avatar :size="24" :src="getClientIcon(this.currentSteam.appid,this.currentSteam.clientIcon)" ></a-avatar> {{currentSteam.chineseName}} {{currentSteam.appid}}</div>
             <div class="flex flex-row flex-wrap w-80">
               <div class="w-1/2 mt-3">上次游玩：{{getDateMyTime(currentSteam.time)}}</div>
               <div class="w-1/2 mt-3">游戏在线玩家数：{{totalTime(currentSteam.online)||'-'}}人</div>
@@ -182,7 +182,7 @@ import {steamUserStore} from "../../store/steamUser";
 import {getDateTime} from '../../util'
 import {runExec} from '../../js/common/exec'
 import {Modal as AntModal} from 'ant-design-vue'
-import {steamProtocol} from "../../js/common/game";
+import {getClientIcon, steamProtocol} from "../../js/common/game";
 export default {
   name: "MyGame",
   components:{
@@ -250,6 +250,7 @@ export default {
     }
   },
   methods:{
+    getClientIcon,
     ...mapActions(steamUserStore,['setGameList','playGame','getClient']),
     goBind(){
       this.$router.push({name:'gameSetting'})

@@ -131,11 +131,22 @@ export const steamUserStore = defineStore("steamUser", {
         //此处映射需要用到的字段，以简化数据库存入，提升性能
         console.log(game)
         let formattedGame = {
+          clientIcon:game.appinfo.common.clienticon,
+          icon:game.appinfo.common.icon,
+          logo:game.appinfo.common.logo,
           name: game.appinfo.common.name,
+          chineseName:game.appinfo.common.name,
           metacritic_score: game.appinfo?.common.metacritic_score,
           appid: game.appinfo.appid,
           time:game.time
         }
+        if(game.appinfo.common.name_localized){
+          if(game.appinfo.common.name_localized.schinese){
+            formattedGame.chineseName= game.appinfo.common.name_localized.schinese
+          }
+        }
+
+
         return formattedGame
       })
     },

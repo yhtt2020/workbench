@@ -7,7 +7,7 @@
       <a-select-option value="0">
         主桌面
       </a-select-option>
-      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.name }}</a-select-option>
+      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>
     </a-select>
   </div>
   <div class="rounded-xl px-5" style="width: 100%;height: 100%">
@@ -82,6 +82,10 @@ export default {
             cardMargin: 5//卡片间隙
           }
         }
+    }
+    if(this.$route.params['appid']){
+      console.log('定位')
+      this.selectDeskId=this.$route.params['appid']
     }
   },
   methods: {

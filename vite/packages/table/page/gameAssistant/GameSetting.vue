@@ -50,8 +50,8 @@
                        bgColor="drawer-item-select-bg"></HorizontalPanel>
       <div class="mt-3 mb-0 pl-2">
         <ExclamationCircleFilled/>
-        请勿使用代理。<a style="color: #c0c0c0" target="_blank"
-                        href="https://www.yuque.com/tswork/mqon1y/kvinb8xbzw2eaa2e">了解技术细节</a></div>
+        网络不好多试几次！ steam302用户请看-><a style="color: #c0c0c0" target="_blank"
+                        href="https://www.yuque.com/tswork/mqon1y/kvinb8xbzw2eaa2e">技术说明</a></div>
       <div class=" mt-3">
         <a-input v-model:value="userName" placeholder="用户名（非邮箱）" class="no-drag rounded-lg h-12 mx-auto"
                  spellcheck="false" style="  width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
@@ -228,7 +228,7 @@ export default {
       if (str.indexOf('invalidpassword') > -1) {
         return '用户名或密码错误'
       } else if (str.indexOf('timedout') > -1) {
-        return '连接超时，请检查网络（不要挂VPN）'
+        return '连接超时，请检查网络（steam302用户请看技术细节，需做额外处理）'
       } else {
         return str
       }

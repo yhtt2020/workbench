@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-row items-center " style="margin-left: 1em">
     <div class="flex flex-row">
-      <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="currentGame.name"
+      <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="currentGame.chineseName"
                 class="w-60 h-12 rounded-lg mr-3 text-xs s-bg right-nav" size="large" :bordered="false">
-        <a-select-option v-for="item in recentGameList" :value="item.name">{{ item.name }}</a-select-option>
+        <a-select-option v-for="item in recentGameList" :value="item.chineseName">{{ item.chineseName }}</a-select-option>
       </a-select>
       <HorizontalPanel :navList="introductionSubList" v-model:selectType="introductionType"></HorizontalPanel>
       <!-- <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="defaultSortType.name"
@@ -155,9 +155,9 @@ export default {
   },
   mounted() {
     if (this.recentGameList.length === 0) {
-      this.currentGame.name = '副屏'
+      this.currentGame.chineseName = '副屏'
     } else {
-      this.currentGame.name = this.recentGameList[0].name
+      this.currentGame.chineseName = this.recentGameList[0].chineseName
     }
     this.loadArticleData()
     this.loadBiliData()
@@ -169,7 +169,7 @@ export default {
         this.refreshData()
       }
     },
-    'currentGame.name': {
+    'currentGame.chineseName': {
       handler() {
         this.refreshData()
       }
@@ -187,7 +187,7 @@ export default {
       this.drawerType = e
       this.drawerVisible = true
       if (this.searchData === '') {
-        this.searchData = this.currentGame.name + ' '
+        this.searchData = this.currentGame.chineseName + ' '
       }
     },
     goBil() {
@@ -198,7 +198,7 @@ export default {
     },
     // 初始化数据
     async loadBiliData(clear = false) {
-      let words=this.encodeBiliWords(this.currentGame.name)
+      let words=this.encodeBiliWords(this.currentGame.chineseName)
       // https://api.bilibili.com/x/web-interface/search/all/v2?page=1&keyword=${encodeURIComponent(this.defaultRunGame.title)}
       const synUrl = `https://search.bilibili.com/all?keyword=${words}&search_source=1`
       // const synUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}`
@@ -282,7 +282,7 @@ export default {
     // 游戏图文攻略数据获取
     async loadArticleData(clear = false,name='') {
       this.gameIntroductionList = []
-      let keywords=name?name:this.currentGame.name
+      let keywords=name?name:this.currentGame.chineseName
       const url = `https://so.gamersky.com/all/handbook?s=${keywords}`
       if (clear) {
         this.gameIntroductionList = []
