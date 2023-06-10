@@ -1,8 +1,12 @@
 <template>
   <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="8">
+      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
+           v-if="runningGame.appid">
+        <a-avatar :size="24" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
+      </div>
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic"
-           v-if="status.music && status.music.title">
+           v-else-if="status.music && status.music.title">
         <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>
@@ -54,6 +58,8 @@ import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
 import WindowController from './WindowController.vue'
+import {steamUserStore} from "../store/steamUser";
+import {getClientIcon, getCover, getIcon} from "../js/common/game";
 
 export default {
   name: 'TopPanel',
@@ -74,6 +80,7 @@ export default {
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
     ...mapWritableState(timerStore,['lockTimeout']),
+    ...mapWritableState(steamUserStore,['runningGame']),
     isMain,
     lockTimeoutDisplay () {
       // if(this.lockTimeout>=60){
@@ -136,6 +143,9 @@ export default {
     this.getTime()
   },
   methods: {
+    getClientIcon,
+    getIcon,
+    getCover,
     ...mapActions(cardStore, ['setAppDate']),
     clearLockTimer () {
       if (this.lockTimer) {
@@ -175,6 +185,14 @@ export default {
         name: 'music',
       })
     },
+    enterGameDesk(appid){
+      this.$router.push({
+        name: 'gameIndex',
+        params:{
+          appid:appid
+        }
+      })
+    }
   },
 }
 </script>

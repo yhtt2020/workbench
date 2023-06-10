@@ -58,7 +58,7 @@
 
     <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
         <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
-          <span class="text-more text-white text-base " style="font-weight: 400">{{item.name}}</span>
+          <span class="text-more text-white text-base " style="font-weight: 400">{{item.chineseName}}</span>
           <span :style="showTime?'':'display:none'"  class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
           <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
         </div>
@@ -109,15 +109,18 @@
             <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
           </div>
           <div class="  p-4">
-            <div style="user-select: text" class="text-white" >{{currentSteam.name}} {{currentSteam.appid}}</div>
+            <div style="user-select: text" class="text-white" ><a-avatar :size="24" :src="getClientIcon(this.currentSteam.appid,this.currentSteam.clientIcon)" ></a-avatar> {{currentSteam.chineseName}} {{currentSteam.appid}}</div>
             <div class="flex flex-row flex-wrap w-80">
               <div class="w-1/2 mt-3">上次游玩：{{getDateMyTime(currentSteam.time)}}</div>
+              <div class="w-1/2 mt-3">游戏在线玩家数：{{totalTime(currentSteam.online)||'-'}}人</div>
               <div class="w-1/2 mt-3">总时长：{{totalTime(currentSteam.time)}}小时</div>
               <div class="w-1/2 mt-3">近两周：{{twoWeekTime(currentSteam.time)}}小时</div>
               <div class="w-1/2 mt-3">M站评分：{{currentSteam.metacritic_score||'无'}}</div>
             </div>
               <div class="flex flex-row justify-between mt-3 text-white">
-                <div  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64" @click="playGame"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+                <div v-if="runningGame.appid!==currentSteam.appid"  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64" @click="playSteamGame(currentSteam)"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
+                <div v-else  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64" @click="stopGame(currentSteam)"><Icon style="" class="mr-2" icon="game"></Icon>停止游戏</div>
+
                 <div class="pointer s-item w-10  flex justify-center items-center rounded-lg ml-4" @click="openDetail"><Icon style=""  icon="folder-open"></Icon></div>
                 <div class="pointer s-item h-10 w-10 flex justify-center items-center rounded-lg ml-4" @click="deleteGame"><Icon style=""   icon="delete"></Icon></div>
             </div>
@@ -179,6 +182,7 @@ import {steamUserStore} from "../../store/steamUser";
 import {getDateTime} from '../../util'
 import {runExec} from '../../js/common/exec'
 import {Modal as AntModal} from 'ant-design-vue'
+import {getClientIcon, steamProtocol} from "../../js/common/game";
 export default {
   name: "MyGame",
   components:{
@@ -230,7 +234,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(steamUserStore, ['gameList','myGameList']),
+    ...mapWritableState(steamUserStore, ['gameList','myGameList','runningGame']),
     ...mapWritableState(appStore,['fullScreen']),
     selectSteamList(){
       if(this.selectName.trim()!==''){
@@ -246,7 +250,8 @@ export default {
     }
   },
   methods:{
-    ...mapActions(steamUserStore,['setGameList']),
+    getClientIcon,
+    ...mapActions(steamUserStore,['setGameList','playGame','getClient']),
     goBind(){
       this.$router.push({name:'gameSetting'})
     },
@@ -272,8 +277,15 @@ export default {
        this.myGameList.unshift(game)
      })
     },
+    stopGame(){
+      steamProtocol._run('stopstreaming')
+      this.runningGame={}
+    },
+    playSteamGame(){
+      this.playGame(this.currentSteam)
+    },
     deleteGame(){
-      runExec('uninstall '+ this.currentSteam.appid)
+     steamProtocol.uninstall(this.currentSteam.appid)
     },
     showMyGameDir(){
       require('electron').shell.showItemInFolder(this.currentGame.path)
@@ -293,13 +305,9 @@ export default {
       })
 
     },
+
     openDetail(){
       runExec('start steam://nav/games/details/' + this.currentSteam.appid)
-    },
-    playGame(){
-      const protocol='steam://run/'+this.currentSteam.appid
-      require('electron').shell.openExternal(protocol)
-     // runExec('"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch '+this.currentSteam.appinfo.appid+' +connect 1.2.3.4:27015')
     },
     getDateMyTime(time){
       if(time){
@@ -342,6 +350,12 @@ export default {
     openSteamDetail(item){
       this.currentSteam = item
       this.steamShow = true
+      this.getClient().getPlayerCount(this.currentSteam.appid,(err,online)=>{
+        if(err){
+          console.error(err)
+        }
+        this.currentSteam.online=online
+      })
     },
     openOtherDetail(item){
       console.log(item)

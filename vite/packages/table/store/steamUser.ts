@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {compareTime, randomData, sendRequest} from '../js/axios/api'
 import {nanoid} from "nanoid";
+import {steamProtocol} from "../js/common/game";
 
 const {steamUser, steamSession, path, https, steamFs} = $models
 let client = new steamUser({
@@ -12,23 +13,9 @@ window.client = client
 // @ts-ignore
 export const steamUserStore = defineStore("steamUser", {
   state: () => ({
-    runningGame:{
-      appid:'0',
-      title:'-',
-      name:'-'
-    },
+    runningGame:{},
     recentGameList:[],
-    desks: [{
-      name: '主桌面',
-      nanoid: nanoid(4),
-      cards: [],
-      settings: {
-        cardZoom: 100,
-        marginTop: 0,
-        cardMargin: 5//卡片间隙
-      }
-    }
-    ],
+    desks: {},
     steamLoginData: {
       accessToken: '',
       refreshToken: '',
@@ -44,6 +31,25 @@ export const steamUserStore = defineStore("steamUser", {
     friendsList: [],
   }),
   actions: {
+    /**
+     * 游玩游戏，并同时同步最近游玩的游戏
+     * @param game
+     */
+    playGame(game){
+      steamProtocol.run(game.appid)
+      this.addRecent(game)
+      this.runningGame=game
+    },
+    addRecent(game){
+      let found=-1
+       found=this.recentGameList.findIndex(g=>{
+        return g.appid===game.appid
+      })
+      if(found>-1){
+        this.recentGameList.splice(found,1)
+      }
+      this.recentGameList.unshift(game)
+    },
     bindClientEvents() {
       console.log('绑定steamClient事件')
       client.on('friendsList', () => {
@@ -60,6 +66,12 @@ export const steamUserStore = defineStore("steamUser", {
         })
       })
     },
+    /**
+     * 返回steam-user的client，可以用于直接操作steam-user
+     */
+    getClient(){
+      return window.client
+    },
     onRefreshToken() {
       console.info('触发steamRefreshToken')
       if (this.steamLoginData.refreshToken === '') {
@@ -74,7 +86,7 @@ export const steamUserStore = defineStore("steamUser", {
         client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) => {
           this.setUserData({name, country})
         });
-        client.gamesPlayed([1172470]);
+        //client.gamesPlayed([1172470]); 模拟正在玩吃鸡
         client.on('appOwnershipCached', () => {
           console.log('游戏库存改变');
           client.getUserOwnedApps(client.steamID.getSteamID64(), {
@@ -119,11 +131,22 @@ export const steamUserStore = defineStore("steamUser", {
         //此处映射需要用到的字段，以简化数据库存入，提升性能
         console.log(game)
         let formattedGame = {
+          clientIcon:game.appinfo.common.clienticon,
+          icon:game.appinfo.common.icon,
+          logo:game.appinfo.common.logo,
           name: game.appinfo.common.name,
+          chineseName:game.appinfo.common.name,
           metacritic_score: game.appinfo?.common.metacritic_score,
           appid: game.appinfo.appid,
           time:game.time
         }
+        if(game.appinfo.common.name_localized){
+          if(game.appinfo.common.name_localized.schinese){
+            formattedGame.chineseName= game.appinfo.common.name_localized.schinese
+          }
+        }
+
+
         return formattedGame
       })
     },
@@ -169,7 +192,7 @@ export const steamUserStore = defineStore("steamUser", {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList'],
+      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList','recentGameList','desks'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
