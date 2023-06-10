@@ -1,50 +1,21 @@
 <template>
     <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef"
-        :desk="desk" style="width: 1000px;" class="box">
-        <div class="controller">
-            <div class="item xt-text">
-                <div class="image" :style="[backgroundState]">
-                    <img src="https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg" alt=""
-                        :style="radiusState" style="width: 56px;height: 56px;">
-                </div>
-                {{ item }}
-            </div>
-        </div>
+        :desk="desk" style="display: none">
+        隐藏不掉 晚点研究
     </Widget>
-
-
+    <div class="item xt-text xt-hover" ref="itemRef" @click="iconClick()">
+        <div class="image" :style="[backgroundState]">
+            <img src="https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg" alt=""
+                :style="radiusState" style="width: 56px;height: 56px;">
+        </div>
+        <div class="title"> {{ customData.titleValue }}</div>
+    </div>
     <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
         <template #title>
             <div class="text-center">设置</div>
+            <div @click="save()">保存</div>
         </template>
-        <div class="text-base" style="margin: 12px 0">图标名称</div>
-        <a-input v-model:value="nameValue" placeholder="想天浏览器" class="xt-bg xt-border" />
-        <div class="text-base" style="margin: 12px 0">图标</div>
-        <div class="parent" style=" justify-content: start;">
-            <div class="image">
-                <img src="" alt="" :style="radiusState" style="width: 100%;height: 100%;background: greenyellow;">
-
-            </div>
-            <div>
-                <p class="xt-text-2" style="font-size: 16px;">推荐图片尺寸：128*128，不能超过2MB</p>
-                <input style="display: none" ref="fileRef" type="file" name="" id="" />
-                <div @click="upIcon()" class="btn no-drag xt-bg">自定义上传</div>
-            </div>
-        </div>
-        <div class="parent">
-            <div class="text-base">图标圆角</div>
-            <a-switch v-model:checked="isRadius"></a-switch>
-        </div>
-        <a-slider v-if="isRadius" v-model:value="radius" :max="50" :step="1" class="no-drag" />
-        <div class="parent">
-            <div class="text-base">图标背景</div>
-            <a-switch v-model:checked="isBackground"></a-switch>
-        </div>
-        <div v-if="isBackground" class="item-box">
-            <div class="item " :key="item" :style="{ background: backgroundColorList[`${'color' + item}`] }"
-                v-for="item  in 15" @click="updateBackground(backgroundColorList[`${'color' + item}`])">
-            </div>
-        </div>
+        <edit ref="editRef" v-bind="editOption"></edit>
     </a-drawer>
 </template>
 
@@ -55,6 +26,11 @@ import { cardStore } from '../../../store/card.ts'
 import { mapActions } from 'pinia'
 
 import { innerImg } from '../../card/hooks/innerImgHook'
+import { message } from 'ant-design-vue'
+// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\js\common\browser.ts
+// '../../js/common/browser
+import browser from "../../../js/common/browser.ts"
+import edit from './edit.vue'
 export default {
     props: {
         customIndex: {
@@ -71,14 +47,12 @@ export default {
     },
     components: {
         Widget,
+        edit
     },
     data() {
         return {
-            isRadius: true,
-            radius: 0,
-            isBackground: true,
-            backgroundColor: "",
-            nameValue: "",
+            titleValue: "",
+            linkValue: "",
             options: {
                 className: 'card small',
                 // title: '图标组件',
@@ -118,46 +92,75 @@ export default {
     mounted() {
         let setData = {}
         // 初始化数据
-        if (this.customData.isRadius == undefined) this.customData.isRadius = true
-        if (this.customData.radius == undefined) this.customData.radius = true
-        if (this.customData.isBackground == undefined) this.customData.isBackground = true
-        if (!this.customData.backgroundColor) setData.backgroundColor = this.backgroundColorList.color1
+        if (this.customData.isRadius == undefined) this.customData.isRadius = false
+        if (this.customData.radius == undefined) this.customData.radius = 0
+        if (this.customData.isBackground == undefined) this.customData.isBackground = false
+        if (this.customData.backgroundColor == undefined) setData.backgroundColor = 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)'
+        if (this.customData.title == undefined) setData.title = ""
+        if (this.customData.link == undefined) setData.link = ""
+        if (this.customData.linkValue == undefined) setData.linkValue = ""
         if (Object.keys(setData)) this.updateCustomData(this.customIndex, setData, this.desk)
-        this.isRadius = this.customData.isRadius
-        this.radius = this.customData.radius
-        this.isBackground = this.customData.isBackground
-        this.backgroundColor = this.customData.backgroundColor
+        this.$refs.itemRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     // 更新数据
     watch: {
-        isRadius(newV, oldV) {
-            this.updateCustomData(this.customIndex, {
-                isRadius: newV,
-            }, this.desk)
+        'customData.isRadius': {
+            handler(isRadius, oldV) {
+                this.updateCustomData(this.customIndex, { isRadius }, this.desk)
+            }
         },
-        radius(newV, oldV) {
-            this.updateCustomData(this.customIndex, {
-                radius: newV,
-            }, this.desk)
+        'customData.radius': {
+            handler(radius, oldV) {
+                this.updateCustomData(this.customIndex, { radius }, this.desk)
+            },
         },
-        isBackground(newV, oldV) {
-            this.updateCustomData(this.customIndex, {
-                isBackground: newV,
-            }, this.desk)
+        'customData.isBackground': {
+            handler(isBackground, oldV) {
+                this.updateCustomData(this.customIndex, { isBackground }, this.desk)
+            },
         },
-        nameValue(newV, oldV) {
-            console.log('newV :>> ', newV);
+        'customData.backgroundColor': {
+            handler(backgroundColor, oldV) {
+                this.updateCustomData(this.customIndex, { backgroundColor }, this.desk)
+            },
+        },
+        'customData.titleValue': {
+            handler(titleValue, oldV) {
+                this.updateCustomData(this.customIndex, { titleValue }, this.desk)
+            },
+        },
+        'customData.link': {
+            handler(link, oldV) {
+                this.updateCustomData(this.customIndex, { link }, this.desk)
+                if (link === '') this.customData.linkValue = ''
+            },
+        },
+        'customData.linkValue': {
+            handler(linkValue, oldV) {
+                this.updateCustomData(this.customIndex, { linkValue }, this.desk)
+            },
         },
     },
     computed: {
         // 动态切换是否使用圆角
         radiusState() {
-            if (this.isRadius) return { borderRadius: this.radius + 'px' }
+            if (this.customData.isRadius) return { borderRadius: this.customData.radius + 'px' }
             else return { borderRadius: '0px' }
         },
         backgroundState() {
-            if (this.isBackground) return { background: this.backgroundColor }
+            if (this.customData.isBackground) return { background: this.customData.backgroundColor }
             else return { background: 'none' }
+        },
+        editOption() {
+            return {
+                isRadius: this.customData.isRadius,
+                radius: this.customData.radius,
+                isBackground: this.customData.isBackground,
+                backgroundColor: this.customData.backgroundColor,
+                titleValue: this.customData.titleValue,
+                link: this.customData.link,
+                linkValue: this.customData.linkValue,
+            }
         }
     },
     methods: {
@@ -173,102 +176,66 @@ export default {
                 event.target.value = ""
             }
         },
-        updateBackground(e) {
-            this.updateCustomData(this.customIndex, {
-                backgroundColor: e,
-            }, this.desk)
-            this.backgroundColor = e
+        handleMenu(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.$refs.homelSlotRef.menuVisible = true
         },
-
+        save() {
+            let editOption = this.$refs.editRef.save()
+            Object.keys(editOption).forEach((k) => {
+                if (k !== undefined) this.customData[k] = editOption[k]
+            })
+            message.success("保存成功")
+            this.settingVisible = false
+        },
+        iconClick() {
+            console.log('this.customData.link :>> ', this.customData.link);
+            if (this.customData.link === "link") browser.openInInner(this.customData.linkValue)
+            else if (this.customData.link === "fast") { }
+            else if (1) { }
+            else {
+                console.log('1 :>> ', 1);
+            }
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.controller {
-    z-index: 99999;
-    border: 1px solid red;
-    // width: 100%;
-    margin: 0 auto;
-    height: 100%;
+.item {
+    width: 134px;
+    height: 96px;
     display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    overflow: auto;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    flex-direction: column;
+    font-size: 14px;
+    cursor: pointer;
 
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
-    .item {
-        border: 1px solid;
-        width: 134px;
-        height: 96px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        margin: 0 1%;
-        margin-bottom: 2%;
-        // padding: 1%;
-        box-sizing: border-box;
-
-        flex-direction: column;
-
-        .image {
-            height: 65px !important;
-            width: 65px !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-        }
-    }
-}
-
-.text-base {
-    font-weight: 500;
-    font-family: PingFangSC-Medium;
-}
-
-
-.parent {
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    margin: 20px 0;
-
-    .btn {
-        cursor: pointer;
-        width: 120px;
-        height: 48px;
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        border-radius: 12px;
+    &:hover {
+        border-radius: 10px;
     }
 
     .image {
-        width: 100px;
-        height: 100px;
-        box-sizing: border-box;
-        padding: 10px;
+        height: 65px !important;
+        width: 65px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
     }
-}
 
-.item-box {
-    display: flex;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    margin-left: 2px;
-}
-
-.item {
-    width: 56px;
-    height: 56px;
-    opacity: 0.65;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 9px;
+    .title {
+        padding: 0 5px;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: center;
+        height: 18px;
+        line-height: 18px;
+    }
 }
 </style>

@@ -14,7 +14,7 @@
       <div class="left no-drag" @click="fullScreen(item)">
 
         <template v-if="item.option.length > 1">
-          <div class="top" >
+          <div class="top">
             <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="">
           </div>
           <div class="bottom">
@@ -22,13 +22,14 @@
           </div>
         </template>
         <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
-             :style="[{ zoom: item.option[0].zoom?item.option[0].zoom + '%':'11%' }]">
+          :style="[{ zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' }]">
       </div>
       <div class="right" style="">
         <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
-          <div class="icon-box" v-for="i in item.sizes" :key="i" style="color:var(--secondary-text);background: var(--active-bg);">{{ i }}
+          <div class="icon-box" v-for="i in item.sizes" :key="i"
+            style="color:var(--secondary-text);background: var(--active-bg);">{{ i }}
           </div>
         </div>
         <div class="data">
@@ -45,7 +46,7 @@
     <div class="box" style="  opacity: 0;height: 1px;"></div>
   </div>
   <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
-                         :cardDetails="cardDetails">
+    :cardDetails="cardDetails">
   </NewPreviewCardDetails>
 </template>
 
@@ -72,7 +73,7 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
       navLists: [],
       carouselIndex: 0,
@@ -86,13 +87,13 @@ export default {
   watch: {
     navList: {
       immediate: true,
-      handler () {
+      handler() {
         this.navLists = JSON.parse(JSON.stringify(this.navList))
       }
     },
     search: {
       immediate: true,
-      handler (newV, oldV) {
+      handler(newV, oldV) {
         if (newV == '下载次数') this.navLists = this.mySort(this.navLists, 'download')
         else if (newV == '更新时间') this.navLists = this.mySort(this.navLists, 'time')
         else this.navLists = this.navList
@@ -101,10 +102,10 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ['addCard']),
-    getImg (url) {
+    getImg(url) {
       return '/img/addCard/' + url + '.png'
     },
-    mySort (data, property, asc) {
+    mySort(data, property, asc) {
       let datas = [...data]
       return datas.sort(function (a, b) {
         a = a[property]
@@ -113,17 +114,17 @@ export default {
         else return b - a
       })
     },
-    formatTimestamp (timestamp) {
+    formatTimestamp(timestamp) {
       const date = new Date(timestamp)
       const year = date.getFullYear().toString()
       const month = (date.getMonth() + 1).toString().padStart(2, '0')
       const day = date.getDate().toString().padStart(2, '0')
       return `${year}-${month}-${day}`
     },
-    closeCardDetails () {
+    closeCardDetails() {
       this.isCardDetails = false
     },
-    addImgClass (index) {
+    addImgClass(index) {
       this.$nextTick(() => {
         let img = this.$refs.imgRef
         let width = img[index].naturalWidth
@@ -132,22 +133,22 @@ export default {
         else img[index].setAttribute('class', 'img-h')
       })
     },
-    addNewCard (item) {
+    addNewCard(item) {
       if (item.option[1] != undefined) {
         this.fullScreen(item)
       } else {
         this.addCardAchieve(item)
       }
     },
-    fullScreen (item) {
+    fullScreen(item) {
       this.cardDetails = item
       this.isCardDetails = true
     },
-    addCardAchieve (item, i) {
+    addCardAchieve(item, i) {
       let index = i ?? this.carouselIndex
       this.addCard({ name: item.option[index].name, id: Date.now(), customData: {} }, this.desk)
       this.$emit('addSuccess')
-      message.info('添加成功！')
+      message.success('添加成功！')
     }
   },
 }
@@ -173,7 +174,7 @@ export default {
   margin: 18px;
   margin-left: 0;
   margin-top: 0;
-    border-radius: 10px;
+  border-radius: 10px;
 
   .add {
     position: absolute;
@@ -217,14 +218,17 @@ export default {
     align-items: center;
     flex-direction: column;
     width: 180px;
-    cursor: pointer;background: var(--active-bg);
+    cursor: pointer;
+    background: var(--active-bg);
 
     .top {
-      background: var(--active-bg) !important;width: 100%;
+      background: var(--active-bg) !important;
+      width: 100%;
       height: 120px;
       display: flex;
       justify-content: center;
-      align-items: center;border-radius: 10px 0 0 0;
+      align-items: center;
+      border-radius: 10px 0 0 0;
 
       img {
         zoom: 0.07 !important;
@@ -263,7 +267,9 @@ export default {
     padding: 10px;
     width: 358px;
 
-    border-radius: 0 12px 12px 0px;.title {
+    border-radius: 0 12px 12px 0px;
+
+    .title {
       font-family: PingFangSC-Medium;
       font-size: 18px;
       color: rgba(255, 255, 255, 0.85);
@@ -326,5 +332,4 @@ export default {
       }
     }
   }
-}
-</style>
+}</style>
