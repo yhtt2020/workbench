@@ -401,7 +401,7 @@ export default {
           }
         },
         {
-          icon: '/img/game.png',
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
           name: '快捷键 （开发中）',
           summary: '',
           needInstall: false,
