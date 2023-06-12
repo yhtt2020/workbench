@@ -72,7 +72,7 @@
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
           <span class="title-text">语言</span>
-          <div class="w-12 h-12 pointer s-item rounded-lg button-active  flex items-center justify-center">
+          <div class="w-12 h-12 pointer s-item rounded-lg button-active  flex items-center justify-center" @click="openClipSet">
             <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
           </div>
         </div>
@@ -207,28 +207,28 @@
   </template>
   <!-- 文件显示区域结束 -->
 
-
-
+  <!-- 设置弹窗 -->
+  <ClipSetDrawer ref="setDrawer"></ClipSetDrawer>
 </template>
 
 <script>
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
+import ClipSetDrawer from './ClipSetDrawer.vue';
 import {toRaw} from "vue";
 import ClipCodemirror from './ClipCodemirror.vue';
 import { mapActions } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
 import textCodeMirror from './textCodeMirror.vue';
 
+
 export default {
-  components: { HorzontanlPanelIcon,ClipCodemirror,textCodeMirror},
-  // codemirror,
+  components: { HorzontanlPanelIcon,ClipCodemirror,textCodeMirror,ClipSetDrawer},
   props:{
     clip:{
       type:Object,
       default:()=>{}
     }
   },
-  inject:['openClipType'],
   data(){
     return{
       type:{},
@@ -296,7 +296,7 @@ export default {
         {title:'Java',name:'text/x-java'},
         {title:'C++',name:'text/x-c++src'},
         {title:'C#',name:'text/x-csharp'},
-        // {title:'PHP'},
+        {title:'PHP',name:'application/x-httpd-php'},
         {title:'Swift',name:'swift'}
       ],
       // clipOptions:{
@@ -442,11 +442,12 @@ export default {
     clickCodeLanguage(item){
       this.changeClipMode(item) // 将代码块语言包进行替换的方法
       this.codeLanguageShow = false
-      // this.textType.reverse()
-      // console.log( this.textType.length - 1 - 1);
-      // this.selectedTab = this.tabs.length - 1 - this.selectedTab;
     },
     
+    // 打开设置
+    openClipSet(){
+      this.$refs.setDrawer.clipOpenShow()
+    },
     
   }
 }

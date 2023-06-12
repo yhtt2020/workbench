@@ -24,12 +24,13 @@ import 'viewerjs/dist/viewer.css'
 
 
 // 导入codemirror主题色样式表和语言包
-import 'codemirror/theme/monokai.css';
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/monokai.css';
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/swift/swift'
 import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/php/php'
 
 import piniaPersist from "./js/ext/pinia-plugin-persist/index";
 
