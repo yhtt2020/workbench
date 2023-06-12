@@ -1,16 +1,16 @@
 <template>
   <div class="  px-5">
     <div class="game-tabs flex flex-row mb-3">
-      <div @click="setSelectDeskId('0')" :class="{'tab-active':selectDeskId==='0'}" class="pr-3 game-tab s-bg  ">
-        <icon icon="desktop"></icon>
+      <div @click="setSelectDeskId('0')" :class="{'tab-active':selectDeskId==='0'}" class="pr-3 home game-tab s-bg  ">
+        <icon class="icon" style="font-size: 22px" icon="desktop"></icon>
         主桌面
       </div>
       <div  :class="{'tab-active':selectDeskId===item.appid}" @click="setSelectDeskId(item.appid)" style="width: 140px;" class="truncate pr-3 game-tab s-bg" v-for="(item,index) in recentGameList.slice(0,3)">
-        <a-avatar class="mr-1" :size="24" :src="getClientIcon(item.appid,item.clientIcon)"></a-avatar>
+        <a-avatar  class="mr-1 icon" :size="22" :src="getClientIcon(item.appid,item.clientIcon)"></a-avatar>
         <span class="">{{ item.chineseName }}</span>
       </div>
-      <div @click="showMore" v-if="recentGameList.length>3" class="game-tab s-bg">
-        <icon icon="gengduo1"></icon>
+      <div @click="showMore" v-if="recentGameList.length>3" class="game-tab s-bg more" >
+        <icon class="icon"  style="font-size: 22px" icon="gengduo1"></icon>
         更多
       </div>
     </div>
@@ -132,6 +132,10 @@ export default {
 <style lang="scss" scoped>
 .game-tabs {
   .game-tab {
+    .icon{
+      margin-top: -1px;
+      vertical-align: text-top;
+    }
     cursor: pointer;
 
     &.tab-active, &:hover {
@@ -142,11 +146,18 @@ export default {
     opacity: 0.5;
     line-height: 42px;
     font-size: 15px;
-    padding-left: 20px;
     min-width: 150px;
     border-radius: 4px;
     margin-right: 10px;
-    text-align: center;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .more{
+    min-width:80px
+  }
+  .home{
+    min-width: 90px;
   }
 }
 </style>
