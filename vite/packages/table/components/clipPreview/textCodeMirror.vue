@@ -21,13 +21,12 @@ export default {
   mounted(){
     this.myClipRefs = CodeMirror(this.$refs.myClip,{
       value:this.editorContent,
-      theme:'monokai',
       smartIndent:true,
       tabSize:1,
       indentWithTabs:true,
-      lineWrapping: true,
       direction: "ltr",
-      mode:this.clipMode
+      lineWrapping: true,
+      mode:null
     })
   }
 }
@@ -44,9 +43,19 @@ export default {
   display: none !important;
 }
 
-.CodeMirror {
-  width: 100%;
-  height: 300px;
-  white-space: pre-wrap; /* 设置代码内容换行 */
+
+</style>
+
+<style>
+.CodeMirror{
+  width: 300px !important;
+  background:none !important;
+  color: rgba(255,255, 255, 0.85);
 }
+/*
+.CodeMirror-line{
+  width: 300px !important;
+  white-space: pre-wrap !important;
+} 
+*/
 </style>

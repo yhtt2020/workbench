@@ -42,7 +42,7 @@
   </vue-custom-scrollbar>
   <!-- 剪贴板列表展示区域结束 -->
 
-  <!-- 设置右侧弹窗开始 -->
+  <!-- 右侧设置弹窗开始 -->
   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
     <div class="flex items-center justify-between mb-6">
       <div class="flex flex-col">
@@ -60,21 +60,28 @@
     <span class="plain-font pb-6">历史记录容量</span>
     <HorizontalPanel class="mt-6 mb-6" :navList="historyCapacity" bg-color="drawer-item-select-bg"
                      v-model:selectType="defaultCapacity"></HorizontalPanel>
-    <div class="w-full flex items-center plain-font set-button pointer justify-center rounded-lg py-3">清除剪贴板记录
+    <div class="w-full flex items-center plain-font set-button pointer justify-center rounded-lg py-3">
+      清除剪贴板记录
+    </div>
+    <div class="flex">
+      <div class="flex"></div>
+       
     </div>
   </a-drawer>
-  <!-- 设置右侧弹窗结束 -->
+  <!-- 右侧设置弹窗结束 -->
 
 
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
 
   <!-- 搜索右侧抽屉开始 -->
   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
-    <a-input placeholder="搜索" class="no-drag h-10 w-full" v-model:value="searchData">
-      <template #prefix>
-        <Icon icon="sousuo"></Icon>
-      </template>
-    </a-input>
+      <div class="flex mb-3">
+        <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData"></a-input>
+        <div class="h-10 w-24 ml-3 s-item pointer flex items-center justify-center rounded-lg" @click="clickSearch">
+          搜索
+        </div>
+      </div>
+      <span class="search-text">支持输入文本关键词、文件名称搜索</span>
   </a-drawer>
  <!-- 搜索右侧抽屉结束 -->
 
@@ -180,6 +187,7 @@ export default {
       }
     }
   },
+  provide:['openClipType'],
   methods: {
     ...mapActions(clipboardStore,['start','stop','isRunning','prepare']),
     //打开设置操作
@@ -194,6 +202,11 @@ export default {
     },
     clipSearch() {
       this.drawerVisible = true
+    },
+
+    // 点击按钮搜索
+    clickSearch(){
+
     },
 
   },
@@ -260,6 +273,12 @@ export default {
   }
 }
 
+.search-text{
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: rgba(255,255,255,0.60);
+  font-weight: 400;
+}
 .s-bg {
   box-shadow: none !important;
 }
