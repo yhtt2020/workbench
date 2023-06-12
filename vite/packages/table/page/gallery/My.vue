@@ -240,7 +240,7 @@ export default defineComponent({
       // 1 清除样式
       const value = JSON.parse(window.localStorage.getItem("style"));
       document.documentElement.classList.remove(value);
-      // 2 判断白天黑夜 
+      // 2 判断白天黑夜
       if (this.styles) {
         document.documentElement.classList.add("light-model");
         window.localStorage.setItem("style", JSON.stringify("light-model"));
@@ -449,7 +449,7 @@ export default defineComponent({
 }
 .play-icon {
   position: absolute;
-  z-index: 999;
+  z-index: 99;
   background: rgba(0, 0, 0, 0.51);
   text-align: center;
   width: 4em;
