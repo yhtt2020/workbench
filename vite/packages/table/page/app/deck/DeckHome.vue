@@ -291,31 +291,31 @@
     </a-row>
 
   </a-drawer>
-  <a-modal :key="addKey" v-model:visible="visibleAdd" :title="null" width="800px" centered height="500px"
-    wrap-class-name="lg-modal" :footer="null">
-    <DeckAdd :data="this.currentItem" @add="doAdd"></DeckAdd>
-  </a-modal>
+<!--  <a-modal :key="addKey" v-model:visible="visibleAdd" :title="null" width="800px" centered height="500px"-->
+<!--    wrap-class-name="lg-modal" :footer="null">-->
+<!--    <DeckAdd :data="this.currentItem" @add="doAdd"></DeckAdd>-->
+<!--  </a-modal>-->
 
   <Prompt @cancel="this.visiblePromptTitle = false" content="请输入分组标题" title="编辑组标题" placeholder="输入标题"
     :visible="visiblePromptTitle" @change-value="changeTitle"></Prompt>
 </template>
 
 <script>
-import DeckItem from '../components/muuri/DeckItem.vue'
-import { appStore } from '../store'
+import DeckItem from '../../../components/muuri/DeckItem.vue'
+import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
-import Template from '../../user/pages/Template.vue'
-import DeckAdd from './app/deck/DeckAdd.vue'
+import Template from '../../../../user/pages/Template.vue'
+import DeckAdd from './DeckAdd.vue'
 import { message } from 'ant-design-vue'
-import { deckStore } from '../store/deck'
-import Widget from '../components/muuri/Widget.vue'
-import vuuri from '../components/vuuri/Vuuri.vue'
-import Prompt from '../components/comp/Prompt.vue'
+import { deckStore } from '../../../store/deck'
+import Widget from '../../../components/muuri/Widget.vue'
+import vuuri from '../../../components/vuuri/Vuuri.vue'
+import Prompt from '../../../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
-import BackBtn from '../components/comp/BackBtn.vue'
+import BackBtn from '../../../components/comp/BackBtn.vue'
 import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import GradeSmallTip from "../components/GradeSmallTip.vue";
-import { powerState } from '../js/watch/grade'
+import GradeSmallTip from "../../../components/GradeSmallTip.vue";
+import { powerState } from '../../../js/watch/grade'
 import _ from 'lodash-es'
 
 export default {
@@ -384,7 +384,6 @@ export default {
       let selectedIds = Object.keys(this.selectedGridIds).filter(key => {
         return this.selectedGridIds[key]
       })
-      console.log(selectedIds)
       return this.grids.filter(g => {
         return selectedIds.indexOf(String(g.id)) > -1
       })
@@ -438,7 +437,6 @@ export default {
 
         needImportGrids.forEach(g => {
           g.id = window.$models.nanoid.nanoid(8)
-          console.log(g)
           this.grids.unshift(g)
         })
         this.toggleImport()
@@ -622,37 +620,48 @@ export default {
 
     },
     edit() {
-      this.addKey = Date.now()
       this.visibleAdd = true
+      this.$router.push({
+        name:'deckAdd',
+        params:{
+          gridId:this.currentGridId,
+          id:this.currentItemId
+        }
+      })
     },
     clone() {
       let cloneItem = _.cloneDeep(this.currentItem)
       cloneItem.id = window.$models.nanoid.nanoid(8)
       this.currentGrid.children.unshift(cloneItem)
-
-      console.log(this.currentGrid.children)
-      console.log(this.currentItem)
       this.menuVisible = false
       this.key += 1
       message.success('复制按钮成功')
     },
     add(currentGrid) {
-      if (currentGrid) {
-        this.currentGrid = currentGrid
-        this.currentGridId = currentGrid.id
+      let params={}
+      if(currentGrid){
+        this.currentGrid=currentGrid
+        this.currentItemId=currentGrid.id
+      }
+      if (this.currentGrid) {
+        params.gridId = this.currentGrid.id
+      }else{
+        message.error('必须选择添加到的分组')
+        return
       }
       this.currentItem = undefined
-      this.addKey = Date.now()
-      this.visibleAdd = true
-      // this.currentGrid.card(document.getElementById('newItem').cloneNode(true))
+      this.$router.push({
+        name:'deckAdd',
+        params:params
+      })
     },
-    showMenu(id, data, type = 'grid') {
+    showMenu(id, data={}, type = 'grid') {
       this.menuVisible = true
       if (type === 'grid') {
         this.menuType = 'grid'
         this.currentGridId = id
         this.currentGrid = this.grids.find(g => {
-          return g.id === id
+          return String(g.id) === String(id)
         })
       } else if (type === 'item') {
         this.menuType = 'item'
@@ -691,27 +700,11 @@ export default {
         children: [],
         cols: 2
       }
-      console.log(this.grids)
       this.grids.push(grid)
       // this.$nextTick(() => {
       //   this.initBoard(board)
       // })
       this.menuVisible = false
-    },
-    doAdd(button) {
-      this.visibleAdd = false
-      this.menuVisible = false
-      if (!this.currentItem) {
-        this.newItem = button
-        this.$refs['grid' + this.currentGridId][0].update()
-        this.currentGrid.children.push(this.newItem)
-        message.success('添加按钮成功')
-      } else {
-        Object.keys(this.currentItem).forEach(key => {
-          this.currentItem[key] = button[key]
-        })
-        message.success('修改按钮成功')
-      }
     }
   }
 }

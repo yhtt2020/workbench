@@ -1,6 +1,6 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot">
+    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" desk="desk">
       <div class="absolute top-4 left-4 w-24 h-5 pointer" @click="openRight"></div>
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
         <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
@@ -83,7 +83,7 @@ export default {
     customData: {
       type: Object,
       default: () => { },
-    },
+    }
   },
   data() {
     return {
@@ -269,7 +269,7 @@ export default {
     },
     imgError() {
       this.imgSpin = false;
-      this.currentImg.src = "/img/homeComponent/smallWallpaper.png";
+      this.currentImg.src = "/img/defaultImg.jpg";
     },
     // getVideo (item) {
     //
@@ -460,11 +460,11 @@ export default {
     //   item.srcProtocol = url
     // })
     this.$nextTick(() => {
-      if (!this.customData.Code) {
+      if (!this.customData) {
         this.pickFilterChange("我的收藏");
       } else {
-        this.pickFilterValue = this.customData.Code.value.value;
-        this.pickFilterChange(this.customData.Code.value.value);
+        this.pickFilterValue = this.customData.value;
+        this.pickFilterChange(this.customData.value);
       }
       this.setImg();
     });

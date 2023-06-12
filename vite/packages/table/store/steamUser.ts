@@ -40,6 +40,9 @@ export const steamUserStore = defineStore("steamUser", {
       this.addRecent(game)
       this.runningGame=game
     },
+    stopGame(game){
+      this.runningGame={}
+    },
     addRecent(game){
       let found=-1
        found=this.recentGameList.findIndex(g=>{

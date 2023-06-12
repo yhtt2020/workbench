@@ -31,6 +31,34 @@ export const deckStore=defineStore('deck',{
     initGrids(){
       console.log(initDeck)
       this.grids=JSON.parse(initDeck)
+    },
+    /**
+     * 添加/编辑一个按钮
+     * @param button
+     * @param currentGrid
+     */
+    addButton(button,currentGrid){
+      let found=currentGrid.children.find(item=>{
+        return item.id===button.id
+      })
+      if(found){
+        Object.assign(found,button)
+        return 'edit'
+      }else{
+        currentGrid.children.push(button)
+        return 'add'
+      }
+      // if (!this.currentItem) {
+      //   this.newItem = button
+      //   this.$refs['grid' + this.currentGridId][0].update()
+      //   this.currentGrid.children.push(this.newItem)
+      //
+      // } else {
+      //   Object.keys(this.currentItem).forEach(key => {
+      //     this.currentItem[key] = button[key]
+      //   })
+      //
+      // }
     }
   },
   persist: {
