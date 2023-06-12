@@ -1,5 +1,5 @@
 <template>
-  <div class="  px-5">
+  <div v-if="!fullScreen" class="  px-5" style="display: flex">
     <div class="game-tabs flex flex-row mb-3">
       <div @click="setSelectDeskId('0')" :class="{'tab-active':selectDeskId==='0'}" class="pr-3 home game-tab s-bg  ">
         <icon class="icon" style="font-size: 22px" icon="desktop"></icon>
@@ -21,6 +21,14 @@
     <!--      class="w-60 h-12 rounded-lg mr-3 text-xs s-bg right-nav" size="large" :bordered="false">-->
     <!--      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>-->
     <!--    </a-select>-->
+    <div >
+      <div @click="setFullScreen" class="s-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="fullscreen"></Icon></div>
+    </div>
+  </div>
+  <div v-if="fullScreen" class="no-drag">
+    <div style="position: absolute;right: 10px;top: 10px;z-index: 999">
+      <div @click="setFullScreen(false)" class="s-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon></div>
+    </div>
   </div>
   <div class="rounded-xl px-5" style="width: 100%;height: 0;flex: 1">
     <template v-if="desks[selectDeskGame.appid] || selectDeskId==='0' && desks[selectDeskGame.appid] ">
@@ -50,11 +58,13 @@ import {mapWritableState} from 'pinia'
 import {getClientIcon, getCover} from "../../js/common/game";
 import {nanoid} from "nanoid";
 import GameListDrawer from "../../components/game/GameListDrawer.vue";
+import { appStore } from '../../store'
 
 export default {
   components: {GameListDrawer, Desk},
   computed: {
     ...mapWritableState(steamUserStore, ['desks', 'runningGame','recentGameList']),
+    ...mapWritableState(appStore,['fullScreen']),
     selectDeskGame() {
       let found = this.recentGameList.find(g => {
         return g.appid === this.selectDeskId
@@ -124,6 +134,9 @@ export default {
     },
     showMore() {
       this.recentVisible = true
+    },
+    setFullScreen(flag=true){
+      this.fullScreen=flag
     }
   }
 }

@@ -7,11 +7,11 @@
         <HorizontalPanel :navList="sortList" class="ml-3 main-nav" v-model:selectType="sortType"></HorizontalPanel>
       </div>
       <div class="flex flex-row ml-3">
-        <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="" icon="sousuo"></Icon></div>
-        <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="tianjia2"></Icon></div>
-        <div @click="()=>{this.settingVisible = true}" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="shezhi"></Icon></div>
+        <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="font-size: 22px" icon="sousuo"></Icon></div>
+        <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon  style="font-size: 22px" icon="tianjia2"></Icon></div>
+        <div @click="()=>{this.settingVisible = true}" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon  style="font-size: 22px" icon="shezhi"></Icon></div>
         <div @click="openScreen" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
-          <Icon icon="desktop"></Icon>
+          <Icon  style="font-size: 22px" icon="fullscreen"></Icon>
         </div>
       </div>
 
@@ -364,12 +364,10 @@ export default {
     },
     openScreen(){
       this.fullScreen = true
-      document.querySelector('#secondPanel').style = 'display:none;'
-      document.querySelector('.content-view').style = 'margin:0;padding:0;'
+     // document.querySelector('.content-view').style = 'margin:0;padding:0;'
     },
     closeScreen(){
       this.fullScreen = false
-      document.querySelector('#secondPanel').style = 'display:block;'
     }
   },
   watch:{

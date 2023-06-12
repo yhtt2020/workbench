@@ -6,7 +6,7 @@
     <!--        <span style="margin-left: 0.5em;" class="s-text text-base">{{ item.title }}</span>-->
     <!--      </div>-->
     <!--    </div>-->
-    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery"
+    <SecondPanel v-if="!fullScreen" :search="true" :goHome="goHome" :menus="menus" :gallery="gallery"
       style="padding: 1em 0; text-align: left; " @changeTab="changeTab"></SecondPanel>
     <div class="flex-1  content-view" style="padding-top: 1em;height: 100%;display: flex;flex-direction: column">
       <router-view></router-view>
@@ -16,6 +16,8 @@
 
 <script>
 import SecondPanel from "../../components/SecondPanel.vue";
+import { mapWritableState } from 'pinia'
+import { appStore } from '../../store'
 export default {
   name: "gameAssistant",
   components: {
@@ -69,15 +71,15 @@ export default {
             name:'GameCapture'
           },
         },
-        {
-          index: 'media',
-          title: '高光时刻',
-          icon: 'record-circle-line',
-          route:
-          {
-              name: 'gameMedia'
-          }
-        },
+        // {
+        //   index: 'media',
+        //   title: '高光时刻',
+        //   icon: 'record-circle-line',
+        //   route:
+        //   {
+        //       name: 'gameMedia'
+        //   }
+        // },
         // {
         //   index: 'm',
         //   title: '社区',
@@ -98,6 +100,9 @@ export default {
         },
       ],
     }
+  },
+  computed:{
+    ...mapWritableState(appStore,['fullScreen'])
   },
   methods: {
     changeTab(args) {
