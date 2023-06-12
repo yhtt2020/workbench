@@ -118,8 +118,8 @@
               <div class="w-1/2 mt-3">M站评分：{{currentSteam.metacritic_score||'无'}}</div>
             </div>
               <div class="flex flex-row justify-between mt-3 text-white">
-                <div v-if="runningGame.appid!==currentSteam.appid"  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64" @click="playSteamGame(currentSteam)"><Icon style="" class="mr-2" icon="game"></Icon>开始游戏</div>
-                <div v-else  class="pointer s-item flex h-10 justify-center items-center rounded-lg w-64" @click="stopGame(currentSteam)"><Icon style="" class="mr-2" icon="game"></Icon>停止游戏</div>
+                <div v-if="runningGame.appid!==currentSteam.appid"  class="pointer s-item start-button flex h-10 justify-center items-center rounded-sm w-64" @click="playSteamGame(currentSteam)"><Icon style="font-size: 22px" class="mr-2" icon="bofang"></Icon>开始游戏</div>
+                <div v-else  class="pointer s-item flex h-10 justify-center items-center start-button running rounded-lg w-64" @click="stopGame(currentSteam)"><Icon style="font-size: 18px" class="mr-2" icon="guanbi"></Icon>停止</div>
 
                 <div class="pointer s-item w-10  flex justify-center items-center rounded-lg ml-4" @click="openDetail"><Icon style=""  icon="folder-open"></Icon></div>
                 <div class="pointer s-item h-10 w-10 flex justify-center items-center rounded-lg ml-4" @click="deleteGame"><Icon style=""   icon="delete"></Icon></div>
@@ -400,6 +400,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.start-button{
+  &.running{
+    background: linear-gradient(90deg, #3a9aec, #235ece);
+  }
+  background: linear-gradient(90deg, #4fc730, #19b04e);
+}
+
 .my-game-content{
   transform-style: preserve-3d;
   perspective: 1000px;
