@@ -217,8 +217,7 @@ app.whenReady().then(async () => {
 
   async function callTable (tag = -1) {
     tableManager.init().then(()=>{
-      global.tableAppManager.setTableWin(tableManager.window)
-      global.tableTabManager.setTableWin(tableManager.window)
+
     })
   }
 
