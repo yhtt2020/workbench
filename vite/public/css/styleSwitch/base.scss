@@ -13,11 +13,11 @@
 }
 
 .xt-active {
-    color: var(--active-bg) !important;
-  }
-  .xt-active-2 {
-    color: var(--active-secondary-bg) !important;
-  }
+  color: var(--active-bg) !important;
+}
+.xt-active-2 {
+  color: var(--active-secondary-bg) !important;
+}
 
 // 文字
 .xt-text {
@@ -54,7 +54,9 @@
 .xt-mask-2 {
   background: var(--main-mask-bg) !important;
 }
-
+.xt-hover {
+  background: var(--secondary-bg);
+}
 // 分割线
 .xt-divider {
   border: 1px solid var(--divider) !important;
