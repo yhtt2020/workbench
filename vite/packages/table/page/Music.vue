@@ -3,7 +3,7 @@
       text-align: center;
       display: flex;
       align-items: center;
-      width: 80%;
+      max-width: 98%;
       height: 95%;
       border-radius: 8px;
       margin: auto;
@@ -13,7 +13,7 @@
     ">
     <a-row :gutter="[20]" style="width: 100%">
       <a-col :span="showPrompt ? 12 : 24" style="display: flex; align-items: center; justify-content: center">
-        <div class="music-player" style="width: 400px; height: 410px; display: inline-block">
+        <div class="music-player" style="max-width:500px; height: 410px; display: inline-block">
           <div class="pointer" @click="enterMusic">
             <a-avatar :class="{ playing: status.music.playing }" :size="120" :src="status.music.cover"
               style="margin: 16px; border: 3px solid #6b6b6b">点击选歌播放</a-avatar>
