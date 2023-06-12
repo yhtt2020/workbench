@@ -1,5 +1,5 @@
 import BarrageSetting from "../page/settings/BarrageSetting.vue";
-import Deck from "../page/Deck.vue";
+import DeckHome from "../page/app/deck/DeckHome.vue";
 import Setting from "../page/Setting.vue";
 import Weather from "../page/app/Weather.vue";
 import Watch from "../page/app/watch/Index.vue";
@@ -45,6 +45,8 @@ import Inspector from "../page/app/Inspector.vue";
 import Clipboard from "../page/clipboard/Clipboard.vue"
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
+import DeckAdd from "../page/app/deck/DeckAdd.vue";
+import DeckIndex from "../page/app/deck/DeckIndex.vue";
 export default [
   {
     path: "/main",
@@ -192,8 +194,20 @@ export default [
 
       {
         path: "/deck",
-        name: "deck",
-        component: Deck,
+        name: "deckIndex",
+        component: DeckIndex,
+        children:[
+          {
+            path:'',
+            name:'deck',
+            component: DeckHome
+          },
+          {
+            path:"/add",
+            name:'deckAdd',
+            component:DeckAdd
+          }
+        ]
       },
       {
         path: "/status",
