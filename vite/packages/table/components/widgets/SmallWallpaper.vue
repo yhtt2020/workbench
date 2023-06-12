@@ -135,11 +135,14 @@ export default {
     },
     imgError(){
       this.imgSpin = false
-      this.currentImg.src = '/img/homeComponent/smallWallpaper.png'
+      this.currentImg.src = '/img/defaultImg.jpg'
     },
     pickFilterChange (e) {
       this.addressType = this.wallpaperOptions.find(i => i.value === e)
       this.updateCustomData(this.customIndex, this.addressType,this.desk)
+      if(!this.addressType) {
+        this.addressType='我的收藏'
+      }
       if (this.addressType.path !== '') {
         axios.get(this.addressType.path, {}).then(res => {
           this.imgList = []
