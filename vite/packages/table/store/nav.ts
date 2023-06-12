@@ -242,19 +242,6 @@ export const navStore = defineStore("nav", {
       },
       {
         type:'systemApp',
-        icon:'thunderbolt',
-        name:'快捷指令',
-        event:'deck',
-      },
-      {
-        type:'systemApp',
-        icon:'tuichu',
-        name:'电源',
-        event:'power',
-        fn:()=>{vm.$router.push({ path: '/power' })}
-      },
-      {
-        type:'systemApp',
         icon:'setting',
         name:'基础设置',
         event:'setting',
@@ -322,12 +309,6 @@ export const navStore = defineStore("nav", {
         "icon": "laptop",
         "name": "设备设置",
         "event": "status"
-      },
-      {
-        "type": "systemApp",
-        "icon": "tuichu",
-        "name": "电源",
-        "event": "power"
       }
     ],
     // navigationToggle: [true,false,true]
@@ -399,7 +380,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['mainNavigationList','sideNavigationList','footNavigationList','rightNavigationList','builtInFeatures','navigationToggle'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

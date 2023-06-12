@@ -164,7 +164,8 @@ class TableManager {
       this.tableScreenManager = new TableScreenManager()
       this.tableScreenManager.bindIPC()
     }
-    global.tableAppManager.setTableWin(tableWin.window)//更新tablewin
+    global.tableAppManager.setTableWin(tableWin.window)
+    global.tableTabManager.setTableWin(tableWin.window)
   }
 
   saveBounds () {
