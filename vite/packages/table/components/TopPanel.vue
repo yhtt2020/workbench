@@ -3,11 +3,11 @@
     <a-col :span="8">
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
            v-if="runningGame.appid">
-        <a-avatar :size="24" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
+        <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
       </div>
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic"
            v-else-if="status.music && status.music.title">
-        <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar>
+        <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>
     </a-col>
