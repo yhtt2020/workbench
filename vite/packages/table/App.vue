@@ -202,13 +202,11 @@ export default {
     ...mapActions(codeStore, ['verify']),
     ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
     KeyDown(event) {
-      console.log('按键了')
       if (event.keyCode === 122) {
         toggleFullScreen()
         event.preventDefault()
         event.stopPropagation()
       }
-      console.log('全屏状态',this.fullScreen)
       if(this.fullScreen){
         console.log('全屏了')
         if(event.keyCode===27){

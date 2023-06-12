@@ -35,6 +35,7 @@ import routes from './route/route'
 
 import "../../public/css/global.scss"
 import "../../public/css/antd.scss"
+import {router}from './router'
 dayjs.locale('zh-cn');
 
 const app = createApp(App)
@@ -45,20 +46,7 @@ pinia.use(piniaPersist)
 // @ts-ignore
 window.$=$
 
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes
-})
-router.beforeEach((to,from,next) =>{
-  if(from.name==='home'){
-    document.body.style.setProperty('--backGroundImgBlur',  '12px');
-    document.body.style.setProperty('--backGroundImgLight', 0.3);
-  }
-  cardStore().setRouteParams(to.params)
-  next()
-})
-
-app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
+const $app=app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
   VueTippy,
   // optional
   {
@@ -76,6 +64,7 @@ app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
-
-export default router;
-
+window.$app=$app
+export {
+  router
+};

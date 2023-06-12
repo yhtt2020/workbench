@@ -191,10 +191,10 @@ export default {
       }
     },
     goBil() {
-      browser.openInUserSelect('https://www.bilibili.com/')
+      browser.openInTable('https://www.bilibili.com/')
     },
     goYm() {
-      browser.openInUserSelect('https://www.gamersky.com/')
+      browser.openInTable('https://www.gamersky.com/')
     },
     // 初始化数据
     async loadBiliData(clear = false) {
@@ -313,7 +313,8 @@ export default {
     },
 
     openUrl(url) {
-      browser.openInUserSelect(url)
+      console.log('打开工作台网页',url)
+      browser.openInTable(url)
     },
 
     selectHotType(e) {

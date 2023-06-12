@@ -198,6 +198,34 @@ class TableAppManager {
       let data= this.getRunningApps()
       event.reply('updateRunningTableApps', { apps:data.apps })
     })
+    ipc.on('syncTableAppBounds', (e, a) => {
+      this.setBounds(a.app.name, a.bounds)
+    })
+
+    ipc.on('setTableAppScale', (e, a) => {
+      this.setScale(a.app.name, a.scale)
+    })
+    ipc.on('executeTableApp', async (event, args) => {
+      let appInstance = await this.executeApp({ app: args.app, position: args.position })
+    })
+
+    ipc.on('ensureTableApp',async(event,args)=>{
+      try{
+        event.returnValue= this.ensureApp({app:args.app})
+      }catch (e) {
+        event.returnValue=false
+      }
+    })
+    ipc.on('refreshTableApp', (e, a) => {
+      this.refresh(a.app.name)
+    })
+
+    ipc.on('closeTableApp', (event, args) => {
+      this.closeApp(this.getName(args.app.name))
+    })
+    ipc.on('hideTableApp', (event, args) => {
+      this.hideApp(this.getName(args.app.name))
+    })
   }
 }
 
