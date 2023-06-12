@@ -51,7 +51,8 @@ import VideoClip from "../page/clipboard/videoClip.vue"
 import AudioClip from "../page/clipboard/audioClip.vue"
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
-import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue"
+import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
+import ShareKey from "../page/shortcutKey/ShareKey.vue"
 export default [
   {
     path: "/main",
@@ -337,7 +338,14 @@ export default [
         path:'/shortcutKey',
         name:'shortcutKey',
         component:ShortcutKey,
-      }
+        // children: [
+        //   {
+        //     path:'/shareKey',
+        //     name:'shareKey',
+        //     component:ShareKey,
+        //   },
+        // ]
+      },
     ],
   },
 ];
