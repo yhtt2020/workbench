@@ -22,7 +22,7 @@
     <!--      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>-->
     <!--    </a-select>-->
   </div>
-  <div class="rounded-xl px-5" style="width: 100%;height: 100%">
+  <div class="rounded-xl px-5" style="width: 100%;height: 0;flex: 1">
     <template v-if="desks[selectDeskGame.appid] || selectDeskId==='0' && desks[selectDeskGame.appid] ">
       <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>

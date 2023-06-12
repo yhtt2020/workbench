@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;width: 100%" v-if="currentDesk.cards">
+  <div style="height:100%;width: 100%" v-if="currentDesk.cards">
     <div  style="width: 100%;height: 100%" class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
@@ -115,6 +115,21 @@
       </a-col>
     </a-row>
   </a-drawer>
+  <a-drawer v-model:visible="settingVisible" placement="right">
+    <div class="line-title">卡片设置：</div>
+    <div class="line">
+      卡片缩放：
+      <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+    </div>
+    <div class="line">
+      卡片空隙：(调大空隙可能变成瀑布流布局)
+      <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+    </div>
+    <div class="line">
+      距离顶部：
+      <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -221,6 +236,7 @@ export default {
   },
   data() {
     return {
+      settingVisible:false,
       hide:false,
       key:Date.now(),
       menuVisible: false,
@@ -246,6 +262,10 @@ export default {
       }
       this.menuVisible = false;
       this.key = Date.now();
+    },
+    showSetting(){
+      this.settingVisible=true
+      this.menuVisible=false
     },
     hideDesk() {
       this.hide = !this.hide;

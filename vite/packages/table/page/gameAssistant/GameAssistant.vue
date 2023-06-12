@@ -8,7 +8,7 @@
     <!--    </div>-->
     <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery"
       style="padding: 1em 0; text-align: left; " @changeTab="changeTab"></SecondPanel>
-    <div class="flex-1  content-view" style="padding-top: 1em;height: 100%">
+    <div class="flex-1  content-view" style="padding-top: 1em;height: 100%;display: flex;flex-direction: column">
       <router-view></router-view>
     </div>
   </div>
