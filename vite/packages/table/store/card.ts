@@ -490,8 +490,8 @@ export const cardStore = defineStore(
       removeCard(customIndex, desk) {
         let currentDesk = this.getCurrentDesk()
         desk=desk||currentDesk
-        desk.cards.splice(currentDesk.cards.findIndex(item => {
-          return item.id === customIndex
+        desk.cards.splice(desk.cards.findIndex(item => {
+          return String(item.id) === String(customIndex)
         }), 1)
         // this.customComponents.splice(customIndex,1);
 
