@@ -1,49 +1,65 @@
+:root {
+    --error: #FF4D4F;
+    --link: #508BFE;
+    --success :#52C41A;
+    --warning :#FAAD14;
+}
+
 .dark-model {
-    // 背景
-    --main-bg: rgb(47, 42, 42) !important;
-    --primary-bg: rgba(26, 26, 26, 0.65) !important; // 主要背景颜色
-    --secondary-bg: rgb(26, 26, 26, 0.65) !important; // 次要背景颜色
-    --active-bg: rgba(0, 0, 0, 0.3) !important; //激活背景颜色 使用在需要激活的背景
-    --active-secondary-bg: rgba(0, 0, 0, 0.3) !important; //激活背景颜色 使用在需要激活的背景
-    --modal-bg: rgba(33, 33, 33, 1) !important;
-    --mask-bg: rgba(0, 0, 0, 65) !important;
-    --divider: rgba(255, 255, 255, 0.5) !important; // 分割线
-    --primary-text: #b7b7b7 !important; // 主要字体
-    --secondary-text: #6e6e6e !important; // 未激活字体
-    --main-text: #fff;
+// 主题
+--active-bg: #508bfe !important;
+--active-secondary-bg: rgba(80, 139, 254, 0.2) !important;
+// 背景
+--main-bg: #191919 !important;
+--primary-bg: linear-gradient(-70deg, #545454 0%) !important;
+--secondary-bg: #2a2a2a !important; 
+--modal-bg:: #212121 !important;
+--mask-bg: rgba(0,0,0,0.30) !important;
+--main-mask-bg:rgba(26,26,26,0.65) !important;
+// 文字
+--primary-text: rgba(255,255,255,0.85) !important;
+--secondary-text: rgba(255,255,255,0.60) !important;
+--disable-text: rgba(255,255,255,0.85) !important;
+// 分割线
+--divider: rgba(255,255,255,0.10)!important;
 
-    body {
-        background: var(--main-bg) !important;
-    }
+  body {
+    background: var(--main-bg) !important;
+  }
 
-    .active {
-        color: var(--primary-text);
-        fill: var(--primary-text);
-        background: var(--active-bg);
-    }
+  .active {
+    color: var(--primary-text);
+    fill: var(--primary-text);
+    background: var(--active-bg);
+  }
 }
 
 .light-model {
-    // 背景
-    --main-bg: rgba(229 229 229) !important;
-    --primary-bg: rgba(255, 255, 255, 0.55) !important;
-    --secondary-bg: rgba(255, 255, 255, 0.85) !important; // 次要背景颜色
-    --modal-bg: rgb(222, 207, 207) !important;
-    --active-bg: rgba(0, 0, 0, 0.1) !important;
-    --mask-bg: rgba(255, 255, 255, 0.1) !important;
-    --divider: rgba(230, 230, 230, 1) !important;
-    --primary-text: rgba(0, 0, 0, 0.85) !important;
-    --secondary-text: rgba(0, 0, 0, 0.45) !important;
-    --main-text: #000 !important;
+// 主题
+--active-bg: #508BFE !important;
+--active-secondary-bg:  rgba(80,139,254,0.20) !important;
+// 背景
+--main-bg: rgba(0,0,0,0.04) !important;
+--primary-bg: #FFFFFF !important;
+--secondary-bg:  #E6E6E6 !important; 
+--modal-bg::  #FFFFFF !important;
+--mask-bg:  #FFFFFF !important;
+--main-mask-bg:#FFFFFF  !important;
+// 文字
+--primary-text:  rgba(0,0,0,0.85) !important;
+--secondary-text:rgba(0,0,0,0.65) !important;
+--disable-text:  rgba(0,0,0,0.25) !important;
+// 分割线
+--divider:  rgba(230,230,230,0.50) !important;
 
+  body {
+    background: var(--main-bg) !important;
+  }
 
-    body {
-        background: var(--main-bg) !important;
-    }
-
-    .active {
-        color: var(--primary-text) !important;
-        fill: var(--primary-text) !important;
-        background: var(--active-bg) !important;
-    }
+  .active {
+    color: var(--primary-text);
+    fill: var(--primary-text);
+    background: var(--active-bg);
+  }
 }
+
