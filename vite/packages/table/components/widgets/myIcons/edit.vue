@@ -8,7 +8,8 @@
             <div class="xt-bg xt-text xt-hover" @click="customClick()">应用导航</div>
         </div>
         <template v-else>
-            <a-input v-if="_link === 'link'" v-model:value="_linkValue" placeholder="想天浏览器1" class="xt-bg xt-border input">
+            <a-input v-if="_link === 'link'" @blur="leaveInput()" v-model:value="_linkValue" placeholder="想天浏览器"
+                class="xt-bg xt-border input">
                 <template #suffix>
                     <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
                         class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
@@ -19,7 +20,7 @@
             <a-input v-else v-model:value="title" placeholder="想天浏览器" class="xt-bg xt-border input" style="border: 0;">
                 <template #suffix>
                     <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
-                        class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()" >
+                        class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
                         <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
                     </div>
                 </template>
@@ -27,12 +28,13 @@
         </template>
         <div class="text-base" style="margin: 12px 0">图标名称</div>
         <a-input v-model:value="_titleValue" placeholder="想天浏览器" class="xt-bg xt-border input" />
+        <!-- 图标开始 -->
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
             <div class="image" :style="[backgroundState]">
-                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;">
+                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;" @error="imgError">
                 <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
-                    class="xt-bg xt-divider flex justify-center items-center xt-hover clear" @click="this._src = ''">
+                    class="xt-modal xt-divider flex justify-center items-center xt-hover clear" @click="this._src = ''">
                     <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
                 </div>
             </div>
@@ -42,6 +44,7 @@
                 <div @click="upIcon()" class="btn no-drag xt-bg">自定义上传</div>
             </div>
         </div>
+        <!-- 图标结束 -->
         <div class="parent">
             <div class="text-base">图标圆角</div>
             <a-switch v-model:checked="_isRadius"></a-switch>
@@ -119,13 +122,24 @@ export default {
             else return { borderRadius: '0px' }
         },
     },
-    watch: {
-        _linkValue(newV, oldV) {
-            this._src = `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + newV
-            console.log('11 :>> ',   this._src);
-        }
-    },
     methods: {
+        imgError() {
+            if (this._link === "link") {
+                this._src = ''
+                this.leaveInput(true)
+            }
+        },
+        leaveInput(flag) {
+            // 失去焦点后在调用外部api 减少频繁请求被屏蔽
+            if (this._src.length === 0) {
+                console.log('flag :>> ', flag);
+                if (flag === undefined) this._src = `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + this._linkValue
+                else {
+                    this._src = `https://www.svlik.com/t/favicon/ico.php?` + this._linkValue
+                    console.log('123 :>> ', 123);
+                }
+            }
+        },
         backgroundClick(index) {
             this._backgroundColor = this.backgroundColorList[`${'color' + index}`]
             this._backgroundIndex = index
