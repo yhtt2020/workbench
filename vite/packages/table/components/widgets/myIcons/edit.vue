@@ -31,10 +31,10 @@
         <!-- 图标开始 -->
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
-            <div class="image" :style="[backgroundState]">
+            <div class="image" :style="[backgroundState]" :class="{ active: _src.length == 0 }">
                 <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;" @error="imgError">
                 <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
-                    class="xt-modal xt-divider flex justify-center items-center xt-hover clear" @click="this._src = ''">
+                    class="xt-modal flex justify-center items-center xt-hover clear" @click="this._src = ''">
                     <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
                 </div>
             </div>
@@ -128,16 +128,14 @@ export default {
                 this._src = ''
                 this.leaveInput(true)
             }
+            this._src = ''
         },
         leaveInput(flag) {
-            // 失去焦点后在调用外部api 减少频繁请求被屏蔽
+            // 匹配icon放在失去焦点后在调用外部api 减少频繁请求被屏蔽
             if (this._src.length === 0) {
-                console.log('flag :>> ', flag);
-                if (flag === undefined) this._src = `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + this._linkValue
-                else {
-                    this._src = `https://www.svlik.com/t/favicon/ico.php?` + this._linkValue
-                    console.log('123 :>> ', 123);
-                }
+                let result = this._linkValue.replace(/^https?:\/\//i, "");
+                if (flag === undefined) this._src = `https://www.svlik.com/t/favicon/ico.php?` + result // 这个api比下面的好用很多
+                else this._src = `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result
             }
         },
         backgroundClick(index) {
@@ -157,8 +155,7 @@ export default {
                 const file = this.files[0]
                 let validate = validateFile(file, 2)
                 if (validate !== true) return message.error(validate)
-                // that._src = file.path
-                that._src = file
+                that._src = file.path
                 event.target.value = ""
             }
         },
@@ -168,6 +165,8 @@ export default {
             this._link = 'fast'
         },
         save() {
+            console.log('object :>> ', this._src.length);
+            console.log('object :>> ', this._src);
             if (this._src.length == 0) return "未上传图标"
             return {
                 isRadius: this._isRadius,

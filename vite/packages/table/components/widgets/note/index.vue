@@ -150,10 +150,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.test {
-  color: var(--color) !important;
-}
-
 .box {
   width: 100%;
   height: 100%;
