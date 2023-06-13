@@ -23,7 +23,7 @@ export const innerImg = async (file: Blob, size?: number | null, compressRatio?:
  * @param file 待验证的文件
  * @returns 如果文件合法返回true，否则返回false
  */
-const validateFile = (file: any, size?: number | null): string | boolean => {
+export const validateFile = (file: any, size?: number | null): string | boolean => {
   size = size ?? 10
   const sizeLimit = size * 1024 * 1024// 设置文件大小上限为10MB
   const legalExts = [".jpg", ".jpeg", ".png"] // 合法文件扩展名数组
