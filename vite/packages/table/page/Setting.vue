@@ -281,7 +281,7 @@ export default {
 
 <style scoped lang="scss">
 .btn {
-  background: var( --active-bg);
+  background: var( --secondary-bg);
 }
 .btn:hover {
   color: var(--primary-text);
