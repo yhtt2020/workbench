@@ -21,7 +21,7 @@
             <img v-for="i in item.option" :src="getImg(i.name)" alt="">
           </div>
         </template>
-        <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
+        <img v-else style="background: var(--secondary-bg);" :src="getImg(item.option[0].name)" alt=""
           :style="[{ zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' }]">
       </div>
       <div class="right" style="">
@@ -29,7 +29,7 @@
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
           <div class="icon-box" v-for="i in item.sizes" :key="i"
-            style="color:var(--secondary-text);background: var(--active-bg);">{{ i }}
+            style="color:var(--secondary-text);background: var(--secondary-bg);">{{ i }}
           </div>
         </div>
         <div class="data">
@@ -169,7 +169,7 @@ export default {
   height: 184px;
   display: flex;
   border-radius: 12px;
-  background: var(--active-bg);
+  background: var(--secondary-bg);
   position: relative;
   margin: 18px;
   margin-left: 0;
@@ -219,10 +219,10 @@ export default {
     flex-direction: column;
     width: 180px;
     cursor: pointer;
-    background: var(--active-bg);
+    background: var(--secondary-bg);
 
     .top {
-      background: var(--active-bg) !important;
+      background: var(--secondary-bg) !important;
       width: 100%;
       height: 120px;
       display: flex;
