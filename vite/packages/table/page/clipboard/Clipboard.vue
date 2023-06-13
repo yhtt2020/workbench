@@ -2,7 +2,7 @@
   <div class="flex items-center clip-container justify-between pr-5 mx-4">
     <div class="flex">
       <!-- tab切换开始 -->
-      <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
+        <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
       <!-- tab切换结束 -->
 
       <!-- 导航栏筛选开始 -->
@@ -14,21 +14,18 @@
         </div>
       </div>
       <!-- 导航栏筛选结束 -->
-
     </div>
 
     <!-- 搜索按钮和设置按钮开始 -->
     <div class="flex">
-      <div @click="clipSearch"
-           class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+      <div @click="clipSearch" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="sousuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet">
         <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
-     <!-- 搜索按钮和设置按钮结束 -->
-
+    <!-- 搜索按钮和设置按钮结束 -->
   </div>
 
   <!-- 剪贴板列表展示区域开始 -->
@@ -42,50 +39,32 @@
   </vue-custom-scrollbar>
   <!-- 剪贴板列表展示区域结束 -->
 
-  <!-- 设置右侧弹窗开始 -->
-  <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex flex-col">
-        <span class="mb-2 plain-font">剪贴板</span>
-        <span class="light-grey-font">关闭后将停止读取剪贴板内容</span>
-      </div>
-      <a-switch v-model:checked="enable"/>
-    </div>
-    <span class="plain-font">打开剪贴板应用快捷键</span>
-    <div class="flex items-center my-6">
-      <span class="mr-3 shortcut-area px-3 py-2.5 rounded-lg">{{ instruct }}</span>
-      <span class="px-4 py-3 set-button pointer rounded-lg mr-3">更换按键</span>
-      <span class="px-4 py-3 set-button pointer rounded-lg">重置</span>
-    </div>
-    <span class="plain-font pb-6">历史记录容量</span>
-    <HorizontalPanel class="mt-6 mb-6" :navList="historyCapacity" bg-color="drawer-item-select-bg"
-                     v-model:selectType="defaultCapacity"></HorizontalPanel>
-    <div class="w-full flex items-center plain-font set-button pointer justify-center rounded-lg py-3">清除剪贴板记录
-    </div>
-  </a-drawer>
-  <!-- 设置右侧弹窗结束 -->
-
-
+  <!-- 导航切换在宽度不够的情况下显示 -->
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
 
   <!-- 搜索右侧抽屉开始 -->
-  <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
-    <a-input placeholder="搜索" class="no-drag h-10 w-full" v-model:value="searchData">
-      <template #prefix>
-        <Icon icon="sousuo"></Icon>
-      </template>
-    </a-input>
-  </a-drawer>
- <!-- 搜索右侧抽屉结束 -->
+   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
+    <div class="flex mb-3">
+      <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData"></a-input>
+      <div class="h-10 w-24 ml-3 s-item pointer flex items-center justify-center rounded-lg" @click="clickSearch" style="background: var(--secondary-bg);">
+        搜索
+      </div>
+    </div>
+    <span class="search-text">支持输入文本关键词、文件名称搜索</span>
+   </a-drawer>
+  <!-- 搜索右侧抽屉结束 -->
 
+  <!-- 设置弹窗 -->
+  <ClipSetDrawer ref="clipDrawer"></ClipSetDrawer>
 </template>
 
 <script>
-import HorizontalPanel from '../../components/HorizontalPanel.vue';
+
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 import TabSwitching from '../../components/TabSwitching.vue';
 import AllClipFile from './allClipFile.vue';
+import ClipSetDrawer from '../../components/clipPreview/ClipSetDrawer.vue';
 import {Empty} from 'ant-design-vue';
 import {mapWritableState,mapActions} from "pinia";
 import {clipboardStore} from "../../store/clipboard";
@@ -94,17 +73,19 @@ import _ from 'lodash-es'
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
 import { fileList } from '../../js/data/clipboardData';
 
-export default {
+export default{
   name: 'Clipboard',
+
   components: {
     HorzontanlPanelIcon,
     TabSwitching,
-    HorizontalPanel,
     HorizontalDrawer,
-    AllClipFile
+    AllClipFile,
+    ClipSetDrawer
   },
-  data() {
-    return {
+
+  data(){
+    return{
       // 历史和收藏切换数组
       clipType: [
         {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
@@ -112,6 +93,7 @@ export default {
       ],
       // 历史和收藏切换数组默认值
       defaultClipType: {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
+    
       // 导航栏筛选分类
       cutType: [
         {title: '全部', icon: 'appstore', typename: 'all',name:'全部'},
@@ -123,20 +105,17 @@ export default {
       ],
       // 导航栏筛选分类默认值
       defaultCutType: {title: '全部', icon: 'appstore', name: '全部',typename:'all'},
-      // 控制设置抽屉打开
-      setShow: false,
 
-      instruct: 'CTRL + ALT + V',
+      // 空状态
+      simpleImage: '/public/img/test/not-data.png',
 
-      historyCapacity: [
-        {title: '1天', name: 'day'},
-        {title: '1周', name: 'week'},
-        {title: '1月', name: 'month'},
-        {title: '不限制', name: 'unlimited'}
-      ],
+      //搜索
+      searchData: '', 
 
-      defaultCapacity: {title: '1天', name: 'day'},
+      // 控制搜索弹窗
+      drawerVisible: false,
 
+      // 滚动配置
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -144,16 +123,12 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
-
-      simpleImage: '/public/img/test/not-data.png',
-
-      drawerVisible: false,
-
-      searchData: '' //搜索
     }
   },
-  computed: {
-    ...mapWritableState(clipboardStore, ['enable', 'clipboardObserver','items']),
+
+  computed:{
+    ...mapWritableState(clipboardStore, ['clipboardObserver','items']),
+    // 根据剪贴板列表不同状态进行数据显示
     clipContent(){
       switch(this.defaultCutType.typename){
         case 'all': // 默认全部
@@ -180,39 +155,28 @@ export default {
       }
     }
   },
-  methods: {
-    ...mapActions(clipboardStore,['start','stop','isRunning','prepare']),
-    //打开设置操作
-    openSet() {
-      this.setShow = true
-    },
+
+  methods:{
+    // 打开导航栏切换
     openClipType() {
       this.$refs.clipRef.openDrawer()
     },
+    // 切换导航栏
     getClipItem(v) {
+      console.log(v);
       this.defaultCutType = v
     },
+    // 打开搜索入口
     clipSearch() {
       this.drawerVisible = true
     },
-
+    // 打开设置入口
+    openSet(){
+      this.$refs.clipDrawer.clipOpenShow()
+    }
   },
-  watch: {
-    'enable': {
-      handler(newVal, oldVal) {
-        console.log('剪切板开关',newVal)
-        if (newVal) {
-          this.prepare()
-          this.start()
-        } else {
-          if (this.clipboardObserver) {
-            if (this.isRunning()) {
-              this.stop()
-            }
-          }
-        }
-      }
-    },
+
+  watch:{
     // 监听导航栏筛选切换
     'defaultCutType': {
       handler() {
@@ -220,35 +184,11 @@ export default {
       },
       immediate: true,
     },
-  },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.light-grey-font {
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.60);
-  font-weight: 500;
-}
-
-.plain-font {
-  font-family: PingFangSC-Medium;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 500;
-}
-
-.set-button {
-  background: #2A2A2A;
-}
-
-.shortcut-area {
-  background: #2A2A2A;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 227px;
-}
-
 .button-active {
   &:active {
     filter: brightness(0.8);
@@ -260,6 +200,12 @@ export default {
   }
 }
 
+.search-text{
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: rgba(255,255,255,0.60);
+  font-weight: 400;
+}
 .s-bg {
   box-shadow: none !important;
 }
