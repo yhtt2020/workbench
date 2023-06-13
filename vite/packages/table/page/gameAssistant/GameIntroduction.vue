@@ -69,8 +69,8 @@
   <template v-else>
     <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em"
                           class="mt-3 mr-3">
-      <div v-for="item in gameIntroductionList" style="width: calc(100vw - 275px)"
-           class="s-bg h-14 mb-3 rounded-xl nav-top-game flex flex-row items-center px-4 inline-block">
+      <div v-for="item in gameIntroductionList" style="width: calc(100vw - 275px)" @click="openUrl(item.href)"
+           class="s-bg h-14 mb-3 rounded-xl nav-top-game flex flex-row items-center px-4 inline-block pointer">
         <div class="round-dot mr-4 flex-shrink-0"></div>
         <div class="text-more inline-block">{{ item.title }}</div>
         <div class="ml-auto flex-shrink-0">{{ item.date }}</div>
