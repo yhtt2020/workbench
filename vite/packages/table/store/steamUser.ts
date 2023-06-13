@@ -132,7 +132,6 @@ export const steamUserStore = defineStore("steamUser", {
       })
       this.gameList = list.map(game => {
         //此处映射需要用到的字段，以简化数据库存入，提升性能
-        console.log(game)
         let formattedGame = {
           clientIcon:game.appinfo.common.clienticon,
           icon:game.appinfo.common.icon,
@@ -154,7 +153,6 @@ export const steamUserStore = defineStore("steamUser", {
       })
     },
     addGameDetail(value) {
-      console.log(value, 'addGameDetailreturn')
       value.forEach((e) => {
         const obj = this.originGameList.find(i => i.appid == e.appinfo.appid)
         if (obj) {

@@ -16,7 +16,7 @@ import Music from "../page/Music.vue";
 import Status from "../page/Status.vue";
 import Main from "../page/Main.vue";
 import Home from "../page/Home.vue";
-import Browser from "../page/settings/Browser.vue";
+import BrowserSetting from "../page/settings/Browser.vue";
 import Common from "../page/settings/Common.vue";
 import SetupCard from "../page/app/card/SetupCard.vue";
 import Sensor from "../page/Sensor.vue";
@@ -47,6 +47,10 @@ import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
 import DeckAdd from "../page/app/deck/DeckAdd.vue";
 import DeckIndex from "../page/app/deck/DeckIndex.vue";
+import BrowserIndex from '../page/app/browser/Index.vue';
+import BrowserMain from '../page/app/browser/Browser.vue';
+
+// @ts-ignore
 export default [
   {
     path: "/main",
@@ -129,6 +133,17 @@ export default [
         component: Apps,
       },
       {
+        path: '/browser',
+        component: BrowserMain,
+        children: [
+          {
+            path: '',
+            name: 'browser',
+            component: BrowserIndex
+          }
+        ]
+      },
+      {
         path: "/music",
         name: "music",
         component: Music,
@@ -185,9 +200,9 @@ export default [
             props: true,
           },
           {
-            path:"/GameCapture",
-            name:'GameCapture',
-            component:GameCapture,
+            path: "/GameCapture",
+            name: 'GameCapture',
+            component: GameCapture,
           }
         ],
       },
@@ -196,16 +211,16 @@ export default [
         path: "/deck",
         name: "deckIndex",
         component: DeckIndex,
-        children:[
+        children: [
           {
-            path:'',
-            name:'deck',
+            path: '',
+            name: 'deck',
             component: DeckHome
           },
           {
-            path:"/add",
-            name:'deckAdd',
-            component:DeckAdd
+            path: "/add",
+            name: 'deckAdd',
+            component: DeckAdd
           }
         ]
       },
@@ -241,8 +256,8 @@ export default [
           },
           {
             path: "/browser",
-            name: "browser",
-            component: Browser,
+            name: "browserSetting",
+            component: BrowserSetting,
           },
           {
             path: "/subscreen",
@@ -304,9 +319,9 @@ export default [
         ],
       },
       {
-        path:'/clipboard',
-        name:'clipboard',
-        component:Clipboard,
+        path: '/clipboard',
+        name: 'clipboard',
+        component: Clipboard,
       }
     ],
   },

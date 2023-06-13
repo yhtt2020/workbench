@@ -5,7 +5,7 @@
     :menuList="menuList"
     ref="customAssembly"
     :custom-data="customData"
-  >
+    :desk="desk">
     <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
       <div
         class="h-full w-full pointer"
@@ -79,7 +79,7 @@
     <template #extra>
       <div
         class="flex justify-center items-center rounded-lg h-10 drawer-item-bg w-16 pointer"
-        @click="saveData" style="background: var(--primary-bg);color:var(--primary-text)"
+        @click="saveData" style="background: #508BFE ;color:white"
       >
         保存
       </div>
