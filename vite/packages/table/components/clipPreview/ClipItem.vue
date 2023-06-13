@@ -205,7 +205,7 @@
   <!-- 视频显示区域开始 -->
   <template v-if="clip.type === 'video'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;" class="flex flex-col justify-between">
+    <div style="width: 338px;" class="flex flex-col justify-between" v-if="controlsShow === false">
       <!-- 视频标题开始 -->
       <div class="flex s-item flex-col rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -220,14 +220,36 @@
       <!-- 视频标题结束 -->
       
       <!-- 视频内容开始 -->
-       <div  class="flex px-5 py-10 items-center flex-col justify-center">
+       <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" @click="textButton">
         <div id="clip-video" ref="clipVideo" class="rounded-lg"></div>
        </div>
       <!-- 视频内容结束 -->
     </div>
 
     <!-- 视频快捷键操作界面 -->
+    <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
+      <div class="flex s-item flex-col px-4 py-3 rounded-lg">
+        <div class="flex justify-between mb-3">
+          <div class="w-12 s-item h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
+            <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>
+          </div>
+          <div class="flex w-4/5 items-center  justify-center">
+           <span>操作</span>
+          </div>
+        </div>
 
+        <!-- 快捷键按钮 -->
+        <div class="flex flex-col">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
+            <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer justify-between s-item px-4 rounded-lg py-3 mb-2">
+              <span>{{item.title}}</span>
+              <span>{{item.intr}}</span>
+            </div> 
+          </vue-custom-scrollbar>
+        </div>
+
+      </div>
+    </div>
   </template>
   <!-- 视频显示区域结束 -->
 
@@ -364,6 +386,7 @@ export default {
 
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
+    // 初始化加载西瓜视频播放器
     this.loadVideo()
   },
 
@@ -416,6 +439,9 @@ export default {
     backClip(){
       this.controlsShow = false
       this.codeLanguageShow = false
+      if(this.clip.type === 'video'){
+        this.loadVideo()
+      }
     },
     // 文本底部tab切换
     selectItem(item,index){
@@ -452,7 +478,7 @@ export default {
           console.log('打开链接');
           break;
         case 's':
-          // this.$emit('previewItem',this.clip)
+          this.$emit('previewItem',this.clip)
           this.isOpenPreview(true)
           break;
         case 'cs':
@@ -488,7 +514,7 @@ export default {
     },
     
 
-    // 加载视频
+    // 加载视频并且创建西瓜视频播放器
     loadVideo(){
       const url = this.clip.videoUrl
       if(this.clip.type === 'video'){
