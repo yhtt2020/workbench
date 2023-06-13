@@ -55,7 +55,9 @@
   background: var(--main-mask-bg) !important;
 }
 .xt-hover {
-  background: var(--secondary-bg);
+  &:hover {
+    background: var(--secondary-bg);
+  }
 }
 // 分割线
 .xt-divider {
