@@ -55,10 +55,9 @@
   background: var(--main-mask-bg) !important;
 }
 
-
 .xt-hover {
   &:hover {
-    background: var(--active-secondary-bg) !important;
+    background: rgba(0, 0, 0, 0.1) !important;
   }
 }
 // 分割线

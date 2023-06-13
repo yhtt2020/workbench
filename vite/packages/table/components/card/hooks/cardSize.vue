@@ -40,7 +40,7 @@ export default {
     .item {
         flex: 1;
         text-align: center;
-        color: #fff !important;
+        color: var(--primary-text) !important;
         line-height: 42px;
         padding: 0 2px;
         cursor: pointer;

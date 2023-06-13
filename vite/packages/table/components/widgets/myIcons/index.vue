@@ -12,7 +12,7 @@
         <template #title>
             <div style="display: flex; justify-content: space-between; align-items:center">
                 <div style="width: 50%;text-align: right;">设置</div>
-                <div style="padding: 10px;border-radius: 5px;cursor: pointer;" class="xt-bg" @click="save()">保存</div>
+                <div style="padding: 10px;border-radius: 5px;cursor: pointer;" class="xt-bg-2" @click="save()">保存</div>
             </div>
         </template>
         <edit ref="editRef" v-bind="editOption"></edit>

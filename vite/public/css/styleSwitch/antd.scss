@@ -1,7 +1,6 @@
 .ant-drawer-header,
 .ant-drawer-wrapper-body {
-  background: var(--primary-bg);
-  background: var(--secondary-bg);
+  background: var(--modal-bg);
   color: var(--primary-text);
 
   .text-center {
@@ -9,14 +8,14 @@
   }
 
   .ant-drawer-close {
-    background: var(--primary-bg);
+    background: var(--secondary-bg);
     color: var(--primary-text);
   }
 
   .btn,
   .option {
     color: var(--primary-text);
-    background: var(--primary-bg);
+    background: var(--secondary-bg);
   }
 }
 // 切换按钮
