@@ -1,11 +1,9 @@
 <template>
-  <!-- 代码块高亮  代码块-->
+  <!-- 代码块不高亮 纯文本 -->
   <div ref="myClip"></div>
 </template>
 
 <script>
-import { mapWritableState,mapActions } from 'pinia'
-import { clipboardStore } from '../../store/clipboard';
 import CodeMirror from 'codemirror'
 
 
@@ -15,20 +13,17 @@ export default {
       type:String,
     }
   },
-  computed:{
-    ...mapWritableState(clipboardStore,['clipMode']),
-  },
   mounted(){
     this.myClipRefs = CodeMirror(this.$refs.myClip,{
       value:this.editorContent,
-      theme:'monokai',
       smartIndent:true,
       tabSize:6,
+      smartIndent:true,
       indentWithTabs:true,
+      direction: "ltr",
       lineWrapping: true,
       lineNumbers: true,
-      direction: "ltr",
-      mode:this.clipMode
+      mode:null
     })
   }
 }
@@ -45,15 +40,22 @@ export default {
   display: none !important;
 }
 
-.CodeMirror {
-  width: 100%;
-  height: 300px;
-  white-space: pre-wrap; /* 设置代码内容换行 */
-}
+
 </style>
 
 <style>
+.CodeMirror{
+  width: 300px !important;
+  background:none !important;
+  color: rgba(255,255, 255, 0.85);
+}
+/*
+.CodeMirror-line{
+  width: 300px !important;
+  white-space: pre-wrap !important;
+} 
+*/
 .CodeMirror-gutters{
-  background: none !important;
+  border: none !important;
 }
 </style>

@@ -2,9 +2,9 @@
   <!-- 文本显示区域开始 -->
    <template v-if="clip.type === 'text'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;" v-if="controlsShow === false" class="flex flex-col rounded-lg justify-between" @contextmenu="textButton">
+    <div style="width: 338px;" v-if="controlsShow === false && codeLanguageShow === false" class="flex flex-col rounded-lg justify-between" @contextmenu="textButton">
       <!-- 文本卡片顶部标题开始 -->
-      <div class="flex s-item flex-col rounded-t-lg w-full px-4 py-2">
+      <div class="flex s-item flex-col h-16 rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
          <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
          <span class="ml-2">{{getType(clip.type).title}}</span>
@@ -18,23 +18,20 @@
 
       <!-- 文本内容开始 -->
         <!-- 纯文本情况下 -->
-        <div class="flex px-5 py-10 cursor-text" v-if="defaultTextType.name === 'text'">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 30vh;">
-            {{ clip.content }}
-          </vue-custom-scrollbar>
+        <div class="flex px-5 py-10 flex-1 text-md" v-if="defaultTextType.name === 'text'">
+          <textCodeMirror :editorContent="clip.content"></textCodeMirror>
         </div>
         <!-- 代码高亮情况下 -->
-        <div v-if="defaultTextType.name === 'code'" class="px-5 py-10 cursor-text">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 30vh;">
-             <!-- <div>代码块</div> -->
-             <ClipCodemirror :editorContent="clip.content" class="w-full"></ClipCodemirror>
-          </vue-custom-scrollbar>
+        <div v-if="defaultTextType.name === 'code'" class="px-5 py-10 flex-1">
+          <ClipCodemirror :editorContent="clip.content" class="w-full"></ClipCodemirror>
         </div>
       <!-- 文本内容结束 -->
 
       <!-- 剪贴板文本底部切换开始 -->
-      <div class="flex s-item p-1 rounded-b-lg items-center justify-between">
-          <div v-for="item in textType" :class="defaultTextType.name === item.name ? 's-item':''" class="flex items-center pointer rounded-lg pt-3 pb-2 px-12" @click.stop="selectItem(item,index)">
+      <div class="flex s-item p-1 h-12 rounded-b-lg items-center justify-between">
+          <div v-for="(item,index) in textType" :class="defaultTextType.name === item.name ? 's-item':''" class="flex items-center pointer rounded-lg pt-3 pb-2 px-12" 
+           @click.stop="selectItem(item,index)"  @tabClick="openCode"
+          >
             <Icon :icon="item.icon" style="font-size: 1.45em;"></Icon>
             <span class="ml-1.5">{{ item.title }}</span>
             <Icon icon="xiangyou" class="pointer"  v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
@@ -68,7 +65,27 @@
     </div>
 
     <!-- 代码语言切换界面 -->
-    
+    <div v-else style="width: 338px;height:100%;" class="flex flex-col">
+      <div class="s-item p-4 ">
+        <div class="flex justify-between items-center mb-3">
+          <div class="w-12 h-12 pointer s-item rounded-lg button-active  flex items-center justify-center" @click="backClip">
+            <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+          </div>
+          <span class="title-text">语言</span>
+          <div class="w-12 h-12 pointer s-item rounded-lg button-active  flex items-center justify-center" @click="openClipSet">
+            <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
+          </div>
+        </div>
+        <!-- 代码块语言包切换列表 -->
+        <div class="flex flex-col">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
+            <div v-for="item in codeLanguage" class="rounded-lg pointer button-active s-item px-4 py-3 mb-2" @click="clickCodeLanguage(item.name)">
+              {{ item.title }}
+            </div>
+          </vue-custom-scrollbar>
+        </div>
+      </div>
+    </div>
    </template>   
   <!-- 文本显示区域结束 -->
 
@@ -190,17 +207,22 @@
   </template>
   <!-- 文件显示区域结束 -->
 
-
+  <!-- 设置弹窗 -->
+  <ClipSetDrawer ref="setDrawer"></ClipSetDrawer>
 </template>
 
 <script>
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
+import ClipSetDrawer from './ClipSetDrawer.vue';
 import {toRaw} from "vue";
 import ClipCodemirror from './ClipCodemirror.vue';
+import { mapActions } from 'pinia'
+import { clipboardStore } from '../../store/clipboard';
+import textCodeMirror from './textCodeMirror.vue';
+
 
 export default {
-  components: { HorzontanlPanelIcon,ClipCodemirror},
-  // codemirror,
+  components: { HorzontanlPanelIcon,ClipCodemirror,textCodeMirror,ClipSetDrawer},
   props:{
     clip:{
       type:Object,
@@ -214,6 +236,8 @@ export default {
 
       // 控制操作界面的显示
       controlsShow:false,
+      // 控制代码块界面的显示
+      codeLanguageShow:false,
 
       // 判断文本底部切换是为首次切换
       firstSwitch:true,
@@ -264,16 +288,17 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-
-      // codeLanguage:[
-      //   {title:'Python',name:'python'},
-      //   {title:'JavaScript',name:'javascript'},
-      //   {title:'Java',name:'text/x-java'},
-      //   {title:'C++',name:'text/x-c++src'},
-      //   {title:'C#',name:'text/x-csharp'},
-      //   // {title:'PHP'},
-      //   {title:'Swift',name:'swift'}
-      // ],
+      
+      // 代码块语言包切换
+      codeLanguage:[
+        {title:'Python',name:'python'},
+        {title:'JavaScript',name:'javascript'},
+        {title:'Java',name:'text/x-java'},
+        {title:'C++',name:'text/x-c++src'},
+        {title:'C#',name:'text/x-csharp'},
+        {title:'PHP',name:'application/x-httpd-php'},
+        {title:'Swift',name:'swift'}
+      ],
       // clipOptions:{
       //   tabSize: 4, // 默认为4
 			// 	mode: 'swift', // 选择代码语言
@@ -307,6 +332,7 @@ export default {
 
 
   methods:{
+    ...mapActions(clipboardStore,['changeClipMode']),
     refresh(){
       this.clip.timeText=tsbApi.util.friendlyDate(this.clip.time)
       this.type=this.getType(this.clip.type)
@@ -347,6 +373,7 @@ export default {
     // 返回按钮
     backClip(){
       this.controlsShow = false
+      this.codeLanguageShow = false
     },
     // 文本底部tab切换
     selectItem(item,index){
@@ -406,22 +433,22 @@ export default {
           break;
           
       }
-    }
-    // openCode(){
-    //   this.textShow = true
-    //   this.codeShow = true
-    // },
-    // clickCodeLanguage(item){
-    //   this.textShow = false
-    //   this.codeShow = false
-    //   this.defaultTextType.title = item.title
-    //   this.clipOptions.mode = item.name
-    // },
+    },
+    // 打开代码块语言包切换界面
+    openCode(){
+      this.codeLanguageShow = true
+    },
+    // 代码块语言包切换的回调事件
+    clickCodeLanguage(item){
+      this.changeClipMode(item) // 将代码块语言包进行替换的方法
+      this.codeLanguageShow = false
+    },
     
-    // // 点击视频显示操作页面
-    // openVideoControls(){
-    //   this.videoShow = true
-    // },
+    // 打开设置
+    openClipSet(){
+      this.$refs.setDrawer.clipOpenShow()
+    },
+    
   }
 }
 </script>
@@ -469,5 +496,26 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+}
+
+.button-active {
+  &:active {
+    filter: brightness(0.8);
+    background: rgba(42, 42, 42, 0.25);
+  }
+
+  &:hover {
+    background: rgba(42, 42, 42, 0.25);
+  }
+}
+.title-text{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 400;
+}
+
+.text-md{
+  flex:1;
 }
 </style>

@@ -4,6 +4,8 @@ import {ClipboardObserver} from '../js/common/clipboardObserver'
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     enable: false,
+    clipMode:'javascript',  // 存储代码块语言包 默认js
+    clipTextTheme:'',      // 存储代码块的主题颜色 默认monokai
     items: [],
     clipboardObserver: {},
     settings: {
@@ -44,6 +46,10 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
       this.items.push(item)
       console.log('监测到[图片]新剪切板内容', image)
+    },
+    changeClipMode(code:string){
+      this.clipMode = code
+      console.log('语言包替换成功',code);
     }
   }
 })
