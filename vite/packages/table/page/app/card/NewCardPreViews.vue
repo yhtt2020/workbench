@@ -1,6 +1,6 @@
 <template>
   <div class="main-box ">
-    <div class="box" v-for="(item, index) in   navLists  " :key="item.name">
+    <div class="box xt-bg-2" v-for="(item, index) in   navLists  " :key="item.name">
       <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
         <div class="icons">
           <Icon icon="tianjia2" style="color: #000;"></Icon>
@@ -21,7 +21,7 @@
             <img v-for="i in item.option" :src="getImg(i.name)" alt="">
           </div>
         </template>
-        <img v-else style="background: var(--secondary-bg);" :src="getImg(item.option[0].name)" alt=""
+        <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
           :style="[{ zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' }]">
       </div>
       <div class="right" style="">
@@ -29,7 +29,7 @@
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
           <div class="icon-box" v-for="i in item.sizes" :key="i"
-            style="color:var(--secondary-text);background: var(--secondary-bg);">{{ i }}
+            style="color:var(--secondary-text);background: var(--active-bg);">{{ i }}
           </div>
         </div>
         <div class="data">
@@ -48,14 +48,22 @@
   <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
     :cardDetails="cardDetails">
   </NewPreviewCardDetails>
+  <a-drawer :width="500" v-model:visible="settingVisible" placement="right" style="z-index:9999999999">
+    <template #title>
+      <div class="text-center">设置</div>
+      <div @click="save()">保存</div>
+    </template>
+    <edit ref="editRef" v-bind="iconOption"></edit>
+  </a-drawer>
 </template>
 
 <script>
-import { mapActions } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { cardStore } from '../../../store/card'
 import { message } from 'ant-design-vue'
 import NewPreviewCardDetails from './NewPreviewCardDetails.vue'
-
+import Edit from '../../../components/widgets/myIcons/edit.vue'
+import { myIcons } from '../../../store/myIcons.ts'
 export default {
   emits: ['close', 'addSuccess'],
   props: {
@@ -72,17 +80,21 @@ export default {
       default: () => { }
     }
   },
-
+  computed: {
+    ...mapWritableState(myIcons, ['iconOption']),
+  },
   data() {
     return {
       navLists: [],
       carouselIndex: 0,
       isCardDetails: false,
-      cardDetails: {}
+      cardDetails: {},
+      settingVisible: false,
+      item: null
     }
   },
   components: {
-    NewPreviewCardDetails
+    NewPreviewCardDetails, Edit
   },
   watch: {
     navList: {
@@ -102,6 +114,13 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ['addCard']),
+    save() {
+      let editOption = this.$refs.editRef.save()
+      if (typeof (editOption) === 'string') return message.error(editOption)
+      Object.keys(editOption).forEach(k => this.iconOption[k] = editOption[k])
+      this.settingVisible = false
+      this.add(this.item)
+    },
     getImg(url) {
       return '/img/addCard/' + url + '.png'
     },
@@ -145,7 +164,15 @@ export default {
       this.isCardDetails = true
     },
     addCardAchieve(item, i) {
-      let index = i ?? this.carouselIndex
+      if (item.name == "myIcons") {
+        this.item = item
+        this.settingVisible = true
+        return
+      }
+      this.add(item, i)
+    },
+    add(item, index) {
+      index = index ?? this.carouselIndex
       this.addCard({ name: item.option[index].name, id: Date.now(), customData: {} }, this.desk)
       this.$emit('addSuccess')
       message.success('添加成功！')
@@ -169,7 +196,6 @@ export default {
   height: 184px;
   display: flex;
   border-radius: 12px;
-  background: var(--secondary-bg);
   position: relative;
   margin: 18px;
   margin-left: 0;
@@ -222,7 +248,7 @@ export default {
     background: var(--secondary-bg);
 
     .top {
-      background: var(--secondary-bg) !important;
+      background: var(--secondary-bg);
       width: 100%;
       height: 120px;
       display: flex;
@@ -243,7 +269,6 @@ export default {
     .bottom {
       width: 100%;
       height: 62px;
-      // background: var(--primary-bg) !important;
       border-radius: 0px 0px 0px 12px;
       display: flex;
       justify-content: space-around;
@@ -332,4 +357,5 @@ export default {
       }
     }
   }
-}</style>
+}
+</style>
