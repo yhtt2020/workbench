@@ -22,6 +22,10 @@
 .ant-switch {
   background: var(--active-secondary-bg);
 }
+
+.ant-message {
+    z-index: 9999999999999999999999;
+}
 .ant-modal-body {
   background: var(--modal-bg);
 }
