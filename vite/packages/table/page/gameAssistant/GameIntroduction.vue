@@ -313,7 +313,6 @@ export default {
     },
 
     openUrl(url) {
-      console.log('打开工作台网页',url)
       browser.openInTable(url)
     },
 

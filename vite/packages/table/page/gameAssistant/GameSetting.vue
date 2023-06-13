@@ -11,6 +11,26 @@
     </div>
   </div>
   <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+    <Icon style="height: 36px;width: 36px" icon="shijian3dian"></Icon>
+    <div class="flex flex-col ml-4 w-2/3">
+      <span class="text-white">最近游玩的游戏记录</span>
+      <span>清空游玩记录不会删除对应的游戏桌面。</span>
+    </div>
+    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clearRecent">
+      清空记录
+    </div>
+  </div>
+  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+    <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>
+    <div class="flex flex-col ml-4 w-2/3">
+      <span class="text-white">游戏桌面</span>
+      <span>每个游戏的独立桌面</span>
+    </div>
+    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">
+      删除全部桌面
+    </div>
+  </div>
+  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
     <Icon style="height: 36px;width: 36px" icon="position"></Icon>
     <div class="flex flex-col ml-4 w-2/3">
       <span class="text-white">折扣地区</span>
@@ -30,8 +50,8 @@
                        bgColor="drawer-item-select-bg"></HorizontalPanel>
       <div class="mt-3 mb-0 pl-2">
         <ExclamationCircleFilled/>
-        请勿使用代理。<a style="color: #c0c0c0" target="_blank"
-                        href="https://www.yuque.com/tswork/mqon1y/kvinb8xbzw2eaa2e">了解技术细节</a></div>
+        网络不好多试几次！ steam302用户请看-><a style="color: #c0c0c0" target="_blank"
+                        href="https://www.yuque.com/tswork/mqon1y/kvinb8xbzw2eaa2e">技术说明</a></div>
       <div class=" mt-3">
         <a-input v-model:value="userName" placeholder="用户名（非邮箱）" class="no-drag rounded-lg h-12 mx-auto"
                  spellcheck="false" style="  width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
@@ -63,7 +83,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'pinia'
+import {mapState, mapActions, mapWritableState} from 'pinia'
 import { Modal as antModal } from 'ant-design-vue'
 import Modal from '../../components/Modal.vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
@@ -161,10 +181,30 @@ export default {
     console.log(session)
   },
   computed: {
-    ...mapState(steamUserStore, ['steamLoginData', 'userData'])
+    ...mapState(steamUserStore, ['steamLoginData', 'userData']),
+    ...mapWritableState(steamUserStore,['recentGameList','desks'])
   },
   methods: {
     ...mapActions(steamUserStore, ['setSteamLoginData', 'setUserData']),
+    clearRecent(){
+      antModal.confirm({
+        centered:true,
+        content:'确认清空游玩记录？此操作并不会删除对应的游戏桌面。但不可恢复。',
+        onOk:()=>{
+          this.recentGameList=[]
+        }
+      })
+    },
+    removeAllDesk(){
+      antModal.confirm({
+        centered:true,
+        content:'确认删除全部的桌面？此操作非常危险，一旦操作就无法撤销！',
+        onOk:()=>{
+          this.desks={}
+        },
+        okText:'确认删除'
+      })
+    },
     clickBind () {
       if (this.steamLoginData.refreshToken === '') {
         this.modalVisibility = true
@@ -188,7 +228,7 @@ export default {
       if (str.indexOf('invalidpassword') > -1) {
         return '用户名或密码错误'
       } else if (str.indexOf('timedout') > -1) {
-        return '连接超时，请检查网络（不要挂VPN）'
+        return '连接超时，请检查网络（steam302用户请看技术细节，需做额外处理）'
       } else {
         return str
       }

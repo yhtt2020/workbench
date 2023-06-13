@@ -1,6 +1,6 @@
 <template>
     <!-- 有内容 -->
-  <!-- <div class="container s-bg rounded-lg" v-if="!detailToggle">
+   <div class="container s-bg rounded-lg" v-if="!detailToggle && true">
     <div class="ability flex justify-between px-4">
         <div class="flex items-center">
           <div>
@@ -37,9 +37,9 @@
             </div>
         </div>
     </div>
-  </div> -->
+  </div>
   <!-- 无内容 -->
-  <div class="container rounded-lg flex flex-col items-center">
+  <div class="container rounded-lg flex flex-col items-center" v-if="false">
     <div class="mt-11">
         <div class="flex items-center justify-center">
             <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />
@@ -92,7 +92,7 @@
   </div>
   <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
 </template>
-  
+
 <script>
   import ShortcutKeyDetail from '../../components/ShortcutKeyDetail.vue';
   export default {
@@ -177,10 +177,10 @@
                 name: 'Adobe Lightroom',
                 number: 92
             },
-            
+
         ],
         notDownloadList: [
-            {   
+            {
                 id: 1,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -191,7 +191,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {   
+            {
                 id: 2,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -202,7 +202,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {   
+            {
                 id: 3,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -213,7 +213,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {   
+            {
                 id: 4,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -224,7 +224,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {   
+            {
                 id: 5,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -235,7 +235,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {   
+            {
                 id: 6,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -265,7 +265,7 @@
     },
   };
 </script>
-  
+
 <style scoped lang="scss">
     .container{
       margin: 0 auto 12px;
@@ -354,4 +354,3 @@
 </style>
 
 
-  
