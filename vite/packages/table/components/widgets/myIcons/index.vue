@@ -1,12 +1,10 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef"
-        :desk="desk" style="display: none">
-        隐藏不掉 晚点研究
+    <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef" :size="reSize"
+        :desk="desk">
     </Widget>
     <div class="item xt-text xt-hover" ref="itemRef" @click="iconClick()">
         <div class="image" :style="[backgroundState]">
-            <img src="https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg" alt=""
-                :style="radiusState" style="width: 56px;height: 56px;">
+            <img :src="customData.src" alt="" :style="radiusState" style="width: 56px;height: 56px;">
         </div>
         <div class="title"> {{ customData.titleValue }}</div>
     </div>
@@ -23,12 +21,10 @@
 import Widget from '../../card/Widget.vue'
 
 import { cardStore } from '../../../store/card.ts'
-import { mapActions } from 'pinia'
-
-import { innerImg } from '../../card/hooks/innerImgHook'
+import { myIcons } from '../../../store/myIcons.ts'
+import { mapActions, mapWritableState } from 'pinia'
 import { message } from 'ant-design-vue'
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\js\common\browser.ts
-// '../../js/common/browser
+
 import browser from "../../../js/common/browser.ts"
 import edit from './edit.vue'
 export default {
@@ -58,6 +54,7 @@ export default {
                 // title: '图标组件',
                 // icon: 'time-circle',
                 type: 'games',
+                hide: true
             },
             menuList: [
                 {
@@ -90,16 +87,13 @@ export default {
         }
     },
     mounted() {
-        let setData = {}
-        // 初始化数据
-        if (this.customData.isRadius == undefined) this.customData.isRadius = false
-        if (this.customData.radius == undefined) this.customData.radius = 0
-        if (this.customData.isBackground == undefined) this.customData.isBackground = false
-        if (this.customData.backgroundColor == undefined) setData.backgroundColor = 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)'
-        if (this.customData.title == undefined) setData.title = ""
-        if (this.customData.link == undefined) setData.link = ""
-        if (this.customData.linkValue == undefined) setData.linkValue = ""
-        if (Object.keys(setData)) this.updateCustomData(this.customIndex, setData, this.desk)
+        // 是否需要初始化 
+        if (this.customData.init == undefined) {
+            let setData = {}
+            // pinia获取初始化数据并重置pinia数据
+            Object.keys(this.iconOption).forEach((k) => [setData[k], this.iconOption[k]] = [this.iconOption[k], this.baseIconOption[k]])
+            this.updateCustomData(this.customIndex, setData, this.desk)
+        }
         this.$refs.itemRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     // 更新数据
@@ -142,11 +136,13 @@ export default {
         },
     },
     computed: {
-        // 动态切换是否使用圆角
+        ...mapWritableState(myIcons, ['iconOption', 'baseIconOption']),
+        // 动态切换圆角状态
         radiusState() {
             if (this.customData.isRadius) return { borderRadius: this.customData.radius + 'px' }
             else return { borderRadius: '0px' }
         },
+        // 动态切换背景状态
         backgroundState() {
             if (this.customData.isBackground) return { background: this.customData.backgroundColor }
             else return { background: 'none' }
@@ -160,22 +156,20 @@ export default {
                 titleValue: this.customData.titleValue,
                 link: this.customData.link,
                 linkValue: this.customData.linkValue,
+                src: this.customData.src,
+            }
+        },
+        // 动态计算卡片大小
+        reSize() {
+            return {
+                width: 0 + 'px',
+                height: 0 + 'px'
             }
         }
+
     },
     methods: {
         ...mapActions(cardStore, ['updateCustomData']),
-        async upIcon() {
-            let fileRef = this.$refs.fileRef
-            fileRef.click()
-            let that = this
-            fileRef.onchange = async function (event) {
-                if (this.files.length === 0) return
-                const file = this.files[0]
-                let image = await innerImg(file, 1, 0.6)
-                event.target.value = ""
-            }
-        },
         handleMenu(e) {
             e.preventDefault()
             e.stopPropagation()
@@ -183,21 +177,51 @@ export default {
         },
         save() {
             let editOption = this.$refs.editRef.save()
-            Object.keys(editOption).forEach((k) => {
-                if (k !== undefined) this.customData[k] = editOption[k]
-            })
+            if (typeof (editOption) === 'string') return message.error(editOption)
+            Object.keys(editOption).forEach((k) => this.customData[k] = editOption[k])
             message.success("保存成功")
             this.settingVisible = false
         },
         iconClick() {
-            console.log('this.customData.link :>> ', this.customData.link);
             if (this.customData.link === "link") browser.openInInner(this.customData.linkValue)
-            else if (this.customData.link === "fast") { }
-            else if (1) { }
-            else {
-                console.log('1 :>> ', 1);
+            else if (this.customData.link === "fast" || this.customData.link === "nav") this.openApp()
+            else message.error("你还未设置链接/快捷方式")
+        },
+        openApp() {
+            if (typeof this.customData.linkValue === "object" && this.customData.linkValue.type) {
+                switch (this.customData.linkValue.type) {
+                    case "systemApp":
+                        if (this.customData.linkValue.event === "fullscreen") {
+                            if (this.full) this.full = false;
+                            else this.full = true;
+                            tsbApi.window.setFullScreen(!this.full);
+                        } else if (this.customData.linkValue.event === "/status") {
+                            if (this.$route.path === "/status") this.$router.go(-1);
+                            else this.$router.push({ path: "/status" });
+                        } else if (this.customData.linkValue.data) {
+                            this.$router.push({ name: "app", params: this.customData.linkValue.data });
+                        } else this.$router.push({ name: this.customData.linkValue.event });
+                        break;
+                    case "coolApp":
+                        this.$router.push({ name: "app", params: this.customData.linkValue.data });
+                        break;
+                    case "localApp":
+                        require("electron").shell.openPath(this.customData.linkValue.path);
+                        break;
+                    case "lightApp":
+                        ipc.send("executeAppByPackage", { package: this.customData.linkValue.package });
+                        break;
+                    default:
+                        require("electron").shell.openPath(this.customData.linkValue.path);
+                }
+            } else if (this.customData.linkValue) {
+                this.customData.linkValue.path
+                    ? require("electron").shell.openPath(this.customData.linkValue.path)
+                    : require("electron").shell.openPath(
+                        require("path").normalize(this.customData.linkValue)
+                    );
             }
-        }
+        },
     }
 }
 </script>

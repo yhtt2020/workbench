@@ -1,30 +1,44 @@
 <template>
     <div>
-        <fastNav style="z-index: 9999999999999999999999999;" @returnApp="returnApp"></fastNav>
+        <fastNav style="z-index: 9999999999999999999999999;" @returnApp="returnApp" ref="fastNavRef"></fastNav>
         <div class="text-base" style="margin: 12px 0">链接/快捷方式</div>
         <div class="link-box" v-if="_link == ''">
             <div class="xt-bg xt-text xt-hover" @click="_link = 'link'">网页链接</div>
-            <div class="xt-bg xt-text xt-hover" @click="_link = 'fast'">快捷方式</div>
+            <div class="xt-bg xt-text xt-hover" @click="fastClick()">快捷方式</div>
             <div class="xt-bg xt-text xt-hover" @click="customClick()">应用导航</div>
         </div>
-        <a-input v-else v-model:value="title" placeholder="想天浏览器" class="xt-bg xt-border input">
-            <template #suffix>
-                <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
-                    class="xt-bg-2 flex justify-center items-center xt-hover" @click="_link = ''">
-                    <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
-                </div>
-            </template>
-        </a-input>
+        <template v-else>
+            <a-input v-if="_link === 'link'" v-model:value="_linkValue" placeholder="想天浏览器1" class="xt-bg xt-border input">
+                <template #suffix>
+                    <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
+                        class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
+                        <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
+                    </div>
+                </template>
+            </a-input>
+            <a-input v-else v-model:value="title" placeholder="想天浏览器" class="xt-bg xt-border input">
+                <template #suffix>
+                    <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
+                        class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
+                        <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
+                    </div>
+                </template>
+            </a-input>
+        </template>
         <div class="text-base" style="margin: 12px 0">图标名称</div>
         <a-input v-model:value="_titleValue" placeholder="想天浏览器" class="xt-bg xt-border input" />
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
-            <div class="image">
-                <img src="" alt="" :style="radiusState" style="width: 100%;height: 100%;background: greenyellow;">
+            <div class="image" :style="[backgroundState]">
+                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;">
+                <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
+                    class="xt-bg-2 flex justify-center items-center xt-hover clear" @click="this._src = ''">
+                    <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
+                </div>
             </div>
-            <div>
-                <p class="xt-text-2" style="font-size: 16px;">推荐图片尺寸：128*128，不能超过2MB</p>
-                <input style="display: none" ref="fileRef" type="file" name="" id="" />
+            <div class="img-info">
+                <div class="xt-text-2" style="font-size: 16px;">推荐图片尺寸：128*128，不能超过2MB</div>
+                <input style="display: none" ref="fileRef" type="file" accept="image/jpg,image/jpeg,image/png" />
                 <div @click="upIcon()" class="btn no-drag xt-bg">自定义上传</div>
             </div>
         </div>
@@ -39,7 +53,8 @@
         </div>
         <div v-if="_isBackground" class="item-box">
             <div class="item " :key="item" :style="{ background: backgroundColorList[`${'color' + item}`] }"
-                v-for="item  in 15" @click="_backgroundColor = backgroundColorList[`${'color' + item}`]">
+                v-for="(item, index) in 15" @click="_backgroundColor = backgroundColorList[`${'color' + item}`]"
+                :class="{ active }">
             </div>
         </div>
     </div>
@@ -47,6 +62,8 @@
 
 <script>
 import fastNav from "./fastNav.vue"
+import { validateFile } from '../../card/hooks/innerImgHook'
+import { message } from "ant-design-vue";
 export default {
     components: { fastNav },
     props: {
@@ -56,7 +73,8 @@ export default {
         backgroundColor: { type: String },
         titleValue: { type: String },
         link: { type: String },
-        linkValue: { type: String }
+        linkValue: {},
+        src: { type: String },
     },
     data() {
         return {
@@ -67,6 +85,7 @@ export default {
             _titleValue: this.titleValue,
             _link: this.link,
             _linkValue: this.linkValue,
+            _src: this.src,
             backgroundColorList: {
                 color1: 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)',
                 color2: 'linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)',
@@ -88,22 +107,45 @@ export default {
     },
     computed: {
         title() {
-            return this._linkValue.name || this._linkValue;
-        }
+            return this._linkValue.name || this._linkValue || "";
+        },
+        backgroundState() {
+            if (this._isBackground) return { background: this._backgroundColor }
+            else return { background: 'none' }
+        },
+        radiusState() {
+            if (this._isRadius) return { borderRadius: this._radius + 'px' }
+            else return { borderRadius: '0px' }
+        },
     },
     methods: {
-        returnApp(item) {
-            console.log('1111 :>> ', 1111);
-            if (item instanceof Array) {
-                console.log('item[0] :>> ', item[0]);
-                this._linkValue = item[0]
-
-            } else {
-                console.log('item :>> ', item);
-                this._linkValue = item
+        clear() {
+            this._linkValue = ""
+            this._link = ""
+        },
+        async upIcon() {
+            let fileRef = this.$refs.fileRef
+            fileRef.click()
+            let that = this
+            fileRef.onchange = async function (event) {
+                if (this.files.length === 0) return
+                const file = this.files[0]
+                let validate = validateFile(file, 2)
+                if (validate !== true) return message.error(validate)
+                that._src = file.path
+                event.target.value = ""
             }
         },
+        returnApp(item) {
+            if (item instanceof Array) this._linkValue = item[0]
+            else this._linkValue = item
+            this._link = 'fast'
+        },
+        check() {
+
+        },
         save() {
+            if (this._src.length == 0) return "未上传图标"
             return {
                 isRadius: this._isRadius,
                 radius: this._radius,
@@ -112,19 +154,21 @@ export default {
                 titleValue: this._titleValue,
                 link: this._link,
                 linkValue: this._linkValue,
+                src: this._src,
             }
         },
         async customClick() {
-            this._link = 'nav'
             let openPath = await tsbApi.dialog.showOpenDialog({
                 title: "选择你的本地应用",
                 filters: [{ name: "全部", extensions: ["*"] }],
                 properties: ["multiSelections"],
             });
-            if (!openPath) return;
+            if (!openPath) return this._link = "";
             else this._linkValue = openPath[0];
-            console.log('object :>> ', this._linkValue);
-
+            this._link = 'nav'
+        },
+        fastClick() {
+            this.$refs.fastNavRef.showFastNav()
         },
     }
 }
@@ -153,11 +197,27 @@ export default {
         border-radius: 12px;
     }
 
+    .img-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
     .image {
+        position: relative;
         width: 100px;
         height: 100px;
-        box-sizing: border-box;
-        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        margin-right: 20px;
+
+        .clear {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+        }
     }
 }
 

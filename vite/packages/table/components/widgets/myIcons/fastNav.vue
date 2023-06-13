@@ -1,18 +1,18 @@
 <template>
-    <Classification :navClassify="navClassify" v-if="editFlag" @clickLeftList="clickItem">
-        <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索"
-            style="background: rgba(42, 42, 42, 0.6)">
-            <template #prefix>
-                <Icon icon="sousuo" class="text-gray-600"></Icon>
-            </template>
-        </a-input>
-        <vue-custom-scrollbar key="scrollbar" :settings="rightScrollbarSettings" class="relative"
-            style="height: calc(100% - 40px); padding: 5px 0">
-            <listItem v-for="(item, index) in filterList" :item="item" class="rounded-lg right-scroll-list"
-                @click="clickRightListItem(item, index)"></listItem>
-        </vue-custom-scrollbar>
-
-        <div v-show="nowClassify === 'localApp'" class="flex flex-col items-start text-zinc-500 h-full">
+    <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
+        <div v-show="nowClassify !== 'localApp'" class="h-full">
+            <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索">
+                <template #prefix>
+                    <Icon icon="sousuo" class="text-gray-600"></Icon>
+                </template>
+            </a-input>
+            <vue-custom-scrollbar key="scrollbar" :settings="rightScrollbarSettings" class="relative"
+                style="height: calc(100% - 40px); padding: 5px 0">
+                <listItem v-for="(item, index) in filterList" :item="item" class="rounded-lg right-scroll-list xt-text"
+                    @click="clickRightListItem(item, index)"></listItem>
+            </vue-custom-scrollbar>
+        </div>
+        <div v-show="nowClassify === 'localApp'" class="flex flex-col items-start text-zinc-500 h-full xt-text">
             <div>1. 点击选择需要添加的应用快捷方式</div>
             <div>2. 拖动应用快捷方式拖放到下方</div>
             <div>3. 支持持批量添加</div>
@@ -22,11 +22,11 @@
                 添加快捷方式
             </div>
             <ScrolX :height="66">
-                <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4 pl-4">
+                <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4 pl-4 xt-text">
                     <div v-for="(item, index) in dropList" class="flex ml-4">
                         <a-badge>
                             <template #count>
-                                <Icon icon="guanbi2" style="height: 24px; width: 24px; color: crimson"
+                                <Icon icon="guanbi2" style="height: 24px; width: 24px;"
                                     @click="deleteDropList(index)" class="pointer"></Icon>
                             </template>
                             <a-avatar :size="40" shape="square" :src="item.icon">
@@ -36,8 +36,7 @@
                 </div>
             </ScrolX>
             <div @click="clickRightListItem(dropList)"
-                class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg"
-                style="background: rgb(42, 42, 42); color: rgba(255, 255, 255, 0.85)">
+                class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg xt-bg xt-text">
                 确定添加
             </div>
         </div>
@@ -53,7 +52,7 @@ export default {
     components: { Classification, listItem },
     data() {
         return {
-            navClassify: [...navigationData.navigationClassify], // 导航数据
+            navClassify: [...navigationData.navigationClassify],
             ClassifyData: [
                 ...navigationData.coolAppList,
                 ...navigationData.systemAppList,
@@ -67,7 +66,7 @@ export default {
                 suppressScrollX: true,
                 wheelPropagation: true,
             },
-            editFlag: true,
+            editFlag: false,
             activeRightItem: 0,
             dropList: [],
         }
@@ -93,7 +92,7 @@ export default {
         deleteDropList(index) {
             this.dropList.splice(index, 1);
         },
-        showAppNav() {
+        showFastNav() {
             this.editFlag = true;
         },
         clickRightListItem(item, index) {
