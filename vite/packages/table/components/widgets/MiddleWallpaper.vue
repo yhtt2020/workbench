@@ -47,8 +47,7 @@
       <div class="text-center">「壁纸」设置</div>
     </template>
     <div class="text-base">壁纸源</div>
-    <a-select style="
-        background: rgba(42, 42, 42, 1);
+    <a-select style=" 
         border: 1px solid rgba(255, 255, 255, 0.1);
       " class="w-full h-10 rounded-lg mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
       @change="pickFilterChange($event)" :options="wallpaperOptions">
