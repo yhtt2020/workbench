@@ -1,10 +1,10 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' style="background: var(--main-bg);"></div>
+    <div class='popContainer' style="background: var(--mask-bg);"></div>
     <div class="controller drag" style="color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="header">
         <div class="left">
-          <div class="btn no-drag" @click="onBack" style="color:var(--primary-text);background: var(--active-bg);  ">
+          <div class="btn no-drag xt-bg-2" @click="onBack" style="color:var(--primary-text);  ">
             <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
           </div>
           <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
@@ -14,7 +14,7 @@
           </a-input>
           <a-select style=" z-index: 99999999; position: relative;" v-model:value="searchValue" class=" no-drag select"
                     size="large" @change="handleChange"
-            :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--active-bg)' }">
+            :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--secondary-bg)' }">
             <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{
                 item.name
               }}
@@ -55,7 +55,7 @@
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
 import { NavList } from "./navList"
-import CardState from '../../../components/homeWidgets/cardState/cardState.vue';
+import CardState from '../../../components/card/cardState.vue';
 import _ from 'lodash-es'
 
 export default {
@@ -68,7 +68,7 @@ export default {
       apiList: [],
       selectContent: '',
       searchValue: '默认排序',
-      baseNavList: NavList,
+      baseNavList: navList,
       searchOptions: [
         { value: '默认排序', name: '默认排序' },
         { value: '下载次数', name: '下载次数' },
@@ -79,7 +79,7 @@ export default {
 
   mounted () {
     // 这里是预留给api请求到时间和下载数据添加数据使用
-    let navList = _.cloneDeep(NavList)
+    let navList = _.cloneDeep(this.baseNavList)
 
     let items = []
     navList.map(li => {
@@ -152,7 +152,6 @@ export default {
   },
   methods: {
     onClick() {
-      console.log('222 :>> ', 222);
     },
     handleChange (value) {
       console.log(`selected ${value}`)
@@ -175,7 +174,6 @@ export default {
 
 <style lang="scss" scoped>
 body {
-  background: red !important;
 }
 .popContainer {
   position: fixed;
@@ -230,7 +228,7 @@ body {
         text-align: center;
         font-size: 16px;
         background: rgba(0, 0, 0, 0.30);
-        background: var(--active-bg) !important;
+        background: var(--secondary-bg) !important;
         border-radius: 12px;
         margin-left: 10px;
       }
@@ -247,7 +245,7 @@ body {
       }
 
       .search {
-        background: var(--active-bg);
+        background: var(--secondary-bg);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         width: 400px;
@@ -293,7 +291,7 @@ body {
       }
 
       .active {
-        background: rgba(0, 0, 0, 0.30);
+        background: var(--secondary-bg);
 
       }
     }

@@ -45,8 +45,7 @@
             class="scroll"
           >
             <div
-              class="event-list px-4 mb-3 s-item"
-              style="background: var(--primary-bg);color: var(--primary-text);"
+              class="event-list px-4 mb-3 s-item xt-bg-2 xt-text"
               v-for="(item,index) in countdownDay"
             >
               <a-dropdown :trigger="['contextmenu']" class="w-full">
@@ -79,18 +78,18 @@
           >
         </div>
         <div class="flex flex-row items-center w-full justify-center mt-4">
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: var(--primary-bg);color: var(--primary-text);" @click="closeDrawer">取消</div>
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: var(--primary-bg);color: var(--primary-text);" @click="goAddEvent">添加事件</div>
+          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2" style="color: var(--primary-text); " @click="closeDrawer">取消</div>
+          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-bg-2" style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
         </div>
       </div>
     <div v-else>
-      <div>事件名称</div>
+      <div>事件22名称</div>
       <a-input class="rounded-lg  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="()=>{this.goAddFlag = false}">取消</div>
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer " style="background:var(--primary-bg) ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-bg-2" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>

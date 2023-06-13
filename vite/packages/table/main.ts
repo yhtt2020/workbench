@@ -40,10 +40,8 @@ import VueViewer from "v-viewer";
 import $ from "jquery";
 
 import dayjs from 'dayjs';
-import routes from './route/route'
 
-import "../../public/css/global.scss"
-import "../../public/css/antd.scss"
+import "../../public/css/styleSwitch/index.scss"
 import {router}from './router'
 dayjs.locale('zh-cn');
 

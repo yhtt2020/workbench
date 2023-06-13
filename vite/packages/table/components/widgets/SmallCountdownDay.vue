@@ -6,7 +6,7 @@
   >
     <div style="text-align: center; ">暂无纪念日</div>
     <a-empty :description="null" :image="simpleImage" style="margin: 15px;" />
-    <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
+    <a-button type="primary" style="background:var(--primary-bg) ;color: var(--primary-text);border: none" @click="onSetup">立即添加</a-button>
   </div>
     <div class="content"  v-else>
     <div
@@ -47,8 +47,8 @@
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeSettingVisible">取消</div>
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background: rgba(42, 42, 42, 1);" @click="addEvent">确定添加</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer" style="background:var(--primary-bg) ;color: var(--primary-text);"  @click="closeSettingVisible">取消</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer" style="background:var(--primary-bg) ;color: var(--primary-text);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>
