@@ -725,26 +725,26 @@ ipc.on('errorClose',(e,args)=>{
   // }
 })
 
-// const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
+const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
-  // setTimeout(()=>{
-  //   global.barrageManager=new BarrageManager(windowManager)
-  //   barrageManager.init()
-  // },1000)
+  setTimeout(()=>{
+    global.barrageManager=new BarrageManager(windowManager)
+    barrageManager.init()
+  },1000)
 
 
-  // ipc.on('toggleBarrage',()=>{
-  //  barrageManager.toggle()
-  // })
-  //
-  //  ipc.on('closeBarrageWindow', () => {
-  //     barrageManager.close()
-  //   })
-  //
-  // ipc.on('barrage.changeUrl',(e,a)=>{
-  //   if(typeof barrageManager !=='undefined')
-  //    barrageManager.changeUrl(a.url)
-  // })
+  ipc.on('toggleBarrage',()=>{
+   barrageManager.toggle()
+  })
+
+   ipc.on('closeBarrageWindow', () => {
+      barrageManager.close()
+    })
+
+  ipc.on('barrage.changeUrl',(e,a)=>{
+    if(typeof barrageManager !=='undefined')
+     barrageManager.changeUrl(a.url)
+  })
 
   ipc.on('tabs.current',(e,a)=>{
     //这是一个非常经典的ipc.sendSync的回调实现。
@@ -764,13 +764,13 @@ app.whenReady().then(()=>{
     })
   })
 
-  // ipc.on('barrage.lock',(e,a)=>{
-  //   barrageManager.lock()
-  // })
-  //
-  // ipc.on('barrage.unlock',()=>{
-  //   barrageManager.unlock()
-  // })
+  ipc.on('barrage.lock',(e,a)=>{
+    barrageManager.lock()
+  })
+
+  ipc.on('barrage.unlock',()=>{
+    barrageManager.unlock()
+  })
 
   ipc.on('setAutoRun',(event,args)=>{
     let autoRun=args.value

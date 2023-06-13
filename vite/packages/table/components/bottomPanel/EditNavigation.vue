@@ -13,7 +13,7 @@
             <div style="overflow: hidden;" id="sideNavList"
             class="flex flex-col items-center  flex-nowrap scroll-content" ref="sideContent">
               <div v-for="item in sideNavigationList" :key="item.name" style="margin: 20px 0;">
-                <a-dropdown  :trigger="['contextmenu']">
+                <a-dropdown  :trigger="['contextmenu']"> 
                   <div v-if="item.type==='systemApp'" style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
                     <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);" ></Icon>
                   </div>
@@ -29,17 +29,18 @@
       </div>
       <div class="center-text">
         <div class="con-center" v-show="navText && !promptModal">
-          <span class="mt-5">支持长按拖拽排序，滑动查看更多。</span>
-          <div class="mt-5"><span >以下功能需要在导航栏上至少各保留一个，以保障功能完整</span></div>
-          <span class="mt-2">可快速拖动到侧边栏</span>
-          <span class="flex   mb-2">注意：侧边栏图标会自动替换：
+          <span>导航栏</span>
+          <span>点击添加更多快捷方式，支持长按拖拽排序，滑动查看更多；左侧导航和底部导航支持设置为隐蔽，但至少保留一个为显示状态，已保证功能完整。</span>
+          <span>以下功能需要在导航栏上至少各保留一个，以保障功能完整</span>
+          <span>点击拖动图标到目标导航栏</span>
+          <span class="flex justify-center items-center mb-2">侧边栏图标替换：
             <span class="mr-4 flex justify-center items-center">
               <Icon icon="home" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
               <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
               <Icon icon="shouye1" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
             </span>
             <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
-            <Icon icon="arrowright" style="width: 20px;height: 20px;margin-top: 6px"></Icon>
+            <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
             <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);" ></Icon>
           </span>
           <div class="main-nav" id="mainList">
@@ -99,7 +100,7 @@
             <div style="overflow: hidden;" id="rightNavList"
             class="flex flex-col items-center  flex-nowrap scroll-content" ref="rightContent">
               <div v-for="item in rightNavigationList" :key="item.name" class="my-5 width: 56px;height: 56px;">
-                <a-dropdown  :trigger="['contextmenu']">
+                <a-dropdown  :trigger="['contextmenu']"> 
                   <div v-if="item.type==='systemApp'" style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
                     <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);" ></Icon>
                   </div>
@@ -350,7 +351,7 @@ export default {
                   this.footNav = true
                   this.setNavigationToggle(type,true)
                 }
-
+            
               }
             })
           }

@@ -1,4 +1,4 @@
-export const NavList = [
+export const navList = [
   {
     cname: '推荐',
     children: [

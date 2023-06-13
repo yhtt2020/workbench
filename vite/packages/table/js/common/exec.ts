@@ -26,7 +26,7 @@ export function getResPathJoin(...paths) {
  * @param cmdStr
  * @param cmdPath
  */
-export async function runExec(cmdStr, cmdPath?) {
+export async function runExec(cmdStr, cmdPath) {
   let promise = new Promise((resolve, reject) => {
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
     workerProcess = exec(cmdStr, {cwd: cmdPath,encoding:'buffer'})

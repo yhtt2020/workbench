@@ -35,7 +35,7 @@
     <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="ml-4 mr-4 my-8"
         v-if="sizeList && sizeList.length > 0"/>
     <div class="flex flex-row">
-      <div class="option h-24 w-24 ml-4" @click="()=>{this.menuVisible=false;item.fn()}" v-for="item in menuList">
+      <div class="option h-24 w-24 ml-4" @click="item.fn()" v-for="item in menuList">
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>

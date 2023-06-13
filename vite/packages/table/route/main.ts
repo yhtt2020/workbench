@@ -51,6 +51,8 @@ import BrowserIndex from '../page/app/browser/Index.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
 
 // @ts-ignore
+import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
+import ShareKey from "../page/shortcutKey/ShareKey.vue"
 export default [
   {
     path: "/main",
@@ -322,7 +324,19 @@ export default [
         path: '/clipboard',
         name: 'clipboard',
         component: Clipboard,
-      }
+      },
+      {
+        path:'/shortcutKey',
+        name:'shortcutKey',
+        component:ShortcutKey,
+        // children: [
+        //   {
+        //     path:'/shareKey',
+        //     name:'shareKey',
+        //     component:ShareKey,
+        //   },
+        // ]
+      },
     ],
   },
 ];

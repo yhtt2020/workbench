@@ -415,7 +415,21 @@ export default {
             })
           }
         },
-
+        {
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: '快捷键 （开发中）',
+          summary: '',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'shortcutKey',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'shortcutKey',
+            })
+          }
+        },
       ]
     }
   },
