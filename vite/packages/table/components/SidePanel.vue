@@ -153,8 +153,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-
 .box {
   :deep(.icon) {
     fill: var(--secondary-text);
@@ -164,6 +162,7 @@ export default {
 
 .item:hover {
   background: var(--active-bg) !important;
+
   :deep(.icon) {
     fill: var(--primary-text) !important
   }
@@ -188,7 +187,7 @@ export default {
 }
 
 .item-nav:hover {
-  background: var(--active-bg) !important;
+  background: var(--active-secondary-bg);
 }
 
 .icon-color:hover {
@@ -233,4 +232,5 @@ export default {
   .side-panel {
     zoom: 0.9;
   }
-}</style>
+}
+</style>
