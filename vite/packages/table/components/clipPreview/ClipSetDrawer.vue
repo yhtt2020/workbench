@@ -46,20 +46,24 @@
       <a-switch />
     </div>
     <div class="mb-6 plain-font">默认语言</div>
-    <div class="mb-6">swift</div>
-    <div class="mb-6">编辑器主题</div>
+    <div class="mb-6 s-item py-3 flex items-center rounded-lg pointer justify-center">
+      <span class="btn-text">{{ clipMode }}</span>
+    </div>
+    <div class="mb-6 plain-font">编辑器主题</div>
     <div class="mb-6">dracula</div>
     <div class="flex justify-between mb-6">
       <div class="flex flex-col">
         <span class="plain-font">显示行号</span>
         <span>开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch />
+      <a-switch v-model:checked="showLineNumber" />
     </div>
     <div class="mb-6">缩进单位</div>
     <a-input placeholder="4" />
     <!-- v-model:value="value"  -->
   </a-drawer>
+
+
 </template>
 
 <script>
@@ -91,10 +95,10 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(clipboardStore,['enable'])
+    ...mapWritableState(clipboardStore,['enable','clipSetShow','clipMode','showLineNumber','clipTheme'])
   },
   methods:{
-    ...mapActions(clipboardStore,['start','stop','isRunning','prepare']),
+    ...mapActions(clipboardStore,['start','stop','isRunning','prepare','isClipLineNumber']),
     // 通过该方法可以打开弹窗
     clipOpenShow(){
       this.setShow = true
@@ -106,7 +110,6 @@ export default {
     // 关闭全部
     onClose(){
       this.clipSetVisible = false
-      this.setShow = false
     },
   },
   watch:{
@@ -122,6 +125,18 @@ export default {
               this.stop()
             }
           }
+        }
+      }
+    },
+    'clipSetShow':{
+       handler(){
+
+       }
+    },
+    'showLineNumber':{
+      handler(newVal,oldVal){
+        if(newVal){
+          this.isClipLineNumber(true)
         }
       }
     }

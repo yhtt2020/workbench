@@ -9,14 +9,17 @@
       <ClipItem :clip="item"></ClipItem>
     </div>
   </div>
+  <ClipTextPreview></ClipTextPreview>
 </template>
 
 <script>
 import ClipItem from '../../components/clipPreview/ClipItem.vue';
+import ClipTextPreview from '../../components/clipPreview/ClipTextPreview.vue';
 import { Empty } from 'ant-design-vue';
 export default {
   components:{
-    ClipItem
+    ClipItem,
+    ClipTextPreview
   },
   props:{
     clipList:{
@@ -29,6 +32,10 @@ export default {
       simpleImage: '/public/img/test/not-data.png',
     }
   },
+  // 获取item
+  // getItem(v){
+  //   console.log('测试',v);
+  // }
 }
 </script>
 

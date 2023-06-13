@@ -4,3 +4,13 @@ export const fileList = [
     type:'file'
   },
 ]
+export const videoList = [
+  {
+    title:'视频',icon:'video',capacity:'4.0MB',
+    videoUrl:'https://up.apps.vip/lively/energy-field-74933.mp4',
+    content:'energy-field-74933.mp4',
+    type:'video'
+  }
+]
+
+
