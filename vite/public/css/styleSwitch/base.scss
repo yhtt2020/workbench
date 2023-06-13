@@ -59,6 +59,12 @@
     background: var(--secondary-bg);
   }
 }
+
+.xt-hover-2 {
+  &:hover {
+    background: var(--active-secondary-bg);
+  }
+}
 // 分割线
 .xt-divider {
   border: 1px solid var(--divider) !important;
