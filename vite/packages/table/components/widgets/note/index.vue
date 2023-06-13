@@ -3,8 +3,8 @@
           :menuList="menuList" ref="homelSlotRef" :desk="desk">
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
-                <textarea spellcheck="false" :style="{ 'backgroundImage': background, color: colors }"
-                          class="test box no-drag" placeholder="输入卡片内容" v-model="text" @blur="updateText">
+                <textarea spellcheck="false" :style="{ 'backgroundImage': background, color: fontColor }"
+                          class=" box no-drag" placeholder="输入卡片内容" v-model="text" @blur="updateText">
                 </textarea>
       </template>
     </cardDrag>
@@ -15,6 +15,14 @@
       <div class="text-center">设置</div>
     </template>
     <cardSize @__updateSize="__updateSize" :isActive="isActive"></cardSize>
+    <div>
+      文字颜色
+    </div>
+    <div class="item-box">
+      <div class="item " :key="item" :style="{ 'background': item }" v-for="item  in fontColors"
+           @click="updateFontColor(item)">
+      </div>
+    </div>
     <div class="text-base" style="margin: 12px 0">背景色</div>
     <div class="item-box">
       <div class="item " :key="item" :style="{ 'backgroundImage': color[`${'color' + item}`] }" v-for="item  in 15"
@@ -32,6 +40,7 @@ import cardSizeHook from '../../card/hooks/cardSizeHook'
 
 import cardDrag from '../../card/hooks/cardDrag.vue'
 import cardDragHook from '../../card/hooks/cardDragHook'
+import { message } from 'ant-design-vue'
 
 export default {
   mixins: [cardDragHook, cardSizeHook],
@@ -59,6 +68,8 @@ export default {
   },
   data () {
     return {
+      fontColors:['white','black','red','green','blue'],
+      fontColor:'white',
       options: {
         className: 'card',
         title: '桌面便签',
@@ -108,6 +119,9 @@ export default {
     if (!this.customData.color) {
       setData.colors= '#ffffff'
     }
+    if(this.customData.fontColor){
+      this.fontColor=this.customData.fontColor
+    }
     if(Object.keys(setData)){
       this.updateCustomData(this.customIndex,setData,this.desk)
     }
@@ -116,6 +130,9 @@ export default {
     this.text = this.customData.text
     this.background = this.customData.background
     this.colors = this.customData.color
+    if(!this.customData.fontColor){
+      this.fontColor='white'
+    }
   },
   components: {
     Widget,
@@ -129,6 +146,10 @@ export default {
       },this.desk)
     },
     updateBackground (e) {
+      message.success({
+        content:'设置卡片背景成功',
+        key:'bg'
+      })
       this.updateCustomData(this.customIndex, {
         background: e,
       },this.desk)
@@ -145,6 +166,17 @@ export default {
         this.colors = '#ffffff'
       }
     },
+    updateFontColor(color){
+      message.success({
+        content:'设置字体颜色成功',
+        key:'color'
+      })
+      console.log('设置了',color)
+      this.updateCustomData(this.customIndex, {
+        fontColor: color,
+      },this.desk)
+      this.fontColor=color
+    }
   }
 }
 </script>
