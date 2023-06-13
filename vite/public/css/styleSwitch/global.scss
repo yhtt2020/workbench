@@ -40,7 +40,7 @@
 --active-secondary-bg:  rgba(80,139,254,0.20) !important;
 // 背景
 --main-bg: rgba(0,0,0,0.04) !important;
---primary-bg: #FFFFFF !important;
+--primary-bg: rgba(255, 255, 255, 0.55)!important;
 --secondary-bg:  #E6E6E6 !important; 
 --modal-bg:  #FFFFFF !important;
 --mask-bg:  #FFFFFF !important;
@@ -50,7 +50,7 @@
 --secondary-text:rgba(0,0,0,0.65) !important;
 --disable-text:  rgba(0,0,0,0.25) !important;
 // 分割线
---divider:  rgba(230,230,230,0.60) !important;
+--divider:  rgba(230,230,230,1.60) !important;
 
   body {
     background: var(--main-bg) !important;

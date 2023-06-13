@@ -54,15 +54,11 @@
 .xt-mask-2 {
   background: var(--main-mask-bg) !important;
 }
+
+
 .xt-hover {
   &:hover {
-    background: var(--secondary-bg);
-  }
-}
-
-.xt-hover-2 {
-  &:hover {
-    background: var(--active-secondary-bg);
+    background: var(--active-secondary-bg) !important;
   }
 }
 // 分割线
