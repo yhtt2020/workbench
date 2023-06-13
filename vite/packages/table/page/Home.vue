@@ -722,6 +722,11 @@ export default {
         if(!e.customData){
           e.customData={}
         }
+        if(Object.keys(e.data).length>0){
+          e.customData={...e.customData,...e.data}
+          e.data1=e.data//转移备份
+          e.data={}//修理掉
+        }
       });
     }
 
