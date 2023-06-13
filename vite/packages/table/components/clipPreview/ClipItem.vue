@@ -501,10 +501,7 @@ export default {
            height:'240',
            loop: true,
            videoInit: true,
-           // poster: url.split('.mp4')[0] + '.jpg',
-           // preview: {
-           //  uploadEl: url
-           // }
+           controlsList: ['nofullscreen'],
           })
         })
       }
@@ -591,5 +588,9 @@ export default {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+.xgplayer-icon-requestfull{
+  display: none !important;
 }
 </style>
