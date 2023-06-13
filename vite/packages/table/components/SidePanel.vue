@@ -1,19 +1,30 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <div class="box common-panel s-bg  scroll-content"
-    style=" background: var(--primary-bg); z-index: 99;width: 6em;max-height: 100%;overflow: hidden;padding-top: 0;padding-bottom: 0" ref="sideContent"
-    @contextmenu.stop="showMenu">
-    <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
-      <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
-        <div class="icon-color" v-if="item.type === 'systemApp'">
-          <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;color:rgba(255, 255, 255, 0.4);"
-            :class="{ 'active-color': current(item) }"></Icon>
+
+    <div class="box common-panel s-bg  "
+         style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
+          background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
+          overflow-x: hidden;
+          padding-top: 0;padding-bottom: 0;position:relative;" ref="sideContent"
+         @contextmenu.stop="showMenu">
+      <div style="width: 67px;overflow-x: hidden">
+        <div style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start">
+          <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
+            <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
+              <div class="icon-color" v-if="item.type === 'systemApp'">
+                <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;color:rgba(255, 255, 255, 0.4);"
+                      :class="{ 'active-color': current(item) }"></Icon>
+              </div>
+              <a-avatar v-else :size="37" shape="square" :src="item.icon"></a-avatar>
+            </div>
+          </div>
         </div>
-        <a-avatar v-else :size="37" shape="square" :src="item.icon"></a-avatar>
       </div>
+
     </div>
-  </div>
+
+
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
@@ -65,7 +76,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
   },
   mounted() {
-    this.scrollNav('sideContent', 'scrollTop')
+  // this.scrollNav('sideContent', 'scrollTop')
   },
   methods: {
     current(item) {
@@ -122,14 +133,14 @@ export default {
           require('electron').shell.openPath(item.path)
       }
     },
-    scrollNav(refVal, scrollDirection) {
-      let content = this.$refs[refVal]
-      content.addEventListener('wheel', (event) => {
-        event.preventDefault();
-        // console.log(event)
-        content[scrollDirection] += event.deltaY
-      });
-    },
+    // scrollNav(refVal, scrollDirection) {
+    //   // let content = this.$refs[refVal]
+    //   // content.addEventListener('wheel', (event) => {
+    //   //   event.preventDefault();
+    //   //   // console.log(event)
+    //   //   content[scrollDirection] += event.deltaY
+    //   // });
+    // },
     closeDrawer() {
       this.menuVisible = false
     },

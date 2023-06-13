@@ -1,6 +1,7 @@
 import Lock from '../page/Lock.vue'
 import Power from '../page/Power.vue'
 import Wizard from '../page/Wizard.vue'
+import ShareKey from "../page/shortcutKey/ShareKey.vue"
 import main from './main'
 //应用
 import TomatoStart from '../page/app/tomato/TomatoStart.vue'
@@ -44,8 +45,12 @@ const routes = [
     path:'/wizard',
     name:'wizard',
     component: Wizard
-  }
-
+  },
+  {
+    path:'/shareKey',
+    name:'shareKey',
+    component: ShareKey
+  },
 
 ]
 

@@ -3,9 +3,9 @@
     <div class="max-container px-4">
       <div class="s-bg capture-container rounded-md p-4 mr-4">
         <div class="flex mb-3">
-          <div @click="startScreenshot" 
+          <div @click="startScreenshot"
            class="cp-w cp-orange-active cp-orange flex pointer flex-col rounded-lg items-center justify-center mr-3"
-          > 
+          >
             <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
              <div class="rounded-full orange-full flex items-center justify-center cp-lw">
               <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
@@ -37,7 +37,7 @@
                 </div>
               </div>
               <div class="cp-text">关闭监控</div>
-            </div> 
+            </div>
           </div>
         </div>
         <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: calc(85vh - 11.8em);">
@@ -49,7 +49,7 @@
               </div>
               <div class="flex items-center pointer justify-center"  @click="openRecordSet">
                 <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
-              </div> 
+              </div>
             </div>
           </div>
           <div class="s-item rounded-md p-4 mb-3">
@@ -87,14 +87,14 @@
                   <img :src="item.url" class="w-full rounded-lg h-full object-cover">
                   <span class="px-4 py-3 truncate" style="max-width:207px;">{{ item.name}} </span>
                 </div>
-              </div> 
+              </div>
             </template>
             <template v-if="defaultRecordingType.name === 'recordFullScreen'">
               <div v-if="recordGameData.length === 0">
                 <a-empty :image="simpleImage" />
               </div>
               <div class="flex justify-between flex-wrap" v-else>
-                <div v-for="(item,index) in  recordFullScreenData" 
+                <div v-for="(item,index) in  recordFullScreenData"
                  class="flex flex-col s-bg rounded-lg mb-4  record-game-item"
                  @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
                 >
@@ -108,7 +108,7 @@
                 <a-empty :image="simpleImage" />
               </div>
               <div class="flex justify-between flex-wrap" v-else>
-                <div v-for="(item,index) in  recordLogger" 
+                <div v-for="(item,index) in  recordLogger"
                  class="flex flex-col s-bg rounded-lg mb-4  record-game-item"
                  @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
                 >
@@ -196,7 +196,7 @@
               </div>
               <div class="flex items-center pointer justify-center"  @click="openRecordSet">
                 <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
-              </div> 
+              </div>
             </div>
             <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
             <template v-if="defaultLastCap.name === 'screenCap'">
@@ -257,7 +257,7 @@
               </div>
             </div>
             <div class="cp-text">关闭监控</div>
-          </div> 
+          </div>
          </div>
       </div>
       <div class="s-item rounded-md p-4 mb-3" v-if="isHeight === true">
@@ -297,7 +297,7 @@
                 <span class="truncate" style="max-width:150px;">{{ item.name}} </span>
               </div>
             </div>
-          </div> 
+          </div>
         </vue-custom-scrollbar>
       </template>
       <template v-if="defaultRecordingType.name === 'recordFullScreen'">
@@ -306,7 +306,7 @@
             <a-empty :image="simpleImage" />
           </div>
           <div class="flex justify-between flex-wrap" v-else>
-            <div v-for="(item,index) in  recordFullScreenData" 
+            <div v-for="(item,index) in  recordFullScreenData"
              class="flex flex-col s-bg rounded-lg mb-4 pointer record-game-item"
              @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
             >
@@ -315,7 +315,7 @@
                 <span class="truncate" style="max-width:207px;">{{ item.name}} </span>
               </div>
             </div>
-          </div> 
+          </div>
         </vue-custom-scrollbar>
       </template>
       <template v-if="defaultRecordingType.name === 'logger'">
@@ -324,7 +324,7 @@
             <a-empty :image="simpleImage" />
           </div>
           <div class="flex justify-between flex-wrap" v-else>
-            <div v-for="(item,index) in  recordLogger" 
+            <div v-for="(item,index) in  recordLogger"
              class="flex flex-col justify-between s-bg rounded-lg mb-4 pointer record-game-item"
              @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
             >
@@ -414,7 +414,7 @@
           </div>
           <div class="flex items-center pointer justify-center"  @click="openRecordSet">
             <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
-          </div> 
+          </div>
         </div>
         <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
         <template v-if="defaultLastCap.name === 'screenCap'">
@@ -523,7 +523,7 @@ export default {
   computed:{
     ...mapWritableState(inspectorStore,['displayData']),
   },
- 
+
   data(){
     return{
       systemSound:10, // 系统声音
@@ -879,7 +879,7 @@ export default {
 }
 
 :deep(.nav-item){
-  width: 50%;  
+  width: 50%;
 }
 
 .drawer-active{

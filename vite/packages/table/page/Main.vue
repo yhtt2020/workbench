@@ -6,8 +6,8 @@
       <TopPanel v-if="!fullScreen"></TopPanel>
     </div>
     <div :class="{ 'mt-3': !fullScreen }"
-      style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
-      <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center">
+      style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%">
+      <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
         <SidePanel :sideNavigationList="sideNavigationList"></SidePanel>
       </div>
