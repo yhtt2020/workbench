@@ -1,6 +1,6 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef" :size="reSize"
-        :desk="desk">
+    <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef"
+        :size="reSize" :desk="desk">
     </Widget>
     <div class="item xt-text xt-hover" ref="itemRef" @click="iconClick()">
         <div class="image" :style="[backgroundState]">
@@ -10,8 +10,10 @@
     </div>
     <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
         <template #title>
-            <div class="text-center">设置</div>
-            <div @click="save()">保存</div>
+            <div style="display: flex; justify-content: space-between; align-items:center">
+                <div style="width: 50%;text-align: right;">设置</div>
+                <div style="padding: 10px;border-radius: 5px;" class="xt-bg" @click="save()">保存</div>
+            </div>
         </template>
         <edit ref="editRef" v-bind="editOption"></edit>
     </a-drawer>
@@ -27,6 +29,10 @@ import { message } from 'ant-design-vue'
 
 import browser from "../../../js/common/browser.ts"
 import edit from './edit.vue'
+// import api from '../../../src/model/api.js'
+// C:\Users\16110\Desktop\demo1 (2)\browser\vite\src\model\api.js
+// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\components\widgets\myIcons\index.vue
+import api from '../../../../../src/model/api.js'
 export default {
     props: {
         customIndex: {
@@ -134,6 +140,16 @@ export default {
                 this.updateCustomData(this.customIndex, { linkValue }, this.desk)
             },
         },
+        'customData.src': {
+            handler(src, oldV) {
+                this.updateCustomData(this.customIndex, { src }, this.desk)
+            },
+        },
+        'customData.backgroundIndex': {
+            handler(backgroundIndex, oldV) {
+                this.updateCustomData(this.customIndex, { backgroundIndex }, this.desk)
+            },
+        },
     },
     computed: {
         ...mapWritableState(myIcons, ['iconOption', 'baseIconOption']),
@@ -157,6 +173,7 @@ export default {
                 link: this.customData.link,
                 linkValue: this.customData.linkValue,
                 src: this.customData.src,
+                backgroundIndex: this.customData.backgroundIndex,
             }
         },
         // 动态计算卡片大小
@@ -166,10 +183,25 @@ export default {
                 height: 0 + 'px'
             }
         }
-
     },
     methods: {
         ...mapActions(cardStore, ['updateCustomData']),
+        async customUpload(file, insertFn) {
+            let url
+            var formData = new FormData();
+            formData.append("file", file)
+            console.log('1 :>> ', formData);
+            await api.getCosUpload(formData, (err, data) => {
+                console.log('2 :>> ', 2);
+                if (!err) {
+                    message.error('图片上传失败')
+                } else {
+                    url = 'http://' + data.data.data
+                    // insertFn(url)
+                }
+            })
+            console.log('url :>> ', url);
+        },
         handleMenu(e) {
             e.preventDefault()
             e.stopPropagation()
@@ -177,6 +209,7 @@ export default {
         },
         save() {
             let editOption = this.$refs.editRef.save()
+            this.customUpload(editOption.src)
             if (typeof (editOption) === 'string') return message.error(editOption)
             Object.keys(editOption).forEach((k) => this.customData[k] = editOption[k])
             message.success("保存成功")

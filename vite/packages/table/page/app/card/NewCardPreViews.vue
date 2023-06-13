@@ -21,7 +21,7 @@
             <img v-for="i in item.option" :src="getImg(i.name)" alt="">
           </div>
         </template>
-        <img v-else style="background: var(--active-bg);" :src="getImg(item.option[0].name)" alt=""
+        <img v-else style="" :src="getImg(item.option[0].name)" alt=""
           :style="[{ zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' }]">
       </div>
       <div class="right" style="">
@@ -50,8 +50,10 @@
   </NewPreviewCardDetails>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right" style="z-index:9999999999">
     <template #title>
-      <div class="text-center">设置</div>
-      <div @click="save()">保存</div>
+      <div style="display: flex; justify-content: space-between; align-items:center">
+                <div style="width: 50%;text-align: right;">设置</div>
+                <div style="padding: 10px;border-radius: 5px;" class="xt-bg" @click="save()">保存</div>
+            </div>
     </template>
     <edit ref="editRef" v-bind="iconOption"></edit>
   </a-drawer>

@@ -12,7 +12,8 @@ export const myIcons = defineStore(
                 link: "",
                 linkValue: "",
                 init: true,
-                src: ""
+                src: "",
+                backgroundIndex:1
             },
             baseIconOption: {
                 isRadius: false,
@@ -22,7 +23,8 @@ export const myIcons = defineStore(
                 titleValue: "",
                 link: "",
                 linkValue: ":",
-                src: ""
+                src: "",
+                backgroundIndex:1
             }
         }
     },

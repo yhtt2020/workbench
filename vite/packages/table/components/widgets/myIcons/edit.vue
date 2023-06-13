@@ -16,10 +16,10 @@
                     </div>
                 </template>
             </a-input>
-            <a-input v-else v-model:value="title" placeholder="想天浏览器" class="xt-bg xt-border input">
+            <a-input v-else v-model:value="title" placeholder="想天浏览器" class="xt-bg xt-border input" style="border: 0;">
                 <template #suffix>
                     <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
-                        class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
+                        class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()" >
                         <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
                     </div>
                 </template>
@@ -32,7 +32,7 @@
             <div class="image" :style="[backgroundState]">
                 <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;">
                 <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
-                    class="xt-bg-2 flex justify-center items-center xt-hover clear" @click="this._src = ''">
+                    class="xt-bg xt-divider flex justify-center items-center xt-hover clear" @click="this._src = ''">
                     <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
                 </div>
             </div>
@@ -53,8 +53,7 @@
         </div>
         <div v-if="_isBackground" class="item-box">
             <div class="item " :key="item" :style="{ background: backgroundColorList[`${'color' + item}`] }"
-                v-for="(item, index) in 15" @click="_backgroundColor = backgroundColorList[`${'color' + item}`]"
-                :class="{ active }">
+                v-for="(item) in 15" @click="backgroundClick(item)" :class="{ active: _backgroundIndex == item }">
             </div>
         </div>
     </div>
@@ -75,6 +74,7 @@ export default {
         link: { type: String },
         linkValue: {},
         src: { type: String },
+        backgroundIndex: { type: Number },
     },
     data() {
         return {
@@ -86,6 +86,7 @@ export default {
             _link: this.link,
             _linkValue: this.linkValue,
             _src: this.src,
+            _backgroundIndex: this.backgroundIndex,
             backgroundColorList: {
                 color1: 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)',
                 color2: 'linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)',
@@ -118,7 +119,17 @@ export default {
             else return { borderRadius: '0px' }
         },
     },
+    watch: {
+        _linkValue(newV, oldV) {
+            this._src = `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + newV
+            console.log('11 :>> ',   this._src);
+        }
+    },
     methods: {
+        backgroundClick(index) {
+            this._backgroundColor = this.backgroundColorList[`${'color' + index}`]
+            this._backgroundIndex = index
+        },
         clear() {
             this._linkValue = ""
             this._link = ""
@@ -132,7 +143,8 @@ export default {
                 const file = this.files[0]
                 let validate = validateFile(file, 2)
                 if (validate !== true) return message.error(validate)
-                that._src = file.path
+                // that._src = file.path
+                that._src = file
                 event.target.value = ""
             }
         },
@@ -140,9 +152,6 @@ export default {
             if (item instanceof Array) this._linkValue = item[0]
             else this._linkValue = item
             this._link = 'fast'
-        },
-        check() {
-
         },
         save() {
             if (this._src.length == 0) return "未上传图标"
@@ -155,6 +164,7 @@ export default {
                 link: this._link,
                 linkValue: this._linkValue,
                 src: this._src,
+                backgroundIndex: this._backgroundIndex
             }
         },
         async customClick() {
@@ -254,11 +264,16 @@ export default {
 .input {
     border-radius: 12px;
     height: 48px;
+    border: 0;
 }
 
 .icon {
     width: 20px;
     height: 20px;
 
+}
+
+.active {
+    border: 2px solid var(--active-bg);
 }
 </style>
