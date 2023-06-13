@@ -30,7 +30,7 @@
       <div @click="setFullScreen(false)" class="s-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon></div>
     </div>
   </div>
-  <div class="rounded-xl px-5" style="width: 100%;height: 0;flex: 1">
+  <div class="rounded-xl" style="width: 100%;height: 0;flex: 1" :class="{'px-5':!fullScreen}">
     <template v-if="desks[selectDeskGame.appid] || selectDeskId==='0' && desks[selectDeskGame.appid] ">
       <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>
@@ -110,7 +110,6 @@ export default {
         }
     }
     if (this.$route.params['appid']) {
-      console.log('定位')
       this.selectDeskId = this.$route.params['appid']
     }
   },
