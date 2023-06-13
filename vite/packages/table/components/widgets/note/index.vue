@@ -128,12 +128,12 @@ export default {
         text: this.text,
       },this.desk)
     },
-    updateBackground (e) {
+    updateBackground (backgroundColor) {
       this.updateCustomData(this.customIndex, {
-        background: e,
+        background: backgroundColor,
       },this.desk)
-      this.background = e
-      if (e == 'linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)') {
+      this.background = backgroundColor
+      if (backgroundColor == 'linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)') {
         this.updateCustomData(this.customIndex, {
           color: '#000000',
         },this.desk)
