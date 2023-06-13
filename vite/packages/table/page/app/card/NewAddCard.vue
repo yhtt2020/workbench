@@ -68,7 +68,7 @@ export default {
       apiList: [],
       selectContent: '',
       searchValue: '默认排序',
-      baseNavList: navList,
+      baseNavList: NavList,
       searchOptions: [
         { value: '默认排序', name: '默认排序' },
         { value: '下载次数', name: '下载次数' },
