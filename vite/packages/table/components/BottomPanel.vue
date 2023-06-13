@@ -1,10 +1,10 @@
 <template>
   <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
-    @contextmenu.stop="showMenu">
+       @contextmenu.stop="showMenu">
     <!-- 快速搜索 底部 用户栏 -->
-    <div  v-if="isMain && !simple" class="common-panel user s-bg"
-      style="display: inline-block;vertical-align: top;margin-top: 0;background: var(--primary-bg);color: var(--primary-text);">
-      <MyAvatar  :chat="true" :level="true"></MyAvatar>
+    <div v-if="isMain && !simple" class="common-panel user s-bg"
+         style="display: inline-block;vertical-align: top;margin-top: 0;background: var(--primary-bg);color: var(--primary-text);">
+      <MyAvatar :chat="true" :level="true"></MyAvatar>
     </div>
     <!--    <div class="common-panel" style="display: inline-block">-->
     <!--      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>-->
@@ -15,65 +15,78 @@
     <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
     <!--    </div>-->
     <!-- 快速搜索 底部栏区域 -->
-    <div :style="{paddingTop:simple?'0':'16px'}" v-show="navigationToggle[2]" class=" flex flex-row  items-center pl-6 s-bg"
-      style=" border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px;background: var(--primary-bg);color: var(--primary-text);">
-      <div style="overflow: hidden;overflow-x: auto;" class="flex flex-row items-center  flex-nowrap scroll-content mr-6"
-        ref="content">
-        <div v-if="footNavigationList.length <= 0" style="height: 56px;">
-        </div>
-        <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList ">
-          <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;" @click="clickNavigation(item)">
-            <div style="width: 56px;height:56px;background: var(--active-bg);" v-if="item.type === 'systemApp'"
-              class="s-item flex justify-center items-center rounded-lg">
+    <div v-show="navigationToggle[2]" class=" flex flex-row  items-center pl-4  s-bg"
+         style="display: flex;flex-direction: column;justify-content: center;justify-items: center;align-content: center;align-items: center; border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px;background: var(--primary-bg);color: var(--primary-text);">
+      <div style="display: flex;flex-direction: row;width: 100%;height:56px;
+align-items: start;
+    flex-wrap: nowrap;
+    justify-content: center;
+">
+        <div style="height: 56px;width: 100%;overflow: hidden">
+          <div class="scroll-content mr-6" style="overflow-y:hidden;overflow-x: auto;flex:1;display: flex;"
+               ref="content">
 
-              <Icon :icon="item.icon" class="test"
-                style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);fill: var(--primary-text)"></Icon>
+            <div style="white-space: nowrap;display: flex;align-items: center">
+              <div v-if="footNavigationList.length <= 0" style="">
+              </div>
+              <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList ">
+                <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;"
+                     @click="clickNavigation(item)">
+                  <div style="width: 56px;height:56px;background: var(--active-bg);" v-if="item.type === 'systemApp'"
+                       class="s-item flex justify-center items-center rounded-lg">
+
+                    <Icon :icon="item.icon" class="test"
+                          style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);fill: var(--primary-text)"></Icon>
+                  </div>
+                  <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
+                    <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
+                  </div>
+                </div>
+              </a-tooltip>
             </div>
-            <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
-              <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
-            </div>
+
+          </div>
+        </div>
+
+        <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
+          <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;height: 58px"
+               class="flex justify-center items-center  h-2/3 pointer ">
+            <template v-if="!showScreen">
+              <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
+              <span
+                style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{
+                  runningApps.length + runningTableApps.length
+                }}</span>
+            </template>
+            <template v-else>
+              <Icon icon="touping" style="width: 40px;height: 40px;margin-left: 2px;"></Icon>
+              <span
+                style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{
+                  runningScreen
+                }}</span>
+            </template>
+
           </div>
         </a-tooltip>
-
       </div>
-
-      <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-        <div :style="{marginTop:simple?'0':'-16px'}" @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;"
-          class="flex justify-center items-center  h-2/3 pointer ">
-          <template v-if="!showScreen">
-            <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
-            <span
-              style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{
-                runningApps.length + runningTableApps.length }}</span>
-          </template>
-          <template v-else>
-            <Icon icon="touping" style="width: 40px;height: 40px;margin-left: 2px;"></Icon>
-            <span
-              style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{
-                runningScreen }}</span>
-          </template>
-
-        </div>
-      </a-tooltip>
-
 
 
     </div>
     <template v-if="!simple && isMain">
       <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8;">
         <div @click="toggleTeam" class="common-panel s-bg pointer "
-          style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0; ">
+             style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0; ">
           <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
           </a-avatar>
-          <div class="mb-0 mt-0" > 小队
+          <div class="mb-0 mt-0"> 小队
             <div v-if="true" style="display: inline-block;position: relative">
             </div>
           </div>
         </div>
       </a-badge-ribbon>
       <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-        style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0;color:var(--primary-text);background: var(--primary-bg);">
+           style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0;color:var(--primary-text);background: var(--primary-bg);">
         <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
 
         </a-avatar>
@@ -140,7 +153,7 @@
 
   </div>
   <div id="trans" v-show="visibleTrans"
-    style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
+       style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
     <a-button @click="visibleTrans = false" style="position:fixed;left: 10px;top: 10px">取消</a-button>
     <iframe id="transFrame" style="width:100vw;height: 100vh;border: none">
 
@@ -186,7 +199,8 @@
     </div>
   </transition>
 
-  <div class="home-blur fixed inset-0" style="z-index: 999;background: var(--mask-background-color);" v-if="changeFlag" @click="closeChangeApp">
+  <div class="home-blur fixed inset-0" style="z-index: 999;background: var(--mask-background-color);" v-if="changeFlag"
+       @click="closeChangeApp">
 
     <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
@@ -207,7 +221,6 @@ import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
 
-const { messageModel } = window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from './ScrolX.vue'
@@ -235,7 +248,7 @@ export default {
     ScrolX,
     GradeSmallTip
   },
-  data() {
+  data () {
     return {
       tab: 'screen',
 
@@ -265,7 +278,7 @@ export default {
       //screenWidth: document.body.clientWidth
     }
   },
-  unmounted() {
+  unmounted () {
 
     let that = this
     window.removeEventListener('resize', that.checkScroll)
@@ -274,7 +287,7 @@ export default {
       clearInterval(this.timerRunning)
     }
   },
-  mounted() {
+  mounted () {
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
@@ -321,7 +334,6 @@ export default {
       content.scrollLeft += event.deltaY
     })
 
-
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -329,13 +341,13 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore, ['screens']),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(navStore, ['footNavigationList','builtInFeatures','navigationToggle']),
+    ...mapWritableState(navStore, ['footNavigationList', 'builtInFeatures', 'navigationToggle']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
-    isMain() {
+    isMain () {
       return isMain()
     },
-    runningScreen() {
+    runningScreen () {
       let count = 0
       this.screens.forEach(s => {
         if (s.running) {
@@ -347,7 +359,7 @@ export default {
   },
   watch: {
     footNavigationList: {
-      handler() {
+      handler () {
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -366,7 +378,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    async toggleTeam() {
+    async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
         this.teamKey = Date.now()
@@ -376,26 +388,26 @@ export default {
       }
 
     },
-    closeDrawer() {
+    closeDrawer () {
       this.menuVisible = false
     },
-    checkScroll() {
-      this.$nextTick(() => {
-        if (this.$refs.content.offsetHeight - this.$refs.content.clientHeight > 0) {
-          this.$refs.content.style.marginTop = '17px'
-        } else {
-          this.$refs.content.style.marginTop = '0px'
-        }
-      })
+    checkScroll () {
+      // this.$nextTick(() => {
+      //   if (this.$refs.content.offsetHeight - this.$refs.content.clientHeight > 0) {
+      //     this.$refs.content.style.marginTop = '17px'
+      //   } else {
+      //     this.$refs.content.style.marginTop = '0px'
+      //   }
+      // })
     },
-    goMy() {
+    goMy () {
       this.$router.push({ name: 'socialMy' })
     },
     ...mapActions(appStore, ['setUser']),
-    setFull(value) {
+    setFull (value) {
       this.full = value
     },
-    appChange() {
+    appChange () {
       if (this.showScreen) {
         this.tab = 'screen'
         this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
@@ -405,37 +417,34 @@ export default {
       }
       this.changeFlag = true
     },
-    closeChangeApp() {
+    closeChangeApp () {
       this.routeParams.url && setTimeout(() => { this.$router.push({ name: 'app', params: this.routeParams }) }, 400)
       this.changeFlag = false
     },
-    showMenu() {
+    showMenu () {
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
-    hideMenu(){
-      this.menuVisible=false
+    hideMenu () {
+      this.menuVisible = false
     },
-    onClose() {
+    onClose () {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
-    editNavigation() {
+    editNavigation () {
       this.quick = true
       this.menuVisible = false
     },
-    setQuick() {
+    setQuick () {
       this.quick = false
     },
 
-
-
-
-    openSetting() {
+    openSetting () {
       this.$router.push({ name: 'setting' })
       this.hideMenu()
     },
-    openStatus() {
+    openStatus () {
       this.hideMenu()
       if (this.$route.path === '/status') {
         this.$router.go(-1)
@@ -444,13 +453,13 @@ export default {
       }
     },
 
-    power() {
+    power () {
       this.$router.push({ path: '/power' })
     },
-    lock() {
+    lock () {
       this.$router.push({ path: '/lock' })
     },
-    transFile() {
+    transFile () {
       //this.visibleTrans=true
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
       // console.log('发送消息')
@@ -467,7 +476,7 @@ export default {
       })
 
     },
-    async setFullScreen() {
+    async setFullScreen () {
       // await tsbApi.window.isFullScreen()
       if (this.full) {
         this.full = false
@@ -479,13 +488,13 @@ export default {
 
     },
 
-    clickNavigation(item) {
+    clickNavigation (item) {
       this.hideMenu()
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
             toggleFullScreen()
-            this.full = !this.full;
+            this.full = !this.full
           } else if (item.event === '/status') {
             if (this.$route.path === '/status') {
               this.$router.go(-1)
@@ -556,7 +565,6 @@ export default {
 }
 
 
-
 //
 //@media screen and (max-height: 510px) {
 //  .bottom-panel {
@@ -605,6 +613,7 @@ export default {
 
 
 .scroll-content {
+
   :last-child {
     margin-right: 0;
   }

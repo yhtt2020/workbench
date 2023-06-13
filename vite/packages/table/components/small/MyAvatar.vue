@@ -6,7 +6,7 @@ import {mapWritableState} from "pinia";
 import {messageStore} from "../../store/message";
 import {appStore} from "../../store";
 import {Modal} from "ant-design-vue";
-
+const { messageModel } = window.$models
 export default {
   components: {
     ThunderboltFilled
