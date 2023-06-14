@@ -68,6 +68,7 @@ export default {
     clickNav(item, index) {
       this.activeIndex = index
       item.state = false  // 将消息未读状态隐藏
+      this.$emit('click')
       this.$emit('update:selectType', item)
     }
   },
