@@ -1,0 +1,66 @@
+:root {
+    --error: #FF4D4F;
+    --link: #508BFE;
+    --success :#52C41A;
+    --warning :#FAAD14;
+}
+
+.dark-model {
+// 主题
+--active-bg: #508bfe !important;
+--active-secondary-bg: rgba(80, 139, 254, 0.2) !important;
+// 背景
+--main-bg: #262525 !important;
+--primary-bg: rgba(26, 26, 26, 0.65)  !important;
+
+--secondary-bg: #2a2a2a !important; 
+--modal-bg: #212121 !important;
+--mask-bg: rgba(0,0,0,0.30) !important;
+--main-mask-bg:rgba(26,26,26,0.65) !important;
+// 文字
+--primary-text: #b7b7b7 !important;
+--secondary-text: #6e6e6e !important;
+--disable-text: rgba(255,255,255,0.85) !important;
+// 分割线
+--divider: rgba(255,255,255,0.10)!important;
+
+  body {
+    background: var(--main-bg) !important;
+  }
+
+  .active {
+    color: var(--primary-text);
+    fill: var(--primary-text);
+    background: var(--active-bg);
+  }
+}
+
+.light-model {
+// 主题
+--active-bg: #508BFE !important;
+--active-secondary-bg:  rgba(80,139,254,0.20) !important;
+// 背景
+--main-bg: rgba(0,0,0,0.04) !important;
+--primary-bg: rgba(255, 255, 255, 0.55)!important;
+--secondary-bg:  #E6E6E6 !important; 
+--modal-bg:  #FFFFFF !important;
+--mask-bg:  #FFFFFF !important;
+--main-mask-bg:#FFFFFF  !important;
+// 文字
+--primary-text:  rgba(0,0,0,0.85) !important;
+--secondary-text:rgba(0,0,0,0.65) !important;
+--disable-text:  rgba(0,0,0,0.25) !important;
+// 分割线
+--divider:  rgba(230,230,230,1.60) !important;
+
+  body {
+    background: var(--main-bg) !important;
+  }
+
+  .active {
+    color: var(--primary-text);
+    fill: var(--primary-text);
+    background: var(--active-bg);
+  }
+}
+

@@ -66,24 +66,26 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.pointer{
+  background: var(--primary-bg) !important;
+  & svg{
+      color:var(--primary-text) !important;
+    }
+
+}
+.anticon  {
+  color:var(--primary-text) !important;
+}
 .btn-top-active {
   text-align: center;
   width: 55px;
   display: inline-block;
   padding: 8px  ;
   line-height: 20px;
-  background: rgba(42, 42, 42, 0.8);
+  background: var(--active-bg) ;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.5) !important;
-    background: #1f1f1f !important;
-  }
-
-  &:active,&.active {
-    & svg{
-      color:white !important;
-    }
-    background: #1f1f1f !important;
+    background: var(--active-bg) !important;
   }
 }
 </style>

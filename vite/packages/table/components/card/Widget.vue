@@ -3,6 +3,7 @@
        style=" background: var( --primary-bg); color: var(--primary-text)"
        :style="{
       pointerEvents: editing ? 'none' : '',
+      display: options.hide == true ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
     }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
@@ -69,7 +70,9 @@ declare interface IOption {
   //类型，字符串
   type: string,
   //是否显示卡片标题
-  noTitle: boolean
+  noTitle: boolean,
+  // 是否隐藏组件
+  hide?: boolean 
 }
 
 //菜单项

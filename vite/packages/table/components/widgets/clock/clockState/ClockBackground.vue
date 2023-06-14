@@ -32,7 +32,7 @@
 import ModalList from "../../../comp/ModalList.vue";
 import { paperStore } from "../../../../store/paper";
 
-import { innerImg } from "../hooks/innerImg.ts"
+import { validateFile } from '../../../card/hooks/innerImgHook'
 import { mapWritableState } from "pinia";
 export default {
   computed: {
@@ -88,9 +88,9 @@ export default {
       fileRef.onchange = async function () {
         if (this.files.length === 0) return // 没有选择文件
         const file = this.files[0] // 获取文件
-
-        let image = await innerImg(file) // 将文件转换为经过压缩和等比裁切的 base64 图片
-        that.$emit('img', image.src)
+        let validate = validateFile(file, 2)
+        if (validate !== true) return message.error(validate)
+        that.$emit('img', file.path)
       }
     },
   },
@@ -102,6 +102,7 @@ export default {
   background: var(--primary-bg);
   border-radius: 5px;
 }
+
 .gutter-box {
   background-color: #fff;
   background: #2a2a2a;

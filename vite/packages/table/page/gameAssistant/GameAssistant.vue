@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row" style="height: 100%">
+  <div class="flex flex-row" style="height: 100%;width: 100%">
     <!--    <div class="w-40 mr-6">-->
     <!--      <div v-for="(item,index) in navList" class="pointer h-14  flex justify-center items-center mb-2 rounded-xl s-icon" :class="activeIndex===index?'s-bg':''" @click="clickNav(item,index)">-->
     <!--        <Icon v-if="item.icon" :icon="item.icon"></Icon>-->
@@ -8,7 +8,7 @@
     <!--    </div>-->
     <SecondPanel v-if="!fullScreen" :search="true" :goHome="goHome" :menus="menus" :gallery="gallery"
       style="padding: 1em 0; text-align: left; " @changeTab="changeTab"></SecondPanel>
-    <div class="flex-1  content-view" style="padding-top: 1em;height: 100%;display: flex;flex-direction: column">
+    <div class="flex-1  content-view" style="padding-top: 1em;height: 100%;display: flex;flex-direction: column;width: 100%">
       <router-view></router-view>
     </div>
   </div>

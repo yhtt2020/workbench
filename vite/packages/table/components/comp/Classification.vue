@@ -1,13 +1,13 @@
 <template>
-  <div class="add-navigation" >
-    <div>添加导航</div>
-    <div @click="closeAdd" class="pointer">
-      <Icon icon="guanbi" class="no-drag" style="width:18px;height:18px;color: rgba(255, 255, 255, 0.85);" ></Icon>
+  <div class="add-navigation xt-modal xt-divider">
+    <div class=" xt-text">添加导航</div>
+    <div @click="closeAdd" class="pointer  xt-bg ">
+      <Icon icon="guanbi" class="no-drag xt-text" style="width:18px;height:18px;" ></Icon>
     </div>
     <div class="add-navigation-content flex flex-row">
       <div class="left-content">
         <div v-for="(item,index) in navClassify" :style="activeItem ===index?' border-right: 1px rgba(22, 119, 255, 1) solid;' :''">
-          <div :class="activeItem ===index?'active' :''" @click="clickItem(item,index)">
+          <div :class="activeItem ===index?'xt-active' :''" @click="clickItem(item,index)" class="xt-text">
             {{item.cname}}
           </div>
         </div>
@@ -50,7 +50,7 @@ export default {
   width: calc(100vw - 20%);
   height: calc(100vh - 10%);
   border-radius: 16px;
-  background: rgba(33, 33, 33, 1);
+  // background: var(--modal-bg);
   max-width: 800px;
   max-height: 600px;
   display: flex;
@@ -91,9 +91,8 @@ export default {
           color: rgba(255, 255, 255, 0.85);
           line-height: 56px;
         }
-        .active{
+        .xt-active{
           border-radius: 12px;
-          background: rgba(42, 42, 42, 1);
         }
       }
     }

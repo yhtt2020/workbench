@@ -102,8 +102,8 @@
       </div>
       <a-input
         v-model:value="myData.title"
-        class="rounded-lg mt-6 drawer-item-bg"
-        style="height: 48px;background: var(--primary-bg);color: var(--primary-text);border: 0px;"
+        class="rounded-lg mt-6 drawer-item-bg xt-bg-2"
+        style="height: 48px;color: var(--primary-text);border: 0px;"
         placeholder=""
       >
       </a-input>
@@ -114,14 +114,14 @@
         v-if="!Object.keys(myData.img).length > 0"
       >
         <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base"
-          @click="importFile" style="background: var(--primary-bg);color: var(--primary-text);"
+          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base xt-bg-2"
+          @click="importFile" style="color: var(--primary-text);"
         >
           选择图片
         </div>
         <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base"
-          @click="openMy" style="background: var(--primary-bg);color: var(--primary-text);"
+          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base xt-bg-2"
+          @click="openMy" style="color: var(--primary-text);"
         >
           选自壁纸收藏
         </div>
@@ -168,16 +168,16 @@
       </div>
       <div class="flex flex-row justify-between items-center mt-6">
         <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer"
+          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer xt-bg-2"
           @click="customClick"
-          v-if="!myData.link"  style="background: var(--primary-bg);color: var(--primary-text);"
+          v-if="!myData.link"  style="color: var(--primary-text);"
         >
           本地应用
         </div>
         <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer"
+          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer xt-bg-2"
           v-if="!myData.link"
-          @click="showAppNav"  style="background: var(--primary-bg);color: var(--primary-text);"
+          @click="showAppNav"  style="color: var(--primary-text);"
         >
           选自应用导航
         </div>

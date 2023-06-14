@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row justify-between items-center">
-    <div class="text-white ">
+    <div class="xt-text ">
       <span class="mr-2">运行中的应用</span> <span class="mr-5">{{runningApps.length + runningTableApps.length}}</span>
       <a-button class="mr-3" :type="type==='all'?'primary':'default'" @click.stop="setType('all')">全部</a-button>
       <a-button class="mr-3" :type="type==='qing'?'primary':'default'" @click.stop="setType('qing')"  style="background: var(--primary-bg);color: var(--primary-text);">轻应用</a-button> <a-button :type="type==='table'?'primary':'default'" @click.stop="setType('table')"  style="background: var(--primary-bg);color: var(--primary-text);">工作台应用</a-button></div>
@@ -31,19 +31,19 @@
     </div>
   </vue-custom-scrollbar>
   <div>
-    <div class="text-white mt-8 ">最近使用</div>
+    <div class="xt-text mt-8 ">最近使用</div>
     <vue-custom-scrollbar :settings="settings"
                           style="position:relative;height:150px;  border-radius: 8px;">
       <div class="" style="position: relative;white-space: nowrap">
         <div class="mt-6 last-app app-small pointer" @click="openApp(item)" v-for="item in recently">
-          <div class="rounded-lg p-3 flex flex-row">
+          <div class="rounded-lg p-3 flex flex-row ">
             <div>
               <div class="h-10 w-10 rounded-lg flex justify-evenly items-center mr-2">
                 <a-avatar :src="item.logo"  class="pointer"></a-avatar></div>
             </div>
             <div class="flex flex-col">
-              <div class="text-white">{{item.name}}</div>
-              <div class="text-xs">{{item.appType||'轻应用'}}</div>
+              <div class="xt-text">{{item.name}}</div>
+              <div class="xt-text-3">{{item.appType||'轻应用'}}</div>
             </div>
           </div>
         </div>
