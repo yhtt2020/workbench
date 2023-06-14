@@ -82,9 +82,11 @@ export default {
     current(item) {
       // console.log(item)
       // console.log("route123",this.$route)
+      console.log(item,'item===')
       if (item.data?.name) {
         return this.$route.params.name === item.data.name
       } else if (item.event) {
+        console.log(this.$route)
         return this.$route.name === item.event
       } else {
         return false

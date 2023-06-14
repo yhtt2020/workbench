@@ -91,7 +91,6 @@ export default {
     MyGameSmallDetail
   },
   mounted(){
-    console.log(this.gameList,'gamelki')
   },
   props:{
     customIndex: {
