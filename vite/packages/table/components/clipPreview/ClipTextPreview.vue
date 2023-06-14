@@ -121,10 +121,51 @@
         <!-- 文件预览模块 -->
         <template v-else-if="previewContent.type === 'file'">
           <div class="flex flex-col w-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+              </div>
+            </div>
 
+            <!-- 内容预览 -->
+            <div class="flex h-full flex-col justify-between">
+              <div class="flex items-center justify-center p-10">
+                <Icon :icon="previewContent.picIcon" style="font-size: 20em;"></Icon>
+              </div> 
+            </div>
           </div>
           <div class="p-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
-            
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
+              <div class="flex flex-col">
+                <div class="flex justify-between mb-6">
+                  <span class="type-text">类型</span>
+                  <span class="type-right" v-if="previewContent.type === 'file'">文件</span>
+                </div>
+                <div class="flex justify-between mb-6">
+                  <span class="type-text">格式</span>
+                  <span class="type-right" v-if="previewContent.type === 'file'">pdf</span>
+                </div>
+                <div class="flex justify-between mb-6">
+                  <span class="type-text">时间</span>
+                  <span class="type-right" v-if="previewContent.type === 'file'">
+                    {{ previewContent.timeText }}
+                  </span>
+                </div>
+                <div class="flex justify-between flex-col mb-6">
+                  <span class="type-text">路径</span>
+                  <span class="type-right" v-if="previewContent.type === 'file'">
+                    C:\PROGRAM FILES (X86)\CLIP
+                  </span>
+                </div>
+              </div>
+              <div class="flex  flex-col justify-between">
+                <div v-for="item  in fileClipKey" class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
+                  <span>{{item.title}}</span>
+                  <span>{{ item.key }}</span>
+               </div>
+              </div> 
+            </vue-custom-scrollbar>
           </div>
         </template>
 

@@ -190,7 +190,7 @@
         <!-- 快捷键按钮 -->
         <div class="flex flex-col">
           <vue-custom-scrollbar :settings="settingsScroller" style="height:50vh;">
-            <div v-for="item in fileKey" @click="keyOperation(item)" class="flex pointer justify-between s-item px-4 rounded-lg py-3 mb-2">
+            <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer justify-between s-item px-4 rounded-lg py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
             </div> 
@@ -220,9 +220,9 @@
       <!-- 视频标题结束 -->
       
       <!-- 视频内容开始 -->
-       <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" @click="textButton">
+      <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" @click="textButton">
         <ClipVideo :vUrl="clip.videoUrl"></ClipVideo>
-       </div>
+      </div>
       <!-- 视频内容结束 -->
     </div>
 
@@ -256,7 +256,31 @@
 
   <!-- 音频显示区域开始 -->
   <template v-if="clip.type === 'audio'">
-    <div>音频</div>
+    <!-- 列表主界面 -->
+    <div style="width: 338px;" class="flex flex-col justify-between" v-if="controlsShow === false">
+      <!-- 标题内容 -->
+      <div class="flex s-item flex-col rounded-t-lg w-full px-4 py-2">
+        <div class="flex items-center mb-1">
+          <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
+          <span class="ml-2">{{getType(clip.type).title}}</span>
+         </div>
+         <div class="flex justify-between"> 
+          <span>{{ clip.timeText }}</span>
+          <span>{{clip.capacity}}</span>
+         </div>
+      </div>
+
+      <!-- 内容 -->
+      <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" >
+        <!-- @click="textButton" -->
+         <ClipAudio :aUrl="clip.audioUrl"></ClipAudio>
+      </div>
+    </div>
+    
+    <!-- 快捷键操作界面 -->
+    <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
+      
+    </div>
   </template>
   <!-- 音频显示区域结束 -->
 
@@ -274,6 +298,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
 import textCodeMirror from './textCodeMirror.vue';
 import ClipVideo from './ClipVideo.vue';
+import ClipAudio from './ClipAudio.vue';
 // import Player from 'xgplayer/dist/simple_player'
 import { codeLanguage } from '../../js/common/clipboardObserver';
 
@@ -283,7 +308,8 @@ export default {
     ClipCodemirror,
     textCodeMirror,
     ClipSetDrawer,
-    ClipVideo
+    ClipVideo,
+    ClipAudio
   },
   props:{
     clip:{
@@ -333,16 +359,6 @@ export default {
         {title:'删除',intr:'Delete',id:'d'}
       ],
 
-      // 文件快捷键操作按钮
-      fileKey:[
-        {title:'复制',intr:'Ctrl + C',id:'cc'},
-        {title:'打开',intr:'Ctrl + O',id:'co'},
-        {title:'复制路径',intr:'Ctrl + Alt + C',id:'cac'},
-        {title:'在资源管理器中打开',intr:'Ctrl + Enter',id:'ce'},
-        {title:'添加到收藏',intr:'Ctrl + S',id:'cs'},
-        {title:'删除',intr:'Delete',id:'d'}
-      ],
-
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -354,7 +370,7 @@ export default {
       // 代码块语言包切换
       codeLanguage,
 
-      
+
     }
   },
 
@@ -378,8 +394,6 @@ export default {
 
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
-    // 初始化加载西瓜视频播放器
-    // this.loadVideo()
   },
 
 
@@ -394,9 +408,6 @@ export default {
         this.img = toRaw(this.clip.content).toDataURL()
         console.log(this.img,'图片地址')
       }
-      // if(this.clip.type === 'video'){
-      //   this.loadVideo()
-      // }
     },
     getType(type) {
       switch (type) {
@@ -420,6 +431,11 @@ export default {
             icon:'video',
             title:'视频'
           }
+        case 'audio':
+          return {
+            title:'音频',
+            icon:'erji1'
+          }  
       }
 
     },
@@ -431,9 +447,6 @@ export default {
     backClip(){
       this.controlsShow = false
       this.codeLanguageShow = false
-      if(this.clip.type === 'video'){
-        this.loadVideo()
-      }
     },
     // 文本底部tab切换
     selectItem(item,index){
