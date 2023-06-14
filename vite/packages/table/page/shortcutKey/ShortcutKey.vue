@@ -1,6 +1,6 @@
 <template>
     <!-- 有内容 -->
-   <div class="container s-bg rounded-lg" v-if="!detailToggle && true">
+  <div class="container s-bg rounded-lg" v-if="!detailToggle && false">
     <div class="ability flex justify-between px-4">
         <div class="flex items-center">
           <div>
@@ -39,14 +39,14 @@
     </div>
   </div>
   <!-- 无内容 -->
-  <div class="container rounded-lg flex flex-col items-center" v-if="false">
+  <div class="container rounded-lg flex flex-col items-center">
     <div class="mt-11">
         <div class="flex items-center justify-center">
             <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />
         </div>
     </div>
     <div class="btn-item flex justify-center">
-        <div class="pointer">浏览创意市场</div>
+        <div class="pointer" @click="market">浏览创意市场</div>
         <div class="pointer" @click="share">我来分享</div>
     </div>
     <div class="grid mt-4">
@@ -68,9 +68,11 @@
             </div>
             <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
                 <span class="flex items-center">
-                    <a-avatar size="24">
-                        <template #icon><UserOutlined /></template>
-                    </a-avatar>
+                    <div @click="showCard(item.id)">
+                        <a-avatar size="24">
+                            <template #icon><UserOutlined /></template>
+                        </a-avatar>
+                    </div>
                     <span class="ml-3">{{ item.userName }}</span>
                 </span>
                 <span>
@@ -87,14 +89,13 @@
         </div>
     </div>
   </div>
-  <div>
-    <router-view></router-view>
-  </div>
   <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
 </template>
-
+  
 <script>
+import { mapActions } from 'vuex';
   import ShortcutKeyDetail from '../../components/ShortcutKeyDetail.vue';
+  import { appStore } from '../../store';
   export default {
     name: "ShortcutKey",
     components: {
@@ -177,10 +178,10 @@
                 name: 'Adobe Lightroom',
                 number: 92
             },
-
+            
         ],
         notDownloadList: [
-            {
+            {   
                 id: 1,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -191,7 +192,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 2,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -202,7 +203,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 3,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -213,7 +214,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 4,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -224,7 +225,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 5,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -235,7 +236,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 6,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -250,6 +251,11 @@
       };
     },
     methods: {
+        ...mapActions(appStore,['showUserCard']),
+        showCard(id){
+            console.log(id)
+            this.showUserCard(id)
+        },
         //点击跳转到详情页
         btnDetail(item){
             this.detailToggle = true
@@ -261,11 +267,14 @@
         //跳转到分享页
         share(){
             this.$router.push({name: 'shareKey'})
+        },
+        market(){
+            this.$router.push({name: 'creativeMarket'})
         }
     },
   };
 </script>
-
+  
 <style scoped lang="scss">
     .container{
       margin: 0 auto 12px;
@@ -354,3 +363,4 @@
 </style>
 
 
+  
