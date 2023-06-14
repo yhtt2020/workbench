@@ -71,7 +71,7 @@ import {clipboardStore} from "../../store/clipboard";
 import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
-import { fileList } from '../../js/data/clipboardData';
+import { fileList, videoList } from '../../js/data/clipboardData';
 
 export default{
   name: 'Clipboard',
@@ -132,7 +132,10 @@ export default{
     clipContent(){
       switch(this.defaultCutType.typename){
         case 'all': // 默认全部
-          return this.items;
+          if(this.items.length !== 0){
+            return this.items;    
+          }
+          break;
         case 'text':   // 筛选文本
           if(this.items.length !== 0){
             const list = _.filter(this.items, function(o) { return  o.type === 'text' });
@@ -147,11 +150,17 @@ export default{
           }
           break;
         case 'file':  // 筛选文件  
-           return fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
+          if(this.items.length !== 0){
+            return fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
+          }
+          break;
         case 'video': // 筛选视频
-          break;
-        case 'audio': // 筛选音频
-          break;
+          if(this.items.length !== 0) {
+            return videoList  // 方便页面搭建暂时使用videoList这个列表,后期视情况而定
+          }
+          break
+        // case 'audio': // 筛选音频
+        //   break;
       }
     }
   },

@@ -4,8 +4,11 @@ import {ClipboardObserver} from '../js/common/clipboardObserver'
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     enable: false,
+    previewShow:false,    // 控制预览显示
+    clipSetShow:false, // 是否打开代码高亮
+    showLineNumber:false, // 是否显示行号
     clipMode:'javascript',  // 存储代码块语言包 默认js
-    clipTextTheme:'',      // 存储代码块的主题颜色 默认monokai
+    clipTheme:'monokai',      // 存储代码块的主题颜色 默认monokai
     items: [],
     clipboardObserver: {},
     settings: {
@@ -49,7 +52,15 @@ export const clipboardStore = defineStore("clipboardStore", {
     },
     changeClipMode(code:string){
       this.clipMode = code
-      console.log('语言包替换成功',code);
+      // console.log('语言包替换成功',this.clipMode);
+    },
+    isOpenPreview(val:boolean){
+      this.previewShow = val
+      // console.log('打开预览',this.previewShow);
+    },
+    isClipLineNumber(val:boolean){
+      this.showLineNumber = val
+      // console.log('显示行号',this.showLineNumber);
     }
   }
 })

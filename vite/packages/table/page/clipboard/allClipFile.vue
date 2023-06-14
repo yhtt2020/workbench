@@ -6,17 +6,20 @@
       </div>
     </div>
     <div v-else v-for="item in clipList" class="mr-3 flex flex-col s-bg rounded-lg" >
-      <ClipItem :clip="item"></ClipItem>
+      <ClipItem :clip="item" @previewItem="getItem"></ClipItem>
     </div>
   </div>
+  <ClipTextPreview :previewContent="previewData"></ClipTextPreview>
 </template>
 
 <script>
 import ClipItem from '../../components/clipPreview/ClipItem.vue';
+import ClipTextPreview from '../../components/clipPreview/ClipTextPreview.vue';
 import { Empty } from 'ant-design-vue';
 export default {
   components:{
-    ClipItem
+    ClipItem,
+    ClipTextPreview
   },
   props:{
     clipList:{
@@ -27,8 +30,15 @@ export default {
   data(){
     return{
       simpleImage: '/public/img/test/not-data.png',
+      previewData:null
     }
   },
+  methods:{
+    // 获取item
+    getItem(v){
+      this.previewData = v
+    }
+  }
 }
 </script>
 

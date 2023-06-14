@@ -28,12 +28,12 @@
       <!-- 文本内容结束 -->
 
       <!-- 剪贴板文本底部切换开始 -->
-      <div class="flex s-item p-1 h-12 rounded-b-lg items-center justify-between">
-          <div v-for="(item,index) in textType" :class="defaultTextType.name === item.name ? 's-item':''" class="flex items-center pointer rounded-lg pt-3 pb-2 px-12" 
+      <div class="flex s-item py-1 px-2 h-12 rounded-b-lg items-center justify-between">
+          <div v-for="(item,index) in textType" :class="defaultTextType.name === item.name ? 's-item':''" class="flex items-center pointer rounded-lg pt-3 pb-2 px-8" 
            @click.stop="selectItem(item,index)"  @tabClick="openCode"
           >
             <Icon :icon="item.icon" style="font-size: 1.45em;"></Icon>
-            <span class="ml-1.5">{{ item.title }}</span>
+            <span class="ml-2 mr-2">{{ item.title }}</span>
             <Icon icon="xiangyou" class="pointer"  v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
           </div> 
       </div>
@@ -79,7 +79,7 @@
         <!-- 代码块语言包切换列表 -->
         <div class="flex flex-col">
           <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
-            <div v-for="item in codeLanguage" class="rounded-lg pointer button-active s-item px-4 py-3 mb-2" @click="clickCodeLanguage(item.name)">
+            <div v-for="item in codeLanguage" class="rounded-lg pointer button-active s-item px-4 py-3 mb-2" @click="clickCodeLanguage(item)">
               {{ item.title }}
             </div>
           </vue-custom-scrollbar>
@@ -142,8 +142,6 @@
 
       </div>
     </div>
-
-    <!-- 代码块语言切换界面 -->
     
   </template>
   <!-- 图片显示区域结束 -->
@@ -159,7 +157,7 @@
          <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between"> 
          <span>{{ clip.timeText }}</span>
          <span>{{clip.capacity}}</span>
         </div>
@@ -198,14 +196,70 @@
             </div> 
           </vue-custom-scrollbar>
         </div>
+      </div>
+    </div>
+  </template>
+  <!-- 文件显示区域结束 -->
+
+
+  <!-- 视频显示区域开始 -->
+  <template v-if="clip.type === 'video'">
+    <!-- 列表主界面 -->
+    <div style="width: 338px;" class="flex flex-col justify-between" v-if="controlsShow === false">
+      <!-- 视频标题开始 -->
+      <div class="flex s-item flex-col rounded-t-lg w-full px-4 py-2">
+        <div class="flex items-center mb-1">
+         <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
+         <span class="ml-2">{{getType(clip.type).title}}</span>
+        </div>
+        <div class="flex justify-between"> 
+         <span>{{ clip.timeText }}</span>
+         <span>{{clip.capacity}}</span>
+        </div>
+      </div>
+      <!-- 视频标题结束 -->
+      
+      <!-- 视频内容开始 -->
+       <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" @click="textButton">
+        <div id="clip-video" ref="clipVideo" class="rounded-lg"></div>
+       </div>
+      <!-- 视频内容结束 -->
+    </div>
+
+    <!-- 视频快捷键操作界面 -->
+    <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
+      <div class="flex s-item flex-col px-4 py-3 rounded-lg">
+        <div class="flex justify-between mb-3">
+          <div class="w-12 s-item h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
+            <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>
+          </div>
+          <div class="flex w-4/5 items-center  justify-center">
+           <span>操作</span>
+          </div>
+        </div>
+
+        <!-- 快捷键按钮 -->
+        <div class="flex flex-col">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
+            <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer justify-between s-item px-4 rounded-lg py-3 mb-2">
+              <span>{{item.title}}</span>
+              <span>{{item.intr}}</span>
+            </div> 
+          </vue-custom-scrollbar>
+        </div>
 
       </div>
     </div>
-    
-    <!-- 代码块语言切换界面 -->
-
   </template>
-  <!-- 文件显示区域结束 -->
+  <!-- 视频显示区域结束 -->
+
+
+  <!-- 音频显示区域开始 -->
+  <template v-if="clip.type === 'audio'">
+    <div>音频</div>
+  </template>
+  <!-- 音频显示区域结束 -->
+
 
   <!-- 设置弹窗 -->
   <ClipSetDrawer ref="setDrawer"></ClipSetDrawer>
@@ -216,10 +270,10 @@ import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
 import ClipSetDrawer from './ClipSetDrawer.vue';
 import {toRaw} from "vue";
 import ClipCodemirror from './ClipCodemirror.vue';
-import { mapActions } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
 import textCodeMirror from './textCodeMirror.vue';
-
+import Player from 'xgplayer/dist/simple_player'
 
 export default {
   components: { HorzontanlPanelIcon,ClipCodemirror,textCodeMirror,ClipSetDrawer},
@@ -312,6 +366,10 @@ export default {
     }
   },
 
+  computed:{
+    ...mapWritableState(clipboardStore,['previewShow'])
+  },
+
   watch:{
     'clip':{
       handler(){
@@ -328,23 +386,25 @@ export default {
 
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
+    // 初始化加载西瓜视频播放器
+    this.loadVideo()
   },
 
 
   methods:{
-    ...mapActions(clipboardStore,['changeClipMode']),
+    ...mapActions(clipboardStore,['changeClipMode','isOpenPreview']),
     refresh(){
       this.clip.timeText=tsbApi.util.friendlyDate(this.clip.time)
       this.type=this.getType(this.clip.type)
       this.capacity=this.clip.content.length+'个字符'
-      console.log(this.capacity);
-      console.log(this.type);
-      if(this.clip.type==='image'){
+      if(this.clip.type === 'image'){
         console.log('是图片，要转换')
         this.img = toRaw(this.clip.content).toDataURL()
         console.log(this.img,'图片地址')
       }
-
+      if(this.clip.type === 'video'){
+        this.loadVideo()
+      }
     },
     getType(type) {
       switch (type) {
@@ -363,6 +423,11 @@ export default {
             icon:'file',
             title:'文件'
           }
+        case 'video':
+          return{
+            icon:'video',
+            title:'视频'
+          }
       }
 
     },
@@ -374,6 +439,9 @@ export default {
     backClip(){
       this.controlsShow = false
       this.codeLanguageShow = false
+      if(this.clip.type === 'video'){
+        this.loadVideo()
+      }
     },
     // 文本底部tab切换
     selectItem(item,index){
@@ -394,36 +462,14 @@ export default {
     clipKeyDown(e){
       // 打开预览快捷键功能
       if(e.keyCode === 32){
-        // this.$emit('openPreview',{preview:true,content:this.clip,copy:this.copyList})
-      }
-      // 复制快捷键功能
-      if(e.ctrlKey && e.key === 'c'){
-        // console.log('复制');
-      }
-      // 收藏快捷键功能
-      if(e.ctrlKey && e.key === 's'){
-        // console.log('收藏');
-      }
-      // 打开链接快捷键
-      if(e.ctrlKey && e.key === 'o'){
-        // console.log('打开链接');
-      }
-      // 删除快捷键
-      if(e.keyCode === 46){
-        console.log('删除',this.clip);
-      }
-      // 复制路径快捷键
-      if(e.ctrlKey && e.altKey && e.key === 'c'){
-        // console.log('复制路径');
-      }
-      if(e.ctrlKey && e.keyCode === 13){
-        // console.log('打开资源管理器');
+        console.log('预览');
+        this.$emit('previewItem',this.clip)
+        this.isOpenPreview(true)
       }
     },
 
     // 快捷键按钮触发
     keyOperation(item){
-      console.log(item.id);
       switch(item.id){
         case 'cc':
           console.log('复制',this.clip);
@@ -431,16 +477,34 @@ export default {
         case 'co':
           console.log('打开链接');
           break;
-          
+        case 's':
+          this.$emit('previewItem',this.clip)
+          this.isOpenPreview(true)
+          break;
+        case 'cs':
+          console.log('添加收藏');
+          break;
+        case 'd':
+          console.log('删除');
+          break;
+        case 'ce':
+          console.log('资源管理打开');
+          break;
+        case 'cac':
+          console.log('复制路径');
+          break;
       }
     },
+
     // 打开代码块语言包切换界面
     openCode(){
       this.codeLanguageShow = true
     },
+
     // 代码块语言包切换的回调事件
     clickCodeLanguage(item){
-      this.changeClipMode(item) // 将代码块语言包进行替换的方法
+      this.changeClipMode(item.name) // 将代码块语言包进行替换的方法
+      this.defaultTextType.title = item.title
       this.codeLanguageShow = false
     },
     
@@ -449,7 +513,26 @@ export default {
       this.$refs.setDrawer.clipOpenShow()
     },
     
-  }
+
+    // 加载视频并且创建西瓜视频播放器
+    loadVideo(){
+      const url = this.clip.videoUrl
+      if(this.clip.type === 'video'){
+        this.$nextTick(()=>{
+          window.$xgplayer = new Player({
+           el:this.$refs.clipVideo,
+           url: url,
+           fitVideoSize: 'fixWidth',
+           width:'302',
+           height:'240',
+           loop: true,
+           videoInit: true,
+           controlsList: ['nofullscreen'],
+          })
+        })
+      }
+    },
+  },
 }
 </script>
 
@@ -517,5 +600,23 @@ export default {
 
 .text-md{
   flex:1;
+}
+.bo-div{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+</style>
+
+<style>
+.CodeMirror-linenumber{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.xgplayer-icon-requestfull{
+  display: none !important;
 }
 </style>

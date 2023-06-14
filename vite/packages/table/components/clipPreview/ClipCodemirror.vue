@@ -16,18 +16,22 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(clipboardStore,['clipMode']),
+    ...mapWritableState(clipboardStore,['clipMode','clipTheme','previewShow','showLineNumber']),
   },
   mounted(){
     this.myClipRefs = CodeMirror(this.$refs.myClip,{
       value:this.editorContent,
-      theme:'monokai',
+      theme:this.clipTheme,
       smartIndent:true,
       tabSize:6,
       indentWithTabs:true,
       lineWrapping: true,
-      lineNumbers: true,
+      lineNumbers: this.showLineNumber,
       direction: "ltr",
+      singleCursorHeightPerLine:true,
+      autocorrect:true,
+      viewportMargin:10,
+      spellcheck:true,
       mode:this.clipMode
     })
   }
