@@ -1,4 +1,6 @@
 <template>
+
+
   <div style="height:100%;width: 100%" v-if="currentDesk.cards">
     <div  style="width: 100%;height: 100%" class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
@@ -21,12 +23,11 @@
         </a-result>
       </div>
     </div>
-    <vue-custom-scrollbar  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+    <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+      style="position: relative; width: 100%; height: 100%">
       <div style="
           white-space: nowrap;
           height: 100%;
-          width: 100%;
           display: flex;
           align-items: center;
           align-content: center;
@@ -49,6 +50,7 @@
       </div>
     </vue-custom-scrollbar>
   </div>
+
   <transition name="fade">
     <div class="home-blur" style="
         position: fixed;
@@ -174,9 +176,11 @@ import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import {message, Modal} from "ant-design-vue";
 import {mapWritableState} from "pinia";
 import {appStore} from "../../store";
+import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 export default {
   name: 'Desk',
   components: {
+    VueCustomScrollbar,
     Vuuri, CPUFourCard, CPULineChart, InternalList,
     SmallCPUCard, SmallGPUCard, DiscountPercentage, GamesDiscount, GameEpic,
     Music, Stock, Dou, Fish, CustomTimer, SmallCountdownDay, Clock, CountdownDay,

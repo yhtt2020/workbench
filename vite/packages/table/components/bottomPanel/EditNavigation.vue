@@ -892,6 +892,7 @@ export default {
 .con-center{
   width: 512px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   // background: greenyellow;
   // justify-content: center;
@@ -915,6 +916,7 @@ export default {
   }
 }
 .main-nav{
+  width: 70%;
   height: 112px;
   padding: 12px;
   background: #212121;
