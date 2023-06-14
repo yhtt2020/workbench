@@ -13,4 +13,11 @@ export const videoList = [
   }
 ]
 
+export const audioList = [
+  {
+    audioUrl:'https://cdn.pixabay.com/audio/2023/05/02/audio_28440129d6.mp3',
+    type:'audio', capacity:'419B',
+    icon:'erji1',title:'音频',content:''
+  }
+]
 

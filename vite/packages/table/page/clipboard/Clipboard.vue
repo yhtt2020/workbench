@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center clip-container justify-between pr-5 mx-4">
+  <div class="flex items-center clip-container justify-between mx-4">
     <div class="flex">
       <!-- tab切换开始 -->
         <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
@@ -71,7 +71,7 @@ import {clipboardStore} from "../../store/clipboard";
 import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
-import { fileList, videoList } from '../../js/data/clipboardData';
+import { fileList, videoList, audioList } from '../../js/data/clipboardData';
 
 export default{
   name: 'Clipboard',
@@ -159,8 +159,11 @@ export default{
             return videoList  // 方便页面搭建暂时使用videoList这个列表,后期视情况而定
           }
           break
-        // case 'audio': // 筛选音频
-        //   break;
+        case 'audio': // 筛选音频
+          if(this.items.length !== 0){
+           return audioList
+          }
+          break;
       }
     }
   },

@@ -189,11 +189,6 @@
   resolved "https://registry.npmmirror.com/@types/resize-observer-browser/-/resize-observer-browser-0.1.7.tgz#294aaadf24ac6580b8fbd1fe3ab7b59fe85f9ef3"
   integrity sha512-G9eN0Sn0ii9PWQ3Vl72jDPgeJwRWhv2Qk/nQkJuWmRmOB4HX3/BhD5SE1dZs/hzPZL/WKnvF0RHdTSG54QJFyg==
 
-"@types/web-bluetooth@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.npmjs.org/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz"
-  integrity sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==
-
 "@uppy/companion-client@^2.2.2":
   version "2.2.2"
   resolved "https://registry.npmmirror.com/@uppy/companion-client/-/companion-client-2.2.2.tgz"
@@ -390,25 +385,18 @@
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.2.47.tgz"
   integrity sha512-BHGyyGN3Q97EZx0taMQ+OLNuZcW3d37ZEVmEAyeoA9ERdGvm9Irc/0Fua8SNyOtV1w6BS4q25wbMzJujO9HIfQ==
 
-"@vueuse/core@^9.6.0":
-  version "9.13.0"
-  resolved "https://registry.npmjs.org/@vueuse/core/-/core-9.13.0.tgz"
-  integrity sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==
+"@vueuse/core@^7.5.5":
+  version "7.7.1"
+  resolved "https://registry.npmmirror.com/@vueuse/core/-/core-7.7.1.tgz#fc284f4103de73c7fb79bc06579d8066790db511"
+  integrity sha512-PRRgbATMpoeUmkCEBtUeJgOwtew8s+4UsEd+Pm7MhkjL2ihCNrSqxNVtM6NFE4uP2sWnkGcZpCjPuNSxowJ1Ow==
   dependencies:
-    "@types/web-bluetooth" "^0.0.16"
-    "@vueuse/metadata" "9.13.0"
-    "@vueuse/shared" "9.13.0"
+    "@vueuse/shared" "7.7.1"
     vue-demi "*"
 
-"@vueuse/metadata@9.13.0":
-  version "9.13.0"
-  resolved "https://registry.npmjs.org/@vueuse/metadata/-/metadata-9.13.0.tgz"
-  integrity sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==
-
-"@vueuse/shared@9.13.0":
-  version "9.13.0"
-  resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-9.13.0.tgz"
-  integrity sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==
+"@vueuse/shared@7.7.1":
+  version "7.7.1"
+  resolved "https://registry.npmmirror.com/@vueuse/shared/-/shared-7.7.1.tgz#77e312de7275380efce86b0079bd7938791a076b"
+  integrity sha512-rN2qd22AUl7VdBxihagWyhUNHCyVk9IpvBTTfHoLH9G7rGE552X1f+zeCfehuno0zXif13jPw+icW/wn2a0rnQ==
   dependencies:
     vue-demi "*"
 
@@ -526,7 +514,7 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ant-design-vue@^3.2.15, ant-design-vue@^3.2.9:
+ant-design-vue@^3.2.9:
   version "3.2.15"
   resolved "https://registry.npmjs.org/ant-design-vue/-/ant-design-vue-3.2.15.tgz"
   integrity sha512-sJfE7LWimSdAPe4dzNyQBrmVMnOTNQTkG9oOyr+7W8qIYrX8sYWyC68Nn1uum4KBJUSZUa/BU6dohvTG0urBhA==
@@ -708,6 +696,14 @@ color-name@^1.1.4:
   version "1.1.4"
   resolved "https://registry.npmmirror.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
+
+colorpicker-v3@^2.10.2:
+  version "2.10.2"
+  resolved "https://registry.npmmirror.com/colorpicker-v3/-/colorpicker-v3-2.10.2.tgz#f5e2f9ea603eee4d227ba10fa436d86963aa2bd0"
+  integrity sha512-ZWPq5wcugS3NcL7DwYqVSP5mE/x45FK31olGpig+Tko5jUXk0danfEYi1Aei3lgYs+Z0zAfhbhqVuDgOdUs5Mw==
+  dependencies:
+    "@vueuse/core" "^7.5.5"
+    vue "^3.2.25"
 
 commander@^2.15.1:
   version "2.20.3"
@@ -1227,11 +1223,6 @@ has@^1.0.3:
   integrity sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
   dependencies:
     function-bind "^1.1.1"
-
-highlight.js@^11.7.0:
-  version "11.7.0"
-  resolved "https://registry.npmjs.org/highlight.js/-/highlight.js-11.7.0.tgz"
-  integrity sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==
 
 html-void-elements@^2.0.0:
   version "2.0.1"
@@ -2120,71 +2111,6 @@ v-viewer@^3.0.11:
     lodash "^4.17.21"
     viewerjs "^1.9.0"
 
-vcolorpicker@2.0.10:
-  version "2.0.10"
-  resolved "https://registry.npmjs.org/vcolorpicker/-/vcolorpicker-2.0.10.tgz"
-  integrity sha512-5MwXNF9CoPs0d3ZhcFbvjrGFTApUQQXdZXEScLKjDg3CFs/YRLCVoSgS0d0WJVJr323rB15bxdpI5ydlUzcl7g==
-  dependencies:
-    "@vueuse/core" "^9.6.0"
-    ant-design-vue "^3.2.15"
-    highlight.js "^11.7.0"
-    vcolorpicker "2.0.9"
-    vue "^3.2.45"
-
-vcolorpicker@2.0.11:
-  version "2.0.11"
-  resolved "https://registry.npmjs.org/vcolorpicker/-/vcolorpicker-2.0.11.tgz"
-  integrity sha512-S1yqvUxvow7fcdtNGPJlBQMXVZt3dp9o4xpPhycwg+yciKNIcUu9nyO+wXDe/htpObpob4g2Djd84i6JWSmrWA==
-  dependencies:
-    "@vueuse/core" "^9.6.0"
-    ant-design-vue "^3.2.15"
-    highlight.js "^11.7.0"
-    vcolorpicker "2.0.10"
-    vue "^3.2.45"
-
-vcolorpicker@2.0.5, vcolorpicker@^2.0.4:
-  version "2.0.5"
-  resolved "https://registry.npmjs.org/vcolorpicker/-/vcolorpicker-2.0.5.tgz"
-  integrity sha512-WLxch6FZTCrSia43TJgG2vspaB8NZRw2mVPSsK31kZWgx6xYUyTjqDZp/zFxhuDcThOqTSoFG0EBxfZy5wn9lQ==
-  dependencies:
-    "@vueuse/core" "^9.6.0"
-    ant-design-vue "^3.2.15"
-    highlight.js "^11.7.0"
-    vcolorpicker "^2.0.4"
-    vue "^3.2.45"
-
-vcolorpicker@2.0.8:
-  version "2.0.8"
-  resolved "https://registry.npmjs.org/vcolorpicker/-/vcolorpicker-2.0.8.tgz"
-  integrity sha512-8Jv6cQfzcGP0cWCV81Kq52qp7xrX5bVjzEozYH5TorEeqWB71Ptj/6+CcOCU45NYgF6jOfGAsGZxjPwkboHDMw==
-  dependencies:
-    "@vueuse/core" "^9.6.0"
-    ant-design-vue "^3.2.15"
-    highlight.js "^11.7.0"
-    vcolorpicker "2.0.5"
-    vue "^3.2.45"
-
-vcolorpicker@2.0.9:
-  version "2.0.9"
-  resolved "https://registry.npmjs.org/vcolorpicker/-/vcolorpicker-2.0.9.tgz"
-  integrity sha512-vTMr2/kpumhWan4seGugXfh4R55s266asALfF5wM4EZfNVAgXy23+wgyiVVzXQe7Rk3F4wNtVP/sKrLEIPJTIw==
-  dependencies:
-    "@vueuse/core" "^9.6.0"
-    ant-design-vue "^3.2.15"
-    highlight.js "^11.7.0"
-    vcolorpicker "2.0.8"
-    vue "^3.2.45"
-
-vcolorpicker@^2.0.12:
-  version "2.0.12"
-  resolved "https://registry.npmjs.org/vcolorpicker/-/vcolorpicker-2.0.12.tgz"
-  integrity sha512-a1GG/qUGfIGcnRcompFJJ4zhCiUCnRga/viE5vC7YDEr6yx9gbSo4sAZlG8OmxDx/BZxkTyFHaZ7TOCxTW1a+g==
-  dependencies:
-    "@vueuse/core" "^9.6.0"
-    highlight.js "^11.7.0"
-    vcolorpicker "2.0.11"
-    vue "^3.2.45"
-
 viewerjs@^1.9.0:
   version "1.11.2"
   resolved "https://registry.npmmirror.com/viewerjs/-/viewerjs-1.11.2.tgz"
@@ -2234,6 +2160,11 @@ vue-tippy@v6:
   dependencies:
     tippy.js "^6.3.7"
 
+vue-toastification@^2.0.0-rc.5:
+  version "2.0.0-rc.5"
+  resolved "https://registry.npmmirror.com/vue-toastification/-/vue-toastification-2.0.0-rc.5.tgz#92798604d806ae473cfb76ed776fae294280f8f8"
+  integrity sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==
+
 vue-tsc@^0.34.7:
   version "0.34.17"
   resolved "https://registry.npmmirror.com/vue-tsc/-/vue-tsc-0.34.17.tgz"
@@ -2268,7 +2199,7 @@ vue@^2.2:
     "@vue/compiler-sfc" "2.7.14"
     csstype "^3.1.0"
 
-vue@^3.2.25, vue@^3.2.45:
+vue@^3.2.25:
   version "3.2.47"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.47.tgz"
   integrity sha512-60188y/9Dc9WVrAZeUVSDxRQOZ+z+y5nO2ts9jWXSTkMvayiWxCWOWtBQoYjLeccfXkiiPZWAHcV+WTPhkqJHQ==
