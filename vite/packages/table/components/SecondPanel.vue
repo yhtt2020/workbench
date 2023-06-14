@@ -8,7 +8,7 @@
         <span style="margin-left: 0.5em;font-size: 1em;" class="s-text" >返回</span>
       </div>
     </div>
-    <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'active-menu-item': current(menu) }"
+    <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'xt-active-btn': current(menu) }"
       v-for="(menu) in menus" style="color:var(--primary-text)">
       <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
       <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="s-text">{{ menu.title }}</span>
