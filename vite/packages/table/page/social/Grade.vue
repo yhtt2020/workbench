@@ -9,8 +9,8 @@
           <div class="flex items-center -ml-4 mt-3">
             <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
           </div>
-          <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2"
-            style="background: var(--active-bg);color:var(--primary-text)">
+          <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2 xt-bg-2"
+            style="color:var(--primary-text)">
             <div>1. 保持在线状态即可升级</div>
             <div>2. 目前有「{{leveList.length}}」个不同的等级权益，高等级还能优先体验新功能</div>
             <div>3. 通过加入「小队」最高可获得20%升级加速</div>
@@ -32,11 +32,11 @@
               :style="item.detail[[leveList[clickGrade]]] ? 'background: rgba(42, 42, 42, 1)' : 'background: rgba(42, 42, 42, 1);opacity: 0.6;'"> -->
               <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
               style="width: calc(50% - 8px);"
-              :style="item.detail[[leveList[clickGrade]]] ? 'background: var(--active-bg)' : 'background: var(--active-bg);opacity: 0.6;'">
+              :style="item.detail[[leveList[clickGrade]]] ? 'background: var(--secondary-bg)' : 'background: var(--secondary-bg);opacity: 0.6;'">
               <Icon :icon="item.icon" style="width: 24px;height: 24px;color: var(--primary-text);" class="mr-4 ml-2 text-white"></Icon>
               <div style="width: calc(100% - 50px)">
-                <div class="text-white text-more w-full" style="color: var(--main-text);" >{{ item.alias }}</div>
-                <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full" style="color: var(--secondary-text);" >
+                <div class="text-white text-more w-full xt-text"  >{{ item.alias }}</div>
+                <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full xt-text-2">
                   {{ item.detail[[leveList[clickGrade]]] }}</div>
               </div>
               <div class="grade-tip" style="color: rgba(255, 255, 255, 0.85);" v-if="item.noOnline">即将上线</div>

@@ -29,7 +29,7 @@
         <div @click="openUrl(item.arcurl)" class="pb-3  pl-3 game-list-item flex-shrink-0"
              v-for="(item,index) in gameVideoList">
           <div class=" rounded-lg w-auto pointer mb-2" style="height: 65.5%;position: relative;">
-            <img :src="`https:${item.pic}`" class="w-full h-full rounded-lg object-cover" alt="">
+            <img :src="`${getVideoCover(item.pic)}`" class="w-full h-full rounded-lg object-cover" alt="">
             <div class="bfl px-4 mb-1 flex justify-between">
               <div class="flex">
                 <div class="flex items-center justify-center">
@@ -111,6 +111,7 @@ import browser from '../../js/common/browser'
 import axios from 'axios'
 import {steamUserStore} from "../../store/steamUser";
 import {mapActions, mapWritableState} from 'pinia';
+import { fixHttp } from '../../util'
 
 export default {
   name: "GameIntroduction",
@@ -315,7 +316,9 @@ export default {
     openUrl(url) {
       browser.openInTable(url)
     },
-
+    getVideoCover(url){
+      return fixHttp(url+'@320w_200h')
+    },
     selectHotType(e) {
       // this.defaultSearchType.name = e
       this.loadIllustratedData()
@@ -335,7 +338,6 @@ export default {
           // 使用正则表达式匹配 <script> 标签中的 JavaScript 代码
           const regex = /<script.*?>((.|\n)*?)<\/script>/gi;
           const matches = htmlText.match(regex)[12];
-          console.log(matches,'matches')
           const startIndex = matches.indexOf('(');
           if(startIndex===-1){
             this.gameVideoList=[]

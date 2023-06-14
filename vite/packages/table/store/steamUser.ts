@@ -54,13 +54,8 @@ export const steamUserStore = defineStore("steamUser", {
       this.recentGameList.unshift(game)
     },
     bindClientEvents() {
-      console.log('绑定steamClient事件')
       client.on('friendsList', () => {
-        console.log('获取到我的好友')
-        console.log(client.myFriends)
-        console.log(this.myFriends, '我的好友列表=')
         client.getPersonas(Object.keys(client.myFriends), (err, users) => {
-          console.log('返回了我的好友', err, users)
           if (err) {
             console.error(err)
             return
@@ -76,7 +71,6 @@ export const steamUserStore = defineStore("steamUser", {
       return window.client
     },
     onRefreshToken() {
-      console.info('触发steamRefreshToken')
       if (this.steamLoginData.refreshToken === '') {
         client.logOff();
         client.once('disconnected', () => {
@@ -91,13 +85,11 @@ export const steamUserStore = defineStore("steamUser", {
         });
         //client.gamesPlayed([1172470]); 模拟正在玩吃鸡
         client.on('appOwnershipCached', () => {
-          console.log('游戏库存改变');
           client.getUserOwnedApps(client.steamID.getSteamID64(), {
             includeFreeSub: true,
             includePlayedFreeGames: true
           }, (err, data) => {
             if (err) console.log(err)
-            console.log(data.apps, '获取到的游戏库存改变后的数据=')
             this.originGameList = data.apps
           })
           client.getProductInfo(client.getOwnedApps({excludeFree: false}), [], (err, data) => {

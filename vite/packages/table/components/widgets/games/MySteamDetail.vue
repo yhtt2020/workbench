@@ -106,6 +106,7 @@ import {getDateTime} from '../.././../util'
 import { mapWritableState,mapActions } from 'pinia';
 import {cardStore} from "../../../store/card";
 import {steamUserStore} from "../../../store/steamUser";
+import { inspectorStore } from '../../../store/inspector'
 export default {
   name:'MySteamDetail',
   props:{
@@ -132,14 +133,14 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(cardStore,['aidaData']),
+    ...mapWritableState(inspectorStore,['displayData']),
     ...mapWritableState(steamUserStore,['runningGame'])
   },
 
   watch:{
-    'aidaData':{
+    'displayData':{
       handler(){
-        let { useGPU, useMemory, useCPU, FPS, down, up} = this.aidaData || {}
+        let { useGPU, useMemory, useCPU, FPS, down, up} = this.displayData || {}
         this.CPUGPUData = {
           useGPU:useGPU,
           useCPU:useCPU,
