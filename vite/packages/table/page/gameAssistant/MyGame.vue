@@ -104,12 +104,12 @@
       </div>
     </Modal>
       <Modal v-model:visible="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
-        <div class=" flex flex-col" style="border-radius: 12px" v-if="currentSteam">
+        <div class=" flex flex-col" style="border-radius: 6px;overflow: hidden" v-if="currentSteam">
           <div class=" relative" style="height: 188px;width: 400px" v-if="currentSteam">
-            <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appid+'/header.jpg'" style="border-radius: 12px 12px 0 0 " class="w-full h-full object-cover" alt="">
+            <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appid+'/header.jpg'" style=" " class="w-full h-full object-cover" alt="">
           </div>
           <div class="  p-4">
-            <div style="user-select: text" class="text-white" ><a-avatar :size="24" :src="getClientIcon(this.currentSteam.appid,this.currentSteam.clientIcon)" ></a-avatar> {{currentSteam.chineseName}} {{currentSteam.appid}}</div>
+            <div style="user-select: text" class="text-white" ><a-avatar shape="square" :size="24" :src="getClientIcon(this.currentSteam.appid,this.currentSteam.clientIcon)" ></a-avatar><span class="xt-text ml-2 truncate"> {{currentSteam.chineseName}} {{currentSteam.appid}}</span></div>
             <div class="flex flex-row flex-wrap w-80">
               <div class="w-1/2 mt-3">上次游玩：{{getDateMyTime(currentSteam.time)}}</div>
               <div class="w-1/2 mt-3">游戏在线玩家数：{{totalTime(currentSteam.online)||'-'}}人</div>
@@ -169,9 +169,7 @@
         </div>
       </a-drawer>
  </div>
- <MyFullScreenGame v-else @close="closeScreen"></MyFullScreenGame>
 </template>
-
 <script>
 import HorizontalPanel from "../../components/HorizontalPanel.vue";
 import Modal from '../../components/Modal.vue'
@@ -183,9 +181,13 @@ import {getDateTime} from '../../util'
 import {runExec} from '../../js/common/exec'
 import {Modal as AntModal} from 'ant-design-vue'
 import {getClientIcon, steamProtocol} from "../../js/common/game";
+import JumpNotice from '../../components/game/JumpNotice.vue'
+import { useToast} from 'vue-toastification'
+const toast=useToast()
 export default {
   name: "MyGame",
   components:{
+    JumpNotice,
     HorizontalPanel,
     Modal,
     MyFullScreenGame
@@ -194,6 +196,8 @@ export default {
     return {
       showTime:true,
       drawerVisible:false,
+      //跳转到对应的桌面的弹窗
+      jumpVisible:false,
       settingVisible:false,
       settingsScroller: {
         useBothWheelAxes: true,
@@ -267,11 +271,9 @@ export default {
       if(!openPath){
         return
       }
-      console.log(openPath,'openPath')
      let dropFiles = await ipc.sendSync("getFilesIcon", {
        files: JSON.parse(JSON.stringify(openPath)),
      });
-     console.log(dropFiles)
      this.modalVisibility=false
      dropFiles.forEach(game=>{
        this.myGameList.unshift(game)
@@ -281,8 +283,37 @@ export default {
       steamProtocol._run('stopstreaming')
       this.runningGame={}
     },
+    /**
+     * 开始steam游戏游玩
+     */
     playSteamGame(){
       this.playGame(this.currentSteam)
+      console.log(toast)
+     // toast(JumpNotice)
+
+      toast({
+        component:JumpNotice,
+        props:{
+          game:this.currentSteam
+        },
+        listeners:{
+          'jump':(event)=>{
+            console.log(event)
+            this.$router.push({
+              name:'gameIndex',
+              params:{
+                appid:event.game.appid
+              }
+            })
+          }
+        }
+      },{
+        icon:false,
+        closeOnClick:false,
+        closeButton:false,
+        pauseOnFocusLoss:false,
+        pauseOnHover:false
+      })
     },
     deleteGame(){
      steamProtocol.uninstall(this.currentSteam.appid)

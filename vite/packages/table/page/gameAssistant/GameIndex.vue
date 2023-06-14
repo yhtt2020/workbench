@@ -8,6 +8,7 @@
       <div  :class="{'tab-active':selectDeskId===item.appid}" @click="setSelectDeskId(item.appid)" style="width: 140px;" class="truncate pr-3 game-tab s-bg" v-for="(item,index) in recentGameList.slice(0,3)">
         <a-avatar  class="mr-1 icon" :size="22" :src="getClientIcon(item.appid,item.clientIcon)"></a-avatar>
         <span class="">{{ item.chineseName }}</span>
+        <div v-if="runningGame.appid===item.appid" style="border-bottom: 3px solid #ffffff"></div>
       </div>
       <div @click="showMore" v-if="recentGameList.length>3" class="game-tab s-bg more" >
         <icon class="icon"  style="font-size: 22px" icon="gengduo1"></icon>
@@ -30,8 +31,9 @@
       <div @click="setFullScreen(false)" class="s-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon></div>
     </div>
   </div>
-  <div class="rounded-xl px-5" style="width: 100%;height: 0;flex: 1">
-    <template v-if="desks[selectDeskGame.appid] || selectDeskId==='0' && desks[selectDeskGame.appid] ">
+<!-- 卡片桌面  -->
+  <div class="rounded-xl" style="width: 100%;height: 0;flex: 1" :class="{'px-5':!fullScreen}">
+    <template v-if="(desks[selectDeskGame.appid] || selectDeskId==='0') && desks[selectDeskGame.appid] ">
       <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>
     <div v-else>
@@ -42,7 +44,14 @@
           此游戏还没有创建桌面，当您为游戏单独创建桌面后，游戏运行中，会自动为您切换至此桌面。
           点击下方按钮为此游戏创建独立桌面。
         </p>
-        <a-button block size="large" @click="createDesk()" type="primary ">单独创建桌面</a-button>
+        <a-row :gutter="15">
+          <a-col :span="12">
+            <a-button block size="large" @click="createDesk()" type="primary ">创建空白桌面</a-button>
+          </a-col>
+          <a-col :span="12">
+            <a-button  block size="large" @click="createMainDesk()">基于主桌面创建</a-button>
+          </a-col>
+        </a-row>
       </div>
 
     </div>
@@ -59,7 +68,8 @@ import {getClientIcon, getCover} from "../../js/common/game";
 import {nanoid} from "nanoid";
 import GameListDrawer from "../../components/game/GameListDrawer.vue";
 import { appStore } from '../../store'
-
+import { useToast} from 'vue-toastification'
+const toast=useToast()
 export default {
   components: {GameListDrawer, Desk},
   computed: {
@@ -95,8 +105,23 @@ export default {
   },
   mounted() {
     if (Object.keys(this.desks).length > 0) {
-      this.currentDesk = this.desks['0']
+      if (this.$route.params['appid']) {
+        let appid=this.$route.params['appid']
+        if(!this.desks[appid]){
+          toast('当前游戏还没有独立桌面，默认使用主桌面。')
+        }else{
+          setTimeout(()=>{
+            this.selectDeskId = this.$route.params['appid']
+          },500)
+        }
+
+
+      }else{
+        this.currentDesk = this.desks['0']
+        this.selectDeskId ='0'
+      }
     } else {
+      //如果还没有桌面
       this.desks['0'] =
         {
           name: '主桌面',
@@ -108,11 +133,10 @@ export default {
             cardMargin: 5//卡片间隙
           }
         }
+      this.currentDesk = this.desks['0']
+      this.selectDeskId ='0'
     }
-    if (this.$route.params['appid']) {
-      console.log('定位')
-      this.selectDeskId = this.$route.params['appid']
-    }
+
   },
   methods: {
     getClientIcon,
@@ -130,6 +154,14 @@ export default {
           marginTop: 0,
           cardMargin: 5//卡片间隙
         }
+      }
+    },
+    createMainDesk(){
+      this.desks[this.selectDeskGame.appid] = {
+        name: this.selectDeskGame.name,
+        nanoid: nanoid(4),
+        cards: this.desks['0'].cards,
+        settings: this.desks['0'].settings
       }
     },
     showMore() {

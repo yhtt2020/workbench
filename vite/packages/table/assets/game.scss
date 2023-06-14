@@ -1,7 +1,7 @@
 .game-start-button{
-  color:white;
+  color:white !important;
   &.running{
-    background: linear-gradient(90deg, #3a9aec, #235ece);
+    background: linear-gradient(90deg, #3a9aec, #235ece)  !important;
   }
-  background: linear-gradient(90deg, #4fc730, #19b04e);
+  background: linear-gradient(90deg, #4fc730, #19b04e)  !important;
 }

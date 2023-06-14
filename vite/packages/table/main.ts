@@ -3,9 +3,9 @@ import Antd from 'ant-design-vue';
 // import 'ant-design-vue/dist/antd.less';
 import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
-import 'vcolorpicker/lib/style.css';
+import ColorPicker from 'colorpicker-v3'
+import 'colorpicker-v3/style.css'
 import {createRouter, createWebHashHistory} from 'vue-router'
-import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
 import 'dayjs/locale/zh-cn';
 import './index.css'
@@ -21,7 +21,9 @@ import BackBtn from './components/comp/BackBtn.vue'
 
 import { setupCalendar } from 'v-calendar';
 import 'viewerjs/dist/viewer.css'
-
+/*消息提示组件*/
+import Toast,{PluginOptions} from 'vue-toastification'
+import "vue-toastification/dist/index.css";
 
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'
@@ -41,10 +43,8 @@ import VueViewer from "v-viewer";
 import $ from "jquery";
 
 import dayjs from 'dayjs';
-import routes from './route/route'
 
-import "../../public/css/global.scss"
-import "../../public/css/antd.scss"
+import "../../public/css/styleSwitch/index.scss"
 import {router}from './router'
 dayjs.locale('zh-cn');
 
@@ -55,8 +55,10 @@ pinia.use(piniaPersist)
 
 // @ts-ignore
 window.$=$
+const options:PluginOptions={
 
-const $app=app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
+}
+const $app=app.use(pinia).use(Antd).use(ColorPicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
   VueTippy,
   // optional
   {
@@ -69,7 +71,7 @@ const $app=app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer)
       trigger:"mouseenter click"
     }, // => Global default options * see all props
   }
-).mount('#app')
+).use(Toast,options).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

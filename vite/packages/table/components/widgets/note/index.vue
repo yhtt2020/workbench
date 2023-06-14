@@ -145,16 +145,16 @@ export default {
         text: this.text,
       },this.desk)
     },
-    updateBackground (e) {
+    updateBackground (backgroundColor) {
       message.success({
         content:'设置卡片背景成功',
         key:'bg'
       })
       this.updateCustomData(this.customIndex, {
-        background: e,
+        background: backgroundColor,
       },this.desk)
-      this.background = e
-      if (e == 'linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)') {
+      this.background = backgroundColor
+      if (backgroundColor == 'linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)') {
         this.updateCustomData(this.customIndex, {
           color: '#000000',
         },this.desk)
@@ -182,10 +182,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.test {
-  color: var(--color) !important;
-}
-
 .box {
   width: 100%;
   height: 100%;

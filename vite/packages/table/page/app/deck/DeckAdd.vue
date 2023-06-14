@@ -72,11 +72,11 @@
               </div>
               <div class="line">
                 文字颜色：
-                <colorPicker v-model="color"/>
+                <colorPicker v-model:hex="color"/>
               </div>
               <div class="line">
                 背景颜色：
-                <colorPicker v-model="bgColor"/>
+                <colorPicker v-model:hex="bgColor"/>
               </div>
 
             </div>
