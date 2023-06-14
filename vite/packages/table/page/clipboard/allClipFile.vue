@@ -16,6 +16,7 @@
 import ClipItem from '../../components/clipPreview/ClipItem.vue';
 import ClipTextPreview from '../../components/clipPreview/ClipTextPreview.vue';
 import { Empty } from 'ant-design-vue';
+import {toRaw} from "vue";
 export default {
   components:{
     ClipItem,
@@ -36,7 +37,23 @@ export default {
   methods:{
     // 获取item
     getItem(v){
-      this.previewData = v
+      // this.previewData = v
+      switch(v.type){
+        case 'text':
+          this.previewData = v
+          break;
+        case 'image':
+          const img = toRaw(v.content).toDataURL()
+          this.previewData = {
+            img,
+            timeText:v.timeText,
+            type:v.type
+          }
+          break;
+        case 'video':
+          this.previewData = v
+          break;
+      }
     }
   }
 }

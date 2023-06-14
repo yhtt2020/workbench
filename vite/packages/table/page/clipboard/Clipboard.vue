@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center clip-container justify-between pr-5 mx-4">
+  <div class="flex items-center clip-container justify-between mx-4">
     <div class="flex">
       <!-- tab切换开始 -->
         <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>

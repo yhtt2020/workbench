@@ -43,7 +43,7 @@
 
     <!-- 操作界面 -->
     <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
-      <div class="flex s-item flex-col rounded-lg px-4 py-3">
+      <div class="flex s-item flex-col rounded-lg px-4 py-3 h-full">
         <div class="flex justify-between mb-3">
           <div class="w-12 s-item h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
             <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>
@@ -189,7 +189,7 @@
 
         <!-- 快捷键按钮 -->
         <div class="flex flex-col">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height:50vh;">
             <div v-for="item in fileKey" @click="keyOperation(item)" class="flex pointer justify-between s-item px-4 rounded-lg py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
@@ -221,7 +221,7 @@
       
       <!-- 视频内容开始 -->
        <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" @click="textButton">
-        <div id="clip-video" ref="clipVideo" class="rounded-lg"></div>
+        <ClipVideo :vUrl="clip.videoUrl"></ClipVideo>
        </div>
       <!-- 视频内容结束 -->
     </div>
@@ -273,10 +273,18 @@ import ClipCodemirror from './ClipCodemirror.vue';
 import { mapActions, mapWritableState } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
 import textCodeMirror from './textCodeMirror.vue';
-import Player from 'xgplayer/dist/simple_player'
+import ClipVideo from './ClipVideo.vue';
+// import Player from 'xgplayer/dist/simple_player'
+import { codeLanguage } from '../../js/common/clipboardObserver';
 
 export default {
-  components: { HorzontanlPanelIcon,ClipCodemirror,textCodeMirror,ClipSetDrawer},
+  components: { 
+    HorzontanlPanelIcon,
+    ClipCodemirror,
+    textCodeMirror,
+    ClipSetDrawer,
+    ClipVideo
+  },
   props:{
     clip:{
       type:Object,
@@ -344,25 +352,9 @@ export default {
       },
       
       // 代码块语言包切换
-      codeLanguage:[
-        {title:'Python',name:'python'},
-        {title:'JavaScript',name:'javascript'},
-        {title:'Java',name:'text/x-java'},
-        {title:'C++',name:'text/x-c++src'},
-        {title:'C#',name:'text/x-csharp'},
-        {title:'PHP',name:'application/x-httpd-php'},
-        {title:'Swift',name:'swift'}
-      ],
-      // clipOptions:{
-      //   tabSize: 4, // 默认为4
-			// 	mode: 'swift', // 选择代码语言
-			// 	lineWrapping: true,    // 自动换行
-      //   styleActiveLine: true,
-      //   scrollbarStyle: null, // 将滚动条样式设置为 null
-      //   line: true,
-			// 	theme: 'monokai' // 主题根据需要自行配置
-      // },
-      // item:{}
+      codeLanguage,
+
+      
     }
   },
 
@@ -387,7 +379,7 @@ export default {
   mounted(){
     window.addEventListener('keydown',this.clipKeyDown)
     // 初始化加载西瓜视频播放器
-    this.loadVideo()
+    // this.loadVideo()
   },
 
 
@@ -402,9 +394,9 @@ export default {
         this.img = toRaw(this.clip.content).toDataURL()
         console.log(this.img,'图片地址')
       }
-      if(this.clip.type === 'video'){
-        this.loadVideo()
-      }
+      // if(this.clip.type === 'video'){
+      //   this.loadVideo()
+      // }
     },
     getType(type) {
       switch (type) {
@@ -479,6 +471,7 @@ export default {
           break;
         case 's':
           this.$emit('previewItem',this.clip)
+          // console.log(this.clip);
           this.isOpenPreview(true)
           break;
         case 'cs':
@@ -503,7 +496,7 @@ export default {
 
     // 代码块语言包切换的回调事件
     clickCodeLanguage(item){
-      this.changeClipMode(item.name) // 将代码块语言包进行替换的方法
+      this.changeClipMode(item.abbr) // 将代码块语言包进行替换的方法
       this.defaultTextType.title = item.title
       this.codeLanguageShow = false
     },
@@ -512,26 +505,7 @@ export default {
     openClipSet(){
       this.$refs.setDrawer.clipOpenShow()
     },
-    
 
-    // 加载视频并且创建西瓜视频播放器
-    loadVideo(){
-      const url = this.clip.videoUrl
-      if(this.clip.type === 'video'){
-        this.$nextTick(()=>{
-          window.$xgplayer = new Player({
-           el:this.$refs.clipVideo,
-           url: url,
-           fitVideoSize: 'fixWidth',
-           width:'302',
-           height:'240',
-           loop: true,
-           videoInit: true,
-           controlsList: ['nofullscreen'],
-          })
-        })
-      }
-    },
   },
 }
 </script>
