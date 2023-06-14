@@ -190,9 +190,9 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
     ...mapWritableState(timerStore, ["appDate"]),
-    ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
   },
@@ -206,6 +206,15 @@ export default {
         toggleFullScreen()
         event.preventDefault()
         event.stopPropagation()
+      }
+      if(this.fullScreen){
+        console.log('全屏了')
+        if(event.keyCode===27){
+          console.log('是esc')
+          this.fullScreen=false
+          event.preventDefault()
+          event.stopPropagation()
+        }
       }
     },
     bindTouchEvents() {

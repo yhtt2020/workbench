@@ -4,7 +4,7 @@
       <div class="flex h-full items-center justify-between p-5">
         <div class="left-preview flex flex-col h-full justify-between">
             <div>
-              <div @click="closePreview"  class="w-12 h-12 no-drag close-button button-active  s-item  flex pointer items-center justify-center rounded-lg">
+              <div @click="closePreview"  class="w-12 h-12 no-drag button-active  s-item  flex pointer items-center justify-center rounded-lg">
                 <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
               </div> 
             </div>
@@ -16,16 +16,20 @@
                <codemirror :value="textPreview.content" :options="clipOptions" ></codemirror>
               </div>
             </div>
-
-            <div v-if="textPreview.type === 'image'" style="height: 100%;" class="w-full flex items-center justify-center">
-              <div  class="rounded-lg image-content" style="height: 80%;">
+            
+            <div v-if="textPreview.type === 'image'" class="w-full flex items-center justify-center">
+              <div  class="rounded-lg image-content p-3">
                 <img :src="textPreview.imgUrl" class="rounded-lg" style="width:100%; height: 100%;object-fit: cover;" alt="">
               </div>
             </div>
 
+            <div v-if="textPreview.type === 'video'" class="w-full  p-3 rounded-lg flex items-center justify-center">
+              <div id="clip-video" class="rounded-lg"></div>
+            </div>
+
             <div class="w-full flex items-center justify-center px-3">
-              <div class="h-12 flex" v-if="textPreview.type === 'text'">
-                <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText"></HorzontanlPanelIcon>
+              <div class="h-12 flex items-center justify-center" v-if="textPreview.type === 'text'">
+                <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText" class="left-panel"></HorzontanlPanelIcon>
                 <div class="ml-3 py-3 px-9 flex button-active items-center rounded-lg s-item pointer"
                  v-if="defaultClipText.name === 'codeBlock'"
                  @click="openCateDrawer"
@@ -58,7 +62,7 @@
               <span class="preview-type">{{item.intr}}</span>
             </div>
           </div>
-        </div>
+          </div>
           <div class="right-preview h-full flex flex-col justify-between pl-6"  v-if="textPreview.type === 'image'">
             <div class="flex flex-col">
               <div class="flex item-center justify-between mb-3">
@@ -93,6 +97,40 @@
               </div>
             </div>
           </div>
+          <div class="right-preview h-full flex flex-col justify-between pl-6" v-if="textPreview.type === 'video'">
+            <div class="flex flex-col">
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">名称</span>
+                <span class="preview-type">{{textPreview.name}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">类型</span>
+                <span class="preview-type">{{textPreview.title}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">格式</span>
+                <span class="preview-type">{{ textPreview.url.slice(-3).toUpperCase()}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">时间</span>
+                <span class="preview-type">{{textPreview.time}}</span>
+              </div>
+              <div class="flex item-center justify-between mb-3">
+                <span class="preview-type">大小</span>
+                <span class="preview-type">{{textPreview.capacity}}</span>
+              </div>
+              <div class="flex flex-col item-center justify-between mb-3">
+                <span class="preview-type mb-2">路径</span>
+                <span class="preview-type break-words break-normal" style="max-width: 352px;">{{textPreview.url}}</span>
+              </div>
+            </div>
+            <div>
+              <div v-for="item in imageCopy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
+                <span class="preview-text">{{item.title}}</span>
+                <span class="preview-type">{{item.intr}}</span>
+              </div>
+            </div>
+          </div>
         </vue-custom-scrollbar>
         
       </div>
@@ -111,6 +149,7 @@
 import codemirror from 'vue-codemirror/src/codemirror.vue';
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue';
 import HorizontalDrawer from '../HorizontalDrawer.vue';
+import Player from 'xgplayer/dist/simple_player'
 export default {
   components:{
     codemirror,
@@ -145,10 +184,10 @@ export default {
       ],
       clipText:[
         {
-          title:'纯文本',name:'text'
+          title:'纯文本',name:'text',icon:'ziyuan'
         },
         {
-          title:'代码块',name:'codeBlock'
+          title:'代码块',name:'codeBlock',icon:'daima'
         }
       ],
       defaultClipText:{title:'纯文本',name:'text'}, 
@@ -180,9 +219,19 @@ export default {
       },
     }
   },
+
+  updated(){
+    if(this.textPreview.type === 'video'){
+      this.loadVideo()
+    }
+  },
+
   methods:{
     closePreview(){
       this.$emit('closeText',false)
+      if (window.$xgplayer) {
+        window.$xgplayer.destroy()
+      }
     },
     openCateDrawer(){
       this.$refs.regionDrawer.openDrawer()
@@ -190,8 +239,24 @@ export default {
     getArea(v){
       this.defaultCate = v
       this.clipOptions.mode = v.id
-    }
+    },
+    loadVideo(){
+      let url = this.textPreview.url
+      window.$xgplayer = new Player({
+        id: 'clip-video',
+        url: url,
+        // fitVideoSize: 'fixWidth',
+        fitVideoSize: 'fixWidth',
+        // width:300,
+        // height:300,
+        // loop: true,
+        fluid: true,
+        videoInit: true,
+        autoplay: true
+      })
+    },
   },
+
   watch:{
     'defaultClipText':{
       handler(){
@@ -270,16 +335,31 @@ export default {
 }
 
 .image-content{
-  
+  max-width: 800px;
 }
 
 
-@media screen and (max-width:800px) {
- /*
-  .image-content{
-    width:calc(100% / 2);
-    height:calc(100% / 2);
+@media screen and (max-width:840px) {
+  .left-preview{
+    width: calc(100% / 2);
   }
- **/
+  .left-panel{
+    width: calc(100% / 1.75);
+  }
+  .image-content{
+    width: calc(100% / 1);
+  }
+}
+
+@media screen and (min-width:840px)  and (max-width: 1140px) {
+  .image-content{
+    width: calc(100% / 1);
+  }
+}
+
+@media screen and (min-width:1140px)  and (max-width: 1240px) {
+  .image-content{
+    width: calc(100% / 1.36);
+  }
 }
 </style>

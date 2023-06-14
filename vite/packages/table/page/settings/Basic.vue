@@ -4,7 +4,7 @@
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
         <!-- 快速搜索 基础设置->基础设置 右侧框 -->
     <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em;color: var(--primary-text);background: var(--primary-bg);
-    
+
     "
   class="s-bg">
       <router-view></router-view>
@@ -29,7 +29,7 @@ const menus = [
     title: '浏览器',
     name: 'browser',
     route: {
-      name: 'browser'
+      name: 'browserSetting'
     }
   },
   {

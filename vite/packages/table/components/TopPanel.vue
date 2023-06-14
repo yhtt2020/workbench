@@ -1,13 +1,17 @@
 <template>
   <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
-    <a-col :span="7">
-      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);" @click="enterMusic"
-           v-if="status.music && status.music.title">
-        <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar>
+    <a-col :span="8">
+      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
+           v-if="runningGame.appid">
+        <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
+      </div>
+      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic"
+           v-else-if="status.music && status.music.title">
+        <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>
     </a-col>
-    <a-col :span="6" style="text-align: center">
+    <a-col :span="8" style="text-align: center">
       <!-- 快速搜索 头部 搜索栏 -->
       <div @click="openGlobalSearch" class="input-box no-drag pointer"
            style=" background: var( --primary-bg); color: var(--secondary-text)">
@@ -54,6 +58,8 @@ import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
 import WindowController from './WindowController.vue'
+import {steamUserStore} from "../store/steamUser";
+import {getClientIcon, getCover, getIcon} from "../js/common/game";
 
 export default {
   name: 'TopPanel',
@@ -74,6 +80,7 @@ export default {
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
     ...mapWritableState(timerStore,['lockTimeout']),
+    ...mapWritableState(steamUserStore,['runningGame']),
     isMain,
     lockTimeoutDisplay () {
       // if(this.lockTimeout>=60){
@@ -136,6 +143,9 @@ export default {
     this.getTime()
   },
   methods: {
+    getClientIcon,
+    getIcon,
+    getCover,
     ...mapActions(cardStore, ['setAppDate']),
     clearLockTimer () {
       if (this.lockTimer) {
@@ -175,6 +185,14 @@ export default {
         name: 'music',
       })
     },
+    enterGameDesk(appid){
+      this.$router.push({
+        name: 'gameIndex',
+        params:{
+          appid:appid
+        }
+      })
+    }
   },
 }
 </script>

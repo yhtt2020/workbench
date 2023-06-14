@@ -5,7 +5,7 @@
       <!-- <template>
         <div class="rounded-lg " style="width: 100px; height: 100px;margin-top: 40px;">
           <img class="rounded-lg" :src="otherGame.src" alt="" style="width: 100%;height: 100%; object-fit: cover;">
-        </div>  
+        </div>
         <span class="mt-4" style="font-size: 18px; font-weight: 500; margin-bottom: 60px;">{{ otherGame.title }}</span>
       </template> -->
       <a-carousel arrows class="mt-5"  :dots="false"  :after-change="imgChang"  style="width: 144px;height: 115px;" effect="fade">
@@ -22,13 +22,13 @@
         <img :src="item.src" v-for="item in detailList" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;" alt="">
       </a-carousel>
       <span class="mt-2" style="font-size: 18px; font-weight: 500; margin-bottom: 60px;">{{detailList[carouselIndex].title}}</span>
-  
+
       <div @click="openGameGuide" class="rounded-lg flex items-center pointer-active mb-3 s-item  pointer justify-center" style=" padding: 13px 80px;">
         <Icon icon="trophy" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">游戏攻略</span>
       </div>
-      <div @click="startGame" v-if="isStartGame === false"  class="rounded-lg flex items-center pointer-active s-item  pointer justify-center" style="background: rgba(82, 196, 26, 1);padding: 13px 80px;">
-        <Icon icon="tuichu" style="font-size: 1.429em;"></Icon>
+      <div @click="startGame" v-if="isStartGame === false"  class="rounded-lg flex items-center game-start-button pointer-active s-item  pointer justify-center" style="background: rgba(82, 196, 26, 1);padding: 13px 80px;">
+        <Icon icon="bofang" style="font-size: 1.429em;"></Icon>
         <span style="font-size: 16px; font-weight: 400;">开始游戏</span>
       </div>
       <div @click="closeGame" v-else class="rounded-lg flex items-center pointer-active s-item  pointer justify-center" style=" padding: 13px 80px;">
@@ -84,7 +84,7 @@
           <span style="font-size: 16px; font-weight: 400;">关闭游戏</span>
          </div>
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 
@@ -137,7 +137,7 @@ export default {
     startGame(){
       this.isStartGame  = !this.isStartGame
     }
-  }    
+  }
 }
 </script>
 

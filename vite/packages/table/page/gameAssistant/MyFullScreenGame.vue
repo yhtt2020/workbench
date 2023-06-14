@@ -3,12 +3,12 @@
     <Vue3SeamlessScroll :list="screenList" v-model="isScrolling" :copyNum="2" :hover="true" :wheel="true">
       <div class="flex flex-row rounded-lg flex-wrap mr-4">
         <div class="pb-4 pl-4 game-list-item rounded-lg flex-shrink-0 my-game-content" v-for=" item in screenList ">
-          <div class="relative  w-auto h-full rounded-lg s-bg  pointer flex flex-col ">
+          <div class="relative  w-auto h-full rounded-lg s-bg   flex flex-col ">
             <div class="rounded-lg" :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
-              <img v-if="item.appinfo" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appinfo.appid+'/header.jpg'" class="w-full h-full rounded-t-lg object-cover"  alt="">
+              <img style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appid+'/header.jpg'" class="w-full h-full rounded-t-lg object-cover"  alt="">
             </div>
             <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
-              <span class="text-more text-white text-base " style="font-weight: 400">{{item.appinfo?.common.name}}</span>
+              <span class="text-more text-white text-base " style="font-weight: 400">{{item.chineseName}}</span>
               <span :style="showTime?'':'display:none'"  class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
               <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
             </div>
@@ -25,9 +25,9 @@
         <Icon icon="shezhi"></Icon>
       </div>
       <div @click="closeFullScreen"  class="set-button-item s-bg rounded-lg pointer">
-        <Icon icon="desktop"></Icon>
+        <Icon icon="quxiaoquanping_huaban"></Icon>
       </div>
-    </div> 
+    </div>
   </div>
 
   <a-drawer v-model:visible="screenVisible" title="设置" :width="500">
@@ -42,7 +42,7 @@
     </div> -->
     <div class="mb-4">排序方式</div>
     <div class="flex flex-col">
-      <div  v-for="item in sortList" @click="tabSort(item)" 
+      <div  v-for="item in sortList" @click="tabSort(item)"
        :class="sortType.name === item.name ? 'drawer-item-bg':''"
        class="w-full h-full rounded-lg pointer px-4 py-4 s-item flex justify-center mb-4">
         {{ item.title }}
@@ -84,6 +84,7 @@ export default {
 
   mounted(){
     this.screenList = this.gameList
+    this.isScrolling=true
   },
 
   computed:{
@@ -110,7 +111,7 @@ export default {
     tabSort(item){
       this.sortType = item
       this.screenVisible = false
-    } 
+    }
   },
   watch:{
     'sortType':{

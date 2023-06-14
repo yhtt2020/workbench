@@ -30,8 +30,14 @@ const browser={
   /**
    * 在工作台内打开
    */
-  openInTable(url:string){
-
+  openInTable(url:string,options:{}){
+    window.$app.$router.push({
+      name:"browser",
+      params:{
+        url:url,
+        ...options
+      }
+    })
   },
 }
 

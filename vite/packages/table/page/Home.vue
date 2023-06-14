@@ -10,6 +10,7 @@
       flex-shrink: 1;
       height: 100%;
       width: 100%;
+      margin-left: 15px;
     ">
     <div class="text-left" v-if="desks.length > 1">
       <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
@@ -283,7 +284,8 @@ import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
-import NewAddCard from "./app/card/NewAddCard.vue"                                                                                                                                                                                                                         
+import NewAddCard from "./app/card/NewAddCard.vue"
+import ShortcutKeyDetail from "../components/ShortcutKeyDetail.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -535,7 +537,8 @@ export default {
     Clocks,
     Notes,
     myIcons,
-    NewAddCard
+    NewAddCard,
+    ShortcutKeyDetail
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -720,6 +723,11 @@ export default {
         }
         if(!e.customData){
           e.customData={}
+        }
+        if(Object.keys(e.data).length>0){
+          e.customData={...e.customData,...e.data}
+          e.data1=e.data//转移备份
+          e.data={}//修理掉
         }
       });
     }

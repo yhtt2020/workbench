@@ -1,5 +1,5 @@
 import BarrageSetting from "../page/settings/BarrageSetting.vue";
-import Deck from "../page/Deck.vue";
+import DeckHome from "../page/app/deck/DeckHome.vue";
 import Setting from "../page/Setting.vue";
 import Weather from "../page/app/Weather.vue";
 import Watch from "../page/app/watch/Index.vue";
@@ -16,7 +16,7 @@ import Music from "../page/Music.vue";
 import Status from "../page/Status.vue";
 import Main from "../page/Main.vue";
 import Home from "../page/Home.vue";
-import Browser from "../page/settings/Browser.vue";
+import BrowserSetting from "../page/settings/Browser.vue";
 import Common from "../page/settings/Common.vue";
 import SetupCard from "../page/app/card/SetupCard.vue";
 import Sensor from "../page/Sensor.vue";
@@ -43,14 +43,16 @@ import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
 import Inspector from "../page/app/Inspector.vue";
 import Clipboard from "../page/clipboard/Clipboard.vue"
-import AllClipFile from "../page/clipboard/allClipFile.vue"
-import TextClip from "../page/clipboard/textClip.vue"
-import ImageClip from "../page/clipboard/imageClip.vue"
-import FileClip from "../page/clipboard/fileClip.vue"
-import VideoClip from "../page/clipboard/videoClip.vue"
-import AudioClip from "../page/clipboard/audioClip.vue"
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
+import DeckAdd from "../page/app/deck/DeckAdd.vue";
+import DeckIndex from "../page/app/deck/DeckIndex.vue";
+import BrowserIndex from '../page/app/browser/Index.vue';
+import BrowserMain from '../page/app/browser/Browser.vue';
+
+// @ts-ignore
+import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
+import ShareKey from "../page/shortcutKey/ShareKey.vue"
 export default [
   {
     path: "/main",
@@ -133,6 +135,17 @@ export default [
         component: Apps,
       },
       {
+        path: '/browser',
+        component: BrowserMain,
+        children: [
+          {
+            path: '',
+            name: 'browser',
+            component: BrowserIndex
+          }
+        ]
+      },
+      {
         path: "/music",
         name: "music",
         component: Music,
@@ -189,17 +202,29 @@ export default [
             props: true,
           },
           {
-            path:"/GameCapture",
-            name:'GameCapture',
-            component:GameCapture,
+            path: "/GameCapture",
+            name: 'GameCapture',
+            component: GameCapture,
           }
         ],
       },
 
       {
         path: "/deck",
-        name: "deck",
-        component: Deck,
+        name: "deckIndex",
+        component: DeckIndex,
+        children: [
+          {
+            path: '',
+            name: 'deck',
+            component: DeckHome
+          },
+          {
+            path: "/add",
+            name: 'deckAdd',
+            component: DeckAdd
+          }
+        ]
       },
       {
         path: "/status",
@@ -233,8 +258,8 @@ export default [
           },
           {
             path: "/browser",
-            name: "browser",
-            component: Browser,
+            name: "browserSetting",
+            component: BrowserSetting,
           },
           {
             path: "/subscreen",
@@ -296,42 +321,22 @@ export default [
         ],
       },
       {
-        path:'/clipboard',
-        name:'clipboard',
-        component:Clipboard,
-        children:[
-          {
-            path:'',
-            name:'allClip',
-            component:AllClipFile
-          },
-          {
-            path:'',
-            name:'textClip',
-            component:TextClip
-          },
-          {
-            path:'',
-            name:'imageClip',
-            component:ImageClip
-          },
-          {
-            path:'',
-            name:'fileClip',
-            component:FileClip
-          },
-          {
-            path:'',
-            name:'videoClip',
-            component:VideoClip
-          },
-          {
-            path:'',
-            name:'audioClip',
-            component:AudioClip
-          },
-        ]
-      }
+        path: '/clipboard',
+        name: 'clipboard',
+        component: Clipboard,
+      },
+      {
+        path:'/shortcutKey',
+        name:'shortcutKey',
+        component:ShortcutKey,
+        // children: [
+        //   {
+        //     path:'/shareKey',
+        //     name:'shareKey',
+        //     component:ShareKey,
+        //   },
+        // ]
+      },
     ],
   },
 ];

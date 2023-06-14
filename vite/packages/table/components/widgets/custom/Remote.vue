@@ -3,7 +3,7 @@
   <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
   <!--  </div>-->
   <Widget :customIndex="customIndex" :size="customSize" :options="options" :menuList="menuList"
-    ref="remote" :custom-data="customData">
+    ref="remote" :custom-data="customData" :desk="desk">
     <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
       <div v-if="!customData.url"
         style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
@@ -64,7 +64,9 @@ export default {
       type: Object,
       default: () => { }
     },
-
+    desk:{
+      type:Object
+    }
   },
   data() {
     return {

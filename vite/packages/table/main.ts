@@ -23,18 +23,16 @@ import { setupCalendar } from 'v-calendar';
 import 'viewerjs/dist/viewer.css'
 
 
-import piniaPersist from "./js/ext/pinia-plugin-persist/index";
-
-import { CodeMirror } from 'vue-codemirror'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/base16-light.css'
-import 'codemirror/theme/monokai.css'
-import 'codemirror/mode/properties/properties.js'
+// 导入codemirror主题色样式表和语言包
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/monokai.css';
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/swift/swift'
 import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/php/php'
 
+import piniaPersist from "./js/ext/pinia-plugin-persist/index";
 
 import "viewerjs/dist/viewer.css";
 import VueViewer from "v-viewer";
@@ -46,29 +44,18 @@ import routes from './route/route'
 
 import "../../public/css/global.scss"
 import "../../public/css/antd.scss"
+import {router}from './router'
 dayjs.locale('zh-cn');
 
 const app = createApp(App)
+
 const pinia = createPinia()
 pinia.use(piniaPersist)
 
 // @ts-ignore
 window.$=$
 
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes
-})
-router.beforeEach((to,from,next) =>{
-  if(from.name==='home'){
-    document.body.style.setProperty('--backGroundImgBlur',  '12px');
-    document.body.style.setProperty('--backGroundImgLight', 0.3);
-  }
-  cardStore().setRouteParams(to.params)
-  next()
-})
-
-app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
+const $app=app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
   VueTippy,
   // optional
   {
@@ -86,6 +73,7 @@ app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
-app.component('CodeMirror',CodeMirror)
-export default router;
-
+window.$app=$app
+export {
+  router
+};
