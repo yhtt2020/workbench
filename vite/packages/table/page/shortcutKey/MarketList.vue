@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row" style="height: 100%">
-    <div class="grid">
-      <div v-for="item in navLists" :key="item.id" class="p-3 pointer recommend">
+    <div class="item-content">
+      <div v-for="item in navLists" :key="item.id" class="p-3 mr-4 mb-4 pointer recommend">
         <div class="flex justify-between">
           <div class="flex">
             <span class="h-14 w-14 flex justify-center items-center">
@@ -97,11 +97,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .grid{
-    display: grid;
-    grid-template-columns: repeat(3, 0.220fr);
-    column-gap:16px ;
-    row-gap: 16px;
+  .item-content{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: auto;
+  }
+  .item-content::-webkit-scrollbar{
+    display: none;
   }
   .recommend{
     background: rgba(0,0,0,0.30);

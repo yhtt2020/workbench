@@ -1,8 +1,9 @@
 <template>
-  <div class="s-bg rounded-lg px-6" style="height: 720px;">
+  <div class="s-bg rounded-lg px-6 box">
     <!-- 头部导航 -->
     <div class="flex items-center justify-between" style="height: 96px;">
-      <div @click="onBack" class="pointer button-active s-bg w-28 h-12 flex items-center rounded-lg justify-center mr-3">
+      <div @click="onBack" class="pointer active flex items-center rounded-lg justify-center" 
+        style="width:112px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
@@ -14,26 +15,28 @@
           </a-input>
         </div>
         <div>
-          <a-select style="width:134px;height:48px;border: 1px solid rgba(255, 255, 255, 0.1);font-size: 16px;"
+          <a-select style="width:134px;height:48px;color: var(--primary-text);border: 1px solid rgba(255, 255, 255, 0.1);font-size: 16px;"
           @change="getSort($event)" class="rounded-lg  text-xs s-item flex items-center text-center" size="large" :bordered="false"
-          v-model:value="sort">
-            <a-select-option v-for="item in sortType" :value="item.value">{{ item.name }}</a-select-option>
+          v-model:value="sort" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--active-bg)' }">
+            <a-select-option class="no-drag" v-for="item in sortType" :value="item.value">{{ item.name }}</a-select-option>
           </a-select>
         </div>
-        <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:134px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">我来分享</div>
+        <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" 
+        style="width:134px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
+        @click="share">我来分享</div>
       </div>
     </div>
-    <div class="flex">
+    <div class="flex" style="height: 90%;">
       <!-- 侧边导航 -->
-      <div class="left" style="width:112px;">
-        <div class="nav" style="color:var(--primary-text)" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
+      <div class="left">
+        <div class="nav" style="color:var(--primary-text);" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
             v-for="( item, index ) in  marketList" :key="item.name">{{
             item.cname
           }}
         </div>
       </div>
       <!-- 列表内容 -->
-      <div class="ml-5">
+      <div class="ml-5 right" style="width:100%;height:90%;overflow: auto;">
         <!-- <router-view></router-view> -->
         <MarketList :search="sort" :navList="marketList[navIndex].children"></MarketList>
       </div>
@@ -89,6 +92,32 @@ export default {
               download: 232,
               key: '快捷键',
               time: 1685462400012
+            },
+            {   
+              id: 3,
+              icon: 'http://a.apps.vip/icons/flappy.jpg',
+              name: 'Adobe Lightroom',
+              number: 92,
+              commonUse: 'Lr常用26个快捷键',
+              avatar: '',
+              userName: 'Victor Ruiz',
+              sumLikes: 12334,
+              download: 1232,
+              key: '快捷键',
+              time: 1685462400000
+            },
+            {   
+              id: 3,
+              icon: 'http://a.apps.vip/icons/flappy.jpg',
+              name: 'Adobe Lightroom',
+              number: 92,
+              commonUse: 'Lr常用26个快捷键',
+              avatar: '',
+              userName: 'Victor Ruiz',
+              sumLikes: 12334,
+              download: 1232,
+              key: '快捷键',
+              time: 1685462400000
             },
             {   
               id: 3,
@@ -434,7 +463,11 @@ export default {
     },
     updateNavIndex(index){
       this.navIndex = index
-    }
+    },
+    //跳转到分享页
+    share(){
+      this.$router.push({name: 'shareKey'})
+    },
   },
   mounted(){
     // this.$router.push({name: 'marketList'})
@@ -445,12 +478,22 @@ export default {
   .s-bg{
     box-shadow: none !important;
   }
+  .box{
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
   .left {
-      height: 100%;
+      height: 95%;
       width: 140px;
       overflow: auto;
       padding-bottom: 40px;
-
       .nav {
         width: 112px;
         height: 56px;
@@ -459,12 +502,17 @@ export default {
         justify-content: center;
         align-items: center;
         cursor: pointer;
-
+        margin-bottom:12px;
+        font-size: 16px;
       }
 
       .active {
         background: rgba(0, 0, 0, 0.30);
 
       }
+    }
+    .left::-webkit-scrollbar,
+    .right::-webkit-scrollbar {
+      display: none;
     }
 </style>
