@@ -465,11 +465,10 @@
             <vue-custom-scrollbar v-else class="rounded-md" @touchstart.stop @touchmove.stop @touchend.stop
                                   :settings="settingsScroller" style="height:65vh;">
               <div class="flex flex-row flex-wrap content-game">
-                <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content " v-for="item in pagedImages">
-                  <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col "
-                       style="border-radius: 12px;">
-                    <img :src="'file://'+item" class="w-full h-full rounded-md object-cover" alt="">
-                  </div>
+                <div class="game-list-item px-1.5 pb-4  my-game-content my-image"
+                     v-for="item in pagedImages">
+                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item" class=" rounded-md img "
+                           alt="">
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -681,14 +680,14 @@ export default {
       recordKey: 'CTRL + WIN + V',
       microphoneKey: 'CTRL + WIN + J',
       imagePage: 1,
-      pageLimit:12,
+      pageLimit: 12,
       videoPage: 1,
 
     }
   },
   computed: {
     ...mapWritableState(inspectorStore, ['displayData']),
-    ...mapWritableState(captureStore, ['sources', 'settings','images','videos']),
+    ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos']),
     ...mapState(steamUserStore, ['runningGame']),
     deskSource () {
       return this.sources.filter(s => {
@@ -700,11 +699,11 @@ export default {
         return s.type === 'window'
       })
     },
-    pagedImages(){
-      return this.images.slice((this.imagePage-1)*this.pageLimit,this.pageLimit)
+    pagedImages () {
+      return this.images.slice((this.imagePage - 1) * this.pageLimit, this.pageLimit)
     },
-    pagedVideos(){
-      return this.videos.slice((this.videoPage-1)*this.pageLimit,this.pageLimit)
+    pagedVideos () {
+      return this.videos.slice((this.videoPage - 1) * this.pageLimit, this.pageLimit)
     }
   },
   mounted () {
@@ -720,7 +719,7 @@ export default {
     if (this.settings.imageSavePath) {
       this.loadImages()
     }
-    if(this.settings.videoSavePath){
+    if (this.settings.videoSavePath) {
       this.loadVideos()
     }
 
@@ -788,15 +787,15 @@ export default {
     },
 
     async loadImages () {
-      this.getAllFiles(this.settings.imageSavePath,['.jpg', '.png', '.bmp', '.jpeg'],'images')
+      this.getAllFiles(this.settings.imageSavePath, ['.jpg', '.png', '.bmp', '.jpeg'], 'images')
       console.log(this.images)
 
     },
     async loadVideos () {
-      this.getAllFiles(this.settings.videoSavePath,['.mp4','.avi','.mpg','rmvb'],'videos')
+      this.getAllFiles(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb'], 'videos')
       console.log(this.videos)
     },
-    getAllFiles (path,extMap,arr) {
+    getAllFiles (path, extMap, arr) {
 
       fs.readdir(path, (err, files) => {
         if (err) throw err
@@ -809,7 +808,7 @@ export default {
               if (extMap.indexOf(require('path').extname(fPath)) > -1)
                 this[arr].push(fPath)
             } else {
-              this.getAllFiles(fPath,extMap,arr)
+              this.getAllFiles(fPath, extMap, arr)
             }
           })
         })
@@ -1120,6 +1119,7 @@ export default {
 
 .game-list-item {
   max-width: 231px;
+
 }
 
 /*
@@ -1234,5 +1234,17 @@ export default {
 
 :deep(.ps__rail-y) {
   display: none !important;
+}
+
+.my-image {
+  width: 160px;
+  height: 90px;
+}
+.content-game{
+  align-items: center;
+  justify-content: center;
+}
+.game-list-item{
+  margin: 10px;
 }
 </style>
