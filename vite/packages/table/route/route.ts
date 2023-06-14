@@ -11,7 +11,7 @@ import Splash from '../page/Splash.vue'
 // 快捷键
 import ShareKey from "../page/shortcutKey/ShareKey.vue"
 import CreativeMarket from "../page/shortcutKey/CreativeMarket.vue"
-import SoftwareNavigation from "../page/shortcutKey/MarketList.vue"
+import MarketList from "../page/shortcutKey/MarketList.vue"
 
 const routes = [
   ...main,
@@ -58,13 +58,13 @@ const routes = [
     path:'/creativeMarket',
     name:'creativeMarket',
     component: CreativeMarket,
-    children: [
-      {
-        path:'',
-        name:'softwareNavigation',
-        component: SoftwareNavigation
-      },
-    ]
+    // children: [
+    //   {
+    //     path:'/marketList',
+    //     name:'marketList',
+    //     component: MarketList
+    //   },
+    // ]
   }
 ]
 

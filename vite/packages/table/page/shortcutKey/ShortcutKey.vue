@@ -93,7 +93,7 @@
 </template>
   
 <script>
-import { mapActions } from 'vuex';
+  import { mapActions } from 'pinia';
   import ShortcutKeyDetail from '../../components/ShortcutKeyDetail.vue';
   import { appStore } from '../../store';
   export default {
