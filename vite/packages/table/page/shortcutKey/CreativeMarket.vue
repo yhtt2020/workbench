@@ -7,20 +7,16 @@
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
-        <div class="mr-3">
-          <a-input v-model:value="userName" placeholder="搜索应用名称" class="no-drag" style="width:320px;height: 48px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 18px;">
-            <template #prefix>
-              <Icon icon="sousuo" class="mr-2"></Icon>
-            </template>
-          </a-input>
-        </div>
-        <div>
-          <a-select style="width:134px;height:48px;color: var(--primary-text);border: 1px solid rgba(255, 255, 255, 0.1);font-size: 16px;"
-          @change="getSort($event)" class="rounded-lg  text-xs s-item flex items-center text-center" size="large" :bordered="false"
-          v-model:value="sort" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--active-bg)' }">
-            <a-select-option class="no-drag" v-for="item in sortType" :value="item.value">{{ item.name }}</a-select-option>
-          </a-select>
-        </div>
+        <!-- 头部搜索和下拉列表 -->
+        <Search 
+          :searchValue="inputSearchValue"
+          :defaultSelect="sort"
+          :sortType="sortType"
+          :isFiltrate="true"
+          @changeSelect="changeSelect"
+          @changeInput="changeInput"
+        />
+        <!-- 分享 -->
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" 
         style="width:134px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
         @click="share">我来分享</div>
@@ -28,16 +24,9 @@
     </div>
     <div class="flex" style="height: 90%;">
       <!-- 侧边导航 -->
-      <div class="left">
-        <div class="nav" style="color:var(--primary-text);" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
-            v-for="( item, index ) in  marketList" :key="item.name">{{
-            item.cname
-          }}
-        </div>
-      </div>
+      <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
       <!-- 列表内容 -->
       <div class="ml-5 right" style="width:100%;height:90%;overflow: auto;">
-        <!-- <router-view></router-view> -->
         <MarketList :search="sort" :navList="marketList[navIndex].children"></MarketList>
       </div>
     </div>
@@ -46,10 +35,14 @@
 
 <script>
 import MarketList from './MarketList.vue'
+import Search from '../../components/Search.vue'
+import NavMenu from '../../components/NavMenu.vue'
 export default {
   name: "CreativeMarket",
   components: {
-    MarketList
+    MarketList,
+    Search,
+    NavMenu
   },
   data() {
     return {
@@ -442,7 +435,8 @@ export default {
             },
           ]
         },
-      ]
+      ],
+      inputSearchValue: '',
     }
   },
   methods: {
@@ -461,17 +455,24 @@ export default {
     onBack(){
       this.$router.go(-1)
     },
-    updateNavIndex(index){
+    updateNavIndex({index}){
       this.navIndex = index
     },
     //跳转到分享页
     share(){
       this.$router.push({name: 'shareKey'})
     },
+    changeSelect(event){
+      // console.log('选择下拉',event)
+    },
+    changeInput(event){
+      // console.log('输入框',event)
+    },
   },
   mounted(){
     // this.$router.push({name: 'marketList'})
-  }
+    
+  },
 }
 </script>
 <style lang="scss" scoped>

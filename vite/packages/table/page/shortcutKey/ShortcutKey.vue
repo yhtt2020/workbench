@@ -1,7 +1,7 @@
 <template>
     <!-- 有内容 -->
   <div class="container s-bg rounded-lg" v-if="!detailToggle && false">
-    <div class="ability flex justify-between px-4">
+    <div class="flex justify-between px-4">
         <div class="flex items-center">
           <div>
             <a-input v-model:value="userName" :bordered="false" placeholder="搜索应用名称" style="width:367px;height: 48px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 18px;">
@@ -25,7 +25,7 @@
         </span>
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
     </div>
-    <div class="main-part grid mt-4 flex justify-center">
+    <div class="main-part item-content">
         <div v-for="item in softwareList" class="flex items-center pointer" @click="btnDetail(item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
@@ -49,7 +49,7 @@
         <div class="pointer" @click="market">浏览创意市场</div>
         <div class="pointer" @click="share">我来分享</div>
     </div>
-    <div class="grid mt-4">
+    <div class="item-content mt-4">
         <div v-for="item in notDownloadList" :key="item.id" class="p-3 pointer recommend">
             <div class="flex justify-between">
                 <div class="flex">
@@ -321,6 +321,7 @@
             width:364px;
             height:88px;
             position: relative;
+            margin: 16px 0 0 16px;
             >div{
                 position: absolute;
                 top: 0;
@@ -339,17 +340,24 @@
             }
         }
     }
-    .grid{
-        display: grid;
-        grid-template-columns: repeat(3, 0.220fr);
-        column-gap:16px ;
-        row-gap: 16px;
+    .item-content{
+        width: 100%;
+        height: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        overflow: auto;
+        padding-bottom: 40px;
+    }
+    .item-content::-webkit-scrollbar{
+        display: none;
     }
     .recommend{
         background: rgba(0,0,0,0.30);
         border-radius: 12px;
         width: 356px;
         height: 136px;
+        margin: 0 0 16px 16px;
     }
     .button-active{
         &:active{
