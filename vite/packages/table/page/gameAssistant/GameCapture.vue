@@ -212,12 +212,12 @@
   </vue-custom-scrollbar> -->
 
   <div class="px-4 max-capture flex">
-    <div class="s-bg rounded-md cap-left px-4 py-2" >
+    <div class="s-bg rounded-md cap-left px-4 py-2">
 
 
-<!--  选择录制源    -->
+      <!--  选择录制源    -->
       <div style="width: 490px">
-        <div v-if="step===1" >
+        <div v-if="step===1">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center">
               <Icon icon="video" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
@@ -227,64 +227,70 @@
               <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
             </div>
           </div>
-          <HorizontalCapture @click="refreshSource" :navList="captureType" v-model:selectType="defaultRecordingType" class="mb-4"></HorizontalCapture>
+          <HorizontalCapture @click="refreshSource" :navList="captureType" v-model:selectType="defaultRecordingType"
+                             class="mb-4"></HorizontalCapture>
           <div class="text-center" v-if="loading===true">
             捕获源获取中…
           </div>
-         <div v-else>
-          <template v-if="defaultRecordingType.name === 'recordGame'">
-            <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
-              <div v-if="recordGameData.length === 0">
-                <a-empty :image="simpleImage" />
-              </div>
-              <div class="flex justify-between flex-wrap" v-else>
-                <div v-for="(item,index) in recordGameData" class="flex pointer flex-col s-bg rounded-lg mb-4  record-game-item"
-                     @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
-                >
-                  <img :src="item.url" class="w-full rounded-lg h-full object-cover">
-                  <div class="px-4 py-3">
-                    <span class="truncate" style="max-width:150px;">{{ item.name}} </span>
+          <div v-else>
+            <template v-if="defaultRecordingType.name === 'recordGame'">
+              <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+                                    style="height:100%;">
+                <div v-if="recordGameData.length === 0">
+                  <a-empty :image="simpleImage"/>
+                </div>
+                <div class="flex justify-between flex-wrap" v-else>
+                  <div v-for="(item,index) in recordGameData"
+                       class="flex pointer flex-col s-bg rounded-lg mb-4  record-game-item"
+                       @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
+                  >
+                    <img :src="item.url" class="w-full rounded-lg h-full object-cover">
+                    <div class="px-4 py-3">
+                      <span class="truncate" style="max-width:150px;">{{ item.name }} </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </vue-custom-scrollbar>
-          </template>
-          <template v-if="defaultRecordingType.name === 'recordFullScreen'">
-            <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
-              <div v-if="recordGameData.length === 0">
-                <a-empty :image="simpleImage" />
-              </div>
-              <div class="flex justify-between flex-wrap" v-else>
-                <div v-for="(item,index) in  deskSource"
-                     class="flex flex-col s-bg rounded-lg mb-4 pointer record-game-item"
-                     @click="chooseSource(item,index)" :class="{'s-active':defaultIndex === index}"
-                >
-                  <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
-                  <div class="px-4 py-3">
-                    <span class="truncate" style="max-width:207px;">{{ item.name}} </span>
+              </vue-custom-scrollbar>
+            </template>
+            <template v-if="defaultRecordingType.name === 'recordFullScreen'">
+              <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+                                    style="height:100%;">
+                <div v-if="recordGameData.length === 0">
+                  <a-empty :image="simpleImage"/>
+                </div>
+                <div class="flex justify-between flex-wrap" v-else>
+                  <div v-for="(item,index) in  deskSource"
+                       class="flex flex-col s-bg rounded-lg mb-4 pointer record-game-item"
+                       @click="chooseSource(item,index)" :class="{'s-active':defaultIndex === index}"
+                  >
+                    <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
+                    <div class="px-4 py-3">
+                      <span class="truncate" style="max-width:207px;">{{ item.name }} </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </vue-custom-scrollbar>
-          </template>
-          <template v-if="defaultRecordingType.name === 'logger'">
-            <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
-              <div v-if="recordLogger.length === 0">
-                <a-empty :image="simpleImage" />
-              </div>
-              <div class="flex justify-between flex-wrap" v-else>
-                <div v-for="(item,index) in  windowSource"
-                     class="flex flex-col justify-between s-bg rounded-lg mb-4 pointer record-game-item"
-                     @click="chooseSource(item,index)" :class="{'s-active':defaultIndex === index}"
-                >
-                  <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
-                  <div class="px-4 py-3 truncate">
-                    <span class="" style="max-width:207px;">{{ item.name}} </span>
+              </vue-custom-scrollbar>
+            </template>
+            <template v-if="defaultRecordingType.name === 'logger'">
+              <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+                                    style="height:100%;">
+                <div v-if="recordLogger.length === 0">
+                  <a-empty :image="simpleImage"/>
+                </div>
+                <div class="flex justify-between flex-wrap" v-else>
+                  <div v-for="(item,index) in  windowSource"
+                       class="flex flex-col justify-between s-bg rounded-lg mb-4 pointer record-game-item"
+                       @click="chooseSource(item,index)" :class="{'s-active':defaultIndex === index}"
+                  >
+                    <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
+                    <div class="px-4 py-3 truncate">
+                      <span class="" style="max-width:207px;">{{ item.name }} </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </vue-custom-scrollbar>
-          </template></div>
+              </vue-custom-scrollbar>
+            </template>
+          </div>
         </div>
         <div v-if="step===2">
           <div class="flex items-center justify-between mb-3">
@@ -292,7 +298,11 @@
           </div>
           <div style="height: 5em;position: relative">
             <back-btn @click="step=1" style="margin-top: -30px;margin-left: -30px"></back-btn>
-            <div style="position: absolute;left:60px;top:10px;font-size: 16px">已选择：<a-avatar v-if="currentSource.type==='window'" :size="24" shape="square" :src="'file://'+currentSource.icon" ></a-avatar> {{currentSource.name}}</div>
+            <div style="position: absolute;left:60px;top:10px;font-size: 16px">已选择：
+              <a-avatar v-if="currentSource.type==='window'" :size="24" shape="square"
+                        :src="'file://'+currentSource.icon"></a-avatar>
+              {{ currentSource.name }}
+            </div>
             <div style="position: absolute;right: 0.5em">
               <div class="flex items-center pointer justify-center" @click="openRecordSet">
                 <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
@@ -300,7 +310,7 @@
             </div>
           </div>
           <div class="flex mb-3">
-            <div class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3"  @click="startScreenshot" >
+            <div class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3" @click="startScreenshot">
               <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
                 <div class="rounded-full cp-orange-full flex items-center justify-center cp-lw">
                   <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
@@ -325,9 +335,9 @@
                     <AreaChartOutlined style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></AreaChartOutlined>
                   </div>
                 </div>
-                <div class="cp-text" >开启监控</div>
+                <div class="cp-text">开启监控</div>
               </div>
-              <div  class="cp-w s-item dark-blue-1 pointer  flex-col rounded-lg"  v-else>
+              <div class="cp-w s-item dark-blue-1 pointer  flex-col rounded-lg" v-else>
                 <div class="w-20 h-20 flex dark-blue-2 items-center rounded-full justify-center mb-3">
                   <div class="rounded-full dark-blue-full flex items-center justify-center cp-lw">
                     <AreaChartOutlined style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></AreaChartOutlined>
@@ -350,7 +360,8 @@
             </div>
             <div class="flex items-center">
               <div class="pointer" @click="closeMicrophone">
-                <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="microphoneShow"></Icon>
+                <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
+                      v-if="microphoneShow"></Icon>
                 <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
               </div>
               <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
@@ -367,8 +378,8 @@
       <div class="s-bg rounded-md mb-3 p-3" v-if="isMonitor === true">
         <div class="flex  justify-between justify-center mb-3">
           <div class="flex items-center ">
-             <Icon icon="game" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
-             <span class="ml-2 monitor-text">{{ monitorTitle }}</span>
+            <Icon icon="game" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
+            <span class="ml-2 monitor-text">{{ monitorTitle }}</span>
           </div>
           <div @click="openMonitorSet" class="flex items-center justify-center pointer">
             <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
@@ -376,100 +387,119 @@
         </div>
         <template v-if="selectIndex === 'f'">
           <div class="flex">
-             <div class="mr-6 w-full">
-               <div id="fps" ref="fpsChart" class="echarts"></div>
-             </div>
-             <div class="flex flex-col justify-between w-2/3">
-               <div class="flex justify-between mb-5">
-                 <span class="fps-sm">实时</span>
-                 <span class="fps-hz">144hz</span>
-               </div>
-               <div class="flex justify-between mb-5">
-                 <span class="fps-sm">平均</span>
-                 <span class="fps-hz">99hz</span>
-               </div>
-               <div class="flex justify-between mb-2">
-                 <span class="fps-sm">1%LOW</span>
-                 <span class="fps-hz">87hz</span>
-               </div>
-             </div>
+            <div class="mr-6 w-full">
+              <div id="fps" ref="fpsChart" class="echarts"></div>
+            </div>
+            <div class="flex flex-col justify-between w-2/3">
+              <div class="flex justify-between mb-5">
+                <span class="fps-sm">实时</span>
+                <span class="fps-hz">144hz</span>
+              </div>
+              <div class="flex justify-between mb-5">
+                <span class="fps-sm">平均</span>
+                <span class="fps-hz">99hz</span>
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="fps-sm">1%LOW</span>
+                <span class="fps-hz">87hz</span>
+              </div>
+            </div>
           </div>
-       </template>
+        </template>
 
-       <template v-else-if="selectIndex === 'p'">
-        <div class="flex justify-between">
-          <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-            <div class="fps-text flex items-center  justify-center">{{CPUGPUData.useCPU.value}}%</div>
-            <div class="flex items-center justify-center">
-              <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-              <span class="ml-2 fps-t">CPU</span>
+        <template v-else-if="selectIndex === 'p'">
+          <div class="flex justify-between">
+            <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useCPU.value }}%</div>
+              <div class="flex items-center justify-center">
+                <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                <span class="ml-2 fps-t">CPU</span>
+              </div>
+            </div>
+            <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useGPU.value }}</div>
+              <div class="flex items-center justify-center">
+                <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                <span class="ml-2 fps-t">GPU</span>
+              </div>
+            </div>
+            <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+              <div class="fps-text flex items-center  justify-center">144</div>
+              <div class="flex items-center justify-center">
+                <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                <span class="ml-2 fps-t">FPS</span>
+              </div>
             </div>
           </div>
-          <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-            <div class="fps-text flex items-center  justify-center">{{CPUGPUData.useGPU.value}}</div>
-            <div class="flex items-center justify-center">
-              <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-              <span class="ml-2 fps-t">GPU</span>
-            </div>
-          </div>
-          <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-            <div class="fps-text flex items-center  justify-center">144</div>
+        </template>
+
+        <template v-else>
+          <div class="s-bg flex flex-col py-8 rounded-lg items-center">
+            <div class="fps-text pb-4">144</div>
             <div class="flex items-center justify-center">
               <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-              <span class="ml-2 fps-t">FPS</span>
+              <span class="ml-3 fps-t">FPS</span>
             </div>
           </div>
-        </div>
-       </template>
-
-       <template v-else>
-        <div class="s-bg flex flex-col py-8 rounded-lg items-center">
-          <div class="fps-text pb-4">144</div>
-          <div class="flex items-center justify-center">
-             <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-             <span class="ml-3 fps-t">FPS</span>
-          </div>
-        </div>
-       </template>
+        </template>
       </div>
       <div class="grow s-bg rounded-md p-3">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center justify-center">
             <Icon icon="video" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
-            <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;">最近截屏和录制</span>
+            <span class="ml-3"
+                  style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;">最近截屏和录制</span>
           </div>
-          <div class="flex items-center pointer justify-center"  @click="openRecordSet">
+          <div class="flex items-center pointer justify-center" @click="openRecordSet">
             <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
           </div>
         </div>
         <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
-        <template v-if="defaultLastCap.name === 'screenCap'">
-          <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
-            <div class="flex flex-row flex-wrap content-game">
-              <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content " v-for="item in recordGameData">
-                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;">
-                  <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
+
+        <div>
+          <template v-if="defaultLastCap.name === 'screenCap'">
+            <div class="p-2" v-if="!settings.imageSavePath">
+              <div class="mb-3 fps-t mb-2 ">需先设置截屏保存位置：</div>
+              <div @click="setImageSavePath" class="text-center mb-3 py-3 s-item rounded-lg">设置截屏保存位置</div>
+            </div>
+            <vue-custom-scrollbar v-else class="rounded-md" @touchstart.stop @touchmove.stop @touchend.stop
+                                  :settings="settingsScroller" style="height:65vh;">
+              <div class="flex flex-row flex-wrap content-game">
+                <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content " v-for="item in pagedImages">
+                  <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col "
+                       style="border-radius: 12px;">
+                    <img :src="'file://'+item" class="w-full h-full rounded-md object-cover" alt="">
+                  </div>
                 </div>
               </div>
+            </vue-custom-scrollbar>
+          </template>
+          <template v-else>
+            <div class="p-2" v-if="!settings.videoSavePath">
+              <div class="mb-3 fps-t">需先设置录屏保存位置：</div>
+              <div @click="setVideoSavePath" class="text-center mb-3 py-3 s-item rounded-lg">设置录屏保存位置</div>
             </div>
-          </vue-custom-scrollbar>
-        </template>
-        <template v-else>
-          <vue-custom-scrollbar class="rounded-md"   @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:65vh;">
-            <div class="flex flex-row flex-wrap content-game ">
-              <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content " v-for="item in recordFullScreenData">
-                <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col " style="border-radius: 12px;">
-                  <img  :src="item.url" class="w-full h-full rounded-md object-cover"  alt="">
+            <vue-custom-scrollbar v-else class="rounded-md" @touchstart.stop @touchmove.stop @touchend.stop
+                                  :settings="settingsScroller" style="height:65vh;">
+              <div class="flex flex-row flex-wrap content-game ">
+                <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content "
+                     v-for="item in pagedVideos">
+                  <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col "
+                       style="border-radius: 12px;">
+                    <img :src="item" class="w-full h-full rounded-md object-cover" alt="">
+                  </div>
                 </div>
               </div>
-            </div>
-          </vue-custom-scrollbar>
-        </template>
+            </vue-custom-scrollbar>
+          </template>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <a-drawer width="500"  title="设置" :bodyStyle="{ overflow: 'hidden' }" :placement="right" v-model:visible="recordSetShow" @close="recordSetShow = false">
+  <a-drawer width="500" title="设置" :bodyStyle="{ overflow: 'hidden' }" :placement="right"
+            v-model:visible="recordSetShow" @close="recordSetShow = false">
     <div class="flex flex-col scroll-container">
       <div class="flex flex-col s-item rounded-md p-4 mb-3">
         <div class="flex items-center mb-3">
@@ -494,9 +524,13 @@
         </div>
       </div>
       <span class="mb-3 fps-t">我的截屏保存地址</span>
-      <span class="text-center mb-3 py-3 s-item rounded-lg">{{ screenShotAddress }}</span>
+      <span @click="setImageSavePath" class="text-center mb-3 py-3 s-item rounded-lg">{{
+          settings.imageSavePath
+        }}</span>
       <span class="mb-3 fps-t">我的录制保存地址</span>
-      <span class="text-center mb-3 py-3 s-item rounded-lg">设置保存地址</span>
+      <span @click="setVideoSavePath" class="text-center mb-3 py-3 s-item rounded-lg">{{
+          settings.videoSavePath
+        }}</span>
       <span class="mb-3 fps-t">截屏快捷键</span>
       <div class="flex items-center  mb-3">
         <span class="rounded-lg p-2 s-item mr-3 w-2/3">{{ shortcutKey }}</span>
@@ -518,11 +552,11 @@
     </div>
   </a-drawer>
 
-  <a-drawer width="500"  title="设置" :placement="right" v-model:visible="setShow">
+  <a-drawer width="500" title="设置" :placement="right" v-model:visible="setShow">
     <div class="flex flex-col">
       <div v-for="item in monitorSetData"
-       class="h-12 mb-2 flex rounded-lg pointer items-center s-item justify-center"
-       @click="selectMonitorItem(item)" :class="{'drawer-item-bg':selectIndex === item.id}"
+           class="h-12 mb-2 flex rounded-lg pointer items-center s-item justify-center"
+           @click="selectMonitorItem(item)" :class="{'drawer-item-bg':selectIndex === item.id}"
       >
         {{ item.name }}
       </div>
@@ -533,61 +567,45 @@
 
 <script>
 import { mapWritableState, mapActions, mapState } from 'pinia'
-import {AreaChartOutlined} from '@ant-design/icons-vue'
+import { AreaChartOutlined } from '@ant-design/icons-vue'
 import HorizontalCapture from '../../components/HorizontalCaptrue.vue'
 import { inspectorStore } from '../../store/inspector'
-import * as echarts from "echarts";
+import * as echarts from 'echarts'
 import { FPSOption } from '../../components/widgets/supervisory/echartOptions'
 import { captureStore } from '../../store/capture'
 import BackBtn from '../../components/comp/BackBtn.vue'
 import { steamUserStore } from '../../store/steamUser'
 
 export default {
-  name:'GameCapture',
-  components:{
+  name: 'GameCapture',
+  components: {
     BackBtn,
     AreaChartOutlined,
     HorizontalCapture
   },
 
-  computed:{
-    ...mapWritableState(inspectorStore,['displayData']),
-    ...mapWritableState(captureStore, ['sources']),
-    ...mapState(steamUserStore,['runningGame']),
-    deskSource(){
-      return this.sources.filter(s=>{
-        return s.type==='screen'
-      })
-    },
-    windowSource(){
-      return this.sources.filter(s=>{
-        return s.type==='window'
-      })
-    }
-  },
-
-  data(){
-    return{
-      loading:false,
+  data () {
+    return {
+      loading: false,
       //1.选源 2.实操
-      step:1,
+      step: 1,
       //当前源
-      currentSource:{},
-      systemSound:10, // 系统声音
-      soundShow:false,
-      microphoneShow:false,
-      recordSetShow:false,
-      isMonitor:false,
-      setShow:false,
-      isHeight:true,
-      systemMicrophone:20, // 麦克风
-      captureType:[
+      currentSource: {},
+      systemSound: 10, // 系统声音
+      soundShow: false,
+      microphoneShow: false,
+      recordSetShow: false,
+      isMonitor: false,
+      setShow: false,
+      isHeight: true,
+      systemMicrophone: 20, // 麦克风
+      captureType: [
         // {title:'录游戏',name:'recordGame'},
-        {title:'录窗口',name:'logger'},
-        {title:'录全屏',name:'recordFullScreen'},
+        { title: '捕获窗口', name: 'logger' },
+        { title: '捕获全屏', name: 'recordFullScreen' },
 
       ],
-      defaultRecordingType:{title:'录窗口',name:'logger'},
+      defaultRecordingType: { title: '录窗口', name: 'logger' },
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -595,256 +613,358 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      recordGameData:[
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',name:'Counter-Strike: Global Offensive'},
-        {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',name:'Dota2'},
+      recordGameData: [
+        {
+          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+          name: 'Counter-Strike: Global Offensive'
+        },
+        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
+        {
+          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+          name: 'Counter-Strike: Global Offensive'
+        },
+        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
+        {
+          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+          name: 'Counter-Strike: Global Offensive'
+        },
+        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
+        {
+          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+          name: 'Counter-Strike: Global Offensive'
+        },
+        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
       ],
-      recordFullScreenData:[
-        {url:'/public/img/cpatureone.png',name:'桌面1'},
-        {url:'/public/img/cpaturetwo.png',name:'桌面2'},
-        {url:'/public/img/cpatureone.png',name:'桌面1'},
-        {url:'/public/img/cpaturetwo.png',name:'桌面2'},
-        {url:'/public/img/cpatureone.png',name:'桌面1'},
-        {url:'/public/img/cpaturetwo.png',name:'桌面2'},
-        {url:'/public/img/cpatureone.png',name:'桌面1'},
-        {url:'/public/img/cpaturetwo.png',name:'桌面2'},
+      recordFullScreenData: [
+        { url: '/public/img/cpatureone.png', name: '桌面1' },
+        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
+        { url: '/public/img/cpatureone.png', name: '桌面1' },
+        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
+        { url: '/public/img/cpatureone.png', name: '桌面1' },
+        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
+        { url: '/public/img/cpatureone.png', name: '桌面1' },
+        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
       ],
-      recordLogger:[
-        {url:'/public/img/test.png',name:'程序1'},
-        {url:'/public/img/test.png',name:'程序2'},
+      recordLogger: [
+        { url: '/public/img/test.png', name: '程序1' },
+        { url: '/public/img/test.png', name: '程序2' },
         // {url:'/public/img/test.png',name:'程序3'},
         // {url:'/public/img/test.png',name:'程序4'},
       ],
-      defaultIndex:0,
-      simpleImage:'/public/img/test/not-data.png',
-      lastCapture:[
-        {title:'截屏',name:'screenCap'},
-        {title:'录制',name:'record'}
+      defaultIndex: 0,
+      simpleImage: '/public/img/test/not-data.png',
+      lastCapture: [
+        { title: '截屏', name: 'screenCap' },
+        { title: '录制', name: 'record' }
       ],
-      defaultLastCap:{title:'截屏',name:'screenCap'},
-      monitorTitle:'FPS',
-      monitorSetData:[
-        {title:'FPS',name:'实时、平均、1%LOW帧数监测',id:'f'},
-        {title:'性能',name:'CPU占用、GPU占用、实时FPS监测',id:'p'},
-        {title:'性能',name:'实时FPS监测',id:'s'}
+      defaultLastCap: { title: '截屏', name: 'screenCap' },
+      monitorTitle: 'FPS',
+      monitorSetData: [
+        { title: 'FPS', name: '实时、平均、1%LOW帧数监测', id: 'f' },
+        { title: '性能', name: 'CPU占用、GPU占用、实时FPS监测', id: 'p' },
+        { title: '性能', name: '实时FPS监测', id: 's' }
       ],
-      selectIndex:'f',
-      CPUGPUData:{
-        useCPU:{value:0},
-        useGPU:{value:0},
-        useMemory:{value:0},
-        FPS:{value:0},
-        down:0,
-        up:0
+      selectIndex: 'f',
+      CPUGPUData: {
+        useCPU: { value: 0 },
+        useGPU: { value: 0 },
+        useMemory: { value: 0 },
+        FPS: { value: 0 },
+        down: 0,
+        up: 0
       },
       FPSOption,
-      fpsInstance:null,
-      fpsList:[0,10,0,20,0,0,0,30,0,0,0,0,60,0,0,0,80],
-      screenShotAddress:"C:\PROGRAM FILES (X86)\CLIP", // 用于接收截屏获取的地址
-      shortcutKey:"CTRL + WIN + G",
-      recordKey:"CTRL + WIN + V",
-      microphoneKey:"CTRL + WIN + J",
+      fpsInstance: null,
+      fpsList: [0, 10, 0, 20, 0, 0, 0, 30, 0, 0, 0, 0, 60, 0, 0, 0, 80],
+      screenShotAddress: 'C:\PROGRAM FILES (X86)\CLIP', // 用于接收截屏获取的地址
+      shortcutKey: 'CTRL + WIN + G',
+      recordKey: 'CTRL + WIN + V',
+      microphoneKey: 'CTRL + WIN + J',
+      imagePage: 1,
+      pageLimit:12,
+      videoPage: 1,
+
     }
   },
-
-  mounted() {
-    window.addEventListener('resize',this.pageResize)
-    this.refreshSource(()=>{
-      let source=this.findWindow()
-      if(source){
-        this.currentSource=source
-        this.step=2
+  computed: {
+    ...mapWritableState(inspectorStore, ['displayData']),
+    ...mapWritableState(captureStore, ['sources', 'settings','images','videos']),
+    ...mapState(steamUserStore, ['runningGame']),
+    deskSource () {
+      return this.sources.filter(s => {
+        return s.type === 'screen'
+      })
+    },
+    windowSource () {
+      return this.sources.filter(s => {
+        return s.type === 'window'
+      })
+    },
+    pagedImages(){
+      return this.images.slice((this.imagePage-1)*this.pageLimit,this.pageLimit)
+    },
+    pagedVideos(){
+      return this.videos.slice((this.videoPage-1)*this.pageLimit,this.pageLimit)
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', this.pageResize)
+    this.refreshSource(() => {
+      let source = this.findWindow()
+      if (source) {
+        this.currentSource = source
+        this.step = 2
       }
     })
+
+    if (this.settings.imageSavePath) {
+      this.loadImages()
+    }
+    if(this.settings.videoSavePath){
+      this.loadVideos()
+    }
 
   },
 
   watch: {
-    "displayData": {
-      handler(newVal, oldVal) {
-        let { useGPU, useMemory, useCPU, FPS, down, up} = this.displayData || {}
+    'displayData': {
+      handler (newVal, oldVal) {
+        let { useGPU, useMemory, useCPU, FPS, down, up } = this.displayData || {}
         this.CPUGPUData = {
-          useGPU:useGPU,
-          useCPU:useCPU,
-          useMemory:useMemory,
-          FPS:FPS,
-          down:down,
-          up:up
+          useGPU: useGPU,
+          useCPU: useCPU,
+          useMemory: useMemory,
+          FPS: FPS,
+          down: down,
+          up: up
         }
       },
       deep: true,
     },
   },
 
-  methods:{
-    ...mapActions(inspectorStore,['startInspect','stopInspect']),
+  methods: {
+    ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     ...mapActions(captureStore, ['getSource']),
-    refreshSource(cb){
-      this.sources=[]
-      this.loading=true
+    refreshSource (cb) {
+      this.sources = []
+      this.loading = true
       this.getSource()
-      let timer=setInterval(()=>{
-        if(this.sources.length>0){
-          this.loading=false
+      let timer = setInterval(() => {
+        if (this.sources.length > 0) {
+          this.loading = false
           clearInterval(timer)
-          if(cb){
+          if (cb) {
             cb()
           }
         }
-      },500)
+      }, 500)
+    },
+    async setImageSavePath () {
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: '选择目录', message: '请选择截屏保存位置', properties: [
+          'openDirectory', 'createDirectory',
+        ]
+      })
+      if (savePath) {
+        this.settings.imageSavePath = savePath[0]
+        this.loadImages()
+      } else {
+        console.log('取消选择')
+      }
+    },
+    async setVideoSavePath () {
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: '选择目录', message: '请选择视频保存位置', properties: [
+          'openDirectory', 'createDirectory',
+        ]
+      })
+      if (savePath) {
+        this.settings.videoSavePath = savePath[0]
+        this.loadVideos()
+      } else {
+        console.log('取消选择')
+      }
+    },
+
+    async loadImages () {
+      this.getAllFiles(this.settings.imageSavePath,['.jpg', '.png', '.bmp', '.jpeg'],'images')
+      console.log(this.images)
+
+    },
+    async loadVideos () {
+      this.getAllFiles(this.settings.videoSavePath,['.mp4','.avi','.mpg','rmvb'],'videos')
+      console.log(this.videos)
+    },
+    getAllFiles (path,extMap,arr) {
+
+      fs.readdir(path, (err, files) => {
+        if (err) throw err
+        files.forEach(file => {
+          //拼接获取绝对路径，fs.stat(绝对路径,回调函数)
+          let fPath = require('path').join(path, file)
+          fs.stat(fPath, (err, stat) => {
+            if (stat.isFile()) {
+              //stat 状态中有两个函数一个是stat中有isFile ,isisDirectory等函数进行判断是文件还是文件夹
+              if (extMap.indexOf(require('path').extname(fPath)) > -1)
+                this[arr].push(fPath)
+            } else {
+              this.getAllFiles(fPath,extMap,arr)
+            }
+          })
+        })
+      })
+      return this[arr]
     },
     /**
      * 查找源
      */
-    findWindow(){
-      let source=this.sources.find(s=>{
-        if(s.name.toLowerCase()===this.runningGame.chineseName.toLowerCase()){
+    findWindow () {
+      if (!this.runningGame.chineseName) {
+        return false
+      }
+      let source = this.sources.find(s => {
+        if (s.name.toLowerCase() === this.runningGame.chineseName.toLowerCase()) {
           return true
         }
       })
       return source
     },
-    chooseSource(source){
-      this.step=2
-      this.currentSource=source
+    chooseSource (source) {
+      this.step = 2
+      this.currentSource = source
     },
     // 开始截屏事件
-    startScreenshot(){},
+    startScreenshot () {},
     // 开始录制事件
-    startRecording(){},
+    startRecording () {},
     // 开始监控事件
-    startMonitoring(){
+    startMonitoring () {
       this.isMonitor = !this.isMonitor
-      if(this.isMonitor){
+      if (this.isMonitor) {
         this.startInspect()
-      }else{
+      } else {
         this.stopInspect()
       }
-      if(this.isMonitor === true && this.selectIndex === 'f'){
+      if (this.isMonitor === true && this.selectIndex === 'f') {
         this.fpsEcharts()
-      }else{
+      } else {
         return
       }
     },
     // 关闭系统声音
-    closeSound(){
+    closeSound () {
       this.soundShow = !this.soundShow
-      if(!this.soundShow){
+      if (!this.soundShow) {
         this.systemSound = 0
-      }else{
+      } else {
         this.systemSound = 10
       }
     },
     // 闭麦事件
-    closeMicrophone(){
+    closeMicrophone () {
       this.microphoneShow = !this.microphoneShow
-      if(!this.microphoneShow){
+      if (!this.microphoneShow) {
         this.systemMicrophone = 0
-      }else{
+      } else {
         this.systemMicrophone = 20
       }
     },
     // 打开录制设置入口
-    openRecordSet(){
+    openRecordSet () {
       this.recordSetShow = true
     },
-    clickRecordGame(item,index){
+    clickRecordGame (item, index) {
       this.defaultIndex = index
     },
-    openMonitorSet(){
+    openMonitorSet () {
       this.setShow = true
     },
-    selectMonitorItem(v){
+    selectMonitorItem (v) {
       this.selectIndex = v.id
       this.monitorTitle = v.title
       this.setShow = false
       this.fpsEcharts()
     },
     // FPS图形表
-    fpsEcharts(){
-      this.$nextTick(()=>{
+    fpsEcharts () {
+      this.$nextTick(() => {
         this.fpsInstance = echarts.init(this.$refs.fpsChart)
         this.fpsInstance.setOption({
           title: {
-           text: ''
+            text: ''
           },
-          animation:false,
-          backgroundColor:'transparent',
+          animation: false,
+          backgroundColor: 'transparent',
           legend: {
-           data: ['normal'],
+            data: ['normal'],
           },
-          grid:{ // 让图表占满容器
-           top:"0px",
-           left:"0px",
-           right:"0px",
-           bottom:"0px"
+          grid: { // 让图表占满容器
+            top: '0px',
+            left: '0px',
+            right: '0px',
+            bottom: '0px'
           },
           xAxis: [
-           {
-            type: 'category',
-            boundaryGap: false,
-            data: []
-          }
+            {
+              type: 'category',
+              boundaryGap: false,
+              data: []
+            }
           ],
           yAxis: [
-          {
-            type: 'value',
-            show:false
-          },
+            {
+              type: 'value',
+              show: false
+            },
 
-         ],
-         series: [
-          {
-            smooth: 0.6,
-            symbol: 'none',
-            name: 'Email',
-            type: 'line',
-            stack: 'Total',
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.fpsList,
-            itemStyle : {
-              normal : {
-                color:'#1890FF'
+          ],
+          series: [
+            {
+              smooth: 0.6,
+              symbol: 'none',
+              name: 'Email',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
               },
+              data: this.fpsList,
+              itemStyle: {
+                normal: {
+                  color: '#1890FF'
+                },
 
-            },
-            areaStyle: {
-              color: {
-                type: 'linear',
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                colorStops: [  // 渐变颜色
-                  {
-                    offset: 0,
-                    color: '#404D61',
-                  },
-                  {
-                    offset: 1,
-                    color: '#404D61',
-                  },
-                ],
-                global: false,
+              },
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [  // 渐变颜色
+                    {
+                      offset: 0,
+                      color: '#404D61',
+                    },
+                    {
+                      offset: 1,
+                      color: '#404D61',
+                    },
+                  ],
+                  global: false,
+                },
               },
             },
-          },
-         ]
+          ]
         })
       })
     },
-    pageResize(){
-      if(window.innerHeight <= 700){
+    pageResize () {
+      if (window.innerHeight <= 700) {
         this.isHeight = false
-      }else{
+      } else {
         this.isHeight = true
       }
     }
@@ -853,19 +973,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cap-left{
+.cap-left {
 }
-.cp-w{
+
+.cp-w {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 150px;
   height: 140px;
 }
-.cp-lw{
+
+.cp-lw {
   width: 64px;
   height: 64px;
 }
+
 /*
 .sp-w{
   max-width: 213px;
@@ -873,111 +996,129 @@ export default {
 }
 */
 
-.f-w{
+.f-w {
   width: 265px;
 }
+
 .echarts {
   margin-top: 1em;
   height: 110px;
   width: calc(100%);
 }
-.cpu-w{
+
+.cpu-w {
   width: 138px;
 }
 
 // 橘黄色
-.cp-orange-1{
-  background: rgba(250,173,20,0.1);
-  .cp-orange-2{
-    background: rgba(250,173,20,0.2);
-    .cp-orange-full{
-      background: rgba(250,173,20,1);
+.cp-orange-1 {
+  background: rgba(250, 173, 20, 0.1);
+
+  .cp-orange-2 {
+    background: rgba(250, 173, 20, 0.2);
+
+    .cp-orange-full {
+      background: rgba(250, 173, 20, 1);
     }
   }
 }
+
 // 橘红色
-.cp-red-1{
-  background: rgba(255,77,79,0.1);
-  .cp-red-2{
-    background: rgba(255,77,79,0.2);
-    .cp-red-full{
-      background: rgba(255,77,79,1);
+.cp-red-1 {
+  background: rgba(255, 77, 79, 0.1);
+
+  .cp-red-2 {
+    background: rgba(255, 77, 79, 0.2);
+
+    .cp-red-full {
+      background: rgba(255, 77, 79, 1);
     }
   }
 }
+
 // 蓝色
-.dark-blue-1{
-  background:rgba(80,139,254, 0.1);
-  .dark-blue-2{
-    background:rgba(80,139,254, 0.2);
-    .dark-blue-full{
-      background:rgba(80,139,254, 1);
+.dark-blue-1 {
+  background: rgba(80, 139, 254, 0.1);
+
+  .dark-blue-2 {
+    background: rgba(80, 139, 254, 0.2);
+
+    .dark-blue-full {
+      background: rgba(80, 139, 254, 1);
     }
   }
 }
-.dark-blue-full{
-  background:rgba(80,139,254, 1);
+
+.dark-blue-full {
+  background: rgba(80, 139, 254, 1);
 }
 
 // 各种字体样式
-.title-color{
+.title-color {
   font-family: PingFangSC-Regular;
   font-size: 16px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
 }
-.fps-hz{
+
+.fps-hz {
   font-family: Oswald-SemiBold;
   font-size: 24px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 600;
 }
-.fps-t{
+
+.fps-t {
   font-family: PingFangSC-Medium;
   font-size: 16px;
-  color: rgba(255,255,255,0.85);
-  font-weight: 500;
-}
-.fps-text{
-  font-family: Oswald-Medium;
-  font-size: 36px;
-  color: rgba(255,255,255,0.85);
-  font-weight: 500;
-}
-.btn-text{
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
 }
 
-.record-game-item{
+.fps-text {
+  font-family: Oswald-Medium;
+  font-size: 36px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.btn-text {
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+}
+
+.record-game-item {
   max-width: 234px;
 }
-.scroll-container{
+
+.scroll-container {
   height: 80vh;
   overflow-y: scroll;
-  &::-webkit-scrollbar{
+
+  &::-webkit-scrollbar {
     width: 0 !important;
   }
 
 }
 
-:deep(.nav-item){
+:deep(.nav-item) {
   width: 50%;
 }
 
-.drawer-active{
-  &:hover{
+.drawer-active {
+  &:hover {
     background: rgba(0, 0, 0, 0.2);
   }
-  &:active{
+
+  &:active {
     filter: brightness(0.8);
     background: rgba(0, 0, 0, 0.2);
   }
 }
 
-.game-list-item{
+.game-list-item {
   max-width: 231px;
 }
 
@@ -991,98 +1132,107 @@ export default {
   aspect-ratio: 231/300;
 }
 */
-@media screen and (max-width: 1071px){
-  .game-list-item{
+@media screen and (max-width: 1071px) {
+  .game-list-item {
     width: calc(100% / 1);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 1);
   }
 }
-@media screen and (min-width: 1072px) and (max-width: 1309px){
-  .game-list-item{
+
+@media screen and (min-width: 1072px) and (max-width: 1309px) {
+  .game-list-item {
     width: calc(100% / 2);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 2);
   }
 }
 
-@media screen and (min-width: 1310px) and (max-width: 1550px){
-  .game-list-item{
+@media screen and (min-width: 1310px) and (max-width: 1550px) {
+  .game-list-item {
     width: calc(100% / 3);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 3);
   }
 }
 
-@media screen and (min-width: 1551px) and (max-width: 1790px){
-  .game-list-item{
+@media screen and (min-width: 1551px) and (max-width: 1790px) {
+  .game-list-item {
     width: calc(100% / 5);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 6);
   }
 }
 
-@media screen and (min-width: 1740px) and (max-width: 2040px){
-  .game-list-item{
+@media screen and (min-width: 1740px) and (max-width: 2040px) {
+  .game-list-item {
     width: calc(100% / 6);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 7);
   }
 }
-@media screen and (min-width: 2040px) and (max-width: 2340px){
-  .game-list-item{
+
+@media screen and (min-width: 2040px) and (max-width: 2340px) {
+  .game-list-item {
     width: calc(100% / 7);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 8);
   }
 }
-@media screen and (min-width: 2340px) and (max-width: 2640px){
-  .game-list-item{
+
+@media screen and (min-width: 2340px) and (max-width: 2640px) {
+  .game-list-item {
     width: calc(100% / 8);
   }
-  .game-list-local{
+  .game-list-local {
     width: calc(100% / 9);
   }
 }
-@media screen and (min-width: 2640px) and (max-width: 2940px){
-  .game-list-item{
+
+@media screen and (min-width: 2640px) and (max-width: 2940px) {
+  .game-list-item {
     width: calc(100% / 9);
   }
 }
-@media screen and (min-width: 2940px) and (max-width: 3240px){
-  .game-list-item{
+
+@media screen and (min-width: 2940px) and (max-width: 3240px) {
+  .game-list-item {
     width: calc(100% / 10);
   }
 }
-@media screen and (min-width: 3240px) and (max-width: 3540px){
-  .game-list-item{
+
+@media screen and (min-width: 3240px) and (max-width: 3540px) {
+  .game-list-item {
     width: calc(100% / 11);
   }
 }
-@media screen and (min-width: 3540px) and (max-width: 3840px){
-  .game-list-item{
+
+@media screen and (min-width: 3540px) and (max-width: 3840px) {
+  .game-list-item {
     width: calc(100% / 12);
   }
 }
 
-::v-deep .ant-slider-track{
+::v-deep .ant-slider-track {
   background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
 }
 
-:deep(.ant-slider-handle){
+:deep(.ant-slider-handle) {
   background: rgba(255, 255, 255, 0.85) !important;
   border-color: rgba(151, 151, 151, 1) !important;
 }
-:deep(.ant-slider-rail){
+
+:deep(.ant-slider-rail) {
   background: rgba(255, 255, 255, 0.4) !important;
 }
-:deep(.ps__rail-y){
+
+:deep(.ps__rail-y) {
   display: none !important;
 }
 </style>
