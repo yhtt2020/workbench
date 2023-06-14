@@ -170,7 +170,7 @@ export default {
 
 .active-back {
   :deep(.icon) {
-    fill: var(--primary-text) !important
+    fill: var(--active-bg) !important
   }
 }
 
@@ -195,7 +195,7 @@ export default {
 }
 
 .active-back {
-  background: var(--active-bg) !important;
+  background: var(--active-secondary-bg) !important;
   color: var(--primary-text) !important;
   fill: var(--primary-text) !important;
 }

@@ -4,6 +4,17 @@
     background: transparent !important;
   }
 }
+
+// 一些二次封装的类
+.xt-active-btn {
+  background: var(--active-bg) !important;
+  color: var(--active-text) !important;
+  fill: var(--active-text) !important;
+  &:active {
+    background: var(--active-secondary-bg) !important;
+  }
+}
+
 // 主题
 .xt-active-bg {
   background: var(--active-bg) !important;
@@ -11,11 +22,16 @@
 .xt-active-bg-2 {
   background: var(--active-secondary-bg) !important;
 }
-
 .xt-active {
+  &:active {
+    background: var(--active-secondary-bg) !important;
+  }
+}
+
+.xt-active-text {
   color: var(--active-bg) !important;
 }
-.xt-active-2 {
+.xt-active-text-2 {
   color: var(--active-secondary-bg) !important;
 }
 
