@@ -467,8 +467,8 @@
               <div class="flex flex-row flex-wrap content-game">
                 <div class="game-list-item px-1.5 pb-4  my-game-content my-image"
                      v-for="item in pagedImages">
-                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item" class=" rounded-md img "
-                           alt="">
+                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item"
+                       class=" rounded-md img">
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -700,10 +700,13 @@ export default {
       })
     },
     pagedImages () {
-      return this.images.slice((this.imagePage - 1) * this.pageLimit, this.pageLimit)
+      console.log(this.images, '计算属性变化')
+      console.log(this.images.slice((this.imagePage - 1) * this.pageLimit, this.pageLimit), '得到的')
+      console.log((this.imagePage - 1) * this.pageLimit, this.pageLimit)
+      return this.images
     },
     pagedVideos () {
-      return this.videos.slice((this.videoPage - 1) * this.pageLimit, this.pageLimit)
+      return this.videos.slice((this.videoPage - 1) * this.pageLimit, (this.imagePage) * this.pageLimit + this.pageLimit)
     }
   },
   mounted () {
@@ -787,16 +790,34 @@ export default {
     },
 
     async loadImages () {
-      this.getAllFiles(this.settings.imageSavePath, ['.jpg', '.png', '.bmp', '.jpeg'], 'images')
-      console.log(this.images)
-
+      this.images = this.genFileList(this.settings.imageSavePath, ['.jpg', '.png', '.bmp', '.jpeg'])
     },
     async loadVideos () {
-      this.getAllFiles(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb'], 'videos')
-      console.log(this.videos)
+      this.videos = this.genFileList(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb'])
     },
-    getAllFiles (path, extMap, arr) {
-
+    // 从目录开始
+    genFileList (path,extMap) {
+      let filesList = []
+      this.readFile(path, filesList,extMap)
+      return filesList
+    },
+    // 遍历读取文件
+    readFile (path, filesList, extMap) {
+      let files = fs.readdirSync(path) // 需要用到同步读取
+      files.forEach((file) => {
+        let states = fs.statSync(path + '/' + file)
+        // ❤❤❤ 判断是否是目录，是就继续递归
+        if (states.isDirectory()) {
+          this.readFile(path + '/' + file, filesList,extMap)
+        } else {
+          // 不是就将文件push进数组，此处可以正则匹配是否是 .js 先忽略
+          if (extMap.indexOf(require('path').extname(file)) > -1) {
+            filesList.push(path + '/' + file)
+          }
+        }
+      })
+    },
+    getAllFiles (path, extMap, object, arr) {
       fs.readdir(path, (err, files) => {
         if (err) throw err
         files.forEach(file => {
@@ -805,15 +826,16 @@ export default {
           fs.stat(fPath, (err, stat) => {
             if (stat.isFile()) {
               //stat 状态中有两个函数一个是stat中有isFile ,isisDirectory等函数进行判断是文件还是文件夹
-              if (extMap.indexOf(require('path').extname(fPath)) > -1)
-                this[arr].push(fPath)
+              if (extMap.indexOf(require('path').extname(fPath)) > -1) {
+                object[arr].push(fPath)
+                console.log(fPath)
+              }
             } else {
-              this.getAllFiles(fPath, extMap, arr)
+              this.getAllFiles(fPath, extMap, object, arr)
             }
           })
         })
       })
-      return this[arr]
     },
     /**
      * 查找源
@@ -1240,11 +1262,13 @@ export default {
   width: 160px;
   height: 90px;
 }
-.content-game{
+
+.content-game {
   align-items: center;
   justify-content: center;
 }
-.game-list-item{
+
+.game-list-item {
   margin: 10px;
 }
 </style>
