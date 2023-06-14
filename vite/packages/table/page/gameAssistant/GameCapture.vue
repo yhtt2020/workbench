@@ -483,9 +483,9 @@
               <div class="flex flex-row flex-wrap content-game ">
                 <div class="game-list-item px-1.5 pb-4 flex-shrink-0 my-game-content "
                      v-for="item in pagedVideos">
-                  <div class="relative  w-auto h-full s-item rounded-md  pointer flex flex-col "
+                  <div class="relative  w-auto h-full s-item rounded-md overflow-hidden  pointer flex flex-col "
                        style="border-radius: 12px;">
-                    <img :src="item" class="w-full h-full rounded-md object-cover" alt="">
+                    <VideoItem :vUrl="item"></VideoItem>
                   </div>
                 </div>
               </div>
@@ -574,10 +574,12 @@ import { FPSOption } from '../../components/widgets/supervisory/echartOptions'
 import { captureStore } from '../../store/capture'
 import BackBtn from '../../components/comp/BackBtn.vue'
 import { steamUserStore } from '../../store/steamUser'
+import VideoItem from '../../components/game/VideoItem.vue'
 
 export default {
   name: 'GameCapture',
   components: {
+    VideoItem,
     BackBtn,
     AreaChartOutlined,
     HorizontalCapture
