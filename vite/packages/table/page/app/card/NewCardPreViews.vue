@@ -28,8 +28,8 @@
         <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
-          <div class="icon-box" v-for="i in item.sizes" :key="i"
-            style="color:var(--secondary-text);background: var(--active-bg);">{{ i }}
+          <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i"
+            style="color:var(--secondary-text);">{{ i }}
           </div>
         </div>
         <div class="data">
@@ -189,6 +189,7 @@ export default {
   flex-wrap: wrap;
   margin: 0 auto;
   width: 100%;
+  flex-wrap: wrap;
   align-content: flex-start;
   justify-content: center;
 }
@@ -210,6 +211,7 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.30);
+    background: var(--active-bg);
     border-radius: 12px;
     width: 48px;
     height: 48px;
@@ -332,7 +334,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        opacity: 0.4;
         padding: 4px 10px;
         border-radius: 4px;
         font-family: PingFangSC-Medium;

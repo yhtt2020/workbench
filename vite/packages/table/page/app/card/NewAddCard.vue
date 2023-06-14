@@ -26,7 +26,7 @@
       </div>
       <div class="mian">
         <div class="left">
-          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'active': navIndex == index }" @click="updateNavIndex(index)"
+          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': navIndex == index }" @click="updateNavIndex(index)"
                v-for="( item, index ) in  baseNavList " :key="item.name">{{
               item.cname
             }}

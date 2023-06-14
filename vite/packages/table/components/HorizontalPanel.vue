@@ -6,8 +6,8 @@
       class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
       @click.stop="clickNav(item, index)" :class="activeIndex === index ? 's-item' : ''"> -->
     <div v-for="(item, index) in navList"
-      class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
-      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'active' : ''">
+      class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer xt-active"
+      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''">
       <span>{{ item.title }}</span>
       <div v-if="item.state === true" class="state-dot ml-2"></div>
     </div>
