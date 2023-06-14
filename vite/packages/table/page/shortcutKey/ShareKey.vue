@@ -19,15 +19,23 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar :size="100">
-              <template #icon><UserOutlined /></template>
-            </a-avatar>
+            <a-avatar :size="100" :src="file.path" />
           </div>
           <span><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
         <div class="ml-10" style="font-family: PingFangSC-Regular;font-size: 16px;color: rgba(255,255,255,0.60);">
           <div>推荐图片尺寸：128*128，不要超过2MB</div>
-          <div class="pointer s-bg flex items-center rounded-lg justify-center mr-3 mt-2" style="width:120px; height:48px;">自定义上传</div>
+          <!-- <div class="pointer s-bg flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
+          
+        <a-upload
+          name="file"
+          :showUploadList="false"
+          :customRequest="uploadImage"
+          :beforeUpload="beforeUpload"
+          accept="image/jpeg,image/jpg,image/png"
+        >
+        <div class="pointer flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="background: #2A2A2A;width:120px; height:48px;">自定义上传</div>
+        </a-upload>
         </div>
       </div>
       <span>应用名称</span>
@@ -35,7 +43,7 @@
       </a-input>
       <span>方案简介</span>
       <a-textarea v-model:value="value" :bordered="false" placeholder="请输入描述" :rows="4" style="width:480px;height: 100px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 16px;"/>
-      <div class="pointer s-bg flex items-center rounded-lg justify-center mr-3 mt-6" style="width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
+      <div class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
     </div>
     <!-- 快捷键 -->
     <div v-else>
@@ -59,12 +67,12 @@
       <div class="key-list">
         <template v-for="(item,i) in keyList">
           <div class="mb-2 mx-5 border-right"
-            style="width: 350px;height:48px;line-height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
+            style="width: 370px;height:48px;line-height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
             >
             {{ item.type }}
           </div>
           <div v-for="(k,index) in item.data" class="border-right flex justify-between items-center px-3 mx-5 h-12 mb-2 pointer"
-          style="border-radius: 8px; width: 350px"
+          style="border-radius: 8px; width: 370px"
           :style="keyIndex === k.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(k.id)"
           >
             <div class="flex">
@@ -85,10 +93,12 @@
 
 <script>
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
+import { UploadOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'ShareKey',
   components: {
-    HorzontanlPanelIcon
+    HorzontanlPanelIcon,
+    UploadOutlined
   },
   data(){
     return{
@@ -96,7 +106,7 @@ export default {
          {title:'基本信息',name:'message'},
          {title:'快捷键',name:'shortcutkey'}
       ],
-      defaultNavType:{title:'基本信息',name:'shortcutkey'},
+      defaultNavType:{title:'基本信息',name:'message'},
       closePrompt: true,
       keyList: [
         {
@@ -239,14 +249,85 @@ export default {
           },
         ]
         }
-      ]
+      ],
+      imageUrl: '',
+      file: {},
+      headers: {
+        authorization: 'authorization-text',
+      },
     }
   },
   methods: {
     onBack(){
       this.$router.go(-1)
-    }
-  },
+    },
+    // 上传头像前校验
+    beforeUpload(file) {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png'
+      if (!isJpgOrPng) {
+        this.$message.error('只能上传jpg/png格式的头像!')
+      }
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('图片不得大于2MB!')
+      }
+      return isJpgOrPng && isLt2M
+    },
+    // 上传头像
+    uploadImage(file) {
+      this.file = file.file
+      // this.avatarLoading = true
+      // const formData = new FormData()
+      // formData.append('file', file.file)
+      // api.upload(formData).then(res => {
+      //   if (res) {
+      //     this.imageUrl = res.data.data.link
+      //     this.saveAvatar() // 保存新头像
+      //     this.avatarLoading = false
+      //   }
+      // }, err => {
+      //   this.avatarLoading = false
+      // })
+    },
+    //图片选中后的事件
+
+    // imageSelect(e) {
+    //   console.log(e);
+    //   var file = e.target.files[0]
+    //   var reader = new FileReader()
+    //   var that = this
+
+    //   if (file.size / 1024 > 200) {
+    //     layer.open({
+    //     title: '提示',
+    //     content: '上传图片的大小不能大于200K,请用photoshop等软件压缩一下图片'
+    //     });
+    //     return;
+    //   }
+
+    //   if (file.type.indexOf("gif") == -1 &&
+    //     file.type.indexOf("jpeg") == -1 &&
+    //     file.type.indexOf("jpg") == -1 &&
+    //     file.type.indexOf("png") == -1 &&
+    //     file.type.indexOf("bmp") == -1) {
+    //       layer.open({
+    //         title: '提示',
+    //         content: '图片格式不正确，请重新选择图片'
+    //       });
+    //       return;
+    //   }
+
+    //   reader.readAsDataURL(file)
+
+    //   reader.onload = function (e) {
+    //     console.log("file name", file.name);
+    //     console.log("file type", file.type);
+    //     console.log("this.result", this.result)
+    //     that.imageUrl = this.result
+
+    //   }
+    // }
+  }
 }
 </script>
 

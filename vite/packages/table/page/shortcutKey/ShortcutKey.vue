@@ -1,7 +1,7 @@
 <template>
     <!-- 有内容 -->
-   <div class="container s-bg rounded-lg" v-if="!detailToggle && true">
-    <div class="ability flex justify-between px-4">
+  <div class="container s-bg rounded-lg" v-if="!detailToggle && false">
+    <div class="flex justify-between px-4">
         <div class="flex items-center">
           <div>
             <a-input v-model:value="userName" :bordered="false" placeholder="搜索应用名称" style="width:367px;height: 48px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 18px;">
@@ -25,7 +25,7 @@
         </span>
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
     </div>
-    <div class="main-part grid mt-4 flex justify-center">
+    <div class="main-part item-content">
         <div v-for="item in softwareList" class="flex items-center pointer" @click="btnDetail(item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
@@ -39,17 +39,17 @@
     </div>
   </div>
   <!-- 无内容 -->
-  <div class="container rounded-lg flex flex-col items-center" v-if="false">
+  <div class="container rounded-lg flex flex-col items-center">
     <div class="mt-11">
         <div class="flex items-center justify-center">
             <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />
         </div>
     </div>
     <div class="btn-item flex justify-center">
-        <div class="pointer">浏览创意市场</div>
+        <div class="pointer" @click="market">浏览创意市场</div>
         <div class="pointer" @click="share">我来分享</div>
     </div>
-    <div class="grid mt-4">
+    <div class="item-content mt-4">
         <div v-for="item in notDownloadList" :key="item.id" class="p-3 pointer recommend">
             <div class="flex justify-between">
                 <div class="flex">
@@ -68,9 +68,11 @@
             </div>
             <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
                 <span class="flex items-center">
-                    <a-avatar size="24">
-                        <template #icon><UserOutlined /></template>
-                    </a-avatar>
+                    <div @click="showCard(item.id)">
+                        <a-avatar size="24">
+                            <template #icon><UserOutlined /></template>
+                        </a-avatar>
+                    </div>
                     <span class="ml-3">{{ item.userName }}</span>
                 </span>
                 <span>
@@ -87,14 +89,13 @@
         </div>
     </div>
   </div>
-  <div>
-    <router-view></router-view>
-  </div>
   <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
 </template>
-
+  
 <script>
+  import { mapActions } from 'pinia';
   import ShortcutKeyDetail from '../../components/ShortcutKeyDetail.vue';
+  import { appStore } from '../../store';
   export default {
     name: "ShortcutKey",
     components: {
@@ -177,10 +178,10 @@
                 name: 'Adobe Lightroom',
                 number: 92
             },
-
+            
         ],
         notDownloadList: [
-            {
+            {   
                 id: 1,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -191,7 +192,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 2,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -202,7 +203,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 3,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -213,7 +214,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 4,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -224,7 +225,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 5,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -235,7 +236,7 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-            {
+            {   
                 id: 6,
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
                 name: 'Adobe Lightroom',
@@ -250,6 +251,11 @@
       };
     },
     methods: {
+        ...mapActions(appStore,['showUserCard']),
+        showCard(id){
+            console.log(id)
+            this.showUserCard(id)
+        },
         //点击跳转到详情页
         btnDetail(item){
             this.detailToggle = true
@@ -261,11 +267,14 @@
         //跳转到分享页
         share(){
             this.$router.push({name: 'shareKey'})
+        },
+        market(){
+            this.$router.push({name: 'creativeMarket'})
         }
     },
   };
 </script>
-
+  
 <style scoped lang="scss">
     .container{
       margin: 0 auto 12px;
@@ -312,6 +321,7 @@
             width:364px;
             height:88px;
             position: relative;
+            margin: 16px 0 0 16px;
             >div{
                 position: absolute;
                 top: 0;
@@ -330,17 +340,24 @@
             }
         }
     }
-    .grid{
-        display: grid;
-        grid-template-columns: repeat(3, 0.220fr);
-        column-gap:16px ;
-        row-gap: 16px;
+    .item-content{
+        width: 100%;
+        height: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        overflow: auto;
+        padding-bottom: 40px;
+    }
+    .item-content::-webkit-scrollbar{
+        display: none;
     }
     .recommend{
         background: rgba(0,0,0,0.30);
         border-radius: 12px;
         width: 356px;
         height: 136px;
+        margin: 0 0 16px 16px;
     }
     .button-active{
         &:active{
@@ -354,3 +371,4 @@
 </style>
 
 
+  
