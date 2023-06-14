@@ -21,7 +21,9 @@ import BackBtn from './components/comp/BackBtn.vue'
 
 import { setupCalendar } from 'v-calendar';
 import 'viewerjs/dist/viewer.css'
-
+/*消息提示组件*/
+import Toast,{PluginOptions} from 'vue-toastification'
+import "vue-toastification/dist/index.css";
 
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css';
@@ -52,7 +54,9 @@ pinia.use(piniaPersist)
 
 // @ts-ignore
 window.$=$
+const options:PluginOptions={
 
+}
 const $app=app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
   VueTippy,
   // optional
@@ -66,7 +70,7 @@ const $app=app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer)
       trigger:"mouseenter click"
     }, // => Global default options * see all props
   }
-).mount('#app')
+).use(Toast,options).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
