@@ -303,6 +303,7 @@
                         :src="'file://'+currentSource.icon"></a-avatar>
               {{ currentSource.name }}
             </div>
+            <div style="z-index: 99899999;position: absolute;left:130px;top: 120px;background: white;color: black">功能正在开发中，当前还不可使用</div>
             <div style="position: absolute;right: 0.5em">
               <div class="flex items-center pointer justify-center" @click="openRecordSet">
                 <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
