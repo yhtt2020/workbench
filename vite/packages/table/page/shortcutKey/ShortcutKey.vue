@@ -1,6 +1,6 @@
 <template>
     <!-- 有内容 -->
-  <div class="container s-bg rounded-lg" v-if="!detailToggle">
+  <div class="container s-bg rounded-lg" v-if="softwareList.length && !detailToggle">
     <div class="flex justify-between px-4">
         <div class="flex items-center">
           <Search :searchValue="searchValue" @changeInput="changeInput"></Search>
@@ -38,58 +38,8 @@
     </div>
   </div>
   <!-- 无内容 -->
-  <div class="container rounded-lg flex flex-col items-center" v-if="false">
-    <div class="mt-11">
-        <div class="flex items-center justify-center">
-            <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />
-        </div>
-    </div>
-    <div class="btn-item flex justify-center">
-        <div class="pointer" @click="market">浏览创意市场</div>
-        <div class="pointer" @click="share">我来分享</div>
-    </div>
-    <div class="item-content mt-4">
-        <div v-for="item in notDownloadList" :key="item.id" class="pointer recommend">
-            <div class="flex justify-between">
-                <div class="flex">
-                    <span class="h-14 w-14 flex justify-center items-center">
-                        <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
-                    </span>
-                    <span class="flex flex-col ml-4">
-                        <span style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">{{ item.name }}</span>
-                        <span class="mt-1" style="font-size: 16px;color: rgba(255,255,255,0.60);">{{ item.commonUse }}</span>
-                    </span>
-                </div>
-                <div class="flex flex-col justify-center items-center w-16 h-16 s-bg rounded-lg">
-                    <span style="font-family: Oswald-SemiBold;font-size: 24px;color: rgba(255,255,255,0.85);font-weight: 600;">{{ item.number }}</span>
-                    <span>快捷键</span>
-                </div>
-            </div>
-            <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
-                <span class="flex items-center">
-                    <div @click="showCard(item.id)">
-                        <a-avatar size="24">
-                            <template #icon><UserOutlined /></template>
-                        </a-avatar>
-                    </div>
-                    <span class="ml-3">{{ item.userName }}</span>
-                </span>
-                <span>
-                    <span>
-                        <Icon icon="dianzan" class="mr-2"></Icon>
-                        <span>{{ item.sumLikes }}</span>
-                    </span>
-                    <span class="ml-3">
-                        <Icon icon="xiazai" class="mr-2"></Icon>
-                        <span>{{ item.download }}</span>
-                    </span>
-                </span>
-            </div>
-        </div>
-        <div class="recommend" style="height:1px;opacity:0;"></div>
-    </div>
-  </div>
-   <!-- 设置抽屉 -->
+  <router-view></router-view>
+  <!-- 设置抽屉 -->
    <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
     <div class="drawer-content">
        <div>
@@ -197,75 +147,6 @@
             },
             
         ],
-        //无快捷键列表
-        notDownloadList: [
-            {   
-                id: 1,
-                icon: 'http://a.apps.vip/icons/flappy.jpg',
-                name: 'Adobe Lightroom',
-                number: 92,
-                commonUse: 'Lr常用26个快捷键',
-                avatar: '',
-                userName: 'Victor Ruiz',
-                sumLikes: 12334,
-                download: 1232,
-            },
-            {   
-                id: 2,
-                icon: 'http://a.apps.vip/icons/flappy.jpg',
-                name: 'Adobe Lightroom',
-                number: 92,
-                commonUse: 'Adobe XD',
-                avatar: '',
-                userName: 'Victor Ruiz',
-                sumLikes: 12334,
-                download: 1232,
-            },
-            {   
-                id: 3,
-                icon: 'http://a.apps.vip/icons/flappy.jpg',
-                name: 'Adobe Lightroom',
-                number: 92,
-                commonUse: 'Lr常用26个快捷键',
-                avatar: '',
-                userName: 'Victor Ruiz',
-                sumLikes: 12334,
-                download: 1232,
-            },
-            {   
-                id: 4,
-                icon: 'http://a.apps.vip/icons/flappy.jpg',
-                name: 'Adobe Lightroom',
-                number: 92,
-                commonUse: 'Lr常用26个快捷键',
-                avatar: '',
-                userName: 'Victor Ruiz',
-                sumLikes: 12334,
-                download: 1232,
-            },
-            {   
-                id: 5,
-                icon: 'http://a.apps.vip/icons/flappy.jpg',
-                name: 'Adobe Lightroom',
-                number: 92,
-                commonUse: 'Lr常用26个快捷键',
-                avatar: '',
-                userName: 'Victor Ruiz',
-                sumLikes: 12334,
-                download: 1232,
-            },
-            {   
-                id: 6,
-                icon: 'http://a.apps.vip/icons/flappy.jpg',
-                name: 'Adobe Lightroom',
-                number: 92,
-                commonUse: 'Lr常用26个快捷键',
-                avatar: '',
-                userName: 'Victor Ruiz',
-                sumLikes: 12334,
-                download: 1232,
-            },
-        ],
         //搜索框的值
         searchValue: '',
         // 设置抽屉显示
@@ -274,11 +155,12 @@
         schemeSwitch: true
       };
     },
+    mounted(){
+        if(!this.softwareList.length){
+            this.$router.push({name: 'notShortcutKey'})
+        }
+    },
     methods: {
-        ...mapActions(appStore,['showUserCard']),
-        showCard(id){
-            this.showUserCard(id)
-        },
         //点击跳转到详情页
         btnDetail(item){
             this.detailToggle = true
