@@ -68,5 +68,7 @@ export default {
 <style lang="scss" scoped>
 .s-bg{
   box-shadow: none !important;
+  background: var(--secondary-bg);
+  color: var(--primary-text) !important;
 }
 </style>

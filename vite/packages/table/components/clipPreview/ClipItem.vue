@@ -9,7 +9,7 @@
          <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between content-text">
          <span>{{ clip.timeText }}</span>
          <span>{{ clip.capacity }}</span>
         </div>
@@ -29,7 +29,7 @@
 
       <!-- 剪贴板文本底部切换开始 -->
       <div class="flex s-item py-1 px-2 h-12 rounded-b-lg items-center justify-between">
-          <div v-for="(item,index) in textType" :class="defaultTextType.name === item.name ? 's-item':''" class="flex items-center pointer rounded-lg pt-3 pb-2 px-8" 
+          <div v-for="(item,index) in textType" :class="defaultTextType.name === item.name ? 's-active':''" class="flex items-center pointer rounded-lg pt-3 pb-2 px-8" 
            @click.stop="selectItem(item,index)"  @tabClick="openCode"
           >
             <Icon :icon="item.icon" style="font-size: 1.45em;"></Icon>
@@ -563,13 +563,14 @@ export default {
 }
 :deep(.CodeMirror){
   height:240px;
+  color: var(--secondary-text);
 }
 :deep(.cm-s-monokai.CodeMirror){
   background: none !important;
   padding: 0 4px ;
   font-family: PingFangSC-Medium !important;
   font-size: 14px !important;
-  color: rgba(255,255,255,0.4) !important;
+  color: var(--secondary-text) !important;
   font-weight: 500 !important;
 }
 .clip-con{
@@ -612,6 +613,19 @@ export default {
   left: 50%;
   transform: translate(-50%,-50%);
 }
+
+.s-item{
+  background: var(--secondary-bg);
+  color: var(--secondary-text);
+}
+
+.s-active{
+  background: var(--active-bg);
+  color: var(--active-text);
+}
+.content-text{
+  color: var(--secondary-text);
+}
 </style>
 
 <style>
@@ -619,6 +633,7 @@ export default {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  color: var(--secondary-text);
 }
 
 .xgplayer-icon-requestfull{
