@@ -1,12 +1,12 @@
 <template>
   <!-- 头部导航 -->
-  <div class="flex justify-between items-center" style="height: 72px;">
+  <div class="flex justify-between items-center" style="height: 72px;width:98%">
     <div class="flex items-center">
       <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
-        <div v-for="(item,index) in appList.slice(0,3)" class="mr-3 pointer rounded-lg" style="padding: 6px 12px"
+        <div v-for="(item,index) in appList.slice(0,3)" class="head-list"
         :class="navIndex === index ? 's-bg':''" @click="toggleApp(index)">
           <span>
             <a-avatar shape="square" :src="item.icon" :size="38"></a-avatar>
@@ -28,18 +28,18 @@
     </div>
   </div>
   <!-- 快捷键列表 -->
-  <div class="s-bg rounded-lg flex flex-col" style="align-content: flex-start;padding: 24px 0; flex-wrap: wrap;height: 85%;">
-    <template v-for="(item,i) in keyList">
-      <div class="mb-2 mx-5" :class="rightBorder"
+  <div class="s-bg key-box">
+    <template v-for="(item,i) in keyList" :key="i">
+      <div class="mb-2 mx-5 border-right"
         style="width: 350px;height:48px;line-height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">
         {{ item.type }}
       </div>
-      <div v-for="(k,index) in item.data" class="flex justify-between items-center px-3 mx-5 h-12 mb-2 pointer"
-      style="border-radius: 8px; width: 350px" :class="rightBorder"
+      <div v-for="(k,index) in item.data" :key="k.id" class="border-right flex justify-between items-center px-3 mx-5 h-12 mb-2 pointer"
+      style="border-radius: 8px; width: 350px"
       :style="keyIndex === k.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(k.id)"
       >
         <div class="flex">
-          <div v-for="i in k.keys" class="flex key-item">
+          <div v-for="i in k.keys" :key="i" class="flex key-item">
             <span v-if="i.icon" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">
               <Icon :icon="i.icon" style="font-size: 1.5em;"></Icon>
             </span>
@@ -49,6 +49,7 @@
         <div style="">{{ k.title}}</div>
       </div>
     </template>
+    <div class="cover"></div>
   </div>
   <!-- 最近使用 -->
   <a-drawer v-model:visible="setShow" title="最近使用" width="500" placement="right">
@@ -107,7 +108,6 @@ export default {
             number: 92
         },
       ],
-      rightBorder: 'right-border-none',// 右边线条
       keyList: [
         {
           type: '常用',
@@ -253,24 +253,7 @@ export default {
     }
   },
   mounted(){
-    let keySum = this.keyList.length;
-    this.keyList.map(item => {
-      keySum += item.data.length
-    })
-    // 8为一列几条, column为几列
-    let column = keySum % 8 == 0 ? 1 : Math.ceil(keySum / 8)
-    console.log(column)
-    switch(column){
-      case 1:
-        this.rightBorder = 'right-border-none'
-        break;
-      case 2:
-        this.rightBorder = 'right-border'
-        break;
-      case 3:
-        this.rightBorder = 'right-border'
-        break;
-    }
+    
   },
   methods:{
     toggleApp(index){
@@ -298,19 +281,6 @@ export default {
   }
   .s-bg{
     box-shadow: none !important;
-  }
-
-  .line-right, right-border-none, .right-border{
-    position: relative;
-  }
-
-  .line-right::after, .right-border::after{
-    content: "";
-    position: absolute;
-    right: -19px;
-    height: 56px;
-    margin-left: 10px;
-    border-right: solid rgba(255,255,255,0.10) 1px;
   }
   .main-part{
         >div{
@@ -340,4 +310,39 @@ export default {
           margin-bottom: 0;
         }
     }
+  .head-list{
+    margin-right: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    min-width: 80px;
+    white-space: nowrap;
+  }
+  .key-box{
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    overflow: auto;
+    padding: 24px 0; 
+    flex-wrap: wrap;
+    height: 85%;
+    width: 98%;
+    
+  }
+  .key-box::-webkit-scrollbar{
+    display: none;
+  }
+  .border-right {
+    position: relative;
+  }
+  .border-right::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 0;
+    height: 56px;
+    margin-left: 10px;
+    border-right: solid rgba(255, 245, 245, 0.1) 1px;
+  }
 </style>

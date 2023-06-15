@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 s-bg rounded-lg" style="height: 720px;">
+  <div class="p-3 s-bg rounded-lg box">
     <!-- 导航 -->
     <div class="flex items-center justify-between">
       <div class="flex">
@@ -39,20 +39,19 @@
         </div>
       </div>
       <span>应用名称</span>
-      <a-input v-model:value="userName" :bordered="false" placeholder="请输入应用名称" style="width:480px;height: 48px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 16px;">
-      </a-input>
+      <a-input v-model:value="userName" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
-      <a-textarea v-model:value="value" :bordered="false" placeholder="请输入描述" :rows="4" style="width:480px;height: 100px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 16px;"/>
+      <a-textarea v-model:value="value" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
       <div class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
     </div>
     <!-- 快捷键 -->
-    <div v-else>
+    <div class="key-content" v-else>
       <!-- 输入框 -->
       <div class="flex mt-7">
-        <a-input class="ml-3" v-model:value="userName" :bordered="false" placeholder="按下组合键" style="width:227px;height: 48px;background: rgba(0,0,0,0.60);border-radius: 12px;color: rgba(255,255,255,0.40);font-size: 16px;"/>
-        <a-input class="ml-3" v-model:value="userName" :bordered="false" placeholder="操作名称" style="width:227px;height: 48px;background: rgba(0,0,0,0.60);border-radius: 12px;color: rgba(255,255,255,0.40);font-size: 16px;"/>
+        <a-input class="ml-3 input" v-model:value="userName" placeholder="按下组合键"/>
+        <a-input class="ml-3 input" v-model:value="userName" placeholder="操作名称" style="width:227px;height: 48px;"/>
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">添加快捷键</div>
-        <a-input class="ml-3" v-model:value="userName" :bordered="false" placeholder="按下分类名称组合键" style="width:227px;height: 48px;background: rgba(0,0,0,0.60);border-radius: 12px;color: rgba(255,255,255,0.40);font-size: 16px;"/>
+        <a-input class="ml-3 input" v-model:value="userName" placeholder="按下分类名称组合键" style="width:227px;height: 48px;"/>
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">新建分类</div>
       </div>
       <!-- 提示 -->
@@ -64,7 +63,7 @@
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
       </div>
       <!-- 快捷键列表 -->
-      <div class="key-list">
+      <div class="key-box" :style="closePrompt ? 'height:80%' : 'height:90%'">
         <template v-for="(item,i) in keyList">
           <div class="mb-2 mx-5 border-right"
             style="width: 370px;height:48px;line-height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
@@ -332,6 +331,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .box{
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
   .btn-item{
     display: flex;
     >div{
@@ -355,8 +365,11 @@ export default {
     }
   }
   .add-content{
+    height: 90%;
     width: 480px;
     margin: 0 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     >span{
       font-family: PingFangSC-Medium;
       font-size: 16px;
@@ -376,6 +389,9 @@ export default {
       right: -14px;
     }
   }
+  .key-content{
+    height: 90%;
+  }
   .key-list{
     display: flex;
     flex-direction: column;    
@@ -384,6 +400,21 @@ export default {
     align-content: flex-start;
     padding: 24px 0;
     height: 500px;
+  }
+  .key-box{
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    overflow: auto;
+    padding: 24px 0; 
+    flex-wrap: wrap;
+    height: 80%;
+    
+  }
+  .key-box::-webkit-scrollbar,
+  .add-content::-webkit-scrollbar{
+    display: none;
   }
   .prompt{
       background: rgba(0,0,0,0.30);
@@ -399,10 +430,20 @@ export default {
   .border-right::after {
     content: '';
     position: absolute;
-    right: -19px;
+    right: -20px;
+    top: 0;
     height: 56px;
     margin-left: 10px;
-    border-right: solid rgba(255,255,255,0.10) 1px;
+    border-right: solid rgba(255,255,255,0.1) 1px;
+  }
+  .input{
+    width:227px;
+    height: 48px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    color: var(--primary-text);
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
   }
   .s-bg{
         box-shadow: none !important;

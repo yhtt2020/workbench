@@ -4,7 +4,7 @@
     <div class="flex justify-between px-4">
         <div class="flex items-center">
           <Search :searchValue="searchValue" @changeInput="changeInput"></Search>
-          <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.60);width:200px;">共27个应用快捷键方案</span>
+          <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.60);width:200px;">共{{ softwareList.length }}个应用快捷键方案</span>
         </div>
         <div class="btn-item">
             <div class="s-bg pointer" @click="market">创意市场</div>
@@ -14,6 +14,7 @@
             </span>
         </div>
     </div>
+    <!-- 提示 -->
     <div class="prompt mt-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
             <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
@@ -21,7 +22,8 @@
         </span>
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
     </div>
-    <div class="main-part item-content">
+    <!-- 列表 -->
+    <div class="main-part item-content" :style="closePrompt ? 'height:80%' : 'height:90%'">
         <div v-for="item in softwareList" class="flex items-center pointer" @click="btnDetail(item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
@@ -195,7 +197,7 @@
             },
             
         ],
-        //有快捷键列表
+        //无快捷键列表
         notDownloadList: [
             {   
                 id: 1,
