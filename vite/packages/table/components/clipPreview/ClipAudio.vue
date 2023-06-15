@@ -1,4 +1,5 @@
 <template>
+  <!-- 剪贴板音频组件 -->
   <div>
     <audio @timeupdate="updateProgress" controls ref="audioRef" style="display: none">
       <source :src="fileUrl" type="audio/mpeg" />
