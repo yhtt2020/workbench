@@ -1,39 +1,45 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef"
-        :size="reSize" :desk="desk">
-    </Widget>
-    <div class="item xt-text xt-hover" ref="itemRef" @click="iconClick()">
-        <div class="image" :style="[backgroundState]">
-            <img :src="customData.src" alt="" :style="radiusState" style="width: 56px;height: 56px;">
-        </div>
-        <div class="title"> {{ customData.titleValue }}</div>
+    <div ref="iconmRef" :style="opacityStyle">
+        <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
+            ref="homelSlotRef" :size="reSize" :desk="desk">
+        </Widget>
+        <template v-if="customData.iconList !== undefined && customData.iconList.length > 1">
+            <icons :iconList="customData.iconList"></icons>
+        </template>
+        <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0">
+            <icon v-bind="customData.iconList[0]"></icon>
+        </template>
     </div>
+    <!-- 编辑开始 -->
     <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
         <template #title>
             <div style="display: flex; justify-content: space-between; align-items:center">
                 <div style="width: 50%;text-align: right;">设置</div>
-                <div style="padding: 10px;border-radius: 5px;cursor: pointer;" class="xt-bg-2" @click="save()">保存</div>
+                <div style="padding: 10px;border-radius: 5px;cursor: pointer;" class="xt-active-bg" @click="save()">保存</div>
             </div>
         </template>
-        <edit ref="editRef" v-bind="editOption"></edit>
+        <edit ref="editRef" v-bind="customData.iconList[0]"></edit>
     </a-drawer>
+    <!-- 编辑结束 -->
 </template> 
 
 <script>
+// components
 import Widget from '../../card/Widget.vue'
+import edit from './edit.vue'
+import icon from "./oneIcon/index.vue"
+import icons from "./multipleIcons/index.vue"
 
+// pinia
+import { mapActions, mapWritableState } from 'pinia'
 import { cardStore } from '../../../store/card.ts'
 import { myIcons } from '../../../store/myIcons.ts'
-import { mapActions, mapWritableState } from 'pinia'
-import { message } from 'ant-design-vue'
 
-import browser from "../../../js/common/browser.ts"
-import edit from './edit.vue'
-// import api from '../../../src/model/api.js'
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\src\model\api.js
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\components\widgets\myIcons\index.vue
+import { message } from 'ant-design-vue'
 import api from '../../../../../src/model/api.js'
+import clickAndDragMixin from "./hooks/clickAndDragMixin.js"
 export default {
+    mixins: [clickAndDragMixin],
     props: {
         customIndex: {
             type: Number,
@@ -49,30 +55,22 @@ export default {
     },
     components: {
         Widget,
-        edit
+        edit,
+        icons,
+        icon
     },
     data() {
         return {
-            titleValue: "",
-            linkValue: "",
+            index: 0,
+            opacityStyle: {},
+            settingVisible: false,
             options: {
                 className: 'card small',
                 // title: '图标组件',
                 // icon: 'time-circle',
-                type: 'games',
+                // type: 'games',
                 hide: true
             },
-            menuList: [
-                {
-                    icon: 'shezhi1',
-                    title: '设置',
-                    fn: () => {
-                        this.$refs.homelSlotRef.menuVisible = false
-                        this.settingVisible = true
-                    }
-                }
-            ],
-            settingVisible: false,
             backgroundColorList: {
                 color1: 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)',
                 color2: 'linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)',
@@ -93,106 +91,103 @@ export default {
         }
     },
     mounted() {
-        // 是否需要初始化 
-        if (this.customData.init == undefined) {
-            let setData = {}
-            // pinia获取初始化数据并重置pinia数据
-            Object.keys(this.iconOption).forEach((k) => [setData[k], this.iconOption[k]] = [this.iconOption[k], this.baseIconOption[k]])
-            this.updateCustomData(this.customIndex, setData, this.desk)
-        }
-        this.$refs.itemRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
+        this.$refs.iconmRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
     },
-    // 更新数据
-    watch: {
-        'customData.isRadius': {
-            handler(isRadius, oldV) {
-                this.updateCustomData(this.customIndex, { isRadius }, this.desk)
-            }
-        },
-        'customData.radius': {
-            handler(radius, oldV) {
-                this.updateCustomData(this.customIndex, { radius }, this.desk)
-            },
-        },
-        'customData.isBackground': {
-            handler(isBackground, oldV) {
-                this.updateCustomData(this.customIndex, { isBackground }, this.desk)
-            },
-        },
-        'customData.backgroundColor': {
-            handler(backgroundColor, oldV) {
-                this.updateCustomData(this.customIndex, { backgroundColor }, this.desk)
-            },
-        },
-        'customData.titleValue': {
-            handler(titleValue, oldV) {
-                this.updateCustomData(this.customIndex, { titleValue }, this.desk)
-            },
-        },
-        'customData.link': {
-            handler(link, oldV) {
-                this.updateCustomData(this.customIndex, { link }, this.desk)
-                if (link === '') this.customData.linkValue = ''
-            },
-        },
-        'customData.linkValue': {
-            handler(linkValue, oldV) {
-                this.updateCustomData(this.customIndex, { linkValue }, this.desk)
-            },
-        },
-        'customData.src': {
-            handler(src, oldV) {
-                this.updateCustomData(this.customIndex, { src }, this.desk)
-            },
-        },
-        'customData.backgroundIndex': {
-            handler(backgroundIndex, oldV) {
-                this.updateCustomData(this.customIndex, { backgroundIndex }, this.desk)
-            },
-        },
+    beforeDestroy() {
+        this.$refs.iconmRef.removeEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     computed: {
-        ...mapWritableState(myIcons, ['iconOption', 'baseIconOption']),
-        // 动态切换圆角状态
-        radiusState() {
-            if (this.customData.isRadius) return { borderRadius: this.customData.radius + 'px' }
-            else return { borderRadius: '0px' }
-        },
-        // 动态切换背景状态
-        backgroundState() {
-            if (this.customData.isBackground) return { background: this.customData.backgroundColor }
-            else return { background: 'none' }
-        },
-        editOption() {
-            return {
-                isRadius: this.customData.isRadius,
-                radius: this.customData.radius,
-                isBackground: this.customData.isBackground,
-                backgroundColor: this.customData.backgroundColor,
-                titleValue: this.customData.titleValue,
-                link: this.customData.link,
-                linkValue: this.customData.linkValue,
-                src: this.customData.src,
-                backgroundIndex: this.customData.backgroundIndex,
+        ...mapWritableState(myIcons, ['iconOption', 'baseIconOption', 'copyIconOption', 'copyIconIndex', 'iconRef', 'isCopy']),
+        menuList() {
+            if (this.customData.iconList !== undefined && this.customData.iconList.length > 1) {
+                return [
+                    {
+                        icon: 'zhankai',
+                        title: '解除分组',
+                        fn: () => { this.disbandGroup() }
+                    },
+                    {
+                        icon: 'shezhi1',
+                        title: '粘贴',
+                        fn: () => { this.copyIcon() }
+                    },
+                ]
+            } else {
+                return [
+                    {
+                        icon: 'shezhi1',
+                        title: '移动',
+                        fn: () => { this.moveIcon() }
+                    },
+                    {
+                        icon: 'shezhi1',
+                        title: '粘贴',
+                        fn: () => { this.copyIcon() }
+                    },
+                    {
+                        icon: 'shezhi1',
+                        title: '设置',
+                        fn: () => {
+                            this.$refs.homelSlotRef.menuVisible = false
+                            this.settingVisible = true
+                        }
+                    },
+                ]
             }
+
         },
-        // 动态计算卡片大小
-        reSize() {
-            return {
-                width: 0 + 'px',
-                height: 0 + 'px'
-            }
-        }
     },
     methods: {
-        ...mapActions(cardStore, ['updateCustomData']),
+        ...mapActions(cardStore, ['updateCustomData', 'addCard']),
+        // 解除图标分组
+        async disbandGroup() {
+            for (let i = 0; i < this.customData.iconList.length; i++) {
+                this.addCard({ name: "myIcons", id: Date.now(), customData: { iconList: [{ ...this.customData.iconList[i] }] } }, this.desk)
+            }
+            this.$refs.homelSlotRef.doRemoveCard()
+            message.success("解除分组成功")
+        },
+        // 点击移动图标组件
+        moveIcon() {
+            this.$refs.homelSlotRef.menuVisible = false
+            Object.keys(this.customData.iconList[0]).forEach((k) => {
+                this.copyIconOption[k] = this.customData.iconList[0][k]
+            })
+            this.copyIconIndex = this.customIndex
+            this.iconRef = this.$refs.homelSlotRef
+            this.isCopy = true
+            this.opacityStyle = { opacity: 0.65 }
+
+        },
+        // 复制新的图标组件
+        copyIcon() {
+            if (this.isCopy === false) return message.error("你还未复制任何图标组件")
+            if (this.copyIconIndex === this.customIndex) return message.error("不能复制到同个图标组件上")
+            this.customData.iconList.push({ ...this.copyIconOption })
+            this.iconRef.doRemoveCard()
+            message.success("移动成功")
+            this.isCopy = false
+            this.$refs.homelSlotRef.menuVisible = false
+        },
+    
+        handleMenu(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.$refs.homelSlotRef.menuVisible = true
+        },
+        // 保存
+        save() {
+            let editOption = this.$refs.editRef.save()
+            if (typeof (editOption) === 'string') return message.error(editOption)
+            Object.keys(editOption).forEach((k) => this.customData.iconList[this.index][k] = editOption[k])
+            message.success("保存成功")
+            this.settingVisible = false
+        },
         async customUpload(file, insertFn) {
             let url
             var formData = new FormData();
             formData.append("file", file)
-            console.log('1 :>> ', formData);
             await api.getCosUpload(formData, (err, data) => {
-                console.log('2 :>> ', 2);
                 if (!err) {
                     message.error('图片上传失败')
                 } else {
@@ -200,99 +195,10 @@ export default {
                     // insertFn(url)
                 }
             })
-            console.log('url :>> ', url);
         },
-        handleMenu(e) {
-            e.preventDefault()
-            e.stopPropagation()
-            this.$refs.homelSlotRef.menuVisible = true
-        },
-        save() {
-            let editOption = this.$refs.editRef.save()
-            this.customUpload(editOption.src)
-            if (typeof (editOption) === 'string') return message.error(editOption)
-            Object.keys(editOption).forEach((k) => this.customData[k] = editOption[k])
-            message.success("保存成功")
-            this.settingVisible = false
-        },
-        iconClick() {
-            if (this.customData.link === "link") browser.openInInner(this.customData.linkValue)
-            else if (this.customData.link === "fast" || this.customData.link === "nav") this.openApp()
-            else message.error("你还未设置链接/快捷方式")
-        },
-        openApp() {
-            if (typeof this.customData.linkValue === "object" && this.customData.linkValue.type) {
-                switch (this.customData.linkValue.type) {
-                    case "systemApp":
-                        if (this.customData.linkValue.event === "fullscreen") {
-                            if (this.full) this.full = false;
-                            else this.full = true;
-                            tsbApi.window.setFullScreen(!this.full);
-                        } else if (this.customData.linkValue.event === "/status") {
-                            if (this.$route.path === "/status") this.$router.go(-1);
-                            else this.$router.push({ path: "/status" });
-                        } else if (this.customData.linkValue.data) {
-                            this.$router.push({ name: "app", params: this.customData.linkValue.data });
-                        } else this.$router.push({ name: this.customData.linkValue.event });
-                        break;
-                    case "coolApp":
-                        this.$router.push({ name: "app", params: this.customData.linkValue.data });
-                        break;
-                    case "localApp":
-                        require("electron").shell.openPath(this.customData.linkValue.path);
-                        break;
-                    case "lightApp":
-                        ipc.send("executeAppByPackage", { package: this.customData.linkValue.package });
-                        break;
-                    default:
-                        require("electron").shell.openPath(this.customData.linkValue.path);
-                }
-            } else if (this.customData.linkValue) {
-                this.customData.linkValue.path
-                    ? require("electron").shell.openPath(this.customData.linkValue.path)
-                    : require("electron").shell.openPath(
-                        require("path").normalize(this.customData.linkValue)
-                    );
-            }
-        },
+
     }
 }
 </script>
 
-<style lang="scss" scoped>
-.item {
-    width: 134px;
-    height: 96px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    flex-direction: column;
-    font-size: 14px;
-    cursor: pointer;
-
-    &:hover {
-        border-radius: 10px;
-    }
-
-    .image {
-        height: 65px !important;
-        width: 65px !important;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 5px;
-    }
-
-    .title {
-        padding: 0 5px;
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        text-align: center;
-        height: 18px;
-        line-height: 18px;
-    }
-}
-</style>
+<style lang="scss" scoped></style>
