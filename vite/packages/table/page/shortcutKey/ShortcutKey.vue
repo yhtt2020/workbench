@@ -1,21 +1,17 @@
 <template>
     <!-- 有内容 -->
-  <div class="container s-bg rounded-lg" v-if="!detailToggle && false">
+  <div class="container s-bg rounded-lg" v-if="!detailToggle">
     <div class="flex justify-between px-4">
         <div class="flex items-center">
-          <div>
-            <a-input v-model:value="userName" :bordered="false" placeholder="搜索应用名称" style="width:367px;height: 48px;background: rgba(0,0,0,0.30);border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);font-size: 18px;">
-            <template #prefix>
-              <Icon icon="sousuo" class="mr-2"></Icon>
-            </template>
-          </a-input>
-          </div>
+          <Search :searchValue="searchValue" @changeInput="changeInput"></Search>
           <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.60);width:200px;">共27个应用快捷键方案</span>
         </div>
         <div class="btn-item">
-            <div class="s-bg">创意市场</div>
-            <div class="s-bg">我来分享</div>
-            <span class="button-active pointer s-bg"><Icon icon="setting" style="width: 20px;height: 20px;color:rgba(255, 255, 255, 0.4);"></Icon></span>
+            <div class="s-bg pointer" @click="market">创意市场</div>
+            <div class="s-bg pointer" @click="share">我来分享</div>
+            <span class="button-active pointer s-bg" @click="setShow = true">
+                <Icon icon="setting" style="width: 20px;height: 20px;color:rgba(255, 255, 255, 0.4);"></Icon>
+            </span>
         </div>
     </div>
     <div class="prompt mt-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
@@ -36,10 +32,11 @@
                 <span>快捷键</span>
             </div>
         </div>
+        <div style="opacity:0;height: 1px;"></div>
     </div>
   </div>
   <!-- 无内容 -->
-  <div class="container rounded-lg flex flex-col items-center">
+  <div class="container rounded-lg flex flex-col items-center" v-if="false">
     <div class="mt-11">
         <div class="flex items-center justify-center">
             <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />
@@ -50,7 +47,7 @@
         <div class="pointer" @click="share">我来分享</div>
     </div>
     <div class="item-content mt-4">
-        <div v-for="item in notDownloadList" :key="item.id" class="p-3 pointer recommend">
+        <div v-for="item in notDownloadList" :key="item.id" class="pointer recommend">
             <div class="flex justify-between">
                 <div class="flex">
                     <span class="h-14 w-14 flex justify-center items-center">
@@ -87,8 +84,22 @@
                 </span>
             </div>
         </div>
+        <div class="recommend" style="height:1px;opacity:0;"></div>
     </div>
   </div>
+   <!-- 设置抽屉 -->
+   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
+    <div class="drawer-content">
+       <div>
+        <div class="title">应用启动时打开</div>
+        <span class="text">从工作台打开应用时，自动打开快捷方案</span>
+       </div>
+       <div class="switch">
+        <a-switch  v-model:checked="schemeSwitch" />
+       </div>
+    </div>
+  </a-drawer>
+  <!-- 快捷键详情 -->
   <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
 </template>
   
@@ -96,16 +107,20 @@
   import { mapActions } from 'pinia';
   import ShortcutKeyDetail from '../../components/ShortcutKeyDetail.vue';
   import { appStore } from '../../store';
+  import Search from '../../components/Search.vue';
   export default {
     name: "ShortcutKey",
     components: {
-        ShortcutKeyDetail
+        ShortcutKeyDetail,
+        Search
     },
     data() {
       return {
-        userName: '',
+        // 跳转详情
         detailToggle: false,
+        //提示开关
         closePrompt: true,
+        // 有快捷键列表
         softwareList: [
             {
                 icon: 'http://a.apps.vip/icons/flappy.jpg',
@@ -180,6 +195,7 @@
             },
             
         ],
+        //有快捷键列表
         notDownloadList: [
             {   
                 id: 1,
@@ -247,7 +263,13 @@
                 sumLikes: 12334,
                 download: 1232,
             },
-        ]
+        ],
+        //搜索框的值
+        searchValue: '',
+        // 设置抽屉显示
+        setShow: false,
+        // 快捷键方案
+        schemeSwitch: true
       };
     },
     methods: {
@@ -267,9 +289,13 @@
         share(){
             this.$router.push({name: 'shareKey'})
         },
+        // 跳转到创意市场
         market(){
             this.$router.push({name: 'creativeMarket'})
-        }
+        },
+        changeInput(event){
+        // console.log('输入框',event)
+        },
     },
   };
 </script>
@@ -281,7 +307,7 @@
     //   width: 1164px;
     //   height: 568px;
       height: 98%;
-    //   background: #1A1A1A;
+      width: 98%;
       background: var(--primary-bg);
       overflow: hidden;
     }
@@ -296,7 +322,7 @@
             text-align: center;
             height: 48px;
             line-height: 48px;
-            margin-right: 14px;
+            margin: 0 7px;
             border-radius: 12px;
         }
         >span{
@@ -320,7 +346,7 @@
             width:364px;
             height:88px;
             position: relative;
-            margin: 16px 0 0 16px;
+            margin: 16px 8px 0;
             >div{
                 position: absolute;
                 top: 0;
@@ -347,6 +373,7 @@
         align-content: flex-start;
         overflow: auto;
         padding-bottom: 40px;
+        justify-content: center;
     }
     .item-content::-webkit-scrollbar{
         display: none;
@@ -356,7 +383,8 @@
         border-radius: 12px;
         width: 356px;
         height: 136px;
-        margin: 0 0 16px 16px;
+        margin: 0 8px 16px;
+        padding: 12px;
     }
     .button-active{
         &:active{
@@ -367,6 +395,27 @@
         background: rgba(42, 42, 42, 0.25);
     }
 }
+ .drawer-content{
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    .switch{
+        display: flex;
+        align-items: center;
+    }
+    .title{
+        font-size: 16px;
+        color: rgba(255,255,255,0.85);
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+    .text{
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: rgba(255,255,255,0.60);
+        font-weight: 500;
+    }
+ }
 </style>
 
 

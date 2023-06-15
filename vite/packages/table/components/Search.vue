@@ -84,7 +84,7 @@ export default {
         },
         //输入框值改变
         changeInput (event) {
-            this.$emit('changeInput', event.target._value)
+            this.$emit('changeInput', event.target.value)
         }
     }
 }
