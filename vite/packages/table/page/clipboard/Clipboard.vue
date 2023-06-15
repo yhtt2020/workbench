@@ -204,22 +204,24 @@ export default{
 .button-active {
   &:active {
     filter: brightness(0.8);
-    background: rgba(42, 42, 42, 0.25);
+    opacity: 0.8;
   }
 
   &:hover {
-    background: rgba(42, 42, 42, 0.25);
+    opacity: 0.8;
   }
 }
 
 .search-text{
   font-family: PingFangSC-Regular;
   font-size: 14px;
-  color: rgba(255,255,255,0.60);
+  color: var(--primary-text);
   font-weight: 400;
 }
 .s-bg {
   box-shadow: none !important;
+  background: var(--main-bg);
+  color: var(--primary-text);
 }
 
 @media screen and (max-width: 1064px) {

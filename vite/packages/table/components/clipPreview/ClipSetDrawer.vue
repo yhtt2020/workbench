@@ -148,14 +148,14 @@ export default {
 .light-grey-font {
   font-family: PingFangSC-Medium;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.60);
+  color: var(--primary-text);
   font-weight: 500;
 }
 
 .plain-font {
   font-family: PingFangSC-Medium;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 500;
 }
 

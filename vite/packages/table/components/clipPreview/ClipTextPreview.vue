@@ -235,7 +235,14 @@
         <!-- 音频预览模块 -->
         <template v-else-if="previewContent.type === 'audio'">
           <div class="flex flex-col w-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+              </div>
+            </div>
 
+            
           </div>
           <div class="p-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
             

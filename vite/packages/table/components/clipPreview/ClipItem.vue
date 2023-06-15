@@ -271,15 +271,34 @@
       </div>
 
       <!-- 内容 -->
-      <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" >
-        <!-- @click="textButton" -->
-         <ClipAudio :aUrl="clip.audioUrl"></ClipAudio>
+      <div  class="flex px-5 py-10 items-center pointer flex-col justify-center" @contextmenu="textButton">
+        <ClipAudio :fileUrl="clip.audioUrl"   style="width:302px;height:148px;"></ClipAudio>
       </div>
     </div>
     
     <!-- 快捷键操作界面 -->
     <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
-      
+      <div class="flex s-item flex-col px-4 py-3 rounded-lg">
+        <div class="flex justify-between mb-3">
+          <div class="w-12 s-item h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
+            <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>
+          </div>
+          <div class="flex w-4/5 items-center  justify-center">
+           <span>操作</span>
+          </div>
+        </div>
+
+        <!-- 快捷键按钮 -->
+        <div class="flex flex-col">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
+            <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer justify-between s-item px-4 rounded-lg py-3 mb-2">
+              <span>{{item.title}}</span>
+              <span>{{item.intr}}</span>
+            </div> 
+          </vue-custom-scrollbar>
+        </div>
+
+      </div>
     </div>
   </template>
   <!-- 音频显示区域结束 -->
@@ -518,7 +537,6 @@ export default {
     openClipSet(){
       this.$refs.setDrawer.clipOpenShow()
     },
-
   },
 }
 </script>
