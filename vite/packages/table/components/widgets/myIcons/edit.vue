@@ -32,7 +32,8 @@
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
             <div class="image" :style="[backgroundState]" :class="{ active: _src.length == 0 }">
-                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;" @error="imgError">
+                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;object-fit: cover;"
+                    @error="imgError">
                 <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
                     class="xt-bg-2 flex justify-center items-center xt-hover clear" @click="this._src = ''">
                     <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
@@ -165,8 +166,6 @@ export default {
             this._link = 'fast'
         },
         save() {
-            console.log('object :>> ', this._src.length);
-            console.log('object :>> ', this._src);
             if (this._src.length == 0) return "未上传图标"
             return {
                 isRadius: this._isRadius,
