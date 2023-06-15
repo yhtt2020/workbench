@@ -11,7 +11,7 @@
             <a-select :style="selectStyle"
                 @change="changeSelect($event)"
                 class="select rounded-lg  text-xs s-item flex items-center text-center" size="large" :bordered="false"
-                v-model:value="selectValue" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--active-bg)' }">
+                v-model:value="selectValue" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--secondary-bg)' }">
                 <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
             </a-select>
         </div>

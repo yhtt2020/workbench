@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="left">
-            <div class="nav" :style="navStyle" :class="{ 'active': currenIndex == index }" @click="updateNavIndex(item, index)"
+            <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': currenIndex == index }" @click="updateNavIndex(item, index)"
                 v-for="( item, index ) in  list" :key="item.name">{{
                 item.cname
             }}
@@ -26,7 +26,7 @@ export default {
         // 导航样式
         navStyle: {
             type: String,
-            default: 'color:var(--primary-text);'
+            default: ''
         }
     },
     methods: {
@@ -55,11 +55,7 @@ export default {
         cursor: pointer;
         margin-bottom:12px;
         font-size: 16px;
-      }
-
-      .active {
-        background: rgba(0, 0, 0, 0.30);
-
+        color:var(--primary-text);
       }
     }
     .left::-webkit-scrollbar{

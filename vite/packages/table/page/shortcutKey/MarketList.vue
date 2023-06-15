@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row" style="height: 100%">
     <div class="item-content">
-      <div v-for="item in navLists" :key="item.id" class="p-3 mr-4 mb-4 pointer recommend">
+      <div v-for="item in navLists" :key="item.id" class="pointer recommend">
         <div class="flex justify-between">
           <div class="flex">
             <span class="h-14 w-14 flex justify-center items-center">
@@ -38,6 +38,7 @@
           </span>
         </div>
       </div>
+      <div class="recommend" style="opacity: 0;height: 1px;"></div>
     </div>
   </div>
 </template>
@@ -53,11 +54,13 @@ export default {
     }
   },
   props: {
+    //排序列表
     navList: {
-      type: Array,
-      defalut: () => {}
+      type: Object,
+      default: {},
     },
-    search: {
+    //下拉框选中的类型
+    selected: {
       type: String
     },
   },
@@ -68,7 +71,7 @@ export default {
         this.navLists = JSON.parse(JSON.stringify(this.navList))
       }
     },
-    search: {
+    selected: {
       immediate: true,
       deep: true,
       handler (newV, oldV) {
@@ -103,6 +106,7 @@ export default {
     flex-wrap: wrap;
     align-content: flex-start;
     overflow: auto;
+    justify-content: center;
   }
   .item-content::-webkit-scrollbar{
     display: none;
@@ -112,6 +116,8 @@ export default {
     border-radius: 12px;
     width: 356px;
     height: 136px;
+    margin: 0 8px 16px;
+    padding: 12px;
   }
   .s-bg{
     box-shadow: none !important;

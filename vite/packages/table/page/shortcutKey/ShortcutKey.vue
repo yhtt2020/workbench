@@ -253,7 +253,6 @@
     methods: {
         ...mapActions(appStore,['showUserCard']),
         showCard(id){
-            console.log(id)
             this.showUserCard(id)
         },
         //点击跳转到详情页
