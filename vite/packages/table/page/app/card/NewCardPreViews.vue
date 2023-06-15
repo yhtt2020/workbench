@@ -28,8 +28,8 @@
         <div class="title" style="color:var(--primary-text)">{{ item.cname }}</div>
         <div class="text" style="color:var( --secondary-text)">{{ item.detail }}</div>
         <div class="icon">
-          <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i"
-            style="color:var(--secondary-text);">{{ i }}
+          <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i" style="color:var(--secondary-text);">{{ i
+          }}
           </div>
         </div>
         <div class="data">
@@ -51,9 +51,9 @@
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right" style="z-index:9999999999">
     <template #title>
       <div style="display: flex; justify-content: space-between; align-items:center">
-                <div style="width: 50%;text-align: right;">设置</div>
-                <div style="padding: 10px;border-radius: 5px;" class="xt-bg" @click="save()">保存</div>
-            </div>
+        <div style="width: 50%;text-align: right;">设置</div>
+        <div style="padding: 10px;border-radius: 5px;" class="xt-active-btn" @click="save()">保存</div>
+      </div>
     </template>
     <edit ref="editRef" v-bind="iconOption"></edit>
   </a-drawer>
@@ -92,7 +92,6 @@ export default {
       isCardDetails: false,
       cardDetails: {},
       settingVisible: false,
-      item: null
     }
   },
   components: {
@@ -119,9 +118,10 @@ export default {
     save() {
       let editOption = this.$refs.editRef.save()
       if (typeof (editOption) === 'string') return message.error(editOption)
-      Object.keys(editOption).forEach(k => this.iconOption[k] = editOption[k])
       this.settingVisible = false
-      this.add(this.item)
+      this.addCard({ name: "myIcons", id: Date.now(), customData: { iconList: [{ ...editOption }] } }, this.desk)
+      this.$emit('addSuccess')
+      message.success('添加成功！')
     },
     getImg(url) {
       return '/img/addCard/' + url + '.png'
@@ -167,7 +167,6 @@ export default {
     },
     addCardAchieve(item, i) {
       if (item.name == "myIcons") {
-        this.item = item
         this.settingVisible = true
         return
       }
