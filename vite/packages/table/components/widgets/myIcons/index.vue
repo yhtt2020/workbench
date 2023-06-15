@@ -1,10 +1,10 @@
 <template>
-    <div ref="iconmRef" :style="opacityStyle">
+    <div ref="iconRef" :style="opacityStyle">
         <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
             ref="homelSlotRef" :size="reSize" :desk="desk">
         </Widget>
         <template v-if="customData.iconList !== undefined && customData.iconList.length > 1">
-            <icons :iconList="customData.iconList"></icons>
+            <icons :iconList="customData.iconList" @disbandGroup="disbandGroup"></icons>
         </template>
         <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0">
             <icon v-bind="customData.iconList[0]"></icon>
@@ -64,13 +64,7 @@ export default {
             index: 0,
             opacityStyle: {},
             settingVisible: false,
-            options: {
-                className: 'card small',
-                // title: '图标组件',
-                // icon: 'time-circle',
-                // type: 'games',
-                hide: true
-            },
+            options: { hide: true },
             backgroundColorList: {
                 color1: 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)',
                 color2: 'linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)',
@@ -91,10 +85,10 @@ export default {
         }
     },
     mounted() {
-        this.$refs.iconmRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
+        this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     beforeDestroy() {
-        this.$refs.iconmRef.removeEventListener("contextmenu", this.handleMenu, { capture: true })
+        this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     computed: {
         ...mapWritableState(myIcons, ['iconOption', 'baseIconOption', 'copyIconOption', 'copyIconIndex', 'iconRef', 'isCopy']),
@@ -169,7 +163,7 @@ export default {
             this.isCopy = false
             this.$refs.homelSlotRef.menuVisible = false
         },
-    
+
         handleMenu(e) {
             e.preventDefault()
             e.stopPropagation()
@@ -183,20 +177,6 @@ export default {
             message.success("保存成功")
             this.settingVisible = false
         },
-        async customUpload(file, insertFn) {
-            let url
-            var formData = new FormData();
-            formData.append("file", file)
-            await api.getCosUpload(formData, (err, data) => {
-                if (!err) {
-                    message.error('图片上传失败')
-                } else {
-                    url = 'http://' + data.data.data
-                    // insertFn(url)
-                }
-            })
-        },
-
     }
 }
 </script>

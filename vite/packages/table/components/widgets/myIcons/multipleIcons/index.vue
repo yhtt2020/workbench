@@ -1,5 +1,5 @@
 <template>
-    <IconsFullScreen v-if="isIconsFullScreen" @closeFullScreen="closeFullScreen" :iconList="iconList"></IconsFullScreen>
+    <IconsFullScreen v-if="isIconsFullScreen" @closeFullScreen="closeFullScreen" :iconList="iconList" @disbandGroup="disbandGroup"></IconsFullScreen>
     <div class="item-list  xt-hover" @click="isIconsFullScreen = true">
         <div class="item">
             <template v-for="(i) in 4">
@@ -32,6 +32,9 @@ export default {
     methods: {
         closeFullScreen() {
             this.isIconsFullScreen = false
+        },
+        disbandGroup() {
+            this.$emit("disbandGroup")
         }
     },
 }
