@@ -224,6 +224,10 @@ export default{
   color: var(--primary-text);
 }
 
+:deep(.ant-input){
+  border-radius: 12px !important;
+}
+
 @media screen and (max-width: 1064px) {
   :deep(.tab-item) {
     display: none !important;
@@ -235,4 +239,5 @@ export default{
     display: block !important;
   }
 }
+
 </style>

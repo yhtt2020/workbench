@@ -7,6 +7,7 @@ export const clipboardStore = defineStore("clipboardStore", {
     previewShow:false,    // 控制预览显示
     clipSetShow:true, // 是否打开代码高亮
     showLineNumber:true, // 是否显示行号
+    clipSize:4, 
     clipMode:'javascript',  // 存储代码块语言包 默认js
     clipTheme:'dracula',      // 存储代码块的主题颜色 默认monokai
     items: [],
@@ -65,6 +66,10 @@ export const clipboardStore = defineStore("clipboardStore", {
     isSetCodeHighlight(val:boolean){
       this.clipSetShow = val
       // console.log('设置代码高亮',val);
+    },
+    updateClipSize(val:number){
+      console.log('修改代码缩进',val);
+      this.clipSize = val
     }
   }
 })

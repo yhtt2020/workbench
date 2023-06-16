@@ -41,15 +41,13 @@ export default {
 }
 </style>
 
-<!-- 
 <style>
 .CodeMirror{
   background:none !important;
   color: var(--primary-text);
+  width: 100% !important;
 }
 .CodeMirror-gutters{
   border: none !important;
 }
 </style>
-
- -->
