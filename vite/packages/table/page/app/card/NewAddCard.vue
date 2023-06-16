@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' style="background: var(--mask-bg);"></div>
-    <div class="controller drag" style="color: var(--primary-text);background-color:var(--primary-bg);">
+    <div class='popContainer' ></div>
+    <div class="controller drag" style="color: var(--primary-text);">
       <div class="header">
         <div class="left">
           <div class="btn no-drag xt-bg-2" @click="onBack" style="color:var(--primary-text);  ">
@@ -173,8 +173,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-body {
-}
+
 .popContainer {
   position: fixed;
   top: 0;

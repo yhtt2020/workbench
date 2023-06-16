@@ -101,14 +101,11 @@ export default {
   async mounted() {
     let style = window.localStorage.getItem("style")
     style = JSON.parse(style!)
-    if (style== "light-model") {
-      document.documentElement.classList.add('light-model');
-    } else {
-      document.documentElement.classList.add('dark-model');
-      window.localStorage.setItem("style", JSON.stringify("dark-model"));
-    }
+    document.documentElement.classList.add(style!);
+
     let transparent = window.localStorage.getItem("transparent")
     transparent = JSON.parse(transparent!)
+
     if (transparent == "true") {
       document.documentElement.classList.add("transparent");
     }
