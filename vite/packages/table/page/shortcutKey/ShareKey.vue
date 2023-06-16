@@ -42,7 +42,7 @@
       <a-input v-model:value="userName" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
       <a-textarea v-model:value="value" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
-      <div class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
+      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
     </div>
     <!-- 快捷键 -->
     <div class="key-content" v-else>
@@ -259,6 +259,9 @@ export default {
   methods: {
     onBack(){
       this.$router.go(-1)
+    },
+    nextStep(){
+      this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
     },
     // 上传头像前校验
     beforeUpload(file) {
