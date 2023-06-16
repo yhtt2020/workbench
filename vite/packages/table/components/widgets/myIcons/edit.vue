@@ -32,7 +32,7 @@
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
             <div class="image" :style="[backgroundState]" :class="{ active: _src.length == 0 }">
-                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;object-fit: cover;"
+                <img :src="_src" v-if="_src" :style="radiusState" style="width: 100%;height: 100%;object-fit: cover;"
                     @error="imgError">
                 <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
                     class="xt-bg-2 flex justify-center items-center xt-hover clear" @click="this._src = ''">
@@ -115,7 +115,10 @@ export default {
             return this._linkValue.name || this._linkValue || "";
         },
         backgroundState() {
-            if (this._isBackground) return { background: this._backgroundColor }
+            if (this._isBackground) {
+                if (this._backgroundColor === null) this.backgroundClick(1)
+                return { background: this._backgroundColor }
+            }
             else return { background: 'none' }
         },
         radiusState() {

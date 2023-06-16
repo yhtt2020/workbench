@@ -1,13 +1,16 @@
 <template>
-    <IconsFullScreen v-if="isIconsFullScreen" @closeFullScreen="closeFullScreen" :iconList="iconList" @disbandGroup="disbandGroup"></IconsFullScreen>
-    <div class="item-list  xt-hover" @click="isIconsFullScreen = true">
+    <IconsFullScreen @updateGroupTitle="updateGroupTitle" :groupTitle="groupTitle" v-if="isIconsFullScreen"
+        @closeFullScreen="closeFullScreen" :iconList="iconList" @disbandGroup="disbandGroup" @deleteIcons="deleteIcons"
+        @editIcons="editIcons">
+    </IconsFullScreen>
+    <div class="item-list  xt-hover no-drag" @click="isIconsFullScreen = true">
         <div class="item">
             <template v-for="(i) in 4">
-                <img v-if="iconList[i - 1]" class="img" :src="iconList[i - 1].src">
+                <img v-if="iconList[i - 1]" class="img" :src="iconList[i - 1].src" style="object-fit: cover;">
                 <div v-else class="img"></div>
             </template>
         </div>
-        <div class="title"></div>
+        <div class="title">{{ groupTitle }}</div>
     </div>
 </template>
 
@@ -19,23 +22,39 @@ export default {
             type: Object,
             default: () => { },
         },
+        groupTitle: {
+            type: String
+        }
     },
     components: {
         IconsFullScreen,
     },
     data() {
         return {
-            istest: false,
-            isIconsFullScreen: false
+            isIconsFullScreen: false // 全屏开关
         }
     },
     methods: {
+        // 多图标全屏模式关闭
         closeFullScreen() {
             this.isIconsFullScreen = false
         },
+        // 解除多图标分组
         disbandGroup() {
             this.$emit("disbandGroup")
-        }
+        },
+        // 更新多图标组件标题
+        updateGroupTitle(title) {
+            this.$emit("updateGroupTitle", title)
+        },
+        // 删除多图标组件中的单个图标
+        deleteIcons(index) {
+            this.$emit('deleteIcons', index)
+        },
+        // 编辑多图标组件中的单个图标
+        editIcons(index) {
+            this.$emit('editIcons', index)
+        },
     },
 }
 </script>
@@ -82,7 +101,7 @@ export default {
 
     .title {
         padding: 0 5px;
-        width: 100%;
+        width: 80%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;

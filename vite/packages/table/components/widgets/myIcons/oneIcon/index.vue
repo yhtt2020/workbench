@@ -108,7 +108,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        border-radius: 5px;
+        // border-radius: 5px;
 
         img {
             width: 56px;
@@ -118,7 +118,7 @@ export default {
 
     .title {
         padding: 0 5px;
-        width: 100%;
+        width: 80%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;

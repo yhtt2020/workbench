@@ -3,7 +3,7 @@
     <div class='popContainer' @click="closeFullScreen()">
       <div class="box xt-bg" @click.stop="">
         <div class="title xt-text">
-          <input type="text" v-model="text" class="input-box" style="" />
+          <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
           <div class="box-btn" @click="disbandGroup">
             <div class="text" style="color: #fff;">
               · · ·
@@ -11,28 +11,25 @@
           </div>
         </div>
         <div class="item-box">
-          <div ref="iconRef" v-for="item in iconList">
+          <div ref="iconRef" v-for="(item, index) in iconList" @contextmenu.prevent.stop="rightClick(index)">
             <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
             </icon>
-            <!-- <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon> -->
           </div>
         </div>
       </div>
     </div>
-
+    <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
+      <div class="flex flex-row">
+        <div class="option h-24 w-24 ml-4" @click="editIcons()">
+          <Icon class="icon" icon="guanbi2"></Icon>
+          编辑
+        </div>
+        <div class="option h-24 w-24 ml-4" @click="deleteIcons()">
+          <Icon class="icon" icon="guanbi2"></Icon>
+          删除
+        </div>
+      </div>
+    </a-drawer>
   </teleport>
 </template>
 
@@ -44,36 +41,49 @@ export default {
       type: Object,
       default: () => { },
     },
+    groupTitle: {
+      type: String
+    }
   },
   data() {
     return {
-      text: "分组"
+      title: this.groupTitle,
+      index: 0,
+      settingVisible: false,
+      visible: false
     }
   },
   components: {
     icon
   },
-  mounted() {
-    this.$refs.iconRef.forEach((item) => {
-      item.addEventListener("contextmenu", this.handleMenu, { capture: true })
-    })
-  },
-  beforeDestroy() {
-    this.$refs.iconRef.forEach((item) => {
-      item.removeEventListener("contextmenu", this.handleMenu, { capture: true })
-    })
-  },
   methods: {
+    // 右键点击
+    rightClick(index) {
+      this.index = index
+      this.visible = true
+    },
+    // 多图标全屏模式关闭
     closeFullScreen() {
       this.$emit("closeFullScreen")
     },
-    handleMenu(e) {
-      e.preventDefault()
-      e.stopPropagation()
-      console.log('123 :>> ', 123);
-    },
+    // 解除多图标分组
     disbandGroup() {
+      this.$emit("closeFullScreen")
       this.$emit("disbandGroup")
+    },
+    // 更新多图标组件标题
+    updateGroupTitle() {
+      this.$emit("updateGroupTitle", this.title)
+    },
+    // 编辑多图标组件中的单个图标
+    editIcons() {
+      this.visible = false
+      this.$emit('editIcons', this.index)
+    },
+    // 删除多图标组件中的单个图标
+    deleteIcons() {
+      this.visible = false
+      this.$emit("deleteIcons", this.index)
     }
   }
 }
@@ -128,6 +138,13 @@ export default {
       background: none;
       border: 0;
 
+      &:focus {
+        outline: none;
+        background: var(--main-mask-bg) !important;
+        border-radius: 12px;
+
+      }
+
     }
 
     .box-btn {
@@ -161,12 +178,5 @@ export default {
     }
 
   }
-}
-
-input[type=text]:focus {
-  outline: none;
-  background: var(--main-mask-bg) !important;
-  border-radius: 12px;
-
 }
 </style>

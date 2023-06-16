@@ -1,24 +1,26 @@
 <template>
     <div ref="iconRef" :style="opacityStyle">
         <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
-            ref="homelSlotRef" :size="reSize" :desk="desk">
+            ref="homelSlotRef" :desk="desk">
         </Widget>
         <template v-if="customData.iconList !== undefined && customData.iconList.length > 1">
-            <icons :iconList="customData.iconList" @disbandGroup="disbandGroup"></icons>
+            <icons :groupTitle="customData.groupTitle" :iconList="customData.iconList" @disbandGroup="disbandGroup"
+                @updateGroupTitle="updateGroupTitle" @deleteIcons="deleteIcons" @editIcons="editIcons"></icons>
         </template>
         <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0">
-            <icon v-bind="customData.iconList[0]"></icon>
+            <icon v-bind="customData.iconList[0]" @rightClick="rightClick"></icon>
         </template>
     </div>
     <!-- 编辑开始 -->
-    <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+    <a-drawer :width="500" v-if="settingVisible" v-model:visible="settingVisible" placement="right"
+        style="z-index: 99999999999;">
         <template #title>
             <div style="display: flex; justify-content: space-between; align-items:center">
                 <div style="width: 50%;text-align: right;">设置</div>
                 <div style="padding: 10px;border-radius: 5px;cursor: pointer;" class="xt-active-bg" @click="save()">保存</div>
             </div>
         </template>
-        <edit ref="editRef" v-bind="customData.iconList[0]"></edit>
+        <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
     </a-drawer>
     <!-- 编辑结束 -->
 </template> 
@@ -36,7 +38,6 @@ import { cardStore } from '../../../store/card.ts'
 import { myIcons } from '../../../store/myIcons.ts'
 
 import { message } from 'ant-design-vue'
-import api from '../../../../../src/model/api.js'
 import clickAndDragMixin from "./hooks/clickAndDragMixin.js"
 export default {
     mixins: [clickAndDragMixin],
@@ -85,6 +86,12 @@ export default {
         }
     },
     mounted() {
+        // 是否需要初始化 
+        if (this.customData.groupTitle == undefined) {
+            let setData = {}
+            setData.groupTitle = "分组"
+            this.updateCustomData(this.customIndex, setData, this.desk)
+        }
         this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     beforeDestroy() {
@@ -123,6 +130,7 @@ export default {
                         title: '设置',
                         fn: () => {
                             this.$refs.homelSlotRef.menuVisible = false
+                            this.index = 0
                             this.settingVisible = true
                         }
                     },
@@ -133,7 +141,17 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ['updateCustomData', 'addCard']),
-        // 解除图标分组
+        // 删除多图标组件中的单个图标
+        deleteIcons(index) {
+            this.customData.iconList.splice(index, 1)
+            message.success("删除成功")
+        },
+        // 编辑多图标组件中的单个图标
+        editIcons(index) {
+            this.index = index
+            this.settingVisible = true
+        },
+        // 解除多图标分组
         async disbandGroup() {
             for (let i = 0; i < this.customData.iconList.length; i++) {
                 this.addCard({ name: "myIcons", id: Date.now(), customData: { iconList: [{ ...this.customData.iconList[i] }] } }, this.desk)
@@ -163,13 +181,16 @@ export default {
             this.isCopy = false
             this.$refs.homelSlotRef.menuVisible = false
         },
-
+        // 更新多图标组件标题
+        updateGroupTitle(title) {
+            this.customData.groupTitle = title
+        },
         handleMenu(e) {
             e.preventDefault()
             e.stopPropagation()
             this.$refs.homelSlotRef.menuVisible = true
         },
-        // 保存
+        // 保存图标
         save() {
             let editOption = this.$refs.editRef.save()
             if (typeof (editOption) === 'string') return message.error(editOption)
