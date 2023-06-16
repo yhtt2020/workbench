@@ -61,8 +61,8 @@ export default {
     width: 100%;
     height: 100%;
     // 背景的模糊大小通过下面的属性值大小来调制
-    background: var(--mask-bg);
-    backdrop-filter: blur(20px);
+    // background: rgba(0,0,0,0);
+    backdrop-filter: blur(40px);
     // -webkit-backdrop-filter: blur(50px);
 }
 

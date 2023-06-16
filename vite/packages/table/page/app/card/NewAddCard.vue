@@ -190,6 +190,7 @@ export default {
   // background: red;
   background: var(--mask-bg);
   backdrop-filter: blur(10px);
+  // background: red;
   -webkit-backdrop-filter: blur(50px);
   // transform: scale(1.2);
 
