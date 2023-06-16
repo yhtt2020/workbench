@@ -43,6 +43,7 @@ export const myIcons = defineStore(
             copyIconIndex: 0,
             iconRef: null, // 替代全局事件总线来处理回调
             isCopy: false, // 是否打开复制状态
+            iconList: []
 
         }
     },

@@ -98,7 +98,7 @@ export default {
         this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, { capture: true })
     },
     computed: {
-        ...mapWritableState(myIcons, ['iconOption', 'baseIconOption', 'copyIconOption', 'copyIconIndex', 'iconRef', 'isCopy']),
+        ...mapWritableState(myIcons, ['iconOption', 'baseIconOption', 'copyIconOption', 'copyIconIndex', 'iconRef', 'isCopy', 'iconList']),
         menuList() {
             if (this.customData.iconList !== undefined && this.customData.iconList.length > 1) {
                 return [
@@ -152,32 +152,37 @@ export default {
             this.settingVisible = true
         },
         // 解除多图标分组
-        async disbandGroup() {
+        disbandGroup() {
             for (let i = 0; i < this.customData.iconList.length; i++) {
-                this.addCard({ name: "myIcons", id: Date.now(), customData: { iconList: [{ ...this.customData.iconList[i] }] } }, this.desk)
+                // 速度太快会导致ID重复
+                setTimeout(() => {
+                    this.addCard({ name: "myIcons", id: Date.now(), customData: { iconList: [{ ...this.customData.iconList[i] }] } }, this.desk)
+                }, 10);
             }
             this.$refs.homelSlotRef.doRemoveCard()
             message.success("解除分组成功")
         },
         // 点击移动图标组件
         moveIcon() {
-            this.$refs.homelSlotRef.menuVisible = false
-            Object.keys(this.customData.iconList[0]).forEach((k) => {
-                this.copyIconOption[k] = this.customData.iconList[0][k]
+            this.iconList.push({
+                ...this.customData.iconList[0],
+                iconRef: this.$refs.homelSlotRef,
+                iconIndex: this.customIndex
             })
-            this.copyIconIndex = this.customIndex
-            this.iconRef = this.$refs.homelSlotRef
+            this.$refs.homelSlotRef.menuVisible = false
             this.isCopy = true
             this.opacityStyle = { opacity: 0.65 }
-
         },
         // 复制新的图标组件
         copyIcon() {
             if (this.isCopy === false) return message.error("你还未复制任何图标组件")
-            if (this.copyIconIndex === this.customIndex) return message.error("不能复制到同个图标组件上")
-            this.customData.iconList.push({ ...this.copyIconOption })
-            this.iconRef.doRemoveCard()
-            message.success("移动成功")
+            this.iconList.forEach((item) => {
+                const { iconRef, iconIndex, ...icon } = item;
+                if (iconIndex === this.customIndex) return message.error("不能复制到同个图标组件上")
+                this.customData.iconList.push({ ...icon })
+                iconRef.doRemoveCard()
+            })
+            this.iconList = []
             this.isCopy = false
             this.$refs.homelSlotRef.menuVisible = false
         },
