@@ -47,11 +47,11 @@
       <a-switch  v-model:checked="clipSetShow"/>
     </div>
     <div class="mb-6 ps-cm-16">默认语言</div>
-    <div class="mb-6 bt-bg py-3 button-active flex items-center rounded-lg pointer justify-center">
+    <div @click="openLanguageDrawer" class="mb-6 bt-bg py-3 button-active flex items-center rounded-lg pointer justify-center">
       <span class="btn-text">{{ clipMode }}</span>
     </div>
     <div class="mb-6 ps-cm-16">编辑器主题</div>
-    <div class="mb-6 py-3 flex items-center bt-bg button-active rounded-lg pointer justify-center">
+    <div @click="openThemeDrawer" class="mb-6 py-3 flex items-center bt-bg button-active rounded-lg pointer justify-center">
       <span>dracula</span>
     </div>
     <div class="flex justify-between mb-6">
@@ -65,21 +65,31 @@
     <a-input placeholder="4" v-model:value="clipSize" @pressEnter="updateIndentUnit($event)"/>
   </a-drawer>
 
+  <!-- 主题色模块 -->
+  <HorizontalDrawer :rightSelect="themeType" ref="themeRef"> </HorizontalDrawer>
   
+  <!-- 语言包选择 -->
+  <HorizontalDrawer :rightSelect="codeLanguage" ref="languageRef"></HorizontalDrawer>
 </template>
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
 import { clipboardStore } from '../../store/clipboard'
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
+import HorizontalDrawer from '../HorizontalDrawer.vue';
+import { themeType  } from '../../js/data/clipTheme'
+import { codeLanguage } from '../../js/common/clipboardObserver';
 export default {
   components:{
-    HorizontalPanel
+    HorizontalPanel,
+    HorizontalDrawer
   },
   data(){
     return{
       // 控制抽屉打开
       setShow:false,
+      themeType,   // 代码块主题选择
+      codeLanguage, // 代码块语言包选择
       // 控制代码高亮设置弹窗
       clipSetVisible:false,
       // 默认的快捷键
@@ -115,6 +125,14 @@ export default {
     // 修改缩进单位配置
     updateIndentUnit(e){
       this.updateClipSize(e.target.value)
+    },
+    // 选择主题
+    openThemeDrawer(){
+      this.$refs.themeRef.openDrawer()
+    },
+    // 选择代码语言
+    openLanguageDrawer(){
+      this.$refs.languageRef.openDrawer()
     }
   },
   watch:{
