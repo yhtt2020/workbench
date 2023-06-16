@@ -67,7 +67,7 @@ export default {
 
 <style scoped lang="scss">
 .pointer{
-  background: var(--primary-bg) !important;
+  // background: var(--primary-bg) !important;
   & svg{
       color:var(--primary-text) !important;
     }
@@ -82,7 +82,7 @@ export default {
   display: inline-block;
   padding: 8px  ;
   line-height: 20px;
-  background: var(--active-bg) ;
+  // background: var(--active-bg) ;
 
   &:hover {
     background: var(--active-bg) !important;
