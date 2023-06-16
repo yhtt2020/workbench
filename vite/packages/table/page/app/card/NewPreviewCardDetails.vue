@@ -7,15 +7,15 @@
                     <div class="img"> <img  ref="imgRef" :src="getImg(item.name)" alt=""
                             :style="[{ zoom: item.zoom * 1.8 + '%' }]">
                     </div>
-                    <div class="size">{{ item.size }}</div>
-                    <div class="add-btn no-drag" @click="addCard(item, index)">
+                    <div class="size xt-active-bg-2 xt-text-2">{{ item.size }}</div>
+                    <div class="add-btn no-drag xt-active-btn" @click="addCard(item, index)">
                         <div class="icons">
                             <Icon icon="tianjia2" style="color: #000;font-size: 12px;"></Icon>
                         </div>立即添加
                     </div>
                 </div>
             </div>
-            <div class="btn no-drag" @click="onBack">
+            <div class="btn no-drag xt-bg xt-text" @click="onBack">
                 <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
             </div>
 
@@ -61,9 +61,9 @@ export default {
     width: 100%;
     height: 100%;
     // 背景的模糊大小通过下面的属性值大小来调制
-    background-color: rgba(19, 19, 19, 0.65);
-    backdrop-filter: blur(50px);
-    -webkit-backdrop-filter: blur(50px);
+    background: var(--mask-bg);
+    backdrop-filter: blur(20px);
+    // -webkit-backdrop-filter: blur(50px);
 }
 
 .boxs {
@@ -110,7 +110,8 @@ export default {
         .card-box {
             width: 400px;
             height: 496px;
-            background: rgba(0, 0, 0, 0.30);
+            // background: rgba(0, 0, 0, 0.30);
+            background: var(--primary-bg);
             border-radius: 12px;
             margin: 20px;
             display: flex;
@@ -128,9 +129,7 @@ export default {
             }
 
             .size {
-                opacity: 0.6;
                 padding: 4px 10px;
-                background: rgba(255, 255, 255, 0.40);
                 border-radius: 4px;
                 font-family: PingFangSC-Medium;
                 font-size: 14px;

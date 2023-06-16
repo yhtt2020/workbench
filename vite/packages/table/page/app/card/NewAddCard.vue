@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' ></div>
+    <div class='popContainer'></div>
     <div class="controller drag" style="color: var(--primary-text);">
       <div class="header">
         <div class="left">
@@ -13,11 +13,11 @@
             </template>
           </a-input>
           <a-select style=" z-index: 99999999; position: relative;" v-model:value="searchValue" class=" no-drag select"
-                    size="large" @change="handleChange"
+            size="large" @change="handleChange"
             :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--secondary-bg)' }">
             <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{
-                item.name
-              }}
+              item.name
+            }}
             </a-select-option>
           </a-select>
         </div>
@@ -26,8 +26,8 @@
       </div>
       <div class="mian">
         <div class="left">
-          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': navIndex == index }" @click="updateNavIndex(index)"
-               v-for="( item, index ) in  baseNavList " :key="item.name">{{
+          <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': navIndex == index }"
+            @click="updateNavIndex(index)" v-for="( item, index ) in  baseNavList " :key="item.name">{{
               item.cname
             }}
           </div>
@@ -37,8 +37,8 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null" :navList="baseNavList[navIndex].children"
-                            :search="searchValue" :desk="desk">
+          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
+            :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
@@ -60,9 +60,9 @@ import _ from 'lodash-es'
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews,CardState },
+  components: { NewCardPreViews, CardState },
   props: ['desk'],
-  data () {
+  data() {
     return {
       navIndex: 1,
       apiList: [],
@@ -77,7 +77,7 @@ export default {
     }
   },
 
-  mounted () {
+  mounted() {
     // 这里是预留给api请求到时间和下载数据添加数据使用
     let navList = _.cloneDeep(this.baseNavList)
 
@@ -86,7 +86,7 @@ export default {
       return items.push(...li.children)
     })
     //取得全部不重复的数组元素
-    items = _.uniqBy(items, (li) => {return li.name})
+    items = _.uniqBy(items, (li) => { return li.name })
     navList.splice(1, 0,
       {
         cname: '全部',
@@ -118,12 +118,12 @@ export default {
     })
   },
   computed: {
-    displayList () {
+    displayList() {
       // return this.apiList.filter
     }
   },
   watch: {
-    selectContent (newV, oldV) {
+    selectContent(newV, oldV) {
       if (newV == '' || newV == null) {
         this.navList = this.baseNavList
         this.navIndex = 1
@@ -153,19 +153,19 @@ export default {
   methods: {
     onClick() {
     },
-    handleChange (value) {
+    handleChange(value) {
       console.log(`selected ${value}`)
     },
-    getTimes () {
+    getTimes() {
       const currentTime = Date.now()
       const startDate = new Date('2023-01-01T00:00:00Z').getTime()
       const randomTimestamp = Math.floor(Math.random() * (currentTime - startDate)) + startDate
       return randomTimestamp
     },
-    onBack () {
+    onBack() {
       this.$emit('close')
     },
-    updateNavIndex (index) {
+    updateNavIndex(index) {
       this.navIndex = index
     },
   },
@@ -173,7 +173,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .popContainer {
   position: fixed;
   top: 0;
@@ -189,9 +188,10 @@ export default {
   // 背景的模糊大小通过下面的属性值大小来调制
   // background-color: rgba(19, 19, 19, 0.35);
   // background: red;
-  backdrop-filter: blur(60px);
+  background: var(--mask-bg);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(50px);
-  transform: scale(1.2);
+  // transform: scale(1.2);
 
 }
 
@@ -253,7 +253,8 @@ export default {
         font-size: 18px;
 
         color: var(--primary-text);
-        input{
+
+        input {
           color: var(--primary-text);
         }
       }
