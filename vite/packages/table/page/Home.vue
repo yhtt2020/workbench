@@ -285,7 +285,8 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import ShortcutKeyDetail from "../components/ShortcutKeyDetail.vue";
+import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
+import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -538,7 +539,8 @@ export default {
     Notes,
     myIcons,
     NewAddCard,
-    ShortcutKeyDetail
+    ShortcutKeyDetail,
+    NotShortcutKey
   },
   computed: {
     ...mapWritableState(cardStore, [

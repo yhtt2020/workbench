@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-        <!-- 头部快捷软件 -->
+      <!-- 头部快捷软件
       <div class="flex items-center mb-3" v-if="detailJump">
         <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
@@ -11,7 +11,7 @@
           </span>
           <span class="ml-2" style="font-size: 16px;color: rgba(255,255,255,0.85);">{{ appMessage.name }}</span>
         </div>
-      </div>
+      </div> -->
       <!-- 无内容 -->
       <div class="container rounded-lg flex flex-col items-center"
       :style="detailJump ? 'height: 90%;' : 'height: 100%;'">
@@ -25,7 +25,7 @@
           <div class="pointer" @click="share">我来分享</div>
         </div>
         <div class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">
-          <div v-for="item in notDownloadList" :key="item.id" class="pointer recommend">
+          <div v-for="item in notAppList" :key="item.id" class="pointer recommend">
             <div class="flex justify-between">
                 <div class="flex">
                   <span class="h-14 w-14 flex justify-center items-center">
@@ -75,83 +75,23 @@ export default {
   name: "NotShortcutKey",
   components: {
   },
+  props: {
+    detailJump: {
+      type: Boolean,
+      default: false
+    },
+    appMessage: {
+      type: Object,
+      default: {}
+    },
+    notDownloadList: {
+      type: Array,
+      default: []
+    }
+  },
   data() {
     return {
-      detailJump: true,
-      appMessage: {   
-        icon: 'http://a.apps.vip/icons/flappy.jpg',
-        name: 'Adobe Lightroom',
-        number: 92
-      },
-      //无快捷键列表
-      notDownloadList: [
-        {   
-          id: 1,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 2,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Adobe XD',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 3,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 4,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 5,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 6,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-      ],
+      notAppList :[]
     }
   },
   methods: {
@@ -173,7 +113,12 @@ export default {
     }
   },
   mounted(){
-    if(this.detailJump) this.notDownloadList = this.notDownloadList.slice(0,3)
+    console.log()
+    if(this.detailJump) {
+      this.notAppList = this.notDownloadList.slice(0,3)
+    }else{
+      this.notAppList = this.notDownloadList
+    }
   },
 }
 </script>

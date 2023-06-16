@@ -52,7 +52,6 @@ import BrowserMain from '../page/app/browser/Browser.vue';
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
-import NotShortcutKey from "../page/shortcutKey/NotShortcutKey.vue"
 export default [
   {
     path: "/main",
@@ -329,13 +328,6 @@ export default [
         path:'/shortcutKey',
         name:'shortcutKey',
         component:ShortcutKey,
-        children: [
-          {
-            path:'/notShortcutKey',
-            name:'notShortcutKey',
-            component:NotShortcutKey,
-          },
-        ]
       },
     ],
   },

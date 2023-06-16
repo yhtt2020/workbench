@@ -38,7 +38,8 @@
     </div>
   </div>
   <!-- 无内容 -->
-  <router-view></router-view>
+  <NotShortcutKey v-if="!softwareList.length && !detailToggle" :notDownloadList="notDownloadList"></NotShortcutKey>
+
   <!-- 设置抽屉 -->
    <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
     <div class="drawer-content">
@@ -56,15 +57,15 @@
 </template>
   
 <script>
-  import { mapActions } from 'pinia';
-  import ShortcutKeyDetail from '../../components/ShortcutKeyDetail.vue';
-  import { appStore } from '../../store';
+  import NotShortcutKey from '../../components/shortcutKey/NotShortcutKey.vue';
+  import ShortcutKeyDetail from '../../components/shortcutKey/ShortcutKeyDetail.vue';
   import Search from '../../components/Search.vue';
   export default {
     name: "ShortcutKey",
     components: {
         ShortcutKeyDetail,
-        Search
+        Search,
+        NotShortcutKey
     },
     data() {
       return {
@@ -147,6 +148,75 @@
             },
             
         ],
+        //无快捷键列表
+        notDownloadList: [
+            {   
+                id: 1,
+                icon: 'http://a.apps.vip/icons/flappy.jpg',
+                name: 'Adobe Lightroom',
+                number: 92,
+                commonUse: 'Lr常用26个快捷键',
+                avatar: '',
+                userName: 'Victor Ruiz',
+                sumLikes: 12334,
+                download: 1232,
+            },
+            {   
+                id: 2,
+                icon: 'http://a.apps.vip/icons/flappy.jpg',
+                name: 'Adobe Lightroom',
+                number: 92,
+                commonUse: 'Adobe XD',
+                avatar: '',
+                userName: 'Victor Ruiz',
+                sumLikes: 12334,
+                download: 1232,
+            },
+            {   
+                id: 3,
+                icon: 'http://a.apps.vip/icons/flappy.jpg',
+                name: 'Adobe Lightroom',
+                number: 92,
+                commonUse: 'Lr常用26个快捷键',
+                avatar: '',
+                userName: 'Victor Ruiz',
+                sumLikes: 12334,
+                download: 1232,
+            },
+            {   
+                id: 4,
+                icon: 'http://a.apps.vip/icons/flappy.jpg',
+                name: 'Adobe Lightroom',
+                number: 92,
+                commonUse: 'Lr常用26个快捷键',
+                avatar: '',
+                userName: 'Victor Ruiz',
+                sumLikes: 12334,
+                download: 1232,
+            },
+            {   
+                id: 5,
+                icon: 'http://a.apps.vip/icons/flappy.jpg',
+                name: 'Adobe Lightroom',
+                number: 92,
+                commonUse: 'Lr常用26个快捷键',
+                avatar: '',
+                userName: 'Victor Ruiz',
+                sumLikes: 12334,
+                download: 1232,
+            },
+            {   
+                id: 6,
+                icon: 'http://a.apps.vip/icons/flappy.jpg',
+                name: 'Adobe Lightroom',
+                number: 92,
+                commonUse: 'Lr常用26个快捷键',
+                avatar: '',
+                userName: 'Victor Ruiz',
+                sumLikes: 12334,
+                download: 1232,
+            },
+        ],
         //搜索框的值
         searchValue: '',
         // 设置抽屉显示
@@ -154,11 +224,6 @@
         // 快捷键方案
         schemeSwitch: true
       };
-    },
-    mounted(){
-        if(!this.softwareList.length){
-            this.$router.push({name: 'notShortcutKey'})
-        }
     },
     methods: {
         //点击跳转到详情页

@@ -1,6 +1,8 @@
 <template>
-  <!-- 头部导航 -->
-  <div class="flex justify-between items-center" style="height: 72px;width:98%">
+  <!-- 详情快捷方案 -->
+ <div class="detail-box" v-if="keyList.length">
+   <!-- 头部导航 -->
+   <div class="flex justify-between items-center" style="height: 72px;width:98%">
     <div class="flex items-center">
       <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
@@ -51,6 +53,24 @@
     </template>
     <div class="cover"></div>
   </div>
+ </div>
+ <!-- 无详情快捷方案 -->
+ <div class="detail-box" v-else>
+  <!-- 头部快捷软件 -->
+  <div class="flex items-center mb-3">
+    <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+      <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+    </div>
+    <div class="head-list s-bg">
+      <span>
+        <a-avatar shape="square" :src="appMessage.icon" :size="38"></a-avatar>
+      </span>
+      <span class="ml-2" style="font-size: 16px;color: rgba(255,255,255,0.85);">{{ appMessage.name }}</span>
+    </div>
+  </div>
+  <!-- 快捷推荐列表 -->
+  <NotShortcutKey :notDownloadList="notDownloadList" :detailJump="true" :appMessage="appMessage"></NotShortcutKey>
+ </div>
   <!-- 最近使用 -->
   <a-drawer v-model:visible="setShow" title="最近使用" width="500" placement="right">
     <div class="main-part">
@@ -69,8 +89,12 @@
 </template>
 
 <script>
+import NotShortcutKey from './NotShortcutKey.vue'
 export default {
   name: 'ShortcutKeyDetail',
+  components: {
+    NotShortcutKey
+  },
   data(){
     return{
       navIndex: 0,
@@ -249,11 +273,84 @@ export default {
           },
         ]
         }
-      ]
+      ],
+      appMessage: {   
+        icon: 'http://a.apps.vip/icons/flappy.jpg',
+        name: 'Adobe Lightroom',
+        number: 92
+      },
+      //无快捷键列表
+      notDownloadList: [
+        {   
+          id: 1,
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Adobe Lightroom',
+          number: 92,
+          commonUse: 'Lr常用26个快捷键',
+          avatar: '',
+          userName: 'Victor Ruiz',
+          sumLikes: 12334,
+          download: 1232,
+        },
+        {   
+          id: 2,
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Adobe Lightroom',
+          number: 92,
+          commonUse: 'Adobe XD',
+          avatar: '',
+          userName: 'Victor Ruiz',
+          sumLikes: 12334,
+          download: 1232,
+        },
+        {   
+          id: 3,
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Adobe Lightroom',
+          number: 92,
+          commonUse: 'Lr常用26个快捷键',
+          avatar: '',
+          userName: 'Victor Ruiz',
+          sumLikes: 12334,
+          download: 1232,
+        },
+        {   
+          id: 4,
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Adobe Lightroom',
+          number: 92,
+          commonUse: 'Lr常用26个快捷键',
+          avatar: '',
+          userName: 'Victor Ruiz',
+          sumLikes: 12334,
+          download: 1232,
+        },
+        {   
+          id: 5,
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Adobe Lightroom',
+          number: 92,
+          commonUse: 'Lr常用26个快捷键',
+          avatar: '',
+          userName: 'Victor Ruiz',
+          sumLikes: 12334,
+          download: 1232,
+        },
+        {   
+          id: 6,
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: 'Adobe Lightroom',
+          number: 92,
+          commonUse: 'Lr常用26个快捷键',
+          avatar: '',
+          userName: 'Victor Ruiz',
+          sumLikes: 12334,
+          download: 1232,
+        },
+      ],
     }
   },
   mounted(){
-    
   },
   methods:{
     toggleApp(index){
@@ -270,6 +367,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.detail-box{
+  width: 100%;
+  height: 100%;
+}
   .button-active{
     &:active{
       filter: brightness(0.8);
