@@ -27,8 +27,6 @@ import "vue-toastification/dist/index.css";
 
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/monokai.css'
-import 'codemirror/theme/dracula.css'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/swift/swift'
@@ -45,6 +43,7 @@ import $ from "jquery";
 import dayjs from 'dayjs';
 
 import "../../public/css/styleSwitch/index.scss"
+import "../../public/css/styleSwitch/codemirror.scss"
 import {router}from './router'
 dayjs.locale('zh-cn');
 
