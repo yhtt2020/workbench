@@ -22,7 +22,7 @@ export default {
       indentWithTabs:true,
       direction: "ltr",
       lineWrapping: true,
-      lineNumbers: true,
+      viewportMargin: Infinity,
       mode:null
     })
   }
@@ -39,23 +39,17 @@ export default {
 :deep(.CodeMirror-scrollbar-filler){
   display: none !important;
 }
-
-
 </style>
 
+<!-- 
 <style>
 .CodeMirror{
-  width: 300px !important;
   background:none !important;
-  color: rgba(255,255, 255, 0.85);
+  color: var(--primary-text);
 }
-/*
-.CodeMirror-line{
-  width: 300px !important;
-  white-space: pre-wrap !important;
-} 
-*/
 .CodeMirror-gutters{
   border: none !important;
 }
 </style>
+
+ -->

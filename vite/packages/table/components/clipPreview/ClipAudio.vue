@@ -55,9 +55,9 @@ export default{
   computed: {
     audioIcon() {
       if (this.audioHuds) {
-        return this.audioVolume > 0.01 ?  'yinliang' : 'jingyin'
+        return this.audioVolume < 0.01 ?   'jingyin' : 'yinliang'
       } else {
-        return 'jingyin'
+        return 'yinliang'
       }
     }
   },

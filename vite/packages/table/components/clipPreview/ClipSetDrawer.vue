@@ -26,8 +26,7 @@
         <span class="plain-font">代码高亮自动识别</span>
         <span class="light-grey-font">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch />
-      <!-- v-model:checked="enable" -->
+      <a-switch v-model:checked="clipSetShow"/>
     </div>
     <!-- 代码块高亮设置入口按钮 -->
     <div class="flex items-center pointer justify-center s-item rounded-lg p-3" @click="openCodeHighlight">
@@ -43,7 +42,7 @@
         <span class="plain-font">代码高亮自动识别</span>
         <span>开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch />
+      <a-switch  v-model:checked="clipSetShow"/>
     </div>
     <div class="mb-6 plain-font">默认语言</div>
     <div class="mb-6 s-item py-3 flex items-center rounded-lg pointer justify-center">
@@ -60,7 +59,6 @@
     </div>
     <div class="mb-6">缩进单位</div>
     <a-input placeholder="4" />
-    <!-- v-model:value="value"  -->
   </a-drawer>
 
 
@@ -98,7 +96,7 @@ export default {
     ...mapWritableState(clipboardStore,['enable','clipSetShow','clipMode','showLineNumber','clipTheme'])
   },
   methods:{
-    ...mapActions(clipboardStore,['start','stop','isRunning','prepare','isClipLineNumber']),
+    ...mapActions(clipboardStore,['start','stop','isRunning','prepare','isClipLineNumber','isSetCodeHighlight']),
     // 通过该方法可以打开弹窗
     clipOpenShow(){
       this.setShow = true
@@ -115,7 +113,7 @@ export default {
   watch:{
     'enable':{
       handler(newVal, oldVal){
-        console.log('剪切板开关',newVal)
+        // console.log('剪切板开关',newVal)
         if (newVal) {
           this.prepare()
           this.start()
@@ -128,16 +126,16 @@ export default {
         }
       }
     },
+    // 是否默认代码高亮
     'clipSetShow':{
-       handler(){
-
+       handler(newVal,oldVal){
+        this.isSetCodeHighlight(newVal)
        }
     },
+    // 是否显示行号
     'showLineNumber':{
       handler(newVal,oldVal){
-        if(newVal){
-          this.isClipLineNumber(true)
-        }
+        this.isClipLineNumber(newVal)
       }
     }
   }
