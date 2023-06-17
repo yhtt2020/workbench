@@ -3,7 +3,10 @@
     <HorizontalPanel :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
     <template v-if="epicType.name === 'week'">
       <div class="w-full" v-if="detailShow === false">
-        <div class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in weekEpic"
+        <div class="flex items-center  justify-center my-10" v-if="weekEpic.length === 0">
+          <a-empty :image="simpleImage" />
+        </div>
+        <div v-else class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in weekEpic"
              @click="enterWeek(weekItem)">
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
@@ -17,7 +20,10 @@
     </template>
     <template v-else>
       <div class="w-full" v-if="detailShow === false">
-        <div class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in nextWeekEpic"
+        <div class="flex items-center  justify-center my-10" v-if="nextWeekEpic.length === 0">
+          <a-empty :image="simpleImage" />
+        </div>
+        <div v-else class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in nextWeekEpic"
              @click="enterWeek(weekItem)">
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
@@ -74,7 +80,8 @@ export default {
       epicNext: [],  // 下周数据
       epicList: [],
       detailList: {},
-      detailShow: false
+      detailShow: false,
+      simpleImage: '/public/img/test/not-data.png', // 空状态
     }
   },
   computed: {
