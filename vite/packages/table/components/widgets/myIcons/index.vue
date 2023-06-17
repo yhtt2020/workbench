@@ -1,15 +1,24 @@
 <template>
     <div ref="iconRef" :style="opacityStyle">
+
+        <!-- 可放置区域 -->
+        <droppable-area @drop="handleDrop">
+            <!-- 可拖拽元素及跟随容器 -->
+            <drag-and-follow @drag-end="handleDragEnd" @drag-start="handleDragStart">
+                <!-- 可拖拽的 div 元素 -->
+                <template v-if="customData.iconList !== undefined && customData.iconList.length > 1">
+                    <icons :groupTitle="customData.groupTitle" :iconList="customData.iconList" @disbandGroup="disbandGroup"
+                        @updateGroupTitle="updateGroupTitle" @deleteIcons="deleteIcons" @editIcons="editIcons"></icons>
+                </template>
+                <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0">
+                    <icon v-bind="customData.iconList[0]" @rightClick="rightClick"></icon>
+                </template>
+            </drag-and-follow>
+        </droppable-area>
         <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
             ref="homelSlotRef" :desk="desk">
         </Widget>
-        <template v-if="customData.iconList !== undefined && customData.iconList.length > 1">
-            <icons :groupTitle="customData.groupTitle" :iconList="customData.iconList" @disbandGroup="disbandGroup"
-                @updateGroupTitle="updateGroupTitle" @deleteIcons="deleteIcons" @editIcons="editIcons"></icons>
-        </template>
-        <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0">
-            <icon v-bind="customData.iconList[0]" @rightClick="rightClick"></icon>
-        </template>
+
     </div>
     <!-- 编辑开始 -->
     <a-drawer :width="500" v-if="settingVisible" v-model:visible="settingVisible" placement="right"
@@ -31,16 +40,16 @@ import Widget from '../../card/Widget.vue'
 import edit from './edit.vue'
 import icon from "./oneIcon/index.vue"
 import icons from "./multipleIcons/index.vue"
-
+import DragAndFollow from './hooks/DragAndFollow.vue';
+import DroppableArea from './hooks/DroppableArea.vue';
 // pinia
 import { mapActions, mapWritableState } from 'pinia'
 import { cardStore } from '../../../store/card.ts'
 import { myIcons } from '../../../store/myIcons.ts'
 
 import { message } from 'ant-design-vue'
-import clickAndDragMixin from "./hooks/clickAndDragMixin.js"
+
 export default {
-    mixins: [clickAndDragMixin],
     props: {
         customIndex: {
             type: Number,
@@ -58,7 +67,9 @@ export default {
         Widget,
         edit,
         icons,
-        icon
+        icon,
+        DragAndFollow,
+        DroppableArea
     },
     data() {
         return {
@@ -141,6 +152,27 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ['updateCustomData', 'addCard']),
+        // 拖拽结束事件处理方法
+        handleDragEnd() {
+            this.isCopy = false
+            console.log('拖拽结束');
+            this.iconList = []
+            // 执行你想要的操作
+        },
+        // 放置区域触发事件处理方法
+        handleDrop() {
+            if (this.isCopy) {
+                console.log('放置区域被触发');
+                this.copyIcon()
+            }
+            // 执行你想要的操作
+        },
+        // 拖拽开始事件处理方法
+        handleDragStart(allowDrop) {
+            this.isCopy = allowDrop;
+            console.log('拖拽开始');
+            this.moveIcon()
+        },
         // 删除多图标组件中的单个图标
         deleteIcons(index) {
             this.customData.iconList.splice(index, 1)
