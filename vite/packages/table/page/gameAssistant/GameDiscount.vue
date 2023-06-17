@@ -13,7 +13,7 @@
           <div class="flex steam-item steam-sw-item">
             <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" class="steam-mw s-bg pointer rounded-lg mb-3 mr-4">
               <div style="height:228px;">
-                <img :src="item.header_image" alt="" class="rounded-lg"  style="width:100%;height: 100%;object-fit: cover;">
+                <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
               <div class="px-3 py-3 name-size">{{item.name}}</div>
               <div class="px-3 mb-3">优惠截止时间: {{ deadline(item.discount_expiration) }}</div>
@@ -27,7 +27,7 @@
           <div class="flex flex-wrap steam-sw-item ">
             <div class="steam-sw  mb-3 mr-2 s-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)">
               <div class="epic-sh mb-3">
-                <img :src="item.header_image" alt="" class="rounded-lg"  style="width:100%;height: 100%;object-fit: cover;">
+                <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
               <div class="px-3 flex  items-center mb-3">
                 <span class="percent px-1 rounded-md">- {{item.discount_percent}} %</span>
@@ -48,7 +48,7 @@
             <div v-for="item in epicList" @click="openEpicStore(item)" class="epic-w s-bg pointer flex rounded-lg flex-col mb-3 mr-3">
               <template v-if="item.el.promotions !== null">
                 <div class="height:272px;">
-                  <img  :src="item.keyImages.url"  class="w-full h-full rounded-lg object-cover"  alt="">
+                  <img  :src="item.keyImages.url"  class="w-full h-full rounded-t-lg object-cover"  alt="">
                 </div>
                 <div class="flex flex-col ">
                   <span  class="mb-2 pointer px-3 my-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
