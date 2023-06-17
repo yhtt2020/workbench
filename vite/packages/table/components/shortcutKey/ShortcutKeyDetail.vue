@@ -180,7 +180,10 @@ export default {
       ],
       keyList: [
         {
-          type: '常用',
+          type: {
+            title: '常用',
+            tId: 1,
+          },
           data: [
             {
               id: 1,
@@ -188,7 +191,8 @@ export default {
                 {icon: 'linechart'},
                 {key: 'H'}
               ],
-              title: '首选项'
+              title: '首选项',
+              isEdit: false, // 是否可编辑
             },
             {
               id: 2,
@@ -197,7 +201,8 @@ export default {
                 {icon: 'linechart'},
                 {key: 'Q'}
               ],
-              title: '清除浏览器数据'
+              title: '清除浏览器数据',
+              isEdit: false, // 是否可编辑
             },
             {
               id: 3,
@@ -218,7 +223,10 @@ export default {
           ]
         },
         {
-          type: '文件',
+          type: {
+            title: '文件',
+            tId: 2,
+          },
           data: [
           {
             id: 5,
@@ -290,7 +298,10 @@ export default {
           ]
         },
         {
-          type: '其他',
+          type: {
+            title: '其他',
+            tId: 3,
+          },
           data: [
           {
             id: 13,
@@ -454,7 +465,7 @@ export default {
     },
     setKeyItem(id){
       this.keyIndex = id
-      console.log(id)
+      // console.log(id)
     },
     onBack(){
       this.$emit('detailShow',false)

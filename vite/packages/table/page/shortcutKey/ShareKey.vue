@@ -64,7 +64,7 @@
       </div>
       <!-- 快捷键列表 -->
       <div :style="closePrompt ? 'height:80%' : 'height:90%'">
-        <ShortcutKeyList :keyList="keyList"></ShortcutKeyList>
+        <ShortcutKeyList :keyList="keyList" :showEdit="true"></ShortcutKeyList>
       </div>
     </div>
   </div>
@@ -73,7 +73,7 @@
 <script>
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
-import { UploadOutlined } from '@ant-design/icons-vue';
+import { TrophyOutlined, UploadOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'ShareKey',
   components: {
@@ -91,7 +91,14 @@ export default {
       closePrompt: true,
       keyList: [
         {
-          type: '常用',
+          // type: {
+          //   title: '常用',
+          //   isEdit: true, // 是否可编辑
+          // },
+          type: {
+            title: '常用',
+            tId: 1
+          },
           data: [
             {
               id: 1,
@@ -99,7 +106,8 @@ export default {
                 {icon: 'linechart'},
                 {key: 'H'}
               ],
-              title: '首选项'
+              title: '首选项',
+              showEdit: false, // 是否显示编辑状态
             },
             {
               id: 2,
@@ -108,7 +116,8 @@ export default {
                 {icon: 'linechart'},
                 {key: 'Q'}
               ],
-              title: '清除浏览器数据'
+              title: '清除浏览器数据',
+              isEdit: true, // 是否可编辑
             },
             {
               id: 3,
@@ -129,7 +138,10 @@ export default {
           ]
         },
         {
-          type: '文件',
+          type: {
+            title: '文件',
+            tId: 2
+          },
           data: [
           {
             id: 5,
@@ -201,7 +213,10 @@ export default {
           ]
         },
         {
-          type: '其他',
+          type: {
+            title: '其他',
+            tId: 3
+          },
           data: [
           {
             id: 13,
@@ -322,7 +337,6 @@ export default {
 
 <style lang="scss" scoped>
   .box{
-    z-index: 9999;
     position: fixed;
     top: 0;
     left: 0;
@@ -421,7 +435,6 @@ export default {
     border-radius: 12px;
     color: var(--primary-text);
     font-size: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
   }
   .s-bg{
         box-shadow: none !important;

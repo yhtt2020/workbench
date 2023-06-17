@@ -96,7 +96,6 @@ export default {
         height: 48px;
         background: rgba(0,0,0,0.30);
         border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.1);
         font-size: 18px;
     }
     .select{
