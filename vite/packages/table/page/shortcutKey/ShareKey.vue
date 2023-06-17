@@ -10,7 +10,7 @@
       </div>
       <div class="flex btn-item">
         <div class="pointer">保存</div>
-        <div class="pointer">保存并分享到创意市场</div>
+        <div class="pointer" @click="shoreModal=true">保存并分享到创意市场</div>
       </div>
     </div>
     <!-- 基本信息 -->
@@ -51,7 +51,7 @@
         <a-input class="ml-3 input" v-model:value="userName" placeholder="按下组合键"/>
         <a-input class="ml-3 input" v-model:value="userName" placeholder="操作名称" style="width:227px;height: 48px;"/>
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">添加快捷键</div>
-        <a-input class="ml-3 input" v-model:value="userName" placeholder="按下分类名称组合键" style="width:227px;height: 48px;"/>
+        <a-input class="ml-3 input" v-model:value="userName" placeholder="分类名称" style="width:227px;height: 48px;"/>
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">新建分类</div>
       </div>
       <!-- 提示 -->
@@ -68,17 +68,39 @@
       </div>
     </div>
   </div>
+  <!-- 分享成功的模态框 -->
+  <div class="fixed inset-0 home-blur" style="z-index: 999999999999;" v-if="shoreModal" >
+    <div
+         class="fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
+         style="padding: 24px 32px;width: 480px;height: 221px;background:  #282828">
+      <div>
+        <Icon icon="yiwancheng" style="color:#52C41A;font-size:20px"></Icon>
+        <span class="ml-2" style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">分享成功</span>
+      </div>
+      <div style="font-size: 16px;margin:24px 0;color: rgba(255,255,255,0.60);">
+        「 {{ userName }} 」成功分享至创意市场，选择分享到元社区让更多人看到吧～
+      </div>
+      <div class="flex">
+        <div style="width: 160px;height: 48px;"
+           class="flex justify-center items-center bg-blue-500 rounded-lg pointer">
+        同时分享到元社区
+        </div>
+        <div style="width: 160px;height: 48px;"
+            class=" ml-3 flex justify-center items-center s-bg rounded-lg pointer" @click="close">
+          完成
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
-import { TrophyOutlined, UploadOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'ShareKey',
   components: {
     HorzontanlPanelIcon,
-    UploadOutlined,
     ShortcutKeyList
   },
   data(){
@@ -249,9 +271,7 @@ export default {
       keyIndex: 1,
       imageUrl: '',
       file: {},
-      headers: {
-        authorization: 'authorization-text',
-      },
+      shoreModal: false
     }
   },
   methods: {
@@ -264,6 +284,9 @@ export default {
     },
     nextStep(){
       this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
+    },
+    close(){
+      this.shoreModal = false
     },
     // 上传头像前校验
     beforeUpload(file) {
