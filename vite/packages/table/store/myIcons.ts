@@ -16,32 +16,6 @@ export const myIcons = defineStore(
                 src: "",
                 backgroundIndex: 1,
             },
-            // 储存初始化的数据
-            baseIconOption: {
-                isRadius: true,
-                radius: 5,
-                isBackground: false,
-                backgroundColor: null,
-                titleValue: "",
-                link: "",
-                linkValue: "",
-                src: "",
-                backgroundIndex: 1,
-            },
-            // 储存复制过来的数据
-            copyIconOption: {
-                isRadius: true,
-                radius: 5,
-                isBackground: false,
-                backgroundColor: null,
-                titleValue: "",
-                link: "",
-                linkValue: "",
-                src: "",
-                backgroundIndex: 1,
-            },
-            copyIconIndex: 0,
-            iconRef: null, // 替代全局事件总线来处理回调
             isCopy: false, // 是否打开复制状态
             iconList: []
 
