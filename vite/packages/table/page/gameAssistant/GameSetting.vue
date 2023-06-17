@@ -1,46 +1,48 @@
 <template>
-  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
-    <Icon style="height: 36px;width: 36px" icon="steam"></Icon>
-    <div class="flex flex-col ml-4 w-2/3">
-      <span class="text-white">Steam</span>
-      <span v-if="steamLoginData.refreshToken">{{ userData.name }}</span>
-      <span v-else>绑定Steam帐号即可同步显示你的游戏数据</span>
+  <div class="px-5">
+    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+      <Icon style="height: 36px;width: 36px" icon="steam"></Icon>
+      <div class="flex flex-col ml-4 w-2/3">
+        <span class="text-white">Steam</span>
+        <span v-if="steamLoginData.refreshToken">{{ userData.name }}</span>
+        <span v-else>绑定Steam帐号即可同步显示你的游戏数据</span>
+      </div>
+      <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clickBind">
+        {{ steamLoginData.refreshToken ? '解绑' : '绑定' }}
+      </div>
     </div>
-    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clickBind">
-      {{ steamLoginData.refreshToken ? '解绑' : '绑定' }}
+    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+      <Icon style="height: 36px;width: 36px" icon="shijian3dian"></Icon>
+      <div class="flex flex-col ml-4 w-2/3">
+        <span class="text-white">最近游玩的游戏记录</span>
+        <span>清空游玩记录不会删除对应的游戏桌面。</span>
+      </div>
+      <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clearRecent">
+        清空记录
+      </div>
     </div>
-  </div>
-  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
-    <Icon style="height: 36px;width: 36px" icon="shijian3dian"></Icon>
-    <div class="flex flex-col ml-4 w-2/3">
-      <span class="text-white">最近游玩的游戏记录</span>
-      <span>清空游玩记录不会删除对应的游戏桌面。</span>
+    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+      <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>
+      <div class="flex flex-col ml-4 w-2/3">
+        <span class="text-white">游戏桌面</span>
+        <span>每个游戏的独立桌面</span>
+      </div>
+      <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">
+        删除全部桌面
+      </div>
     </div>
-    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clearRecent">
-      清空记录
+    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+      <Icon style="height: 36px;width: 36px" icon="position"></Icon>
+      <div class="flex flex-col ml-4 w-2/3">
+        <span class="text-white">折扣地区</span>
+        <span>选择默认的折扣地区</span>
+      </div>
+      <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
+                @change="getRegion($event)" class="w-56 h-auto rounded-lg  text-xs s-item" size="large" :bordered="false"
+                v-model:value="area">
+        <a-select-option v-for="item in region" :value="item.id">{{ item.name }}</a-select-option>
+      </a-select>
     </div>
-  </div>
-  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
-    <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>
-    <div class="flex flex-col ml-4 w-2/3">
-      <span class="text-white">游戏桌面</span>
-      <span>每个游戏的独立桌面</span>
-    </div>
-    <div class="s-item ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">
-      删除全部桌面
-    </div>
-  </div>
-  <div class="s-bg  h-20 rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
-    <Icon style="height: 36px;width: 36px" icon="position"></Icon>
-    <div class="flex flex-col ml-4 w-2/3">
-      <span class="text-white">折扣地区</span>
-      <span>选择默认的折扣地区</span>
-    </div>
-    <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
-              @change="getRegion($event)" class="w-56 h-auto rounded-lg  text-xs s-item" size="large" :bordered="false"
-              v-model:value="area">
-      <a-select-option v-for="item in region" :value="item.id">{{ item.name }}</a-select-option>
-    </a-select>
   </div>
   <Modal v-model:visible="modalVisibility" v-show="modalVisibility" animationName="bounce-in" :maskNoClose="true"
          :blurFlag="true" @click.stop>
@@ -292,6 +294,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.set-bg{
+  background: var(--primary-bg);
+  color: var(--primary-text);
+}
 </style>
