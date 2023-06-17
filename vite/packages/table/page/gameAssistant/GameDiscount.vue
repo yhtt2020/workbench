@@ -11,12 +11,12 @@
         <a-spin v-if="isLoading === true" class="" style="margin-top: 2em;"></a-spin>
         <div class="flex items-center flex-col justify-center" v-else>
           <div class="flex steam-item steam-sw-item">
-            <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" class="steam-mw s-bg pointer rounded-lg mb-3 mr-4">
+            <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" class="steam-mw steam-bg pointer rounded-lg mb-3 mr-4">
               <div style="height:228px;">
                 <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
-              <div class="px-3 py-3 name-size">{{item.name}}</div>
-              <div class="px-3 mb-3">优惠截止时间: {{ deadline(item.discount_expiration) }}</div>
+              <div class="px-3 py-3  name-text">{{item.name}}</div>
+              <div class="px-3 mb-3" style="color: var(--secondary-text);">优惠截止时间: {{ deadline(item.discount_expiration) }}</div>
               <div class="px-3 flex  items-center mb-3">
                 <span class="percent px-1 rounded-md">- {{item.discount_percent}} %</span>
                 <span class="final-price ml-3">{{ currencyFormat(item.final_price,item.currency) }}</span>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="flex flex-wrap steam-sw-item ">
-            <div class="steam-sw  mb-3 mr-2 s-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)">
+            <div class="steam-sw  mb-3 mr-2 steam-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)">
               <div class="epic-sh mb-3">
                 <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
@@ -128,12 +128,10 @@ export default {
       this.defaultGameValue = v
       this.getSelectCCData(v.id)
     },
-
     // 进入详情
     enterDiscountDetail(val){
       this.$router.push({name:'GameDiscountDetail',params:{id:val.id,exTime:val.discount_expiration}})
     },
-
     // 获取默认的加载数据
     getSteamDataList(){
       if(!this.isLoading){
@@ -153,7 +151,6 @@ export default {
         },0)
       }
     },
-
     // 根据不同区服切换数据
     getSelectCCData(v){
       this.steamList = []
@@ -174,7 +171,6 @@ export default {
         },1000)
       }
     },
-
     // 根据区服获取epic数据
     getEpicData(){
       sendRequest(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=${this.defaultGameValue.defaultLocale}&country=${this.defaultGameValue.id.toLocaleUpperCase()}&allowCountries=${this.defaultGameValue.id.toLocaleUpperCase()}`,{},{
@@ -213,7 +209,6 @@ export default {
         browser.openInInner(`https://store.epicgames.com/zh-CN`)
       }
     },
-
     deadline(value){
       const date = new Date( typeof value === 'string' ?  `${value}`: parseInt(value) * 1000);
       const month = date.getMonth() + 1;
@@ -224,11 +219,20 @@ export default {
       const formattedDate = `${month}月${day}日 ${ampm} ${hour % 12}:${minute.toString().padStart(2, '0')}`;
       return formattedDate
     }
-  },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.name-text{
+  font-family: PingFangSC-Semibold;
+  font-size: 18px;
+  color:var(--secondary-text);
+  font-weight: 600;
+}
+
+
+
 .active{
   background:rgba(33, 33, 33, 1);
   border-radius: 10px;
@@ -255,6 +259,8 @@ export default {
 .area-name{
   padding-top: 9px;
   padding-bottom: 9px;
+  background: var(--primary-bg);
+  color: var(--primary-text);
 }
 .right-select-active:active{
   filter: brightness(0.8);
@@ -278,8 +284,9 @@ export default {
 }
 
 .old-price{
+  font-family: Oswald - Google Fonts;
   font-size: 14px;
-  color: rgba(255,255,255,0.40);
+  color:var(--secondary-text);
   font-weight: 400;
 }
 .final-price{
@@ -313,6 +320,9 @@ export default {
   width: 1000px;
 }
 
+.steam-bg{
+  background: var(--primary-bg);
+}
 
 
 @media screen and (max-width: 840px){
@@ -349,5 +359,4 @@ export default {
   }
 }
 */
-
 </style>
