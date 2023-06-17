@@ -45,25 +45,27 @@
     <div class="flex mx-3 epic-container">
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 15.8em)">
          <div class="epic-item flex">
-            <div v-for="item in epicList" class="epic-w s-bg flex rounded-lg flex-col mb-3 mr-3">
-              <div class="height:272px;">
-                <img  :src="item.keyImages.url"  class="w-full h-full rounded-lg object-cover"  alt="">
-              </div>
-              <div class="flex flex-col ">
-                <span  class="mb-2 pointer px-3 my-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                  {{ item.el.title === 'Mystery Game' ? '神秘游戏' : item.el.title }}
-                </span>
-                <div v-if="item.el.promotions !== null" class="px-3 mb-3">
-                  <div v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex item-center">
-                    <span class="px-2 py-1 mr-2 rounded-md free-font">现在免费</span>
-                    <span class="py-1">截止时间: {{ deadline(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}</span>
-                  </div>
-                  <div v-if="item.el.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
-                    <span class="px-1  mr-2 rounded-md next-notice">下周预告</span>
-                    <span class="py-1">开始时间: {{ deadline(item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
-                  </div>
+            <div v-for="item in epicList" @click="openEpicStore(item)" class="epic-w s-bg pointer flex rounded-lg flex-col mb-3 mr-3">
+              <template v-if="item.el.promotions !== null">
+                <div class="height:272px;">
+                  <img  :src="item.keyImages.url"  class="w-full h-full rounded-lg object-cover"  alt="">
                 </div>
-              </div>
+                <div class="flex flex-col ">
+                  <span  class="mb-2 pointer px-3 my-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                    {{ item.el.title === 'Mystery Game' ? '神秘游戏' : item.el.title }}
+                  </span>
+                  <div v-if="item.el.promotions !== null" class="px-3 mb-3">
+                    <div v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex item-center">
+                      <span class="px-2 py-1 mr-2 rounded-md free-font">现在免费</span>
+                      <span class="py-1">截止时间: {{ deadline(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}</span>
+                    </div>
+                    <div v-if="item.el.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
+                      <span class="px-1  mr-2 rounded-md next-notice">下周预告</span>
+                      <span class="py-1">开始时间: {{ deadline(item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
+                    </div>
+                  </div>
+                </div> 
+              </template> 
             </div>
          </div>
       </vue-custom-scrollbar>
@@ -203,8 +205,13 @@ export default {
         this.epicList  = resultArr
       })
     },
-    openEpicStore(){
-      browser.openInUserSelect(`https://store.epicgames.com/zh-CN`)
+    openEpicStore(v){
+      console.log(v);
+      if(v.el.productSlug !== null){
+        browser.openInInner(`https://store.epicgames.com/zh-CN/p/${v.el.productSlug}`)
+      }else{
+        browser.openInInner(`https://store.epicgames.com/zh-CN`)
+      }
     },
 
     deadline(value){
