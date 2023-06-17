@@ -51,6 +51,7 @@
             <a-switch v-model:checked="_isRadius"></a-switch>
         </div>
         <a-slider v-if="_isRadius" v-model:value="_radius" :max="50" :step="1" class="no-drag" />
+
         <div class="parent">
             <div class="text-base">图标背景</div>
             <a-switch v-model:checked="_isBackground"></a-switch>
@@ -65,7 +66,7 @@
 
 <script>
 import fastNav from "./fastNav.vue"
-import { validateFile } from '../../card/hooks/innerImgHook'
+import { validateFile } from '../../../card/hooks/innerImgHook'
 import { message } from "ant-design-vue";
 export default {
     components: { fastNav },

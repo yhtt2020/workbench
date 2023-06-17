@@ -5,8 +5,8 @@ export const myIcons = defineStore(
         return {
             // 添加卡片的数据
             iconOption: {
-                isRadius: false,
-                radius: 0,
+                isRadius: true,
+                radius: 5,
                 isBackground: false,
                 backgroundColor: null,
                 titleValue: "",
@@ -18,8 +18,8 @@ export const myIcons = defineStore(
             },
             // 储存初始化的数据
             baseIconOption: {
-                isRadius: false,
-                radius: 0,
+                isRadius: true,
+                radius: 5,
                 isBackground: false,
                 backgroundColor: null,
                 titleValue: "",
@@ -30,8 +30,8 @@ export const myIcons = defineStore(
             },
             // 储存复制过来的数据
             copyIconOption: {
-                isRadius: false,
-                radius: 0,
+                isRadius: true,
+                radius: 5,
                 isBackground: false,
                 backgroundColor: null,
                 titleValue: "",

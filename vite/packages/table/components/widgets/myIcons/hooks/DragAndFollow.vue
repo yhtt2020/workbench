@@ -2,7 +2,7 @@
 
 <template>
     <!-- 可拖拽元素 -->
-    <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @click="handleClick">
+    <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @click="handleClick" class="draggable">
         <slot></slot>
     </div>
     <teleport to="body">
@@ -38,14 +38,12 @@ export default {
             this.followPosition = { x: event.clientX, y: event.clientY };
             event.preventDefault();
             this.dragStartTimer = setTimeout(() => {
-                // 触发拖拽开始事件，参数为 true 表示允许放置
-                this.$emit('drag-start', true);
+                this.$emit('drag-start');
                 event.preventDefault();
                 this.isDragging = true;
 
-                const draggableElement = event.target;
+                const draggableElement = document.querySelector('.draggable');
                 const draggableRect = draggableElement.getBoundingClientRect();
-
                 this.followWidth = draggableRect.width;
                 this.followHeight = draggableRect.height;
 
@@ -61,6 +59,10 @@ export default {
                 this.tempContainer.appendChild(this.draggedElement);
                 document.body.style.cursor = 'move';
             }, 1000);
+
+            // 监听鼠标移动和抬起事件
+            document.addEventListener('mousemove', this.handleMouseMove);
+            document.addEventListener('mouseup', this.handleMouseUp);
         },
         // 鼠标抬起事件处理方法
         handleMouseUp() {
@@ -78,6 +80,10 @@ export default {
                 }
                 document.body.style.cursor = 'default';
             }
+
+            // 移除鼠标移动和抬起事件监听
+            document.removeEventListener('mousemove', this.handleMouseMove);
+            document.removeEventListener('mouseup', this.handleMouseUp);
         },
         // 鼠标移动事件处理方法
         handleMouseMove(event) {
@@ -115,15 +121,6 @@ export default {
 </script>
   
 <style scoped>
-/* 样式定义 */
-.draggable {
-    position: absolute;
-    background-color: #f1f1f1;
-    padding: 10px;
-    cursor: pointer;
-    user-select: none;
-}
-
 .follow-container {
     position: fixed;
     top: 0;

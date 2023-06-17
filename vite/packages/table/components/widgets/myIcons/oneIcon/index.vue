@@ -98,7 +98,6 @@ export default {
     box-sizing: border-box;
     flex-direction: column;
     font-size: 14px;
-    cursor: pointer;
     border-radius: 12px;
 
     .image {

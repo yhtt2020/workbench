@@ -64,7 +64,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { cardStore } from '../../../store/card'
 import { message } from 'ant-design-vue'
 import NewPreviewCardDetails from './NewPreviewCardDetails.vue'
-import Edit from '../../../components/widgets/myIcons/edit.vue'
+import Edit from '../../../components/widgets/myIcons/hooks/edit.vue'
 import { myIcons } from '../../../store/myIcons.ts'
 export default {
   emits: ['close', 'addSuccess'],

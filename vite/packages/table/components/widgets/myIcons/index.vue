@@ -1,5 +1,5 @@
 <template>
-    <div ref="iconRef" :style="opacityStyle">
+    <div ref="iconRef" :style="opacityStyle" style="">
 
         <!-- 可放置区域 -->
         <droppable-area @drop="handleDrop">
@@ -37,7 +37,7 @@
 <script>
 // components
 import Widget from '../../card/Widget.vue'
-import edit from './edit.vue'
+import edit from './hooks/edit.vue'
 import icon from "./oneIcon/index.vue"
 import icons from "./multipleIcons/index.vue"
 import DragAndFollow from './hooks/DragAndFollow.vue';
@@ -120,7 +120,7 @@ export default {
                     },
                     {
                         icon: 'shezhi1',
-                        title: '粘贴',
+                        title: '放置',
                         fn: () => { this.copyIcon() }
                     },
                 ]
@@ -133,7 +133,7 @@ export default {
                     },
                     {
                         icon: 'shezhi1',
-                        title: '粘贴',
+                        title: '放置',
                         fn: () => { this.copyIcon() }
                     },
                     {
