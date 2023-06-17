@@ -81,7 +81,7 @@ import { clipboardStore } from '../../store/clipboard'
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorizontalDrawer from '../HorizontalDrawer.vue';
 import { themeType  } from '../../js/data/clipTheme'
-import { codeLanguage } from '../../js/common/clipboardObserver';
+import { codeLanguage } from '../../js/data/clipTheme';
 export default {
   components:{
     HorizontalPanel,

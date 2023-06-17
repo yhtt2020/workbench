@@ -314,7 +314,7 @@
 <script>
 import { mapActions, mapWritableState } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
-import { codeLanguage } from '../../js/common/clipboardObserver';
+import { codeLanguage } from '../../js/data/clipTheme';
 import ClipCodemirror from './ClipCodemirror.vue';
 import HorizontalPanel from '../HorizontalPanel.vue';
 import textCodeMirror from './textCodeMirror.vue';
@@ -445,8 +445,8 @@ export default {
   font-weight: 400;
 }
 :deep(.CodeMirror){
-  height:auto !important;
-  width: auto !important;
+  height:400px!important;
+  width:1000px !important;
 }
 
 .clip-image{
@@ -462,12 +462,16 @@ export default {
 }
 
 
-@media screen and (max-width:840px) {
+@media screen and (max-width:840px){
   .clip-image{
     width: calc(100% / 1.2);
   }
   .md-clip{
     width: calc(100% / 1.2);
+  }
+  :deep(.CodeMirror){
+    width:500px !important;
+    height: 480px !important; 
   }
 }
 
@@ -478,6 +482,10 @@ export default {
   .md-clip{
     width: calc(100% / 1.25);
   }
+
+  :deep(.CodeMirror){
+    width:600px !important;
+  }
 }
 
 @media screen and (min-width:1141px) and (max-width:1240px) {
@@ -487,6 +495,10 @@ export default {
   .md-clip{
     width: calc(100% / 1.35);
   }
+
+  :deep(.CodeMirror){
+    width:700px !important;
+  }
 }
 
 @media screen and (min-width:1241px){
@@ -495,6 +507,10 @@ export default {
   }
   .md-clip{
     width: calc(100% / 1);
+  }
+
+  :deep(.CodeMirror){
+    width:1000px !important;
   }
 }
 

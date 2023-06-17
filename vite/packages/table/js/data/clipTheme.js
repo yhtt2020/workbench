@@ -65,3 +65,14 @@ export const themeType = [
   {title:'yonce',name:'yonce',id:'yonce'},
   {title:'zenburn',name:'zenburn',id:'zenburn'},
 ]
+
+// 将剪贴板代码块语言包的配置移动到这里,方便后期需要添加的语言包就在这里改动即可
+export const codeLanguage = [
+  {title:'Python',name:'Python',abbr:'python',id:'python'},
+  {title:'JavaScript',name:'JavaScript',abbr:'javascript',id:'javascript'},
+  {title:'Java',name:'Java',abbr:'text/x-java',id:'text/x-java'},
+  {title:'C++',name:'C++',abbr:'text/x-c++src',id:'text/x-c++src'},
+  {title:'C#',name:'C#',abbr:'text/x-csharp',id:'text/x-csharp'},
+  {title:'PHP',name:'PHP',abbr:'application/x-httpd-php',id:'application/x-httpd-php'},
+  {title:'Swift',name:'Swift',abbr:'swift',id:'swift'}
+]

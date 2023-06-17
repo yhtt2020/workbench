@@ -321,7 +321,7 @@ import { clipboardStore } from '../../store/clipboard';
 import textCodeMirror from './textCodeMirror.vue';
 import ClipVideo from './ClipVideo.vue';
 import ClipAudio from './ClipAudio.vue';
-import { codeLanguage } from '../../js/common/clipboardObserver';
+import { codeLanguage } from '../../js/data/clipTheme';
 
 export default {
   components: { 
