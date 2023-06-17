@@ -48,11 +48,11 @@
     </div>
     <div class="mb-6 ps-cm-16">默认语言</div>
     <div @click="openLanguageDrawer" class="mb-6 bt-bg py-3 button-active flex items-center rounded-lg pointer justify-center">
-      <span class="btn-text">{{ clipMode }}</span>
+      <span class="btn-text">{{ selectLanguage.name }}</span>
     </div>
     <div class="mb-6 ps-cm-16">编辑器主题</div>
     <div @click="openThemeDrawer" class="mb-6 py-3 flex items-center bt-bg button-active rounded-lg pointer justify-center">
-      <span>dracula</span>
+      <span>{{clipTheme}}</span>
     </div>
     <div class="flex justify-between mb-6">
       <div class="flex flex-col">
@@ -66,10 +66,13 @@
   </a-drawer>
 
   <!-- 主题色模块 -->
-  <HorizontalDrawer :rightSelect="themeType" ref="themeRef"> </HorizontalDrawer>
+  <HorizontalDrawer :rightSelect="themeType" ref="themeRef" 
+   v-model:selectRegion="clipTheme"  @getArea="getTheme"
+  >
+  </HorizontalDrawer>
   
   <!-- 语言包选择 -->
-  <HorizontalDrawer :rightSelect="codeLanguage" ref="languageRef"></HorizontalDrawer>
+  <HorizontalDrawer :rightSelect="codeLanguage" v-model:selectRegion="clipMode" ref="languageRef" @getArea="getLanguage"></HorizontalDrawer>
 </template>
 
 <script>
@@ -106,10 +109,25 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(clipboardStore,['enable','clipSetShow','clipMode','showLineNumber','clipTheme','clipSize'])
+    ...mapWritableState(clipboardStore,[
+      'enable','clipSetShow','clipMode',
+      'showLineNumber','clipTheme','clipSize','clipboardObserver'
+    ]),
+    selectLanguage(){
+      const index = this.codeLanguage.find(el=>{
+        return el.abbr === this.clipMode
+      })
+      return index
+    }
   },
   methods:{
-    ...mapActions(clipboardStore,['start','stop','isRunning','prepare','isClipLineNumber','isSetCodeHighlight','updateClipSize']),
+    ...mapActions(clipboardStore,
+    [
+      'start','stop','isRunning','prepare',
+      'isClipLineNumber','isSetCodeHighlight',
+      'updateClipSize','updateTheme','changeClipMode'
+    ]
+    ),
     // 通过该方法可以打开弹窗
     clipOpenShow(){
       this.setShow = true
@@ -133,6 +151,16 @@ export default {
     // 选择代码语言
     openLanguageDrawer(){
       this.$refs.languageRef.openDrawer()
+    },
+    // 修改主题
+    getTheme(item){
+      // console.log('修改主题',item);
+      this.updateTheme(item.name)
+    },
+    // 修改语言包
+    getLanguage(item){
+      // console.log('修改语言',item);
+      this.changeClipMode(item.abbr)
     }
   },
   watch:{

@@ -70,6 +70,10 @@ export const clipboardStore = defineStore("clipboardStore", {
     updateClipSize(val:number){
       console.log('修改代码缩进',val);
       this.clipSize = val
+    },
+    updateTheme(val:string){
+      // console.log('修改主题色',val);
+      this.clipTheme = val
     }
   }
 })

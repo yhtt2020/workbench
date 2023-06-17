@@ -4,8 +4,8 @@
   >
 
    <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
-    <div class="w-full h-12 flex items-center  justify-center pointer my-4 rounded-lg drawer-item-bg xt-bg-2" style="color: var(--primary-text);"
-      v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'active':''" @click="selectedAreaSuit(item,index)"
+    <div class="w-full h-12 flex items-center  justify-center pointer my-4 rounded-lg s-list"
+      v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'drawer-active':''" @click="selectedAreaSuit(item,index)"
     >
       {{ item.name }}
     </div>
@@ -69,9 +69,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.active{
-  background: rgba(255,255,255,0.2);
+.drawer-active{
+  background: var(--active-bg);
+  color: var(--active-text);
 }
+
+
 ::v-deep .ps__thumb-y{
   display: none !important;
 }
@@ -79,5 +82,8 @@ export default {
 <style>
 .ant-drawer-header{
   border-bottom: none !important;
+}
+.s-list{
+  background: var(--secondary-bg);
 }
 </style>
