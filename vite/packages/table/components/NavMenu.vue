@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="left">
-            <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': currenIndex == index }" @click="updateNavIndex(item, index)"
+            <div class="no-drag nav" :style="navStyle" :class="{ 'xt-active-btn': currenIndex == index }" @click="updateNavIndex(item, index)"
                 v-for="( item, index ) in  list" :key="item.name">{{
                 item.cname
             }}

@@ -287,6 +287,7 @@ import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
 import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
+import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -540,7 +541,8 @@ export default {
     myIcons,
     NewAddCard,
     ShortcutKeyDetail,
-    NotShortcutKey
+    NotShortcutKey,
+    ShortcutKeyList
   },
   computed: {
     ...mapWritableState(cardStore, [

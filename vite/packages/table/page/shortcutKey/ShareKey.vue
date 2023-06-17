@@ -47,7 +47,7 @@
     <!-- 快捷键 -->
     <div class="key-content" v-else>
       <!-- 输入框 -->
-      <div class="flex mt-7">
+      <div class="flex mt-7 mb-4">
         <a-input class="ml-3 input" v-model:value="userName" placeholder="按下组合键"/>
         <a-input class="ml-3 input" v-model:value="userName" placeholder="操作名称" style="width:227px;height: 48px;"/>
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">添加快捷键</div>
@@ -55,36 +55,16 @@
         <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">新建分类</div>
       </div>
       <!-- 提示 -->
-      <div class="prompt mt-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
+      <div class="prompt mb-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
           <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
-          <span class="mx-4">从工作台启动的Windows应用，默认会自动打开可用的快捷键方案。</span>
+          <span class="mx-4">支持长按拖拽排序</span>
         </span>
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
       </div>
       <!-- 快捷键列表 -->
-      <div class="key-box" :style="closePrompt ? 'height:80%' : 'height:90%'">
-        <template v-for="(item,i) in keyList">
-          <div class="mb-2 mx-5 border-right"
-            style="width: 370px;height:48px;line-height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
-            >
-            {{ item.type }}
-          </div>
-          <div v-for="(k,index) in item.data" class="border-right flex justify-between items-center px-3 mx-5 h-12 mb-2 pointer"
-          style="border-radius: 8px; width: 370px"
-          :style="keyIndex === k.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(k.id)"
-          >
-            <div class="flex">
-              <div v-for="i in k.keys" class="flex key-item">
-                <span v-if="i.icon" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">
-                  <Icon :icon="i.icon" style="font-size: 1.5em;"></Icon>
-                </span>
-                <span v-else-if="i.key" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
-              </div>
-            </div>
-            <div style="">{{ k.title}}</div>
-          </div>
-        </template>
+      <div :style="closePrompt ? 'height:80%' : 'height:90%'">
+        <ShortcutKeyList :keyList="keyList"></ShortcutKeyList>
       </div>
     </div>
   </div>
@@ -92,12 +72,14 @@
 
 <script>
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
+import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import { UploadOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'ShareKey',
   components: {
     HorzontanlPanelIcon,
-    UploadOutlined
+    UploadOutlined,
+    ShortcutKeyList
   },
   data(){
     return{
@@ -249,6 +231,7 @@ export default {
         ]
         }
       ],
+      keyIndex: 1,
       imageUrl: '',
       file: {},
       headers: {
@@ -259,6 +242,10 @@ export default {
   methods: {
     onBack(){
       this.$router.go(-1)
+    },
+    setKeyItem(index){
+      this.keyIndex = index
+      console.log(index)
     },
     nextStep(){
       this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
@@ -404,18 +391,6 @@ export default {
     padding: 24px 0;
     height: 500px;
   }
-  .key-box{
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-content: flex-start;
-    overflow: auto;
-    padding: 24px 0; 
-    flex-wrap: wrap;
-    height: 80%;
-    
-  }
-  .key-box::-webkit-scrollbar,
   .add-content::-webkit-scrollbar{
     display: none;
   }

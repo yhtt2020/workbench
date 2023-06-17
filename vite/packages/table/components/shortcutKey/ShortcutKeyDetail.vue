@@ -30,28 +30,8 @@
     </div>
   </div>
   <!-- 快捷键列表 -->
-  <div class="s-bg key-box">
-    <template v-for="(item,i) in keyList" :key="i">
-      <div class="mb-2 mx-5 border-right"
-        style="width: 350px;height:48px;line-height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">
-        {{ item.type }}
-      </div>
-      <div v-for="(k,index) in item.data" :key="k.id" class="border-right flex justify-between items-center px-3 mx-5 h-12 mb-2 pointer"
-      style="border-radius: 8px; width: 350px"
-      :style="keyIndex === k.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(k.id)"
-      >
-        <div class="flex">
-          <div v-for="i in k.keys" :key="i" class="flex key-item">
-            <span v-if="i.icon" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">
-              <Icon :icon="i.icon" style="font-size: 1.5em;"></Icon>
-            </span>
-            <span v-else-if="i.key" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
-          </div>
-        </div>
-        <div style="">{{ k.title}}</div>
-      </div>
-    </template>
-    <div class="cover"></div>
+  <div style="width:98%;height:85%;">
+    <ShortcutKeyList :keyList="keyList" :keyIndex="keyIndex" @setKeyItem="setKeyItem" :keyBoxStyle="{background:'var(--primary-bg)'}"></ShortcutKeyList>
   </div>
  </div>
  <!-- 无详情快捷方案 -->
@@ -153,10 +133,12 @@
 
 <script>
 import NotShortcutKey from './NotShortcutKey.vue'
+import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
 export default {
   name: 'ShortcutKeyDetail',
   components: {
-    NotShortcutKey
+    NotShortcutKey,
+    ShortcutKeyList
   },
   data(){
     return{
@@ -470,8 +452,9 @@ export default {
     toggleApp(index){
       this.navIndex = index
     },
-    toggleKey(id){
+    setKeyItem(id){
       this.keyIndex = id
+      console.log(id)
     },
     onBack(){
       this.$emit('detailShow',false)
@@ -533,21 +516,6 @@ export default {
     min-width: 80px;
     white-space: nowrap;
   }
-  .key-box{
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-content: flex-start;
-    overflow: auto;
-    padding: 24px 0; 
-    flex-wrap: wrap;
-    height: 85%;
-    width: 98%;
-    
-  }
-  .key-box::-webkit-scrollbar{
-    display: none;
-  }
   .border-right {
     position: relative;
   }
@@ -564,7 +532,7 @@ export default {
     margin: 24px 0;
     background: #2A2A2A;
     border-radius: 12px;
-    width: 452px;
+    // width: 452px;
     height: 136px;
     padding: 12px;
   }
@@ -576,7 +544,7 @@ export default {
   .set-item{
     background: #2A2A2A;
     border-radius: 12px;
-    width: 452px;
+    // width: 452px;
     height: 48px;
     margin-bottom: 16px;
     font-size: 16px;
