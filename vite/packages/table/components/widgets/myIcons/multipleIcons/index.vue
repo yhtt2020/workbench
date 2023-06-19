@@ -1,7 +1,7 @@
 <template>
     <IconsFullScreen @updateGroupTitle="updateGroupTitle" :groupTitle="groupTitle" v-if="isIconsFullScreen"
-        @closeFullScreen="closeFullScreen" :iconList="iconList" @disbandGroup="disbandGroup" @deleteIcons="deleteIcons"
-        @editIcons="editIcons">
+        @closeFullScreen="closeFullScreen" :iconLists="iconList" @disbandGroup="disbandGroup" @deleteIcons="deleteIcons"
+        @editIcons="editIcons" @dragAddIcon="dragAddIcon">
     </IconsFullScreen>
     <div class="item-list  xt-hover no-drag" @click="isIconsFullScreen = true">
         <div class="item">
@@ -35,6 +35,9 @@ export default {
         }
     },
     methods: {
+        dragAddIcon(icon) {
+            this.$emit('dragAddIcon', icon)
+        },
         // 多图标全屏模式关闭
         closeFullScreen() {
             this.isIconsFullScreen = false

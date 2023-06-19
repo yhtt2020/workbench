@@ -1,7 +1,10 @@
 <template>
   <teleport to="body">
-    <div class='popContainer' @click="closeFullScreen()">
-      <div class="box xt-bg" @click.stop="">
+
+    <div class='popContainer' @click="closeFullScreen()" :style="show">
+    </div>
+    <droppable-area @leave="handleLeave" style="border: 1px solid red;">
+      <div class="box xt-bg" @click.stop="" :style="show">
         <div class="title xt-text">
           <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
           <div class="box-btn" @click="disbandGroup">
@@ -11,13 +14,16 @@
           </div>
         </div>
         <div class="item-box">
-          <div ref="iconRef" v-for="(item, index) in iconList" @contextmenu.prevent.stop="rightClick(index)">
-            <icon v-bind="item" style="margin: 5px;" @onIconClick="closeFullScreen">
-            </icon>
+          <div ref="iconRef" v-for="(item, index) in iconLists" @contextmenu.prevent.stop="rightClick(index)">
+            <drag-and-follow @drag-start="handleDragStart" @drag-end="handleDragEnd">
+              <icon v-bind="item" :index="index" :data-index="index" style="margin: 5px;" @onIconClick="closeFullScreen">
+              </icon>
+            </drag-and-follow>
           </div>
         </div>
       </div>
-    </div>
+    </droppable-area>
+
     <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
       <div class="flex flex-row">
         <div class="option h-24 w-24 ml-4" @click="editIcons()">
@@ -35,28 +41,79 @@
 
 <script>
 import icon from "../oneIcon/index.vue"
+import DragAndFollow from '../hooks/DragAndFollow.vue';
+import DroppableArea from "../hooks/DroppableArea.vue"
+
+
+import { mapWritableState } from 'pinia'
+import { myIcons } from '../../../../store/myIcons.ts'
 export default {
   props: {
-    iconList: {
+    iconLists: {
       type: Object,
       default: () => { },
     },
     groupTitle: {
       type: String
-    }
+    },
+
   },
   data() {
     return {
       title: this.groupTitle,
       index: 0,
       settingVisible: false,
-      visible: false
+      visible: false,
+      isShow: true
     }
   },
+  inject: ['customIndex'],
   components: {
-    icon
+    icon,
+    DragAndFollow,
+    DroppableArea
+  },
+  computed: {
+    ...mapWritableState(myIcons, ['iconOption', 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
+    show() {
+      return { display: this.isShow == true ? 'black' : 'none' }
+    }
   },
   methods: {
+    // 全屏拖拽开始
+    handleDragStart(event) {
+      this.isDrag = true
+      this.iconState = true
+      const index = event.target.dataset.index;
+      this.index = index
+      this.iconList = []
+      this.iconList.push({ ...this.iconLists[index], iconIndex: this.customIndex })
+    },
+    // 全屏拖拽结束
+    handleDragEnd() {
+      if (this.isClose) { // 是否离开过全屏
+        this.closeFullScreen() // 关闭全屏
+        this.isClose = false // 重置离开全屏状态
+        // 是否执行过粘贴图标
+        if (this.isPaste && this.iconState) {
+          this.deleteIcons()
+        }
+        else if (this.iconState) {
+          this.$emit('dragAddIcon', this.iconList[0])
+          this.deleteIcons()
+        }
+        this.isPaste = false // 重置粘贴状态
+
+      }
+
+    },
+    // 全屏离开
+    handleLeave() {
+      if (this.isDrag) { // 是否为拖拽状态
+        this.isShow = false
+        this.isClose = true
+      }
+    },
     // 右键点击
     rightClick(index) {
       this.index = index
@@ -111,6 +168,10 @@ export default {
 }
 
 .box {
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  left: 50%;
   width: 598px;
   height: 476px !important;
   z-index: 9999999;
@@ -118,6 +179,7 @@ export default {
   border-radius: 12px;
   box-sizing: border-box;
   padding: 10px;
+  z-index: 999999999999999999;
 
   .title {
 

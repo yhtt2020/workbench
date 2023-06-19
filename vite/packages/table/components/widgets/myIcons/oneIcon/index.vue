@@ -1,129 +1,147 @@
 <template>
-    <div class="item xt-text xt-hover no-drag" @click="iconClick()">
-        <div class="image" :style="[backgroundState]">
-            <img :src="src" alt="" :style="radiusState" style="object-fit: cover;">
-        </div>
-        <div class="title"> {{ titleValue }}</div>
+  <div class="item xt-text xt-hover no-drag" @click="iconClick()">
+    <div class="image" :style="[backgroundState]">
+      <img
+        :src="src"
+        alt=""
+        :style="radiusState"
+        style="object-fit: cover"
+        :data-index="index"
+      />
     </div>
+    <div class="title">{{ titleValue }}</div>
+  </div>
 </template>
 
 <script>
-import { message } from 'ant-design-vue'
+import { message } from "ant-design-vue";
+import { mapWritableState } from "pinia";
+import { myIcons } from "../../../../store/myIcons.ts";
 export default {
-    props: {
-        isRadius: { type: Boolean },
-        radius: { type: Number },
-        isBackground: { type: Boolean },
-        backgroundColor: { type: String },
-        titleValue: { type: String },
-        link: { type: String },
-        linkValue: {},
-        src: { type: String },
-        backgroundIndex: { type: Number },
+  props: {
+    isRadius: { type: Boolean },
+    radius: { type: Number },
+    isBackground: { type: Boolean },
+    backgroundColor: { type: String },
+    titleValue: { type: String },
+    link: { type: String },
+    linkValue: {},
+    src: { type: String },
+    backgroundIndex: { type: Number },
+    index: { type: Number },
+  },
+  computed: {
+    ...mapWritableState(myIcons, ["isDrag"]),
+    // 动态切换圆角状态
+    radiusState() {
+      if (this.isRadius) return { borderRadius: this.radius + "px" };
+      else return { borderRadius: "0px" };
     },
-    computed: {
-        // 动态切换圆角状态
-        radiusState() {
-            if (this.isRadius) return { borderRadius: this.radius + 'px' }
-            else return { borderRadius: '0px' }
-        },
-        // 动态切换背景状态
-        backgroundState() {
-            if (this.isBackground) return { background: this.backgroundColor }
-            else return { background: 'none' }
-        },
+    // 动态切换背景状态
+    backgroundState() {
+      if (this.isBackground) return { background: this.backgroundColor };
+      else return { background: "none" };
     },
-    methods: {
-        // 单图标点击
-        iconClick() {
-            if (this.link === "link") { // 链接
-                this.$emit("onIconClick")
-                browser.openInInner(this.linkValue)
-            }
-            else if (this.link === "fast" || this.link === "nav") { // 其他应用
-                this.$emit("onIconClick")
-                this.openApp(this.linkValue)
-            }
-            else message.error("你还未设置链接/快捷方式")
-        },
-        // 打开app 里面有需要注意查看的
-        openApp() {
-            this.$emit("onIconClick")
-            if (typeof this.linkValue === "object" && this.linkValue.type) {
-                switch (this.linkValue.type) {
-                    case "systemApp":
-                        if (this.linkValue.event === "fullscreen") {
-                            // 这里
-                            if (this.full) this.full = false;
-                            else this.full = true;
-                            tsbApi.window.setFullScreen(!this.full);
-                        } else if (this.linkValue.event === "/status") {
-                            if (this.$route.path === "/status") this.$router.go(-1);
-                            else this.$router.push({ path: "/status" });
-                        } else if (this.linkValue.data) {
-                            this.$router.push({ name: "app", params: this.linkValue.data });
-                        } else this.$router.push({ name: this.linkValue.event });
-                        break;
-                    case "coolApp":
-                        this.$router.push({ name: "app", params: this.linkValue.data });
-                        break;
-                    case "localApp":
-                        require("electron").shell.openPath(this.linkValue.path);
-                        break;
-                    case "lightApp":
-                        ipc.send("executeAppByPackage", { package: this.linkValue.package });
-                        break;
-                    default:
-                        require("electron").shell.openPath(this.linkValue.path);
-                }
-            } else if (this.linkValue) {
-                this.linkValue.path
-                    ? require("electron").shell.openPath(this.linkValue.path)
-                    : require("electron").shell.openPath(
-                        require("path").normalize(this.linkValue)
-                    );
-            }
-        },
-    }
-}
+  },
+  methods: {
+    // 单图标点击
+    iconClick() {
+        console.log('this.isDrag :>> ', this.isDrag);
+      if (this.isDrag) {
+        console.log('this.isDrag :>> ', this.isDrag);
+        this.isDrag = false; // 重置拖拽状态
+        return;
+      }
+      if (this.link === "link") {
+        // 链接
+        this.$emit("onIconClick");
+        browser.openInInner(this.linkValue);
+      } else if (this.link === "fast" || this.link === "nav") {
+        // 其他应用
+        this.$emit("onIconClick");
+        this.openApp(this.linkValue);
+      } else message.error("你还未设置链接/快捷方式");
+    },
+    // 打开app 里面有需要注意查看的
+    openApp() {
+      this.$emit("onIconClick");
+      if (typeof this.linkValue === "object" && this.linkValue.type) {
+        switch (this.linkValue.type) {
+          case "systemApp":
+            if (this.linkValue.event === "fullscreen") {
+              // 这里
+              if (this.full) this.full = false;
+              else this.full = true;
+              tsbApi.window.setFullScreen(!this.full);
+            } else if (this.linkValue.event === "/status") {
+              if (this.$route.path === "/status") this.$router.go(-1);
+              else this.$router.push({ path: "/status" });
+            } else if (this.linkValue.data) {
+              this.$router.push({ name: "app", params: this.linkValue.data });
+            } else this.$router.push({ name: this.linkValue.event });
+            break;
+          case "coolApp":
+            this.$router.push({ name: "app", params: this.linkValue.data });
+            break;
+          case "localApp":
+            require("electron").shell.openPath(this.linkValue.path);
+            break;
+          case "lightApp":
+            ipc.send("executeAppByPackage", {
+              package: this.linkValue.package,
+            });
+            break;
+          default:
+            require("electron").shell.openPath(this.linkValue.path);
+        }
+      } else if (this.linkValue) {
+        this.linkValue.path
+          ? require("electron").shell.openPath(this.linkValue.path)
+          : require("electron").shell.openPath(
+              require("path").normalize(this.linkValue)
+            );
+      }
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .item {
-    width: 134px;
-    height: 96px;
+  width: 134px;
+  height: 96px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  flex-direction: column;
+  font-size: 14px;
+  border-radius: 12px;
+
+  .image {
+    margin-top: 8px;
+    height: 56px !important;
+    width: 56px !important;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    box-sizing: border-box;
-    flex-direction: column;
-    font-size: 14px;
-    border-radius: 12px;
+    // border-radius: 5px;
 
-    .image {
-        margin-top: 8px;
-        height: 56px !important;
-        width: 56px !important;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        // border-radius: 5px;
-
-        img {
-            width: 56px;
-            height: 56px;
-        }
+    img {
+      width: 56px;
+      height: 56px;
     }
+  }
 
-    .title {
-        padding: 0 5px;
-        width: 80%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        text-align: center;
-        height: 18px;
-        line-height: 18px;
-    }
+  .title {
+    padding: 0 5px;
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    height: 18px;
+    line-height: 18px;
+  }
 }
 </style>
