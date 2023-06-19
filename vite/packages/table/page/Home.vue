@@ -213,9 +213,14 @@
       <a-input-number v-model:value="appSettings.down.count"></a-input-number>
     </div>
   </a-drawer>
-  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest === false">
+  <!-- <div class="home-blur fixed inset-0 p-12" style="z-index: 999" >
     <GradeNotice></GradeNotice>
+  </div> -->
+  
+  <div class="home-blur fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
+    <GuidePage></GuidePage>
   </div>
+
   <a-drawer v-model:visible="addDeskVisible">
     <div class="line-title">添加桌面</div>
     <div class="line">
@@ -258,6 +263,7 @@ import InternalList from "../components/widgets/supervisory/InternalList.vue";
 import SmallCPUCard from "../components/widgets/supervisory/SmallCPUCard.vue";
 import SmallGPUCard from "../components/widgets/supervisory/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
+import GuidePage from "./app/grade/GuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
 import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
@@ -286,6 +292,7 @@ import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
 import ShortcutKeyDetail from "../components/ShortcutKeyDetail.vue";
+import GuidePageVue from './app/grade/GuidePage.vue';
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -538,7 +545,8 @@ export default {
     Notes,
     myIcons,
     NewAddCard,
-    ShortcutKeyDetail
+    ShortcutKeyDetail,
+    GuidePage
   },
   computed: {
     ...mapWritableState(cardStore, [
