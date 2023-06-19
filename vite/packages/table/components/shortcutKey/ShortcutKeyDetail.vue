@@ -120,7 +120,7 @@
       <Icon icon="dianzan" class="mr-2"></Icon>
       <span>点赞</span>
     </div>
-    <div class="set-item">
+    <div class="set-item" @click="btnEdit">
       <Icon icon="bianji" class="mr-2"></Icon>
       <span>编辑方案</span>
     </div>
@@ -344,39 +344,78 @@ export default {
         isCommunity: true, //是否来自社区
         keyList: [
           {
-            type: '常用',
-            data: [
-              {
-                id: 1,
-                keys: [
-                  {icon: 'linechart'},
-                  {key: 'H'}
-                ],
-                title: '首选项'
-              },
-            ]
+            groupName: '常用',
+            id: 1,
           },
           {
-            type: '文件',
-            data: [
-              {
-                id: 5,
-                keys: [
-                  {icon: 'linechart'},
-                  {key: 'H'}
-                ],
-                title: '首选项'
-              },
-              {
-                id:6,
-                keys: [
-                  {icon: 'linechart'},
-                  {icon: 'linechart'},
-                  {key: 'Q'}
-                ],
-                title: '清除浏览器数据'
-              },
-            ]
+            id: 2,
+            keys: [
+              {icon: 'linechart'},
+              {key: 'H'}
+            ],
+            title: '首选项',
+          },
+          {
+            id: 3,
+            keys: [
+              {icon: 'linechart'},
+              {icon: 'linechart'},
+              {key: 'Q'}
+            ],
+            title: '清除浏览器数据',
+          },
+          {
+            id: 4,
+            keys: [
+              {icon: 'linechart'},
+              {key: 'H'}
+            ],
+            title: '隐藏 Microsoft Edge'
+          },
+          {
+            id: 5,
+            keys: [
+              {icon: 'linechart'},
+              {key: 'H'}
+            ],
+            title: '隐藏 Microsoft Edge'
+          },
+          {
+            groupName: '文件',
+            id: 6,
+          },
+          {
+            id: 7,
+            keys: [
+              {icon: 'linechart'},
+              {key: 'H'}
+            ],
+            title: '首选项',
+          },
+          {
+            id: 8,
+            keys: [
+              {icon: 'linechart'},
+              {icon: 'linechart'},
+              {key: 'Q'}
+            ],
+            title: '清除浏览器数据',
+          },
+          {
+            id: 9,
+            keys: [
+              {icon: 'linechart'},
+              {key: 'H'}
+            ],
+            title: '隐藏 Microsoft Edge'
+          },
+          {
+            id: 10,
+            keys: [
+              {icon: 'linechart'},
+              {key: 'H'}
+            ],
+            title: '隐藏 Microsoft Edge'
           }
         ]
       }
@@ -393,6 +432,9 @@ export default {
     },
     onBack(){
       this.$emit('detailShow',false)
+    },
+    btnEdit(){
+      this.openSet = false
     }
   },
 }

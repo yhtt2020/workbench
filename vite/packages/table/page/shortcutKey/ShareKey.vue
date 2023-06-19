@@ -1,6 +1,6 @@
 <template>
   <div class="p-3 s-bg rounded-lg box">
-    <!-- 导航 -->
+    <!-- 头部导航栏 -->
     <div class="flex items-center justify-between">
       <div class="flex">
         <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
@@ -41,18 +41,18 @@
       <span>应用名称</span>
       <a-input v-model:value="userName" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
-      <a-textarea v-model:value="value" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
+      <a-textarea v-model:value="introduce" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
       <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
     </div>
     <!-- 快捷键 -->
     <div class="key-content" v-else>
       <!-- 输入框 -->
       <div class="flex mt-7 mb-4">
-        <a-input class="ml-3 input" v-model:value="userName" placeholder="按下组合键"/>
-        <a-input class="ml-3 input" v-model:value="userName" placeholder="操作名称" style="width:227px;height: 48px;"/>
-        <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">添加快捷键</div>
-        <a-input class="ml-3 input" v-model:value="userName" placeholder="分类名称" style="width:227px;height: 48px;"/>
-        <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" style="width:120px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">新建分类</div>
+        <a-input class="ml-3 input"  :value="keyCombination" @keydown="showInfo" placeholder="按下组合键"/>
+        <a-input class="ml-3 input" v-model:value="combinationName" placeholder="操作名称" style="width:227px;height: 48px;"/>
+        <div class="addBtn" @click="addShortcutKey">添加快捷键</div>
+        <a-input class="ml-3 input" v-model:value="groupName" placeholder="分类名称" style="width:227px;height: 48px;"/>
+        <div class="addBtn" @click="addGroup">新建分类</div>
       </div>
       <!-- 提示 -->
       <div class="prompt mb-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
@@ -64,7 +64,7 @@
       </div>
       <!-- 快捷键列表 -->
       <div :style="closePrompt ? 'height:80%' : 'height:90%'">
-        <ShortcutKeyList :keyList="keyList" :showEdit="true"></ShortcutKeyList>
+        <ShortcutKeyList :keyList="keyList" :keyIndex="keyIndex" :showEdit="true" @setKeyItem="setKeyItem"></ShortcutKeyList>
       </div>
     </div>
   </div>
@@ -97,6 +97,8 @@
 <script>
 import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
+import {nanoid} from 'nanoid'
+import { message } from 'ant-design-vue';
 export default {
   name: 'ShareKey',
   components: {
@@ -228,22 +230,80 @@ export default {
       keyIndex: 1,
       imageUrl: '',
       file: {},
-      shoreModal: false
+      shoreModal: false,
+      keyCombination: '',
+      inputKeyArr: [],
+      combinationName: '',
+      groupName: '',
+      // 介绍
+      introduce: ''
     }
   },
   methods: {
     onBack(){
       this.$router.go(-1)
     },
-    setKeyItem(index){
-      this.keyIndex = index
-      console.log(index)
+    setKeyItem(id){
+      this.keyIndex = id
     },
     nextStep(){
       this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
     },
     close(){
       this.shoreModal = false
+    },
+    //获取键盘按下的键
+    showInfo(event){
+      const str = event.key
+      str.replace(/[^u4e00-u9fa5|,]+/ig, '')
+      switch(event.key){
+        case "Backspace":
+          this.keyCombination = ''
+          this.inputKeyArr = []
+          break;
+        // 不需要的
+        case "Tab":
+        case " ":
+        case "Process":
+          break;
+        default:
+          //去重
+          if(this.keyCombination.indexOf(str.toUpperCase()) == -1){
+            this.keyCombination.replace(/^\s/g, '')
+            this.inputKeyArr.push(str)
+            if(this.inputKeyArr.length < 4){
+              this.keyCombination += this.keyCombination ? (' + ' + str) : str
+              this.keyCombination = this.keyCombination.toUpperCase()
+            }
+          }
+          break;
+      }
+    },
+    // 添加快捷键
+    addShortcutKey(){
+      if(!this.keyCombination || !this.combinationName.trim())return message.info('组合键或名称不能为空');
+      let keyArr = this.keyCombination.split(' + ')
+      keyArr.forEach((item,index) => {
+        keyArr.splice(index,1,{key: item})
+      })
+      let obj =  {
+        id: nanoid(),
+        keys: keyArr,
+        title: this.combinationName.trim(),
+      }
+      this.keyList.push(obj)
+      this.keyCombination = ''
+      this.combinationName = ''
+    },
+    // 添加分类名称
+    addGroup(){
+      if(!this.groupName.trim()) return message.info("分组名称不能为空")
+      let obj = {
+        id: nanoid(),
+        groupName: this.groupName.trim()
+      }
+      this.keyList.push(obj)
+      this.groupName = ''
     },
     // 上传头像前校验
     beforeUpload(file) {
@@ -375,6 +435,19 @@ export default {
   }
   .key-content{
     height: 90%;
+  }
+  .addBtn{
+    cursor: pointer;
+    background: var(--secondary-bg);
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    justify-content: center;
+    margin-left: 12px;
+    width:120px;
+    height:48px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.85);
   }
   .key-list{
     display: flex;

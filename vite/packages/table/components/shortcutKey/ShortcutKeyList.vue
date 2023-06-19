@@ -12,14 +12,14 @@
       </div>
       <!-- 快捷键 -->
       <div v-else class="border-right key-item" :class="showEdit ? 'key-back' : ''"
-      :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(item.id)"
+      :style="!showEdit ? (keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':'') : ''" @click="toggleKey(item.id)"
       >
         <div class="flex">
           <div v-for="i in item.keys" :key="i" class="flex">
             <span v-if="i.icon" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">
               <Icon :icon="i.icon" style="font-size: 1.5em;"></Icon>
             </span>
-            <span v-else-if="i.key" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
+            <span v-else-if="i.key" style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
           </div>
         </div>
         <div class="key-title">{{ item.title}}</div>
@@ -43,7 +43,7 @@
     </div>
     <div v-else-if="editType === 'item'">
       <span class="edit-title">组合键</span>
-      <a-input :value="keyCombination" @keyup="showInfo" class="rounded-lg my-6 drawer-item-bg" style="height: 48px" />
+      <a-input :value="keyCombination" @keydown="showInfo" class="rounded-lg my-6 drawer-item-bg" style="height: 48px" />
       <span class="edit-title">操作名称</span>
       <a-input v-model:value="editName" class="rounded-lg mt-6 drawer-item-bg" style="height: 48px" />
     </div>
@@ -52,7 +52,7 @@
 
 <script>
 import Sortable from 'sortablejs'
-
+import { message } from 'ant-design-vue';
 export default {
   name: "ShortcutKeyList",
   props: {
@@ -103,13 +103,18 @@ export default {
     editItem(item,type){
       switch (type) {
         case 'title':
-          this.editTitle = item.groupName
+          this.editTitle = item.groupName.trim()
           this.editIndex = item.id
           this.editType = 'title'
           this.openEdit = true
           break;
         case 'item':
-          this.editName = item.title
+          let arr = item.keys.map(i => {
+            return i.key || i.icon
+          })
+          let str = arr.join(' + ')
+          this.keyCombination = str
+          this.editName = item.title.trim()
           this.editIndex = item.id
           this.editType = 'item'
           this.openEdit = true
@@ -119,14 +124,23 @@ export default {
     //关闭编辑抽屉保存输入的值
     saveVal(){
       if(this.editType === 'title'){
+        if(!this.editTitle.trim())return message.info('分组名称不能为空');
         // 保存修改分组名称
         this.keyList.forEach(item => {
           if(item.id === this.editIndex) item.groupName = this.editTitle
         })
       }else if(this.editType === 'item'){
+        if(!this.keyCombination || !this.editName.trim())return message.info('组合键或名称不能为空');
         // 保存修改的快捷键
         this.keyList.forEach(item => {
-            if(item.id === this.editIndex)item.title = this.editName
+            if(item.id === this.editIndex){
+              let keyArr = this.keyCombination.split(' + ')
+              keyArr.forEach((item,index) => {
+                keyArr.splice(index,1,{key: item})
+              })
+              item.keys = keyArr
+              item.title = this.editName
+            }
         })
       }
       this.openEdit = false
@@ -154,7 +168,6 @@ export default {
               this.keyCombination += this.keyCombination ? (' + ' + str) : str
               this.keyCombination = this.keyCombination.toUpperCase()
             }
-            
           }
           break;
       }
@@ -187,9 +200,11 @@ export default {
     },
   },
   mounted(){
-    this.$nextTick(() => {
+    if(this.showEdit){
+      this.$nextTick(() => {
       this.keyDrop()
     })
+    }
   },
 }
 </script>
