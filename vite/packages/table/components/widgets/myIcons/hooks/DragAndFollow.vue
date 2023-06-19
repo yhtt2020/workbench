@@ -76,7 +76,6 @@ export default {
                 this.isDragging = false;
                 // 触发拖拽结束事件
                 this.$emit('drag-end');
-
                 if (this.draggedElement) {
                     this.draggedElement.remove();
                     this.draggedElement = null;

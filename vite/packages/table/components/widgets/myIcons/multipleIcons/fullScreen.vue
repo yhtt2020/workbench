@@ -85,28 +85,28 @@ export default {
   methods: {
     // 全屏拖拽开始
     handleDragStart(event) {
+      // 初始化
       this.isDrag = true
+      this.isPaste = false
       this.iconState = true
-      const index = event.target.dataset.index;
-      this.index = index
       this.iconList = []
-      this.iconList.push({ ...this.iconLists[index], iconIndex: this.customIndex })
+      this.index = event.target.dataset.index; // 获取拖拽的图标下标
+      this.iconList.push({ ...this.iconLists[this.index], iconIndex: this.customIndex })
     },
     // 全屏拖拽结束
     handleDragEnd() {
       if (this.isClose) { // 是否离开过全屏
-        this.closeFullScreen() // 关闭全屏
-        this.isClose = false // 重置离开全屏状态
-        // 是否执行过粘贴图标
-        if (this.isPaste && this.iconState) {
-          this.deleteIcons()
-        }
+        // 粘贴到多图标组件
+        if (this.isPaste && this.iconState) this.deleteIcons()
+        // 恢复单图标组件
         else if (this.iconState) {
           this.$emit('dragAddIcon', this.iconList[0])
           this.deleteIcons()
         }
-        this.isPaste = false // 重置粘贴状态
+        this.closeFullScreen() // 关闭全屏
+        this.isClose = false // 关闭全屏离开状态
       }
+      this.isDrag = false
     },
     // 全屏离开
     handleLeave() {

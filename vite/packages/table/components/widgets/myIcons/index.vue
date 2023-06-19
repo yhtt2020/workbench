@@ -187,7 +187,7 @@ export default {
         handleDragEnd() {
             this.iconList = [];
             this.isDragStyle = false
-            // this.isDrag= false
+            this.isDrag = false
         },
         // 处于图标组件放置区
         handleDrop(event) {
@@ -239,45 +239,45 @@ export default {
         },
         // 点击移动图标组件
         moveIcon() {
-            this.$refs.homelSlotRef.menuVisible = false;
-            let state = false
+            this.$refs.homelSlotRef.menuVisible = false; // 隐藏控件
+            let state = false // 初始化状态
+            // 遍历全局数据并拦截重复的数据
             this.iconList.forEach((item) => {
                 const { iconRef, iconIndex, ...icon } = item;
                 if (iconIndex === this.customIndex) state = true;
             });
-            if (state) return
+            if (state) return // 本次移动被拦截
+            // 添加数据
             this.iconList.push({
                 ...this.customData.iconList[0],
                 iconRef: this.$refs.homelSlotRef,
                 iconIndex: this.customIndex,
             });
-            this.isCopy = true;
-            this.isDragStyle = true
+            this.isCopy = true;  // 打开复制状态
+            this.isDragStyle = true  // 打开选中样式
         },
         // 复制新的图标组件
         copyIcon() {
-            this.$refs.homelSlotRef.menuVisible = false;
-            this.isDragStyle = false
+            this.$refs.homelSlotRef.menuVisible = false; // 隐藏控件
+            this.isDragStyle = false  // 关闭选中样式
             if (this.isCopy === false && this.isDrag === false)
                 return message.error("你还未复制任何图标组件");
+
+            // 遍历全局数组并添加
             this.iconList.forEach((item) => {
                 const { iconRef, iconIndex, ...icon } = item;
+                // 拦截重复的数据
                 if (iconIndex === this.customIndex) {
-                    this.iconState = false;
+                    this.iconState = false; // 关闭该图标状态 本次拖拽锁住无法添加
                     if (!this.isDrag) message.error("不能复制到同个图标组件上");
                     return;
                 }
                 this.customData.iconList.push({ ...icon });
-                if (iconRef !== undefined) iconRef.doRemoveCard();
+                if (iconRef !== undefined) iconRef.doRemoveCard(); // 删除原图标组件
             });
+            this.isPaste = true // 打开粘贴状态
             this.iconList = []; // 清空全局数组
             this.isCopy = false; // 重置拷贝状态
-            if (this.iconState) {
-                return this.iconState;
-            }
-            this.isPaste = true; // 打开粘贴状态
-
-            return this.iconState;
         },
         // 更新多图标组件标题
         updateGroupTitle(title) {
