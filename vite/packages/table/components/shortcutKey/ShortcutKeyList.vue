@@ -1,7 +1,7 @@
 <template>
     <!-- 快捷键列表 -->
   <div class="key-box" :style="keyBoxStyle">
-    <template v-for="(item,i) in keyList" :key="i">
+    <template v-for="(item,i) in keyList" :key="item.type.tid" >
       <div class="key-item border-right" :class="showEdit ? 'key-back' : ''">
         <span>{{ item.type.title }}</span>
         <div class="key-edit" v-if="showEdit" @click="editItem(item.type,'title')">
@@ -42,7 +42,7 @@
     </div>
     <div v-else-if="editType === 'item'">
       <span class="edit-title">组合键</span>
-      <a-input v-model:value="keyCombination" @keydown="showInfo" class="rounded-lg my-6 drawer-item-bg" style="height: 48px" />
+      <a-input :value="keyCombination" @keyup="showInfo" class="rounded-lg my-6 drawer-item-bg" style="height: 48px" />
       <span class="edit-title">操作名称</span>
       <a-input v-model:value="editName" class="rounded-lg mt-6 drawer-item-bg" style="height: 48px" />
     </div>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import Sortable from 'sortablejs'
+
 export default {
   name: "ShortcutKeyList",
   props: {
@@ -130,11 +132,29 @@ export default {
     },
     //获取键盘按下的键
     showInfo(event){
-      console.log(event.key)
+      const str = event.key
+      str.replace(/[^u4e00-u9fa5|,]+/ig, '')
+      switch(event.key){
+        case "Backspace":
+          this.keyCombination = ''
+          break;
+        // 不需要的
+        case "Tab":
+        case " ":
+        case "Process":
+          break;
+        default:
+          if(this.keyCombination.indexOf(str.toUpperCase()) == -1){
+            this.keyCombination.replace(/^\s/g, '')
+            this.keyCombination += this.keyCombination ? (' + ' + str) : str
+            this.keyCombination = this.keyCombination.toUpperCase()
+          }
+          break;
+      }
     },
   },
   mounted(){
-
+    
   },
 }
 </script>
