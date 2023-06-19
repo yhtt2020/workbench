@@ -2,7 +2,7 @@
   <!-- 文本列表 -->
   <template v-if="clip.type === 'text'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;" v-if="controlsShow === false && codeLanguageShow === false" class="flex flex-col rounded-lg justify-between" @contextmenu="textButton">
+    <div style="width: 338px;height:420px;" v-if="controlsShow === false && codeLanguageShow === false" class="flex flex-col rounded-lg justify-between" @contextmenu="textButton">
       <!-- 文本卡片顶部标题开始 -->
       <div class="flex s-item h-item flex-col h-16 rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -10,8 +10,8 @@
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
         <div class="flex justify-between content-text">
-         <span>{{ clip.timeText }}</span>
-         <span>{{ clip.capacity }}</span>
+         <span class="time-bg">{{ clip.timeText }}</span>
+         <span class="time-bg">{{ clip.capacity }}</span>
         </div>
       </div>
       <!-- 文本卡片顶部标题结束 -->
@@ -39,7 +39,7 @@
 
 
     <!-- 操作界面 -->
-    <div v-else-if="controlsShow === true" style="width: 338px;height:412px;">
+    <div v-else-if="controlsShow === true" style="width: 338px;height:420px;">
       <div class="flex s-item flex-col rounded-lg px-4 py-3 h-full default-content">
         <div class="flex mb-3">
           <div class="w-12 s-item button-active bt-default h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
@@ -76,7 +76,7 @@
         </div>
         <!-- 代码块语言包切换列表 -->
         <div class="flex flex-col">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 49vh;">
             <div v-for="item in codeLanguage" class="rounded-lg pointer button-active btn-list px-4 py-3 mb-2" @click="clickCodeLanguage(item)">
               {{ item.title }}
             </div>
@@ -92,7 +92,7 @@
   <!-- 图片列表 -->
   <template v-if="clip.type === 'image'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;" v-if="controlsShow === false" class="flex flex-col" @contextmenu="textButton">
+    <div style="width: 338px;height:420px;" v-if="controlsShow === false" class="flex flex-col" @contextmenu="textButton">
       <!-- 图片标题开始 -->
       <div class="flex s-item h-item flex-col rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -100,15 +100,15 @@
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
         <div class="flex justify-between">
-         <span>{{ clip.timeText }}</span>
-         <span>{{clip.capacity}}</span>
+         <span class="time-bg">{{ clip.timeText }}</span>
+         <span class="time-bg">{{clip.capacity}}</span>
         </div>
       </div>
       <!-- 图片标题结束 -->
 
       <!-- 图片内容开始 -->
-      <div class="flex px-5 pt-10 pb-20 items-center ">
-        <div style="width:100%;height:185px;" class="rounded-lg flex flex-col" v-if="img">
+      <div class="flex px-5 pt-20 pb-20 items-center ">
+        <div class="rounded-lg flex flex-col" v-if="img">
           <a-image :src="img" alt="" class="rounded-lg w-full h-full  object-cover"  ></a-image>
           <!-- <span class="pt-5 text-center">{{ clip.name }}</span> -->
         </div>
@@ -118,7 +118,7 @@
     </div>
 
     <!-- 图片操作界面 -->
-    <div v-else-if="controlsShow === true" style="width: 338px;height:412px;">
+    <div v-else-if="controlsShow === true" style="width: 338px;height:420px;">
       <div class="flex  flex-col px-4 py-3 rounded-lg">
         <div class="flex mb-3">
           <div class="w-12 bt-default button-active h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
@@ -131,7 +131,7 @@
 
         <!-- 快捷键按钮 -->
         <div class="flex flex-col">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 38vh;">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 48vh;">
             <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer button-active justify-between s-item px-4 rounded-lg btn-list py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
@@ -150,7 +150,7 @@
   <!-- 文件列表 -->
   <template v-if="clip.type === 'file'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;" v-if="controlsShow === false" class="flex flex-col" @contextmenu="textButton">
+    <div style="width: 338px;height:420px;" v-if="controlsShow === false" class="flex flex-col" @contextmenu="textButton">
       <!-- 文件标题开始 -->
       <div class="flex h-item flex-col rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -158,8 +158,8 @@
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
         <div class="flex justify-between"> 
-         <span>{{ clip.timeText }}</span>
-         <span>{{clip.capacity}}</span>
+         <span class="time-bg">{{ clip.timeText }}</span>
+         <span class="time-bg">{{clip.capacity}}</span>
         </div>
       </div>
       <!-- 文件标题结束 -->
@@ -176,7 +176,7 @@
     </div>
 
     <!-- 文件快捷键操作界面 -->
-    <div v-else-if="controlsShow === true" style="width: 338px;height:412px;" >
+    <div v-else-if="controlsShow === true" style="width: 338px;height:420px;" >
       <div class="flex flex-col rounded-lg px-4 py-3 ">
         <div class="flex  mb-3">
           <div class="w-12 bt-default button-active  h-12 rounded-lg pointer flex items-center justify-center" @click="backClip">
@@ -206,7 +206,7 @@
   <!-- 视频列表 -->
   <template v-if="clip.type === 'video'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;height:412px;" class="flex flex-col " v-if="controlsShow === false">
+    <div style="width: 338px;height:420px;" class="flex flex-col " v-if="controlsShow === false">
       <!-- 视频标题开始 -->
       <div class="flex h-item flex-col rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -214,8 +214,8 @@
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
         <div class="flex justify-between"> 
-         <span>{{ clip.timeText }}</span>
-         <span>{{clip.capacity}}</span>
+         <span class="time-bg">{{ clip.timeText }}</span>
+         <span class="time-bg">{{clip.capacity}}</span>
         </div>
       </div>
       <!-- 视频标题结束 -->
@@ -259,7 +259,7 @@
   <!-- 音频列表 -->
   <template v-if="clip.type === 'audio'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;" class="flex flex-col" v-if="controlsShow === false">
+    <div style="width: 338px;height:420px;" class="flex flex-col" v-if="controlsShow === false">
       <!-- 标题内容 -->
       <div class="flex h-item flex-col rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -267,8 +267,8 @@
           <span class="ml-2">{{getType(clip.type).title}}</span>
          </div>
          <div class="flex justify-between"> 
-          <span>{{ clip.timeText }}</span>
-          <span>{{clip.capacity}}</span>
+          <span class="time-bg">{{ clip.timeText }}</span>
+          <span class="time-bg">{{clip.capacity}}</span>
          </div>
       </div>
 
@@ -594,5 +594,14 @@ export default {
 // 列表
 .btn-list{
   background: var(--primary-bg);
+}
+
+:deep(.ant-image){
+  width: 100%;
+  height: 185px;
+}
+
+.time-bg{
+  color: var(--secondary-text);
 }
 </style>

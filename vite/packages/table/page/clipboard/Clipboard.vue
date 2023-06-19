@@ -224,12 +224,13 @@ export default{
 }
 .s-bg {
   box-shadow: none !important;
-  background: var(--main-bg);
+  background: var(--primary-bg);
   color: var(--primary-text);
 }
 
 :deep(.ant-input){
   border-radius: 12px !important;
+  border: 1px solid var(--divider);
 }
 
 @media screen and (max-width: 1064px) {
