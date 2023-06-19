@@ -16,7 +16,11 @@ export const myIcons = defineStore(
                 src: "",
                 backgroundIndex: 1,
             },
-            isCopy: false, // 是否打开复制状态
+            isCopy: false, // 复制状态
+            isDrag: false, // 拖拽状态
+            isClose: false, // 全屏离开状态
+            isPaste: false, // 粘贴状态
+            iconState: true, // 图标组件状态
             iconList: []
 
         }
