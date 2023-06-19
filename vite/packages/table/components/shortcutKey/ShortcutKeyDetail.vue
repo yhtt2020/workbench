@@ -178,160 +178,84 @@ export default {
             number: 92
         },
       ],
+      //快捷键列表
       keyList: [
         {
-          type: {
-            title: '常用',
-            tId: 1,
-          },
-          data: [
-            {
-              id: 1,
-              keys: [
-                {icon: 'linechart'},
-                {key: 'H'}
-              ],
-              title: '首选项',
-              isEdit: false, // 是否可编辑
-            },
-            {
-              id: 2,
-              keys: [
-                {icon: 'linechart'},
-                {icon: 'linechart'},
-                {key: 'Q'}
-              ],
-              title: '清除浏览器数据',
-              isEdit: false, // 是否可编辑
-            },
-            {
-              id: 3,
-              keys: [
-                {icon: 'linechart'},
-                {key: 'H'}
-              ],
-              title: '隐藏 Microsoft Edge'
-            },
-            {
-              id: 4,
-              keys: [
-                {icon: 'linechart'},
-                {key: 'H'}
-              ],
-              title: '隐藏 Microsoft Edge'
-            }
-          ]
+          groupName: '常用',
+          id: 1,
         },
         {
-          type: {
-            title: '文件',
-            tId: 2,
-          },
-          data: [
-          {
-            id: 5,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:6,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-          {
-            id:7,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id:8,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:9,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-          {
-            id:10,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id:11,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:12,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-          ]
+          id: 2,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '首选项',
         },
         {
-          type: {
-            title: '其他',
-            tId: 3,
-          },
-          data: [
-          {
-            id: 13,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:14,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id:15,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-        ]
+          id: 3,
+          keys: [
+            {icon: 'linechart'},
+            {icon: 'linechart'},
+            {key: 'Q'}
+          ],
+          title: '清除浏览器数据',
+        },
+        {
+          id: 4,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏 Microsoft Edge'
+        },
+        {
+          id: 5,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏 Microsoft Edge'
+        },
+        {
+          groupName: '文件',
+          id: 6,
+        },
+        {
+          id: 7,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '首选项',
+        },
+        {
+          id: 8,
+          keys: [
+            {icon: 'linechart'},
+            {icon: 'linechart'},
+            {key: 'Q'}
+          ],
+          title: '清除浏览器数据',
+        },
+        {
+          id: 9,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏 Microsoft Edge'
+        },
+        {
+          id: 10,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏 Microsoft Edge'
         }
       ],
-      //无快捷键列表
+      //推荐方案
       notDownloadList: [
         {   
           id: 1,
@@ -400,6 +324,7 @@ export default {
           download: 1232,
         },
       ],
+      // 单个app的内容
       appContent: {
         id: 1,
         icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
@@ -465,7 +390,6 @@ export default {
     },
     setKeyItem(id){
       this.keyIndex = id
-      // console.log(id)
     },
     onBack(){
       this.$emit('detailShow',false)

@@ -113,159 +113,116 @@ export default {
       closePrompt: true,
       keyList: [
         {
-          // type: {
-          //   title: '常用',
-          //   isEdit: true, // 是否可编辑
-          // },
-          type: {
-            title: '常用',
-            tId: 1
-          },
-          data: [
-            {
-              id: 1,
-              keys: [
-                {icon: 'linechart'},
-                {key: 'H'}
-              ],
-              title: '首选项',
-              showEdit: false, // 是否显示编辑状态
-            },
-            {
-              id: 2,
-              keys: [
-                {icon: 'linechart'},
-                {icon: 'linechart'},
-                {key: 'Q'}
-              ],
-              title: '清除浏览器数据',
-              isEdit: true, // 是否可编辑
-            },
-            {
-              id: 3,
-              keys: [
-                {icon: 'linechart'},
-                {key: 'H'}
-              ],
-              title: '隐藏 Microsoft Edge'
-            },
-            {
-              id: 4,
-              keys: [
-                {icon: 'linechart'},
-                {key: 'H'}
-              ],
-              title: '隐藏 Microsoft Edge'
-            }
-          ]
+          groupName: '常用0',
+          id: 1,
         },
         {
-          type: {
-            title: '文件',
-            tId: 2
-          },
-          data: [
-          {
-            id: 5,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:6,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-          {
-            id:7,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id:8,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:9,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-          {
-            id:10,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id:11,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:12,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-          ]
+          id: 2,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '首选项1',
         },
         {
-          type: {
-            title: '其他',
-            tId: 3
-          },
-          data: [
-          {
-            id: 13,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项'
-          },
-          {
-            id:14,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id:15,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据'
-          },
-        ]
+          id: 3,
+          keys: [
+            {icon: 'linechart'},
+            {icon: 'linechart'},
+            {key: 'Q'}
+          ],
+          title: '清除2',
+        },
+        {
+          id: 4,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏3'
+        },
+        {
+          id: 5,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: 'osoft4'
+        },
+        {
+          groupName: '文件5',
+          id: 6,
+        },
+        {
+          id: 7,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '首选项6',
+        },
+        {
+          id: 8,
+          keys: [
+            {icon: 'linechart'},
+            {icon: 'linechart'},
+            {key: 'Q'}
+          ],
+          title: '清除浏览器数据7',
+        },
+        {
+          id: 9,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏8'
+        },
+        {
+          id: 10,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '隐藏 Microsoft9'
+        },
+        {
+          id:11,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '首选项'
+        },
+        {
+          id:12,
+          keys: [
+            {icon: 'linechart'},
+            {icon: 'linechart'},
+            {key: 'Q'}
+          ],
+          title: '清除浏览器数据'
+        },
+        {
+          id: 13,
+          groupName: '其他'
+        },
+        {
+          id:14,
+          keys: [
+            {icon: 'linechart'},
+            {key: 'H'}
+          ],
+          title: '辅导课'
+        },
+        {
+          id:15,
+          keys: [
+            {icon: 'linechart'},
+            {icon: 'linechart'},
+            {key: 'Q'}
+          ],
+          title: '类似的控股权'
         }
       ],
       keyIndex: 1,

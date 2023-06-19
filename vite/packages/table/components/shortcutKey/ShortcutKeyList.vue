@@ -1,33 +1,34 @@
 <template>
     <!-- 快捷键列表 -->
-  <div class="key-box" :style="keyBoxStyle">
-    <template v-for="(item,i) in keyList" :key="item.type.tid" >
-      <div class="key-item border-right" :class="showEdit ? 'key-back' : ''">
-        <span>{{ item.type.title }}</span>
-        <div class="key-edit" v-if="showEdit" @click="editItem(item.type,'title')">
+  <div class="key-box" :style="keyBoxStyle" id="keyBox">
+    <div v-for="(item,i) in keyList" :key="item.id">
+      <!-- 分组名称 -->
+      <div class="key-item border-right" :class="showEdit ? 'key-back' : ''" v-if="item.groupName">
+        <span>{{ item.groupName }}</span>
+        <div class="key-edit" v-if="showEdit" @click="editItem(item,'title')">
           <Icon icon="bianji"></Icon>
           <span class="ml-2">编辑</span>
         </div>
       </div>
-      <div v-for="(k,index) in item.data" :key="k.id" class="border-right key-item" :class="showEdit ? 'key-back' : ''"
-      :style="keyIndex === k.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(k.id)"
+      <!-- 快捷键 -->
+      <div v-else class="border-right key-item" :class="showEdit ? 'key-back' : ''"
+      :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(item.id)"
       >
         <div class="flex">
-          <div v-for="i in k.keys" :key="i" class="flex">
+          <div v-for="i in item.keys" :key="i" class="flex">
             <span v-if="i.icon" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">
               <Icon :icon="i.icon" style="font-size: 1.5em;"></Icon>
             </span>
             <span v-else-if="i.key" class="s-bg h-8 w-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
           </div>
         </div>
-        <div class="key-title">{{ k.title}}</div>
-        <div class="key-edit" v-if="showEdit" @click="editItem(k,'item')">
+        <div class="key-title">{{ item.title}}</div>
+        <div class="key-edit" v-if="showEdit" @click="editItem(item,'item')">
           <Icon icon="bianji"></Icon>
           <span class="ml-2">编辑</span>
         </div>
       </div>
-    </template>
-    <div class="cover"></div>
+    </div>
   </div>
   <!-- 编辑名称 -->
   <a-drawer v-model:visible="openEdit" title="编辑" width="500" placement="right">
@@ -84,6 +85,8 @@ export default {
       editTitle: '',
       // 编辑组合键
       keyCombination: '',
+      // 输入的组合键
+      inputKeyArr: [],
       // 编辑操作名称
       editName: '',
       // 当前编辑的元素索引
@@ -100,8 +103,8 @@ export default {
     editItem(item,type){
       switch (type) {
         case 'title':
-          this.editTitle = item.title
-          this.editIndex = item.tId
+          this.editTitle = item.groupName
+          this.editIndex = item.id
           this.editType = 'title'
           this.openEdit = true
           break;
@@ -118,14 +121,12 @@ export default {
       if(this.editType === 'title'){
         // 保存修改分组名称
         this.keyList.forEach(item => {
-          if(item.type.tId === this.editIndex) item.type.title = this.editTitle
+          if(item.id === this.editIndex) item.groupName = this.editTitle
         })
       }else if(this.editType === 'item'){
         // 保存修改的快捷键
         this.keyList.forEach(item => {
-          item.data.forEach(i => {
-            if(i.id === this.editIndex)i.title = this.editName
-          })
+            if(item.id === this.editIndex)item.title = this.editName
         })
       }
       this.openEdit = false
@@ -137,6 +138,7 @@ export default {
       switch(event.key){
         case "Backspace":
           this.keyCombination = ''
+          this.inputKeyArr = []
           break;
         // 不需要的
         case "Tab":
@@ -144,17 +146,50 @@ export default {
         case "Process":
           break;
         default:
+          //去重
           if(this.keyCombination.indexOf(str.toUpperCase()) == -1){
             this.keyCombination.replace(/^\s/g, '')
-            this.keyCombination += this.keyCombination ? (' + ' + str) : str
-            this.keyCombination = this.keyCombination.toUpperCase()
+            this.inputKeyArr.push(str)
+            if(this.inputKeyArr.length < 4){
+              this.keyCombination += this.keyCombination ? (' + ' + str) : str
+              this.keyCombination = this.keyCombination.toUpperCase()
+            }
+            
           }
           break;
       }
     },
+    //拖拽排序
+    keyDrop(){
+      let that = this;
+      let side = document.getElementById('keyBox')
+      Sortable.create(side, {
+        sort: true,
+        animation: 150,
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let  newItem = side.children[newIndex]
+          let  oldItem = side.children[oldIndex]
+          // 先删除移动的节点
+          side.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if(newIndex > oldIndex) {
+            side.insertBefore(newItem,oldItem)
+          } else {
+            side.insertBefore(newItem,oldItem.nextSibling)
+          }
+          let temp = that.keyList[oldIndex]
+          that.keyList.splice(oldIndex, 1)
+          that.keyList.splice(newIndex, 0, temp)
+        }
+      });
+    },
   },
   mounted(){
-    
+    this.$nextTick(() => {
+      this.keyDrop()
+    })
   },
 }
 </script>
