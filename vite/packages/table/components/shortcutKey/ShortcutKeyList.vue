@@ -1,13 +1,19 @@
 <template>
     <!-- 快捷键列表 -->
   <div class="key-box" :style="keyBoxStyle" id="keyBox">
-    <div v-for="(item,i) in keyList" :key="item.id">
+    <div v-for="(item,index) in keyList" :key="item.id">
       <!-- 分组名称 -->
       <div class="key-item border-right" :class="showEdit ? 'key-back' : ''" v-if="item.groupName">
         <span>{{ item.groupName }}</span>
-        <div class="key-edit" v-if="showEdit" @click="editItem(item,'title')">
-          <Icon icon="bianji"></Icon>
-          <span class="ml-2">编辑</span>
+        <div class="key-edit" v-if="showEdit">
+          <span @click="delItem(index)">
+            <Icon icon="delete" style="width:18px;height:18px;"></Icon>
+            <span class="mx-2">删除</span>
+          </span>
+          <span @click="editItem(item,'title')">
+            <Icon icon="bianji"></Icon>
+            <span class="ml-2">编辑</span>
+          </span>
         </div>
       </div>
       <!-- 快捷键 -->
@@ -23,10 +29,29 @@
           </div>
         </div>
         <div class="key-title">{{ item.title}}</div>
-        <div class="key-edit" v-if="showEdit" @click="editItem(item,'item')">
-          <Icon icon="bianji"></Icon>
-          <span class="ml-2">编辑</span>
+        <div class="key-edit" v-if="showEdit">
+          <span @click="delItem(index)">
+            <Icon icon="delete" style="width:18px;height:18px;"></Icon>
+            <span class="mx-2">删除</span>
+          </span>
+          <span @click="editItem(item,'item')">
+            <Icon icon="bianji"></Icon>
+            <span class="ml-2">编辑</span>
+          </span>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="prompt-modal s-bg" v-show="showModal">
+    <div class="p-5 s-bg flex flex-col justify-center items-center" style="border-radius:16px">
+      <!-- <div>
+        <Icon icon="tishi-xianxing" style="font-size: 16px;color: orange"></Icon>
+        <span class="ml-3">提示</span>
+      </div> -->
+      <span class="my-5">确定要删除吗</span>
+      <div class="modal-btn">
+        <div class="mr-3 rounded-lg" @click="showModal = false">取消</div>
+        <div @click="delModal">删除</div>
       </div>
     </div>
   </div>
@@ -92,12 +117,25 @@ export default {
       // 当前编辑的元素索引
       editIndex: -1,
       // 编辑的类型
-      editType: ''
+      editType: '',
+      // 删除的模态框
+      showModal: false,
+      // 删除的索引
+      delIndex: -1
     }
   },
   methods: {
     toggleKey(id){
       this.$emit('setKeyItem',id)
+    },
+    delItem(index){
+      this.delIndex = index
+      this.showModal = true
+    },
+    // 删除一列快捷键
+    delModal(){
+      this.showModal = false
+      this.keyList.splice(this.delIndex,1)
     },
     // 打开编辑抽屉
     editItem(item,type){
@@ -281,4 +319,24 @@ export default {
     justify-content: center;
     align-items: center;
   }
+  .prompt-modal{
+    position: absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    left:0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .modal-btn{
+      display: flex;
+      color: white;
+      >div{
+        padding: 10px 50px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.30);
+      }
+    }
+}
 </style>

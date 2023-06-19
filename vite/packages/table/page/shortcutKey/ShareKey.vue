@@ -69,7 +69,7 @@
     </div>
   </div>
   <!-- 分享成功的模态框 -->
-  <div class="fixed inset-0 home-blur" style="z-index: 999999999999;" v-if="shoreModal" >
+  <div class="fixed inset-0 home-blur" style="z-index: 99999;" v-if="shoreModal" >
     <div
          class="fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
          style="padding: 24px 32px;width: 480px;height: 221px;background:  #282828">
