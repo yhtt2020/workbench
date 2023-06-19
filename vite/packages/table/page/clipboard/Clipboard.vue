@@ -45,8 +45,8 @@
   <!-- 搜索右侧抽屉开始 -->
    <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
     <div class="flex mb-3">
-      <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData"></a-input>
-      <div class="h-10 w-24 ml-3 s-item pointer flex items-center justify-center rounded-lg" @click="clickSearch" style="background: var(--secondary-bg);">
+      <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData" style="background: var(--secondary-bg);"></a-input>
+      <div class="h-10 w-24 ml-3 s-item pointer flex button-active items-center justify-center rounded-lg" @click="clickSearch" style="background: var(--secondary-bg);">
         搜索
       </div>
     </div>
@@ -185,6 +185,10 @@ export default{
     // 打开设置入口
     openSet(){
       this.$refs.clipDrawer.clipOpenShow()
+    },
+    // 搜索按钮事件
+    clickSearch(){
+
     }
   },
 

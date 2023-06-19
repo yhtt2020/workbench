@@ -62,7 +62,7 @@
       <a-switch v-model:checked="showLineNumber" />
     </div>
     <div class="mb-6 ps-cm-16">缩进单位</div>
-    <a-input placeholder="4" v-model:value="clipSize" @pressEnter="updateIndentUnit($event)"/>
+    <a-input placeholder="4" class="h-12" v-model:value="clipSize" @pressEnter="updateIndentUnit($event)"/>
   </a-drawer>
 
   <!-- 主题色模块 -->
