@@ -18,8 +18,8 @@ export default {
         },
 
         // 处理鼠标经过事件
-        handleHover() {
-            this.$emit('hover');
+        handleHover(event) {
+            this.$emit('hover',event);
         },
     },
 };

@@ -1,6 +1,8 @@
+<!-- DragAndFollow.vue -->
+
 <template>
     <!-- 可拖拽元素 -->
-    <div @mousedown.stop.prevent="handleMouseDown" @mouseup.stop.prevent="handleMouseUp"  class="draggable">
+    <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @click="handleClick" class="draggable">
         <slot></slot>
     </div>
     <teleport to="body">
@@ -12,7 +14,7 @@
             </div>
         </div>
         <!-- 临时容器 -->
-        <div class="temp" style="display: none;"></div>
+        <!-- <div class="temp" style="display: none;"></div> -->
     </teleport>
 </template>
   
@@ -40,7 +42,6 @@ export default {
                 this.$emit('drag-start', event);
                 event.preventDefault();
                 event.stopPropagation();
-
                 this.isDragging = true;
 
                 const draggableElement = document.querySelector('.draggable');
@@ -89,6 +90,7 @@ export default {
         },
         // 鼠标移动事件处理方法
         handleMouseMove(event) {
+            // console.log('event :>> ', event);
             if (this.isDragging) {
                 this.followPosition = {
                     x: event.clientX,
@@ -100,7 +102,7 @@ export default {
         handleClick(event) {
             if (!this.isDragging) {
                 // 触发点击事件
-                // this.$emit('click');
+                this.$emit('click');
             }
         },
     },
@@ -109,7 +111,8 @@ export default {
             // 监听鼠标移动和抬起事件
             document.addEventListener('mousemove', this.handleMouseMove);
             document.addEventListener('mouseup', this.handleMouseUp);
-            this.tempContainer = document.querySelector('.temp');
+            // this.tempContainer = document.querySelector('.temp');
+            this.tempContainer =document.querySelector('body');
         });
     },
     beforeDestroy() {

@@ -46,9 +46,7 @@ export default {
   methods: {
     // 单图标点击
     iconClick() {
-        console.log('this.isDrag :>> ', this.isDrag);
       if (this.isDrag) {
-        console.log('this.isDrag :>> ', this.isDrag);
         this.isDrag = false; // 重置拖拽状态
         return;
       }

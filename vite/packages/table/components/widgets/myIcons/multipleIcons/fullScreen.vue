@@ -7,7 +7,7 @@
       <div class="box xt-bg" @click.stop="" :style="show">
         <div class="title xt-text">
           <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
-          <div class="box-btn" @click="disbandGroup">
+          <div class="box-btn xt-bg-2" @click="disbandGroup">
             <div class="text" style="color: #fff;">
               · · ·
             </div>
@@ -79,6 +79,9 @@ export default {
       return { display: this.isShow == true ? 'black' : 'none' }
     }
   },
+  mounted() {
+    this.isDrag = false
+  },
   methods: {
     // 全屏拖拽开始
     handleDragStart(event) {
@@ -103,9 +106,7 @@ export default {
           this.deleteIcons()
         }
         this.isPaste = false // 重置粘贴状态
-
       }
-
     },
     // 全屏离开
     handleLeave() {
@@ -194,7 +195,7 @@ export default {
     justify-content: center;
 
     .input-box {
-      width: 98%;
+      width: 60%;
       text-align: center;
       height: 52px;
       background: none;
@@ -213,8 +214,8 @@ export default {
       position: absolute;
       width: 48px;
       height: 48px;
-      background: var(--active-bg);
-      color: var(--active-text);
+      color: var(--primary-text);
+      background-color: var(--secondary-bg);
       right: 6px;
       top: 0px;
       z-index: 999999;

@@ -3,7 +3,7 @@
         @closeFullScreen="closeFullScreen" :iconLists="iconList" @disbandGroup="disbandGroup" @deleteIcons="deleteIcons"
         @editIcons="editIcons" @dragAddIcon="dragAddIcon">
     </IconsFullScreen>
-    <div class="item-list  xt-hover no-drag" @click="isIconsFullScreen = true">
+    <div class="item-list  xt-hover no-drag" @click="fuullScreenClick()">
         <div class="item">
             <template v-for="(i) in 4">
                 <img v-if="iconList[i - 1]" class="img" :src="iconList[i - 1].src" style="object-fit: cover;">
@@ -35,6 +35,9 @@ export default {
         }
     },
     methods: {
+        fuullScreenClick() {
+            this.isIconsFullScreen = true
+        },
         dragAddIcon(icon) {
             this.$emit('dragAddIcon', icon)
         },
