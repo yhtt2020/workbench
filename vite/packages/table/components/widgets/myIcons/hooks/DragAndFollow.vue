@@ -1,5 +1,3 @@
-<!-- DragAndFollow.vue -->
-
 <template>
     <!-- 可拖拽元素 -->
     <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @click="handleClick" class="draggable">
@@ -35,21 +33,20 @@ export default {
     methods: {
         // 鼠标按下事件处理方法
         handleMouseDown(event) {
-            this.followPosition = { x: event.clientX, y: event.clientY };
+            this.followPosition = { x: event.clientX, y: event.clientY }; // 初始化拖拽元素坐标
             event.preventDefault();
             event.stopPropagation();
             this.dragStartTimer = setTimeout(() => {
                 this.$emit('drag-start', event);
                 event.preventDefault();
                 event.stopPropagation();
-                this.isDragging = true;
-
+                this.isDragging = true; // 打开拖拽状态
+                document.body.style.cursor = 'move'; // 拖拽手指
+                // 获取可拖拽元素并创建拖拽元素
                 const draggableElement = document.querySelector('.draggable');
-
                 const draggableRect = draggableElement.getBoundingClientRect();
                 this.followWidth = draggableRect.width;
                 this.followHeight = draggableRect.height;
-
                 this.draggedElement = document.createElement('div');
                 this.draggedElement.classList.add('follow');
                 this.draggedElement.style.width = draggableRect.width + 'px';
@@ -58,9 +55,7 @@ export default {
                     event.clientX - draggableRect.width / 2 + 'px';
                 this.draggedElement.style.top =
                     event.clientY - draggableRect.height / 2 + 'px';
-
                 this.tempContainer.appendChild(this.draggedElement);
-                document.body.style.cursor = 'move';
             }, 1000);
 
             // 监听鼠标移动和抬起事件
@@ -89,7 +84,6 @@ export default {
         },
         // 鼠标移动事件处理方法
         handleMouseMove(event) {
-            // console.log('event :>> ', event);
             if (this.isDragging) {
                 this.followPosition = {
                     x: event.clientX,
@@ -100,7 +94,6 @@ export default {
         // 点击事件处理方法
         handleClick(event) {
             if (!this.isDragging) {
-                // 触发点击事件
                 this.$emit('click');
             }
         },

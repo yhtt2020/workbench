@@ -135,24 +135,23 @@ export default {
             if (
                 this.customData.iconList !== undefined &&
                 this.customData.iconList.length > 1
-            ) {
-                return [
-                    {
-                        icon: "zhankai",
-                        title: "解除分组",
-                        fn: () => {
-                            this.disbandGroup();
-                        },
+            ) return [
+                {
+                    icon: "zhankai",
+                    title: "解除分组",
+                    fn: () => {
+                        this.disbandGroup();
                     },
-                    {
-                        icon: "shezhi1",
-                        title: "放置",
-                        fn: () => {
-                            this.copyIcon();
-                        },
+                },
+                {
+                    icon: "shezhi1",
+                    title: "放置",
+                    fn: () => {
+                        this.copyIcon();
                     },
-                ];
-            } else {
+                },
+            ];
+            else
                 return [
                     {
                         icon: "shezhi1",
@@ -178,28 +177,26 @@ export default {
                         },
                     },
                 ];
-            }
         },
     },
     methods: {
         ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-        // 单图标组件拖拽结束
-        handleDragEnd() {
-            this.iconList = [];
-            this.isDragStyle = false
-            this.isDrag = false
-        },
         // 处于图标组件放置区
-        handleDrop(event) {
-            if (this.isDrag) {
-                this.copyIcon();
-            }
+        handleDrop() {
+            // 拖拽状态下 添加图标组件
+            if (this.isDrag) this.copyIcon();
         },
         // 单图标组件拖拽开始
-        handleDragStart(event) {
+        handleDragStart() {
             this.iconList = [];
             this.isDrag = true; // 打开拖拽状态
             this.moveIcon(); // 复制图标组件
+        },
+          // 单图标组件拖拽结束
+          handleDragEnd() {
+            this.iconList = [];
+            this.isDragStyle = false
+            // this.isDrag = false // 这里没处理 可能有bug  目前没发现
         },
         // 删除多图标组件中的单个图标
         deleteIcons(index) {
@@ -210,7 +207,7 @@ export default {
             this.index = index;
             this.settingVisible = true;
         },
-        // 拖拽添加图标
+        // 全屏拖拽添加图标
         dragAddIcon(icon) {
             this.addIcon(icon);
         },
