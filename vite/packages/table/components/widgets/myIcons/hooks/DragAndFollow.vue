@@ -1,8 +1,6 @@
-<!-- DragAndFollow.vue -->
-
 <template>
     <!-- 可拖拽元素 -->
-    <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @click="handleClick" class="draggable">
+    <div @mousedown.stop.prevent="handleMouseDown" @mouseup.stop.prevent="handleMouseUp"  class="draggable">
         <slot></slot>
     </div>
     <teleport to="body">
@@ -37,12 +35,16 @@ export default {
         handleMouseDown(event) {
             this.followPosition = { x: event.clientX, y: event.clientY };
             event.preventDefault();
+            event.stopPropagation();
             this.dragStartTimer = setTimeout(() => {
-                this.$emit('drag-start');
+                this.$emit('drag-start', event);
                 event.preventDefault();
+                event.stopPropagation();
+
                 this.isDragging = true;
 
                 const draggableElement = document.querySelector('.draggable');
+
                 const draggableRect = draggableElement.getBoundingClientRect();
                 this.followWidth = draggableRect.width;
                 this.followHeight = draggableRect.height;
@@ -87,7 +89,6 @@ export default {
         },
         // 鼠标移动事件处理方法
         handleMouseMove(event) {
-            // console.log('event :>> ', event);
             if (this.isDragging) {
                 this.followPosition = {
                     x: event.clientX,
@@ -99,7 +100,7 @@ export default {
         handleClick(event) {
             if (!this.isDragging) {
                 // 触发点击事件
-                this.$emit('click');
+                // this.$emit('click');
             }
         },
     },
@@ -128,11 +129,13 @@ export default {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 9999999999999999999999999999;
 }
 
 .follow {
     position: absolute;
     pointer-events: none;
+    z-index: 9999999999999999999999999999;
+
 }
 </style>
