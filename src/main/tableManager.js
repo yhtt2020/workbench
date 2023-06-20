@@ -98,7 +98,7 @@ class TableManager {
 
       tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
       tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-        let allowedPermissions = ['audioCapture', 'media'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+        let allowedPermissions = ['audioCapture', 'media','fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
         if (allowedPermissions.includes(permission)) {
           callback(true) // Approve permission request

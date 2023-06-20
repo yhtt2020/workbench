@@ -218,7 +218,7 @@
 
       <!--  选择录制源    -->
       <div style="width: 490px;height: 100%" >
-        <div v-if="step===1">
+        <div v-if="step===1" style="height: 100%">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center">
               <Icon icon="video" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
@@ -233,7 +233,7 @@
           <div class="text-center" v-if="loading===true">
             捕获源获取中…
           </div>
-          <div v-else>
+          <div v-else style="height: 100%">
             <template v-if="defaultRecordingType.name === 'recordGame'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
@@ -386,7 +386,8 @@
             </div>
           </div>
             <div style="text-align: center" v-if="recording">
-              <icon icon="record-circle-line" style="color:red" ></icon> 正在录制视频：已录制{{recordedTimeStr}}
+              <icon icon="record-circle-line" style="color:red" ></icon> 正在录制视频：已录制{{recordedTimeStr}}，
+              码率：{{(this.settings.videoBitsPerSecond/1024/1024).toFixed(2)}}Mbps 预估大小：{{(this.settings.videoBitsPerSecond/1024/1024/8*this.recordedSeconds).toFixed(2)}}MB
             </div>
 <!--  捕获预览        -->
           <div  v-if="recentFileName && !recording">
@@ -396,6 +397,7 @@
               </div>
               <div class="mb-2">
                 <a-button @click="openRecent" class="mr-2">打开</a-button>
+                <a-button @click="openPos" class="mr-2">浏览</a-button>
                 <a-button @click="saveRecent" class="mr-2">另存为</a-button>
                 <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
               </div>
@@ -408,7 +410,8 @@
               </div>
               <div class="mb-2">
                 <a-button @click="openRecent" class="mr-2">打开</a-button>
-                <a-button @click="editRecent" class="mr-2">编辑</a-button>
+                <a-button @click="openPos" class="mr-2">浏览</a-button>
+<!--                <a-button @click="editRecent" class="mr-2">编辑</a-button>-->
                 <a-button @click="saveRecent" class="mr-2">另存为</a-button>
                 <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
               </div>
@@ -577,6 +580,24 @@
       <span @click="setVideoSavePath" class="text-center mb-3 py-3 s-item rounded-lg">{{
           settings.videoSavePath
         }}</span>
+      <span class="mb-3 fps-t">视频码率</span>
+      <a-select v-model:value="settings.videoBitsPerSecond">
+        <a-select-option :value="1.5e6">
+          1.5Mbps
+        </a-select-option>
+        <a-select-option :value="2.5e6">
+          2.5Mbps
+        </a-select-option>
+        <a-select-option :value="5.0e6">
+          5.0Mbps
+        </a-select-option>
+        <a-select-option :value="8.0e6">
+          8.0Mbps
+        </a-select-option>
+        <a-select-option :value="10.0e6">
+          10.0Mbps
+        </a-select-option>
+      </a-select>
       <span class="mb-3 fps-t">截屏快捷键</span>
       <div class="flex items-center  mb-3">
         <span class="rounded-lg p-2 s-item mr-3 w-2/3">{{ shortcutKey }}</span>
@@ -628,6 +649,7 @@ import SaveImage from '../../components/game/SaveImage.vue'
 import { message, Modal } from 'ant-design-vue'
 import { formatSeconds, timeStamp } from '../../util'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
+import filenamify from 'filenamify'
 const toast=useToast()
 export default {
   name: 'GameCapture',
@@ -826,6 +848,16 @@ export default {
   methods: {
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     ...mapActions(captureStore, ['getSource']),
+    /**
+     * 重载列表
+     */
+    reload(){
+      if(this.lastCapture==='record'){
+        this.loadVideos()
+      }else{
+        this.loadImages()
+      }
+    },
     refreshSource (cb) {
       this.sources = []
       this.loading = true
@@ -923,17 +955,24 @@ export default {
      * @returns {string}
      */
     getRecentPath(){
+      return this.recentType==='video'?this.getRecentVideoPath():this.getRecentImagePath()
+    },
+    getRecentImagePath(){
       return require('path').join(this.settings.imageSavePath,this.recentFileName)
     },
     getRecentVideoPath(){
       return require('path').join(this.settings.videoSavePath,this.recentFileName)
     },
     async saveRecent () {
+      let filters={ name: '图片', extensions: ['png'] }
+      if(this.recentType==='video'){
+        filters={ name: '视频', extensions: ['mp4'] }
+      }
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
         defaultPath: this.recentFileName,
-        message: '选择保存的截图位置',
-        filters: [{ name: '图片', extensions: ['png'] }],
+        message: '选择保存的位置',
+        filters: [filters],
         properties: [
           'createDirectory',
           'showOverwriteConfirmation'
@@ -942,22 +981,25 @@ export default {
       if(savePath){
         require('fs').copyFileSync(this.getRecentPath(),savePath)
         if(require('fs').existsSync(this.getRecentPath(),savePath)){
-          message.success('截图保存成功')
+          message.success('保存成功')
         }
       }
     },
     openRecent(){
+      require('electron').shell.openPath(this.getRecentPath())
+    },
+    openPos(){
       require('electron').shell.showItemInFolder(this.getRecentPath())
     },
     delRecent(){
       Modal.confirm({
-        content:'删除此图片？',
+        content:'删除此内容？',
         centered:true,
         onOk:()=>{
           require('fs').rmSync(this.getRecentPath())
           this.recentFileName=''
           this.recentScreenShot=''
-          this.loadImages()
+          this.reload()
         }
       })
     },
@@ -979,10 +1021,13 @@ export default {
       this.step = 2
       this.currentSource = source
     },
+    filterName(name){
+      return filenamify(name)
+    },
     callback(image){
       this.recentScreenShot=image
       let time=timeStamp(Date.now())
-      const filename=this.currentSource.name+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.png'
+      const filename=this.filterName(this.currentSource.name)+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.png'
       const path=require('path').join(this.settings.imageSavePath,filename)
       const base64 = image.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
       const dataBuffer = new Buffer(base64, 'base64'); //把base64码转成buffer对象，
@@ -1152,7 +1197,7 @@ export default {
         mimeType: 'video/webm;codecs=vp9',
         // 支持手动设置码率，这里设了1.5Mbps的码率，以限制码率较大的情况
         // 由于本身还是动态码率，这个值并不准确
-        videoBitsPerSecond: 1.5e6,
+        videoBitsPerSecond: this.settings.videoBitsPerSecond,
 
       });
 
@@ -1175,15 +1220,15 @@ export default {
           var buffer = new Buffer(reader.result)
           //temp文件夹应已存在
           const time=timeStamp(Date.now())
-          const fileName=this.currentSource.name+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.mp4'
+          const fileName=this.filterName(this.currentSource.name)+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.mp4'
           const savePath=require('path').join(this.settings.videoSavePath,fileName)
-          this.recentType='video'
-          this.recentFileName=fileName
           fs.writeFile(savePath, buffer, {}, (err, res) => {
             if(err){
               console.error(err)
               return
             }
+            this.recentType='video'
+            this.recentFileName=fileName
             message.success('保存录屏成功')
             this.loadVideos()
           })
@@ -1204,6 +1249,7 @@ export default {
         // 开始录制，并且每timeslice毫秒，触发一次ondataavailable，输出并清空缓冲区（非常重要）
 
         recorder.start(timeslice);
+        this.recentFileName=''
         this.recording=true
         this.recordedSeconds=0
         this.setRecordingTimer()

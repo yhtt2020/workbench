@@ -8,7 +8,8 @@ export const captureStore = defineStore("captureStore", {
       //截图保存位置
       imageSavePath: '',
       //录屏保存位置
-      videoSavePath: ''
+      videoSavePath: '',
+      videoBitsPerSecond:1.5e6
     },
     images:[],
     videos:[]
