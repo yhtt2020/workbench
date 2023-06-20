@@ -443,15 +443,15 @@
             <div class="flex flex-col justify-between w-2/3">
               <div class="flex justify-between mb-5">
                 <span class="fps-sm">实时</span>
-                <span class="fps-hz">144hz</span>
+                <span class="fps-hz">{{ CPUGPUData.FPS.value }}</span>
               </div>
               <div class="flex justify-between mb-5">
                 <span class="fps-sm">平均</span>
-                <span class="fps-hz">99hz</span>
+                <span class="fps-hz">{{ averageFps }}</span>
               </div>
               <div class="flex justify-between mb-2">
                 <span class="fps-sm">1%LOW</span>
-                <span class="fps-hz">87hz</span>
+                <span class="fps-hz">{{low1}}</span>
               </div>
             </div>
           </div>
@@ -467,14 +467,14 @@
               </div>
             </div>
             <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useGPU.value }}</div>
+              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useGPU.value|| '-' }}</div>
               <div class="flex items-center justify-center">
                 <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
                 <span class="ml-2 fps-t">GPU</span>
               </div>
             </div>
             <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">144</div>
+              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.FPS.value  }}</div>
               <div class="flex items-center justify-center">
                 <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
                 <span class="ml-2 fps-t">FPS</span>
@@ -485,7 +485,7 @@
 
         <template v-else>
           <div class="s-bg flex flex-col py-8 rounded-lg items-center">
-            <div class="fps-text pb-4">144</div>
+            <div class="fps-text pb-4">{{ CPUGPUData.FPS.value }}</div>
             <div class="flex items-center justify-center">
               <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
               <span class="ml-3 fps-t">FPS</span>
@@ -633,6 +633,7 @@
 </template>
 
 <script>
+import _ from 'lodash-es'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { AreaChartOutlined } from '@ant-design/icons-vue'
 import HorizontalCapture from '../../components/HorizontalCaptrue.vue'
@@ -756,7 +757,7 @@ export default {
       },
       FPSOption,
       fpsInstance: null,
-      fpsList: [0, 10, 0, 20, 0, 0, 0, 30, 0, 0, 0, 0, 60, 0, 0, 0, 80],
+      fpsList: [],
       screenShotAddress: 'C:\PROGRAM FILES (X86)\CLIP', // 用于接收截屏获取的地址
       shortcutKey: 'CTRL + WIN + G',
       recordKey: 'CTRL + WIN + V',
@@ -779,6 +780,7 @@ export default {
 
     }
   },
+
   computed: {
     ...mapWritableState(inspectorStore, ['displayData']),
     ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos']),
@@ -811,6 +813,25 @@ export default {
     recordedTimeStr(){
 
       return formatSeconds(this.recordedSeconds)
+    },
+    averageFps() {
+      if (this.fpsList.length === 0) {
+        return 0
+      }
+      return _.mean(this.fpsList).toFixed(1)
+    },
+    low1(){
+
+      let sorted=this.fpsList.sort((a,b)=>{
+        return a-b
+      })
+      let length=this.fpsList.length
+      let getNum=Math.floor(length/10)
+      if(getNum===0){
+        return 0
+      }
+      console.log(sorted,length,getNum)
+      return _.mean(_.take(sorted,getNum)).toFixed(1)
     }
   },
   async mounted () {
@@ -862,6 +883,18 @@ export default {
           FPS: FPS,
           down: down,
           up: up
+        }
+        if(this.displayData.FPS.value) {
+          this.fpsList.push(this.displayData.FPS.value)
+          if(this.fpsInstance){
+            this.fpsInstance.setOption({
+              series: [
+                {
+                  data: this.fpsList,
+                },
+              ]
+            })
+          }
         }
       },
       deep: true,
@@ -1403,7 +1436,7 @@ export default {
             {
               smooth: 0.6,
               symbol: 'none',
-              name: 'Email',
+              name: 'fps',
               type: 'line',
               stack: 'Total',
               emphasis: {
