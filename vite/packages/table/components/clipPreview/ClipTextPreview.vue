@@ -12,7 +12,7 @@
                 <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
               </div>
             </div>
-            <div class="flex items-center justify-center grow pr-5 pl-2">
+            <div class="flex items-center justify-center grow pr-5 pl-2 mb-3">
               <template v-if="defaultText.name === 'plainText'">
                 <textCodeMirror :editorContent="previewContent.content" class="w-full"></textCodeMirror>
               </template>
@@ -183,7 +183,7 @@
 
             <!-- 内容预览 -->
             <div class="flex h-full flex-col items-center justify-center">
-              <ClipVideo :vUrl="previewContent.videoUrl" class="middle-clip rounded-lg"></ClipVideo>
+              <ClipVideo :videoUrl="previewContent.videoUrl" class="middle-clip rounded-lg"></ClipVideo>
             </div>
           </div>
           <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
@@ -513,7 +513,7 @@ export default {
 
 @media screen and (max-height:480px) {
   :deep(.CodeMirror){
-    height:300px !important;
+    height:330px !important;
   }
 }
 @media screen and (min-height:481px) and (max-height:800px) {
@@ -524,7 +524,7 @@ export default {
 
 @media screen and (min-height:801px) and (max-height:1200px) {
   :deep(.CodeMirror){
-    height: 800px !important;
+    height: 100% !important;
   }
 }
 </style>

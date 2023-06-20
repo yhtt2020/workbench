@@ -222,7 +222,7 @@
       
       <!-- 视频内容开始 -->
       <div  class="flex px-5 py-20 items-center pointer flex-col justify-center" @click="textButton">
-        <ClipVideo :vUrl="clip.videoUrl"></ClipVideo>
+        <ClipVideo :videoUrl="clip.videoUrl"></ClipVideo>
       </div>
       <!-- 视频内容结束 -->
     </div>

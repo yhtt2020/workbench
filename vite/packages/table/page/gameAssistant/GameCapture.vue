@@ -486,7 +486,7 @@
                      v-for="item in pagedVideos">
                   <div class="relative  w-auto h-full s-item rounded-md overflow-hidden  pointer flex flex-col "
                        style="border-radius: 12px;">
-                    <VideoItem :vUrl="item"></VideoItem>
+                    <VideoItem :videoUrl="item"></VideoItem>
                   </div>
                 </div>
               </div>

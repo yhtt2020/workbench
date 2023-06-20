@@ -8,7 +8,7 @@
 import Player from 'xgplayer/dist/simple_player'
 export default {
   props:{
-    vUrl:{
+    videoUrl:{
       type:String,
     }
   },
@@ -19,7 +19,7 @@ export default {
   methods:{
     // 初始化西瓜视频播放器
     loadXgPlayer(){
-      const url = this.vUrl
+      const url = this.videoUrl
       this.$nextTick(()=>{
         window.$xgplayer = new Player({
           el:this.$refs.clipVideo,
