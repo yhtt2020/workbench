@@ -52,7 +52,6 @@ import BrowserMain from '../page/app/browser/Browser.vue';
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
-import ShareKey from "../page/shortcutKey/ShareKey.vue"
 export default [
   {
     path: "/main",
@@ -329,13 +328,6 @@ export default [
         path:'/shortcutKey',
         name:'shortcutKey',
         component:ShortcutKey,
-        // children: [
-        //   {
-        //     path:'/shareKey',
-        //     name:'shareKey',
-        //     component:ShareKey,
-        //   },
-        // ]
       },
     ],
   },

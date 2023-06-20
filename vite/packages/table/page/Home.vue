@@ -216,7 +216,7 @@
   <!-- <div class="home-blur fixed inset-0 p-12" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
-  
+
   <div class="home-blur fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
     <GuidePage></GuidePage>
   </div>
@@ -291,8 +291,10 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import ShortcutKeyDetail from "../components/ShortcutKeyDetail.vue";
 import GuidePageVue from './app/grade/GuidePage.vue';
+import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
+import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
+import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -545,8 +547,10 @@ export default {
     Notes,
     myIcons,
     NewAddCard,
+    GuidePage,
     ShortcutKeyDetail,
-    GuidePage
+    NotShortcutKey,
+    ShortcutKeyList
   },
   computed: {
     ...mapWritableState(cardStore, [

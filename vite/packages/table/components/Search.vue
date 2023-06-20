@@ -11,7 +11,7 @@
             <a-select :style="selectStyle"
                 @change="changeSelect($event)"
                 class="select rounded-lg  text-xs s-item flex items-center text-center" size="large" :bordered="false"
-                v-model:value="selectValue" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--active-bg)' }">
+                v-model:value="selectValue" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--secondary-bg)' }">
                 <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
             </a-select>
         </div>
@@ -84,7 +84,7 @@ export default {
         },
         //输入框值改变
         changeInput (event) {
-            this.$emit('changeInput', event.target._value)
+            this.$emit('changeInput', event.target.value)
         }
     }
 }
@@ -96,7 +96,6 @@ export default {
         height: 48px;
         background: rgba(0,0,0,0.30);
         border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.1);
         font-size: 18px;
     }
     .select{

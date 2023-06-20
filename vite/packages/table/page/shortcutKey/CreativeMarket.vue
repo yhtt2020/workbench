@@ -2,8 +2,8 @@
   <div class="s-bg rounded-lg px-6 box">
     <!-- 头部导航 -->
     <div class="flex items-center justify-between" style="height: 96px;">
-      <div @click="onBack" class="pointer active flex items-center rounded-lg justify-center" 
-        style="width:112px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">
+      <div @click="onBack" class="pointer flex items-center rounded-lg justify-center" 
+        style="background: rgba(0, 0, 0, 0.30);width:112px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
@@ -26,8 +26,8 @@
       <!-- 侧边导航 -->
       <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
       <!-- 列表内容 -->
-      <div class="ml-5 right" style="width:100%;height:90%;overflow: auto;">
-        <MarketList :search="sort" :navList="marketList[navIndex].children"></MarketList>
+      <div class="ml-5 right no-drag" style="width:100%;height:90%;overflow: auto;">
+        <MarketList :selected="sort" :navList="marketList[navIndex].children"></MarketList>
       </div>
     </div>
   </div>
@@ -100,7 +100,7 @@ export default {
               time: 1685462400000
             },
             {   
-              id: 3,
+              id: 19,
               icon: 'http://a.apps.vip/icons/flappy.jpg',
               name: 'Adobe Lightroom',
               number: 92,
@@ -113,8 +113,8 @@ export default {
               time: 1685462400000
             },
             {   
-              id: 3,
-              icon: 'http://a.apps.vip/icons/flappy.jpg',
+              id: 20,
+              icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
               name: 'Adobe Lightroom',
               number: 92,
               commonUse: 'Lr常用26个快捷键',
@@ -139,7 +139,7 @@ export default {
               avatar: '',
               userName: 'Victor111 Ruiz',
               sumLikes: 12334,
-              download: 1232,
+              download: 32,
               key: '快捷键',
               time: 1685462400000
             },
@@ -154,7 +154,7 @@ export default {
               sumLikes: 12334,
               download: 1232,
               key: '快捷键',
-              time: 1685462400000
+              time: 1685462400050
             },
             {   
               id: 6,
@@ -441,16 +441,7 @@ export default {
   },
   methods: {
     changeTab(args) {
-      // this.$router.push(args.menu.route)
       this.tab = args.index
-    },
-    goHome() {
-      // this.$router.push({
-      //   name: 'home'
-      // })
-    },
-    getSort(e){
-      // console.log(e)
     },
     onBack(){
       this.$router.go(-1)
@@ -464,6 +455,7 @@ export default {
     },
     changeSelect(event){
       // console.log('选择下拉',event)
+      this.sort = event
     },
     changeInput(event){
       // console.log('输入框',event)
@@ -471,7 +463,6 @@ export default {
   },
   mounted(){
     // this.$router.push({name: 'marketList'})
-    
   },
 }
 </script>
