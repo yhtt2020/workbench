@@ -22,7 +22,7 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar :size="100" :src="file.path" />
+            <a-avatar shape="square" :size="100" :src="file.path" />
           </div>
           <span><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
@@ -264,6 +264,9 @@ export default {
       releaseDrawer: false
     }
   },
+  mounted(){
+    let appContent = this.$route.params.appContent
+  },
   methods: {
     onBack(){
       this.$router.go(-1)
@@ -458,8 +461,8 @@ export default {
     position: relative;
     >span{
       position: absolute;
-      top: -14px;
-      right: -14px;
+      top: -10px;
+      right: -10px;
     }
   }
   .key-content{

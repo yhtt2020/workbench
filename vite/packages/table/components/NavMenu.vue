@@ -42,7 +42,7 @@ export default {
 <style lang="scss" scoped>
     .left {
       height: 95%;
-      width: 140px;
+      width: 112px;
       overflow: auto;
       padding-bottom: 40px;
       .nav {

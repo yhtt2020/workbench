@@ -1,6 +1,6 @@
 <template>
   <!-- 详情快捷方案 -->
- <div class="detail-box" v-if="keyList.length">
+ <div class="detail-box" v-if="isData">
    <!-- 头部导航 -->
    <div class="flex justify-between items-center" style="height: 72px;width:98%">
     <div class="flex items-center">
@@ -9,7 +9,7 @@
       </div>
       <div class="flex">
         <div v-for="(item,index) in appList.slice(0,3)" class="head-list"
-        :class="navIndex === index ? 's-bg':''" @click="toggleApp(index)">
+        :class="navIndex === index ? 's-bg':''" @click="toggleApp(index,item)">
           <span>
             <a-avatar shape="square" :src="item.icon" :size="38"></a-avatar>
           </span>
@@ -49,7 +49,7 @@
     </div>
   </div>
   <!-- 快捷推荐列表 -->
-  <NotShortcutKey :notDownloadList="notDownloadList" :detailJump="true" :appMessage="appMessage"></NotShortcutKey>
+  <NotShortcutKey :detailJump="true" :appMessage="appMessage"></NotShortcutKey>
  </div>
   <!-- 最近使用 -->
   <a-drawer v-model:visible="recentlyUsed" title="最近使用" width="500" placement="right">
@@ -134,6 +134,8 @@
 <script>
 import NotShortcutKey from './NotShortcutKey.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
+import { mapActions, mapWritableState } from "pinia";
+import { keyStore } from '../../store/key'
 export default {
   name: 'ShortcutKeyDetail',
   components: {
@@ -146,286 +148,32 @@ export default {
       keyIndex: 1,
       recentlyUsed: false,
       openSet: false,
-      appList: [
-        {   
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            name: 'Adobe Lightroom',
-            number: 92
-        },
-        {
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            name: 'Adobe Lightroom',
-            number: 92
-        },
-        {
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            name: 'Adobe Lightroom',
-            number: 92
-        },
-        {
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            name: 'Adobe Lightroom',
-            number: 92
-        },
-        {
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            name: 'Adobe Lightroom',
-            number: 92
-        },
-        {
-            icon: 'http://a.apps.vip/icons/flappy.jpg',
-            name: 'Adobe Lightroom',
-            number: 92
-        },
-      ],
+      //最近使用的方案
+      appList: [],
       //快捷键列表
-      keyList: [
-        {
-          groupName: '常用',
-          id: 1,
-        },
-        {
-          id: 2,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '首选项',
-        },
-        {
-          id: 3,
-          keys: [
-            {icon: 'linechart'},
-            {icon: 'linechart'},
-            {key: 'Q'}
-          ],
-          title: '清除浏览器数据',
-        },
-        {
-          id: 4,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏 Microsoft Edge'
-        },
-        {
-          id: 5,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏 Microsoft Edge'
-        },
-        {
-          groupName: '文件',
-          id: 6,
-        },
-        {
-          id: 7,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '首选项',
-        },
-        {
-          id: 8,
-          keys: [
-            {icon: 'linechart'},
-            {icon: 'linechart'},
-            {key: 'Q'}
-          ],
-          title: '清除浏览器数据',
-        },
-        {
-          id: 9,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏 Microsoft Edge'
-        },
-        {
-          id: 10,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏 Microsoft Edge'
-        }
-      ],
-      //推荐方案
-      notDownloadList: [
-        {   
-          id: 1,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 2,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Adobe XD',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 3,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 4,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 5,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-        {   
-          id: 6,
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Adobe Lightroom',
-          number: 92,
-          commonUse: 'Lr常用26个快捷键',
-          avatar: '',
-          userName: 'Victor Ruiz',
-          sumLikes: 12334,
-          download: 1232,
-        },
-      ],
+      keyList: [],
+      isData: true,
       // 单个app的内容
-      appContent: {
-        id: 1,
-        icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
-        name: 'Adobe Lightroom',
-        number: 92,
-        commonUse: 'Lr常用26个快捷键',
-        avatar: '',
-        userName: 'Victor Ruiz',
-        sumLikes: 12334,
-        download: 39,
-        key: '快捷键',
-        time: 1686462400000,
-        isDownload: true, //是否下载
-        isLike: false,  //是否点赞
-        isMyCreate: false, //是否是自己创建
-        isShare: false, //是否分享到社区
-        isCommunity: true, //是否来自社区
-        keyList: [
-          {
-            groupName: '常用',
-            id: 1,
-          },
-          {
-            id: 2,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项',
-          },
-          {
-            id: 3,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据',
-          },
-          {
-            id: 4,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id: 5,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            groupName: '文件',
-            id: 6,
-          },
-          {
-            id: 7,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '首选项',
-          },
-          {
-            id: 8,
-            keys: [
-              {icon: 'linechart'},
-              {icon: 'linechart'},
-              {key: 'Q'}
-            ],
-            title: '清除浏览器数据',
-          },
-          {
-            id: 9,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          },
-          {
-            id: 10,
-            keys: [
-              {icon: 'linechart'},
-              {key: 'H'}
-            ],
-            title: '隐藏 Microsoft Edge'
-          }
-        ]
-      }
+      appContent: {}
     }
   },
+  computed: {
+    ...mapWritableState(keyStore,['recentlyUsedList'])
+  },
   mounted(){
+    this.getData()
   },
   methods:{
-    toggleApp(index){
+    getData(){
+      this.appList = this.recentlyUsedList
+      this.keyList = this.appList[0].keyList
+      this.appContent = this.appList[0]
+      if(!this.keyList.length)this.isData = false
+    },
+    toggleApp(index,item){
       this.navIndex = index
+      this.keyList = item.keyList
+      this.appContent = item
     },
     setKeyItem(id){
       this.keyIndex = id
@@ -435,7 +183,7 @@ export default {
     },
     btnEdit(){
       this.openSet = false
-      this.$router.push({name: 'shareKey'})
+      this.$router.push({name: 'shareKey', params: {appContent: this.appContent}})
     }
   },
 }
