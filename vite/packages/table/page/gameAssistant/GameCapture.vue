@@ -1037,6 +1037,8 @@ export default {
           message.error('文件保存失败',err)
         }else{
           this.recentFileName=filename
+
+          this.recentType='image'
           this.loadImages()
           this.showToast(image)
         }
