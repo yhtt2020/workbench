@@ -435,6 +435,7 @@ export default {
     },
     btnEdit(){
       this.openSet = false
+      this.$router.push({name: 'shareKey'})
     }
   },
 }

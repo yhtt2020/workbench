@@ -71,7 +71,120 @@ export default {
               sumLikes: 12334,
               download: 39,
               key: '快捷键',
-              time: 1686462400000
+              time: 1686462400000,
+              keyList: [
+                {
+                  groupName: '常用',
+                  id: 1,
+                },
+                {
+                  id: 2,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '首选项',
+                },
+                {
+                  id: 3,
+                  keys: [
+                    {icon: 'linechart'},
+                    {icon: 'linechart'},
+                    {key: 'Q'}
+                  ],
+                  title: '清除浏览器数据',
+                },
+                {
+                  id: 4,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '隐藏 Microsoft Edge'
+                },
+                {
+                  id: 5,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '隐藏 Microsoft Edge'
+                },
+                {
+                  groupName: '文件',
+                  id: 6,
+                },
+                {
+                  id: 7,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '首选项',
+                },
+                {
+                  id: 8,
+                  keys: [
+                    {icon: 'linechart'},
+                    {icon: 'linechart'},
+                    {key: 'Q'}
+                  ],
+                  title: '清除浏览器数据',
+                },
+                {
+                  id: 9,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '隐藏 Microsoft Edge'
+                },
+                {
+                  id: 10,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '隐藏 Microsoft Edge'
+                },
+                {
+                  id: 11,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '娄山关路'
+                },
+                {
+                  id: 12,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '阿里的第三个的'
+                },
+                {
+                  groupName: '文件',
+                  id: 13,
+                },
+                {
+                  id: 14,
+                  keys: [
+                    {icon: 'linechart'},
+                    {key: 'H'}
+                  ],
+                  title: '首选项',
+                },
+                {
+                  id: 15,
+                  keys: [
+                    {icon: 'linechart'},
+                    {icon: 'linechart'},
+                    {key: 'Q'}
+                  ],
+                  title: '清除浏览器数据',
+                },
+              ]
             },
             {   
               id: 2,
@@ -436,7 +549,7 @@ export default {
           ]
         },
       ],
-      inputSearchValue: '',
+      inputSearchValue: ''
     }
   },
   methods: {

@@ -6,7 +6,7 @@
         <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
         </div>
-        <HorzontanlPanelIcon :navList="navType" v-model:selectType="defaultNavType"></HorzontanlPanelIcon>
+        <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
       <div class="flex btn-item">
         <div class="pointer">保存</div>
@@ -82,6 +82,7 @@
       </div>
       <div class="flex">
         <div style="width: 160px;height: 48px;"
+          @click="openDrawer"
            class="flex justify-center items-center bg-blue-500 rounded-lg pointer">
         同时分享到元社区
         </div>
@@ -92,17 +93,28 @@
       </div>
     </div>
   </div>
+  <!-- 发布抽屉 -->
+  <a-drawer v-model:visible="openDrawer" style="z-index:999999;" width="320" placement="right">
+    <template #extra>
+      <a-space>
+        <div class="add-scheme" @click="saveVal">发布</div>
+      </a-space>
+    </template>
+    <div class="drawer-center">
+      
+    </div>
+  </a-drawer>
 </template>
 
 <script>
-import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
+import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import {nanoid} from 'nanoid'
 import { message } from 'ant-design-vue';
 export default {
   name: 'ShareKey',
   components: {
-    HorzontanlPanelIcon,
+    HorizontalPanel,
     ShortcutKeyList
   },
   data(){
@@ -236,7 +248,8 @@ export default {
       combinationName: '',
       groupName: '',
       // 介绍
-      introduce: ''
+      introduce: '',
+      openDrawer: false
     }
   },
   methods: {
@@ -304,6 +317,9 @@ export default {
       }
       this.keyList.push(obj)
       this.groupName = ''
+    },
+    openDrawer(){
+
     },
     // 上传头像前校验
     beforeUpload(file) {
