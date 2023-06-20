@@ -365,12 +365,12 @@
           <div class="s-item rounded-md p-4 mb-3" v-if="isHeight === true">
             <div class="flex items-center mb-5">
               <div class="pointer" @click="closeSound">
-                <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
+                <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemSound.muted"></Icon>
                 <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
               </div>
               <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
               <div style="width:331px;">
-                <a-slider v-model:value="systemSound"></a-slider>
+                <a-slider @afterChange="changeVolume" v-model:value="systemSound.volume"></a-slider>
               </div>
             </div>
             <div class="flex items-center">
@@ -552,13 +552,13 @@
     <div class="flex flex-col scroll-container">
       <div class="flex flex-col s-item rounded-md p-4 mb-3">
         <div class="flex items-center mb-3">
-          <div class="pointer" @click="closeSound">
-            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
+          <div class="pointer" @click="clickMute">
+            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemSound.muted"></Icon>
             <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
           </div>
           <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
           <div style="width:310px;">
-            <a-slider v-model:value="systemSound"></a-slider>
+            <a-slider @afterChange="changeVolume" v-model:value="systemSound.volume"></a-slider>
           </div>
         </div>
         <div class="flex items-center">
@@ -650,6 +650,7 @@ import { message, Modal } from 'ant-design-vue'
 import { formatSeconds, timeStamp } from '../../util'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import filenamify from 'filenamify'
+import { getDefaultVolume, setDefaultVolume } from '../../js/ext/audio/audio'
 const toast=useToast()
 export default {
   name: 'GameCapture',
@@ -668,7 +669,10 @@ export default {
       step: 1,
       //当前源
       currentSource: {},
-      systemSound: 10, // 系统声音
+      systemSound: {
+        volume:0,
+        muted:false
+      }, // 系统声音
       soundShow: false,
       microphoneShow: false,
       recordSetShow: false,
@@ -809,7 +813,16 @@ export default {
       return formatSeconds(this.recordedSeconds)
     }
   },
-  mounted () {
+  async mounted () {
+    getDefaultVolume().then((defaultVolume)=>{
+      console.log(defaultVolume,'defaultVolume')
+       this.systemSound={
+         volume:defaultVolume.volume.toFixed(0),
+         muted:defaultVolume.muted
+       }
+
+
+    })
     window.addEventListener('resize', this.pageResize)
     this.refreshSource(() => {
       let source = this.findWindow()
@@ -825,6 +838,8 @@ export default {
     if (this.settings.videoSavePath) {
       this.loadVideos()
     }
+
+
 
   },
 
@@ -927,6 +942,17 @@ export default {
             })
           }
         }
+      })
+    },
+    clickMute(){
+      this.systemSound.muted = !this.systemSound.muted
+      setDefaultVolume({
+        muted:this.systemSound.muted
+      })
+    },
+    changeVolume(){
+      setDefaultVolume({
+        volume:this.systemSound.volume
       })
     },
     getAllFiles (path, extMap, object, arr) {
@@ -1303,15 +1329,7 @@ export default {
         return
       }
     },
-    // 关闭系统声音
-    closeSound () {
-      this.soundShow = !this.soundShow
-      if (!this.soundShow) {
-        this.systemSound = 0
-      } else {
-        this.systemSound = 10
-      }
-    },
+
     // 闭麦事件
     closeMicrophone () {
       this.microphoneShow = !this.microphoneShow
