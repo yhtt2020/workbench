@@ -25,16 +25,7 @@
     </droppable-area>
 
     <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
-      <div class="flex flex-row">
-        <div class="option h-24 w-24 ml-4" @click="editIcons()">
-          <Icon class="icon" icon="guanbi2"></Icon>
-          编辑
-        </div>
-        <div class="option h-24 w-24 ml-4" @click="deleteIcons()">
-          <Icon class="icon" icon="guanbi2"></Icon>
-          删除
-        </div>
-      </div>
+      <BottomEdit :menuList="menuList"></BottomEdit>
     </a-drawer>
   </teleport>
 </template>
@@ -43,6 +34,7 @@
 import icon from "../oneIcon/index.vue"
 import DragAndFollow from '../hooks/DragAndFollow.vue';
 import DroppableArea from "../hooks/DroppableArea.vue"
+import BottomEdit from "../hooks/bottomEdit.vue";
 
 
 import { mapWritableState } from 'pinia'
@@ -64,14 +56,32 @@ export default {
       index: 0,
       settingVisible: false,
       visible: false,
-      isShow: true
+      isShow: true,
+      menuList: [
+
+        {
+          icon: "shezhi1",
+          title: "编辑",
+          fn: () => {
+            this.editIcons()();
+          },
+        },
+        {
+          icon: "guanbi2",
+          title: "删除",
+          fn: () => {
+            this.deleteIcons();
+          },
+        },
+      ]
     }
   },
   inject: ['customIndex'],
   components: {
     icon,
     DragAndFollow,
-    DroppableArea
+    DroppableArea,
+    BottomEdit
   },
   computed: {
     ...mapWritableState(myIcons, ['iconOption', 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
