@@ -27,7 +27,8 @@ window.$models = {
   path:require('path'),
   https:require('https'),
   steamFs:require('fs'),
-  rpc:require('../rpc/rpc')
+  rpc:require('../rpc/rpc'),
+  electron:require('electron')
 }
 window.$models.appModel.initDb()
 

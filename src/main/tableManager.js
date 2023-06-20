@@ -352,6 +352,14 @@ app.whenReady().then(() => {
       console.warn('获得录屏源失败', err)
     })
   })
+
+  // ipc.on('captureImage',(event,args)=>{
+  //   screenCaptureManager.getSource().then(sources => {
+  //     sources.forEach(source=>{
+  //       if(source.id===)
+  //     })
+  //   })
+  // })
 })
 
 module.exports = TableManager

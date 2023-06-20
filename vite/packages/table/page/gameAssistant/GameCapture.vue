@@ -211,12 +211,13 @@
     </div>
   </vue-custom-scrollbar> -->
 
-  <div class="px-4 max-capture flex">
-    <div class="s-bg rounded-md cap-left px-4 py-2">
+
+  <div class="px-4 max-capture flex" style="height: 100%">
+    <div class="s-bg rounded-md cap-left px-4 py-2" style="height: 100%">
 
 
       <!--  选择录制源    -->
-      <div style="width: 490px">
+      <div style="width: 490px;height: 100%" >
         <div v-if="step===1">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center">
@@ -246,7 +247,7 @@
                   >
                     <img :src="item.url" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:150px;">{{ item.name }} </span>
+                      <span class="truncate" style="max-width:150px;">{{item.id}}|{{ item.name }}  </span>
                     </div>
                   </div>
                 </div>
@@ -265,7 +266,7 @@
                   >
                     <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:207px;">{{ item.name }} </span>
+                      <span class="truncate" style="max-width:207px;">{{item.id}}|{{ item.name }} </span>
                     </div>
                   </div>
                 </div>
@@ -284,7 +285,7 @@
                   >
                     <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3 truncate">
-                      <span class="" style="max-width:207px;">{{ item.name }} </span>
+                      <span class="" style="max-width:207px;">{{item.id}}|{{ item.name }} </span>
                     </div>
                   </div>
                 </div>
@@ -292,7 +293,10 @@
             </template>
           </div>
         </div>
-        <div v-if="step===2">
+        <div v-if="step===2" style="height: 100%">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%">
+
+
           <div class="flex items-center justify-between mb-3">
 
           </div>
@@ -303,7 +307,7 @@
                         :src="'file://'+currentSource.icon"></a-avatar>
               {{ currentSource.name }}
             </div>
-            <div style="z-index: 99899999;position: absolute;left:130px;top: 120px;background: white;color: black">功能正在开发中，当前还不可使用</div>
+            <div v-if="false" style="z-index: 99899999;position: absolute;left:130px;top: 120px;background: white;color: black">功能正在开发中，当前还不可使用</div>
             <div style="position: absolute;right: 0.5em">
               <div class="flex items-center pointer justify-center" @click="openRecordSet">
                 <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
@@ -311,13 +315,13 @@
             </div>
           </div>
           <div class="flex mb-3">
-            <div class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3" @click="startScreenshot">
+            <div  class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3 screenshot" @click="screenshot">
               <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
                 <div class="rounded-full cp-orange-full flex items-center justify-center cp-lw">
                   <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
                 </div>
               </div>
-              <div class="cp-text">截取屏幕</div>
+              <div class="cp-text">截图</div>
             </div>
 
             <div @click="startRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
@@ -371,6 +375,20 @@
               </div>
             </div>
           </div>
+<!--  捕获预览        -->
+          <div v-if="recentScreenShot">
+            <div class="mb-2 truncate">最后捕获：
+            {{recentFileName}}
+            </div>
+            <div class="mb-2">
+              <a-button @click="openRecent" class="mr-2">打开</a-button>
+              <a-button @click="editRecent" class="mr-2">编辑</a-button>
+              <a-button @click="saveRecent" class="mr-2">另存为</a-button>
+              <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
+            </div>
+            <a-image style="width: 100%;border-radius: 4px" :src="recentScreenShot"></a-image>
+          </div>
+          </vue-custom-scrollbar>
         </div>
       </div>
 
@@ -468,7 +486,7 @@
               <div class="flex flex-row flex-wrap content-game">
                 <div class="game-list-item px-1.5 pb-4  my-game-content my-image"
                      v-for="item in pagedImages">
-                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item"
+                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item.path"
                        class=" rounded-md img">
                 </div>
               </div>
@@ -486,7 +504,7 @@
                      v-for="item in pagedVideos">
                   <div class="relative  w-auto h-full s-item rounded-md overflow-hidden  pointer flex flex-col "
                        style="border-radius: 12px;">
-                    <VideoItem :vUrl="item"></VideoItem>
+                    <VideoItem :vUrl="item.path"></VideoItem>
                   </div>
                 </div>
               </div>
@@ -576,10 +594,17 @@ import { captureStore } from '../../store/capture'
 import BackBtn from '../../components/comp/BackBtn.vue'
 import { steamUserStore } from '../../store/steamUser'
 import VideoItem from '../../components/game/VideoItem.vue'
-
+import { useToast } from 'vue-toastification'
+import JumpNotice from '../../components/game/JumpNotice.vue'
+import SaveImage from '../../components/game/SaveImage.vue'
+import { message, Modal } from 'ant-design-vue'
+import { formatSeconds, timeStamp } from '../../util'
+import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
+const toast=useToast()
 export default {
   name: 'GameCapture',
   components: {
+    VueCustomScrollbar,
     VideoItem,
     BackBtn,
     AreaChartOutlined,
@@ -685,6 +710,8 @@ export default {
       imagePage: 1,
       pageLimit: 12,
       videoPage: 1,
+      recentScreenShot:'',
+      recentFileName:''
 
     }
   },
@@ -706,11 +733,14 @@ export default {
       console.log(this.images, '计算属性变化')
       console.log(this.images.slice((this.imagePage - 1) * this.pageLimit, this.pageLimit), '得到的')
       console.log((this.imagePage - 1) * this.pageLimit, this.pageLimit)
-      return this.images
+      let sorted=this.images.sort((img1,img2)=>{
+       return  img2.stat.ctimeMs-img1.stat.ctimeMs
+      })
+      return sorted
     },
     pagedVideos () {
       return this.videos.slice((this.videoPage - 1) * this.pageLimit, (this.imagePage) * this.pageLimit + this.pageLimit)
-    }
+    },
   },
   mounted () {
     window.addEventListener('resize', this.pageResize)
@@ -775,7 +805,6 @@ export default {
         this.settings.imageSavePath = savePath[0]
         this.loadImages()
       } else {
-        console.log('取消选择')
       }
     },
     async setVideoSavePath () {
@@ -788,7 +817,6 @@ export default {
         this.settings.videoSavePath = savePath[0]
         this.loadVideos()
       } else {
-        console.log('取消选择')
       }
     },
 
@@ -815,7 +843,11 @@ export default {
         } else {
           // 不是就将文件push进数组，此处可以正则匹配是否是 .js 先忽略
           if (extMap.indexOf(require('path').extname(file)) > -1) {
-            filesList.push(path + '/' + file)
+            const stat=fs.statSync(path + '/' + file)
+            filesList.push({
+              stat:stat,
+              path:path + '/' + file
+            })
           }
         }
       })
@@ -830,14 +862,55 @@ export default {
             if (stat.isFile()) {
               //stat 状态中有两个函数一个是stat中有isFile ,isisDirectory等函数进行判断是文件还是文件夹
               if (extMap.indexOf(require('path').extname(fPath)) > -1) {
-                object[arr].push(fPath)
-                console.log(fPath)
+                object[arr].push({
+                  stat:stat,
+                  path:fPath })
               }
             } else {
               this.getAllFiles(fPath, extMap, object, arr)
             }
           })
         })
+      })
+    },
+    /**
+     * 获取到最近捕获的文件路径
+     * @returns {string}
+     */
+    getRecentPath(){
+      return require('path').join(this.settings.imageSavePath,this.recentFileName)
+    },
+    async saveRecent () {
+      let savePath = await tsbApi.dialog.showSaveDialog({
+        title: '选择保存位置',
+        defaultPath: this.recentFileName,
+        message: '选择保存的截图位置',
+        filters: [{ name: '图片', extensions: ['png'] }],
+        properties: [
+          'createDirectory',
+          'showOverwriteConfirmation'
+        ]
+      })
+      if(savePath){
+        require('fs').copyFileSync(this.getRecentPath(),savePath)
+        if(require('fs').existsSync(this.getRecentPath(),savePath)){
+          message.success('截图保存成功')
+        }
+      }
+    },
+    openRecent(){
+      require('electron').shell.showItemInFolder(this.getRecentPath())
+    },
+    delRecent(){
+      Modal.confirm({
+        content:'删除此图片？',
+        centered:true,
+        onOk:()=>{
+          require('fs').rmSync(this.getRecentPath())
+          this.recentFileName=''
+          this.recentScreenShot=''
+          this.loadImages()
+        }
       })
     },
     /**
@@ -858,8 +931,123 @@ export default {
       this.step = 2
       this.currentSource = source
     },
-    // 开始截屏事件
-    startScreenshot () {},
+    callback(image){
+      this.recentScreenShot=image
+      let time=timeStamp(Date.now())
+      const filename=this.currentSource.name+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.png'
+      const path=require('path').join(this.settings.imageSavePath,filename)
+      const base64 = image.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
+      const dataBuffer = new Buffer(base64, 'base64'); //把base64码转成buffer对象，
+      fs.writeFile(path, dataBuffer, (err)=>{//用fs写入文件
+        if(err){
+          console.log(err);
+          message.error('文件保存失败',err)
+        }else{
+          this.recentFileName=filename
+          this.loadImages()
+          this.showToast(image)
+        }
+      })
+
+    },
+    showToast(src){
+      toast(
+        {
+          component:SaveImage,
+          props:{
+            image:src
+          },
+        },{
+          icon:false,
+          closeOnClick:false,
+          closeButton:false,
+          pauseOnFocusLoss:false,
+          pauseOnHover:false
+        }
+      )
+    },
+    // 截图
+    screenshot () {
+      //ipc.send('captureImage',{source:this.currentSource})
+      const handleStream = (stream) => {
+        //document.body.style.cursor = oldCursor
+        document.body.style.opacity = '1'
+        // Create hidden video tag
+        let video = document.createElement('video')
+        video.autoplay='autoplay'
+        video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;'
+        // Event connected to stream
+
+        let loaded = false
+        video.onplaying = () => {
+          if (loaded) {
+            return
+          }
+          loaded = true
+          // Set video ORIGINAL height (screenshot)
+          video.style.height = video.videoHeight + 'px' // videoHeight
+          video.style.width = video.videoWidth + 'px' // videoWidth
+
+          // Create canvas
+          let canvas = document.createElement('canvas')
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          let ctx = canvas.getContext('2d')
+          // Draw video on canvas
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+          if (this.callback) {
+            // Save screenshot to png - base64
+            this.callback(canvas.toDataURL('image/png'))
+          } else {
+            // console.log('Need callback!')
+          }
+
+          // Remove hidden video tag
+          video.remove()
+          try {
+            stream.getTracks()[0].stop()
+          } catch (e) {
+            // nothing
+          }
+        }
+        video.srcObject = stream
+        document.body.appendChild(video)
+      }
+
+      // mac 和 windows 获取 chromeMediaSourceId 的方式不同
+      if (require('os').platform() === 'win32') {
+        navigator.getUserMedia({
+          audio: false,
+          video: {
+            mandatory: {
+              chromeMediaSource: 'desktop',
+              chromeMediaSourceId: this.currentSource.id + '',
+              minWidth: 1280,
+              minHeight: 720,
+              maxWidth: 8000,
+              maxHeight: 8000,
+            },
+          },
+        }, handleStream, ()=>{
+
+        })
+      } else {
+        // navigator.getUserMedia({
+        //   audio: false,
+        //   video: {
+        //     mandatory: {
+        //       chromeMediaSource: 'desktop',
+        //       chromeMediaSourceId: `screen:${curScreen.id}`,
+        //       minWidth: 1280,
+        //       minHeight: 720,
+        //       maxWidth: 8000,
+        //       maxHeight: 8000,
+        //     },
+        //   },
+        // }, handleStream, handleError)
+      }
+    },
     // 开始录制事件
     startRecording () {},
     // 开始监控事件
@@ -1273,5 +1461,10 @@ export default {
 
 .game-list-item {
   margin: 10px;
+}
+.screenshot{
+  &:hover{
+    opacity: 0.8;
+  }
 }
 </style>
