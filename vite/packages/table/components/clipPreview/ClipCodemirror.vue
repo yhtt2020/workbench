@@ -8,7 +8,6 @@ import { mapWritableState,mapActions } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
 import CodeMirror from 'codemirror'
 
-
 export default {
   props:{
     editorContent:{
