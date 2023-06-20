@@ -249,9 +249,9 @@ export function setMicVolume(setting) {
     let defaultMic = outputs.find(li => {
       return li.isDefaultForMultimedia
     })
-    // if (setting.volume !== undefined) {
-    //   setVolume(defaultOutput, setting.volume)
-    // }
+    if (setting.volume !== undefined) {
+      setVolume(defaultMic, setting.volume)
+    }
     if (setting.muted !== undefined) {
       if (setting.muted === true) {
         mute(defaultMic)

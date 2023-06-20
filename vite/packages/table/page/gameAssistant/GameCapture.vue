@@ -364,7 +364,7 @@
           </div>
           <div class="s-item rounded-md p-4 mb-3" v-if="isHeight === true">
             <div class="flex items-center mb-5">
-              <div class="pointer" @click="closeSound">
+              <div class="pointer" @click="clickMute">
                 <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemSound.muted"></Icon>
                 <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
               </div>
@@ -374,14 +374,14 @@
               </div>
             </div>
             <div class="flex items-center">
-              <div class="pointer" @click="closeMicrophone">
+              <div class="pointer" @click="clickMicMute">
                 <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
-                      v-if="microphoneShow"></Icon>
+                      v-if="!systemMicrophone.muted"></Icon>
                 <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
               </div>
               <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
               <div style="width:331px;">
-                <a-slider v-model:value="systemMicrophone"></a-slider>
+                <a-slider @afterChange="changeMicVolume" v-model:value="systemMicrophone.volume"></a-slider>
               </div>
             </div>
           </div>
@@ -562,13 +562,13 @@
           </div>
         </div>
         <div class="flex items-center">
-          <div class="pointer" @click="closeMicrophone">
-            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="microphoneShow"></Icon>
+          <div class="pointer" @click="clickMicMute">
+            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemMicrophone.muted"></Icon>
             <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
           </div>
           <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
           <div style="width:310px;">
-            <a-slider v-model:value="systemMicrophone"></a-slider>
+            <a-slider @afterChange="changeMicVolume" v-model:value="systemMicrophone.volume"></a-slider>
           </div>
         </div>
       </div>
@@ -650,7 +650,7 @@ import { message, Modal } from 'ant-design-vue'
 import { formatSeconds, timeStamp } from '../../util'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import filenamify from 'filenamify'
-import { getDefaultVolume, setDefaultVolume } from '../../js/ext/audio/audio'
+import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../js/ext/audio/audio'
 const toast=useToast()
 export default {
   name: 'GameCapture',
@@ -820,9 +820,17 @@ export default {
          volume:defaultVolume.volume.toFixed(0),
          muted:defaultVolume.muted
        }
-
-
     })
+
+    getDefaultMic().then(defaultVolume=>{
+      this.systemMicrophone={
+        volume:defaultVolume.volume.toFixed(0),
+        muted:defaultVolume.muted
+      }
+    })
+
+
+
     window.addEventListener('resize', this.pageResize)
     this.refreshSource(() => {
       let source = this.findWindow()
@@ -950,9 +958,20 @@ export default {
         muted:this.systemSound.muted
       })
     },
+    clickMicMute(){
+      this.systemMicrophone.muted=!this.systemMicrophone.muted
+      setMicVolume({
+        muted:this.systemMicrophone.muted
+      })
+    },
     changeVolume(){
       setDefaultVolume({
         volume:this.systemSound.volume
+      })
+    },
+    changeMicVolume(){
+      setMicVolume({
+        volume:this.systemMicrophone.volume
       })
     },
     getAllFiles (path, extMap, object, arr) {
@@ -1330,15 +1349,7 @@ export default {
       }
     },
 
-    // 闭麦事件
-    closeMicrophone () {
-      this.microphoneShow = !this.microphoneShow
-      if (!this.microphoneShow) {
-        this.systemMicrophone = 0
-      } else {
-        this.systemMicrophone = 20
-      }
-    },
+
     // 打开录制设置入口
     openRecordSet () {
       this.recordSetShow = true
