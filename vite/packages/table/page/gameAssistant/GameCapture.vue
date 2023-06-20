@@ -247,7 +247,7 @@
                   >
                     <img :src="item.url" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:150px;">{{item.id}}|{{ item.name }}  </span>
+                      <span class="truncate" style="max-width:150px;">{{ item.name }}  </span>
                     </div>
                   </div>
                 </div>
@@ -266,7 +266,7 @@
                   >
                     <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:207px;">{{item.id}}|{{ item.name }} </span>
+                      <span class="truncate" style="max-width:207px;">{{ item.name }} </span>
                     </div>
                   </div>
                 </div>
@@ -285,7 +285,7 @@
                   >
                     <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3 truncate">
-                      <span class="" style="max-width:207px;">{{item.id}}|{{ item.name }} </span>
+                      <span class="" style="max-width:207px;">{{ item.name }} </span>
                     </div>
                   </div>
                 </div>
@@ -324,7 +324,7 @@
               <div class="cp-text">截图</div>
             </div>
 
-            <div @click="startRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
+            <div v-if="!recording"  @click="startRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
               <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
                 <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
                   <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
@@ -332,6 +332,16 @@
               </div>
               <div class="cp-text">开始录制</div>
             </div>
+            <div v-else  @click="stopRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
+              <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
+                <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
+                  <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
+                </div>
+              </div>
+              <div class="cp-text">停止录制</div>
+            </div>
+
+
 
             <div @click="startMonitoring">
               <div class="cp-w s-item  pointer  flex-col rounded-lg " v-if="isMonitor === false">
@@ -375,19 +385,37 @@
               </div>
             </div>
           </div>
+            <div style="text-align: center" v-if="recording">
+              <icon icon="record-circle-line" style="color:red" ></icon> 正在录制视频：已录制{{recordedTimeStr}}
+            </div>
 <!--  捕获预览        -->
-          <div v-if="recentScreenShot">
-            <div class="mb-2 truncate">最后捕获：
-            {{recentFileName}}
+          <div  v-if="recentFileName && !recording">
+            <div v-if="recentType==='video'">
+              <div class="mb-2 truncate">最后录屏：
+                {{recentFileName}}
+              </div>
+              <div class="mb-2">
+                <a-button @click="openRecent" class="mr-2">打开</a-button>
+                <a-button @click="saveRecent" class="mr-2">另存为</a-button>
+                <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
+              </div>
+              <VideoItem :key="recentKey" :options="{controls:true,loop:false}" :url="'file://'+this.getRecentVideoPath()"></VideoItem>
+
             </div>
-            <div class="mb-2">
-              <a-button @click="openRecent" class="mr-2">打开</a-button>
-              <a-button @click="editRecent" class="mr-2">编辑</a-button>
-              <a-button @click="saveRecent" class="mr-2">另存为</a-button>
-              <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
+            <div v-else>
+              <div class="mb-2 truncate">最后捕获：
+                {{recentFileName}}
+              </div>
+              <div class="mb-2">
+                <a-button @click="openRecent" class="mr-2">打开</a-button>
+                <a-button @click="editRecent" class="mr-2">编辑</a-button>
+                <a-button @click="saveRecent" class="mr-2">另存为</a-button>
+                <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
+              </div>
+              <a-image style="width: 100%;border-radius: 4px" :src="recentScreenShot"></a-image>
             </div>
-            <a-image style="width: 100%;border-radius: 4px" :src="recentScreenShot"></a-image>
-          </div>
+            </div>
+
           </vue-custom-scrollbar>
         </div>
       </div>
@@ -504,7 +532,7 @@
                      v-for="item in pagedVideos">
                   <div class="relative  w-auto h-full s-item rounded-md overflow-hidden  pointer flex flex-col "
                        style="border-radius: 12px;">
-                    <VideoItem :vUrl="item.path"></VideoItem>
+                    <VideoItem :url="item.path"></VideoItem>
                   </div>
                 </div>
               </div>
@@ -711,7 +739,17 @@ export default {
       pageLimit: 12,
       videoPage: 1,
       recentScreenShot:'',
-      recentFileName:''
+      recentFileName:'',
+      recording:false,
+
+
+      recentType:'image',
+      recorder:null,
+
+      //录制状态显示
+      recordedSeconds:0,
+      recordingTimer:null,//录制时间定时器
+      recentKey:Date.now()//最近播放器的key
 
     }
   },
@@ -739,8 +777,15 @@ export default {
       return sorted
     },
     pagedVideos () {
-      return this.videos.slice((this.videoPage - 1) * this.pageLimit, (this.imagePage) * this.pageLimit + this.pageLimit)
+      let sorted=this.videos.sort((img1,img2)=>{
+        return  img2.stat.ctimeMs-img1.stat.ctimeMs
+      })
+      return sorted
     },
+    recordedTimeStr(){
+
+      return formatSeconds(this.recordedSeconds)
+    }
   },
   mounted () {
     window.addEventListener('resize', this.pageResize)
@@ -879,6 +924,9 @@ export default {
      */
     getRecentPath(){
       return require('path').join(this.settings.imageSavePath,this.recentFileName)
+    },
+    getRecentVideoPath(){
+      return require('path').join(this.settings.videoSavePath,this.recentFileName)
     },
     async saveRecent () {
       let savePath = await tsbApi.dialog.showSaveDialog({
@@ -1049,7 +1097,150 @@ export default {
       }
     },
     // 开始录制事件
-    startRecording () {},
+    async startRecording () {
+      const videoSource = await navigator.mediaDevices.getUserMedia({
+        audio: false, // 强行表示不录制音频，音频额外获取
+        video: {
+          mandatory: {
+            chromeMediaSource: 'desktop',
+            chromeMediaSourceId:this.currentSource.id
+          }
+        }
+      });
+      // Windows音频流获取
+
+      const audioSource = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          mandatory: {
+            // 无需指定mediaSourceId就可以录音了，录得是系统音频
+            chromeMediaSource: 'desktop',
+          },
+        },
+
+        // 如果想要录制音频，必须同样把视频的选项带上，否则会失败
+        video: {
+          mandatory: {
+            chromeMediaSource: 'desktop',
+          },
+        },
+      });
+
+// 接着手工移除点不用的视频源，即可完成音频流的获取
+      (audioSource.getVideoTracks() || []).forEach(track => audioSource.removeTrack(track));
+      // 合并音频流与视频流
+
+      const combinedSource = new MediaStream([...audioSource.getAudioTracks(), ...videoSource.getVideoTracks()]);
+
+      let types = [
+        "video/webm",
+        "audio/webm",
+        "video/webm;codecs=vp9",
+        "video/webm;codecs=vp8",
+        "video/webm;codecs=daala",
+        "video/webm;codecs=h264",
+        "audio/webm;codecs=opus",
+        "video/mpeg"
+      ];
+      for (let i in types) {
+        // 可以自行测试需要的编码的MIME Type是否支持
+        console.log( "Is " + types[i] + " supported? " + (MediaRecorder.isTypeSupported(types[i]) ? "Yes" : "No :("));
+
+      }
+
+
+      const recorder = new MediaRecorder(combinedSource, {
+        mimeType: 'video/webm;codecs=vp9',
+        // 支持手动设置码率，这里设了1.5Mbps的码率，以限制码率较大的情况
+        // 由于本身还是动态码率，这个值并不准确
+        videoBitsPerSecond: 1.5e6,
+
+      });
+
+      const timeslice = 5000;
+      let  fileBits = [];
+// 当数据可用时，会回调该函数，有以下四种情况：
+// 1. 手动停止MediaRecorder时
+// 2. 设置了timeslice，每到一次timeslice时间间隔时
+// 3. 媒体流内所有轨道均变成非活跃状态时
+// 4. 调用recorder.requestData()转移缓冲区数据时
+      recorder.ondataavailable = (event) => {
+        fileBits.push(event.data);
+      }
+      recorder.onstop = () => {
+        // 录屏停止并获取录屏文件
+        // 触发时机一定在ondataavailable之后
+        const videoFile = new Blob(fileBits, { type: 'video/webm;codecs=vp9' });
+        var reader = new FileReader()
+        reader.onload = ()=>{
+          var buffer = new Buffer(reader.result)
+          //temp文件夹应已存在
+          const time=timeStamp(Date.now())
+          const fileName=this.currentSource.name+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.mp4'
+          const savePath=require('path').join(this.settings.videoSavePath,fileName)
+          this.recentType='video'
+          this.recentFileName=fileName
+          fs.writeFile(savePath, buffer, {}, (err, res) => {
+            if(err){
+              console.error(err)
+              return
+            }
+            message.success('保存录屏成功')
+            this.loadVideos()
+          })
+        }
+        reader.readAsArrayBuffer(videoFile)
+      }
+
+
+
+      if (timeslice === 0) {
+
+        // 开始录制，并一直存储数据到缓冲区，直到停止
+
+        recorder.start();
+
+      } else {
+
+        // 开始录制，并且每timeslice毫秒，触发一次ondataavailable，输出并清空缓冲区（非常重要）
+
+        recorder.start(timeslice);
+        this.recording=true
+        this.recordedSeconds=0
+        this.setRecordingTimer()
+
+        this.recorder=recorder
+      }
+
+
+
+
+
+
+
+    },
+    /**
+     * 设置一个录制定时器
+     * @param start 是否是启动，否则自动清理定时器
+     */
+    setRecordingTimer(start=true){
+      if(!start){
+        //如果是取消
+        if(this.recordingTimer){
+          clearInterval(this.recordingTimer)
+          return
+        }
+      }
+      this.recordedSeconds=0
+      this.recordingTimer=setInterval(()=>{
+        this.recordedSeconds++
+      },1000)
+    },
+    stopRecording(){
+      this.setRecordingTimer(false)
+      this.recorder.stop()
+      this.recording=false
+      this.recordKey=Date.now()
+    },
     // 开始监控事件
     startMonitoring () {
       this.isMonitor = !this.isMonitor

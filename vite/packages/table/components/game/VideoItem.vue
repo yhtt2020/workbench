@@ -6,10 +6,23 @@
 
 <script>
 import Player from 'xgplayer/dist/simple_player'
+const defaultOptions={
+  fitVideoSize: 'fixWidth',
+  width:'302',
+  height:'240',
+  loop: true,
+  videoInit: true,
+  controls:false,
+  lang:'zh-cn',
+  controlsList: ['nofullscreen'],
+}
 export default {
   props:{
-    vUrl:{
+    url:{
       type:String,
+    },
+    options:{
+      default:{}
     }
   },
 
@@ -19,18 +32,13 @@ export default {
   methods:{
     // 初始化西瓜视频播放器
     loadXgPlayer(){
-      const url = this.vUrl
+      const url = this.url
       this.$nextTick(()=>{
         window.$xgplayer = new Player({
           el:this.$refs.clipVideo,
           url: url,
-          fitVideoSize: 'fixWidth',
-          width:'302',
-          height:'240',
-          loop: true,
-          videoInit: true,
-          controls:false,
-          controlsList: ['nofullscreen'],
+          ...defaultOptions,
+          ...this.options
         })
       })
     }
