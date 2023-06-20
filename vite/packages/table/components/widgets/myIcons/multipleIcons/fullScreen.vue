@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
 
-    <div class='popContainer' @click="closeFullScreen()" :style="show">
+    <div class='pop-container' @click="closeFullScreen()" :style="show">
     </div>
     <droppable-area @leave="handleLeave" style="border: 1px solid red;">
       <div class="box xt-bg" @click.stop="" :style="show">
@@ -148,7 +148,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.popContainer {
+.pop-container {
   position: fixed;
   top: 0;
   left: 0;
