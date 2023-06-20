@@ -1,38 +1,65 @@
+<!-- 图标组件入口 -->
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" :menuList="menuList" ref="homelSlotRef"
-        :size="reSize" :desk="desk">
-    </Widget>
-    <div class="item xt-text xt-hover" ref="itemRef" @click="iconClick()">
-        <div class="image" :style="[backgroundState]">
-            <img :src="customData.src" alt="" :style="radiusState" style="width: 56px;height: 56px;">
-        </div>
-        <div class="title"> {{ customData.titleValue }}</div>
+    <!-- 图标组件开始 -->
+    <div ref="iconRef" :style="dragStyle">
+        <!-- 可放置区域 -->
+        <droppable-area @drop="handleDrop">
+            <!-- 多图标组件 -->
+            <template v-if="customData.iconList !== undefined && customData.iconList.length > 1
+                ">
+                <icons :groupTitle="customData.groupTitle" :iconList="customData.iconList" @disbandGroup="disbandGroup"
+                    @updateGroupTitle="updateGroupTitle" @deleteIcons="deleteIcons" @editIcons="editIcons"
+                    @dragAddIcon="dragAddIcon"></icons>
+            </template>
+            <!-- 单图标组件 -->
+            <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0
+                ">
+                <drag-and-follow @drag-end="handleDragEnd" @drag-start="handleDragStart">
+                    <icon v-bind="customData.iconList[0]" @rightClick="rightClick"></icon>
+                </drag-and-follow>
+            </template>
+        </droppable-area>
+        <!-- 卡片核心 -->
+        <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
+            ref="homelSlotRef" :desk="desk">
+        </Widget>
     </div>
-    <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+    <!-- 图标组件结束 -->
+    <!-- 编辑开始 -->
+    <a-drawer :width="500" v-if="settingVisible" v-model:visible="settingVisible" placement="right"
+        style="z-index: 99999999999">
         <template #title>
-            <div style="display: flex; justify-content: space-between; align-items:center">
-                <div style="width: 50%;text-align: right;">设置</div>
-                <div style="padding: 10px;border-radius: 5px;cursor: pointer;" class="xt-bg-2" @click="save()">保存</div>
+            <div style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        ">
+                <div style="width: 50%; text-align: right">设置</div>
+                <div style="padding: 10px; border-radius: 5px; cursor: pointer" class="xt-active-bg" @click="save()">
+                    保存
+                </div>
             </div>
         </template>
-        <edit ref="editRef" v-bind="editOption"></edit>
+        <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
     </a-drawer>
-</template> 
+    <!-- 编辑结束 -->
+</template>
 
 <script>
-import Widget from '../../card/Widget.vue'
+// components
+import Widget from "../../card/Widget.vue";
+import edit from "./hooks/edit.vue";
+import icon from "./oneIcon/index.vue";
+import icons from "./multipleIcons/index.vue";
+import DragAndFollow from "./hooks/DragAndFollow.vue";
+import DroppableArea from "./hooks/DroppableArea.vue";
+// pinia
+import { mapActions, mapWritableState } from "pinia";
+import { cardStore } from "../../../store/card.ts";
+import { myIcons } from "../../../store/myIcons.ts";
 
-import { cardStore } from '../../../store/card.ts'
-import { myIcons } from '../../../store/myIcons.ts'
-import { mapActions, mapWritableState } from 'pinia'
-import { message } from 'ant-design-vue'
+import { message } from "ant-design-vue";
 
-import browser from "../../../js/common/browser.ts"
-import edit from './edit.vue'
-// import api from '../../../src/model/api.js'
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\src\model\api.js
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\components\widgets\myIcons\index.vue
-import api from '../../../../../src/model/api.js'
 export default {
     props: {
         customIndex: {
@@ -44,255 +71,233 @@ export default {
             default: () => { },
         },
         desk: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     components: {
         Widget,
-        edit
+        edit,
+        icons,
+        icon,
+        DragAndFollow,
+        DroppableArea,
     },
     data() {
         return {
-            titleValue: "",
-            linkValue: "",
-            options: {
-                className: 'card small',
-                // title: '图标组件',
-                // icon: 'time-circle',
-                type: 'games',
-                hide: true
-            },
-            menuList: [
-                {
-                    icon: 'shezhi1',
-                    title: '设置',
-                    fn: () => {
-                        this.$refs.homelSlotRef.menuVisible = false
-                        this.settingVisible = true
-                    }
-                }
-            ],
-            settingVisible: false,
-            backgroundColorList: {
-                color1: 'linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)',
-                color2: 'linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)',
-                color3: 'linear-gradient(-45deg, #545454 0%, #CDF97D 0%, #A1E99D 100%)',
-                color4: 'linear-gradient(-45deg, #545454 0%, #C0E0FF 0%, #ADC9FF 100%)',
-                color5: 'linear-gradient(-45deg, #545454 0%, #89E5FF 0%, #70B3FF 100%)',
-                color6: 'linear-gradient(-45deg, #545454 0%, #44D2DE 0%, #558AED 100%)',
-                color7: 'linear-gradient(-45deg, #545454 0%, #D9ABE1 0%, #A772FC 100%)',
-                color8: 'linear-gradient(-45deg, #545454 0%, #F5BC9A 0%, #D57FE6 100%)',
-                color9: 'linear-gradient(-45deg, #545454 0%, #FDE485 0%, #F895AA 100%)',
-                color10: 'linear-gradient(-45deg, #BA4348 0%, #A466E9 0%, #BA4244 100%)',
-                color11: 'linear-gradient(-45deg, #A93AAE 0%, #DA6891 0%, #C987CC 100%)',
-                color12: 'linear-gradient(-45deg, #545454 0%, #DA6991 0%, #A73781 100%)',
-                color13: 'linear-gradient(-45deg, #545454 0%, #F1EBF9 0%, #F4CFF6 100%)',
-                color14: 'linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)',
-                color15: 'linear-gradient(-45deg, #252A31 0%, #30373F 0%, #15161A 100%)',
-            },
-        }
+            index: 0, // 图标数组的下标
+            isDragStyle: false,
+            settingVisible: false, // 编辑状态
+            options: { hide: true }, // 卡片核心配置
+        };
     },
     mounted() {
-        // 是否需要初始化 
-        if (this.customData.init == undefined) {
-            let setData = {}
-            // pinia获取初始化数据并重置pinia数据
-            Object.keys(this.iconOption).forEach((k) => [setData[k], this.iconOption[k]] = [this.iconOption[k], this.baseIconOption[k]])
-            this.updateCustomData(this.customIndex, setData, this.desk)
+        // 是否需要初始化
+        if (this.customData.groupTitle == undefined) {
+            let setData = {};
+            setData.groupTitle = "分组"; // 初始化分组名称
+            this.updateCustomData(this.customIndex, setData, this.desk);
         }
-        this.$refs.itemRef.addEventListener("contextmenu", this.handleMenu, { capture: true })
+        // 绑定右键事件
+        this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
+            capture: true,
+        });
     },
-    // 更新数据
-    watch: {
-        'customData.isRadius': {
-            handler(isRadius, oldV) {
-                this.updateCustomData(this.customIndex, { isRadius }, this.desk)
-            }
-        },
-        'customData.radius': {
-            handler(radius, oldV) {
-                this.updateCustomData(this.customIndex, { radius }, this.desk)
-            },
-        },
-        'customData.isBackground': {
-            handler(isBackground, oldV) {
-                this.updateCustomData(this.customIndex, { isBackground }, this.desk)
-            },
-        },
-        'customData.backgroundColor': {
-            handler(backgroundColor, oldV) {
-                this.updateCustomData(this.customIndex, { backgroundColor }, this.desk)
-            },
-        },
-        'customData.titleValue': {
-            handler(titleValue, oldV) {
-                this.updateCustomData(this.customIndex, { titleValue }, this.desk)
-            },
-        },
-        'customData.link': {
-            handler(link, oldV) {
-                this.updateCustomData(this.customIndex, { link }, this.desk)
-                if (link === '') this.customData.linkValue = ''
-            },
-        },
-        'customData.linkValue': {
-            handler(linkValue, oldV) {
-                this.updateCustomData(this.customIndex, { linkValue }, this.desk)
-            },
-        },
-        'customData.src': {
-            handler(src, oldV) {
-                this.updateCustomData(this.customIndex, { src }, this.desk)
-            },
-        },
-        'customData.backgroundIndex': {
-            handler(backgroundIndex, oldV) {
-                this.updateCustomData(this.customIndex, { backgroundIndex }, this.desk)
-            },
-        },
+    beforeDestroy() {
+        // 取消右键事件
+        this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, {
+            capture: true,
+        });
+    },
+    provide() {
+        return {
+            customIndex: this.customIndex, // '孙组件数据'
+        };
     },
     computed: {
-        ...mapWritableState(myIcons, ['iconOption', 'baseIconOption']),
-        // 动态切换圆角状态
-        radiusState() {
-            if (this.customData.isRadius) return { borderRadius: this.customData.radius + 'px' }
-            else return { borderRadius: '0px' }
+        ...mapWritableState(myIcons, [
+            "iconOption",
+            "isCopy",
+            "isPaste",
+            "isDrag",
+            "iconState",
+            "iconList",
+        ]),
+        dragStyle() {
+            if (this.isDragStyle) {
+                return {
+                    opacity: 0.65,
+                    border: "1px solid var(--active-bg)",
+                }
+            } else return {}
         },
-        // 动态切换背景状态
-        backgroundState() {
-            if (this.customData.isBackground) return { background: this.customData.backgroundColor }
-            else return { background: 'none' }
+        // 右键菜单
+        menuList() {
+            if (
+                this.customData.iconList !== undefined &&
+                this.customData.iconList.length > 1
+            ) return [
+                {
+                    icon: "zhankai",
+                    title: "解除分组",
+                    fn: () => {
+                        this.disbandGroup();
+                    },
+                },
+                {
+                    icon: "shezhi1",
+                    title: "放置",
+                    fn: () => {
+                        this.copyIcon();
+                    },
+                },
+            ];
+            else
+                return [
+                    {
+                        icon: "shezhi1",
+                        title: "移动",
+                        fn: () => {
+                            this.moveIcon();
+                        },
+                    },
+                    {
+                        icon: "shezhi1",
+                        title: "放置",
+                        fn: () => {
+                            this.copyIcon();
+                        },
+                    },
+                    {
+                        icon: "shezhi1",
+                        title: "设置",
+                        fn: () => {
+                            this.$refs.homelSlotRef.menuVisible = false;
+                            this.index = 0;
+                            this.settingVisible = true;
+                        },
+                    },
+                ];
         },
-        editOption() {
-            return {
-                isRadius: this.customData.isRadius,
-                radius: this.customData.radius,
-                isBackground: this.customData.isBackground,
-                backgroundColor: this.customData.backgroundColor,
-                titleValue: this.customData.titleValue,
-                link: this.customData.link,
-                linkValue: this.customData.linkValue,
-                src: this.customData.src,
-                backgroundIndex: this.customData.backgroundIndex,
-            }
-        },
-        // 动态计算卡片大小
-        reSize() {
-            return {
-                width: 0 + 'px',
-                height: 0 + 'px'
-            }
-        }
     },
     methods: {
-        ...mapActions(cardStore, ['updateCustomData']),
-        async customUpload(file, insertFn) {
-            let url
-            var formData = new FormData();
-            formData.append("file", file)
-            console.log('1 :>> ', formData);
-            await api.getCosUpload(formData, (err, data) => {
-                console.log('2 :>> ', 2);
-                if (!err) {
-                    message.error('图片上传失败')
-                } else {
-                    url = 'http://' + data.data.data
-                    // insertFn(url)
-                }
-            })
-            console.log('url :>> ', url);
+        ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+        // 处于图标组件放置区
+        handleDrop() {
+            // 拖拽状态下 添加图标组件
+            if (this.isDrag) this.copyIcon();
         },
-        handleMenu(e) {
-            e.preventDefault()
-            e.stopPropagation()
-            this.$refs.homelSlotRef.menuVisible = true
+        // 单图标组件拖拽开始
+        handleDragStart() {
+            this.iconList = [];
+            this.isDrag = true; // 打开拖拽状态
+            this.moveIcon(); // 复制图标组件
         },
-        save() {
-            let editOption = this.$refs.editRef.save()
-            this.customUpload(editOption.src)
-            if (typeof (editOption) === 'string') return message.error(editOption)
-            Object.keys(editOption).forEach((k) => this.customData[k] = editOption[k])
-            message.success("保存成功")
-            this.settingVisible = false
+          // 单图标组件拖拽结束
+          handleDragEnd() {
+            this.iconList = [];
+            this.isDragStyle = false
+            // this.isDrag = false // 这里没处理 可能有bug  目前没发现
         },
-        iconClick() {
-            if (this.customData.link === "link") browser.openInInner(this.customData.linkValue)
-            else if (this.customData.link === "fast" || this.customData.link === "nav") this.openApp()
-            else message.error("你还未设置链接/快捷方式")
+        // 删除多图标组件中的单个图标
+        deleteIcons(index) {
+            this.customData.iconList.splice(index, 1);
         },
-        openApp() {
-            if (typeof this.customData.linkValue === "object" && this.customData.linkValue.type) {
-                switch (this.customData.linkValue.type) {
-                    case "systemApp":
-                        if (this.customData.linkValue.event === "fullscreen") {
-                            if (this.full) this.full = false;
-                            else this.full = true;
-                            tsbApi.window.setFullScreen(!this.full);
-                        } else if (this.customData.linkValue.event === "/status") {
-                            if (this.$route.path === "/status") this.$router.go(-1);
-                            else this.$router.push({ path: "/status" });
-                        } else if (this.customData.linkValue.data) {
-                            this.$router.push({ name: "app", params: this.customData.linkValue.data });
-                        } else this.$router.push({ name: this.customData.linkValue.event });
-                        break;
-                    case "coolApp":
-                        this.$router.push({ name: "app", params: this.customData.linkValue.data });
-                        break;
-                    case "localApp":
-                        require("electron").shell.openPath(this.customData.linkValue.path);
-                        break;
-                    case "lightApp":
-                        ipc.send("executeAppByPackage", { package: this.customData.linkValue.package });
-                        break;
-                    default:
-                        require("electron").shell.openPath(this.customData.linkValue.path);
-                }
-            } else if (this.customData.linkValue) {
-                this.customData.linkValue.path
-                    ? require("electron").shell.openPath(this.customData.linkValue.path)
-                    : require("electron").shell.openPath(
-                        require("path").normalize(this.customData.linkValue)
-                    );
+        // 编辑多图标组件中的单个图标
+        editIcons(index) {
+            this.index = index;
+            this.settingVisible = true;
+        },
+        // 全屏拖拽添加图标
+        dragAddIcon(icon) {
+            this.addIcon(icon);
+        },
+        // 添加单图标组件
+        addIcon(icon) {
+            this.addCard(
+                {
+                    name: "myIcons",
+                    id: Date.now(),
+                    customData: { iconList: [{ ...icon }] },
+                },
+                this.desk
+            );
+        },
+        // 解除多图标分组
+        disbandGroup() {
+            // 遍历多图标数组 重新添加到桌面
+            for (let i = 0; i < this.customData.iconList.length; i++) {
+                // 速度太快会导致ID重复
+                setTimeout(() => {
+                    this.addIcon(this.customData.iconList[i]);
+                }, 10);
             }
+            this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
+            message.success("解除分组成功");
         },
-    }
-}
+        // 点击移动图标组件
+        moveIcon() {
+            this.$refs.homelSlotRef.menuVisible = false; // 隐藏控件
+            let state = false // 初始化状态
+            // 遍历全局数据并拦截重复的数据
+            this.iconList.forEach((item) => {
+                const { iconRef, iconIndex, ...icon } = item;
+                if (iconIndex === this.customIndex) state = true;
+            });
+            if (state) return // 本次移动被拦截
+            // 添加数据
+            this.iconList.push({
+                ...this.customData.iconList[0],
+                iconRef: this.$refs.homelSlotRef,
+                iconIndex: this.customIndex,
+            });
+            this.isCopy = true;  // 打开复制状态
+            this.isDragStyle = true  // 打开选中样式
+        },
+        // 复制新的图标组件
+        copyIcon() {
+            this.$refs.homelSlotRef.menuVisible = false; // 隐藏控件
+            this.isDragStyle = false  // 关闭选中样式
+            if (this.isCopy === false && this.isDrag === false)
+                return message.error("你还未复制任何图标组件");
+
+            // 遍历全局数组并添加
+            this.iconList.forEach((item) => {
+                const { iconRef, iconIndex, ...icon } = item;
+                // 拦截重复的数据
+                if (iconIndex === this.customIndex) {
+                    this.iconState = false; // 关闭该图标状态 本次拖拽锁住无法添加
+                    if (!this.isDrag) message.error("不能复制到同个图标组件上");
+                    return;
+                }
+                this.customData.iconList.push({ ...icon });
+                if (iconRef !== undefined) iconRef.doRemoveCard(); // 删除原图标组件
+            });
+            this.isPaste = true // 打开粘贴状态
+            this.iconList = []; // 清空全局数组
+            this.isCopy = false; // 重置拷贝状态
+        },
+        // 更新多图标组件标题
+        updateGroupTitle(title) {
+            this.customData.groupTitle = title;
+        },
+        // 右键菜单绑定
+        handleMenu(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$refs.homelSlotRef.menuVisible = true;
+        },
+        // 保存图标
+        save() {
+            let editOption = this.$refs.editRef.save(); // 获取编辑组件的最新数据
+            if (typeof editOption === "string") return message.error(editOption);
+            Object.keys(editOption).forEach(
+                (k) => (this.customData.iconList[this.index][k] = editOption[k])
+            );
+            message.success("保存成功");
+            this.settingVisible = false;
+        },
+    },
+};
 </script>
 
-<style lang="scss" scoped>
-.item {
-    width: 134px;
-    height: 96px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    flex-direction: column;
-    font-size: 14px;
-    cursor: pointer;
-
-    &:hover {
-        border-radius: 10px;
-    }
-
-    .image {
-        height: 65px !important;
-        width: 65px !important;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 5px;
-    }
-
-    .title {
-        padding: 0 5px;
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        text-align: center;
-        height: 18px;
-        line-height: 18px;
-    }
-}
-</style>
+<style lang="scss" scoped></style>

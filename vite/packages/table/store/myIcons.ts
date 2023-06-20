@@ -3,9 +3,10 @@ export const myIcons = defineStore(
     "myIcons", {
     state() {
         return {
+            // 添加卡片的数据
             iconOption: {
-                isRadius: false,
-                radius: 0,
+                isRadius: true,
+                radius: 5,
                 isBackground: false,
                 backgroundColor: null,
                 titleValue: "",
@@ -13,19 +14,15 @@ export const myIcons = defineStore(
                 linkValue: "",
                 init: true,
                 src: "",
-                backgroundIndex:1
+                backgroundIndex: 1,
             },
-            baseIconOption: {
-                isRadius: false,
-                radius: 0,
-                isBackground: false,
-                backgroundColor: null,
-                titleValue: "",
-                link: "",
-                linkValue: ":",
-                src: "",
-                backgroundIndex:1
-            }
+            isCopy: false, // 复制状态
+            isDrag: false, // 拖拽状态
+            isClose: false, // 全屏离开状态
+            isPaste: false, // 粘贴状态
+            iconState: true, // 图标组件状态
+            iconList: []
+
         }
     },
     actions: {}
