@@ -10,7 +10,10 @@
       </div>
       <div class="flex btn-item">
         <div class="pointer">保存</div>
-        <div class="pointer" @click="shoreModal=true">保存并分享到创意市场</div>
+        <a-tooltip>
+          <template #title>保存并分享到创意市场</template>
+          <div class="pointer" @click="shoreModal=true">保存并分享</div>
+        </a-tooltip>
       </div>
     </div>
     <!-- 基本信息 -->
@@ -47,15 +50,19 @@
     <!-- 快捷键 -->
     <div class="key-content" v-else>
       <!-- 输入框 -->
-      <div class="flex mt-7 mb-4">
-        <a-input class="ml-3 input"  :value="keyCombination" @keydown="showInfo" placeholder="按下组合键"/>
-        <a-input class="ml-3 input" v-model:value="combinationName" placeholder="操作名称" style="width:227px;height: 48px;"/>
-        <div class="addBtn" @click="addShortcutKey">添加快捷键</div>
-        <a-input class="ml-3 input" v-model:value="groupName" placeholder="分类名称" style="width:227px;height: 48px;"/>
-        <div class="addBtn" @click="addGroup">新建分类</div>
+      <div class="input-item">
+        <div>
+          <a-input class=" input"  :value="keyCombination" @keydown="showInfo" placeholder="按下组合键"/>
+          <a-input class="ml-3 input" v-model:value="combinationName" placeholder="操作名称" style="width:227px;height: 48px;"/>
+          <div class="addBtn" @click="addShortcutKey">添加快捷键</div>
+        </div>
+        <div>
+          <a-input class="ml-3 input" v-model:value="groupName" placeholder="分类名称" style="width:227px;height: 48px;"/>
+          <div class="addBtn" @click="addGroup">新建分类</div>
+        </div>
       </div>
       <!-- 提示 -->
-      <div class="prompt mb-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
+      <div class="prompt mb-4 mx-3 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
           <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
           <span class="mx-4">支持长按拖拽排序</span>
@@ -94,14 +101,19 @@
     </div>
   </div>
   <!-- 发布抽屉 -->
-  <a-drawer v-model:visible="openDrawer" style="z-index:999999;" width="320" placement="right">
+  <a-drawer v-model:visible="releaseDrawer" style="z-index:999999;" width="500" placement="right">
     <template #extra>
       <a-space>
         <div class="add-scheme" @click="saveVal">发布</div>
       </a-space>
     </template>
     <div class="drawer-center">
-      
+      <div class="mb-5 title">动态</div>
+      <div class="trend-content"></div>
+      <div class="drawer-img">
+        <div class="title">附图</div>
+        <div class="btnCopy">复制图片</div>
+      </div>
     </div>
   </a-drawer>
 </template>
@@ -249,7 +261,7 @@ export default {
       groupName: '',
       // 介绍
       introduce: '',
-      openDrawer: false
+      releaseDrawer: false
     }
   },
   methods: {
@@ -319,7 +331,8 @@ export default {
       this.groupName = ''
     },
     openDrawer(){
-
+      this.shoreModal = false
+      this.releaseDrawer = true
     },
     // 上传头像前校验
     beforeUpload(file) {
@@ -419,7 +432,7 @@ export default {
       height: 48px;
     }
     div:nth-child(2){
-      width: 200px;
+      width: 150px;
       height: 48px;
       margin-left: 12px;
     }
@@ -497,6 +510,14 @@ export default {
     margin-left: 10px;
     border-right: solid rgba(255,255,255,0.1) 1px;
   }
+  .input-item{
+    display: flex;
+    justify-content: space-between;
+    margin: 28px 12px 16px;
+    >div{
+      display: flex;
+    }
+  }
   .input{
     width:227px;
     height: 48px;
@@ -504,8 +525,46 @@ export default {
     border-radius: 12px;
     color: var(--primary-text);
     font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
   }
   .s-bg{
         box-shadow: none !important;
     }
+  .add-scheme{
+    background: #2A2A2A;
+    border-radius: 12px;
+    width: 80px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .drawer-center{
+    .title{
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+    .trend-content{
+      background: #2A2A2A;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      height:100px;
+    }
+    .drawer-img{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 24px 0;
+      .btnCopy{
+        background: #2A2A2A;
+        border-radius: 12px;
+        width: 128px;
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
 </style>
