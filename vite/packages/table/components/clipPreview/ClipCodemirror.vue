@@ -1,6 +1,6 @@
 <template>
   <!-- 代码块高亮  代码块-->
-  <div ref="myClip"></div>
+  <div ref="myClip" class="h-full"></div>
 </template>
 
 <script>

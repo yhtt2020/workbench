@@ -5,34 +5,31 @@
         <!-- 文本预览模块 -->
         <template v-if="previewContent.type === 'text'">
           <!-- 文本预览左侧 -->
-          <div class="flex flex-col w-full">
+          <div class="flex flex-col w-full justify-between h-full">
             <!-- 关闭预览按钮 -->
             <div class="mb-3 no-drag  pointer" @click="closePreview">
               <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
                 <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
               </div>
             </div>
-
-            <!-- 内容预览区域 -->
-            <div class="flex h-full flex-col justify-between">
-              <div class="flex h-full items-center justify-center">
-                <template v-if="defaultText.name === 'plainText'">
-                  <textCodeMirror :editorContent="previewContent.content"></textCodeMirror>
-                </template>
-                <template v-else>
-                  <ClipCodemirror ref="myClipCodeMirror" :editorContent="previewContent.content"></ClipCodemirror>
-                </template>
-              </div>
-              <div class="flex items-center justify-center mb-4">
-                <HorizontalPanel :navList="textType" v-model:selectType="defaultText"></HorizontalPanel>
-                <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center" 
-                 style="background: var(--secondary-bg);" @click="openCodeLanguage" v-if="defaultText.name === 'code'"
-                >
-                  <span class="mr-5 type-right">
-                    {{ language.title }}
-                  </span>
-                  <Icon icon="xiangxia" style="font-size: 1.25em;"></Icon>
-                </div>
+            <div class="flex items-center justify-center grow pr-5 pl-2">
+              <template v-if="defaultText.name === 'plainText'">
+                <textCodeMirror :editorContent="previewContent.content" class="w-full"></textCodeMirror>
+              </template>
+              <template v-else>
+                <ClipCodemirror ref="myClipCodeMirror" class="w-full" :editorContent="previewContent.content"></ClipCodemirror>
+              </template>
+            </div>
+            <!-- 底部tab切换 -->
+            <div class="flex items-center justify-center">
+              <HorizontalPanel :navList="textType" v-model:selectType="defaultText"></HorizontalPanel>
+              <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center" 
+                style="background: var(--secondary-bg);" @click="openCodeLanguage" v-if="defaultText.name === 'code'"
+              >
+                <span class="mr-5 type-right">
+                  {{ language.title }}
+                </span>
+                <Icon icon="xiangxia" style="font-size: 1.25em;"></Icon>
               </div>
             </div>
           </div>
@@ -186,7 +183,7 @@
 
             <!-- 内容预览 -->
             <div class="flex h-full flex-col items-center justify-center">
-              <ClipVideo :vUrl="previewContent.videoUrl" class="md-clip rounded-lg"></ClipVideo>
+              <ClipVideo :vUrl="previewContent.videoUrl" class="middle-clip rounded-lg"></ClipVideo>
             </div>
           </div>
           <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
@@ -445,8 +442,7 @@ export default {
   font-weight: 400;
 }
 :deep(.CodeMirror){
-  height:400px!important;
-  width:1000px !important;
+  height:calc(100% - 20px) !important;
 }
 
 .clip-image{
@@ -456,7 +452,7 @@ export default {
   justify-content: center;
 }
 
-.md-clip{
+.middle-clip{
   max-width: 800px;
 
 }
@@ -466,7 +462,7 @@ export default {
   .clip-image{
     width: calc(100% / 1.2);
   }
-  .md-clip{
+  .middle-clip{
     width: calc(100% / 1.2);
   }
   :deep(.CodeMirror){
@@ -479,7 +475,7 @@ export default {
   .clip-image{
     width: calc(100% / 1.25);
   }
-  .md-clip{
+  .middle-clip{
     width: calc(100% / 1.25);
   }
 
@@ -492,7 +488,7 @@ export default {
   .clip-image{
     width: calc(100% / 1.35);
   }
-  .md-clip{
+  .middle-clip{
     width: calc(100% / 1.35);
   }
 
@@ -505,16 +501,30 @@ export default {
   .clip-image{
     width: calc(100% / 1);
   }
-  .md-clip{
+  .middle-clip{
     width: calc(100% / 1);
-  }
-
-  :deep(.CodeMirror){
-    width:1000px !important;
   }
 }
 
 :deep(.ps__rail-y){
   display: none !important;
+}
+
+
+@media screen and (max-height:480px) {
+  :deep(.CodeMirror){
+    height:300px !important;
+  }
+}
+@media screen and (min-height:481px) and (max-height:800px) {
+  :deep(.CodeMirror){
+    height: 600px !important;
+  }
+}
+
+@media screen and (min-height:801px) and (max-height:1200px) {
+  :deep(.CodeMirror){
+    height: 800px !important;
+  }
 }
 </style>
