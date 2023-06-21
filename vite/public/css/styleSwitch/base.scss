@@ -1,10 +1,12 @@
 .transparent {
   body {
     background-color: transparent !important;
-    background: transparent !important;
+    background: none !important;
   }
 }
-
+body {
+  background: var(--main-bg) !important;
+}
 // 一些二次封装的类
 .xt-active-btn {
   background: var(--active-bg) !important;

@@ -32,7 +32,8 @@
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
             <div class="image" :style="[backgroundState]" :class="{ active: _src.length == 0 }">
-                <img :src="_src" v-if="_src" :style="radiusState" style="width: 80%;height: 80%;" @error="imgError">
+                <img :src="_src" v-if="_src" :style="radiusState" style="width: 100%;height: 100%;object-fit: cover;"
+                    @error="imgError">
                 <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
                     class="xt-bg-2 flex justify-center items-center xt-hover clear" @click="this._src = ''">
                     <Icon class="icon xt-text  no-drag" icon="guanbi"></Icon>
@@ -50,6 +51,7 @@
             <a-switch v-model:checked="_isRadius"></a-switch>
         </div>
         <a-slider v-if="_isRadius" v-model:value="_radius" :max="50" :step="1" class="no-drag" />
+
         <div class="parent">
             <div class="text-base">图标背景</div>
             <a-switch v-model:checked="_isBackground"></a-switch>
@@ -64,7 +66,7 @@
 
 <script>
 import fastNav from "./fastNav.vue"
-import { validateFile } from '../../card/hooks/innerImgHook'
+import { validateFile } from '../../../card/hooks/innerImgHook'
 import { message } from "ant-design-vue";
 export default {
     components: { fastNav },
@@ -114,7 +116,10 @@ export default {
             return this._linkValue.name || this._linkValue || "";
         },
         backgroundState() {
-            if (this._isBackground) return { background: this._backgroundColor }
+            if (this._isBackground) {
+                if (this._backgroundColor === null) this.backgroundClick(1)
+                return { background: this._backgroundColor }
+            }
             else return { background: 'none' }
         },
         radiusState() {
@@ -165,8 +170,6 @@ export default {
             this._link = 'fast'
         },
         save() {
-            console.log('object :>> ', this._src.length);
-            console.log('object :>> ', this._src);
             if (this._src.length == 0) return "未上传图标"
             return {
                 isRadius: this._isRadius,

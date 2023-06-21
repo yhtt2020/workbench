@@ -18,11 +18,13 @@
     </div>
     <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;">
-        <a-result class="s-bg rounded-lg m-auto" style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success"
-          title="使用卡片桌面" sub-title="您可以长按空白处、右键添加卡片。">
+        <a-result class="s-bg rounded-lg m-auto"
+          style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用卡片桌面"
+          sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
             <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
-            <a-button disabled key="buy" @click="learn" style="background: var( --active-bg);color: var( --secondary-text);">学习（课程暂未上线）</a-button>
+            <a-button disabled key="buy" @click="learn"
+              style="background: var( --active-bg);color: var( --secondary-text);">学习（课程暂未上线）</a-button>
           </template>
 
           <div class="desc">
@@ -71,8 +73,8 @@
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
             <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
-                :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch"
+                @touchend="touch" :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -216,7 +218,7 @@
   <!-- <div class="home-blur fixed inset-0 p-12" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
-  
+
   <div class="home-blur fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
     <GuidePage></GuidePage>
   </div>
@@ -291,8 +293,10 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import ShortcutKeyDetail from "../components/ShortcutKeyDetail.vue";
 import GuidePageVue from './app/grade/GuidePage.vue';
+import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
+import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
+import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -545,8 +549,10 @@ export default {
     Notes,
     myIcons,
     NewAddCard,
+    GuidePage,
     ShortcutKeyDetail,
-    GuidePage
+    NotShortcutKey,
+    ShortcutKeyList
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -585,8 +591,8 @@ export default {
           if (!e.data) {
             e.data = {};
           }
-          if(!e.customData){
-            e.customData={}
+          if (!e.customData) {
+            e.customData = {}
           }
         });
         return find;
@@ -724,13 +730,13 @@ export default {
     }
   },
   created() {
-    if(this.currentDesk.cards.length){
+    if (this.currentDesk.cards.length) {
       this.currentDesk.cards.forEach((e) => {
         if (!e.data) {
           e.data = {};
         }
-        if(!e.customData){
-          e.customData={}
+        if (!e.customData) {
+          e.customData = {}
         }
         if(Object.keys(e.data).length>0){
           e.customData={...e.customData,...e.data}
@@ -750,8 +756,8 @@ export default {
     }
   },
   methods: {
-    hideAddCard(){
-      this.visibleAdd=false
+    hideAddCard() {
+      this.visibleAdd = false
     },
     setTransparent() {
       if (this.appSettings.transparent) {
@@ -783,17 +789,23 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
 
     clearWallpaper() {
+
       this.setBackgroundImage({ path: "" });
       const value = JSON.parse(window.localStorage.getItem("style"));
       document.documentElement.classList.remove(value);
-      if (this.styles == true) {
-        document.documentElement.classList.add('light-model');
-        window.localStorage.setItem("style", JSON.stringify("light-model"));
-      } else {
-        document.documentElement.classList.add('dark-model');
-        window.localStorage.setItem("style", JSON.stringify("dark-model"));
-
-      }
+      window.localStorage.setItem("background", JSON.stringify("-no"));
+      const background = JSON.parse(window.localStorage.getItem("background"));
+      let model = this.styles ? "light" : "dark"
+      let name = `${model}${background || ''}-model`
+      document.documentElement.classList.add(name);
+      window.localStorage.setItem("style", JSON.stringify(name));
+      // if (this.styles == true) {
+      //   document.documentElement.classList.add(`light${background || ''}-model`);
+      //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));
+      // } else {
+      //   document.documentElement.classList.add(`dark${background || ''}-model`);
+      //   window.localStorage.setItem("style", JSON.stringify(`dark${background || ''}-model`));
+      // }
     },
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
@@ -808,7 +820,7 @@ export default {
       this.addDeskVisible = true;
     },
     doAddDesk() {
-      if (this.newDesk.name.trim() ===  "") {
+      if (this.newDesk.name.trim() === "") {
         message.error("请输入新桌面名称");
         return;
       }
@@ -944,9 +956,11 @@ export default {
 :deep(.ant-result-title) {
   color: var(--primary-text);
 }
+
 :deep(.ant-result-subtitle) {
-  color:var(--secondary-text)
+  color: var(--secondary-text)
 }
+
 .grid {
   position: relative;
   display: inline-block;

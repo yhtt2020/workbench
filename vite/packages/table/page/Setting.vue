@@ -205,17 +205,13 @@ export default {
     isMain: isMain,
     styleSwitch() {
       const value = JSON.parse(window.localStorage.getItem("style"));
-      let name = null;
       document.documentElement.classList.remove(value);
-      if (this.styles) {
-        name =  "light-model";
-        document.documentElement.classList.add(name);
-        window.localStorage.setItem("style", JSON.stringify(name));
-      } else {
-        name =  "dark-model";
-        document.documentElement.classList.add(name);
-        window.localStorage.setItem("style", JSON.stringify(name));
-      }
+      window.localStorage.setItem("background", JSON.stringify("-no"));
+      const background = JSON.parse(window.localStorage.getItem("background"));
+      let model = this.styles ? "light" : "dark"
+      let name = `${model}${background || ''}-model`
+      document.documentElement.classList.add(name);
+      window.localStorage.setItem("style", JSON.stringify(name));
     },
 
     tipSaving() {

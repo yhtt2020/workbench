@@ -163,7 +163,6 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #fff;
   z-index: 99999;
   // background-size: cover;
   background-repeat: no-repeat;
@@ -174,7 +173,6 @@ export default {
   width: 100%;
   height: 100%;
   // 背景的模糊大小通过下面的属性值大小来调制
-  background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(5px);
   transform: scale(1.2);

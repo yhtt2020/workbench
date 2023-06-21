@@ -211,13 +211,14 @@
     </div>
   </vue-custom-scrollbar> -->
 
-  <div class="px-4 max-capture flex">
-    <div class="s-bg rounded-md cap-left px-4 py-2">
+
+  <div class="px-4 max-capture flex" style="height: 100%">
+    <div class="s-bg rounded-md cap-left px-4 py-2" style="height: 100%">
 
 
       <!--  选择录制源    -->
-      <div style="width: 490px">
-        <div v-if="step===1">
+      <div style="width: 490px;height: 100%" >
+        <div v-if="step===1" style="height: 100%">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center">
               <Icon icon="video" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
@@ -232,7 +233,7 @@
           <div class="text-center" v-if="loading===true">
             捕获源获取中…
           </div>
-          <div v-else>
+          <div v-else style="height: 100%">
             <template v-if="defaultRecordingType.name === 'recordGame'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
@@ -246,7 +247,7 @@
                   >
                     <img :src="item.url" class="w-full rounded-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:150px;">{{ item.name }} </span>
+                      <span class="truncate" style="max-width:150px;">{{ item.name }}  </span>
                     </div>
                   </div>
                 </div>
@@ -292,7 +293,10 @@
             </template>
           </div>
         </div>
-        <div v-if="step===2">
+        <div v-if="step===2" style="height: 100%">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%">
+
+
           <div class="flex items-center justify-between mb-3">
 
           </div>
@@ -303,7 +307,7 @@
                         :src="'file://'+currentSource.icon"></a-avatar>
               {{ currentSource.name }}
             </div>
-            <div style="z-index: 99899999;position: absolute;left:130px;top: 120px;background: white;color: black">功能正在开发中，当前还不可使用</div>
+            <div v-if="false" style="z-index: 99899999;position: absolute;left:130px;top: 120px;background: white;color: black">功能正在开发中，当前还不可使用</div>
             <div style="position: absolute;right: 0.5em">
               <div class="flex items-center pointer justify-center" @click="openRecordSet">
                 <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
@@ -311,16 +315,16 @@
             </div>
           </div>
           <div class="flex mb-3">
-            <div class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3" @click="startScreenshot">
+            <div  class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3 screenshot" @click="screenshot">
               <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
                 <div class="rounded-full cp-orange-full flex items-center justify-center cp-lw">
                   <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
                 </div>
               </div>
-              <div class="cp-text">截取屏幕</div>
+              <div class="cp-text">截图</div>
             </div>
 
-            <div @click="startRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
+            <div v-if="!recording"  @click="startRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
               <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
                 <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
                   <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
@@ -328,6 +332,16 @@
               </div>
               <div class="cp-text">开始录制</div>
             </div>
+            <div v-else  @click="stopRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
+              <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
+                <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
+                  <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
+                </div>
+              </div>
+              <div class="cp-text">停止录制</div>
+            </div>
+
+
 
             <div @click="startMonitoring">
               <div class="cp-w s-item  pointer  flex-col rounded-lg " v-if="isMonitor === false">
@@ -350,27 +364,62 @@
           </div>
           <div class="s-item rounded-md p-4 mb-3" v-if="isHeight === true">
             <div class="flex items-center mb-5">
-              <div class="pointer" @click="closeSound">
-                <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
+              <div class="pointer" @click="clickMute">
+                <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemSound.muted"></Icon>
                 <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
               </div>
               <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
               <div style="width:331px;">
-                <a-slider v-model:value="systemSound"></a-slider>
+                <a-slider @afterChange="changeVolume" v-model:value="systemSound.volume"></a-slider>
               </div>
             </div>
             <div class="flex items-center">
-              <div class="pointer" @click="closeMicrophone">
+              <div class="pointer" @click="clickMicMute">
                 <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
-                      v-if="microphoneShow"></Icon>
+                      v-if="!systemMicrophone.muted"></Icon>
                 <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
               </div>
               <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
               <div style="width:331px;">
-                <a-slider v-model:value="systemMicrophone"></a-slider>
+                <a-slider @afterChange="changeMicVolume" v-model:value="systemMicrophone.volume"></a-slider>
               </div>
             </div>
           </div>
+            <div style="text-align: center" v-if="recording">
+              <icon icon="record-circle-line" style="color:red" ></icon> 正在录制视频：已录制{{recordedTimeStr}}，
+              码率：{{(this.settings.videoBitsPerSecond/1024/1024).toFixed(2)}}Mbps 预估大小：{{(this.settings.videoBitsPerSecond/1024/1024/8*this.recordedSeconds).toFixed(2)}}MB
+            </div>
+<!--  捕获预览        -->
+          <div  v-if="recentFileName && !recording">
+            <div v-if="recentType==='video'">
+              <div class="mb-2 truncate">最后录屏：
+                {{recentFileName}}
+              </div>
+              <div class="mb-2">
+                <a-button @click="openRecent" class="mr-2">打开</a-button>
+                <a-button @click="openPos" class="mr-2">浏览</a-button>
+                <a-button @click="saveRecent" class="mr-2">另存为</a-button>
+                <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
+              </div>
+              <VideoItem :key="recentKey" :options="{controls:true,loop:false}" :url="'file://'+this.getRecentVideoPath()"></VideoItem>
+
+            </div>
+            <div v-else>
+              <div class="mb-2 truncate">最后捕获：
+                {{recentFileName}}
+              </div>
+              <div class="mb-2">
+                <a-button @click="openRecent" class="mr-2">打开</a-button>
+                <a-button @click="openPos" class="mr-2">浏览</a-button>
+<!--                <a-button @click="editRecent" class="mr-2">编辑</a-button>-->
+                <a-button @click="saveRecent" class="mr-2">另存为</a-button>
+                <a-button @click="delRecent" type="danger" class="mr-2">删除</a-button>
+              </div>
+              <a-image style="width: 100%;border-radius: 4px" :src="recentScreenShot"></a-image>
+            </div>
+            </div>
+
+          </vue-custom-scrollbar>
         </div>
       </div>
 
@@ -394,15 +443,15 @@
             <div class="flex flex-col justify-between w-2/3">
               <div class="flex justify-between mb-5">
                 <span class="fps-sm">实时</span>
-                <span class="fps-hz">144hz</span>
+                <span class="fps-hz">{{ CPUGPUData.FPS.value }}</span>
               </div>
               <div class="flex justify-between mb-5">
                 <span class="fps-sm">平均</span>
-                <span class="fps-hz">99hz</span>
+                <span class="fps-hz">{{ averageFps }}</span>
               </div>
               <div class="flex justify-between mb-2">
                 <span class="fps-sm">1%LOW</span>
-                <span class="fps-hz">87hz</span>
+                <span class="fps-hz">{{low1}}</span>
               </div>
             </div>
           </div>
@@ -418,14 +467,14 @@
               </div>
             </div>
             <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useGPU.value }}</div>
+              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useGPU.value|| '-' }}</div>
               <div class="flex items-center justify-center">
                 <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
                 <span class="ml-2 fps-t">GPU</span>
               </div>
             </div>
             <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
-              <div class="fps-text flex items-center  justify-center">144</div>
+              <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.FPS.value  }}</div>
               <div class="flex items-center justify-center">
                 <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
                 <span class="ml-2 fps-t">FPS</span>
@@ -436,7 +485,7 @@
 
         <template v-else>
           <div class="s-bg flex flex-col py-8 rounded-lg items-center">
-            <div class="fps-text pb-4">144</div>
+            <div class="fps-text pb-4">{{ CPUGPUData.FPS.value }}</div>
             <div class="flex items-center justify-center">
               <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
               <span class="ml-3 fps-t">FPS</span>
@@ -468,7 +517,7 @@
               <div class="flex flex-row flex-wrap content-game">
                 <div class="game-list-item px-1.5 pb-4  my-game-content my-image"
                      v-for="item in pagedImages">
-                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item"
+                  <img style="object-fit: contain" :width="160" :height="90" :src="'file://'+item.path"
                        class=" rounded-md img">
                 </div>
               </div>
@@ -486,7 +535,7 @@
                      v-for="item in pagedVideos">
                   <div class="relative  w-auto h-full s-item rounded-md overflow-hidden  pointer flex flex-col "
                        style="border-radius: 12px;">
-                    <VideoItem :videoUrl="item"></VideoItem>
+                    <VideoItem :url="item.path"></VideoItem>
                   </div>
                 </div>
               </div>
@@ -503,23 +552,23 @@
     <div class="flex flex-col scroll-container">
       <div class="flex flex-col s-item rounded-md p-4 mb-3">
         <div class="flex items-center mb-3">
-          <div class="pointer" @click="closeSound">
-            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="soundShow"></Icon>
+          <div class="pointer" @click="clickMute">
+            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemSound.muted"></Icon>
             <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
           </div>
           <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
           <div style="width:310px;">
-            <a-slider v-model:value="systemSound"></a-slider>
+            <a-slider @afterChange="changeVolume" v-model:value="systemSound.volume"></a-slider>
           </div>
         </div>
         <div class="flex items-center">
-          <div class="pointer" @click="closeMicrophone">
-            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="microphoneShow"></Icon>
+          <div class="pointer" @click="clickMicMute">
+            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-if="!systemMicrophone.muted"></Icon>
             <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
           </div>
           <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
           <div style="width:310px;">
-            <a-slider v-model:value="systemMicrophone"></a-slider>
+            <a-slider @afterChange="changeMicVolume" v-model:value="systemMicrophone.volume"></a-slider>
           </div>
         </div>
       </div>
@@ -531,6 +580,24 @@
       <span @click="setVideoSavePath" class="text-center mb-3 py-3 s-item rounded-lg">{{
           settings.videoSavePath
         }}</span>
+      <span class="mb-3 fps-t">视频码率</span>
+      <a-select v-model:value="settings.videoBitsPerSecond">
+        <a-select-option :value="1.5e6">
+          1.5Mbps
+        </a-select-option>
+        <a-select-option :value="2.5e6">
+          2.5Mbps
+        </a-select-option>
+        <a-select-option :value="5.0e6">
+          5.0Mbps
+        </a-select-option>
+        <a-select-option :value="8.0e6">
+          8.0Mbps
+        </a-select-option>
+        <a-select-option :value="10.0e6">
+          10.0Mbps
+        </a-select-option>
+      </a-select>
       <span class="mb-3 fps-t">截屏快捷键</span>
       <div class="flex items-center  mb-3">
         <span class="rounded-lg p-2 s-item mr-3 w-2/3">{{ shortcutKey }}</span>
@@ -566,6 +633,7 @@
 </template>
 
 <script>
+import _ from 'lodash-es'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { AreaChartOutlined } from '@ant-design/icons-vue'
 import HorizontalCapture from '../../components/HorizontalCaptrue.vue'
@@ -576,10 +644,19 @@ import { captureStore } from '../../store/capture'
 import BackBtn from '../../components/comp/BackBtn.vue'
 import { steamUserStore } from '../../store/steamUser'
 import VideoItem from '../../components/game/VideoItem.vue'
-
+import { useToast } from 'vue-toastification'
+import JumpNotice from '../../components/game/JumpNotice.vue'
+import SaveImage from '../../components/game/SaveImage.vue'
+import { message, Modal } from 'ant-design-vue'
+import { formatSeconds, timeStamp } from '../../util'
+import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
+import filenamify from 'filenamify'
+import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../js/ext/audio/audio'
+const toast=useToast()
 export default {
   name: 'GameCapture',
   components: {
+    VueCustomScrollbar,
     VideoItem,
     BackBtn,
     AreaChartOutlined,
@@ -593,7 +670,10 @@ export default {
       step: 1,
       //当前源
       currentSource: {},
-      systemSound: 10, // 系统声音
+      systemSound: {
+        volume:0,
+        muted:false
+      }, // 系统声音
       soundShow: false,
       microphoneShow: false,
       recordSetShow: false,
@@ -677,7 +757,7 @@ export default {
       },
       FPSOption,
       fpsInstance: null,
-      fpsList: [0, 10, 0, 20, 0, 0, 0, 30, 0, 0, 0, 0, 60, 0, 0, 0, 80],
+      fpsList: [],
       screenShotAddress: 'C:\PROGRAM FILES (X86)\CLIP', // 用于接收截屏获取的地址
       shortcutKey: 'CTRL + WIN + G',
       recordKey: 'CTRL + WIN + V',
@@ -685,9 +765,22 @@ export default {
       imagePage: 1,
       pageLimit: 12,
       videoPage: 1,
+      recentScreenShot:'',
+      recentFileName:'',
+      recording:false,
+
+
+      recentType:'image',
+      recorder:null,
+
+      //录制状态显示
+      recordedSeconds:0,
+      recordingTimer:null,//录制时间定时器
+      recentKey:Date.now()//最近播放器的key
 
     }
   },
+
   computed: {
     ...mapWritableState(inspectorStore, ['displayData']),
     ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos']),
@@ -706,13 +799,59 @@ export default {
       console.log(this.images, '计算属性变化')
       console.log(this.images.slice((this.imagePage - 1) * this.pageLimit, this.pageLimit), '得到的')
       console.log((this.imagePage - 1) * this.pageLimit, this.pageLimit)
-      return this.images
+      let sorted=this.images.sort((img1,img2)=>{
+       return  img2.stat.ctimeMs-img1.stat.ctimeMs
+      })
+      return sorted
     },
     pagedVideos () {
-      return this.videos.slice((this.videoPage - 1) * this.pageLimit, (this.imagePage) * this.pageLimit + this.pageLimit)
+      let sorted=this.videos.sort((img1,img2)=>{
+        return  img2.stat.ctimeMs-img1.stat.ctimeMs
+      })
+      return sorted
+    },
+    recordedTimeStr(){
+
+      return formatSeconds(this.recordedSeconds)
+    },
+    averageFps() {
+      if (this.fpsList.length === 0) {
+        return 0
+      }
+      return _.mean(this.fpsList).toFixed(1)
+    },
+    low1(){
+
+      let sorted=this.fpsList.sort((a,b)=>{
+        return a-b
+      })
+      let length=this.fpsList.length
+      let getNum=Math.floor(length/10)
+      if(getNum===0){
+        return 0
+      }
+      console.log(sorted,length,getNum)
+      return _.mean(_.take(sorted,getNum)).toFixed(1)
     }
   },
-  mounted () {
+  async mounted () {
+    getDefaultVolume().then((defaultVolume)=>{
+      console.log(defaultVolume,'defaultVolume')
+       this.systemSound={
+         volume:defaultVolume.volume.toFixed(0),
+         muted:defaultVolume.muted
+       }
+    })
+
+    getDefaultMic().then(defaultVolume=>{
+      this.systemMicrophone={
+        volume:defaultVolume.volume.toFixed(0),
+        muted:defaultVolume.muted
+      }
+    })
+
+
+
     window.addEventListener('resize', this.pageResize)
     this.refreshSource(() => {
       let source = this.findWindow()
@@ -729,6 +868,8 @@ export default {
       this.loadVideos()
     }
 
+
+
   },
 
   watch: {
@@ -743,6 +884,18 @@ export default {
           down: down,
           up: up
         }
+        if(this.displayData.FPS.value) {
+          this.fpsList.push(this.displayData.FPS.value)
+          if(this.fpsInstance){
+            this.fpsInstance.setOption({
+              series: [
+                {
+                  data: this.fpsList,
+                },
+              ]
+            })
+          }
+        }
       },
       deep: true,
     },
@@ -751,6 +904,16 @@ export default {
   methods: {
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
     ...mapActions(captureStore, ['getSource']),
+    /**
+     * 重载列表
+     */
+    reload(){
+      if(this.lastCapture==='record'){
+        this.loadVideos()
+      }else{
+        this.loadImages()
+      }
+    },
     refreshSource (cb) {
       this.sources = []
       this.loading = true
@@ -775,7 +938,6 @@ export default {
         this.settings.imageSavePath = savePath[0]
         this.loadImages()
       } else {
-        console.log('取消选择')
       }
     },
     async setVideoSavePath () {
@@ -788,7 +950,6 @@ export default {
         this.settings.videoSavePath = savePath[0]
         this.loadVideos()
       } else {
-        console.log('取消选择')
       }
     },
 
@@ -815,9 +976,35 @@ export default {
         } else {
           // 不是就将文件push进数组，此处可以正则匹配是否是 .js 先忽略
           if (extMap.indexOf(require('path').extname(file)) > -1) {
-            filesList.push(path + '/' + file)
+            const stat=fs.statSync(path + '/' + file)
+            filesList.push({
+              stat:stat,
+              path:path + '/' + file
+            })
           }
         }
+      })
+    },
+    clickMute(){
+      this.systemSound.muted = !this.systemSound.muted
+      setDefaultVolume({
+        muted:this.systemSound.muted
+      })
+    },
+    clickMicMute(){
+      this.systemMicrophone.muted=!this.systemMicrophone.muted
+      setMicVolume({
+        muted:this.systemMicrophone.muted
+      })
+    },
+    changeVolume(){
+      setDefaultVolume({
+        volume:this.systemSound.volume
+      })
+    },
+    changeMicVolume(){
+      setMicVolume({
+        volume:this.systemMicrophone.volume
       })
     },
     getAllFiles (path, extMap, object, arr) {
@@ -830,14 +1017,68 @@ export default {
             if (stat.isFile()) {
               //stat 状态中有两个函数一个是stat中有isFile ,isisDirectory等函数进行判断是文件还是文件夹
               if (extMap.indexOf(require('path').extname(fPath)) > -1) {
-                object[arr].push(fPath)
-                console.log(fPath)
+                object[arr].push({
+                  stat:stat,
+                  path:fPath })
               }
             } else {
               this.getAllFiles(fPath, extMap, object, arr)
             }
           })
         })
+      })
+    },
+    /**
+     * 获取到最近捕获的文件路径
+     * @returns {string}
+     */
+    getRecentPath(){
+      return this.recentType==='video'?this.getRecentVideoPath():this.getRecentImagePath()
+    },
+    getRecentImagePath(){
+      return require('path').join(this.settings.imageSavePath,this.recentFileName)
+    },
+    getRecentVideoPath(){
+      return require('path').join(this.settings.videoSavePath,this.recentFileName)
+    },
+    async saveRecent () {
+      let filters={ name: '图片', extensions: ['png'] }
+      if(this.recentType==='video'){
+        filters={ name: '视频', extensions: ['mp4'] }
+      }
+      let savePath = await tsbApi.dialog.showSaveDialog({
+        title: '选择保存位置',
+        defaultPath: this.recentFileName,
+        message: '选择保存的位置',
+        filters: [filters],
+        properties: [
+          'createDirectory',
+          'showOverwriteConfirmation'
+        ]
+      })
+      if(savePath){
+        require('fs').copyFileSync(this.getRecentPath(),savePath)
+        if(require('fs').existsSync(this.getRecentPath(),savePath)){
+          message.success('保存成功')
+        }
+      }
+    },
+    openRecent(){
+      require('electron').shell.openPath(this.getRecentPath())
+    },
+    openPos(){
+      require('electron').shell.showItemInFolder(this.getRecentPath())
+    },
+    delRecent(){
+      Modal.confirm({
+        content:'删除此内容？',
+        centered:true,
+        onOk:()=>{
+          require('fs').rmSync(this.getRecentPath())
+          this.recentFileName=''
+          this.recentScreenShot=''
+          this.reload()
+        }
       })
     },
     /**
@@ -858,10 +1099,274 @@ export default {
       this.step = 2
       this.currentSource = source
     },
-    // 开始截屏事件
-    startScreenshot () {},
+    filterName(name){
+      return filenamify(name)
+    },
+    callback(image){
+      this.recentScreenShot=image
+      let time=timeStamp(Date.now())
+      const filename=this.filterName(this.currentSource.name)+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.png'
+      const path=require('path').join(this.settings.imageSavePath,filename)
+      const base64 = image.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
+      const dataBuffer = new Buffer(base64, 'base64'); //把base64码转成buffer对象，
+      fs.writeFile(path, dataBuffer, (err)=>{//用fs写入文件
+        if(err){
+          console.log(err);
+          message.error('文件保存失败',err)
+        }else{
+          this.recentFileName=filename
+
+          this.recentType='image'
+          this.loadImages()
+          this.showToast(image)
+        }
+      })
+
+    },
+    showToast(src){
+      toast(
+        {
+          component:SaveImage,
+          props:{
+            image:src
+          },
+        },{
+          icon:false,
+          closeOnClick:false,
+          closeButton:false,
+          pauseOnFocusLoss:false,
+          pauseOnHover:false
+        }
+      )
+    },
+    // 截图
+    screenshot () {
+      //ipc.send('captureImage',{source:this.currentSource})
+      const handleStream = (stream) => {
+        //document.body.style.cursor = oldCursor
+        document.body.style.opacity = '1'
+        // Create hidden video tag
+        let video = document.createElement('video')
+        video.autoplay='autoplay'
+        video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;'
+        // Event connected to stream
+
+        let loaded = false
+        video.onplaying = () => {
+          if (loaded) {
+            return
+          }
+          loaded = true
+          // Set video ORIGINAL height (screenshot)
+          video.style.height = video.videoHeight + 'px' // videoHeight
+          video.style.width = video.videoWidth + 'px' // videoWidth
+
+          // Create canvas
+          let canvas = document.createElement('canvas')
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          let ctx = canvas.getContext('2d')
+          // Draw video on canvas
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+          if (this.callback) {
+            // Save screenshot to png - base64
+            this.callback(canvas.toDataURL('image/png'))
+          } else {
+            // console.log('Need callback!')
+          }
+
+          // Remove hidden video tag
+          video.remove()
+          try {
+            stream.getTracks()[0].stop()
+          } catch (e) {
+            // nothing
+          }
+        }
+        video.srcObject = stream
+        document.body.appendChild(video)
+      }
+
+      // mac 和 windows 获取 chromeMediaSourceId 的方式不同
+      if (require('os').platform() === 'win32') {
+        navigator.getUserMedia({
+          audio: false,
+          video: {
+            mandatory: {
+              chromeMediaSource: 'desktop',
+              chromeMediaSourceId: this.currentSource.id + '',
+              minWidth: 1280,
+              minHeight: 720,
+              maxWidth: 8000,
+              maxHeight: 8000,
+            },
+          },
+        }, handleStream, ()=>{
+
+        })
+      } else {
+        // navigator.getUserMedia({
+        //   audio: false,
+        //   video: {
+        //     mandatory: {
+        //       chromeMediaSource: 'desktop',
+        //       chromeMediaSourceId: `screen:${curScreen.id}`,
+        //       minWidth: 1280,
+        //       minHeight: 720,
+        //       maxWidth: 8000,
+        //       maxHeight: 8000,
+        //     },
+        //   },
+        // }, handleStream, handleError)
+      }
+    },
     // 开始录制事件
-    startRecording () {},
+    async startRecording () {
+      const videoSource = await navigator.mediaDevices.getUserMedia({
+        audio: false, // 强行表示不录制音频，音频额外获取
+        video: {
+          mandatory: {
+            chromeMediaSource: 'desktop',
+            chromeMediaSourceId:this.currentSource.id
+          }
+        }
+      });
+      // Windows音频流获取
+
+      const audioSource = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          mandatory: {
+            // 无需指定mediaSourceId就可以录音了，录得是系统音频
+            chromeMediaSource: 'desktop',
+          },
+        },
+
+        // 如果想要录制音频，必须同样把视频的选项带上，否则会失败
+        video: {
+          mandatory: {
+            chromeMediaSource: 'desktop',
+          },
+        },
+      });
+
+// 接着手工移除点不用的视频源，即可完成音频流的获取
+      (audioSource.getVideoTracks() || []).forEach(track => audioSource.removeTrack(track));
+      // 合并音频流与视频流
+
+      const combinedSource = new MediaStream([...audioSource.getAudioTracks(), ...videoSource.getVideoTracks()]);
+
+      let types = [
+        "video/webm",
+        "audio/webm",
+        "video/webm;codecs=vp9",
+        "video/webm;codecs=vp8",
+        "video/webm;codecs=daala",
+        "video/webm;codecs=h264",
+        "audio/webm;codecs=opus",
+        "video/mpeg"
+      ];
+      for (let i in types) {
+        // 可以自行测试需要的编码的MIME Type是否支持
+        console.log( "Is " + types[i] + " supported? " + (MediaRecorder.isTypeSupported(types[i]) ? "Yes" : "No :("));
+
+      }
+
+
+      const recorder = new MediaRecorder(combinedSource, {
+        mimeType: 'video/webm;codecs=vp9',
+        // 支持手动设置码率，这里设了1.5Mbps的码率，以限制码率较大的情况
+        // 由于本身还是动态码率，这个值并不准确
+        videoBitsPerSecond: this.settings.videoBitsPerSecond,
+
+      });
+
+      const timeslice = 5000;
+      let  fileBits = [];
+// 当数据可用时，会回调该函数，有以下四种情况：
+// 1. 手动停止MediaRecorder时
+// 2. 设置了timeslice，每到一次timeslice时间间隔时
+// 3. 媒体流内所有轨道均变成非活跃状态时
+// 4. 调用recorder.requestData()转移缓冲区数据时
+      recorder.ondataavailable = (event) => {
+        fileBits.push(event.data);
+      }
+      recorder.onstop = () => {
+        // 录屏停止并获取录屏文件
+        // 触发时机一定在ondataavailable之后
+        const videoFile = new Blob(fileBits, { type: 'video/webm;codecs=vp9' });
+        var reader = new FileReader()
+        reader.onload = ()=>{
+          var buffer = new Buffer(reader.result)
+          //temp文件夹应已存在
+          const time=timeStamp(Date.now())
+          const fileName=this.filterName(this.currentSource.name)+'_'+time.year+'年'+time.month+'月'+time.day+'日'+time.hours+'时'+time.minutes+'分'+time.seconds+'秒'+'.mp4'
+          const savePath=require('path').join(this.settings.videoSavePath,fileName)
+          fs.writeFile(savePath, buffer, {}, (err, res) => {
+            if(err){
+              console.error(err)
+              return
+            }
+            this.recentType='video'
+            this.recentFileName=fileName
+            message.success('保存录屏成功')
+            this.loadVideos()
+          })
+        }
+        reader.readAsArrayBuffer(videoFile)
+      }
+
+
+
+      if (timeslice === 0) {
+
+        // 开始录制，并一直存储数据到缓冲区，直到停止
+
+        recorder.start();
+
+      } else {
+
+        // 开始录制，并且每timeslice毫秒，触发一次ondataavailable，输出并清空缓冲区（非常重要）
+
+        recorder.start(timeslice);
+        this.recentFileName=''
+        this.recording=true
+        this.recordedSeconds=0
+        this.setRecordingTimer()
+
+        this.recorder=recorder
+      }
+
+
+
+
+
+
+
+    },
+    /**
+     * 设置一个录制定时器
+     * @param start 是否是启动，否则自动清理定时器
+     */
+    setRecordingTimer(start=true){
+      if(!start){
+        //如果是取消
+        if(this.recordingTimer){
+          clearInterval(this.recordingTimer)
+          return
+        }
+      }
+      this.recordedSeconds=0
+      this.recordingTimer=setInterval(()=>{
+        this.recordedSeconds++
+      },1000)
+    },
+    stopRecording(){
+      this.setRecordingTimer(false)
+      this.recorder.stop()
+      this.recording=false
+      this.recordKey=Date.now()
+    },
     // 开始监控事件
     startMonitoring () {
       this.isMonitor = !this.isMonitor
@@ -876,24 +1381,8 @@ export default {
         return
       }
     },
-    // 关闭系统声音
-    closeSound () {
-      this.soundShow = !this.soundShow
-      if (!this.soundShow) {
-        this.systemSound = 0
-      } else {
-        this.systemSound = 10
-      }
-    },
-    // 闭麦事件
-    closeMicrophone () {
-      this.microphoneShow = !this.microphoneShow
-      if (!this.microphoneShow) {
-        this.systemMicrophone = 0
-      } else {
-        this.systemMicrophone = 20
-      }
-    },
+
+
     // 打开录制设置入口
     openRecordSet () {
       this.recordSetShow = true
@@ -947,7 +1436,7 @@ export default {
             {
               smooth: 0.6,
               symbol: 'none',
-              name: 'Email',
+              name: 'fps',
               type: 'line',
               stack: 'Total',
               emphasis: {
@@ -1273,5 +1762,10 @@ export default {
 
 .game-list-item {
   margin: 10px;
+}
+.screenshot{
+  &:hover{
+    opacity: 0.8;
+  }
 }
 </style>

@@ -23,6 +23,7 @@
     "codemirror": "5.65.13",
     "colorpicker-v3": "^2.10.2",
     "echarts": "^5.4.1",
+    "filenamify": "^5.1.1",
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.3",
     "justifiedGallery": "^3.8.1",
