@@ -5,7 +5,6 @@
     @mouseup="handleMouseUp"
     @click="handleClick"
     class="draggable"
-    :style="a"
   >
     <slot></slot>
   </div>
@@ -43,7 +42,6 @@ export default {
       dragStartTimer: null,
       draggedElement: null,
       tempContainer: null,
-      a: null,
     };
   },
   props: {
@@ -58,7 +56,6 @@ export default {
       event.preventDefault();
       event.stopPropagation();
       this.dragStartTimer = setTimeout(() => {
-        this.a = { display: "none" };
         this.$emit("drag-start", event);
         event.preventDefault();
         event.stopPropagation();
@@ -105,7 +102,6 @@ export default {
       this.dragStartTimer = null;
       if (this.isDragging) {
         this.isDragging = false;
-        this.a = { display: "" };
         // 触发拖拽结束事件
         this.$emit("drag-end");
         if (this.draggedElement) {

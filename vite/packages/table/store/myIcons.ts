@@ -16,6 +16,7 @@ export const myIcons = defineStore(
                 src: "",
                 backgroundIndex: 1,
             },
+            iconSelect:false, // 图标多选情况
             isHover: false,
             isCopy: false, // 复制状态
             isDrag: false, // 拖拽状态
