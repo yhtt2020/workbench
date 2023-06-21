@@ -123,6 +123,7 @@ import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import GradeNotice from './GradeNotice.vue'
 import { guideData,workTheme } from '../../../js/data/guideData'
 import {appStore} from '../../../store'
+import { cardStore } from '../../../store/card'
 import { mapWritableState,mapActions } from 'pinia'
 
 const deskTemplate = {
@@ -208,6 +209,9 @@ const deskTemplate = {
     },
   ],
   empty: [],
+  gameName:'游戏娱乐',
+  workName:'效率辅助',
+  emptyName:'极简diy',
 }
 
 export default {
@@ -295,6 +299,7 @@ export default {
   },
   methods:{
     ...mapActions(appStore,['updateMode','updateSimple']),
+    ...mapActions(cardStore,['addDesk']),
     // 点击下一步
     nextButton(e){
       this.step ++ 
@@ -311,13 +316,14 @@ export default {
       this.guideIndex = index
       switch(index){
         case 0:
-          console.log('游戏娱乐',deskTemplate.game);
+          // console.log('游戏娱乐',deskTemplate.game);
+          this.addDesk(deskTemplate.gameName,deskTemplate.game)
           break;
         case 1:
-          console.log('效率辅助',deskTemplate.work);
+          this.addDesk(deskTemplate.workName,deskTemplate.work);
           break;
         case 2:
-           console.log('极简diy',deskTemplate.empty);
+          this.addDesk(deskTemplate.emptyName,deskTemplate.empty);
           break;
       }
     },
