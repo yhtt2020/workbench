@@ -1,13 +1,13 @@
 <template>
-  <div class="w-full h-full p-3 flex flex-col  " style="background:var(--modal-bg);" v-if="isGradeNotice === false">
+  <div class="w-full h-full p-3 flex flex-col" style="background:var(--modal-bg);" v-if="isGradeNotice === false">
     <!-- 返回按钮 -->
-    <div class="back-button mouse-click w-12 h-12 flex-none">
+    <div class="back-button mouse-click w-12 h-12 flex-none" @click="backSplash">
       <Icon icon="xiangzuo" style="font-size: 1.75em;"></Icon>
     </div>
 
     <!-- 引导步骤1 -->
     <template v-if="step === 1">
-      <div class="flex items-center h-full mb-5 flex-col justify-center">
+      <div class="flex items-center grow h-full mb-5 flex-col justify-center">
         <div class="main-head mb-1 flex items-center justify-center">
           <span>选择适合你的工作台模式</span>
         </div>
@@ -26,7 +26,7 @@
                 <img style="width: 100%;height: 100%; object-fit: contain;" :src="'../../../../../public/img/state/'+ item.url " alt="" >
               </div>
               <div class="main-head mb-2">{{ item.title }}</div>
-              <div class="subhead">
+              <div class="subhead max-explain">
                 {{ item.explain }}
               </div>
             </div>
@@ -55,44 +55,37 @@
 
     <!-- 引导步骤3 -->
     <template v-else-if="step === 3">
-      <div class="flex flex-col h-full items-center mb-4 justify-center">
-        <div class="main-head mb-3 flex items-center justify-center ">选择你需要的模式</div>
-        <div class="subhead flex flex-col items-center justify-center mb-8">
-          <div>同步元社区互动功能，完成选择后，你仍然可以在后续自定义修改。</div>
-        </div>
-        <div class="flex items-center justify-center next-btn">
-          <div class="mr-8 mode-image" v-if="defaultMode.name === 'simpMode'">
+      <div class="flex flex-col mt-6 h-full items-center justify-center image-height mb-5">
+        <span class="main-head min-height mb-3 flex items-center justify-center ">选择你需要的模式</span>
+        <span class="subhead flex min-height  flex-col items-center justify-center mb-8">
+          同步元社区互动功能，完成选择后，你仍然可以在后续自定义修改。
+        </span>
+        <div class="flex  w-full items-start pt-4 justify-center">
+          <div class="modal-img mr-8" v-if="defaultMode.name === 'simpMode'">
             <img src="../../../../../public/img/state/dark-backup.png" class="w-full h-full " alt="">
           </div>
-          <div class="mr-8 mode-image" v-if="defaultMode.name === 'intMode'">
+          <div class="modal-img mr-8" v-if="defaultMode.name === 'intMode'">
             <img src="../../../../../public/img/state/homedark2.png" class="w-full h-full " alt="">
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col my-auto">
             <HorizontalPanel :navList="modeData" v-model:selectType="defaultMode"></HorizontalPanel>
-            <div class="flex  items-center justify-between my-8 p-4 rounded-lg" style="background: var(--secondary-bg);">
-              <div class="flex items-center">
-                <div style="width:40px;height:40px;">
-                  <img src="../../../../../public/img/state/init.png" class="w-full h-full" alt="">
-                </div>
-                <span class="ml-4 guide-title">小队</span>
+            <div v-for="item in teamData" @click="openTeamPersonal(item)"
+              class="flex  items-center prev-bg team-item justify-between pointer my-4 p-4 rounded-lg" 
+            >
+             <div class="flex">
+              <div style="width:40px;height:40px;">
+                <img :src="'../../../../../public/img/state/'+ item.img" class="w-full h-full" alt="">
               </div>
-              <span>{{ isOpen ? '打开':'关闭' }}</span>
-            </div>
-            <div class="flex  items-center justify-between p-4 rounded-lg" style="background: var(--secondary-bg);">
-              <div class="flex items-center">
-                <div style="width:40px;height:40px;">
-                  <img src="../../../../../public/img/state/placard_3d.png" class="w-full h-full" alt="">
-                </div>
-                <span class="ml-4 guide-title">底部个人信息栏</span>
-              </div>
-              <span>{{ isOpen ? '打开':'关闭' }}</span>
+              <span class="ml-4 guide-title">{{item.title}}</span>
+             </div>
+             <span>{{ enable ? '打开':'关闭' }}</span>
             </div>
           </div>
         </div>
       </div>
     </template>
 
-    <div class="flex items-center h-14 justify-center">
+    <div class="flex items-center h-14 justify-center mb-3">
       <div @click="prevButton" v-if="showPrevButton">
         <span class="py-3 px-14 rounded-lg mb-5 prev-bg mouse-click pointer mr-3">上一步</span>
       </div>
@@ -104,16 +97,35 @@
     </div>
   </div>
   <GradeNotice v-else></GradeNotice>
+
+
+  <transition name="fade">
+    <div class="home-blur modal-container flex items-center justify-center"  v-if="showModal === true">
+      <div class="rounded-lg flex flex-col p-4" style="width:480px;background: var(--modal-bg);">
+        <div class="flex items-center justify-end">
+          <div class="w-12 h-12 rounded-lg pointer mouse-click flex items-center justify-center"  style="background: var(--main-bg);" @click="showModal = false">
+            <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+          </div>
+        </div>
+        <div class="flex items-center flex-col justify-center">
+          <div style="width: 64px;height: 64px;" class="mb-6">
+            <img :src="'../../../../../public/img/state/'+defaultTeamData.img" class="w-full h-full" alt="">
+          </div>
+          <span class="mb-6 main-head">{{ defaultTeamData.title}}</span>
+          <span class="subhead mb-14" style="max-width: 380px;">{{defaultTeamData.content}}</span>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import GradeNotice from './GradeNotice.vue'
-
 export default {
   components:{
     HorizontalPanel,
-    GradeNotice
+    GradeNotice,
   },
   data(){
     return{
@@ -133,12 +145,12 @@ export default {
          explain:'无内置推荐数据，仅保留基础和性功能模块，从0开始DIY你的专属工作台。'
         }
       ],
-      guideIndex:0, 
+      guideIndex:0,  // 步骤一选择工作台模式类型下标
       guideModeIndex:0, // 工作台背景色模式切换
       // 步骤二选择工作台主题模式数据
       workTheme:[
         {title:'暗色模式',url:'new_moon_3d.png'},
-        {title:'亮色模式',url:'sun_3d.png'}
+        {title:'浅色模式',url:'sun_3d.png'}
       ],
       // 步骤三模式切换
       modeData:[
@@ -146,9 +158,21 @@ export default {
         {title:'极简模式',name:'simpMode'}
       ],
       defaultMode:{title:'完整模式',name:'intMode'},
+      teamData:[
+        {
+         img:'init.png',title:'小队',
+         content:'与全网的工作台小伙伴自由组成小队，一同体验“等级加速”、“道具互动”、“桌宠乱斗”等等那些旧时的回忆和乐趣，为你带来一种不一样的陪伴感。'
+        },
+        {
+          img:'placard_3d.png',title:'底部个人信息栏',
+          content:'内置即时通讯应用，同步元社区圈子，创建你的圈子或团队群聊。'
+        }
+      ],
       step:1, 
-      isOpen:true,
-      isGradeNotice:false,
+      enable:true, // 显示开启或者关闭
+      isGradeNotice:false, // 切换
+      showModal:false, // 控制步骤三模式的小队和底部个人信息的弹窗
+      defaultTeamData:{}, // 接收步骤三模式的小队和底部个人数据
     }
   },
 
@@ -167,14 +191,32 @@ export default {
         return false
       }
     }
+    
   },
 
   watch:{
-    defaultMode:{
+    'defaultMode':{
       handler(){
         this.defaultMode = this.defaultMode
-        this.isOpen = !this.isOpen
+        this.enable = !this.enable
       }
+    },
+    'guideModeIndex':{
+      handler(newVal,oldVal){
+        const value = JSON.parse(window.localStorage.getItem("style"));
+        let name = null;
+        document.documentElement.classList.remove(value);
+        if(newVal === 1){
+          this.guideModeIndex = 1
+          name =  "light-model";  // 亮色模式
+          document.documentElement.classList.add(name);
+          window.localStorage.setItem("style", JSON.stringify(name));
+        }else if(newVal === 0){
+          name =  "dark-model"; // 暗色模式
+          document.documentElement.classList.add(name);
+          window.localStorage.setItem("style", JSON.stringify(name));
+        }
+      },
     }
   },
   methods:{
@@ -204,18 +246,14 @@ export default {
     // 工作台背景色模式切换
     guideModeChange(item,index){
       this.guideModeIndex = index
-      const value = JSON.parse(window.localStorage.getItem("style"));
-      let name = null;
-      document.documentElement.classList.remove(value);
-      if(index === 1){
-        name =  "light-model";  // 亮色模式
-        document.documentElement.classList.add(name);
-        window.localStorage.setItem("style", JSON.stringify(name));
-      }else{
-        name =  "dark-model"; // 暗色模式
-        document.documentElement.classList.add(name);
-        window.localStorage.setItem("style", JSON.stringify(name));
-      }
+    },
+    // 打开小队和底部个人信息描述
+    openTeamPersonal(item){
+      this.showModal = true
+      this.defaultTeamData = item
+    },
+    closeModal(){
+      this.showModal = false
     }
   }  
 }
@@ -278,8 +316,21 @@ export default {
   }
 }
 
-.mode-image{
-  max-width: 720px;
+.max-explain{
+  width: 288px;
+}
+
+.modal-container{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0; 
+  z-index: 999;
+  background: var(--mask-bg);
+}
+.modal-img{
+  max-width: 700px;
   max-height: 405px;
 }
 
@@ -288,17 +339,78 @@ export default {
   .default-mode{
     width: calc(100% / 2) ;
   }
-  .mode-image{
+  .max-explain{
+    width: calc(100% / 1);
+  }
+
+  .modal-img{
     width: calc(100% / 2);
   }
 }
 
-@media screen and (max-height:500px) {
+@media screen and (min-width: 841px) and (max-width: 1100px){
+  .default-mode{
+    width: calc(100% / 2) ;
+  }
+  .modal-img{
+    width: calc(100% / 2);
+  }
+}
+
+@media screen and (min-width: 1101px){
+  .default-mode{
+    width: calc(100% / 2) ;
+  }
+
+  .modal-img{
+    width: calc(100% / 1);
+  }
+}
+
+@media screen and (min-width: 1201px){
+  .default-mode{
+    width: calc(100% / 2) ;
+  }
+  .modal-img{
+    width: calc(100% / 1);
+  }
+}
+
+@media screen and (max-height:500px) and (min-width:1200px){
   .min-height{
     margin-bottom: 8px !important;
   }
   .default-mode{
     height: calc(100% / 1);
+  }
+  .modal-img{
+    height:calc(100% / 1.25);
+  }
+  .image-height{
+    height: 75%;
+  }
+  .my-auto{
+    margin: 40px !important;
+  }
+}
+@media screen and (max-height:500px) and (max-width:840px){
+  .min-height{
+    margin-bottom: 8px !important;
+  }
+  .default-mode{
+    height: calc(100% / 1);
+  }
+  .modal-img{
+    height:calc(100% / 1);
+  }
+  .image-height{
+    height: 75%;
+  }
+
+  .team-item{
+    &:last-of-type{
+      margin-bottom: 0 !important;
+    }
   }
 }
 </style>
