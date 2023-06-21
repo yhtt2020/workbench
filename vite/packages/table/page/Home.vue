@@ -12,7 +12,7 @@
       width: 100%;
       margin-left: 15px;
     ">
-    <div class="text-left" v-if="desks.length > 1">
+    <div class="text-left mb-2" v-if="desks.length > 1">
       <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
       </HorizontalPanel>
     </div>
@@ -41,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -288,16 +288,13 @@ import ManyFilm from "../components/widgets/film/ManyFilm.vue"
 import SteamFriends from '../components/widgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
-import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import GuidePageVue from './app/grade/GuidePage.vue';
 import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
 import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
-const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);

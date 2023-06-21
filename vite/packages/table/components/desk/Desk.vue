@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%;width: 100%" v-if="currentDesk.cards">
+  <div style="height:100%;width: 100%;" v-if="currentDesk.cards">
     <div  style="width: 100%;height: 100%" class="m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
@@ -22,7 +22,7 @@
       </div>
     </div>
     <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; width: 100%; height: 100%">
+      style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
       <div style="
           white-space: nowrap;
           height: 100%;

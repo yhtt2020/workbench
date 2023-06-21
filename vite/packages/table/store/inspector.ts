@@ -60,8 +60,13 @@ export const inspectorStore = defineStore(
         //todo 运行python脚本
         console.log('启动python数据源')
         this.inspectorTimer = setInterval(async () => {
-          let fps = await rpc.inspector.getFPS()
-          this.setDisplayValue('FPS', {value: fps})
+          try{
+            let fps = await rpc.inspector.getFPS()
+            this.setDisplayValue('FPS', {value: fps})
+          }catch (e) {
+            console.warn('FPS服务未启动')
+          }
+
           let osu=window.$models.osUtils
           osu.cpu.usage().then(cpuPercentage=>{
             this.setDisplayValue('useCPU',{value:cpuPercentage})

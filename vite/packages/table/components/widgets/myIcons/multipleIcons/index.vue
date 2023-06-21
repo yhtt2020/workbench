@@ -3,7 +3,7 @@
         @closeFullScreen="closeFullScreen" :iconLists="iconList" @disbandGroup="disbandGroup" @deleteIcons="deleteIcons"
         @editIcons="editIcons" @dragAddIcon="dragAddIcon">
     </IconsFullScreen>
-    <div class="item-list  xt-hover no-drag" @click="fuullScreenClick()">
+    <div class="item-list  xt-hover no-drag" @click="fuullScreenClick($event)">
         <div class="item">
             <template v-for="(i) in 4">
                 <img v-if="iconList[i - 1]" class="img" :src="iconList[i - 1].src" style="object-fit: cover;">
@@ -16,6 +16,8 @@
 
 <script>
 import IconsFullScreen from './fullScreen.vue';
+import { mapWritableState } from 'pinia'
+import { myIcons } from '../../../../store/myIcons.ts'
 export default {
     props: {
         iconList: {
@@ -34,8 +36,23 @@ export default {
             isIconsFullScreen: false // 全屏开关
         }
     },
+    computed: {
+        ...mapWritableState(myIcons, [
+            "isHover",
+        ]),
+    },
     methods: {
-        fuullScreenClick() {
+        fuullScreenClick(event) {
+            if (event.ctrlKey && event.button === 0) {
+                this.$emit('custom-event');
+                return
+            }
+            console.log('this. :>> ', this.isHover);
+            
+            if (this.isHover) {
+                this.isHover = false
+                return
+            }
             this.isIconsFullScreen = true
         },
         dragAddIcon(icon) {

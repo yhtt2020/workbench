@@ -1,5 +1,5 @@
 <template>
-    <div class="item xt-text xt-hover no-drag" @click="iconClick()" :data-index="index">
+    <div class="item xt-text xt-hover no-drag" @click="iconClick($event)" :data-index="index">
         <div class="image" :style="[backgroundState]" :data-index="index">
             <img :src="src" alt="" :style="radiusState" style="object-fit: cover" :data-index="index" />
         </div>
@@ -9,8 +9,8 @@
 
 <script>
 import { message } from "ant-design-vue";
-import { mapWritableState } from "pinia";
-import { myIcons } from "../../../../store/myIcons.ts";
+import { mapWritableState } from 'pinia'
+import { myIcons } from '../../../../store/myIcons.ts'
 export default {
     props: {
         isRadius: { type: Boolean },
@@ -25,7 +25,9 @@ export default {
         index: { type: Number },
     },
     computed: {
-        ...mapWritableState(myIcons, ["isDrag"]),
+        ...mapWritableState(myIcons, [
+            "isHover",
+        ]),
         // 动态切换圆角状态
         radiusState() {
             if (this.isRadius) return { borderRadius: this.radius + "px" };
@@ -39,10 +41,15 @@ export default {
     },
     methods: {
         // 单图标点击
-        iconClick() {
-            if (this.isDrag) {
-                this.isDrag = false; // 重置拖拽状态
-                return;
+        iconClick(event) {
+            if (event.ctrlKey && event.button === 0) {
+                this.$emit('custom-event');
+                return
+            }
+            console.log('this.11 :>> ', this.isHover);
+            if (this.isHover) {
+                this.isHover = false
+                return
             }
             if (this.link === "link") {
                 // 链接

@@ -1,48 +1,93 @@
 <!-- 图标组件入口 -->
 <template>
-    <!-- 图标组件开始 -->
-    <div ref="iconRef" :style="dragStyle">
-        <!-- 可放置区域 -->
-        <droppable-area @drop="handleDrop">
-            <!-- 多图标组件 -->
-            <template v-if="customData.iconList !== undefined && customData.iconList.length > 1
-                ">
-                <icons :groupTitle="customData.groupTitle" :iconList="customData.iconList" @disbandGroup="disbandGroup"
-                    @updateGroupTitle="updateGroupTitle" @deleteIcons="deleteIcons" @editIcons="editIcons"
-                    @dragAddIcon="dragAddIcon"></icons>
-            </template>
-            <!-- 单图标组件 -->
-            <template v-else-if="customData.iconList !== undefined && customData.iconList.length > 0
-                ">
-                <drag-and-follow @drag-end="handleDragEnd" @drag-start="handleDragStart">
-                    <icon v-bind="customData.iconList[0]" @rightClick="rightClick"></icon>
-                </drag-and-follow>
-            </template>
-        </droppable-area>
-        <!-- 卡片核心 -->
-        <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
-            ref="homelSlotRef" :desk="desk">
-        </Widget>
-    </div>
-    <!-- 图标组件结束 -->
-    <!-- 编辑开始 -->
-    <a-drawer :width="500" v-if="settingVisible" v-model:visible="settingVisible" placement="right"
-        style="z-index: 99999999999">
-        <template #title>
-            <div style="
+  <!-- 图标组件开始 -->
+  <div ref="iconRef" :style="dragStyle">
+    <!-- 可放置区域 -->
+    <droppable-area @drop="handleDrop">
+      <drag-and-follow @drag-end="handleDragEnd" @drag-start="handleDragStart">
+        <!-- 多图标组件 -->
+        <template
+          v-if="
+            customData.iconList !== undefined && customData.iconList.length > 1
+          "
+        >
+          <icons
+            @custom-event="handleCustomEvent"
+            :groupTitle="customData.groupTitle"
+            :iconList="customData.iconList"
+            @disbandGroup="disbandGroup"
+            @updateGroupTitle="updateGroupTitle"
+            @deleteIcons="deleteIcons"
+            @editIcons="editIcons"
+            @dragAddIcon="dragAddIcon"
+          ></icons>
+        </template>
+        <!-- 单图标组件 -->
+        <template
+          v-else-if="
+            customData.iconList !== undefined && customData.iconList.length > 0
+          "
+        >
+          <icon
+            v-bind="customData.iconList[0]"
+            @rightClick="rightClick"
+            @custom-event="handleCustomEvent"
+          ></icon>
+        </template>
+      </drag-and-follow>
+    </droppable-area>
+    <!-- 卡片核心 -->
+    <Widget
+      :customData="customData"
+      :editing="true"
+      :customIndex="customIndex"
+      :options="options"
+      :menuList="menuList"
+      ref="homelSlotRef"
+      :desk="desk"
+    >
+    </Widget>
+  </div>
+  <!-- 图标组件结束 -->
+  <!-- 编辑开始 -->
+  <a-drawer
+    :width="500"
+    v-if="settingVisible"
+    v-model:visible="settingVisible"
+    placement="right"
+    style="z-index: 99999999999"
+  >
+    <template #title>
+      <div
+        style="
           display: flex;
           justify-content: space-between;
           align-items: center;
-        ">
-                <div style="width: 50%; text-align: right">设置</div>
-                <div style="padding: 10px; border-radius: 5px; cursor: pointer" class="xt-active-bg" @click="save()">
-                    保存
-                </div>
-            </div>
-        </template>
-        <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
-    </a-drawer>
-    <!-- 编辑结束 -->
+        "
+      >
+        <div style="width: 50%; text-align: right">设置</div>
+        <div
+          style="padding: 10px; border-radius: 5px; cursor: pointer"
+          class="xt-active-bg"
+          @click="save()"
+        >
+          保存
+        </div>
+      </div>
+    </template>
+    <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
+  </a-drawer>
+  <a-drawer
+    v-if="menuVisible"
+    :width="500"
+    :height="198"
+    placement="bottom"
+    v-model:visible="menuVisible"
+    style="z-index: 99999999"
+  >
+    <BottomEdit :menuList="menuList"></BottomEdit>
+  </a-drawer>
+  <!-- 编辑结束 -->
 </template>
 
 <script>
@@ -53,6 +98,7 @@ import icon from "./oneIcon/index.vue";
 import icons from "./multipleIcons/index.vue";
 import DragAndFollow from "./hooks/DragAndFollow.vue";
 import DroppableArea from "./hooks/DroppableArea.vue";
+import BottomEdit from "./hooks/bottomEdit.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -61,242 +107,312 @@ import { myIcons } from "../../../store/myIcons.ts";
 import { message } from "ant-design-vue";
 
 export default {
-    props: {
-        customIndex: {
-            type: Number,
-            default: 0,
-        },
-        customData: {
-            type: Object,
-            default: () => { },
-        },
-        desk: {
-            type: Object,
-        },
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0,
     },
-    components: {
-        Widget,
-        edit,
-        icons,
-        icon,
-        DragAndFollow,
-        DroppableArea,
+    customData: {
+      type: Object,
+      default: () => {},
     },
-    data() {
+    desk: {
+      type: Object,
+    },
+  },
+  components: {
+    Widget,
+    edit,
+    icons,
+    icon,
+    DragAndFollow,
+    DroppableArea,
+    BottomEdit,
+  },
+  data() {
+    return {
+      menuVisible: false,
+      index: 0, // 图标数组的下标
+      isSelect: false,
+      isDragStyle: false,
+      settingVisible: false, // 编辑状态
+      options: { hide: true }, // 卡片核心配置
+    };
+  },
+  mounted() {
+    // 是否需要初始化
+    if (this.customData.groupTitle == undefined) {
+      let setData = {};
+      setData.groupTitle = "分组"; // 初始化分组名称
+      this.updateCustomData(this.customIndex, setData, this.desk);
+    }
+    // 绑定右键事件
+    this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
+      capture: true,
+    });
+  },
+  beforeDestroy() {
+    // 取消右键事件
+    this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, {
+      capture: true,
+    });
+  },
+  provide() {
+    return {
+      customIndex: this.customIndex, // '孙组件数据'
+      getIsHover: () => this.isHover,
+      isDrag: this.isDrag,
+    };
+  },
+  computed: {
+    ...mapWritableState(myIcons, [
+      "iconOption",
+      "isCopy",
+      "isPaste",
+      "isDrag",
+      "iconState",
+      "iconList",
+      "iconsRefs",
+      "isHover",
+    ]),
+    dragStyle() {
+      if (this.isDragStyle) {
         return {
-            index: 0, // 图标数组的下标
-            isDragStyle: false,
-            settingVisible: false, // 编辑状态
-            options: { hide: true }, // 卡片核心配置
+          opacity: 0.65,
+          border: "1px solid var(--active-bg)",
+          "border-radius": "12px",
         };
+      } else return {};
     },
-    mounted() {
-        // 是否需要初始化
-        if (this.customData.groupTitle == undefined) {
-            let setData = {};
-            setData.groupTitle = "分组"; // 初始化分组名称
-            this.updateCustomData(this.customIndex, setData, this.desk);
-        }
-        // 绑定右键事件
-        this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
-            capture: true,
-        });
-    },
-    beforeDestroy() {
-        // 取消右键事件
-        this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, {
-            capture: true,
-        });
-    },
-    provide() {
-        return {
-            customIndex: this.customIndex, // '孙组件数据'
-        };
-    },
-    computed: {
-        ...mapWritableState(myIcons, [
-            "iconOption",
-            "isCopy",
-            "isPaste",
-            "isDrag",
-            "iconState",
-            "iconList",
-        ]),
-        dragStyle() {
-            if (this.isDragStyle) {
-                return {
-                    opacity: 0.65,
-                    border: "1px solid var(--active-bg)",
-                }
-            } else return {}
+    // 右键菜单
+    menuList() {
+      let menus = [
+        {
+          icon: "shezhi1",
+          title: "移动",
+          fn: () => {
+            this.moveIcon();
+          },
         },
-        // 右键菜单
-        menuList() {
-            if (
-                this.customData.iconList !== undefined &&
-                this.customData.iconList.length > 1
-            ) return [
-                {
-                    icon: "zhankai",
-                    title: "解除分组",
-                    fn: () => {
-                        this.disbandGroup();
-                    },
-                },
-                {
-                    icon: "shezhi1",
-                    title: "放置",
-                    fn: () => {
-                        this.copyIcon();
-                    },
-                },
-            ];
-            else
-                return [
-                    {
-                        icon: "shezhi1",
-                        title: "移动",
-                        fn: () => {
-                            this.moveIcon();
-                        },
-                    },
-                    {
-                        icon: "shezhi1",
-                        title: "放置",
-                        fn: () => {
-                            this.copyIcon();
-                        },
-                    },
-                    {
-                        icon: "shezhi1",
-                        title: "设置",
-                        fn: () => {
-                            this.$refs.homelSlotRef.menuVisible = false;
-                            this.index = 0;
-                            this.settingVisible = true;
-                        },
-                    },
-                ];
+        {
+          icon: "shezhi1",
+          title: "合并",
+          fn: () => {
+            this.copyIcon();
+          },
         },
-    },
-    methods: {
-        ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-        // 处于图标组件放置区
-        handleDrop() {
-            // 拖拽状态下 添加图标组件
-            if (this.isDrag) this.copyIcon();
-        },
-        // 单图标组件拖拽开始
-        handleDragStart() {
-            this.iconList = [];
-            this.isDrag = true; // 打开拖拽状态
-            this.moveIcon(); // 复制图标组件
-        },
-          // 单图标组件拖拽结束
-          handleDragEnd() {
-            this.iconList = [];
-            this.isDragStyle = false
-            // this.isDrag = false // 这里没处理 可能有bug  目前没发现
-        },
-        // 删除多图标组件中的单个图标
-        deleteIcons(index) {
-            this.customData.iconList.splice(index, 1);
-        },
-        // 编辑多图标组件中的单个图标
-        editIcons(index) {
-            this.index = index;
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.homelSlotRef.menuVisible = false;
+            this.index = 0;
             this.settingVisible = true;
+          },
         },
-        // 全屏拖拽添加图标
-        dragAddIcon(icon) {
-            this.addIcon(icon);
+        {
+          icon: "guanbi2",
+          title: "删除",
+          fn: () => {
+            this.deleteIcon();
+          },
         },
-        // 添加单图标组件
-        addIcon(icon) {
-            this.addCard(
-                {
-                    name: "myIcons",
-                    id: Date.now(),
-                    customData: { iconList: [{ ...icon }] },
-                },
-                this.desk
-            );
+        {
+          icon: "guanbi2",
+          title: "长按框选图标（开发中）",
+          fn: () => {
+            this.dragSelection();
+          },
         },
-        // 解除多图标分组
-        disbandGroup() {
-            // 遍历多图标数组 重新添加到桌面
-            for (let i = 0; i < this.customData.iconList.length; i++) {
-                // 速度太快会导致ID重复
-                setTimeout(() => {
-                    this.addIcon(this.customData.iconList[i]);
-                }, 10);
-            }
-            this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
-            message.success("解除分组成功");
-        },
-        // 点击移动图标组件
-        moveIcon() {
-            this.$refs.homelSlotRef.menuVisible = false; // 隐藏控件
-            let state = false // 初始化状态
-            // 遍历全局数据并拦截重复的数据
-            this.iconList.forEach((item) => {
-                const { iconRef, iconIndex, ...icon } = item;
-                if (iconIndex === this.customIndex) state = true;
-            });
-            if (state) return // 本次移动被拦截
-            // 添加数据
-            this.iconList.push({
-                ...this.customData.iconList[0],
-                iconRef: this.$refs.homelSlotRef,
-                iconIndex: this.customIndex,
-            });
-            this.isCopy = true;  // 打开复制状态
-            this.isDragStyle = true  // 打开选中样式
-        },
-        // 复制新的图标组件
-        copyIcon() {
-            this.$refs.homelSlotRef.menuVisible = false; // 隐藏控件
-            this.isDragStyle = false  // 关闭选中样式
-            if (this.isCopy === false && this.isDrag === false)
-                return message.error("你还未复制任何图标组件");
-
-            // 遍历全局数组并添加
-            this.iconList.forEach((item) => {
-                const { iconRef, iconIndex, ...icon } = item;
-                // 拦截重复的数据
-                if (iconIndex === this.customIndex) {
-                    this.iconState = false; // 关闭该图标状态 本次拖拽锁住无法添加
-                    if (!this.isDrag) message.error("不能复制到同个图标组件上");
-                    return;
-                }
-                this.customData.iconList.push({ ...icon });
-                if (iconRef !== undefined) iconRef.doRemoveCard(); // 删除原图标组件
-            });
-            this.isPaste = true // 打开粘贴状态
-            this.iconList = []; // 清空全局数组
-            this.isCopy = false; // 重置拷贝状态
-        },
-        // 更新多图标组件标题
-        updateGroupTitle(title) {
-            this.customData.groupTitle = title;
-        },
-        // 右键菜单绑定
-        handleMenu(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.$refs.homelSlotRef.menuVisible = true;
-        },
-        // 保存图标
-        save() {
-            let editOption = this.$refs.editRef.save(); // 获取编辑组件的最新数据
-            if (typeof editOption === "string") return message.error(editOption);
-            Object.keys(editOption).forEach(
-                (k) => (this.customData.iconList[this.index][k] = editOption[k])
-            );
-            message.success("保存成功");
-            this.settingVisible = false;
-        },
+      ];
+      if (
+        this.customData.iconList !== undefined &&
+        this.customData.iconList.length > 1
+      ) {
+        menus.splice(2, 1);
+        menus.unshift({
+          icon: "zhankai",
+          title: "解除分组",
+          fn: () => {
+            this.disbandGroup();
+          },
+        });
+      }
+      return menus;
     },
+  },
+  methods: {
+    ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    //
+    dragSelection() {},
+    // ctrl + 点击
+    handleCustomEvent(event) {
+      this.isSelect = !this.isSelect;
+      if (this.isSelect) {
+        this.moveIcon();
+      } else {
+        for (let i = 0; i < this.iconList.length; i++) {
+          const { iconIndex } = this.iconList[i];
+          if (iconIndex === this.customIndex) {
+            this.iconList.splice(i, 1);
+          }
+        }
+        for (let i = 0; i < this.iconsRefs.length; i++) {
+          if (this.$refs.homelSlotRef === this.iconsRefs[i]) {
+            this.iconsRefs.splice(i, 1);
+          }
+        }
+        this.isDragStyle = false;
+        if (this.iconList.length == 0) {
+          this.isCopy = false;
+        }
+      }
+    },
+    // 处于图标组件放置区
+    handleDrop() {
+      // 拖拽状态下 添加图标组件
+      if (this.isDrag) {
+        this.copyIcon();
+      }
+    },
+    // 图标组件拖拽开始
+    handleDragStart() {
+      this.isHover = true;
+      if (!this.isSelect) {
+        this.iconList = [];
+        this.iconsRefs = [];
+      }
+      this.isDrag = true; // 打开拖拽状态
+      this.moveIcon(); // 复制图标组件
+    },
+    // 图标组件拖拽结束
+    handleDragEnd() {
+      this.isDragStyle = false;
+      this.isDrag = false;
+    },
+    // 删除多图标组件中的单个图标
+    deleteIcons(index) {
+      this.customData.iconList.splice(index, 1);
+    },
+    // 编辑多图标组件中的单个图标
+    editIcons(index) {
+      this.index = index;
+      this.settingVisible = true;
+    },
+    // 全屏拖拽添加图标
+    dragAddIcon(icon) {
+      this.addIcon(icon);
+    },
+    // 添加单图标组件
+    addIcon(icon) {
+      this.addCard(
+        {
+          name: "myIcons",
+          id: Date.now(),
+          customData: { iconList: [{ ...icon }] },
+        },
+        this.desk
+      );
+    },
+    // 解除多图标分组
+    disbandGroup() {
+      // 遍历多图标数组 重新添加到桌面
+      for (let i = 0; i < this.customData.iconList.length; i++) {
+        // 速度太快会导致ID重复
+        setTimeout(() => {
+          this.addIcon(this.customData.iconList[i]);
+        }, 10);
+      }
+      this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
+      message.success("解除分组成功");
+    },
+    // 点击移动图标组件
+    moveIcon() {
+      this.isDragStyle = true; // 打开选中样式
+      this.menuVisible = false; // 隐藏控件
+      let state = false; // 初始化状态
+      // 遍历全局数据并拦截重复的数据
+      this.iconList.forEach((item) => {
+        const { iconIndex } = item;
+        if (iconIndex === this.customIndex) state = true;
+      });
+      if (state) {
+        if (!this.isDrag) message.error("不能复制到同个图标组件上");
+        return; // 本次移动被拦截
+      }
+      this.customData.iconList.forEach((item) => {
+        this.iconList.push({
+          ...item,
+          iconIndex: this.customIndex,
+        });
+      });
+      this.iconsRefs.push(this.$refs.homelSlotRef);
+      this.isCopy = true; // 打开复制状态
+      this.isDragStyle = true; // 打开选中样式
+    },
+    // 复制新的图标组件
+    copyIcon() {
+      this.menuVisible = false; // 隐藏控件
+      this.isDragStyle = false; // 关闭选中样式
+      if (this.isCopy === false && this.isDrag === false)
+        return message.error("你还未复制任何图标组件");
+      // 遍历全局数组并添加
+      this.isDrag = false;
+      this.iconList.forEach((item) => {
+        const { iconRef, iconIndex, ...icon } = item;
+        // 拦截重复的数据
+        if (iconIndex === this.customIndex) {
+          this.iconState = false; // 关闭该图标状态 本次拖拽锁住无法添加
+          if (!this.isDrag) message.error("不能复制到同个图标组件上");
+          return;
+        }
+        this.customData.iconList.push({ ...icon });
+      });
+      this.iconsRefs.forEach((item) => {
+        if (item !== undefined) {
+          item.doRemoveCard(); // 删除原图标组件
+        }
+      });
+      this.isPaste = true; // 打开粘贴状态
+      this.isHover = false;
+      this.iconsRefs = [];
+      this.iconList = []; // 清空全局数组
+      this.isCopy = false; // 重置拷贝状态
+    },
+    // 删除图标组件
+    deleteIcon() {
+      this.menuVisible = false;
+      if (this.isSelect) {
+        for (let i = 0; i < this.iconsRefs.length; i++) {
+          this.iconsRefs[i].doRemoveCard();
+        }
+        this.iconsRefs = [];
+      } else {
+        this.$refs.homelSlotRef.doRemoveCard();
+      }
+    },
+    // 更新多图标组件标题
+    updateGroupTitle(title) {
+      this.customData.groupTitle = title;
+    },
+    // 右键菜单绑定
+    handleMenu(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      // this.$refs.homelSlotRef.menuVisible = true;
+      this.menuVisible = true;
+    },
+    // 保存图标
+    save() {
+      let editOption = this.$refs.editRef.save(); // 获取编辑组件的最新数据
+      if (typeof editOption === "string") return message.error(editOption);
+      Object.keys(editOption).forEach(
+        (k) => (this.customData.iconList[this.index][k] = editOption[k])
+      );
+      message.success("保存成功");
+      this.settingVisible = false;
+    },
+  },
 };
 </script>
 
