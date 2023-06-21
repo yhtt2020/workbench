@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 剪贴板视频组件 -->
      <div ref="clipVideo"></div>
   </div>
 </template>

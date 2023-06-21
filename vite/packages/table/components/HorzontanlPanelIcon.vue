@@ -79,4 +79,11 @@ export default {
   background: #FF4D4F;
   border-radius: 4px;
 }
+.s-item{
+  background:var(--active-bg);
+  color: var( --active-text) !important;
+}
+.nav-item{
+  color: var(--primary-text);
+}
 </style>

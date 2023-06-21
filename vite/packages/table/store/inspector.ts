@@ -62,6 +62,10 @@ export const inspectorStore = defineStore(
         this.inspectorTimer = setInterval(async () => {
           let fps = await rpc.inspector.getFPS()
           this.setDisplayValue('FPS', {value: fps})
+          let osu=window.$models.osUtils
+          osu.cpu.usage().then(cpuPercentage=>{
+            this.setDisplayValue('useCPU',{value:cpuPercentage})
+          })
         }, this.frequent*1000)
       },
       setupAida() {

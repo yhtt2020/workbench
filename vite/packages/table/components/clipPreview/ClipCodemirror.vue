@@ -16,14 +16,14 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(clipboardStore,['clipMode','clipTheme','previewShow','showLineNumber']),
+    ...mapWritableState(clipboardStore,['clipMode','clipTheme','previewShow','showLineNumber','clipSize']),
   },
   mounted(){
     this.myClipRefs = CodeMirror(this.$refs.myClip,{
       value:this.editorContent,
       theme:this.clipTheme,
       smartIndent:true,
-      tabSize:6,
+      tabSize:this.clipSize,
       indentWithTabs:true,
       lineWrapping: true,
       lineNumbers: this.showLineNumber,

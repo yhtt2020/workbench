@@ -43,7 +43,7 @@
   <a-row style="height: 1em;cursor: move" class="drag text-right" v-else>
 
   </a-row>
-  <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg ">
+  <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg " style=" background: var(--primary-bg) !important;">
     <WindowController></WindowController>
   </div>
 </template>

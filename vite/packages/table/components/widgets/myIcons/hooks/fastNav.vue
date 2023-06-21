@@ -44,9 +44,9 @@
 </template>
 
 <script>
-import Classification from '../../comp/Classification.vue'
-import navigationData from "../../../js/data/tableData";
-import listItem from '../../bottomPanel/listItem.vue';
+import Classification from '../../../comp/Classification.vue'
+import navigationData from "../../../../js/data/tableData";
+import listItem from '../../../bottomPanel/listItem.vue';
 const { appModel } = window.$models;
 export default {
     components: { Classification, listItem },

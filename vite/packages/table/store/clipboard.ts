@@ -5,10 +5,11 @@ export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     enable: false,
     previewShow:false,    // 控制预览显示
-    clipSetShow:false, // 是否打开代码高亮
-    showLineNumber:false, // 是否显示行号
+    clipSetShow:true, // 是否打开代码高亮
+    showLineNumber:true, // 是否显示行号
+    clipSize:4, 
     clipMode:'javascript',  // 存储代码块语言包 默认js
-    clipTheme:'monokai',      // 存储代码块的主题颜色 默认monokai
+    clipTheme:'dracula',      // 存储代码块的主题颜色 默认monokai
     items: [],
     clipboardObserver: {},
     settings: {
@@ -61,6 +62,18 @@ export const clipboardStore = defineStore("clipboardStore", {
     isClipLineNumber(val:boolean){
       this.showLineNumber = val
       // console.log('显示行号',this.showLineNumber);
+    },
+    isSetCodeHighlight(val:boolean){
+      this.clipSetShow = val
+      // console.log('设置代码高亮',val);
+    },
+    updateClipSize(val:number){
+      console.log('修改代码缩进',val);
+      this.clipSize = val
+    },
+    updateTheme(val:string){
+      // console.log('修改主题色',val);
+      this.clipTheme = val
     }
   }
 })

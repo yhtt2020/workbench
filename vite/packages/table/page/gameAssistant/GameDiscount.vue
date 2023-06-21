@@ -11,12 +11,12 @@
         <a-spin v-if="isLoading === true" class="" style="margin-top: 2em;"></a-spin>
         <div class="flex items-center flex-col justify-center" v-else>
           <div class="flex steam-item steam-sw-item">
-            <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" class="steam-mw s-bg pointer rounded-lg mb-3 mr-4">
+            <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" class="steam-mw steam-bg pointer rounded-lg mb-3 mr-4">
               <div style="height:228px;">
-                <img :src="item.header_image" alt="" class="rounded-lg"  style="width:100%;height: 100%;object-fit: cover;">
+                <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
-              <div class="px-3 py-3 name-size">{{item.name}}</div>
-              <div class="px-3 mb-3">优惠截止时间: {{ deadline(item.discount_expiration) }}</div>
+              <div class="px-3 py-3  name-text">{{item.name}}</div>
+              <div class="px-3 mb-3" style="color: var(--secondary-text);">优惠截止时间: {{ deadline(item.discount_expiration) }}</div>
               <div class="px-3 flex  items-center mb-3">
                 <span class="percent px-1 rounded-md">- {{item.discount_percent}} %</span>
                 <span class="final-price ml-3">{{ currencyFormat(item.final_price,item.currency) }}</span>
@@ -25,9 +25,9 @@
             </div>
           </div>
           <div class="flex flex-wrap steam-sw-item ">
-            <div class="steam-sw  mb-3 mr-2 s-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)">
+            <div class="steam-sw  mb-3 mr-2 steam-bg rounded-lg pointer" v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)">
               <div class="epic-sh mb-3">
-                <img :src="item.header_image" alt="" class="rounded-lg"  style="width:100%;height: 100%;object-fit: cover;">
+                <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
               </div>
               <div class="px-3 flex  items-center mb-3">
                 <span class="percent px-1 rounded-md">- {{item.discount_percent}} %</span>
@@ -45,25 +45,27 @@
     <div class="flex mx-3 epic-container">
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 15.8em)">
          <div class="epic-item flex">
-            <div v-for="item in epicList" class="epic-w s-bg flex rounded-lg flex-col mb-3 mr-3">
-              <div class="height:272px;">
-                <img  :src="item.keyImages.url"  class="w-full h-full rounded-lg object-cover"  alt="">
-              </div>
-              <div class="flex flex-col ">
-                <span  class="mb-2 pointer px-3 my-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
-                  {{ item.el.title === 'Mystery Game' ? '神秘游戏' : item.el.title }}
-                </span>
-                <div v-if="item.el.promotions !== null" class="px-3 mb-3">
-                  <div v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex item-center">
-                    <span class="px-2 py-1 mr-2 rounded-md free-font">现在免费</span>
-                    <span class="py-1">截止时间: {{ deadline(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}</span>
-                  </div>
-                  <div v-if="item.el.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
-                    <span class="px-1  mr-2 rounded-md next-notice">下周预告</span>
-                    <span class="py-1">开始时间: {{ deadline(item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
-                  </div>
+            <div v-for="item in epicList" @click="openEpicStore(item)" class="epic-w s-bg pointer flex rounded-lg flex-col mb-3 mr-3">
+              <template v-if="item.el.promotions !== null">
+                <div class="height:272px;">
+                  <img  :src="item.keyImages.url"  class="w-full h-full rounded-t-lg object-cover"  alt="">
                 </div>
-              </div>
+                <div class="flex flex-col ">
+                  <span  class="mb-2 pointer px-3 my-2" style="font-size: 18px;font-weight: 500;color: rgba(255, 255, 255, 0.85);">
+                    {{ item.el.title === 'Mystery Game' ? '神秘游戏' : item.el.title }}
+                  </span>
+                  <div v-if="item.el.promotions !== null" class="px-3 mb-3">
+                    <div v-if="item.el.promotions.promotionalOffers.length !== 0" class="flex item-center">
+                      <span class="px-2 py-1 mr-2 rounded-md free-font">现在免费</span>
+                      <span class="py-1">截止时间: {{ deadline(item.el.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}</span>
+                    </div>
+                    <div v-if="item.el.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
+                      <span class="px-1  mr-2 rounded-md next-notice">下周预告</span>
+                      <span class="py-1">开始时间: {{ deadline(item.el.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
+                    </div>
+                  </div>
+                </div> 
+              </template> 
             </div>
          </div>
       </vue-custom-scrollbar>
@@ -126,12 +128,10 @@ export default {
       this.defaultGameValue = v
       this.getSelectCCData(v.id)
     },
-
     // 进入详情
     enterDiscountDetail(val){
       this.$router.push({name:'GameDiscountDetail',params:{id:val.id,exTime:val.discount_expiration}})
     },
-
     // 获取默认的加载数据
     getSteamDataList(){
       if(!this.isLoading){
@@ -151,7 +151,6 @@ export default {
         },0)
       }
     },
-
     // 根据不同区服切换数据
     getSelectCCData(v){
       this.steamList = []
@@ -172,7 +171,6 @@ export default {
         },1000)
       }
     },
-
     // 根据区服获取epic数据
     getEpicData(){
       sendRequest(`https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=${this.defaultGameValue.defaultLocale}&country=${this.defaultGameValue.id.toLocaleUpperCase()}&allowCountries=${this.defaultGameValue.id.toLocaleUpperCase()}`,{},{
@@ -203,10 +201,14 @@ export default {
         this.epicList  = resultArr
       })
     },
-    openEpicStore(){
-      browser.openInUserSelect(`https://store.epicgames.com/zh-CN`)
+    openEpicStore(v){
+      console.log(v);
+      if(v.el.productSlug !== null){
+        browser.openInInner(`https://store.epicgames.com/zh-CN/p/${v.el.productSlug}`)
+      }else{
+        browser.openInInner(`https://store.epicgames.com/zh-CN`)
+      }
     },
-
     deadline(value){
       const date = new Date( typeof value === 'string' ?  `${value}`: parseInt(value) * 1000);
       const month = date.getMonth() + 1;
@@ -217,11 +219,20 @@ export default {
       const formattedDate = `${month}月${day}日 ${ampm} ${hour % 12}:${minute.toString().padStart(2, '0')}`;
       return formattedDate
     }
-  },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.name-text{
+  font-family: PingFangSC-Semibold;
+  font-size: 18px;
+  color:var(--secondary-text);
+  font-weight: 600;
+}
+
+
+
 .active{
   background:rgba(33, 33, 33, 1);
   border-radius: 10px;
@@ -248,6 +259,8 @@ export default {
 .area-name{
   padding-top: 9px;
   padding-bottom: 9px;
+  background: var(--primary-bg);
+  color: var(--primary-text);
 }
 .right-select-active:active{
   filter: brightness(0.8);
@@ -271,8 +284,9 @@ export default {
 }
 
 .old-price{
+  font-family: Oswald - Google Fonts;
   font-size: 14px;
-  color: rgba(255,255,255,0.40);
+  color:var(--secondary-text);
   font-weight: 400;
 }
 .final-price{
@@ -306,6 +320,9 @@ export default {
   width: 1000px;
 }
 
+.steam-bg{
+  background: var(--primary-bg);
+}
 
 
 @media screen and (max-width: 840px){
@@ -342,5 +359,4 @@ export default {
   }
 }
 */
-
 </style>

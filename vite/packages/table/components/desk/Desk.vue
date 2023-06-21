@@ -1,8 +1,6 @@
 <template>
-
-
   <div style="height:100%;width: 100%" v-if="currentDesk.cards">
-    <div  style="width: 100%;height: 100%" class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
+    <div  style="width: 100%;height: 100%" class="m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
