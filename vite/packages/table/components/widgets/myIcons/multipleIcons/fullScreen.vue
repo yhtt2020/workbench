@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
 
-    <div class='popContainer' @click="closeFullScreen()" :style="show">
+    <div class='pop-container' @click="closeFullScreen()" :style="show">
     </div>
     <droppable-area @leave="handleLeave" style="border: 1px solid red;">
       <div class="box xt-bg" @click.stop="" :style="show">
@@ -25,16 +25,7 @@
     </droppable-area>
 
     <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
-      <div class="flex flex-row">
-        <div class="option h-24 w-24 ml-4" @click="editIcons()">
-          <Icon class="icon" icon="guanbi2"></Icon>
-          编辑
-        </div>
-        <div class="option h-24 w-24 ml-4" @click="deleteIcons()">
-          <Icon class="icon" icon="guanbi2"></Icon>
-          删除
-        </div>
-      </div>
+      <BottomEdit :menuList="menuList"></BottomEdit>
     </a-drawer>
   </teleport>
 </template>
@@ -43,6 +34,7 @@
 import icon from "../oneIcon/index.vue"
 import DragAndFollow from '../hooks/DragAndFollow.vue';
 import DroppableArea from "../hooks/DroppableArea.vue"
+import BottomEdit from "../hooks/bottomEdit.vue";
 
 
 import { mapWritableState } from 'pinia'
@@ -64,14 +56,32 @@ export default {
       index: 0,
       settingVisible: false,
       visible: false,
-      isShow: true
+      isShow: true,
+      menuList: [
+
+        {
+          icon: "shezhi1",
+          title: "编辑",
+          fn: () => {
+            this.editIcons()();
+          },
+        },
+        {
+          icon: "guanbi2",
+          title: "删除",
+          fn: () => {
+            this.deleteIcons();
+          },
+        },
+      ]
     }
   },
   inject: ['customIndex'],
   components: {
     icon,
     DragAndFollow,
-    DroppableArea
+    DroppableArea,
+    BottomEdit
   },
   computed: {
     ...mapWritableState(myIcons, ['iconOption', 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
@@ -148,7 +158,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.popContainer {
+.pop-container {
   position: fixed;
   top: 0;
   left: 0;
