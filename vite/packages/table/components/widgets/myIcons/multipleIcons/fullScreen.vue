@@ -63,7 +63,7 @@ export default {
           icon: "shezhi1",
           title: "编辑",
           fn: () => {
-            this.editIcons()();
+            this.editIcons();
           },
         },
         {

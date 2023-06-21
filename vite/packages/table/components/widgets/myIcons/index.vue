@@ -210,7 +210,7 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.$refs.homelSlotRef.menuVisible = false;
+            this.menuVisible = false;
             this.index = 0;
             this.settingVisible = true;
           },

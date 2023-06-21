@@ -8,7 +8,7 @@
             <div class="xt-bg-2 xt-text xt-hover" @click="customClick()">应用导航</div>
         </div>
         <template v-else>
-            <a-input v-if="_link === 'link'" @blur="leaveInput()" v-model:value="_linkValue" placeholder="想天浏览器"
+            <a-input v-if="_link === 'link'" @blur="leaveInput()" v-model:value="_linkValue" placeholder=""
                 class="xt-bg-2 xt-border input">
                 <template #suffix>
                     <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
@@ -17,7 +17,7 @@
                     </div>
                 </template>
             </a-input>
-            <a-input v-else v-model:value="title" placeholder="想天浏览器" class="xt-bg xt-border input" style="border: 0;">
+            <a-input v-else v-model:value="title" placeholder="" class="xt-bg xt-border input" style="border: 0;">
                 <template #suffix>
                     <div style="border-radius: 50%;padding: 5px;cursor: pointer;"
                         class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
@@ -27,7 +27,7 @@
             </a-input>
         </template>
         <div class="text-base" style="margin: 12px 0">图标名称</div>
-        <a-input v-model:value="_titleValue" placeholder="想天浏览器" class="xt-bg-2 xt-border input" />
+        <a-input v-model:value="_titleValue" placeholder="给你的图标组件取个名称吧" class="xt-bg-2 xt-border input" />
         <!-- 图标开始 -->
         <div class="text-base" style="margin: 12px 0">图标</div>
         <div class="parent" style="justify-content: start;">
