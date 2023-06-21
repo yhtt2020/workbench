@@ -48,6 +48,7 @@ import GameMedia from "../page/gameAssistant/GameMedia.vue";
 import DeckAdd from "../page/app/deck/DeckAdd.vue";
 import DeckIndex from "../page/app/deck/DeckIndex.vue";
 import BrowserIndex from '../page/app/browser/Index.vue';
+import BrowserTabs from '../page/app/browser/Tabs.vue'
 import BrowserMain from '../page/app/browser/Browser.vue';
 
 // @ts-ignore
@@ -141,6 +142,11 @@ export default [
             path: '',
             name: 'browser',
             component: BrowserIndex
+          },
+          {
+            path:'/tabs',
+            name:'browserTabs',
+            component:BrowserTabs
           }
         ]
       },

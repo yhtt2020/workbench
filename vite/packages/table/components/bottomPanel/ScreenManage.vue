@@ -119,7 +119,6 @@ export default {
   methods: {
     ...mapActions(screenStore, ['startupScreen', 'tagScreen', 'stopScreen', 'add']),
     addScreen () {
-      console.log('11234 :>> ', 11234);
       let s = this.add()
       this.select(s.key)
     },

@@ -108,6 +108,7 @@ import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
 import { navStore } from '../store/nav'
 import {clipboardStore} from "../store/clipboard";
+import { browserStore } from '../store/browser'
 
 export default {
   name: 'Code',
@@ -137,6 +138,8 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
+    this.initStore(browserStore,'browserStore')
+    browserStore().bindIPC()
     captureStore()//仅触发一下载入
     clipboardStore()
     if (isMain()) {
