@@ -104,6 +104,19 @@
       <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
+  <transition name="fade">
+    <div class="home-blur" style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 999;
+      " v-if="iconVisible">
+      <AddIcon @setCustoms="setCustoms" @close="hideAddCard" ></AddIcon>
+    </div>
+  </transition>
+  
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -111,6 +124,12 @@
         <div @click="newAddCard" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>添加卡片</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="newAddIcon" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>添加图标</span></div>
         </div>
       </a-col>
       <a-col>
@@ -286,6 +305,7 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
+import AddIcon from "../components/widgets/myIcons/addIcon/index.vue"
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -452,6 +472,7 @@ export default {
   name: "Home",
   data() {
     return {
+      iconVisible:false,
       visibleAdd: false,
       newDesk: {
         name: "",
@@ -537,7 +558,8 @@ export default {
     Clocks,
     Notes,
     myIcons,
-    NewAddCard
+    NewAddCard,
+    AddIcon
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -736,6 +758,11 @@ export default {
     }
   },
   methods: {
+    // 添加图标
+    newAddIcon() {
+      this.iconVisible=true
+      this.menuVisible = false;
+    },
     hideAddCard() {
       this.visibleAdd = false
     },
