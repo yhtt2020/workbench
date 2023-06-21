@@ -54,7 +54,7 @@
   <!-- 最近使用 -->
   <a-drawer v-model:visible="recentlyUsed" title="最近使用" width="500" placement="right">
     <div class="main-part">
-        <div v-for="item in appList" class="flex items-center mb-4 pointer" @click="btnDetail(item)">
+        <div v-for="(item,index) in appList" class="flex items-center mb-4 pointer" @click="toggleApp(index,item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
@@ -122,7 +122,7 @@
       <Icon icon="bianji" class="mr-2"></Icon>
       <span>编辑方案</span>
     </div>
-    <div class="set-item">
+    <div class="set-item" @click="btnDel">
       <Icon icon="delete" class="mr-2"></Icon>
       <span>删除</span>
     </div>
@@ -134,6 +134,7 @@ import NotShortcutKey from './NotShortcutKey.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../../store/key'
+import { message } from 'ant-design-vue';
 export default {
   name: 'ShortcutKeyDetail',
   components: {
@@ -162,6 +163,7 @@ export default {
     this.getData()
   },
   methods:{
+    ...mapActions(keyStore,['removeShortcutKeyList']),
     getData(){
       this.appList = this.recentlyUsedList
       this.keyList = this.appList[0].keyList
@@ -182,6 +184,11 @@ export default {
     btnEdit(){
       this.openSet = false
       this.$router.push({name: 'shareKey', params: {id: this.appContent.id}})
+    },
+    btnDel(){
+      this.removeShortcutKeyList(this.appContent)
+      message.success('删除成功');
+      this.onBack()
     }
   },
 }

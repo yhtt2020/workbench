@@ -267,6 +267,17 @@ export const keyStore = defineStore("key", {
           this.shortcutKeyList.splice(index,1,item)
         }
       })
+    },
+    setShortcutKeyList(item){
+      this.shortcutKeyList.push(item)
+    },
+    removeShortcutKeyList(item){
+      this.shortcutKeyList.map((i,index) => {
+        if(item.id === i.id)this.shortcutKeyList.splice(index, 1)
+      })
+      this.recentlyUsedList.map((i,index) => {
+        if(item.id === i.id)this.recentlyUsedList.splice(index, 1)
+      })
     }
   },
   persist: {

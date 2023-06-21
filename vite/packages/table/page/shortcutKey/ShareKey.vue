@@ -12,7 +12,7 @@
         <div class="pointer" @click="saveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
-          <div class="pointer" @click="shoreModal=true">保存并分享</div>
+          <div class="pointer xt-active-btn" @click="shoreModal=true">保存并分享</div>
         </a-tooltip>
       </div>
     </div>
@@ -27,7 +27,7 @@
           <span><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
         <div class="ml-10" style="font-family: PingFangSC-Regular;font-size: 16px;color: rgba(255,255,255,0.60);">
-          <div>推荐图片尺寸：128*128，不要超过2MB</div>
+          <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer s-bg flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
           
         <a-upload
@@ -42,22 +42,22 @@
         </div>
       </div>
       <span>应用名称</span>
-      <a-input v-model:value="applyName" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
+      <a-input v-model:value="applyName" spellcheck ="false" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
-      <a-textarea v-model:value="introduce" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
-      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
+      <a-textarea v-model:value="introduce" spellcheck="false" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
+      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6 xt-active-btn" style="width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
     </div>
     <!-- 快捷键 -->
     <div class="key-content" v-else>
       <!-- 输入框 -->
       <div class="input-item">
         <div>
-          <a-input class=" input"  :value="keyCombination" @keydown="showInfo" placeholder="按下组合键"/>
-          <a-input class="ml-3 input" v-model:value="combinationName" placeholder="操作名称" style="width:227px;height: 48px;"/>
+          <a-input class=" input"  :value="keyCombination" @keydown="showInfo" spellcheck="false" placeholder="按下组合键"/>
+          <a-input class="ml-3 input" v-model:value="combinationName" spellcheck="false" placeholder="操作名称" style="width:227px;height: 48px;"/>
           <div class="addBtn" @click="addShortcutKey">添加快捷键</div>
         </div>
         <div>
-          <a-input class="ml-3 input" v-model:value="groupName" placeholder="分类名称" style="width:227px;height: 48px;"/>
+          <a-input class="ml-3 input" v-model:value="groupName" spellcheck="false" placeholder="分类名称" style="width:227px;height: 48px;"/>
           <div class="addBtn" @click="addGroup">新建分类</div>
         </div>
       </div>
@@ -278,7 +278,7 @@ export default {
     this.getData()
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList']),
+    ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList']),
     getData(){
       if(this.$route.params.id){
         this.paramsId = this.$route.params.id
@@ -295,17 +295,37 @@ export default {
     },
     // 保存
     saveScheme(){
+      if(!this.applyName)return message.info('名称不能为空')
       if(this.paramsId !== -1){
         this.appContent.icon = this.icon 
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
         this.setSchemeList(this.appContent)
-        message.success('成功保存');
-        this.$router.go(-1)
       }else{
-        // console.log("保存123")
+        const time = new Date().valueOf()
+        this.appContent =  {   
+          id: nanoid(),  //唯一标识
+          icon: this.file.path, //方案的图片
+          name: this.applyName, //方案名称
+          number: 92, //快捷键总数
+          commonUse: this.introduce, //方案简介
+          avatar: '/icons/logo128.png', //方案人
+          nickName: 'Victor Ruiz', //头像
+          sumLikes: 0, //总赞数
+          download: 0, //下载次数
+          key: '快捷键',
+          time, //时间轴
+          isLike: false,  //是否点赞
+          isMyCreate: true, //是否是自己创建
+          isShare: false, //是否分享到社区
+          isCommunity: false, //是否来自社区
+          keyList: this.keyList //快捷键列表
+        }
+        this.setShortcutKeyList(this.appContent)
       }
+      message.success('成功保存');
+      this.$router.go(-1)
     },
     onBack(){
       this.$router.go(-1)
