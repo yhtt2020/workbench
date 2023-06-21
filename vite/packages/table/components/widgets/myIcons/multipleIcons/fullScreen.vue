@@ -84,7 +84,7 @@ export default {
     BottomEdit
   },
   computed: {
-    ...mapWritableState(myIcons, ['iconOption', 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
+    ...mapWritableState(myIcons, [ 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
     show() {
       return { display: this.isShow == true ? 'black' : 'none' }
     }

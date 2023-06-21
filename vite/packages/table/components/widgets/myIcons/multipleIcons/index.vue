@@ -47,12 +47,6 @@ export default {
                 this.$emit('custom-event');
                 return
             }
-            console.log('this. :>> ', this.isHover);
-            
-            if (this.isHover) {
-                this.isHover = false
-                return
-            }
             this.isIconsFullScreen = true
         },
         dragAddIcon(icon) {

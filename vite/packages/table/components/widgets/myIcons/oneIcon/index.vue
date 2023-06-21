@@ -46,11 +46,6 @@ export default {
                 this.$emit('custom-event');
                 return
             }
-            console.log('this.11 :>> ', this.isHover);
-            if (this.isHover) {
-                this.isHover = false
-                return
-            }
             if (this.link === "link") {
                 // 链接
                 this.$emit("onIconClick");
