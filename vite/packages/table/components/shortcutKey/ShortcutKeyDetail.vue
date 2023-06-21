@@ -90,11 +90,9 @@
       <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
         <span class="flex items-center">
           <div @click="showCard(appContent.id)">
-            <a-avatar size="24">
-                <template #icon><UserOutlined /></template>
-            </a-avatar>
+            <a-avatar shape="square" :src="appContent.avatar" :size="32"></a-avatar>
           </div>
-          <span class="ml-3">{{ appContent.userName }}</span>
+          <span class="ml-3">{{ appContent.nickName }}</span>
         </span>
         <span v-if="appContent.isCommunity || appContent.isShare">
           <span>
@@ -183,7 +181,7 @@ export default {
     },
     btnEdit(){
       this.openSet = false
-      this.$router.push({name: 'shareKey', params: {appContent: this.appContent}})
+      this.$router.push({name: 'shareKey', params: {id: this.appContent.id}})
     }
   },
 }

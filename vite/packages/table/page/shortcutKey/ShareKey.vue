@@ -9,7 +9,7 @@
         <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
       <div class="flex btn-item">
-        <div class="pointer">保存</div>
+        <div class="pointer" @click="saveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
           <div class="pointer" @click="shoreModal=true">保存并分享</div>
@@ -22,7 +22,7 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar shape="square" :size="100" :src="file.path" />
+            <a-avatar shape="square" :size="100" :src="file.path ? file.path : icon" />
           </div>
           <span><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <span>应用名称</span>
-      <a-input v-model:value="userName" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
+      <a-input v-model:value="applyName" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
       <a-textarea v-model:value="introduce" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
       <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6" style="background: #2A2A2A;width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
@@ -85,7 +85,7 @@
         <span class="ml-2" style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">分享成功</span>
       </div>
       <div style="font-size: 16px;margin:24px 0;color: rgba(255,255,255,0.60);">
-        「 {{ userName }} 」成功分享至创意市场，选择分享到元社区让更多人看到吧～
+        「 {{ applyName }} 」成功分享至创意市场，选择分享到元社区让更多人看到吧～
       </div>
       <div class="flex">
         <div style="width: 160px;height: 48px;"
@@ -121,6 +121,8 @@
 <script>
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
+import { mapActions, mapWritableState } from "pinia";
+import { keyStore } from '../../store/key'
 import {nanoid} from 'nanoid'
 import { message } from 'ant-design-vue';
 export default {
@@ -137,120 +139,121 @@ export default {
       ],
       defaultNavType:{title:'基本信息',name:'message'},
       closePrompt: true,
-      keyList: [
-        {
-          groupName: '常用0',
-          id: 1,
-        },
-        {
-          id: 2,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '首选项1',
-        },
-        {
-          id: 3,
-          keys: [
-            {icon: 'linechart'},
-            {icon: 'linechart'},
-            {key: 'Q'}
-          ],
-          title: '清除2',
-        },
-        {
-          id: 4,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏3'
-        },
-        {
-          id: 5,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: 'osoft4'
-        },
-        {
-          groupName: '文件5',
-          id: 6,
-        },
-        {
-          id: 7,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '首选项6',
-        },
-        {
-          id: 8,
-          keys: [
-            {icon: 'linechart'},
-            {icon: 'linechart'},
-            {key: 'Q'}
-          ],
-          title: '清除浏览器数据7',
-        },
-        {
-          id: 9,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏8'
-        },
-        {
-          id: 10,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '隐藏 Microsoft9'
-        },
-        {
-          id:11,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '首选项'
-        },
-        {
-          id:12,
-          keys: [
-            {icon: 'linechart'},
-            {icon: 'linechart'},
-            {key: 'Q'}
-          ],
-          title: '清除浏览器数据'
-        },
-        {
-          id: 13,
-          groupName: '其他'
-        },
-        {
-          id:14,
-          keys: [
-            {icon: 'linechart'},
-            {key: 'H'}
-          ],
-          title: '辅导课'
-        },
-        {
-          id:15,
-          keys: [
-            {icon: 'linechart'},
-            {icon: 'linechart'},
-            {key: 'Q'}
-          ],
-          title: '类似的控股权'
-        }
-      ],
+      // keyList: [
+      //   {
+      //     groupName: '常用0',
+      //     id: 1,
+      //   },
+      //   {
+      //     id: 2,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '首选项1',
+      //   },
+      //   {
+      //     id: 3,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {icon: 'linechart'},
+      //       {key: 'Q'}
+      //     ],
+      //     title: '清除2',
+      //   },
+      //   {
+      //     id: 4,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '隐藏3'
+      //   },
+      //   {
+      //     id: 5,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: 'osoft4'
+      //   },
+      //   {
+      //     groupName: '文件5',
+      //     id: 6,
+      //   },
+      //   {
+      //     id: 7,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '首选项6',
+      //   },
+      //   {
+      //     id: 8,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {icon: 'linechart'},
+      //       {key: 'Q'}
+      //     ],
+      //     title: '清除浏览器数据7',
+      //   },
+      //   {
+      //     id: 9,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '隐藏8'
+      //   },
+      //   {
+      //     id: 10,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '隐藏 Microsoft9'
+      //   },
+      //   {
+      //     id:11,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '首选项'
+      //   },
+      //   {
+      //     id:12,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {icon: 'linechart'},
+      //       {key: 'Q'}
+      //     ],
+      //     title: '清除浏览器数据'
+      //   },
+      //   {
+      //     id: 13,
+      //     groupName: '其他'
+      //   },
+      //   {
+      //     id:14,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {key: 'H'}
+      //     ],
+      //     title: '辅导课'
+      //   },
+      //   {
+      //     id:15,
+      //     keys: [
+      //       {icon: 'linechart'},
+      //       {icon: 'linechart'},
+      //       {key: 'Q'}
+      //     ],
+      //     title: '类似的控股权'
+      //   }
+      // ],
+      keyList: [],
       keyIndex: 1,
       imageUrl: '',
       file: {},
@@ -261,13 +264,49 @@ export default {
       groupName: '',
       // 介绍
       introduce: '',
-      releaseDrawer: false
+      releaseDrawer: false,
+      icon: '',
+      applyName: '',
+      appContent: {},
+      paramsId: -1
     }
   },
+  computed: {
+    ...mapWritableState(keyStore,['recentlyUsedList'])
+  },
   mounted(){
-    let appContent = this.$route.params.appContent
+    this.getData()
   },
   methods: {
+    ...mapActions(keyStore, ['setSchemeList']),
+    getData(){
+      if(this.$route.params.id){
+        this.paramsId = this.$route.params.id
+        this.recentlyUsedList.find(item => {
+          if(item.id == this.paramsId){
+            this.appContent = item
+            this.icon = item.icon
+            this.keyList = item.keyList
+            this.applyName = item.name
+            this.introduce = item.commonUse
+          }
+        })
+      }
+    },
+    // 保存
+    saveScheme(){
+      if(this.paramsId !== -1){
+        this.appContent.icon = this.icon 
+        this.appContent.keyList = this.keyList
+        this.appContent.name = this.applyName
+        this.appContent.commonUse = this.introduce
+        this.setSchemeList(this.appContent)
+        message.success('成功保存');
+        this.$router.go(-1)
+      }else{
+        // console.log("保存123")
+      }
+    },
     onBack(){
       this.$router.go(-1)
     },

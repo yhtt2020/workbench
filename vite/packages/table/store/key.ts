@@ -7,7 +7,7 @@ let arrData = [
     icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png', //方案的图片
     name: 'Adobe Lightroom', //方案名称
     number: 92, //快捷键总数
-    commonUse: 'Lr常用26个快捷键', //常用快捷数
+    commonUse: 'Lr常用26个快捷键', //方案简介
     avatar: '/icons/logo128.png', //方案人
     nickName: 'Victor Ruiz', //头像
     sumLikes: 12334, //总赞数
@@ -139,7 +139,7 @@ let arrData = [
     name: 'Adobe InDesign',
     number: 92,
     commonUse: 'Lr常用26ety个快捷键',
-    avatar: '',
+    avatar: '/icons/logo128.png',
     nickName: 'Victor Ruiz',
     sumLikes: 12334,
     download: 232,
@@ -248,11 +248,11 @@ let arrData = [
 export const keyStore = defineStore("key", {
   state: () => ({
     //快捷键方案列表
-    shortcutKeyList: [...arrData],
+    shortcutKeyList: [...arrData.concat()],
     // 最近使用的快捷键方案列表
     recentlyUsedList: [],
     // 推荐方案列表
-    sellSchemeList: [...arrData]
+    sellSchemeList: [...arrData.concat()]
   }),
   actions: {
     setRecentlyUsedList(item){
@@ -260,6 +260,13 @@ export const keyStore = defineStore("key", {
         if(i.id === item.id) this.recentlyUsedList.splice(index,1)
       })
       this.recentlyUsedList.unshift(item)
+    },
+    setSchemeList(item){
+      this.shortcutKeyList.find((i,index) => {
+        if(i.id === item.id){
+          this.shortcutKeyList.splice(index,1,item)
+        }
+      })
     }
   },
   persist: {
