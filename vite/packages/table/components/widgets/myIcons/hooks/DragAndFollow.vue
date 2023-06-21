@@ -51,16 +51,16 @@ export default {
   methods: {
     // 鼠标按下事件处理方法
     handleMouseDown(event) {
-     
       this.followPosition = { x: event.clientX, y: event.clientY }; // 初始化拖拽元素坐标
       event.preventDefault();
       event.stopPropagation();
       this.dragStartTimer = setTimeout(() => {
+        document.body.style.cursor = "move"; // 拖拽手指
         this.$emit("drag-start", event);
         event.preventDefault();
         event.stopPropagation();
         this.isDragging = true; // 打开拖拽状态
-        document.body.style.cursor = "move"; // 拖拽手指
+  
         // 获取可拖拽元素并创建拖拽元素
         let draggableElement;
         if (this.isSelect) {

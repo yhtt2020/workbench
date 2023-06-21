@@ -1,7 +1,7 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-  <div ref="iconRef" :style="dragStyle">
+  <div ref="iconRef" class="icon-box" :style="dragStyle">
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
       <drag-and-follow
@@ -16,16 +16,18 @@
             customData.iconList !== undefined && customData.iconList.length > 1
           "
         >
-          <icons
-            @custom-event="handleCustomEvent"
-            :groupTitle="customData.groupTitle"
-            :iconList="customData.iconList"
-            @disbandGroup="disbandGroup"
-            @updateGroupTitle="updateGroupTitle"
-            @deleteIcons="deleteIcons"
-            @editIcons="editIcons"
-            @dragAddIcon="dragAddIcon"
-          ></icons>
+          <div>
+            <icons
+              :groupTitle="customData.groupTitle"
+              :iconList="customData.iconList"
+              @custom-event="handleCustomEvent"
+              @disbandGroup="disbandGroup"
+              @updateGroupTitle="updateGroupTitle"
+              @deleteIcons="deleteIcons"
+              @editIcons="editIcons"
+              @dragAddIcon="dragAddIcon"
+            ></icons>
+          </div>
         </template>
         <!-- 单图标组件 -->
         <template
@@ -183,8 +185,8 @@ export default {
       if (this.isSelect) {
         return {
           opacity: 0.65,
-          border: "1px solid var(--active-bg)",
-          "border-radius": "12px",
+          border: "1px solid var(--active-bg)  !important",
+          "border-radius": "12px  !important",
         };
       } else return {};
     },
@@ -221,13 +223,13 @@ export default {
             this.deleteIcon();
           },
         },
-        {
-          icon: "guanbi2",
-          title: "长按框选图标（开发中）",
-          fn: () => {
-            this.dragSelection();
-          },
-        },
+        // {
+        //   icon: "guanbi2",
+        //   title: "长按框选图标（开发中）",
+        //   fn: () => {
+        //     this.dragSelection();
+        //   },
+        // },
       ];
       if (
         this.customData.iconList !== undefined &&
@@ -390,7 +392,6 @@ export default {
       this.iconsRefs.forEach((item) => {
         if (item.customIndex === this.customIndex) return;
         if (item !== undefined) item.doRemoveCard();
-        
       });
       this.isPaste = true; // 打开粘贴状态
       this.isDrag = false;
@@ -435,4 +436,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.icon-box {
+  margin: 0 10px;
+}
+</style>
