@@ -9,8 +9,10 @@
     <template v-if="showSize.width === 1 && showSize.height === 2">
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
+      <!-- 这是什么判断 栓q -->
           <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
+            <CardState  v-if="gameList.length ==0"  :state="'null'" style="width: 250px;height: 352px;"></CardState>
            <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
             <div style="height:118.53px;" >
               <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
@@ -36,6 +38,7 @@
         <div class="flex items-center" v-if="detailShow === false">
           <a-spin v-if="gameList.length !== gameList.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
+            <CardState  v-if="gameList.length ==0" :state="'null'" style="width: 538px;height: 352px;"></CardState>
             <div v-for="item in gameList.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
               <div style="height:118px;">
                 <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
@@ -79,6 +82,7 @@ import MyGameSmallDetail from './MyGameSmallDetail.vue';
 import { mapActions, mapWritableState } from 'pinia';
 import { cardStore } from '../../../store/card';
 import { steamUserStore } from '../../../store/steamUser';
+import CardState from '../../../components/card/cardState.vue';
 // import { message } from "ant-design-vue";
 import _ from 'lodash-es'
 
@@ -88,7 +92,8 @@ export default {
     Widget,
     HorizontalPanel,
     MySteamDetail,
-    MyGameSmallDetail
+    MyGameSmallDetail,
+    CardState
   },
   mounted(){
     console.log(this.gameList,'gamelki')
