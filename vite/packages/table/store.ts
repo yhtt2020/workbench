@@ -168,7 +168,7 @@ export const appStore = defineStore('appStore', {
 
       Object.keys(userInfo.onlineGrade).forEach(v => handleGrade(v))
       this.userInfo = userInfo
-    }
+    },
   },
   persist: {
     enabled: true,
