@@ -222,7 +222,7 @@
       
       <!-- 视频内容开始 -->
       <div  class="flex px-5 py-20 items-center pointer flex-col justify-center" @click="textButton">
-        <ClipVideo :vUrl="clip.videoUrl"></ClipVideo>
+        <ClipVideo :videoUrl="clip.videoUrl"></ClipVideo>
       </div>
       <!-- 视频内容结束 -->
     </div>
@@ -399,10 +399,10 @@ export default {
     ...mapWritableState(clipboardStore,['previewShow','clipSetShow']),
     showArray(){
       if(this.clipSetShow){
-        const rArr = this.textType.slice()
-        return rArr.reverse()
+        const newTextArr = this.textType.slice()  // 将文本底部tab数组复制一份
+        return newTextArr.reverse()  // 将复制的文本底部tab数组进行反转
       }else{
-        return this.textType
+        return this.textType  // 返回文本底部tab没有改变的数组
       }
     }
   },
@@ -603,5 +603,9 @@ export default {
 
 .time-bg{
   color: var(--secondary-text);
+}
+
+:deep(.CodeMirror){
+  height: 310px !important;
 }
 </style>

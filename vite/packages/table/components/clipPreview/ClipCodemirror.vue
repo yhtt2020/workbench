@@ -1,13 +1,12 @@
 <template>
   <!-- 代码块高亮  代码块-->
-  <div ref="myClip"></div>
+  <div ref="myClip" class="h-full"></div>
 </template>
 
 <script>
 import { mapWritableState,mapActions } from 'pinia'
 import { clipboardStore } from '../../store/clipboard';
 import CodeMirror from 'codemirror'
-
 
 export default {
   props:{

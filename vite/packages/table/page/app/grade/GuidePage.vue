@@ -1,80 +1,71 @@
 <template>
-  <div class="w-full h-full p-3 flex flex-col" style="background:var(--modal-bg);" v-if="isGradeNotice === false">
+  <div class="w-full h-full p-3 flex flex-col  " style="background:var(--modal-bg);" v-if="isGradeNotice === false">
     <!-- 返回按钮 -->
-    <div class="back-button mouse-click w-12 h-12">
+    <div class="back-button mouse-click w-12 h-12 flex-none">
       <Icon icon="xiangzuo" style="font-size: 1.75em;"></Icon>
     </div>
 
     <!-- 引导步骤1 -->
     <template v-if="step === 1">
-       <div class="flex flex-col items-center justify-center">
-        <div class="gp-title mb-3 flex items-center  justify-center">
+      <div class="flex items-center h-full mb-5 flex-col justify-center">
+        <div class="main-head mb-1 flex items-center justify-center">
           <span>选择适合你的工作台模式</span>
         </div>
-        <div class="gs-title flex flex-col items-center justify-center mb-12">
-          <div>
-            完成选择后，会内置对应模式的工作功能方案，你仍然可以在后续自定
-          </div>
-          <div>
-            义修改各个功能和布局。
-          </div>
+        <div class="subhead flex flex-col items-center min-height justify-start mb-12">
+          <span>完成选择后，会内置对应模式的工作功能方案，你仍然可以在后续自定</span>
+          <span>义修改各个功能和布局。</span>
         </div>
-        <div class="flex items-center  w-full justify-center next-btn">
-          <div v-for="(item,index) in guideData" 
-           class="g-max p-10 mr-8 flex-col pointer"
-           :class="guideIndex === index ? 'active-guide-bg' : ''"
-           @click="guideItem(item,index)" 
-          >
-            <div class="gp-image mb-4">
-              <img class="w-full h-full " :src="'../../../../../public/img/state/'+ item.url " alt="" >
+        <div class="flex items-center justify-center">
+           <div 
+              v-for="(item,index) in guideData"
+              :class="guideIndex === index ? 'active-guide-bg' : ''"
+              @click="guideItem(item,index)"  
+              class="mr-8 px-4 py-1 flex-col p-1 prev-bg pointer rounded-lg default-mode flex items-center justify-center"
+            > 
+              <div style="width: 100px ; height: 100px;" class="mb-0.5">
+                <img style="width: 100%;height: 100%; object-fit: contain;" :src="'../../../../../public/img/state/'+ item.url " alt="" >
+              </div>
+              <div class="main-head mb-2">{{ item.title }}</div>
+              <div class="subhead">
+                {{ item.explain }}
+              </div>
             </div>
-            <div class="gp-title mb-4">{{ item.title }}</div>
-            <div style="max-width: 240px;color: var(--secondary-text);">
-              {{ item.explain }}
-            </div>
-          </div>
         </div>
-        <div class=" flex items-center justify-center " >
-          <div class="py-3 px-14 mouse-click btn-bg  rounded-lg pointer" @click="nextButton">
-            <span>下一步</span>
-          </div>
-        </div>
-       </div>
+      </div>
     </template>
 
     <!-- 引导步骤2 -->
     <template v-else-if="step === 2">
-      <div class="flex items-center flex-col  justify-center">
-        <div class="gp-title mb-3">选择你的主题模式</div>
-        <div class="gs-title flex flex-col items-center justify-center mb-12">
+      <div class="flex items-center h-full flex-col  justify-center">
+        <div class="main-head mb-3">选择你的主题模式</div>
+        <div class="subhead flex flex-col items-center  justify-center mb-12">
           <div>完成选择后，你仍然可以在后续自定义修改。</div>
         </div>
-        <div class="flex gp-step">
-          <div v-for="(item,index) in workTheme" :class="{'active-guide-bg': guideIndex === index}" @click="guideItem(item,index)"
-           class="flex flex-col items-center p-10 pointer rounded-lg justify-center guide-item mr-8">
-            <div class="mb-4" style="width: 100px; height: 100px;">
-            <img class="w-full h-full " :src="'../../../../../public/img/state/'+ item.url " alt="" >
-           </div> 
-           <div class="gp-title mb-4">{{ item.title }}</div>
+        <div class="flex items-center justify-center">
+          <div v-for="(item,index) in workTheme" :class="{'active-guide-bg': guideModeIndex=== index}" @click="guideModeChange(item,index)"
+          class="flex flex-col items-center px-28 py-8 default-mode pointer rounded-lg justify-center prev-bg mr-8">
+            <div style="width: 100px;height: 100px;" class="mb-4">
+              <img class="w-full h-full " :src="'../../../../../public/img/state/'+ item.url " alt="" >
+            </div>
+            <div class="main-head">{{ item.title }}</div>
           </div>
-        </div>
-        <div class="flex">
-          <div class="py-3 px-14 rounded-lg prev-bg pointer mr-3" @click="prevButton">上一步</div>
-          <div class="py-3 px-14 btn-bg rounded-lg pointer" @click="nextButton">下一步</div>
         </div>
       </div>
     </template>
 
     <!-- 引导步骤3 -->
     <template v-else-if="step === 3">
-      <div class="flex flex-col">
-        <div class="gp-title mb-3 flex items-center justify-center ">选择你需要的模式</div>
-        <div class="gs-title flex flex-col items-center justify-center mb-8">
+      <div class="flex flex-col h-full items-center mb-4 justify-center">
+        <div class="main-head mb-3 flex items-center justify-center ">选择你需要的模式</div>
+        <div class="subhead flex flex-col items-center justify-center mb-8">
           <div>同步元社区互动功能，完成选择后，你仍然可以在后续自定义修改。</div>
         </div>
         <div class="flex items-center justify-center next-btn">
-          <div class="gp-left mr-8">
+          <div class="mr-8 mode-image" v-if="defaultMode.name === 'simpMode'">
             <img src="../../../../../public/img/state/dark-backup.png" class="w-full h-full " alt="">
+          </div>
+          <div class="mr-8 mode-image" v-if="defaultMode.name === 'intMode'">
+            <img src="../../../../../public/img/state/homedark2.png" class="w-full h-full " alt="">
           </div>
           <div class="flex flex-col">
             <HorizontalPanel :navList="modeData" v-model:selectType="defaultMode"></HorizontalPanel>
@@ -98,13 +89,19 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center justify-center">
-          <div class="py-3 px-14 rounded-lg prev-bg pointer mr-3" @click="prevButton">上一步</div>
-          <div class="py-3 px-14 btn-bg rounded-lg pointer" @click="goButton">GO</div>
-        </div>
       </div>
     </template>
 
+    <div class="flex items-center h-14 justify-center">
+      <div @click="prevButton" v-if="showPrevButton">
+        <span class="py-3 px-14 rounded-lg mb-5 prev-bg mouse-click pointer mr-3">上一步</span>
+      </div>
+      <div @click="nextButton">
+        <span class="py-3 px-14 rounded-lg mb-5  button-bg mouse-click pointer">
+          {{ showNextButton ? 'GO':'下一步' }}
+        </span>
+      </div>
+    </div>
   </div>
   <GradeNotice v-else></GradeNotice>
 </template>
@@ -112,6 +109,7 @@
 <script>
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import GradeNotice from './GradeNotice.vue'
+
 export default {
   components:{
     HorizontalPanel,
@@ -136,6 +134,7 @@ export default {
         }
       ],
       guideIndex:0, 
+      guideModeIndex:0, // 工作台背景色模式切换
       // 步骤二选择工作台主题模式数据
       workTheme:[
         {title:'暗色模式',url:'new_moon_3d.png'},
@@ -152,6 +151,24 @@ export default {
       isGradeNotice:false,
     }
   },
+
+  computed:{
+    showPrevButton(){  // 上一步按钮到1时隐藏
+      if(this.step === 1 || this.step === 4){
+        return false
+      }else{
+        return true
+      }
+    },
+    showNextButton(){  // 下一步按钮到3时切换按钮叙述
+      if(this.step === 3){
+        return true
+      }else{
+        return false
+      }
+    }
+  },
+
   watch:{
     defaultMode:{
       handler(){
@@ -162,8 +179,12 @@ export default {
   },
   methods:{
     // 点击下一步
-    nextButton(){
+    nextButton(e){
       this.step ++ 
+      if(this.step > 3){
+        e.stopPropagation()
+        this.isGradeNotice = true
+      }
     },
     // 点击上一步
     prevButton(){
@@ -179,6 +200,23 @@ export default {
     backSplash(){
       this.$router.replace({name:'splash'})
     },
+
+    // 工作台背景色模式切换
+    guideModeChange(item,index){
+      this.guideModeIndex = index
+      const value = JSON.parse(window.localStorage.getItem("style"));
+      let name = null;
+      document.documentElement.classList.remove(value);
+      if(index === 1){
+        name =  "light-model";  // 亮色模式
+        document.documentElement.classList.add(name);
+        window.localStorage.setItem("style", JSON.stringify(name));
+      }else{
+        name =  "dark-model"; // 暗色模式
+        document.documentElement.classList.add(name);
+        window.localStorage.setItem("style", JSON.stringify(name));
+      }
+    }
   }  
 }
 </script>
@@ -191,6 +229,28 @@ export default {
   justify-content: center;
   border-radius: 12px;
 }
+// 主要标题
+.main-head{ 
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  color: var(--primary-text);
+  font-weight: 500;
+}
+// 次要标题
+.subhead{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: var(--secondary-text);
+  font-weight: 400;
+}
+// 按钮样式
+.button-bg{
+  background: var(--active-bg);
+  color: var( --active-text);
+}
+.prev-bg{
+  background: var(--secondary-bg);
+}
 // 鼠标点击状态
 .mouse-click{
   &:active {
@@ -202,112 +262,43 @@ export default {
   }
   cursor: pointer;
 }
-// 主要文字样式
-.gp-title{
-  font-family: PingFangSC-Medium;
-  font-size: 18px;
-  color: var(--primary-text);
-  font-weight: 500;
-}
-// 次要文字样式
-.gs-title{
-  font-family: PingFangSC-Regular;
-  font-size: 16px;
-  color: var(--secondary-text);
-  font-weight: 400;
-}
-// 按钮样式
-.btn-bg{
-  background: var(--active-bg);
-  color: var( --active-text);
-}
-.prev-bg{
-  background: var(--secondary-bg);
-}
-.g-max{
-  width: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--secondary-bg);
-  border-radius: 12px;
-  &:last-of-type{
-    margin-right: 0 !important;
-  }
-  .gp-image{
-    max-width: 100px;
-    height: 100px;
-  }
-}
+// 选中状态颜色
 .active-guide-bg{
   background: var(--active-secondary-bg) !important;
   border: 1px solid var(--active-bg);
 }
-.gp-left{
+
+// 默认的主题模式宽度
+.default-mode{
+  max-width: 320px;
+  height: 320px;
+  max-height: 320px;
+  &:last-of-type{
+    margin-right: 0 !important;
+  }
+}
+
+.mode-image{
   max-width: 720px;
+  max-height: 405px;
 }
 
 
-@media screen and (max-width:840px){
-   .g-max{
-    width: calc(100% / 1);
-    margin-right: 10px;
-    .gp-image{
-      width:calc(100% / 4);
-      height:calc(100% / 4);
-    }
-   }
-   .gp-left{
+@media screen and (max-width: 840px) {
+  .default-mode{
+    width: calc(100% / 2) ;
+  }
+  .mode-image{
     width: calc(100% / 2);
-   }
-}
-
-@media screen and (min-width: 841px) and (max-width: 1100px) {
-  .g-max{
-    width: calc(100% / 1);
-    margin-right: 32px !important;
   }
 }
 
-@media screen and (min-width: 1101px){
-  .g-max{
-    width: calc(100% / 1);
-    margin-right: 32px !important;
+@media screen and (max-height:500px) {
+  .min-height{
+    margin-bottom: 8px !important;
   }
-  .next-btn{
-    margin-bottom: 64px ;
+  .default-mode{
+    height: calc(100% / 1);
   }
-}
-
-@media screen and (max-height:500px){
-  .g-max{
-    height: 250px;
-    padding: 16px  !important;
-  }
-  .next-btn{
-    margin-bottom: 8px ;
-  }
-  .gp-step{
-    margin-bottom: 10px !important;
-  }
-}
-
-@media screen and (min-height:501px) {
-  .g-max{
-    width: calc(100% / 1);
-    height: 320px;
-    margin-right: 10px;
-    .gp-image{
-      width:calc(100% / 2);
-      height:calc(100% / 2);
-    }
-   }
-   .next-btn{
-    margin-bottom: 64px ;
-   }
-
-   .gp-step{
-     margin-bottom: 40px !important;
-   }
 }
 </style>

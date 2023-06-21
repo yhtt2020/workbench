@@ -5,7 +5,7 @@
       <source :src="fileUrl" type="audio/mpeg" />
     </audio>
     <div class="audio-right flex items-center ">
-      <div class="flex dialogAudioPlay" @click="playAudio">
+      <div class="flex dialog-audio-play" @click="playAudio">
         <Icon :icon="audioStatus !== 'pause' ? 'bofang' : 'zanting'" style="font-size: 2em;"></Icon>
       </div>
 
@@ -204,7 +204,7 @@ export default{
   border-radius: 6px;
   display: flex;
   padding: 0 15px;
-  .dialogAudioPlay {
+  .dialog-audio-play {
     cursor: pointer;
     color:var(--primary-text);
     font-size: 20px;
