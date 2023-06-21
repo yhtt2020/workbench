@@ -12,7 +12,7 @@
       width: 100%;
       margin-left: 15px;
     ">
-    <div class="text-left" v-if="desks.length > 1">
+    <div class="text-left mb-2" v-if="desks.length > 1">
       <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
       </HorizontalPanel>
     </div>
@@ -41,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;

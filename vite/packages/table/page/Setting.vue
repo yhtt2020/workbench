@@ -1,11 +1,11 @@
 <template>
   <div style="display: flex;width: 100%">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-      style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
+      style="position:relative;  border-radius: 8px;height: 100%;">
       <div style="width: auto;    white-space: nowrap;">
         <!-- 快速搜索 快速开关功能 -->
         <div class="s-bg"
-          style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block;color: var(--primary-text);background: var(--primary-bg);">
+          style="margin: 1em;margin-right: 0em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block;color: var(--primary-text);background: var(--primary-bg);">
           <h3 style="color: var(--primary-text);">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
@@ -56,7 +56,7 @@
         </div>
         <div style="display: inline-block;vertical-align: top">
           <div
-            style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
+            style="margin: 1em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
             class="s-bg">
             <h3 style="color: var(--primary-text);">常用</h3>
             <a-row style="font-size: 1.2em;text-align: center">
@@ -96,7 +96,7 @@
             </div>
           </div>
           <div
-            style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
+            style="margin: 1em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
             class="s-bg">
 
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10, 10]">
