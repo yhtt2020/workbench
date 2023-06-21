@@ -9,8 +9,6 @@
 
 <script>
 import { message } from "ant-design-vue";
-import { mapWritableState } from 'pinia'
-import { myIcons } from '../../../../store/myIcons.ts'
 export default {
     props: {
         isRadius: { type: Boolean },
@@ -25,9 +23,6 @@ export default {
         index: { type: Number },
     },
     computed: {
-        ...mapWritableState(myIcons, [
-            "isHover",
-        ]),
         // 动态切换圆角状态
         radiusState() {
             if (this.isRadius) return { borderRadius: this.radius + "px" };

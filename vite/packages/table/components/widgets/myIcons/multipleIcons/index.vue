@@ -16,8 +16,6 @@
 
 <script>
 import IconsFullScreen from './fullScreen.vue';
-import { mapWritableState } from 'pinia'
-import { myIcons } from '../../../../store/myIcons.ts'
 export default {
     props: {
         iconList: {
@@ -35,11 +33,6 @@ export default {
         return {
             isIconsFullScreen: false // 全屏开关
         }
-    },
-    computed: {
-        ...mapWritableState(myIcons, [
-            "isHover",
-        ]),
     },
     methods: {
         fuullScreenClick(event) {

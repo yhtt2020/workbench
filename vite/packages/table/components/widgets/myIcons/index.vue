@@ -138,6 +138,7 @@ export default {
     return {
       menuVisible: false,
       index: 0, // 图标数组的下标
+      dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
       isSelect: false,
       settingVisible: false, // 编辑状态
       options: { hide: true }, // 卡片核心配置
@@ -164,7 +165,6 @@ export default {
   provide() {
     return {
       customIndex: this.customIndex, // '孙组件数据'
-      getIsHover: () => this.isHover,
       isDrag: this.isDrag,
     };
   },
@@ -177,7 +177,6 @@ export default {
       "iconState",
       "iconList",
       "iconsRefs",
-      "isHover",
       "iconSelect",
     ]),
     dragStyle() {
@@ -249,15 +248,14 @@ export default {
   watch: {
     iconSelect(newV, oldV) {
       // 全局选择被放弃 则恢复状态
-      if (this.isSelect && newV == false) {
+      if (this.isSelect && !newV && !this.dargFlag) {
         this.isSelect = false;
       }
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-  
-    //
+    // 开启框选
     dragSelection() {},
     // ctrl + 点击
     handleCustomEvent(event) {
@@ -288,14 +286,10 @@ export default {
       if (this.isDrag) {
         this.copyIcon();
       }
-      if (this.isSelect) {
-        this.isHover = true;
-      }
     },
     // 图标组件拖拽开始
     handleDragStart() {
       // 拖拽判断优先级
-      // this.isHover = true;
       // 1、不处于选中状态
       if (!this.isSelect) {
         // 放弃之前的操作 全部清空
@@ -303,15 +297,17 @@ export default {
         this.iconList = [];
         this.iconsRefs = [];
       }
+      this.dargFlag = true;
       this.isDrag = true; // 打开拖拽状态
       this.moveIcon(); // 复制图标组件
     },
     // 图标组件拖拽结束
     handleDragEnd() {
-      this.isSelect = false;
+      if (!this.iconSelect) this.isSelect = false;
       this.isDrag = false;
       this.iconList = [];
       this.iconsRefs = [];
+      this.dargFlag = false;
     },
     // 删除多图标组件中的单个图标
     deleteIcons(index) {
@@ -352,6 +348,7 @@ export default {
     // 点击移动图标组件
     moveIcon() {
       this.isSelect = true; // 打开选中样式
+      this.isSelect = true; // 打开选中样式
       this.menuVisible = false; // 隐藏控件
       let state = false; // 初始化状态
       // 遍历全局数据并拦截重复的数据
@@ -372,7 +369,6 @@ export default {
       });
       this.iconsRefs.push(this.$refs.homelSlotRef);
       this.isCopy = true; // 打开复制状态
-      this.isSelect = true; // 打开选中样式
     },
     // 复制新的图标组件
     copyIcon() {
@@ -384,7 +380,7 @@ export default {
       this.iconList.forEach((item) => {
         const { iconRef, iconIndex, ...icon } = item;
         // 拦截重复的数据
-        if (iconIndex === this.customIndex) {
+        if (iconIndex !== undefined && iconIndex === this.customIndex) {
           this.iconState = false; // 关闭该图标状态 本次拖拽锁住无法添加
           return;
         }
@@ -392,11 +388,11 @@ export default {
       });
       // 遍历图标组件进行删除
       this.iconsRefs.forEach((item) => {
-        if (iconIndex === this.customIndex) return;
+        if (item.customIndex === this.customIndex) return;
         if (item !== undefined) item.doRemoveCard();
+        
       });
       this.isPaste = true; // 打开粘贴状态
-      this.isHover = false;
       this.isDrag = false;
       this.isCopy = false;
       this.iconsRefs = [];
