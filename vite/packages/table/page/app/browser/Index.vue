@@ -15,11 +15,21 @@
               ></Icon>
             </div>
           </div>
-          <div class="btn-wrapper">
+          <div class="app-btn">
+            <div class="btn-wrapper no-drag">
+              <Icon
+                icon="youjiantou"
+                style="font-size: 1.5em; vertical-align: middle;transform: rotate(-180deg)"
+              ></Icon>
+            </div>
+          </div>
+          <div class="app-btn">
+          <div class="btn-wrapper no-drag">
             <Icon
-              icon="xiangyou"
+              icon="youjiantou"
               style="font-size: 1.5em; vertical-align: middle"
             ></Icon>
+          </div>
           </div>
           <div @click="refresh" class="app-btn no-drag">
             <div class="btn-wrapper">
@@ -88,7 +98,7 @@
             </a-row>
           </div>
           <div class="no-drag" v-else style="display: flex">
-            <a-input v-model:value="tab.title" class="address-input"></a-input>
+            <a-input @keyup.enter="addTab" v-model:value="tab.title" class="address-input"></a-input>
             <div @click="refresh" class="app-btn no-drag">
               <div class="btn-wrapper">
                 <Icon
@@ -232,6 +242,9 @@ export default {
     this.handleLeave()
   },
   methods: {
+    addTab(tab){
+
+    },
     fixZoom (num) {
       return Number(((num * this.settings.zoomFactor) / 100).toFixed(0))
     },
@@ -275,8 +288,8 @@ export default {
       this.$router.go(-1)
     },
     refresh () {
-      ipc.send('refreshTableApp', {
-        app: JSON.parse(JSON.stringify(this.tab)),
+      ipc.send('refreshTableTab', {
+        tab: JSON.parse(JSON.stringify(this.tab)),
       })
     },
   }
