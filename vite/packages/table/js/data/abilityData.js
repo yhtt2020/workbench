@@ -38,7 +38,7 @@ export const powerList = [
   },
   {icon:'pause',name:'sideNavigation',alias:'自定义侧边导航',detail:{
       3:' ',5:' ',10:' '
-    },noOnline:true},
+    }},
   {icon:'comment',name:'closeChat',alias:'轻聊',detail:{
     0:'创建群聊',    1:'创建群聊',    2:'创建群聊',    3:'创建群聊',
       5:' ',10:' '}

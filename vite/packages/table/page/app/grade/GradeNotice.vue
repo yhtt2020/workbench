@@ -7,9 +7,9 @@
       已阅读并同意<span @click.stop="openAgree" class="pointer" style="color: rgba(80, 139, 254, 1);">《想天工作台内测须知》</span></div>
     <div class="h-1/5 w-2/5 rounded-lg flex justify-center items-center text-white mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="next">开始</div>
   </div>
-  <div class="w-1/2 h-5/12 rounded-lg flex flex-col items-center pt-6 px-4 pb-4" style="background: rgba(33, 33, 33, 1);" v-else>
+  <div class="  h-5/12 rounded-lg flex flex-col items-center pt-6 px-4 pb-4" style="background: rgba(33, 33, 33, 1);width:300px" v-else>
     <div class="text-white"><Icon icon="rise" style="font-size: 1.2em" class="mr-2"></Icon>升级啦</div>
-    <div class="mt-4 text-xs">体验所有功能需要达到一定在线等级，了解各个等级权益和升级规则。</div>
+    <div class="mt-4 text-xs" style="line-height: 2">体验所有功能需要达到一定在线等级；<br>点击按钮，了解各个等级权益和升级规则。</div>
 <!--    <div class="flex flex-wrap justify-between">-->
 <!--      <div v-for="item in abilityList" class="rounded-xl h-12 mt-2 flex flex-row items-center pl-2" style="background: rgba(42, 42, 42, 1);width: calc(50% - 4px);">-->
 <!--        <Icon :icon="item.icon" style="font-size: 1.2em" class="mr-2"></Icon> {{item.name}}</div>-->
