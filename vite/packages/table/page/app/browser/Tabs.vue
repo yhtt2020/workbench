@@ -35,7 +35,7 @@ export default {
 
       <div @click="switchToTab(tab)" v-if="tab.url" class="s-bg p-2 rounded-md m-1 pointer" style="display: inline-block;vertical-align: top;width: 220px;">
         <div >
-          <a-image @click.stop class="mb-1 rounded-md" :width="200" :height="140" style="width: 200px;height:140px;object-fit: cover"
+          <a-image  @click.stop class="mb-1 rounded-md" :width="200" :height="140" style="width: 200px;height:140px;object-fit: cover"
                    :src="'file://'+tab.capture">
           </a-image>
         </div>
@@ -44,7 +44,7 @@ export default {
           <div class="mt-2 ml-1 truncate">
             <a-avatar shape="square" style="vertical-align: text-top" :size="18" :src="tab.favicons[0]" v-if="tab.favicons">
             </a-avatar>
-            {{ tab.title }}
+            {{ tab.title ||'新标签页'}}
           </div>
         </a-tooltip>
       </div>

@@ -100,17 +100,17 @@
           <div class="no-drag" v-else style="display: flex">
             <!--      网址输入框      -->
 
-            <a-input @blur="this.showEdit=false" spellcheck="false" v-if="showEdit" @keyup.enter="addTab"
+            <a-input style="font-weight: bold" @blur="this.showEdit=false" spellcheck="false" v-if="showEdit" @keyup.enter="addTab"
                      v-model:value="urlInput" class="address-input"></a-input>
-            <div @click="showEdit=true" class="xt-main-bg xt-text"
-                 style="text-align:left;border-radius: 100px;height: 32px;line-height:32px;color: white;padding-left: 20px;width: 100%;margin-top: 10px;margin-left: 10px;margin-right: 10px"
+            <div @click="showEdit=true" class="xt-main-bg xt-text truncate"
+                 style="font-weight:bold;text-align:left;border-radius: 100px;height: 32px;line-height:32px;color: white;padding-left: 20px;width: 100%;margin-top: 10px;margin-left: 10px;margin-right: 10px"
                  v-else>
               <template v-if="currentTab.favicons">
                 <a-avatar shape="square" :size="18" :src="currentTab.favicons[0]"></a-avatar>
               </template>
               {{ currentTab.title }}
             </div>
-            <div @click="refresh" class="app-btn no-drag">
+            <div @click="addNewTab" class="app-btn no-drag">
               <div class="btn-wrapper">
                 <Icon
                   icon="tianjia2"
@@ -271,11 +271,22 @@ export default {
   methods: {
     ...mapActions(browserStore, ['updateTabCapture']),
     switchToTab(id){
-      ipc.send('showTableTab', { id: id, position: this.getContentBounds() })
+      let found=this.runningTabs.find(tab=>{
+        return tab.id===id
+      })
+      if(found){
+        this.currentTab=found
+        this.urlInput=this.currentTab.url
+        ipc.send('showTableTab', { id: id, position: this.getContentBounds() })
+      }
+
     },
     async addTab () {
       console.log('event', event)
       await this.invokeAddTab({ url: this.urlInput })
+    },
+    async addNewTab(){
+      await this.invokeAddTab({url:'about:blank'})
     },
     fixZoom (num) {
       return Number(((num * this.settings.zoomFactor) / 100).toFixed(0))
