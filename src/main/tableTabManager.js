@@ -179,15 +179,16 @@ class TableTabManager {
   }
 
   closeTab (id) {
+    //先移除，以避免移除过程中数据被移除的情况
     let instance = this.get(id)
+    let index = this.getIndex(id)
+    this.runningTabsInstance.splice(index, 1)
+    this.runningTabs.splice(index, 1)
     if (instance) {
       if (this.tableWin && !this.tableWin.isDestroyed()) {
         this.tableWin.removeBrowserView(instance.view)
       }
       instance.close()
-      let index = this.getIndex(id)
-      this.runningTabsInstance.splice(index, 1)
-      this.runningTabs.splice(index, 1)
     }
   }
 

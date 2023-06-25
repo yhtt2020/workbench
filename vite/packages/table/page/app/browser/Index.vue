@@ -1,20 +1,25 @@
 <template>
+
   <div
     style="width: 100%; display: flex; height: 100%; flex-direction: column;padding-right: 10px;padding-bottom: 10px">
+    <back-btn style="margin-top: -20px;margin-left: -20px"></back-btn>
     <div
       class="drag"
       style="height: 4em; width: 100%"
     >
       <a-row type="flex">
+
         <a-col style="display: flex">
-          <div @click="goBack" class="app-btn no-drag">
-            <div class="btn-wrapper">
-              <Icon
-                icon="xiangzuo"
-                style="font-size: 1.5em; vertical-align: middle"
-              ></Icon>
-            </div>
+          <div @click="goBack" class="app-btn no-drag" style="width:60px">
+<!--            <div class="btn-wrapper">-->
+<!--              <Icon-->
+<!--                icon="xiangzuo"-->
+<!--                style="font-size: 1.5em; vertical-align: middle"-->
+<!--              ></Icon>-->
+<!--            </div>-->
+
           </div>
+
           <div class="app-btn">
             <div class="btn-wrapper no-drag">
               <Icon
@@ -105,10 +110,10 @@
             <div @click="showEdit=true" class="xt-main-bg xt-text truncate"
                  style="font-weight:bold;text-align:left;border-radius: 100px;height: 32px;line-height:32px;color: white;padding-left: 20px;width: 100%;margin-top: 10px;margin-left: 10px;margin-right: 10px"
                  v-else>
-              <template v-if="currentTab.favicons">
+              <template v-if="currentTab && currentTab.favicons">
                 <a-avatar shape="square" :size="18" :src="currentTab.favicons[0]"></a-avatar>
               </template>
-              {{ currentTab.title }}
+              <span v-if="currentTab.url">&nbsp;{{ currentTab.title }}</span><span v-else>工作台浏览器</span>
             </div>
             <div @click="addNewTab" class="app-btn no-drag">
               <div class="btn-wrapper">
@@ -183,7 +188,7 @@
     <div
       v-else
       id="frame"
-      style="width: 100%; flex: 1"
+      style="width: 100%; flex: 1;background: rgba(0,0,0,0.2)"
     >
       &nbsp;
     </div>
@@ -198,6 +203,7 @@ import _ from 'lodash-es'
 import { browserStore } from '../../../store/browser'
 import Template from '../../../../user/pages/Template.vue'
 import runningApps from '../../../components/bottomPanel/RunningApps.vue'
+import BackBtn from '../../../components/comp/BackBtn.vue'
 
 export default {
   name: 'BrowserIndex',
@@ -214,6 +220,7 @@ export default {
     }
   },
   components: {
+    BackBtn,
     Template,
     PlusOutlined,
     MinusOutlined,
@@ -378,8 +385,9 @@ export default {
       })
     },
     handleLeave () {
-      console.log(this.currentTab, '离开时 d', this.currentTab)
-      this.hideTab(JSON.parse(JSON.stringify(this.currentTab)))
+      if(this.currentTab){
+        this.hideTab(JSON.parse(JSON.stringify(this.currentTab)))
+      }
       this.fullScreen = false
     },
     goBack () {
