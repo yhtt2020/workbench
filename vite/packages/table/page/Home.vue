@@ -295,6 +295,7 @@ import NewAddCard from "./app/card/NewAddCard.vue"
 import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
 import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -549,7 +550,8 @@ export default {
     GuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
-    ShortcutKeyList
+    ShortcutKeyList,
+    GameStrategy
   },
   computed: {
     ...mapWritableState(cardStore, [
