@@ -219,7 +219,7 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="home-blur fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
+  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
     <GuidePage></GuidePage>
   </div>
 
@@ -991,6 +991,10 @@ export default {
       height: 438px;
     }
   }
+}
+
+.home-guide{
+  background:rgba(00,00,00,0.75) !important;
 }
 </style>
 <style lang="scss">
