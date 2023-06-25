@@ -544,7 +544,6 @@ export default {
 .btn {
   text-align: center;
   margin-right: 24px;
-  background: #2A2A2A;
   border-radius: 12px;
   width: 100px;
   height: 100px;
