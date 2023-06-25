@@ -216,6 +216,16 @@ export default {
         this.refreshData()
       }
     },
+    'currentSearchWords.video':{
+      handler(newVal){
+        this.searchData=newVal+' '
+      }
+    },
+    'currentSearchWords.text':{
+      handler(newVal){
+        this.searchData=newVal
+      }
+    },
     'currentGame.appid': {
       handler(newVal,oldVal) {
         let game=this.recentGameList.find(game=>{
