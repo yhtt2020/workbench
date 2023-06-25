@@ -127,12 +127,12 @@
 
 
               </a-col>
-<!--              <a-col v-if="isMain()" :span="6">-->
-<!--                <div @click="verifyCode" class="btn">-->
-<!--                  <Icon icon="shezhi" style="font-size: 2em"></Icon>-->
-<!--                  <div> 验证激活码</div>-->
-<!--                </div>-->
-<!--              </a-col>-->
+              <a-col v-if="isMain()" :span="6">
+                <div @click="verifyCode" class="btn">
+                  <Icon icon="team" style="font-size: 2em"></Icon>
+                  <div> 邀请/受邀</div>
+                </div>
+              </a-col>
 
               <a-col v-if="userInfo && userInfo.uid === 4 && isMain()" :span="6">
                 <div @click="createCodes" class="btn">
@@ -201,7 +201,7 @@ export default {
     ...mapWritableState(appStore, ['userInfo'])
   },
   methods: {
-    ...mapActions(codeStore, ['verify', 'create']),
+    ...mapActions(codeStore, ['verify', 'create','myCode']),
     isMain: isMain,
     styleSwitch() {
       const value = JSON.parse(window.localStorage.getItem("style"));
@@ -231,7 +231,35 @@ export default {
     },
 
     async verifyCode() {
-      this.$router.push({ name: 'splash' })
+      if(!this.myCode){
+        Modal.confirm({
+          content:'您还没有通过邀请码受邀，点击“接受邀请”，进入验证邀请码界面。',
+          okText:'接受邀请',
+          centered:true,
+          onOk:()=>{
+            this.$router.push({
+              name:'invite',
+              params:{
+                tab:'verify'
+              }
+            })
+          }
+        })
+        return
+      }
+      let rs = await this.verify(this.userInfo.uid)
+      if(rs ){
+        Modal.info({
+          content:'验证邀请码成功。您可在小队个人信息界面查收勋章。',
+          centered:true,
+        })
+      }else{
+        Modal.error({
+          content:'邀请码已失效。',
+          centered:true,
+        })
+      }
+      console.log(rs,'验证结果')
     },
     async createCodes() {
       this.create().then(rs => {
