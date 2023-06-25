@@ -168,7 +168,7 @@
                 }}</span>
             </div>
           </div>
-          <div class="app-btn no-drag">
+          <div v-if="false" class="app-btn no-drag">
             <div class="btn-wrapper">
               <Icon
                 icon="touping"
