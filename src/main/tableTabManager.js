@@ -170,6 +170,14 @@ class TableTabManager {
     }
   }
 
+  goBackTab(id){
+    let instance = this.get(id)
+    instance.view.webContents.goBack()
+  }
+  goForwardTab(id){
+    let instance = this.get(id)
+    instance.view.webContents.goForward()
+  }
   closeAllTab () {
     this.runningTabs.forEach(app => {
       this.closeTab(this.getName(app.name))
@@ -280,7 +288,12 @@ class TableTabManager {
     ipc.on('hideTableTab', (event, args) => {
       this.hideTab(this.getName(args.tab.id))
     })
-
+    ipc.on('goBackTableTab',(event,args)=>{
+      this.goBackTab(this.getName(args.tab.id))
+    })
+    ipc.on('goForwardTableTab',(event,args)=>{
+      this.goForwardTab(this.getName(args.tab.id))
+    })
     ipc.on('updateRunningTabsCapture', (event, args) => {
       this.runningTabs.forEach((tab, index) => {
         capture(this.runningTabsInstance[index].view.webContents,undefined,'tab_'+tab.id).then((image) => {

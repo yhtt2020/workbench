@@ -10,7 +10,7 @@
       <a-row type="flex">
 
         <a-col style="display: flex">
-          <div @click="goBack" class="app-btn no-drag" style="width:60px">
+          <div   class="app-btn no-drag" style="width:60px">
 <!--            <div class="btn-wrapper">-->
 <!--              <Icon-->
 <!--                icon="xiangzuo"-->
@@ -20,15 +20,15 @@
 
           </div>
 
-          <div class="app-btn">
-            <div class="btn-wrapper no-drag">
+          <div @click="goBack" class="app-btn">
+            <div  class="btn-wrapper no-drag">
               <Icon
                 icon="youjiantou"
                 style="font-size: 1.5em; vertical-align: middle;transform: rotate(-180deg)"
               ></Icon>
             </div>
           </div>
-          <div class="app-btn">
+          <div @click="goForward" class="app-btn">
             <div class="btn-wrapper no-drag">
               <Icon
                 icon="youjiantou"
@@ -391,7 +391,14 @@ export default {
       this.fullScreen = false
     },
     goBack () {
-      this.$router.go(-1)
+      ipc.send('goBackTableTab',{
+        tab: JSON.parse(JSON.stringify(this.currentTab)),
+      })
+    },
+    goForward(){
+      ipc.send('goForwardTableTab',{
+        tab: JSON.parse(JSON.stringify(this.currentTab)),
+      })
     },
     refresh () {
       ipc.send('refreshTableTab', {
