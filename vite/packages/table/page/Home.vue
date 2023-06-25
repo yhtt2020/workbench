@@ -297,6 +297,7 @@ import GuidePageVue from './app/grade/GuidePage.vue';
 import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
 import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -552,7 +553,8 @@ export default {
     GuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
-    ShortcutKeyList
+    ShortcutKeyList,
+    KeyBoard
   },
   computed: {
     ...mapWritableState(cardStore, [

@@ -158,6 +158,7 @@
         ...mapWritableState(keyStore, ['shortcutKeyList']),
     },
     mounted() {
+        this.detailToggle = false
         this.softwareList = this.shortcutKeyList
     },
     methods: {

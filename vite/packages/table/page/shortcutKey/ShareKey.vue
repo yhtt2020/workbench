@@ -9,6 +9,7 @@
         <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
       <div class="flex btn-item">
+        <div class="pointer">批量编辑</div>
         <div class="pointer" @click="saveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
@@ -48,9 +49,9 @@
       <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6 xt-active-btn" style="width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
     </div>
     <!-- 快捷键 -->
-    <div class="key-content" v-else>
+    <div class="key-content" v-show="defaultNavType.name === 'shortcutkey'">
       <!-- 输入框 -->
-      <div class="input-item">
+      <!-- <div class="input-item">
         <div>
           <a-input class=" input"  :value="keyCombination" @keydown="showInfo" spellcheck="false" placeholder="按下组合键"/>
           <a-input class="ml-3 input" v-model:value="combinationName" spellcheck="false" placeholder="操作名称" style="width:227px;height: 48px;"/>
@@ -60,9 +61,9 @@
           <a-input class="ml-3 input" v-model:value="groupName" spellcheck="false" placeholder="分类名称" style="width:227px;height: 48px;"/>
           <div class="addBtn" @click="addGroup">新建分类</div>
         </div>
-      </div>
+      </div> -->
       <!-- 提示 -->
-      <div class="prompt mb-4 mx-3 px-4 flex justify-between items-center" v-show="closePrompt">
+      <div class="prompt mt-4 mx-3 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
           <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
           <span class="mx-4">支持长按拖拽排序</span>
@@ -70,8 +71,71 @@
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
       </div>
       <!-- 快捷键列表 -->
-      <div :style="closePrompt ? 'height:80%' : 'height:90%'">
-        <ShortcutKeyList :keyList="keyList" :keyIndex="keyIndex" :showEdit="true" @setKeyItem="setKeyItem"></ShortcutKeyList>
+      <div :style="closePrompt ? 'height:90%' : 'height:100%'">
+        <div class="key-box" :style="keyBoxStyle" id="keyBox">
+          <div v-for="(item,index) in keyList" :key="item.id">
+            <!-- 分组名称 -->
+            <div v-if="item.groupName" class="key-item border-right" @click="editItem(item,index,'name')">
+              <div class="flex items-center" v-if="item.isEdit">
+                <a-input class="input"
+                  v-model:value="groupName" 
+                  :ref="`inputEdit_${index}`"
+                  spellcheck="false" 
+                  placeholder="分类名称" 
+                  style="width:370px;height: 48px;"
+                  @blur="lostFocus(item,'groupName')"
+                  />
+                  <span @click.stop="delKey(index)">
+                    <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                  </span>
+              </div>
+              <span v-else>{{ item.groupName }}</span>
+            </div>
+            <!-- 快捷键 -->
+            <div v-else class="border-right key-item" 
+            :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" 
+            @click="editItem(item,index,'item')">
+              <div class="flex">
+                <template v-if="!item.isEdit">
+                  <div v-for="i in item.keys" :key="i" class="flex">
+                    <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                  </div>
+                </template>
+                <div v-else class="flex items-center mr-3" @click="openKeyBoard(item)">
+                  <a-input class="input pointer"
+                    v-model:value="keyContent" 
+                    readonly
+                    spellcheck="false" 
+                    placeholder="按下组合键" 
+                    style="width:179px;height: 48px;"
+                  >
+                    <template #suffix>
+                    <div class="w-8 h-8 flex rounded-lg justify-center items-center" 
+                    style="background: rgba(80,139,254,0.20);">
+                      <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
+                    </div>
+                    </template>
+                  </a-input>
+                </div>
+              </div>
+              <div>
+                <div class="key-title" v-if="!item.isEdit">{{ item.title}}</div>
+                <a-input class="input text-right"
+                  v-else
+                  v-model:value="keyName" 
+                  :ref="`inputEdit_${index}`"
+                  spellcheck="false" 
+                  placeholder="快捷键名称" 
+                  style="width:179px;height: 48px;"
+                  @blur="lostFocus(item,'keyName')"
+                  />
+              </div>
+              <span @click.stop="delKey(index)" v-if="item.isEdit">
+                <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,11 +180,18 @@
       </div>
     </div>
   </a-drawer>
+  <!-- 键盘 -->
+  <KeyBoard v-if="keyBoard" 
+  :selectKey="selectKey" 
+  @closeKeyBoard="closeKeyBoard"
+  @saveKey="saveKey"></KeyBoard>
 </template>
 
 <script>
+import Sortable from 'sortablejs'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
+import KeyBoard from '../../components/shortcutKey/KeyBoard.vue';
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../../store/key'
 import {nanoid} from 'nanoid'
@@ -129,7 +200,15 @@ export default {
   name: 'ShareKey',
   components: {
     HorizontalPanel,
-    ShortcutKeyList
+    ShortcutKeyList,
+    KeyBoard
+  },
+  directives: {
+      focus: {
+          inserted(el) {
+              el.focus();
+          }
+      }
   },
   data(){
     return{
@@ -139,120 +218,6 @@ export default {
       ],
       defaultNavType:{title:'基本信息',name:'message'},
       closePrompt: true,
-      // keyList: [
-      //   {
-      //     groupName: '常用0',
-      //     id: 1,
-      //   },
-      //   {
-      //     id: 2,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '首选项1',
-      //   },
-      //   {
-      //     id: 3,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {icon: 'linechart'},
-      //       {key: 'Q'}
-      //     ],
-      //     title: '清除2',
-      //   },
-      //   {
-      //     id: 4,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '隐藏3'
-      //   },
-      //   {
-      //     id: 5,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: 'osoft4'
-      //   },
-      //   {
-      //     groupName: '文件5',
-      //     id: 6,
-      //   },
-      //   {
-      //     id: 7,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '首选项6',
-      //   },
-      //   {
-      //     id: 8,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {icon: 'linechart'},
-      //       {key: 'Q'}
-      //     ],
-      //     title: '清除浏览器数据7',
-      //   },
-      //   {
-      //     id: 9,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '隐藏8'
-      //   },
-      //   {
-      //     id: 10,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '隐藏 Microsoft9'
-      //   },
-      //   {
-      //     id:11,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '首选项'
-      //   },
-      //   {
-      //     id:12,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {icon: 'linechart'},
-      //       {key: 'Q'}
-      //     ],
-      //     title: '清除浏览器数据'
-      //   },
-      //   {
-      //     id: 13,
-      //     groupName: '其他'
-      //   },
-      //   {
-      //     id:14,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {key: 'H'}
-      //     ],
-      //     title: '辅导课'
-      //   },
-      //   {
-      //     id:15,
-      //     keys: [
-      //       {icon: 'linechart'},
-      //       {icon: 'linechart'},
-      //       {key: 'Q'}
-      //     ],
-      //     title: '类似的控股权'
-      //   }
-      // ],
       keyList: [],
       keyIndex: 1,
       imageUrl: '',
@@ -262,13 +227,17 @@ export default {
       inputKeyArr: [],
       combinationName: '',
       groupName: '',
-      // 介绍
+      keyName: '',
+      keyContent: '',
       introduce: '',
       releaseDrawer: false,
       icon: '',
       applyName: '',
       appContent: {},
-      paramsId: -1
+      paramsId: -1,
+      keyBoard: false,
+      //选中的快捷键
+      selectKey: {},
     }
   },
   computed: {
@@ -276,6 +245,9 @@ export default {
   },
   mounted(){
     this.getData()
+    this.$nextTick(() => {
+      this.keyDrop()
+    })
   },
   methods: {
     ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList']),
@@ -339,32 +311,81 @@ export default {
     close(){
       this.shoreModal = false
     },
-    //获取键盘按下的键
-    showInfo(event){
-      const str = event.key
-      str.replace(/[^u4e00-u9fa5|,]+/ig, '')
-      switch(event.key){
-        case "Backspace":
-          this.keyCombination = ''
-          this.inputKeyArr = []
+    // 编辑内容
+    editItem({id,groupName,keyStr,title},index,type){
+      this.keyList.forEach(i => {
+        if(i.id === id){
+          i.isEdit = true
+        }else{
+          i.isEdit = false
+        }
+      })
+      switch (type) {
+        case 'name':
+          this.groupName = groupName
+          this.$nextTick(() => {
+            this.$refs[`inputEdit_${index}`][0].focus()
+          })
           break;
-        // 不需要的
-        case "Tab":
-        case " ":
-        case "Process":
-          break;
-        default:
-          //去重
-          if(this.keyCombination.indexOf(str.toUpperCase()) == -1){
-            this.keyCombination.replace(/^\s/g, '')
-            this.inputKeyArr.push(str)
-            if(this.inputKeyArr.length < 4){
-              this.keyCombination += this.keyCombination ? (' + ' + str) : str
-              this.keyCombination = this.keyCombination.toUpperCase()
-            }
-          }
+        case 'item':
+          this.keyName = title
+          this.keyContent = keyStr
+          this.$nextTick(() => {
+            this.$refs[`inputEdit_${index}`][0].focus()
+          })
           break;
       }
+    },
+    // toggleKey(item){
+    //   this.keyList.forEach(i => {
+    //     if(i.id === id){
+    //       i.isEdit = true
+    //     }else{
+    //       i.isEdit = false
+    //     }
+    //   })
+    // },
+    // 失去焦点，保存修改
+    lostFocus({id},type){
+      switch (type) {
+        case 'groupName':
+          if(!this.groupName.trim())return message.info('分组名称不能为空');
+          this.keyList.forEach(i => {
+            if(i.id === id){
+              // i.isEdit = false
+              i.groupName = this.groupName
+            }
+          })
+          break;
+        case 'keyName':
+          if(!this.keyName.trim())return message.info('分组名称不能为空');
+          this.keyList.forEach(i => {
+            if(i.id === id){
+              i.title = this.keyName
+            }
+          })
+          break;
+      }
+    },
+    // 开启键盘
+    openKeyBoard(item){
+      this.selectKey = item
+      this.keyBoard = true
+    },
+    // 关闭键盘
+    closeKeyBoard(){
+      this.keyBoard = false
+    },
+    // 保存修改的快捷键
+    saveKey(keyArr){
+      console.log(this.keyList)
+      this.keyBoard = false
+      this.keyList.find((item,index) => {
+        if(item.id === keyArr.id){
+          this.keyList.splice(index,1,keyArr)
+          this.keyContent = keyArr.keyStr
+        }
+      })
     },
     // 添加快捷键
     addShortcutKey(){
@@ -392,9 +413,39 @@ export default {
       this.keyList.push(obj)
       this.groupName = ''
     },
+    // 删除一列快捷键
+    delKey(index){
+      this.keyList.splice(index,1)
+    },
     openDrawer(){
       this.shoreModal = false
       this.releaseDrawer = true
+    },
+    //拖拽排序
+    keyDrop(){
+      let that = this;
+      let side = document.getElementById('keyBox')
+      Sortable.create(side, {
+        sort: true,
+        animation: 150,
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let  newItem = side.children[newIndex]
+          let  oldItem = side.children[oldIndex]
+          // 先删除移动的节点
+          side.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if(newIndex > oldIndex) {
+            side.insertBefore(newItem,oldItem)
+          } else {
+            side.insertBefore(newItem,oldItem.nextSibling)
+          }
+          let temp = that.keyList[oldIndex]
+          that.keyList.splice(oldIndex, 1)
+          that.keyList.splice(newIndex, 0, temp)
+        }
+      });
     },
     // 上传头像前校验
     beforeUpload(file) {
@@ -489,14 +540,15 @@ export default {
       font-size: 16px;
       color: rgba(255,255,255,0.85);
     }
-    div:nth-child(1){
+    div:nth-child(1),
+    div:nth-child(2){
       width: 120px;
       height: 48px;
+      margin-right: 12px;
     }
-    div:nth-child(2){
+    div:nth-child(3){
       width: 150px;
       height: 48px;
-      margin-left: 12px;
     }
   }
   .add-content{
@@ -566,7 +618,7 @@ export default {
   .border-right::after {
     content: '';
     position: absolute;
-    right: -20px;
+    right: -58px;
     top: 0;
     height: 56px;
     margin-left: 10px;
@@ -587,6 +639,12 @@ export default {
     border-radius: 12px;
     color: var(--primary-text);
     font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .edit-item{
+    width:227px;
+    height: 48px;
+    background: var(--secondary-bg);
     border: 1px solid rgba(255,255,255,0.2);
   }
   .s-bg{
@@ -628,5 +686,35 @@ export default {
         align-items: center;
       }
     }
+  }
+  .key-box{
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    overflow: auto;
+    padding: 24px 0; 
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    
+  }
+  .key-box::-webkit-scrollbar{
+    display: none;
+  }
+  .key-item{
+    padding: 0 12px;
+    margin: 0 48px 8px;
+    width: 370px;
+    height:48px;
+    line-height:48px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.85);
+    display: flex;
+    border-radius: 8px;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
   }
 </style>
