@@ -22,30 +22,32 @@
   </div>
   <div v-else style="background: #333;width: 100vw;height: 100vw;" class="p-10 drag">
     <div class="no-drag" style="width: 600px;margin: auto">
-      <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台抢鲜体验</h3>
-      <p>目前我们仍处于早期阶段，必须使用邀请码方可体验产品。
-        <a-button @click="() => { this.showTip = !this.showTip }">什么是抢鲜体验？</a-button>
+      <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台公测</h3>
+      <p>虽然我们已经过一段时间的内测，但目前仍未正式发行。<br>不过您可以<strong>“无码体验”</strong>。
+        <a-button type="primary" @click="() => { this.showTip = !this.showTip }">什么是公测？</a-button>
       </p>
       <div v-if="showTip" class="p-5 mb-3" style="background: #3b3b3b;border-radius: 8px;border-width: 2px">
         <p style="font-weight: bold">
-          EA阶段说明：
+          公测阶段：
         </p>
         <p class="mb-1">
-          EA（抢鲜体验）意味着产品尚未达到我们认为的成熟状态。目前所有的功能都不代表完成状态。我们极有可能在任何时刻对功能做修改。
+         公测意味着产品已经具备一定的实用性。 但仍未达到我们认为的成熟状态。<br>目前所有的功能都不代表最终效果。我们仍会随时对这些功能做较大调整。
         </p>
       </div>
       <p>
-        您可通过以下多种途径获得邀请码：
+        您也可通过邀请码激活产品：
       </p>
       <p>
-        1.我们将不定期在产品群发码。
+        1.通过邀请码激活产品可额外获得&nbsp;<img  style="width: 22px" src="https://a.apps.vip/icons/test_sm.png" />&nbsp;“受邀用户勋章”。
       </p>
       <p>
         2.通过老用户邀请，每一位老用户均可通过在线使用时长兑换邀请码。
       </p>
-
+      <p>
+        3.您也可以在后期通过补填邀请码获得此勋章。
+      </p>
       <p v-if="!userInfo">
-        请登录账号后，确认是否具备体验资格。
+        请登录账号后，使用产品功能。
         <a-button type="primary" @click="login">登录/注册账号</a-button>
       </p>
       <div v-else>当前登录账号：
@@ -82,7 +84,7 @@
       <div class="flex">
         <a-button class="m-3" :loading="loading" @click="checkCode" :disabled="code === ''" block type="primary"
                   size="large">
-          激活 ! 发车
+          装填，发车！
         </a-button>
         <a-button size="large" class="m-3" v-if="myCode" @click="verifyAgain">验证</a-button>
       </div>
@@ -108,6 +110,7 @@ import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
 import { navStore } from '../store/nav'
 import {clipboardStore} from "../store/clipboard";
+import { browserStore } from '../store/browser'
 
 export default {
   name: 'Code',
@@ -137,6 +140,8 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
+    this.initStore(browserStore,'browserStore')
+    browserStore().bindIPC()
     captureStore()//仅触发一下载入
     clipboardStore()
     if (isMain()) {
@@ -231,9 +236,12 @@ export default {
             this.$router.replace({ name: 'home' })
           } else {
             Modal.error({
-              content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+              content: '您所提交的邀请码无效，无法获得勋章，您可取消后重试，或者点击直接进入，跳过此阶段。',
               centered: true,
-              onOk: () => { }
+              onOk: () => {
+                this.$router.replace({ name: 'wizard' })
+              },
+              okText:"直接进入"
             })
           }
         }
@@ -251,9 +259,12 @@ export default {
           this.$router.replace({ name: 'home' })
         } else {
           Modal.error({
-            content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+            content: '您当前的账号为直接体验用户，点击直接进入。',
             centered: true,
-            onOk: () => { }
+            onOk: () => {
+              this.$router.replace({ name: 'home' })
+            },
+            okText:'直接进入'
           })
         }
 
@@ -309,13 +320,13 @@ export default {
         }
       }).catch((err) => {
         Modal.error({
-          content: '服务器连接超时。无法验证激活信息。请稍后再试。',
+          content: '服务器连接超时。无法验证激活信息。您可直接进入。',
           key: 'error',
-          okText: '重试',
+          okText: '直接进入',
           centered: true,
           onOk: () => {
-            window.location.reload()
-          }
+            this.$router.replace({ name: 'home' })
+          },
         })
       }).finally(() => {
         this.launching = false
@@ -337,7 +348,7 @@ export default {
       this.active(this.code, hash, this.userInfo.uid).then(rs => {
         this.loading = false
         if (rs.code !== 1000) {
-          message.error('邀请码验证不通过或已被绑定（请点击验证），请检查网络（代理）或退出后重试。')
+          message.error('邀请码验证不通过或已被使用（请点击验证），请检查网络（代理）或退出后重试。')
           return
         } else {
           this.myCode = this.code
@@ -347,7 +358,7 @@ export default {
           }, 10000)
           this.modal = Modal.success({
             centered: true,
-            content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
+            content: '兑换成功，欢迎受邀参与测试，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
               clearTimeout(timer)
               this.$router.replace({ name: 'wizard' })

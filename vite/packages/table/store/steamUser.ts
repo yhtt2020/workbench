@@ -27,6 +27,8 @@ export const steamUserStore = defineStore("steamUser", {
     myGameList: [],
     myFriends: [],
 
+    searchWords:{},//appid=>{video,text}
+
     //好友列表
     friendsList: [],
   }),
@@ -185,7 +187,7 @@ export const steamUserStore = defineStore("steamUser", {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList','recentGameList','desks'],
+      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList','recentGameList','desks','searchWords'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
