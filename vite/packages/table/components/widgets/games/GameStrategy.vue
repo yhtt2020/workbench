@@ -3,7 +3,7 @@
   <Widget :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
     <!-- 游戏名称 -->
     <div class="game-name rounded-lg px-3 py-1 pointer" @click="openGuideDrawer">
-      游戏攻略- 
+      游戏攻略- {{ customData.name }}
       <!-- {{ recentGameList[0].chineseName }} -->
     </div>
     <!--按钮操作设置 -->
@@ -24,7 +24,6 @@
     
     <!-- 游戏攻略内容显示 -->
     <template v-if="defaultStrategy.name === 'video'">
-      {{ recentGame }}
       <!-- 视频攻略 -->
     </template>
 
@@ -32,7 +31,8 @@
       <!-- 图文攻略 -->
     </template>
   </Widget>
-  <HorizontalDrawer ref="strategyDrawer" :drawerTitle="strategyTitle"></HorizontalDrawer>
+  <HorizontalDrawer ref="strategyDrawer" :drawerTitle="strategyTitle" v-model:selectRegion="customData.id" :rightSelect="recentGameList"  @getArea="getArea"></HorizontalDrawer>
+  <!--  -->
   <a-drawer v-model:visible="searchShow" title="搜索" width="500" placement="right">
      
   </a-drawer>
@@ -79,7 +79,7 @@ export default {
       ],
       defaultStrategy:{title:'视频攻略',name:'video'},
       searchShow:false,
-      strategyTitle:'游戏名称'
+      strategyTitle:'游戏名称',
     }
   },
   watch:{
@@ -92,15 +92,11 @@ export default {
   },
   computed:{
     ...mapWritableState(steamUserStore,['recentGameList']),
-    recentGame(){
-      // const arr = _.filter(this.recentGameList, function(o) {
-      //   return {
-      //     name:o.name,
-      //     id:o.appid,
-      //     chineseName:o.chineseName
-      //   }
-      // });
-      // console.log('测试',arr);
+  },
+  mounted(){
+    if(Object.keys(this.customData).length === 0){
+      this.customData.name = this.recentGameList[0].name
+      this.customData.id = this.recentGameList[0].appid
     }
   },
   methods:{
@@ -110,6 +106,10 @@ export default {
     },
     openSearch(){
       this.searchShow = true
+    },
+    getArea(v){
+      this.customData.name = v.chineseName
+      this.customData.id = v.appid
     }
   }
   
