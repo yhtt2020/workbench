@@ -312,11 +312,18 @@ export default {
     // 保存
     saveScheme(){
       if(!this.applyName)return message.info('名称不能为空')
+        let sum = 0
+        this.keyList.map(item => {
+          if(item.keys){
+            sum += item.keys.length
+          }
+        })
       if(this.paramsId !== -1){
         this.appContent.icon = this.icon 
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
+        this.appContent.number = sum
         this.setSchemeList(this.appContent)
       }else{
         const time = new Date().valueOf()
@@ -324,7 +331,7 @@ export default {
           id: nanoid(),  //唯一标识
           icon: this.file.path, //方案的图片
           name: this.applyName, //方案名称
-          number: 92, //快捷键总数
+          number: sum, //快捷键总数
           commonUse: this.introduce, //方案简介
           avatar: '/icons/logo128.png', //方案人
           nickName: 'Victor Ruiz', //头像
@@ -338,6 +345,7 @@ export default {
           isCommunity: false, //是否来自社区
           keyList: this.keyList //快捷键列表
         }
+        console.log('id',typeof this.appContent.id)
         this.setShortcutKeyList(this.appContent)
       }
       message.success('成功保存');

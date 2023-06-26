@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center">
         <div class="mr-3">
-            <a-input :modelValue="searchValue" @change="changeInput($event)" :placeholder="placeholder" class="no-drag input" :style="inputStyle">
+            <a-input :modelValue="searchValue" @change="changeInput($event)" :placeholder="placeholder" spellcheck="false"  class="no-drag input" :style="inputStyle">
                 <template #prefix>
                     <Icon v-if="isSearchIcon" icon="sousuo" class="mr-2"></Icon>
                 </template>
@@ -94,9 +94,10 @@ export default {
     .input{
         width:320px;
         height: 48px;
-        background: rgba(0,0,0,0.30);
+        background: var(--secondary-bg);
         border-radius: 12px;
         font-size: 18px;
+        border: 1px solid rgba(255,255,255,0.2);
     }
     .select{
         width:134px;

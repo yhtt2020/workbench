@@ -21,9 +21,10 @@
         <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
           <span class="flex items-center">
             <div @click="showCard(item.id)">
-              <a-avatar size="24">
+              <!-- <a-avatar size="24">
                   <template #icon><UserOutlined /></template>
-              </a-avatar>
+              </a-avatar> -->
+              <a-avatar shape="square" :src="item.avatar" :size="32"></a-avatar>
             </div>
             <span class="ml-3" style="color: rgba(255,255,255,0.60);">{{ item.userName }}</span>
           </span>
@@ -39,6 +40,7 @@
           </span>
         </div>
       </div>
+      <div class="recommend" style="opacity: 0;height: 1px;"></div>
       <div class="recommend" style="opacity: 0;height: 1px;"></div>
     </div>
   </div>
