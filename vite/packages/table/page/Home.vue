@@ -305,7 +305,7 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import AddIcon from "../components/widgets/myIcons/addIcon/index.vue"
+import AddIcon from "./app/addIcon/index.vue"
 const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession

@@ -1,13 +1,15 @@
  /* 隐藏滚动条 */
- .container {
+ .xt-container {
   -ms-overflow-style: none; /* IE 和 Edge */
   scrollbar-width: none; /* Firefox */
   overflow: scroll; /* 其他浏览器 */
   -webkit-overflow-scrolling: touch; /* iOS 滚动效果 */
+  scroll-behavior: smooth;
+
 }
 
 /* 创建一个自定义滚动条 */
-.container::-webkit-scrollbar {
+.xt-container::-webkit-scrollbar {
   display: none; /* Chrome 和 Safari */
 }
 
