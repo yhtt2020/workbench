@@ -41,7 +41,8 @@ export default {
   computed: {
     ...mapWritableState(appsStore, ["myApps"]),
   },
-  mounted() {
+  async mounted() {
+    const desktopApps = await ipc.sendSync("getDeskApps");
     if (this.myApps.length === 0) this.loadDeskIconApps();
   },
   methods: {
@@ -49,6 +50,7 @@ export default {
     async loadDeskIconApps() {
       this.myApps = [];
       const desktopApps = await ipc.sendSync("getDeskApps");
+      console.log('object :>> ', desktopApps);
       this.addApps(desktopApps);
     },
   },
