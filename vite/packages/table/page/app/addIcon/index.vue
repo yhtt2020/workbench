@@ -3,7 +3,7 @@
   <div class="w-full h-full" @click="close()"></div>
   <!-- 添加图标 -->
   <div
-    class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl"
+    class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
     style="width: 728px"
   >
     <!-- 头部 -->
@@ -58,9 +58,10 @@
 </template>
 
 <script>
-import Apps from "./modules/apps.vue";
-import Links from "./modules/links.vue";
-
+import Links from "./modules/Links.vue";
+import MyApps from "./modules/MyApps.vue";
+import Desktop from "./modules/Desktop.vue";
+import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 import { mapActions, mapWritableState } from "pinia";
@@ -68,14 +69,19 @@ import { mapActions, mapWritableState } from "pinia";
 export default {
   props: ["desk"],
   components: {
-    Apps,
     Links,
+    MyApps,
+    Desktop,
+    QingApps,
+
   },
   data() {
     return {
       navList: [
         { name: "网址导航", component: "Links" },
-        { name: "我的应用", component: "Apps" },
+        { name: "我的应用", component: "MyApps" },
+        { name: "桌面图标", component: "Desktop" },
+        { name: "轻应用", component: "QingApps" },
       ],
       navName: "Links",
     };
@@ -93,9 +99,8 @@ export default {
       if (app.selectApps.length !== 0) {
         for (let i = 0; i < app.selectApps.length; i++) {
           let iconOption = { ...this.iconOption };
-          console.log(' :>> ',app.selectApps[i] );
           iconOption.titleValue = app.selectApps[i].name;
-          iconOption.link = "nav";
+          iconOption.link =app.selectApps[i].link || "nav";
           iconOption.linkValue = app.selectApps[i].path;
           iconOption.src = app.selectApps[i].icon;
 
