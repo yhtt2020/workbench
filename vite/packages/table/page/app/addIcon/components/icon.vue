@@ -12,13 +12,13 @@
   >
     <div
       v-for="(item, index) in data"
-      class="mx-2 mb-4 rounded-xl flex flex-col justify-center items-center cursor-pointer text-xs"
+      class="mx-2 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer text-xs"
       style="width: 125px; height: 125px"
       @click="selectApp(item, index)"
       :style="[isSelected(index)]"
     >
-      <a-avatar :size="50" shape="square" :src="item.icon"></a-avatar>
-      <div class="w-full text-center truncate">{{ item.name }}</div>
+      <a-avatar :size="52" shape="square" :src="item.icon"></a-avatar>
+      <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
     </div>
   </div>
 </template>

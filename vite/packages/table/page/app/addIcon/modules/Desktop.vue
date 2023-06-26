@@ -3,7 +3,6 @@
     <Icon
       ref="iconRef"
       :isSelect="true"
-      style="height: calc(100% - 48px)"
       :data="allApps"
       @updateSelectApps="updateSelectApps"
     ></Icon>
@@ -19,7 +18,7 @@ export default {
   data() {
     return {
       allApps: [],
-    }
+    };
   },
   mounted() {
     this.loadDeskIconApps();
@@ -27,7 +26,6 @@ export default {
   methods: {
     async loadDeskIconApps() {
       const desktopApps = await ipc.sendSync("getDeskApps");
-      console.log('object :>> ', desktopApps);
       this.allApps = desktopApps;
     },
   },

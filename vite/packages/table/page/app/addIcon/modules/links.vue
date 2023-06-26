@@ -124,6 +124,7 @@ export default {
         });
         res.data[0].forEach((item) => {
           appList.push({
+            link: "link",
             icon: item.app.version.logo256,
             name: item.app.version.name,
             path: item.app.version.url,

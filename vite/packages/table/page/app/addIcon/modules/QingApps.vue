@@ -15,7 +15,6 @@ export default {
     let res = await getQingApps();
     let appList = [];
     res.forEach((item) => {
-      console.log("item :>> ", item.type);
       appList.push({
         link: "fast",
         icon: item.logo,

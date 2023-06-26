@@ -22,17 +22,24 @@
     <main class="flex mt-3" style="">
       <!-- 左侧 -->
       <div
-        class="pr-2"
+        class=""
         style="width: 130px; border-right: 1px solid var(--divider)"
       >
         <div
-          class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120"
+          :style="{
+            'border-right':
+              item.component == navName ? '1px solid var(--active-bg)' : '',
+          }"
           v-for="item in navList"
-          :key="item.name"
-          @click="navName = item.component"
-          :class="{ 'xt-bg-2': item.component == navName }"
         >
-          {{ item.name }}
+          <div
+            class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+            :key="item.name"
+            @click="navName = item.component"
+            :class="{ 'xt-bg-2': item.component == navName }"
+          >
+            {{ item.name }}
+          </div>
         </div>
       </div>
       <!-- 右侧 -->
@@ -40,6 +47,7 @@
         <component ref="apps" :is="navName"></component>
       </div>
     </main>
+    <!-- 底部 -->
     <footer class="flex items-center justify-center mt-2">
       <div
         class="xt-bg-2 flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120"
@@ -73,7 +81,6 @@ export default {
     MyApps,
     Desktop,
     QingApps,
-
   },
   data() {
     return {
@@ -100,7 +107,7 @@ export default {
         for (let i = 0; i < app.selectApps.length; i++) {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = app.selectApps[i].name;
-          iconOption.link =app.selectApps[i].link || "nav";
+          iconOption.link = app.selectApps[i].link || "nav";
           iconOption.linkValue = app.selectApps[i].path;
           iconOption.src = app.selectApps[i].icon;
 
