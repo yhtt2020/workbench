@@ -407,16 +407,19 @@ export default {
     },
     // 确定
     confirm(){
-      console.log(this.keyContent.keyArr)
       if(!this.keyContent.keyArr.length) return message.info('不能为空')
       let keys = []
       this.keyContent.keyArr.map(item => {
         keys.push(item.key)
       })
+
+      const isAdd = this.selectKey.isAdd ? true : false
+
       this.keyContent.keys = keys
       this.keyContent.keyStr = keys.join(' + ')
-      this.$emit('saveKey',this.keyContent)
+      this.$emit('saveKey',{ keyArr: this.keyContent, isAdd })
       this.$emit('closeKeyBoard')
+      
     },
     // 按键
     onKeyDown(item, index, field){

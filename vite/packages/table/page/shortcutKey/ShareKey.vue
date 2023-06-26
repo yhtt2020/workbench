@@ -50,18 +50,6 @@
     </div>
     <!-- 快捷键 -->
     <div class="key-content" v-show="defaultNavType.name === 'shortcutkey'">
-      <!-- 输入框 -->
-      <!-- <div class="input-item">
-        <div>
-          <a-input class=" input"  :value="keyCombination" @keydown="showInfo" spellcheck="false" placeholder="按下组合键"/>
-          <a-input class="ml-3 input" v-model:value="combinationName" spellcheck="false" placeholder="操作名称" style="width:227px;height: 48px;"/>
-          <div class="addBtn" @click="addShortcutKey">添加快捷键</div>
-        </div>
-        <div>
-          <a-input class="ml-3 input" v-model:value="groupName" spellcheck="false" placeholder="分类名称" style="width:227px;height: 48px;"/>
-          <div class="addBtn" @click="addGroup">新建分类</div>
-        </div>
-      </div> -->
       <!-- 提示 -->
       <div class="prompt mt-4 mx-3 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
@@ -101,7 +89,7 @@
                     <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
                   </div>
                 </template>
-                <div v-else class="flex items-center mr-3" @click="openKeyBoard(item)">
+                <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
                   <a-input class="input pointer"
                     v-model:value="keyContent" 
                     readonly
@@ -135,6 +123,59 @@
               </span>
             </div>
           </div>
+          <!-- 添加单个快捷键 -->
+          <!-- <div class=""> -->
+            <!-- 添加组合键 -->
+            <div class="border-right key-item">
+              <div class="flex">
+                <div class="flex items-center mr-3" @click="openKeyBoard(_,'addKey')">
+                  <a-input class="input pointer"
+                    v-model:value="keyCombination" 
+                    readonly
+                    spellcheck="false" 
+                    placeholder="按下组合键" 
+                    style="width:179px;height: 48px;"
+                  >
+                    <template #suffix>
+                    <div class="w-8 h-8 flex rounded-lg justify-center items-center" 
+                    style="background: rgba(80,139,254,0.20);">
+                      <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
+                    </div>
+                    </template>
+                  </a-input>
+                </div>
+              </div>
+              <div>
+                <a-input class="input text-right"
+                  v-model:value="combinationName" 
+                  spellcheck="false" 
+                  placeholder="快捷键名称" 
+                  style="width:179px;height: 48px;"
+                  />
+              </div>
+              <span @click.stop="delStaging('key')">
+                <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+              </span>
+            </div>
+            <!-- 添加分类名称 -->
+            <div class="key-item border-right">
+              <div class="flex items-center">
+                <a-input class="input"
+                  v-model:value="addGroupName" 
+                  spellcheck="false" 
+                  placeholder="分类名称" 
+                  style="width:370px;height: 48px;"
+                  />
+                  <span @click.stop="delStaging('name')">
+                    <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                  </span>
+              </div>
+            </div>
+            <div class="add-box">
+              <div class="add-btn" style="width:181px" @click="addShortcutKey">新增快捷键</div>
+              <div class="add-btn" @click="addGroup">新增分类</div>
+            </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -227,6 +268,7 @@ export default {
       inputKeyArr: [],
       combinationName: '',
       groupName: '',
+      addGroupName: '',
       keyName: '',
       keyContent: '',
       introduce: '',
@@ -238,6 +280,7 @@ export default {
       keyBoard: false,
       //选中的快捷键
       selectKey: {},
+      stagingKey: {},// 暂存的Key
     }
   },
   computed: {
@@ -368,8 +411,27 @@ export default {
       }
     },
     // 开启键盘
-    openKeyBoard(item){
-      this.selectKey = item
+    openKeyBoard(item,type){
+      // if(this.stagingKey.id){
+      //   delete this.stagingKey.isAdd
+      // }
+      switch (type) {
+        case 'key':
+          this.selectKey = item
+          break;
+        case 'addKey':
+          this.selectKey = this.stagingKey.id ? this.stagingKey : {
+            id: nanoid(),
+            keys: [],
+            keyStr: '',
+            keyArr: [],
+            title: '',
+            isEdit: false,
+            isAdd: true
+          }
+          break;
+      }
+      
       this.keyBoard = true
     },
     // 关闭键盘
@@ -377,45 +439,66 @@ export default {
       this.keyBoard = false
     },
     // 保存修改的快捷键
-    saveKey(keyArr){
-      console.log(this.keyList)
+    saveKey({keyArr, isAdd}){
       this.keyBoard = false
-      this.keyList.find((item,index) => {
-        if(item.id === keyArr.id){
-          this.keyList.splice(index,1,keyArr)
-          this.keyContent = keyArr.keyStr
-        }
-      })
+      if(isAdd){
+        this.keyCombination = keyArr.keyStr
+        this.stagingKey = keyArr
+      }else{
+        this.keyList.find((item,index) => {
+          if(item.id === keyArr.id){
+            this.keyList.splice(index,1,keyArr)
+            this.keyContent = keyArr.keyStr
+          }
+        })
+      }
     },
     // 添加快捷键
     addShortcutKey(){
       if(!this.keyCombination || !this.combinationName.trim())return message.info('组合键或名称不能为空');
-      let keyArr = this.keyCombination.split(' + ')
-      keyArr.forEach((item,index) => {
-        keyArr.splice(index,1,{key: item})
-      })
-      let obj =  {
-        id: nanoid(),
-        keys: keyArr,
-        title: this.combinationName.trim(),
-      }
-      this.keyList.push(obj)
+      // let keyArr = this.keyCombination.split(' + ')
+      // keyArr.forEach((item,index) => {
+      //   keyArr.splice(index,1,{key: item})
+      // })
+      // let obj =  {
+      //   id: nanoid(),
+      //   keys: keyArr,
+      //   title: this.combinationName.trim(),
+      // }
+      delete this.stagingKey.isAdd
+      this.stagingKey.title = this.combinationName.trim()
+      this.keyList.push(this.stagingKey)
+      this.stagingKey = {}
       this.keyCombination = ''
       this.combinationName = ''
     },
     // 添加分类名称
     addGroup(){
-      if(!this.groupName.trim()) return message.info("分组名称不能为空")
+      if(!this.addGroupName.trim()) return message.info("分组名称不能为空")
       let obj = {
         id: nanoid(),
-        groupName: this.groupName.trim()
+        groupName: this.addGroupName.trim(),
+        isEdit: false
       }
       this.keyList.push(obj)
-      this.groupName = ''
+      this.addGroupName = ''
     },
     // 删除一列快捷键
     delKey(index){
       this.keyList.splice(index,1)
+    },
+    // 删除暂存添加的内容
+    delStaging(type){
+      switch (type) {
+        case 'key':
+          this.stagingKey = {}
+          this.keyCombination = ''
+          this.combinationName = ''
+          break;
+        case 'name':
+          this.addGroupName = ''
+          break;
+      }
     },
     openDrawer(){
       this.shoreModal = false
@@ -428,6 +511,7 @@ export default {
       Sortable.create(side, {
         sort: true,
         animation: 150,
+        filter: '.input-item',
         onUpdate:function(event){
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
@@ -579,18 +663,25 @@ export default {
   .key-content{
     height: 90%;
   }
-  .addBtn{
-    cursor: pointer;
-    background: var(--secondary-bg);
+  .add-box{
+    padding: 0 12px;
+    margin: 16px 36px 8px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    border-radius: 12px;
-    justify-content: center;
-    margin-left: 12px;
-    width:120px;
-    height:48px;
-    font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    .add-btn{
+      cursor: pointer;
+      background: var(--secondary-bg);
+      display: flex;
+      align-items: center;
+      border-radius: 12px;
+      justify-content: center;
+      margin-left: 12px;
+      width:181px;
+      height:48px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+    }
   }
   .key-list{
     display: flex;
@@ -625,12 +716,11 @@ export default {
     border-right: solid rgba(255,255,255,0.1) 1px;
   }
   .input-item{
-    display: flex;
-    justify-content: space-between;
-    margin: 28px 12px 16px;
-    >div{
-      display: flex;
-    }
+    // justify-content: space-between;
+    // margin: 28px 12px 16px;
+    // >div{
+    //   display: flex;
+    // }
   }
   .input{
     width:227px;
