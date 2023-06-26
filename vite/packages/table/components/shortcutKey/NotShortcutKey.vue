@@ -62,7 +62,8 @@
               </span>
             </div>
           </div>
-          <div class="recommend" style="height:1px;opacity:0;"></div>
+          <div v-if="notAppList.length > 3" class="recommend" style="height:1px;opacity:0;"></div>
+          <div v-if="notAppList.length > 3" class="recommend" style="height:1px;opacity:0;"></div>
         </div>
       </div>
     </div>

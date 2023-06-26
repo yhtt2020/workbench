@@ -34,7 +34,8 @@
                 <span>快捷键</span>
             </div>
         </div>
-        <div style="opacity:0;height: 1px;"></div>
+        <div v-if="softwareList.length > 3" style="opacity:0;height: 1px;"></div>
+        <div v-if="softwareList.length > 3" style="opacity:0;height: 1px;"></div>
     </div>
   </div>
   <!-- 无内容 -->

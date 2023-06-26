@@ -9,7 +9,7 @@
         <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
       <div class="flex btn-item">
-        <div class="pointer">批量编辑</div>
+        <div class="pointer" @click="bulkEdit">{{ bulkEditKey ? '完成编辑' : '批量编辑'}}</div>
         <div class="pointer" @click="saveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
@@ -63,17 +63,17 @@
         <div class="key-box" :style="keyBoxStyle" id="keyBox">
           <div v-for="(item,index) in keyList" :key="item.id">
             <!-- 分组名称 -->
-            <div v-if="item.groupName" class="key-item border-right" @click="editItem(item,index,'name')">
+            <div v-if="!item.keys" class="key-item border-right" @click="editItem(item,index,'name')">
               <div class="flex items-center" v-if="item.isEdit">
                 <a-input class="input"
-                  v-model:value="groupName" 
-                  :ref="`inputEdit_${index}`"
+                  v-model:value="item.groupName" 
+                  :ref="`inputNameEdit_${index}`"
                   spellcheck="false" 
                   placeholder="分类名称" 
                   style="width:370px;height: 48px;"
                   @blur="lostFocus(item,'groupName')"
                   />
-                  <span @click.stop="delKey(index)">
+                  <span @click.stop="delKey(index,item)">
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
               </div>
@@ -81,7 +81,6 @@
             </div>
             <!-- 快捷键 -->
             <div v-else class="border-right key-item" 
-            :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" 
             @click="editItem(item,index,'item')">
               <div class="flex">
                 <template v-if="!item.isEdit">
@@ -91,7 +90,7 @@
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
                   <a-input class="input pointer"
-                    v-model:value="keyContent" 
+                    v-model:value="item.keyStr" 
                     readonly
                     spellcheck="false" 
                     placeholder="按下组合键" 
@@ -110,23 +109,23 @@
                 <div class="key-title" v-if="!item.isEdit">{{ item.title}}</div>
                 <a-input class="input text-right"
                   v-else
-                  v-model:value="keyName" 
-                  :ref="`inputEdit_${index}`"
+                  v-model:value="item.title" 
+                  :ref="`inputKeyEdit_${index}`"
                   spellcheck="false" 
                   placeholder="快捷键名称" 
                   style="width:179px;height: 48px;"
                   @blur="lostFocus(item,'keyName')"
                   />
               </div>
-              <span @click.stop="delKey(index)" v-if="item.isEdit">
+              <span @click.stop="delKey(index,item)" v-if="item.isEdit">
                 <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
               </span>
             </div>
           </div>
           <!-- 添加单个快捷键 -->
-          <!-- <div class=""> -->
+          <!-- <div class="input-item"> -->
             <!-- 添加组合键 -->
-            <div class="border-right key-item">
+            <div class="border-right key-item input-item">
               <div class="flex">
                 <div class="flex items-center mr-3" @click="openKeyBoard(_,'addKey')">
                   <a-input class="input pointer"
@@ -151,6 +150,8 @@
                   spellcheck="false" 
                   placeholder="快捷键名称" 
                   style="width:179px;height: 48px;"
+                  ref="inputFocusKey"
+                  @click="getFocus('key')"
                   />
               </div>
               <span @click.stop="delStaging('key')">
@@ -158,20 +159,22 @@
               </span>
             </div>
             <!-- 添加分类名称 -->
-            <div class="key-item border-right">
+            <div class="key-item border-right input-item">
               <div class="flex items-center">
                 <a-input class="input"
                   v-model:value="addGroupName" 
                   spellcheck="false" 
                   placeholder="分类名称" 
                   style="width:370px;height: 48px;"
+                  ref="inputFocusName"
+                  @click="getFocus('name')"
                   />
                   <span @click.stop="delStaging('name')">
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
               </div>
             </div>
-            <div class="add-box">
+            <div class="add-box input-item">
               <div class="add-btn" style="width:181px" @click="addShortcutKey">新增快捷键</div>
               <div class="add-btn" @click="addGroup">新增分类</div>
             </div>
@@ -258,29 +261,27 @@ export default {
          {title:'快捷键',name:'shortcutkey'}
       ],
       defaultNavType:{title:'基本信息',name:'message'},
-      closePrompt: true,
-      keyList: [],
-      keyIndex: 1,
+      closePrompt: true, //提示
+      keyList: [], //快捷键列表
       imageUrl: '',
       file: {},
-      shoreModal: false,
-      keyCombination: '',
-      inputKeyArr: [],
-      combinationName: '',
-      groupName: '',
-      addGroupName: '',
-      keyName: '',
-      keyContent: '',
-      introduce: '',
+      shoreModal: false, //分享
+      keyCombination: '', //添加组合键
+      combinationName: '', //添加快捷键名称
+      addGroupName: '', //添加的分类名称
+      groupName: '', //当前修改的分类名称
+      keyName: '', //当前修改的快捷键类名
+      keyContent: '',//当前修改的组合键
+      introduce: '', //方案简介
       releaseDrawer: false,
       icon: '',
       applyName: '',
-      appContent: {},
+      appContent: {}, //当前方案
       paramsId: -1,
       keyBoard: false,
-      //选中的快捷键
-      selectKey: {},
+      selectKey: {},//选中的快捷键
       stagingKey: {},// 暂存的Key
+      bulkEditKey: false
     }
   },
   computed: {
@@ -345,9 +346,6 @@ export default {
     onBack(){
       this.$router.go(-1)
     },
-    setKeyItem(id){
-      this.keyIndex = id
-    },
     nextStep(){
       this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
     },
@@ -356,28 +354,42 @@ export default {
     },
     // 编辑内容
     editItem({id,groupName,keyStr,title},index,type){
-      this.keyList.forEach(i => {
-        if(i.id === id){
-          i.isEdit = true
-        }else{
-          i.isEdit = false
-        }
-      })
+      if(!this.bulkEditKey){
+        this.keyList.forEach(i => {
+          if(i.id === id){
+            i.isEdit = true
+          }else{
+            i.isEdit = false
+          }
+        })
+      }
       switch (type) {
         case 'name':
           this.groupName = groupName
           this.$nextTick(() => {
-            this.$refs[`inputEdit_${index}`][0].focus()
+            this.$refs[`inputNameEdit_${index}`][0].focus()
           })
           break;
         case 'item':
           this.keyName = title
           this.keyContent = keyStr
           this.$nextTick(() => {
-            this.$refs[`inputEdit_${index}`][0].focus()
+            this.$refs[`inputKeyEdit_${index}`][0].focus()
           })
           break;
       }
+    },
+    //添加的input获取焦点 (禁止拖拽导致需要手动获取焦点)
+    getFocus(type){
+      switch (type) {
+        case 'key':
+          this.$refs.inputFocusKey.focus()
+          break;
+        case 'name':
+        this.$refs.inputFocusName.focus()
+          break;
+      }
+      
     },
     // toggleKey(item){
     //   this.keyList.forEach(i => {
@@ -389,24 +401,31 @@ export default {
     //   })
     // },
     // 失去焦点，保存修改
-    lostFocus({id},type){
+    lostFocus(item,type){
       switch (type) {
         case 'groupName':
-          if(!this.groupName.trim())return message.info('分组名称不能为空');
-          this.keyList.forEach(i => {
-            if(i.id === id){
-              // i.isEdit = false
-              i.groupName = this.groupName
-            }
-          })
+          if(!item.groupName.trim()){
+            item.groupName = this.groupName
+            return message.info('分组名称不能为空');
+          }
+          // this.keyList.forEach(i => {
+          //   if(i.id === id){
+          //     // i.isEdit = false
+          //     i.groupName = this.groupName
+          //   }
+          // })
           break;
         case 'keyName':
-          if(!this.keyName.trim())return message.info('分组名称不能为空');
-          this.keyList.forEach(i => {
-            if(i.id === id){
-              i.title = this.keyName
-            }
-          })
+          if(!item.title.trim()){
+            item.title = this.keyName
+            return message.info('快捷键名称不能为空');
+          }
+          
+          // this.keyList.forEach(i => {
+          //   if(i.id === id){
+          //     i.title = this.keyName
+          //   }
+          // })
           break;
       }
     },
@@ -471,6 +490,10 @@ export default {
       this.stagingKey = {}
       this.keyCombination = ''
       this.combinationName = ''
+      if(this.bulkEditKey){
+        this.bulkEditKey = false
+        this.bulkEdit()
+      }
     },
     // 添加分类名称
     addGroup(){
@@ -482,10 +505,17 @@ export default {
       }
       this.keyList.push(obj)
       this.addGroupName = ''
+      if(this.bulkEditKey){
+        this.bulkEditKey = false
+        this.bulkEdit()
+      }
     },
     // 删除一列快捷键
-    delKey(index){
-      this.keyList.splice(index,1)
+    delKey(index,item){
+      this.keyList.forEach(i => {
+        if(item.id === i.id)this.keyList.splice(index,1)
+      })
+      // this.keyList.splice(index,1)
     },
     // 删除暂存添加的内容
     delStaging(type){
@@ -504,14 +534,27 @@ export default {
       this.shoreModal = false
       this.releaseDrawer = true
     },
+    // 批量编辑
+    bulkEdit(){
+      this.bulkEditKey = !this.bulkEditKey
+      if(this.bulkEditKey){
+        this.keyList.forEach(item => {
+          item.isEdit = true
+        })
+      }else{
+        this.keyList.forEach(item => {
+          item.isEdit = false
+        })
+      }
+    },
     //拖拽排序
     keyDrop(){
       let that = this;
       let side = document.getElementById('keyBox')
       Sortable.create(side, {
         sort: true,
-        animation: 150,
         filter: '.input-item',
+        animation: 150,
         onUpdate:function(event){
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
@@ -665,7 +708,7 @@ export default {
   }
   .add-box{
     padding: 0 12px;
-    margin: 16px 36px 8px;
+    margin: 0 36px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -677,7 +720,7 @@ export default {
       border-radius: 12px;
       justify-content: center;
       margin-left: 12px;
-      width:181px;
+      width:180px;
       height:48px;
       font-size: 16px;
       color: rgba(255,255,255,0.85);
@@ -715,13 +758,13 @@ export default {
     margin-left: 10px;
     border-right: solid rgba(255,255,255,0.1) 1px;
   }
-  .input-item{
+  // .input-item{
     // justify-content: space-between;
     // margin: 28px 12px 16px;
     // >div{
     //   display: flex;
     // }
-  }
+  // }
   .input{
     width:227px;
     height: 48px;
