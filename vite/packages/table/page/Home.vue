@@ -219,7 +219,7 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
+  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;"  v-if="agreeTest === false">
     <GuidePage></GuidePage>
   </div>
 
@@ -242,6 +242,7 @@
     </div>
   </a-drawer>
 </template>
+
 <script>
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
@@ -951,6 +952,7 @@ export default {
   },
 };
 </script>
+
 <style scoped lang="scss">
 :deep(.ant-result-title) {
   color: var(--primary-text);
