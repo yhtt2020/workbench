@@ -4,7 +4,7 @@
     <div v-for="(item,index) in keyList" :key="item.id">
       <!-- 分组名称 -->
       <div class="key-item border-right" v-if="item.groupName">
-        <span>{{ item.groupName }}</span>
+        <span class="truncate">{{ item.groupName }}</span>
       </div>
       <!-- 快捷键 -->
       <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(item.id)">
@@ -13,7 +13,7 @@
             <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
           </div>
         </div>
-        <div class="key-title">{{ item.title}}</div>
+        <div class="key-title truncate">{{ item.title}}</div>
       </div>
     </div>
   </div>
@@ -103,4 +103,9 @@ export default {
   .s-bg{
     box-shadow: none !important;
   }  
+  .key-title{
+    flex: 1;
+    max-width: 160px;
+    text-align: right;
+  }
 </style>

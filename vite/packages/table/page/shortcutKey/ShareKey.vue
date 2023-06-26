@@ -77,7 +77,7 @@
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
               </div>
-              <span v-else>{{ item.groupName }}</span>
+              <span v-else class="truncate">{{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
             <div v-else class="border-right key-item" 
@@ -106,7 +106,7 @@
                 </div>
               </div>
               <div>
-                <div class="key-title" v-if="!item.isEdit">{{ item.title}}</div>
+                <div class="key-title truncate" v-if="!item.isEdit">{{ item.title}}</div>
                 <a-input class="input text-right"
                   v-else
                   v-model:value="item.title" 
@@ -345,7 +345,6 @@ export default {
           isCommunity: false, //是否来自社区
           keyList: this.keyList //快捷键列表
         }
-        console.log('id',typeof this.appContent.id)
         this.setShortcutKeyList(this.appContent)
       }
       message.success('成功保存');
@@ -781,6 +780,11 @@ export default {
     color: var(--primary-text);
     font-size: 16px;
     border: 1px solid rgba(255,255,255,0.2);
+  }
+  .key-title{
+    flex: 1;
+    max-width: 160px;
+    text-align: right;
   }
   .edit-item{
     width:227px;
