@@ -85,6 +85,9 @@ export default {
     text-shadow:none !important;
 }
 .second-panel {
+  .xt-active-btn{
+    justify-content: left;
+  }
   padding-left: 0 !important;
 
   &.small {}
@@ -106,6 +109,7 @@ export default {
     cursor: pointer;
     margin-bottom: 0.5em;
   }
+
 }
 
 .second-panel-back {
@@ -119,4 +123,5 @@ export default {
   margin-bottom: 0.5em;
 
 }
+
 </style>
