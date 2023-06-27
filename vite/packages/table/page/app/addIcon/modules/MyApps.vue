@@ -14,7 +14,7 @@
         :text="{ null: '暂无应用' }"
       >
       </CardState>
-      <div @click="goAddMyApps()">123</div>
+      <!-- <div @click="goAddMyApps()">123</div> -->
     </div>
     <!-- 展示数据 -->
     <Icon
