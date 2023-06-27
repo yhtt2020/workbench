@@ -1,5 +1,6 @@
 <template>
     <Widget
+    :desk="desk"
     :sizeList="sizeList"
     :options="options"
     :customIndex="customIndex"
@@ -33,9 +34,9 @@
             class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
               <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
               <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="right-top text-center bg-black bg-opacity-70" style="background: red !important;">
+              <div class="right-top text-center bg-black bg-opacity-70" style="background: var(--primary-bg) !important;">
                 <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);background: red;">{{item.score}}</span>
+                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);background: background: var(--primary-bg);">{{item.score}}</span>
                 </span>
                 <span v-else style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);">{{ item.comingDate }}</span>
               </div>
@@ -73,6 +74,9 @@
 
         },
       },
+      desk:{
+        type:Object
+      }
     },
     data() {
       return {

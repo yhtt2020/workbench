@@ -13,7 +13,7 @@
         <div class="pointer" @click="saveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
-          <div class="pointer xt-active-btn" @click="shoreModal=true">保存并分享</div>
+          <div class="pointer xt-active-btn" @click="saveShare">保存并分享</div>
         </a-tooltip>
       </div>
     </div>
@@ -25,7 +25,7 @@
           <div>
             <a-avatar shape="square" :size="100" :src="file.path ? file.path : icon" />
           </div>
-          <span><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
+          <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
         <div class="ml-10" style="font-family: PingFangSC-Regular;font-size: 16px;color: rgba(255,255,255,0.60);">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
@@ -227,6 +227,7 @@
   <!-- 键盘 -->
   <KeyBoard v-if="keyBoard" 
   :selectKey="selectKey" 
+  :parentKeyList="keyList"
   @closeKeyBoard="closeKeyBoard"
   @saveKey="saveKey"></KeyBoard>
 </template>
@@ -294,7 +295,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList']),
+    ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList','setMarketList']),
     getData(){
       if(this.$route.params.id){
         this.paramsId = this.$route.params.id
@@ -319,7 +320,7 @@ export default {
           }
         })
       if(this.paramsId !== -1){
-        this.appContent.icon = this.icon 
+        this.appContent.icon = this.icon || this.file.path 
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
@@ -415,19 +416,12 @@ export default {
             item.groupName = this.groupName
             return message.info('分组名称不能为空');
           }
-          // this.keyList.forEach(i => {
-          //   if(i.id === id){
-          //     // i.isEdit = false
-          //     i.groupName = this.groupName
-          //   }
-          // })
           break;
         case 'keyName':
           if(!item.title.trim()){
             item.title = this.keyName
             return message.info('快捷键名称不能为空');
           }
-          
           // this.keyList.forEach(i => {
           //   if(i.id === id){
           //     i.title = this.keyName
@@ -467,6 +461,14 @@ export default {
     // 保存修改的快捷键
     saveKey({keyArr, isAdd}){
       this.keyBoard = false
+      let arr = keyArr.keys
+      // 判断组合键是否重复
+      let retArr = this.keyList.find(item => {
+        return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
+      })
+      if(retArr?.id === keyArr?.id) return
+      if(retArr) return message.info('组合键重复')
+
       if(isAdd){
         this.keyCombination = keyArr.keyStr
         this.stagingKey = keyArr
@@ -505,6 +507,7 @@ export default {
     // 添加分类名称
     addGroup(){
       if(!this.addGroupName.trim()) return message.info("分组名称不能为空")
+
       let obj = {
         id: nanoid(),
         groupName: this.addGroupName.trim(),
@@ -580,6 +583,11 @@ export default {
           that.keyList.splice(newIndex, 0, temp)
         }
       });
+    },
+    // 删除上传的方案图标
+    delIcon(){
+      this.file = {} 
+      this.icon = ''
     },
     // 上传头像前校验
     beforeUpload(file) {

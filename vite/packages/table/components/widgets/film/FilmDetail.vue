@@ -11,10 +11,10 @@
           <div :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
             <div style="height:304px;">
               <div class="film-content" :class="fatherWidth == 2 ? 'size-max' : 'size-min'">
-              <div style="font-family: PingFangSC-Semibold;font-size: 20px;color: rgba(255,255,255,0.85);font-weight: 600;margin-bottom: 8px;">
+              <div style="font-family: PingFangSC-Semibold;font-size: 20px;color: var(--primary-text);font-weight: 600;margin-bottom: 8px;">
                 {{ detailMovie.nm }}
               </div>
-              <span style="color: rgba(255,255,255,0.85);font-size: 20px;font-weight: 600;">{{ detailMovie.title }}</span>
+              <span style="color: var(--primary-text);font-size: 20px;font-weight: 600;">{{ detailMovie.title }}</span>
               <div>主演：<span>{{ detailMovie.members }}</span></div>
               <div>导演：<span>{{ detailMovie.dir }}</span></div>
               <div>类型：<span>{{ detailMovie.filmType }}</span></div>
@@ -23,7 +23,7 @@
               <div>上映：<span>{{ detailMovie.pubDesc }}</span></div>
             </div>
             <div v-if="detailMovie.sc" class="items-center s-item mt-2 mb-3 rounded-lg pl-4" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'"  >
-              <span class="mr-4" style="font-size: 16px;color: rgba(255,255,255,0.60);" v-if="fatherWidth == 2">猫眼</span>
+              <span class="mr-4" style="font-size: 16px;color: var(--secondary-text);" v-if="fatherWidth == 2">猫眼</span>
               <span style="font-size: 32px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.score }}</span>
               <span style="font-size:20px;position: relative;top: -3px;">
                 <a-rate v-model:value="detailMovie.starRating" allow-half disabled/>
@@ -33,10 +33,10 @@
             <div class="flex items-center justify-between">
               <div @click="discountBack(false)"
                   class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
-                <Icon icon="xiangzuo" style="font-size: 20px;color: rgba(255, 255, 255, 0.85);"></Icon>
+                <Icon icon="xiangzuo" style="font-size: 20px;color: var(--primary-text);"></Icon>
               </div>
               <span class="change pointer rounded-lg s-item  flex items-center justify-center"
-              style="color: rgba(255,255,255,0.85);font-size: 16px;"
+              style="color: var(--primary-text);font-size: 16px;"
               @click="stripDay(detailMovie.shareInfo.url)"
               :style="fatherWidth == 2 ? 'padding: 13px 80px;' : 'padding:13px 62px;'"
               >
@@ -146,7 +146,7 @@
       width:250px;
       font-weight: 400;
       div{
-        color: rgba(255,255,255,0.60);
+        color: var(--secondary-text);
         line-height: 32px;
         font-size: 16px;
         word-break: normal;
@@ -155,7 +155,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         span{
-          color: rgba(255,255,255,0.85);
+          color: var(--primary-text);
           line-height: 32px;
           font-size: 16px;
         }
