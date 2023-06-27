@@ -35,7 +35,7 @@
         </template>
       </a-input>
       <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
-      <div>123</div>
+      <!-- <div>123</div> -->
     </template>
     <!-- 快捷和应用 -->
     <template v-else>

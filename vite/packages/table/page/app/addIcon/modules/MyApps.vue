@@ -3,7 +3,7 @@
     <!-- 空置状态 -->
     <div
       class="w-full h-full flex flex-col justify-center items-center"
-      style="height: 470px; border: 1px solid red"
+      style="height: 470px"
       v-if="myApps.length === 0"
     >
       <CardState
@@ -14,6 +14,7 @@
         :text="{ null: '暂无应用' }"
       >
       </CardState>
+      <div @click="goAddMyApps()">123</div>
     </div>
     <!-- 展示数据 -->
     <Icon
@@ -32,7 +33,7 @@ import CardState from "../../../../components/card/cardState.vue";
 import syncSelected from "../hooks/syncSelected";
 
 import { appsStore } from "../../../../store/apps";
-import { mapWritableState, mapActions } from "pinia";
+import { mapWritableState } from "pinia";
 export default {
   mixins: [syncSelected],
   components: {
@@ -41,17 +42,9 @@ export default {
   computed: {
     ...mapWritableState(appsStore, ["myApps"]),
   },
-  async mounted() {
-    const desktopApps = await ipc.sendSync("getDeskApps");
-    if (this.myApps.length === 0) this.loadDeskIconApps();
-  },
   methods: {
-    ...mapActions(appsStore, ["addApps"]),
-    async loadDeskIconApps() {
-      this.myApps = [];
-      const desktopApps = await ipc.sendSync("getDeskApps");
-      console.log('object :>> ', desktopApps);
-      this.addApps(desktopApps);
+    goAddMyApps() {
+      this.$router.push({ name: "apps" })
     },
   },
 };

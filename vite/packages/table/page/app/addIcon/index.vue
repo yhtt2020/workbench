@@ -1,6 +1,6 @@
 <template>
   <!-- 遮罩 -->
-  <div class="w-full h-full" @click="close()"></div>
+  <div class="w-full h-full xt-mask-2 fixed top-0 left-0" @click="close()"></div>
   <!-- 添加图标 -->
   <div
     class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
@@ -44,7 +44,7 @@
       </div>
       <!-- 右侧 -->
       <div class="pl-2 w-full h-full">
-        <component ref="apps" :is="navName"></component>
+        <slot> <component ref="apps" :is="navName"></component></slot>
       </div>
     </main>
     <!-- 底部 -->
@@ -75,23 +75,39 @@ import { myIcons } from "../../../store/myIcons.ts";
 import { mapActions, mapWritableState } from "pinia";
 
 export default {
-  props: ["desk"],
+  emits: ["update:navName"],
+  props: {
+    desk: {},
+    navList: {
+      type: Array,
+      default: () => {
+        return [
+          { name: "网址导航", component: "Links" },
+          { name: "我的应用", component: "MyApps" },
+          { name: "桌面图标", component: "Desktop" },
+          { name: "轻应用", component: "QingApps" },
+        ];
+      },
+    },
+    navName: {
+      type: String,
+      default: "Links",
+    },
+  },
   components: {
     Links,
     MyApps,
     Desktop,
     QingApps,
   },
-  data() {
-    return {
-      navList: [
-        { name: "网址导航", component: "Links" },
-        { name: "我的应用", component: "MyApps" },
-        { name: "桌面图标", component: "Desktop" },
-        { name: "轻应用", component: "QingApps" },
-      ],
-      navName: "Links",
-    };
+  watch: {
+    navName: {
+      deep: true,
+      handler(newValue, old) {
+        console.log("old :>> ", old);
+        this.$emit("update:navName", newValue);
+      },
+    },
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
@@ -99,9 +115,14 @@ export default {
   methods: {
     ...mapActions(cardStore, ["addCard"]),
     close() {
-      this.$emit("hideAddCard");
+      this.$emit("close");
     },
     async commitIcons() {
+      if (!this.desk) {
+        this.$emit("getSelectApps");
+        this.close();
+        return;
+      }
       let app = this.$refs.apps;
       if (app.selectApps.length !== 0) {
         for (let i = 0; i < app.selectApps.length; i++) {
