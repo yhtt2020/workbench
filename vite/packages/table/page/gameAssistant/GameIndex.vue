@@ -32,7 +32,7 @@
     </div>
   </div>
 <!-- 卡片桌面  -->
-  <div class="rounded-xl" style="width: 100%;height: 0;flex: 1">
+  <div class="rounded-xl mx-5"  style="width: 100%;height: 0;flex: 1">
     <template v-if="(desks[selectDeskGame.appid] || selectDeskId==='0') && desks[selectDeskGame.appid] ">
       <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>

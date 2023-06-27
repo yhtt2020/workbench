@@ -9,7 +9,8 @@ export const steamStore = defineStore("steam", {
     data: {},
     dataDetail: {}, // 应用详情
     weekList: [],
-    nextWeekLits: []
+    nextWeekLits: [],
+    discountDetail:{}, // 游戏助手折扣推荐详情
   }),
   actions: {
     getRandomList(list) {
@@ -81,6 +82,27 @@ export const steamStore = defineStore("steam", {
       console.log('更新数据=', value)
       this.data[cc] = value
     },
+
+    // 获取折扣推荐详情数据
+    async getDiscountDetail(id:number,v:string){
+      const url = `https://store.steampowered.com/api/appdetails?appids=${id}&cc=${v}&l=${v}`
+      const result = await sendRequest(url,{},{localCache:true,localTtl:60*12*60})
+      const res = result.data[id].data
+      const newLanguages = res.supported_languages.replaceAll('<strong>*</strong>','') // 将语言中的strong标签去除
+      this.discountDetail.name = res.name
+      this.discountDetail.content = res.short_description
+      this.discountDetail.movie_image = res.movies.concat(res.screenshots)
+      this.discountDetail.IssueDate = res.release_date.date
+      this.discountDetail.developers = res.developers[0]
+      this.discountDetail.language = newLanguages.split('<br>')[0]
+      this.discountDetail.publisher = res.publishers[0]
+      this.discountDetail.genres = res.genres
+      this.discountDetail.percent = res.price_overview.discount_percent
+      this.discountDetail.newPrice = res.price_overview.final_formatted
+      this.discountDetail.gameIntroduction = res.detailed_description
+      // console.log('命中更新',this.discountDetail.movie_image);
+    },
+    
   },
   // persist: {
   //   enabled: true,
