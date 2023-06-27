@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-7 flex flex-col">
+  <div class="mx-7 pt-3.5 flex flex-col">
     <!-- 顶部tab切换 -->
     <div class="flex justify-between h-12 items-center mb-4">
       <HorizontalPanel :navList="leftTitle" v-model:selectType="leftTitleType"></HorizontalPanel>
@@ -7,10 +7,11 @@
     </div>
 
     <template v-if="leftTitleType.name === 'steam' ">
-      <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 15.8em)">
-        <div class="steam-top-content w-full mb-4">
+      <a-spin v-if="isLoading === true" />
+      <vue-custom-scrollbar v-else  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 15.8em)">
+        <div class="steam-top-content w-full mb-4" >
           <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" 
-           class="steam-top-item rounded-t-lg flex pointer flex-col discount-bg"
+           class="steam-top-item rounded-lg flex pointer flex-col discount-bg"
           >
             <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
             <div class="p-2.5 name-text">{{item.name}}</div>
@@ -24,7 +25,7 @@
         </div>
         <div class="steam-bottom-content">
           <div v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)" 
-           class="steam-bottom-item discount-bg pointer rounded-t-lg flex flex-col mr-2"
+           class="steam-bottom-item discount-bg pointer rounded-lg flex flex-col mr-2"
           >
             <img :src="item.header_image" alt="" class="rounded-t-lg mb-3"  style="width:100%;height: 100%;object-fit: cover;">
             <div class="px-3 flex  items-center mb-3">
@@ -40,7 +41,7 @@
     <template v-else>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"  style="height: calc(100vh - 15.8em)">
         <div class="flex epic-container">
-          <div v-for="item in epicList" @click="openEpicStore(item)" class="mr-4 mb-4 discount-bg pointer flex flex-col rounded-t-lg">
+          <div v-for="item in epicList" @click="openEpicStore(item)" class="mr-4 mb-4 discount-bg pointer flex flex-col rounded-lg">
             <div class="epic-image">
               <img  :src="getSpecifiedPicture(item.keyImages).url"  class="w-full h-full rounded-t-lg object-cover"  alt="">
             </div>
@@ -314,7 +315,7 @@ export default {
 
 @media screen and (min-width:841px)  and (max-width:1074px) {
   .steam-bottom-item{
-    width: calc(100% / 2);
+    width: calc(100% / 1);
     margin-bottom: 16px !important;
   }
   .steam-bottom-content{
@@ -327,12 +328,15 @@ export default {
     flex-wrap: wrap !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+  .steam-top-item{
+    width: calc(100% / 1);
   }
 }
 
 @media screen and (min-width:1075px)  and (max-width:1140px){
   .steam-bottom-item{
-    width: calc(100% / 4);
+    width: calc(100% / 2);
     margin-bottom: 16px !important;
   }
   .steam-bottom-content{
@@ -343,12 +347,15 @@ export default {
     flex-wrap: wrap !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+  .steam-top-item{
+    width: calc(100% / 1);
   }
 }
 
 @media screen and (min-width:1141px) and (max-width: 1380px){
   .steam-bottom-item{
-    width: calc(100% / 4.5);
+    width: calc(100% / 3);
     margin-bottom: 16px !important;
   }
   .steam-bottom-content{
@@ -359,6 +366,9 @@ export default {
   .epic-container{
     display: flex !important;
     flex-wrap: wrap !important;
+  }
+  .steam-top-item{
+    width: calc(100% / 1);
   }
 }
 @media screen and (min-width:1381px) and (max-width: 1512px){
@@ -371,6 +381,9 @@ export default {
     align-items: center !important;
     justify-content: center !important;
     flex-wrap: wrap !important;
+  }
+  .steam-top-item{
+    width: calc(100% / 1);
   }
 }
 
@@ -385,6 +398,13 @@ export default {
   }
   .steam-bottom-item{
     margin-bottom: 16px !important;
+    width: calc(100% / 1);
+  }
+  .steam-top-item{
+    width: calc(100% / 1);
+  }
+  .steam-top-item{
+    width: calc(100% / 1);
   }
 }
 

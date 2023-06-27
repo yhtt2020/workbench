@@ -1,11 +1,11 @@
 <template>
-  <div class="px-5">
+  <div class="px-5 pt-3.5">
     <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
       <Icon style="height: 36px;width: 36px" icon="steam"></Icon>
       <div class="flex flex-col ml-4 w-2/3">
-        <span class="text-white">Steam</span>
+        <span class="set-title">Steam</span>
         <span v-if="steamLoginData.refreshToken">{{ userData.name }}</span>
-        <span v-else>绑定Steam帐号即可同步显示你的游戏数据</span>
+        <span v-else  style="color: var(--secondary-text);">绑定Steam帐号即可同步显示你的游戏数据</span>
       </div>
       <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clickBind">
         {{ steamLoginData.refreshToken ? '解绑' : '绑定' }}
@@ -14,8 +14,8 @@
     <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
       <Icon style="height: 36px;width: 36px" icon="shijian3dian"></Icon>
       <div class="flex flex-col ml-4 w-2/3">
-        <span class="text-white">最近游玩的游戏记录</span>
-        <span>清空游玩记录不会删除对应的游戏桌面。</span>
+        <span class="set-title">最近游玩的游戏记录</span>
+        <span  style="color: var(--secondary-text);">清空游玩记录不会删除对应的游戏桌面。</span>
       </div>
       <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="clearRecent">
         清空记录
@@ -24,8 +24,8 @@
     <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
       <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>
       <div class="flex flex-col ml-4 w-2/3">
-        <span class="text-white">游戏桌面</span>
-        <span>每个游戏的独立桌面</span>
+        <span class="set-title">游戏桌面</span>
+        <span  style="color: var(--secondary-text);">每个游戏的独立桌面</span>
       </div>
       <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">
         删除全部桌面
@@ -34,8 +34,8 @@
     <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
       <Icon style="height: 36px;width: 36px" icon="position"></Icon>
       <div class="flex flex-col ml-4 w-2/3">
-        <span class="text-white">折扣地区</span>
-        <span>选择默认的折扣地区</span>
+        <span class="set-title">折扣地区</span>
+        <span style="color: var(--secondary-text);">选择默认的折扣地区</span>
       </div>
       <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);"
                 @change="getRegion($event)" class="w-56 h-auto rounded-lg  text-xs s-item" size="large" :bordered="false"
@@ -52,26 +52,26 @@
                        bgColor="drawer-item-select-bg"></HorizontalPanel>
       <div class="mt-3 mb-0 pl-2">
         <ExclamationCircleFilled/>
-        网络不好多试几次！ steam302用户请看-><a style="color: #c0c0c0" target="_blank"
+        网络不好多试几次！ steam302用户请看-><a style="color:var(--secondary-text);" target="_blank"
                         href="https://www.yuque.com/tswork/mqon1y/kvinb8xbzw2eaa2e">技术说明</a></div>
       <div class=" mt-3">
         <a-input v-model:value="userName" placeholder="用户名（非邮箱）" class="no-drag rounded-lg h-12 mx-auto"
-                 spellcheck="false" style="  width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+                 spellcheck="false" style="  width: 328px;background:var(--secondary-bg);" @click.stop/>
       </div>
       <div class=" mt-6">
         <a-input-password @keyup.enter="bindSteam" v-model:value="password" class="no-drag  rounded-lg h-12  mx-auto"
-                          placeholder="密码" style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+                          placeholder="密码" style="width: 328px;background: var(--secondary-bg);" @click.stop/>
       </div>
       <div class=" mt-6" v-show="loginType.name==='phone'">
         <a-input v-model:value="authCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="令牌"
-                 style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+                 style="width: 328px;background: var(--secondary-bg);" @click.stop/>
       </div>
       <div class=" mt-6" v-show="mailBoxShow&&loginType.name!=='phone'">
         <a-input v-model:value="mailBoxAuthCode" class="no-drag   rounded-lg h-12  mx-auto" placeholder="邮箱验证码"
-                 style="width: 328px;background: rgba(42, 42, 42, 0.6);" @click.stop/>
+                 style="width: 328px;background: var(--secondary-bg);" @click.stop/>
       </div>
       <div class="flex justify-between mt-6">
-        <div class="s-item  h-12 rounded-lg flex justify-center items-center pointer w-40" style="background: #2A2A2A"
+        <div class="s-item  h-12 rounded-lg flex justify-center items-center pointer w-40" style="color:var(--primary-text);"
              @click="()=>{this.modalVisibility = false}">
           取消
         </div>
@@ -299,4 +299,14 @@ export default {
   background: var(--primary-bg);
   color: var(--primary-text);
 }
+
+.set-title{
+ font-size: 16px;
+ font-weight: 500;
+ letter-spacing: 0px;
+ line-height: 23.17px;
+ font-family: PingFangSC;
+ color:var(--primary-text);
+}
+
 </style>
