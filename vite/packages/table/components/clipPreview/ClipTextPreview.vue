@@ -421,7 +421,7 @@ export default {
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: var(--main-mask-bg);
+  background: var(--main-mask-bg);
   backdrop-filter: blur(60px);
 }
 

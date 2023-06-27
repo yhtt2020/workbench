@@ -227,7 +227,7 @@ export default {
       width: 48px;
       height: 48px;
       color: var(--primary-text);
-      background-color: var(--secondary-bg);
+      background: var(--secondary-bg);
       right: 6px;
       top: 0px;
       z-index: 999999;

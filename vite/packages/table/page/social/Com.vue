@@ -106,7 +106,7 @@
     <vue-custom-scrollbar v-else :settings="scrollbarSettings"
       style="height: 90%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden">
       <div class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
-        <div class="card mb-3" style="width: 300px; background-color: var(--primary-bg); color: var(--primary-text)">
+        <div class="card mb-3" style="width: 300px; background: var(--primary-bg); color: var(--primary-text)">
           <div>
             当前版本：<br>
 
