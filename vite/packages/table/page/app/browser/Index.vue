@@ -414,10 +414,11 @@ export default {
 .app-btn {
   display: inline-block;
   cursor: pointer;
+  color:var(--primary-text);
 
   &:hover .btn-wrapper {
-    color: #1e1e1e;
-    background: #969696;
+    color: var(--secondary-text);
+    background: var(--active-secondary-bg);
   }
 }
 
