@@ -24,7 +24,7 @@
 }
 
 .ant-message {
-    z-index: 9999999999999999999999;
+  z-index: 9999999999999999999999;
 }
 .ant-modal-body {
   background: var(--modal-bg);
@@ -43,11 +43,12 @@
     background: var(--secondary-bg);
     color: var(--primary-text);
     border-bottom: 1px solid var(--divider);
+  
   }
 
   .ant-table-tbody > tr.ant-table-row:hover > td,
   .ant-table-tbody > tr > td.ant-table-cell-row-hover {
-    background: var(--primary-bg);
+    background: var(--main-bg);
   }
 }
 // 按钮开始

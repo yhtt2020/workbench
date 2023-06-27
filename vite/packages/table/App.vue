@@ -100,7 +100,11 @@ export default {
 
   async mounted() {
     let style = cache.get("style")
+    if (!style) {
+      style = cache.set("style","dark-model")
+    }
     document.documentElement.classList.add(style);
+
     let transparent = window.localStorage.getItem("transparent")
     transparent = JSON.parse(transparent!)
 

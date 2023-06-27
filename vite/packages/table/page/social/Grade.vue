@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-      <div class="grade-card p-6 rounded-lg  mr-4" style=" background-color:var(--primary-bg)">
+      <div class="grade-card p-6 rounded-lg  mr-4" style=" background:var(--primary-bg)">
         <div class="text-white" style="color:var(--primary-text);">等级权益</div>
         <div class="flex flex-row">
           <div class="mt-6 mr-4" style="width: 160px">

@@ -3,11 +3,11 @@
 
     <div class='pop-container' @click="closeFullScreen()" :style="show">
     </div>
-    <droppable-area @leave="handleLeave" style="border: 1px solid red;">
-      <div class="box  xt-bg" @click.stop="" :style="show">
+    <droppable-area @leave="handleLeave">
+      <div class="box  xt-modal" @click.stop="" :style="show">
         <div class="title xt-text">
           <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
-          <div class="box-btn xt-bg" @click="disbandGroup">
+          <div class="box-btn xt-bg-2" @click="disbandGroup">
             <Icon class="icon" icon="zhankai"></Icon>
           </div>
         </div>

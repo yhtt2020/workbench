@@ -1,10 +1,13 @@
 <template>
   <!-- 遮罩 -->
-  <div class="w-full h-full xt-mask-2 fixed top-0 left-0" @click="close()"></div>
+  <div
+    class="w-full h-full xt-mask-2 fixed top-0 left-0"
+    @click="close()"
+  ></div>
   <!-- 添加图标 -->
   <div
     class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
-    style="width: 728px"
+    style="width: 728px; box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%)"
   >
     <!-- 头部 -->
     <header
