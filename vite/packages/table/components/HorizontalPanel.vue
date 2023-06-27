@@ -65,7 +65,6 @@ export default {
     activeIndex: {
       handler(newV, oldV) {
         this.index = newV
-        console.log('newV :>> ', newV);
       },
       immediate: true
     },
