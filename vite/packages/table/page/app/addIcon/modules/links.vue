@@ -130,7 +130,7 @@ export default {
             path: item.app.version.url,
           });
         });
-        cache.set(`link-${index}`, appList);
+        cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
       this.appList = appList;
     },
