@@ -208,7 +208,7 @@ export default {
       const value = cache.get("style")
       document.documentElement.classList.remove(value);
       // cache.set("background","-no")
-      // const background = cache.get("background")
+      const background = cache.get("background")
       // console.log('object :>> ', background);
       let model = this.styles ? "light" : "dark"
       let name = `${model}${background || ''}-model`
