@@ -1,16 +1,16 @@
 <template>
-  <div v-if="!fullScreen" class="  px-5" style="display: flex">
+  <div v-if="!fullScreen" class="  px-5 pt-3.5" style="display: flex">
     <div class="game-tabs flex flex-row mb-3">
-      <div @click="setSelectDeskId('0')" :class="{'tab-active':selectDeskId==='0'}" class="pr-3 home game-tab s-bg  ">
-        <icon class="icon" style="font-size: 22px" icon="desktop"></icon>
+      <div @click="setSelectDeskId('0')" :class="{'tab-active':selectDeskId==='0'}" class="pr-3 home game-tab game-bg">
+        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>
         主桌面
       </div>
-      <div  :class="{'tab-active':selectDeskId===item.appid}" @click="setSelectDeskId(item.appid)" style="width: 140px;" class="truncate pr-3 game-tab s-bg" v-for="(item,index) in recentGameList.slice(0,3)">
+      <div  :class="{'tab-active':selectDeskId===item.appid}" @click="setSelectDeskId(item.appid)" style="width: 140px;" class="truncate pr-3 game-tab game-bg" v-for="(item,index) in recentGameList.slice(0,3)">
         <a-avatar  class="mr-1 icon" :size="22" :src="getClientIcon(item.appid,item.clientIcon)"></a-avatar>
         <span class="">{{ item.chineseName }}</span>
         <div v-if="runningGame.appid===item.appid" style="border-bottom: 3px solid #ffffff"></div>
       </div>
-      <div @click="showMore" v-if="recentGameList.length>3" class="game-tab s-bg more" >
+      <div @click="showMore" v-if="recentGameList.length>3" class="game-tab game-bg more" >
         <icon class="icon"  style="font-size: 22px" icon="gengduo1"></icon>
         更多
       </div>
@@ -23,12 +23,12 @@
     <!--      <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>-->
     <!--    </a-select>-->
     <div >
-      <div @click="setFullScreen" class="s-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="fullscreen"></Icon></div>
+      <div @click="setFullScreen" class="game-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="fullscreen"></Icon></div>
     </div>
   </div>
   <div v-if="fullScreen" class="no-drag">
     <div style="position: absolute;right: 10px;top: 10px;z-index: 999">
-      <div @click="setFullScreen(false)" class="s-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon></div>
+      <div @click="setFullScreen(false)" class="game-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"><Icon  style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon></div>
     </div>
   </div>
 <!-- 卡片桌面  -->
@@ -37,7 +37,7 @@
       <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>
     <div v-else>
-      <div class="s-bg p-5 rounded-md" style="margin: auto;width: 400px;margin-top: 40px">
+      <div class="game-bg p-5 rounded-md" style="margin: auto;width: 400px;margin-top: 40px">
         <p>
           <a-image class="rounded-md" :preview="false" :src="getCover(selectDeskGame.appid)"></a-image>
           <div class="mt-3 mb-3 text-lg font-bold">{{ selectDeskGame.chineseName }}-{{ selectDeskGame.appid }}</div>
@@ -204,5 +204,26 @@ export default {
   .home{
     min-width: 90px;
   }
+}
+
+.game-bg{
+  background: var(--primary-bg);
+  color: var(--primary-text);
+}
+
+:deep(.ant-result-success){
+  background: var(--primary-bg);
+  color: var(--primary-text);
+}
+:deep(.ant-result-title){
+  color: var(--primary-text);
+}
+:deep(.ant-result-subtitle){
+  color: var(--primary-text);
+}
+
+:deep(.ant-btn:nth-of-type(2)){
+  background: var(--primary-bg);
+  color: var(--primary-text);
 }
 </style>

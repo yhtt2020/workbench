@@ -61,6 +61,9 @@ export default {
           this.defaultGameIndex = this.rightSelect.findIndex(el=>{
             return el.id === this.selectRegion
           })
+          this.defaultGameIndex = this.rightSelect.findIndex(el=>{
+            return el.appid === this.selectRegion
+          })
         }
       }
     }
