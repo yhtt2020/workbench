@@ -219,7 +219,7 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="home-blur fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
+  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;"  v-if="agreeTest === false">
     <GuidePage></GuidePage>
   </div>
 
@@ -242,6 +242,7 @@
     </div>
   </a-drawer>
 </template>
+
 <script>
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
@@ -295,6 +296,7 @@ import NewAddCard from "./app/card/NewAddCard.vue"
 import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
 import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -549,7 +551,8 @@ export default {
     GuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
-    ShortcutKeyList
+    ShortcutKeyList,
+    GameStrategy
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -949,6 +952,7 @@ export default {
   },
 };
 </script>
+
 <style scoped lang="scss">
 :deep(.ant-result-title) {
   color: var(--primary-text);
@@ -991,6 +995,10 @@ export default {
       height: 438px;
     }
   }
+}
+
+.home-guide{
+  background:rgba(00,00,00,0.75) !important;
 }
 </style>
 <style lang="scss">
