@@ -1,12 +1,12 @@
 <template>
 
 
-  <div class="s-bg ml-3 p-3 rounded-xl " style="width: 800px;min-height: 300px;">
+  <div class="s-bg ml-3 p-3 rounded-xl " style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
     <div class="mb-3" style="width: 300px;">
       <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
       </HorizontalPanel>
     </div>
-    <div class="px-3">
+    <div class="px-3"  style="flex: 1;height: 0">
       <vueCustomScrollbar v-if="tab.name==='invite'" :settings="scrollbarSettings" style="height: 100%">
         <div class="" style="height: auto;color: var(--primary-text )" >
           <p>
@@ -39,6 +39,13 @@
               <template v-else-if="column.key === 'status'">
                 <a-tag color="green" v-if="record.status===1"  style="color: #6abe39 ">有效</a-tag>
                 <a-tag color="geekblue" v-else-if="record.status===2" >已使用</a-tag>
+              </template>
+              <template v-else-if="column.key === 'user' && record.uid">
+                <div @click="showCard(record.uid,record.userInfo)" class="text-center truncate" style="max-width: 120px;">
+                  <a-avatar :src="record.userInfo.avatar"></a-avatar>&nbsp;
+                  <span  style="font-size: 12px" :title="record.userInfo.nickname">{{record.userInfo.nickname}}</span>
+                </div>
+
               </template>
               <template v-else-if="column.key==='index'">
                 {{codes.length-index}}
@@ -160,6 +167,10 @@ export default {
   },
   methods: {
     ...mapActions(codeStore, ['exchange','listCodes']),
+    ...mapActions(appStore,['showUserCard']),
+    showCard(uid,userInfo){
+      this.showUserCard(uid,userInfo)
+    },
     friendlyDate: tsbApi.util.friendlyDate,
     copy(text){
       require('electron').clipboard.writeText(text)

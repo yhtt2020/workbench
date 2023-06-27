@@ -29,7 +29,6 @@
   <div class="bg-mask rounded-lg p-3 m-3 mt-0  mb-3" style="background: var(--primary-bg);color: var(--primary-text) ;">
     <OnlineMedal  v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
     <Medal :medal="medal" v-for="medal in medals"></Medal>
-
   </div>
   <!--  <div class=" mb-0 pd-0 m-3 p-3 mt-0">-->
   <!--    小队信息-->
