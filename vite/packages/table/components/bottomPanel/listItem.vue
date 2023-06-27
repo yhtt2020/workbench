@@ -1,8 +1,8 @@
 <template>
   <div class="flex-row flex items-center  pointer h-16 p-3 w-full mb-2">
-    <div class="h-10 w-10 rounded-lg flex justify-center items-center xt-bg xt-text" style="color"
+    <div class="h-10 w-10 rounded-lg flex justify-center items-center xt-bg xt-text" style="background:rgb(80, 80, 80);"
       v-if="item.type === 'systemApp'">
-      <Icon :icon="item.icon" class="h-10 w-10"></Icon>
+      <Icon style="font-size: 24px" :icon="item.icon" class="h-10 w-10"></Icon>
     </div>
     <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
 

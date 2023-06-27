@@ -50,7 +50,7 @@
     {{ screenDetail.title || '主屏' }}
   </div>
 
-  <Modal style="z-index:999999999999999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t"
+  <Modal style="z-index:999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t"
          :blurFlag="true">
     <slot>
       <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
@@ -187,9 +187,9 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
     ...mapWritableState(timerStore, ["appDate"]),
-    ...mapWritableState(appStore, ['userCardVisible', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
     ...mapWritableState(codeStore, ['myCode']),
-    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps',]),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
   },
@@ -203,6 +203,15 @@ export default {
         toggleFullScreen()
         event.preventDefault()
         event.stopPropagation()
+      }
+      if(this.fullScreen){
+        console.log('全屏了')
+        if(event.keyCode===27){
+          console.log('是esc')
+          this.fullScreen=false
+          event.preventDefault()
+          event.stopPropagation()
+        }
       }
     },
     bindTouchEvents() {

@@ -1,205 +1,415 @@
 <template>
   <transition name="fade">
-    <div class="preview-container" v-if="textShow">
-      <div class="flex h-full items-center justify-between p-5">
-        <div class="left-preview flex flex-col h-full justify-between">
-            <div>
-              <div @click="closePreview"  class="w-12 h-12 no-drag close-button button-active  s-item  flex pointer items-center justify-center rounded-lg">
-                <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
+    <div v-if="previewShow" class="preview-container">
+      <div class="flex justify-between p-3 w-full h-full">
+        <!-- 文本预览模块 -->
+        <template v-if="previewContent.type === 'text'">
+          <!-- 文本预览左侧 -->
+          <div class="flex flex-col w-full justify-between h-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+              </div>
+            </div>
+            <div class="flex items-center justify-center grow pr-5 pl-2 mb-3">
+              <template v-if="defaultText.name === 'plainText'">
+                <textCodeMirror :editorContent="previewContent.content" class="w-full"></textCodeMirror>
+              </template>
+              <template v-else>
+                <ClipCodemirror ref="myClipCodeMirror" class="w-full" :editorContent="previewContent.content"></ClipCodemirror>
+              </template>
+            </div>
+            <!-- 底部tab切换 -->
+            <div class="flex items-center justify-center">
+              <HorizontalPanel :navList="textType" v-model:selectType="defaultText"></HorizontalPanel>
+              <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center" 
+                style="background: var(--secondary-bg);" @click="openCodeLanguage" v-if="defaultText.name === 'code'"
+              >
+                <span class="mr-5 type-right">
+                  {{ language.title }}
+                </span>
+                <Icon icon="xiangxia" style="font-size: 1.25em;"></Icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- 文本预览右侧 -->
+          <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
+            <div class="flex flex-col">
+              <div class="flex justify-between mb-6">
+                <span class="type-text">类型</span>
+                <span class="type-right" v-if="previewContent.type === 'text'">文本</span>
+              </div>
+              <div class="flex justify-between mb-6">
+                <span class="type-text">时间</span>
+                <span class="type-right">{{ previewContent.timeText}}</span>
+              </div>
+              <div class="flex justify-between mb-6">
+                <span class="type-text">大小</span>
+                <span class="type-right">{{ previewContent.content.length}}个字符</span>
+              </div>
+            </div>
+            <div class="flex  flex-col justify-between">
+               <div v-for="item  in textClipKey" class="flex py-3 px-4 mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
+                  <span>{{item.title}}</span>
+                  <span>{{ item.key }}</span>
+               </div>
+            </div>
+          </div>
+        </template>
+
+
+        <!-- 图片预览模块 -->
+        <template v-else-if="previewContent.type === 'image'">
+          <!-- 图片预览左侧 -->
+          <div class="flex flex-col w-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+              </div>
+            </div>
+
+            <!-- 内容预览区域 -->
+            <div class="flex h-full flex-col justify-center items-center">
+               <div class="clip-image rounded-lg">
+                <img :src="previewContent.img" alt="" class="w-full rounded-lg h-full object-cover">
+               </div> 
+            </div>
+          </div>
+
+          <!-- 图片预览右侧 -->
+          <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
+              <div class="flex flex-col h-full justify-between">
+                <div class="flex flex-col">
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">类型</span>
+                    <span class="type-right" v-if="previewContent.type === 'image'">图片</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">格式</span>
+                    <span class="type-right" v-if="previewContent.type === 'image'">png</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">时间</span>
+                    <span class="type-right" v-if="previewContent.type === 'image'">
+                      {{ previewContent.timeText }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between flex-col mb-6">
+                    <span class="type-text">路径</span>
+                    <span class="type-right" v-if="previewContent.type === 'image'">
+                      C:\PROGRAM FILES (X86)\CLIP
+                    </span>
+                  </div>
+                </div>
+                <div class="flex  flex-col justify-between">
+                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
+                    <span>{{item.title}}</span>
+                    <span>{{ item.key }}</span>
+                 </div>
+                </div> 
+              </div>
+            </vue-custom-scrollbar>
+          </div>
+        </template>
+
+
+        <!-- 文件预览模块 -->
+        <template v-else-if="previewContent.type === 'file'">
+          <div class="flex flex-col w-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+              </div>
+            </div>
+
+            <!-- 内容预览 -->
+            <div class="flex h-full flex-col justify-between">
+              <div class="flex items-center h-full justify-center p-10">
+                <Icon :icon="previewContent.picIcon" style="font-size: 20em;"></Icon>
               </div> 
             </div>
-            <div class="flex items-center justify-center px-3"  v-if="textPreview.type==='text'">
-              <div class="w-full flex items-center justify-center"  v-if="textPreview.type==='text' && defaultClipText.name === 'text'">
-                <span class="preview-content">{{textPreview.content}}</span>
+          </div>
+          <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
+              <div class="flex flex-col justify-between h-full">
+                <div class="flex flex-col">
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">类型</span>
+                    <span class="type-right" v-if="previewContent.type === 'file'">文件</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">格式</span>
+                    <span class="type-right" v-if="previewContent.type === 'file'">pdf</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">时间</span>
+                    <span class="type-right" v-if="previewContent.type === 'file'">
+                      {{ previewContent.timeText }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between flex-col mb-6">
+                    <span class="type-text">路径</span>
+                    <span class="type-right" v-if="previewContent.type === 'file'">
+                      C:\PROGRAM FILES (X86)\CLIP
+                    </span>
+                  </div>
+                </div>
+                <div class="flex  flex-col justify-between">
+                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
+                    <span>{{item.title}}</span>
+                    <span>{{ item.key }}</span>
+                  </div>
+                </div> 
               </div>
-              <div v-else-if="textPreview.type==='text' && defaultClipText.name === 'codeBlock'" class="w-full flex my-auto items-center justify-center">
-               <codemirror :value="textPreview.content" :options="clipOptions" ></codemirror>
+            </vue-custom-scrollbar>
+          </div>
+        </template>
+
+
+        <!-- 视频预览模块 -->
+        <template v-else-if="previewContent.type === 'video'">
+          <div class="flex flex-col w-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
               </div>
             </div>
 
-            <div v-if="textPreview.type === 'image'" style="height: 100%;" class="w-full flex items-center justify-center">
-              <div  class="rounded-lg image-content" style="height: 80%;">
-                <img :src="textPreview.imgUrl" class="rounded-lg" style="width:100%; height: 100%;object-fit: cover;" alt="">
-              </div>
+            <!-- 内容预览 -->
+            <div class="flex h-full flex-col items-center justify-center">
+              <ClipVideo :videoUrl="previewContent.videoUrl" class="middle-clip rounded-lg"></ClipVideo>
             </div>
-
-            <div class="w-full flex items-center justify-center px-3">
-              <div class="h-12 flex" v-if="textPreview.type === 'text'">
-                <HorzontanlPanelIcon :navList="clipText" v-model:selectType="defaultClipText"></HorzontanlPanelIcon>
-                <div class="ml-3 py-3 px-9 flex button-active items-center rounded-lg s-item pointer"
-                 v-if="defaultClipText.name === 'codeBlock'"
-                 @click="openCateDrawer"
-                >
-                  <span class="pr-2">{{defaultCate.name}}</span>
-                  <Icon icon="xiangxia"></Icon>
+          </div>
+          <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
+              <div class="flex flex-col justify-between h-full">
+                <div class="flex flex-col">
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">名称</span>
+                    <span class="type-right">
+                      {{ previewContent.content }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">类型</span>
+                    <span class="type-right" v-if="previewContent.type === 'video'">视频</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">格式</span>
+                    <span class="type-right" v-if="previewContent.type === 'video'">mp4</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">时间</span>
+                    <span class="type-right">
+                      {{ previewContent.timeText }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between  mb-6">
+                    <span class="type-text">大小</span>
+                    <span class="type-right">
+                       1.2MB
+                    </span>
+                  </div>
+                  <div class="flex justify-between flex-col mb-6">
+                    <span class="type-text">路径</span>
+                    <div class="type-right">
+                      {{ previewContent.videoUrl }}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex  flex-col justify-between">
+                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
+                    <span>{{item.title}}</span>
+                    <span>{{ item.key }}</span>
+                  </div> 
                 </div>
               </div>
-            </div>
-        </div>
-        <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="py-4" style="height: 100vh;">
-          <div class="right-preview h-full flex flex-col justify-between pl-6"  v-if="textPreview.type === 'text'">
-          <div class="flex flex-col">
-            <div class="flex justify-between mb-6">
-              <span class="preview-type">类型</span>
-              <span class="preview-text">{{textPreview.title}}</span>
-            </div>
-            <div class="flex justify-between mb-6">
-              <span class="preview-type">时间</span>
-              <span class="preview-text">{{textPreview.time }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="preview-type">大小</span>
-              <span class="preview-text">{{textPreview.capacity}}</span>
-            </div>
+            </vue-custom-scrollbar>
           </div>
-          <div>
-            <div v-for="item in copy" style="max-width:352px;" class="s-item mb-2 pointer button-active justify-between flex rounded-lg px-4 py-3">
-              <span class="preview-text">{{item.title}}</span>
-              <span class="preview-type">{{item.intr}}</span>
+        </template>
+
+
+        <!-- 音频预览模块 -->
+        <template v-else-if="previewContent.type === 'audio'">
+          <div class="flex flex-col w-full">
+            <!-- 关闭预览按钮 -->
+            <div class="mb-3 no-drag  pointer" @click="closePreview">
+              <div class="w-12 h-12  rounded-lg s-item flex items-center justify-center">
+                <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+              </div>
             </div>
+      
+            <!-- 内容预览 -->
+            <div class="flex h-full flex-col items-center justify-center">
+              <ClipAudio :fileUrl="previewContent.audioUrl" class="w-1/2"></ClipAudio>
+            </div>
+
           </div>
-        </div>
-          <div class="right-preview h-full flex flex-col justify-between pl-6"  v-if="textPreview.type === 'image'">
-            <div class="flex flex-col">
-              <div class="flex item-center justify-between mb-3">
-                <span class="preview-type">名称</span>
-                <span class="preview-type">{{textPreview.name}}</span>
+          <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
+              <div class="flex flex-col h-full justify-between">
+                <div class="flex flex-col">
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">名称</span>
+                    <span class="type-right">
+                      {{ previewContent.content }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">类型</span>
+                    <span class="type-right" v-if="previewContent.type === 'audio'">音频</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">格式</span>
+                    <span class="type-right" v-if="previewContent.type === 'audio'">mp3</span>
+                  </div>
+                  <div class="flex justify-between mb-6">
+                    <span class="type-text">时间</span>
+                    <span class="type-right">
+                      {{ previewContent.timeText }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between  mb-6">
+                    <span class="type-text">大小</span>
+                    <span class="type-right">
+                      1.2MB
+                    </span>
+                  </div>
+                  <div class="flex justify-between flex-col mb-6">
+                    <span class="type-text">路径</span>
+                    <div class="type-right break-words">
+                      {{ previewContent.audioUrl }}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex  flex-col justify-between">
+                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
+                    <span class="type-right">{{item.title}}</span>
+                    <span class="type-text">{{ item.key }}</span>
+                  </div> 
+                </div>
               </div>
-              <div class="flex item-center justify-between mb-3">
-                <span class="preview-type">类型</span>
-                <span class="preview-type">{{textPreview.title}}</span>
-              </div>
-              <div class="flex item-center justify-between mb-3">
-                <span class="preview-type">时间</span>
-                <span class="preview-type">{{textPreview.time}}</span>
-              </div>
-              <div class="flex item-center justify-between mb-3">
-                <span class="preview-type">大小</span>
-                <span class="preview-type">{{textPreview.capacity}}</span>
-              </div>
-              <div class="flex item-center justify-between mb-3">
-                <span class="preview-type">格式</span>
-                <span class="preview-type">{{textPreview.fileType}}</span>
-              </div>
-              <div class="flex flex-col item-center justify-between mb-3">
-                <span class="preview-type mb-2">路径</span>
-                <span class="preview-type break-words break-normal" style="max-width: 352px;">{{textPreview.imgUrl}}</span>
-              </div>
-            </div>
-            <div>
-              <div v-for="item in imageCopy" class="s-item mb-2 pointer button-active flex justify-between items-center rounded-lg px-4 py-3">
-                <span class="preview-text">{{item.title}}</span>
-                <span class="preview-type">{{item.intr}}</span>
-              </div>
-            </div>
+            </vue-custom-scrollbar>
           </div>
-        </vue-custom-scrollbar>
-        
+        </template>
+
+
       </div>
-     
     </div>
   </transition>
-  <HorizontalDrawer :drawerTitle="drawerTitle"  
-  v-model:selectRegion="defaultCate.id"
-  @getArea="getArea"
-  :rightSelect="languageCate" ref="regionDrawer">
 
-  </HorizontalDrawer>
+  <!-- 语言包切换弹窗设置 -->
+  <HorizontalDrawer ref="previewRef" :drawerTitle="defaultTitle" :rightSelect="codeLanguage" v-model:selectRegion="language.id" @getArea="getArea"></HorizontalDrawer>
 </template>
 
 <script>
-import codemirror from 'vue-codemirror/src/codemirror.vue';
-import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue';
+import { mapActions, mapWritableState } from 'pinia'
+import { clipboardStore } from '../../store/clipboard';
+import { codeLanguage } from '../../js/data/clipTheme';
+import ClipCodemirror from './ClipCodemirror.vue';
+import HorizontalPanel from '../HorizontalPanel.vue';
+import textCodeMirror from './textCodeMirror.vue';
 import HorizontalDrawer from '../HorizontalDrawer.vue';
+import ClipVideo from './ClipVideo.vue';
+import ClipAudio from './ClipAudio.vue';
+
 export default {
   components:{
-    codemirror,
-    HorzontanlPanelIcon,
-    HorizontalDrawer
+    ClipCodemirror,
+    HorizontalPanel,
+    textCodeMirror,
+    HorizontalDrawer,
+    ClipVideo,
+    ClipAudio
   },
   props:{
-    textShow:{
-      type:Boolean,
-      default:false
-    },
-    textPreview:{
+    previewContent:{
       type:Object,
       default:()=>{}
     }
   },
+
   data(){
     return{
-      copy:[
-        {title:'复制',intr:'Ctrl + C'},
-        {title:'打开链接',intr:'Ctrl + O'},
-        {title:'添加到收藏',intr:'Ctrl + S'},
-        {title:'删除',intr:'Delete'}
-      ],  
-      imageCopy:[
-        {title:'复制',intr:'Ctrl + C'},
-        {title:'打开',intr:'Ctrl + O'},
-        {title:'复制路径',intr:'Ctrl + Alt + C'},
-        {title:'在资源管理器中打开',intr:'Ctrl + Enter'},
-        {title:'添加到收藏',intr:'Ctrl + S'},
-        {title:'删除',intr:'Delete'}
+      // 预览代码块类型切换
+      textType:[
+        {title:'纯文本',name:'plainText'},
+        {title:'代码块',name:'code'}
       ],
-      clipText:[
-        {
-          title:'纯文本',name:'text'
-        },
-        {
-          title:'代码块',name:'codeBlock'
-        }
+      // 默认的预览代码块类型
+      defaultText: {title:'纯文本',name:'plainText'},
+      // 代码块语言包选项
+      codeLanguage,
+      defaultTitle:'语言',
+      // 文本预览快捷键操作
+      textClipKey:[
+        {title:'复制',key:'Ctrl + C',id:'cs'},
+        {title:'打开链接',key:'Ctrl + O',id:'co'},
+        {title:'添加收藏',key:'Ctrl + S',id:'cs'},
+        {title:'删除',key:'Delete',id:'d'}
       ],
-      defaultClipText:{title:'纯文本',name:'text'}, 
-      clipOptions:{
-        tabSize: 4, // 默认为4
-				mode: 'swift', // 选择代码语言
-				lineWrapping: true,    // 自动换行
-        styleActiveLine: true,
-        scrollbarStyle: null, // 将滚动条样式设置为 null
-        line: true,
-				theme: 'monokai' // 主题根据需要自行配置
-      },
-      languageCate:[
-        {name:'Python',id:'python'},
-        {name:'Javascript',id:'javascript'},
-        {name:'Java',id:'text/x-java'},
-        {name:'C++',id:'text/x-c++src'},
-        {name:'C#',id:'text/x-csharp'},
-        {name:'Swift',id:'swift'}
+      // 其他文件预览快捷键
+      fileClipKey:[
+        {title:'复制',key:'Ctrl + C',id:'cs'},
+        {title:'打开',key:'Ctrl + O',id:'co'},
+        {title:'复制路径',key:'Ctrl + Alt + C',id:'cas'},
+        {title:'在资源管理器中打开',key:'Ctrl + Enter',id:'ce'},
+        {title:'添加收藏',key:'Ctrl + S',id:'cs'},
+        {title:'删除',key:'Delete',id:'d'}
       ],
-      defaultCate:{name:'Swift',id:'swift'},
-      drawerTitle:'语言模式',
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
         suppressScrollY: false,
-        suppressScrollX:true,
+        suppressScrollX: true,
         wheelPropagation: true
       },
     }
   },
-  methods:{
-    closePreview(){
-      this.$emit('closeText',false)
-    },
-    openCateDrawer(){
-      this.$refs.regionDrawer.openDrawer()
-    },
-    getArea(v){
-      this.defaultCate = v
-      this.clipOptions.mode = v.id
+
+  computed:{
+    ...mapWritableState(clipboardStore,['previewShow','clipMode']),
+    language(){
+      const index = this.codeLanguage.find(el=>{
+        return el.abbr === this.clipMode
+      })
+      return index
     }
   },
+
+  mounted(){
+  },
+
+  methods:{
+    ...mapActions(clipboardStore,['isOpenPreview','changeClipMode']),
+    // 关闭预览全屏窗口
+    closePreview(){
+      this.isOpenPreview(false)
+    },
+    // 打开语言包选项配置
+    openCodeLanguage(){
+      this.$refs.previewRef.openDrawer()
+    },
+    getArea(v){
+      this.changeClipMode(v.abbr)
+      // this.$refs.myClipCodeMirror.$forceUpdate()
+    },
+  },
+
   watch:{
-    'defaultClipText':{
+    'defaultText':{
       handler(){
-        this.defaultClipText = this.defaultClipText
+        this.defaultText = this.defaultText
       },
-      immediate:true,
+      immediate:true
     }
-  }   
+  },
 }
 </script>
 
@@ -211,75 +421,110 @@ export default {
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: rgba(19, 19, 19, 0.35);
+  background-color: var(--main-mask-bg);
   backdrop-filter: blur(60px);
 }
-.button-active{
-  &:active{
-    filter: brightness(0.8);
-    background: rgba(42, 42, 42, 0.6);
-  }
-  &:hover{
-    background: rgba(42, 42, 42, 0.6);
-  }
-}
-.preview-content{
-  width:600px;
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: rgba(255,255,255,0.60);
-  font-weight: 500;
-}
-.preview-type{
+
+.type-text{
   font-family: PingFangSC-Regular;
   font-size: 16px;
-  color: rgba(255,255,255,0.60);
+  color: var(--secondary-text);
   font-weight: 400;
 }
-.preview-text{
+.s-item{
+  background: var(--secondary-bg);
+  color: var(--primary-text);
+}
+.type-right{
   font-family: PingFangSC-Regular;
   font-size: 16px;
-  color: rgba(255,255,255,0.85);
+  color: var(--primary-text);
   font-weight: 400;
 }
-
-:deep(.cm-s-monokai.CodeMirror){
-  background: rgba(42, 42, 42, 0.8) !important;
-  border-radius: 12px;
-  padding: 20px !important;
-  font-family: PingFangSC-Medium !important;
-  font-size: 14px !important;
-  color: rgba(255,255,255,0.4) !important;
-  font-weight: 500 !important;
-}
-.right-preview{
-  width: 352px;
-}
-.left-preview{
-  flex: 1;
+:deep(.CodeMirror){
+  height:calc(100% - 20px) !important;
 }
 
-.close-button{
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 100;
+.clip-image{
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-:deep(.ps__thumb-y){
+
+.middle-clip{
+  max-width: 800px;
+
+}
+
+
+@media screen and (max-width:840px){
+  .clip-image{
+    width: calc(100% / 1.2);
+  }
+  .middle-clip{
+    width: calc(100% / 1.2);
+  }
+  :deep(.CodeMirror){
+    width:500px !important;
+    height: 480px !important; 
+  }
+}
+
+@media screen and (min-width:841px) and (max-width:1140px) {
+  .clip-image{
+    width: calc(100% / 1.25);
+  }
+  .middle-clip{
+    width: calc(100% / 1.25);
+  }
+
+  :deep(.CodeMirror){
+    width:600px !important;
+  }
+}
+
+@media screen and (min-width:1141px) and (max-width:1240px) {
+  .clip-image{
+    width: calc(100% / 1.35);
+  }
+  .middle-clip{
+    width: calc(100% / 1.35);
+  }
+
+  :deep(.CodeMirror){
+    width:700px !important;
+  }
+}
+
+@media screen and (min-width:1241px){
+  .clip-image{
+    width: calc(100% / 1);
+  }
+  .middle-clip{
+    width: calc(100% / 1);
+  }
+}
+
+:deep(.ps__rail-y){
   display: none !important;
 }
 
-.image-content{
-  
+
+@media screen and (max-height:480px) {
+  :deep(.CodeMirror){
+    height:330px !important;
+  }
+}
+@media screen and (min-height:481px) and (max-height:800px) {
+  :deep(.CodeMirror){
+    height: 600px !important;
+  }
 }
 
-
-@media screen and (max-width:800px) {
- /*
-  .image-content{
-    width:calc(100% / 2);
-    height:calc(100% / 2);
+@media screen and (min-height:801px) and (max-height:1200px) {
+  :deep(.CodeMirror){
+    height: 100% !important;
   }
- **/
 }
 </style>

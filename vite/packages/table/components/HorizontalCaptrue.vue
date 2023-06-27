@@ -4,7 +4,7 @@
     :style="{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'var(--active-font-color)', height: itemHeight }">
     <div v-for="(item, index) in navList"
       class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
-      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'active' : ''">
+      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active xt-active-btn' : ''">
       <span class="item-text">{{ item.title }}</span>
       <div v-if="item.state === true" class="state-dot ml-2"></div>
     </div>
@@ -68,6 +68,7 @@ export default {
     clickNav(item, index) {
       this.activeIndex = index
       item.state = false  // 将消息未读状态隐藏
+      this.$emit('click')
       this.$emit('update:selectType', item)
     }
   },

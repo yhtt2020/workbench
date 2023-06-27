@@ -8,6 +8,10 @@ import Tomato from '../page/app/tomato/Tomato.vue'
 //设置
 import Splash from '../page/Splash.vue'
 //import index from './index'
+// 快捷键
+import ShareKey from "../page/shortcutKey/ShareKey.vue"
+import CreativeMarket from "../page/shortcutKey/CreativeMarket.vue"
+import MarketList from "../page/shortcutKey/MarketList.vue"
 
 const routes = [
   ...main,
@@ -44,9 +48,24 @@ const routes = [
     path:'/wizard',
     name:'wizard',
     component: Wizard
+  },
+  {
+    path:'/shareKey',
+    name:'shareKey',
+    component: ShareKey
+  },
+  {
+    path:'/creativeMarket',
+    name:'creativeMarket',
+    component: CreativeMarket,
+    // children: [
+    //   {
+    //     path:'/marketList',
+    //     name:'marketList',
+    //     component: MarketList
+    //   },
+    // ]
   }
-
-
 ]
 
 export default routes

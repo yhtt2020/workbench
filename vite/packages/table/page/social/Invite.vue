@@ -1,49 +1,68 @@
 <template>
-  <vueCustomScrollbar :settings="scrollbarSettings"
-                      style="padding: 15px;height: 100%">
-    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto;background-color: var(--primary-bg);color: var(--primary-text )" >
-      <div class="line-title">
-         邀请好友
-      </div>
-      <p>
-        目前想天工作台仍然在测试阶段，并未面向大众公开下载使用。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。</p>
-      <p>兑换比例方式：每200小时可兑换1枚邀请码，四舍五入（第1个邀请码在100小时释放，第2个在300小时） <br>
-        <strong style="color: red">邀请码机制仅用于老带新和互相帮扶，请勿销售邀请码或购买邀请码!</strong><br>
-        您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong
-          class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{ exchanged }}</strong>，剩余：<strong
-          class="text-red-400">{{ leave }}</strong>。
-        <a-button type="primary" @click="confirmExchange" :disabled="leave===0" style="color:var(--main-text)">兑换1枚</a-button>
-      </p>
 
-      <a-table :pagination="false" :dataSource="codes" :columns="columns">
-        <template #bodyCell="{ column, record,index }">
-          <template v-if="column.key === 'createTime'">
-            {{ friendlyDate(record.createTime) }}
-          </template>
-          <template v-else-if="column.key === 'updateTime'">
+
+  <div class="s-bg ml-3 p-3 rounded-xl " style="width: 800px;min-height: 300px;">
+    <div class="mb-3" style="width: 300px;">
+      <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
+      </HorizontalPanel>
+    </div>
+    <div class="px-3">
+      <vueCustomScrollbar v-if="tab.name==='invite'" :settings="scrollbarSettings" style="height: 100%">
+        <div class="" style="height: auto;color: var(--primary-text )" >
+          <p>
+            目前想天工作台仍然在测试阶段。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。
+            <br>对方将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。</p>
+          <p>兑换方式：每200小时可兑换1枚邀请码，四舍五入（第1个邀请码在100小时释放，第2个在300小时） <br>
+            您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong
+              class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{ exchanged }}</strong>，剩余：<strong
+              class="text-red-400">{{ leave }}</strong>。
+            <a-button type="primary" @click="confirmExchange" :disabled="leave===0" style="color:var(--main-text)">兑换1枚</a-button>
+          </p>
+
+          <a-table :pagination="false" :dataSource="codes" :columns="columns">
+            <template #bodyCell="{ column, record,index }">
+              <template v-if="column.key === 'createTime'">
+                {{ friendlyDate(record.createTime) }}
+              </template>
+              <template v-else-if="column.key === 'updateTime'">
             <span v-if="record.createTime!==record.updateTime">
               {{ friendlyDate(record.updateTime) }}
             </span>
-            <span v-else>未使用</span>
-          </template>
-          <template v-else-if="column.key === 'key'">
+                <span v-else>未使用</span>
+              </template>
+              <template v-else-if="column.key === 'key'">
             <span style="padding-left: 2px;padding-right: 2px" class="mr-3" :style="{background:isMarked(record.key)?'#35ad03':'transparent',textDecoration:record.status===2?'line-through':'none'}">
               {{ record.key }}
             </span>
-            <a-tag class="pointer" @click="copy(record.key)" >复制</a-tag> <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
-          </template>
-          <template v-else-if="column.key === 'status'">
-            <a-tag color="green" v-if="record.status===1"  style="color: #6abe39 ">有效</a-tag>
-            <a-tag color="geekblue" v-else-if="record.status===2" >已使用</a-tag>
-          </template>
-          <template v-else-if="column.key==='index'">
-            {{codes.length-index}}
-          </template>
-        </template>
-      </a-table>
+                <a-tag class="pointer" @click="copy(record.key)" >复制</a-tag> <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
+              </template>
+              <template v-else-if="column.key === 'status'">
+                <a-tag color="green" v-if="record.status===1"  style="color: #6abe39 ">有效</a-tag>
+                <a-tag color="geekblue" v-else-if="record.status===2" >已使用</a-tag>
+              </template>
+              <template v-else-if="column.key==='index'">
+                {{codes.length-index}}
+              </template>
+            </template>
+          </a-table>
+        </div>
+
+      </vueCustomScrollbar>
+      <vueCustomScrollbar v-if="tab.name==='verify'" :settings="scrollbarSettings" style="height: 100%">
+        如果您是受邀参与公测，可在下方输入您的专属邀请码。
+        <br>
+        验证通过后将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。
+        <div>
+          <a-input class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg)" v-model:value="code"></a-input>
+        </div>
+        <div>
+          <a-button type="primary">验证邀请码</a-button>
+        </div>
+      </vueCustomScrollbar>
     </div>
 
-  </vueCustomScrollbar>
+  </div>
+
 </template>
 
 <script>
@@ -52,13 +71,25 @@ import { mapState,mapActions } from 'pinia'
 import Template from '../../../user/pages/Template.vue'
 import { Modal,message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
+import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
 
 export default {
   name: 'Invite',
-  components: { Template },
+  components: { HorizontalPanel, Template },
 
   data () {
     return {
+      code:'',
+      tabs:[{
+        name:'invite',
+        title:'邀请好友'
+      },{
+        name:'verify',
+        title:'受邀'
+      }],
+      tab:{
+        name:'invite'
+      },
       marked:[],
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -94,11 +125,21 @@ export default {
           dataIndex: 'updateTime',
           key: 'updateTime',
         },
+        {
+          title: '受邀用户',
+          dataIndex: 'user',
+          key: 'user',
+        },
       ]
     }
   },
   mounted () {
     this.loadCodes().then()
+    if(this.$route.params.tab){
+      this.tab={
+        name:this.$route.params.tab
+      }
+    }
   },
   computed: {
     ...mapState(appStore, ['userInfo']),

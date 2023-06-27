@@ -1,6 +1,6 @@
 <template>
   <div class="wheel-content flex flex-col" style="width:600px;">
-    <div ref="slider" class="keen-slider s-bg rounded-lg">
+    <div ref="slider" class="keen-slider rounded-lg wheel-bg">
       <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
         <video class="w-full h-full rounded-lg" @ended="next"  controls="controls"   controlslist="nodownload  noremoteplayback noplaybackrate"
         disablePictureInPicture  ref="wheelVideo"  playsinline="" autoplay="" muted="" v-if="item.mp4">
@@ -12,18 +12,18 @@
       </div>
     </div>
     <div class="flex mt-3 " style="height: 72px;">
-      <button class="keen-slider__arrow btn-active mr-2 pointer rounded-md keen-slider__arrow--left s-bg" @click="prev()" style="border: none;">
+      <button class="keen-slider__arrow btn-active mr-2 wheel-bg pointer rounded-md keen-slider__arrow--left " @click="prev()" style="border: none;">
          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </button>
       <div ref="thumbnail" class="keen-slider thumbnail">
         <div class="keen-slider__slide rounded-lg" v-for="item in wheelList">
           <img :src="item.mp4 ? item.thumbnail : item.path_thumbnail" class="w-full h-full  rounded-md  object-cover" alt="">
-          <div class="thumbnail-bofang w-8 h-8  rounded-full s-bg flex items-center justify-center" v-if="item.mp4">
-            <Icon icon="bofang" style="font-size: 2em;"></Icon>
+          <div class="thumbnail-bofang w-8 h-8  rounded-full flex items-center justify-center" style="background: var(--primary-bg);" v-if="item.mp4">
+            <Icon icon="bofang" style="font-size: 2em;color: var(--primary-text);"></Icon>
           </div>
         </div>
       </div>
-      <button class="keen-slider__arrow ml-2  pointer btn-active rounded-md keen-slider__arrow--right s-bg" @click="next()" style="border: none;">
+      <button class="keen-slider__arrow ml-2 wheel-bg pointer btn-active rounded-md keen-slider__arrow--right " @click="next()" style="border: none;">
         <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
       </button>
     </div>
@@ -49,8 +49,6 @@ function ThumbnailPlugin(main) {
       slider.slides.forEach((slide, idx) => {
         slide.addEventListener("click", () => {
           main.moveToIdx(idx)
-          const wheelVideo = document.querySelectorAll('video')
-          wheelVideo[idx].play()
         })
       })
     }
@@ -71,20 +69,9 @@ function ThumbnailPlugin(main) {
 export default {
   name: "WheelCastingUnit",
   props:{
-    screenshots:{
+    wheelList:{
       type:Array,
       default:()=>[]
-    },
-    movies:{
-      type:Array,
-      default:()=>[]
-    }
-  },
-  computed:{
-    wheelList(){
-      if(this.movies !== undefined && this.screenshots !== undefined){
-        return this.movies.concat(this.screenshots)
-      }
     }
   },
   mounted() {
@@ -117,12 +104,16 @@ export default {
   methods:{
     prev() {
       this.slider.prev()
-      this.$refs.wheelVideo[this.slider.track.details.rel].pause()
+      if(this.$refs.wheelVideo[this.slider.track.details.rel] !== undefined){
+        this.$refs.wheelVideo[this.slider.track.details.rel].pause()
+      }
     },
     next(){
       this.slider.next()
       // 切换下一个,上一个视频暂停
-      this.$refs.wheelVideo[this.slider.track.details.rel].pause()
+      if(this.$refs.wheelVideo[this.slider.track.details.rel] !== undefined){
+        this.$refs.wheelVideo[this.slider.track.details.rel].pause()
+      }
     },
   },
   beforeDestroy() {
@@ -131,6 +122,13 @@ export default {
   },
 }
 </script>
+
+<style>
+.wheel-bg{
+  background: var(--primary-bg);
+  color: var(--primary-text);
+}
+</style>
 
 <style>
 [class^="number-slide"],

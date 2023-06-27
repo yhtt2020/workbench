@@ -1,17 +1,17 @@
 <template>
   <div style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333"
-    class="no-drag" v-if="launching">
+       class="no-drag" v-if="launching">
     <div style="margin: auto;">
       <div class="animate-bounce mb-5 ">
         <a-avatar :size="60"
-          src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
+                  src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
       </div>
       <div style="font-size: 1.2em;">
         <svg style="vertical-align: text-bottom" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
           </path>
         </svg>
         欢迎回来，又是元气满满的一天！
@@ -22,30 +22,32 @@
   </div>
   <div v-else style="background: #333;width: 100vw;height: 100vw;" class="p-10 drag">
     <div class="no-drag" style="width: 600px;margin: auto">
-      <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台抢鲜体验</h3>
-      <p>目前我们仍处于早期阶段，必须使用邀请码方可体验产品。
-        <a-button @click="() => { this.showTip = !this.showTip }">什么是抢鲜体验？</a-button>
+      <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台公测</h3>
+      <p>虽然我们已经过一段时间的内测，但目前仍未正式发行。<br>不过您可以<strong>“无码体验”</strong>。
+        <a-button type="primary" @click="() => { this.showTip = !this.showTip }">什么是公测？</a-button>
       </p>
       <div v-if="showTip" class="p-5 mb-3" style="background: #3b3b3b;border-radius: 8px;border-width: 2px">
         <p style="font-weight: bold">
-          EA阶段说明：
+          公测阶段：
         </p>
         <p class="mb-1">
-          EA（抢鲜体验）意味着产品尚未达到我们认为的成熟状态。目前所有的功能都不代表完成状态。我们极有可能在任何时刻对功能做修改。
+         公测意味着产品已经具备一定的实用性。 但仍未达到我们认为的成熟状态。<br>目前所有的功能都不代表最终效果。我们仍会随时对这些功能做较大调整。
         </p>
       </div>
       <p>
-        您可通过以下多种途径获得邀请码：
+        您也可通过邀请码激活产品：
       </p>
       <p>
-        1.我们将不定期在产品群发码。
+        1.通过邀请码激活产品可额外获得&nbsp;<img  style="width: 22px" src="https://a.apps.vip/icons/test_sm.png" />&nbsp;“受邀用户勋章”。
       </p>
       <p>
         2.通过老用户邀请，每一位老用户均可通过在线使用时长兑换邀请码。
       </p>
-
+      <p>
+        3.您也可以在后期通过补填邀请码获得此勋章。
+      </p>
       <p v-if="!userInfo">
-        请登录账号后，确认是否具备体验资格。
+        请登录账号后，使用产品功能。
         <a-button type="primary" @click="login">登录/注册账号</a-button>
       </p>
       <div v-else>当前登录账号：
@@ -64,10 +66,12 @@
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
           <div v-if="!myCode" class="mt-3 mb-3">请输入激活码激活账号。</div>
-          <p v-if="myCode" class="mt-2">检测到您已使用过激活码：<span style="user-select: text;font-weight: bold">{{ myCode
-          }}</span>，可直接填入发车。如遇已激活但无法验证的情况，请确认网络（如梯子），并退出重试，若多次重试仍不可验证，请更新版本，联系QQ<span
-              style="user-select: text;font-weight: bold">276905621</span>，重新领码。
-            <a-button type="primary" @click="code = myCode" size="small" class="ml-3">填入</a-button> 当前版本：<span
+          <p v-if="myCode" class="mt-2">检测到您已使用过激活码：<span style="user-select: text;font-weight: bold">{{
+              myCode
+            }}</span>，可直接填入发车。如遇已激活但无法验证的情况，请确认网络（如梯子），并退出重试，若多次重试仍不可验证，请更新版本，联系QQ<span
+            style="user-select: text;font-weight: bold">276905621</span>，重新领码。
+            <a-button type="primary" @click="code = myCode" size="small" class="ml-3">填入</a-button>
+            当前版本：<span
               style="user-select: text;font-weight: bold">{{ version }}</span>
           </p>
           <p>
@@ -79,9 +83,10 @@
 
       <div class="flex">
         <a-button class="m-3" :loading="loading" @click="checkCode" :disabled="code === ''" block type="primary"
-          size="large">
-          激活 ! 发车
-        </a-button> <a-button size="large" class="m-3" v-if="myCode" @click="verifyAgain">验证</a-button>
+                  size="large">
+          装填，发车！
+        </a-button>
+        <a-button size="large" class="m-3" v-if="myCode" @click="verifyAgain">验证</a-button>
       </div>
 
     </div>
@@ -103,11 +108,13 @@ import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
-import { navStore } from "../store/nav"
+import { navStore } from '../store/nav'
+import {clipboardStore} from "../store/clipboard";
+import { browserStore } from '../store/browser'
 
 export default {
   name: 'Code',
-  data() {
+  data () {
     return {
       showTip: false,
       loading: false,
@@ -120,7 +127,7 @@ export default {
       version: tsbApi.runtime.appVersion
     }
   },
-  async mounted() {
+  async mounted () {
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
     this.initStore(appStore, 'appStore')
@@ -132,43 +139,45 @@ export default {
     this.initStore(screenStore, 'screen')
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
+    this.initStore(navStore, 'nav')
+    this.initStore(browserStore,'browserStore')
+    browserStore().bindIPC()
     captureStore()//仅触发一下载入
+    clipboardStore()
     if (isMain()) {
-      this.initStore(navStore, 'navStore')
-      if (isMain()) {
-        this.bindMainIPC()
-      } else {
-        this.bindSubIPC()
-      }
-
-      window.loadedStore['userInfo'] = false
-
-      this.bindUserInfoResponse()
-
-      setTimeout(() => {
-        this.storeReadyTimer = setInterval(() => {
-          if (!this.launching) {
-            return
-          }
-          if (Object.keys(window.loadedStore).some(key => {
-            let check = !window.loadedStore[key]
-            if (window.loadedStore[key] === false)
-              console.log(key, '=', window.loadedStore[key])
-            return check
-          })) {
-            //未全部搞定
-            return
-          } else {
-            //已经全部搞定
-            clearInterval(this.storeReadyTimer)
-            this.afterLaunch().then()
-          }
-        }, 1000)
-      }, 100)
-
-      this.getUserInfo()
-      this.sortClock()
+      this.bindMainIPC()
+    } else {
+      this.bindSubIPC()
     }
+
+    window.loadedStore['userInfo'] = false
+
+    this.bindUserInfoResponse()
+
+    setTimeout(() => {
+      this.storeReadyTimer = setInterval(() => {
+        if (!this.launching) {
+          return
+        }
+        if (Object.keys(window.loadedStore).some(key => {
+          let check = !window.loadedStore[key]
+          if (window.loadedStore[key] === false)
+            console.log(key, '=', window.loadedStore[key])
+          return check
+        })) {
+          //未全部搞定
+          return
+        } else {
+          //已经全部搞定
+          clearInterval(this.storeReadyTimer)
+          this.afterLaunch().then()
+        }
+      }, 1000)
+    }, 100)
+
+    this.getUserInfo()
+    this.sortClock()
+
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
@@ -179,9 +188,9 @@ export default {
     ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
     ...mapActions(appStore, ['getUserInfo', 'setUser']),
-    ...mapActions(steamUserStore,['bindClientEvents']),
-    ...mapActions(captureStore,['bindCaptureIPC']),
-    timeout() {
+    ...mapActions(steamUserStore, ['bindClientEvents']),
+    ...mapActions(captureStore, ['bindCaptureIPC']),
+    timeout () {
       this.timeoutHandler = setTimeout(() => {
         Modal.error({
           content: '服务器连接超时。无法验证激活信息。请稍后再试。',
@@ -194,11 +203,11 @@ export default {
         })
       }, 5000)
     },
-    enter() {
+    enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       this.$router.replace({ name: 'home' })
     },
-    bindUserInfoResponse() {
+    bindUserInfoResponse () {
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
         this.tipped = false
@@ -227,16 +236,19 @@ export default {
             this.$router.replace({ name: 'home' })
           } else {
             Modal.error({
-              content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+              content: '您所提交的邀请码无效，无法获得勋章，您可取消后重试，或者点击直接进入，跳过此阶段。',
               centered: true,
-              onOk: () => { }
+              onOk: () => {
+                this.$router.replace({ name: 'wizard' })
+              },
+              okText:"直接进入"
             })
           }
         }
         this.setUser(userInfo)
       })
     },
-    async verifyAgain() {
+    async verifyAgain () {
       if (!this.userInfo) {
         message.info('请登录后重试')
         return
@@ -247,15 +259,18 @@ export default {
           this.$router.replace({ name: 'home' })
         } else {
           Modal.error({
-            content: '抱歉，您的账号不具备EA资格，请验证邀请码。',
+            content: '您当前的账号为直接体验用户，点击直接进入。',
             centered: true,
-            onOk: () => { }
+            onOk: () => {
+              this.$router.replace({ name: 'home' })
+            },
+            okText:'直接进入'
           })
         }
 
       }
     },
-    initStore(store, name) {
+    initStore (store, name) {
       if (!window.loadedStore) {
         window.loadedStore = {}
       }
@@ -265,11 +280,16 @@ export default {
       store()
     },
 
-    async afterLaunch() {
+    async afterLaunch () {
       this.bindCaptureIPC()
       console.log('afterLaunch')
 
       this.bindClientEvents()
+
+      if(clipboardStore().enable){
+        clipboardStore().prepare()
+        clipboardStore().start()
+      }
 
       //执行分屏的启动操作
       this.onTableStarted().then()
@@ -300,20 +320,20 @@ export default {
         }
       }).catch((err) => {
         Modal.error({
-          content: '服务器连接超时。无法验证激活信息。请稍后再试。',
+          content: '服务器连接超时。无法验证激活信息。您可直接进入。',
           key: 'error',
-          okText: '重试',
+          okText: '直接进入',
           centered: true,
           onOk: () => {
-            window.location.reload()
-          }
+            this.$router.replace({ name: 'home' })
+          },
         })
       }).finally(() => {
         this.launching = false
       })
 
     },
-    checkCode() {
+    checkCode () {
       this.loading = true
       let hash = this.getSerialHash()
       if (this.code === '') {
@@ -328,7 +348,7 @@ export default {
       this.active(this.code, hash, this.userInfo.uid).then(rs => {
         this.loading = false
         if (rs.code !== 1000) {
-          message.error('邀请码验证不通过或已被绑定（请点击验证），请检查网络（代理）或退出后重试。')
+          message.error('邀请码验证不通过或已被使用（请点击验证），请检查网络（代理）或退出后重试。')
           return
         } else {
           this.myCode = this.code
@@ -338,7 +358,7 @@ export default {
           }, 10000)
           this.modal = Modal.success({
             centered: true,
-            content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
+            content: '兑换成功，欢迎受邀参与测试，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
               clearTimeout(timer)
               this.$router.replace({ name: 'wizard' })
@@ -352,7 +372,7 @@ export default {
         message.error('服务器无响应，请稍后再试')
       })
     },
-    gradeTableGenerate(num) {
+    gradeTableGenerate (num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {
         let arrLef = 0
@@ -369,7 +389,7 @@ export default {
       delete lvSys['lv0']
       return lvSys
     },
-    login() {
+    login () {
       tsbApi.user.login((data) => {
         this.getUserInfo()
       })

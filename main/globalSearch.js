@@ -84,10 +84,13 @@ const globalSearchMod = {
 }
 const TableManager = require('./src/main/tableManager.js')
 const TableAppManager = require('./src/main/tableAppManager.js')
+const TableTabManager = require('./src/main/tableTabManager')
 global.tableManager = new TableManager()
 app.whenReady().then(async () => {
   global.tableAppManager = new TableAppManager()
   tableAppManager.bindIPC()
+  global.tableTabManager=new TableTabManager()
+  tableTabManager.bindIPC()
   let registerTableShortcutResult = false
   let registerGlobalSearchShortcutResult =false
 
@@ -214,7 +217,7 @@ app.whenReady().then(async () => {
 
   async function callTable (tag = -1) {
     tableManager.init().then(()=>{
-      global.tableAppManager.setTableWin(tableManager.window)
+
     })
   }
 
@@ -275,34 +278,7 @@ app.whenReady().then(async () => {
     globalSearch.hide()
   })
 
-  ipc.on('syncTableAppBounds', (e, a) => {
-    tableAppManager.setBounds(a.app.name, a.bounds)
-  })
 
-  ipc.on('setTableAppScale', (e, a) => {
-    tableAppManager.setScale(a.app.name, a.scale)
-  })
-  ipc.on('executeTableApp', async (event, args) => {
-    let appInstance = await tableAppManager.executeApp({ app: args.app, position: args.position })
-  })
-
-  ipc.on('ensureTableApp',async(event,args)=>{
-    try{
-      event.returnValue= tableAppManager.ensureApp({app:args.app})
-    }catch (e) {
-      event.returnValue=false
-    }
-  })
-  ipc.on('refreshTableApp', (e, a) => {
-    tableAppManager.refresh(a.app.name)
-  })
-
-  ipc.on('closeTableApp', (event, args) => {
-    tableAppManager.closeApp(tableAppManager.getName(args.app.name))
-  })
-  ipc.on('hideTableApp', (event, args) => {
-    tableAppManager.hideApp(tableAppManager.getName(args.app.name))
-  })
 
 
 

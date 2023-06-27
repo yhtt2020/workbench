@@ -10,8 +10,9 @@
       flex-shrink: 1;
       height: 100%;
       width: 100%;
+      margin-left: 15px;
     ">
-    <div class="text-left" v-if="desks.length > 1">
+    <div class="text-left mb-2" v-if="desks.length > 1">
       <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
       </HorizontalPanel>
     </div>
@@ -40,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -104,7 +105,7 @@
       <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
-  
+
    <transition name="fade">
      <div class="" style="
          position: fixed;
@@ -233,9 +234,14 @@
       <a-input-number v-model:value="appSettings.down.count"></a-input-number>
     </div>
   </a-drawer>
-  <div class="home-blur fixed inset-0 p-12" style="z-index: 999" v-if="agreeTest === false">
+  <!-- <div class="home-blur fixed inset-0 p-12" style="z-index: 999" >
     <GradeNotice></GradeNotice>
+  </div> -->
+
+  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;"  v-if="agreeTest === false">
+    <GuidePage></GuidePage>
   </div>
+
   <a-drawer v-model:visible="addDeskVisible">
     <div class="line-title">添加桌面</div>
     <div class="line">
@@ -255,6 +261,7 @@
     </div>
   </a-drawer>
 </template>
+
 <script>
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
@@ -278,6 +285,7 @@ import InternalList from "../components/widgets/supervisory/InternalList.vue";
 import SmallCPUCard from "../components/widgets/supervisory/SmallCPUCard.vue";
 import SmallGPUCard from "../components/widgets/supervisory/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
+import GuidePage from "./app/grade/GuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
 import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
@@ -300,13 +308,16 @@ import ManyFilm from "../components/widgets/film/ManyFilm.vue"
 import SteamFriends from '../components/widgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
-import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
+import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
+import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
+import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
-const readAida64 = window.readAida64
+import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -559,7 +570,13 @@ export default {
     Notes,
     myIcons,
     NewAddCard,
-    AddIcon
+    GuidePage,
+    ShortcutKeyDetail,
+    NotShortcutKey,
+    ShortcutKeyList,
+    GameStrategy,
+    AddIcon,
+    KeyBoard
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -744,6 +761,11 @@ export default {
         }
         if (!e.customData) {
           e.customData = {}
+        }
+        if(Object.keys(e.data).length>0){
+          e.customData={...e.customData,...e.data}
+          e.data1=e.data//转移备份
+          e.data={}//修理掉
         }
       });
     }
@@ -962,6 +984,7 @@ export default {
   },
 };
 </script>
+
 <style scoped lang="scss">
 :deep(.ant-result-title) {
   color: var(--primary-text);
@@ -1004,6 +1027,10 @@ export default {
       height: 438px;
     }
   }
+}
+
+.home-guide{
+  background:rgba(00,00,00,0.75) !important;
 }
 </style>
 <style lang="scss">

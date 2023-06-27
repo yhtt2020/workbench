@@ -98,7 +98,7 @@ class TableManager {
 
       tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
       tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-        let allowedPermissions = ['audioCapture', 'media'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+        let allowedPermissions = ['audioCapture', 'media','fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
         if (allowedPermissions.includes(permission)) {
           callback(true) // Approve permission request
@@ -164,7 +164,8 @@ class TableManager {
       this.tableScreenManager = new TableScreenManager()
       this.tableScreenManager.bindIPC()
     }
-    global.tableAppManager.setTableWin(tableWin.window)//更新tablewin
+    global.tableAppManager.setTableWin(tableWin.window)
+    global.tableTabManager.setTableWin(tableWin.window)
   }
 
   saveBounds () {
@@ -351,6 +352,14 @@ app.whenReady().then(() => {
       console.warn('获得录屏源失败', err)
     })
   })
+
+  // ipc.on('captureImage',(event,args)=>{
+  //   screenCaptureManager.getSource().then(sources => {
+  //     sources.forEach(source=>{
+  //       if(source.id===)
+  //     })
+  //   })
+  // })
 })
 
 module.exports = TableManager

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}">
+  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}" style="background: var(--primary-bg);">
     <div v-for="(item,index) in navList" class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
        @click.stop="clickNav(item,index)" :class="activeIndex===index ? 's-item':''" >
        <Icon :icon="item.icon" style="font-size: 1.5em;"></Icon>
@@ -78,5 +78,12 @@ export default {
   height: 8px;
   background: #FF4D4F;
   border-radius: 4px;
+}
+.s-item{
+  background:var(--active-bg);
+  color: var( --active-text) !important;
+}
+.nav-item{
+  color: var(--primary-text);
 }
 </style>

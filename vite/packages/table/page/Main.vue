@@ -6,13 +6,13 @@
       <TopPanel v-if="!fullScreen"></TopPanel>
     </div>
     <div :class="{ 'mt-3': !fullScreen }"
-      style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden">
-      <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center">
+      style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;padding: 8px;margin: -3px">
+      <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
         <SidePanel :sideNavigationList="sideNavigationList"></SidePanel>
       </div>
       <div
-        style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden">
+        style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
         <!--主题区域，自动滚动条        -->
         <router-view></router-view>
       </div>

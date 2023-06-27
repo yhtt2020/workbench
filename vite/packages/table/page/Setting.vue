@@ -1,11 +1,11 @@
 <template>
   <div style="display: flex;width: 100%">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-      style="position:relative;  border-radius: 8px;height: calc(100vh - 12em);">
+      style="position:relative;  border-radius: 8px;height: 100%;">
       <div style="width: auto;    white-space: nowrap;">
         <!-- 快速搜索 快速开关功能 -->
         <div class="s-bg"
-          style="margin: 2em;margin-right: 1em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block;color: var(--primary-text);background: var(--primary-bg);">
+          style="margin: 1em;margin-right: 0em;padding:1em;border-radius: 0.5em;width:20em;display: inline-block;color: var(--primary-text);background: var(--primary-bg);">
           <h3 style="color: var(--primary-text);">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em;text-align: center">
             <a-col :span="12">
@@ -15,24 +15,14 @@
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
-            <a-col v-if="isMain()" :span="12">
-              <div class="btn relative"  >
-                聊天<br>
-                <a-switch v-model:checked="settings.enableChat"></a-switch>
-              </div>
-            </a-col>
+
             <a-col :span="12">
               <div style="cursor: help;" @click="tipSaving" class="btn relative">
                 节能模式<br>
                 <a-switch @click.stop="() => { }" v-model:checked="saving"></a-switch>
               </div>
             </a-col>
-            <a-col v-if="isMain()" :span="12">
-              <div style="cursor: help;" @click="tipSimple" class="btn relative">
-                极简模式<br>
-                <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
-              </div>
-            </a-col>
+
             <a-col :span="12">
               <div style="cursor: help;"  class="btn relative">
                 窗口控制<br>
@@ -46,6 +36,18 @@
                 <a-switch @click="styleSwitch()" v-model:checked="styles"></a-switch>
               </div>
             </a-col>
+            <a-col v-if="isMain()" :span="12">
+              <div style="cursor: help;" @click="tipSimple" class="btn relative">
+                极简模式<br>
+                <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
+              </div>
+            </a-col>
+            <a-col v-if="isMain() && !simple" :span="12">
+              <div class="btn relative"  >
+                聊天<br>
+                <a-switch v-model:checked="settings.enableChat"></a-switch>
+              </div>
+            </a-col>
           </a-row>
 
 
@@ -54,9 +56,9 @@
         </div>
         <div style="display: inline-block;vertical-align: top">
           <div
-            style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
+            style="margin: 1em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
             class="s-bg">
-            <h3 style="color: var(--primary-text);">屏幕设置</h3>
+            <h3 style="color: var(--primary-text);">常用</h3>
             <a-row style="font-size: 1.2em;text-align: center">
               <a-col v-if="isMain()" :span="6">
                 <div @click="setTouch" class="btn" >
@@ -80,6 +82,9 @@
                   <div> 选择屏幕</div>
                 </div>
               </a-col>
+              <a-col v-if="simple">
+                <MyAvatar :size="80"></MyAvatar>
+              </a-col>
               <!--              <a-col :span="6">-->
               <!--                <div v-if="isMain()"  @click="subscreen" class="btn">-->
               <!--                  <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>-->
@@ -91,7 +96,7 @@
             </div>
           </div>
           <div
-            style="margin: 2em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
+            style="margin: 1em;padding:1em;border-radius: 0.5em;width: 40em;color: var(--primary-text);background: var(--primary-bg);"
             class="s-bg">
 
             <a-row style="font-size: 1.2em;text-align: center" :gutter="[10, 10]">
@@ -101,14 +106,7 @@
                   <div> 配置向导</div>
                 </div>
               </a-col>
-              <a-col :span="6">
-                <div @click="barrage" class="btn" >
-                  <Icon icon="danmushezhi" style="font-size: 2em"></Icon>
-                  <div> 弹幕设置</div>
-                </div>
 
-
-              </a-col>
               <a-col :span="6">
                 <div @click="papersSettings" class="btn"  >
                   <Icon icon="banner" style="font-size: 2em"></Icon>
@@ -118,21 +116,31 @@
               <a-col :span="6">
                 <div @click="basic" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
-                  <div> 基础设置</div>
+                  <div> 通用设置</div>
                 </div>
+              </a-col>
+              <a-col :span="6">
+                <div @click="power" class="btn" >
+                  <Icon icon="tuichu" style="font-size: 2em"></Icon>
+                  <div> 电源</div>
+                </div>
+
+
               </a-col>
               <a-col v-if="isMain()" :span="6">
                 <div @click="verifyCode" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
-                  <div> 验证激活码</div>
+                  <Icon icon="team" style="font-size: 2em"></Icon>
+                  <div> 邀请/受邀</div>
                 </div>
               </a-col>
+
               <a-col v-if="userInfo && userInfo.uid === 4 && isMain()" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 生成激活码</div>
                 </div>
               </a-col>
+
             </a-row>
             <div>
             </div>
@@ -167,10 +175,11 @@ import { codeStore } from '../store/code'
 import SecondPanel from '../components/SecondPanel.vue'
 import GradeSmallTip from "../components/GradeSmallTip.vue";
 import { isMain } from '../js/common/screenUtils'
+import MyAvatar from '../components/small/MyAvatar.vue'
 
 export default {
   name: 'Setting',
-  components: { SecondPanel, ChooseScreen, GradeSmallTip },
+  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
   data() {
     return {
       visibleChooseScreen: false,
@@ -192,7 +201,7 @@ export default {
     ...mapWritableState(appStore, ['userInfo'])
   },
   methods: {
-    ...mapActions(codeStore, ['verify', 'create']),
+    ...mapActions(codeStore, ['verify', 'create','myCode']),
     isMain: isMain,
     styleSwitch() {
       const value = JSON.parse(window.localStorage.getItem("style"));
@@ -217,9 +226,40 @@ export default {
         centered: true
       })
     },
+    power() {
+      this.$router.push({ path: '/power' })
+    },
 
     async verifyCode() {
-      this.$router.push({ name: 'splash' })
+      if(!this.myCode){
+        Modal.confirm({
+          content:'您还没有通过邀请码受邀，点击“接受邀请”，进入验证邀请码界面。',
+          okText:'接受邀请',
+          centered:true,
+          onOk:()=>{
+            this.$router.push({
+              name:'invite',
+              params:{
+                tab:'verify'
+              }
+            })
+          }
+        })
+        return
+      }
+      let rs = await this.verify(this.userInfo.uid)
+      if(rs ){
+        Modal.info({
+          content:'验证邀请码成功。您可在小队个人信息界面查收勋章。',
+          centered:true,
+        })
+      }else{
+        Modal.error({
+          content:'邀请码已失效。',
+          centered:true,
+        })
+      }
+      console.log(rs,'验证结果')
     },
     async createCodes() {
       this.create().then(rs => {

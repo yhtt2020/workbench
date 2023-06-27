@@ -135,11 +135,14 @@ export default {
     },
     imgError(){
       this.imgSpin = false
-      this.currentImg.src = '/img/homeComponent/smallWallpaper.png'
+      this.currentImg.src = '/img/defaultImg.jpg'
     },
     pickFilterChange (e) {
       this.addressType = this.wallpaperOptions.find(i => i.value === e)
       this.updateCustomData(this.customIndex, this.addressType,this.desk)
+      if(!this.addressType) {
+        this.addressType='我的收藏'
+      }
       if (this.addressType.path !== '') {
         axios.get(this.addressType.path, {}).then(res => {
           this.imgList = []
@@ -324,11 +327,11 @@ export default {
   },
   mounted () {
     this.$nextTick(()=>{
-      if(!this.customData.Code){
+      if(!this.customData){
         this.pickFilterChange('我的收藏')
       }else{
-        this.pickFilterValue = this.customData.Code.value.value
-        this.pickFilterChange(this.customData.Code.value.value)
+        this.pickFilterValue = this.customData.value
+        this.pickFilterChange(this.customData.value)
       }
       this.setImg()
     })

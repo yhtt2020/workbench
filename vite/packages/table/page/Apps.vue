@@ -202,6 +202,21 @@ export default {
         },
         {
           icon: 'https://a.apps.vip/icons/weather.png',
+          name: '浏览器',
+          summary: '内置于工作台的浏览器，方便在工作台打开网页。',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'browser',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'browser',
+            })
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/icons/weather.png',
           name: '天气',
           summary: '可以自由添加城市。',
           needInstall: false,
@@ -422,7 +437,21 @@ export default {
             })
           }
         },
-        
+        {
+          icon: 'http://a.apps.vip/icons/flappy.jpg',
+          name: '快捷键 （开发中）',
+          summary: '',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'shortcutKey',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'shortcutKey',
+            })
+          }
+        },
       ]
     }
   },

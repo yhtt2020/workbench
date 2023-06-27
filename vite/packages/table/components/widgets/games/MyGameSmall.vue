@@ -96,7 +96,6 @@ export default {
     CardState
   },
   mounted(){
-    console.log(this.gameList,'gamelki')
   },
   props:{
     customIndex: {
