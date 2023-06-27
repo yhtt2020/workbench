@@ -1,5 +1,6 @@
 <template>
-  <Widget :options="options" :desk="desk">
+  <Widget :options="options" :desk="desk" :showRightIcon='rightIcon'>
+    <div></div>
 <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
 <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
 <!--      活动说明-->
@@ -114,7 +115,7 @@ export default {
     HorizontalPanel,
     UserOutlined
   },
-  props:['desk'],
+  props:['desk', 'rightIcon'],
   data () {
     return {
       options: {
@@ -380,4 +381,5 @@ export default {
 ::v-deep .ps__thumb-y {
   display: none !important;
 }
+
 </style>
