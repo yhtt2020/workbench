@@ -464,11 +464,11 @@ export const NavList = [
         name: 'singleDoubanFilm',
         cname: '正在热映',
         detail: '电影荒了？来看看近期正在上映的热门电影。',
-        sizes: ['2x2', '2x4'],
+        sizes: ['2x4', '2x4'],
         option: [
           {
             name: 'SingleFilm',
-            size: '2x2',
+            size: '2x4',
             zoom: '11'
           }, {
             name: 'ManyFilm',

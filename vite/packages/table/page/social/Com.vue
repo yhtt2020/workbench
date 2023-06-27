@@ -82,7 +82,7 @@
 
       </div>
       <div style="width: 280px" class="mr-3">
-        <SingIn :customIndex="1" :customData="{}"></SingIn>
+        <SingIn :customIndex="1" :customData="{}" :rightIcon="false"></SingIn>
       </div>
       <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top;">
         <div class="card mb-3"

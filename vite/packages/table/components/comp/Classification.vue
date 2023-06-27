@@ -58,7 +58,7 @@ export default {
   text-align: center;
   >:nth-child(1){
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--primary-text);
     margin-top: 8px;
   }
   >:nth-child(2){
@@ -67,7 +67,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background:rgb(42, 42, 42);
+    background:var(--secondary-bg);
     border-radius: 12px;
     position: absolute;
     top: 16px;
@@ -88,7 +88,7 @@ export default {
           height: 56px;
           font-size: 16px;
           font-weight: 400;
-          color: rgba(255, 255, 255, 0.85);
+          color: var(--primary-text);
           line-height: 56px;
         }
         .xt-active{

@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
-      <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
+      <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px"></Icon>
     </div>
   </transition>
   <transition name="fade">
@@ -17,7 +17,7 @@
                   <a-dropdown :trigger="['contextmenu']">
                     <div v-if="item.type==='systemApp'"
                          style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
-                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);"></Icon>
+                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text)"></Icon>
                     </div>
                     <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
                   </a-dropdown>
@@ -25,7 +25,7 @@
               </div>
             </div>
             <div>
-              <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);" class="pointer"
+              <Icon icon="tianjia" style="width: 56px;height: 56px;color:var(--secondary-text);" class="pointer"
                     @click="addEdit('left')"></Icon>
             </div>
           </div>
@@ -39,13 +39,13 @@
               </div>
               <div class="flex mb-2">
                 <span class="mr-4 flex justify-center items-center">
-              <Icon icon="home" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);"></Icon>
+              <Icon icon="home" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
               <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
-              <Icon icon="shouye1" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);"></Icon>
+              <Icon icon="shouye1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
             </span>
-                <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);"></Icon>
+                <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
                 <Icon icon="arrowright" style="width: 20px;height: 20px;margin-top: 6px"></Icon>
-                <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:rgba(255, 255, 255, 0.4);"></Icon>
+                <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
               </div>
 
             </div>
@@ -53,19 +53,19 @@
             <div class="main-nav" id="mainList" style="width: 350px">
               <div v-for="item in mainNavList" :key="item.name">
                 <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
-                  <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);"></Icon>
-                  <span class="mt-2">{{ item.name }}</span>
+                  <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
+                  <span class="mt-2 xt-text-2">{{ item.name }}</span>
                 </div>
                 <div class="add-toggle" v-if="item.addNav"><icon icon="yixuan" style="font-size:32px;color: #52ff52"></icon></div>
               </div>
             </div>
             <div style="width: 650px;text-align: center">
-              <div class="mb-2 mt-2">推荐图标</div>
+              <div class="mb-2 mt-2" style="color:var(--secondary-text);">推荐图标</div>
               <div class="suggest-nav" id="suggestList">
                 <div v-for="item in suggestNavList" :key="item.name">
                   <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
-                    <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);"></Icon>
-                    <span class="mt-2">{{ item.name }}</span>
+                    <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
+                    <span class="mt-2 xt-text-2">{{ item.name }}</span>
                   </div>
                   <div class="add-toggle" v-if="item.addNav"><icon icon="yixuan" style="font-size:32px;color: #52ff52"></icon></div>
                 </div>
@@ -75,27 +75,27 @@
 
           <div class="nav-toggle" v-show="navText && !promptModal">
             <div class="left-point">
-              <span class="mb-4"><Icon icon="arrowleft"></Icon>左侧</span>
+              <span class="mb-4 secondary-text"><Icon icon="arrowleft"></Icon>左侧</span>
               <div>
                 <!-- <a-switch v-model:checked="leftNav" @change="navToggle(sideNavigationList,'left')"/> -->
                 <a-switch v-model:checked="leftNav" @change="navToggle('left')"/>
               </div>
             </div>
             <div class="foot-point">
-              <span class="mb-4"><Icon icon="arrowdown"></Icon>底部</span>
+              <span class="mb-4 secondary-text"><Icon icon="arrowdown"></Icon>底部</span>
               <div>
                 <a-switch v-model:checked="footNav" @change="navToggle('foot')"/>
               </div>
             </div>
             <div class="right-point">
-              <span class="mb-4">右侧<Icon icon="arrowright"></Icon></span>
+              <span class="mb-4 secondary-text">右侧<Icon icon="arrowright"></Icon></span>
               <div>
                 <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
               </div>
             </div>
           </div>
           <div class="prompt-modal " v-show="promptModal ">
-            <div class="p-5 s-bg flex flex-col justify-center items-center" style="border-radius:16px">
+            <div class="p-5 xt-modal flex flex-col justify-center items-center" style="border-radius:16px">
               <div>
                 <Icon icon="tishi-xianxing" style="font-size: 16px;color: orange"></Icon>
                 <span class="ml-3">提示</span>
@@ -123,7 +123,7 @@
                   <a-dropdown :trigger="['contextmenu']">
                     <div v-if="item.type==='systemApp'"
                          style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
-                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:rgba(255, 255, 255, 0.4);"></Icon>
+                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
                     </div>
                     <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
                   </a-dropdown>
@@ -131,7 +131,7 @@
               </div>
             </div>
             <div>
-              <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);" class="pointer"
+              <Icon icon="tianjia" style="width: 56px;height: 56px;color:var(--secondary-text);" class="pointer"
                     @click="addEdit('right')"></Icon>
             </div>
           </div>
@@ -146,7 +146,7 @@
                 <div
                   style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: rgba(33, 33, 33, 1);border-radius: 12px"
                   v-if="item.type==='systemApp'">
-                  <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);"></Icon>
+                  <Icon :icon="item.icon" style="width: 32px;height: 32px;color:var(--secondary-text);"></Icon>
                 </div>
                 <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
               </a-dropdown>
@@ -155,12 +155,12 @@
         </div>
         <div>
           <Icon icon="tianjia"
-                style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);position:relative;top:2px;"
+                style="width: 56px;height: 56px;color:var(--secondary-text);position:relative;top:2px;"
                 class="pointer mr-8" @click="addEdit('foot')"></Icon>
         </div>
         <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);"
              class="flex justify-center items-center pointer  pl-6 mr-6">
-          <Icon icon="appstore-fill" style="width: 48px;height: 48px;"></Icon>
+          <Icon icon="appstore-fill" style="width: 48px;height: 48px;color:var(--secondary-text);"></Icon>
         </div>
       </div>
     </div>
@@ -170,7 +170,7 @@
     <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
       <div v-show="nowClassify!=='localApp'" class="h-full">
         <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索"
-                 style="background: rgba(42, 42, 42, 0.6);">
+                 style="background: var(--secondary-bg)">
           <template #prefix>
             <Icon icon="sousuo" class="text-gray-600"></Icon>
           </template>
@@ -181,7 +181,7 @@
                     class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
         </vue-custom-scrollbar>
       </div>
-      <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500  h-full">
+      <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500 h-full" style="color:var(--secondary-text)">
         <div>1. 点击选择需要添加的应用快捷方式</div>
         <div>2. 拖动应用快捷方式拖放到下方</div>
         <div>3. 支持持批量添加</div>
@@ -207,7 +207,7 @@
         </ScrolX>
         <div @click="clickRightListItem(dropList)"
              class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg  "
-             style="background: rgb(42, 42, 42);color: rgba(255, 255, 255, 0.85);">
+             style="background: var(--secondary-bg);color: var(--primary-text)">
           确定添加
         </div>
       </div>
@@ -958,12 +958,10 @@ export default {
 </style>
 <style lang="scss" scoped>
 .box-content {
-  // background: red;
   height: 100%;
 
   .box-center {
     height: 70%;
-    // background: pink;
     margin: 32px 12px 14px;
     display: flex;
     align-items: center;
@@ -977,7 +975,7 @@ export default {
       align-items: center;
       text-align: center;
       border-radius: 12px;
-      background: rgb(40, 40, 40);
+      background: var(--primary-bg);
       max-height: 508px;
       overflow: hidden;
       padding: 24px 0 24px;
@@ -987,7 +985,6 @@ export default {
       width: 90%;
       // width: 1056px;
       margin: 0 10px;
-      // background: yellow;
       height: 100%;
       display: flex;
       justify-content: center;
@@ -1009,7 +1006,7 @@ export default {
     width: 70%;
     height: 80px;
     border-radius: 12px;
-    background: rgb(40, 40, 40);
+    background: var(--primary-bg);
     box-sizing: border-box;
   }
 }
@@ -1019,7 +1016,6 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
-  // background: greenyellow;
   // justify-content: center;
   // align-items: center;
   > span:nth-child(1),
@@ -1027,7 +1023,7 @@ export default {
     display: block;
     font-size: 18px;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--primary-text);
     font-family: PingFangSC-Medium;
   }
 
@@ -1036,7 +1032,7 @@ export default {
     margin: 8px 0 16px;
     // width: 65%;
     // text-align: center;
-    color: rgba(255, 255, 255, 0.6);
+    color:var(--secondary-text);
     font-family: PingFangSC-Regular;
     font-size: 16px;
   }
@@ -1045,7 +1041,7 @@ export default {
   width: 100%;
   height: 112px;
   padding: 12px;
-  background: #212121;
+  background: var(--modal-bg);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -1054,7 +1050,7 @@ export default {
   > div {
     width: 88px;
     height: 88px;
-    background: #2A2A2A;
+    background: var(--secondary-bg);
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -1081,7 +1077,7 @@ export default {
   width: 70%;
   height: 112px;
   padding: 12px;
-  background: #212121;
+  background: var(--modal-bg);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -1090,7 +1086,7 @@ export default {
   > div {
     width: 88px;
     height: 88px;
-    background: #2A2A2A;
+    background: var(--secondary-bg);
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -1122,7 +1118,7 @@ export default {
     flex-direction: column;
     padding: 24px 44px;
     text-align: center;
-    background: #212121;
+    background: var(--modal-bg);
     border-radius: 12px;
   }
 }
@@ -1157,33 +1153,31 @@ export default {
   // height: 200px;
   width: 380px;
   margin: 0 auto;
+  color: var(--primary-text);
 
   .modal-btn {
     display: flex;
-    color: white;
 
     > div {
       padding: 8px 50px;
-      // background: rgba(255, 255, 255, 0.6);
       border-radius: 12px;
-      background: rgba(0, 0, 0, 0.30);
+      background: var(--mask-bg);
     }
   }
 }
 
 .del-icon {
-  background: black;
   width: 100%;
   height: 100%;
   opacity: 0.5;
-  background: #2A2A2A;
+  background: var(--secondary-bg);
   border: 1px dashed rgba(255, 255, 255, 0.4);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 500;
 }
 
@@ -1205,7 +1199,7 @@ export default {
   width: 80px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(42, 42, 42, 1);
+  background: var(--secondary-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1229,7 +1223,7 @@ export default {
 
   > :nth-child(1) {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--primary-text);
     margin-top: 8px;
   }
 
@@ -1264,7 +1258,7 @@ export default {
           height: 56px;
           font-size: 16px;
           font-weight: 400;
-          color: rgba(255, 255, 255, 0.85);
+          color: var(--primary-text);
           line-height: 56px;
         }
 
