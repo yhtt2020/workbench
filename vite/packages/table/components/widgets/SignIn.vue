@@ -16,7 +16,7 @@
         <div @click="signIn" class="middle-button sign-in-btn s-item"
              style="height: 42px;line-height: 42px;color: white"
              :class="signedIn ? (completeLikes.length > 4 ? 'already' : 'new-people') : 'old-people'">
-          {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '每日迎新') : '签到' }}
+          {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '今日新人') : '签到' }}
         </div>
       </div>
       <HorizontalPanel :navList="signInTitle" v-model:selectType="signInType" :height="44"
@@ -70,19 +70,30 @@
       </div>
     </template>
     <template v-else>
-      <div class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
+      <div v-if="false " class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
         <span class="text-style" style="color: rgba(255,255,255,0.85);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
         <div class="mt-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日已为{{
             completeLikes.length
           }}位社区新人点赞
         </div>
       </div>
-      <div class="mt-3" style="height:178px; overflow:hidden;">
-        <div class="text-center mb-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日新人 {{total}}</div>
+      <div v-else class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
+        <span class="text-style"
+              style="color: rgba(255,255,255,0.85);font-size: 14px;">今日新注册用户：  {{ total }} 人</span>
+      </div>
+      <div class="mt-3" style="height:235px; overflow:hidden;">
+        <!--        <div class="text-center mb-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日新人</div>-->
         <div class="head-list">
-          <div v-for="item in newPeopleList" class="h-14 w-14 s-item flex justify-center items-center" :key="item.id"
-               style="margin:8px 14px;border-radius: 50%;" @click="newLikes(item)" @contextmenu.stop="showCard(item.uid,item.userInfo)">
+          <div v-for="item in newPeopleList" class=" w-14  flex justify-center items-center pointer flex-col"
+               :key="item.id"
+               style="margin:8px 14px;border-radius: 50%;" @click="showCard(item.uid,item.userInfo)"
+               @contextmenu.stop="showCard(item.uid,item.userInfo)">
+            <div class="mb-2 mt-2">
               <a-avatar class="h-14 w-14" :class="item.headToggle ? 'h-8 w-8' : ''" :src="item.userInfo.avatar"/>
+            </div>
+            <div>
+              {{ item.userInfo.nickname }}
+            </div>
           </div>
         </div>
       </div>
@@ -92,9 +103,9 @@
           <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
         </div>
         <span @click="popUsers" class="change pointer rounded-lg s-item  flex items-center justify-center"
-              style="padding:13px 74px;color: rgba(255, 255, 255, 0.85);"
+              style="padding:13px 55px;color: rgba(255, 255, 255, 0.85);"
         >
-            换一换
+          <icon style="font-size: 20px" icon="shuaxin" class="mr-2"></icon>   换一换
           </span>
       </div>
     </template>
@@ -156,7 +167,7 @@ export default {
       page: 1,
       max: 99999,
       lastUsers: [],
-      total:0,
+      total: 0,
     }
   },
   async mounted () {
@@ -177,13 +188,13 @@ export default {
     async popUsers () {
       console.log('开始弹出用户')
       if (this.lastUsers.length > 0) {
-        console.log('剩余用户数组',this.lastUsers)
-        if(this.lastUsers[0].length<6){
+        console.log('剩余用户数组', this.lastUsers)
+        if (this.lastUsers[0].length < 6) {
           console.log('剩余用户不足6')
           //证明已经没有下一页了
           this.newPeopleList = _.cloneDeep(this.lastUsers[0])
           this.lastUsers.splice(0, 1)//移除
-        }else{
+        } else {
           console.log('剩余用户充足')
           //如果还有数组
           this.newPeopleList = this.lastUsers[0]
@@ -195,12 +206,12 @@ export default {
         if (this.page >= this.max) {
           console.log('已经到达最后一页')
           //已经是最多的了，重新获取第一页
-          this.page=1
-          await  this.request(this.page)
-        }else{
+          this.page = 1
+          await this.request(this.page)
+        } else {
 
           this.page++
-          console.log('请求下一页',this.page)
+          console.log('请求下一页', this.page)
           await this.request(this.page)
         }
         console.log('再次执行弹出')
@@ -211,7 +222,7 @@ export default {
       let dailyNew = await this.getDailyNewUsers(page)
       this.lastUsers = _.chunk(dailyNew.list, 6)//按照每页6个分页
       this.max = dailyNew.pageInfo.pages
-      this.total=dailyNew.pageInfo.count
+      this.total = dailyNew.pageInfo.count
       console.log(dailyNew, '请求到一页的数据')
     },
     async getTodayList () {
@@ -241,8 +252,8 @@ export default {
         this.signedIn = false
       })
     },
-    showCard (uid,userInfo) {
-      this.showUserCard(uid,userInfo)
+    showCard (uid, userInfo) {
+      this.showUserCard(uid, userInfo)
     },
     async signIn () {
       if (!this.signedIn) {
