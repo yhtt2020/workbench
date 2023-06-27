@@ -176,7 +176,8 @@ import SecondPanel from '../components/SecondPanel.vue'
 import GradeSmallTip from "../components/GradeSmallTip.vue";
 import { isMain } from '../js/common/screenUtils'
 import MyAvatar from '../components/small/MyAvatar.vue'
-
+// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\page\app\addIcon\hooks\cache.js
+import cache from "./app/addIcon/hooks/cache"
 export default {
   name: 'Setting',
   components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
@@ -204,14 +205,15 @@ export default {
     ...mapActions(codeStore, ['verify', 'create','myCode']),
     isMain: isMain,
     styleSwitch() {
-      const value = JSON.parse(window.localStorage.getItem("style"));
+      const value = cache.get("style")
       document.documentElement.classList.remove(value);
-      window.localStorage.setItem("background", JSON.stringify("-no"));
-      const background = JSON.parse(window.localStorage.getItem("background"));
+      // cache.set("background","-no")
+      // const background = cache.get("background")
+      // console.log('object :>> ', background);
       let model = this.styles ? "light" : "dark"
       let name = `${model}${background || ''}-model`
       document.documentElement.classList.add(name);
-      window.localStorage.setItem("style", JSON.stringify(name));
+      cache.set("style",name)
     },
 
     tipSaving() {
