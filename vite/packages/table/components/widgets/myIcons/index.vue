@@ -187,6 +187,7 @@ export default {
           opacity: 0.65,
           border: "1px solid var(--active-bg)  !important",
           "border-radius": "12px  !important",
+          background: "var(--active-secondary-bg) ",
         };
       } else return {};
     },
@@ -194,19 +195,13 @@ export default {
     menuList() {
       let menus = [
         {
-          icon: "shezhi1",
+          icon: "yichu",
           title: "移动",
           fn: () => {
             this.moveIcon();
           },
         },
-        {
-          icon: "shezhi1",
-          title: "合并",
-          fn: () => {
-            this.copyIcon();
-          },
-        },
+
         {
           icon: "shezhi1",
           title: "设置",
@@ -231,10 +226,21 @@ export default {
         //   },
         // },
       ];
+      // 当全局数据长度超过1代表有数据 添加合并操作
+      if (this.iconList.length > 0) {
+        menus.splice(1, 0, {
+          icon: `tianjiakuaijiefangshi`,
+          title: "合并",
+          fn: () => {
+            this.copyIcon();
+          },
+        });
+      }
       if (
         this.customData.iconList !== undefined &&
         this.customData.iconList.length > 1
       ) {
+       
         menus.splice(2, 1);
         menus.unshift({
           icon: "zhankai",

@@ -27,7 +27,7 @@
       </div>
     </droppable-area>
 
-    <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
+    <a-drawer :width="500" :height="200" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
       <BottomEdit :menuList="menuList"></BottomEdit>
     </a-drawer>
   </teleport>
@@ -64,7 +64,7 @@ export default {
 
         {
           icon: "shezhi1",
-          title: "编辑",
+          title: "设置",
           fn: () => {
             this.editIcons();
           },
@@ -191,10 +191,9 @@ export default {
   z-index: 9999999;
   box-shadow: 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  // background: var(--secondary-bg) !important;
   box-sizing: border-box;
   padding: 10px;
-  z-index: 999999999999999999;
+  z-index: 999999;
 
   .title {
     height: 48px;
