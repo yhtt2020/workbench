@@ -1,33 +1,70 @@
 <template>
   <teleport to="body">
-    <img class='popContainer ' :style="{ filter: blurs }" :src="imgUrl" alt="">
+    <img class="popContainer" :style="{ filter: blurs }" :src="imgUrl" alt="" />
     <div class="box">
-      <component :is="clock" v-if="clock !== 'clock3'" :key="clock" :style="{ zoom: zoom }" />
-      <clock3 v-if="clock == 'clock3'" key="clock3" :style="{ zoom: zoom }"></clock3>
-      <div class="flex  bottom" :style="optAction == true ? 'display: none' : ''">
-        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="up()">
+      <component
+        :is="clock"
+        v-if="clock !== 'clock3'"
+        :key="clock"
+        :style="{ zoom: zoom }"
+      />
+      <clock3
+        v-if="clock == 'clock3'"
+        key="clock3"
+        :style="{ zoom: zoom }"
+      ></clock3>
+      <div
+        class="flex bottom"
+        :style="optAction == true ? 'display: none' : ''"
+      >
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
+          @click="up()"
+        >
           <Icon class="icon" icon="caret-left"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="down()">
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
+          @click="down()"
+        >
           <Icon class="icon" icon="caret-right"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="random()">
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
+          @click="random()"
+        >
           <Icon class="icon" icon="reload"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="settingVisible = true">
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
+          @click="settingVisible = true"
+        >
           <Icon class="icon" icon="setting"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4 no-drag" @click="exit()">
+        <div
+          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
+          @click="exit()"
+        >
           <Icon class="icon" icon="guanbi2"></Icon>
         </div>
       </div>
     </div>
-    <a-drawer style="z-index: 99999999999;scrollbar-width: none;" :width="500" v-model:visible="settingVisible"
-      placement="right">
+    <a-drawer
+      style="z-index: 99999999999; scrollbar-width: none"
+      :width="500"
+      v-model:visible="settingVisible"
+      placement="right"
+    >
       <template #title>
         <div class="text-center">设置</div>
       </template>
-      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur">
+      <ClockBackground
+        @img="img"
+        @updateBlur="updateBlur"
+        @updateBgZoom="updateBgZoom"
+        :bgZoom="bgZoom"
+        :blur="blur"
+      >
       </ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
     </a-drawer>
@@ -35,7 +72,7 @@
 </template>
 
 <script>
-import mixin from "../hooks/clockMixin.js"
+import mixin from "../hooks/clockMixin.js";
 
 import ClockStyle from "./ClockStyle.vue";
 import ClockBackground from "./ClockBackground.vue";
@@ -43,9 +80,9 @@ export default {
   mixins: [mixin],
   components: {
     ClockStyle,
-    ClockBackground
+    ClockBackground,
   },
-  emits:['updateBgZoom','updateBlur','updateClockStyle'],
+  emits: ["updateBgZoom", "updateBlur", "updateClockStyle"],
   props: {
     clock: {
       type: String,
@@ -66,23 +103,23 @@ export default {
   },
   watch: {
     blur(a, b) {
-      this.updateBlur(a)
-    }
+      this.updateBlur(a);
+    },
   },
   mounted() {
-    window.addEventListener("keyup", this.esc)
-    this.blurs = `blur(${parseInt(this.blur / 2)}px)`
-    this.zoom = `${this.bgZoom + 100}%`
-    this.touchEvent()
+    window.addEventListener("keyup", this.esc);
+    this.blurs = `blur(${parseInt(this.blur / 2)}px)`;
+    this.zoom = `${this.bgZoom + 100}%`;
+    this.touchEvent();
 
     //鼠标事件
-    document.addEventListener('mousemove', this.touchEvent, { capture: true });//鼠标移动
-    document.addEventListener('mousedown', this.touchEvent, { capture: true });//鼠标按下
+    document.addEventListener("mousemove", this.touchEvent, { capture: true }); //鼠标移动
+    document.addEventListener("mousedown", this.touchEvent, { capture: true }); //鼠标按下
     //触摸事件
-    document.addEventListener('touchstart', this.touchEvent, { capture: true }); //手指放到屏幕上时触发
-    document.addEventListener('touchmove', this.touchEvent, { capture: true });//手指在屏幕上滑动式触发
+    document.addEventListener("touchstart", this.touchEvent, { capture: true }); //手指放到屏幕上时触发
+    document.addEventListener("touchmove", this.touchEvent, { capture: true }); //手指在屏幕上滑动式触发
     //键盘事件
-    document.addEventListener('keydown', this.touchEvent, { capture: true }); //键盘按下事件
+    document.addEventListener("keydown", this.touchEvent, { capture: true }); //键盘按下事件
   },
   data() {
     return {
@@ -96,41 +133,51 @@ export default {
   },
   methods: {
     esc(e) {
-      if (e.keyCode === 27) this.exit()
+      if (e.keyCode === 27) this.exit();
     },
     exit() {
-      document.removeEventListener("mousemove", this.touchEvent, { capture: true });
-      document.removeEventListener("mousedown", this.touchEvent, { capture: true });
-      document.removeEventListener("touchstart", this.touchEvent, { capture: true });
-      document.removeEventListener("touchmove", this.touchEvent, { capture: true });
-      document.removeEventListener("keydown", this.touchEvent, { capture: true });
-      this.$emit('exit')
+      document.removeEventListener("mousemove", this.touchEvent, {
+        capture: true,
+      });
+      document.removeEventListener("mousedown", this.touchEvent, {
+        capture: true,
+      });
+      document.removeEventListener("touchstart", this.touchEvent, {
+        capture: true,
+      });
+      document.removeEventListener("touchmove", this.touchEvent, {
+        capture: true,
+      });
+      document.removeEventListener("keydown", this.touchEvent, {
+        capture: true,
+      });
+      this.$emit("exit");
     },
     updateBlur(e) {
-      this.blurs = `blur(${parseInt(e / 2)}px)`
-      this.$emit("updateBlur", e)
+      this.blurs = `blur(${parseInt(e / 2)}px)`;
+      this.$emit("updateBlur", e);
     },
     updateBgZoom(e) {
-      this.zoom = `${e + 100}%`
-      this.$emit("updateBgZoom", e)
+      this.zoom = `${e + 100}%`;
+      this.$emit("updateBgZoom", e);
     },
     touchEvent() {
-      const that = this
+      const that = this;
       // console.log("操作中")
-      that.optAction = false //让判断条件为true
-      clearTimeout(this.autoTime) //清除自动刷新页面定时器
+      that.optAction = false; //让判断条件为true
+      clearTimeout(this.autoTime); //清除自动刷新页面定时器
       this.autoTime = setTimeout(function () {
-        that.optAction = true //页面无操作后3秒，重时开启定时器
+        that.optAction = true; //页面无操作后3秒，重时开启定时器
         // console.log("无操作")
-        that.settingVisible = false
-      }, 3000)
+        that.settingVisible = false;
+      }, 3000);
     },
 
     updateClockStyle(e) {
       this.$emit("updateClockStyle", e);
     },
     img(img) {
-      this.$emit("updateImgUrl", img)
+      this.$emit("updateImgUrl", img);
     },
     random() {
       let randNum = Math.floor(Math.random() * 5) + 1;
@@ -139,20 +186,20 @@ export default {
     down() {
       if (this.clock == "clock6") {
         this.$emit("updateClockStyle", `clock1`);
-        return
+        return;
       }
-      let num = this.clock.slice(-1)
+      let num = this.clock.slice(-1);
       this.$emit("updateClockStyle", `clock${1 + parseInt(num)}`);
     },
     up() {
       if (this.clock == "clock1") {
         this.$emit("updateClockStyle", `clock6`);
-        return
+        return;
       }
-      let num = this.clock.slice(-1)
+      let num = this.clock.slice(-1);
       this.$emit("updateClockStyle", `clock${parseInt(num) - 1}`);
-    }
-  }
+    },
+  },
 };
 </script>
 

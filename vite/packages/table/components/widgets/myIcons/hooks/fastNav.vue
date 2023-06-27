@@ -115,58 +115,6 @@ export default {
             }
             this.ClassifyData.push(...desktopApps, ...lightApps);
         },
-        openApp() {
-            if (typeof this.myData.link === "object" && this.myData.link.type) {
-                switch (this.myData.link.type) {
-                    case "systemApp":
-                        if (this.myData.link.event === "fullscreen") {
-                            if (this.full) {
-                                this.full = false;
-                                tsbApi.window.setFullScreen(false);
-                            } else {
-                                this.full = true;
-                                tsbApi.window.setFullScreen(true);
-                            }
-                        } else if (this.myData.link.event === "/status") {
-                            if (this.$route.path === "/status") {
-                                this.$router.go(-1);
-                            } else {
-                                this.$router.push({ path: "/status" });
-                            }
-                        } else if (this.myData.link.data) {
-                            this.$router.push({
-                                name: "app",
-                                params: this.myData.link.data,
-                            });
-                        } else {
-                            this.$router.push({ name: this.myData.link.event });
-                        }
-                        break;
-                    case "coolApp":
-                        this.$router.push({
-                            name: "app",
-                            params: this.myData.link.data,
-                        });
-                        break;
-                    case "localApp":
-                        require("electron").shell.openPath(this.myData.link.path);
-                        break;
-                    case "lightApp":
-                        ipc.send("executeAppByPackage", {
-                            package: this.myData.link.package,
-                        });
-                        break;
-                    default:
-                        require("electron").shell.openPath(this.myData.link.path);
-                }
-            } else if (this.myData.link) {
-                this.myData.link.path
-                    ? require("electron").shell.openPath(this.myData.link.path)
-                    : require("electron").shell.openPath(
-                        require("path").normalize(this.myData.link)
-                    );
-            }
-        },
     },
     created() {
         this.loadDeskIconApps();
