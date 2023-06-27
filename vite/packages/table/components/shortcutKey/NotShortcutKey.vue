@@ -48,7 +48,7 @@
                     <template #icon><UserOutlined /></template>
                   </a-avatar>
                 </div>
-                <span class="ml-3">{{ item.userName }}</span>
+                <span class="ml-3">{{ item.nickName }}</span>
               </span>
               <span>
                 <span>
@@ -62,15 +62,17 @@
               </span>
             </div>
           </div>
-          <div class="recommend" style="height:1px;opacity:0;"></div>
+          <div v-if="notAppList.length > 2" class="recommend" style="height:1px;opacity:0;"></div>
+          <div v-if="notAppList.length > 2" class="recommend" style="height:1px;opacity:0;"></div>
         </div>
       </div>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'pinia';
 import { appStore } from '../../store';
+import { mapActions, mapWritableState } from "pinia";
+import { keyStore } from '../../store/key'
 export default {
   name: "NotShortcutKey",
   components: {
@@ -84,15 +86,18 @@ export default {
       type: Object,
       default: {}
     },
-    notDownloadList: {
-      type: Array,
-      default: []
-    }
+    // notDownloadList: {
+    //   type: Array,
+    //   default: []
+    // }
   },
   data() {
     return {
       notAppList :[]
     }
+  },
+  computed: {
+    ...mapWritableState(keyStore, ['sellSchemeList']),
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
@@ -113,11 +118,10 @@ export default {
     }
   },
   mounted(){
-    console.log()
     if(this.detailJump) {
-      this.notAppList = this.notDownloadList.slice(0,3)
+      this.notAppList = this.sellSchemeList.slice(0,3)
     }else{
-      this.notAppList = this.notDownloadList
+      this.notAppList = this.sellSchemeList
     }
   },
 }
