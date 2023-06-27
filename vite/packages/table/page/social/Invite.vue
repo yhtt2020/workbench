@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="s-bg ml-3 p-3 rounded-xl " style="width: 800px;min-height: 300px;">
+  <div class="s-bg ml-3 p-3 rounded-xl xt-bg " style="width: 800px;min-height: 300px">
     <div class="mb-3" style="width: 300px;">
       <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
       </HorizontalPanel>
@@ -226,7 +226,12 @@ export default {
 </script>
 
 <style scoped>
-.card {
+  .ant-table-tbody  {
+    &:hover {
+      background: red !important;
+    }
+  }
+/* .card {
   background: #252525;
-}
+} */
 </style>

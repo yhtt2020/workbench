@@ -74,7 +74,7 @@ import Modal from './components/Modal.vue'
 import {timerStore} from "./store/timer";
 import {Modal as antModal} from 'ant-design-vue'
 import {toggleFullScreen} from "./js/common/common";
-
+import cache from "./page/app/addIcon/hooks/cache";
 window.browser = browser
 const {appModel} = window.$models
 let startX,
@@ -99,9 +99,11 @@ export default {
   },
 
   async mounted() {
-    let style = window.localStorage.getItem("style")
-    style = JSON.parse(style!)
-    document.documentElement.classList.add(style!);
+    let style = cache.get("style")
+    if (!style) {
+      style = cache.set("style","dark-model")
+    }
+    document.documentElement.classList.add(style);
 
     let transparent = window.localStorage.getItem("transparent")
     transparent = JSON.parse(transparent!)

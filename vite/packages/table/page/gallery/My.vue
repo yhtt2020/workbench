@@ -113,6 +113,7 @@ import Import from './Import.vue'
 import { message, Modal } from 'ant-design-vue'
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import Spotlight from 'spotlight.js'
+import cache from '../app/addIcon/hooks/cache';
 
 const fs = window.$models.fs
 const path = require('path')
@@ -238,15 +239,17 @@ export default defineComponent({
     },
     setAppPaper() {
       // 1 清除样式
-      const value = JSON.parse(window.localStorage.getItem("style"));
+      const value = cache.get("style")
       document.documentElement.classList.remove(value);
+      cache.del("background")
       // 2 判断白天黑夜
       if (this.styles) {
         document.documentElement.classList.add("light-model");
-        window.localStorage.setItem("style", JSON.stringify("light-model"));
+        cache.set("style","light-model")
       } else {
         document.documentElement.classList.add('dark-model');
-        window.localStorage.setItem("style", JSON.stringify('dark-model'));
+        cache.set("style","dark-model")
+
       }
       message.info('正在为您设置背景')
       if (this.currentPaper.srcProtocol) {

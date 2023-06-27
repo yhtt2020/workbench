@@ -1,0 +1,40 @@
+.w {
+  width: 566px;
+}
+.h {
+  height: 415px;
+}
+// 宽度
+@media screen and (max-width: 767px) {
+  .w {
+    width: 282px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .w {
+    width: 424px;
+  }
+}
+
+@media screen and (min-width: 1024px) and (min-aspect-ratio: 16/9) {
+  .w {
+    width: 566px;
+  }
+}
+// 高度
+@media screen and (max-height: 600px) {
+  .h {
+    height: 136px;
+  }
+}
+
+@media screen and (min-height: 601px) and (max-height: 900px) {
+  .h {
+    height: 272px;
+  }
+}
+@media screen and (min-height: 901px) {
+  .h {
+    height: 415px;
+  }
+}

@@ -263,6 +263,7 @@
 </template>
 
 <script>
+import cache from "./app/addIcon/hooks/cache";
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";
@@ -821,16 +822,16 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
 
     clearWallpaper() {
-
       this.setBackgroundImage({ path: "" });
-      const value = JSON.parse(window.localStorage.getItem("style"));
+      const value = cache.get("style")
       document.documentElement.classList.remove(value);
-      window.localStorage.setItem("background", JSON.stringify("-no"));
-      const background = JSON.parse(window.localStorage.getItem("background"));
+      cache.set("background","-no")
+      let background = cache.get("background")
       let model = this.styles ? "light" : "dark"
       let name = `${model}${background || ''}-model`
       document.documentElement.classList.add(name);
-      window.localStorage.setItem("style", JSON.stringify(name));
+      cache.set("style",name)
+      
       // if (this.styles == true) {
       //   document.documentElement.classList.add(`light${background || ''}-model`);
       //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));

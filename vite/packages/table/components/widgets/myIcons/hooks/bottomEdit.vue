@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row">
+    <div class="flex flex-row ">
         <div class="option h-24 w-24 ml-4" @click="item.fn()" v-for="item in menuList">
             <Icon class="icon" :icon="item.icon"></Icon>
             {{ item.title }}

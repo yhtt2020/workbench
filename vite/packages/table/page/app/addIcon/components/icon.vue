@@ -1,26 +1,29 @@
 <template>
-  <!-- 应用数量 和 全选按钮 -->
-  <div v-if="isSelect" class="flex justify-between items-center mb-3">
-    <div>已选 {{ selectApps.length }} 个应用图标</div>
-    <div class="xt-active-btn h-12 w-120" @click="selectAllApp()">
-      {{ selectAll }}
-    </div>
+  <div class="w" style="height: 100%">
+    <slot></slot>
   </div>
-  <div
-    class="flex h-full flex-wrap overflow-y-auto xt-container mt-3"
-    style="align-content: flex-start; width: 566px; height: 410px"
-  >
+    <!-- 应用数量 和 全选按钮 -->
+    <div v-if="isSelect" class="flex justify-between items-center mb-3">
+      <div>已选 {{ selectApps.length }} 个应用图标</div>
+      <div class="xt-active-btn h-12 w-120" @click="selectAllApp()">
+        {{ selectAll }}
+      </div>
+    </div>
     <div
-      v-for="(item, index) in data"
-      class="mx-2 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer text-xs"
-      style="width: 125px; height: 125px"
-      @click="selectApp(item, index)"
-      :style="[isSelected(index)]"
+      class="flex h-full flex-wrap overflow-y-auto xt-container mt-3 w h"
+      style="align-content: flex-start"
     >
-      <a-avatar :size="52" shape="square" :src="item.icon"></a-avatar>
-      <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
+      <div
+        v-for="(item, index) in data"
+        class="mx-2 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer text-xs"
+        style="width: 125px; height: 125px"
+        @click="selectApp(item, index)"
+        :style="[isSelected(index)]"
+      >
+        <a-avatar :size="52" shape="square" :src="item.icon"></a-avatar>
+        <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -100,4 +103,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "./index.scss";
+</style>
