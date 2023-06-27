@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center " style="margin-left: 1em">
+  <div class="flex flex-row items-center pt-3.5" style="margin-left: 1em">
     <div class="flex flex-row mr-3" v-if="recentGameList.length>0">
       <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="currentGame.appid"
                 class="w-60 h-12 rounded-lg mr-3 text-xs s-bg right-nav" size="large" :bordered="false">
@@ -13,11 +13,13 @@
       </a-select> -->
     </div>
     <div class="flex flex-row " v-if="recentGameList.length>0">
-      <div @click="openDrawer('search')" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center">
-        <Icon style="" icon="sousuo"></Icon>
+      <div @click="openDrawer('search')" style="background: var(--primary-bg); color: var(--primary-text);"
+      class="pointer h-12 w-12 rounded-lg flex justify-center items-center">
+        <Icon icon="sousuo"></Icon>
       </div>
-      <div @click="openDrawer('tip')" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
-        <Icon style="" icon="tishi-xianxing"></Icon>
+      <div @click="openDrawer('tip')"  style="background: var(--primary-bg);color: var(--primary-text);"
+       class="pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
+        <Icon  icon="tishi-xianxing"></Icon>
       </div>
     </div>
   </div>
@@ -27,8 +29,8 @@
   </div>
 
   <template v-else-if="introductionType.name==='video'">
-    <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em"
-                          class="mt-3 mr-3 s-bg rounded-lg">
+    <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em;background: var(--primary-bg);"
+                          class="mt-3 mr-3  rounded-lg">
       <div class="flex flex-row flex-wrap -ml-3  p-3">
         <div @click="openUrl(item.arcurl)" class="pb-3  pl-3 game-list-item flex-shrink-0"
              v-for="(item,index) in gameVideoList">
@@ -49,13 +51,13 @@
               <div class="text-color">{{ item.duration }}</div>
             </div>
           </div>
-          <div class="text-white mb-2 px-1 pointer" @click="openUrl(item.arcurl)"
+          <div class="text-white mb-2 px-1 pointer my-primary-title" @click="openUrl(item.arcurl)"
                style="overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;  ">
             {{ item.title.replace( /<em[^>]*>/g, '').replace(/<\/em>/g, '')}}
           </div>
           <div class="flex flex-row justify-between items-center px-2">
-            <div>{{ item.author }}</div>
-            <div>{{ changeTime(item.senddate) }}</div>
+            <div class="my-secondary-title">{{ item.author }}</div>
+            <div class="my-secondary-title">{{ changeTime(item.senddate) }}</div>
           </div>
         </div>
       </div>
@@ -74,10 +76,10 @@
     <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em"
                           class="mt-3 mr-3">
       <div v-for="item in gameIntroductionList" style="width: calc(100vw - 275px)" @click="openUrl(item.href)"
-           class="s-bg h-14 mb-3 rounded-xl nav-top-game flex flex-row items-center px-4 inline-block pointer">
+           class="h-14 guide-bg mb-3 rounded-xl nav-top-game flex flex-row items-center px-4 inline-block pointer">
         <div class="round-dot mr-4 flex-shrink-0"></div>
-        <div class="text-more inline-block">{{ item.title }}</div>
-        <div class="ml-auto flex-shrink-0">{{ item.date }}</div>
+        <div class="text-more inline-block" style="color: var(--primary-text);">{{ item.title }}</div>
+        <div class="ml-auto flex-shrink-0" style="color: var(--secondary-text);">{{ item.date }}</div>
       </div>
     </vue-custom-scrollbar>
   </template>
@@ -94,13 +96,13 @@
     <div class="line">视频攻略关键词：</div>
     <div class="line">
       <a-input v-model:value="currentSearchWords.video" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="视频关键词" style="
-    border-radius: 12px;background: rgba(42, 42, 42, 0.6);" v-if="drawerType==='search'">
+    border-radius: 12px;background:var(--secondary-bg);" v-if="drawerType==='search'">
       </a-input>
     </div>
     <div class="line">图文攻略关键词：</div>
     <div class="line">
       <a-input v-model:value="currentSearchWords.text" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="图文关键词" style="
-    border-radius: 12px;background: rgba(42, 42, 42, 0.6);" v-if="drawerType==='search'">
+    border-radius: 12px;background:var(--secondary-bg);" v-if="drawerType==='search'">
       </a-input>
     </div>
     <div class="line-title">
@@ -108,24 +110,24 @@
     </div>
     <div class="line">
       <a-input v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="搜索" style="
-    border-radius: 12px;background: rgba(42, 42, 42, 0.6);">
+    border-radius: 12px;background:var(--secondary-bg);">
         <template #prefix>
-          <Icon icon="sousuo"></Icon>
+          <Icon icon="sousuo" style="color: var(--secondary-text);"></Icon>
         </template>
       </a-input>
     </div>
       <div class="line">
-        <a-button type="primary" @click="searchEnter" size="large" block>搜索</a-button>
+        <a-button type="primary" class="rounded-lg" style="color: var(--active-text);" @click="searchEnter" size="large" block>搜索</a-button>
       </div>
     </template>
     <div v-else class="px-14">
       <div>视频攻略数据均来自「Bilibili」，本应用不提供任何攻略数据</div>
-      <div class="drawer-item-bg h-10 rounded-lg w-20 mx-auto flex justify-center items-center mt-3 pointer"
-           @click="goBil">访问官网
+      <div class="h-10  xt-bg-2 rounded-lg w-20 mx-auto flex justify-center items-center mt-3 pointer"
+           @click="goBil"  style="color:var(--primary-text);">访问官网
       </div>
       <div class="mt-3">图文攻略数据均来自「游民星空」，本应用不提供任何攻略数据</div>
-      <div class="drawer-item-bg h-10 rounded-lg w-20 mx-auto flex justify-center items-center mt-3 pointer"
-           @click="goYm">访问官网
+      <div class="h-10 rounded-lg xt-bg-2 w-20 mx-auto flex justify-center items-center mt-3 pointer" 
+       style="color:var(--primary-text);" @click="goYm">访问官网
       </div>
     </div>
   </a-drawer>
@@ -466,6 +468,21 @@ export default {
 <style scoped>
 .nav-top-game {
   max-width: 1050px;
+}
+.my-primary-title{
+ font-size: 14px;
+ font-weight: 400;
+ font-family: PingFangSC;
+ color:var(--primary-text);
+}
+.guide-bg{
+  background: var(--primary-bg);
+}
+.my-secondary-title{
+ font-size: 12px;
+ font-weight: 400;
+ font-family: PingFangSC;
+ color:var(--secondary-text);
 }
 
 .game-list-item {

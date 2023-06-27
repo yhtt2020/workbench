@@ -1,16 +1,16 @@
 <template>
   <div class="px-4 max-capture flex" style="height: 100%">
-    <div class="s-bg rounded-md cap-left px-4 py-2 mb-2" style="height: 100%">
+    <div class="capture-bg rounded-md px-4 py-2 mb-2" style="height: 100%">
       <!--  选择录制源    -->
       <div style="width: 490px;height: 100%">
         <div v-if="step===1" style="height: 100%">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center">
-              <Icon icon="video" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
-              <span class="title-color ml-3">捕获</span>
+              <Icon icon="video" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
+              <span class="title-color ml-3" style="color:var(--primary-text);">捕获</span>
             </div>
             <div class="flex items-center pointer justify-center" @click="openRecordSet">
-              <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
+              <Icon icon="gengduo1" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
             </div>
           </div>
           <HorizontalCapture @click="refreshSource" :navList="captureType" v-model:selectType="defaultRecordingType"
@@ -27,12 +27,12 @@
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
                   <div v-for="(item,index) in recordGameData"
-                       class="flex pointer flex-col s-bg rounded-lg mb-4  record-game-item"
+                       class="flex pointer flex-col capture-bg rounded-lg mb-4  record-game-item"
                        @click="clickRecordGame(item,index)" :class="{'s-active':defaultIndex === index}"
                   >
-                    <img :src="item.url" class="w-full rounded-lg h-full object-cover">
+                    <img :src="item.url" class="w-full rounded-t-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:150px;">{{ item.name }}  </span>
+                      <span class="truncate capture-title" style="max-width:150px;">{{ item.name }}  </span>
                     </div>
                   </div>
                 </div>
@@ -46,12 +46,12 @@
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
                   <div v-for="(item,index) in  deskSource"
-                       class="flex flex-col s-bg rounded-lg mb-4 pointer record-game-item"
+                       class="flex flex-col capture-bg rounded-lg mb-4 pointer record-game-item"
                        @click="chooseSource(item,index)" :class="{'s-active':defaultIndex === index}"
                   >
-                    <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
+                    <img :src="'file://'+item.src" class="w-full rounded-t-lg h-full object-cover">
                     <div class="px-4 py-3">
-                      <span class="truncate" style="max-width:207px;">{{ item.name }} </span>
+                      <span class="truncate capture-title" style="max-width:207px;">{{ item.name }} </span>
                     </div>
                   </div>
                 </div>
@@ -65,12 +65,12 @@
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
                   <div v-for="(item,index) in  windowSource"
-                       class="flex flex-col justify-between s-bg rounded-lg mb-4 pointer record-game-item"
+                       class="flex flex-col justify-between capture-bg rounded-lg mb-4 pointer record-game-item"
                        @click="chooseSource(item,index)" :class="{'s-active':defaultIndex === index}"
                   >
-                    <img :src="'file://'+item.src" class="w-full rounded-lg h-full object-cover">
+                    <img :src="'file://'+item.src" class="w-full rounded-t-lg h-full object-cover">
                     <div class="px-4 py-3 truncate">
-                      <span class="" style="max-width:207px;">{{ item.name }} </span>
+                      <span class="capture-title" style="max-width:207px;">{{ item.name }} </span>
                     </div>
                   </div>
                 </div>
@@ -86,15 +86,15 @@
 
             </div>
             <div style="height: 5em;position: relative">
-              <back-btn @click="step=1" style="margin-top: -30px;margin-left: -20px"></back-btn>
-              <div style="position: absolute;left:70px;top:10px;font-size: 16px">已选择：
+              <back-btn @click="step=1" class="capture-bg capture-title" style="margin-top: -30px;margin-left: -20px"></back-btn>
+              <div class="capture-title" style="position: absolute;left:70px;top:10px;font-size: 16px">已选择：
                 <a-avatar v-if="currentSource.type==='window'" :size="24" shape="square"
                           :src="'file://'+currentSource.icon"></a-avatar>
                 {{ currentSource.name }}
               </div>
               <div style="position: absolute;right: 0.5em">
                 <div class="flex items-center pointer justify-center" @click="openRecordSet">
-                  <Icon icon="gengduo1" style="font-size: 1.75em;color:rgba(255,255,255,0.85)"></Icon>
+                  <Icon icon="gengduo1" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
                 </div>
               </div>
             </div>
@@ -103,69 +103,69 @@
                    class="cp-w cp-orange-1 flex-col rounded-lg pointer mr-3 hover-btn" @click="screenshot">
                 <div class="cp-orange-2 mb-3 w-20 flex items-center justify-center  rounded-full h-20">
                   <div class="rounded-full cp-orange-full flex items-center justify-center cp-lw">
-                    <Icon icon="camera" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
+                    <Icon icon="camera" style="font-size: 2em;color:var(--primary-text);"></Icon>
                   </div>
                 </div>
-                <div class="cp-text">截图</div>
+                <div class="cp-text capture-title">截图</div>
               </div>
 
               <div :class="{disable:!this.settings.videoSavePath}" v-if="!recording" @click="startRecording"
                    class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3 hover-btn">
                 <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
                   <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
-                    <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
+                    <Icon icon="record-circle-line" style="font-size: 2em;color:var(--primary-text);"></Icon>
                   </div>
                 </div>
-                <div class="cp-text">开始录制</div>
+                <div class="cp-text capture-title">开始录制</div>
               </div>
               <div v-else @click="stopRecording" class="cp-w cp-red-active cp-red-1 pointer flex-col rounded-lg mr-3">
                 <div class="w-20 h-20 flex cp-red-2  items-center rounded-full justify-center mb-3">
                   <div class="rounded-full cp-red-full flex items-center justify-center cp-lw">
-                    <Icon icon="record-circle-line" style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></Icon>
+                    <Icon icon="record-circle-line" style="font-size: 2em;color:var(--primary-text);"></Icon>
                   </div>
                 </div>
-                <div class="cp-text">停止录制</div>
+                <div class="cp-text capture-title">停止录制</div>
               </div>
 
 
               <div @click="startMonitoring">
-                <div class="cp-w s-item  pointer  flex-col rounded-lg " v-if="settings.enableInspector === false">
+                <div class="cp-w capture-bg pointer  flex-col rounded-lg " v-if="settings.enableInspector === false">
                   <div class="w-20 h-20 flex  items-center rounded-full justify-center mb-3">
                     <div class="rounded-full dark-blue-full flex items-center justify-center cp-lw">
-                      <AreaChartOutlined style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></AreaChartOutlined>
+                      <AreaChartOutlined style="font-size: 2em;color:var(--primary-text);"></AreaChartOutlined>
                     </div>
                   </div>
-                  <div class="cp-text">开启监控</div>
+                  <div class="cp-text capture-title">开启监控</div>
                 </div>
-                <div class="cp-w s-item dark-blue-1 pointer  flex-col rounded-lg" v-else>
+                <div class="cp-w  dark-blue-1 pointer  flex-col rounded-lg" v-else>
                   <div class="w-20 h-20 flex dark-blue-2 items-center rounded-full justify-center mb-3">
                     <div class="rounded-full dark-blue-full flex items-center justify-center cp-lw">
-                      <AreaChartOutlined style="font-size: 2em;color:rgba(255, 255, 255, 0.8);"></AreaChartOutlined>
+                      <AreaChartOutlined style="font-size: 2em;color:var(--primary-text);"></AreaChartOutlined>
                     </div>
                   </div>
                   <div class="cp-text">关闭监控</div>
                 </div>
               </div>
             </div>
-            <div class="s-item rounded-md p-4 mb-3" v-if="isHeight === true">
+            <div class="capture-bg rounded-md p-4 mb-3" v-if="isHeight === true">
               <div class="flex items-center mb-5">
                 <div class="pointer" @click="clickMute">
-                  <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
+                  <Icon icon="yinliang" style="font-size: 1.5em;color:var(--primary-text);"
                         v-if="!systemSound.muted"></Icon>
-                  <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                  <Icon icon="jingyin" v-else style="font-size: 1.5em;color:var(--primary-text);"></Icon>
                 </div>
-                <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
+                <span class="mx-3" style="color:var(--primary-text);">系统声音</span>
                 <div style="width:331px;">
                   <a-slider @afterChange="changeVolume" v-model:value="systemSound.volume"></a-slider>
                 </div>
               </div>
               <div class="flex items-center">
                 <div class="pointer" @click="clickMicMute">
-                  <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
+                  <Icon icon="mic-on" style="font-size: 1.5em;color:var(--primary-text);"
                         v-if="!systemMicrophone.muted"></Icon>
-                  <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
+                  <Icon icon="mic-off" style="font-size: 1.5em;color:var(--primary-text);" v-else></Icon>
                 </div>
-                <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
+                <span style="margin: 0 19px;color:var(--primary-text);">麦克风</span>
                 <div style="width:331px;">
                   <a-slider @afterChange="changeMicVolume" v-model:value="systemMicrophone.volume"></a-slider>
                 </div>
@@ -215,14 +215,14 @@
     </div>
     <div class="ml-3 rounded-md w-full flex flex-col cap-right " >
       <!--   监控部分   -->
-      <div class="s-bg rounded-md mb-3 p-3" v-if="this.settings.enableInspector === true">
+      <div class="capture-bg rounded-md mb-3 p-3" v-if="this.settings.enableInspector === true">
         <div class="flex  justify-between justify-center mb-3">
           <div class="flex items-center ">
-            <Icon icon="game" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
-            <span class="ml-2 monitor-text">{{ monitorTitle }}</span>
+            <Icon icon="game" style="font-size: 1.5em;color:var(--primary-text);"></Icon>
+            <span class="ml-2 monitor-text" style="color:var(--primary-text);">{{ monitorTitle }}</span>
           </div>
           <div @click="openMonitorSet" class="flex items-center justify-center pointer">
-            <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
+            <Icon icon="gengduo1" style="font-size: 1.5em;color:var(--primary-text);"></Icon>
           </div>
         </div>
         <template v-if="this.settings.inspectorIndex === 'f'">
@@ -249,24 +249,24 @@
 
         <template v-else-if="this.settings.inspectorIndex  === 'p'">
           <div class="flex justify-between">
-            <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+            <div class="px-5 flex flex-col capture-bg py-8 rounded-lg cpu-w">
               <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useCPU.value }}%</div>
               <div class="flex items-center justify-center">
-                <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                <Icon icon="cpu" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
                 <span class="ml-2 fps-t">CPU</span>
               </div>
             </div>
-            <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+            <div class="px-5 flex flex-col capture-bg py-8 rounded-lg cpu-w">
               <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.useGPU.value || '-' }}</div>
               <div class="flex items-center justify-center">
-                <Icon icon="cpu" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                <Icon icon="cpu" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
                 <span class="ml-2 fps-t">GPU</span>
               </div>
             </div>
-            <div class="px-5 flex flex-col s-item py-8 rounded-lg cpu-w">
+            <div class="px-5 flex flex-col capture-bg py-8 rounded-lg cpu-w">
               <div class="fps-text flex items-center  justify-center">{{ CPUGPUData.FPS.value }}</div>
               <div class="flex items-center justify-center">
-                <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+                <Icon icon="game" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
                 <span class="ml-2 fps-t">FPS</span>
               </div>
             </div>
@@ -274,24 +274,24 @@
         </template>
 
         <template v-else>
-          <div class="s-bg flex flex-col py-8 rounded-lg items-center">
+          <div class="capture-bg flex flex-col py-8 rounded-lg items-center">
             <div class="fps-text pb-4">{{ CPUGPUData.FPS.value }}</div>
             <div class="flex items-center justify-center">
-              <Icon icon="game" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+              <Icon icon="game" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
               <span class="ml-3 fps-t">FPS</span>
             </div>
           </div>
         </template>
       </div>
-      <div class="flex-1 flex s-bg rounded-md p-3 flex-col" style="height: 0">
+      <div class="flex-1 flex capture-bg rounded-md p-3 flex-col" style="height: 0">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center justify-center">
-            <Icon icon="video" style="font-size: 1.75em;color:rgba(255, 255, 255, 0.85);"></Icon>
+            <Icon icon="video" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
             <span class="ml-3"
-                  style="font-size: 16px;color: rgba(255,255,255,0.85);font-weight: 400;">最近截屏和录制</span>
+                  style="font-size: 16px;color: var(--primary-text);font-weight: 400;">最近截屏和录制</span>
           </div>
           <div class="flex items-center pointer justify-center" @click="openRecordSet">
-            <Icon icon="gengduo1" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.6);"></Icon>
+            <Icon icon="gengduo1" style="font-size: 1.5em;color:var(--secondary-text);"></Icon>
           </div>
         </div>
         <HorizontalCapture :navList="lastCapture" v-model:selectType="defaultLastCap" class="mb-3"></HorizontalCapture>
@@ -345,40 +345,40 @@
   <a-drawer width="500" title="设置" :bodyStyle="{ overflow: 'hidden' }" :placement="right"
             v-model:visible="recordSetShow" @close="recordSetShow = false">
     <div class="flex flex-col scroll-container">
-      <div class="flex flex-col s-item rounded-md p-4 mb-3">
+      <div class="flex flex-col rounded-md p-4 mb-3" style="background: var(--secondary-bg);">
         <div class="flex items-center mb-3">
           <div class="pointer" @click="clickMute">
-            <Icon icon="yinliang" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
+            <Icon icon="yinliang" style="font-size: 1.5em;color:var(--primary-text);"
                   v-if="!systemSound.muted"></Icon>
-            <Icon icon="jingyin" v-else style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"></Icon>
+            <Icon icon="jingyin" v-else style="font-size: 1.5em;color:var(--primary-text);"></Icon>
           </div>
-          <span class="mx-3" style="color:rgba(255, 255, 255, 0.85);">系统声音</span>
+          <span class="mx-3" style="color:var(--primary-text);">系统声音</span>
           <div style="width:310px;">
             <a-slider @afterChange="changeVolume" v-model:value="systemSound.volume"></a-slider>
           </div>
         </div>
         <div class="flex items-center">
           <div class="pointer" @click="clickMicMute">
-            <Icon icon="mic-on" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);"
+            <Icon icon="mic-on" style="font-size: 1.5em;color:var(--primary-text);"
                   v-if="!systemMicrophone.muted"></Icon>
-            <Icon icon="mic-off" style="font-size: 1.5em;color:rgba(255, 255, 255, 0.85);" v-else></Icon>
+            <Icon icon="mic-off" style="font-size: 1.5em;color:var(--primary-text);" v-else></Icon>
           </div>
-          <span style="margin: 0 19px;color:rgba(255, 255, 255, 0.85);">麦克风</span>
+          <span style="margin: 0 19px;color:var(--primary-text);">麦克风</span>
           <div style="width:310px;">
             <a-slider @afterChange="changeMicVolume" v-model:value="systemMicrophone.volume"></a-slider>
           </div>
         </div>
       </div>
       <span class="mb-3 fps-t">我的截屏保存地址</span>
-      <span @click="setImageSavePath" class="text-center mb-3 py-3 s-item rounded-lg">{{
+      <span @click="setImageSavePath" style="background: var(--secondary-bg);" class="text-center mb-3 py-3 s-item rounded-lg">{{
           settings.imageSavePath
         }}</span>
       <span class="mb-3 fps-t">我的录制保存地址</span>
-      <span @click="setVideoSavePath" class="text-center mb-3 py-3 s-item rounded-lg">{{
+      <span @click="setVideoSavePath" style="background: var(--secondary-bg);" class="text-center mb-3 py-3 rounded-lg">{{
           settings.videoSavePath
         }}</span>
       <span class="mb-3 fps-t ">视频码率</span>
-      <a-select v-model:value="settings.videoBitsPerSecond">
+      <a-select  v-model:value="settings.videoBitsPerSecond">
         <a-select-option :value="1.5e6">
           1.5Mbps
         </a-select-option>
@@ -419,8 +419,8 @@
   <a-drawer width="500" title="设置" :placement="right" v-model:visible="setShow">
     <div class="flex flex-col">
       <div v-for="item in monitorSetData"
-           class="h-12 mb-2 flex rounded-lg pointer items-center s-item justify-center"
-           @click="selectMonitorItem(item)" :class="{'drawer-item-bg':this.settings.inspectorIndex  === item.id}"
+           class="h-12 mb-2 flex rounded-lg pointer items-center justify-center" style="background: var(--secondary-bg);"
+           @click="selectMonitorItem(item)" :class="{'xt-active-bg cap-active':this.settings.inspectorIndex  === item.id}"
       >
         {{ item.name }}
       </div>
@@ -1277,9 +1277,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cap-left {
+.capture-bg{
+  background: var(--primary-bg);
 }
 
+.cap-active{
+  color: var(--active-text);
+}
+
+.capture-title{
+  color:var(--primary-text);
+}
 .cp-w {
   display: flex;
   align-items: center;
@@ -1361,35 +1369,42 @@ export default {
 .title-color {
   font-family: PingFangSC-Regular;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 400;
 }
 
 .fps-hz {
   font-family: Oswald-SemiBold;
   font-size: 24px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 600;
 }
 
 .fps-t {
   font-family: PingFangSC-Medium;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 500;
+}
+.fps-sm{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color:var(--secondary-text);
+  letter-spacing: 1.14px;
+  font-weight: 400;
 }
 
 .fps-text {
   font-family: Oswald-Medium;
   font-size: 36px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 500;
 }
 
 .btn-text {
   font-family: PingFangSC-Medium;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--primary-text);
   font-weight: 500;
 }
 
@@ -1413,12 +1428,12 @@ export default {
 
 .drawer-active {
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
   }
 
   &:active {
     filter: brightness(0.8);
-    background: rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
   }
 }
 
@@ -1528,7 +1543,7 @@ export default {
 }
 
 :deep(.ant-slider-handle) {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: var(--primary-text) !important;
   border-color: rgba(151, 151, 151, 1) !important;
 }
 

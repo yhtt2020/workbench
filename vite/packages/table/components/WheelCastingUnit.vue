@@ -75,7 +75,7 @@ export default {
     }
   },
   mounted() {
-    setTimeout(()=>{
+    this.$nextTick(()=>{
       this.slider = new KeenSlider(this.$refs.slider)
       this.thumbnail = new KeenSlider(
        this.$refs.thumbnail,
@@ -88,7 +88,7 @@ export default {
        },
        [ThumbnailPlugin(this.slider)]
       )
-    },50)
+    })
   },
   data(){
     return{

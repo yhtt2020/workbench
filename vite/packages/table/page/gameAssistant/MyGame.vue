@@ -1,16 +1,16 @@
 <template>
  <div v-if="fullScreen === false">
-  <div>
+  <div class="pt-3.5">
     <div class="flex flex-row  items-center game-page-nav">
       <div class="flex flex-row" style="padding-left: 1em">
         <HorizontalPanel :navList="gameNavList" v-model:selectType="gameType"></HorizontalPanel>
         <HorizontalPanel :navList="sortList" class="ml-3 main-nav" v-model:selectType="sortType"></HorizontalPanel>
       </div>
       <div class="flex flex-row ml-3">
-        <div @click="openDrawer" class="s-bg pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="font-size: 22px" icon="sousuo"></Icon></div>
-        <div @click="openModal" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon  style="font-size: 22px" icon="tianjia2"></Icon></div>
-        <div @click="()=>{this.settingVisible = true}" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon  style="font-size: 22px" icon="shezhi"></Icon></div>
-        <div @click="openScreen" class="s-bg pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
+        <div @click="openDrawer" class="my-bg my-title pointer h-12 w-12 rounded-lg  flex justify-center items-center"><Icon style="font-size: 22px" icon="sousuo"></Icon></div>
+        <div @click="openModal" class="my-bg my-title pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon  style="font-size: 22px" icon="tianjia2"></Icon></div>
+        <div @click="()=>{this.settingVisible = true}" class="my-bg my-title pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon  style="font-size: 22px" icon="shezhi"></Icon></div>
+        <div @click="openScreen" class="my-bg my-title pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
           <Icon  style="font-size: 22px" icon="fullscreen"></Icon>
         </div>
       </div>
@@ -21,7 +21,7 @@
     <div class="flex flex-row flex-wrap -ml-3 " v-if="gameType.name==='other'&&myGameList.length>0">
 <!--   导入的外部游戏，非steam   -->
       <div class="pb-3 pl-3 game-list-local flex-shrink-0 my-game-content" v-for="(item,index) in myGameList" >
-        <div class="s-bg h-full pointer w-full rounded-lg" style="padding-top:30px" @click="openMyGame(item)" @contextmenu="openOtherDetail(item)">
+        <div class="my-bg h-full pointer w-full rounded-lg" style="padding-top:30px" @click="openMyGame(item)" @contextmenu="openOtherDetail(item)">
           <div class="relative    mx-auto " style="height: 65px;width: 65px;" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose"  >
             <img :src="item.icon"  class="w-full h-full rounded-lg object-cover"  alt="">
           </div>
@@ -51,16 +51,16 @@
     <!--    </div>-->
     <!--  </div>-->
     <div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content " v-for="(item,index) in selectSteamList">
-      <div  class="relative  w-auto h-full s-bg  pointer flex flex-col " style="border-radius: 12px" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @click="openSteamDetail(item)">
+      <div  class="relative  w-auto h-full my-bg  pointer flex flex-col " style="border-radius: 12px" :class="hoverIndex===index?'fly':''"  @mouseenter="mouseOn(index)" @mouseleave="mouseClose" @click="openSteamDetail(item)">
         <div :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
           <img v-if="item" style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appid+'/header.jpg'" class="w-full h-full  object-cover"  alt="">
         </div>
 
     <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
         <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
-          <span class="text-more text-white text-base " style="font-weight: 400">{{item.chineseName}}</span>
-          <span :style="showTime?'':'display:none'"  class="text-xs">过去两周：{{twoWeekTime(item.time)}}小时</span>
-          <span :style="showTime?'':'display:none'"  class="text-xs">总数：{{totalTime(item.time)}}小时</span>
+          <span class="text-more text-white text-base my-item" style="font-weight: 400">{{item.chineseName}}</span>
+          <span :style="showTime?'':'display:none'"  class="text-xs my-num">过去两周：{{twoWeekTime(item.time)}}小时</span>
+          <span :style="showTime?'':'display:none'"  class="text-xs my-num">总数：{{totalTime(item.time)}}小时</span>
         </div>
       </div>
 
@@ -78,7 +78,7 @@
     </vue-custom-scrollbar>
     </div>
     <Modal v-model:visible="modalVisibility"  v-show="modalVisibility" animationName="b-t" :blurFlag="true">
-      <div class="p-6" @click.stop>
+      <div class="p-6 my-bg" @click.stop>
     <!--      <div class="flex flex-row items-center">-->
     <!--        <Icon style="height: 26px;width: 26px" icon="steam"></Icon>-->
     <!--        <div class="flex flex-col ml-4">-->
@@ -93,13 +93,13 @@
         <div class="flex flex-row items-center" >
           <Icon style="height: 26px;width: 26px" icon="game"></Icon>
           <div class="flex flex-col ml-4">
-            <span class="text-white" >自定义导入其他游戏</span>
-            <span>手动选择游戏运行文件</span>
+            <span style="color:var(--primary-text)">自定义导入其他游戏</span>
+            <span style="color: var(--secondary-text);">手动选择游戏运行文件</span>
           </div>
         </div>
         <div class="flex flex-row mt-4">
-          <div class="s-item pointer h-12 w-48 rounded-lg flex justify-center items-center"  @click.stop="openLocal">选择游戏</div>
-          <div @click="openModal" class="s-item pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
+          <div style="background: var(--active-bg);color:var(--active-text);" class="pointer h-12 w-48 rounded-lg flex justify-center items-center"  @click.stop="openLocal">选择游戏</div>
+          <div @click="openModal" style="background: var(--secondary-bg);" class="my-title pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3"><Icon style="" icon="yiwen-xianxing"></Icon></div>
         </div>
       </div>
     </Modal>
@@ -149,9 +149,9 @@
       </template>
       <a-input
         v-model:value="selectName"
-        class="rounded-lg mt-6 drawer-item-bg"
+        class="rounded-lg mt-6 my-bg my-title"
         style="height: 48px"
-        placeholder=""
+        placeholder="搜索游戏"
       >
       </a-input>
     </a-drawer>
@@ -169,6 +169,7 @@
         </div>
       </a-drawer>
  </div>
+ <MyFullScreenGame  v-else @close="fullScreen = false"></MyFullScreenGame>
 </template>
 <script>
 import HorizontalPanel from "../../components/HorizontalPanel.vue";
@@ -405,7 +406,7 @@ export default {
     'sortType':{
       handler(){
         if(this.sortType.name === 'letter'){
-          this.selectSteamList.sort((a, b) => a.appinfo.common.name.localeCompare(b.appinfo.common.name));
+          this.selectSteamList.sort((a, b) => a.name.localeCompare(b.name));
         }else{
           this.selectSteamList.sort((a, b) => {
             if (a.time === undefined && a.time === undefined) {
@@ -429,6 +430,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.my-bg{
+  background: var(--primary-bg);
+}
+
+.my-title{
+  color: var(--primary-text);
+}
+
+.my-item{
+  font-family: PingFangSC-Semibold;
+  font-size: 16px;
+  color:var(--primary-text);
+  font-weight: 600;
+}
+
+.my-num{
+  font-family: PingFangSC-Regular;
+  font-size: 13px;
+  color:var(--secondary-text);
+  font-weight: 400;
+}
+
 .my-game-content{
   transform-style: preserve-3d;
   perspective: 1000px;
