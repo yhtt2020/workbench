@@ -13,8 +13,27 @@
       <div v-if="myApps.length === 0" style="text-align: center">
         <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
       </div>
-      <div style="margin: 1em;">
-        <MyApps></MyApps>
+      <div style="margin: 1em">
+        <MyApps
+          @addIcons="iconVisible = true"
+          v-if="myApps.length > 0"
+        ></MyApps>
+        <Teleport to="body">
+          <AddIcon
+          v-if="iconVisible"
+            @getSelectApps="getSelectApps"
+            @close="iconHide"
+            navName="Desktop"
+            :navList="[
+              { name: '桌面图标', component: 'Desktop' },
+            ]"
+          >
+            <div>
+              {{ navName }}
+              <Desktop ref="apps"></Desktop>
+            </div>
+          </AddIcon>
+        </Teleport>
       </div>
     </div>
     <div class="app-content s-bg" style="margin: 1em;background: var(--primary-bg);" v-if="currentIndex === 'qing'">
@@ -115,16 +134,19 @@ import { runExec } from '../js/common/exec'
 import Template from '../../user/pages/Template.vue'
 import { NotificationOutlined, FolderOpenOutlined } from '@ant-design/icons-vue'
 import browser from '../js/common/browser'
+import AddIcon from "../page/app/addIcon/index.vue"
+import Desktop from "../page/app/addIcon/modules/Desktop.vue"
 let { fs } = window.$models
 export default {
   name: 'Apps',
-  components: { Template, MyApps, QingApps, SecondPanel, NotificationOutlined, FolderOpenOutlined },
+  components: { AddIcon,Desktop,Template, MyApps, QingApps, SecondPanel, NotificationOutlined, FolderOpenOutlined },
   computed: {
     ...mapWritableState(appStore, ['appData']),
     ...mapWritableState(appsStore, ['myApps'])
   },
   data() {
     return {
+      iconVisible:false,
       settings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -406,6 +428,10 @@ export default {
   },
   methods: {
     ...mapActions(appsStore, ['addApps']),
+    getSelectApps(){
+    let app = this.$refs.apps;
+    this.addApps(app.selectApps)
+    },
     executeApp(appData) {
       this.$router.push({
         name: 'app',
@@ -415,11 +441,14 @@ export default {
     open(app) {
       require('electron').shell.openPath(app.path)
     },
-
+    iconHide(){
+      this.iconVisible = false
+    },
     async loadDeskIconApps() {
-      const desktopApps = await ipc.sendSync('getDeskApps')
-      this.desktopApps = desktopApps
-      this.addApps(this.desktopApps)
+      this.iconVisible = true
+      // const desktopApps = await ipc.sendSync('getDeskApps')
+      // this.desktopApps = desktopApps
+      // this.addApps(this.desktopApps)
     },
     dragOver() {
 

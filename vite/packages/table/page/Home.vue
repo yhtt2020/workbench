@@ -93,7 +93,7 @@
     </div>
   </transition>
   <transition name="fade">
-    <div class="home-blur" style="
+    <div class="" style="
         position: fixed;
         top: 0;
         right: 0;
@@ -106,7 +106,7 @@
   </transition>
   
    <transition name="fade">
-     <div class="home-blur" style="
+     <div class="" style="
          position: fixed;
          top: 0;
          right: 0;

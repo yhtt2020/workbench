@@ -376,8 +376,8 @@ export default {
     copyIcon() {
       this.menuVisible = false; // 隐藏控件
       this.isSelect = false; // 关闭选中样式
-      if (this.isCopy === false && this.isDrag === false)
-        return message.error("你还未复制任何图标组件");
+      // if (this.isCopy === false && this.isDrag === false)
+      //   return message.error("你还未移动任何图标组件");
       // 遍历全局数组并添加
       this.iconList.forEach((item) => {
         const { iconRef, iconIndex, ...icon } = item;

@@ -6,10 +6,10 @@ export const scrollable = {
       let left = event.deltaY / 2;
       el.scrollLeft = el.scrollLeft + left;
     };
-    el.addEventListener("wheel", handleMouseWheel);
+    el.addEventListener("wheel", handleMouseWheel, { passive: true });
   },
   onBeforeUnmount(el) {
-    el.removeEventListener("wheel", handleMouseWheel);
+    el.removeEventListener("wheel", handleMouseWheel, { passive: true });
   },
 };
 
