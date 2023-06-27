@@ -227,6 +227,7 @@
   <!-- 键盘 -->
   <KeyBoard v-if="keyBoard" 
   :selectKey="selectKey" 
+  :parentKeyList="keyList"
   @closeKeyBoard="closeKeyBoard"
   @saveKey="saveKey"></KeyBoard>
 </template>
@@ -350,47 +351,6 @@ export default {
       message.success('成功保存');
       this.$router.go(-1)
     },
-    // 保存并分享
-    saveShare(){
-      if(!this.applyName)return message.info('名称不能为空')
-        let sum = 0
-        this.keyList.map(item => {
-          if(item.keys){
-            sum += item.keys.length
-          }
-        })
-      if(this.paramsId !== -1){
-        this.appContent.icon = this.icon || this.file.path 
-        this.appContent.keyList = this.keyList
-        this.appContent.name = this.applyName
-        this.appContent.commonUse = this.introduce
-        this.appContent.number = sum
-        this.setSchemeList(this.appContent)
-      }else{
-        const time = new Date().valueOf()
-        this.appContent =  {   
-          id: nanoid(),  //唯一标识
-          icon: this.file.path, //方案的图片
-          name: this.applyName, //方案名称
-          number: sum, //快捷键总数
-          commonUse: this.introduce, //方案简介
-          avatar: '/icons/logo128.png', //方案人
-          nickName: 'Victor Ruiz', //头像
-          sumLikes: 0, //总赞数
-          download: 0, //下载次数
-          key: '快捷键',
-          time, //时间轴
-          isLike: false,  //是否点赞
-          isMyCreate: true, //是否是自己创建
-          isShare: false, //是否分享到社区
-          isCommunity: false, //是否来自社区
-          keyList: this.keyList //快捷键列表
-        }
-      }
-      this.setMarketList(this.appContent)
-      // console.log(this.appContent)
-      this.shoreModal = true
-    },
     onBack(){
       this.$router.go(-1)
     },
@@ -456,29 +416,11 @@ export default {
             item.groupName = this.groupName
             return message.info('分组名称不能为空');
           }
-
-          let retArr = this.keyList.find(i => {
-            return i.groupName === item.groupName
-          })
-          if(retArr.id === item.id) return
-          if(retArr){
-            item.groupName = this.groupName
-            return message.info('分组名称重复')
-          }
           break;
         case 'keyName':
           if(!item.title.trim()){
             item.title = this.keyName
             return message.info('快捷键名称不能为空');
-          }
-          
-          let arr = this.keyList.find(i => {
-            return i.title === item.title
-          })
-          if(arr.id === item.id) return
-          if(arr){
-            item.title = this.keyName
-            return message.info('快捷键名称重复')
           }
           // this.keyList.forEach(i => {
           //   if(i.id === id){
@@ -542,10 +484,6 @@ export default {
     // 添加快捷键
     addShortcutKey(){
       if(!this.keyCombination || !this.combinationName.trim())return message.info('组合键或名称不能为空');
-      if(this.keyList.find(i => i.title === this.combinationName)){
-        this.combinationName = ''
-        return message.info('快捷键名称重复')
-      }
       // let keyArr = this.keyCombination.split(' + ')
       // keyArr.forEach((item,index) => {
       //   keyArr.splice(index,1,{key: item})
@@ -569,10 +507,6 @@ export default {
     // 添加分类名称
     addGroup(){
       if(!this.addGroupName.trim()) return message.info("分组名称不能为空")
-      if(this.keyList.find(i => i.groupName === this.addGroupName)){
-        this.addGroupName = ''
-        return message.info('分类名称重复')
-      }
 
       let obj = {
         id: nanoid(),

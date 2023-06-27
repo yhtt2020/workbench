@@ -89,8 +89,12 @@ export default {
   props: {
     //需要修改的内容
     selectKey: {
-      type: Array,
+      type: Object,
       defalut: () => {}
+    },
+    parentKeyList: {
+      type: Array,
+      defalut: () => []
     }
   },
   data() {
@@ -417,6 +421,14 @@ export default {
 
       this.keyContent.keys = keys
       this.keyContent.keyStr = keys.join(' + ')
+
+      let arr = this.keyContent.keys
+      // 判断组合键是否重复
+      let retArr = this.parentKeyList.find(item => {
+        return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
+      })
+      if(retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
+
       this.$emit('saveKey',{ keyArr: this.keyContent, isAdd })
       this.$emit('closeKeyBoard')
       
