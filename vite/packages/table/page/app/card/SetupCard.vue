@@ -206,7 +206,7 @@
             <div
               class="event-list"
               v-for="(item, index) in clockEvent"
-              style="background-color: var(--primary-bg);color: var(--primary-text);"
+              style="background: var(--primary-bg);color: var(--primary-text);"
             >
               <a-dropdown :trigger="['contextmenu']">
                 <div class="card-list">

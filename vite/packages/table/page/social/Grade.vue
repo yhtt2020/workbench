@@ -2,7 +2,7 @@
   <vueCustomScrollbar :settings="scrollbarSettings" style="height: 100%;padding: 15px;">
     <div class="w-full h-full flex justify-center flex-row flex-wrap">
       <div class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
-        <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" style="background-color: var(--primary-bg);">
+        <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" style="background: var(--primary-bg);">
           <GradePanel @openGradeTip="openGradeTip"></GradePanel>
         </div>
         <div class="rounded-lg flex-1 w-full  tip-card px-5 text-white" style="background: var(--primary-bg);">

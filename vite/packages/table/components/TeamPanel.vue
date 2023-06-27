@@ -1,6 +1,6 @@
 <template>
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
-       style="overflow: hidden;background-color: var(--primary-bg);color: var(--primary-text)">
+       style="overflow: hidden;background: var(--primary-bg);color: var(--primary-text)">
       <div v-if="showDetail"
            style="width:350px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
         <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"

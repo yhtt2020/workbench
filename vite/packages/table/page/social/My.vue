@@ -6,15 +6,15 @@
 
     <div class="mr-3" style="width: 400px;display: inline-block;vertical-align: top;white-space: pre-wrap">
       <!-- 快速搜索 用户->我的 -->
-      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background-color: var(--primary-bg);color: var(--primary-text);">
+      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background: var(--primary-bg);color: var(--primary-text);">
         <ComPanel></ComPanel>
       </div>
-      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;background-color: var(--primary-bg);color: var(--primary-text);">
+      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;background: var(--primary-bg);color: var(--primary-text);">
         <ComActionPanel></ComActionPanel>
       </div>
     </div>
 
-    <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background-color: var(--primary-bg);color: var(--primary-text);">
+    <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background: var(--primary-bg);color: var(--primary-text);">
       <GroupPanel></GroupPanel>
     </div>
 

@@ -6,7 +6,7 @@
     <vueCustomScrollbar v-if="currentTab.name === 'com'" :settings="scrollbarSettings"
       style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
       <div class="card mr-3"
-        style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column;background-color: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
+        style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column;background: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
         <div class="line-title" style="">
           <HorizontalPanel v-if="Number(this.myTeamNo) > 0" :navList="channelList" v-model:select-type="currentChannel">
           </HorizontalPanel>
@@ -86,7 +86,7 @@
       </div>
       <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top;">
         <div class="card mb-3"
-          style="width: 300px;background-color: var(--primary-bg);color: var(--primary-text);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);">
+          style="width: 300px;background: var(--primary-bg);color: var(--primary-text);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);">
           <div>
             反馈问题？提交Bug？进入想天浏览器官方版块。
             <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">
@@ -119,7 +119,7 @@
             <a-button class="mt-3" block type="primary" @click="checkUpdate">检查更新</a-button>
           </div>
         </div>
-        <div class="card mb-3" style="width: 300px;background-color: var(--primary-bg); color: var(--primary-text)">
+        <div class="card mb-3" style="width: 300px;background: var(--primary-bg); color: var(--primary-text)">
           <div class="line-title">
             成为开发者：
           </div>
