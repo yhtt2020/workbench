@@ -281,5 +281,5 @@ export default {
   }
 /* .card {
   background: #252525;
-}
+}*/
 </style>
