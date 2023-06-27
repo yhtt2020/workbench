@@ -57,15 +57,15 @@
 }
 // 按钮结束
 // 进度条开始
-// .ant-slider-rail {
-//   background-color: var(--active-secondary-bg);
-// }
-// .ant-slider-track {
-//   background: var(--active-bg);
-// }
-// .ant-drawer .ant-slider-handle {
-//   background-color: var(--active-bg);
-// }
+.ant-slider-rail {
+  background: var(--active-secondary-bg) !important;
+}
+.ant-slider-track {
+  background: var(--active-bg) !important;
+}
+.ant-drawer .ant-slider-handle {
+  background-color: var(--active-bg);
+}
 // 进度条结束
 .ant-select {
   background: var(--secondary-bg);
