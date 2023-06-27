@@ -8,9 +8,7 @@
         <div class="title xt-text">
           <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
           <div class="box-btn xt-bg" @click="disbandGroup">
-            <div class="text" style="color: #fff;">
-              · · ·
-            </div>
+            <Icon class="icon" icon="zhankai"></Icon>
           </div>
         </div>
         <div class="item-box" >
