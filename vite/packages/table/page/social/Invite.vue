@@ -1,23 +1,40 @@
 <template>
 
 
-  <div class="s-bg ml-3 p-3 rounded-xl " style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
+  <div class="s-bg ml-3 p-3 rounded-xl "
+       style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
     <div class="mb-3" style="width: 300px;">
       <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
       </HorizontalPanel>
     </div>
-    <div class="px-3"  style="flex: 1;height: 0">
+    <div class="px-3" style="flex: 1;height: 0">
       <vueCustomScrollbar v-if="tab.name==='invite'" :settings="scrollbarSettings" style="height: 100%">
-        <div class="" style="height: auto;color: var(--primary-text )" >
+        <div class="" style="height: auto;color: var(--primary-text )">
           <p>
-            目前想天工作台仍然在测试阶段。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。
+            如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。
             <br>对方将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。</p>
           <p>兑换方式：每200小时可兑换1枚邀请码，四舍五入（第1个邀请码在100小时释放，第2个在300小时） <br>
             您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong
-              class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{ exchanged }}</strong>，剩余：<strong
+              class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{
+                exchanged
+              }}</strong>，剩余：<strong
               class="text-red-400">{{ leave }}</strong>。
-            <a-button type="primary" @click="confirmExchange" :disabled="leave===0" style="color:var(--main-text)">兑换1枚</a-button>
+            <a-button type="primary" @click="confirmExchange" :disabled="leave===0" style="color:var(--main-text)">
+              兑换1枚
+            </a-button>
           </p>
+
+          <p>您已成功邀请{{ invitedUsers.length }}位用户。</p>
+          <div>
+            <div @click="showCard(user.uid,user)" class="aUser truncate pointer" v-for="user in invitedUsers"
+                 :title="user.nickname">
+              <a-avatar :size="40" :src="user.avatar">
+              </a-avatar>
+              <div>
+                {{ user.nickname }}
+              </div>
+            </div>
+          </div>
 
           <a-table :pagination="false" :dataSource="codes" :columns="columns">
             <template #bodyCell="{ column, record,index }">
@@ -31,24 +48,27 @@
                 <span v-else>未使用</span>
               </template>
               <template v-else-if="column.key === 'key'">
-            <span style="padding-left: 2px;padding-right: 2px" class="mr-3" :style="{background:isMarked(record.key)?'#35ad03':'transparent',textDecoration:record.status===2?'line-through':'none'}">
+            <span style="padding-left: 2px;padding-right: 2px" class="mr-3"
+                  :style="{background:isMarked(record.key)?'#35ad03':'transparent',textDecoration:record.status===2?'line-through':'none'}">
               {{ record.key }}
             </span>
-                <a-tag class="pointer" @click="copy(record.key)" >复制</a-tag> <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
+                <a-tag class="pointer" @click="copy(record.key)">复制</a-tag>
+                <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
               </template>
               <template v-else-if="column.key === 'status'">
-                <a-tag color="green" v-if="record.status===1"  style="color: #6abe39 ">有效</a-tag>
-                <a-tag color="geekblue" v-else-if="record.status===2" >已使用</a-tag>
+                <a-tag color="green" v-if="record.status===1" style="color: #6abe39 ">有效</a-tag>
+                <a-tag color="geekblue" v-else-if="record.status===2">已使用</a-tag>
               </template>
               <template v-else-if="column.key === 'user' && record.uid">
-                <div @click="showCard(record.uid,record.userInfo)" class="text-center truncate" style="max-width: 120px;">
+                <div @click="showCard(record.uid,record.userInfo)" class="text-center truncate"
+                     style="max-width: 120px;">
                   <a-avatar :src="record.userInfo.avatar"></a-avatar>&nbsp;
-                  <span  style="font-size: 12px" :title="record.userInfo.nickname">{{record.userInfo.nickname}}</span>
+                  <span style="font-size: 12px" :title="record.userInfo.nickname">{{ record.userInfo.nickname }}</span>
                 </div>
 
               </template>
               <template v-else-if="column.key==='index'">
-                {{codes.length-index}}
+                {{ codes.length - index }}
               </template>
             </template>
           </a-table>
@@ -60,7 +80,8 @@
         <br>
         验证通过后将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。
         <div>
-          <a-input class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg)" v-model:value="code"></a-input>
+          <a-input class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg)"
+                   v-model:value="code"></a-input>
         </div>
         <div>
           <a-button type="primary">验证邀请码</a-button>
@@ -74,9 +95,9 @@
 
 <script>
 import { appStore } from '../../store'
-import { mapState,mapActions } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 import Template from '../../../user/pages/Template.vue'
-import { Modal,message } from 'ant-design-vue'
+import { Modal, message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
 import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
 
@@ -86,18 +107,18 @@ export default {
 
   data () {
     return {
-      code:'',
-      tabs:[{
-        name:'invite',
-        title:'邀请好友'
-      },{
-        name:'verify',
-        title:'受邀'
+      code: '',
+      tabs: [{
+        name: 'invite',
+        title: '邀请好友'
+      }, {
+        name: 'verify',
+        title: '受邀'
       }],
-      tab:{
-        name:'invite'
+      tab: {
+        name: 'invite'
       },
-      marked:[],
+      marked: [],
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -142,9 +163,9 @@ export default {
   },
   mounted () {
     this.loadCodes().then()
-    if(this.$route.params.tab){
-      this.tab={
-        name:this.$route.params.tab
+    if (this.$route.params.tab) {
+      this.tab = {
+        name: this.$route.params.tab
       }
     }
   },
@@ -162,57 +183,64 @@ export default {
     leave () {
       return this.canExchange - this.exchanged
     },
-
+    invitedUsers () {
+      let invited = this.codes.filter(code => {
+        return code.uid
+      })
+      return invited.map(code => {
+        return code.userInfo
+      })
+    }
 
   },
   methods: {
-    ...mapActions(codeStore, ['exchange','listCodes']),
-    ...mapActions(appStore,['showUserCard']),
-    showCard(uid,userInfo){
-      this.showUserCard(uid,userInfo)
+    ...mapActions(codeStore, ['exchange', 'listCodes']),
+    ...mapActions(appStore, ['showUserCard']),
+    showCard (uid, userInfo) {
+      this.showUserCard(uid, userInfo)
     },
     friendlyDate: tsbApi.util.friendlyDate,
-    copy(text){
+    copy (text) {
       require('electron').clipboard.writeText(text)
       message.success('复制邀请码成功。')
     },
-    mark(key){
-      let found =this.marked.indexOf(key)
-      let mark=false
-      if(found>-1){
-        this.marked.splice(found,1)
-        mark=false
-      }else{
+    mark (key) {
+      let found = this.marked.indexOf(key)
+      let mark = false
+      if (found > -1) {
+        this.marked.splice(found, 1)
+        mark = false
+      } else {
         this.marked.push(key)
-        mark=true
+        mark = true
       }
-      localStorage.setItem('marked',JSON.stringify(this.marked))
-      if(mark){
-        message.success({content:'已为您标记此邀请码，再次标记取消',key:'mark'})
-      }else{
-        message.success({content:'已为您取消标记',key:'mark'})
+      localStorage.setItem('marked', JSON.stringify(this.marked))
+      if (mark) {
+        message.success({ content: '已为您标记此邀请码，再次标记取消', key: 'mark' })
+      } else {
+        message.success({ content: '已为您取消标记', key: 'mark' })
       }
 
     },
-    async loadCodes(){
-      let rs=await this.listCodes()
-      if(rs.status){
-        this.codes=rs.data
+    async loadCodes () {
+      let rs = await this.listCodes()
+      if (rs.status) {
+        this.codes = rs.data
       }
       let marked
-      try{
-        marked=JSON.parse(localStorage.getItem('marked'))
-      }catch (e) {
-        marked=[]
+      try {
+        marked = JSON.parse(localStorage.getItem('marked'))
+      } catch (e) {
+        marked = []
       }
 
-      if(marked===null){
-        marked=[]
+      if (marked === null) {
+        marked = []
       }
-      this.marked=marked
+      this.marked = marked
     },
-    isMarked(key){
-      return this.marked.indexOf(key)>-1
+    isMarked (key) {
+      return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
       Modal.confirm({
@@ -221,12 +249,12 @@ export default {
         onOk: async () => {
           let rs = await this.exchange()
           if (rs.status) {
-            rs.data.forEach(item=>{
+            rs.data.forEach(item => {
               this.codes.unshift(item)
             })
 
             message.success('兑换成功。')
-          }else{
+          } else {
             message.error('兑换失败，您已无法兑换邀请码。')
           }
         }
@@ -239,5 +267,14 @@ export default {
 <style scoped>
 .card {
   background: #252525;
+}
+
+.aUser {
+  display: inline-block;
+  margin-right: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+  width: 50px;
+  font-size: 12px;
 }
 </style>
