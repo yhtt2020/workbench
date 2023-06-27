@@ -11,7 +11,7 @@
           <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}
           </div>
-          <span v-if="false" style="color: rgba(255,255,255,0.60); font-size: 14px;">已连续签到2天</span>
+          <span v-if="false" style="color: var(--secondary-text); font-size: 14px;">已连续签到2天</span>
         </div>
         <div @click="signIn" class="middle-button sign-in-btn s-item" style="height: 42px;line-height: 42px;color: white"
              :class="signedIn ? (completeLikes.length > 4 ? 'already' : 'new-people') : 'old-people'">
@@ -69,14 +69,14 @@
     </template>
     <template v-else>
       <div class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
-        <span class="text-style" style="color: rgba(255,255,255,0.85);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
-        <div class="mt-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日已为{{
+        <span class="text-style" style="color: var(--primary-text);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
+        <div class="mt-1" style="color: var(--secondary-text);font-size: 14px;">今日已为{{
             completeLikes.length
           }}位社区新人点赞
         </div>
       </div>
       <div class="mt-3" style="height:178px; overflow:hidden;">
-        <div class="text-center mb-1" style="color: rgba(255,255,255,0.60);font-size: 14px;">今日新人</div>
+        <div class="text-center mb-1" style="color: var(--secondary-text);font-size: 14px;">今日新人</div>
         <div class="head-list">
           <div v-for="item in newPeopleList" class="h-14 w-14 s-item flex justify-center items-center" :key="item.id"
                style="margin:8px 14px;border-radius: 50%;" @click="newLikes(item)">
@@ -87,10 +87,10 @@
       <div class="flex items-center justify-around">
         <div @click="signInBack"
              class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
-          <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
+          <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
         </div>
         <span class="change pointer rounded-lg s-item  flex items-center justify-center"
-              style="padding:13px 74px;color: rgba(255, 255, 255, 0.85);"
+              style="padding:13px 74px;color: var(--primary-text);"
         >
             换一换
           </span>
@@ -252,7 +252,7 @@ export default {
 .sign-in-btn {
   width: 91px;
   height: 48px;
-  background: #508BFE;
+  background: var(--active-bg);
   font-size: 18px;
   line-height: 48px;
   text-align: center;
@@ -265,7 +265,7 @@ export default {
 }
 
 .old-people {
-  background: #508BFE;
+  background: var(--active-bg);
 }
 
 .new-people {
@@ -280,10 +280,10 @@ export default {
   width: 24px;
   height: 24px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.30);
+  background: var(--mask-bg);
   border-radius: 4px;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
   font-weight: 600;
 }
 
@@ -310,7 +310,7 @@ export default {
 
   .modal-number {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--primary-text);
     font-weight: 600;
     margin-top: 14px;
   }
@@ -340,7 +340,7 @@ export default {
   word-wrap: break-word;
   overflow: hidden;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-text);
 }
 
 .head-list {
@@ -352,7 +352,7 @@ export default {
 
 .not-sign {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.60);
+  color: var(--primary-text);
   text-align: center;
 }
 

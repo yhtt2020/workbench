@@ -111,7 +111,7 @@
       height: 224px;
       div{
         font-size: 16px;
-        color: rgba(255,255,255,0.60);
+        color: var(--secondary-text);
         line-height: 32px;
         font-weight: 400;
         word-break: normal;
@@ -120,7 +120,7 @@
         word-wrap: break-word;
         span{
           font-size: 16px;
-          color: rgba(255,255,255,0.85);
+          color: var(--primary-text);
           line-height: 32px;
           font-weight: 400;
         }
