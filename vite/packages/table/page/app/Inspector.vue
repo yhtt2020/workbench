@@ -1,5 +1,6 @@
 <template>
-  <div class="s-bg p-10 rounded-lg m-3" style="color:var(--primary-text);background: var(--primary-bg);">
+  <back-btn></back-btn>
+  <div class="s-bg p-10 rounded-lg m-3" style="color:var(--primary-text);background: var(--primary-bg);padding-left:80px">
     <div class="line-title">
       监控助手
     </div>
@@ -72,7 +73,7 @@
       </div>
     </div>
     <div v-else>
-      <div class="line-title mt-3" > 
+      <div class="line-title mt-3" >
         暂不支持内置数据源
       </div>
     </div>
@@ -83,9 +84,11 @@
 <script>
 import { inspectorStore } from '../../store/inspector'
 import { mapWritableState } from 'pinia'
+import BackBtn from '../../components/comp/BackBtn.vue'
 
 export default {
   name: 'Inspector',
+  components: { BackBtn },
   computed: {
     ...mapWritableState(inspectorStore, ['dataSource','frequent'])
   },

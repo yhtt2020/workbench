@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%;width: 100%" v-if="currentDesk.cards">
+  <div style="height:100%;width: 100%;" v-if="currentDesk.cards">
     <div  style="width: 100%;height: 100%" class="m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
@@ -22,7 +22,7 @@
       </div>
     </div>
     <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; width: 100%; height: 100%">
+      style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -171,6 +171,7 @@ import Clock from "../widgets/Clock.vue";
 import CountdownDay from "../widgets/CountdownDay.vue";
 import Notes from '../widgets/note/index.vue'
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
+import GameStrategy from '../widgets/games/GameStrategy.vue';
 import {message, Modal} from "ant-design-vue";
 import {mapWritableState} from "pinia";
 import {appStore} from "../../store";
@@ -184,7 +185,7 @@ export default {
     Music, Stock, Dou, Fish, CustomTimer, SmallCountdownDay, Clock, CountdownDay,
     Timer, Weather, SteamFriends, Remote, SignIn, SingleFilm, ManyFilm,
     CaptureNewCard, Voice, Audio, Capture, CustomAssembly, MyGameSmall, SmallWallpaper,
-    MiddleWallpaper,NewAddCard,Clocks,Notes
+    MiddleWallpaper,NewAddCard,Clocks,Notes,GameStrategy
   },
   props:
   {

@@ -12,7 +12,7 @@
       width: 100%;
       margin-left: 15px;
     ">
-    <div class="text-left" v-if="desks.length > 1">
+    <div class="text-left mb-2" v-if="desks.length > 1">
       <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
       </HorizontalPanel>
     </div>
@@ -41,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%">
+      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -94,7 +94,7 @@
     </div>
   </transition>
   <transition name="fade">
-    <div class="home-blur" style="
+    <div class="" style="
         position: fixed;
         top: 0;
         right: 0;
@@ -105,6 +105,19 @@
       <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk"></NewAddCard>
     </div>
   </transition>
+
+   <transition name="fade">
+     <div class="" style="
+         position: fixed;
+         top: 0;
+         right: 0;
+         left: 0;
+         bottom: 0;
+         z-index: 999;
+       " v-if="iconVisible">
+       <AddIcon @setCustoms="setCustoms" @close="iconHide"  :desk="currentDesk"></AddIcon>
+     </div>
+   </transition>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -114,6 +127,12 @@
           <div><span>添加卡片</span></div>
         </div>
       </a-col>
+       <a-col>
+         <div @click="newAddIcon" class="btn">
+           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+           <div><span>添加图标（开发中）</span></div>
+         </div>
+       </a-col>
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
@@ -219,7 +238,7 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="home-blur fixed inset-0" style="z-index: 999;" v-if="agreeTest === false">
+  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;"  v-if="agreeTest === false">
     <GuidePage></GuidePage>
   </div>
 
@@ -242,6 +261,7 @@
     </div>
   </a-drawer>
 </template>
+
 <script>
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
@@ -288,17 +308,16 @@ import ManyFilm from "../components/widgets/film/ManyFilm.vue"
 import SteamFriends from '../components/widgets/games/SteamFriends.vue'
 import Muuri from 'muuri'
 import HorizontalPanel from '../components/HorizontalPanel.vue'
-import { setSupervisoryData } from '../js/action/supervisory'
 import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import GuidePageVue from './app/grade/GuidePage.vue';
 import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
 import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import GameStrategy from '../components/widgets/games/GameStrategy.vue'
+import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
-const readAida64 = window.readAida64
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -465,6 +484,7 @@ export default {
   data() {
     return {
       visibleAdd: false,
+      iconVisible:false,
       newDesk: {
         name: "",
         template: "daily",
@@ -554,6 +574,8 @@ export default {
     ShortcutKeyDetail,
     NotShortcutKey,
     ShortcutKeyList,
+    GameStrategy,
+    AddIcon,
     KeyBoard
   },
   computed: {
@@ -758,8 +780,16 @@ export default {
     }
   },
   methods: {
+    iconHide() {
+      this.iconVisible =false;
+    },
     hideAddCard() {
       this.visibleAdd = false
+    },
+    // 添加图标
+    newAddIcon() {
+      this.iconVisible=true
+      this.menuVisible = false;
     },
     setTransparent() {
       if (this.appSettings.transparent) {
@@ -954,6 +984,7 @@ export default {
   },
 };
 </script>
+
 <style scoped lang="scss">
 :deep(.ant-result-title) {
   color: var(--primary-text);
@@ -996,6 +1027,10 @@ export default {
       height: 438px;
     }
   }
+}
+
+.home-guide{
+  background:rgba(00,00,00,0.75) !important;
 }
 </style>
 <style lang="scss">

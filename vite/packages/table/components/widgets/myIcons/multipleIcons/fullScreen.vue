@@ -1,22 +1,25 @@
 <template>
   <teleport to="body">
 
-    <div class='popContainer' @click="closeFullScreen()" :style="show">
+    <div class='pop-container' @click="closeFullScreen()" :style="show">
     </div>
     <droppable-area @leave="handleLeave" style="border: 1px solid red;">
-      <div class="box xt-bg" @click.stop="" :style="show">
+      <div class="box  xt-bg" @click.stop="" :style="show">
         <div class="title xt-text">
           <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
-          <div class="box-btn xt-bg-2" @click="disbandGroup">
+          <div class="box-btn xt-bg" @click="disbandGroup">
             <div class="text" style="color: #fff;">
               · · ·
             </div>
           </div>
         </div>
-        <div class="item-box">
+        <div class="item-box" >
           <div ref="iconRef" v-for="(item, index) in iconLists" @contextmenu.prevent.stop="rightClick(index)">
             <drag-and-follow @drag-start="handleDragStart" @drag-end="handleDragEnd">
-              <icon v-bind="item" :index="index" :data-index="index" style="margin: 5px;" @onIconClick="closeFullScreen">
+              <icon
+               v-bind="item" :index="index" :data-index="index" @onIconClick="closeFullScreen"
+               style="margin: 5px 10px;"
+              >
               </icon>
             </drag-and-follow>
           </div>
@@ -25,16 +28,7 @@
     </droppable-area>
 
     <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
-      <div class="flex flex-row">
-        <div class="option h-24 w-24 ml-4" @click="editIcons()">
-          <Icon class="icon" icon="guanbi2"></Icon>
-          编辑
-        </div>
-        <div class="option h-24 w-24 ml-4" @click="deleteIcons()">
-          <Icon class="icon" icon="guanbi2"></Icon>
-          删除
-        </div>
-      </div>
+      <BottomEdit :menuList="menuList"></BottomEdit>
     </a-drawer>
   </teleport>
 </template>
@@ -43,6 +37,7 @@
 import icon from "../oneIcon/index.vue"
 import DragAndFollow from '../hooks/DragAndFollow.vue';
 import DroppableArea from "../hooks/DroppableArea.vue"
+import BottomEdit from "../hooks/bottomEdit.vue";
 
 
 import { mapWritableState } from 'pinia'
@@ -64,17 +59,35 @@ export default {
       index: 0,
       settingVisible: false,
       visible: false,
-      isShow: true
+      isShow: true,
+      menuList: [
+
+        {
+          icon: "shezhi1",
+          title: "编辑",
+          fn: () => {
+            this.editIcons();
+          },
+        },
+        {
+          icon: "guanbi2",
+          title: "删除",
+          fn: () => {
+            this.deleteIcons();
+          },
+        },
+      ]
     }
   },
   inject: ['customIndex'],
   components: {
     icon,
     DragAndFollow,
-    DroppableArea
+    DroppableArea,
+    BottomEdit
   },
   computed: {
-    ...mapWritableState(myIcons, ['iconOption', 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
+    ...mapWritableState(myIcons, [ 'isDrag', 'isPaste', 'iconList', 'isClose', 'iconState']),
     show() {
       return { display: this.isShow == true ? 'black' : 'none' }
     }
@@ -148,7 +161,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.popContainer {
+.pop-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -173,17 +186,17 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
   left: 50%;
-  width: 598px;
-  height: 476px !important;
+  width: 558px;
+  height: 490px !important;
   z-index: 9999999;
   box-shadow: 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
+  // background: var(--secondary-bg) !important;
   box-sizing: border-box;
   padding: 10px;
   z-index: 999999999999999999;
 
   .title {
-
     height: 48px;
     font-family: PingFangSC-Semibold;
     font-size: 16px;
@@ -229,11 +242,10 @@ export default {
   }
 
   .item-box {
-    margin-top: 12px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: 411px;
+    height: 425px;
     overflow: auto;
 
     &::-webkit-scrollbar {

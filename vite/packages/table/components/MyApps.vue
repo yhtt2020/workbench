@@ -1,6 +1,14 @@
 <template>
   <vue-custom-scrollbar @contextmenu.stop="menuVisible = true" :settings="outerSettings"
     style="position:relative;height:calc(100vh - 14em);  ">
+    <!-- 添加样式 -->
+    <a-dropdown>
+      <div @click="addIcons()"  class="app" style="height: 78px;">
+      <div class="flex justify-center items-center w-full h-full" style="">
+        <Icon class=" xt-text" icon="tianjia2" style=""></Icon>
+      </div>
+    </div>
+    </a-dropdown>
     <a-dropdown @contextmenu.stop="() => { }" v-for="app in myApps" :trigger="['contextmenu']">
       <div @click="open(app)" class="app">
 
@@ -62,6 +70,9 @@ export default {
   },
   methods: {
     ...mapActions(appsStore, ['deleteApp']),
+    addIcons(){
+      this.$emit("addIcons")
+    },
     open(app) {
       // if(fs.lstatSync(app.path).isDirectory()){
       //   require('electron').shell.openPath(app.path.replaceAll('/','\\'))

@@ -1,8 +1,10 @@
 <template>
+  <back-btn></back-btn>
   <div id="display" class="s-bg p-3 m-3 rounded-lg" style="height:calc(100vh - 12em);background: var(--primary-bg); ">
+    <div style="padding-left: 60px;font-size: 32px;margin-bottom: 10px">天气</div>
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit" :destroyInactiveTabPane="true">
-      <a-tab-pane v-for="city in cities" :key="city.id" :tab="city.name" > 
-        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 17em);  ">
+      <a-tab-pane v-for="city in cities" :key="city.id" :tab="city.name" >
+        <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 22em);  ">
           <div class="section" style="text-align: center">
             <div style="width: 40em;display: inline-block">
               <a-row style="">
@@ -85,9 +87,10 @@ import { mapWritableState, mapActions } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime.js'
 import WeatherChart from './WeatherChart.vue'
 import { weatherStore } from '../../store/weather'
+import BackBtn from '../../components/comp/BackBtn.vue'
 export default {
   name: 'Weather',
-  components: { WeatherChart },
+  components: { BackBtn, WeatherChart },
   data() {
     return {
       outerSettings: {

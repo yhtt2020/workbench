@@ -12,6 +12,9 @@
 
 <script>
 
+import { mapWritableState } from 'pinia'
+import { browserStore } from '../../store/browser'
+
 export default {
   name: 'Browser',
   data() {
@@ -19,9 +22,11 @@ export default {
       openUrlBrowser: 'inner'
     }
   },
+  computed:{
+
+  },
   async mounted() {
     this.openUrlBrowser = await tsbApi.settings.get('openUrlBrowser') || 'inner'
-    console.log(this.openUrlBrowser)
   },
   watch: {
     openUrlBrowser: {

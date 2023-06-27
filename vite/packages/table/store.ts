@@ -25,7 +25,8 @@ export const appStore = defineStore('appStore', {
     },
     style: "", // 指定样式
     styles: false,  // 浅色切换功能
-    saving: true,//性能模式
+    stylesIndex:0, // 主题模式下标
+    saving: true,//性能模式 
 
     simple: false,//极简模式
     agreeTest: false,
@@ -168,6 +169,17 @@ export const appStore = defineStore('appStore', {
 
       Object.keys(userInfo.onlineGrade).forEach(v => handleGrade(v))
       this.userInfo = userInfo
+    },
+
+    // 修改当前背景色模式
+    updateMode(val:boolean,index:number){
+      this.styles = val
+      this.stylesIndex = index
+    },
+    
+    // 修改当前极简模式
+    updateSimple(val:boolean){
+      this.simple = val
     }
   },
   persist: {

@@ -16,11 +16,13 @@ const captureHelper = {
     let capturedImage = await webContents.capturePage()
     if (capturedImage.isEmpty()) {
       //如果截图为空，则直接返回路径，而不进行覆盖，以提升截图成功率
+      console.warn('截图失败')
       return imagePath
     }
     try {
       fs.writeFileSync(imagePath, capturedImage.toJPEG(50))
     } catch (err) {
+      console.error(err)
       return false
     }
     return imagePath

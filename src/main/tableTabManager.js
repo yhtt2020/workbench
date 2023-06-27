@@ -1,5 +1,6 @@
 const { ipcMain: ipc } = require('electron')
 const { nanoid } = require('nanoid')
+const { capture } = require('./captureHelper')
 
 class TableTabManager {
   //运行中的tab
@@ -8,6 +9,7 @@ class TableTabManager {
   runningTabsInstance = []
 
   setTableWin (tableWin) {
+    console.log('更新tableWind')
     this.tableWin = tableWin
   }
 
@@ -35,6 +37,11 @@ class TableTabManager {
     }
   }
 
+  sendToBrowser(channel,args){
+    if(this.tableWin){
+      this.tableWin.webContents.send(channel,args)
+    }
+  }
   /**
    * 打开标签页
    * @param args
@@ -42,7 +49,7 @@ class TableTabManager {
    */
   async addTab (args) {
     //app args silent静默
-    console.log('addtab参数',args)
+    console.log('addtab参数', args)
     let { url, position, silent } = args
     let id = nanoid(4)
     let tab = {
@@ -88,16 +95,29 @@ class TableTabManager {
         event.preventDefault()
       }
     })
+
+    view.webContents.on('page-title-updated', (event, title) => {
+      console.log('更新标题',title)
+      tab.title=title
+      this.sendToBrowser('updateTabTitle', { id: id, title: title })
+    })
+    view.webContents.on('page-favicon-updated', (event, favicons) => {
+      console.log('更新图标',favicons)
+      tab.favicons=favicons
+      this.sendToBrowser('updateTabFavicon', { id: id, favicons: favicons })
+    })
     if (!silent) {//静默则不设置位置
       this.tableWin.setBrowserView(view)//置入app
       view.webContents.on('dom-ready', () => {
         this.setViewPos(tabInstance.view, position)
+        setTimeout(()=>{
+          capture(view.webContents,undefined,'tab_'+id).then((image) => {
+            this.sendToBrowser('updateTabCapture', { id: tab.id, image: image })
+          })
+        },1000)
       })
     }
-    this.runningTabs.push({
-      url: url,
-      id: id
-    })
+    this.runningTabs.push(tab)
     this.runningTabsInstance.push(tabInstance)
 
     return {
@@ -111,12 +131,12 @@ class TableTabManager {
    * @param position
    */
   setBounds (id, position) {
-    console.log('setBounds id',id)
-    let tabInstance=this.get(this.getName(id))
-    if(tabInstance){
+    console.log('setBounds id', id)
+    let tabInstance = this.get(this.getName(id))
+    if (tabInstance) {
       this.setViewPos(tabInstance.view, position)
-    }else{
-      console.error('不存在的tableTab',id)
+    } else {
+      console.error('不存在的tableTab', id)
     }
 
   }
@@ -150,6 +170,14 @@ class TableTabManager {
     }
   }
 
+  goBackTab(id){
+    let instance = this.get(id)
+    instance.view.webContents.goBack()
+  }
+  goForwardTab(id){
+    let instance = this.get(id)
+    instance.view.webContents.goForward()
+  }
   closeAllTab () {
     this.runningTabs.forEach(app => {
       this.closeTab(this.getName(app.name))
@@ -159,21 +187,23 @@ class TableTabManager {
   }
 
   closeTab (id) {
+    //先移除，以避免移除过程中数据被移除的情况
     let instance = this.get(id)
+    let index = this.getIndex(id)
+    this.runningTabsInstance.splice(index, 1)
+    this.runningTabs.splice(index, 1)
     if (instance) {
       if (this.tableWin && !this.tableWin.isDestroyed()) {
         this.tableWin.removeBrowserView(instance.view)
       }
       instance.close()
-      let index = this.getIndex(id)
-      this.runningTabsInstance.splice(index, 1)
-      this.runningTabs.splice(index, 1)
     }
   }
 
   showTab (id, position) {
     //实现还存在问题，需要去获取到最新的位置再重置
-    let instance = this.get(id)
+    let instance = this.get(this.getName(id))
+    console.log('找到instance用于显示',instance)
     if (instance) {
       this.tableWin.setBrowserView(instance.view)
       this.setViewPos(instance.view, position)
@@ -217,7 +247,7 @@ class TableTabManager {
     })
 
     ipc.on('syncTableTabBounds', (e, a) => {
-      console.log(a,'接收到的console')
+      console.log(a, '接收到的console',a)
       this.setBounds(a.tab.id, a.bounds)
     })
 
@@ -228,8 +258,8 @@ class TableTabManager {
     ipc.on('addTableTab', async (event, args) => {
       let tab = {}
       try {
-       let  result = await this.addTab({ url: args.url, position: args.position })
-        tab=result.tab
+        let result = await this.addTab({ url: args.url, position: args.position })
+        tab = result.tab
       } catch (e) {
         console.error(e, '创建出错')
         tab = {
@@ -237,7 +267,7 @@ class TableTabManager {
         }
       }
 
-      console.log('回传tab',tab)
+      console.log('回传tab', tab)
       event.returnValue = tab
     })
 
@@ -257,6 +287,38 @@ class TableTabManager {
     })
     ipc.on('hideTableTab', (event, args) => {
       this.hideTab(this.getName(args.tab.id))
+    })
+    ipc.on('goBackTableTab',(event,args)=>{
+      this.goBackTab(this.getName(args.tab.id))
+    })
+    ipc.on('goForwardTableTab',(event,args)=>{
+      this.goForwardTab(this.getName(args.tab.id))
+    })
+    ipc.on('updateRunningTabsCapture', (event, args) => {
+      this.runningTabs.forEach((tab, index) => {
+        capture(this.runningTabsInstance[index].view.webContents,undefined,'tab_'+tab.id).then((image) => {
+          console.log('获取到的webcontents', this.runningTabsInstance[index].view.webContents)
+          event.reply('updateTabCapture', { id: tab.id, image: image })
+        })
+      })
+    })
+
+    /**
+     * 更新单个网页的截图
+     */
+    ipc.on('updateTabCapture', (event, args) => {
+      this.runningTabs.forEach((tab, index) => {
+        if (tab.id === args.id) {
+          capture(this.runningTabsInstance[index].view.webContents,undefined,'tab_'+tab.id).then((image) => {
+            console.log('获取到的webcontents', )
+            event.reply('updateTabCapture', { id: tab.id, image: image })
+          })
+        }
+      })
+    })
+
+    ipc.on('showTableTab',(event,args)=>{
+      this.showTab(args.id,args.position)
     })
   }
 }

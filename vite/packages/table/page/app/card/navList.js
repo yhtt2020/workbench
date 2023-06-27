@@ -333,7 +333,6 @@ export const NavList = [
   {
     cname: '游戏',
     children: [
-
       {
         name: 'games',
         cname: 'Steam特惠',
@@ -414,6 +413,20 @@ export const NavList = [
         ],
         time: '2023/5/31'
       },
+      {
+        name:'strategy',
+        cname:'游戏攻略',
+        detail:'快速查看当前运行游戏的视频和图文攻略。',
+        sizes: ['4x4'],
+        option:[
+          {
+            name: 'GameStrategy',
+            size: '4x4',
+            zoom: '90'
+          },
+        ],
+        time: '2023/5/24',
+      }
     ],
   },
   {

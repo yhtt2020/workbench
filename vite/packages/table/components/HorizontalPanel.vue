@@ -1,20 +1,25 @@
 <template>
   <!-- 快速搜索 头部 菜单切换 -->
-  <div class="flex flex-row rounded-lg p-1" :class="bgColor"
-    :style="{  height: itemHeight }" style="background: var(--primary-bg);color: var(--primary-text);">
+  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{ height: itemHeight }"
+    style="background: var(--primary-bg);color: var(--primary-text);">
     <!-- <div v-for="(item, index) in navList"
       class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
       @click.stop="clickNav(item, index)" :class="activeIndex === index ? 's-item' : ''"> -->
-    <div v-for="(item, index) in navList"
-      class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer xt-active"
-      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''">
-      <span>{{ item.title }}</span>
-      <div v-if="item.state === true" class="state-dot ml-2"></div>
-    </div>
+    <template v-for="(item, index) in navList">
+      
+        <div
+          class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer xt-active"
+          @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''" :data-index="index"
+          :data-item="JSON.stringify(item)">
+          <span>{{ item.title }}</span>
+          <div v-if="item.state === true" class="state-dot ml-2"></div>
+        </div>
+    </template>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'HorizontalPanel',
   emits: ['changed'],
@@ -38,7 +43,7 @@ export default {
   },
   data() {
     return {
-      activeIndex: 0
+      activeIndex: 0,
     }
   },
   computed: {
@@ -51,8 +56,7 @@ export default {
       handler() {
         this.posType()
       }
-
-    }
+    },
   },
   mounted() {
     this.posType()

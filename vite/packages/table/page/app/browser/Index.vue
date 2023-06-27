@@ -1,25 +1,40 @@
 <template>
+
   <div
     style="width: 100%; display: flex; height: 100%; flex-direction: column;padding-right: 10px;padding-bottom: 10px">
+    <back-btn style="margin-top: -20px;margin-left: -20px"></back-btn>
     <div
       class="drag"
       style="height: 4em; width: 100%"
     >
       <a-row type="flex">
+
         <a-col style="display: flex">
-          <div @click="goBack" class="app-btn no-drag">
-            <div class="btn-wrapper">
+          <div   class="app-btn no-drag" style="width:60px">
+<!--            <div class="btn-wrapper">-->
+<!--              <Icon-->
+<!--                icon="xiangzuo"-->
+<!--                style="font-size: 1.5em; vertical-align: middle"-->
+<!--              ></Icon>-->
+<!--            </div>-->
+
+          </div>
+
+          <div @click="goBack" class="app-btn">
+            <div  class="btn-wrapper no-drag">
               <Icon
-                icon="xiangzuo"
-                style="font-size: 1.5em; vertical-align: middle"
+                icon="youjiantou"
+                style="font-size: 1.5em; vertical-align: middle;transform: rotate(-180deg)"
               ></Icon>
             </div>
           </div>
-          <div class="btn-wrapper">
-            <Icon
-              icon="xiangyou"
-              style="font-size: 1.5em; vertical-align: middle"
-            ></Icon>
+          <div @click="goForward" class="app-btn">
+            <div class="btn-wrapper no-drag">
+              <Icon
+                icon="youjiantou"
+                style="font-size: 1.5em; vertical-align: middle"
+              ></Icon>
+            </div>
           </div>
           <div @click="refresh" class="app-btn no-drag">
             <div class="btn-wrapper">
@@ -88,8 +103,19 @@
             </a-row>
           </div>
           <div class="no-drag" v-else style="display: flex">
-            <a-input v-model:value="tab.title" class="address-input"></a-input>
-            <div @click="refresh" class="app-btn no-drag">
+            <!--      网址输入框      -->
+
+            <a-input style="font-weight: bold" @blur="this.showEdit=false" spellcheck="false" v-if="showEdit" @keyup.enter="addTab"
+                     v-model:value="urlInput" class="address-input"></a-input>
+            <div @click="showEdit=true" class="xt-main-bg xt-text truncate"
+                 style="font-weight:bold;text-align:left;border-radius: 100px;height: 32px;line-height:32px;color: white;padding-left: 20px;width: 100%;margin-top: 10px;margin-left: 10px;margin-right: 10px"
+                 v-else>
+              <template v-if="currentTab && currentTab.favicons">
+                <a-avatar shape="square" :size="18" :src="currentTab.favicons[0]"></a-avatar>
+              </template>
+              <span v-if="currentTab.url">&nbsp;{{ currentTab.title }}</span><span v-else>工作台浏览器</span>
+            </div>
+            <div @click="addNewTab" class="app-btn no-drag">
               <div class="btn-wrapper">
                 <Icon
                   icon="tianjia2"
@@ -104,11 +130,13 @@
         <a-col style="text-align: right">
 
           <div @click="switchScale" class="app-btn no-drag">
-            <Icon
-              icon="wenzidaxiao2"
-              style="font-size: 1.5em; vertical-align: middle"
-            ></Icon>
-            <div class="scale">{{ scale }}%</div>
+            <div class="btn-wrapper" style="position: relative">
+              <Icon
+                icon="wenzidaxiao2"
+                style="font-size: 1.5em; vertical-align: middle"
+              ></Icon>
+              <div class="scale">{{ scale }}%</div>
+            </div>
           </div>
 
           <div class="app-btn no-drag">
@@ -131,7 +159,16 @@
               ></Icon>
             </div>
           </div>
-          <div class="app-btn no-drag">
+          <div @click="showTabs" class="app-btn no-drag">
+            <div class="btn-wrapper" style="position: relative">
+              <Icon icon="fuzhi" style="width: 24px;height:24px;font-size: 32px;transform: translateY(4px) "></Icon>
+              <span
+                style="position: absolute;width: 24px;height: 24px;text-align: center;line-height: 24px;font-weight: bold;font-size: 12px;left: 11px;transform: translateY(4px)">{{
+                  runningTabs.length
+                }}</span>
+            </div>
+          </div>
+          <div v-if="false" class="app-btn no-drag">
             <div class="btn-wrapper">
               <Icon
                 icon="touping"
@@ -145,14 +182,13 @@
     <div
       v-if="fullScreen"
       id="frame"
-      :style="{ background: tab.theme || 'white' }"
+
       style="width: 100%; flex: 1"
     ></div>
     <div
       v-else
       id="frame"
-      :style="{ background: tab.theme || 'white' }"
-      style="width: 100%; flex: 1"
+      style="width: 100%; flex: 1;background: rgba(0,0,0,0.2)"
     >
       &nbsp;
     </div>
@@ -161,37 +197,44 @@
 
 <script>
 import { appStore } from '../../../store'
-import { mapWritableState } from 'pinia'
+import { mapWritableState, mapActions } from 'pinia'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
+import { browserStore } from '../../../store/browser'
+import Template from '../../../../user/pages/Template.vue'
+import runningApps from '../../../components/bottomPanel/RunningApps.vue'
+import BackBtn from '../../../components/comp/BackBtn.vue'
 
 export default {
   name: 'BrowserIndex',
   data () {
     return {
-      tab: {
-        url: '',
-        title: '',
-        id: '',
-      },
       showScale: false,
       scale: 100,
       marks: {
         100: '100',
         200: '200',
       },
+      urlInput: '',//用户输入的地址
+      showEdit: false,
     }
   },
   components: {
+    BackBtn,
+    Template,
     PlusOutlined,
     MinusOutlined,
   },
   computed: {
+    runningApps () {
+      return runningApps
+    },
     ...mapWritableState(appStore, ['fullScreen', 'settings', 'saving']),
+    ...mapWritableState(browserStore, ['currentTab', 'runningTabs'])
   },
   mounted () {
+    ipc.send('getRunningTableTabs')
     let params = this.$route.params
-    console.log('原始parmas', params)
     if (typeof params.fullScreen === 'undefined') {
       params.fullScreen = false //默认全屏
     } else {
@@ -202,6 +245,65 @@ export default {
     }
     //非系统应用，则打开内嵌网页
     this.$nextTick(async () => {
+      if(params.id){
+        //如果是直接切换到某个tab
+        console.log(params.id)
+        this.switchToTab(params.id)
+        return
+      }
+      if (params.url) {
+        //如果存在需要打开的url
+        await this.invokeAddTab({ url: params.url })
+        setTimeout(() => {
+          ipc.send('getRunningTableTabs')
+        }, 3000)
+
+      } else {
+        //如果已经存在tab了
+        if (this.currentTab.id) {
+          this.switchToTab(this.currentTab.id)
+        }
+      }
+      let frame = document.getElementById('frame')
+      frame.addEventListener('resize', () => {
+        _.debounce(() => {
+          this.syncBounds()
+        }, 1000)
+      })
+    })
+  },
+  beforeUnmount () {
+    this.handleLeave()
+  },
+  methods: {
+    ...mapActions(browserStore, ['updateTabCapture']),
+    switchToTab(id){
+      let found=this.runningTabs.find(tab=>{
+        return tab.id===id
+      })
+      if(found){
+        this.currentTab=found
+        this.urlInput=this.currentTab.url
+        ipc.send('showTableTab', { id: id, position: this.getContentBounds() })
+      }
+
+    },
+    async addTab () {
+      console.log('event', event)
+      await this.invokeAddTab({ url: this.urlInput })
+    },
+    async addNewTab(){
+      await this.invokeAddTab({url:'about:blank'})
+    },
+    fixZoom (num) {
+      return Number(((num * this.settings.zoomFactor) / 100).toFixed(0))
+    },
+    /**
+     * 执行添加一个tab
+     * @param tab
+     * @returns {Promise<void>}
+     */
+    getContentBounds () {
       let frame = document.getElementById('frame')
       let position = {
         x: this.fixZoom(frame.getBoundingClientRect().x),
@@ -209,39 +311,42 @@ export default {
         width: this.fixZoom(frame.offsetWidth),
         height: this.fixZoom(frame.offsetHeight),
       }
-      let args = {
-        position,
-        url: params.url,
-      }
-      this.tab = await ipc.sendSync('addTableTab', JSON.parse(JSON.stringify(args)))
-      console.log('创建出来的tab', this.tab)
-      setTimeout(() => {
-        ipc.send('getRunningTableTabs')
-      }, 3000)
-      frame.addEventListener('resize', () => {
-        _.debounce(() => {
-          this.syncBounds()
-        }, 1000)
-      })
-      setTimeout(() => {
-        this.syncBounds()
-      }, 600)
-    })
-  },
-  beforeUnmount () {
-    this.handleLeave()
-  },
-  methods: {
-    fixZoom (num) {
-      return Number(((num * this.settings.zoomFactor) / 100).toFixed(0))
+      return position
     },
+    async invokeAddTab (tab) {
+
+      let args = {
+        position: this.getContentBounds(),
+        url: tab.url,
+      }
+      this.currentTab = await ipc.sendSync('addTableTab', JSON.parse(JSON.stringify(args)))
+      this.urlInput = this.currentTab.url
+      console.log('当前tab', this.currentTab)
+      this.runningTabs.push(JSON.parse(JSON.stringify(this.currentTab)))
+      console.log('this.currenttab=', this.currentTab)
+    },
+    /**
+     * 切换缩放
+     */
     switchScale () {
       this.showScale = !this.showScale
     },
+    /**
+     * 设置网页的缩放
+     * @param value
+     */
     setScale (value) {
       ipc.send('setTableTabScale', {
-        tab: JSON.parse(JSON.stringify(this.tab)),
+        tab: JSON.parse(JSON.stringify(this.currentTab)),
         scale: value,
+      })
+    },
+    /**
+     * 显示当前的全部tabs
+     */
+    showTabs () {
+      this.$router.push({
+        name: 'browserTabs'
       })
     },
     toggleFullScreen () {
@@ -250,7 +355,13 @@ export default {
         this.syncBounds()
       })
     },
+    /**
+     * 同步边框位置
+     */
     syncBounds () {
+      if (!this.currentTab) {
+        return
+      }
       let frame = document.getElementById('frame')
       let position = {
         x: this.fixZoom(frame.getBoundingClientRect().x),
@@ -260,23 +371,38 @@ export default {
       }
       let args = {
         bounds: position,
-        tab: this.tab,
+        tab: this.currentTab,
       }
-      console.log('发送消息', args)
       ipc.send('syncTableTabBounds', JSON.parse(JSON.stringify(args)))
     },
-    handleLeave () {
+    /**
+     * 隐藏Tab
+     * @param tab
+     */
+    hideTab (tab) {
       ipc.send('hideTableTab', {
-        tab: JSON.parse(JSON.stringify(this.tab)),
+        tab: tab
       })
+    },
+    handleLeave () {
+      if(this.currentTab){
+        this.hideTab(JSON.parse(JSON.stringify(this.currentTab)))
+      }
       this.fullScreen = false
     },
     goBack () {
-      this.$router.go(-1)
+      ipc.send('goBackTableTab',{
+        tab: JSON.parse(JSON.stringify(this.currentTab)),
+      })
+    },
+    goForward(){
+      ipc.send('goForwardTableTab',{
+        tab: JSON.parse(JSON.stringify(this.currentTab)),
+      })
     },
     refresh () {
-      ipc.send('refreshTableApp', {
-        app: JSON.parse(JSON.stringify(this.tab)),
+      ipc.send('refreshTableTab', {
+        tab: JSON.parse(JSON.stringify(this.currentTab)),
       })
     },
   }
@@ -288,10 +414,11 @@ export default {
 .app-btn {
   display: inline-block;
   cursor: pointer;
+  color:var(--primary-text);
 
   &:hover .btn-wrapper {
-    color: #1e1e1e;
-    background: #969696;
+    color: var(--secondary-text);
+    background: var(--active-secondary-bg);
   }
 }
 
