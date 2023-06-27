@@ -519,6 +519,7 @@ export const keyStore = defineStore("key", {
     recentlyUsedList: [],
     // 推荐方案列表
     sellSchemeList: [...keyData.concat()],
+    //创意市场列表
     marketList: [
       {
         cname: '推荐',
@@ -3341,6 +3342,9 @@ export const keyStore = defineStore("key", {
       this.recentlyUsedList.map((i,index) => {
         if(item.id === i.id)this.recentlyUsedList.splice(index, 1)
       })
+    },
+    setMarketList(item){
+      this.marketList[this.marketList.length-1].children.push(item)
     }
   },
   persist: {
