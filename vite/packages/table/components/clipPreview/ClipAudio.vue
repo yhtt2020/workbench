@@ -219,7 +219,7 @@ export default{
     margin: 0 10px;
   }
   .progress-bar {
-    background-color: var(--active-bg);
+    background: var(--active-bg);
     width: 0%;
     height: 10px;
     border-radius: 5px;

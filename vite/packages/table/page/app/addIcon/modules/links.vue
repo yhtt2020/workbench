@@ -1,5 +1,11 @@
 <template>
-  <div class="h-full" style="width: 566px">
+  <div class="h-full" >
+    <Icon
+      ref="iconRef"
+      @updateSelectApps="updateSelectApps"
+      style="height: calc(100% - 48px)"
+      :data="appList"
+    >
     <div
       class="w-full flex overflow-x-auto xt-container"
       ref="scrollContainer"
@@ -17,12 +23,7 @@
         {{ item.label }}
       </div>
     </div>
-    <Icon
-      ref="iconRef"
-      @updateSelectApps="updateSelectApps"
-      style="height: calc(100% - 48px)"
-      :data="appList"
-    ></Icon>
+  </Icon>
   </div>
 </template>
 
@@ -130,7 +131,7 @@ export default {
             path: item.app.version.url,
           });
         });
-        cache.set(`link-${index}`, appList);
+        cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
       this.appList = appList;
     },

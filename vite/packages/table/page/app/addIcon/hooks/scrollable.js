@@ -2,7 +2,6 @@
 export const scrollable = {
   mounted(el) {
     const handleMouseWheel = (event) => {
-      event.preventDefault();
       let left = event.deltaY / 2;
       el.scrollLeft = el.scrollLeft + left;
     };

@@ -1,10 +1,13 @@
 <template>
   <!-- 遮罩 -->
-  <div class="w-full h-full xt-mask-2 fixed top-0 left-0" @click="close()"></div>
+  <div
+    class="w-full h-full xt-mask-2 fixed top-0 left-0"
+    @click="close()"
+  ></div>
   <!-- 添加图标 -->
   <div
     class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
-    style="width: 728px"
+    style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%)"
   >
     <!-- 头部 -->
     <header
@@ -19,26 +22,29 @@
       </div>
     </header>
     <!-- 主体 -->
-    <main class="flex mt-3" style="">
+    <main class="flex mt-3 h-full" style="">
       <!-- 左侧 -->
-      <div
-        class=""
-        style="width: 130px; border-right: 1px solid var(--divider)"
-      >
+      <div style="" class="h-full">
         <div
-          :style="{
-            'border-right':
-              item.component == navName ? '1px solid var(--active-bg)' : '',
-          }"
-          v-for="item in navList"
+          class="overflow-y-auto xt-container"
+          style="border-right: 1px solid var(--divider)"
+          :style="height"
         >
           <div
-            class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
-            :key="item.name"
-            @click="navName = item.component"
-            :class="{ 'xt-bg-2': item.component == navName }"
+            :style="{
+              'border-right':
+                item.component == navName ? '1px solid var(--active-bg)' : '',
+            }"
+            v-for="item in navList"
           >
-            {{ item.name }}
+            <div
+              class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+              :key="item.name"
+              @click="navName = item.component"
+              :class="{ 'xt-bg-2': item.component == navName }"
+            >
+              {{ item.name }}
+            </div>
           </div>
         </div>
       </div>
@@ -73,7 +79,6 @@ import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 import { mapActions, mapWritableState } from "pinia";
-
 export default {
   emits: ["update:navName"],
   props: {
@@ -94,6 +99,11 @@ export default {
       default: "Links",
     },
   },
+  data() {
+    return {
+      screenHeight: 0,
+    };
+  },
   components: {
     Links,
     MyApps,
@@ -104,16 +114,40 @@ export default {
     navName: {
       deep: true,
       handler(newValue, old) {
-        console.log("old :>> ", old);
         this.$emit("update:navName", newValue);
       },
     },
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
+    height() {
+      let h = 48;
+      if (this.screenHeight > 901) {
+        h += 415;
+      } else if (this.screenHeight > 600) {
+        h += 272;
+      } else {
+        h += 136;
+      }
+      return {
+        height: `${h}px`,
+      };
+    },
+  },
+  mounted() {
+    this.screenHeight =
+      window.innerHeight || document.documentElement.clientHeight;
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleResize);
   },
   methods: {
     ...mapActions(cardStore, ["addCard"]),
+    handleResize() {
+      this.screenHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+    },
     close() {
       this.$emit("close");
     },

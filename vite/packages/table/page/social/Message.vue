@@ -1,6 +1,6 @@
 <template>
   <div class="ml-4">
-    <a-row class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em; background-color: var(    --primary-bg);color: var(--primary-text)" :gutter="20">
+    <a-row class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em; background: var(    --primary-bg);color: var(--primary-text)" :gutter="20">
       <a-col :span="24">
         <div class="message-title flex items-center justify-between mb-4">
           <div class="flex items-center">

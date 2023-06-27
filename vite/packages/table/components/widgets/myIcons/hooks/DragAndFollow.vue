@@ -156,13 +156,13 @@ export default {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 9999999999999999999999999999;
+  z-index: 999999999;
 }
 
 .follow {
   position: absolute;
   pointer-events: none;
-  z-index: 9999999999999999999999999999;
+  z-index: 999999999;
 }
 
 .icons {

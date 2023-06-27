@@ -3,14 +3,12 @@
 
     <div class='pop-container' @click="closeFullScreen()" :style="show">
     </div>
-    <droppable-area @leave="handleLeave" style="border: 1px solid red;">
-      <div class="box  xt-bg" @click.stop="" :style="show">
+    <droppable-area @leave="handleLeave">
+      <div class="box  xt-modal" @click.stop="" :style="show">
         <div class="title xt-text">
           <input @blur="updateGroupTitle()" type="title" v-model="title" class="input-box" style="" />
-          <div class="box-btn xt-bg" @click="disbandGroup">
-            <div class="text" style="color: #fff;">
-              · · ·
-            </div>
+          <div class="box-btn xt-bg-2" @click="disbandGroup">
+            <Icon class="icon" icon="zhankai"></Icon>
           </div>
         </div>
         <div class="item-box" >
@@ -27,7 +25,7 @@
       </div>
     </droppable-area>
 
-    <a-drawer :width="500" :height="196" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
+    <a-drawer :width="500" :height="200" placement="bottom" v-model:visible="visible" style="z-index: 99999999;">
       <BottomEdit :menuList="menuList"></BottomEdit>
     </a-drawer>
   </teleport>
@@ -64,7 +62,7 @@ export default {
 
         {
           icon: "shezhi1",
-          title: "编辑",
+          title: "设置",
           fn: () => {
             this.editIcons();
           },
@@ -191,10 +189,9 @@ export default {
   z-index: 9999999;
   box-shadow: 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  // background: var(--secondary-bg) !important;
   box-sizing: border-box;
   padding: 10px;
-  z-index: 999999999999999999;
+  z-index: 999999;
 
   .title {
     height: 48px;
@@ -228,7 +225,7 @@ export default {
       width: 48px;
       height: 48px;
       color: var(--primary-text);
-      background-color: var(--secondary-bg);
+      background: var(--secondary-bg);
       right: 6px;
       top: 0px;
       z-index: 999999;

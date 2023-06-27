@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="s-bg ml-3 p-3 rounded-xl "
+  <div class="s-bg ml-3 p-3 rounded-xl  xt-bg"
        style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
     <div class="mb-3" style="width: 300px;">
       <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
@@ -265,16 +265,21 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  background: #252525;
-}
+  .ant-table-tbody  {
+    &:hover {
+      background: red !important;
+    }
+  }
 
-.aUser {
-  display: inline-block;
-  margin-right: 10px;
-  text-align: center;
-  margin-bottom: 10px;
-  width: 50px;
-  font-size: 12px;
+  .aUser {
+    display: inline-block;
+    margin-right: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+    width: 50px;
+    font-size: 12px;
+  }
+/* .card {
+  background: #252525;
 }
 </style>

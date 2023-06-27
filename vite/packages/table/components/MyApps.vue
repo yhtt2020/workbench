@@ -5,7 +5,7 @@
     <a-dropdown>
       <div @click="addIcons()"  class="app" style="height: 78px;">
       <div class="flex justify-center items-center w-full h-full" style="">
-        <Icon class=" xt-text" icon="tianjia2" style=""></Icon>
+        <Icon class=" xt-text" icon="tianjia2" style="font-size: 30px;"></Icon>
       </div>
     </div>
     </a-dropdown>
@@ -143,7 +143,6 @@ export default {
 .btn {
   width: 6em;
   text-align: center;
-  background: #575757;
   font-size: 1.2em;
 }
 

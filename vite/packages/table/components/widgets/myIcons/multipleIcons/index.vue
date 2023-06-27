@@ -84,7 +84,7 @@ export default {
 
 <style lang="scss" scoped>
 .xt-hover {
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .item-list {
