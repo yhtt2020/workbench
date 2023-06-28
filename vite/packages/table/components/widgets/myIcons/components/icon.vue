@@ -28,6 +28,7 @@ export default {
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
+    open: {},
     src: { type: String },
     backgroundIndex: { type: Number },
     index: { type: Number },
@@ -45,30 +46,75 @@ export default {
     },
   },
   methods: {
+    newOpenApp() {
+      switch (this.open.type) {
+        // 默认浏览器
+        case "default":
+          browser.openInSystem(this.open.value);
+          break;
+        // 嵌入浏览器
+        case "internal":
+          browser.openInTable(this.open.value);
+          break;
+        // 想天浏览器
+        case "thinksky":
+          browser.openInInner(this.open.value);
+          break;
+        // 轻应用
+        case "lightApp":
+          ipc.send("executeAppByPackage", {
+            package: this.open.value,
+          });
+          break;
+        // 酷应用
+        case "coolApp":
+          this.$router.push({ name: "app", params: this.open.value });
+          break;
+        // 本地应用
+        case "tableApp":
+          require("electron").shell.openPath(
+            require("path").normalize(this.open.value)
+          );
+          break;
+        // 系统应用
+        // case "systemApp":
+        //   if (this.open.value.event === "fullscreen") {
+        //     tsbApi.window.setFullScreen(this.full);
+        //   } else if (this.open.value.event === "/status") {
+        //     this.$router.push({ path: "/status" });
+        //   } else if (this.linkValue.data) {
+        //     this.$router.push({ name: "app", params: this.linkValue.data });
+        //   } else this.$router.push({ name: this.linkValue.event });
+        //   break;
+        default:
+          this.openApp();
+      }
+      return;
+    },
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
         this.$emit("custom-event");
         return;
       }
-      if (this.link === "link") {
+      if (this.open !== undefined && this.open.value !== "") {
         // 链接
         this.$emit("onIconClick");
-        browser.openInInner(this.linkValue);
+        this.newOpenApp();
       } else if (this.link === "fast" || this.link === "nav") {
         // 其他应用
         this.$emit("onIconClick");
         this.openApp(this.linkValue);
       } else message.error("你还未设置链接/快捷方式");
     },
-    // 打开app 里面有需要注意查看的
+    // 打开app
     openApp() {
       this.$emit("onIconClick");
       if (typeof this.linkValue === "object" && this.linkValue.type) {
         switch (this.linkValue.type) {
           case "systemApp":
             if (this.linkValue.event === "fullscreen") {
-              // 这里
+              // 这里不知道啥意思
               if (this.full) this.full = false;
               else this.full = true;
               tsbApi.window.setFullScreen(!this.full);

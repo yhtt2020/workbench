@@ -75,7 +75,7 @@
         <div style="width: 50%; text-align: right">设置</div>
         <div
           style="padding: 10px; border-radius: 5px; cursor: pointer"
-          class="xt-active-bg"
+          class="xt-active-btn"
           @click="save()"
         >
           保存
@@ -100,12 +100,12 @@
 <script>
 // components
 import Widget from "../../card/Widget.vue";
-import edit from "./hooks/edit.vue";
-import icon from "./oneIcon/index.vue";
-import icons from "./multipleIcons/index.vue";
-import DragAndFollow from "./hooks/DragAndFollow.vue";
-import DroppableArea from "./hooks/DroppableArea.vue";
-import BottomEdit from "./hooks/bottomEdit.vue";
+import edit from "./components/edit.vue";
+import icon from "./components/icon.vue";
+import icons from "./icons/index.vue";
+import DragAndFollow from "./components/DragAndFollow.vue";
+import DroppableArea from "./components/DroppableArea.vue";
+import BottomEdit from "./components/bottomEdit.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -239,7 +239,6 @@ export default {
         this.customData.iconList !== undefined &&
         this.customData.iconList.length > 1
       ) {
-        menus.splice(-1, 1);
         menus.unshift({
           icon: "zhankai",
           title: "解除分组",
@@ -247,6 +246,14 @@ export default {
             this.disbandGroup();
           },
         });
+
+        // 查找"设置"菜单项的索引
+        const settingIndex = menus.findIndex((menu) => menu.title === "设置");
+
+        // 删除"设置"菜单项
+        if (settingIndex !== -1) {
+          menus.splice(settingIndex, 1);
+        }
       }
       return menus;
     },

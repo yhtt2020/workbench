@@ -22,7 +22,7 @@
           style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
+            <a-button @click="newAddCard" class="mr-10 " key="console" type="primary" style="color:var(--active-text)">添加第一张卡片</a-button>
             <a-button disabled key="buy" @click="learn"
               style="background: var( --active-bg);color: var( --secondary-text);">学习（课程暂未上线）</a-button>
           </template>

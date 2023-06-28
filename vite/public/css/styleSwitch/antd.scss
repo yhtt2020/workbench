@@ -43,7 +43,6 @@
     background: var(--secondary-bg);
     color: var(--primary-text);
     border-bottom: 1px solid var(--divider);
-  
   }
 
   .ant-table-tbody > tr.ant-table-row:hover > td,
@@ -67,10 +66,30 @@
   background-color: var(--active-bg);
 }
 // 进度条结束
+
+// 下拉框开始
 .ant-select {
   background: var(--secondary-bg);
 }
-
+.ant-select-dropdown {
+  /* 自定义下拉框样式 */
+  background: var(--secondary-bg) !important;
+  text-align: center;
+  color: var(--primary-text) !important;
+}
+.ant-select-item {
+  color: var(--primary-text);
+}
+.ant-select-item-option-selected {
+  background: var(--active-bg) !important;
+}
+.ant-select-item-option:hover {
+  background: var(--active-secondary-bg);
+}
+.ant-select-selection-item {
+  color: var(--primary-text) !important;
+}
+// 下拉框结束
 .ant-select-selector,
 .ant-select-arrow {
   color: var(--primary-text);
