@@ -5,15 +5,16 @@
       <div style="width: auto;   ">
         <div style="display: inline-block;vertical-align: top">
           <div
-            style="margin: 2em;padding:2em;border-radius: 0.5em;width: 40em;background-color:var(--primary-bg) ; color: var(--primary-text);">
-            <h3 style="color: var(--primary-text)">音量</h3>
+          class="xt-bg xt-text"
+            style="margin: 2em;padding:2em;border-radius: 0.5em;width: 40em; ">
+            <h3 class="xt-text">音量</h3>
             <a-row>
               <a-col :span="3">
-                <div style="cursor: pointer" v-if="!muted" @click="setMuted">
+                <div style="cursor: pointer" class="xt-text" v-if="!muted" @click="setMuted">
                   <Icon icon="yinliang" style="font-size: 3em"></Icon>
                 </div>
-                <div style="cursor: pointer" v-else @click="cancelMuted">
-                  <Icon icon="jingyin" style="font-size: 3em"></Icon>
+                <div style="cursor: pointer"  class="xt-text" v-else @click="cancelMuted">
+                  <Icon icon="jingyin"   style="font-size: 3em"></Icon>
                 </div>
               </a-col>
               <a-col id="scroller" :span="21">
@@ -25,12 +26,13 @@
             </div>
           </div>
           <div
-            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;background-color:var(--primary-bg) ; color: var(--primary-text);">
-            <h3 style="color: var(--primary-text)">屏幕亮度</h3>
+          class="xt-bg xt-text"
+            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
+            <h3  class="xt-text">屏幕亮度</h3>
             <a-row>
               <a-col :span="3">
                 <div>
-                  <Icon icon="icon_qingtian" style="font-size: 3em;filter: grayscale(100%)"></Icon>
+                  <Icon icon="icon_qingtian"  class="xt-text " style="font-size: 3em;filter: grayscale(100%)"></Icon>
                 </div>
               </a-col>
               <a-col :span="21">
@@ -49,10 +51,11 @@
 
         <div style="display: inline-block; ">
           <div
-            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--primary-bg) ; color: var(--primary-text);">
+          class="xt-bg xt-text"
+            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top; ">
             <h3 style="color: var(--primary-text)">音频输出设备</h3>
             <div v-for=" audio in audioList">
-              <div @click="setAudio(audio,audioList)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia }">
+              <div @click="setAudio(audio,audioList)" class="audio xt-bg-2" :class="{ 'active': audio.isDefaultForMultimedia }">
                 <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon>
                 {{ audio.name }} ({{ audio.deviceName }}) <span v-if="audio.deviceId === 'default'">当前</span>
               </div>
@@ -66,10 +69,11 @@
         </div>
         <div style="display: inline-block;vertical-align: top">
           <div
+          class="xt-bg xt-text"
             style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;background-color:var(--primary-bg) ; color: var(--primary-text);">
             <h3 style="color: var(--primary-text)">音频输入设备</h3>
             <div v-for="audio in micList">
-              <div @click="setAudio(audio,micList)" class="audio" :class="{ 'active': audio.isDefaultForMultimedia}">
+              <div @click="setAudio(audio,micList)" class="audio xt-bg-2" :class="{ 'active': audio.isDefaultForMultimedia}">
                 <Icon icon="maikefeng" style="font-size: 1.2em"></Icon>
                 {{ audio.name }}（{{audio.deviceName}}） <span v-if="audio.deviceId === 'default'">当前</span>
               </div>

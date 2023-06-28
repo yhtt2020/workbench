@@ -101,7 +101,7 @@ export default {
     width: 56px;
     height: 56px;
     background: var(--primary-bg);
-    border-radius: 12px;
+    border-radius: 6px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;

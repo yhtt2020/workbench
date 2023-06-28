@@ -483,7 +483,7 @@ export default {
   width: 100px;
   height: 56px;
   border-radius: 12px;
-  background: var(--primary-bg);
+  background: var(--secondary-bg);
   color: var(--primary-text);
   backdrop-filter: blur(20px);
 

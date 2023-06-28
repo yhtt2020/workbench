@@ -14,14 +14,14 @@
           </div>
         </div>
         <div class="flex-1">
-          <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item"  style="background: var(--primary-bg)" >
+          <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2"  >
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
       <span class="mt-2" style=" font-size: 14px;font-weight: 400;">输出</span>
-      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px;background: var(--primary-bg)">
+      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
         <div class="item-name">{{ defaultOutput.name }}（{{defaultOutput.deviceName}}）</div>
         <Icon icon="xiangxia" style="font-size: 1.5em"></Icon>
       </div>
@@ -30,13 +30,13 @@
         <div style="width: 180px;" class="mr-4 flex items-center justify-center">
           <a-progress :percent="audioTest" :showInfo="false"/>
         </div>
-        <div @click="closeMicrophone" style="background: var(--primary-bg)" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item">
+        <div @click="closeMicrophone" style="" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2">
           <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
           <Icon icon="mic-off" style="font-size: 2.286em" v-else></Icon>
         </div>
       </div>
       <span style="font-size: 14px;font-weight: 400;">输入</span>
-      <div @click="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item" style="padding: 8px 10px;background: var(--primary-bg)">
+      <div @click="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
         <span class="item-name">{{ defaultMic.name }}（{{defaultMic.deviceName}}）</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
@@ -165,7 +165,7 @@ export default {
   border-color: rgba(151, 151, 151, 1) !important;
 }
 :deep(.ant-slider-rail){
-  background: rgba(255, 255, 255, 0.4) !important;
+  // background: rgba(255, 255, 255, 0.4) !important;
 }
 :deep(.ant-progress-inner){
   background-color: rgba(255, 255, 255, 0.4) !important;

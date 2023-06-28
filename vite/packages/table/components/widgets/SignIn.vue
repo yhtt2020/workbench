@@ -6,8 +6,8 @@
 <!--      活动说明-->
 <!--    </div>-->
     <template v-if="!newPeoplePage">
-      <div class="flex justify-between s-item p-4 rounded-lg"
-           style="margin-top: 1em;color:var(--primary-text);background: var(--primary-bg);">
+      <div class="flex justify-between s-item p-4 rounded-lg xt-bg-2 xt-text"
+           style="margin-top: 1em;">
         <div>
           <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}

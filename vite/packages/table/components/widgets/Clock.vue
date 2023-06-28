@@ -33,7 +33,7 @@
     </div>
     <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
     <a-empty :description="null" :image="simpleImage"/>
-    <a-button type="primary" style="background: var(--primary-bg);border: none;color:var(--primary-text)"
+    <a-button type="primary xt-text xt-bg-2" style="border: none;"
               @click="onSetup">立即添加
     </a-button>
   </div>

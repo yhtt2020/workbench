@@ -116,7 +116,7 @@
             </div>
             反馈问题请附版本号
 
-            <a-button class="mt-3" block type="primary" @click="checkUpdate">检查更新</a-button>
+            <a-button class="mt-3" block type="primary" @click="checkUpdate" style="color:var(--active-text)">检查更新</a-button>
           </div>
         </div>
         <div class="card mb-3" style="width: 300px;background: var(--primary-bg); color: var(--primary-text)">
@@ -127,12 +127,12 @@
             <div class="mt-5">
               <a-row :gutter="10">
                 <a-col :span="12">
-                  <a-button @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary"
-                    block>开发者入驻
+                  <a-button style="color:var(--active-text)" @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary" 
+                    block >开发者入驻
                   </a-button>
                 </a-col>
                 <a-col :span="12">
-                  <a-button style="background-color:var(--primary-bg);color: var( --primary-text);"
+                  <a-button class="xt-bg-2 xt-text"
                     @click="openTab('https://www.yuque.com/tswork/mqon1y/ldt3ll8lqoedpo07')" block>前端实习
                   </a-button>
                 </a-col>

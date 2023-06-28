@@ -101,7 +101,8 @@ export default {
   async mounted() {
     let style = cache.get("style")
     if (!style) {
-      style = cache.set("style","dark-model")
+      cache.set("style","dark-model")
+      style = cache.get("style")
     }
     document.documentElement.classList.add(style);
 

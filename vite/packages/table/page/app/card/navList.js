@@ -347,6 +347,7 @@ export const NavList = [
           {
             name: 'DiscountPercentage',
             size: '2x4',
+            zoom: '38'
           },
         ],
         time: '2023/5/31'

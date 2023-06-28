@@ -129,7 +129,7 @@
        <a-col>
          <div @click="newAddIcon" class="btn">
            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-           <div><span>添加图标（开发中）</span></div>
+           <div><span>添加图标</span></div>
          </div>
        </a-col>
 <!--      <a-col>-->

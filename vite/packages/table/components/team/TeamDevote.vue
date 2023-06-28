@@ -5,7 +5,7 @@
       <div v-if="defaultIncome.name === 'MIC'" class="mt-3  flex flex-col">
         <div class="flex justify-between items-center h-12" style="display: block;">
           <!--        <span style="font-size: 16px;font-weight: 400;">累计收益: 0 分钟</span>-->
-          <span  @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3 " style="background: var(--primary-bg);color: var(--primary-text);">
+          <span  @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3 xt-bg-2" style="color: var(--primary-text);">
                 一键领取
               </span>
         </div>
@@ -32,7 +32,7 @@
             </div>
           </vue-custom-scrollbar>
         </div>
-        <div class="flex items-center rounded-lg py-1" style="background:var(--primary-bg);">
+        <div class="flex items-center rounded-lg py-1 xt-bg-2" style="">
           <a-col class="mr-4">
             <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
           </a-col>
