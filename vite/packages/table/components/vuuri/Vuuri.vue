@@ -1,7 +1,7 @@
 <template>
   <div
     ref="muuri"
-    class="muuri-grid"
+    class="muuri-grid xt-bg"
     :class="className"
     :data-grid-key="gridKey">
     <div

@@ -9,7 +9,7 @@
           padding-top: 0;padding-bottom: 0;position:relative;" ref="sideContent"
          @contextmenu.stop="showMenu">
       <div style="width: 67px;overflow-x: hidden">
-        <div style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start">
+        <div style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" class="xt-container">
           <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
             <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">

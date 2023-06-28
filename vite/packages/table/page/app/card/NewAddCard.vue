@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="right no-drag">
-          <div class="warn" v-if="navIndex == 8">
+          <div class="warn xt-bg-2" v-if="navIndex == 8">
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
@@ -311,7 +311,6 @@ export default {
       flex-direction: column !important;
 
       .warn {
-        background: rgba(0, 0, 0, 0.30);
         border-radius: 12px;
         font-size: 16px;
         padding: 10px;
