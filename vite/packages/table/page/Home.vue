@@ -238,7 +238,7 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="fixed inset-0 home-guide flex flex-col items-center justify-between p-5" style="z-index: 999;" v-if="agreeTest === false">
+  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="agreeTest === false">
     <!-- v-if="agreeTest === false" -->
     <GuidePage ></GuidePage>
   </div>

@@ -1,16 +1,17 @@
 <template>
-  <!-- 返回按钮 -->
-  <div class="guide-button" v-if="isShow === false">
+  <div class="flex flex-col h-full items-center justify-between p-5" v-if="showModal === false">
+    <!-- 返回按钮 -->
+    <div class="guide-button" v-if="isShow === false ">
     <div class="flex guide-page-bg button-active pointer w-12 h-12 rounded-lg items-center justify-center "
      @click="backSplash"
     >
      <Icon icon="xiangzuo" style="font-size: 1.75em;"></Icon>
     </div>
-  </div>
+    </div>
+ 
 
-
-  <!-- 引导内容提示 -->
-  <div class="h-full flex items-center justify-center min-content mb-4" v-if="isShow === false">
+    <!-- 引导内容提示 -->
+    <div class="h-full flex items-center justify-center min-content mb-4" v-if="isShow === false">
     <!-- 合适工作台模式 -->
     <template v-if="step === 0">
       <div class="flex flex-col items-center">
@@ -69,27 +70,58 @@
         </div>
         <div class="flex">
           <div class="mode-image mr-9 flex items-center justify-center">
-            <img src="../../../../../public/img/state/dark-backup.png" class="w-full h-full object-cover" alt="">
+            <img src="../../../../../public/img/state/homedark2.png" class="w-full h-full " alt="" v-if="defaultMode.name === 'intMode'">
+            <img src="../../../../../public/img/state/dark-backup.png" v-else class="w-full h-full object-cover" alt="">
           </div>
           <div class="flex flex-col">
-            <HorizontalPanel :navList="modeData" v-mode:selectType="defaultMode"></HorizontalPanel>
+            <HorizontalPanel :navList="modeData" v-model:selectType="defaultMode" class="mb-5"></HorizontalPanel>
+            <div v-for="item in teamData"  @click="openTeamPersonal(item)"
+             class="guide-page-bg mb-4 p-4 button-active flex items-center justify-between pointer rounded-lg"
+            >
+            <div class="flex items-center">
+              <div style="width:40px;height:40px;">
+                <img :src="'../../../../../public/img/state/'+ item.img" class="w-full h-full" alt="">
+              </div>
+              <span class="ml-4 guide-title">{{item.title}}</span>
+             </div>
+             <span>{{ simple === true ? '打开':'关闭' }}</span>
+            </div>
           </div>
         </div>
       </div>
     </template>
-  </div>
+    </div>
 
 
-  <!-- 上下一步点击按钮 -->
-  <div v-if="isShow === false">
+   <!-- 上下一步点击按钮 -->
+   <div v-if="isShow === false ">
     <a-button type="primary" class="mr-3 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
       上一步
     </a-button>
     <a-button type="primary" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
       {{ step === 2 ? 'GO':'下一步' }}
     </a-button>
+   </div>
+   <GradeNotice v-else></GradeNotice>
   </div>
-  <GradeNotice v-else></GradeNotice>
+  <transition name="fade">
+    <div class="guide-page-bg h-full flex items-center justify-center"  v-if="showModal === true">
+      <div class="rounded-lg flex flex-col p-4" style="width:480px;background: var(--modal-bg);">
+        <div class="flex items-center justify-end">
+          <div class="w-12 h-12 rounded-lg pointer mouse-click flex items-center justify-center"  style="background: var(--main-bg);" @click="showModal = false">
+            <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
+          </div>
+        </div>
+        <div class="flex items-center flex-col justify-center">
+          <div style="width: 64px;height: 64px;" class="mb-6">
+            <img :src="'../../../../../public/img/state/'+defaultTeamData.img" class="w-full h-full" alt="">
+          </div>
+          <span class="mb-6 primary-title">{{ defaultTeamData.title}}</span>
+          <span class="secondary-title mb-14" style="max-width: 380px;">{{defaultTeamData.content}}</span>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -111,6 +143,8 @@ export default {
       guideData,teamData,
       modeData,workTheme,
       defaultMode:{title:'完整模式',name:'intMode'},
+      showModal:false,
+      defaultTeamData:{},
     }
   },
   computed:{
@@ -151,6 +185,12 @@ export default {
       }
     },
     
+    // 打开个人和小队引导信息提示回调事件
+    openTeamPersonal(item){
+      this.defaultTeamData = item 
+      this.showModal = true
+    }
+    
   },
   watch:{
     // 根据浅色模式监听
@@ -168,8 +208,9 @@ export default {
     },
     // 切换极简和完整模式监听
     'defaultMode':{
-      handler(){
-
+      handler(newVal){
+        this.defaultMode = newVal
+        this.updateSimple(newVal.name === 'intMode')
       },
       immediate:true,
     }
@@ -258,7 +299,6 @@ export default {
   max-width:720px;
   max-height: 405px;
 }
-
 
 @media screen and(max-height:600px) {
   .mode-image{
