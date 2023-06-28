@@ -16,6 +16,22 @@ export const  guideData = [
 
 // 步骤二选择工作台主题模式数据
 export const workTheme = [
-  {title:'暗色模式',url:'new_moon_3d.png'},
-  {title:'浅色模式',url:'sun_3d.png'}
+  {title:'暗色模式',url:'new_moon_3d.png',id:0},
+  {title:'浅色模式',url:'sun_3d.png',id:1}
+]
+
+// 步骤三工作台极简模式和完整模式数据
+export const modeData = [
+  {title:'完整模式',name:'intMode',},
+  {title:'极简模式',name:'simpMode'}
+]
+export const teamData = [
+  {
+   img:'init.png',title:'小队',
+   content:'与全网的工作台小伙伴自由组成小队，一同体验“等级加速”、“道具互动”、“桌宠乱斗”等等那些旧时的回忆和乐趣，为你带来一种不一样的陪伴感。'
+  },
+  {
+    img:'placard_3d.png',title:'底部个人信息栏',
+    content:'内置即时通讯应用，同步元社区圈子，创建你的圈子或团队群聊。'
+  }
 ]

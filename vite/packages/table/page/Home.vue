@@ -237,8 +237,9 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;"  v-if="agreeTest === false">
-    <GuidePage></GuidePage>
+  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="agreeTest === false">
+    <!-- v-if="agreeTest === false" -->
+    <GuidePage ></GuidePage>
   </div>
 
   <a-drawer v-model:visible="addDeskVisible">
@@ -1043,7 +1044,7 @@ export default {
 }
 
 .home-guide{
-  background:rgba(00,00,00,0.75) !important;
+  background:var(--modal-bg) !important;
 }
 </style>
 <style lang="scss">
