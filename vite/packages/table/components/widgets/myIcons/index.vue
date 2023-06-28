@@ -201,7 +201,6 @@ export default {
             this.moveIcon();
           },
         },
-
         {
           icon: "shezhi1",
           title: "设置",
@@ -240,8 +239,7 @@ export default {
         this.customData.iconList !== undefined &&
         this.customData.iconList.length > 1
       ) {
-       
-        menus.splice(2, 1);
+        menus.splice(-1, 1);
         menus.unshift({
           icon: "zhankai",
           title: "解除分组",
