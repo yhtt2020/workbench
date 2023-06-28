@@ -27,7 +27,7 @@
               v-for="i in item.option"
               :src="getImg(i.name)"
               alt=""
-              :style="[{ zoom: i.zoom+'%' }]"
+             
             />
           </div>
         </template>
@@ -251,9 +251,11 @@ export default {
 
 <style lang="scss" scoped>
 .main-box {
+
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
+  margin-top: 3px;
   width: 100%;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -261,6 +263,7 @@ export default {
 }
 
 .box {
+  box-shadow: rgb(0 0 0 / 30%) 0px 0px 3px 0px;
   width: 542px;
   height: 184px;
   display: flex;

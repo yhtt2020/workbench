@@ -15,13 +15,14 @@
       </a-empty>
       <div v-if="['all','table'].indexOf(this.type)>-1" @click="openApp(item)" v-for="item in runningTableApps" class="w-1/3 open-app pointer mb-10 mt-5">
         <div class="flex flex-row items-center w-1/2">
+          
           <div class="h-8 w-8 rounded-lg flex justify-evenly items-center mr-2">
             <a-avatar :src="item.icon"  class="pointer"></a-avatar></div>
           {{item.name}}
         </div>
       </div>
       <div v-if="['all','qing'].indexOf(this.type)>-1" @click="openApp(item)" v-for="item in runningAppsInfo" class="w-1/3 open-app pointer mb-10 mt-5">
-        <div class="flex flex-row items-center w-1/2">
+        <div class="flex flex-row items-center w-1/2 xt-text">
           <div class="h-8 w-8 rounded-lg flex justify-evenly items-center mr-2">
             <a-avatar :src="item.logo"  class="pointer"></a-avatar></div>
           {{item.name}}

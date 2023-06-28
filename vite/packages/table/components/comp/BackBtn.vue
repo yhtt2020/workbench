@@ -1,5 +1,5 @@
 <template>
-  <div class="back-btn no-drag" @click="click">
+  <div class="back-btn no-drag xt-text xt-bg" @click="click">
     <Icon icon="xiangzuo"  style="font-size: 2em"></Icon>
   </div>
 </template>

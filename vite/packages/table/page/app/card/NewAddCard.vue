@@ -37,7 +37,8 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
+  
+          <NewCardPreViews  @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
             :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
@@ -192,6 +193,7 @@ export default {
   backdrop-filter: blur(10px);
   // background: red;
   -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(28px);
   // transform: scale(1.2);
 
 }
