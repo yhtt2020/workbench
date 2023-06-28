@@ -118,7 +118,6 @@
           type="file"
           accept="image/jpg,image/jpeg,image/png"
         />
-
         <div @click="upIcon()" class="btn no-drag xt-bg-2">自定义上传</div>
       </div>
     </div>
@@ -134,10 +133,8 @@
       :step="1"
       class="no-drag"
     />
-
     <div class="parent">
       <div class="text-base">图标背景</div>
-
       <a-switch v-model:checked="_isBackground"></a-switch>
     </div>
     <div v-if="_isBackground" class="item-box">
@@ -247,8 +244,8 @@ export default {
       if (this._src.length === 0) {
         let result = this._linkValue.replace(/^https?:\/\//i, "");
         if (flag === undefined)
+          // 这个api比下面的好用很多
           this._src = `https://www.svlik.com/t/favicon/ico.php?` + result;
-        // 这个api比下面的好用很多
         else
           this._src =
             `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result;
@@ -286,7 +283,7 @@ export default {
           this._src = item.icon;
         }
       }
-
+console.log('item :>> ', item);
       // 当标题状态为空时
       if (this._titleValue == "") {
         if (item.name) this._titleValue = item.name;

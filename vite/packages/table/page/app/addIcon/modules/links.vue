@@ -1,34 +1,30 @@
 <template>
   <div class="h-full">
-    <div>
-      选择打开的浏览器方式
-    </div>
+    <div>选择打开的浏览器方式</div>
     <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
       <div
         class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': 'internal' == type }"
+        :class="{ 'xt-active-btn': type === 'internal' }"
         @click="type = 'internal'"
       >
         工作台内部
       </div>
       <div
         class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': 'thinksky' == type }"
+        :class="{ 'xt-active-btn': type === 'thinksky' }"
         @click="type = 'thinksky'"
       >
         想天浏览器
       </div>
       <div
         class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': 'default' == type }"
+        :class="{ 'xt-active-btn': type === 'default' }"
         @click="type = 'default'"
       >
         系统默认
       </div>
     </div>
-    <div class="my-2">
-      网址分类
-    </div>
+    <div class="my-2">网址分类</div>
     <Icon
       ref="iconRef"
       @updateSelectApps="updateSelectApps"
@@ -64,6 +60,34 @@ import { scrollable } from "../hooks/scrollable";
 
 export default {
   mixins: [syncSelected],
+  watch: {
+    type: {
+      handler(newV) {
+        let data = []; // 临时存放数据不做取名
+        this.appList.forEach((item) => {
+          data.push({
+            ...item,
+            open: {
+              value: item.open.value,
+              type: this.type,
+            },
+          });
+        });
+        this.appList = data;
+        data = [];
+        this.selectApps.forEach((item) => {
+          data.push({
+            ...item,
+            open: {
+              value: item.open.value,
+              type: this.type,
+            },
+          });
+        });
+        this.selectApps = data;
+      },
+    },
+  },
   data() {
     return {
       type: "internal",
@@ -158,7 +182,6 @@ export default {
             link: "link",
             icon: item.app.version.logo256,
             name: item.app.version.name,
-            path: item.app.version.url,
             open: {
               value: item.app.version.url,
               type: this.type,
@@ -167,7 +190,7 @@ export default {
         });
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
-      console.log('app :>> ', appList);
+      console.log("app :>> ", appList);
       this.appList = appList;
     },
     handleChange(index) {

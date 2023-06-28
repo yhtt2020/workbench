@@ -50,15 +50,15 @@ export default {
       switch (this.open.type) {
         // 默认浏览器
         case "default":
-          browser.openInSystem(this.linkValue);
+          browser.openInSystem(this.open.value);
           break;
         // 嵌入浏览器
         case "internal":
-          browser.openInTable(this.linkValue);
+          browser.openInTable(this.open.value);
           break;
         // 想天浏览器
         case "thinksky":
-          browser.openInInner(this.linkValue);
+          browser.openInInner(this.open.value);
           break;
         // 轻应用
         case "lightApp":

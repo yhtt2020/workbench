@@ -42,13 +42,10 @@ export default {
   },
   mounted() {
     let data = [];
-    console.log("object :>> ", this.myApps);
     this.$nextTick(() => {
       this.myApps.forEach((item) => {
-        console.log('item :>> ', item);
         data.push({
           ...item,
-          link: "nav",
           open: {
             type: "tableApp",
             value: item.path,

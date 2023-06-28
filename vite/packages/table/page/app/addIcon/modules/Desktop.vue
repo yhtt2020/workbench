@@ -30,7 +30,6 @@ export default {
       desktopApps.forEach((item) => {
         data.push({
           ...item,
-          link:"nav",
           open: {
             type: "tableApp",
             value: item.path,
