@@ -3,7 +3,7 @@
   <Widget :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
     <!-- 游戏名称 -->
     <div class="game-name rounded-lg px-3 py-1 pointer" @click="openGuideDrawer">
-      游戏攻略- {{ customData.name }}
+      游戏攻略- {{ customData.chineseName }}
     </div>
     <!--按钮操作设置 -->
     <div class="w-full flex mt-3.5 mb-3">
@@ -172,7 +172,7 @@ export default {
   },
   mounted(){
     if(Object.keys(this.customData).length === 0){
-      this.customData.name = this.recentGameList[0].name
+      this.customData.name = this.recentGameList[0].chineseName
       this.customData.id = this.recentGameList[0].appid
       this.customData.chineseName = this.recentGameList[0].chineseName
     }else{
