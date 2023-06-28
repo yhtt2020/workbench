@@ -72,7 +72,7 @@ export default {
   height: 138px;
   width: 110px;
   border-radius: 10px;
-  background: var(--primary-bg);
+  background: var(--secondary-bg);
   border-radius: 12px;
   margin: 8px;
 }

@@ -1,7 +1,7 @@
 <template>
   <Widget :customData="customData" :customIndex="customIndex" :options="options" :desk="desk">
     <HorizontalPanel :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
-    <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col" style="color: var(--primary-text);">
+    <div v-if="audioType.name === 'output'" class="mt-4 flex flex-col xt-text" style="">
       <div class="flex">
         <div class="flex-1 flex flex-col mr-4">
           <div class="flex my-1 justify-between">
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="flex-1">
-          <div @click="closeVolume" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item" style="background: var(--primary-bg);">
+          <div @click="closeVolume" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2">
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
@@ -24,7 +24,7 @@
       <span class="mt-2 mb-2" style="font-size: 14px;font-weight: 400;">输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
         <template v-for="(item,index) in outputList">
-        <div   :class="item.isDefaultForMultimedia ? 's-item' :''" @click="selectDefaultDevice(item,outputList)" class="w-full py-1 flex btn-active voice-hover  items-center rounded-lg  pointer" style="padding: 8px 10px 6px 10px;color: rgba(255, 255, 255, 1);font-size: 14.64px;font-weight: 200;">
+        <div   :class="item.isDefaultForMultimedia ? 's-item' :''" @click="selectDefaultDevice(item,outputList)" class="w-full py-1 flex btn-active voice-hover  items-center rounded-lg  pointer xt-bg-2" style="padding: 8px 10px 6px 10px;font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}（{{item.deviceName}}）
           </span>

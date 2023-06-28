@@ -46,12 +46,12 @@
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="s-item change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;background: var(--primary-bg);color:var(--primary-text)">
+            <div class="s-item change  flex rounded-lg cursor-pointer xt-bg-2" @click="discountChange" style="padding:13px 41px;color:var(--primary-text)">
               <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
               <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
               <span style="margin-left: 1em;">换一换</span>
             </div>
-            <span style="padding:13px 26px;background: var(--primary-bg);" class="s-item rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
+            <span style="padding:13px 26px;" class="s-item rounded-lg change pointer xt-bg-2" @click="enterDiscountDetail">更多</span>
           </div>
         </div>
       </template>

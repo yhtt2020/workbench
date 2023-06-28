@@ -132,7 +132,7 @@
                   </a-button>
                 </a-col>
                 <a-col :span="12">
-                  <a-button style="background-color:var(--primary-bg);color: var( --primary-text);"
+                  <a-button class="xt-bg-2 xt-text"
                     @click="openTab('https://www.yuque.com/tswork/mqon1y/ldt3ll8lqoedpo07')" block>前端实习
                   </a-button>
                 </a-col>
