@@ -224,7 +224,7 @@ export default {
   border-color: rgba(151, 151, 151, 1) !important;
 }
 :deep(.ant-slider-rail){
-  background: rgba(255, 255, 255, 0.4) !important;
+  // background: rgba(255, 255, 255, 0.4) !important;
 }
 .voice-hover:hover{
   background: rgba(32, 32,32, 1);

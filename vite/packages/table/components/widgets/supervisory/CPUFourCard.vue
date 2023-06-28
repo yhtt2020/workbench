@@ -30,7 +30,7 @@
     </div>
     <div class="buttom " style="border-radius: 5px">
       <div>
-        <div class="xt-bg"> <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
+        <div> <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
           <span>下载</span></div>
 
         <span>{{lastDown}}</span>

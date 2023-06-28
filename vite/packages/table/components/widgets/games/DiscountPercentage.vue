@@ -1,7 +1,7 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk">
-    <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showRegionSelect"
-         style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);">{{ region.name }}
+    <div class="bg-mask rounded-lg px-3 py-1 pointer xt-bg-2" @click="showRegionSelect"
+         style="position: absolute;left: 45px;top:10px;">{{ region.name }}
     </div>
     <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
