@@ -1,4 +1,5 @@
 <template>
+<div style="background: var(--main-mask-bg) !important;width: 100%;height:100%;" class="pt-6">
   <transition name="fade">
     <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
       <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px"></Icon>
@@ -213,6 +214,7 @@
       </div>
     </Classification>
   </transition>
+ </div> 
 </template>
 
 <script>
@@ -1194,7 +1196,6 @@ export default {
 }
 
 .back {
-  margin-top: 24px;
   margin-left: 12px;
   width: 80px;
   height: 48px;
@@ -1273,6 +1274,6 @@ export default {
 }
 
 .right-scroll-list:hover {
-  background: rgb(42, 42, 42)
+  background: var(--secondary-bg);
 }
 </style>
