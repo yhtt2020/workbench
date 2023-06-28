@@ -101,8 +101,8 @@ export default defineComponent({
 
 <template>
   <!--  选择录制源    -->
-  <div style="width: 550px;height: 100%;padding:20px">
-    <div style="height: 100%">
+  <div style="width: 550px;max-height: 600px;padding:20px">
+    <div style="max-height: 550px;display: flex;flex-direction: column;overflow: hidden;position: relative">
       <div style="width: 300px;margin: auto">
         <HorizontalCapture @click="refreshSource" :navList="captureType" v-model:selectType="defaultRecordingType"
                            class="mb-4"></HorizontalCapture>
@@ -111,10 +111,10 @@ export default defineComponent({
       <div class="text-center" v-if="loading===true">
         捕获源获取中…
       </div>
-      <div v-else style="height: 100%">
+      <div v-else style="flex:1;height: 0">
         <template v-if="defaultRecordingType.name === 'recordFullScreen'">
           <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                                style="height:100%;">
+                                style="max-height:450px;position:relative;height: 450px;padding-right: 15px">
             <div v-if="deskSource.length === 0">
               <a-empty :image="simpleImage"/>
             </div>
@@ -133,7 +133,7 @@ export default defineComponent({
         </template>
         <template v-if="defaultRecordingType.name === 'logger'">
           <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                                style="height:100%;">
+                                style="max-height:450px;position:relative;height:450px;padding-right: 15px">
             <div v-if="windowSource.length === 0">
               <a-empty :image="simpleImage"/>
             </div>

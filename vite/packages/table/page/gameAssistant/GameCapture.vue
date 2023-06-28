@@ -725,7 +725,7 @@ export default {
       this.images = this.genFileList(this.settings.imageSavePath, ['.jpg', '.png', '.bmp', '.jpeg'])
     },
     async loadVideos () {
-      this.videos = this.genFileList(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb'])
+      this.videos = this.genFileList(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb','webm'])
     },
     // 从目录开始
     genFileList (path, extMap) {
@@ -814,7 +814,7 @@ export default {
     async saveRecent () {
       let filters = { name: '图片', extensions: ['png'] }
       if (this.recentType === 'video') {
-        filters = { name: '视频', extensions: ['mp4'] }
+        filters = { name: '视频', extensions: ['webm'] }
       }
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
@@ -1069,7 +1069,7 @@ export default {
           var buffer = new Buffer(reader.result)
           //temp文件夹应已存在
           const time = timeStamp(Date.now())
-          const fileName = this.filterName(this.currentSource.name) + '_' + time.year + '年' + time.month + '月' + time.day + '日' + time.hours + '时' + time.minutes + '分' + time.seconds + '秒' + '.mp4'
+          const fileName = this.filterName(this.currentSource.name) + '_' + time.year + '年' + time.month + '月' + time.day + '日' + time.hours + '时' + time.minutes + '分' + time.seconds + '秒' + '.webm'
           const savePath = require('path').join(this.settings.videoSavePath, fileName)
           fs.writeFile(savePath, buffer, {}, (err, res) => {
             if (err) {
