@@ -114,7 +114,7 @@ export default {
         switch (this.linkValue.type) {
           case "systemApp":
             if (this.linkValue.event === "fullscreen") {
-              // 这里
+              // 这里不知道啥意思
               if (this.full) this.full = false;
               else this.full = true;
               tsbApi.window.setFullScreen(!this.full);
@@ -140,12 +140,6 @@ export default {
             require("electron").shell.openPath(this.linkValue.path);
         }
       } else if (this.linkValue) {
-        console.log("object333 :>> ", this.linkValue);
-        // require("electron").shell.openPath(this.linkValue.path)
-        require("electron").shell.openPath(
-          require("path").normalize(this.linkValue)
-        );
-        return;
         this.linkValue.path
           ? require("electron").shell.openPath(this.linkValue.path)
           : require("electron").shell.openPath(

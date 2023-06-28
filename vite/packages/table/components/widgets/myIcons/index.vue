@@ -157,7 +157,6 @@ export default {
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
     });
-    console.log(" :>> ", this.customData.iconList[0]);
   },
   beforeDestroy() {
     // 取消右键事件

@@ -278,7 +278,6 @@ export default {
     },
     // 获取app信息
     returnApp(item) {
-      console.log("item :>> ", item);
       this._open.name = item.name;
 
       // 当图片状态为空时
