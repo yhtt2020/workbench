@@ -76,16 +76,24 @@
 
       </vueCustomScrollbar>
       <vueCustomScrollbar v-if="tab.name==='verify'" :settings="scrollbarSettings" style="height: 100%">
-        如果您是受邀参与公测，可在下方输入您的专属邀请码。
-        <br>
-        验证通过后将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。
-        <div>
-          <a-input class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg)"
-                   v-model:value="code"></a-input>
-        </div>
-        <div>
-          <a-button type="primary">验证邀请码</a-button>
-        </div>
+
+        <template v-if="verified">
+          恭喜您，您已认证受邀参与公测资格。为您颁发 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。可在"我的"界面查看。
+        <a-button @click="this.verified=false">测试</a-button>
+        </template>
+        <template v-else>
+          如果您是受邀参与公测，可在下方输入您的专属邀请码。
+          <br>
+          验证通过后将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。
+          <div>
+            <a-input class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg)"
+                     v-model:value="code"></a-input>
+          </div>
+          <div>
+            <a-button @click="activeCode" type="primary">获得勋章</a-button>
+          </div>
+        </template>
+
       </vueCustomScrollbar>
     </div>
 
@@ -168,6 +176,7 @@ export default {
         name: this.$route.params.tab
       }
     }
+
   },
   computed: {
     ...mapState(appStore, ['userInfo']),
@@ -194,8 +203,24 @@ export default {
 
   },
   methods: {
-    ...mapActions(codeStore, ['exchange', 'listCodes']),
+    ...mapActions(codeStore, ['exchange', 'listCodes','verify','active','verified']),
     ...mapActions(appStore, ['showUserCard']),
+    async activeCode () {
+      if(!this.code){
+        message.error('请输入邀请码')
+        return
+      }
+      if(!this.userInfo){
+        message.error('请登录后重试')
+        return
+      }
+      let rs=await this.active(this.code, undefined,this.userInfo.uid)
+      if(rs.status){
+        message.success('激活成功。')
+        this.verified=true
+      }
+      console.log(rs,'激活结果')
+    },
     showCard (uid, userInfo) {
       this.showUserCard(uid, userInfo)
     },
