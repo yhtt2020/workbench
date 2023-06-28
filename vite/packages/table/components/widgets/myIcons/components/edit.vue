@@ -35,7 +35,7 @@
         </template>
       </a-input>
       <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
-      <div class="w-full h-12 xt-bg-2 rounded-xl flex  p-1">
+      <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
         <div
           class="flex-1 flex justify-center items-center"
           :class="{ 'xt-active-btn': 'internal' == _open.type }"
@@ -58,14 +58,13 @@
           系统默认浏览器
         </div>
       </div>
-      <!-- <div>{{_open.type}}</div> -->
     </template>
     <!-- 快捷和应用 -->
     <template v-else>
       <a-input
         v-model:value="title"
         placeholder=""
-        class="xt-bg xt-border input"
+        class="xt-bg-2 xt-border input"
         style="border: 0"
       >
         <template #suffix>
@@ -166,9 +165,20 @@ export default {
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
-    open: {},
+    open: {
+      default: () => {
+        return {
+          value: "",
+          type: "internal",
+        };
+      },
+    },
     src: { type: String },
     backgroundIndex: { type: Number },
+  },
+  mounted() {
+    if (!this.open) {
+    }
   },
   data() {
     return {
@@ -265,17 +275,17 @@ export default {
     },
     // 获取app信息
     returnApp(item) {
-      console.log('item :>> ', item);
+      // 当图片状态为空时
       if (!this._src) {
-        console.log('111 :>> ', 111);
-        if(item.icon) {
-          console.log('22222 :>> ', 22222);
-          this._src = item.icon
+        if (item.icon) {
+          this._src = item.icon;
         }
       }
+      // 当图片状态为空时
       if (!this._titleValue) {
-        if(item.name) this._titleValue = item.name
+        if (item.name) this._titleValue = item.name;
       }
+      // this.open.type = item.type;
       if (item instanceof Array) this._linkValue = item[0];
       else this._linkValue = item;
       this._link = "fast";
@@ -290,7 +300,7 @@ export default {
         titleValue: this._titleValue,
         link: this._link,
         linkValue: this._linkValue,
-        open:this._open,
+        open: this._open,
         src: this._src,
         backgroundIndex: this._backgroundIndex,
       };

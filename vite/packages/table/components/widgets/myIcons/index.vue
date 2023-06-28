@@ -75,7 +75,7 @@
         <div style="width: 50%; text-align: right">设置</div>
         <div
           style="padding: 10px; border-radius: 5px; cursor: pointer"
-          class="xt-active-bg"
+          class="xt-active-btn"
           @click="save()"
         >
           保存
@@ -100,12 +100,12 @@
 <script>
 // components
 import Widget from "../../card/Widget.vue";
-import edit from "./hooks/edit.vue";
-import icon from "./oneIcon/index.vue";
-import icons from "./multipleIcons/index.vue";
-import DragAndFollow from "./hooks/DragAndFollow.vue";
-import DroppableArea from "./hooks/DroppableArea.vue";
-import BottomEdit from "./hooks/bottomEdit.vue";
+import edit from "./components/edit.vue";
+import icon from "./components/icon.vue";
+import icons from "./icons/index.vue";
+import DragAndFollow from "./components/DragAndFollow.vue";
+import DroppableArea from "./components/DroppableArea.vue";
+import BottomEdit from "./components/bottomEdit.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";

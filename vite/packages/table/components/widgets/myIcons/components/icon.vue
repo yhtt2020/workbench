@@ -48,8 +48,8 @@ export default {
   methods: {
     openBrowser() {
       switch (this.open.type) {
-         // 默认浏览器
-         case "default":
+        // 默认浏览器
+        case "default":
           browser.openInSystem(this.linkValue);
           break;
         // 嵌入浏览器
@@ -61,40 +61,9 @@ export default {
           browser.openInInner(this.linkValue);
           break;
         default:
-          console.log("错误啦！~");
+          this.openApp();
       }
-    //  return
-      switch (this.link.type) {
-        // 轻应用
-        case "lightApp":
-          ipc.send("executeAppByPackage", {
-            package: this.link.value,
-          });
-          break;
-        // 酷应用
-        case "coolApp":
-          this.$router.push({ name: "app", params: this.linkValue.data });
-          break;
-        case "systemApp":
-          if (this.linkValue.event === "fullscreen") {
-            // 这里
-            if (this.full) this.full = false;
-            else this.full = true;
-            tsbApi.window.setFullScreen(!this.full);
-          } else if (this.linkValue.event === "/status") {
-            if (this.$route.path === "/status") this.$router.go(-1);
-            else this.$router.push({ path: "/status" });
-          } else if (this.linkValue.data) {
-            this.$router.push({ name: "app", params: this.linkValue.data });
-          } else this.$router.push({ name: this.linkValue.event });
-          break;
-
-        case "localApp":
-          require("electron").shell.openPath(this.linkValue.path);
-          break;
-        default:
-          require("electron").shell.openPath(this.linkValue.path);
-      }
+      return;
     },
     // 单图标点击
     iconClick(event) {
@@ -102,19 +71,20 @@ export default {
         this.$emit("custom-event");
         return;
       }
-      if (this.link === "link") {
+      if (this.link === "link" || this.open.value !== "") {
         // 链接
         this.$emit("onIconClick");
-        this.openBrowser()
+        this.openBrowser();
       } else if (this.link === "fast" || this.link === "nav") {
         // 其他应用
         this.$emit("onIconClick");
         this.openApp(this.linkValue);
       } else message.error("你还未设置链接/快捷方式");
     },
-    // 打开app 里面有需要注意查看的
+    // 打开app
     openApp() {
       this.$emit("onIconClick");
+      console.log("1 :>> ", 1);
       if (typeof this.linkValue === "object" && this.linkValue.type) {
         switch (this.linkValue.type) {
           case "systemApp":

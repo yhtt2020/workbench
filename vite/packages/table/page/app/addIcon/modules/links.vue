@@ -147,10 +147,8 @@ export default {
   methods: {
     async getData(index) {
       index = this.webBtn[index].name;
-      // let appList = cache.get(`link-${index}`);
-      let appList = false;
+      let appList = cache.get(`link-${index}`);
       if (!appList) {
-        console.log('123 :>> ', 123);
         appList = [];
         let res = await getSelect({
           applicationType: index,

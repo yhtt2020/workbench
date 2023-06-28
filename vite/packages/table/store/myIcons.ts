@@ -17,9 +17,7 @@ export const myIcons = defineStore(
                 open: {
                     value: "",
                     type: "internal",
-                    name:""
                 },
-               
             },
             iconSelect: false, // 图标多选情况
             isHover: false,
