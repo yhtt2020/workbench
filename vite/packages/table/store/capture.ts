@@ -113,21 +113,26 @@ export const captureStore = defineStore("captureStore", {
 
       // mac 和 windows 获取 chromeMediaSourceId 的方式不同
       if (require('os').platform() === 'win32') {
-        navigator.getUserMedia({
-          audio: false,
-          video: {
-            mandatory: {
-              chromeMediaSource: 'desktop',
-              chromeMediaSourceId: this.currentSource.id + '',
-              minWidth: 1280,
-              minHeight: 720,
-              maxWidth: 8000,
-              maxHeight: 8000,
+        try{
+          navigator.getUserMedia({
+            audio: false,
+            video: {
+              mandatory: {
+                chromeMediaSource: 'desktop',
+                chromeMediaSourceId: this.currentSource.id + '',
+                minWidth: 1280,
+                minHeight: 720,
+                maxWidth: 8000,
+                maxHeight: 8000,
+              },
             },
-          },
-        }, handleStream, () => {
+          }, handleStream, () => {
 
-        })
+          })
+        }catch (e) {
+          message.error('截图失败，请确认协议和域名，必须运行在localhost或者tsbapp协议下')
+        }
+
       } else {
         // navigator.getUserMedia({
         //   audio: false,
