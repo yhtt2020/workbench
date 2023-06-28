@@ -22,7 +22,6 @@ export default {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
   },
   mounted() {
-    console.log(this.size, 'size')
     this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
     this.setMinute()
     this.loadMessages()

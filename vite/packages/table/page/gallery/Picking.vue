@@ -135,7 +135,7 @@
       <a-col :span="4">
         <div @click="setAppPaper" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div>设为壁纸</div>
+          <div>设为工作台背景</div>
           <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
         </div>
       </a-col>
@@ -455,5 +455,8 @@ export default defineComponent({
     border-top-right-radius: 0.5em;
     border-bottom-right-radius: 0.5em;
   }
+}
+:deep(.ant-select){
+  background: none;
 }
 </style>

@@ -199,7 +199,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.userInfo)
   },
   computed: {
     ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles', 'style','showWindowController']),
