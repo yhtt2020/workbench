@@ -156,6 +156,9 @@ export default {
       </a-select-option>
     </a-select>
   </div>
+  <div class="mt-3">
+    暂不支持快捷键使用
+  </div>
 </template>
 
 <style scoped lang="scss">

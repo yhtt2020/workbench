@@ -4,6 +4,8 @@ import {message} from "ant-design-vue";
 import filenamify from "filenamify";
 
 import {timeStamp} from '../util'
+
+const fs = require('fs')
 // @ts-ignore
 export const captureStore = defineStore("captureStore", {
   state: () => ({
@@ -302,6 +304,44 @@ export const captureStore = defineStore("captureStore", {
       }
       this.recording = false
     },
+    async reloadAll(){
+      this.loadVideos()
+      this.loadImages()
+    },
+    async loadImages() {
+      this.images = this.genFileList(this.settings.imageSavePath, ['.jpg', '.png', '.bmp', '.jpeg'])
+    },
+    async loadVideos() {
+      this.videos = this.genFileList(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb', 'webm'])
+    },
+    // 从目录开始
+    genFileList(path, extMap) {
+      let filesList = []
+      this.readFile(path, filesList, extMap)
+      return filesList
+    },
+    // 遍历读取文件
+    readFile(path, filesList, extMap) {
+      let files = fs.readdirSync(path) // 需要用到同步读取
+      files.forEach((file) => {
+        let states = fs.statSync(path + '/' + file)
+        // ❤❤❤ 判断是否是目录，是就继续递归
+        if (states.isDirectory()) {
+          this.readFile(path + '/' + file, filesList, extMap)
+        } else {
+          // 不是就将文件push进数组，此处可以正则匹配是否是 .js 先忽略
+          if (extMap.indexOf(require('path').extname(file)) > -1) {
+            const stat = fs.statSync(path + '/' + file)
+            filesList.push({
+              stat: stat,
+              filename: file,
+              path: path + '/' + file
+            })
+          }
+        }
+      })
+    },
+
   },
   persist: {
     enabled: true,
