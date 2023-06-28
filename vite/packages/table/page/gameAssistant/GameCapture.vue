@@ -41,7 +41,7 @@
             <template v-if="defaultRecordingType.name === 'recordFullScreen'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
-                <div v-if="recordGameData.length === 0">
+                <div v-if="deskSource.length === 0">
                   <a-empty :image="simpleImage"/>
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
@@ -60,7 +60,7 @@
             <template v-if="defaultRecordingType.name === 'logger'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
-                <div v-if="recordLogger.length === 0">
+                <div v-if="windowSource.length === 0">
                   <a-empty :image="simpleImage"/>
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
@@ -467,7 +467,6 @@ export default {
       //1.选源 2.实操
       step: 1,
       //当前源
-      currentSource: {},
       systemSound: {
         volume: 0,
         muted: false
@@ -477,7 +476,9 @@ export default {
       recordSetShow: false,
       setShow: false,
       isHeight: true,
-      systemMicrophone: 20, // 麦克风
+      systemMicrophone: {
+
+      }, // 麦克风
       captureType: [
         // {title:'录游戏',name:'recordGame'},
         { title: '捕获窗口', name: 'logger' },
@@ -493,40 +494,10 @@ export default {
         wheelPropagation: true
       },
       recordGameData: [
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
       ],
       recordFullScreenData: [
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
       ],
       recordLogger: [
-        { url: '/public/img/test.png', name: '程序1' },
-        { url: '/public/img/test.png', name: '程序2' },
         // {url:'/public/img/test.png',name:'程序3'},
         // {url:'/public/img/test.png',name:'程序4'},
       ],
@@ -578,7 +549,7 @@ export default {
 
   computed: {
     ...mapWritableState(inspectorStore, ['displayData']),
-    ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos']),
+    ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos','currentSource']),
     ...mapState(steamUserStore, ['runningGame']),
     deskSource () {
       return this.sources.filter(s => {
@@ -784,8 +755,6 @@ export default {
       })
     },
     clickMute () {
-      this.settings.imageSavePath = ''
-      this.settings.videoSavePath = ''
       this.systemSound.muted = !this.systemSound.muted
       setDefaultVolume({
         muted: this.systemSound.muted
@@ -945,7 +914,7 @@ export default {
       //ipc.send('captureImage',{source:this.currentSource})
       const handleStream = (stream) => {
         //document.body.style.cursor = oldCursor
-        document.body.style.opacity = '1'
+        // document.body.style.opacity = '1'
         // Create hidden video tag
         let video = document.createElement('video')
         video.autoplay = 'autoplay'
