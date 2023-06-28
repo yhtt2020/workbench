@@ -92,7 +92,9 @@ export default {
   data(){
     return{
       visibleSettings:false,
-      systemMicrophone:{},
+      systemMicrophone:{
+        muted:false,
+      },
       menuList:[{
         icon:'wanggeshitu',
         title:'更换录制源',
