@@ -66,15 +66,14 @@
         <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
             return settings.cardMargin + 'px';
           }
-          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
-      zoom: (this.settings.cardZoom / 100).toFixed(2),
+          " group-id="grid.id" v-model="currentDesk.cards" :key="key" :style="{
+
       height: '100%',
       width: '100%',
-    }" class="grid home-widgets" ref="grid" :options="muuriOptions">
+    }" class="grid home-widgets" ref="grid" :options="muuriOptions" :drag-enabled="true">
           <template #item="{ item }">
-            <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch"
-                @touchend="touch" :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
+            <div  :style="{  zoom: (this.settings.cardZoom / 100).toFixed(2),}">
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"  :editing="editing" :customData="item.customData" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -133,15 +132,15 @@
            <div><span>添加图标（开发中）</span></div>
          </div>
        </a-col>
-      <a-col>
-        <div @click="toggleEditing" class="btn">
-          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
-          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>
-          <div>
-            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>
-          </div>
-        </div>
-      </a-col>
+<!--      <a-col>-->
+<!--        <div @click="toggleEditing" class="btn">-->
+<!--          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>-->
+<!--          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>-->
+<!--          <div>-->
+<!--            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </a-col>-->
 
       <a-col>
         <div @click="showSetting" class="btn">
@@ -510,20 +509,33 @@ export default {
       reserveTimer: null,
       custom: false,
       muuriOptions: {
-        dragAutoScroll: {
-          targets: [
-            {
-              element: "#scrollerBar>div",
-            },
-          ],
-          handle: null,
-          threshold: 50,
-          safeZone: 0.2,
-          speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
-          sortDuringScroll: true,
-          smoothStop: false,
-          onStart: null,
-          onStop: null,
+        layout:{
+          fillGaps: true,
+          horizontal: false,
+          alignRight: false,
+          alignBottom: false,
+          rounding: true
+        },
+        targets: [
+          {
+            element: '#scrollerBar>div',
+          },
+        ],
+        handle: null,
+        threshold: 50,
+        safeZone: 0.2,
+        speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+        sortDuringScroll: true,
+        smoothStop: false,
+        onStart: null,
+        onStop: null,
+        dragSortPredicate:{
+          threshold: 30,
+        },
+        dragSortHeuristics: {
+          sortInterval: 10,
+          minDragDistance: 5,
+          minBounceBackAngle: Math.PI / 2,
         },
       },
     };
@@ -805,10 +817,10 @@ export default {
       this.$refs.grid.update();
     },
     touch(event) {
-      if (this.editing) {
-        event.stopPropagation();
-      } else {
-      }
+      // if (this.editing) {
+      //   event.stopPropagation();
+      // } else {
+      // }
     },
     runExec,
     ...mapActions(cardStore, [
@@ -831,7 +843,7 @@ export default {
       let name = `${model}${background || ''}-model`
       document.documentElement.classList.add(name);
       cache.set("style",name)
-      
+
       // if (this.styles == true) {
       //   document.documentElement.classList.add(`light${background || ''}-model`);
       //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));
