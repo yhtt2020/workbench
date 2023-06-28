@@ -17,6 +17,7 @@ export const codeStore = defineStore('code', {
   state: () => ({
     myCode: '',//我的激活码
     serialHash: '',
+    verified:false,
   }),
   actions: {
 
@@ -91,6 +92,8 @@ export const codeStore = defineStore('code', {
         }
         return false
       } else {
+        console.log(rs)
+        this.verified=true
         return true
       }
     }

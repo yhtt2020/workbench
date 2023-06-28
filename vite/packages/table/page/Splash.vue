@@ -242,18 +242,19 @@ export default {
             if(localStorage.getItem('noCode')){
               //已经是免码进入了，不需要再提示了
               this.$router.replace({ name: 'home' })
-              return
+            }else{
+              Modal.confirm({
+                content: '您的账号暂未通过邀请码激活，无法获得勋章。您可点击直接进入，免激活码使用。',
+                centered: true,
+                onOk: () => {
+                  localStorage.setItem('noCode','1')
+                  this.$router.replace({ name: 'wizard' })
+                },
+                okText:"直接进入",
+                cancelText:'取消'
+              })
             }
-            Modal.confirm({
-              content: '您的账号暂未通过邀请码激活，无法获得勋章。您可点击直接进入，免激活码使用。',
-              centered: true,
-              onOk: () => {
-                localStorage.setItem('noCode','1')
-                this.$router.replace({ name: 'wizard' })
-              },
-              okText:"直接进入",
-              cancelText:'取消'
-            })
+
           }
         }
         this.setUser(userInfo)
