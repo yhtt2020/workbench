@@ -7,7 +7,7 @@
     <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
       <div v-if="!customData.url"
         style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
-        <a-button size="large" @click="this.panelVisible = true" type="primary">
+        <a-button size="large" @click="this.panelVisible = true" type="primary" class="xt-active-text">
           配置卡片</a-button>
       </div>
       <template v-else>

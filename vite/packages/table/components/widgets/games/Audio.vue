@@ -40,7 +40,7 @@
           <div style="width: 180px;" class="mr-4 flex items-center justify-center">
             <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
-          <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item" style="background: var(--primary-bg);">
+          <div @click="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2" style="">
             <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
             <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
           </div>
@@ -49,7 +49,7 @@
       <span class="mt-2 " style="font-size: 14px;font-weight: 400;">输入</span>
       <vue-custom-scrollbar class="mt-2" :settings="settingsScroller" style="height:200px;">
         <template v-for="(item,index) in inputList">
-        <div :class="item.isDefaultForMultimedia ? 's-item' :''" class="w-full py-1 voice-hover pointer voice-hover rounded-lg flex items-center  py-2 px-2" @click="selectDefaultDevice(item,inputList)" style=" color: rgba(255, 255, 255, 1);font-size: 15px;font-weight: 200;">
+        <div :class="item.isDefaultForMultimedia ? 's-item' :''" class="w-full py-1 voice-hover pointer voice-hover rounded-lg flex items-center  py-2 px-2 xt-bg-2 xt-text" @click="selectDefaultDevice(item,inputList)" style=" font-size: 15px;font-weight: 200;background: var(--secondary-bg) !important;color: var(--primary-text) !important;">
           <span class="item-name">
             {{ item.name }}（{{item.deviceName}}）
           </span>
