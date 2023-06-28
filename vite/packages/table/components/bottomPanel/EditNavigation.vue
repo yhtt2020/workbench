@@ -34,7 +34,7 @@
           <div class="con-center" v-show="navText && !promptModal" style="width:800px">
             <span class="mt-5 mb-4">支持长按拖拽排序，滑动查看更多。</span>
             <div class="   mb-2">
-              <div class="mb-2">
+              <div class="mb-2 xt-text-2">
                 注意：侧边栏图标风格会自动调整
               </div>
               <div class="flex mb-2">
@@ -49,7 +49,7 @@
               </div>
 
             </div>
-            <div class="mb-2">必选图标（拖拽添加）</div>
+            <div class="mb-2 xt-text-2">必选图标（拖拽添加）</div>
             <div class="main-nav" id="mainList" style="width: 350px">
               <div v-for="item in mainNavList" :key="item.name">
                 <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
@@ -75,20 +75,20 @@
 
           <div class="nav-toggle" v-show="navText && !promptModal">
             <div class="left-point">
-              <span class="mb-4 secondary-text"><Icon icon="arrowleft"></Icon>左侧</span>
+              <span class="mb-4 xt-text-2"><Icon icon="arrowleft"></Icon>左侧</span>
               <div>
                 <!-- <a-switch v-model:checked="leftNav" @change="navToggle(sideNavigationList,'left')"/> -->
                 <a-switch v-model:checked="leftNav" @change="navToggle('left')"/>
               </div>
             </div>
             <div class="foot-point">
-              <span class="mb-4 secondary-text"><Icon icon="arrowdown"></Icon>底部</span>
+              <span class="mb-4 xt-text-2"><Icon icon="arrowdown"></Icon>底部</span>
               <div>
                 <a-switch v-model:checked="footNav" @change="navToggle('foot')"/>
               </div>
             </div>
             <div class="right-point">
-              <span class="mb-4 secondary-text">右侧<Icon icon="arrowright"></Icon></span>
+              <span class="mb-4 xt-text-2">右侧<Icon icon="arrowright"></Icon></span>
               <div>
                 <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
               </div>
@@ -144,7 +144,7 @@
             <div v-for="item in footNavigationList" style="margin: 4px 18px" :key="item.name">
               <a-dropdown :trigger="['contextmenu']">
                 <div
-                  style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: rgba(33, 33, 33, 1);border-radius: 12px"
+                  style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: var(--secondary-bg);border-radius: 12px"
                   v-if="item.type==='systemApp'">
                   <Icon :icon="item.icon" style="width: 32px;height: 32px;color:var(--secondary-text);"></Icon>
                 </div>
