@@ -97,7 +97,7 @@ export default {
         this.$emit("custom-event");
         return;
       }
-      if (this.open.value !== "") {
+      if (this.open !== undefined && this.open.value !== "") {
         // 链接
         this.$emit("onIconClick");
         this.newOpenApp();
