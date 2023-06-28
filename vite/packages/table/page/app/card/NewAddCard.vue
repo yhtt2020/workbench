@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="right no-drag">
-          <div class="warn" v-if="navIndex == 8">
+          <div class="warn" v-if="navIndex == 9">
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
