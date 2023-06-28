@@ -157,6 +157,7 @@ export default {
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
     });
+    console.log(' :>> ',this.customData.iconList[0] );
   },
   beforeDestroy() {
     // 取消右键事件
@@ -239,7 +240,6 @@ export default {
         this.customData.iconList !== undefined &&
         this.customData.iconList.length > 1
       ) {
-        menus.splice(-1, 1);
         menus.unshift({
           icon: "zhankai",
           title: "解除分组",
@@ -247,6 +247,7 @@ export default {
             this.disbandGroup();
           },
         });
+        menus.splice(-1, 1);
       }
       return menus;
     },

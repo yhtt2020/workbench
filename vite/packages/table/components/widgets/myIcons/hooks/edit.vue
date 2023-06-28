@@ -34,8 +34,31 @@
           </div>
         </template>
       </a-input>
-      <!-- <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div> -->
-      <!-- <div>123</div> -->
+      <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
+      <div class="w-full h-12 xt-bg-2 rounded-xl flex  p-1">
+        <div
+          class="flex-1 flex justify-center items-center"
+          :class="{ 'xt-active-btn': 'internal' == _open.type }"
+          @click="_open.type = 'internal'"
+        >
+          工作台内打开
+        </div>
+        <div
+          class="flex-1 flex justify-center items-center"
+          :class="{ 'xt-active-btn': 'thinksky' == _open.type }"
+          @click="_open.type = 'thinksky'"
+        >
+          想天浏览器
+        </div>
+        <div
+          class="flex-1 flex justify-center items-center"
+          :class="{ 'xt-active-btn': 'default' == _open.type }"
+          @click="_open.type = 'default'"
+        >
+          系统默认浏览器
+        </div>
+      </div>
+      <!-- <div>{{_open.type}}</div> -->
     </template>
     <!-- 快捷和应用 -->
     <template v-else>
@@ -113,7 +136,7 @@
 
     <div class="parent">
       <div class="text-base">图标背景</div>
-      
+
       <a-switch v-model:checked="_isBackground"></a-switch>
     </div>
     <div v-if="_isBackground" class="item-box">
@@ -143,6 +166,7 @@ export default {
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
+    open: {},
     src: { type: String },
     backgroundIndex: { type: Number },
   },
@@ -155,6 +179,7 @@ export default {
       _titleValue: this.titleValue,
       _link: this.link,
       _linkValue: this.linkValue,
+      _open: this.open,
       _src: this.src,
       _backgroundIndex: this.backgroundIndex,
       backgroundColorList: {
@@ -238,7 +263,19 @@ export default {
         event.target.value = "";
       };
     },
+    // 获取app信息
     returnApp(item) {
+      console.log('item :>> ', item);
+      if (!this._src) {
+        console.log('111 :>> ', 111);
+        if(item.icon) {
+          console.log('22222 :>> ', 22222);
+          this._src = item.icon
+        }
+      }
+      if (!this._titleValue) {
+        if(item.name) this._titleValue = item.name
+      }
       if (item instanceof Array) this._linkValue = item[0];
       else this._linkValue = item;
       this._link = "fast";
@@ -253,6 +290,7 @@ export default {
         titleValue: this._titleValue,
         link: this._link,
         linkValue: this._linkValue,
+        open:this._open,
         src: this._src,
         backgroundIndex: this._backgroundIndex,
       };

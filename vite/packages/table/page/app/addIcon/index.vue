@@ -160,12 +160,13 @@ export default {
       let app = this.$refs.apps;
       if (app.selectApps.length !== 0) {
         for (let i = 0; i < app.selectApps.length; i++) {
+          console.log('object :>> ', app.selectApps[i].open);
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = app.selectApps[i].name;
           iconOption.link = app.selectApps[i].link || "nav";
           iconOption.linkValue = app.selectApps[i].path;
           iconOption.src = app.selectApps[i].icon;
-
+          iconOption.open = app.selectApps[i].open || {};
           this.addIcon(iconOption);
         }
       }

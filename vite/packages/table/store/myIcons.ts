@@ -12,11 +12,16 @@ export const myIcons = defineStore(
                 titleValue: "",
                 link: "",
                 linkValue: "",
-                init: true,
                 src: "",
                 backgroundIndex: 1,
+                open: {
+                    value: "",
+                    type: "internal",
+                    name:""
+                },
+               
             },
-            iconSelect:false, // 图标多选情况
+            iconSelect: false, // 图标多选情况
             isHover: false,
             isCopy: false, // 复制状态
             isDrag: false, // 拖拽状态

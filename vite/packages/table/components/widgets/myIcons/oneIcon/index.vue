@@ -28,6 +28,7 @@ export default {
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
+    open: {},
     src: { type: String },
     backgroundIndex: { type: Number },
     index: { type: Number },
@@ -45,6 +46,56 @@ export default {
     },
   },
   methods: {
+    openBrowser() {
+      switch (this.open.type) {
+         // 默认浏览器
+         case "default":
+          browser.openInSystem(this.linkValue);
+          break;
+        // 嵌入浏览器
+        case "internal":
+          browser.openInTable(this.linkValue);
+          break;
+        // 想天浏览器
+        case "thinksky":
+          browser.openInInner(this.linkValue);
+          break;
+        default:
+          console.log("错误啦！~");
+      }
+    //  return
+      switch (this.link.type) {
+        // 轻应用
+        case "lightApp":
+          ipc.send("executeAppByPackage", {
+            package: this.link.value,
+          });
+          break;
+        // 酷应用
+        case "coolApp":
+          this.$router.push({ name: "app", params: this.linkValue.data });
+          break;
+        case "systemApp":
+          if (this.linkValue.event === "fullscreen") {
+            // 这里
+            if (this.full) this.full = false;
+            else this.full = true;
+            tsbApi.window.setFullScreen(!this.full);
+          } else if (this.linkValue.event === "/status") {
+            if (this.$route.path === "/status") this.$router.go(-1);
+            else this.$router.push({ path: "/status" });
+          } else if (this.linkValue.data) {
+            this.$router.push({ name: "app", params: this.linkValue.data });
+          } else this.$router.push({ name: this.linkValue.event });
+          break;
+
+        case "localApp":
+          require("electron").shell.openPath(this.linkValue.path);
+          break;
+        default:
+          require("electron").shell.openPath(this.linkValue.path);
+      }
+    },
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
@@ -54,7 +105,7 @@ export default {
       if (this.link === "link") {
         // 链接
         this.$emit("onIconClick");
-        browser.openInInner(this.linkValue);
+        this.openBrowser()
       } else if (this.link === "fast" || this.link === "nav") {
         // 其他应用
         this.$emit("onIconClick");

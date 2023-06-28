@@ -1,29 +1,58 @@
 <template>
-  <div class="h-full" >
+  <div class="h-full">
+    <div>
+      选择打开的浏览器方式
+    </div>
+    <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
+      <div
+        class="flex-1 flex justify-center items-center"
+        :class="{ 'xt-active-btn': 'internal' == type }"
+        @click="type = 'internal'"
+      >
+        工作台内部
+      </div>
+      <div
+        class="flex-1 flex justify-center items-center"
+        :class="{ 'xt-active-btn': 'thinksky' == type }"
+        @click="type = 'thinksky'"
+      >
+        想天浏览器
+      </div>
+      <div
+        class="flex-1 flex justify-center items-center"
+        :class="{ 'xt-active-btn': 'default' == type }"
+        @click="type = 'default'"
+      >
+        系统默认
+      </div>
+    </div>
+    <div class="my-2">
+      网址分类
+    </div>
     <Icon
       ref="iconRef"
       @updateSelectApps="updateSelectApps"
       style="height: calc(100% - 48px)"
       :data="appList"
     >
-    <div
-      class="w-full flex overflow-x-auto xt-container"
-      ref="scrollContainer"
-      v-scrollable
-    >
       <div
-        v-for="(item, index) in webBtn"
-        @click="handleChange(index)"
-        class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl"
-        style="flex: 0 0 auto"
-        :class="{
-          'xt-bg-2': index === selectIndex,
-        }"
+        class="w-full flex overflow-x-auto xt-container"
+        ref="scrollContainer"
+        v-scrollable
       >
-        {{ item.label }}
+        <div
+          v-for="(item, index) in webBtn"
+          @click="handleChange(index)"
+          class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl"
+          style="flex: 0 0 auto"
+          :class="{
+            'xt-bg-2': index === selectIndex,
+          }"
+        >
+          {{ item.label }}
+        </div>
       </div>
-    </div>
-  </Icon>
+    </Icon>
   </div>
 </template>
 
@@ -37,6 +66,7 @@ export default {
   mixins: [syncSelected],
   data() {
     return {
+      type: "internal",
       webBtn: [
         {
           label: "设计工具",
@@ -117,8 +147,10 @@ export default {
   methods: {
     async getData(index) {
       index = this.webBtn[index].name;
-      let appList = cache.get(`link-${index}`);
+      // let appList = cache.get(`link-${index}`);
+      let appList = false;
       if (!appList) {
+        console.log('123 :>> ', 123);
         appList = [];
         let res = await getSelect({
           applicationType: index,
@@ -129,10 +161,15 @@ export default {
             icon: item.app.version.logo256,
             name: item.app.version.name,
             path: item.app.version.url,
+            open: {
+              value: item.app.version.url,
+              type: this.type,
+            },
           });
         });
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
+      console.log('app :>> ', appList);
       this.appList = appList;
     },
     handleChange(index) {
