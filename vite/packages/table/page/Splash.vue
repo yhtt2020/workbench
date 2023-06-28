@@ -65,7 +65,7 @@
           </a-row>
           <!--        <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>-->
 
-          <div v-if="!myCode" class="mt-3 mb-3">请输入激活码激活账号。</div>
+          <div v-if="!myCode" class="mt-3 mb-3"></div>
           <p v-if="myCode" class="mt-2">检测到您已使用过激活码：<span style="user-select: text;font-weight: bold">{{
               myCode
             }}</span>，可直接填入发车。如遇已激活但无法验证的情况，请确认网络（如梯子），并退出重试，若多次重试仍不可验证，请更新版本，联系QQ<span
@@ -75,7 +75,7 @@
               style="user-select: text;font-weight: bold">{{ version }}</span>
           </p>
           <p>
-            <a-input v-model:value="code" placeholder="请输入邀请码" size="large"></a-input>
+            <a-input v-model:value="code" placeholder="请输入邀请码以兑换勋章" size="large"></a-input>
           </p>
         </div>
 
@@ -86,7 +86,7 @@
                   size="large">
           装填，发车！
         </a-button>
-        <a-button size="large" class="m-3" v-if="myCode" @click="verifyAgain">验证</a-button>
+        <a-button type="primary" size="large" class="m-3"  @click="goDirect">直接进入</a-button>
       </div>
 
     </div>
@@ -203,6 +203,10 @@ export default {
         })
       }, 5000)
     },
+    goDirect(){
+      localStorage.setItem('noCode','1')
+      this.$router.replace({ name: 'wizard' })
+    },
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       this.$router.replace({ name: 'home' })
@@ -235,13 +239,20 @@ export default {
           if (rs) {
             this.$router.replace({ name: 'home' })
           } else {
-            Modal.error({
-              content: '您所提交的邀请码无效，无法获得勋章，您可取消后重试，或者点击直接进入，跳过此阶段。',
+            if(localStorage.getItem('noCode')){
+              //已经是免码进入了，不需要再提示了
+              this.$router.replace({ name: 'home' })
+              return
+            }
+            Modal.confirm({
+              content: '您的账号暂未通过邀请码激活，无法获得勋章。您可点击直接进入，免激活码使用。',
               centered: true,
               onOk: () => {
+                localStorage.setItem('noCode','1')
                 this.$router.replace({ name: 'wizard' })
               },
-              okText:"直接进入"
+              okText:"直接进入",
+              cancelText:'取消'
             })
           }
         }
