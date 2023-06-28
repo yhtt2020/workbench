@@ -108,9 +108,14 @@ export default defineComponent({
                            class="mb-4"></HorizontalCapture>
       </div>
 
-      <div class="text-center" v-if="loading===true">
-        捕获源获取中…
-      </div>
+      <div style="height: 450px;" class="text-center" v-if="loading===true">
+        <div style="margin-top: 100px;">
+
+            <icon class=" animate-spin " icon="shuaxin" style="font-size:24px;vertical-align: top"></icon>
+
+           捕获源获取中…
+        </div>
+             </div>
       <div v-else style="flex:1;height: 0">
         <template v-if="defaultRecordingType.name === 'recordFullScreen'">
           <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"

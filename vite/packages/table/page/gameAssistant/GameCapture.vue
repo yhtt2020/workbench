@@ -16,7 +16,7 @@
           <HorizontalCapture @click="refreshSource" :navList="captureType" v-model:selectType="defaultRecordingType"
                              class="mb-4"></HorizontalCapture>
           <div class="text-center" v-if="loading===true">
-            捕获源获取中…
+            <icon class=" animate-spin " icon="shuaxin" style="font-size:24px;vertical-align: top"></icon> 捕获源获取中…
           </div>
           <div v-else style="height: 100%">
             <template v-if="defaultRecordingType.name === 'recordGame'">
