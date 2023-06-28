@@ -4,12 +4,7 @@
     class="w-full h-full flex flex-col justify-center items-center w h"
     v-if="myApps.length === 0"
   >
-    <CardState
-      :bg="false"
-      state="null"
-      :zoom="26"
-      :text="{ null: '暂无应用' }"
-    >
+    <CardState :bg="false" state="null" :zoom="26" :text="{ null: '暂无应用' }">
     </CardState>
     <!-- <div @click="goAddMyApps()">123</div> -->
   </div>
@@ -20,7 +15,7 @@
     ref="iconRef"
     :isSelect="true"
     style="height: calc(100% - 48px)"
-    :data="myApps"
+    :data="appList"
     @updateSelectApps="updateSelectApps"
   >
   </Icon>
@@ -37,10 +32,35 @@ export default {
   components: {
     CardState,
   },
+  data() {
+    return {
+      appList: [],
+    };
+  },
   computed: {
     ...mapWritableState(appsStore, ["myApps"]),
   },
+  mounted() {
+    let data = [];
+    console.log("object :>> ", this.myApps);
+    this.$nextTick(() => {
+      this.myApps.forEach((item) => {
+        console.log('item :>> ', item);
+        data.push({
+          ...item,
+          link: "nav",
+          open: {
+            type: "tableApp",
+            value: item.path,
+            name: item.name,
+          },
+        });
+      });
+      this.appList = data;
+    });
+  },
   methods: {
+    // 跳转链接
     goAddMyApps() {
       this.$router.push({ name: "apps" });
     },

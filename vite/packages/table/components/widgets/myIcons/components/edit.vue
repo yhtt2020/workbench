@@ -12,6 +12,7 @@
         网页链接
       </div>
       <div class="xt-bg-2 xt-text xt-hover" @click="fastClick()">快捷方式</div>
+      <input style="display: none" ref="fileRef" type="file" />
       <div class="xt-bg-2 xt-text xt-hover" @click="customClick()">
         应用导航
       </div>
@@ -113,10 +114,11 @@
         </div>
         <input
           style="display: none"
-          ref="fileRef"
+          ref="imgRef"
           type="file"
           accept="image/jpg,image/jpeg,image/png"
         />
+
         <div @click="upIcon()" class="btn no-drag xt-bg-2">自定义上传</div>
       </div>
     </div>
@@ -219,7 +221,7 @@ export default {
   },
   computed: {
     title() {
-      return this._linkValue.name || this._linkValue || "";
+      return this._open.name || this._linkValue.name || this._linkValue || "";
     },
     backgroundState() {
       if (this._isBackground) {
@@ -261,33 +263,70 @@ export default {
       this._link = "";
     },
     async upIcon() {
-      let fileRef = this.$refs.fileRef;
-      fileRef.click();
+      let imgRef = this.$refs.imgRef;
+      imgRef.click();
       let that = this;
-      fileRef.onchange = async function (event) {
+      imgRef.onchange = async function (event) {
         if (this.files.length === 0) return;
         const file = this.files[0];
         let validate = validateFile(file, 2);
         if (validate !== true) return message.error(validate);
+
         that._src = file.path;
         event.target.value = "";
       };
     },
     // 获取app信息
     returnApp(item) {
+      console.log("item :>> ", item);
+      this._open.name = item.name;
+
       // 当图片状态为空时
       if (!this._src) {
         if (item.icon) {
           this._src = item.icon;
         }
       }
-      // 当图片状态为空时
-      if (!this._titleValue) {
+
+      // 当标题状态为空时
+      if (this._titleValue == "") {
         if (item.name) this._titleValue = item.name;
       }
-      // this.open.type = item.type;
-      if (item instanceof Array) this._linkValue = item[0];
-      else this._linkValue = item;
+      if (item.type === "lightApp") {
+        // 轻应用数据
+        this._open = {
+          type: "lightApp",
+          value: item.package,
+          name: item.name,
+        };
+        item = this._open;
+      } else if (item.type === "coolApp") {
+        // 酷应用数据
+        this._open = {
+          type: "coolApp",
+          value: item.data,
+          name: item.name,
+        };
+        item = this._open;
+      } else if (item.type === "tableApp") {
+        // 本地应用数据
+        this._open = {
+          type: "tableApp",
+          value: item.path,
+          name: item.name,
+        };
+        item = this._open;
+      }
+      //  else if (item.type === "systemApp") {
+      //   // 本地应用数据
+      //   this._open = {
+      //     type: "systemApp",
+      //     value: item.event,
+      //     name: item.name,
+      //   };
+      //   item = this._open;
+      // }
+      this._linkValue = item;
       this._link = "fast";
     },
     save() {
@@ -306,13 +345,18 @@ export default {
       };
     },
     async customClick() {
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择你的本地应用",
-        filters: [{ name: "全部", extensions: ["*"] }],
-        properties: ["multiSelections"],
-      });
-      if (!openPath) return (this._link = "");
-      else this._linkValue = openPath[0];
+      let fileRef = this.$refs.fileRef;
+      fileRef.click();
+      let that = this;
+      fileRef.onchange = async function (event) {
+        if (this.files.length === 0) return;
+        const file = this.files[0];
+        that._open = {
+          type: "tableApp",
+          name: file.name,
+          value: file.path,
+        };
+      };
       this._link = "nav";
     },
     fastClick() {

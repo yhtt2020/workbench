@@ -157,7 +157,7 @@ export default {
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
     });
-    console.log(' :>> ',this.customData.iconList[0] );
+    console.log(" :>> ", this.customData.iconList[0]);
   },
   beforeDestroy() {
     // 取消右键事件
@@ -247,7 +247,14 @@ export default {
             this.disbandGroup();
           },
         });
-        menus.splice(-1, 1);
+
+        // 查找"设置"菜单项的索引
+        const settingIndex = menus.findIndex((menu) => menu.title === "设置");
+
+        // 删除"设置"菜单项
+        if (settingIndex !== -1) {
+          menus.splice(settingIndex, 1);
+        }
       }
       return menus;
     },

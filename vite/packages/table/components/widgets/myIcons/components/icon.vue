@@ -46,7 +46,7 @@ export default {
     },
   },
   methods: {
-    openBrowser() {
+    newOpenApp() {
       switch (this.open.type) {
         // 默认浏览器
         case "default":
@@ -60,6 +60,32 @@ export default {
         case "thinksky":
           browser.openInInner(this.linkValue);
           break;
+        // 轻应用
+        case "lightApp":
+          ipc.send("executeAppByPackage", {
+            package: this.open.value,
+          });
+          break;
+        // 酷应用
+        case "coolApp":
+          this.$router.push({ name: "app", params: this.open.value });
+          break;
+        // 本地应用
+        case "tableApp":
+          require("electron").shell.openPath(
+            require("path").normalize(this.open.value)
+          );
+          break;
+        // 系统应用
+        // case "systemApp":
+        //   if (this.open.value.event === "fullscreen") {
+        //     tsbApi.window.setFullScreen(this.full);
+        //   } else if (this.open.value.event === "/status") {
+        //     this.$router.push({ path: "/status" });
+        //   } else if (this.linkValue.data) {
+        //     this.$router.push({ name: "app", params: this.linkValue.data });
+        //   } else this.$router.push({ name: this.linkValue.event });
+        //   break;
         default:
           this.openApp();
       }
@@ -71,10 +97,10 @@ export default {
         this.$emit("custom-event");
         return;
       }
-      if (this.link === "link" || this.open.value !== "") {
+      if (this.open.value !== "") {
         // 链接
         this.$emit("onIconClick");
-        this.openBrowser();
+        this.newOpenApp();
       } else if (this.link === "fast" || this.link === "nav") {
         // 其他应用
         this.$emit("onIconClick");
@@ -84,7 +110,6 @@ export default {
     // 打开app
     openApp() {
       this.$emit("onIconClick");
-      console.log("1 :>> ", 1);
       if (typeof this.linkValue === "object" && this.linkValue.type) {
         switch (this.linkValue.type) {
           case "systemApp":
@@ -115,6 +140,12 @@ export default {
             require("electron").shell.openPath(this.linkValue.path);
         }
       } else if (this.linkValue) {
+        console.log("object333 :>> ", this.linkValue);
+        // require("electron").shell.openPath(this.linkValue.path)
+        require("electron").shell.openPath(
+          require("path").normalize(this.linkValue)
+        );
+        return;
         this.linkValue.path
           ? require("electron").shell.openPath(this.linkValue.path)
           : require("electron").shell.openPath(

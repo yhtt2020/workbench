@@ -26,7 +26,19 @@ export default {
   methods: {
     async loadDeskIconApps() {
       const desktopApps = await ipc.sendSync("getDeskApps");
-      this.allApps = desktopApps;
+      let data = [];
+      desktopApps.forEach((item) => {
+        data.push({
+          ...item,
+          link:"nav",
+          open: {
+            type: "tableApp",
+            value: item.path,
+            name: item.name,
+          },
+        });
+      });
+      this.allApps = data;
     },
   },
 };
