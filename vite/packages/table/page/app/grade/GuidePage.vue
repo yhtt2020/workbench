@@ -21,8 +21,8 @@
         </div>
         <div class="flex relative">
           <div class="guide-divider"></div>
-          <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(index)}"
-           class="flex flex-col pointer max-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
+          <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(item)}"
+           class="flex flex-col pointer mode-width max-width mode-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
            @click="selectWorkMode(item,index)"
           >
           <!--  -->
@@ -31,7 +31,7 @@
             </div>
             <span class="my-4 primary-title">{{ item.title }}</span>
             <div class="container flex items-center justify-center">
-              <p class="text-clamp">
+              <p class="text-clamp w-full">
                 {{ item.explain }}
               </p>
             </div>
@@ -83,8 +83,9 @@
               <div style="width:40px;height:40px;">
                 <img :src="'../../../../../public/img/state/'+ item.img" class="w-full h-full" alt="">
               </div>
-              <span class="ml-4 guide-title xt-text">{{item.title}}</span>
+              <span class="ml-4 guide-title primary-title xt-text">{{item.title}}</span>
              </div>
+             <span>{{ simple === true ? '打开':'关闭' }}</span>
              <span :style="{background: !simple? 'green':'red'}" class="p-2 rounded-lg px-3">
               <icon style="font-size: 18px;color: white;vertical-align: middle" v-if="!simple" icon="yixuan"></icon>
                <icon style="font-size: 18px;color: white;vertical-align: middle" v-else icon="guanbi"></icon>
@@ -102,7 +103,7 @@
     <a-button type="primary" class="mr-3 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
       上一步
     </a-button>
-    <a-button type="primary" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
+    <a-button type="primary" :disabled="!isNext" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
       {{ step === 2 ? 'GO':'下一步' }}
     </a-button>
    </div>
@@ -120,7 +121,7 @@
           <div style="width: 64px;height: 64px;" class="mb-6">
             <img :src="'../../../../../public/img/state/'+defaultTeamData.img" class="w-full h-full" alt="">
           </div>
-          <span class="mb-6 primary-title">{{ defaultTeamData.title}}</span>
+          <span class="mb-6 primary-text">{{ defaultTeamData.title}}</span>
           <span class="secondary-title mb-14" style="max-width: 380px;">{{defaultTeamData.content}}</span>
         </div>
       </div>
@@ -162,6 +163,13 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['styles','simple','stylesIndex']),
+    //是否禁用下一步
+    isNext(){
+      return this.statusIndex === 2 || this.selectItem.length > 0 
+    }
+  },
+  mounted(){
+    this.selectItem = ['gr']
   },
   methods:{
     ...mapActions(appStore,['updateMode','updateSimple']),
@@ -191,10 +199,16 @@ export default {
     },
     // 选择合适的工作台模式
     selectWorkMode(item,index){
-      if(this.selectItem.includes(index)){
-        this.selectItem = []
+      console.log('测试1',this.selectItem);
+      console.log('测试2',this.selectItem.indexOf(item.id) > -1);
+      const find = this.selectItem.indexOf(item.id) 
+      if(find > -1){
+        // this.selectItem = []
+        this.selectItem.splice(find,1)
+        console.log(this.selectItem);
+        // console.log(find);
       }else{
-        this.selectItem.push(index); // 添加选中
+        this.selectItem.push(item.id); // 添加选中
       }
       this.statusIndex = index
       if(index === 2){
@@ -202,8 +216,11 @@ export default {
       }
     },
     // 选中状态
-    isActive(index){
-      return this.selectItem.includes(index) || this.statusIndex === index
+    isActive(item){
+      if(item.id === 'dy'){  // 第三个元素选中
+        return this.statusIndex === 2
+      }
+      return this.selectItem.includes(item.id) 
     },
     // 下一步按钮
     nextButton(){
@@ -259,7 +276,7 @@ export default {
       }
       this.updateLeftNavData(mergePanel.left)
       this.updateBottomNavData(mergePanel.bottom)
-    }
+    },
 
   },
   watch:{
@@ -307,6 +324,14 @@ export default {
   color: var(--primary-text);
   font-weight: 500;
 }
+
+.primary-text{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: var(--primary-text);
+  font-weight: 500;
+}
+
 .secondary-title{
   font-family: PingFangSC-Regular;
   font-size: 16px;
@@ -317,7 +342,6 @@ export default {
   max-width: 240px;
 }
 .text-clamp {
-  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp:4;
   white-space: break-spaces;
@@ -370,6 +394,7 @@ export default {
   max-height: 405px;
 }
 
+// 最小高度响应
 @media screen and(max-height:600px) {
   .mode-image{
     max-width:540px !important;
@@ -378,6 +403,28 @@ export default {
   // 最小高度的底部间距
   .min-mb{
     margin-bottom: 16px !important;
+  }
+}
+
+// 最小宽度响应
+@media screen and(max-width:840px) {
+  .guide-divider{
+    position: absolute;
+    top: 0;
+    right:34.25% !important;
+    width: 1px;
+    height: 100%;
+    background: var(--divider);
+  }
+  .container{
+    width: calc(100% / 1.25);
+  }
+  .mode-width{
+    padding:10px 5px !important;
+    &:last-of-type{
+      padding: 0 !important;
+      margin: 0 !important;
+    }
   }
 }
 

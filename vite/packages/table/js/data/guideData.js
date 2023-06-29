@@ -1,15 +1,15 @@
 // 步骤一选择工作台模式数据
 export const  guideData = [
   {
-    title:'游戏娱乐',url:'joystick_3d.png',id:0,
+    title:'游戏娱乐',url:'joystick_3d.png',id:'gr',
     explain:'支持同步Steam游戏库，支持一键启动游戏，支持自定义导入其他平台游戏；支持系统CPU、GPU、内存、游戏帧数检测。'
   },
   {
-   title:'效率辅助',url:'keyboard_3d.png',id:1,
+   title:'效率辅助',url:'keyboard_3d.png',id:'wf',
    explain:'内置快捷指令方案，自定义编辑指令功能；内置剪切板和快捷键应用，更有待办事项、日历、倒数日等多个内置小组件。'
   },
   {
-   title:'极简DIY',url:'magic_wand_3d.png',id:2,
+   title:'极简DIY',url:'magic_wand_3d.png',id:'dy',
    explain:'无内置推荐数据，仅保留基础和性功能模块，从0开始DIY你的专属工作台。'
   }
 ]
@@ -137,7 +137,6 @@ export const mergePanel = {
     {"type": "systemApp","icon": "kuaijie1","name": "快捷指令","event": "deck"},
     {"type": "systemApp", "icon": "youxishoubing","name": "游戏","event": "gameIndex"},
     {"type": "systemApp","icon": "yinle1","name": "音乐","event": "music"},
-    {"type": "systemApp","icon": "kuaijie1","name": "快捷指令","event": "deck"},
     {"type":"systemApp","icon":"banner","name":"壁纸","event":"my",},
     {
       type: 'systemApp',icon: 'daibanshixiang',
