@@ -221,7 +221,7 @@ export default {
     nextButton(){
       this.step ++
       if(this.step > 2) this.isShow = true
-      if(this.step === 1 ){
+      if(this.step > 2 ){  // 最后一步生成
         if(this.selectItem.length > 0){  // 判断是不是多选
           for(let i=0;i<this.selectItem.length;i++){
            this.addSwitchDesk(this.guideData[i])
@@ -229,7 +229,8 @@ export default {
         }else{
           this.addSwitchDesk(this.guideData[this.statusIndex])
         }
-       
+      }else{
+        return
       }
     },
 
