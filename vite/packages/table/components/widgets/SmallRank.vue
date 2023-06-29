@@ -116,7 +116,7 @@ export default {
   },
   data () {
     return {
-      options: {className: 'card small',title: '',icon: 'linechart',type: 'smallRankingList'},
+      options: {className: 'card small',title: '',icon: 'linechart',type: 'smallRank'},
       sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
       //在线时长榜
       onLineList,
