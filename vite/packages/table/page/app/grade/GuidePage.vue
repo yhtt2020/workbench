@@ -391,7 +391,7 @@ export default {
   .guide-divider{
     position: absolute;
     top: 0;
-    right:33.25% !important;
+    right:34.25% !important;
     width: 1px;
     height: 100%;
     background: var(--divider);

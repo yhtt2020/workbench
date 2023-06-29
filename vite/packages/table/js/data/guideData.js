@@ -137,7 +137,6 @@ export const mergePanel = {
     {"type": "systemApp","icon": "kuaijie1","name": "快捷指令","event": "deck"},
     {"type": "systemApp", "icon": "youxishoubing","name": "游戏","event": "gameIndex"},
     {"type": "systemApp","icon": "yinle1","name": "音乐","event": "music"},
-    {"type": "systemApp","icon": "kuaijie1","name": "快捷指令","event": "deck"},
     {"type":"systemApp","icon":"banner","name":"壁纸","event":"my",},
     {
       type: 'systemApp',icon: 'daibanshixiang',
