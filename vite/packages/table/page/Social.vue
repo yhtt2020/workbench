@@ -71,10 +71,10 @@ export default {
        },
        {
         title:'榜单',
-        index:'rankingList',
-        icon:'message',
+        index:'rank',
+        icon:'linechart',
         route:{
-          name:'rankingList'
+          name:'rank'
         }
        }
       ],

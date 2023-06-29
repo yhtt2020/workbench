@@ -319,7 +319,7 @@ import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
-import SmallRankingList from "../components/widgets/SmallRankingList.vue";
+import SmallRank from "../components/widgets/SmallRank.vue";
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -579,7 +579,7 @@ export default {
     GameStrategy,
     AddIcon,
     KeyBoard,
-    SmallRankingList
+    SmallRank
   },
   computed: {
     ...mapWritableState(cardStore, [
