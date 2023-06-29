@@ -111,7 +111,7 @@ import BottomEdit from "./components/bottomEdit.vue";
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
-import { formatArrayAsFileSize } from './hooks/useFileSize.js';
+// import { formatArrayAsFileSize } from './hooks/useFileSize.js';
 
 import { message } from "ant-design-vue";
 
@@ -159,7 +159,6 @@ export default {
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
     });
-    let size = formatArrayAsFileSize(this.customData.iconList);
   },
   beforeDestroy() {
     // 取消右键事件

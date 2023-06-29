@@ -36,7 +36,7 @@
         </template>
       </a-input>
       <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
-      <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
+      <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
         <div
           class="flex-1 flex justify-center items-center"
           :class="{ 'xt-active-btn': 'internal' == _open.type }"
@@ -58,7 +58,12 @@
         >
           系统默认浏览器
         </div>
-      </div>
+      </div> -->
+      <a-radio-group  v-model:value="_open.type">
+      <a-radio value="internal">工作台内打开</a-radio>
+      <a-radio value="thinksky">想天浏览器</a-radio>
+      <a-radio value="default">系统默认浏览器</a-radio>
+    </a-radio-group>
     </template>
     <!-- 快捷和应用 -->
     <template v-else>
@@ -244,11 +249,11 @@ export default {
         this._src = urlWithoutParams + "/favicon.ico";
         if (flag == undefined) {
           this._src = urlWithoutParams + "/favicon.ico";
-          console.log("1 :>> ",    this._src);
+          console.log("1 :>> ", this._src);
         } else {
           this._src =
             `https://www.svlik.com/t/favicon/ico.php?` + urlWithoutParams;
-          console.log("2 :>> ",     this._src);
+          console.log("2 :>> ", this._src);
         }
         // if (flag == undefined) {
         //   // 这个api比下面的好用很多
