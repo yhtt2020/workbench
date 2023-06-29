@@ -2,6 +2,7 @@
 <template>
   <!-- 图标组件开始 -->
   <div ref="iconRef" class="icon-box" :style="dragStyle">
+    <!-- {{ formatArrayAsFileSize(customData.iconList) }} -->
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
       <drag-and-follow
@@ -110,6 +111,7 @@ import BottomEdit from "./components/bottomEdit.vue";
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
+// import { formatArrayAsFileSize } from './hooks/useFileSize.js';
 
 import { message } from "ant-design-vue";
 

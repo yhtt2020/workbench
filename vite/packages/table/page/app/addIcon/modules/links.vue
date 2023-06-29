@@ -1,7 +1,7 @@
 <template>
   <div class="h-full">
-    <div>选择打开的浏览器方式</div>
-    <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
+    <div class="text-base mb-1">选择打开的浏览器方式</div>
+    <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
       <div
         class="flex-1 flex justify-center items-center"
         :class="{ 'xt-active-btn': type === 'internal' }"
@@ -12,7 +12,7 @@
       <div
         class="flex-1 flex justify-center items-center"
         :class="{ 'xt-active-btn': type === 'thinksky' }"
-        @click="type = 'thinksky'"
+        @click="type = 'thinksky'"  
       >
         想天浏览器
       </div>
@@ -23,7 +23,12 @@
       >
         系统默认
       </div>
-    </div>
+    </div> -->
+    <a-radio-group  v-model:value="type">
+      <a-radio value="internal">工作台内打开</a-radio>
+      <a-radio value="thinksky">想天浏览器</a-radio>
+      <a-radio value="default">系统默认浏览器</a-radio>
+    </a-radio-group>
     <div class="my-2">网址分类</div>
     <Icon
       ref="iconRef"
@@ -180,17 +185,16 @@ export default {
         res.data[0].forEach((item) => {
           appList.push({
             link: "link",
-            icon: item.app.version.logo256,
-            name: item.app.version.name,
+            icon: item.app.version.logo256 || "",
+            name: item.app.version.name || "",
             open: {
-              value: item.app.version.url,
+              value: item.app.version.url || "",
               type: this.type,
             },
           });
         });
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
-      console.log("app :>> ", appList);
       this.appList = appList;
     },
     handleChange(index) {

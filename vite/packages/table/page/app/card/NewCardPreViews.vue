@@ -109,7 +109,7 @@
         </div>
       </div>
     </template>
-    <edit ref="editRef" v-bind="iconOption"></edit>
+    <edit ref="editRef" v-if="settingVisible" v-bind="{...iconOption}"></edit>
   </a-drawer>
 </template>
 
@@ -230,6 +230,7 @@ export default {
       this.isCardDetails = true;
     },
     addCardAchieve(item, i) {
+
       if (item.name == "myIcons") {
         this.settingVisible = true;
         return;
