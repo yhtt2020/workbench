@@ -100,7 +100,7 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list s-bg">
+        <a-row class="box-list xt-mask">
           <a-col :span="7" class="box-col"> 
             <div class="ranking-back">{{ myRanking.id }}</div>
             <span class="mx-4" @showCard="myRanking.uid">
@@ -199,7 +199,7 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list s-bg">
+        <a-row class="box-list xt-mask">
           <a-col :span="7" class="box-col"> 
             <div class="ranking-back">{{ myTeam.id }}</div>
             <span class="mx-4" @showCard="myTeam.uid">
@@ -294,7 +294,7 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list s-bg">
+        <a-row class="box-list xt-mask">
           <a-col :span="7" class="box-col"> 
             <div class="ranking-back">{{ myInvite.id }}</div>
             <span class="mx-4" @showCard="myInvite.uid">
@@ -397,7 +397,7 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list s-bg">
+        <a-row class="box-list xt-mask">
           <a-col :span="7" class="box-col"> 
             <div class="ranking-back">{{ mySignIn.id }}</div>
             <span class="mx-4" @showCard="mySignIn.uid">
