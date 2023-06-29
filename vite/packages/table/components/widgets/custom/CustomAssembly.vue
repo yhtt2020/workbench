@@ -90,13 +90,17 @@
       class="relative"
       style="height: calc(100% - 10px)"
     >
-      <div class="text-base">小组件尺寸</div>
-      <HorizontalPanel
+      <div class="text-base ">小组件尺寸</div>
+      <!-- {{ sizeList }} -->
+      <a-radio-group  v-model:value="mySize">
+      <a-radio class="mt-6 mr-10"  size="large" style="font-size: 18px;" v-for="item in sizeList" :value="item.className">{{item.name  }}</a-radio>
+    </a-radio-group>
+      <!-- <HorizontalPanel
         :navList="sizeList"
         v-model:select-type="mySize"
         class="mt-6"
         bg-color="drawer-item-select-bg"
-      ></HorizontalPanel>
+      ></HorizontalPanel> -->
       <div class="flex flex-row justify-between items-center mt-6">
         <div class="text-base">显示名称</div>
         <div><a-switch v-model:checked="showName" /></div>
