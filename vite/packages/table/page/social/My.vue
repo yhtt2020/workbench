@@ -2,7 +2,7 @@
   <vueCustomScrollbar :settings="scrollbarSettings"
                       style="padding: 15px;white-space: nowrap;height: 100%">
 
-    <div class="card half mr-3" style="width:330px">
+    <div class="card half mr-3" style="width:330px;background: var(--primary-bg);color: var(--primary-text);">
       <userCard :uid="userInfo.uid" :userInfo="userInfo">
       </userCard>
     </div>

@@ -78,7 +78,7 @@
       <vueCustomScrollbar v-if="tab.name==='verify'" :settings="scrollbarSettings" style="height: 100%">
 
         <template v-if="verified">
-          <div class="text-center" style="min-height: 300px">
+          <div class="text-center xt-text " style="min-height: 300px">
             恭喜您，您已认证受邀参与公测资格，获得勋章：<br>
             <div style="background: var(--secondary-bg);width: 200px;text-align: center;" class="p-3 rounded-2xl m-3 inline-block">
               <div>

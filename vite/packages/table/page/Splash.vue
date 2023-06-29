@@ -38,7 +38,7 @@
         您也可通过邀请码激活产品：
       </p>
       <p>
-        1.通过邀请码激活产品可额外获得&nbsp;<img  style="width: 22px" src="https://a.apps.vip/icons/test_sm.png" />&nbsp;“受邀用户勋章”。
+        1.通过邀请码激活可额外获得&nbsp;<RayMedal  :size="50" src="https://a.apps.vip/icons/test_sm.png" />&nbsp;受邀用户勋章。
       </p>
       <p>
         2.通过老用户邀请，每一位老用户均可通过在线使用时长兑换邀请码。
@@ -111,9 +111,11 @@ import { captureStore } from '../store/capture'
 import { navStore } from '../store/nav'
 import {clipboardStore} from "../store/clipboard";
 import { browserStore } from '../store/browser'
+import RayMedal from '../components/small/RayMedal.vue'
 
 export default {
   name: 'Code',
+  components: { RayMedal },
   data () {
     return {
       showTip: false,
