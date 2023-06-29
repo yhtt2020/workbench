@@ -85,6 +85,7 @@
               </div>
               <span class="ml-4 guide-title primary-title xt-text">{{item.title}}</span>
              </div>
+             <span>{{ simple === true ? '打开':'关闭' }}</span>
              <span :style="{background: !simple? 'green':'red'}" class="p-2 rounded-lg px-3">
               <icon style="font-size: 18px;color: white;vertical-align: middle" v-if="!simple" icon="yixuan"></icon>
                <icon style="font-size: 18px;color: white;vertical-align: middle" v-else icon="guanbi"></icon>
