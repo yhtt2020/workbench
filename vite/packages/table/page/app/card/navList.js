@@ -665,13 +665,13 @@ export const NavList = [
   {
     cname: '施工中', children: [
       {
-        name: 'smallRankingList',
+        name: 'smallRank',
         cname: '排行榜(开发中)',
         detail: '快来看看你的等级、你的小队都是啥名次。',
         sizes: ['2x2', '2x4'],
         option: [
           {
-            name: 'smallRankingList',
+            name: 'smallRank',
             size: '2x2',
             zoom: '11'
           },
