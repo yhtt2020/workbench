@@ -1,6 +1,6 @@
 <template>
   <div class="h-full">
-    <div>选择打开的浏览器方式</div>
+    <div class="text-base mb-1">选择打开的浏览器方式</div>
     <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
       <div
         class="flex-1 flex justify-center items-center"
@@ -29,7 +29,6 @@
       <a-radio value="thinksky">想天浏览器</a-radio>
       <a-radio value="default">系统默认浏览器</a-radio>
     </a-radio-group>
-    
     <div class="my-2">网址分类</div>
     <Icon
       ref="iconRef"
