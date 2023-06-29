@@ -23,8 +23,8 @@
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
             <a-button @click="newAddCard" class="mr-10 " key="console" type="primary" style="color:var(--active-text)">添加第一张卡片</a-button>
-            <a-button disabled key="buy" @click="learn"
-              style="background: var( --active-bg);color: var( --secondary-text);">学习（课程暂未上线）</a-button>
+            <a-button key="buy" @click="learn"
+              style="">学习</a-button>
           </template>
 
           <div class="desc">
@@ -794,6 +794,9 @@ export default {
     }
   },
   methods: {
+    learn(){
+      browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
+    },
     iconHide() {
       this.iconVisible =false;
     },
