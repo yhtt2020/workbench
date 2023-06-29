@@ -21,7 +21,7 @@
     <template v-else-if="_link === 'link'">
       <a-input
         @blur="leaveInput()"
-        v-model:value="_linkValue"
+        v-model:value="_open.value"
         placeholder=""
         class="xt-bg-2 xt-border input"
       >
@@ -175,10 +175,7 @@ export default {
     src: { type: String },
     backgroundIndex: { type: Number },
   },
-  mounted() {
-    if (!this.open) {
-    }
-  },
+  mounted() {},
   data() {
     return {
       _isRadius: this.isRadius,
@@ -188,7 +185,7 @@ export default {
       _titleValue: this.titleValue,
       _link: this.link,
       _linkValue: this.linkValue,
-      _open: this.open,
+      _open: { ...this.open },
       _src: this.src,
       _backgroundIndex: this.backgroundIndex,
       backgroundColorList: {
@@ -242,13 +239,26 @@ export default {
     leaveInput(flag) {
       // 匹配icon放在失去焦点后在调用外部api 减少频繁请求被屏蔽
       if (this._src.length === 0) {
-        let result = this._linkValue.replace(/^https?:\/\//i, "");
-        if (flag === undefined)
-          // 这个api比下面的好用很多
-          this._src = `https://www.svlik.com/t/favicon/ico.php?` + result;
-        else
+        const url = new URL(this._open.value);
+        const urlWithoutParams = url.origin;
+        this._src = urlWithoutParams + "/favicon.ico";
+        if (flag == undefined) {
+          this._src = urlWithoutParams + "/favicon.ico";
+          console.log("1 :>> ",    this._src);
+        } else {
           this._src =
-            `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result;
+            `https://www.svlik.com/t/favicon/ico.php?` + urlWithoutParams;
+          console.log("2 :>> ",     this._src);
+        }
+        // if (flag == undefined) {
+        //   // 这个api比下面的好用很多
+        //   this._src = `https://www.svlik.com/t/favicon/ico.php?` + result;
+        //   console.log("1 :>> ", this._src);
+        // } else {
+        //   console.log("2 :>> ", 2);
+        //   this._src =
+        //     `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result;
+        // }
       }
     },
     backgroundClick(index) {
@@ -258,6 +268,7 @@ export default {
     clear() {
       this._linkValue = "";
       this._link = "";
+      this._open = {};
     },
     async upIcon() {
       let imgRef = this.$refs.imgRef;
@@ -276,14 +287,12 @@ export default {
     // 获取app信息
     returnApp(item) {
       this._open.name = item.name;
-
       // 当图片状态为空时
       if (!this._src) {
         if (item.icon) {
           this._src = item.icon;
         }
       }
-console.log('item :>> ', item);
       // 当标题状态为空时
       if (this._titleValue == "") {
         if (item.name) this._titleValue = item.name;
@@ -326,7 +335,7 @@ console.log('item :>> ', item);
       this._link = "fast";
     },
     save() {
-      if (this._src.length == 0) return "未上传图标";
+      if (this._src.length == 0 || this._src == "") return "未上传图标";
       return {
         isRadius: this._isRadius,
         radius: this._radius,
