@@ -129,6 +129,7 @@ export default {
       } else {
         h += 136;
       }
+      if (this.navName =="Links") h += 60
       return {
         height: `${h}px`,
       };
@@ -158,9 +159,9 @@ export default {
         return;
       }
       let app = this.$refs.apps;
-      console.log(" app.selectApps 2222222 :>> ", app.selectApps[0].open);
-      // return
+
       if (app.selectApps.length !== 0) {
+       
         for (let i = 0; i < app.selectApps.length; i++) {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = app.selectApps[i].name;

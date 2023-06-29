@@ -180,17 +180,16 @@ export default {
         res.data[0].forEach((item) => {
           appList.push({
             link: "link",
-            icon: item.app.version.logo256,
-            name: item.app.version.name,
+            icon: item.app.version.logo256 || "",
+            name: item.app.version.name || "",
             open: {
-              value: item.app.version.url,
+              value: item.app.version.url || "",
               type: this.type,
             },
           });
         });
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
-      console.log("app :>> ", appList);
       this.appList = appList;
     },
     handleChange(index) {
