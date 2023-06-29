@@ -21,7 +21,7 @@
         </div>
         <div class="flex relative">
           <div class="guide-divider"></div>
-          <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(index)}"
+          <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(item)}"
            class="flex flex-col pointer mode-width max-width mode-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
            @click="selectWorkMode(item,index)"
           >
@@ -103,7 +103,7 @@
     <a-button type="primary" class="mr-3 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
       上一步
     </a-button>
-    <a-button type="primary" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
+    <a-button type="primary" :disabled="!isNext" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
       {{ step === 2 ? 'GO':'下一步' }}
     </a-button>
    </div>
@@ -163,6 +163,13 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['styles','simple','stylesIndex']),
+    //是否禁用下一步
+    isNext(){
+      return this.statusIndex === 2 || this.selectItem.length > 0 
+    }
+  },
+  mounted(){
+    this.selectItem = ['gr']
   },
   methods:{
     ...mapActions(appStore,['updateMode','updateSimple']),
@@ -192,10 +199,16 @@ export default {
     },
     // 选择合适的工作台模式
     selectWorkMode(item,index){
-      if(this.selectItem.includes(index)){
-        this.selectItem = []
+      console.log('测试1',this.selectItem);
+      console.log('测试2',this.selectItem.indexOf(item.id) > -1);
+      const find = this.selectItem.indexOf(item.id) 
+      if(find > -1){
+        // this.selectItem = []
+        this.selectItem.splice(find,1)
+        console.log(this.selectItem);
+        // console.log(find);
       }else{
-        this.selectItem.push(index); // 添加选中
+        this.selectItem.push(item.id); // 添加选中
       }
       this.statusIndex = index
       if(index === 2){
@@ -203,8 +216,11 @@ export default {
       }
     },
     // 选中状态
-    isActive(index){
-      return this.selectItem.includes(index) || this.statusIndex === index
+    isActive(item){
+      if(item.id === 'dy'){  // 第三个元素选中
+        return this.statusIndex === 2
+      }
+      return this.selectItem.includes(item.id) 
     },
     // 下一步按钮
     nextButton(){
@@ -260,7 +276,7 @@ export default {
       }
       this.updateLeftNavData(mergePanel.left)
       this.updateBottomNavData(mergePanel.bottom)
-    }
+    },
 
   },
   watch:{
