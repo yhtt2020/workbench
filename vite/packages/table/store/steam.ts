@@ -91,7 +91,12 @@ export const steamStore = defineStore("steam", {
       const newLanguages = res.supported_languages.replaceAll('<strong>*</strong>','') // 将语言中的strong标签去除
       this.discountDetail.name = res.name
       this.discountDetail.content = res.short_description
-      this.discountDetail.movie_image = res.movies.concat(res.screenshots)
+      if(res.movies){
+        this.discountDetail.movie_image = res.movies.concat(res.screenshots)
+      }else{
+        this.discountDetail.movie_image=res.screenshots
+      }
+
       this.discountDetail.IssueDate = res.release_date.date
       this.discountDetail.developers = res.developers[0]
       this.discountDetail.language = newLanguages.split('<br>')[0]
@@ -102,7 +107,7 @@ export const steamStore = defineStore("steam", {
       this.discountDetail.gameIntroduction = res.detailed_description
       // console.log('命中更新',this.discountDetail.movie_image);
     },
-    
+
   },
   // persist: {
   //   enabled: true,
