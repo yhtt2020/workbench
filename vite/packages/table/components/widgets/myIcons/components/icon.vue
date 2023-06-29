@@ -101,7 +101,7 @@ export default {
         // 链接
         this.$emit("onIconClick");
         this.newOpenApp();
-      } else if (this.link === "fast" || this.link === "nav") {
+      } else if (this.link !== "") {
         // 其他应用
         this.$emit("onIconClick");
         this.openApp(this.linkValue);

@@ -623,10 +623,19 @@ async function appStart () {
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
     let tableMod=settings.get('tableMod')
-    if((tableMod===undefined || tableMod==='table') && !global.URLToOpen){
+    console.log(tableMod,'tableMod')
+    if(tableMod===undefined){
+      //首次运行
+      settings.set('tableMod','table')//设置为工作台模式
+      return
+    }
+    if(( tableMod==='table') && !global.URLToOpen){
       //工作台模式，且没有要打开的网址
+      console.log('触发工作台模式')
       return
     }else{
+      //浏览器模式
+      console.log('打开浏览器',tableMod,global.URLToOpen)
       createWindow(function () {
         mainWindow.webContents.on('did-finish-load', function () {
           // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
@@ -642,7 +651,6 @@ async function appStart () {
         })
       })
     }
-
   } else {
     showUserWindow()
   }

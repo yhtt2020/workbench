@@ -14,7 +14,7 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
           </path>
         </svg>
-        欢迎回来，又是元气满满的一天！
+       欢迎回来，又是元气满满的一天！
       </div>
 
     </div>
@@ -22,9 +22,9 @@
   </div>
   <div v-else style="background: #333;width: 100vw;height: 100vw;" class="p-10 drag">
     <div class="no-drag" style="width: 600px;margin: auto">
-      <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台公测</h3>
+      <h3 style="text-align: center;font-size: 1.5em"> <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar> 欢迎参与想天工作台公测</h3>
       <p>虽然我们已经过一段时间的内测，但目前仍未正式发行。<br>不过您可以<strong>“无码体验”</strong>。
-        <a-button type="primary" @click="() => { this.showTip = !this.showTip }">什么是公测？</a-button>
+        <a-button size="small" type="primary" @click="() => { this.showTip = !this.showTip }">什么是公测？</a-button>
       </p>
       <div v-if="showTip" class="p-5 mb-3" style="background: #3b3b3b;border-radius: 8px;border-width: 2px">
         <p style="font-weight: bold">
@@ -38,16 +38,16 @@
         您也可通过邀请码激活产品：
       </p>
       <p>
-        1.通过邀请码激活可额外获得&nbsp;<RayMedal  :size="50" src="https://a.apps.vip/icons/test_sm.png" />&nbsp;受邀用户勋章。
+        1.通过邀请码激活可额外获得&nbsp;<RayMedal  :size="50" src="https://a.apps.vip/icons/test_sm.png" />&nbsp;受邀测试勋章。
       </p>
       <p>
-        2.通过老用户邀请，每一位老用户均可通过在线使用时长兑换邀请码。
+        2.通过老用户邀请，老用户可通过在线使用时长兑换邀请码。
       </p>
       <p>
-        3.您也可以在后期通过补填邀请码获得此勋章。
+        3.您可在后期补填邀请码获得勋章。
       </p>
       <p v-if="!userInfo">
-        请登录账号后，使用产品功能。
+        请先登录。
         <a-button type="primary" @click="login">登录/注册账号</a-button>
       </p>
       <div v-else>当前登录账号：
@@ -84,9 +84,9 @@
       <div class="flex">
         <a-button class="m-3" :loading="loading" @click="checkCode" :disabled="code === ''" block type="primary"
                   size="large">
-          装填，发车！
+         发车！
         </a-button>
-        <a-button type="primary" size="large" class="m-3"  @click="goDirect">直接进入</a-button>
+        <a-button v-if="userInfo" type="primary" size="large" class="m-3"  @click="goDirect">直接进入</a-button>
       </div>
 
     </div>
