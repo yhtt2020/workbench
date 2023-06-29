@@ -1,10 +1,13 @@
 <template>
   <Widget 
-  :options="options[rankingIndex]" 
+  :options="options" 
   :sizeList="sizeList"
   :desk="desk" 
   ref="rankingSmallSlot" 
   :menuList="toggleRankingList">
+  <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showDrawer"
+    style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[rankingIndex].title }}
+  </div>
     <!-- 总在线时长榜 -->
     <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 0">
       <div  v-for="item in onLineList" :key="item.id"
@@ -112,15 +115,7 @@ export default {
   },
   data () {
     return {
-      options: [
-      {className: 'card small',title: '总在线时长榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card small',title: '净在线时长榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card small',title: '小队榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card small',title: '邀请榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card small',title: '今日签到',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card small',title: '累计签到',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card small',title: '连续签到',icon: 'linechart',type: 'smallRankingList'},
-      ],
+      options: {className: 'card small',title: '',icon: 'linechart',type: 'smallRankingList'},
       sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
       //在线时长榜
       onLineList: [
@@ -499,6 +494,10 @@ export default {
     },
     getRankingType(item,index){
       this.rankingIndex = index
+    },
+    showDrawer(){
+      this.middleShow = true
+      this.$refs.rankingSmallSlot.visible = false
     }
   }
 }
