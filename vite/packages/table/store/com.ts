@@ -4,6 +4,7 @@ import {Server, sUrl} from '../consts'
 const getTodayRank = sUrl('/app/com/sign/getTodayRank')
 const doSignUrl = sUrl('/app/com/sign/doSign')
 const getSignInfoUrl = sUrl('/app/com/sign/getSignInfo')
+const getDailyNewUsersUrl=sUrl('/app/com/sign/getDailyNewUsers')
 const {axios} = window.$models
 import {getConfig} from "../js/axios/serverApi";
 import {getDateTime} from "../util";
@@ -50,6 +51,16 @@ export const comStore = defineStore("comStore", {
     async getSignInfo() {
       let response = await axios.get(getSignInfoUrl, await getConfig())
       if (response.code === 1000) {
+        return response.data
+      }else{
+        return false
+      }
+    },
+    async getDailyNewUsers(page){
+      let response =await axios.get(getDailyNewUsersUrl,{params:{
+        page:page
+        },...await getConfig()},)
+      if(response.code===1000){
         return response.data
       }else{
         return false

@@ -17,7 +17,9 @@
   </div>
   <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em)" class="mt-3 mr-3">
     <div class="detail-container">
-      <WheelCastingUnit :wheelList="wheelData"></WheelCastingUnit>
+      <div v-if="loading">
+      </div>
+      <WheelCastingUnit :loading="loading" v-else :wheelList="wheelData"></WheelCastingUnit>
       <div class="flex flex-col min-width detail-bg ml-4 rounded-lg px-4 py-4">
         <span style="font-size: 16px; font-weight: 400;color:var(--primary-text);">{{ discountDetail.content }}</span>
         <div class="flex justify-between items-center mt-4" >
@@ -55,13 +57,13 @@
         </div>
       </div>
     </div>
-   
+
     <div class="flex items-center justify-center flex-col mt-5">
       <div class="rounded-lg px-4 py-4 min-introduction detail-bg" style="width: 960px;">
         <span style="font-size: 18px;color:var(--primary-text); font-weight: 600;">游戏介绍</span>
         <div v-html="discountDetail.gameIntroduction" class="game-intro"></div>
       </div>
-    </div> 
+    </div>
   </vue-custom-scrollbar>
 
   <HorizontalDrawer
@@ -95,6 +97,7 @@ export default {
     },
     data(){
       return{
+        loading:true,
         rightSelect:regionRange,
         defaultDetailRegion:{
           id:'cn',
@@ -119,8 +122,11 @@ export default {
       }
     },
     mounted(){
-      this.getDiscountDetail(this.id,this.defaultDetailRegion.id)
-      
+      this.loading=true
+      this.getDiscountDetail(this.id,this.defaultDetailRegion.id).then(()=>{
+        console.log('加载完了')
+        this.loading =false
+      })
     },
     methods:{
       ...mapActions(steamStore,['getDiscountDetail']),

@@ -8,8 +8,8 @@
 // 一些二次封装的类
 .xt-active-btn {
   background: var(--active-bg) !important;
-  color: var(--active-text);
-  fill: var(--active-text);
+  color: var(--active-text) !important;
+  fill: var(--active-text) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,7 +87,6 @@ body {
 .xt-mask-2 {
   background: var(--main-mask-bg) !important;
   backdrop-filter: blur(8px);
-
 }
 
 .xt-hover {

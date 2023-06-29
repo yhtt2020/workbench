@@ -29,7 +29,6 @@
   <div class="bg-mask rounded-lg p-3 m-3 mt-0  mb-3" style="background: var(--primary-bg);color: var(--primary-text) ;">
     <OnlineMedal  v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
     <Medal :medal="medal" v-for="medal in medals"></Medal>
-
   </div>
   <!--  <div class=" mb-0 pd-0 m-3 p-3 mt-0">-->
   <!--    小队信息-->
@@ -54,6 +53,7 @@ export default {
       grade: {},
       medals: [],
       key: Date.now(),
+      userCardUserInfo:{}
     }
   },
   watch: {
@@ -66,23 +66,39 @@ export default {
     }
   },
   computed: {
-    ...mapState(appStore, ['userCardUserInfo']),
     displayUserInfo () {
       if (this.userInfo) {
         return this.userInfo
       } else {
         return {
+          ...this.userCardUserInfo,
           certification: []
         }
       }
     }
   },
   async mounted () {
+    if (this.userInfo) {
+      //如果存在用户数据，则使用此数据显示卡片
+      this.userCardUserInfo = this.userInfo
+    }
+    let response = await this.getUserCard(this.uid)
+    if (response.code === 200) {
+      const data = response.data
+      this.userCardUserInfo = {
+        uid: this.uid,
+        nickname: data.user.nickname,
+        avatar: data.user.avatar_128,
+        signature: data.user.signature,
+        certification: data.user.all_certification_entity_pc || []
+      }
+    }
     this.updateUserMedal()
     this.grade = await this.getMemberGrade(this.uid)
   },
   methods: {
-    ...mapActions(teamStore, ['getMemberGrade', 'getUserMedal', 'getUserCard']),
+    ...mapActions(teamStore, ['getMemberGrade', 'getUserMedal']),
+    ...mapActions(appStore,['getUserCard']),
     updateUserMedal(){
       this.getUserMedal(this.uid).then(result => {
         if (result) {

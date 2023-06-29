@@ -1,11 +1,11 @@
 <template>
   <!-- 仅供改样式快速搜索：菜单切换 -->
-  <div class="flex flex-row rounded-lg p-1" :class="bgColor"
-    :style="{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'var(--active-font-color)', height: itemHeight }">
+  <div class="flex flex-row rounded-lg p-1 " :class="bgColor"
+    :style="{ backgroundColor: 'var(--secondary-bg)', height: itemHeight }">
     <div v-for="(item, index) in navList"
       class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
-      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active xt-active-btn' : ''">
-      <span class="item-text">{{ item.title }}</span>
+      @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn ' : 'xt-text-2'">
+      <span class="">{{ item.title }}</span>
       <div v-if="item.state === true" class="state-dot ml-2"></div>
     </div>
   </div>

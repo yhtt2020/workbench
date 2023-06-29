@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import icon from "../oneIcon/index.vue"
-import DragAndFollow from '../hooks/DragAndFollow.vue';
-import DroppableArea from "../hooks/DroppableArea.vue"
-import BottomEdit from "../hooks/bottomEdit.vue";
+import icon from "../components/icon.vue"
+import DragAndFollow from '../components/DragAndFollow.vue';
+import DroppableArea from "../components/DroppableArea.vue"
+import BottomEdit from "../components/bottomEdit.vue";
 
 
 import { mapWritableState } from 'pinia'

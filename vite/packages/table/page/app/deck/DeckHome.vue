@@ -69,7 +69,7 @@
                 <span class="pl-5"></span> {{ grid.title }}</span>
             </h3>
             <h3 @click.stop="showEditTitle(grid)" style="padding-left: 0.8em;margin-bottom: 0em" v-else
-              class="pointer text-more">
+              class="pointer text-more xt-text">
               {{ grid.title }}
             </h3>
           </template>

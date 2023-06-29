@@ -54,7 +54,7 @@
           <!--            </div>-->
           <!--          </div>-->
         </a-col>
-        <a-col flex="1" style="text-align: center; ">
+        <a-col flex="1" style="text-align: center;width: 0 ">
 
           <div class="no-drag" v-if="showScale" style="line-height: 3">
             <a-row>
@@ -106,8 +106,8 @@
             <!--      网址输入框      -->
 
             <a-input style="font-weight: bold" @blur="this.showEdit=false" spellcheck="false" v-if="showEdit" @keyup.enter="addTab"
-                     v-model:value="urlInput" class="address-input"></a-input>
-            <div @click="showEdit=true" class="xt-main-bg xt-text truncate"
+                     v-model:value="urlInput" class="address-input xt-bg"></a-input>
+            <div @click="showEdit=true" class="xt-bg xt-text truncate"
                  style="font-weight:bold;text-align:left;border-radius: 100px;height: 32px;line-height:32px;color: white;padding-left: 20px;width: 100%;margin-top: 10px;margin-left: 10px;margin-right: 10px"
                  v-else>
               <template v-if="currentTab && currentTab.favicons">

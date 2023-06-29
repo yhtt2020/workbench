@@ -50,7 +50,7 @@
         <a-empty description="" />
         <div
           class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-40 pointer mt-4 text-base"
-          style="background: var(--primary-bg);color: var(--primary-text);"
+          style="background: var(--secondary-bg);color: var(--primary-text);"
           @click="
             () => {
               this.panelVisible = true;

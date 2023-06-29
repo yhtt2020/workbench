@@ -5,8 +5,8 @@
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
-            <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+            <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
+            <a-button key="buy" @click="learn">学习</a-button>
           </template>
 
           <div class="desc">
@@ -33,14 +33,14 @@
         <vuuri  v-if="currentDesk.cards && !hide" :get-item-margin="() => {
             return settings.cardMargin + 'px';
           }
-          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
-      zoom: (this.settings.cardZoom / 100).toFixed(2),
+          " group-id="grid.id" :drag-enabled="true" v-model="currentDesk.cards" :key="key" :style="{
+
       height: '100%',
       width: '100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
-            <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch" @touchend="touch"
+            <div :style="{ pointerEvents: editing ? 'none' : '',zoom: (this.settings.cardZoom / 100).toFixed(2), }">
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                 :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
           </template>
@@ -64,15 +64,15 @@
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
-      <a-col>
-        <div @click="toggleEditing" class="btn">
-          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
-          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>
-          <div>
-            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>
-          </div>
-        </div>
-      </a-col>
+<!--      <a-col>-->
+<!--        <div @click="toggleEditing" class="btn">-->
+<!--          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>-->
+<!--          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>-->
+<!--          <div>-->
+<!--            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </a-col>-->
       <a-col>
         <div @click="newAddCard" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
@@ -119,7 +119,7 @@
     <div class="line-title">卡片设置：</div>
     <div class="line">
       卡片缩放：
-      <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+      <a-slider @afterChange="update" :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
     </div>
     <div class="line">
       卡片空隙：(调大空隙可能变成瀑布流布局)
@@ -202,7 +202,18 @@ export default {
       required: false,
       default: () => {
         return {
+          dragStartPredicate: {
+            distance: 10,
+            delay: 1000,
+          },
           dragAutoScroll: {
+            layout:{
+              fillGaps: true,
+              horizontal: false,
+              alignRight: false,
+              alignBottom: false,
+              rounding: true
+            },
             targets: [
               {
                 element: '#scrollerBar>div',
@@ -216,6 +227,14 @@ export default {
             smoothStop: false,
             onStart: null,
             onStop: null,
+            dragSortPredicate:{
+              threshold: 30,
+            },
+            dragSortHeuristics: {
+              sortInterval: 10,
+              minDragDistance: 5,
+              minBounceBackAngle: Math.PI / 2,
+            },
           },
         }
       }
@@ -256,6 +275,12 @@ export default {
     }
   },
   methods: {
+    learn(){
+      browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
+    },
+    update(){
+      this.$refs.grid.update()
+    },
     toggleEditing() {
       this.editing = !this.editing;
       if (this.editing) {

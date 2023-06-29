@@ -1,7 +1,7 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk">
-    <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showRegionSelect"
-         style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);">{{ region.name }}
+    <div class="bg-mask rounded-lg px-3 py-1 pointer xt-bg-2" @click="showRegionSelect"
+         style="position: absolute;left: 45px;top:10px;">{{ region.name }}
     </div>
     <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
@@ -27,12 +27,12 @@
           <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
         </div> -->
         <div class="flex mt-12 items-center justify-between" style="color: var(--primary-text)">
-          <div class="s-item change  flex rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 41px;background: var(--primary-bg);">
+          <div class="s-item change  flex rounded-lg cursor-pointer xt-bg-2" @click="discountChange" style="padding:13px 41px;">
             <Icon icon="reload" class="animate-spin" style="font-size: 1.429em" v-if="reloadShow === true"></Icon>
             <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
             <span style="margin-left: 1em;">换一换</span>
           </div>
-          <span style="padding:13px 26px;background: var(--primary-bg);" class="s-item rounded-lg change pointer" @click="enterDiscountDetail">更多</span>
+          <span style="padding:13px 26px;" class="s-item rounded-lg change pointer  xt-bg-2" @click="enterDiscountDetail">更多</span>
         </div>
       </template>
       <template v-if="detailShow === true">

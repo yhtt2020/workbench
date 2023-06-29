@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex;height: 100%">
-    <SecondPanel   @change-tab="changeTab" :menus="tabs"></SecondPanel>
-    <div style="flex-grow: 1;flex-shrink: 1;height: 100%;display: flex;flex-direction: column;overflow: hidden">
+    <SecondPanel   @change-tab="changeTab" :menus="tabs"  ></SecondPanel>
+    <div style="flex-grow: 1;flex-shrink: 1;height: 100%;display: flex;flex-direction: column;overflow: hidden;">
       <router-view>
       </router-view>
     </div>

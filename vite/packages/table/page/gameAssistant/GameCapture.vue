@@ -16,7 +16,7 @@
           <HorizontalCapture @click="refreshSource" :navList="captureType" v-model:selectType="defaultRecordingType"
                              class="mb-4"></HorizontalCapture>
           <div class="text-center" v-if="loading===true">
-            捕获源获取中…
+            <icon class=" animate-spin " icon="shuaxin" style="font-size:24px;vertical-align: top"></icon> 捕获源获取中…
           </div>
           <div v-else style="height: 100%">
             <template v-if="defaultRecordingType.name === 'recordGame'">
@@ -41,7 +41,7 @@
             <template v-if="defaultRecordingType.name === 'recordFullScreen'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
-                <div v-if="recordGameData.length === 0">
+                <div v-if="deskSource.length === 0">
                   <a-empty :image="simpleImage"/>
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
@@ -60,7 +60,7 @@
             <template v-if="defaultRecordingType.name === 'logger'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
-                <div v-if="recordLogger.length === 0">
+                <div v-if="windowSource.length === 0">
                   <a-empty :image="simpleImage"/>
                 </div>
                 <div class="flex justify-between flex-wrap" v-else>
@@ -467,7 +467,6 @@ export default {
       //1.选源 2.实操
       step: 1,
       //当前源
-      currentSource: {},
       systemSound: {
         volume: 0,
         muted: false
@@ -477,7 +476,9 @@ export default {
       recordSetShow: false,
       setShow: false,
       isHeight: true,
-      systemMicrophone: 20, // 麦克风
+      systemMicrophone: {
+
+      }, // 麦克风
       captureType: [
         // {title:'录游戏',name:'recordGame'},
         { title: '捕获窗口', name: 'logger' },
@@ -493,40 +494,10 @@ export default {
         wheelPropagation: true
       },
       recordGameData: [
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
-        {
-          url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-          name: 'Counter-Strike: Global Offensive'
-        },
-        { url: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg', name: 'Dota2' },
       ],
       recordFullScreenData: [
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
-        { url: '/public/img/cpatureone.png', name: '桌面1' },
-        { url: '/public/img/cpaturetwo.png', name: '桌面2' },
       ],
       recordLogger: [
-        { url: '/public/img/test.png', name: '程序1' },
-        { url: '/public/img/test.png', name: '程序2' },
         // {url:'/public/img/test.png',name:'程序3'},
         // {url:'/public/img/test.png',name:'程序4'},
       ],
@@ -578,7 +549,7 @@ export default {
 
   computed: {
     ...mapWritableState(inspectorStore, ['displayData']),
-    ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos']),
+    ...mapWritableState(captureStore, ['sources', 'settings', 'images', 'videos','currentSource']),
     ...mapState(steamUserStore, ['runningGame']),
     deskSource () {
       return this.sources.filter(s => {
@@ -754,7 +725,7 @@ export default {
       this.images = this.genFileList(this.settings.imageSavePath, ['.jpg', '.png', '.bmp', '.jpeg'])
     },
     async loadVideos () {
-      this.videos = this.genFileList(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb'])
+      this.videos = this.genFileList(this.settings.videoSavePath, ['.mp4', '.avi', '.mpg', 'rmvb','webm'])
     },
     // 从目录开始
     genFileList (path, extMap) {
@@ -784,8 +755,6 @@ export default {
       })
     },
     clickMute () {
-      this.settings.imageSavePath = ''
-      this.settings.videoSavePath = ''
       this.systemSound.muted = !this.systemSound.muted
       setDefaultVolume({
         muted: this.systemSound.muted
@@ -845,7 +814,7 @@ export default {
     async saveRecent () {
       let filters = { name: '图片', extensions: ['png'] }
       if (this.recentType === 'video') {
-        filters = { name: '视频', extensions: ['mp4'] }
+        filters = { name: '视频', extensions: ['webm'] }
       }
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
@@ -945,7 +914,7 @@ export default {
       //ipc.send('captureImage',{source:this.currentSource})
       const handleStream = (stream) => {
         //document.body.style.cursor = oldCursor
-        document.body.style.opacity = '1'
+        // document.body.style.opacity = '1'
         // Create hidden video tag
         let video = document.createElement('video')
         video.autoplay = 'autoplay'
@@ -1100,7 +1069,7 @@ export default {
           var buffer = new Buffer(reader.result)
           //temp文件夹应已存在
           const time = timeStamp(Date.now())
-          const fileName = this.filterName(this.currentSource.name) + '_' + time.year + '年' + time.month + '月' + time.day + '日' + time.hours + '时' + time.minutes + '分' + time.seconds + '秒' + '.mp4'
+          const fileName = this.filterName(this.currentSource.name) + '_' + time.year + '年' + time.month + '月' + time.day + '日' + time.hours + '时' + time.minutes + '分' + time.seconds + '秒' + '.webm'
           const savePath = require('path').join(this.settings.videoSavePath, fileName)
           fs.writeFile(savePath, buffer, {}, (err, res) => {
             if (err) {

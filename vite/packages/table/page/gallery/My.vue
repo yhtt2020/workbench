@@ -68,23 +68,23 @@
         </div>
       </a-col>
 
-      <a-col :span="2">
+      <a-col :span="3">
         <div @click="download()" class="btn">
           <Icon style="font-size: 3em" icon="xiazai"></Icon>
           <div>下载壁纸</div>
         </div>
       </a-col>
 
-      <a-col :span="2">
+      <a-col :span="3">
         <div class="btn" @click="del()">
           <Icon icon="guanbi2" style="font-size: 3em"></Icon>
           <div>删除该壁纸</div>
         </div>
       </a-col>
-      <a-col :span="2">
+      <a-col :span="4">
         <div class="btn relative" @click="setAppPaper">
           <Icon icon="tianjia1" style="font-size: 3em"></Icon>
-          <div>设为壁纸</div>
+          <div>设为工作台背景</div>
           <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
         </div>
       </a-col>

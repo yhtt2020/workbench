@@ -12,9 +12,8 @@
           ></Icon>
           <div style="margin-top:20px;font-size: 18px;font-weight: 400;">今日番茄：0</div>
           <div
-            class="middle-button timer-btn s-item"
+            class="middle-button timer-btn s-item xt-bg-2"
             @click="start"
-            style="background: var(--primary-bg);"
           >
             立即开始
           </div>
