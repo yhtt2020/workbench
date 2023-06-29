@@ -73,7 +73,7 @@
             <a-input style="width:calc(100% - 60px)" @keyup.enter="postBarrage" v-model:value="postContent"
               :placeholder="'发送至' + currentChannel.title + '频道'">
               <template #addonBefore>
-                <span>{{ currentChannel.title }}</span>
+                <span style="color:var(--primary-text)">{{ currentChannel.title }}</span>
               </template>
             </a-input>
             <a-button @click="postBarrage" type="primary">发送</a-button>
@@ -127,7 +127,7 @@
             <div class="mt-5">
               <a-row :gutter="10">
                 <a-col :span="12">
-                  <a-button style="color:var(--active-text)" @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary" 
+                  <a-button style="color:var(--active-text)" @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary"
                     block >开发者入驻
                   </a-button>
                 </a-col>

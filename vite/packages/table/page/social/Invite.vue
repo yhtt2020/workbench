@@ -52,8 +52,8 @@
                   :style="{background:isMarked(record.key)?'#35ad03':'transparent',textDecoration:record.status===2?'line-through':'none'}">
               {{ record.key }}
             </span>
-                <a-tag class="pointer" @click="copy(record.key)">复制</a-tag>
-                <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
+                <a-button size="small" class="pointer mr-1" @click="copy(record.key)">复制</a-button>
+                <a-button size="small" class="pointer" @click="mark(record.key)">标记</a-button>
               </template>
               <template v-else-if="column.key === 'status'">
                 <a-tag color="green" v-if="record.status===1" style="color: #6abe39 ">有效</a-tag>
@@ -78,8 +78,23 @@
       <vueCustomScrollbar v-if="tab.name==='verify'" :settings="scrollbarSettings" style="height: 100%">
 
         <template v-if="verified">
-          恭喜您，您已认证受邀参与公测资格。为您颁发 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。可在"我的"界面查看。
-        <a-button @click="this.verified=false">测试</a-button>
+          <div class="text-center" style="min-height: 300px">
+            恭喜您，您已认证受邀参与公测资格，获得勋章：<br>
+            <div style="background: var(--secondary-bg);width: 200px;text-align: center;" class="p-3 rounded-2xl m-3 inline-block">
+              <div>
+                <RayMedal :size="120" src="https://a.apps.vip/icons/test_lg.png"></RayMedal>
+
+              </div>
+              <div>
+                受邀用户勋章
+              </div>
+            </div>
+            <br>
+            前往<a-button @click.stop="goToMy" class="mx-2" size="small" type="primary">我的</a-button>界面查看。
+            可在"我的"界面查看。
+          </div>
+
+<!--        <a-button @click="this.verified=false">测试</a-button>-->
         </template>
         <template v-else>
           如果您是受邀参与公测，可在下方输入您的专属邀请码。
@@ -90,7 +105,7 @@
                      v-model:value="code"></a-input>
           </div>
           <div>
-            <a-button @click="activeCode" type="primary">获得勋章</a-button>
+            <a-button @click="activeCode" type="primary">激活</a-button>
           </div>
         </template>
 
@@ -103,15 +118,16 @@
 
 <script>
 import { appStore } from '../../store'
-import { mapState, mapActions } from 'pinia'
+import { mapState, mapActions, mapWritableState } from 'pinia'
 import Template from '../../../user/pages/Template.vue'
 import { Modal, message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
 import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
+import RayMedal from '../../components/small/RayMedal.vue'
 
 export default {
   name: 'Invite',
-  components: { HorizontalPanel, Template },
+  components: { RayMedal, HorizontalPanel, Template },
 
   data () {
     return {
@@ -176,13 +192,16 @@ export default {
         name: this.$route.params.tab
       }
     }
+    this.verify(this.userInfo.uid)
 
   },
   computed: {
     ...mapState(appStore, ['userInfo']),
+    ...mapWritableState(codeStore,['verified']),
     totalHours () {
       return (this.userInfo.onlineGradeExtra.cumulativeHours)
     },
+
     canExchange () {
       return (this.userInfo.onlineGradeExtra.cumulativeHours / 200).toFixed(0)
     },
@@ -203,8 +222,13 @@ export default {
 
   },
   methods: {
-    ...mapActions(codeStore, ['exchange', 'listCodes','verify','active','verified']),
+    ...mapActions(codeStore, ['exchange', 'listCodes','verify','active']),
     ...mapActions(appStore, ['showUserCard']),
+    goToMy(){
+      this.$router.push({
+        name:'socialMy'
+      })
+    },
     async activeCode () {
       if(!this.code){
         message.error('请输入邀请码')
@@ -215,9 +239,11 @@ export default {
         return
       }
       let rs=await this.active(this.code, undefined,this.userInfo.uid)
-      if(rs.status){
+      if(rs.code===1000){
         message.success('激活成功。')
         this.verified=true
+      }else{
+        message.error('激活失败，请更换有效邀请码。')
       }
       console.log(rs,'激活结果')
     },

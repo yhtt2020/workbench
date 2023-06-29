@@ -90,6 +90,7 @@ export const codeStore = defineStore('code', {
         if(rs.code==='ENOTFOUND'){
           throw 'neterror'
         }
+        this.verified=false
         return false
       } else {
         console.log(rs)
