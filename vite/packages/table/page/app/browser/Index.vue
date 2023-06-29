@@ -54,7 +54,7 @@
           <!--            </div>-->
           <!--          </div>-->
         </a-col>
-        <a-col flex="1" style="text-align: center; ">
+        <a-col flex="1" style="text-align: center;width: 0 ">
 
           <div class="no-drag" v-if="showScale" style="line-height: 3">
             <a-row>
