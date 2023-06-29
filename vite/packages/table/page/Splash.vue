@@ -86,7 +86,7 @@
                   size="large">
           装填，发车！
         </a-button>
-        <a-button type="primary" size="large" class="m-3"  @click="goDirect">直接进入</a-button>
+        <a-button v-if="userInfo" type="primary" size="large" class="m-3"  @click="goDirect">直接进入</a-button>
       </div>
 
     </div>
