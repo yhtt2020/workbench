@@ -8,7 +8,7 @@
      <Icon icon="xiangzuo" style="font-size: 1.75em;"></Icon>
     </div>
     </div>
- 
+
 
     <!-- 引导内容提示 -->
     <div class="h-full flex items-center justify-center min-content mb-4" v-if="isShow === false">
@@ -48,7 +48,7 @@
             <span class="secondary-title">完成选择后，你仍然可以在后续自定义修改。</span>
           </div>
           <div class="flex items-center">
-             <div v-for="(item) in workTheme" 
+             <div v-for="(item) in workTheme"
               :class="{'mode-active-bg': stylesIndex === item.id}"
               class="flex py-8 pointer rounded-lg px-25 mr-8 clear-mr flex-col items-center justify-center guide-page-bg"
               @click="selectThemeMode(item.id)"
@@ -59,7 +59,7 @@
                <span class="mt-4 primary-title">{{ item.title }}</span>
              </div>
           </div>
-      </div> 
+      </div>
     </template>
 
     <!-- 合适模式 -->
@@ -83,9 +83,9 @@
               <div style="width:40px;height:40px;">
                 <img :src="'../../../../../public/img/state/'+ item.img" class="w-full h-full" alt="">
               </div>
-              <span class="ml-4 guide-title primary-title">{{item.title}}</span>
+              <span class="ml-4 guide-title primary-title xt-text">{{item.title}}</span>
              </div>
-             <span class="secondary-title">{{ simple === true ? '打开':'关闭' }}</span>
+             <span>{{ simple === true ? '打开':'关闭' }}</span>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ import {appStore} from '../../../store'
 import { navStore } from '../../../store/nav';
 import { cardStore } from '../../../store/card';
 import GradeNotice from './GradeNotice.vue'
-import { 
+import {
   guideData,workTheme,teamData,modeData,
   deskTemplate,diyPanel,gamePanel,workPanel,mergePanel
 } from '../../../js/data/guideData'
@@ -170,7 +170,7 @@ export default {
     },
     // 上一步按钮
     prevButton(){
-      this.step -- 
+      this.step --
     },
     // 选择合适的主题模式回调事件
     selectThemeMode(index){
@@ -183,7 +183,7 @@ export default {
     },
     // 打开个人和小队引导信息提示回调事件
     openTeamPersonal(item){
-      this.defaultTeamData = item 
+      this.defaultTeamData = item
       this.showModal = true
     },
     // 选择合适的工作台模式
@@ -192,7 +192,7 @@ export default {
         this.selectItem = []
       }else{
         this.selectItem.push(index); // 添加选中
-      } 
+      }
       this.statusIndex = index
       if(index === 2){
         this.selectItem = []
@@ -215,8 +215,8 @@ export default {
         this.addSwitchDesk(this.guideData[this.statusIndex])
       }
     },
-   
-    
+
+
     addSwitchDesk(obj){   // 添加单选桌面
       switch (obj.title) {
           case '游戏娱乐':
@@ -257,7 +257,7 @@ export default {
       this.updateLeftNavData(mergePanel.left)
       this.updateBottomNavData(mergePanel.bottom)
     }
-    
+
   },
   watch:{
     // 根据浅色模式监听
@@ -281,7 +281,7 @@ export default {
       },
       immediate:true,
     }
-  }     
+  }
 }
 </script>
 
