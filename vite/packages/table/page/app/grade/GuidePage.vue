@@ -199,14 +199,9 @@ export default {
     },
     // 选择合适的工作台模式
     selectWorkMode(item,index){
-      console.log('测试1',this.selectItem);
-      console.log('测试2',this.selectItem.indexOf(item.id) > -1);
       const find = this.selectItem.indexOf(item.id) 
       if(find > -1){
-        // this.selectItem = []
         this.selectItem.splice(find,1)
-        console.log(this.selectItem);
-        // console.log(find);
       }else{
         this.selectItem.push(item.id); // 添加选中
       }
@@ -226,16 +221,16 @@ export default {
     nextButton(){
       this.step ++
       if(this.step > 2) this.isShow = true
-      if(this.step === 1 && this.selectItem.length !== 0){
-        // 多选
-        for(let i=0;i<this.selectItem.length;i++){
-          this.addMoreDesk(this.guideData[i])
+      if(this.step === 1 ){
+        if(this.selectItem.length > 0){  // 判断是不是多选
+          for(let i=0;i<this.selectItem.length;i++){
+           this.addMoreDesk(this.guideData[i])
+          }
         }
-      }else{
+        // 单选
         this.addSwitchDesk(this.guideData[this.statusIndex])
       }
     },
-
 
     addSwitchDesk(obj){   // 添加单选桌面
       switch (obj.title) {
