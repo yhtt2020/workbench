@@ -5,7 +5,7 @@
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
+            <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
             <a-button key="buy" @click="learn">学习</a-button>
           </template>
 
