@@ -21,10 +21,11 @@
         </div>
         <div class="flex relative">
           <div class="guide-divider"></div>
-          <div v-for="item in guideData" 
+          <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(index)}"
            class="flex flex-col pointer max-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
-           @click="selectWorkMode"
+           @click="selectWorkMode(item,index)"
           >
+          <!--  -->
             <div style="width: 100px;height: 100px;">
               <img :src="'../../../../../public/img/state/'+ item.url " class="w-full h-full" alt="">
             </div>
@@ -127,10 +128,16 @@
 <script>
 import { mapWritableState,mapActions } from 'pinia';
 import {appStore} from '../../../store'
+import { navStore } from '../../../store/nav';
+import { cardStore } from '../../../store/card';
 import GradeNotice from './GradeNotice.vue'
-import { guideData,workTheme,teamData,modeData} from '../../../js/data/guideData'
+import { 
+  guideData,workTheme,teamData,modeData,
+  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel
+} from '../../../js/data/guideData'
 import cache from '../addIcon/hooks/cache';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
+import _ from 'lodash-es'
 export default {
   components:{
     GradeNotice,
@@ -140,11 +147,14 @@ export default {
     return{
       step:0,
       isShow:false,
-      guideData,teamData,
+      guideData,teamData,deskTemplate,
       modeData,workTheme,
       defaultMode:{title:'完整模式',name:'intMode'},
       showModal:false,
       defaultTeamData:{},
+      selectItem:[],
+      statusIndex:0, // 默认引导步骤一的默认选项
+      loadShow:false, // 第一次加载
     }
   },
   computed:{
@@ -152,29 +162,16 @@ export default {
   },
   methods:{
     ...mapActions(appStore,['updateMode','updateSimple']),
+    ...mapActions(cardStore,['addDesk']),
+    ...mapActions(navStore,['updateLeftNavData','updateBottomNavData']),
     // 点击返回按钮的回调事件
     backSplash(){
       this.$router.replace({name:'splash'})
     },
-
     // 上一步按钮
     prevButton(){
       this.step -- 
     },
-    // 下一步按钮
-    nextButton(){
-      this.step ++
-      if(this.step > 2){
-        console.log('结束引导页面',this.step);
-        this.isShow = true
-      }
-    },
-
-    // 选择合适工作台模式回调事件
-    selectWorkMode(){
-
-    },
-
     // 选择合适的主题模式回调事件
     selectThemeMode(index){
       cache.set('index',index)
@@ -184,11 +181,81 @@ export default {
         this.updateMode(true)
       }
     },
-    
     // 打开个人和小队引导信息提示回调事件
     openTeamPersonal(item){
       this.defaultTeamData = item 
       this.showModal = true
+    },
+    // 选择合适的工作台模式
+    selectWorkMode(item,index){
+      if(this.selectItem.includes(index)){
+        this.selectItem = []
+      }else{
+        this.selectItem.push(index); // 添加选中
+      } 
+      this.statusIndex = index
+      if(index === 2){
+        this.selectItem = []
+      }
+    },
+    // 选中状态
+    isActive(index){
+      return this.selectItem.includes(index) || this.statusIndex === index
+    },
+    // 下一步按钮
+    nextButton(){
+      this.step ++
+      if(this.step > 2) this.isShow = true
+      if(this.step === 1 && this.selectItem.length !== 0){
+        // 多选
+        for(let i=0;i<this.selectItem.length;i++){
+          this.addMoreDesk(this.guideData[i])
+        }
+      }else{
+        this.addSwitchDesk(this.guideData[this.statusIndex])
+      }
+    },
+   
+    
+    addSwitchDesk(obj){   // 添加单选桌面
+      switch (obj.title) {
+          case '游戏娱乐':
+            // 添加桌面
+            this.addDesk(this.deskTemplate.gameName,this.deskTemplate.game)
+            // 添加桌面底部和左侧导航
+            this.updateLeftNavData(gamePanel.left)
+            this.updateBottomNavData(gamePanel.bottom)
+            break;
+          case '效率辅助':
+            // 添加桌面
+            this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
+            // 添加桌面底部和左侧导航
+            this.updateLeftNavData(workPanel.left)
+            this.updateBottomNavData(workPanel.bottom)
+            break;
+          case '极简DIY':
+            // 添加桌面
+            this.addDesk(this.deskTemplate.emptyName,this.deskTemplate.empty)
+            // 添加桌面底部和左侧导航
+            this.updateLeftNavData(diyPanel.left)
+            this.updateBottomNavData(diyPanel.bottom)
+            break;
+      }
+    },
+
+    addMoreDesk(obj){  // 添加多选桌面
+      switch (obj.title) {
+          case '游戏娱乐':
+            // 添加桌面
+            this.addDesk(this.deskTemplate.gameName,this.deskTemplate.game)
+            break;
+          case '效率辅助':
+            // 添加桌面
+            this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
+            break;
+      }
+      this.updateLeftNavData(mergePanel.left)
+      this.updateBottomNavData(mergePanel.bottom)
     }
     
   },
@@ -210,7 +277,7 @@ export default {
     'defaultMode':{
       handler(newVal){
         this.defaultMode = newVal
-        this.updateSimple(newVal.name === 'intMode')
+        this.updateSimple(newVal.name !== 'intMode')
       },
       immediate:true,
     }

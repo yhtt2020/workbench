@@ -1,8 +1,9 @@
 <template>
   <Widget :options="options" :customData="customData" :customIndex="customIndex" style="overflow: hidden" :desk="desk">
-    <a-empty v-if="myFriends.length===0" style="margin-top: 10px" description="您还没有好友或未绑定Steam">
+    <!-- <a-empty style="margin-top: 10px" description="您还没有好友或未绑定Steam">
 
-    </a-empty>
+    </a-empty> -->
+    <CardState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" style="width: 100%;height: 80%;" class="mt-2"></CardState>
     <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 90%">
       <div class="mt-5 my-friends"  >
           <div v-for="item in myFriends" class=" avatar-item">
@@ -15,6 +16,8 @@
   </Widget>
 </template>
 <script>
+import CardState from '../../../components/card/cardState.vue';
+
 import Widget from '../../card/Widget.vue'
 import { steamUserStore } from '../../../store/steamUser'
 import {mapState}from 'pinia'
@@ -23,7 +26,8 @@ export default {
   name:'SteamFriends',
   components:{
     VueCustomScrollbar,
-    Widget
+    Widget,
+    CardState
   },
   props:{
     customIndex: {
