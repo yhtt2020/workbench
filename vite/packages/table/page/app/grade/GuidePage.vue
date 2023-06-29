@@ -221,16 +221,16 @@ export default {
     nextButton(){
       this.step ++
       if(this.step > 2) this.isShow = true
-      if(this.step === 1 && this.selectItem.length !== 0){
-        // 多选
-        for(let i=0;i<this.selectItem.length;i++){
-          this.addMoreDesk(this.guideData[i])
+      if(this.step === 1 ){
+        if(this.selectItem.length > 0){  // 判断是不是多选
+          for(let i=0;i<this.selectItem.length;i++){
+           this.addMoreDesk(this.guideData[i])
+          }
         }
-      }else{
+        // 单选
         this.addSwitchDesk(this.guideData[this.statusIndex])
       }
     },
-
 
     addSwitchDesk(obj){   // 添加单选桌面
       switch (obj.title) {
