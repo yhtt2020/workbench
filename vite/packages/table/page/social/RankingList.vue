@@ -561,7 +561,8 @@ export default {
       selectSignInValue: '今日签到榜',
       sortSignInType: [
         {name: '今日签到榜',value: '今日签到榜'},
-        {name: '本周签到榜',value: '本周签到榜'},
+        {name: '累计签到榜',value: '累计签到榜'},
+        {name: '连续签到榜',value: '连续签到榜'},
       ],
       teamListTitle: ['用户','在线时长','小队成员'],
       // 小队榜
