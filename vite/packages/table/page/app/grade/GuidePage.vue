@@ -83,9 +83,9 @@
               <div style="width:40px;height:40px;">
                 <img :src="'../../../../../public/img/state/'+ item.img" class="w-full h-full" alt="">
               </div>
-              <span class="ml-4 guide-title">{{item.title}}</span>
+              <span class="ml-4 guide-title primary-title">{{item.title}}</span>
              </div>
-             <span>{{ simple === true ? '打开':'关闭' }}</span>
+             <span class="secondary-title">{{ simple === true ? '打开':'关闭' }}</span>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
           <div style="width: 64px;height: 64px;" class="mb-6">
             <img :src="'../../../../../public/img/state/'+defaultTeamData.img" class="w-full h-full" alt="">
           </div>
-          <span class="mb-6 primary-title">{{ defaultTeamData.title}}</span>
+          <span class="mb-6 primary-text">{{ defaultTeamData.title}}</span>
           <span class="secondary-title mb-14" style="max-width: 380px;">{{defaultTeamData.content}}</span>
         </div>
       </div>
@@ -304,6 +304,14 @@ export default {
   color: var(--primary-text);
   font-weight: 500;
 }
+
+.primary-text{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: var(--primary-text);
+  font-weight: 500;
+}
+
 .secondary-title{
   font-family: PingFangSC-Regular;
   font-size: 16px;
