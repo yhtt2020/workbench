@@ -50,7 +50,7 @@ import DeckIndex from "../page/app/deck/DeckIndex.vue";
 import BrowserIndex from '../page/app/browser/Index.vue';
 import BrowserTabs from '../page/app/browser/Tabs.vue'
 import BrowserMain from '../page/app/browser/Browser.vue';
-import RankingList from '../page/social/RankingList.vue'
+import Rank from '../page/social/Rank.vue'
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
@@ -129,9 +129,9 @@ export default [
             component: Message,
           },
           {
-            path: "/rankingList",
-            name: "rankingList",
-            component: RankingList,
+            path: "/rank",
+            name: "rank",
+            component: Rank,
           },
         ],
       },
