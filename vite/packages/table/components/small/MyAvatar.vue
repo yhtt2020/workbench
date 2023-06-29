@@ -268,4 +268,7 @@ export default {
 
   }
 }
+:deep(.ant-badge-count){
+  box-shadow: none;
+}
 </style>
