@@ -199,14 +199,9 @@ export default {
     },
     // 选择合适的工作台模式
     selectWorkMode(item,index){
-      console.log('测试1',this.selectItem);
-      console.log('测试2',this.selectItem.indexOf(item.id) > -1);
       const find = this.selectItem.indexOf(item.id) 
       if(find > -1){
-        // this.selectItem = []
         this.selectItem.splice(find,1)
-        console.log(this.selectItem);
-        // console.log(find);
       }else{
         this.selectItem.push(item.id); // 添加选中
       }
