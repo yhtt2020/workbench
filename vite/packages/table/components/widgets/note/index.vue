@@ -14,7 +14,8 @@
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    <cardSize @__updateSize="__updateSize" :isActive="isActive"></cardSize>
+
+    <cardSize @onChange="__updateSize"  :data="customData.dragCardSize"></cardSize>
     <div>
       文字颜色
     </div>

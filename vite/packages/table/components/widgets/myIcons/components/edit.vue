@@ -59,11 +59,15 @@
           系统默认浏览器
         </div>
       </div> -->
-      <a-radio-group  v-model:value="_open.type">
-      <a-radio value="internal">工作台内打开</a-radio>
-      <a-radio value="thinksky">想天浏览器</a-radio>
-      <a-radio value="default">系统默认浏览器</a-radio>
-    </a-radio-group>
+      <a-radio-group
+        class="my-3"
+        style="font-size: 18px"
+        v-model:value="_open.type"
+      >
+        <a-radio value="internal" class="mr-8">工作台内打开</a-radio>
+        <a-radio value="thinksky" class="mr-8">想天浏览器</a-radio>
+        <a-radio value="default" class="mr-8">系统默认浏览器</a-radio>
+      </a-radio-group>
     </template>
     <!-- 快捷和应用 -->
     <template v-else>
