@@ -129,7 +129,7 @@ export default {
       } else {
         h += 136;
       }
-      if (this.navName =="Links") h += 60
+      if (this.navName =="Links") h += 80
       return {
         height: `${h}px`,
       };

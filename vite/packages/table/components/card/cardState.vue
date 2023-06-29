@@ -58,7 +58,7 @@ export default {
         // 是否显示背景
         bg: {
             type: Boolean,
-            default: true
+            default: false
         }
     },
     methods: {
