@@ -572,11 +572,11 @@ export const NavList = [
         name: 'smallRankingList',
         cname: '排行榜(开发中)',
         detail: '快来看看你的等级、你的小队都是啥名次。',
-        sizes: ['2x4'],
+        sizes: ['2x2', '2x4'],
         option: [
           {
             name: 'smallRankingList',
-            size: '2x4',
+            size: '2x2',
             zoom: '11'
           },
         ],

@@ -1,5 +1,10 @@
 <template>
-  <Widget :options="options[rankingIndex]" :desk="desk" ref="rankingSmallSlot" :menuList="toggleRankingList">
+  <Widget 
+  :options="options[rankingIndex]" 
+  :sizeList="sizeList"
+  :desk="desk" 
+  ref="rankingSmallSlot" 
+  :menuList="toggleRankingList">
     <!-- 总在线时长榜 -->
     <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 0">
       <div  v-for="item in onLineList" :key="item.id"
@@ -108,14 +113,15 @@ export default {
   data () {
     return {
       options: [
-      {className: 'card',title: '总在线时长榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card',title: '净在线时长榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card',title: '小队榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card',title: '邀请榜',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card',title: '今日签到',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card',title: '累计签到',icon: 'linechart',type: 'smallRankingList'},
-      {className: 'card',title: '连续签到',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '总在线时长榜',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '净在线时长榜',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '小队榜',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '邀请榜',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '今日签到',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '累计签到',icon: 'linechart',type: 'smallRankingList'},
+      {className: 'card small',title: '连续签到',icon: 'linechart',type: 'smallRankingList'},
       ],
+      sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
       //在线时长榜
       onLineList: [
         {
@@ -512,8 +518,8 @@ export default {
 }
 
 .content-box {
-  height: 92%;
-  margin-top: 6px;
+  height: calc(100% - 35px);
+  margin-top: 10px;
   overflow: hidden;
 }
 
