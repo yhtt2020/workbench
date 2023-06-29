@@ -13,10 +13,10 @@
     </a-col>
     <a-col :span="8" style="text-align: center">
       <!-- 快速搜索 头部 搜索栏 -->
-      <div @click="openGlobalSearch" class="input-box no-drag pointer"
-           style=" background: var( --primary-bg); color: var(--secondary-text)">
+      <div hidden="" @click="openGlobalSearch" class="input-box no-drag pointer inline-block"
+           style=" background: var( --primary-bg); color: var(--secondary-text);width: 40px">
         <Icon icon="sousuo"></Icon>
-        搜索 网页内容、标签
+<!--        搜索 网页内容、标签-->
         <!--        <span style="float: right; padding-right: 10px">-->
         <!--          <span style="margin-right: 3px" class="key-button">Alt</span-->
         <!--          ><span class="key-button">F</span>-->
