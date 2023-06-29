@@ -181,6 +181,7 @@ export const appStore = defineStore('appStore', {
     
     // 修改当前极简模式
     updateSimple(val:boolean){
+      console.log('检测::>>>',val);
       this.simple = val
     }
   },

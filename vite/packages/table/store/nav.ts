@@ -372,6 +372,15 @@ export const navStore = defineStore("nav", {
           this.navigationToggle[2] = val
           break;
       }
+    },
+    // 替换左侧导航数据
+    updateLeftNavData(val){
+      // console.log('更新左侧导航数据',val);
+      this.sideNavigationList = val
+    },
+    updateBottomNavData(val){
+      // console.log('更新底部导航数据',val);
+      this.footNavigationList = val
     }
   },
   persist: {
