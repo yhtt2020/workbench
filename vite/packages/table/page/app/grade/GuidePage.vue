@@ -22,7 +22,7 @@
         <div class="flex relative">
           <div class="guide-divider"></div>
           <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(index)}"
-           class="flex flex-col pointer max-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
+           class="flex flex-col pointer mode-width max-width mode-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
            @click="selectWorkMode(item,index)"
           >
           <!--  -->
@@ -31,7 +31,7 @@
             </div>
             <span class="my-4 primary-title">{{ item.title }}</span>
             <div class="container flex items-center justify-center">
-              <p class="text-clamp">
+              <p class="text-clamp w-full">
                 {{ item.explain }}
               </p>
             </div>
@@ -322,7 +322,6 @@ export default {
   max-width: 240px;
 }
 .text-clamp {
-  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp:4;
   white-space: break-spaces;
@@ -375,6 +374,7 @@ export default {
   max-height: 405px;
 }
 
+// 最小高度响应
 @media screen and(max-height:600px) {
   .mode-image{
     max-width:540px !important;
@@ -383,6 +383,28 @@ export default {
   // 最小高度的底部间距
   .min-mb{
     margin-bottom: 16px !important;
+  }
+}
+
+// 最小宽度响应
+@media screen and(max-width:840px) {
+  .guide-divider{
+    position: absolute;
+    top: 0;
+    right:33.25% !important;
+    width: 1px;
+    height: 100%;
+    background: var(--divider);
+  }
+  .container{
+    width: calc(100% / 1.25);
+  }
+  .mode-width{
+    padding:10px 5px !important;
+    &:last-of-type{
+      padding: 0 !important;
+      margin: 0 !important;
+    }
   }
 }
 
