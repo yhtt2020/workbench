@@ -35,7 +35,6 @@
           </div>
         </template>
       </a-input>
-      <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
       <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
         <div
           class="flex-1 flex justify-center items-center"
@@ -59,16 +58,19 @@
           系统默认浏览器
         </div>
       </div> -->
-      <a-radio-group
+      <Radio :list="linkList" v-model:data="_open.type" text="选择打开的浏览器" :marginR="20" :fontSize="16"></Radio>
+      <!-- <a-radio-group
         class="my-3"
         style="font-size: 18px"
         v-model:value="_open.type"
+        size="large"
       >
         <a-radio value="internal" class="mr-8">工作台内打开</a-radio>
         <a-radio value="thinksky" class="mr-8">想天浏览器</a-radio>
         <a-radio value="default" class="mr-8">系统默认浏览器</a-radio>
-      </a-radio-group>
+      </a-radio-group> -->
     </template>
+
     <!-- 快捷和应用 -->
     <template v-else>
       <a-input
@@ -161,10 +163,11 @@
 
 <script>
 import fastNav from "./fastNav.vue";
+import Radio from "../../../card/hooks/Radio.vue";
 import { validateFile } from "../../../card/hooks/innerImgHook";
 import { message } from "ant-design-vue";
 export default {
-  components: { fastNav },
+  components: { fastNav ,Radio},
   props: {
     isRadius: { type: Boolean },
     radius: { type: Number },
@@ -187,6 +190,20 @@ export default {
   mounted() {},
   data() {
     return {
+      linkList: [
+        {
+          value: "internal",
+          name: "工作台内打开",
+        },
+        {
+          value: "thinksky",
+          name: "想天浏览器",
+        },
+        {
+          value: "default",
+          name: "系统默认浏览器",
+        },
+      ],
       _isRadius: this.isRadius,
       _radius: this.radius,
       _isBackground: this.isBackground,

@@ -36,7 +36,7 @@
 
 <script>
 import Widget from '../../card/Widget.vue'
-import cardSize from '../../card/hooks/cardSize.vue'
+import cardSize from '../../card/hooks/Radio.vue'
 import cardSizeHook from '../../card/hooks/cardSizeHook'
 
 import cardDrag from '../../card/hooks/cardDrag.vue'
