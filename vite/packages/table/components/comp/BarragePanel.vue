@@ -13,6 +13,7 @@ import TeamBarrage from './TeamBarrage.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
 import { mapActions, mapState } from 'pinia'
 import { teamStore } from '../../store/team'
+import { appStore } from '../../store'
 
 export default {
   name: 'BarragePanel',
@@ -47,9 +48,11 @@ export default {
       this.currentChannel={name:'team',title:'小队'}
     }
     this.loadAllBarrages().then()
-    this.loadTeamBarrage().then(()=>{
-      this.loading =false
-    })
+    if(this.userInfo.uid){
+      this.loadTeamBarrage().then(()=>{
+        this.loading =false
+      })
+    }
   },
   watch:{
     currentChannel:{
@@ -60,6 +63,7 @@ export default {
     }
   },
   computed:{
+    ...mapState(appStore,['userInfo']),
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
     barrages () {
       if (this.currentChannel.name === 'all') {

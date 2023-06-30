@@ -85,7 +85,6 @@
               </div>
               <span class="ml-4 guide-title primary-title xt-text">{{item.title}}</span>
              </div>
-             <span>{{ simple === true ? '打开':'关闭' }}</span>
              <span :style="{background: !simple? 'green':'red'}" class="p-2 rounded-lg px-3">
               <icon style="font-size: 18px;color: white;vertical-align: middle" v-if="!simple" icon="yixuan"></icon>
                <icon style="font-size: 18px;color: white;vertical-align: middle" v-else icon="guanbi"></icon>
@@ -165,7 +164,7 @@ export default {
     ...mapWritableState(appStore,['styles','simple','stylesIndex']),
     //是否禁用下一步
     isNext(){
-      return this.statusIndex === 2 || this.selectItem.length > 0 
+      return this.statusIndex === 2 || this.selectItem.length > 0
     }
   },
   mounted(){
@@ -199,9 +198,7 @@ export default {
     },
     // 选择合适的工作台模式
     selectWorkMode(item,index){
-      console.log('测试1',this.selectItem);
-      console.log('测试2',this.selectItem.indexOf(item.id) > -1);
-      const find = this.selectItem.indexOf(item.id) 
+      const find = this.selectItem.indexOf(item.id)
       if(find > -1){
         // this.selectItem = []
         this.selectItem.splice(find,1)
@@ -220,7 +217,7 @@ export default {
       if(item.id === 'dy'){  // 第三个元素选中
         return this.statusIndex === 2
       }
-      return this.selectItem.includes(item.id) 
+      return this.selectItem.includes(item.id)
     },
     // 下一步按钮
     nextButton(){

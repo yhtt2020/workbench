@@ -82,6 +82,9 @@ export default {
       //如果存在用户数据，则使用此数据显示卡片
       this.userCardUserInfo = this.userInfo
     }
+    if(!this.uid){
+      return
+    }
     let response = await this.getUserCard(this.uid)
     if (response.code === 200) {
       const data = response.data

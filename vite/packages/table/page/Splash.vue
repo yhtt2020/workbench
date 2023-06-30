@@ -323,6 +323,11 @@ export default {
         //   document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
         // }
       }
+      if(!this.userInfo){
+        //如果个人信息不存在，则直接返回
+        this.launching = false
+        return
+      }
       this.verify(this.userInfo.uid).then(rs => {
         //只要提供了uid，就能基于uid验证
         if (!rs) {

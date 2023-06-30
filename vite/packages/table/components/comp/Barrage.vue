@@ -17,16 +17,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(appStore, ['settings']),
+    ...mapState(appStore, ['settings','userInfo']),
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
   },
   async mounted() {
     window.loadBarrage = this.loadAll
-    if(!this.my.created){
-      this.updateMy().then(()=>{
-        this.getTeamBarrage().then()
-      })
+    if(this.userInfo){
+      if(!this.my.created){
+        this.updateMy().then(()=>{
+          this.getTeamBarrage().then()
+        })
+      }
     }
+
     this.timer = setInterval(() => {
       this.changeUrl('table').then()
       this.getTeamBarrage().then()
