@@ -7,12 +7,10 @@
   ref="rankingSmallSlot" 
   :menuList="toggleRankingList">
   <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showDrawer"
-    style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[rankingIndex].title }}
+    style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[customData.id].title }}
   </div>
-  <!-- {{ customData }}
-  {{ customData.id }} -->
     <!-- 总在线时长榜 -->
-    <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 0">
+    <div class="flex flex-col overflow content-box pt-1" v-if="customData.id === 0">
       <div  v-for="item in onLineList" :key="item.id"
             class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
         <span class="ranking">{{ item.id }}</span>
@@ -26,7 +24,7 @@
       </div>
     </div>
     <!-- 净在线时长榜 -->
-    <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 1">
+    <div class="flex flex-col overflow content-box pt-1" v-if="customData.id === 1">
       <div  v-for="item in onLineList" :key="item.id"
             class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
         <span class="ranking">{{ item.id }}</span>
@@ -40,7 +38,7 @@
       </div>
     </div>
     <!-- 小队榜 -->
-    <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 2">
+    <div class="flex flex-col overflow content-box pt-1" v-if="customData.id === 2">
       <div  v-for="item in teamList" :key="item.id"
             class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
         <span class="ranking">{{ item.id }}</span>
@@ -54,7 +52,7 @@
       </div>
     </div>
     <!-- 邀请榜 -->
-    <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 3">
+    <div class="flex flex-col overflow content-box pt-1" v-if="customData.id === 3">
       <div  v-for="item in inviteList" :key="item.id"
             class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
         <span class="ranking">{{ item.id }}</span>
@@ -68,7 +66,7 @@
       </div>
     </div>
     <!-- 签到榜 -->
-    <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 4">
+    <div class="flex flex-col overflow content-box pt-1" v-if="customData.id === 4">
       <div  v-for="item in signInList" :key="item.id"
             class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
         <span class="ranking">{{ item.id }}</span>
@@ -86,7 +84,7 @@
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span   v-for="(item,index) in rankingType" :key="index"  
       @click="getRankingType(item,index)" 
-      :class="rankingIndex === index ? 'active-index':''" 
+      :class="customData.id === index ? 'active-index':''" 
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
@@ -140,7 +138,6 @@ export default {
         {title:'累计签到榜',name:'accrue'},
         {title:'连续签到榜',name:'series'},
       ],
-      rankingIndex: 0,
     }
   },
   methods: {
@@ -149,11 +146,11 @@ export default {
       this.showUserCard(uid)
     },
     getRankingType(item,index){
-      this.rankingIndex = index
+      this.customData.id = index
+      this.middleShow = false
     },
     showDrawer(){
       this.middleShow = true
-      this.customData.id = this.rankingIndex
       this.$refs.rankingSmallSlot.visible = false
     }
   }
