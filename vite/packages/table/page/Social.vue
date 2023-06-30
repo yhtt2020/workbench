@@ -72,7 +72,7 @@ export default {
        {
         title:'榜单',
         index:'rank',
-        icon:'linechart',
+        icon:'trophy',
         route:{
           name:'rank'
         }

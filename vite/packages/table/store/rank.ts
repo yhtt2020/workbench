@@ -6,10 +6,12 @@ import axios from "axios";
 const apiGetRank=sUrl('/app/rank/get')
 export const rankStore = defineStore('rank', {
   state: () => ({
-    totalUserTimeSum:{ //page=>data
-
+    rankLists:{
+      onlineUserSum:{}//page=>data
     },
-    totalUserPageInfo:{}
+    pageInfos:{
+      onlineUserSum:{}
+    }
 
 
   }),
@@ -20,9 +22,15 @@ export const rankStore = defineStore('rank', {
           page
         },...await getConfig()}, )
       if(rs.data.code===1000){
-        this[name][page]=rs.data.data.list
-        this[name+'PageInfo']=rs.data.data.pageInfo
+        this['rankLists'][name][page]=rs.data.data.data.list
+        this['rankLists'][name][page].forEach(li=>{
+          if(!li.userInfo){
+            li.userInfo={}
+          }
+        })
+        this['pageInfos'][name]=rs.data.data.data.pageInfo
       }
+      console.log(this.rankLists)
       console.log(rs)
     }
   }

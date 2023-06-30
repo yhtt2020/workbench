@@ -1,11 +1,11 @@
 <template>
   <!-- 排名前三 -->
-  <div class="top-three-box"> 
+  <div class="top-three-box">
     <div class="box-item">
-      <div class="item-avatar two-avatar" @click="showCard(rankList[1].uid)">
-        <a-avatar :src="rankList[1].avatar" class="other-img"></a-avatar>
+      <div class="item-avatar two-avatar" @click="showCard(rankList[1].userInfo.uid)">
+        <a-avatar :src="rankList[1].userInfo.avatar" class="other-img"></a-avatar>
       </div>
-      <span class="xt-text mb-2 truncate">{{ rankList[1].nickname }}</span>
+      <span class="xt-text mb-2 truncate">{{ rankList[1].userInfo.nickname }}</span>
       <span>
         <span v-if="showSelect" class="text-back">{{ selectValue.slice(0,1) }}</span>
         <span class="xt-text-2 ml-1">
@@ -16,28 +16,28 @@
     </div>
     <div class="one-box-item">
       <div class="one-avatar">
-        <div class="avatar-img" @click="showCard(rankList[0].uid)">
-          <a-avatar :src="rankList[0].avatar" class="one-img"></a-avatar>
+        <div class="avatar-img" @click="showCard(rankList[0].userInfo.uid)">
+          <a-avatar :src="rankList[0].userInfo.avatar" class="one-img"></a-avatar>
         </div>
       </div>
-      <div class="xt-text mb-2 truncate">{{ rankList[0].nickname }}</div>
+      <div class="xt-text mb-2 truncate">{{ rankList[0].userInfo.nickname }}</div>
       <span>
         <span v-if="showSelect" class="text-back">{{ selectValue.slice(0,1) }}</span>
         <span class="xt-text-2 ml-1">
-          {{ rankList[0][lastName] }} 
+          {{ rankList[0][lastName] }}
           <span> {{ unit }}</span>
         </span>
       </span>
     </div>
     <div class="box-item">
-      <div class="item-avatar three-avatar" @click="showCard(rankList[2].uid)">
-        <a-avatar :src="rankList[2].avatar" class="other-img"></a-avatar>
+      <div class="item-avatar three-avatar" @click="showCard(rankList[2].userInfo.uid)">
+        <a-avatar :src="rankList[2].userInfo.avatar" class="other-img"></a-avatar>
       </div>
-      <span class="xt-text mb-2 truncate">{{ rankList[2].nickname }}</span>
+      <span class="xt-text mb-2 truncate">{{ rankList[2].userInfo.nickname }}</span>
       <span>
         <span v-if="showSelect" class="text-back">{{ selectValue.slice(0,1) }}</span>
         <span class="xt-text-2 ml-1">
-          {{ rankList[2][lastName] }} 
+          {{ rankList[2][lastName] }}
           <span> {{ unit }}</span>
         </span>
       </span>
@@ -211,7 +211,7 @@ export default {
         //   position: relative;
         //   top: 8px;
         // }
-      } 
+      }
     }
     .text-back{
       background: rgba(255,255,255,0.40);
