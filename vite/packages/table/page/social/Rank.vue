@@ -15,7 +15,7 @@
       <div class="top-three-box"> 
         <div class="box-item">
           <div class="item-avatar two-avatar">
-            <a-avatar :src="onLineList[1].avatar" :size="68"></a-avatar>
+            <a-avatar :src="onLineList[1].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ onLineList[1].nickname }}</span>
           <span>
@@ -26,7 +26,7 @@
         <div class="one-box-item">
           <div class="one-avatar">
             <div class="avatar-img">
-              <a-avatar :src="onLineList[0].avatar" :size="87"></a-avatar>
+              <a-avatar :src="onLineList[0].avatar" class="one-img"></a-avatar>
             </div>
           </div>
           <div class="xt-text mb-2 truncate">{{ onLineList[0].nickname }}</div>
@@ -37,7 +37,7 @@
         </div>
         <div class="box-item">
           <div class="item-avatar three-avatar">
-            <a-avatar :src="onLineList[2].avatar" :size="69"></a-avatar>
+            <a-avatar :src="onLineList[2].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ onLineList[2].nickname }}</span>
           <span>
@@ -58,20 +58,20 @@
       <div class="box">
         <a-row class="box-head">
           <!-- <a-col class="head-col" :span="6" v-for="i in onLineListTitle" :key="i">{{ i }}</a-col> -->
-          <a-col class="head-col" :span="7">用户</a-col>
-          <a-col class="head-col" :span="5">总在线时长</a-col>
-          <a-col class="head-col" :span="5">净在线时长</a-col>
-          <a-col class="head-col" :span="7">小队</a-col>
+          <a-col class="head-col" :xs="12" :sm="12" :md="12" :lg="7">用户</a-col>
+          <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5">总在线时长</a-col>
+          <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5">净在线时长</a-col>
+          <a-col class="head-col last-col" :xs="0" :sm="0" :md="0" :lg="7">小队</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in onLineList" :key="item.id">
-          <a-col :span="7" class="box-col"> 
-            <span class="ml-4" v-if="item.id === 1">
+          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4"> 
+            <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 2">
+            <span v-else-if="item.id === 2">
               <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 3">
+            <span v-else-if="item.id === 3">
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
@@ -80,17 +80,17 @@
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
           </a-col>
-          <a-col :span="5" class="box-col justify-center">
+          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
             <span>{{ item.totalDuration }} 小时</span>
           </a-col>
-          <a-col :span="5" class="box-col justify-center">{{ item.netDuration }} 小时</a-col>
-          <a-col :span="7" class="box-col" v-if="item.team">
-            <span class="mr-4 ml-16">
+          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">{{ item.netDuration }} 小时</a-col>
+          <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col" v-if="item.team">
+            <span class="mr-4 team-box">
               <a-avatar :src="item.icon" :size="40"></a-avatar>
             </span>
             <span>{{ item.team }}</span>
           </a-col>
-          <a-col v-else :span="6" class="box-col flex justify-center">-</a-col>
+          <a-col v-else :span="6" class="box-col last-col flex justify-center">-</a-col>
         </a-row>
       </div>
       <!-- 切换数据 -->
@@ -101,7 +101,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :span="7" class="box-col"> 
+          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4"> 
             <div class="ranking-back">{{ myRanking.id }}</div>
             <span class="mx-4" @showCard="myRanking.uid">
               <a-avatar :src="myRanking.avatar" :size="40"></a-avatar>
@@ -109,12 +109,12 @@
             <span class="xt-text truncate" style="font-size: 16px;">{{ myRanking.nickname }}</span>
             <span class="min-back ml-2">我</span>
           </a-col>
-          <a-col :span="5" class="box-col justify-center">
+          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
             <span>{{ myRanking.totalDuration }} 小时</span>
           </a-col>
-          <a-col :span="5" class="box-col justify-center">{{ myRanking.netDuration }} 小时</a-col>
-          <a-col :span="7" class="box-col">
-            <span class="mr-4 ml-16">
+          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">{{ myRanking.netDuration }} 小时</a-col>
+          <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col">
+            <span class="mr-4 team-box">
               <a-avatar :src="myRanking.icon" :size="40"></a-avatar>
             </span>
             <span>{{ myRanking.team }}</span>
@@ -129,7 +129,7 @@
       <div class="top-three-box"> 
         <div class="box-item">
           <div class="item-avatar two-avatar">
-            <a-avatar :src="teamList[1].avatar" :size="68"></a-avatar>
+            <a-avatar :src="teamList[1].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ teamList[1].nickname }}</span>
           <span>
@@ -139,7 +139,7 @@
         <div class="one-box-item">
           <div class="one-avatar">
             <div class="avatar-img">
-              <a-avatar :src="teamList[0].avatar" :size="87"></a-avatar>
+              <a-avatar :src="teamList[0].avatar" class="one-img"></a-avatar>
             </div>
           </div>
           <div class="xt-text mb-2 truncate">{{ teamList[0].nickname }}</div>
@@ -149,7 +149,7 @@
         </div>
         <div class="box-item">
           <div class="item-avatar three-avatar">
-            <a-avatar :src="teamList[2].avatar" :size="69"></a-avatar>
+            <a-avatar :src="teamList[2].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ teamList[2].nickname }}</span>
           <span>
@@ -160,20 +160,19 @@
       <!-- 小队榜列表 -->
       <div class="box">
         <a-row class="box-head">
-          <!-- <a-col class="head-col" :span="6" v-for="i in teamListTitle" :key="i">{{ i }}</a-col> -->
-          <a-col class="head-col" :span="7">用户</a-col>
-          <a-col class="head-col" :span="5">在线时长</a-col>
-          <a-col class="head-col" style="text-align:left;padding-left: 60px;" :span="12">小队成员</a-col>
+          <a-col class="head-col" :xs="12" :sm="12" :md="14" :lg="7">用户</a-col>
+          <a-col class="head-col" :xs="12" :sm="12" :md="10" :lg="5">在线时长</a-col>
+          <a-col class="head-col last-col" style="text-align:left;padding-left: 60px;" :xs="0" :sm="0" :md="0" :lg="12">小队成员</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in teamList" :key="item.id">
-          <a-col :span="7" class="box-col"> 
-            <span class="ml-4" v-if="item.id === 1">
+          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4"> 
+            <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 2">
+            <span v-else-if="item.id === 2">
               <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 3">
+            <span v-else-if="item.id === 3">
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
@@ -183,8 +182,8 @@
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
             <span class="ml-2 min-back">{{ item.unknown }}</span>
           </a-col>
-          <a-col :span="5" class="box-col justify-center">{{ item.onlineDuration }} 小时</a-col>
-          <a-col :span="12" class="box-col flex pl-10">
+          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ item.onlineDuration }} 小时</a-col>
+          <a-col :xs="0" :sm="0" :md="0" :lg="12" class="box-col box-right last-col flex pl-10">
             <div v-for="i in item.member" :key="i.id" class="mx-2" style="position:relative;">
               <a-avatar :src="i.avatar" :size="40"></a-avatar>
               <span v-if="i.captain" class="captain">队长</span>
@@ -200,7 +199,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :span="7" class="box-col"> 
+          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4"> 
             <div class="ranking-back">{{ myTeam.id }}</div>
             <span class="mx-4" @showCard="myTeam.uid">
               <a-avatar :src="myTeam.avatar" :size="40"></a-avatar>
@@ -208,8 +207,8 @@
             <span class="xt-text truncate" style="font-size: 16px;">{{ myTeam.nickname }}</span>
             <span class="ml-2 min-back">{{ myTeam.unknown }}</span>
           </a-col>
-          <a-col :span="5" class="box-col justify-center">{{ myTeam.onlineDuration }} 小时</a-col>
-          <a-col :span="12" class="box-col flex pl-10">
+          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ myTeam.onlineDuration }} 小时</a-col>
+          <a-col :xs="0" :sm="0" :md="0" :lg="12"  class="box-col box-right last-col flex pl-10">
             <div v-for="i in myTeam.member" :key="i.id" class="mx-2" style="position:relative;">
               <a-avatar :src="i.avatar" :size="40"></a-avatar>
               <span v-if="i.captain" class="captain">队长</span>
@@ -225,7 +224,7 @@
       <div class="top-three-box"> 
         <div class="box-item">
           <div class="item-avatar two-avatar">
-            <a-avatar :src="inviteList[1].avatar" :size="68"></a-avatar>
+            <a-avatar :src="inviteList[1].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ inviteList[1].nickname }}</span>
           <span>
@@ -235,7 +234,7 @@
         <div class="one-box-item">
           <div class="one-avatar">
             <div class="avatar-img">
-              <a-avatar :src="inviteList[0].avatar" :size="87"></a-avatar>
+              <a-avatar :src="inviteList[0].avatar" class="one-img"></a-avatar>
             </div>
           </div>
           <div class="xt-text mb-2 truncate">{{ inviteList[0].nickname }}</div>
@@ -245,7 +244,7 @@
         </div>
         <div class="box-item">
           <div class="item-avatar three-avatar">
-            <a-avatar :src="inviteList[2].avatar" :size="69"></a-avatar>
+            <a-avatar :src="inviteList[2].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ inviteList[2].nickname }}</span>
           <span>
@@ -256,19 +255,19 @@
       <!-- 邀请榜列表 -->
       <div class="box">
         <a-row class="box-head">
-          <a-col class="head-col" :span="7">用户</a-col>
-          <a-col class="head-col" :span="10">已邀请</a-col>
-          <a-col class="head-col" :span="7">小队</a-col>
+          <a-col class="head-col" :xs="11" :sm="11" :md="12" :lg="7">用户</a-col>
+          <a-col class="head-col" :xs="5" :sm="5" :md="5" :lg="10">已邀请</a-col>
+          <a-col class="head-col" :xs="8" :sm="8" :md="7" :lg="7">小队</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in inviteList" :key="item.id">
-          <a-col :span="7" class="box-col"> 
-            <span class="ml-4" v-if="item.id === 1">
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
+            <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 2">
+            <span v-else-if="item.id === 2">
               <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 3">
+            <span v-else-if="item.id === 3">
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
@@ -277,14 +276,14 @@
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
           </a-col>
-          <a-col :span="10" class="box-col justify-center">{{ item.invite }} 人</a-col>
-          <a-col :span="7" class="box-col" v-if="item.team">
-            <span class="mr-4 ml-16">
+          <a-col  :xs="5" :sm="5" :md="5" :lg="10" class="box-col justify-center">{{ item.invite }} 人</a-col>
+          <a-col :xs="8" :sm="8" :md="7" :lg="7" class="box-col" v-if="item.team">
+            <span class="mr-4 team-box">
               <a-avatar :src="item.icon" :size="40"></a-avatar>
             </span>
             <span>{{ item.team }}</span>
           </a-col>
-          <a-col v-else :span="6" class="box-col flex justify-center">-</a-col>
+          <a-col v-else :xs="8" :sm="8" :md="7" :lg="7" class="box-col flex justify-center">-</a-col>
         </a-row>
       </div>
       <!-- 切换数据 -->
@@ -295,7 +294,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :span="7" class="box-col"> 
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
             <div class="ranking-back">{{ myInvite.id }}</div>
             <span class="mx-4" @showCard="myInvite.uid">
               <a-avatar :src="myInvite.avatar" :size="40"></a-avatar>
@@ -303,9 +302,9 @@
             <span class="xt-text truncate" style="font-size: 16px;">{{ myInvite.nickname }}</span>
             <span class="min-back ml-2">我</span>
           </a-col>
-          <a-col :span="10" class="box-col justify-center">{{ myInvite.invite }} 人</a-col>
-          <a-col :span="7" class="box-col">
-            <span class="mr-4 ml-16">
+          <a-col :xs="5" :sm="5" :md="5" :lg="10" class="box-col justify-center">{{ myInvite.invite }} 人</a-col>
+          <a-col :xs="8" :sm="8" :md="7" :lg="7" class="box-col">
+            <span class="mr-4 team-box">
               <a-avatar :src="myInvite.icon" :size="40"></a-avatar>
             </span>
             <span>{{ myInvite.team }}</span>
@@ -320,7 +319,7 @@
       <div class="top-three-box"> 
         <div class="box-item">
           <div class="item-avatar two-avatar">
-            <a-avatar :src="signInList[1].avatar" :size="68"></a-avatar>
+            <a-avatar :src="signInList[1].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ signInList[1].nickname }}</span>
           <span>
@@ -330,7 +329,7 @@
         <div class="one-box-item">
           <div class="one-avatar">
             <div class="avatar-img">
-              <a-avatar :src="signInList[0].avatar" :size="87"></a-avatar>
+              <a-avatar :src="signInList[0].avatar" class="one-img"></a-avatar>
             </div>
           </div>
           <div class="xt-text mb-2 truncate">{{ signInList[0].nickname }}</div>
@@ -340,7 +339,7 @@
         </div>
         <div class="box-item">
           <div class="item-avatar three-avatar">
-            <a-avatar :src="signInList[2].avatar" :size="69"></a-avatar>
+            <a-avatar :src="signInList[2].avatar" class="other-img"></a-avatar>
           </div>
           <span class="xt-text mb-2 truncate">{{ signInList[2].nickname }}</span>
           <span>
@@ -359,19 +358,19 @@
       <!-- 签到榜列表 -->
       <div class="box">
         <a-row class="box-head">
-          <a-col class="head-col" :span="7">用户</a-col>
-          <a-col class="head-col" :span="10">已邀请</a-col>
-          <a-col class="head-col" :span="7">小队</a-col>
+          <a-col class="head-col" :xs="11" :sm="11" :md="12" :lg="7">用户</a-col>
+          <a-col class="head-col" :xs="5" :sm="5" :md="5" :lg="10">签到时间</a-col>
+          <a-col class="head-col" :xs="8" :sm="8" :md="7" :lg="7">小队</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in signInList" :key="item.id">
-          <a-col :span="7" class="box-col"> 
-            <span class="ml-4" v-if="item.id === 1">
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
+            <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 2">
+            <span v-else-if="item.id === 2">
               <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
-            <span class="ml-4" v-else-if="item.id === 3">
+            <span v-else-if="item.id === 3">
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
@@ -380,14 +379,14 @@
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
           </a-col>
-          <a-col :span="10" class="box-col justify-center">{{ item.signInTime }}</a-col>
-          <a-col :span="7" class="box-col" v-if="item.team">
-            <span class="mr-4 ml-16">
+          <a-col :xs="5" :sm="5" :md="5" :lg="10" class="box-col justify-center">{{ item.signInTime }}</a-col>
+          <a-col :xs="8" :sm="8" :md="7" :lg="7" class="box-col" v-if="item.team">
+            <span class="mr-4 team-box">
               <a-avatar :src="item.icon" :size="40"></a-avatar>
             </span>
             <span>{{ item.team }}</span>
           </a-col>
-          <a-col v-else :span="6" class="box-col flex justify-center">-</a-col>
+          <a-col v-else :xs="8" :sm="8" :md="7" :lg="7" class="box-col flex justify-center">-</a-col>
         </a-row>
       </div>
       <!-- 切换数据 -->
@@ -398,7 +397,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :span="7" class="box-col"> 
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
             <div class="ranking-back">{{ mySignIn.id }}</div>
             <span class="mx-4" @showCard="mySignIn.uid">
               <a-avatar :src="mySignIn.avatar" :size="40"></a-avatar>
@@ -406,9 +405,9 @@
             <span class="xt-text truncate" style="font-size: 16px;">{{ mySignIn.nickname }}</span>
             <span class="min-back ml-2">我</span>
           </a-col>
-          <a-col :span="10" class="box-col justify-center">{{ mySignIn.signInTime }}</a-col>
-          <a-col :span="7" class="box-col">
-            <span class="mr-4 ml-16">
+          <a-col :xs="5" :sm="5" :md="5" :lg="10" class="box-col justify-center">{{ mySignIn.signInTime }}</a-col>
+          <a-col :xs="8" :sm="8" :md="7" :lg="7" class="box-col">
+            <span class="mr-4 team-box">
               <a-avatar :src="mySignIn.icon" :size="40"></a-avatar>
             </span>
             <span>{{ mySignIn.team }}</span>
@@ -478,6 +477,94 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+ @media screen and (min-width:992px){
+  .one-box-item{
+    width: 231px;
+    margin: 0 70px;
+    .one-avatar{
+      width: 231px;
+      height: 231px;
+      background-size: 168px;
+    }
+    .one-img{
+      width: 87px;
+      height: 87px;
+    }
+    .avatar-img{
+      position: relative;
+      top: 8px;
+    }
+  }
+  .box-item{
+    width: 178px;
+    .item-avatar{
+      width: 178px;
+      height: 178px;
+    }
+    .other-img{
+      width: 68px;
+      height: 68px;
+    }
+  }
+  .last-col{
+    display: block;
+  }
+  .select{
+    width:200px;
+  }
+  .team-box{
+    margin-left: 20%;
+  }
+ }
+ @media screen and (max-width:992px){
+  .one-box-item{
+    width: 180px;
+    margin: 0 25px;
+    .one-avatar{
+      width: 180px;
+      height: 180px;
+      background-size: 118px;
+    }
+    .one-img{
+      width: 60px;
+      height: 60px;
+    }
+    .avatar-img{
+      position: relative;
+      top: 6px;
+    }
+  }
+  .box-item{
+    width: 128px;
+    .item-avatar{
+      width: 128px;
+      height: 128px;
+    }
+    .other-img{
+      width: 48px;
+      height: 48px;
+    }
+  }
+  .two-avatar{
+    background-size: 92px;
+  }
+  .three-avatar{
+    background-size: 80px;
+  }
+  .last-col{
+    display: none !important;
+  }
+  .box-col:nth-child(3),
+  .box-right:nth-child(2){
+    border-right: none !important;
+  }
+  .select{
+    width:150px;
+  }
+  .team-box{
+    margin-left: 10%;
+  }
+ }
  .page-container{
   margin: 0 12px;
   padding: 12px;
@@ -502,14 +589,14 @@ export default {
     justify-content: center;
     // position: relative;
     .box-item{
-      width: 178px;
+      // width: 178px;
       font-size: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       .item-avatar{
-        width: 178px;
-        height: 178px;
+        // width: 178px;
+        // height: 178px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -526,26 +613,26 @@ export default {
       }
     }
     .one-box-item{
-      width: 231px;
+      // width: 231px;
       font-size: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0 70px;
+      // margin: 0 70px;
       .one-avatar{
-        width: 231px;
-        height: 231px;
+        // width: 231px;
+        // height: 231px;
         display: flex;
         justify-content: center;
         align-items: center;
         background-image: url(../../../../public/img/rankingList/metals.svg);
-        background-size: 168px;
+        // background-size: 168px;
         background-repeat: no-repeat;
         background-position: center;
-        .avatar-img{
-          position: relative;
-          top: 8px;
-        }
+        // .avatar-img{
+        //   position: relative;
+        //   top: 8px;
+        // }
       } 
     }
     .text-back{
@@ -603,7 +690,6 @@ export default {
       font-size: 18px;
       color: var(--primary-text);
       font-weight: 500;
-      margin-left: 16px;
     }
   }
   .my-style{
@@ -633,7 +719,7 @@ export default {
     }
   }
   .select{
-    width:200px;
+    // width:200px;
     height:48px;
     color: var(--primary-text);
     background: var(--secondary-bg);

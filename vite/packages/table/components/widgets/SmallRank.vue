@@ -2,12 +2,15 @@
   <Widget 
   :options="options" 
   :sizeList="sizeList"
+  :customData="customData"
   :desk="desk" 
   ref="rankingSmallSlot" 
   :menuList="toggleRankingList">
   <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showDrawer"
     style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[rankingIndex].title }}
   </div>
+  <!-- {{ customData }}
+  {{ customData.id }} -->
     <!-- 总在线时长榜 -->
     <div class="flex flex-col overflow content-box pt-1" v-if="rankingIndex === 0">
       <div  v-for="item in onLineList" :key="item.id"
@@ -150,6 +153,7 @@ export default {
     },
     showDrawer(){
       this.middleShow = true
+      this.customData.id = this.rankingIndex
       this.$refs.rankingSmallSlot.visible = false
     }
   }
