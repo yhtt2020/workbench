@@ -125,11 +125,12 @@
           <!-- 添加单个快捷键 -->
           <!-- <div class="input-item"> -->
             <!-- 添加组合键 -->
-            <div class="border-right key-item input-item">
+            <!-- <div class="border-right key-item input-item"> -->
+            <div class="border-right key-item input-item" v-for="(item,i) in addKeyList" :key="i">
               <div class="flex">
                 <div class="flex items-center mr-3" @click="openKeyBoard(_,'addKey')">
-                  <a-input class="input pointer"
-                    v-model:value="keyCombination" 
+                  <a-input class="input pointer" 
+                    v-model="keyCombination[i]"
                     readonly
                     spellcheck="false" 
                     placeholder="按下组合键" 
@@ -146,12 +147,12 @@
               </div>
               <div>
                 <a-input class="input text-right"
-                  v-model:value="combinationName" 
+                  v-model:value="combinationName[i]" 
                   spellcheck="false" 
                   placeholder="快捷键名称" 
                   style="width:179px;height: 48px;"
-                  ref="inputFocusKey"
-                  @click="getFocus('key')"
+                  :ref="'inputFocusKey_'+ i"
+                  @click="getFocus('key',i)"
                   />
               </div>
               <span @click.stop="delStaging('key')">
@@ -267,9 +268,10 @@ export default {
       imageUrl: '',
       file: {},
       shoreModal: false, //分享
-      keyCombination: '', //添加组合键
-      combinationName: '', //添加快捷键名称
-      addGroupName: '', //添加的分类名称
+      addKeyList: [''], //添加快捷键集合
+      keyCombination: [], //添加组合键
+      combinationName: [], //添加快捷键名称
+      addGroupName: [], //添加的分类名称
       groupName: '', //当前修改的分类名称
       keyName: '', //当前修改的快捷键类名
       keyContent: '',//当前修改的组合键
@@ -282,7 +284,8 @@ export default {
       keyBoard: false,
       selectKey: {},//选中的快捷键
       stagingKey: {},// 暂存的Key
-      bulkEditKey: false
+      bulkEditKey: false,
+      addNumber: 1
     }
   },
   computed: {
@@ -388,10 +391,10 @@ export default {
       }
     },
     //添加的input获取焦点 (禁止拖拽导致需要手动获取焦点)
-    getFocus(type){
+    getFocus(type,index){
       switch (type) {
         case 'key':
-          this.$refs.inputFocusKey.focus()
+          this.$refs[`inputFocusKey_${index}`][0].focus()
           break;
         case 'name':
         this.$refs.inputFocusName.focus()
@@ -483,26 +486,28 @@ export default {
     },
     // 添加快捷键
     addShortcutKey(){
-      if(!this.keyCombination || !this.combinationName.trim())return message.info('组合键或名称不能为空');
-      // let keyArr = this.keyCombination.split(' + ')
-      // keyArr.forEach((item,index) => {
-      //   keyArr.splice(index,1,{key: item})
-      // })
-      // let obj =  {
-      //   id: nanoid(),
-      //   keys: keyArr,
-      //   title: this.combinationName.trim(),
+      this.addKeyList.push({})
+      // this.addNumber += 1
+      // if(!this.keyCombination || !this.combinationName.trim())return message.info('组合键或名称不能为空');
+      // // let keyArr = this.keyCombination.split(' + ')
+      // // keyArr.forEach((item,index) => {
+      // //   keyArr.splice(index,1,{key: item})
+      // // })
+      // // let obj =  {
+      // //   id: nanoid(),
+      // //   keys: keyArr,
+      // //   title: this.combinationName.trim(),
+      // // }
+      // delete this.stagingKey.isAdd
+      // this.stagingKey.title = this.combinationName.trim()
+      // this.keyList.push(this.stagingKey)
+      // this.stagingKey = {}
+      // this.keyCombination = ''
+      // this.combinationName = ''
+      // if(this.bulkEditKey){
+      //   this.bulkEditKey = false
+      //   this.bulkEdit()
       // }
-      delete this.stagingKey.isAdd
-      this.stagingKey.title = this.combinationName.trim()
-      this.keyList.push(this.stagingKey)
-      this.stagingKey = {}
-      this.keyCombination = ''
-      this.combinationName = ''
-      if(this.bulkEditKey){
-        this.bulkEditKey = false
-        this.bulkEdit()
-      }
     },
     // 添加分类名称
     addGroup(){
