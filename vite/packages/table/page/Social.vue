@@ -69,14 +69,14 @@ export default {
           name:'message'
         }
        },
-       // {
-       //  title:'榜单',
-       //  index:'rank',
-       //  icon:'linechart',
-       //  route:{
-       //    name:'rank'
-       //  }
-       // }
+      //  {
+      //   title:'榜单',
+      //   index:'rank',
+      //   icon:'linechart',
+      //   route:{
+      //     name:'rank'
+      //   }
+      //  }
       ],
 
 

@@ -11,71 +11,37 @@
     </div>
     <!-- 在线榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'onLine'">
-      <!-- 前三名展示 -->
-      <div class="top-three-box"> 
-        <div class="box-item">
-          <div class="item-avatar two-avatar">
-            <a-avatar :src="onLineList[1].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ onLineList[1].nickname }}</span>
-          <span>
-            <span class="text-back">总</span>
-            <span class="xt-text-2 ml-1">{{ onLineList[1].totalDuration }} 小时</span>
-          </span>
-        </div>
-        <div class="one-box-item">
-          <div class="one-avatar">
-            <div class="avatar-img">
-              <a-avatar :src="onLineList[0].avatar" class="one-img"></a-avatar>
-            </div>
-          </div>
-          <div class="xt-text mb-2 truncate">{{ onLineList[0].nickname }}</div>
-          <span>
-            <span class="text-back">总</span>
-            <span class="xt-text-2 ml-1">{{ onLineList[0].totalDuration }} 小时</span>
-          </span>
-        </div>
-        <div class="box-item">
-          <div class="item-avatar three-avatar">
-            <a-avatar :src="onLineList[2].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ onLineList[2].nickname }}</span>
-          <span>
-            <span class="text-back">总</span>
-            <span class="xt-text-2 ml-1">{{ onLineList[2].totalDuration }} 小时</span>
-          </span>
-        </div>
-        <!-- 切换时长 -->
-        <div class="toggle-duration">
-          <a-select :style="selectStyle"
-              class="select rounded-lg  text-xs flex items-center" size="large" :bordered="false"
-              v-model:value="selectValue" :dropdownStyle="{ 'z-index': 9, backgroundColor: 'var(--secondary-bg)' }">
-              <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
-          </a-select>
-        </div>
+      <!-- 前三排名 -->
+      <ThreeRank :rankList="onLineLists" :selectValue="selectValue"  :showSelect="true" lastName="totalDuration" unit="小时"></ThreeRank>
+      <!-- 切换时长 -->
+      <div class="toggle-duration">
+        <a-select :style="selectStyle"
+            class="select rounded-lg  text-xs flex items-center" size="large" :bordered="false"
+            v-model:value="selectValue" :dropdownStyle="{ 'z-index': 9, backgroundColor: 'var(--secondary-bg)' }">
+            <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
+        </a-select>
       </div>
       <!-- 在线榜列表 -->
       <div class="box">
         <a-row class="box-head">
-          <!-- <a-col class="head-col" :span="6" v-for="i in onLineListTitle" :key="i">{{ i }}</a-col> -->
           <a-col class="head-col" :xs="12" :sm="12" :md="12" :lg="7">用户</a-col>
           <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5">总在线时长</a-col>
           <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5">净在线时长</a-col>
           <a-col class="head-col last-col" :xs="0" :sm="0" :md="0" :lg="7">小队</a-col>
         </a-row>
-        <a-row class="box-list" v-for="item in onLineList" :key="item.id">
+        <a-row class="box-list" v-for="(item,index) in onLineLists" :key="item.id">
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4"> 
-            <span v-if="item.id === 1">
+            <span v-if="index === 0">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
-            <span v-else-if="item.id === 2">
+            <span v-else-if="index === 1">
               <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
-            <span v-else-if="item.id === 3">
+            <span v-else-if="index === 2">
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
-            <span class="mx-4" @showCard="item.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="item.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
@@ -100,10 +66,10 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list xt-mask">
+        <a-row class="box-list my-rank xt-mask">
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4"> 
             <div class="ranking-back">{{ myRanking.id }}</div>
-            <span class="mx-4" @showCard="myRanking.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="myRanking.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ myRanking.nickname }}</span>
@@ -125,38 +91,8 @@
 
     <!-- 小队榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'team'">
-      <!-- 前三名展示 -->
-      <div class="top-three-box"> 
-        <div class="box-item">
-          <div class="item-avatar two-avatar">
-            <a-avatar :src="teamList[1].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ teamList[1].nickname }}</span>
-          <span>
-            <span class="xt-text-2 ml-1">{{ teamList[1].onlineDuration }} 小时</span>
-          </span>
-        </div>
-        <div class="one-box-item">
-          <div class="one-avatar">
-            <div class="avatar-img">
-              <a-avatar :src="teamList[0].avatar" class="one-img"></a-avatar>
-            </div>
-          </div>
-          <div class="xt-text mb-2 truncate">{{ teamList[0].nickname }}</div>
-          <span>
-            <span class="xt-text-2 ml-1">{{ teamList[0].onlineDuration }} 小时</span>
-          </span>
-        </div>
-        <div class="box-item">
-          <div class="item-avatar three-avatar">
-            <a-avatar :src="teamList[2].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ teamList[2].nickname }}</span>
-          <span>
-            <span class="xt-text-2 ml-1">{{ teamList[2].onlineDuration }} 小时</span>
-          </span>
-        </div>
-      </div>
+      <!-- 前三排名 -->
+      <ThreeRank :rankList="teamList" lastName="onlineDuration" unit="小时"></ThreeRank>
       <!-- 小队榜列表 -->
       <div class="box">
         <a-row class="box-head">
@@ -176,7 +112,7 @@
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
-            <span class="mx-4" @showCard="item.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="item.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
@@ -198,10 +134,10 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list xt-mask">
+        <a-row class="box-list my-rank xt-mask">
           <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4"> 
             <div class="ranking-back">{{ myTeam.id }}</div>
-            <span class="mx-4" @showCard="myTeam.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="myTeam.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ myTeam.nickname }}</span>
@@ -220,38 +156,8 @@
 
     <!-- 邀请榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'invite'">
-      <!-- 前三名展示 -->
-      <div class="top-three-box"> 
-        <div class="box-item">
-          <div class="item-avatar two-avatar">
-            <a-avatar :src="inviteList[1].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ inviteList[1].nickname }}</span>
-          <span>
-            <span class="xt-text-2 ml-1">{{ inviteList[1].invite }} 人</span>
-          </span>
-        </div>
-        <div class="one-box-item">
-          <div class="one-avatar">
-            <div class="avatar-img">
-              <a-avatar :src="inviteList[0].avatar" class="one-img"></a-avatar>
-            </div>
-          </div>
-          <div class="xt-text mb-2 truncate">{{ inviteList[0].nickname }}</div>
-          <span>
-            <span class="xt-text-2 ml-1">{{ inviteList[0].invite }} 人</span>
-          </span>
-        </div>
-        <div class="box-item">
-          <div class="item-avatar three-avatar">
-            <a-avatar :src="inviteList[2].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ inviteList[2].nickname }}</span>
-          <span>
-            <span class="xt-text-2 ml-1">{{ inviteList[2].invite }} 人</span>
-          </span>
-        </div>
-      </div>
+      <!-- 前三排名 -->
+      <ThreeRank :rankList="inviteList" lastName="invite" unit="人"></ThreeRank>
       <!-- 邀请榜列表 -->
       <div class="box">
         <a-row class="box-head">
@@ -271,7 +177,7 @@
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
-            <span class="mx-4" @showCard="item.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="item.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
@@ -293,10 +199,10 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list xt-mask">
+        <a-row class="box-list my-rank xt-mask">
           <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
             <div class="ranking-back">{{ myInvite.id }}</div>
-            <span class="mx-4" @showCard="myInvite.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="myInvite.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ myInvite.nickname }}</span>
@@ -315,45 +221,15 @@
 
     <!-- 签到榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'signIn'">
-      <!-- 前三名展示 -->
-      <div class="top-three-box"> 
-        <div class="box-item">
-          <div class="item-avatar two-avatar">
-            <a-avatar :src="signInList[1].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ signInList[1].nickname }}</span>
-          <span>
-            <span class="xt-text-2 ml-1">{{ signInList[1].signInTime }}</span>
-          </span>
-        </div>
-        <div class="one-box-item">
-          <div class="one-avatar">
-            <div class="avatar-img">
-              <a-avatar :src="signInList[0].avatar" class="one-img"></a-avatar>
-            </div>
-          </div>
-          <div class="xt-text mb-2 truncate">{{ signInList[0].nickname }}</div>
-          <span>
-            <span class="xt-text-2 ml-1">{{ signInList[0].signInTime }}</span>
-          </span>
-        </div>
-        <div class="box-item">
-          <div class="item-avatar three-avatar">
-            <a-avatar :src="signInList[2].avatar" class="other-img"></a-avatar>
-          </div>
-          <span class="xt-text mb-2 truncate">{{ signInList[2].nickname }}</span>
-          <span>
-            <span class="xt-text-2 ml-1">{{ signInList[2].signInTime }}</span>
-          </span>
-        </div>
-        <!-- 切换签到日期 -->
-        <div class="toggle-duration">
-          <a-select :style="selectStyle"
-              class="select rounded-lg  text-xs s-item flex items-center" size="large" :bordered="false"
-              v-model:value="selectSignInValue" :dropdownStyle="{ 'z-index': 9, backgroundColor: 'var(--secondary-bg)' }">
-              <a-select-option class="no-drag" v-for="item in sortSignInType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
-          </a-select>
-        </div>
+      <!-- 前三排名 -->
+      <ThreeRank :rankList="signInList" lastName="signInTime"></ThreeRank>
+      <!-- 切换签到日期 -->
+      <div class="toggle-duration">
+        <a-select :style="selectStyle"
+          class="select rounded-lg  text-xs s-item flex items-center" size="large" :bordered="false"
+          v-model:value="selectSignInValue" :dropdownStyle="{ 'z-index': 9, backgroundColor: 'var(--secondary-bg)' }">
+          <a-select-option class="no-drag" v-for="item in sortSignInType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
+        </a-select>
       </div>
       <!-- 签到榜列表 -->
       <div class="box">
@@ -374,7 +250,7 @@
               <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.id }}</div>
-            <span class="mx-4" @showCard="item.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="item.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
@@ -396,10 +272,10 @@
       </div>
       <!-- 我的排名 -->
       <div class="my-style">
-        <a-row class="box-list xt-mask">
+        <a-row class="box-list my-rank xt-mask">
           <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
             <div class="ranking-back">{{ mySignIn.id }}</div>
-            <span class="mx-4" @showCard="mySignIn.uid">
+            <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="mySignIn.avatar" :size="40"></a-avatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ mySignIn.nickname }}</span>
@@ -422,9 +298,11 @@
 import { mapActions, mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 import { onLineList,myRanking,teamList,myTeam,inviteList,myInvite,signInList,mySignIn } from "../../js/rank"
+import ThreeRank from '../../components/rank/ThreeRank.vue'
 export default {
   name: 'Rank',
   components: {
+    ThreeRank
   },
   data(){
     return {
@@ -460,6 +338,7 @@ export default {
         {name: '连续签到榜',value: '连续签到榜'},
       ],
       teamListTitle: ['用户','在线时长','小队成员'],
+      onLineLists: []
     }
   },
   methods: {
@@ -471,6 +350,26 @@ export default {
     },
     showCard(uid){
       this.showUserCard(uid)
+    },
+    mySort (data, property, asc) {
+      let datas = [...data]
+      return datas.sort(function (a, b) {
+        a = a[property]
+        b = b[property]
+        if (asc) return a - b
+        else return b - a
+      })
+    },
+  },
+  watch: {
+    selectValue: {
+      immediate: true,
+      deep: true,
+      handler (newV, oldV) {
+        if (newV == '总在线时长') this.onLineLists = this.mySort(this.onLineList, 'totalDuration')
+        else if (newV == '更新时间') this.onLineLists = this.mySort(this.onLineList, 'netDuration')
+        else this.onLineLists = this.onLineList
+      }
     },
   }
 }
@@ -691,6 +590,10 @@ export default {
       color: var(--primary-text);
       font-weight: 500;
     }
+  }
+  .my-rank{
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+    margin-top: 0;
   }
   .my-style{
     z-index: 99;
