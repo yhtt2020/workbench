@@ -45,7 +45,7 @@
             <div class="epic-image">
               <img  :src="getSpecifiedPicture(item.keyImages).url"  class="w-full h-full rounded-t-lg object-cover"  alt="">
             </div>
-            <div class="p-3 name-text epic-title truncate" style="max-width: 350px;">{{ item.title === 'Mystery Game' ? '神秘游戏' : item.title }}</div>
+            <div class="p-3 name-text epic-title truncate">{{ item.title === 'Mystery Game' ? '神秘游戏' : item.title }}</div>
             <div class="p-3">
               <div v-if="item.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
                 <span class="p-1  mr-2 rounded-md next-notice">下周预告</span>
@@ -150,7 +150,7 @@ export default {
       const data = await sendRequest(allUrl, {},{localCache:true, localTtl:60*12*60})
       const result = data.data.data.Catalog.searchStore.elements
       const noResultNull = _.filter(result, function(o) { return o.promotions !== null });
-      this.epicList = noResultNull
+      this.epicList = noResultNull.reverse()
     },
     
     openEpicStore(v){

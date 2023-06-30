@@ -111,7 +111,7 @@ export default {
         // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       settingVisible: false,
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      simpleImage: '/public/img/test/load-ail.png',
       addressType: {
         value: '我的收藏',
         path: '',
@@ -378,5 +378,9 @@ export default {
   }
 
 
+}
+
+:deep(.ant-empty-image){
+  height: 60px;
 }
 </style>

@@ -3,6 +3,7 @@ import dbStorage from "./dbStorage";
 import {compareTime, randomData, sendRequest} from '../js/axios/api'
 import {nanoid} from "nanoid";
 import {steamProtocol} from "../js/common/game";
+import cache from '../page/app/addIcon/hooks/cache'
 
 const {steamUser, steamSession, path, https, steamFs} = $models
 let client = new steamUser({
@@ -31,6 +32,8 @@ export const steamUserStore = defineStore("steamUser", {
 
     //好友列表
     friendsList: [],
+    // 显示游戏时长
+    showTime:true,
   }),
   actions: {
     /**
@@ -180,7 +183,10 @@ export const steamUserStore = defineStore("steamUser", {
       //      // e = {...e,...obj}
       //     }
       // })
-    }
+    },
+    updateGameTime(){ //修改我的游戏时长配置项
+      this.showTime = cache.get('game_duration')
+    },
   },
   persist: {
     enabled: true,

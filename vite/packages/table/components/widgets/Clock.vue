@@ -138,7 +138,7 @@ export default {
   },
   data () {
     return {
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      simpleImage: '/public/img/test/load-ail.png',
       visible: false,
       value1: dayjs('00:00:00', 'HH:mm'),
       custom: false
@@ -252,7 +252,7 @@ export default {
 }
 
 .custom {
-  background: #6a6a6a;
+  background: var(--secondary-bg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -268,4 +268,7 @@ export default {
   z-index: 999;
 }
 
+:deep(.ant-empty-image){
+  height: 60px;
+}
 </style>

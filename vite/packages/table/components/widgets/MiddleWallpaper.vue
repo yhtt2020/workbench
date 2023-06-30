@@ -5,7 +5,7 @@
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
         <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
           <a-empty :image="simpleImage" />
-          <div style="margin-top: 2em">
+          <div style="margin-top: 2em;">
             <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default {
         // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       settingVisible: false,
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      simpleImage: '/public/img/test/load-ail.png',
       addressType: {
         value: "我的收藏",
         path: "",
@@ -491,5 +491,8 @@ export default {
     height: 36px;
     width: 36px;
   }
+}
+:deep(.ant-empty-image){
+  height: 60px;
 }
 </style>

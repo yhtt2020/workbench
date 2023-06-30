@@ -5,7 +5,7 @@
     </div>
     <span class="mt-2 truncate" style="max-width:252px;font-size: 16px;font-weight: 500;color: var(--primary-text);">{{ detailOptions.name }}</span>
     <span class="content-introduction h-12" style="font-size: 16px; font-weight: 400;color: var(--secondary-text);">{{detailOptions.illustrate}}</span>
-    <span class="line-through mt-1" style="color: rgba(151, 151, 151, 1);">￥{{detailOptions.price}}.00</span>
+    <span class="line-through mt-1" style="color: rgba(151, 151, 151, 1);">{{detailOptions.price}}</span>
     <div class="flex justify-between items-center">
       <span style="color: rgba(255, 77, 79, 1);">免费领取</span>
       <span style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;color: #fff;">剩余{{ detailType.name === 'week' ? remainderDay(detailOptions.weekDate) : remainderDay(detailOptions.nextWeekDate)  }}天</span>

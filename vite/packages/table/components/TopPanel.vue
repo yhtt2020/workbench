@@ -6,7 +6,7 @@
         <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
       </div>
       <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);" @click="enterMusic"
-           v-else-if="status.music && status.music.title">
+           v-else-if="status.music.playing && status.music.title && status.music">
         <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>

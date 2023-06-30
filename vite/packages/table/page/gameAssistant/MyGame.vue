@@ -165,7 +165,7 @@
         </div>
         <div class="flex justify-between items-center mt-4">
           显示游戏时长
-          <a-switch v-model:checked="showTime" />
+          <a-switch v-model:checked="showTime"/>
         </div>
       </a-drawer>
  </div>
@@ -184,6 +184,7 @@ import {Modal as AntModal} from 'ant-design-vue'
 import {getClientIcon, steamProtocol} from "../../js/common/game";
 import JumpNotice from '../../components/game/JumpNotice.vue'
 import { useToast} from 'vue-toastification'
+import cache from "../app/addIcon/hooks/cache";
 const toast=useToast()
 export default {
   name: "MyGame",
@@ -195,7 +196,7 @@ export default {
   },
   data(){
     return {
-      showTime:true,
+      
       drawerVisible:false,
       //跳转到对应的桌面的弹窗
       jumpVisible:false,
@@ -237,9 +238,10 @@ export default {
         this.setGameList(this.gameList)
       }
     }
+    this.updateGameTime()
   },
   computed:{
-    ...mapWritableState(steamUserStore, ['gameList','myGameList','runningGame']),
+    ...mapWritableState(steamUserStore, ['gameList','myGameList','runningGame','showTime']),
     ...mapWritableState(appStore,['fullScreen']),
     selectSteamList(){
       if(this.selectName.trim()!==''){
@@ -256,14 +258,14 @@ export default {
   },
   methods:{
     getClientIcon,
-    ...mapActions(steamUserStore,['setGameList','playGame','getClient']),
+    ...mapActions(steamUserStore,['setGameList','playGame','getClient','updateGameTime']),
     goBind(){
       this.$router.push({name:'gameSetting'})
     },
     openMyGame(item){
       require("electron").shell.openPath(item.path)
     },
-   async openLocal(){
+    async openLocal(){
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",
         filters: [{ name: "全部", extensions: ["*"] }],
@@ -400,7 +402,7 @@ export default {
     },
     closeScreen(){
       this.fullScreen = false
-    }
+    },
   },
   watch:{
     'sortType':{
@@ -424,7 +426,11 @@ export default {
       },
       immediate:true
     },
-
+    'showTime':{
+      handler(newVal){
+        cache.set('game_duration',newVal)
+      }
+    }
   }
 }
 </script>
