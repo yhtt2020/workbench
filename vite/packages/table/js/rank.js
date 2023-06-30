@@ -186,7 +186,7 @@ export const myRanking = {
     ]
   },
   {
-    id: 4,
+    id: 2,
     uid: 111,
     avatar: '/icons/logo128.png',
     nickname: '勇敢海豚',

@@ -221,12 +221,17 @@ export default {
       this.step ++
       if(this.step > 2) this.isShow = true
       if(this.step > 2 ){  // 最后一步生成
-        if(this.selectItem.length > 0){  // 判断是不是多选
+        if(this.selectItem.length !==0 && this.selectItem.length > 1){  // 判断是不是多选
           for(let i=0;i<this.selectItem.length;i++){
            this.addSwitchDesk(this.guideData[i])
           }
         }else{
-          this.addSwitchDesk(this.guideData[this.statusIndex])
+          // 单选情况下 分为极简和不极简, 
+          if(this.selectItem[0]){
+            this.addSwitchDesk({id:this.selectItem[0]})
+          }else{  
+            this.addSwitchDesk(this.guideData[this.statusIndex])
+          }
         }
       }else{
         return
@@ -243,6 +248,7 @@ export default {
           }
           break;
         case 'wf': // 效率辅助
+          console.log('测试');
           this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
           if(this.selectItem.length === 1){
             this.updateLeftNavData(workPanel.left)

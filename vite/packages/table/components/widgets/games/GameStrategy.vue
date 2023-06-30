@@ -33,7 +33,7 @@
       </div>
 
       <!-- 视频攻略显示列表区域 -->
-      <div v-else class="flex items-center justify-center flex-wrap">
+      <div v-else class="flex  justify-center flex-wrap">
         <div v-for="item in videoList" class="video-item mr-2.5 mb-2 flex flex-col pointer"  @click="openUrl(item.arcurl)">
           <div style="height:105px;" class="pb-1">
             <img :src="`${getVideoCover(item.pic)}`" class="w-full h-full rounded-lg object-cover" alt="">

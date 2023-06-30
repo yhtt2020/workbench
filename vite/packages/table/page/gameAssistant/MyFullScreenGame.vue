@@ -4,8 +4,8 @@
       <div class="flex flex-row rounded-lg flex-wrap mr-4">
         <div class="pb-4 pl-4 game-list-item rounded-lg flex-shrink-0 my-game-content" v-for=" item in screenList ">
           <div class="relative  w-auto h-full rounded-lg my-bg   flex flex-col ">
-            <div class="rounded-lg" :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
-              <img style="border-radius: 12px 12px 0 0" :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appid+'/header.jpg'" class="w-full h-full rounded-t-lg object-cover"  alt="">
+            <div :style="showTime?'height: calc(100% - 96px)':'height: calc(100% - 50px)'">
+              <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+item.appid+'/header.jpg'" class="w-full h-full rounded-t-lg object-cover"  alt="">
             </div>
             <div  :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
               <span class="text-more text-white text-base my-title" style="font-weight: 400">{{item.chineseName}}</span>

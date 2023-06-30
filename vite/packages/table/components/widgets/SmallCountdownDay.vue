@@ -76,7 +76,7 @@ export default {
   components:{Widget},
   data() {
     return {
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      simpleImage: '/public/img/test/load-ail.png',
       visible:false,
       myCountdownDay:[],
       options:{
@@ -145,5 +145,7 @@ export default {
 
 <style scoped lang="scss">
 
-
+:deep(.ant-empty-image){
+  height: 60px;
+}
 </style>
