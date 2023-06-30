@@ -1,7 +1,7 @@
 <template>
   <div class="page-container rounded-xl xt-bg">
     <!-- 榜单tab -->
-    <div class="flex flex-row rounded-lg p-1 h-11"
+    <div hidden="" class="flex flex-row rounded-lg p-1 h-11"
          style="color: var(--primary-text); background: var(--primary-bg); z-index:2;">
       <div v-for="(item,index) in navList" :key="index" style="width:25%;"
            class="h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
@@ -20,7 +20,7 @@
       </template>
 
       <!-- 切换时长 -->
-      <div class="toggle-duration">
+      <div hidden="" class="toggle-duration">
         <a-select :style="selectStyle"
                   class="select rounded-lg  text-xs flex items-center" size="large" :bordered="false"
                   v-model:value="selectValue" :dropdownStyle="{ 'z-index': 9, backgroundColor: 'var(--secondary-bg)' }">
@@ -66,39 +66,17 @@
             {{ parseHours(item.onlineInfo.total_time) }}
             小时
           </a-col>
-          <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col" v-if="item.team">
+          <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col truncate" v-if="item.teamInfo">
             <span class="mr-4 team-box">
-              <a-avatar :src="item.icon" :size="40"></a-avatar>
+              <a-avatar :src="item.teamInfo.teamInfo.avatar" :size="40"></a-avatar>
             </span>
-            <span>{{ item.team }}</span>
+            <span>{{item.teamInfo.teamInfo.no}} {{ item.teamInfo.teamInfo.name }}</span>
           </a-col>
           <a-col v-else :span="6" class="box-col last-col flex justify-center">-</a-col>
         </a-row>
       </div>
 
-      <!-- 我的排名 -->
-      <div class="my-style">
-        <a-row class="box-list my-rank xt-mask">
-          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4">
-            <div class="ranking-back">{{ myRanking.id }}</div>
-            <span class="mx-4" @click="showCard(item.uid)">
-              <a-avatar :src="myRanking.avatar" :size="40"></a-avatar>
-            </span>
-            <span class="xt-text truncate" style="font-size: 16px;">{{ myRanking.nickname }}</span>
-            <span class="min-back ml-2">我</span>
-          </a-col>
-          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
-            <span>{{ myRanking.totalDuration }} 小时</span>
-          </a-col>
-          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">{{ myRanking.netDuration }} 小时</a-col>
-          <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col">
-            <span class="mr-4 team-box">
-              <a-avatar :src="myRanking.icon" :size="40"></a-avatar>
-            </span>
-            <span>{{ myRanking.team }}</span>
-          </a-col>
-        </a-row>
-      </div>
+
     </div>
 
     <!-- 小队榜 -->
@@ -319,12 +297,47 @@
       </div>
 
     </div>
-    <div class="switch-data" v-if="true" style="z-index: 999999">
-      <div @click='prevPage' :class="page === 1 ? 'pag-active' : ''" class="mr-3">
-        <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+
+    <div style="position:absolute;bottom: 0;width: 100%">
+      <div class="switch-data" v-if="true" style="z-index: 999999">
+        <div @click.stop='homePage' :class="page === 1 ? 'pag-active' : ''" class="mr-3">
+          <icon icon="henggang" style="font-size: 1.7em;transform: rotate(90deg);margin-right: -10px"></icon>
+          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+
+        </div>
+        <div @click.stop='prevPage' :class="page === 1 ? 'pag-active' : ''" class="mr-3">
+          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+        </div>
+        <div @click.stop="nextPage" :class="page>=pageInfo.pages?'pag-active':''" class="mr-3">
+          <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+        </div>
+        <div @click.stop="endPage" :class="page>=pageInfo.pages?'pag-active':''">
+          <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+          <icon icon="henggang" style="font-size: 1.7em;transform: rotate(90deg);margin-left: -10px"></icon>
+        </div>
       </div>
-      <div @click="nextPage" :class="page>=pageInfo.pages?'pag-active':''">
-        <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+      <!-- 我的排名 -->
+      <div class="my-style" v-if="myRank">
+        <a-row class="box-list my-rank xt-mask">
+          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4">
+            <div class="ranking-back">{{ myRank.no }}</div>
+            <span class="mx-4" @click="showCard(myRank.uid)">
+              <a-avatar :src="myRank.userInfo.avatar" :size="40"></a-avatar>
+            </span>
+            <span class="xt-text truncate" style="font-size: 16px;">{{ myRank.userInfo.nickname }}</span>
+            <span class="min-back ml-2">我</span>
+          </a-col>
+          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
+            <span>{{ parseHours(myRank.totalTime) }} 小时</span>
+          </a-col>
+          <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">{{ parseHours(myRank.onlineInfo.total_time) }} 小时</a-col>
+          <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col">
+            <span class="mr-4 team-box">
+              <a-avatar :src="myRank.teamInfo.avatar" :size="40"></a-avatar>
+            </span>
+            <span>{{ myRank.teamInfo.name }}</span>
+          </a-col>
+        </a-row>
       </div>
     </div>
   </div>
@@ -386,9 +399,10 @@ export default {
   mounted () {
     this.page = 1
     this.reload()
+    this.reloadMy()
   },
   computed: {
-    ...mapState(rankStore, ['rankLists', 'pageInfos']),
+    ...mapState(rankStore, ['rankLists', 'pageInfos','myRanks']),
     /**
      * 榜单英文名
      * @returns {string}
@@ -424,16 +438,30 @@ export default {
         return this.rankLists[this.rankName][this.page]
       }
       return []
+    },
+    myRank(){
+      if (this.myRanks[this.rankName]) {
+        return this.myRanks[this.rankName]
+      }
+      return false
     }
   },
   methods: {
     ...mapActions(appStore, ['showUserCard']),
-    ...mapActions(rankStore, ['getRank']),
+    ...mapActions(rankStore, ['getRank','getMy']),
+    homePage(){
+      this.page=1
+      this.reload()
+    },
     prevPage () {
       if (this.page > 1) {
         this.page--
         this.reload()
       }
+    },
+    endPage(){
+      this.page=this.pageInfo.pages
+      this.reload()
     },
     nextPage () {
       if (this.page >= this.pageInfo.pages) {
@@ -442,8 +470,11 @@ export default {
       this.page++
       this.reload()
     },
+    reloadMy(){
+      this.getMy(this.rankName)
+    },
     reload () {
-      this.getRank(this.rankName, this.page).then(() => {
+      this.getRank(this.rankName, this.page,{withTeam:1}).then(() => {
         let top3 = [
           this.rankLists.onlineUserSum[1][0],
           this.rankLists.onlineUserSum[1][1],
@@ -766,7 +797,7 @@ export default {
 }
 
 .switch-data {
-  margin: -120px 0 0;
+  margin: -145px 0 0;
   display: flex;
   justify-content: center;
   color: var(--primary-text);
@@ -823,7 +854,7 @@ export default {
 }
 
 .pag-active {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .box > .box-list.first {
