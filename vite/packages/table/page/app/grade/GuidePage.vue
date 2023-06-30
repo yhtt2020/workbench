@@ -200,10 +200,7 @@ export default {
     selectWorkMode(item,index){
       const find = this.selectItem.indexOf(item.id)
       if(find > -1){
-        // this.selectItem = []
         this.selectItem.splice(find,1)
-        console.log(this.selectItem);
-        // console.log(find);
       }else{
         this.selectItem.push(item.id); // 添加选中
       }
@@ -223,56 +220,47 @@ export default {
     nextButton(){
       this.step ++
       if(this.step > 2) this.isShow = true
-      if(this.step === 1 && this.selectItem.length !== 0){
-        // 多选
-        for(let i=0;i<this.selectItem.length;i++){
-          this.addMoreDesk(this.guideData[i])
+      if(this.step > 2 ){  // 最后一步生成
+        if(this.selectItem.length > 0){  // 判断是不是多选
+          for(let i=0;i<this.selectItem.length;i++){
+           this.addSwitchDesk(this.guideData[i])
+          }
+        }else{
+          this.addSwitchDesk(this.guideData[this.statusIndex])
         }
       }else{
-        this.addSwitchDesk(this.guideData[this.statusIndex])
+        return
       }
     },
 
-
-    addSwitchDesk(obj){   // 添加单选桌面
-      switch (obj.title) {
-          case '游戏娱乐':
-            // 添加桌面
-            this.addDesk(this.deskTemplate.gameName,this.deskTemplate.game)
-            // 添加桌面底部和左侧导航
+    addSwitchDesk(obj){   // 添加桌面和导航
+      switch (obj.id) {
+        case 'gr': // 游戏娱乐
+          this.addDesk(this.deskTemplate.gameName,this.deskTemplate.game)
+          if(this.selectItem.length === 1){
             this.updateLeftNavData(gamePanel.left)
             this.updateBottomNavData(gamePanel.bottom)
-            break;
-          case '效率辅助':
-            // 添加桌面
-            this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
-            // 添加桌面底部和左侧导航
+          }
+          break;
+        case 'wf': // 效率辅助
+          this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
+          if(this.selectItem.length === 1){
             this.updateLeftNavData(workPanel.left)
             this.updateBottomNavData(workPanel.bottom)
-            break;
-          case '极简DIY':
-            // 添加桌面
-            this.addDesk(this.deskTemplate.emptyName,this.deskTemplate.empty)
-            // 添加桌面底部和左侧导航
+          }
+          break;
+        case 'dy': // 极简diy
+          this.addDesk(this.deskTemplate.emptyName,this.deskTemplate.empty)
+          if(this.selectItem.length === 1){
             this.updateLeftNavData(diyPanel.left)
             this.updateBottomNavData(diyPanel.bottom)
-            break;
+          }
+          break;
       }
-    },
-
-    addMoreDesk(obj){  // 添加多选桌面
-      switch (obj.title) {
-          case '游戏娱乐':
-            // 添加桌面
-            this.addDesk(this.deskTemplate.gameName,this.deskTemplate.game)
-            break;
-          case '效率辅助':
-            // 添加桌面
-            this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
-            break;
+      if(this.selectItem.length === 2){
+        this.updateLeftNavData(mergePanel.left)
+        this.updateBottomNavData(mergePanel.bottom)
       }
-      this.updateLeftNavData(mergePanel.left)
-      this.updateBottomNavData(mergePanel.bottom)
     },
 
   },

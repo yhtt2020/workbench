@@ -12,15 +12,11 @@ export const cardStore = defineStore(
         moved: false,
         currentDeskIndex: {},
         desks: [{
-          name: '日常桌面',
+          name: '基础桌面',
           nanoid: nanoid(4),
           cards: []
-        },
-          {
-            name: '游戏桌面',
-            nanoid: nanoid(4),
-            cards: []
-          }],
+        }
+        ],
         settings: {
           cardZoom: 100,
           marginTop: 0,
@@ -475,34 +471,35 @@ export const cardStore = defineStore(
        * @param desk 当前的桌面
        */
       updateCustomData(customIndex, newData, desk) {
-        if(!desk){
+        if (!desk) {
           throw '未提交desk参数，此参数必须提供'
         }
-        let currentDesk =desk// || this.getCurrentDesk()
+        let currentDesk = desk// || this.getCurrentDesk()
         const findCard = currentDesk.cards.find(el => {
           return customIndex === el.id
         })
-        if(!findCard){
+        if (!findCard) {
           throw '未找到需要设置的组件'
         }
-        findCard.customData =  {...findCard.customData,...newData}
+        findCard.customData = {...findCard.customData, ...newData}
       },
       removeCard(customIndex, desk) {
         let currentDesk = this.getCurrentDesk()
-        desk=desk||currentDesk
+        desk = desk || currentDesk
         desk.cards.splice(desk.cards.findIndex(item => {
           return String(item.id) === String(customIndex)
         }), 1)
         // this.customComponents.splice(customIndex,1);
 
       },
-      setDataEmpty() {},
-      insetSteamSize(value,newData){
+      setDataEmpty() {
+      },
+      insetSteamSize(value, newData) {
         let currentDesk = this.getCurrentDesk()
         const findCustom = currentDesk.cards.find(el => {
           return value === el.id
         })
-        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data,...newData}
+        currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data = {...currentDesk.cards[currentDesk.cards.indexOf(findCustom)].data, ...newData}
       }
     },
     persist: {
@@ -510,7 +507,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings','desks','currentDeskIndex','moved'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]
