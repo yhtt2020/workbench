@@ -1,12 +1,16 @@
 <template>
+  <div style="max-width: 100%;width: 360px">
   <a-row :gutter="20" style="color:var(--primary-text);">
     <a-col :span="5" style="position:relative;">
-      <a-avatar class="mt-3 ml-3" :size="50" :src="displayUserInfo.avatar"></a-avatar>
-      <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
-                 :title="displayUserInfo.certification[0].name">
-        <a-avatar style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0;z-index: 999;"
-                  :src="displayUserInfo.certification[0].attestation_icon"></a-avatar>
-      </a-tooltip>
+      <div style="width: 52px;position:relative;">
+        <a-avatar class="mt-3 ml-3" :size="50" :src="displayUserInfo.avatar"></a-avatar>
+        <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
+                   :title="displayUserInfo.certification[0].name">
+          <a-avatar style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0;z-index: 999;"
+                    :src="displayUserInfo.certification[0].attestation_icon"></a-avatar>
+        </a-tooltip>
+      </div>
+
     </a-col>
     <a-col :span="19">
       <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ displayUserInfo.nickname }}
@@ -33,6 +37,7 @@
   <!--  <div class=" mb-0 pd-0 m-3 p-3 mt-0">-->
   <!--    小队信息-->
   <!--  </div>-->
+  </div>
 </template>
 
 <script>
