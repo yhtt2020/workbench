@@ -12,7 +12,7 @@
     <!-- 在线榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'onLine'">
       <!-- 前三名展示 -->
-      <div class="top-three-box"> 
+      <div class="top-three-box">
         <div class="box-item">
           <div class="item-avatar two-avatar">
             <a-avatar :src="onLineList[1].avatar" class="other-img"></a-avatar>
@@ -64,7 +64,7 @@
           <a-col class="head-col last-col" :xs="0" :sm="0" :md="0" :lg="7">小队</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in onLineList" :key="item.id">
-          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4"> 
+          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4">
             <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
@@ -101,7 +101,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4"> 
+          <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4">
             <div class="ranking-back">{{ myRanking.id }}</div>
             <span class="mx-4" @showCard="myRanking.uid">
               <a-avatar :src="myRanking.avatar" :size="40"></a-avatar>
@@ -126,7 +126,7 @@
     <!-- 小队榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'team'">
       <!-- 前三名展示 -->
-      <div class="top-three-box"> 
+      <div class="top-three-box">
         <div class="box-item">
           <div class="item-avatar two-avatar">
             <a-avatar :src="teamList[1].avatar" class="other-img"></a-avatar>
@@ -165,7 +165,7 @@
           <a-col class="head-col last-col" style="text-align:left;padding-left: 60px;" :xs="0" :sm="0" :md="0" :lg="12">小队成员</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in teamList" :key="item.id">
-          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4"> 
+          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4">
             <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
@@ -199,7 +199,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4"> 
+          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4">
             <div class="ranking-back">{{ myTeam.id }}</div>
             <span class="mx-4" @showCard="myTeam.uid">
               <a-avatar :src="myTeam.avatar" :size="40"></a-avatar>
@@ -221,7 +221,7 @@
     <!-- 邀请榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'invite'">
       <!-- 前三名展示 -->
-      <div class="top-three-box"> 
+      <div class="top-three-box">
         <div class="box-item">
           <div class="item-avatar two-avatar">
             <a-avatar :src="inviteList[1].avatar" class="other-img"></a-avatar>
@@ -260,7 +260,7 @@
           <a-col class="head-col" :xs="8" :sm="8" :md="7" :lg="7">小队</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in inviteList" :key="item.id">
-          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4">
             <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
@@ -294,7 +294,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4">
             <div class="ranking-back">{{ myInvite.id }}</div>
             <span class="mx-4" @showCard="myInvite.uid">
               <a-avatar :src="myInvite.avatar" :size="40"></a-avatar>
@@ -316,7 +316,7 @@
     <!-- 签到榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'signIn'">
       <!-- 前三名展示 -->
-      <div class="top-three-box"> 
+      <div class="top-three-box">
         <div class="box-item">
           <div class="item-avatar two-avatar">
             <a-avatar :src="signInList[1].avatar" class="other-img"></a-avatar>
@@ -363,7 +363,7 @@
           <a-col class="head-col" :xs="8" :sm="8" :md="7" :lg="7">小队</a-col>
         </a-row>
         <a-row class="box-list" v-for="item in signInList" :key="item.id">
-          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4">
             <span v-if="item.id === 1">
               <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
@@ -397,7 +397,7 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list xt-mask">
-          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4"> 
+          <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4">
             <div class="ranking-back">{{ mySignIn.id }}</div>
             <span class="mx-4" @showCard="mySignIn.uid">
               <a-avatar :src="mySignIn.avatar" :size="40"></a-avatar>
@@ -422,13 +422,16 @@
 import { mapActions, mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 import { onLineList,myRanking,teamList,myTeam,inviteList,myInvite,signInList,mySignIn } from "../../js/rank"
+import { rankStore } from '../../store/rank'
 export default {
   name: 'Rank',
   components: {
   },
   data(){
     return {
+      page:1,//分页
       onLineList,// 在线榜
+
       myRanking,// 我的在线榜排行
       teamList, // 小队榜
       myTeam,// 我的小队榜排行
@@ -462,8 +465,13 @@ export default {
       teamListTitle: ['用户','在线时长','小队成员'],
     }
   },
+  mounted () {
+    this.page=1
+    this.getRank('onlineUserSum',this.page)
+  },
   methods: {
     ...mapActions(appStore,['showUserCard']),
+    ...mapActions(rankStore,['getRank']),
     clickNav (item, index) {
       this.activeIndex = index
       item.state = false  // 将消息未读状态隐藏
@@ -633,7 +641,7 @@ export default {
         //   position: relative;
         //   top: 8px;
         // }
-      } 
+      }
     }
     .text-back{
       background: rgba(255,255,255,0.40);
