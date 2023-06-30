@@ -1,7 +1,7 @@
 <template>
-  <div class="s-bg m-2 rounded-md px-5" style="height: calc(100% - 20px);">
-    <back-btn></back-btn>
-    <div style="font-size: 18px;display: flex;flex-direction: column;height: 100%">
+  <div class="s-bg m-2 rounded-md px-5 xt-bg xt-text" style="height: calc(100% - 20px);">
+    <back-btn class="xt-bg-2 xt-text"></back-btn>
+    <div  style="font-size: 18px;display: flex;flex-direction: column;height: 100%">
       <h3 class="mt-3" style="text-align: center;">
       <span v-if="!this.id">
        添加自定义按钮
@@ -95,7 +95,7 @@
                 {{ data.action.title }}
                 <Icon class="close-btn" @click.stop="removeAction(index)" style="font-size: 15px" icon="guanbi1"></Icon>
               </div>
-              <a-button @click="addAction">添加</a-button>
+              <a-button @click="addAction" class="xt-bg-2 xt-text">添加</a-button>
 
             </div>
           </div>

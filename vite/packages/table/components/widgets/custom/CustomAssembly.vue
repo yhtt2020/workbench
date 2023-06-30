@@ -90,18 +90,18 @@
       class="relative"
       style="height: calc(100% - 10px)"
     >
-      <div class="text-base ">小组件尺寸</div>
-      <!-- {{ sizeList }} -->
-      <a-radio-group  v-model:value="mySize">
-      <a-radio class="mt-6 mr-10"  size="large" style="font-size: 18px;" v-for="item in sizeList" :value="item.className">{{item.name  }}</a-radio>
-    </a-radio-group>
+      <!-- <div class="text-base ">小组件尺寸</div> -->
+    <Radio :list="sizeList" v-model:data="mySize.className" value="className" ></Radio>
+
+    <!-- this.mySize.className; -->
+    <!-- // 旧版本逻辑 -->
       <!-- <HorizontalPanel
         :navList="sizeList"
         v-model:select-type="mySize"
         class="mt-6"
         bg-color="drawer-item-select-bg"
       ></HorizontalPanel> -->
-      <div class="flex flex-row justify-between items-center mt-6">
+      <div class="flex flex-row justify-between items-center mt-2">
         <div class="text-base">显示名称</div>
         <div><a-switch v-model:checked="showName" /></div>
       </div>
@@ -292,6 +292,7 @@
 
 
 <script>
+import Radio from '../../card/hooks/Radio.vue';
 import CardState from '../../../components/card/cardState.vue';
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
@@ -315,7 +316,8 @@ export default {
     Classification,
     listItem,
     ModalList,
-    CardState
+    CardState,
+    Radio
   },
   props: {
     customIndex: {
@@ -573,11 +575,12 @@ export default {
   },
   watch: {
     mySize: {
-      handler() {
+      handler(newV)  {
         this.options.className = "card" + " " + this.mySize.className;
         this.$emit("customEvent");
       },
       immediate: true,
+      deep:true
     },
   },
 };

@@ -58,7 +58,7 @@
           系统默认浏览器
         </div>
       </div> -->
-      <Radio :list="linkList" v-model:data="_open.type" text="选择打开的浏览器" :marginR="20" :fontSize="16"></Radio>
+      <Radio :list="linkList" v-model:data="_open.type" text="选择打开的浏览器"></Radio>
       <!-- <a-radio-group
         class="my-3"
         style="font-size: 18px"

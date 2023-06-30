@@ -8,11 +8,11 @@
       :style="[marginYStyle]"
     >
       <a-radio
-        v-for="item in list"
-        :key="item.value"
-        :value="item.value"
+        v-for="(item, index) in list"
+        :key="item[value]"
+        :value="item[value]"
         :style="[fontSizeStyle, marginRightStyle]"
-        >{{ item.name }}</a-radio
+        >{{ item[name] }}</a-radio
       >
     </a-radio-group>
   </div>
@@ -52,10 +52,22 @@ export default {
     };
   },
   props: {
+    // 自定义绑定数组显示的内容
+    name: {
+      type: String,
+      default: "name",
+    },
+    // 自定义绑定的值
+    value: {
+      type: String,
+      default: "value",
+    },
+    // 自定义显示的标题 填空会隐藏
     text: {
       type: String,
       default: "小组件尺寸",
     },
+    // 控制
     marginR: {
       type: Number,
       default: 20,
@@ -94,9 +106,16 @@ export default {
         ];
       },
       validator: (val) => {
-        let res = val.every((item) => "name" in item && "value" in item);
+        if (!Array.isArray(val)) {
+          console.error(`list 必须是一个数组`);
+          return false;
+        }
+
+        const res = val.every(
+          (item) => typeof item === "object" && item !== null
+        );
         if (!res) {
-          console.error(`你的 list 数组必须包含 name 和 value 属性`);
+          console.error(`list 包含的元素必须是对象`);
         }
         return res;
       },
