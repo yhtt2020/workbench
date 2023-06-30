@@ -4,16 +4,16 @@
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
       <template v-for="(item,index) in inputList" >
         <div  :class="item.isDefaultForMultimedia ? 's-item':''"
-             @click="selectAudio(item,inputList)" class="flex rounded-lg voice-item-hover  pointer items-center " style="padding: 7px 10px;">
+             @click="selectAudio(item,inputList)" class="flex rounded-lg voice-item-hover  pointer items-center xt-bg-2 " style="padding: 7px 10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
             {{ item.name }}（{{item.deviceName}}）
           </span>
         </div>
       </template>
     </vue-custom-scrollbar>
-    <div @click="backInput" class="flex items-center select-active voice-item-hover justify-center rounded-lg py-3 my-2 pointer s-item w-full">
+    <div @click="backInput" class="flex items-center select-active voice-item-hover justify-center rounded-lg py-3 my-2 pointer s-item w-full xt-bg-2 xt-text">
       <Icon icon="xiangzuo" style="font-size: 1.429em;"></Icon>
-      <span class="text-center" style="font-size: 16px; color: rgba(255,255,255,0.85); font-weight: 400;">返回</span>
+      <span class="text-center" style="font-size: 16px;  font-weight: 400;">返回</span>
     </div>
   </div>
 </template>

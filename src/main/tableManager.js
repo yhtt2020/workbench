@@ -149,6 +149,10 @@ class TableManager {
       tableWin.window.on('enter-full-screen', () => {
         this.saveBounds()
       })
+      tableWin.window.on('ready-to-show',()=>{
+        tableWin.window.show()
+        tableWin.window.focus()
+      })
 
     } else {
       if (tableWin.window) {

@@ -163,6 +163,22 @@ const defaultOptimize = {
   keepRunning: false,
   showInSideBar: false
 }
+
+function isOrderMatch (target, find) {
+  for (let i = 0; i < find.length; i++) {
+    //挨个字符去匹配，一旦找到，就从这个字符开始的位置继续匹配，如果全部匹配到，则认为成功
+    let currentChart = find.charAt(i)
+    let charIndex = target.indexOf(currentChart)
+    if (charIndex === -1) {
+      //没找到这个字符
+      return false
+    }
+    //如果找到位置，则截断当前的字符后，继续往后面找
+    target = target.substring(charIndex)
+  }
+  //找了一遍都找到了，则返回true
+  return true
+}
 const appModel = {
   authBaseList,
   authApiList,
@@ -470,21 +486,7 @@ const appModel = {
   async find (word, option) {
     let result = await sqlDb.knex('app').orderBy(option.order, 'desc').select()
 
-    function isOrderMatch (target, find) {
-      for (let i = 0; i < find.length; i++) {
-        //挨个字符去匹配，一旦找到，就从这个字符开始的位置继续匹配，如果全部匹配到，则认为成功
-        let currentChart = find.charAt(i)
-        let charIndex = target.indexOf(currentChart)
-        if (charIndex === -1) {
-          //没找到这个字符
-          return false
-        }
-        //如果找到位置，则截断当前的字符后，继续往后面找
-        target = target.substring(charIndex)
-      }
-      //找了一遍都找到了，则返回true
-      return true
-    }
+
 
     let matchedApps = result.filter(testApp => {
       if (this._testPin(testApp.name, word) || this._testPin(testApp.summary, word) || this._testPin(testApp.url, word) || isOrderMatch(testApp.name, word) || isOrderMatch(testApp.summary, word)) {

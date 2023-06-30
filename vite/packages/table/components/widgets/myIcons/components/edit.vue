@@ -12,6 +12,7 @@
         网页链接
       </div>
       <div class="xt-bg-2 xt-text xt-hover" @click="fastClick()">快捷方式</div>
+      <input style="display: none" ref="fileRef" type="file" />
       <div class="xt-bg-2 xt-text xt-hover" @click="customClick()">
         应用导航
       </div>
@@ -20,7 +21,7 @@
     <template v-else-if="_link === 'link'">
       <a-input
         @blur="leaveInput()"
-        v-model:value="_linkValue"
+        v-model:value="_open.value"
         placeholder=""
         class="xt-bg-2 xt-border input"
       >
@@ -35,14 +36,45 @@
         </template>
       </a-input>
       <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
-      <!-- <div>123</div> -->
+      <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
+        <div
+          class="flex-1 flex justify-center items-center"
+          :class="{ 'xt-active-btn': 'internal' == _open.type }"
+          @click="_open.type = 'internal'"
+        >
+          工作台内打开
+        </div>
+        <div
+          class="flex-1 flex justify-center items-center"
+          :class="{ 'xt-active-btn': 'thinksky' == _open.type }"
+          @click="_open.type = 'thinksky'"
+        >
+          想天浏览器
+        </div>
+        <div
+          class="flex-1 flex justify-center items-center"
+          :class="{ 'xt-active-btn': 'default' == _open.type }"
+          @click="_open.type = 'default'"
+        >
+          系统默认浏览器
+        </div>
+      </div> -->
+      <a-radio-group
+        class="my-3"
+        style="font-size: 18px"
+        v-model:value="_open.type"
+      >
+        <a-radio value="internal" class="mr-8">工作台内打开</a-radio>
+        <a-radio value="thinksky" class="mr-8">想天浏览器</a-radio>
+        <a-radio value="default" class="mr-8">系统默认浏览器</a-radio>
+      </a-radio-group>
     </template>
     <!-- 快捷和应用 -->
     <template v-else>
       <a-input
         v-model:value="title"
         placeholder=""
-        class="xt-bg xt-border input"
+        class="xt-bg-2 xt-border input"
         style="border: 0"
       >
         <template #suffix>
@@ -91,7 +123,7 @@
         </div>
         <input
           style="display: none"
-          ref="fileRef"
+          ref="imgRef"
           type="file"
           accept="image/jpg,image/jpeg,image/png"
         />
@@ -110,7 +142,6 @@
       :step="1"
       class="no-drag"
     />
-
     <div class="parent">
       <div class="text-base">图标背景</div>
       <a-switch v-model:checked="_isBackground"></a-switch>
@@ -142,9 +173,18 @@ export default {
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
+    open: {
+      default: () => {
+        return {
+          value: "",
+          type: "internal",
+        };
+      },
+    },
     src: { type: String },
     backgroundIndex: { type: Number },
   },
+  mounted() {},
   data() {
     return {
       _isRadius: this.isRadius,
@@ -154,6 +194,7 @@ export default {
       _titleValue: this.titleValue,
       _link: this.link,
       _linkValue: this.linkValue,
+      _open: { ...this.open },
       _src: this.src,
       _backgroundIndex: this.backgroundIndex,
       backgroundColorList: {
@@ -183,7 +224,7 @@ export default {
   },
   computed: {
     title() {
-      return this._linkValue.name || this._linkValue || "";
+      return this._open.name || this._linkValue.name || this._linkValue || "";
     },
     backgroundState() {
       if (this._isBackground) {
@@ -207,13 +248,26 @@ export default {
     leaveInput(flag) {
       // 匹配icon放在失去焦点后在调用外部api 减少频繁请求被屏蔽
       if (this._src.length === 0) {
-        let result = this._linkValue.replace(/^https?:\/\//i, "");
-        if (flag === undefined)
-          this._src = `https://www.svlik.com/t/favicon/ico.php?` + result;
-        // 这个api比下面的好用很多
-        else
+        const url = new URL(this._open.value);
+        const urlWithoutParams = url.origin;
+        this._src = urlWithoutParams + "/favicon.ico";
+        if (flag == undefined) {
+          this._src = urlWithoutParams + "/favicon.ico";
+          console.log("1 :>> ", this._src);
+        } else {
           this._src =
-            `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result;
+            `https://www.svlik.com/t/favicon/ico.php?` + urlWithoutParams;
+          console.log("2 :>> ", this._src);
+        }
+        // if (flag == undefined) {
+        //   // 这个api比下面的好用很多
+        //   this._src = `https://www.svlik.com/t/favicon/ico.php?` + result;
+        //   console.log("1 :>> ", this._src);
+        // } else {
+        //   console.log("2 :>> ", 2);
+        //   this._src =
+        //     `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result;
+        // }
       }
     },
     backgroundClick(index) {
@@ -223,27 +277,74 @@ export default {
     clear() {
       this._linkValue = "";
       this._link = "";
+      this._open = {};
     },
     async upIcon() {
-      let fileRef = this.$refs.fileRef;
-      fileRef.click();
+      let imgRef = this.$refs.imgRef;
+      imgRef.click();
       let that = this;
-      fileRef.onchange = async function (event) {
+      imgRef.onchange = async function (event) {
         if (this.files.length === 0) return;
         const file = this.files[0];
         let validate = validateFile(file, 2);
         if (validate !== true) return message.error(validate);
+
         that._src = file.path;
         event.target.value = "";
       };
     },
+    // 获取app信息
     returnApp(item) {
-      if (item instanceof Array) this._linkValue = item[0];
-      else this._linkValue = item;
+      this._open.name = item.name;
+      // 当图片状态为空时
+      if (!this._src) {
+        if (item.icon) {
+          this._src = item.icon;
+        }
+      }
+      // 当标题状态为空时
+      if (this._titleValue == "") {
+        if (item.name) this._titleValue = item.name;
+      }
+      if (item.type === "lightApp") {
+        // 轻应用数据
+        this._open = {
+          type: "lightApp",
+          value: item.package,
+          name: item.name,
+        };
+        item = this._open;
+      } else if (item.type === "coolApp") {
+        // 酷应用数据
+        this._open = {
+          type: "coolApp",
+          value: item.data,
+          name: item.name,
+        };
+        item = this._open;
+      } else if (item.type === "tableApp") {
+        // 本地应用数据
+        this._open = {
+          type: "tableApp",
+          value: item.path,
+          name: item.name,
+        };
+        item = this._open;
+      }
+      //  else if (item.type === "systemApp") {
+      //   // 本地应用数据
+      //   this._open = {
+      //     type: "systemApp",
+      //     value: item.event,
+      //     name: item.name,
+      //   };
+      //   item = this._open;
+      // }
+      this._linkValue = item;
       this._link = "fast";
     },
     save() {
-      if (this._src.length == 0) return "未上传图标";
+      if (this._src.length == 0 || this._src == "") return "未上传图标";
       return {
         isRadius: this._isRadius,
         radius: this._radius,
@@ -252,18 +353,24 @@ export default {
         titleValue: this._titleValue,
         link: this._link,
         linkValue: this._linkValue,
+        open: this._open,
         src: this._src,
         backgroundIndex: this._backgroundIndex,
       };
     },
     async customClick() {
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择你的本地应用",
-        filters: [{ name: "全部", extensions: ["*"] }],
-        properties: ["multiSelections"],
-      });
-      if (!openPath) return (this._link = "");
-      else this._linkValue = openPath[0];
+      let fileRef = this.$refs.fileRef;
+      fileRef.click();
+      let that = this;
+      fileRef.onchange = async function (event) {
+        if (this.files.length === 0) return;
+        const file = this.files[0];
+        that._open = {
+          type: "tableApp",
+          name: file.name,
+          value: file.path,
+        };
+      };
       this._link = "nav";
     },
     fastClick() {

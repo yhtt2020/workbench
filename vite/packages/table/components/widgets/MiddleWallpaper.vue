@@ -1,6 +1,6 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" desk="desk">
+    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" :desk="desk">
       <div class="absolute top-4 left-4 w-24 h-5 pointer" @click="openRight"></div>
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
         <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
@@ -47,7 +47,7 @@
       <div class="text-center">「壁纸」设置</div>
     </template>
     <div class="text-base">壁纸源</div>
-    <a-select style=" 
+    <a-select style="
         border: 1px solid rgba(255, 255, 255, 0.1);
       " class="w-full h-10 rounded-lg mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
       @change="pickFilterChange($event)" :options="wallpaperOptions">
@@ -483,7 +483,7 @@ export default {
   width: 100px;
   height: 56px;
   border-radius: 12px;
-  background: var(--primary-bg);
+  background: var(--secondary-bg);
   color: var(--primary-text);
   backdrop-filter: blur(20px);
 

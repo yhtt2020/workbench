@@ -9,14 +9,14 @@
 
 
     <div
-      class="event-list px-4 mb-3 s-item" style="background: var(--primary-bg);"
+      class="event-list px-4 mb-3 s-item xt-bg-2" style=""
       v-for="(item) in countdownDay"
     >
       <div class="flex flex-row items-center">
         <div class="round-dot mr-4"></div>
       <div class="event-title">
-        <span class="text-more w-28" style="color: var(--primary-text);font-size: 16px">{{ item.eventValue }}</span>
-        <span class="event" style="color:var(--primary-text);font-size: 12px;"
+        <span class="text-more w-28 xt-text" style="font-size: 16px">{{ item.eventValue }}</span>
+        <span class="event xt-text" style="font-size: 12px;"
         >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
             item.dateValue.day
           }}</span
@@ -24,7 +24,8 @@
       </div>
       </div>
       <span
-      style="color:var(--primary-text);font-size: 18px;"><span v-if="item.type">还有</span>
+      class="xt-text"
+      style="font-size: 18px;"><span v-if="item.type">还有</span>
         <span v-else>已过</span> {{
           differenceDay(item)
         }} 天</span

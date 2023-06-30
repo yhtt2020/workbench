@@ -1,70 +1,46 @@
 <template>
-  <Widget :options="options" :customData="customData" :customIndex="customIndex" :menuList="detailBar" ref="captureNewSlot" :desk="desk">
-    <div class="flex justify-center items-center mx-5 my-7">
-      <div class="flex justify-center pointer  items-center mr-6 flex-col ml-6">
-          <span class="px-4 py-4 voice-hover rounded-full btn-active mb-3 s-item">
-            <Icon  icon="camera" style="font-size: 2em;"></Icon>
-          </span>
-          <span>截屏</span>
-      </div>
-      <div class="flex justify-center pointer  items-center mr-6 flex-col">
-        <span class="px-4 py-4 voice-hover rounded-full btn-active mb-3 s-item">
-          <Icon icon="record-circle-line" style="font-size: 2em;"></Icon>
-        </span>
-        <span>录制</span>
-      </div>
-      <div @click="closeMicrophone" class="flex justify-center  pointer items-center mr-6 flex-col">
-        <span class="px-4 py-4 voice-hover btn-active rounded-full mb-3 s-item">
-          <Icon icon="mic-on" style="font-size: 2em;" v-if="microphoneShow === true"></Icon>
-          <Icon icon="mic-off" style="font-size: 2em;" v-else></Icon>
-        </span>
-        <span>麦克风</span>
-      </div>
-    </div>
+  <Widget :menuList="menuList" :options="options" :customData="customData" :customIndex="customIndex"
+           ref="captureNewSlot" :desk="desk">
+
+      <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
+
+
     <div class="flex flex-col items-center justify-center">
-      <span class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3">我的截屏(183)</span>
-      <span class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3">我的录制(124)</span>
-      <span class="mb-2 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3" @click="shortcutSet">快捷键设置</span>
-      <span class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3" @click="shortcutSet">捕获设置</span>
+      <span :class="{disable:!this.settings.imageSavePath}" @click="showImages" class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3">我的截屏({{ images.length }})</span>
+      <span :class="{disable:!this.settings.videoSavePath}" @click="showVideos" class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3">我的录制({{ videos.length }})</span>
+      <span class="mb-2 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3" @click="visibleSettings=true">快捷键设置</span>
+      <span class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3" @click="visibleSettings=true">捕获设置</span>
     </div>
   </Widget>
-  <a-drawer title="设置" :placement="right"  v-model:visible="captureNewShow" width="500">
-    <div class="flex flex-col">
-      <span class="mb-6">我的截屏保存地址</span>
-      <span class="text-center mb-6 py-3 drawer-item-bg rounded-lg">{{ screenShotAddress }}</span>
-      <span class="mb-6">我的录制保存地址</span>
-      <span class="text-center mb-6 py-3 drawer-item-bg rounded-lg">设置保存地址</span>
-      <span class="mb-6">截屏快捷键</span>
-      <div class="flex items-center  mb-6">
-        <span class="shortcut-key rounded-lg mr-3">{{ shortcutKey }}</span>
-        <span class="mr-3 drawer-item-bg rounded-lg btn-active voice-hover replace-key pointer">更换按键</span>
-        <span class="mr-3 rounded-lg drawer-item-bg btn-active voice-hover replace-key pointer">重置</span>
-      </div>
-      <span class="mb-6">录制快捷键</span>
-      <div class="flex items-center mb-6">
-        <span class="shortcut-key rounded-lg mr-3">{{ recordKey }}</span>
-        <span class="mr-3 drawer-item-bg rounded-lg voice-hover btn-active replace-key pointer">更换按键</span>
-        <span class="mr-3 rounded-lg drawer-item-bg voice-hover btn-active replace-key pointer">重置</span>
-      </div>
-      <span class="mb-6">是否启用麦克风录制快捷键</span>
-      <div class="flex items-center mb-6">
-        <span class="shortcut-key rounded-lg mr-3">{{ microphoneKey }}</span>
-        <span class="mr-3 rounded-lg drawer-item-bg voice-hover btn-active replace-key pointer">更换按键</span>
-        <span class="mr-3 rounded-lg drawer-item-bg voice-hover btn-active replace-key pointer">重置</span>
-      </div>
-    </div>
-
+  <teleport to="#app">
+    <Modal v-if="visibleSource" v-model:visible="visibleSource" :blurFlag="true">
+      <SourceSelector @choosenSource="choosenSource">
+      </SourceSelector>
+    </Modal>
+  </teleport>
+  <a-drawer @close="reloadMic" width="500" title="设置" :bodyStyle="{ overflow: 'hidden' }"
+            v-model:visible="visibleSettings">
+    <CaptureSettings></CaptureSettings>
   </a-drawer>
 </template>
 
 <script>
-import Widget from '../../card/Widget.vue';
+import Widget from '../../card/Widget.vue'
+import CaptureCore from './CaptureCore.vue'
+import SourceSelector from '../../modal/SourceSelector.vue'
+import CaptureSettings from '../../modal/CaptureSettings.vue'
+import Modal from '../../Modal.vue'
+import { captureStore } from '../../../store/capture'
+import { mapActions,mapState } from 'pinia'
+
 export default {
-  name:'CaptureNewCard',
-  components:{
+  name: 'CaptureNewCard',
+  components: {
+    Modal, CaptureSettings, SourceSelector,
+    CaptureCore,
     Widget
   },
-  props:{
+  props: {
     customIndex: {
       type: Number,
       default: 0
@@ -76,51 +52,87 @@ export default {
     confirmCCData: {
       type: Function,
       default: () => {}
-    },desk:{
-      type:Object
+    }, desk: {
+      type: Object
     }
   },
-  data(){
-    return{
-      options:{
+  data () {
+    return {
+      visibleSettings: false,
+      visibleSource: false,
+      menuList: [{
+        icon: 'wanggeshitu',
+        title: '更换录制源',
+        fn: () => {
+          this.visibleSource = true
+        }
+      }, {
+        icon: 'shezhi',
+        title: '设置',
+        fn: () => {
+          this.visibleSettings = true
+        }
+      }],
+      options: {
         className: 'card',
         title: '捕获',
         icon: 'video',
         type: 'games',
       },
-      detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.captureNewShow = true;this.$refs.captureNewSlot.visible = false}}],
-      captureNewShow:false,
-      screenShotAddress:"C:\PROGRAM FILES (X86)\CLIP", // 用于接收截屏获取的地址
-      shortcutKey:"CTRL + WIN + G",
-      recordKey:"CTRL + WIN + V",
-      microphoneKey:"CTRL + WIN + J",
-      microphoneShow:false,
+      captureNewShow: false,
+      screenShotAddress: 'C:\PROGRAM FILES (X86)\CLIP', // 用于接收截屏获取的地址
+      shortcutKey: 'CTRL + WIN + G',
+      recordKey: 'CTRL + WIN + V',
+      microphoneKey: 'CTRL + WIN + J',
+      microphoneShow: false,
     }
   },
-  methods:{
-    shortcutSet(){
-      this.captureNewShow = true
-    },
-    closeMicrophone(){
+  mounted () {
+    this.reloadAll()
+  },
+  computed:{
+    ...mapState(captureStore,['images','videos','settings'])
+  },
+  methods: {
+    ...mapActions(captureStore,['reloadAll']),
+    closeMicrophone () {
       this.microphoneShow = !this.microphoneShow
+    },
+    choosenSource(){
+      this.visibleSource=false
+    },
+    openDir(dir){
+      require('electron').shell.openPath(dir)
+    },
+    showImages(){
+      this.openDir(this.settings.imageSavePath)
+    },
+    showVideos(){
+      this.openDir(this.settings.videoSavePath)
     }
   }
 }
 </script>
 
 <style scoped>
-.shortcut-key{
+.shortcut-key {
   width: 270px;
   padding: 12px 12px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
 }
-.replace-key{
+
+.replace-key {
   padding: 13px 12px;
 }
-.voice-hover:hover{
+
+.voice-hover:hover {
+  opacity: 0.5;
+}
+.disable {
+  pointer-events: none;
   opacity: 0.5;
 }
 </style>

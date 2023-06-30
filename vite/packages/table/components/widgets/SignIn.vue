@@ -6,16 +6,18 @@
 <!--      活动说明-->
 <!--    </div>-->
     <template v-if="!newPeoplePage">
-      <div class="flex justify-between s-item p-4 rounded-lg" style="margin-top: 1em;color:var(--primary-text);background: var(--primary-bg);">
+      <div class="flex justify-between s-item p-4 rounded-lg xt-bg-2 xt-text"
+           style="margin-top: 1em;">
         <div>
           <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}
           </div>
           <span v-if="false" style="color: var(--secondary-text); font-size: 14px;">已连续签到2天</span>
         </div>
-        <div @click="signIn" class="middle-button sign-in-btn s-item" style="height: 42px;line-height: 42px;color: white"
+        <div @click="signIn" class="middle-button sign-in-btn s-item"
+             style="height: 42px;line-height: 42px;color: white"
              :class="signedIn ? (completeLikes.length > 4 ? 'already' : 'new-people') : 'old-people'">
-          {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '每日迎新') : '签到' }}
+          {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '今日新人') : '签到' }}
         </div>
       </div>
       <HorizontalPanel :navList="signInTitle" v-model:selectType="signInType" :height="44"
@@ -24,7 +26,7 @@
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
         <div v-if="!todayRank.length" class="not-sign h-full flex justify-center items-center">还没有人签到，快来抢第一
         </div>
-        <div  v-else v-for="item in todayRank" :key="item.id"
+        <div v-else v-for="item in todayRank" :key="item.id"
              class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
           <div class="flex-1 flex ml-3 items-center">
@@ -33,7 +35,8 @@
                 <UserOutlined/>
               </template>
             </a-avatar>
-            <div @click="showCard(item.uid)" class="ml-3 truncate" style="color: var(--primary-text);font-size: 16px;max-width: 120px;">
+            <div @click="showCard(item.uid)" class="ml-3 truncate"
+                 style="color: var(--primary-text);font-size: 16px;max-width: 120px;">
               {{ item.nickname }}
             </div>
           </div>
@@ -43,22 +46,22 @@
       </div>
       <div v-else class="flex flex-col overflow content-box pt-1">
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
-<!--        <div v-for="item in accrueList" :key="item.id"-->
-<!--             class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type"-->
-<!--             style="margin: 6px 0 6px;">-->
-<!--          <span class="ranking">{{ item.id }}</span>-->
-<!--          <div class="flex-1 flex ml-3 items-center">-->
-<!--            <a-avatar>-->
-<!--              <template #icon>-->
-<!--                <UserOutlined/>-->
-<!--              </template>-->
-<!--            </a-avatar>-->
-<!--            <div class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 110px;">-->
-<!--              {{ item.username }}-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.accumulate }}</div>-->
-<!--        </div>-->
+        <!--        <div v-for="item in accrueList" :key="item.id"-->
+        <!--             class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type"-->
+        <!--             style="margin: 6px 0 6px;">-->
+        <!--          <span class="ranking">{{ item.id }}</span>-->
+        <!--          <div class="flex-1 flex ml-3 items-center">-->
+        <!--            <a-avatar>-->
+        <!--              <template #icon>-->
+        <!--                <UserOutlined/>-->
+        <!--              </template>-->
+        <!--            </a-avatar>-->
+        <!--            <div class="ml-3 truncate" style="color: rgba(255,255,255,0.85);font-size: 16px;max-width: 110px;">-->
+        <!--              {{ item.username }}-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--          <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.accumulate }}</div>-->
+        <!--        </div>-->
         <div class="text-center py-5">暂未开放，敬请期待</div>
         <!-- </vue-custom-scrollbar> -->
       </div>
@@ -68,19 +71,30 @@
       </div>
     </template>
     <template v-else>
-      <div class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
+      <div v-if="false " class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
         <span class="text-style" style="color: var(--primary-text);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
         <div class="mt-1" style="color: var(--secondary-text);font-size: 14px;">今日已为{{
             completeLikes.length
           }}位社区新人点赞
         </div>
       </div>
-      <div class="mt-3" style="height:178px; overflow:hidden;">
-        <div class="text-center mb-1" style="color: var(--secondary-text);font-size: 14px;">今日新人</div>
+      <div v-else class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
+        <span class="text-style"
+              style="color: rgba(255,255,255,0.85);font-size: 14px;">今日新注册用户：  {{ total }} 人</span>
+      </div>
+      <div class="mt-3" style="height:235px; overflow:hidden;">
+        <!--        <div class="text-center mb-1" style="color: var(--secondary-text);font-size: 14px;">今日新人</div>-->
         <div class="head-list">
-          <div v-for="item in newPeopleList" class="h-14 w-14 s-item flex justify-center items-center" :key="item.id"
-               style="margin:8px 14px;border-radius: 50%;" @click="newLikes(item)">
-            <a-avatar class="h-14 w-14" :class="item.headToggle ? 'h-8 w-8' : ''" :src="item.headSculpture"/>
+          <div v-for="item in newPeopleList" class=" w-14  flex justify-center items-center pointer flex-col"
+               :key="item.id"
+               style="margin:8px 14px;border-radius: 50%;" @click="showCard(item.uid,item.userInfo)"
+               @contextmenu.stop="showCard(item.uid,item.userInfo)">
+            <div class="mb-2 mt-2">
+              <a-avatar class="h-14 w-14" :class="item.headToggle ? 'h-8 w-8' : ''" :src="item.userInfo.avatar"/>
+            </div>
+            <div>
+              {{ item.userInfo.nickname }}
+            </div>
           </div>
         </div>
       </div>
@@ -89,10 +103,10 @@
              class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
           <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
         </div>
-        <span class="change pointer rounded-lg s-item  flex items-center justify-center"
-              style="padding:13px 74px;color: var(--primary-text);"
+        <span @click="popUsers" class="change pointer rounded-lg s-item  flex items-center justify-center"
+              style="padding:13px 55px;color: var(--primary-text);"
         >
-            换一换
+          <icon style="font-size: 20px" icon="shuaxin" class="mr-2"></icon>   换一换
           </span>
       </div>
     </template>
@@ -107,6 +121,7 @@ import { UserOutlined } from '@ant-design/icons-vue'
 import { comStore } from '../../store/com'
 import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
+import _ from 'lodash-es'
 
 export default {
   name: 'SingIn',
@@ -115,7 +130,7 @@ export default {
     HorizontalPanel,
     UserOutlined
   },
-  props:['desk', 'rightIcon'],
+  props: ['desk', 'rightIcon'],
   data () {
     return {
       options: {
@@ -146,28 +161,71 @@ export default {
       signedIn: false,
       toggleModal: false,
       newPeoplePage: false,
-      newPeopleList: [
-        { id: 1, headSculpture: '../../../../public/img/001.png', username: '外太空的狗' },
-        { id: 2, headSculpture: '../../../../public/img/001.png', username: '猫星人' },
-        { id: 3, headSculpture: '../../../../public/img/001.png', username: '晒太阳的猫' },
-        { id: 4, headSculpture: '../../../../public/img/001.png', username: '猪猪人' },
-        { id: 5, headSculpture: '../../../../public/img/001.png', username: '彩虹马' },
-        { id: 6, headSculpture: '../../../../public/img/001.png', username: 'yyq' }
-      ],
+      newPeopleList: [],
       completeLikes: [],
-      illustrateUrl: 'https://www.yuque.com/tswork/mqon1y/kax12qz084vffcyp'
+      illustrateUrl: 'https://www.yuque.com/tswork/mqon1y/kax12qz084vffcyp',
+
+      page: 1,
+      max: 99999,
+      lastUsers: [],
+      total: 0,
     }
   },
   async mounted () {
     this.updateTodayRank().then()
     this.getSingInfo()
+
+    this.request().then(() => {
+      this.popUsers()
+    })
   },
   computed: {
-    ...mapWritableState(comStore, ['todayRank'])
+    ...mapWritableState(comStore, ['todayRank']),
+
   },
   methods: {
-    ...mapActions(comStore, ['updateTodayRank', 'doSign','getSignInfo']),
-    ...mapActions(appStore,['showUserCard']),
+    ...mapActions(comStore, ['updateTodayRank', 'doSign', 'getSignInfo', 'getDailyNewUsers']),
+    ...mapActions(appStore, ['showUserCard']),
+    async popUsers () {
+      console.log('开始弹出用户')
+      if (this.lastUsers.length > 0) {
+        console.log('剩余用户数组', this.lastUsers)
+        if (this.lastUsers[0].length < 6) {
+          console.log('剩余用户不足6')
+          //证明已经没有下一页了
+          this.newPeopleList = _.cloneDeep(this.lastUsers[0])
+          this.lastUsers.splice(0, 1)//移除
+        } else {
+          console.log('剩余用户充足')
+          //如果还有数组
+          this.newPeopleList = this.lastUsers[0]
+          this.lastUsers.splice(0, 1)//移除
+        }
+      } else {
+        console.log('剩余用户组不足，翻页')
+        //已经没有足够的数组了，就请求下一页
+        if (this.page >= this.max) {
+          console.log('已经到达最后一页')
+          //已经是最多的了，重新获取第一页
+          this.page = 1
+          await this.request(this.page)
+        } else {
+
+          this.page++
+          console.log('请求下一页', this.page)
+          await this.request(this.page)
+        }
+        console.log('再次执行弹出')
+        await this.popUsers()
+      }
+    },
+    async request (page) {
+      let dailyNew = await this.getDailyNewUsers(page)
+      this.lastUsers = _.chunk(dailyNew.list, 6)//按照每页6个分页
+      this.max = dailyNew.pageInfo.pages
+      this.total = dailyNew.pageInfo.count
+      console.log(dailyNew, '请求到一页的数据')
+    },
     async getTodayList () {
       // let rankResponse = await this.getTodayRank()
       // if(rankResponse.status===1){
@@ -184,19 +242,19 @@ export default {
       // }
       // console.log(rankResponse)
     },
-    getSingInfo(){
-      this.getSignInfo().then(data=>{
-        if(data){
-          if(data.status===1){
-            this.signedIn=true
+    getSingInfo () {
+      this.getSignInfo().then(data => {
+        if (data) {
+          if (data.status === 1) {
+            this.signedIn = true
             return
           }
         }
-        this.signedIn=false
+        this.signedIn = false
       })
     },
-    showCard(uid){
-      this.showUserCard(uid)
+    showCard (uid, userInfo) {
+      this.showUserCard(uid, userInfo)
     },
     async signIn () {
       if (!this.signedIn) {

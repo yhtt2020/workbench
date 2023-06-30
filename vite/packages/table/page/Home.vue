@@ -22,9 +22,9 @@
           style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="newAddCard" class="mr-10" key="console" type="primary">添加第一张卡片</a-button>
-            <a-button disabled key="buy" @click="learn"
-              style="background: var( --active-bg);color: var( --secondary-text);">学习（课程暂未上线）</a-button>
+            <a-button @click="newAddCard" class="mr-10 " key="console" type="primary" style="color:var(--active-text)">添加第一张卡片</a-button>
+            <a-button key="buy" @click="learn"
+              style="">学习</a-button>
           </template>
 
           <div class="desc">
@@ -66,15 +66,14 @@
         <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
             return settings.cardMargin + 'px';
           }
-          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
-      zoom: (this.settings.cardZoom / 100).toFixed(2),
+          " group-id="grid.id" v-model="currentDesk.cards" :key="key" :style="{
+
       height: '100%',
       width: '100%',
-    }" class="grid home-widgets" ref="grid" :options="muuriOptions">
+    }" class="grid home-widgets" ref="grid" :options="muuriOptions" :drag-enabled="true">
           <template #item="{ item }">
-            <div :style="{ pointerEvents: editing ? 'none' : '' }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" @touchstart="touch" @touchmove="touch"
-                @touchend="touch" :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
+            <div  :style="{  zoom: (this.settings.cardZoom / 100).toFixed(2),}">
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"  :editing="editing" :customData="item.customData" @customEvent="customEvent"></component>
             </div>
           </template>
         </vuuri>
@@ -130,18 +129,18 @@
        <a-col>
          <div @click="newAddIcon" class="btn">
            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-           <div><span>添加图标（开发中）</span></div>
+           <div><span>添加图标</span></div>
          </div>
        </a-col>
-      <a-col>
-        <div @click="toggleEditing" class="btn">
-          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
-          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>
-          <div>
-            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>
-          </div>
-        </div>
-      </a-col>
+<!--      <a-col>-->
+<!--        <div @click="toggleEditing" class="btn">-->
+<!--          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>-->
+<!--          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>-->
+<!--          <div>-->
+<!--            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </a-col>-->
 
       <a-col>
         <div @click="showSetting" class="btn">
@@ -238,8 +237,9 @@
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="home-blur home-guide fixed inset-0" style="z-index: 999;"  v-if="agreeTest === false">
-    <GuidePage></GuidePage>
+  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="agreeTest === false">
+    <!-- v-if="agreeTest === false" -->
+    <GuidePage ></GuidePage>
   </div>
 
   <a-drawer v-model:visible="addDeskVisible">
@@ -511,20 +511,33 @@ export default {
       reserveTimer: null,
       custom: false,
       muuriOptions: {
-        dragAutoScroll: {
-          targets: [
-            {
-              element: "#scrollerBar>div",
-            },
-          ],
-          handle: null,
-          threshold: 50,
-          safeZone: 0.2,
-          speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
-          sortDuringScroll: true,
-          smoothStop: false,
-          onStart: null,
-          onStop: null,
+        layout:{
+          fillGaps: true,
+          horizontal: false,
+          alignRight: false,
+          alignBottom: false,
+          rounding: true
+        },
+        targets: [
+          {
+            element: '#scrollerBar>div',
+          },
+        ],
+        handle: null,
+        threshold: 50,
+        safeZone: 0.2,
+        speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+        sortDuringScroll: true,
+        smoothStop: false,
+        onStart: null,
+        onStop: null,
+        dragSortPredicate:{
+          threshold: 30,
+        },
+        dragSortHeuristics: {
+          sortInterval: 10,
+          minDragDistance: 5,
+          minBounceBackAngle: Math.PI / 2,
         },
       },
     };
@@ -783,6 +796,9 @@ export default {
     }
   },
   methods: {
+    learn(){
+      browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
+    },
     iconHide() {
       this.iconVisible =false;
     },
@@ -807,10 +823,10 @@ export default {
       this.$refs.grid.update();
     },
     touch(event) {
-      if (this.editing) {
-        event.stopPropagation();
-      } else {
-      }
+      // if (this.editing) {
+      //   event.stopPropagation();
+      // } else {
+      // }
     },
     runExec,
     ...mapActions(cardStore, [
@@ -833,7 +849,7 @@ export default {
       let name = `${model}${background || ''}-model`
       document.documentElement.classList.add(name);
       cache.set("style",name)
-      
+
       // if (this.styles == true) {
       //   document.documentElement.classList.add(`light${background || ''}-model`);
       //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));
@@ -1033,7 +1049,7 @@ export default {
 }
 
 .home-guide{
-  background:rgba(00,00,00,0.75) !important;
+  background:var(--modal-bg) !important;
 }
 </style>
 <style lang="scss">

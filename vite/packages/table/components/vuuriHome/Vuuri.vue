@@ -26,6 +26,7 @@ import { GridEvent } from './GridEvent'
 import GridStore from './GridStore'
 import { ItemKey, ItemSize, ItemDragHandle } from './constants'
 import { deckStore } from '../../store/deck'
+import { message } from 'ant-design-vue'
 export default {
   name: 'Vuuri',
   date(){
@@ -173,7 +174,19 @@ export default {
      * @private
      */
     _setup () {
-      this.muuri = new Muuri(this.selector, this.muuriOptions)
+      this.muuri = new Muuri(this.selector, {
+        ...this.muuriOptions,
+        dragStartPredicate: function (item, e) {
+          // Start moving the item after the item has been dragged for one second.
+          if (e.deltaY>20 ||e.deltaX>20) {
+            message.success({
+              content:'开始调整布局',
+              key:'start'
+            })
+            return true;
+          }
+        },
+      })
       if (this.groupId) {
         GridStore.addGrid(this.groupId, this.muuri)
       }

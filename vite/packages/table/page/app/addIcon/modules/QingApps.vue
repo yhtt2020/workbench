@@ -1,5 +1,9 @@
 <template>
-  <Icon :isSelect="true" @updateSelectApps="updateSelectApps" :data="appList"></Icon>
+  <Icon
+    :isSelect="true"
+    @updateSelectApps="updateSelectApps"
+    :data="appList"
+  ></Icon>
 </template>
 
 <script>
@@ -19,7 +23,12 @@ export default {
         link: "fast",
         icon: item.logo,
         name: item.name,
-        path: { package: item.package, type: "lightApp" },
+        path: { package: item.package, type: "lightApp", name: item.name },
+        open: {
+          type: "lightApp",
+          value: item.package,
+          name: item.name,
+        },
       });
     });
     this.appList = appList;
@@ -27,5 +36,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

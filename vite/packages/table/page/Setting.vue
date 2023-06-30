@@ -128,19 +128,23 @@
 
               </a-col>
               <a-col v-if="isMain()" :span="6">
-                <div @click="verifyCode" class="btn">
-                  <Icon icon="team" style="font-size: 2em"></Icon>
-                  <div> 邀请/受邀</div>
+                <div @click="invite" class="btn">
+                  <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon>
+                  <div>邀请</div>
                 </div>
               </a-col>
-
-              <a-col v-if="userInfo && userInfo.uid === 4 && isMain()" :span="6">
+              <a-col v-if="isMain()" :span="6">
+                <div @click="verify" class="btn">
+                  <Icon icon="team" style="font-size: 2em"></Icon>
+                  <div> 受邀</div>
+                </div>
+              </a-col>
+              <a-col v-if="userInfo && userInfo.uid === 4 && isMain() && false" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div> 生成激活码</div>
                 </div>
               </a-col>
-
             </a-row>
             <div>
             </div>
@@ -195,7 +199,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.userInfo)
   },
   computed: {
     ...mapWritableState(appStore, ['settings', 'saving', 'simple', 'styles', 'style','showWindowController']),
@@ -228,6 +231,20 @@ export default {
     },
     power() {
       this.$router.push({ path: '/power' })
+    },
+
+    invite(){
+      this.$router.push({
+        name:'invite'
+      })
+    },
+    verify(){
+      this.$router.push({
+        name:'invite',
+        params:{
+          tab:'verify'
+        }
+      })
     },
 
     async verifyCode() {

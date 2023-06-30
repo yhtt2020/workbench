@@ -2,6 +2,7 @@
 <template>
   <!-- 图标组件开始 -->
   <div ref="iconRef" class="icon-box" :style="dragStyle">
+    <!-- {{ formatArrayAsFileSize(customData.iconList) }} -->
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
       <drag-and-follow
@@ -75,7 +76,7 @@
         <div style="width: 50%; text-align: right">设置</div>
         <div
           style="padding: 10px; border-radius: 5px; cursor: pointer"
-          class="xt-active-bg"
+          class="xt-active-btn"
           @click="save()"
         >
           保存
@@ -100,16 +101,17 @@
 <script>
 // components
 import Widget from "../../card/Widget.vue";
-import edit from "./hooks/edit.vue";
-import icon from "./oneIcon/index.vue";
-import icons from "./multipleIcons/index.vue";
-import DragAndFollow from "./hooks/DragAndFollow.vue";
-import DroppableArea from "./hooks/DroppableArea.vue";
-import BottomEdit from "./hooks/bottomEdit.vue";
+import edit from "./components/edit.vue";
+import icon from "./components/icon.vue";
+import icons from "./icons/index.vue";
+import DragAndFollow from "./components/DragAndFollow.vue";
+import DroppableArea from "./components/DroppableArea.vue";
+import BottomEdit from "./components/bottomEdit.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
+// import { formatArrayAsFileSize } from './hooks/useFileSize.js';
 
 import { message } from "ant-design-vue";
 
@@ -201,7 +203,6 @@ export default {
             this.moveIcon();
           },
         },
-
         {
           icon: "shezhi1",
           title: "设置",
@@ -240,8 +241,6 @@ export default {
         this.customData.iconList !== undefined &&
         this.customData.iconList.length > 1
       ) {
-       
-        menus.splice(2, 1);
         menus.unshift({
           icon: "zhankai",
           title: "解除分组",
@@ -249,6 +248,14 @@ export default {
             this.disbandGroup();
           },
         });
+
+        // 查找"设置"菜单项的索引
+        const settingIndex = menus.findIndex((menu) => menu.title === "设置");
+
+        // 删除"设置"菜单项
+        if (settingIndex !== -1) {
+          menus.splice(settingIndex, 1);
+        }
       }
       return menus;
     },

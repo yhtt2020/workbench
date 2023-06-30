@@ -1,54 +1,67 @@
 <template>
-    <div class="text-base" style="margin: 12px 0">小组件尺寸</div>
-    <div class="box">
-        <div class="item no-drag" :class="{ active: isActive == 'card small' }" @click="updateSize('card small')"> 1 x 1
-        </div>
-        <div class="item no-drag" :class="{ active: isActive == 'card' }" @click="updateSize('card')"> 1 x 2</div>
-        <div class="item no-drag" :class="{ active: isActive == 'card1' }" @click="updateSize('card1')"> 2 x 1</div>
-        <div class="item no-drag" :class="{ active: isActive == 'card double' }" @click="updateSize('card double')"> 2 x 2
-        </div>
-    </div>
+  <div class="text-base" style="margin: 12px 0">小组件尺寸</div>
+  <a-radio-group class="my-3" v-model:value="select">
+    <a-radio
+      v-for="item in list"
+      :key="item.value"
+      :value="item.value"
+      :style="{ fontSize: `${fontSize}px` }"
+      >{{ item.name }}</a-radio
+    >
+  </a-radio-group>
+ 
 </template>
 
 <script>
 export default {
-    methods: {
-        updateSize(e) {
-            this.$emit("__updateSize", e)
+  watch: {
+    select(newV) {
+        // 
+      // 执行回调
+      this.$emit("onChange", newV);
+      // 更新双向绑定
+      this.$emit("update:data", newV);
+    },
+  },
+  data() {
+    return {
+      select: this.data,
+    };
+  },
+  props: {
+    isActive: {
+      type: String,
+      default: "",
+    },
+    fontSize: {
+      type: Number,
+      default: 18,
+    },
+    data: {
+      type: String,
+      default: "card small",
+    },
+    list: {
+      type: Array,
+      default: () => {
+        return [
+          { name: "2 x 4", value: "card small" },
+          { name: "2 x 4", value: "card" },
+          { name: "4 x 2", value: "card1" },
+          { name: "4 x 4", value: "card double" },
+        ];
+      },
+      validator: (val) => {
+        let res = val.every((item) => "name" in item && "value" in item);
+        if (!res) {
+          console.error(`你的 list 数组必须包含 name 和 value 属性`);
         }
+        return res;
+      },
     },
-    props: {
-        isActive: {
-            type: String,
-            default: "",
-        },
-    },
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.box {
-    width: 100%;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 2px;
-    position: relative;
-
-    .item {
-        flex: 1;
-        text-align: center;
-        color: var(--primary-text) !important;
-        line-height: 42px;
-        padding: 0 2px;
-        cursor: pointer;
-    }
-}
-
-.active {
-    background: #212121;
-    border-radius: 10px;
-}
 </style>

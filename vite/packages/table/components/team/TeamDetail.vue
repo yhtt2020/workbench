@@ -33,13 +33,13 @@
           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           退出小队
         </div>
-        <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer " style="background: var(--primary-bg);">
+        <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2" style="">
           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           解散小队
         </div>
       </a-col>
       <a-col>
-        <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="goHall" style="background: var(--primary-bg);">
+        <div class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2" @click="goHall" style="">
           <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           小队大厅
         </div>

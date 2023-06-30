@@ -7,7 +7,7 @@
     <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
       <div v-if="!customData.url"
         style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
-        <a-button size="large" @click="this.panelVisible = true" type="primary">
+        <a-button size="large" @click="this.panelVisible = true" type="primary" class="xt-active-text">
           配置卡片</a-button>
       </div>
       <template v-else>
@@ -23,7 +23,11 @@
     </div>
     <div class="line">卡片尺寸：</div>
     <div class="line">
-      <a-input-number :min="1" :max="10" v-model:value="width"></a-input-number> x <a-input-number :min="1" :max="10"
+      <a-input-number  :min="2"
+      :max="20"
+      :step="2" v-model:value="width"></a-input-number> x <a-input-number :min="2"
+      :max="20"
+      :step="2"
         v-model:value="height"></a-input-number>
     </div>
     <div class="line">
@@ -32,7 +36,6 @@
     <div class="mt-10">
       <a-button type="primary" @click="save" block>确定</a-button>
     </div>
-
   </a-drawer>
 </template>
 
@@ -71,7 +74,7 @@ export default {
   data() {
     return {
       url: '',
-      width: 1,
+      width: 2,
       height: 2,
 
       panelVisible: false,
@@ -95,12 +98,24 @@ export default {
       ],
     }
   },
+  watch: {
+    width(newWidth) {
+      this.width = this.ensureEvenNumber(newWidth);
+    },
+    height(newHeight) {
+      this.height = this.ensureEvenNumber(newHeight);
+    }
+  },
   methods: {
+    ensureEvenNumber(value) {
+      const parsedValue = parseInt(value);
+      return Math.ceil(parsedValue / 2) * 2;
+    },
     save() {
       this.$refs.remote.visible = false
       this.panelVisible = false
-      this.customData.width = this.width
-      this.customData.height = this.height
+      this.customData.width = this.width / 2
+      this.customData.height = this.height / 2
       this.customData.url = this.url
       message.success('修改成功')
 
@@ -145,8 +160,8 @@ export default {
     //   this.setUA()
     // }
 
-    this.width = this.customData.width || 1
-    this.height = this.customData.height || 2
+    this.width = this.customData.width * 2 || 2
+    this.height = this.customData.height * 2 || 2
     this.url = this.customData.url || ''
 
     // console.log('尝试载入')

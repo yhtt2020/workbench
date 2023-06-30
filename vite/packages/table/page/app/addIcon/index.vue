@@ -129,6 +129,7 @@ export default {
       } else {
         h += 136;
       }
+      if (this.navName =="Links") h += 80
       return {
         height: `${h}px`,
       };
@@ -158,14 +159,19 @@ export default {
         return;
       }
       let app = this.$refs.apps;
+
       if (app.selectApps.length !== 0) {
+       
         for (let i = 0; i < app.selectApps.length; i++) {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = app.selectApps[i].name;
-          iconOption.link = app.selectApps[i].link || "nav";
-          iconOption.linkValue = app.selectApps[i].path;
+          iconOption.link = app.selectApps[i].link || "fast";
           iconOption.src = app.selectApps[i].icon;
-
+          if (app.selectApps[i].open) {
+            iconOption.open = app.selectApps[i].open;
+          } else {
+            iconOption.linkValue = app.selectApps[i].path;
+          }
           this.addIcon(iconOption);
         }
       }

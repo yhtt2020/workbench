@@ -3,6 +3,20 @@ export const NavList = [
     cname: '推荐',
     children: [
       {
+        name: 'myIcons',
+        cname: '图标组件',
+        detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
+        sizes: ['自定义大小'],
+        option: [
+          {
+            name: 'myIcons',
+            size: '自定义大小',
+            zoom: '11'
+          },
+        ],
+        time: '2023/6/28'
+      },
+      {
         name: 'Audio',
         cname: '音频',
         detail: '快速调整音量大小，音频设备选择，一键开启静音模式。',
@@ -114,6 +128,25 @@ export const NavList = [
   {
     cname: '工具',
     children: [
+      {
+        name: 'capture',
+        cname: '捕获',
+        detail: '一键截屏、开启屏幕录制，录屏状态下控制麦克风的收录状态。',
+        sizes: ['2x2', '4x4'],
+        option: [
+          {
+            name: 'capture',
+            size: '2x2',
+            zoom: '11'
+          },
+          {
+            name: 'CaptureNewCard',
+            size: '4x4',
+            zoom: '11'
+          },
+        ],
+        time: '2023/6/28'
+      },
       {
         name: 'supervisory',
         cname: '系统性能监控',
@@ -311,6 +344,68 @@ export const NavList = [
   {
     cname: '系统', children: [
       {
+        name: 'myIcons',
+        cname: '图标组件',
+        detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
+        sizes: ['自定义大小'],
+        option: [
+          {
+            name: 'myIcons',
+            size: '自定义大小',
+            zoom: '11'
+          },
+        ],
+        time: '2023/6/28'
+      },
+      {
+        name: 'capture',
+        cname: '捕获',
+        detail: '一键截屏、开启屏幕录制，录屏状态下控制麦克风的收录状态。',
+        sizes: ['2x2', '4x4'],
+        option: [
+          {
+            name: 'capture',
+            size: '2x2',
+            zoom: '11'
+          },
+          {
+            name: 'CaptureNewCard',
+            size: '4x4',
+            zoom: '11'
+          },
+        ],
+        time: '2023/6/28'
+      },
+      {
+        name: 'supervisory',
+        cname: '系统性能监控',
+        detail: '同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。',
+        sizes: ['2*2', '2x4', '4种样式'],
+        option: [
+          {
+            name: 'CPULineChart',
+            size: '2*4',
+            zoom: '11'
+          },
+          {
+            name: 'CPUFourCard',
+            size: '2*4',
+            zoom: '11'
+          },
+          {
+            name: 'SmallCPUCard',
+            size: '2*2',
+            zoom: '11'
+          },
+          {
+            name: 'SmallGPUCard',
+            size: '2*2',
+            zoom: '11'
+          },
+        ],
+        time: '2023/5/31'
+      },
+      {
         name: 'Audio',
         cname: '音频',
         detail: '快速调整音量大小，音频设备选择，一键开启静音模式。',
@@ -334,6 +429,25 @@ export const NavList = [
     cname: '游戏',
     children: [
       {
+        name: 'capture',
+        cname: '捕获',
+        detail: '一键截屏、开启屏幕录制，录屏状态下控制麦克风的收录状态。',
+        sizes: ['2x2', '4x4'],
+        option: [
+          {
+            name: 'capture',
+            size: '2x2',
+            zoom: '11'
+          },
+          {
+            name: 'CaptureNewCard',
+            size: '4x4',
+            zoom: '11'
+          },
+        ],
+        time: '2023/6/28'
+      },
+      {
         name: 'games',
         cname: 'Steam特惠',
         detail: '今日特惠游戏，快快加入你的购物车和愿望单。',
@@ -347,6 +461,7 @@ export const NavList = [
           {
             name: 'DiscountPercentage',
             size: '2x4',
+            zoom: '38'
           },
         ],
         time: '2023/5/31'
@@ -504,6 +619,20 @@ export const NavList = [
     cname: '创意',
     children: [
       {
+        name: 'myIcons',
+        cname: '图标组件',
+        detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
+        sizes: ['自定义大小'],
+        option: [
+          {
+            name: 'myIcons',
+            size: '自定义大小',
+            zoom: '11'
+          },
+        ],
+        time: '2023/6/28'
+      },
+      {
         name: 'customAssembly',
         cname: '自定义图片组件',
         detail: '使用喜爱的图片作为小组件，支持自由设置点击图片的快捷方式。',
@@ -535,39 +664,6 @@ export const NavList = [
   },
   {
     cname: '施工中', children: [
-      {
-        name: 'capture',
-        cname: '捕获(开发中)',
-        detail: '一键截屏、开启屏幕录制，录屏状态下控制麦克风的收录状态。',
-        sizes: ['2x2', '4x4'],
-        option: [
-          {
-            name: 'capture',
-            size: '2x2',
-            zoom: '11'
-          },
-          {
-            name: 'CaptureNewCard',
-            size: '4x4',
-            zoom: '11'
-          },
-        ],
-        time: '2023/5/31'
-      },
-      {
-        name: 'myIcons',
-        cname: '图标组件',
-        detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
-        sizes: ['自定义大小'],
-        option: [
-          {
-            name: 'myIcons',
-            size: '自定义大小',
-            zoom: '11'
-          },
-        ],
-        time: '2023/5/31'
-      },
       {
         name: 'smallRank',
         cname: '排行榜(开发中)',

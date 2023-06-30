@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full justify-between items-center" style="margin-bottom: 16px;margin-top: 2em;">
     <div class="w-96 h-12 flex items-center">
-      <div class="w-80 h-12 bg-white bg-opacity-10 rounded-lg flex items-center ">
+      <div class="w-80 h-12 bg-opacity-10 rounded-lg flex items-center xt-bg-2 ">
         <div class="w-20 h-12 flex items-center justify-center"
           style="border-right: 1px solid rgba(255, 255, 255, 0.1);color: var(--primary-text);">
           壁纸源</div>
@@ -135,7 +135,7 @@
       <a-col :span="4">
         <div @click="setAppPaper" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div>设为壁纸</div>
+          <div>设为工作台背景</div>
           <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
         </div>
       </a-col>
@@ -455,5 +455,8 @@ export default defineComponent({
     border-top-right-radius: 0.5em;
     border-bottom-right-radius: 0.5em;
   }
+}
+:deep(.ant-select){
+  background: none;
 }
 </style>
