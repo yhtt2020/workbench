@@ -15,8 +15,8 @@ export const onLineList =  [
     uid: 112,
     avatar: '/icons/logo128.png',
     nickname: 'Edith Harvey',
-    totalDuration: 1253,
-    netDuration: 1241,
+    totalDuration: 53,
+    netDuration: 2011,
     team: '铁匠铺',
     icon: '../../../../public/img/rankingList/handshake.png'
   },
@@ -25,7 +25,7 @@ export const onLineList =  [
     uid: 113,
     avatar: '/icons/logo128.png',
     nickname: 'Russell Morgan',
-    totalDuration: 1113,
+    totalDuration: 13,
     netDuration: 1011,
     team: '',
     icon: ''
