@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <fastNav
-      style="z-index: 99999999999999999"
-      @returnApp="returnApp"
-      ref="fastNavRef"
-    ></fastNav>
+  <div class="xt-container">
     <Radio v-model:data="_size" :list="sizeList"></Radio>
     <div class="text-base" style="margin: 12px 0">链接/快捷方式</div>
     <!-- 未选择打开方式 -->
@@ -13,7 +8,6 @@
         网页链接
       </div>
       <div class="xt-bg-2 xt-text xt-hover" @click="fastClick()">快捷方式</div>
-      <input style="display: none" ref="fileRef" type="file" />
       <div class="xt-bg-2 xt-text xt-hover" @click="customClick()">
         应用导航
       </div>
@@ -36,46 +30,13 @@
           </div>
         </template>
       </a-input>
-      <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
-        <div
-          class="flex-1 flex justify-center items-center"
-          :class="{ 'xt-active-btn': 'internal' == _open.type }"
-          @click="_open.type = 'internal'"
-        >
-          工作台内打开
-        </div>
-        <div
-          class="flex-1 flex justify-center items-center"
-          :class="{ 'xt-active-btn': 'thinksky' == _open.type }"
-          @click="_open.type = 'thinksky'"
-        >
-          想天浏览器
-        </div>
-        <div
-          class="flex-1 flex justify-center items-center"
-          :class="{ 'xt-active-btn': 'default' == _open.type }"
-          @click="_open.type = 'default'"
-        >
-          系统默认浏览器
-        </div>
-      </div> -->
       <Radio
         :list="linkList"
         v-model:data="_open.type"
+        :marginR="12"
         text="选择打开的浏览器"
       ></Radio>
-      <!-- <a-radio-group
-        class="my-3"
-        style="font-size: 18px"
-        v-model:value="_open.type"
-        size="large"
-      >
-        <a-radio value="internal" class="mr-8">工作台内打开</a-radio>
-        <a-radio value="thinksky" class="mr-8">想天浏览器</a-radio>
-        <a-radio value="default" class="mr-8">系统默认浏览器</a-radio>
-      </a-radio-group> -->
     </template>
-
     <!-- 快捷和应用 -->
     <template v-else>
       <a-input
@@ -95,6 +56,18 @@
         </template>
       </a-input>
     </template>
+    <input
+      style="display: none"
+      ref="fileRef"
+      type="file"
+      v-if="_link != 'link' && _link != 'fast'"
+    />
+    <fastNav
+      v-if="_link != 'link' && _link != 'nav'"
+      style="z-index: 999999999999999"
+      @returnApp="returnApp"
+      ref="fastNavRef"
+    ></fastNav>
     <!-- 设置组件名称 -->
     <div class="text-base" style="margin: 12px 0">图标名称</div>
     <a-input
@@ -155,17 +128,23 @@
       <div class="text-base">图标背景</div>
       <a-switch v-model:checked="_isBackground"></a-switch>
     </div>
-    <div v-if="_isBackground" class="item-box">
-      <colorPicker style="width: 100px" v-model:hex="_backgroundColor" />
-      <div
-        class="item"
-        :key="item"
-        :style="{ background: backgroundColorList[`${'color' + item}`] }"
-        v-for="item in 15"
-        @click="backgroundClick(item)"
-        :class="{ active: _backgroundIndex == item }"
-      ></div>
-    </div>
+    <colorPicker
+      v-if="_isBackground"
+      style="width: 100px"
+      v-model:hex="_backgroundColor"
+    />
+    <template v-if="_isBackground">
+      <div class="item-box">
+        <div
+          class="item"
+          :key="item"
+          :style="{ background: backgroundColorList[`${'color' + item}`] }"
+          v-for="item in 15"
+          @click="backgroundClick(item)"
+          :class="{ active: _backgroundIndex == item }"
+        ></div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -197,7 +176,11 @@ export default {
     src: { type: String },
     backgroundIndex: { type: Number },
   },
-  mounted() {},
+  mounted() {
+    // 为了兼容旧版本
+    if (this.backgroundColor == null) this._backgroundColor = "";
+    else this._backgroundColor = this.backgroundColor;
+  },
   data() {
     return {
       sizeList,
@@ -206,7 +189,7 @@ export default {
       _isRadius: this.isRadius,
       _radius: this.radius,
       _isBackground: this.isBackground,
-      _backgroundColor: this.backgroundColor,
+      _backgroundColor: "",
       _titleValue: this.titleValue,
       _link: this.link,
       _linkValue: this.linkValue,
@@ -271,7 +254,7 @@ export default {
     clear() {
       this._linkValue = "";
       this._link = "";
-      this._open = {};
+      this._open = { value: "", type: "internal" };
     },
     async upIcon() {
       let imgRef = this.$refs.imgRef;
@@ -357,19 +340,25 @@ export default {
       let fileRef = this.$refs.fileRef;
       fileRef.click();
       let that = this;
+      // 用户选择执行
       fileRef.onchange = async function (event) {
-        if (this.files.length === 0) return;
+        if (this.files.length === 0) {
+          this.clear();
+          return;
+        }
         const file = this.files[0];
         that._open = {
           type: "tableApp",
           name: file.name,
           value: file.path,
         };
+        that._link = "nav";
       };
-      this._link = "nav";
     },
     fastClick() {
-      this.$refs.fastNavRef.showFastNav();
+      this.$nextTick(() => {
+        this.$refs.fastNavRef.showFastNav();
+      });
     },
   },
 };
