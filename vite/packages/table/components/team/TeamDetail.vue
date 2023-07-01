@@ -25,11 +25,11 @@
 
   </div>
 
-  <div style="position: absolute;bottom: 0;margin-left:20px;color: var(--primary-text);">
-    <a-row class="m-5" :gutter="10">
+  <div style="position: absolute;bottom: 0;margin-left:34px;color: var(--primary-text);">
+    <a-row class="m-5" :gutter="16">
       <a-col>
         <div  v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
-             class="rounded-lg bg-mask px-6 py-3 pointer " >
+             class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2" >
           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           退出小队
         </div>
