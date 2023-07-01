@@ -1,6 +1,7 @@
 <template>
   <!-- 可拖拽元素 -->
   <div
+    ref="draggable"
     @mousedown="handleMouseDown"
     @mouseup="handleMouseUp"
     @click="handleClick"
@@ -12,11 +13,14 @@
     <!-- 拖拽元素 -->
     <div v-show="isDragging" class="follow-container">
       <div
+        ref="follow"
         class="follow"
         :style="{
           transform: `translate(${followPosition.x - followWidth / 2}px, ${
             followPosition.y - followHeight / 2
           }px)`,
+          width: `${followWidth}px`,
+          height: `${followHeight}px`,
         }"
       >
         <template v-if="isSelect && length > 1">
@@ -60,13 +64,13 @@ export default {
         event.preventDefault();
         event.stopPropagation();
         this.isDragging = true; // 打开拖拽状态
-  
+
         // 获取可拖拽元素并创建拖拽元素
         let draggableElement;
         if (this.isSelect) {
           draggableElement = document.querySelector(".icons");
         } else {
-          draggableElement = document.querySelector(".draggable");
+          draggableElement = this.$refs.draggable;
         }
         const draggableRect = draggableElement.getBoundingClientRect();
 
@@ -76,15 +80,16 @@ export default {
           this.followWidth = 56;
           this.followHeight = 56;
         }
+
+        // 创建拖拽元素
         this.draggedElement = document.createElement("div");
         this.draggedElement.classList.add("follow");
-        this.draggedElement.style.width = draggableRect.width + "px";
-        this.draggedElement.style.height = draggableRect.height + "px";
-        this.draggedElement.style.left =
-          event.clientX - draggableRect.width / 2 + "px";
-        this.draggedElement.style.top =
-          event.clientY - draggableRect.height / 2 + "px";
-        this.tempContainer.appendChild(this.draggedElement);
+        // this.draggedElement.style.width = this.followWidth + "px";
+        // this.draggedElement.style.height = this.followHeight + "px";
+
+        // this.draggedElement.style.width = 135 + "px";
+        // this.draggedElement.style.height = 135 + "px";
+
         this.draggedElement.style.pointerEvents = "none"; // 防止拖拽元素干扰鼠标事件
 
         // 将拖拽元素添加到文档中
@@ -162,6 +167,7 @@ export default {
 .follow {
   position: absolute;
   pointer-events: none;
+  /* zoom: 0.66; */
   z-index: 999999999;
 }
 
