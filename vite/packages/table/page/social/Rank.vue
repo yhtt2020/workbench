@@ -45,13 +45,13 @@
                v-for="(item,index) in list" :key="item.id">
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4 ">
             <span v-if="item.no === 1">
-              <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
+              <a-avatar src="/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
             <span v-else-if="item.no === 2">
-              <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
+              <a-avatar src="/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
             <span v-else-if="item.no === 3">
-              <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
+              <a-avatar src="/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
             <div v-else class="ranking-back">{{ item.no }}</div>
             <span class="mx-4">
