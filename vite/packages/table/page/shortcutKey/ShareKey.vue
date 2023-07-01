@@ -72,7 +72,7 @@
                   placeholder="分类名称" 
                   style="width:370px;height: 48px;"
                   @blur="lostFocus(item,'groupName')"
-                  />
+                />
                   <span @click.stop="delKey(index,item)">
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
@@ -126,11 +126,11 @@
           <!-- <div class="input-item"> -->
             <!-- 添加组合键 -->
             <!-- <div class="border-right key-item input-item"> -->
-            <div class="border-right key-item input-item" v-for="(item,i) in addKeyList" :key="i">
+            <!-- <div class="border-right key-item input-item" v-for="(item,i) in addKeyList" :key="i">
               <div class="flex">
-                <div class="flex items-center mr-3" @click="openKeyBoard(_,'addKey')">
+                <div class="flex items-center mr-3" @click="openKeyBoard(i,'addKey')">
                   <a-input class="input pointer" 
-                    v-model="keyCombination[i]"
+                    :value="keyCombination[i]"
                     readonly
                     spellcheck="false" 
                     placeholder="按下组合键" 
@@ -153,14 +153,15 @@
                   style="width:179px;height: 48px;"
                   :ref="'inputFocusKey_'+ i"
                   @click="getFocus('key',i)"
+                  @blur="lostFocus('inputFocusKey_'+ i,'addKeyName')"
                   />
               </div>
               <span @click.stop="delStaging('key')">
                 <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
               </span>
-            </div>
+            </div> -->
             <!-- 添加分类名称 -->
-            <div class="key-item border-right input-item">
+            <!-- <div class="key-item border-right input-item">
               <div class="flex items-center">
                 <a-input class="input"
                   v-model:value="addGroupName" 
@@ -174,7 +175,7 @@
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
               </div>
-            </div>
+            </div> -->
             <div class="add-box input-item">
               <div class="add-btn" style="width:181px" @click="addShortcutKey">新增快捷键</div>
               <div class="add-btn" @click="addGroup">新增分类</div>
@@ -283,9 +284,16 @@ export default {
       paramsId: -1,
       keyBoard: false,
       selectKey: {},//选中的快捷键
-      stagingKey: {},// 暂存的Key
+      stagingKey: [],// 暂存的Key
       bulkEditKey: false,
-      addNumber: 1
+      addNumber: 0
+    }
+  },
+  watch: {
+    recentlyUsedList: {
+        deep:true,
+        handler(newV,oldV){
+      }
     }
   },
   computed: {
@@ -296,14 +304,18 @@ export default {
     this.$nextTick(() => {
       this.keyDrop()
     })
+
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList','setMarketList']),
-    getData(){
+    ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList','setMarketList', 'delRecentlyEmpty']),
+    async getData(){
       if(this.$route.params.id){
         this.paramsId = this.$route.params.id
-        this.recentlyUsedList.find(item => {
-          if(item.id == this.paramsId){
+        // let usedList = this.deepClone({},this.recentlyUsedList)
+        // let usedList = this.copyObj(this.recentlyUsedList)
+        this.recentlyUsedList.find(i => {
+          if(i.id == this.paramsId){
+           let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
             this.appContent = item
             this.icon = item.icon
             this.keyList = item.keyList
@@ -311,7 +323,34 @@ export default {
             this.introduce = item.commonUse
           }
         })
+        //执行添加默认添加一个可编辑的空数据
+        this.addShortcutKey()
       }
+    },
+    //写函数
+		copyObj(obj){
+			let newObj={};
+			for(let key in obj){
+				if(typeof obj[key] =='object'){//如:key是wife,引用类型,那就递归
+					newObj[key] = copyObj(obj[key])
+				}else{//基本类型,直接赋值
+					newObj[key] = obj[key];
+				}
+			}
+			return newObj;
+		},
+    //深拷贝
+    deepClone(obj, newObj) {
+      var newObj = newObj || {};
+      for (let key in obj) {
+        if (typeof obj[key] == 'object') {
+          newObj[key] = (obj[key].constructor === Array) ? [] : {}
+          this.deepClone(obj[key], newObj[key]);
+        } else {
+          newObj[key] = obj[key]
+        }
+      }
+      return newObj;
     },
     // 保存
     saveScheme(){
@@ -355,6 +394,13 @@ export default {
       this.$router.go(-1)
     },
     onBack(){
+      
+      // 检测快捷键列表中的空数据后进行删除操作
+      this.keyList = this.keyList.filter(item => {
+        return item.keyStr !== ''
+      })
+      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+
       this.$router.go(-1)
     },
     nextStep(){
@@ -367,7 +413,7 @@ export default {
     editItem({id,groupName,keyStr,title},index,type){
       if(!this.bulkEditKey){
         this.keyList.forEach(i => {
-          if(i.id === id){
+          if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === ''){
             i.isEdit = true
           }else{
             i.isEdit = false
@@ -381,13 +427,13 @@ export default {
             this.$refs[`inputNameEdit_${index}`][0].focus()
           })
           break;
-        case 'item':
-          this.keyName = title
-          this.keyContent = keyStr
-          this.$nextTick(() => {
-            this.$refs[`inputKeyEdit_${index}`][0].focus()
-          })
-          break;
+        // case 'item':
+        //   this.keyName = title
+        //   this.keyContent = keyStr
+        //   this.$nextTick(() => {
+        //     this.$refs[`inputKeyEdit_${index}`][0].focus()
+        //   })
+        //   break;
       }
     },
     //添加的input获取焦点 (禁止拖拽导致需要手动获取焦点)
@@ -402,55 +448,54 @@ export default {
       }
       
     },
-    // toggleKey(item){
-    //   this.keyList.forEach(i => {
-    //     if(i.id === id){
-    //       i.isEdit = true
-    //     }else{
-    //       i.isEdit = false
-    //     }
-    //   })
-    // },
     // 失去焦点，保存修改
     lostFocus(item,type){
-      switch (type) {
-        case 'groupName':
-          if(!item.groupName.trim()){
-            item.groupName = this.groupName
-            return message.info('分组名称不能为空');
-          }
-          break;
-        case 'keyName':
-          if(!item.title.trim()){
-            item.title = this.keyName
-            return message.info('快捷键名称不能为空');
-          }
-          // this.keyList.forEach(i => {
-          //   if(i.id === id){
-          //     i.title = this.keyName
-          //   }
-          // })
-          break;
-      }
+      setTimeout(()=>{
+        switch (type) {
+          case 'groupName':
+            if(!item.groupName.trim()){
+              item.groupName = this.groupName
+              return message.info('分组名称不能为空');
+            }else{
+              this.keyList.forEach(kItem => {
+                if(kItem.id === item.id)kItem.isEdit = false
+              })
+              
+            }
+            break;
+          case 'keyName':
+            if(!item.title.trim()){
+              item.title = this.keyName
+              return message.info('快捷键名称不能为空');
+            }else{
+              if(item.keys.length){
+                this.keyList.forEach(kItem => {
+                  if(kItem.id === item.id)kItem.isEdit = false
+                })
+              }
+            }
+            break;
+        }
+      },200)
+      
     },
     // 开启键盘
     openKeyBoard(item,type){
-      // if(this.stagingKey.id){
-      //   delete this.stagingKey.isAdd
-      // }
       switch (type) {
         case 'key':
           this.selectKey = item
           break;
         case 'addKey':
-          this.selectKey = this.stagingKey.id ? this.stagingKey : {
+          this.addNumber = item
+          // this.stagingKey.id ? this.stagingKey : 
+          this.selectKey = {
             id: nanoid(),
-            keys: [],
-            keyStr: '',
-            keyArr: [],
-            title: '',
-            isEdit: false,
-            isAdd: true
+            keys: item.keys ? item.keys : [],
+            keyStr: item.keyStr ? item.keyStr : '',
+            keyArr: item.keyArr ? item.keyArr : [],
+            title: item.title ? item.title : '',
+            isEdit: item.keyStr ? true : false,
+            addInputIndex: item
           }
           break;
       }
@@ -462,68 +507,53 @@ export default {
       this.keyBoard = false
     },
     // 保存修改的快捷键
-    saveKey({keyArr, isAdd}){
-      this.keyBoard = false
-      let arr = keyArr.keys
-      // 判断组合键是否重复
-      let retArr = this.keyList.find(item => {
-        return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
-      })
-      if(retArr?.id === keyArr?.id) return
-      if(retArr) return message.info('组合键重复')
+    saveKey(keyArr){
 
-      if(isAdd){
-        this.keyCombination = keyArr.keyStr
-        this.stagingKey = keyArr
-      }else{
-        this.keyList.find((item,index) => {
-          if(item.id === keyArr.id){
-            this.keyList.splice(index,1,keyArr)
-            this.keyContent = keyArr.keyStr
+      this.keyBoard = false
+      this.keyList.forEach((item,index) => {
+        if(item.id === keyArr.id){
+          if(keyArr.title){
+            keyArr.isEdit = false
           }
-        })
-      }
+          this.keyList.splice(index,1,keyArr)
+          this.keyContent = keyArr.keyStr
+        }
+        if(item.keyStr === '' || item.title === ''){
+          item.isEdit = true
+        }
+      })
     },
     // 添加快捷键
     addShortcutKey(){
-      this.addKeyList.push({})
-      // this.addNumber += 1
-      // if(!this.keyCombination || !this.combinationName.trim())return message.info('组合键或名称不能为空');
-      // // let keyArr = this.keyCombination.split(' + ')
-      // // keyArr.forEach((item,index) => {
-      // //   keyArr.splice(index,1,{key: item})
-      // // })
-      // // let obj =  {
-      // //   id: nanoid(),
-      // //   keys: keyArr,
-      // //   title: this.combinationName.trim(),
-      // // }
-      // delete this.stagingKey.isAdd
-      // this.stagingKey.title = this.combinationName.trim()
-      // this.keyList.push(this.stagingKey)
-      // this.stagingKey = {}
-      // this.keyCombination = ''
-      // this.combinationName = ''
+      this.keyList.push({
+        id: nanoid(),
+        keys: [],
+        keyStr: '',
+        keyArr: [],
+        title: '',
+        isEdit: true,
+      })
+    },
+    // 添加分类名称
+    addGroup(){
+      this.keyList.push({
+        id: nanoid(),
+        groupName: '',
+        isEdit: true,
+      },)
+      // if(!this.addGroupName.trim()) return message.info("分组名称不能为空")
+
+      // let obj = {
+      //   id: nanoid(),
+      //   groupName: this.addGroupName.trim(),
+      //   isEdit: false
+      // }
+      // this.keyList.push(obj)
+      // this.addGroupName = ''
       // if(this.bulkEditKey){
       //   this.bulkEditKey = false
       //   this.bulkEdit()
       // }
-    },
-    // 添加分类名称
-    addGroup(){
-      if(!this.addGroupName.trim()) return message.info("分组名称不能为空")
-
-      let obj = {
-        id: nanoid(),
-        groupName: this.addGroupName.trim(),
-        isEdit: false
-      }
-      this.keyList.push(obj)
-      this.addGroupName = ''
-      if(this.bulkEditKey){
-        this.bulkEditKey = false
-        this.bulkEdit()
-      }
     },
     // 删除一列快捷键
     delKey(index,item){
@@ -531,6 +561,9 @@ export default {
         if(item.id === i.id)this.keyList.splice(index,1)
       })
       // this.keyList.splice(index,1)
+    },
+    addKey(){
+
     },
     // 删除暂存添加的内容
     delStaging(type){
@@ -558,7 +591,11 @@ export default {
         })
       }else{
         this.keyList.forEach(item => {
-          item.isEdit = false
+          if(item.title === '' || item.keys === '' || item.groupName === ''){
+            item.isEdit = true
+          }else{
+            item.isEdit = false
+          }
         })
       }
     },

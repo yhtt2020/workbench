@@ -3345,6 +3345,13 @@ export const keyStore = defineStore("key", {
     },
     setMarketList(item){
       this.marketList[this.marketList.length-1].children.push(item)
+    },
+    delRecentlyEmpty({keyList, id}){
+      this.recentlyUsedList.forEach((item, index) => {
+        if (item.id == id) {
+          this.recentlyUsedList[index].keyList = keyList
+        }
+      })
     }
   },
   persist: {
