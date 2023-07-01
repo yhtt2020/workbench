@@ -1,5 +1,5 @@
 <template>
-  <div class="cursor-pointer rounded-xl"  :data-index="index">
+  <div class="cursor-pointer rounded-xl xt-hover" :data-index="index">
     <div
       class="xt-text no-drag flex items-center justify-center rounded-xl"
       :style="[iconSize, backgroundState]"
@@ -14,7 +14,13 @@
         :data-index="index"
       />
     </div>
-    <div class="text-center h-5" :data-index="index">{{ titleValue }}</div>
+    <div
+      class="text-center h-5 truncate mx-auto"
+      :style="[textSize]"
+      :data-index="index"
+    >
+      {{ titleValue }}
+    </div>
   </div>
 </template>
 
@@ -22,6 +28,9 @@
 import { message } from "ant-design-vue";
 export default {
   props: {
+    isReSize: { type: Boolean, default: false },
+    index: { type: Number },
+    // 下面是v-bind参数
     isRadius: { type: Boolean },
     radius: { type: Number },
     isBackground: { type: Boolean },
@@ -33,7 +42,6 @@ export default {
     size: { type: String, default: "mini" },
     src: { type: String },
     backgroundIndex: { type: Number },
-    index: { type: Number },
   },
   computed: {
     // 动态切换圆角状态
@@ -49,6 +57,9 @@ export default {
     iconSize() {
       return this.getSizeValues(this.size).iconSize;
     },
+    textSize() {
+      return this.getSizeValues(this.size).textSize;
+    },
     imgSize() {
       return this.getSizeValues(this.size).imgSize;
     },
@@ -57,6 +68,7 @@ export default {
     getSizeValues(size) {
       let w, h;
       let val;
+      if (this.isReSize) size = "mini";
       switch (size) {
         case "mini":
           w = 134.5;
@@ -88,6 +100,9 @@ export default {
         iconSize: {
           width: `${w}px`,
           height: `${h - 20}px`,
+        },
+        textSize: {
+          width: `${w - 20}px`,
         },
         imgSize: {
           width: `${val}px`,
