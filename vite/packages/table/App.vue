@@ -77,7 +77,7 @@ import {toggleFullScreen} from "./js/common/common";
 import cache from "./page/app/addIcon/hooks/cache";
 import {
   setTheme
-} from "./components/card/hooks/theme";
+} from "./components/card/hooks/theme/setTheme";
 
 window.browser = browser
 const {appModel} = window.$models

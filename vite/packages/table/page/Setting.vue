@@ -207,10 +207,22 @@
   >
     <div class="text-base">主题颜色</div>
     <colorPicker style="width: 100px" v-model:hex="themeBgColor" />
-    <div @click="clearThemeBgColor()">恢复默认主题颜色</div>
+    <div
+      @click="clearThemeBgColor()"
+      class="xt-active-btn w-120 h-12 my-4 pl-1"
+      style="width: 120px; height: "
+    >
+      恢复默认主题颜色
+    </div>
     <div class="text-base">文本颜色</div>
     <colorPicker style="width: 100px" v-model:hex="themeTextColor" />
-    <div @click="clearThemeTextColor()">恢复默认文本颜色</div>
+    <div
+      @click="clearThemeTextColor()"
+      class="xt-active-btn w-120 h-12 my-4 pl-1"
+      style="width: 120px; height: "
+    >
+      恢复默认文本颜色
+    </div>
   </a-drawer>
 
   <a-modal
@@ -238,13 +250,19 @@
 <script>
 import cache from "./app/addIcon/hooks/cache";
 import {
-  setThemeBgColor,
-  setThemeTextColor,
+  delThemeBgColor,
+  delThemeSecondaryBgColor,
+  delThemeTextColor,
+} from "./../components/card/hooks/theme/delTheme";
+import {
   getThemeBgColor,
   getThemeTextColor,
-  clearThemeBgColor,
-  clearThemeTextColor,
-} from "./../components/card/hooks/theme";
+} from "./../components/card/hooks/theme/getTheme";
+import {
+  setThemeBgColor,
+  setThemeSecondaryBgColor,
+  setThemeTextColor,
+} from "./../components/card/hooks/theme/setTheme";
 import ChooseScreen from "./ChooseScreen.vue";
 import { appStore } from "../store";
 import { mapWritableState } from "pinia";
@@ -275,9 +293,9 @@ export default {
   },
   watch: {
     themeBgColor(newV) {
-      console.log("object :>> ", newV);
       if (!newV) return;
       setThemeBgColor(newV);
+      setThemeSecondaryBgColor(newV);
     },
     themeTextColor(newV) {
       if (!newV) return;
@@ -303,11 +321,12 @@ export default {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     isMain: isMain,
     clearThemeBgColor() {
-      clearThemeBgColor();
+      delThemeBgColor();
+      delThemeSecondaryBgColor();
       this.themeBgColor = "";
     },
     clearThemeTextColor() {
-      clearThemeTextColor();
+      delThemeTextColor();
       this.themeTextColor = "";
     },
     styleSwitch() {
