@@ -15,7 +15,7 @@
       />
     </div>
     <div
-      class="text-center h-5 truncate mx-auto"
+      class="text-center xt-text h-5 truncate mx-auto"
       :style="[textSize]"
       :data-index="index"
     >
@@ -71,14 +71,20 @@ export default {
       if (this.isReSize) size = "mini";
       switch (size) {
         case "mini":
-          w = 134.5;
+          // w = 134.5;
+          w = 110;
+          h = 96;
+          val = 60;
+          break;
+          case "mini1":
+          w = 280;
           h = 96;
           val = 70;
           break;
         case "small":
           w = 280;
           h = 205;
-          val = 130;
+          val = 170;
           break;
         case "default":
           w = 280;
