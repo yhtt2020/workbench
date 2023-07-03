@@ -36,10 +36,10 @@ export const rankColor = [  // 定义颜色数据
 ]
 
 export const rareColor = [
-  {id:0,color:'rgb(172,172,172)'},
-  {id:1,color:'rgb(255,255,255)'},
-  {id:2,color:'rgb(82,196,26)'},
-  {id:3,color:'rgb(80,139,254)'},
-  {id:4,color:'rgb(199,20,250)'},
-  {id:5,color:'rgb(250,75,20)'}
+  {id:0,avatar_color:'rgb(172,172,172)'},
+  {id:1,avatar_color:'rgb(255,255,255)'},
+  {id:2,avatar_color:'rgb(82,196,26)'},
+  {id:3,avatar_color:'rgb(80,139,254)'},
+  {id:4,avatar_color:'rgb(199,20,250)'},
+  {id:5,avatar_color:'rgb(250,75,20)'}
 ]

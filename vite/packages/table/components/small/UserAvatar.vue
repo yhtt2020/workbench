@@ -27,7 +27,7 @@ export default {
        return el.id === this.rare
       })
       return{
-        border:`4px solid ${index.color}`
+        border:`4px solid ${index.avatar_color}`
       }
     },
   }
