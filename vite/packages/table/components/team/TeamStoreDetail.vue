@@ -34,7 +34,7 @@
   </div>
 
   <!-- 点击价格购买头像框弹窗 -->
-  <a-modal v-model:visible="payVisible" :width="480" >
+  <a-modal v-model:visible="payVisible" :width="480" :footer="null" :title="null" :closable="false"  :centered="true">
     <!-- 未购买情况下走扫码支付的流程 -->
     <template v-if="isPay === false">
        <div class="w-full h-full flex-col flex">
@@ -106,7 +106,7 @@
   </a-modal>
 
   <!-- 点击积分兑换时触发的弹窗 -->
-  <a-modal v-model:visible="pointsVisible" :width="480" >
+  <a-modal v-model:visible="pointsVisible" :width="480" :footer="null" :title="null" :centered="true" :closable="false">
     <div class="w-full h-full flex-col flex">
       <div class="mx-3 mt-3 mb-8 h-12 flex ">
         <div class="flex items-center justify-center" style="width: 90%;">
@@ -337,30 +337,6 @@ export default {
 }
 </style>
 
-<style>
-.ant-modal-footer{
-  display: none !important;
-}
-.ant-modal-header{
-  background: var(--primary-bg) !important;
-  color: var(--primary-text) !important;
-  border: none !important;
-  text-align: center !important;
-}
-.ant-modal-title{
-  color: var(--primary-text) !important;
-}
-.ant-modal{
-  padding: 0 !important;
-  top:150px !important;
-}
-.ant-modal-mask{
-  background: var(--main-mask-bg) !important;
-}
-.ant-modal-close{
-  display: none !important;
-}
-.ant-modal-body{
-  padding: 0 !important;
-}
+<style scoped>
+
 </style>
