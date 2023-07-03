@@ -5,7 +5,7 @@
     </div>
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
-      <div>已选 {{ selectAppsLenght }} 个应用图标</div>
+      <div>总共 {{ appsLenght }} 个应用图标</div>
       <div class="xt-active-btn h-12 w-120" @click="selectAllApp()">
         {{ selectAll }}
       </div>
@@ -56,12 +56,9 @@ export default {
     selectAll() {
       return this.isSelectedAll ? "全选" : "取消全选";
     },
-    selectAppsLenght() {
-      let i = 0;
-      for (let key in this.selectApps) {
-        this.selectApps[key].forEach(() => i++);
-      }
-      return i;
+    appsLenght() {
+      let length = this.data ? this.data.length : "";
+      return length;
     },
   },
   methods: {

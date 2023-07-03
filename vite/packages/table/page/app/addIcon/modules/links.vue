@@ -1,46 +1,5 @@
 <template>
   <div class="h-full" style="border: 1px solid">
-    <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
-      <div
-        class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': type === 'internal' }"
-        @click="type = 'internal'"
-      >
-        工作台内部
-      </div>
-      <div
-        class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': type === 'thinksky' }"
-        @click="type = 'thinksky'"  
-      >
-        想天浏览器
-      </div>
-      <div
-        class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': type === 'default' }"
-        @click="type = 'default'"
-      >
-        系统默认
-      </div>
-    </div> -->
-
-    <!-- <div
-      class="w-full flex overflow-x-auto xt-container"
-      ref="scrollContainer"
-      v-scrollable
-    >
-      <div
-        v-for="(item, index) in webBtn"
-        @click="handleChange(index)"
-        class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl"
-        style="flex: 0 0 auto"
-        :class="{
-          'xt-bg-2': index === selectIndex,
-        }"
-      >
-        {{ item.label }}
-      </div>
-    </div> -->
     <div class="flex relative">
       <div class="w-32">
         <div class="overflow-y-auto xt-container" style="height: 300px">
@@ -82,7 +41,6 @@ import { getSelect } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
 import cache from "../hooks/cache";
 import { scrollable } from "../hooks/scrollable";
-
 
 export default {
   mixins: [syncSelected],
@@ -233,7 +191,7 @@ export default {
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
       this.appList[index] = appList;
-      this.selectName = index
+      this.selectName = index;
     },
     handleChange(index) {
       let iconRef = this.$refs["iconRef"];
