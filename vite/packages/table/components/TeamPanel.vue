@@ -2,30 +2,32 @@
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden;background: var(--primary-bg);color: var(--primary-text)">
       <div v-if="showDetail"
-           style="width:350px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
-        <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
-             style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
-          <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
+           style="width:445px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
+        <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer"
+             style="position:absolute;bottom:0;left:9px;width: 2.8em;text-align: center;z-index: 99">
+          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
         </div>
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
 
-              <li @click="currentTab='barrage'" :class="{'nav-active':currentTab==='barrage'}">
+              <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
               </li>
-              <li @click="currentTab='devote'" :class="{'nav-active':currentTab==='devote'}">
+              <li @click="currentTab='devote'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='devote'}">
                 <div><icon icon="thunderbolt"></icon></div>
               </li>
-              <li @click="currentTab='info'" :class="{'nav-active':currentTab==='info'}">
+              <li @click="currentTab='info'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='info'}">
                 <div><icon icon="tishi-xianxing"></icon></div>
               </li>
-
+              <li @click="currentTab = 'store'" class="flex items-center justify-center" :class="{'nav-active':currentTab === 'store'}">
+                <div><Icon icon="gift"></Icon></div>
+              </li>
 
             </ul>
           </a-col>
           <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
-            <a-row class="" @click="" :gutter="20">
+            <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
 
               <a-col>
                 <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
@@ -45,6 +47,9 @@
             <div v-if="showDetail && currentTab==='devote'"
                  style="height: 100%;position: relative;width: 100%">
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
+            </div>
+            <div v-if="showDetail && currentTab==='store'">
+              <TeamStoreDetail></TeamStoreDetail>
             </div>
           </a-col>
         </a-row>
@@ -144,9 +149,11 @@ import LevelIcon from './small/LevelIcon.vue'
 import HorizontalPanel from './HorizontalPanel.vue'
 import TeamDevote from './team/TeamDevote.vue'
 import TeamDetail from './team/TeamDetail.vue'
+import TeamStoreDetail from './team/TeamStoreDetail.vue'
 import TeamBarrage from './comp/TeamBarrage.vue'
 import BarrageSender from './comp/BarrageSender.vue'
 import BarragePanel from './comp/BarragePanel.vue'
+
 
 export default {
   name: 'TeamPanel',
@@ -160,7 +167,8 @@ export default {
     UserAvatar,
     UserDetail,
     PlusOutlined,
-    HorizontalPanel
+    HorizontalPanel,
+    TeamStoreDetail
   },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
@@ -366,10 +374,13 @@ export default {
   li{
     list-style: none;
     font-size: 26px;
+    padding-top: 10px;
+    /**
     text-align: center;
     padding-left: 10px;
     padding-top: 10px;
     text-align: center;
+    **/
     cursor: pointer;
     &>div{
       padding:4px 8px 4px 8px;
@@ -386,8 +397,11 @@ export default {
         background: var(--active-bg);
         border-radius: 10px;
       }
-
     }
   }
+}
+
+:deep(.nav-item){
+  width: 50% !important;
 }
 </style>

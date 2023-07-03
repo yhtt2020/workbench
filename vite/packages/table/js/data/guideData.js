@@ -10,7 +10,7 @@ export const guideData = [
   },
   {
     title: '极简DIY', url: 'magic_wand_3d.png', id: 'dy',
-    explain: '无内置推荐数据，仅保留基础和性功能模块，从0开始DIY你的专属工作台。'
+    explain: '无内置推荐数据，仅保留基础核心功能模块，从0开始DIY你的专属工作台。'
   }
 ]
 

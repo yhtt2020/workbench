@@ -1,6 +1,5 @@
 <template>
   <div class="h-full">
-    <div class="text-base mb-1">选择打开的浏览器方式</div>
     <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
       <div
         class="flex-1 flex justify-center items-center"
@@ -24,12 +23,12 @@
         系统默认
       </div>
     </div> -->
-    <a-radio-group  v-model:value="type">
-      <a-radio value="internal">工作台内打开</a-radio>
-      <a-radio value="thinksky">想天浏览器</a-radio>
-      <a-radio value="default">系统默认浏览器</a-radio>
-    </a-radio-group>
-    <div class="my-2">网址分类</div>
+    <Radio
+      :list="linkList"
+      v-model:data="type"
+      text="选择打开的浏览器方式"
+    ></Radio>
+    <div class="my-2 text-base mb-4">网址分类</div>
     <Icon
       ref="iconRef"
       @updateSelectApps="updateSelectApps"
@@ -58,6 +57,7 @@
 </template>
 
 <script>
+import Radio from "../../../../components/card/hooks/Radio.vue";
 import { getSelect } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
 import cache from "../hooks/cache";
@@ -65,6 +65,7 @@ import { scrollable } from "../hooks/scrollable";
 
 export default {
   mixins: [syncSelected],
+  components: { Radio },
   watch: {
     type: {
       handler(newV) {
@@ -96,6 +97,20 @@ export default {
   data() {
     return {
       type: "internal",
+      linkList: [
+        {
+          value: "internal",
+          name: "工作台内打开",
+        },
+        {
+          value: "thinksky",
+          name: "想天浏览器",
+        },
+        {
+          value: "default",
+          name: "系统默认浏览器",
+        },
+      ],
       webBtn: [
         {
           label: "设计工具",

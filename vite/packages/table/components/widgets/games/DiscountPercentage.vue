@@ -17,7 +17,7 @@
           <swiper-slide v-for="item in list">
             <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
               <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-              <div class="right-top w-14 text-center bg-black bg-opacity-70" style="border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
+              <div class="right-top w-14 text-center bg-black bg-opacity-70" style="color:var(--active-text);font-family: oswald;border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
             </div>
           </swiper-slide>
         </swiper>
@@ -42,35 +42,35 @@
             <img class="rounded-lg" :src="dpList.header_image" alt="">
           </div>
           <div class="truncate" style="font-size: 18px;font-weight: 500;">{{dpList.name}}</div>
-          <span class="content-introduction" style="color: rgba(255, 255, 255, 0.6);font-size: 16px;font-weight: 400;">{{dpList.short_description}}</span>
+          <span class="content-introduction" style="color:var(--secondary-text);font-size: 16px;font-weight: 400;">{{dpList.short_description}}</span>
           <div class="flex" style="margin-bottom: 8px;">
-            <span class="discount-description rounded-md" style="background: rgba(255, 255, 255, 0.2);color: rgba(255, 255, 255, 0.6);font-size: 12px;font-weight: 500;"  v-for="item in dpList.genres">{{item.description}}</span>
+            <span class="discount-description rounded-md" style="background:var(--secondary-bg);color: var(--secondary-text);font-size: 12px;font-weight: 500;"  v-for="item in dpList.genres">{{item.description}}</span>
           </div>
-          <span class="line-through text-white text-opacity-60" style="font-size: 12px;">
+          <span class="line-through" style="font-family: Oswald-Regular;font-size: 12px;">
             {{dpList.price_overview.initial_formatted}}
           </span>
           <div class="flex w-full justify-between " style="margin-bottom: 16px;">
-            <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
+            <span style="font-family: Oswald-SemiBold;color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
              {{dpList.price_overview.final_formatted}}
             </span>
             <div class="flex justify-end">
-             <span class="rounded-md" style="background:rgba(255, 77, 79, 1); padding: 3px 10.23px;font-size: 12px;">
+             <span class="rounded-md" style="font-family: oswald;background:rgba(255, 77, 79, 1);color: var(--active-text); padding: 3px 10.23px;font-size: 12px;">
                -{{dpList.price_overview.discount_percent}}%
               </span>
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack()" class=" change pointer s-item rounded-lg w-12 h-12 flex items-center justify-center">
-              <Icon icon="xiangzuo" style="font-size: 1.715em;color: rgba(255, 255, 255, 0.85);"></Icon>
+            <div @click="discountBack()" class=" change pointer rounded-lg w-12 h-12 flex items-center justify-center" style="background: var(--primary-bg);">
+              <Icon icon="xiangzuo" style="font-size: 1.715em;color:var(--primary-text);"></Icon>
             </div>
-            <span class="change pointer rounded-lg s-item flex items-center justify-center"
-            style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+            <span class="change pointer rounded-lg  flex items-center justify-center"
+            style="padding:13px 30px;color:var(--primary-text); background: var(--primary-bg);"
              @click="enterGameDetail(dpList.steam_appid)"
             >
               详情
             </span>
-            <span class="change pointer rounded-lg s-item  flex items-center justify-center"
-             style="padding:13px 30px;color: rgba(255, 255, 255, 0.85);"
+            <span class="change pointer rounded-lg flex items-center justify-center"
+             style="padding:13px 30px;color:var(--primary-text); background: var(--primary-bg);"
              @click="openSteam(dpList.steam_appid)">购买</span>
           </div>
         </div>
