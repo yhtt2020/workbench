@@ -823,14 +823,14 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
-      const value = cache.get("style")
-      document.documentElement.classList.remove(value);
-      cache.set("background","-no")
-      let background = cache.get("background")
-      let model = this.styles ? "light" : "dark"
-      let name = `${model}${background || ''}-model`
-      document.documentElement.classList.add(name);
-      cache.set("style",name)
+      // const value = cache.get("style")
+      // document.documentElement.classList.remove(value);
+      // cache.set("background","-no")
+      // let background = cache.get("background")
+      // let model = this.styles ? "light" : "dark"
+      // let name = `${model}${background || ''}-model`
+      // document.documentElement.classList.add(name);
+      // cache.set("style",name)
       
       // if (this.styles == true) {
       //   document.documentElement.classList.add(`light${background || ''}-model`);

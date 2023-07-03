@@ -1,7 +1,7 @@
 <template>
   <div class="xt-container">
-    <Radio v-model:data="_size" :list="sizeList"></Radio>
-    <div class="text-base" style="margin: 12px 0">链接/快捷方式</div>
+    <Radio v-model:data="_size" :list="sizeList" :marginR="10"></Radio>
+    <div class="text-base" style="margin: 12px 0">链接/快捷方式 以http/https开头</div>
     <!-- 未选择打开方式 -->
     <div class="link-box" v-if="_link == ''">
       <div class="xt-bg-2 xt-text xt-hover" @click="_link = 'link'">
@@ -148,7 +148,11 @@
   </div>
 </template>
 
+
 <script>
+// import "../../../../../../src/util/"
+// import "/"
+
 import fastNav from "./fastNav.vue";
 import Radio from "../../../card/hooks/Radio.vue";
 import { validateFile } from "../../../card/hooks/innerImgHook";

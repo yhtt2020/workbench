@@ -238,19 +238,19 @@ export default defineComponent({
       this.visibleMenu = true
     },
     setAppPaper() {
-      // 1 清除样式
-      const value = cache.get("style")
-      document.documentElement.classList.remove(value);
-      cache.del("background")
-      // 2 判断白天黑夜
-      if (this.styles) {
-        document.documentElement.classList.add("light-model");
-        cache.set("style","light-model")
-      } else {
-        document.documentElement.classList.add('dark-model');
-        cache.set("style","dark-model")
+      // // 1 清除样式
+      // const value = cache.get("style")
+      // document.documentElement.classList.remove(value);
+      // cache.del("background")
+      // // 2 判断白天黑夜
+      // if (this.styles) {
+      //   document.documentElement.classList.add("light-model");
+      //   cache.set("style","light-model")
+      // } else {
+      //   document.documentElement.classList.add('dark-model');
+      //   cache.set("style","dark-model")
 
-      }
+      // }
       message.info('正在为您设置背景')
       if (this.currentPaper.srcProtocol) {
         this.setBackgroundImage({
