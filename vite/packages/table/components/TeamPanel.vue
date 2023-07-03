@@ -90,7 +90,7 @@
         </div>
       </div>
       <!-- 快速搜索 小队右边栏 -->
-    <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0;">
+    <div class="common-panel  flex" style="width: 100px;flex-direction: column;padding-bottom: 0;">
       <div v-if="!teamDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
@@ -108,7 +108,7 @@
              v-if="teamLeader.userInfo">
 
           <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" ></UserAvatar>
+                      :avatar="teamLeader.userInfo.avatar" :rare="rarity" :url="avatar_url"></UserAvatar>
 
           <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
@@ -119,7 +119,7 @@
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
           <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''"></UserAvatar>
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="rarity" :url="avatar_url"></UserAvatar>
           <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
@@ -205,6 +205,8 @@ export default {
       showBarrage: true,
       teamDetail: false,
       showUid: 0,
+      rarity:4, // 稀有度
+      avatar_url:'/img/excellent _avatar.svg',
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息

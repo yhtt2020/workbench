@@ -1,25 +1,36 @@
 <template>
   <div style="position: relative;">
-
-    <div v-if="tag" class="rounded-lg w-10 tag"
-         :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}"
-    >
-      {{ tag }}
+    <div class="" style="width: 100px; height: 100px;position: relative;">
+      <img :src="url" class="w-full h-full object-cover" alt="">
+      <div v-if="tag" class="rounded-lg w-10 tag"
+      :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}"
+      >
+     {{ tag }}
+      </div>
+     <a-avatar :size="50" class="avatar-tag" :src="avatar" :style="rarityBorder"></a-avatar>
+     <OnlineTag style="position: absolute;right:5px;bottom: 5px;z-index: 99" v-if="online"></OnlineTag>
     </div>
-
-
-    <a-avatar :size="50" :src="avatar"></a-avatar>
-    <OnlineTag style="position: absolute;right:5px;bottom: 5px;z-index: 99" v-if="online"></OnlineTag>
+    
   </div>
 </template>
 
 <script>
 import OnlineTag from './OnlineTag.vue'
-
+import {rareColor} from '../../js/data/teamAvatar'
 export default {
   name: 'UserAvatar',
   components: { OnlineTag },
-  props: ['avatar', 'tag', 'online', 'tagColor']
+  props: ['avatar', 'tag', 'online', 'tagColor','rare','url'],
+  computed:{
+    rarityBorder(){ // 通过计算属性将稀有度边框UI进行渲染
+      const index = rareColor.find(el=>{
+       return el.id === this.rare
+      })
+      return{
+        border:`4px solid ${index.color}`
+      }
+    },
+  }
 }
 </script>
 
@@ -33,5 +44,20 @@ export default {
   left: 50%;
   font-size: 0.8em;
   color: white
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
+}
+:deep(.ps__thumb-y){
+  display: none !important;
+}
+
+.avatar-tag{
+  position: absolute !important;
+  transform: translateX(-50%) !important;
+  top: 20% !important;
+  left: 50% !important;
+  z-index: -1;
 }
 </style>
