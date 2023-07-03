@@ -352,22 +352,25 @@ export default {
       }
       return newObj;
     },
+    // 删除空数据
+    delNotData(){
+      // 检测快捷键列表中的空数据后进行删除操作
+      this.keyList = this.keyList.filter(item => {
+        return item.keyStr !== '' && item.groupName !== '' && item.title !== ''
+      })
+      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+    },
     // 保存
     saveScheme(){
       if(!this.applyName)return message.info('名称不能为空')
+      this.delNotData()
 
-      // 检测快捷键列表中的空数据后进行删除操作
-      this.keyList = this.keyList.filter(item => {
-        return item.keyStr !== '' && item.groupName !== ''
+      let sum = 0
+      this.keyList.map(item => {
+        if(item.keys){
+          sum += item.keys.length
+        }
       })
-      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
-
-        let sum = 0
-        this.keyList.map(item => {
-          if(item.keys){
-            sum += item.keys.length
-          }
-        })
       if(this.paramsId !== -1){
         this.appContent.icon = this.icon || this.file.path 
         this.appContent.keyList = this.keyList
@@ -400,14 +403,53 @@ export default {
       message.success('成功保存');
       this.$router.go(-1)
     },
-    onBack(){
-      
-      // 检测快捷键列表中的空数据后进行删除操作
-      this.keyList = this.keyList.filter(item => {
-        return item.keyStr !== '' && item.groupName !== ''
-      })
-      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+    // 保存并分享
+    // setMarketList
+    saveShare(){
+      if(!this.applyName)return message.info('名称不能为空')
+      if(!this.keyList.length)return message.info('快捷键列表不能为空')
+      this.delNotData()
 
+      let sum = 0
+      this.keyList.map(item => {
+        if(item.keys){
+          sum += item.keys.length
+        }
+      })
+      if(this.paramsId !== -1){
+        this.appContent.icon = this.icon || this.file.path 
+        this.appContent.keyList = this.keyList
+        this.appContent.name = this.applyName
+        this.appContent.commonUse = this.introduce
+        this.appContent.number = sum
+        this.isShare = true
+        this.setMarketList(this.appContent)
+      }else{
+        const time = new Date().valueOf()
+        this.appContent =  {   
+          id: nanoid(),  //唯一标识
+          icon: this.file.path, //方案的图片
+          name: this.applyName, //方案名称
+          number: sum, //快捷键总数
+          commonUse: this.introduce, //方案简介
+          avatar: '/icons/logo128.png', //方案人
+          nickName: 'Victor Ruiz', //头像
+          sumLikes: 0, //总赞数
+          download: 0, //下载次数
+          key: '快捷键',
+          time, //时间轴
+          isLike: false,  //是否点赞
+          isMyCreate: true, //是否是自己创建
+          isShare: true, //是否分享到社区
+          isCommunity: false, //是否来自社区
+          keyList: this.keyList //快捷键列表
+        }
+        this.setMarketList(this.appContent)
+      }
+      this.shoreModal = true
+    },
+    onBack(){
+      this.delNotData()
       this.$router.go(-1)
     },
     nextStep(){
@@ -415,6 +457,7 @@ export default {
     },
     close(){
       this.shoreModal = false
+      this.$router.go(-1)
     },
     // 编辑内容
     editItem({id,groupName,keyStr,title},index,type){

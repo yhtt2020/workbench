@@ -514,10 +514,12 @@ let keyData = [
 export const keyStore = defineStore("key", {
   state: () => ({
     //快捷键方案列表
-    shortcutKeyList: [...keyData.concat()],
+    // shortcutKeyList: [...keyData.concat()],
+    shortcutKeyList: [],
     // 最近使用的快捷键方案列表
     recentlyUsedList: [],
     // 推荐方案列表
+    // sellSchemeList: [...keyData.concat()],
     sellSchemeList: [...keyData.concat()],
     //创意市场列表
     marketList: [
@@ -3344,7 +3346,22 @@ export const keyStore = defineStore("key", {
       })
     },
     setMarketList(item){
-      this.marketList[this.marketList.length-1].children.push(item)
+      if(this.marketList[this.marketList.length-1].children.find(i => i.id === item.id )){
+        this.marketList[this.marketList.length-1].children.find((i,index) => {
+          if(i.id === item.id){
+            this.marketList[this.marketList.length-1].children.splice(index,1,item)
+          }
+        })
+        this.setSchemeList(item)
+      }else{
+        this.marketList[this.marketList.length-1].children.push(item)
+        if(this.shortcutKeyList.find(i => i.id === item.id )){
+          this.setSchemeList(item)
+        }else{
+          this.setShortcutKeyList(item)
+        }
+        
+      }
     },
     delRecentlyEmpty({keyList, id}){
       this.recentlyUsedList.forEach((item, index) => {

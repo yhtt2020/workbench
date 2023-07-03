@@ -39,7 +39,7 @@
     </div>
   </div>
   <!-- 无内容 -->
-  <NotShortcutKey v-if="!softwareList.length && !detailToggle"></NotShortcutKey>
+  <NotShortcutKey v-else-if="!softwareList.length && !detailToggle"></NotShortcutKey>
 
   <!-- 设置抽屉 -->
    <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
