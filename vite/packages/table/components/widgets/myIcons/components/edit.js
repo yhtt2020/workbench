@@ -4,6 +4,10 @@ export const sizeList = [
     name: "1*1",
   },
   {
+    value: "mini1",
+    name: "2*1",
+  },
+  {
     value: "small",
     name: "2*2",
   },

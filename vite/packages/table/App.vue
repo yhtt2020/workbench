@@ -75,6 +75,10 @@ import {timerStore} from "./store/timer";
 import {Modal as antModal} from 'ant-design-vue'
 import {toggleFullScreen} from "./js/common/common";
 import cache from "./page/app/addIcon/hooks/cache";
+import {
+  setTheme
+} from "./components/card/hooks/theme/setTheme";
+
 window.browser = browser
 const {appModel} = window.$models
 let startX,
@@ -99,6 +103,7 @@ export default {
   },
 
   async mounted() {
+    setTheme()
     let style = cache.get("style")
     if (!style) {
       cache.set("style","dark-model")

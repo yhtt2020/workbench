@@ -70,7 +70,7 @@ export default {
     // 控制
     marginR: {
       type: Number,
-      default: 20,
+      default: 18,
     },
     marginY: {
       type: Number,

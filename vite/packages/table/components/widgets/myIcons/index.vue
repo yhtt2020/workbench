@@ -1,7 +1,7 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-  <div ref="iconRef" class="icon-box " :style="dragStyle">
+  <div ref="iconRef" class="icon-box box-border" :style="dragStyle">
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
       <drag-and-follow
@@ -82,10 +82,7 @@
         </div>
       </div>
     </template>
-    <edit
-      ref="editRef"
-      v-bind="customData.iconList[index]"
-    ></edit>
+    <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
   </a-drawer>
   <!-- 底部导航 -->
   <a-drawer
@@ -151,6 +148,13 @@ export default {
     };
   },
   mounted() {
+    // 是否需要初始化
+    if (this.customData.groupTitle == undefined) {
+      let setData = {};
+      setData.groupTitle = "分组"; // 初始化分组名称
+      this.updateCustomData(this.customIndex, setData, this.desk);
+    }
+
     // 绑定右键事件
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
