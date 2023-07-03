@@ -315,7 +315,7 @@ export default {
         // let usedList = this.copyObj(this.recentlyUsedList)
         this.recentlyUsedList.find(i => {
           if(i.id == this.paramsId){
-           let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
+            let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
             this.appContent = item
             this.icon = item.icon
             this.keyList = item.keyList
@@ -355,6 +355,13 @@ export default {
     // 保存
     saveScheme(){
       if(!this.applyName)return message.info('名称不能为空')
+
+      // 检测快捷键列表中的空数据后进行删除操作
+      this.keyList = this.keyList.filter(item => {
+        return item.keyStr !== '' && item.groupName !== ''
+      })
+      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+
         let sum = 0
         this.keyList.map(item => {
           if(item.keys){
@@ -397,7 +404,7 @@ export default {
       
       // 检测快捷键列表中的空数据后进行删除操作
       this.keyList = this.keyList.filter(item => {
-        return item.keyStr !== ''
+        return item.keyStr !== '' && item.groupName !== ''
       })
       this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
 
@@ -411,15 +418,13 @@ export default {
     },
     // 编辑内容
     editItem({id,groupName,keyStr,title},index,type){
-      if(!this.bulkEditKey){
-        this.keyList.forEach(i => {
-          if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === ''){
-            i.isEdit = true
-          }else{
-            i.isEdit = false
-          }
-        })
-      }
+      this.keyList.forEach(i => {
+        if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === '' || this.bulkEditKey){
+          i.isEdit = true
+        }else{
+          i.isEdit = false
+        }
+      })
       switch (type) {
         case 'name':
           this.groupName = groupName
@@ -457,10 +462,11 @@ export default {
               item.groupName = this.groupName
               return message.info('分组名称不能为空');
             }else{
-              this.keyList.forEach(kItem => {
-                if(kItem.id === item.id)kItem.isEdit = false
-              })
-              
+              if(!this.bulkEditKey){
+                 this.keyList.forEach(kItem => {
+                  if(kItem.id === item.id)kItem.isEdit = false
+                })
+              }
             }
             break;
           case 'keyName':
@@ -468,10 +474,12 @@ export default {
               item.title = this.keyName
               return message.info('快捷键名称不能为空');
             }else{
-              if(item.keys.length){
-                this.keyList.forEach(kItem => {
-                  if(kItem.id === item.id)kItem.isEdit = false
-                })
+              if(!this.bulkEditKey){
+                if(item.keys.length){
+                  this.keyList.forEach(kItem => {
+                    if(kItem.id === item.id)kItem.isEdit = false
+                  })
+                }
               }
             }
             break;
@@ -512,7 +520,7 @@ export default {
       this.keyBoard = false
       this.keyList.forEach((item,index) => {
         if(item.id === keyArr.id){
-          if(keyArr.title){
+          if(keyArr.title && !this.bulkEditKey){
             keyArr.isEdit = false
           }
           this.keyList.splice(index,1,keyArr)

@@ -513,8 +513,12 @@ export default {
     align-items: center;
     justify-content: center;
   }
+  .box::-webkit-scrollbar{
+    display: none;
+  }
   .box{
-    width: 74%;
+    // width: 74%;
+    width: 942px;
     height: 634px;
     border-radius: 12px;
     display: flex;
@@ -540,11 +544,12 @@ export default {
       }
     }
     .box-body{
-      width: 90%;
+      overflow: auto;
+      width: 92%;
       display: flex;
       justify-content: space-between;
       .box-left{
-        width: 25%;
+        width: 30%;
       }
       .key-box{
           display: flex;
@@ -563,7 +568,7 @@ export default {
           }
         }
       .box-right{
-        width: 62%;
+        width: 65%;
       }
     }
     .box-foot{
