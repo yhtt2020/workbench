@@ -47,13 +47,13 @@
             </div>
             <div class="p-3 name-text epic-title truncate">{{ item.title === 'Mystery Game' ? '神秘游戏' : item.title }}</div>
             <div class="p-3">
-              <div v-if="item.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
-                <span class="p-1  mr-2 rounded-md next-notice">下周预告</span>
-                <span class="py-1 time-text" >开始时间: {{ deadline(item.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
-              </div>
               <div v-if="item.promotions.promotionalOffers.length !== 0" class="flex item-center">
                 <span class="p-2 py-1 mr-2 rounded-md free-font">现在免费</span>
                 <span class="py-1 time-text">截止时间: {{ deadline(item.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}</span>
+              </div>
+              <div v-if="item.promotions.upcomingPromotionalOffers.length !== 0" class="flex item-center">
+                <span class="p-1  mr-2 rounded-md next-notice">下周预告</span>
+                <span class="py-1 time-text" >开始时间: {{ deadline(item.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].startDate) }}</span>
               </div>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default {
       const data = await sendRequest(allUrl, {},{localCache:true, localTtl:60*12*60})
       const result = data.data.data.Catalog.searchStore.elements
       const noResultNull = _.filter(result, function(o) { return o.promotions !== null });
-      this.epicList = noResultNull.reverse()
+      this.epicList = noResultNull
     },
     
     openEpicStore(v){
