@@ -22,7 +22,10 @@ export const getTextColor = () => getStyleColor(TEXT_COLOR)
  * 获取壁纸颜色
  * @returns {string} 壁纸颜色
  */
-export const getWallpaperColor = () => getStyleColor(WALLPAPER_COLOR)
+export const getWallpaperColor = () => {
+    let color = getStyleColor(WALLPAPER_COLOR)
+    return color == "none" ? "" : color
+}
 
 /**
  * 统一获取样式数据api
