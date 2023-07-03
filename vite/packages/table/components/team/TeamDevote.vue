@@ -18,7 +18,7 @@
               <div class="text-center   mt-3  mb-3"   v-for="user in memberDevoteDisplay">
                 <a-row style="width: 100%">
                   <a-col :span="8">
-                    <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===teamLeader.uid?'队长':'队员'" ></UserAvatar>
+                    <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===teamLeader.uid?'队长':'队员'" :rare="rarity" :url="avatar_url" ></UserAvatar>
                   </a-col>
                   <a-col :span="9" class="text-center">
                     <div class=" pt-3 " style=" font-size: 14px; color: rgba(255,255,255,0.85);font-weight: 500;">
@@ -127,6 +127,8 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      rarity:4, // 稀有度
+      avatar_url:'/img/excellent _avatar.svg',
     }
   },
   async mounted() {

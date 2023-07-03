@@ -3,14 +3,21 @@
        style="overflow: hidden;background: var(--primary-bg);color: var(--primary-text)">
       <div v-if="showDetail"
            style="width:445px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
-        <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer"
-             style="position:absolute;bottom:0;left:9px;width: 2.8em;text-align: center;z-index: 99">
-          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
-        </div>
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
+              <li  @click="closeDetail" class="flex pointer items-center justify-center">
+                <div class="rounded-lg"  style="background: var(--secondary-bg);">
+                  <Icon icon="doubleright"></Icon>
+                </div>
+              </li>
 
+              <!-- 
+                <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
+             style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
+          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
+        </div>
+               -->
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
               </li>
@@ -90,7 +97,7 @@
         </div>
       </div>
       <!-- 快速搜索 小队右边栏 -->
-    <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0;">
+    <div class="common-panel  flex" style="width: 100px;flex-direction: column;padding-bottom: 0;">
       <div v-if="!showDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
@@ -108,7 +115,7 @@
              v-if="teamLeader.userInfo">
 
           <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" ></UserAvatar>
+                      :avatar="teamLeader.userInfo.avatar" :rare="rarity" :url="avatar_url"></UserAvatar>
 
           <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
@@ -119,7 +126,7 @@
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
           <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''"></UserAvatar>
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="rarity" :url="avatar_url"></UserAvatar>
           <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
@@ -205,6 +212,8 @@ export default {
       showBarrage: true,
       teamDetail: false,
       showUid: 0,
+      rarity:4, // 稀有度
+      avatar_url:'/img/excellent _avatar.svg',
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
