@@ -129,7 +129,7 @@ export default {
       } else {
         h += 136;
       }
-      if (this.navName =="Links") h += 120
+      // if (this.navName =="Links") h += 120
       return {
         height: `${h}px`,
       };
@@ -159,21 +159,31 @@ export default {
         return;
       }
       let app = this.$refs.apps;
-
-      if (app.selectApps.length !== 0) {
-       
-        for (let i = 0; i < app.selectApps.length; i++) {
+      for (let key in app.selectApps) {
+        app.selectApps[key].forEach((item) => {
           let iconOption = { ...this.iconOption };
-          iconOption.titleValue = app.selectApps[i].name;
-          iconOption.link = app.selectApps[i].link || "fast";
-          iconOption.src = app.selectApps[i].icon;
-          if (app.selectApps[i].open) {
-            iconOption.open = app.selectApps[i].open;
+          iconOption.titleValue = item.name;
+          iconOption.link = item.link || "fast";
+          iconOption.src = item.icon;
+          if (item.open) {
+            iconOption.open = item.open;
           } else {
-            iconOption.linkValue = app.selectApps[i].path;
+            iconOption.linkValue = item.path;
           }
           this.addIcon(iconOption);
-        }
+        });
+        // for (let i = 0; i < app.selectApps.length; i++) {
+        //   let iconOption = { ...this.iconOption };
+        //   iconOption.titleValue = app.selectApps[i].name;
+        //   iconOption.link = app.selectApps[i].link || "fast";
+        //   iconOption.src = app.selectApps[i].icon;
+        //   if (app.selectApps[i].open) {
+        //     iconOption.open = app.selectApps[i].open;
+        //   } else {
+        //     iconOption.linkValue = app.selectApps[i].path;
+        // }
+        //   this.addIcon(iconOption);
+        // }
       }
       this.close();
     },

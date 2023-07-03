@@ -1,10 +1,11 @@
 <template>
-  <div class="w" style="height: 100%">
-    <slot></slot>
-  </div>
+  <div>
+    <div class="w" style="height: 100%">
+      <slot></slot>
+    </div>
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
-      <div>已选 {{ selectApps.length }} 个应用图标</div>
+      <div>已选 {{ selectAppsLenght }} 个应用图标</div>
       <div class="xt-active-btn h-12 w-120" @click="selectAllApp()">
         {{ selectAll }}
       </div>
@@ -24,6 +25,7 @@
         <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -31,11 +33,14 @@ export default {
   props: {
     data: {},
     isSelect: {},
+    name: {
+      default: "default",
+    },
   },
   data() {
     return {
-      selectApps: [],
-      selectedIndexes: [],
+      selectApps: {},
+      selectedIndexes: {},
       isSelectedAll: true,
     };
   },
@@ -51,6 +56,13 @@ export default {
     selectAll() {
       return this.isSelectedAll ? "全选" : "取消全选";
     },
+    selectAppsLenght() {
+      let i = 0;
+      for (let key in this.selectApps) {
+        this.selectApps[key].forEach(() => i++);
+      }
+      return i;
+    },
   },
   methods: {
     selectAllApp() {
@@ -59,45 +71,52 @@ export default {
       if (!this.isSelectedAll) {
         for (let i = 0; i < this.data.length; i++) {
           this.toggleSelect(i);
-          this.selectApps.push(this.data[i]);
+          this.selectApps[this.name].push(this.data[i]);
         }
       }
     },
     // 取消全选
     cancelAll() {
-      this.selectApps = [];
-      this.selectedIndexes = [];
+      this.selectApps[this.name] = [];
+      this.selectedIndexes[this.name] = [];
     },
     // 选择app
     selectApp(item, index) {
       let state = false;
+
+      // 二维数组不存在则开辟一个数组
+      if (!this.selectApps[this.name]) this.selectApps[this.name] = [];
       this.toggleSelect(index);
-      for (let i = 0; i < this.selectApps.length; i++) {
-        if (this.selectApps[i].name === item.name) {
-          this.selectApps.splice(i, 1);
+      for (let i = 0; i < this.selectApps[this.name].length; i++) {
+        if (this.selectApps[this.name][i].name === item.name) {
+          this.selectApps[this.name].splice(i, 1);
           state = true;
         }
       }
       if (state) return;
-      this.selectApps.push(item);
+      this.selectApps[this.name].push(item);
     },
     toggleSelect(index) {
       if (this.isSelected(index)) {
-        this.selectedIndexes = this.selectedIndexes.filter((i) => i !== index); // 取消选中
+        // 二维数组不存在则开辟一个数组
+        // if (!this.selectApps[this.name]) this.selectApps[this.name] = [];
+        this.selectedIndexes[this.name] = this.selectedIndexes[
+          this.name
+        ].filter((i) => i !== index); // 取消选中
       } else {
-        this.selectedIndexes.push(index); // 添加选中
+        this.selectedIndexes[this.name].push(index); // 添加选中
       }
     },
     isSelected(index) {
-      let flag = this.selectedIndexes.includes(index); // 判断索引是否在选中数组中
+      if (!this.selectedIndexes[this.name])
+        this.selectedIndexes[this.name] = [];
+      let flag = this.selectedIndexes[this.name].includes(index); // 判断索引是否在选中数组中
       if (flag) {
         return {
           border: "1px solid var(--active-bg)",
           background: "var(--active-secondary-bg)",
         };
-      } else {
-        return;
-      }
+      } else return;
     },
   },
 };
