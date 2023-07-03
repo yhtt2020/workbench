@@ -29,6 +29,20 @@
 .ant-modal-body {
   background: var(--modal-bg);
 }
+// 弹出层body开始
+.ant-drawer-body {
+  -ms-overflow-style: none !important; /* IE 和 Edge */
+  scrollbar-width: none !important; /* Firefox */
+  overflow: scroll !important; /* 其他浏览器 */
+  -webkit-overflow-scrolling: touch !important; /* iOS 滚动效果 */
+  scroll-behavior: smooth !important;
+
+  &::-webkit-scrollbar {
+    display: none !important; /* Chrome 和 Safari */
+  }
+}
+// 弹出层body结束
+
 .ant-switch-checked {
   background: var(--active-bg);
 }
