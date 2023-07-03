@@ -48,7 +48,10 @@ let keyData = [
           }
         ],
         title: '首选项',
-        isEdit: false
+        isEdit: false, //是否编辑
+        addNote: false, //是否添加备注
+        isNote: false, //是否编辑备注，
+        noteVal: ''
       },
       {
         id: 3,
@@ -67,7 +70,10 @@ let keyData = [
           }
         ],
         title: '清除浏览器数据',
-        isEdit: false
+        isEdit: false,
+        addNote: false,
+        isNote: false,
+        noteVal: ''
       },
       {
         id: 4,
@@ -86,7 +92,10 @@ let keyData = [
           }
         ],
         title: '隐藏 Microsoft Edge',
-        isEdit: false
+        isEdit: false,
+        addNote: false,
+        isNote: false,
+        noteVal: ''
       },
       {
         id: 5,
@@ -110,7 +119,10 @@ let keyData = [
           }
         ],
         title: '通过系统对话框打印',
-        isEdit: false
+        isEdit: false,
+        addNote: false,
+        isNote: false,
+        noteVal: ''
       },
       {
         id: 6,

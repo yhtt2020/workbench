@@ -15,6 +15,12 @@
         </div>
         <div class="key-title truncate">{{ item.title}}</div>
       </div>
+      <!-- <div v-if="item.addNote" class="key-item text-note">
+        <span class="note-val">{{ item.noteVal }}</span>
+      </div> -->
+      <div v-if="item.addNote" class="text-note">
+        <span class="note-val">{{ item.noteVal }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -108,4 +114,31 @@ export default {
     max-width: 160px;
     text-align: right;
   }
+
+  
+  .text-note{
+    margin: 0 20px 8px;
+    padding: 0 12px;
+    width: 350px;
+    height: 22px;
+    text-align:right;
+    position: relative;
+  }
+  .note-val{
+    position: relative;
+    top: -14px;
+    font-size: 16px;
+    color: var(--secondary-text);
+  }
+
+  .text-note::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 0;
+    height: 30px;
+    margin-left: 10px;
+    border-right: solid rgba(255,255,255,0.1) 1px;
+  }
+
 </style>

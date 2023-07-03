@@ -117,9 +117,38 @@
                   @blur="lostFocus(item,'keyName')"
                   />
               </div>
-              <span @click.stop="delKey(index,item)" v-if="item.isEdit">
-                <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+              <span v-if="item.isEdit" class="flex"> 
+                <a-tooltip>
+                  <template #title>添加备注</template>
+                  <span @click.stop="setAddNote(index,item)" v-if="item.isEdit">
+                    <Icon class="ml-3" icon="edit-square" style="font-size:21px;color: #7A7A7A;"></Icon>
+                  </span>
+                </a-tooltip>
+                <span @click.stop="delKey(index,item)">
+                  <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                </span>
               </span>
+            </div>
+            <!-- 备注 -->
+            <div v-if="item.addNote">
+              <div class="key-item border-right" v-if="item.isNote">
+                <div class="flex items-center">
+                  <a-input class="input text-right"
+                    v-model:value="item.noteVal" 
+                    :ref="`note_${index}`"
+                    spellcheck="false" 
+                    placeholder="备注" 
+                    style="width:370px;height: 48px;"
+                    @blur="lostFocus(item,'note')"
+                  />
+                    <span @click.stop="delKey(index,item)">
+                      <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                    </span>
+                </div>
+              </div>
+              <div v-else class="text-note">
+                <span class="note-val">{{ item.noteVal }}</span>
+              </div>
             </div>
           </div>
           <!-- 添加单个快捷键 -->
@@ -517,12 +546,11 @@ export default {
               item.title = this.keyName
               return message.info('快捷键名称不能为空');
             }else{
-              console.log(item)
+              if(!item.keys.length){
+                item.keyStr = '?'
+                item.keys.push('?')
+              }
               if(!this.bulkEditKey){
-                if(!item.keys.length){
-                  item.keyStr = '?'
-                  item.keys.push('?')
-                }
                 // if(item.keys.length){
                   this.keyList.forEach(kItem => {
                     if(kItem.id === item.id)kItem.isEdit = false
@@ -531,6 +559,12 @@ export default {
               }
             }
             break;
+          case 'note':
+          if(!this.bulkEditKey){
+            this.keyList.forEach(kItem => {
+              if(kItem.id === item.id)kItem.isNote = false
+            })
+          }
         }
       },200)
       
@@ -617,10 +651,15 @@ export default {
         if(item.id === i.id)this.keyList.splice(index,1)
       })
       // this.keyList.splice(index,1)
-    },
-    addKey(){
+    },  
+    //添加备注
+    setAddNote(index,item){
+      item.addNote = true
+      item.isNote = true
+    },    
+    // addKey(){
 
-    },
+    // },
     // 删除暂存添加的内容
     delStaging(type){
       switch (type) {
@@ -820,11 +859,8 @@ export default {
     height: 90%;
   }
   .add-box{
-    padding: 0 12px;
-    margin: 0 36px 8px;
+    margin-left: 48px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     .add-btn{
       cursor: pointer;
       background: var(--secondary-bg);
@@ -859,13 +895,13 @@ export default {
   .right-text{
     margin: 0 40px;
   }
-  .border-right {
+  .border-right{
     position: relative;
   }
-  .border-right::after {
+  .border-right::after{
     content: '';
     position: absolute;
-    right: -58px;
+    right: -100px;
     top: 0;
     height: 56px;
     margin-left: 10px;
@@ -955,7 +991,7 @@ export default {
   }
   .key-item{
     padding: 0 12px;
-    margin: 0 48px 8px;
+    margin: 0 100px 8px 48px;
     width: 370px;
     height:48px;
     line-height:48px;
@@ -968,4 +1004,29 @@ export default {
     cursor: pointer;
     border-radius: 8px;
   }
+  .text-note{
+    margin: 0 100px 0 48px;
+    padding: 0 12px;
+    width: 370px;
+    height: 22px;
+    text-align:right;
+    position: relative;
+  }
+  .note-val{
+    position: relative;
+    top: -14px;
+    font-size: 16px;
+    color: var(--secondary-text);
+  }
+
+  .text-note::after {
+    content: '';
+    position: absolute;
+    right: -100px;
+    top: 0;
+    height: 22px;
+    margin-left: 10px;
+    border-right: solid rgba(255,255,255,0.1) 1px;
+  }
+  
 </style>
