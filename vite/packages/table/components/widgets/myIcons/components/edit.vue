@@ -1,7 +1,9 @@
 <template>
   <div class="xt-container">
     <Radio v-model:data="_size" :list="sizeList" :marginR="10"></Radio>
-    <div class="text-base" style="margin: 12px 0">链接/快捷方式 以http/https开头</div>
+    <div class="text-base" style="margin: 12px 0">
+      链接/快捷方式 以http/https开头
+    </div>
     <!-- 未选择打开方式 -->
     <div class="link-box" v-if="_link == ''">
       <div class="xt-bg-2 xt-text xt-hover" @click="_link = 'link'">
@@ -128,13 +130,16 @@
       <div class="text-base">图标背景</div>
       <a-switch v-model:checked="_isBackground"></a-switch>
     </div>
-    <colorPicker
-      v-if="_isBackground"
-      style="width: 100px"
-      v-model:hex="_backgroundColor"
-    />
+
     <template v-if="_isBackground">
-      <div class="item-box">
+      <!-- <div class="item-box">
+        <div>
+          <colorPicker
+          @click="colorPickerClick()"
+            v-if="_isBackground"
+            v-model:hex="_backgroundColor"
+          />
+        </div>
         <div
           class="item"
           :key="item"
@@ -143,23 +148,23 @@
           @click="backgroundClick(item)"
           :class="{ active: _backgroundIndex == item }"
         ></div>
-      </div>
+      </div> -->
+      <Color v-model:color="_backgroundColor"></Color>
     </template>
   </div>
 </template>
 
-
 <script>
 // import "../../../../../../src/util/"
 // import "/"
-
+import Color from "../../../card/color/index.vue"
 import fastNav from "./fastNav.vue";
 import Radio from "../../../card/hooks/Radio.vue";
 import { validateFile } from "../../../card/hooks/innerImgHook";
 import { sizeList, linkList, backgroundColorList } from "./edit";
 import { message } from "ant-design-vue";
 export default {
-  components: { fastNav, Radio },
+  components: { fastNav, Radio ,Color},
   props: {
     isRadius: { type: Boolean },
     radius: { type: Number },
@@ -219,6 +224,10 @@ export default {
     },
   },
   methods: {
+    colorPickerClick(){
+      console.log('1 :>> ', 1);
+      // this._backgroundColor = ""
+    },
     imgError() {
       if (this._link === "link") {
         this._src = "";
@@ -370,8 +379,11 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.zs-color-picker-btn) {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
+  z-index: 99999;
+  border-radius: 10px;
+  margin: 7px;
 }
 
 .text-base {

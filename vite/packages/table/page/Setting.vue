@@ -169,7 +169,7 @@
               </a-col>
               <a-col :span="6">
                 <div @click="styleVisible = true" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                  <Icon icon="yifu" style="font-size: 2em"></Icon>
                   <div>主题颜色</div>
                 </div>
               </a-col>
@@ -205,33 +205,24 @@
     placement="right"
     style="z-index: 9999999"
   >
-    <div class="text-base">主题颜色</div>
-    <colorPicker style="width: 100px" v-model:hex="bgColor" />
-    <div
-      @click="clearBgColor()"
-      class="xt-btn h-12 my-4 px-2"
-      style="width: 150px"
-    >
-      恢复默认主题颜色
-    </div>
-    <div class="text-base">文本颜色</div>
-    <colorPicker style="width: 100px" v-model:hex="textColor" />
-    <div
-      @click="clearTextColor()"
-      class="xt-btn h-12 my-4 px-2"
-      style="width: 150px"
-    >
-      恢复默认文本颜色
-    </div>
-    <div class="text-base">壁纸颜色</div>
-    <colorPicker style="width: 100px" v-model:hex="wallpaperColor" />
-    <div
-      @click="clearWallpaperColor()"
-      class="xt-btn h-12 my-4 px-2"
-      style="width: 150px"
-    >
-      恢复默认壁纸颜色
-    </div>
+    <Color
+      v-model:color="bgColor"
+      title="主题"
+      btnText="恢复默认主题颜色"
+      @onBtnClick="clearBgColor"
+    ></Color>
+    <Color
+      v-model:color="textColor"
+      title="文本"
+      btnText="恢复默认文本颜色"
+      @onBtnClick="clearTextColor"
+    ></Color>
+    <Color
+      v-model:color="wallpaperColor"
+      title="背景"
+      @onBtnClick="clearWallpaperColor"
+      btnText="恢复默认壁纸颜色"
+    ></Color>
   </a-drawer>
 
   <a-modal
@@ -257,6 +248,7 @@
 </template>
 
 <script>
+import Color from "../components/card/color/index.vue";
 import {
   delBgColor,
   delSecondaryBgColor,
@@ -287,7 +279,7 @@ import { isMain } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 export default {
   name: "Setting",
-  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
+  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip, Color },
   data() {
     return {
       bgColor: "",
@@ -460,8 +452,8 @@ export default {
 
 <style scoped lang="scss">
 :deep(.zs-color-picker-btn) {
-  width: 455px;
-  height: 100px;
+  // width: 455px;
+  // height: 100px;
 }
 
 .btn {
