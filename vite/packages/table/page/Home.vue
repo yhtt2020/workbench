@@ -319,6 +319,7 @@ import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
+import {setWallpaperColor}from "../components/card/hooks/styleSwitch/setStyle"
 import SmallRank from "../components/widgets/SmallRank.vue";
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -840,16 +841,16 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
 
     clearWallpaper() {
+      setWallpaperColor("none")
       this.setBackgroundImage({ path: "" });
-      const value = cache.get("style")
-      document.documentElement.classList.remove(value);
-      cache.set("background","-no")
-      let background = cache.get("background")
-      let model = this.styles ? "light" : "dark"
-      let name = `${model}${background || ''}-model`
-      document.documentElement.classList.add(name);
-      cache.set("style",name)
-
+      // const value = cache.get("style")
+      // document.documentElement.classList.remove(value);
+      // cache.set("background","-no")
+      // let background = cache.get("background")
+      // let model = this.styles ? "light" : "dark"
+      // let name = `${model}${background || ''}-model`
+      // document.documentElement.classList.add(name);
+      // cache.set("style",name)
       // if (this.styles == true) {
       //   document.documentElement.classList.add(`light${background || ''}-model`);
       //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));

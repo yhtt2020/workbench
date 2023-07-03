@@ -1,58 +1,37 @@
 <template>
-  <div class="h-full">
-    <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex duration-500 my-2 p-1">
-      <div
-        class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': type === 'internal' }"
-        @click="type = 'internal'"
-      >
-        工作台内部
+  <div class="h-full" style="border: 1px solid">
+    <div class="flex relative">
+      <div class="w-32">
+        <div class="overflow-y-auto xt-container" style="height: 300px">
+          <div
+            v-for="(item, index) in webBtn"
+            @click="handleChange(index)"
+            class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl mr-2"
+            style="flex: 0 0 auto"
+            :class="{
+              'xt-bg-2': index === selectIndex,
+            }"
+          >
+            {{ item.label }}
+          </div>
+        </div>
       </div>
-      <div
-        class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': type === 'thinksky' }"
-        @click="type = 'thinksky'"  
+      <Icon
+        ref="iconRef"
+        @updateSelectApps="updateSelectApps"
+        :isSelect="true"
+        :name="selectName"
+        style="height: calc(100% - 48px)"
+        :data="appList[selectName]"
       >
-        想天浏览器
-      </div>
-      <div
-        class="flex-1 flex justify-center items-center"
-        :class="{ 'xt-active-btn': type === 'default' }"
-        @click="type = 'default'"
-      >
-        系统默认
-      </div>
-    </div> -->
-    <Radio
+      </Icon>
+    </div>
+    <!-- <Radio
       :list="linkList"
       v-model:data="type"
       text="选择打开的浏览器方式"
     ></Radio>
-    <div class="my-2 text-base mb-4">网址分类</div>
-    <Icon
-      ref="iconRef"
-      @updateSelectApps="updateSelectApps"
-      style="height: calc(100% - 48px)"
-      :data="appList"
-    >
-      <div
-        class="w-full flex overflow-x-auto xt-container"
-        ref="scrollContainer"
-        v-scrollable
-      >
-        <div
-          v-for="(item, index) in webBtn"
-          @click="handleChange(index)"
-          class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl"
-          style="flex: 0 0 auto"
-          :class="{
-            'xt-bg-2': index === selectIndex,
-          }"
-        >
-          {{ item.label }}
-        </div>
-      </div>
-    </Icon>
+    <div class="my-2 text-base mb-4">网址分类</div> -->
   </div>
 </template>
 
@@ -178,8 +157,9 @@ export default {
           checked: false,
         },
       ],
-      appList: [],
+      appList: {},
       selectIndex: 0,
+      selectName: "",
     };
   },
   directives: {
@@ -210,11 +190,12 @@ export default {
         });
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
       }
-      this.appList = appList;
+      this.appList[index] = appList;
+      this.selectName = index;
     },
     handleChange(index) {
       let iconRef = this.$refs["iconRef"];
-      iconRef.cancelAll();
+      // iconRef.cancelAll();
       this.selectIndex = index;
       this.getData(this.selectIndex);
     },

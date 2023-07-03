@@ -5,6 +5,9 @@
   overflow: scroll; /* 其他浏览器 */
   -webkit-overflow-scrolling: touch; /* iOS 滚动效果 */
   scroll-behavior: smooth;
+  &::-webkit-scrollbar {
+    display: none; /* Chrome 和 Safari */
+  }
 }
 
 /* 创建一个自定义滚动条 */

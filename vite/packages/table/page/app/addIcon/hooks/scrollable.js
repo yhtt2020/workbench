@@ -1,9 +1,8 @@
-// 局部注册
 export const scrollable = {
   mounted(el) {
     const handleMouseWheel = (event) => {
       let left = event.deltaY / 2;
-      el.scrollLeft = el.scrollLeft + left;
+      el.scrollLeft += left;
     };
     el.addEventListener("wheel", handleMouseWheel, { passive: true });
   },

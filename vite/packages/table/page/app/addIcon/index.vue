@@ -1,7 +1,7 @@
 <template>
   <!-- 遮罩 -->
   <div
-    class="w-full h-full xt-mask-2 fixed top-0 left-0"
+    class="h-full w-full xt-mask-2 fixed top-0 left-0"
     @click="close()"
   ></div>
   <!-- 添加图标 -->
@@ -50,10 +50,32 @@
       </div>
       <!-- 右侧 -->
       <div class="pl-2 w-full h-full">
-        <slot> <component ref="apps" :is="navName"></component></slot>
+        <slot>
+          <component
+            ref="apps"
+            :is="navName"
+            @updateData="updateData"
+          ></component
+        ></slot>
       </div>
     </main>
     <!-- 底部 -->
+    <div class="flex items-center my-3" v-if="selectAppsLenght">
+      <div style="width: 100px" class="flex justify-end">
+        已选 {{ selectAppsLenght }} ：
+      </div>
+      <div
+        class="flex overflow-x-auto xt-container"
+        v-scrollable
+        style="width: 590px"
+      >
+        <template v-for="(v, k, i) of selectApps">
+          <div v-for="item in selectApps[k]">
+            <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
+          </div>
+        </template>
+      </div>
+    </div>
     <footer class="flex items-center justify-center mt-2">
       <div
         class="xt-bg-2 flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120"
@@ -78,6 +100,8 @@ import Desktop from "./modules/Desktop.vue";
 import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
+import { scrollable } from "./hooks/scrollable";
+
 import { mapActions, mapWritableState } from "pinia";
 export default {
   emits: ["update:navName"],
@@ -102,7 +126,11 @@ export default {
   data() {
     return {
       screenHeight: 0,
+      selectApps: {},
     };
+  },
+  directives: {
+    scrollable,
   },
   components: {
     Links,
@@ -114,6 +142,7 @@ export default {
     navName: {
       deep: true,
       handler(newValue, old) {
+        this.selectApps = {};
         this.$emit("update:navName", newValue);
       },
     },
@@ -129,10 +158,17 @@ export default {
       } else {
         h += 136;
       }
-      if (this.navName =="Links") h += 120
+      // if (this.navName =="Links") h += 120
       return {
         height: `${h}px`,
       };
+    },
+    selectAppsLenght() {
+      let i = 0;
+      for (let key in this.selectApps) {
+        this.selectApps[key].forEach(() => i++);
+      }
+      return i;
     },
   },
   mounted() {
@@ -145,6 +181,10 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["addCard"]),
+    updateData(data) {
+      console.log("data :>> ", data);
+      this.selectApps = data;
+    },
     handleResize() {
       this.screenHeight =
         window.innerHeight || document.documentElement.clientHeight;
@@ -159,21 +199,19 @@ export default {
         return;
       }
       let app = this.$refs.apps;
-
-      if (app.selectApps.length !== 0) {
-       
-        for (let i = 0; i < app.selectApps.length; i++) {
+      for (let key in app.selectApps) {
+        app.selectApps[key].forEach((item) => {
           let iconOption = { ...this.iconOption };
-          iconOption.titleValue = app.selectApps[i].name;
-          iconOption.link = app.selectApps[i].link || "fast";
-          iconOption.src = app.selectApps[i].icon;
-          if (app.selectApps[i].open) {
-            iconOption.open = app.selectApps[i].open;
+          iconOption.titleValue = item.name;
+          iconOption.link = item.link || "fast";
+          iconOption.src = item.icon;
+          if (item.open) {
+            iconOption.open = item.open;
           } else {
-            iconOption.linkValue = app.selectApps[i].path;
+            iconOption.linkValue = item.path;
           }
           this.addIcon(iconOption);
-        }
+        });
       }
       this.close();
     },

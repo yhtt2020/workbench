@@ -59,7 +59,7 @@
                 浅色模式<br />
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
                 <a-switch
-                  @click="styleSwitch()"
+                  @click="themeSwitch()"
                   v-model:checked="styles"
                 ></a-switch>
               </div>
@@ -168,8 +168,8 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <div @click="colorVisible = true" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                <div @click="styleVisible = true" class="btn">
+                  <Icon icon="yifu" style="font-size: 2em"></Icon>
                   <div>主题颜色</div>
                 </div>
               </a-col>
@@ -205,29 +205,29 @@
 
   <a-drawer
     :width="500"
-    v-if="colorVisible"
-    v-model:visible="colorVisible"
+    v-if="styleVisible"
+    v-model:visible="styleVisible"
     placement="right"
     style="z-index: 9999999"
   >
-    <div class="text-base">主题颜色</div>
-    <colorPicker style="width: 100px" v-model:hex="themeBgColor" />
-    <div
-      @click="clearThemeBgColor()"
-      class="xt-active-btn w-120 h-12 my-4 pl-1"
-      style="width: 120px; height: "
-    >
-      恢复默认主题颜色
-    </div>
-    <div class="text-base">文本颜色</div>
-    <colorPicker style="width: 100px" v-model:hex="themeTextColor" />
-    <div
-      @click="clearThemeTextColor()"
-      class="xt-active-btn w-120 h-12 my-4 pl-1"
-      style="width: 120px; height: "
-    >
-      恢复默认文本颜色
-    </div>
+    <Color
+      v-model:color="bgColor"
+      title="主题"
+      btnText="恢复默认主题颜色"
+      @onBtnClick="clearBgColor"
+    ></Color>
+    <Color
+      v-model:color="textColor"
+      title="文本"
+      btnText="恢复默认文本颜色"
+      @onBtnClick="clearTextColor"
+    ></Color>
+    <Color
+      v-model:color="wallpaperColor"
+      title="背景"
+      @onBtnClick="clearWallpaperColor"
+      btnText="恢复默认壁纸颜色"
+    ></Color>
   </a-drawer>
 
   <a-modal
@@ -253,21 +253,25 @@
 </template>
 
 <script>
-import cache from "./app/addIcon/hooks/cache";
+import Color from "../components/card/color/index.vue";
 import {
-  delThemeBgColor,
-  delThemeSecondaryBgColor,
-  delThemeTextColor,
-} from "./../components/card/hooks/theme/delTheme";
+  delBgColor,
+  delSecondaryBgColor,
+  delTextColor,
+  delWallpaperColor,
+} from "./../components/card/hooks/styleSwitch/delStyle";
 import {
-  getThemeBgColor,
-  getThemeTextColor,
-} from "./../components/card/hooks/theme/getTheme";
+  getBgColor,
+  getTextColor,
+  getWallpaperColor,
+} from "./../components/card/hooks/styleSwitch/getStyle";
 import {
-  setThemeBgColor,
-  setThemeSecondaryBgColor,
-  setThemeTextColor,
-} from "./../components/card/hooks/theme/setTheme";
+  setBgColor,
+  setSecondaryBgColor,
+  setTextColor,
+  setWallpaperColor,
+} from "./../components/card/hooks/styleSwitch/setStyle";
+import { setThemeSwitch } from "./../components/card/hooks/themeSwitch/";
 import ChooseScreen from "./ChooseScreen.vue";
 import { appStore } from "../store";
 import { mapWritableState } from "pinia";
@@ -280,12 +284,13 @@ import { isMain } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 export default {
   name: "Setting",
-  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
+  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip, Color },
   data() {
     return {
-      themeBgColor: "",
-      themeTextColor: "",
-      colorVisible: false,
+      bgColor: "",
+      textColor: "",
+      wallpaperColor: "",
+      styleVisible: false,
       visibleChooseScreen: false,
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -297,19 +302,23 @@ export default {
     };
   },
   watch: {
-    themeBgColor(newV) {
+    bgColor(newV) {
       if (!newV) return;
-      setThemeBgColor(newV);
-      setThemeSecondaryBgColor(newV);
+      setBgColor(newV);
+      setSecondaryBgColor(newV);
     },
-    themeTextColor(newV) {
+    textColor(newV) {
       if (!newV) return;
-      setThemeTextColor(newV);
+      setTextColor(newV);
+    },
+    wallpaperColor(newV) {
+      setWallpaperColor(newV);
     },
   },
   mounted() {
-    this.themeBgColor = getThemeBgColor();
-    this.themeTextColor = getThemeTextColor();
+    this.bgColor = getBgColor();
+    this.textColor = getTextColor();
+    this.wallpaperColor = getWallpaperColor();
   },
   computed: {
     ...mapWritableState(appStore, [
@@ -325,23 +334,21 @@ export default {
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     isMain: isMain,
-    clearThemeBgColor() {
-      delThemeBgColor();
-      delThemeSecondaryBgColor();
-      this.themeBgColor = "";
+    clearBgColor() {
+      delBgColor();
+      delSecondaryBgColor();
+      this.bgColor = "";
     },
-    clearThemeTextColor() {
-      delThemeTextColor();
-      this.themeTextColor = "";
+    clearTextColor() {
+      delTextColor();
+      this.textColor = "";
     },
-    styleSwitch() {
-      const value = cache.get("style");
-      document.documentElement.classList.remove(value);
-      const background = cache.get("background");
-      let model = this.styles ? "light" : "dark";
-      let name = `${model}${background || ""}-model`;
-      document.documentElement.classList.add(name);
-      cache.set("style", name);
+    clearWallpaperColor() {
+      delWallpaperColor();
+      this.wallpaperColor = "";
+    },
+    themeSwitch() {
+      setThemeSwitch(this.styles);
     },
 
     tipSaving() {
@@ -464,8 +471,8 @@ export default {
 
 <style scoped lang="scss">
 :deep(.zs-color-picker-btn) {
-  width: 460px;
-  height: 100px;
+  // width: 455px;
+  // height: 100px;
 }
 
 .btn {

@@ -451,7 +451,6 @@ export default {
     save() {
       let editOption = this.$refs.editRef.save(); // 获取编辑组件的最新数据
       if (typeof editOption === "string") return message.error(editOption);
-      console.log("editOption :>> ", editOption);
       Object.keys(editOption).forEach(
         (k) => (this.customData.iconList[this.index][k] = editOption[k])
       );
@@ -463,6 +462,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.ant-drawer-body){
+  border: 22px solid red;
+}
 .icon-box {
   // margin: 0 10px;
 }
