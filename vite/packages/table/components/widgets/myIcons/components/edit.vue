@@ -1,10 +1,11 @@
 <template>
   <div>
     <fastNav
-      style="z-index: 9999999999999999999999999"
+      style="z-index: 99999999999999999"
       @returnApp="returnApp"
       ref="fastNavRef"
     ></fastNav>
+    <Radio v-model:data="_size" :list="sizeList"></Radio>
     <div class="text-base" style="margin: 12px 0">链接/快捷方式</div>
     <!-- 未选择打开方式 -->
     <div class="link-box" v-if="_link == ''">
@@ -35,7 +36,6 @@
           </div>
         </template>
       </a-input>
-      <div class="text-base" style="margin: 12px 0">选择打开的浏览器</div>
       <!-- <div class="w-full h-12 xt-bg-2 rounded-xl flex p-1">
         <div
           class="flex-1 flex justify-center items-center"
@@ -59,16 +59,23 @@
           系统默认浏览器
         </div>
       </div> -->
-      <a-radio-group
+      <Radio
+        :list="linkList"
+        v-model:data="_open.type"
+        text="选择打开的浏览器"
+      ></Radio>
+      <!-- <a-radio-group
         class="my-3"
         style="font-size: 18px"
         v-model:value="_open.type"
+        size="large"
       >
         <a-radio value="internal" class="mr-8">工作台内打开</a-radio>
         <a-radio value="thinksky" class="mr-8">想天浏览器</a-radio>
         <a-radio value="default" class="mr-8">系统默认浏览器</a-radio>
-      </a-radio-group>
+      </a-radio-group> -->
     </template>
+
     <!-- 快捷和应用 -->
     <template v-else>
       <a-input
@@ -88,13 +95,14 @@
         </template>
       </a-input>
     </template>
+    <!-- 设置组件名称 -->
     <div class="text-base" style="margin: 12px 0">图标名称</div>
     <a-input
       v-model:value="_titleValue"
       placeholder="给你的图标组件取个名称吧"
       class="xt-bg-2 xt-border input"
     />
-    <!-- 图标开始 -->
+    <!-- 设置组件图标 -->
     <div class="text-base" style="margin: 12px 0">图标</div>
     <div class="parent" style="justify-content: start">
       <div
@@ -130,7 +138,7 @@
         <div @click="upIcon()" class="btn no-drag xt-bg-2">自定义上传</div>
       </div>
     </div>
-    <!-- 图标结束 -->
+    <!-- 设置组件圆角 -->
     <div class="parent">
       <div class="text-base">图标圆角</div>
       <a-switch v-model:checked="_isRadius"></a-switch>
@@ -142,11 +150,13 @@
       :step="1"
       class="no-drag"
     />
+    <!-- 设置图标背景 -->
     <div class="parent">
       <div class="text-base">图标背景</div>
       <a-switch v-model:checked="_isBackground"></a-switch>
     </div>
     <div v-if="_isBackground" class="item-box">
+      <colorPicker style="width: 100px" v-model:hex="_backgroundColor" />
       <div
         class="item"
         :key="item"
@@ -161,10 +171,12 @@
 
 <script>
 import fastNav from "./fastNav.vue";
+import Radio from "../../../card/hooks/Radio.vue";
 import { validateFile } from "../../../card/hooks/innerImgHook";
+import { sizeList, linkList, backgroundColorList } from "./edit";
 import { message } from "ant-design-vue";
 export default {
-  components: { fastNav },
+  components: { fastNav, Radio },
   props: {
     isRadius: { type: Boolean },
     radius: { type: Number },
@@ -173,6 +185,7 @@ export default {
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
+    size: { type: String, default: "mini" },
     open: {
       default: () => {
         return {
@@ -187,6 +200,9 @@ export default {
   mounted() {},
   data() {
     return {
+      sizeList,
+      linkList,
+      backgroundColorList,
       _isRadius: this.isRadius,
       _radius: this.radius,
       _isBackground: this.isBackground,
@@ -194,32 +210,10 @@ export default {
       _titleValue: this.titleValue,
       _link: this.link,
       _linkValue: this.linkValue,
+      _size: this.size,
       _open: { ...this.open },
       _src: this.src,
       _backgroundIndex: this.backgroundIndex,
-      backgroundColorList: {
-        color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-        color2: "linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",
-        color3: "linear-gradient(-45deg, #545454 0%, #CDF97D 0%, #A1E99D 100%)",
-        color4: "linear-gradient(-45deg, #545454 0%, #C0E0FF 0%, #ADC9FF 100%)",
-        color5: "linear-gradient(-45deg, #545454 0%, #89E5FF 0%, #70B3FF 100%)",
-        color6: "linear-gradient(-45deg, #545454 0%, #44D2DE 0%, #558AED 100%)",
-        color7: "linear-gradient(-45deg, #545454 0%, #D9ABE1 0%, #A772FC 100%)",
-        color8: "linear-gradient(-45deg, #545454 0%, #F5BC9A 0%, #D57FE6 100%)",
-        color9: "linear-gradient(-45deg, #545454 0%, #FDE485 0%, #F895AA 100%)",
-        color10:
-          "linear-gradient(-45deg, #BA4348 0%, #A466E9 0%, #BA4244 100%)",
-        color11:
-          "linear-gradient(-45deg, #A93AAE 0%, #DA6891 0%, #C987CC 100%)",
-        color12:
-          "linear-gradient(-45deg, #545454 0%, #DA6991 0%, #A73781 100%)",
-        color13:
-          "linear-gradient(-45deg, #545454 0%, #F1EBF9 0%, #F4CFF6 100%)",
-        color14:
-          "linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)",
-        color15:
-          "linear-gradient(-45deg, #252A31 0%, #30373F 0%, #15161A 100%)",
-      },
     };
   },
   computed: {
@@ -354,6 +348,7 @@ export default {
         link: this._link,
         linkValue: this._linkValue,
         open: this._open,
+        size: this._size,
         src: this._src,
         backgroundIndex: this._backgroundIndex,
       };
@@ -381,6 +376,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.zs-color-picker-btn) {
+  width: 56px;
+  height: 56px;
+}
+
 .text-base {
   font-weight: 500;
   font-family: PingFangSC-Medium;

@@ -1,19 +1,20 @@
 <template>
-  <div
-    class="item xt-text xt-hover no-drag"
-    @click="iconClick($event)"
-    :data-index="index"
-  >
-    <div class="image" :style="[backgroundState]" :data-index="index">
+  <div class="cursor-pointer rounded-xl"  :data-index="index">
+    <div
+      class="xt-text no-drag flex items-center justify-center rounded-xl"
+      :style="[iconSize, backgroundState]"
+      style="border: 0px solid red !important"
+      @click="iconClick($event)"
+      :data-index="index"
+    >
       <img
         :src="src"
         alt=""
-        :style="radiusState"
-        style="object-fit: cover"
+        :style="[imgSize, radiusState]"
         :data-index="index"
       />
     </div>
-    <div class="title" :data-index="index">{{ titleValue }}</div>
+    <div class="text-center h-5" :data-index="index">{{ titleValue }}</div>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ export default {
     link: { type: String },
     linkValue: {},
     open: {},
+    size: { type: String, default: "mini" },
     src: { type: String },
     backgroundIndex: { type: Number },
     index: { type: Number },
@@ -44,8 +46,56 @@ export default {
       if (this.isBackground) return { background: this.backgroundColor };
       else return { background: "none" };
     },
+    iconSize() {
+      return this.getSizeValues(this.size).iconSize;
+    },
+    imgSize() {
+      return this.getSizeValues(this.size).imgSize;
+    },
   },
   methods: {
+    getSizeValues(size) {
+      let w, h;
+      let val;
+      switch (size) {
+        case "mini":
+          w = 134.5;
+          h = 96;
+          val = 70;
+          break;
+        case "small":
+          w = 280;
+          h = 205;
+          val = 130;
+          break;
+        case "default":
+          w = 280;
+          h = 420;
+          val = 270;
+          break;
+        case "long":
+          w = 570;
+          h = 205;
+          val = 175;
+          break;
+        case "big":
+          w = 570;
+          h = 420;
+          val = 390;
+          break;
+      }
+      return {
+        iconSize: {
+          width: `${w}px`,
+          height: `${h - 20}px`,
+        },
+        imgSize: {
+          width: `${val}px`,
+          height: `${val}px`,
+          border: "0px solid red",
+        },
+      };
+    },
     newOpenApp() {
       switch (this.open.type) {
         // 默认浏览器
@@ -107,7 +157,7 @@ export default {
         this.openApp(this.linkValue);
       } else message.error("你还未设置链接/快捷方式");
     },
-    // 打开app
+    // 复制来到 旧版打开app
     openApp() {
       this.$emit("onIconClick");
       if (typeof this.linkValue === "object" && this.linkValue.type) {
@@ -151,43 +201,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.item {
-  width: 114px;
-  height: 96px;
-  border: 0px solid red;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  flex-direction: column;
-  font-size: 14px;
-  border-radius: 12px;
-  cursor: pointer;
-
-  .image {
-    margin-top: 10px;
-    height: 56px !important;
-    width: 56px !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    img {
-      width: 56px;
-      height: 56px;
-    }
-  }
-
-  .title {
-    margin-top: 4px;
-    padding: 0 5px;
-    width: 80%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-align: center;
-    height: 18px;
-    line-height: 18px;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

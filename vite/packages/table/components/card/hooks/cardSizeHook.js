@@ -24,7 +24,6 @@ export default {
   methods: {
     ...mapActions(cardStore, ['updateCustomData']),
     __updateSize (e) {
-      // this.callBack && this.callBack(e)
       if (e == 'card1') {
         this.isActive = 'card1'
         this.options.className = 'card'
