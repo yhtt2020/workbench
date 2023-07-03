@@ -29,8 +29,8 @@ export const modeData = [
 
 // 模式图
 export const modeImg = {
-  initUrl:'https://a.apps.vip/icons/mod/tiny.png',
-  simpleUrl:'https://a.apps.vip/icons/mod/common.png'
+  initUrl:'https://a.apps.vip/icons/mod/common.png',
+  simpleUrl:'https://a.apps.vip/icons/mod/tiny.png'
 }
 
 export const teamData = [
