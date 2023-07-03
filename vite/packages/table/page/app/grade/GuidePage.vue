@@ -27,7 +27,7 @@
           >
           <!--  -->
             <div style="width: 100px;height: 100px;">
-              <img :src="'/public/img/state/'+ item.url " class="w-full h-full" alt="">
+              <img :src="guideImg(item.url)" class="w-full h-full" alt="">
             </div>
             <span class="my-4 primary-title">{{ item.title }}</span>
             <div class="container flex items-center justify-center">
@@ -54,7 +54,7 @@
               @click="selectThemeMode(item.id)"
              >
                <div style="width: 100px;height: 100px;">
-                <img :src="'/public/img/state/'+ item.url " class="w-full h-full" alt="">
+                <img :src="guideImg(item.url) " class="w-full h-full" alt="">
                </div>
                <span class="mt-4 primary-title">{{ item.title }}</span>
              </div>
@@ -71,8 +71,8 @@
         </div>
         <div class="flex">
           <div class="mode-image mr-9 flex items-center justify-center">
-            <img src="/public/img/state/homedark2.png" class="w-full h-full " alt="" v-if="defaultMode.name === 'intMode'">
-            <img src="/public/img/state/dark-backup.png" v-else class="w-full h-full object-cover" alt="">
+            <img :src="modeImg.initUrl" class="w-full h-full " alt="" v-if="defaultMode.name === 'intMode'">
+            <img :src="modeImg.simpleUrl" v-else class="w-full h-full object-cover" alt="">
           </div>
           <div class="flex flex-col">
             <HorizontalPanel :navList="modeData" v-model:selectType="defaultMode" class="mb-5"></HorizontalPanel>
@@ -81,7 +81,7 @@
             >
             <div class="flex items-center">
               <div style="width:40px;height:40px;">
-                <img :src="'/public/img/state/'+ item.img" class="w-full h-full" alt="">
+                <img :src="guideImg(item.img)" class="w-full h-full" alt="">
               </div>
               <span class="ml-4 guide-title primary-title xt-text">{{item.title}}</span>
              </div>
@@ -118,7 +118,7 @@
         </div>
         <div class="flex items-center flex-col justify-center">
           <div style="width: 64px;height: 64px;" class="mb-6">
-            <img :src="'/public/img/state/'+defaultTeamData.img" class="w-full h-full" alt="">
+            <img :src="guideImg(defaultTeamData.img)" class="w-full h-full" alt="">
           </div>
           <span class="mb-6 primary-text">{{ defaultTeamData.title}}</span>
           <span class="secondary-title mb-14" style="max-width: 380px;">{{defaultTeamData.content}}</span>
@@ -136,7 +136,7 @@ import { cardStore } from '../../../store/card';
 import GradeNotice from './GradeNotice.vue'
 import {
   guideData,workTheme,teamData,modeData,
-  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel
+  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg 
 } from '../../../js/data/guideData'
 import cache from '../addIcon/hooks/cache';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
@@ -151,7 +151,7 @@ export default {
       step:0,
       isShow:false,
       guideData,teamData,deskTemplate,
-      modeData,workTheme,
+      modeData,workTheme,modeImg,
       defaultMode:{title:'完整模式',name:'intMode'},
       showModal:false,
       defaultTeamData:{},
@@ -279,6 +279,10 @@ export default {
       }
     },
 
+    // 图片转换
+    guideImg(url){
+      return '/img/state/' + url + '.png';
+    }
   },
   watch:{
     // 根据浅色模式监听
