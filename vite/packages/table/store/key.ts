@@ -514,8 +514,8 @@ let keyData = [
 export const keyStore = defineStore("key", {
   state: () => ({
     //快捷键方案列表
-    // shortcutKeyList: [...keyData.concat()],
-    shortcutKeyList: [],
+    shortcutKeyList: [...keyData.concat()],
+    // shortcutKeyList: [],
     // 最近使用的快捷键方案列表
     recentlyUsedList: [],
     // 推荐方案列表

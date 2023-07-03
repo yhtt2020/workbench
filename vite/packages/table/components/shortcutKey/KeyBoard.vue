@@ -412,7 +412,15 @@ export default {
     },
     // 确定
     confirm(){
-      if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      // if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      if(!this.keyContent.keyArr.length){
+        console.log(this.keyContent.keys)
+        this.keyContent.keyStr = '?'
+        this.keyContent.keys.splice(0,this.keyContent.keys.length,'?')
+        this.$emit('saveKey',this.keyContent)
+        this.$emit('closeKeyBoard')
+        return
+      }
       let keys = []
       this.keyContent.keyArr.map(item => {
         keys.push(item.key)
@@ -421,11 +429,12 @@ export default {
       this.keyContent.keys = keys
       this.keyContent.keyStr = keys.join(' + ')
 
-      let arr = this.keyContent.keys
       // 判断组合键是否重复
+      let arr = this.keyContent.keys
       let retArr = this.parentKeyList.find(item => {
         return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
       })
+      console.log(retArr)
       if(retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
       this.$emit('saveKey',this.keyContent)
       this.$emit('closeKeyBoard')

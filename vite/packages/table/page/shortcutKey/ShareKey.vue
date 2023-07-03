@@ -84,8 +84,8 @@
             @click="editItem(item,index,'item')">
               <div class="flex">
                 <template v-if="!item.isEdit">
-                  <div v-for="i in item.keyArr" :key="i" class="flex">
-                    <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
+                  <div v-for="i in item.keys" :key="i" class="flex">
+                    <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
                   </div>
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
@@ -517,12 +517,17 @@ export default {
               item.title = this.keyName
               return message.info('快捷键名称不能为空');
             }else{
+              console.log(item)
               if(!this.bulkEditKey){
-                if(item.keys.length){
+                if(!item.keys.length){
+                  item.keyStr = '?'
+                  item.keys.push('?')
+                }
+                // if(item.keys.length){
                   this.keyList.forEach(kItem => {
                     if(kItem.id === item.id)kItem.isEdit = false
                   })
-                }
+                // }
               }
             }
             break;
