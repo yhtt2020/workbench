@@ -29,7 +29,8 @@ window.$models = {
   steamFs:require('fs'),
   rpc:require('../rpc/rpc'),
   electron:require('electron'),
-  osUtils:require('node-os-utils')
+  osUtils:require('node-os-utils'),
+  // hid:require('node-hid')
 }
 window.$models.appModel.initDb()
 
