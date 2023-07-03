@@ -9,18 +9,18 @@ export default {
   },
   // 判断数据是否已超时
   isExpired: function (key) {
-    const item = JSON.parse(localStorage.getItem(key));
+    const item = JSON.parse(localStorage.getItem(key)!);
     if (item && item.times !== undefined && item.times < new Date().getTime()) {
       return true; // 数据已超时
     }
     return false; // 获取缓存数据
   },
-  get: function (key) {
-    const item = JSON.parse(localStorage.getItem(key));
+  get: function (key, error: any = null) {
+    const item = JSON.parse(localStorage.getItem(key)!);
     if (item && !this.isExpired(key)) {
       return item.value; // 返回缓存数据的值
     }
-    return null; // 缓存不存在或已超时
+    return error; // 缓存不存在或已超时
   },
   // 删除缓存数据
   del: function (key) {

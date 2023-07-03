@@ -30,7 +30,8 @@ export const teamStore = defineStore("teamStore", {
     teamVisible: false,//小组可见
     //小组
     team: {
-      status: false
+      status: false,
+      rankInfo:{}
     },
     teamLeader: {
       userInfo: {}
@@ -196,11 +197,12 @@ export const teamStore = defineStore("teamStore", {
     },
 
 
-    async updateTeam(no, cache) {
+    async updateTeam(no, cache,withRank=false) {
       let conf = await getConfig()
       conf.params = {
         no: no,
-        cache: cache
+        cache: cache,
+        withRank:withRank
       }
       let teamResult = await axios.get(getByNo, conf)
       if (teamResult.code === 1000) {

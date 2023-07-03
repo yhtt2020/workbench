@@ -95,7 +95,16 @@ class TableManager {
           }
         }, 1000)
       }
-
+      // tableWin.window.webContents.on('select-bluetooth-device',(event, deviceList, callback)=>{
+      //   event.preventDefault();
+      //   console.log('Device list:', deviceList);
+      //   let result = deviceList[0];
+      //   if (!result) {
+      //     callback('');
+      //   } else {
+      //     callback(result.deviceId);
+      //   }
+      // })
       tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
       tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
         let allowedPermissions = ['audioCapture', 'media','fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest

@@ -10,7 +10,7 @@
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
-             
+
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
               </li>
@@ -27,7 +27,7 @@
             </ul>
           </a-col>
           <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
-            <a-row class="pointer" @click="showTeamDetail" v-if="showDetail && currentTab !=='store'" :gutter="20">
+            <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
 
               <a-col>
                 <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
@@ -63,7 +63,7 @@
         <vue-custom-scrollbar :settings="outerSettings"
                               style="position:relative;height:calc(100% - 60px);  ">
           <div class="mb-10">
-         
+
             <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo" :joinedTime="showUserMemberInfo.joinedTime"></UserDetail>
           </div>
         </vue-custom-scrollbar>
@@ -90,15 +90,15 @@
         </div>
       </div>
       <!-- 快速搜索 小队右边栏 -->
-    <div class="common-panel  flex" style="width: 100px;flex-direction: column;padding-bottom: 0;">
-      <div v-if="!teamDetail" @click="showBarragePanel"
+    <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0;">
+      <div v-if="!showDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
         <div>
           <a-avatar :size="50" shape="square" :src="team.avatar"></a-avatar>
         </div>
       </div>
-      <div v-if="teamDetail" class="text-center">小队成员</div>
+      <div v-if="showDetail" class="text-center">小队成员</div>
       <!-- <a-divider style="margin-top: 10px;margin-bottom: 10px;color: red;"></a-divider> -->
       <div style="margin-top: 10px;margin-bottom: 10px;text-align: center;">—————</div>
       <vue-custom-scrollbar :settings="outerSettings"

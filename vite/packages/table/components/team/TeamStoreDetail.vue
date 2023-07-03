@@ -155,8 +155,8 @@ export default {
   data(){
     return{
       avatarList:[    // 头像框是否购买的状态
-        {title:'商店',name:'shop_store'},
-        {title:'已购',name:'have_bought'}
+        {title:'商店(开发中)',name:'shop_store'},
+        {title:'已购（开发中）',name:'have_bought'}
       ],
       listItem:{title:'商店',name:'shop_store'}, // 默认显示头像框未购买界面
       settingsScroller: {
@@ -166,7 +166,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      avatarShop, // 模拟数据 
+      avatarShop, // 模拟数据
       payVisible:false, // 默认关闭头像框购买弹窗
       pointsVisible:false, // 默认关闭头像框积分兑换窗口
       needPayAvatar:{},  // 模拟接收需要付费的头像框数据
@@ -196,7 +196,7 @@ export default {
     /**
      * 根据不同头像框级别匹配头像框背景色
      * 最外层容器的底部背景色
-     * **/ 
+     * **/
     avatarBgColor(item){
       const rankIndex = _.findIndex(rankColor,function(o){
         return o.avatar_rank === item.avatar_rank
@@ -207,9 +207,9 @@ export default {
     },
 
     /**
-     * 根据不同头像框级别匹配头像框名称颜色 
+     * 根据不同头像框级别匹配头像框名称颜色
      * 例如：小狐狸头像框、小青蛙头像框、小恶魔头像框
-     * **/ 
+     * **/
     avatarFontColor(item){
       const rankIndex = _.findIndex(rankColor,function(o){
         return o.avatar_rank === item.avatar_rank
@@ -220,9 +220,9 @@ export default {
     },
 
     /**
-     * 根据不同头像框级别的背景色 
+     * 根据不同头像框级别的背景色
      * 例如:史诗、优秀、精良等等这情况的的背景色
-     * **/ 
+     * **/
     avatarBgFontColor(item){
       const rankIndex = _.findIndex(rankColor,function(o){
         return o.avatar_rank === item.avatar_rank
@@ -231,7 +231,7 @@ export default {
         background:rankColor[rankIndex].color,
       }
     },
-    
+
     // 点击价格购买逻辑
     buyNow(item){
       this.payVisible = true // 打开支付弹窗
@@ -251,12 +251,12 @@ export default {
     paymentCompletion(){
       this.payVisible = false
     },
-    
+
     // 立即兑换的操作逻辑
     immediateExchange(){
 
     },
-    
+
   }
 }
 </script>

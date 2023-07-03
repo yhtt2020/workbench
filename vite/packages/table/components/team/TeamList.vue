@@ -13,8 +13,8 @@
             </div>
             <div class="flex mt-0">
               <div class="bg-mask m-1 px-1.5 py-0.5 rounded-md"># {{ team.no }}</div>
-              <div class="bg-mask m-1 px-1.5 py-0.5   rounded-md">1级</div>
-              <div class="bg-mask m-1 px-1.5  py-0.5  rounded-md">排名：-</div>
+              <div class="bg-mask m-1 px-1.5 py-0.5   rounded-md">{{ team.grade.level }}级</div>
+              <div class="bg-mask m-1 px-1.5  py-0.5  rounded-md">排名：{{ team.rankInfo.no }}</div>
             </div>
           </a-col>
         </a-row>

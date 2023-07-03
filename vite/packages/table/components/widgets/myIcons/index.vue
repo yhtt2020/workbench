@@ -1,8 +1,7 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-  <div ref="iconRef" class="icon-box" :style="dragStyle">
-    <!-- {{ formatArrayAsFileSize(customData.iconList) }} -->
+  <div ref="iconRef" class="icon-box box-border" :style="dragStyle">
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
       <drag-and-follow
@@ -57,7 +56,7 @@
     </Widget>
   </div>
   <!-- 图标组件结束 -->
-  <!-- 编辑开始 -->
+  <!-- 内容编辑 -->
   <a-drawer
     :width="500"
     v-if="settingVisible"
@@ -85,6 +84,7 @@
     </template>
     <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
   </a-drawer>
+  <!-- 底部导航 -->
   <a-drawer
     v-if="menuVisible"
     :width="500"
@@ -95,7 +95,6 @@
   >
     <BottomEdit :menuList="menuList"></BottomEdit>
   </a-drawer>
-  <!-- 编辑结束 -->
 </template>
 
 <script>
@@ -155,6 +154,7 @@ export default {
       setData.groupTitle = "分组"; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     }
+
     // 绑定右键事件
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
@@ -192,6 +192,19 @@ export default {
           background: "var(--active-secondary-bg) ",
         };
       } else return {};
+    },
+    // 动态计算卡片大小
+    reSize() {
+      return {
+        width:
+          (this.customData.width || 1) * this.WIDTH +
+          (this.customData.width - 1) * 10 +
+          "px",
+        height:
+          (this.customData.height || 2) * this.HEIGHT +
+          (this.customData.height - 1) * 10 +
+          "px",
+      };
     },
     // 右键菜单
     menuList() {
@@ -432,7 +445,6 @@ export default {
     handleMenu(e) {
       e.preventDefault();
       e.stopPropagation();
-      // this.$refs.homelSlotRef.menuVisible = true;
       this.menuVisible = true;
     },
     // 保存图标
@@ -450,7 +462,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.ant-drawer-body){
+  border: 22px solid red;
+}
 .icon-box {
-  margin: 0 10px;
+  // margin: 0 10px;
 }
 </style>

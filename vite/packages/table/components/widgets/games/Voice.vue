@@ -106,6 +106,17 @@ export default {
     this.muteShow=!this.defaultOutput.muted
     this.microphoneShow=!this.defaultMic.muted
     this.startListenAudioTest()
+    //
+    // const device = await navigator.bluetooth.requestDevice({
+    //   acceptAllDevices: true
+    // })
+    // var {hid}=window.$models
+    // console.log(hid.devices())
+    // hid.devices().forEach(d=>{
+    //   console.log(d)
+    //   console.log(d.product+":")
+    // })
+    // console.log(new HID.HID())
   },
   methods:{
     ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),

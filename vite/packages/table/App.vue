@@ -74,7 +74,14 @@ import Modal from './components/Modal.vue'
 import {timerStore} from "./store/timer";
 import {Modal as antModal} from 'ant-design-vue'
 import {toggleFullScreen} from "./js/common/common";
-import cache from "./page/app/addIcon/hooks/cache";
+// improt "/vite/src/util/"
+import {
+  initStyle
+} from "./components/card/hooks/styleSwitch/";
+import {
+  initTheme
+} from "./components/card/hooks/themeSwitch/";
+
 window.browser = browser
 const {appModel} = window.$models
 let startX,
@@ -99,19 +106,8 @@ export default {
   },
 
   async mounted() {
-    let style = cache.get("style")
-    if (!style) {
-      cache.set("style","dark-model")
-      style = cache.get("style")
-    }
-    document.documentElement.classList.add(style);
-
-    let transparent = window.localStorage.getItem("transparent")
-    transparent = JSON.parse(transparent!)
-
-    if (transparent == "true") {
-      document.documentElement.classList.add("transparent");
-    }
+    initTheme()
+    initStyle()
 
     window.addEventListener("keydown", this.KeyDown, true)// 监听按键事件
 

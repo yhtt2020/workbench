@@ -15,6 +15,7 @@
           <div ref="iconRef" v-for="(item, index) in iconLists" @contextmenu.prevent.stop="rightClick(index)">
             <drag-and-follow @drag-start="handleDragStart" @drag-end="handleDragEnd">
               <icon
+              :isReSize="true"
                v-bind="item" :index="index" :data-index="index" @onIconClick="closeFullScreen"
                style="margin: 5px 10px;"
               >
@@ -184,7 +185,7 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
   left: 50%;
-  width: 558px;
+  width: 638px;
   height: 490px !important;
   z-index: 9999999;
   box-shadow: 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2);

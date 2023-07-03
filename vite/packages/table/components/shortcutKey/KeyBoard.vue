@@ -417,8 +417,6 @@ export default {
         keys.push(item.key)
       })
 
-      const isAdd = this.selectKey.isAdd ? true : false
-
       this.keyContent.keys = keys
       this.keyContent.keyStr = keys.join(' + ')
 
@@ -428,8 +426,7 @@ export default {
         return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
       })
       if(retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
-
-      this.$emit('saveKey',{ keyArr: this.keyContent, isAdd })
+      this.$emit('saveKey',this.keyContent)
       this.$emit('closeKeyBoard')
       
     },
