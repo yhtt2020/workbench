@@ -84,8 +84,8 @@
             @click="editItem(item,index,'item')">
               <div class="flex">
                 <template v-if="!item.isEdit">
-                  <div v-for="i in item.keys" :key="i" class="flex">
-                    <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                  <div v-for="i in item.keyArr" :key="i" class="flex">
+                    <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
                   </div>
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">

@@ -9,8 +9,8 @@
       <!-- 快捷键 -->
       <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(item.id)">
         <div class="flex">
-          <div v-for="i in item.keys" :key="i" class="flex">
-            <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+          <div v-for="i in item.keyArr" :key="i" class="flex">
+            <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i.key }}</span>
           </div>
         </div>
         <div class="key-title truncate">{{ item.title}}</div>
