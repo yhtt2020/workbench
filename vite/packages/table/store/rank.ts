@@ -8,10 +8,12 @@ const apiGetMy = sUrl('/app/rank/getMy')
 export const rankStore = defineStore('rank', {
   state: () => ({
     rankLists: {
-      onlineUserSum: {}//page=>data
+      onlineUserSum: {},//page=>data
+      onlineTeamSum:{}
     },
     pageInfos: {
-      onlineUserSum: {}
+      onlineUserSum: {},
+      onlineTeamSum:{}
     },
     myRanks:{}
 

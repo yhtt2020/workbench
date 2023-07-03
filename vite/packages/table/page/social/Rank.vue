@@ -1,7 +1,7 @@
 <template>
   <div class="page-container rounded-xl xt-bg">
     <!-- 榜单tab -->
-    <div hidden="" class="flex flex-row rounded-lg p-1 h-11"
+    <div  class="flex flex-row rounded-lg p-1 h-11"
          style="color: var(--primary-text); background: var(--primary-bg); z-index:2;">
       <div v-for="(item,index) in navList" :key="index" style="width:25%;"
            class="h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
@@ -14,7 +14,7 @@
     <!-- 在线榜 -->
     <div class="scroll-list" v-if="defaultNavList.name === 'onlineUser'">
       <!-- 前三排名 -->
-      <template v-if="top3.onlineUserSum">
+      <template v-if="top3[rankName].length>0">
         <ThreeRank :rankList="top3.onlineUserSum" selectValue="总" :showSelect="true" lastName="total"
                    unit="小时"></ThreeRank>
       </template>
@@ -41,7 +41,7 @@
           <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5">净在线时长</a-col>
           <a-col class="head-col last-col" :xs="0" :sm="0" :md="0" :lg="7">小队</a-col>
         </a-row>
-        <a-row :class="getExtraClass(item.no)" class="box-list pointer" @click="showCard(item.uid,item.userInfo)"
+        <a-row :class="getExtraClass(item.no)" class="box-list hovered pointer" @click="showCard(item.uid,item.userInfo)"
                v-for="(item,index) in list" :key="item.id">
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4 ">
             <span v-if="item.no === 1">
@@ -80,43 +80,50 @@
     </div>
 
     <!-- 小队榜 -->
-    <div class="scroll-list" v-if="defaultNavList.name === 'team'">
+    <div class="scroll-list" v-if="defaultNavList.name === 'onlineTeamSum'">
       <!-- 前三排名 -->
-      <ThreeRank :rankList="teamList" lastName="onlineDuration" unit="小时"></ThreeRank>
+      <template v-if="top3[rankName].length>0">
+        <ThreeRank :rankList="top3.onlineTeamSum" selectValue="总" :showSelect="true" lastName="total"
+                   unit="小时"></ThreeRank>
+      </template>
+
       <!-- 小队榜列表 -->
       <div class="box">
         <a-row class="box-head">
-          <a-col class="head-col" :xs="12" :sm="12" :md="14" :lg="7">用户</a-col>
+          <a-col class="head-col" :xs="12" :sm="12" :md="14" :lg="8">小队</a-col>
           <a-col class="head-col" :xs="12" :sm="12" :md="10" :lg="5">在线时长</a-col>
-          <a-col class="head-col last-col" style="text-align:left;padding-left: 60px;" :xs="0" :sm="0" :md="0" :lg="12">
+          <a-col class="head-col last-col" style="text-align:left;padding-left: 60px;" :xs="0" :sm="0" :md="0" :lg="11">
             小队成员
           </a-col>
         </a-row>
-        <a-row class="box-list" v-for="item in teamList" :key="item.id">
-          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4">
-            <span v-if="item.id === 1">
-              <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
+        <a-row class="box-list" v-for="item in list" :key="item.no">
+          <a-col :xs="12" :sm="12" :md="14" :lg="8" class="box-col box-right px-4">
+            <span v-if="item.no === 1">
+              <a-avatar src="/img/rankingList/one.png" :size="32"></a-avatar>
             </span>
-            <span v-else-if="item.id === 2">
-              <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
+            <span v-else-if="item.no === 2">
+              <a-avatar src="/img/rankingList/two.png" :size="32"></a-avatar>
             </span>
-            <span v-else-if="item.id === 3">
-              <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
+            <span v-else-if="item.no === 3">
+              <a-avatar src="/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
-            <div v-else class="ranking-back">{{ item.id }}</div>
-            <span class="mx-4" @click="showCard(item.uid)">
-              <a-avatar :src="item.avatar" :size="40"></a-avatar>
+            <div v-else class="ranking-back">{{ item.no }}</div>
+            <span class="mx-4" >
+              <a-avatar :src="item.teamInfo.avatar" :size="40"></a-avatar>
             </span>
-            <span class="xt-text truncate" style="font-size: 16px;">{{ item.nickname }}</span>
+            <span class="xt-text truncate" style="font-size: 16px;">{{item.teamNo}} {{ item.teamInfo.name }}</span>
             <span class="ml-2 min-back">{{ item.unknown }}</span>
           </a-col>
-          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ item.onlineDuration }}
+          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ parseHours(item.totalTime,2) }}
             小时
           </a-col>
-          <a-col :xs="0" :sm="0" :md="0" :lg="12" class="box-col box-right last-col flex pl-10">
-            <div v-for="i in item.member" :key="i.id" class="mx-2" style="position:relative;">
-              <a-avatar :src="i.avatar" :size="40"></a-avatar>
-              <span v-if="i.captain" class="captain">队长</span>
+          <a-col :xs="0" :sm="0" :md="0" :lg="11" class="box-col box-right last-col flex pl-10">
+            <div @click="showCard(item.leader.userInfo.uid,item.leader.userInfo)"  class="mx-2 hovered pointer" style="position:relative;" >
+              <a-avatar :src="item.leader.userInfo.avatar" :size="40"></a-avatar>
+              <span  class="captain">队长</span>
+            </div>
+            <div @click="showCard(i.uid,i.userInfo)" v-for="i in item.members" :key="i.id" class="mx-2 pointer hovered" style="position:relative;">
+              <a-avatar :src="i.userInfo.avatar" :size="40"></a-avatar>
             </div>
           </a-col>
         </a-row>
@@ -133,21 +140,24 @@
       <!-- 我的排名 -->
       <div class="my-style">
         <a-row class="box-list my-rank xt-mask">
-          <a-col :xs="12" :sm="12" :md="14" :lg="7" class="box-col box-right px-4">
-            <div class="ranking-back">{{ myTeam.id }}</div>
-            <span class="mx-4" @click="showCard(item.uid)">
-              <a-avatar :src="myTeam.avatar" :size="40"></a-avatar>
+          <a-col :xs="12" :sm="12" :md="14" :lg="9" class="box-col box-right px-4">
+            <div class="ranking-back">{{ team.rankNo }}</div>
+            <span class="mx-4" >
+              <a-avatar :src="team.avatar" :size="40"></a-avatar>
             </span>
-            <span class="xt-text truncate" style="font-size: 16px;">{{ myTeam.nickname }}</span>
-            <span class="ml-2 min-back">{{ myTeam.unknown }}</span>
+            <span class="xt-text truncate" style="font-size: 16px;">{{ team.name }}</span>
+            <span class="ml-2 min-back">{{ team.no }}</span>
           </a-col>
-          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ myTeam.onlineDuration }}
+          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ team.onlineTotal }}
             小时
           </a-col>
-          <a-col :xs="0" :sm="0" :md="0" :lg="12" class="box-col box-right last-col flex pl-10">
-            <div v-for="i in myTeam.member" :key="i.id" class="mx-2" style="position:relative;">
-              <a-avatar :src="i.avatar" :size="40"></a-avatar>
-              <span v-if="i.captain" class="captain">队长</span>
+          <a-col :xs="0" :sm="0" :md="0" :lg="10" class="box-col box-right last-col flex pl-10">
+            <div class="mx-2" style="position:relative;">
+              <a-avatar :src="teamLeader.userInfo.avatar" :size="40"></a-avatar>
+              <span class="captain">队长</span>
+            </div>
+            <div v-for="i in teamMembers" :key="i.id" class="mx-2" style="position:relative;">
+              <a-avatar :src="i.userInfo.avatar" :size="40"></a-avatar>
             </div>
           </a-col>
         </a-row>
@@ -350,17 +360,23 @@ import { appStore } from '../../store'
 import { onLineList, myRanking, teamList, myTeam, inviteList, myInvite, signInList, mySignIn } from '../../js/rank'
 import ThreeRank from '../../components/rank/ThreeRank.vue'
 import { rankStore } from '../../store/rank'
+import Template from '../../../user/pages/Template.vue'
+import { teamStore } from '../../store/team'
 
 export default {
   name: 'Rank',
   components: {
+    Template,
     ThreeRank
   },
   data () {
     return {
       page: 1,//分页
       onLineList,// 在线榜
-      top3: [],//前3名，用于格式化前三名的头像
+      top3: {
+        onlineUserSum:[],
+        onlineTeamSum:[]
+      },//前3名，用于格式化前三名的头像
 
       myRanking,// 我的在线榜排行
       teamList, // 小队榜
@@ -373,9 +389,9 @@ export default {
       // 榜单tab
       navList: [
         { title: '在线榜', icon: '../../../../public/img/rankingList/rocket.png', name: 'onlineUser' },
-        { title: '小队榜', icon: '../../../../public/img/rankingList/tiny_spot.png', name: 'team' },
-        { title: '邀请榜', icon: '../../../../public/img/rankingList/handshake.png', name: 'invite' },
-        { title: '签到榜', icon: '../../../../public/img/rankingList/mantelpiece.png', name: 'signIn' }
+        { title: '小队榜', icon: '../../../../public/img/rankingList/tiny_spot.png', name: 'onlineTeamSum' },
+        // { title: '邀请榜', icon: '../../../../public/img/rankingList/handshake.png', name: 'invite' },
+        // { title: '签到榜', icon: '../../../../public/img/rankingList/mantelpiece.png', name: 'signIn' }
       ],
       // 默认选中
       defaultNavList: { title: '在线榜', icon: '../../../../public/img/rankingList/rocket.png', name: 'onlineUser' },
@@ -403,6 +419,7 @@ export default {
   },
   computed: {
     ...mapState(rankStore, ['rankLists', 'pageInfos','myRanks']),
+    ...mapState(teamStore,['team','teamMembers','teamLeader']),
     /**
      * 榜单英文名
      * @returns {string}
@@ -412,8 +429,9 @@ export default {
         if (this.selectValue === 'sum') {
           return 'onlineUserSum'
         }
+      }else{
+        return this.defaultNavList.name
       }
-      return ''
     },
     /**
      * 翻页信息
@@ -444,7 +462,7 @@ export default {
         return this.myRanks[this.rankName]
       }
       return false
-    }
+    },
   },
   methods: {
     ...mapActions(appStore, ['showUserCard']),
@@ -473,19 +491,63 @@ export default {
     reloadMy(){
       this.getMy(this.rankName)
     },
+    getTop3FromUserSumRank(){
+      let top3 = [
+        {
+          ...this.rankLists.onlineUserSum[1][0],
+          uid:this.rankLists.onlineUserSum[1][0].uid,
+          name:this.rankLists.onlineUserSum[1][0].userInfo.nickname,
+          avatar:this.rankLists.onlineUserSum[1][0].userInfo.avatar
+        },
+        {
+          ...this.rankLists.onlineUserSum[1][1],
+          uid:this.rankLists.onlineUserSum[1][1].uid,
+          name:this.rankLists.onlineUserSum[1][1].userInfo.nickname,
+          avatar:this.rankLists.onlineUserSum[1][1].userInfo.avatar
+        },
+        {
+          ...this.rankLists.onlineUserSum[1][2],
+          uid:this.rankLists.onlineUserSum[1][2].uid,
+          name:this.rankLists.onlineUserSum[1][2].userInfo.nickname,
+          avatar:this.rankLists.onlineUserSum[1][2].userInfo.avatar
+        },
+      ]
+      top3[0].total = this.parseHours(top3[0].totalTime)
+      top3[1].total = this.parseHours(top3[1].totalTime)
+      top3[2].total = this.parseHours(top3[2].totalTime)
+      return top3
+    },
     reload () {
       this.getRank(this.rankName, this.page,{withTeam:1}).then(() => {
-        let top3 = [
-          this.rankLists.onlineUserSum[1][0],
-          this.rankLists.onlineUserSum[1][1],
-          this.rankLists.onlineUserSum[1][2]
-        ]
-        console.log('be tiopr', top3)
-        top3[0].total = this.parseHours(top3[0].totalTime)
-        top3[1].total = this.parseHours(top3[1].totalTime)
-        top3[2].total = this.parseHours(top3[2].totalTime)
-        this.top3['onlineUserSum'] = top3
-        console.log(this.top3, 'top3')
+        if(this.rankName==='onlineUserSum'){
+          this.top3['onlineUserSum'] = this.getTop3FromUserSumRank()
+        }else if(this.rankName==='onlineTeamSum'){
+          let top3 = [
+            {
+              ...this.rankLists.onlineTeamSum[1][0],
+              avatar:this.rankLists.onlineTeamSum[1][0].teamInfo.avatar,
+              name:this.rankLists.onlineTeamSum[1][0].teamInfo.name,
+              id:this.rankLists.onlineTeamSum[1][0].teamInfo.no
+            },
+            {
+              ...this.rankLists.onlineTeamSum[1][1],
+              avatar:this.rankLists.onlineTeamSum[1][1].teamInfo.avatar,
+              name:this.rankLists.onlineTeamSum[1][1].teamInfo.name,
+              id:this.rankLists.onlineTeamSum[1][1].teamInfo.no
+            },
+            {
+              ...this.rankLists.onlineTeamSum[1][2],
+              avatar:this.rankLists.onlineTeamSum[1][2].teamInfo.avatar,
+              name:this.rankLists.onlineTeamSum[1][2].teamInfo.name,
+              id:this.rankLists.onlineTeamSum[1][2].teamInfo.no
+            },
+          ]
+          top3[0].total = this.parseHours(top3[0].totalTime,2)
+          top3[1].total = this.parseHours(top3[1].totalTime,2)
+          top3[2].total = this.parseHours(top3[2].totalTime,2)
+          this.top3['onlineTeamSum'] = top3
+        }
+
       })
 
     },
@@ -500,8 +562,8 @@ export default {
         return 'third'
       }
     },
-    parseHours (minutes) {
-      return (minutes / 60).toFixed(0)
+    parseHours (minutes,fixed=0) {
+      return (minutes / 60).toFixed(fixed)
     },
     clickNav (item, index) {
       this.activeIndex = index
@@ -522,6 +584,13 @@ export default {
     },
   },
   watch: {
+    'defaultNavList.name':{
+      handler(newVal){
+        this.page=1
+        this.reload()
+      }
+    },
+
     selectValue: {
       immediate: true,
       deep: true,
@@ -648,7 +717,7 @@ export default {
   height: 92%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 0 100px;
+  padding: 0 0 120px;
 }
 
 .scroll-list::-webkit-scrollbar {
@@ -744,11 +813,13 @@ export default {
     }
   }
 }
-
-.box-list {
+.hovered{
   &:hover {
     opacity: 0.8;
   }
+}
+.box-list {
+
 
   width: 100%;
   height: 72px;
@@ -839,9 +910,10 @@ export default {
 
 .captain {
   position: absolute;
-  bottom: 0;
+  bottom: -4px;
   left: 0;
   right: 0;
+  opacity: 0.8;
   background: var(--modal-bg);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
@@ -849,6 +921,7 @@ export default {
   font-size: 10px;
   color: var(-secondary-text);
   height: 16px;
+  line-height: 16px;
   text-align: center;
   font-weight: 600;
 }
