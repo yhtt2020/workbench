@@ -3,9 +3,9 @@
   <div class="top-three-box">
     <div class="box-item pointer" @click="showCard(rankList[1].userInfo.uid,rankList[1].userInfo)">
       <div class="item-avatar two-avatar" >
-        <a-avatar :src="rankList[1].userInfo.avatar" class="other-img"></a-avatar>
+        <a-avatar :src="rankList[1].avatar" class="other-img"></a-avatar>
       </div>
-      <span class="xt-text mb-2 truncate">{{ rankList[1].userInfo.nickname }}</span>
+      <span class="xt-text mb-2 truncate">{{ rankList[1].name }}</span>
       <span>
         <span v-if="showSelect" class="text-back">{{ selectValue.slice(0, 1) }}</span>
         <span class="xt-text-2 ml-1">
@@ -17,10 +17,10 @@
     <div class="one-box-item pointer" @click="showCard(rankList[0].userInfo.uid,rankList[0].userInfo)">
       <div class="one-avatar">
         <div class="avatar-img" >
-          <a-avatar :src="rankList[0].userInfo.avatar" class="one-img"></a-avatar>
+          <a-avatar :src="rankList[0].avatar" class="one-img"></a-avatar>
         </div>
       </div>
-      <div class="xt-text mb-2 truncate">{{ rankList[0].userInfo.nickname }}</div>
+      <div class="xt-text mb-2 truncate">{{ rankList[0].name }}</div>
       <span>
         <span v-if="showSelect" class="text-back">{{ selectValue.slice(0, 1) }}</span>
         <span class="xt-text-2 ml-1">
@@ -31,9 +31,9 @@
     </div>
     <div class="box-item pointer" @click="showCard(rankList[2].userInfo.uid,rankList[2].userInfo)">
       <div class="item-avatar three-avatar" >
-        <a-avatar :src="rankList[2].userInfo.avatar" class="other-img"></a-avatar>
+        <a-avatar :src="rankList[2].avatar" class="other-img"></a-avatar>
       </div>
-      <span class="xt-text mb-2 truncate">{{ rankList[2].userInfo.nickname }}</span>
+      <span class="xt-text mb-2 truncate">{{ rankList[2].name }}</span>
       <span>
         <span v-if="showSelect" class="text-back">{{ selectValue.slice(0, 1) }}</span>
         <span class="xt-text-2 ml-1">
@@ -86,7 +86,10 @@ export default {
   methods: {
     ...mapActions(appStore, ['showUserCard']),
     showCard (uid,userInfo) {
-      this.showUserCard(uid,userInfo)
+      if(uid){
+        this.showUserCard(uid,userInfo)
+      }
+
     },
   }
 }

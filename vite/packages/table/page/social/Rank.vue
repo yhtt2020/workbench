@@ -44,16 +44,7 @@
         <a-row :class="getExtraClass(item.no)" class="box-list hovered pointer" @click="showCard(item.uid,item.userInfo)"
                v-for="(item,index) in list" :key="item.id">
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4 ">
-            <span v-if="item.no === 1">
-              <a-avatar src="/img/rankingList/one.png" :size="32"></a-avatar>
-            </span>
-            <span v-else-if="item.no === 2">
-              <a-avatar src="/img/rankingList/two.png" :size="32"></a-avatar>
-            </span>
-            <span v-else-if="item.no === 3">
-              <a-avatar src="/img/rankingList/three.png" :size="32"></a-avatar>
-            </span>
-            <div v-else class="ranking-back">{{ item.no }}</div>
+            <MedalNo :no="item.no"></MedalNo>
             <span class="mx-4">
               <a-avatar :src="item.userInfo.avatar" :size="40"></a-avatar>
             </span>
@@ -70,7 +61,7 @@
             <span class="mr-4 team-box">
               <a-avatar :src="item.teamInfo.teamInfo.avatar" :size="40"></a-avatar>
             </span>
-            <span>{{item.teamInfo.teamInfo.no}} {{ item.teamInfo.teamInfo.name }}</span>
+            <span class="min-back mr-1">{{item.teamInfo.teamInfo.no}}</span><span> {{ item.teamInfo.teamInfo.name }}</span>
           </a-col>
           <a-col v-else :span="6" class="box-col last-col flex justify-center">-</a-col>
         </a-row>
@@ -98,20 +89,12 @@
         </a-row>
         <a-row class="box-list" v-for="item in list" :key="item.no">
           <a-col :xs="12" :sm="12" :md="14" :lg="8" class="box-col box-right px-4">
-            <span v-if="item.no === 1">
-              <a-avatar src="/img/rankingList/one.png" :size="32"></a-avatar>
-            </span>
-            <span v-else-if="item.no === 2">
-              <a-avatar src="/img/rankingList/two.png" :size="32"></a-avatar>
-            </span>
-            <span v-else-if="item.no === 3">
-              <a-avatar src="/img/rankingList/three.png" :size="32"></a-avatar>
-            </span>
-            <div v-else class="ranking-back">{{ item.no }}</div>
+            <MedalNo :no="item.no"></MedalNo>
+
             <span class="mx-4" >
               <a-avatar :src="item.teamInfo.avatar" :size="40"></a-avatar>
             </span>
-            <span class="xt-text truncate" style="font-size: 16px;">{{item.teamNo}} {{ item.teamInfo.name }}</span>
+            <span class="xt-text truncate" style="font-size: 16px;"><span class="min-back mr-1">{{item.teamNo}}</span><span>{{ item.teamInfo.name }}</span></span>
             <span class="ml-2 min-back">{{ item.unknown }}</span>
           </a-col>
           <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ parseHours(item.totalTime,2) }}
@@ -137,31 +120,7 @@
           <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
         </div>
       </div>
-      <!-- 我的排名 -->
-      <div class="my-style">
-        <a-row class="box-list my-rank xt-mask">
-          <a-col :xs="12" :sm="12" :md="14" :lg="9" class="box-col box-right px-4">
-            <div class="ranking-back">{{ team.rankNo }}</div>
-            <span class="mx-4" >
-              <a-avatar :src="team.avatar" :size="40"></a-avatar>
-            </span>
-            <span class="xt-text truncate" style="font-size: 16px;">{{ team.name }}</span>
-            <span class="ml-2 min-back">{{ team.no }}</span>
-          </a-col>
-          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ team.onlineTotal }}
-            小时
-          </a-col>
-          <a-col :xs="0" :sm="0" :md="0" :lg="10" class="box-col box-right last-col flex pl-10">
-            <div class="mx-2" style="position:relative;">
-              <a-avatar :src="teamLeader.userInfo.avatar" :size="40"></a-avatar>
-              <span class="captain">队长</span>
-            </div>
-            <div v-for="i in teamMembers" :key="i.id" class="mx-2" style="position:relative;">
-              <a-avatar :src="i.userInfo.avatar" :size="40"></a-avatar>
-            </div>
-          </a-col>
-        </a-row>
-      </div>
+
     </div>
 
     <!-- 邀请榜 -->
@@ -177,16 +136,8 @@
         </a-row>
         <a-row class="box-list" v-for="item in inviteList" :key="item.id">
           <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4">
-            <span v-if="item.id === 1">
-              <a-avatar src="../../../../public/img/rankingList/one.png" :size="32"></a-avatar>
-            </span>
-            <span v-else-if="item.id === 2">
-              <a-avatar src="../../../../public/img/rankingList/two.png" :size="32"></a-avatar>
-            </span>
-            <span v-else-if="item.id === 3">
-              <a-avatar src="../../../../public/img/rankingList/three.png" :size="32"></a-avatar>
-            </span>
-            <div v-else class="ranking-back">{{ item.id }}</div>
+
+            <MedalNo :no="item.id"></MedalNo>
             <span class="mx-4" @click="showCard(item.uid)">
               <a-avatar :src="item.avatar" :size="40"></a-avatar>
             </span>
@@ -327,10 +278,10 @@
         </div>
       </div>
       <!-- 我的排名 -->
-      <div class="my-style" v-if="myRank">
-        <a-row class="box-list my-rank xt-mask">
+      <div class="my-style" v-if="rankName!=='onlineTeamSum'">
+        <a-row v-if="myRank" class="box-list my-rank xt-mask">
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4">
-            <div class="ranking-back">{{ myRank.no }}</div>
+            <MedalNo :no="myRank.no"></MedalNo>
             <span class="mx-4" @click="showCard(myRank.uid)">
               <a-avatar :src="myRank.userInfo.avatar" :size="40"></a-avatar>
             </span>
@@ -349,6 +300,32 @@
           </a-col>
         </a-row>
       </div>
+      <!-- 我的排名 -->
+      <div class="my-style" v-else>
+        <a-row v-if="team && myRank" class="box-list my-rank xt-mask">
+          <a-col :xs="12" :sm="12" :md="14" :lg="9" class="box-col box-right px-4">
+            <MedalNo :no="myRank.no"></MedalNo>
+            <span class="mx-4" >
+              <a-avatar :src="myRank.teamInfo.avatar" :size="40"></a-avatar>
+            </span>
+            <span class="mr-2 min-back">{{ myRank.teamInfo.no }}</span>
+            <span class="xt-text truncate" style="font-size: 16px;">{{ myRank.teamInfo.name }}</span>
+
+          </a-col>
+          <a-col :xs="12" :sm="12" :md="10" :lg="5" class="box-col box-right justify-center">{{ parseHours(myRank.onlineInfo.total_time,2) }}
+            小时
+          </a-col>
+          <a-col :xs="0" :sm="0" :md="0" :lg="10" class="box-col box-right last-col flex pl-10">
+            <div class="mx-2" style="position:relative;">
+              <a-avatar :src="myRank.leader.userInfo.avatar" :size="40"></a-avatar>
+              <span class="captain">队长</span>
+            </div>
+            <div v-for="i in myRank.members" :key="i.id" class="mx-2" style="position:relative;">
+              <a-avatar :src="i.userInfo.avatar" :size="40"></a-avatar>
+            </div>
+          </a-col>
+        </a-row>
+      </div>
     </div>
   </div>
 
@@ -362,10 +339,12 @@ import ThreeRank from '../../components/rank/ThreeRank.vue'
 import { rankStore } from '../../store/rank'
 import Template from '../../../user/pages/Template.vue'
 import { teamStore } from '../../store/team'
+import MedalNo from './MedalNo.vue'
 
 export default {
   name: 'Rank',
   components: {
+    MedalNo,
     Template,
     ThreeRank
   },
@@ -588,6 +567,7 @@ export default {
       handler(newVal){
         this.page=1
         this.reload()
+        this.reloadMy()
       }
     },
 
@@ -841,17 +821,7 @@ export default {
     border-right: none;
   }
 
-  .ranking-back {
-    height: 32px;
-    padding: 0 10px;
-    line-height: 32px;
-    border-radius: 8px;
-    text-align: center;
-    background: var(--mask-bg);
-    font-size: 18px;
-    color: var(--primary-text);
-    font-weight: 500;
-  }
+
 }
 
 .my-rank {
