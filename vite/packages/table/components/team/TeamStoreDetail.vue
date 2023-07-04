@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pb-10 pt-4 h-full">
+  <div class="pl-4 pb-10 pt-4 h-full">
     <HorizontalPanel :navList="avatarList" v-model:selectType="listItem" class="mb-5"></HorizontalPanel>
     <template v-if="listItem.name === 'shop_store'">
       <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 62vh;">
@@ -12,7 +12,7 @@
                   <span class="avatar-font" :style="avatarFontColor(item)">
                     {{item.title}}
                   </span>
-                  <span class="w-11 h-6 rank-font rounded-md my-2.5" :style="avatarBgFontColor(item)">
+                  <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarBgFontColor(item)">
                     {{item.avatar_rank}}
                   </span>
                   <span class="get-way-font">
@@ -21,17 +21,17 @@
                 </div>
               </div>
               <div class="avatar-bottom flex">
-                <a-button type="primary" class="mr-3 rounded-md flex items-center justify-center" @click="buyNow(item)" 
-                 style="width: 104px;color: var(--active-text);height: 48px;"
+                <a-button type="primary" class="mr-3 rounded-xl flex items-center justify-center" @click="buyNow(item)" 
+                 style="width: 104px;color: var(--active-text);height: 44px;"
                 >
                   ￥ <span class="avatar-font" style="color: var(--active-text);">{{item.price}}</span>
                 </a-button>
-                <a-button type="primary" class="mr-3  rounded-md avatar-font flex items-center justify-center" @click="scorePay(item)" 
-                 style="width: 104px;color: var(--active-text);height: 48px;"
+                <a-button type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center" @click="scorePay(item)" 
+                 style="width: 104px;color: var(--active-text);height: 44px;"
                 >
                   {{ item.score }}
                 </a-button>
-                <a-button type="primary" class="rounded-md" @click="teamGift(item)" style="width: 104px;height: 48px;color: var(--active-text);">
+                <a-button type="primary" class="rounded-xl" @click="teamGift(item)" style="width: 104px;height: 44px;color: var(--active-text);">
                   赠送
                 </a-button>
               </div>
@@ -57,7 +57,7 @@
               </span>
             </div>
           </div>
-          <a-button type="primary" class="rounded-md h-12 w-full" style="margin-right: 0;color: var(--active-text);">
+          <a-button type="primary" class="rounded-xl h-12 w-full" style="margin-right: 0;color: var(--active-text);">
             使用
           </a-button>
         </div>
@@ -72,13 +72,13 @@
     <div class="flex p-3 mb-6">
       <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">收银台</div>
       <div class="close-pay w-12 h-12 rounded-lg active-button" @click="payVisible = false">
-        <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+        <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
       </div>
     </div>
     <!-- 未购买情况下走扫码支付的流程 -->
     <template v-if="isPay === false">
       <div class="w-full flex-col flex px-10">
-        <div class="h-24 flex rounded-lg p-4 mb-4" style="color: var(--primary-text);background: var(--secondary-bg);">
+        <div class="h-24 flex rounded-xl p-4 mb-4" style="color: var(--primary-text);background: var(--secondary-bg);">
           <div style="width:64px;height:64px;" class="flex items-center justify-center">
             <img :src="needPayAvatar.url"  class="w-full h-full object-cover" alt="">
           </div>
@@ -87,7 +87,7 @@
             <span class="avatar-font" style="color: var(--primary-text);">道具</span>
           </div>
         </div>
-        <HorzontanlPanelIcon :navList="payMethod" v-model:selectType="payWeixin"></HorzontanlPanelIcon>
+        <HorzontanlPanelIcon :navList="payMethod" v-model:selectType="payWeixin" style="background: var(--secondary-bg);!important"></HorzontanlPanelIcon>
         <template v-if="payWeixin.type === 'wechat'">
           <div class="flex my-8 px-1">
             <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
@@ -96,8 +96,8 @@
             <div class="flex flex-col ml-8 justify-center">
               <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
               <div class="flex items-center">
-                <Icon icon="weixinzhifu" style="font-size: 1em;"></Icon>
-                <span class="avatar-font" style="color: var(--primary-text);">微信扫码支付</span>
+                <Icon icon="weixinzhifu" style="font-size: 0.55em;"></Icon>
+                <span class="avatar-font  ml-2" style="color: var(--primary-text);">微信扫码支付</span>
               </div>
             </div>
           </div>
@@ -110,8 +110,8 @@
             <div class="flex flex-col ml-8 justify-center">
               <span class="mb-2 avatar-price avatar-font">￥{{ needPayAvatar.price }}</span>
               <div class="flex items-center">
-                <Icon icon="zhifubao" style="font-size: 1em;"></Icon>
-                <span class="avatar-font" style="color: var(--primary-text);">支付宝扫码支付</span>
+                <Icon icon="zhifubao" style="font-size: 0.55em;"></Icon>
+                <span class="avatar-font ml-2" style="color: var(--primary-text);">支付宝扫码支付</span>
               </div>
             </div>
           </div>
@@ -141,11 +141,11 @@
    <div class="flex p-4 mb-6">
     <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">收银台</div>
     <div class="close-pay w-12 h-12 rounded-lg active-button" @click="pointsVisible = false">
-     <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+     <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
     </div>
    </div>
    <div class="px-10 pb-10 flex flex-col">
-    <div class="h-24 flex justify-between mb-3 items-center rounded-lg p-4" style="color:var(--primary-text);background:var(--secondary-bg);">
+    <div class="h-24 flex justify-between mb-3 items-center rounded-xl p-4" style="color:var(--primary-text);background:var(--secondary-bg);">
       <div class="flex">
         <div style="width:64px;height:64px;" class="flex items-center justify-center">
           <img :src="needPayAvatar.url"  class="w-full h-full object-cover" alt="">
@@ -159,14 +159,14 @@
         {{ needPayAvatar.score }}
       </div>
     </div>
-    <div class="h-16 mb-3 flex items-center justify-between rounded-lg" style="color: var(--primary-text);background: var(--secondary-bg);">
+    <div class="h-16 mb-3 flex items-center justify-between rounded-xl" style="color: var(--primary-text);background: var(--secondary-bg);">
       <div class="px-4 success-text">可用积分</div>
       <div class="px-4 avatar-font" style="color:var(--secondary-text);">2000积分</div>
     </div>
-    <a-button type="primary" v-if="isEnough" class="rounded-md" style="margin-right: 0;height: 48px; width: 400px;color: var(--active-text);" @click="immediateExchange">
+    <a-button type="primary" v-if="isEnough" style="border-radius: 12px; margin-right: 0;height: 48px; width: 400px;color: var(--active-text);" @click="immediateExchange">
       立即兑换
     </a-button>
-    <a-button v-else class="rounded-md" disabled style="border:none;height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);" 
+    <a-button v-else  disabled style="border:none;border-radius: 12px; height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);" 
      @click="immediateExchange"
     >
       积分不足
@@ -184,7 +184,7 @@
           <span class="avatar-font" style="color: var(--primary-text);">收银台</span>
         </div>
         <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftVisible = false">
-          <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+          <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
         </div>
       </div>
     </div>
@@ -194,24 +194,24 @@
       <div class="flex flex-col mx-10 pb-10">
         <span class="avatar-font mb-4" style="color: var(--primary-text);">选择购买方式</span>
         <div class="flex flex-col">
-          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-lg" 
+          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-xl" 
            style="background: var(--secondary-bg);"
            @click="pricePay"
           >
             <span class="avatar-font" style="color: var(--primary-text);">金额</span>
             <div class="flex items-center justify-center">
               <span class="avatar-font mr-4" style="color: var(--primary-text);">￥9.0</span>
-              <Icon icon="xiangyou" style="font-size: 0.45em;color: var(--primary-text);"></Icon>
+              <Icon icon="xiangyou" style="font-size: 0.4765em;color: var(--primary-text);"></Icon>
             </div>
           </div>
-          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-lg" 
+          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-xl" 
            style="background: var(--secondary-bg);"
            @click="pricePay"
           >
             <span class="avatar-font" style="color: var(--primary-text);">积分（可用：2000）</span>
             <div class="flex items-center justify-center">
               <span class="avatar-font mr-4" style="color: var(--primary-text);">￥9.0</span>
-              <Icon icon="xiangyou" style="font-size: 0.45em;color: var(--primary-text);"></Icon>
+              <Icon icon="xiangyou" style="font-size: 0.4765em;color: var(--primary-text);"></Icon>
             </div>
           </div>
         </div>
@@ -223,13 +223,13 @@
       <div class="w-full h-full flex-col flex pb-10 pt-4 px-3">
         <div class="mb-3 h-12 flex justify-between">
           <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftShow = false">
-            <Icon icon="xiangzuo" style="font-size: 0.65em;"></Icon>
+            <Icon icon="xiangzuo" style="font-size: 0.5715em;"></Icon>
           </div>
           <div class="flex items-center justify-center" >
             <span class="avatar-font" style="color: var(--primary-text);">选择用户</span>
           </div>
           <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftVisible = false">
-            <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+            <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
           </div>
         </div>
         <div class="mx-5 mb-4">
@@ -357,7 +357,7 @@ export default {
     }
   },
   mounted(){
-    this.teamIndex = 4654
+    
   },
   methods:{
     /**
@@ -450,7 +450,7 @@ export default {
   font-weight: 500;
 }
 .avatar-price{
-  font-family: Oswald-Regular;
+  font-family: Oswald;
   font-size: 24px;
   color: #FF4D4F;
   font-weight: 400;
@@ -502,11 +502,12 @@ export default {
 }
 :deep(.nav-item){
   width: 50% !important;
+  border-radius: 7px !important;
 }
 :deep(.panel-icon){
   width: 50% !important;
   &>svg{
-    font-size: 0.85em !important;
+    font-size: 0.65em !important;
   }
   &>.panel-title{
     font-family: PingFangSC-Regular;
@@ -515,7 +516,8 @@ export default {
   }
 }
 :deep(.active-item){
-  background: rgba(80, 139, 254, 0.25) !important;
+  background: var(--active-secondary-bg);
+  color: var(--active-text);
 }
 
 .avatar-bg{
