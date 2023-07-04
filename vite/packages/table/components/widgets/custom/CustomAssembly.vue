@@ -292,7 +292,7 @@
 
 
 <script>
-import Radio from '../../card/hooks/Radio.vue';
+import Radio from '../../card/components/Radio.vue';
 import CardState from '../../../components/card/cardState.vue';
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
