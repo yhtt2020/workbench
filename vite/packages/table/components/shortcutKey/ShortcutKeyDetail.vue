@@ -30,8 +30,13 @@
     </div>
   </div>
   <!-- 快捷键列表 -->
-  <div style="width:98%;height:85%;">
-    <ShortcutKeyList :keyList="keyList" :keyIndex="keyIndex" @setKeyItem="setKeyItem" :keyBoxStyle="{background:'var(--primary-bg)'}"></ShortcutKeyList>
+  <div class="key-list">
+    <div class="side-nav">
+      
+    </div>
+    <div class="list-item">
+      <ShortcutKeyList :keyList="keyList" :keyIndex="keyIndex" @setKeyItem="setKeyItem"></ShortcutKeyList>
+    </div>
   </div>
  </div>
  <!-- 无详情快捷方案 -->
@@ -284,5 +289,25 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+  }
+  .key-list{
+    width:98%;
+    height:85%;
+    background: var(--primary-bg);
+    border-radius: 12px;
+    display: flex;
+    .side-nav{
+      // width:252px;
+      width: 20%;
+      height: 100%;
+      background: var(--secondary-bg);
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+      padding: 16px;
+    }
+    .list-item{
+      width: 80%;
+      height: 100%;
+    }
   }
 </style>
