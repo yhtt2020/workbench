@@ -65,7 +65,7 @@
   <a-drawer v-model:visible="openDrawer" style="z-index:9999;" width="320" placement="right">
      <template #extra>
       <a-space>
-        <div class="add-scheme" @click="saveVal">立即添加</div>
+        <div class="add-scheme" @click="addPlan">立即添加</div>
       </a-space>
     </template>
     <div class="drawer-center">
@@ -161,6 +161,9 @@ export default {
     previewKay(item){
       this.keyScheme = item
       this.showModal = true
+    },
+    addPlan(){
+      console.log(this.keyScheme)
     }
   }
 }

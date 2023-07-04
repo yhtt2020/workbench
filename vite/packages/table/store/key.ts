@@ -48,7 +48,10 @@ let keyData = [
           }
         ],
         title: '首选项',
-        isEdit: false
+        isEdit: false, //是否编辑
+        addNote: false, //是否添加备注
+        isNote: false, //是否编辑备注，
+        noteVal: ''
       },
       {
         id: 3,
@@ -67,7 +70,10 @@ let keyData = [
           }
         ],
         title: '清除浏览器数据',
-        isEdit: false
+        isEdit: false,
+        addNote: false,
+        isNote: false,
+        noteVal: ''
       },
       {
         id: 4,
@@ -86,7 +92,10 @@ let keyData = [
           }
         ],
         title: '隐藏 Microsoft Edge',
-        isEdit: false
+        isEdit: false,
+        addNote: false,
+        isNote: false,
+        noteVal: ''
       },
       {
         id: 5,
@@ -110,7 +119,10 @@ let keyData = [
           }
         ],
         title: '通过系统对话框打印',
-        isEdit: false
+        isEdit: false,
+        addNote: false,
+        isNote: false,
+        noteVal: ''
       },
       {
         id: 6,
@@ -515,9 +527,11 @@ export const keyStore = defineStore("key", {
   state: () => ({
     //快捷键方案列表
     shortcutKeyList: [...keyData.concat()],
+    // shortcutKeyList: [],
     // 最近使用的快捷键方案列表
     recentlyUsedList: [],
     // 推荐方案列表
+    // sellSchemeList: [...keyData.concat()],
     sellSchemeList: [...keyData.concat()],
     //创意市场列表
     marketList: [
@@ -3344,7 +3358,22 @@ export const keyStore = defineStore("key", {
       })
     },
     setMarketList(item){
-      this.marketList[this.marketList.length-1].children.push(item)
+      if(this.marketList[this.marketList.length-1].children.find(i => i.id === item.id )){
+        this.marketList[this.marketList.length-1].children.find((i,index) => {
+          if(i.id === item.id){
+            this.marketList[this.marketList.length-1].children.splice(index,1,item)
+          }
+        })
+        this.setSchemeList(item)
+      }else{
+        this.marketList[this.marketList.length-1].children.push(item)
+        if(this.shortcutKeyList.find(i => i.id === item.id )){
+          this.setSchemeList(item)
+        }else{
+          this.setShortcutKeyList(item)
+        }
+        
+      }
     },
     delRecentlyEmpty({keyList, id}){
       this.recentlyUsedList.forEach((item, index) => {
