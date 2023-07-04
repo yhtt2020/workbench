@@ -1,4 +1,4 @@
-import cache from "../../../../page/app/addIcon/hooks/cache";
+import cache from "../cache";
 import { BG_COLOR, SECONDARY_BG_COLOR, TEXT_COLOR ,WALLPAPER_COLOR} from "./types";
 /**
  * 获取背景颜色

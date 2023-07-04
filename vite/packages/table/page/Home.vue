@@ -263,7 +263,6 @@
 </template>
 
 <script>
-import cache from "./app/addIcon/hooks/cache";
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";

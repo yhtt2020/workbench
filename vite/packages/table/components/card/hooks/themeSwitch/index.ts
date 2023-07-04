@@ -1,4 +1,4 @@
-import cache from "../../../../page/app/addIcon/hooks/cache";
+import cache from "../cache";
 import { DARK_THEME, LIGHT_THEME, THEME_NAME, OLD_THEME_NAME, SUFFIX } from "./types";
 
 /**
