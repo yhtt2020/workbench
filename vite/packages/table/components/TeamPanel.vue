@@ -6,25 +6,18 @@
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
-<<<<<<< HEAD
-              <li  @click="closeDetail" class="flex pointer items-center mb-1 justify-center">
-=======
               <li  @click="closeDetail" class="flex pointer items-center justify-center mb-3">
->>>>>>> develop-50
                 <div class="rounded-lg"  style="background: var(--secondary-bg);">
                   <Icon icon="doubleright"></Icon>
                 </div>
               </li>
 
-<<<<<<< HEAD
-=======
               <!--
                 <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
              style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
           <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
         </div>
                -->
->>>>>>> develop-50
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
               </li>
@@ -63,7 +56,7 @@
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
             <div v-if="showDetail && currentTab==='store'">
-              <TeamStoreDetail></TeamStoreDetail>
+              <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
             </div>
           </a-col>
         </a-row>

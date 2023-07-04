@@ -1,12 +1,7 @@
 <template>
   <div style="position: relative;">
-<<<<<<< HEAD
-    <div class="" style="width: 100px; height: 100px;position: relative;">
-      <img :src="url" class="w-full h-full object-contain" alt="">
-=======
     <div v-if="url"  class="" style="width: 100px; height: 100px;position: relative;">
       <img :src="url" class="w-full h-full object-cover" alt="">
->>>>>>> develop-50
       <div v-if="tag" class="rounded-lg w-10 tag"
       :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}"
       >
