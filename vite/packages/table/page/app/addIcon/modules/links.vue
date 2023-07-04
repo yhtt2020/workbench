@@ -31,7 +31,7 @@
 import Radio from "../../../../components/card/hooks/Radio.vue";
 import { getSelect } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
-import cache from "../hooks/cache";
+import cache from "../../../../components/card/hooks/cache";
 import { scrollable } from "../hooks/scrollable";
 
 export default {
@@ -168,8 +168,6 @@ export default {
       this.selectName = index;
     },
     handleChange(index) {
-      let iconRef = this.$refs["iconRef"];
-      // iconRef.cancelAll();
       this.selectIndex = index;
       this.getData(this.selectIndex);
     },
