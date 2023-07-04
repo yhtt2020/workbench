@@ -169,3 +169,12 @@
     color: var(--primary-text);
   }
 }
+
+.ant-btn-primary {
+  background: var(--active-bg);
+  border: 3px var(--active-secondary-bg) solid;
+  &:hover {
+    background: var(--active-bg);
+    border: 3px var(--active-secondary-bg) solid;
+  }
+}
