@@ -110,7 +110,7 @@
                 <a-input class="input text-right"
                   v-else
                   v-model:value="item.title" 
-                  :ref="`inputKeyEdit_${index}`"
+                  :id="`keyName_${item.id}`"
                   spellcheck="false" 
                   placeholder="快捷键名称" 
                   style="width:179px;height: 48px;"
@@ -124,7 +124,7 @@
                     <Icon class="ml-3" icon="edit-square" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
                 </a-tooltip>
-                <span @click.stop="delKey(index,item)">
+                <span @click.stop="delNote(index,item)">
                   <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                 </span>
               </span>
@@ -135,13 +135,13 @@
                 <div class="flex items-center">
                   <a-input class="input text-right"
                     v-model:value="item.noteVal" 
-                    :ref="`note_${index}`"
+                    :id="`note_${item.id}`"
                     spellcheck="false" 
                     placeholder="备注" 
                     style="width:370px;height: 48px;"
                     @blur="lostFocus(item,'note')"
                   />
-                    <span @click.stop="delKey(index,item)">
+                    <span @click.stop="delNote(index,item)">
                       <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                     </span>
                 </div>
@@ -508,7 +508,10 @@ export default {
           break;
         case 'item':
           this.keyList.forEach(i => {
-            if(i.id === id)i.isNote = true
+            if(i.id === id){
+              i.isEdit = true
+              i.isNote = true
+            }
           })
           // this.keyName = title
           // this.keyContent = keyStr
@@ -567,8 +570,17 @@ export default {
                 // if(item.keys.length){
                   this.keyList.forEach(kItem => {
                     if(kItem.id === item.id){
-                      kItem.isEdit = false
-                      kItem.isNote = false
+                      // 查找你要判断的文本框
+                      var  myInput = document.getElementById( 'note_' + item.id );
+                      if(myInput != document.activeElement) {
+                        setTimeout(()=> {
+                          kItem.isEdit = false
+                          kItem.isNote = false
+                          if(!kItem.noteVal){
+                            kItem.addNote = false
+                          }
+                        }, 200)
+                      }
                     }
                   })
                 // }
@@ -579,8 +591,18 @@ export default {
           if(!this.bulkEditKey){
             this.keyList.forEach(kItem => {
               if(kItem.id === item.id){
-                kItem.isNote = false
-                kItem.isEdit = false
+                
+                // 查找你要判断的文本框
+                var  myInput = document.getElementById( 'keyName_' + item.id );
+                if  (myInput != document.activeElement) {
+                  setTimeout(()=> {
+                    kItem.isEdit = false
+                    kItem.isNote = false
+                    if(!kItem.noteVal){
+                      kItem.addNote = false
+                    }
+                  }, 200)
+                }
               }
             })
           }
@@ -673,6 +695,15 @@ export default {
       })
       // this.keyList.splice(index,1)
     },  
+    delNote(index,item){
+      this.keyList.forEach(i => {
+        if(item.id === i.id){
+          i.addNote = false
+          i.isNote = false
+          i.noteVal = ''
+        }
+      })
+    },
     //添加备注
     setAddNote(index,item){
       item.addNote = true
@@ -704,13 +735,16 @@ export default {
       if(this.bulkEditKey){
         this.keyList.forEach(item => {
           item.isEdit = true
+          item.isNote = true
         })
       }else{
         this.keyList.forEach(item => {
           if(item.title === '' || item.keys === '' || item.groupName === ''){
             item.isEdit = true
+            item.isNote = true
           }else{
             item.isEdit = false
+            item.isNote = false
           }
         })
       }

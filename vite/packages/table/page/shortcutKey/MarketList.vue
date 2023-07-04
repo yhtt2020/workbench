@@ -163,7 +163,7 @@ export default {
       this.showModal = true
     },
     addPlan(){
-      console.log(this.keyScheme)
+      // console.log(this.keyScheme)
     }
   }
 }

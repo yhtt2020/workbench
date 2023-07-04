@@ -8,7 +8,7 @@
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
-        <div v-for="(item,index) in appList.slice(0,3)" class="head-list"
+        <div v-for="(item,index) in appList.slice(0,3)" :key="item.id" class="head-list"
         :class="navIndex === index ? 's-bg':''" @click="toggleApp(index,item)">
           <span>
             <a-avatar shape="square" :src="item.icon" :size="38"></a-avatar>
@@ -21,22 +21,52 @@
       </div>
     </div>
     <div class="flex">
-      <div @click="clipSearch" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
-        <Icon icon="dianzan" style="font-size: 1.5em;"></Icon>
-      </div>
+      <a-tooltip placement="left">
+        <template #title>展开或收起分类栏</template>
+        <div @click="showSide = !showSide" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+          <Icon icon="outdent" style="font-size: 1.5em;"></Icon>
+        </div>
+      </a-tooltip>
       <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet = true">
         <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
   </div>
-  <!-- 快捷键列表 -->
   <div class="key-list">
-    <div class="side-nav">
-      
+    <!-- 侧边栏 -->
+    <div class="side-nav" v-if="showSide">
+      <Search inputStyle="width:220px;" placeholder="搜索"></Search>
+      <div class="nav-box">
+        <div class="nav-item" 
+        v-for="(item,index) in sideNav" :key="item.id" 
+        @click="updateNavIndex(item, index)">
+          {{ item.groupName }}
+        </div>
+      </div>
     </div>
-    <div class="list-item">
-      <ShortcutKeyList :keyList="keyList" :keyIndex="keyIndex" @setKeyItem="setKeyItem"></ShortcutKeyList>
-    </div>
+    <!-- 快捷键列表 -->
+    <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;" :style="showSide ? 'width: 80%;' : 'width:100%'">
+      <div class="key-box" :style="keyBoxStyle">
+        <div v-for="(item,index) in keyList" :key="item.id">
+          <!-- 分组名称 -->
+          <div :id="'groupId_' + item.id" class="key-item border-right" v-if="item.groupName" :style="item.id === currentGroup.id ? activeGroup : ''">
+            <span class="truncate">{{ item.groupName }}</span>
+          </div>
+          <!-- 快捷键 -->
+          <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="setKeyItem(item.id)">
+            <div class="flex">
+              <div v-for="i in item.keys" :key="i" class="flex">
+                <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+              </div>
+            </div>
+            <div class="key-title truncate">{{ item.title}}</div>
+          </div>
+          <div v-if="item.addNote" class="text-note">
+            <span class="note-val">{{ item.noteVal }}</span>
+          </div>
+        </div>
+      </div>
+    </vue-custom-scrollbar>
   </div>
  </div>
  <!-- 无详情快捷方案 -->
@@ -136,7 +166,8 @@
 
 <script>
 import NotShortcutKey from './NotShortcutKey.vue'
-import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
+// import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
+import Search from '../../components/Search.vue'
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../../store/key'
 import { message } from 'ant-design-vue';
@@ -144,7 +175,8 @@ export default {
   name: 'ShortcutKeyDetail',
   components: {
     NotShortcutKey,
-    ShortcutKeyList
+    // ShortcutKeyList,
+    Search
   },
   data(){
     return{
@@ -158,7 +190,21 @@ export default {
       keyList: [],
       isData: true,
       // 单个app的内容
-      appContent: {}
+      appContent: {},
+      sideNav: [],
+      currentIndex: 0,
+      // 是否显示侧边栏
+      showSide: false,
+      // 当前分组
+      currentGroup: {},
+      activeGroup: {},
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      },
     }
   },
   computed: {
@@ -174,11 +220,20 @@ export default {
       this.keyList = this.appList[0].keyList
       this.appContent = this.appList[0]
       if(!this.keyList.length)this.isData = false
+      this.sideNav = this.keyList.filter(i => i.groupName)
+
+      if(this.sideNav.length < 4){
+        this.showSide = false
+      }else{
+        this.showSide = true
+      }
     },
     toggleApp(index,item){
       this.navIndex = index
       this.keyList = item.keyList
       this.appContent = item
+      this.currentIndex = 0
+      this.sideNav = this.keyList.filter(i => i.groupName)
     },
     setKeyItem(id){
       this.keyIndex = id
@@ -194,6 +249,19 @@ export default {
       this.removeShortcutKeyList(this.appContent)
       message.success('删除成功');
       this.onBack()
+    },
+    updateNavIndex(item,index){
+      let groupId = document.getElementById('groupId_' + item.id)
+      this.currentIndex = index
+      this.currentGroup = item
+      this.activeGroup = {
+        background: 'var(--active-bg)'
+      }
+      setTimeout(() => {
+        this.activeGroup = {}
+      },100)
+
+      document.getElementById('scrollCus').scrollLeft = groupId.offsetLeft
     }
   },
 }
@@ -297,17 +365,114 @@ export default {
     border-radius: 12px;
     display: flex;
     .side-nav{
-      // width:252px;
-      width: 20%;
+      min-width:252px;
+      max-width: 253px;
+      // width: 20%;
       height: 100%;
       background: var(--secondary-bg);
       border-top-left-radius: 12px;
       border-bottom-left-radius: 12px;
       padding: 16px;
-    }
-    .list-item{
-      width: 80%;
-      height: 100%;
+      .nav-box{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .nav-item{
+          // width: 104px;
+          width: 48%;
+          height: 48px;
+          border-radius: 12px;
+          margin: 12px 0 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 16px;
+        }
+        .nav-item:hover{
+          background: var(--active-bg);
+          color: var(--primary-text);
+        }
+      }
     }
   }
+
+  .key-box{
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    // overflow: auto;
+    padding: 24px 0; 
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    
+  }
+  .key-box::-webkit-scrollbar{
+    display: none;
+  }
+  .key-item{
+    padding: 0 12px;
+    margin: 0 20px 8px;
+    width: 350px;
+    height:48px;
+    line-height:48px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.85);
+    display: flex;
+    border-radius: 8px;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  .border-right {
+    position: relative;
+  }
+  .border-right::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 0;
+    height: 56px;
+    margin-left: 10px;
+    border-right: solid rgba(255, 245, 245, 0.1) 1px;
+  }
+  .s-bg{
+    box-shadow: none !important;
+  }  
+  .key-title{
+    flex: 1;
+    max-width: 160px;
+    text-align: right;
+  }
+
+  
+  .text-note{
+    margin: 0 20px 8px;
+    padding: 0 12px;
+    width: 350px;
+    height: 22px;
+    text-align:right;
+    position: relative;
+  }
+  .note-val{
+    position: relative;
+    top: -14px;
+    font-size: 16px;
+    color: var(--secondary-text);
+  }
+
+  .text-note::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 0;
+    height: 30px;
+    margin-left: 10px;
+    border-right: solid rgba(255,255,255,0.1) 1px;
+  }
+
+
 </style>

@@ -1,13 +1,13 @@
 <template>
     <div class="flex items-center">
-        <div class="mr-3">
+        <div>
             <a-input :modelValue="searchValue" @change="changeInput($event)" :placeholder="placeholder" spellcheck="false"  class="no-drag input" :style="inputStyle">
                 <template #prefix>
-                    <Icon v-if="isSearchIcon" icon="sousuo" class="mr-2"></Icon>
+                    <Icon v-if="isSearchIcon" icon="sousuo" class="mr-2" style="color: var(--disable-text) !important;"></Icon>
                 </template>
             </a-input>
         </div>
-        <div v-if="isFiltrate">
+        <div class="ml-3" v-if="isFiltrate">
             <a-select :style="selectStyle"
                 @change="changeSelect($event)"
                 class="select rounded-lg  text-xs s-item flex items-center text-center" size="large" :bordered="false"
