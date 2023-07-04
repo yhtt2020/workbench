@@ -41,6 +41,7 @@ export default {
     return {
       selectApps: {},
       selectedIndexes: {},
+      isSelectedArr: {},
       isSelectedAll: true,
     };
   },
@@ -54,7 +55,7 @@ export default {
   },
   computed: {
     selectAll() {
-      return this.isSelectedAll ? "全选" : "取消全选";
+      return this.isSelectedAll[this.name] ? "全选" : "取消全选";
     },
     appsLenght() {
       let length = this.data ? this.data.length : "";
@@ -64,6 +65,9 @@ export default {
   methods: {
     selectAllApp() {
       this.cancelAll();
+      if (!this.isSelectedArr[this.name])
+        this.isSelectedArr[this.name] = !this.isSelectedAll;
+
       this.isSelectedAll = !this.isSelectedAll;
       if (!this.isSelectedAll) {
         for (let i = 0; i < this.data.length; i++) {

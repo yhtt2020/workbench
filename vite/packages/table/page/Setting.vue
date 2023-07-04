@@ -369,18 +369,18 @@ export default {
       this.$router.push({ path: "/power" });
     },
 
-    invite(){
+    invite() {
       this.$router.push({
-        name:'invite'
-      })
+        name: "invite",
+      });
     },
-    verify(){
+    verify() {
       this.$router.push({
-        name:'invite',
-        params:{
-          tab:'verify'
-        }
-      })
+        name: "invite",
+        params: {
+          tab: "verify",
+        },
+      });
     },
 
     async verifyCode() {
