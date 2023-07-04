@@ -140,7 +140,7 @@
 <script>
 // import "../../../../../../src/util/"
 // import "/"
-import Color from "../../../card/color/index.vue"
+import Color from "../../../card/components/color/index.vue"
 import fastNav from "./fastNav.vue";
 import Radio from "../../../card/components/Radio.vue";
 import { validateFile } from "../../../card/hooks/innerImgHook";

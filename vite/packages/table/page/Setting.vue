@@ -253,7 +253,7 @@
 </template>
 
 <script>
-import Color from "../components/card/color/index.vue";
+import Color from "../components/card/components/color/index.vue";
 import {
   delBgColor,
   delSecondaryBgColor,
