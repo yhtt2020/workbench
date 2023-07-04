@@ -1,17 +1,30 @@
 <template>
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
-       style="overflow: hidden;background: var(--primary-bg);color: var(--primary-text)">
+       style="overflow: hidden;background: var(--modal-bg);color: var(--primary-text)">
       <div v-if="showDetail"
-           style="width:445px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
+           style="width:445px;height: 100%;position: relative;display: flex;flex-direction: column;">
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
+<<<<<<< HEAD
               <li  @click="closeDetail" class="flex pointer items-center mb-1 justify-center">
+=======
+              <li  @click="closeDetail" class="flex pointer items-center justify-center mb-3">
+>>>>>>> develop-50
                 <div class="rounded-lg"  style="background: var(--secondary-bg);">
                   <Icon icon="doubleright"></Icon>
                 </div>
               </li>
 
+<<<<<<< HEAD
+=======
+              <!--
+                <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
+             style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
+          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
+        </div>
+               -->
+>>>>>>> develop-50
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
               </li>
@@ -109,7 +122,7 @@
              v-if="teamLeader.userInfo">
 
           <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" :rare="rarity" :url="avatar_url"></UserAvatar>
+                      :avatar="teamLeader.userInfo.avatar" :rare="0" :url="''"></UserAvatar>
 
           <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
@@ -120,7 +133,7 @@
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
           <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="rarity" :url="avatar_url"></UserAvatar>
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="0" :url="''"></UserAvatar>
           <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}

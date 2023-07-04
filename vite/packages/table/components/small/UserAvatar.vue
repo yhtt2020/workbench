@@ -1,16 +1,29 @@
 <template>
   <div style="position: relative;">
+<<<<<<< HEAD
     <div class="" style="width: 100px; height: 100px;position: relative;">
       <img :src="url" class="w-full h-full object-contain" alt="">
+=======
+    <div v-if="url"  class="" style="width: 100px; height: 100px;position: relative;">
+      <img :src="url" class="w-full h-full object-cover" alt="">
+>>>>>>> develop-50
       <div v-if="tag" class="rounded-lg w-10 tag"
       :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}"
       >
      {{ tag }}
       </div>
-     <a-avatar :size="50" class="avatar-tag" :src="avatar" :style="rarityBorder"></a-avatar>
+     <a-avatar :size="50" class="avatar-tag" :src="avatar" :style="rarityBorder" style="position: relative"></a-avatar>
      <OnlineTag style="position: absolute;right:5px;bottom: 5px;z-index: 99" v-if="online"></OnlineTag>
     </div>
-    
+    <div v-else class="">
+      <div v-if="tag" class="rounded-lg w-10 tag"
+           :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}" style="margin-bottom:25px"
+      >
+        {{ tag }}
+      </div>
+      <a-avatar :size="55"  :src="avatar" :style="rarityBorder"></a-avatar>
+      <OnlineTag style="position: absolute;right:12px;bottom: 0px;z-index: 99" v-if="online"></OnlineTag>
+    </div>
   </div>
 </template>
 
@@ -39,7 +52,8 @@ export default {
   position: absolute;
   display: inline-block;
   z-index: 9;
-  bottom: -5px;
+  bottom: -30px;
+  right: 10px;
   transform: translateX(-50%);
   left: 50%;
   font-size: 0.8em;

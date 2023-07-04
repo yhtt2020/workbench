@@ -53,6 +53,7 @@
   </div>
 
   <!-- 点击价格购买头像框弹窗 -->
+<<<<<<< HEAD
   <a-modal v-model:visible="payVisible" :width="480"  :closable="false"
    :height="0" :footer="null"  :header="null" :bodyStyle="{padding:'0'}"
   >
@@ -62,6 +63,9 @@
         <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
       </div>
     </div>
+=======
+  <a-modal v-model:visible="payVisible" :width="480" :footer="null" :title="null" :closable="false"  :centered="true">
+>>>>>>> develop-50
     <!-- 未购买情况下走扫码支付的流程 -->
     <template v-if="isPay === false">
       <div class="w-full flex-col flex px-10">
@@ -122,6 +126,7 @@
   </a-modal>
 
   <!-- 点击积分兑换时触发的弹窗 -->
+<<<<<<< HEAD
   <a-modal  v-model:visible="pointsVisible" :width="480"  :closable="false"
   :height="0" :footer="null"  :header="null" :bodyStyle="{padding:'0'}"
   >
@@ -129,6 +134,17 @@
       <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;">收银台</div>
       <div class="close-pay w-12 h-12 rounded-lg active-button" @click="pointsVisible = false">
        <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+=======
+  <a-modal v-model:visible="pointsVisible" :width="480" :footer="null" :title="null" :centered="true" :closable="false">
+    <div class="w-full h-full flex-col flex">
+      <div class="mx-3 mt-3 mb-8 h-12 flex ">
+        <div class="flex items-center justify-center" style="width: 90%;">
+          <span class="avatar-font">收银台</span>
+        </div>
+        <div class="close-pay w-12 h-12 rounded-lg active-button" @click="pointsVisible = false">
+          <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+        </div>
+>>>>>>> develop-50
       </div>
     </div>
     <div class="px-10 pb-10 flex flex-col">
@@ -362,4 +378,12 @@ export default {
 :deep(.active-item){
   background: rgba(80, 139, 254, 0.25) !important;
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+
+<style scoped>
+
+</style>
+>>>>>>> develop-50
