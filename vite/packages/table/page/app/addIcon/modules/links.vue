@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Radio from "../../../../components/card/components/Radio.vue";
+import Radio from "../../../../components/card/components/radio/index.vue";
 import { getSelect } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
 import cache from "../../../../components/card/hooks/cache";

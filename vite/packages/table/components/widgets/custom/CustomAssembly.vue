@@ -292,8 +292,8 @@
 
 
 <script>
-import Radio from '../../card/components/Radio.vue';
-import CardState from '../../../components/card/components/State.vue';
+import Radio from '../../card/components/radio/index.vue';
+import CardState from '../../../components/card/components/state/index.vue';
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
 import Classification from "../../comp/Classification.vue";

@@ -82,7 +82,7 @@ import MyGameSmallDetail from './MyGameSmallDetail.vue';
 import { mapActions, mapWritableState } from 'pinia';
 import { cardStore } from '../../../store/card';
 import { steamUserStore } from '../../../store/steamUser';
-import CardState from '../../../components/card/components/State.vue';
+import CardState from '../../../components/card/components/state/index.vue';
 // import { message } from "ant-design-vue";
 import _ from 'lodash-es'
 

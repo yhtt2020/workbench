@@ -142,8 +142,8 @@
 // import "/"
 import Color from "../../../card/components/color/index.vue"
 import fastNav from "./fastNav.vue";
-import Radio from "../../../card/components/Radio.vue";
-import { validateFile } from "../../../card/hooks/innerImgHook";
+import Radio from "../../../card/components/radio/index.vue";
+import { validateFile } from "../../../card/hooks/imageProcessing";
 import { sizeList, linkList, backgroundColorList } from "./edit";
 import { message } from "ant-design-vue";
 export default {

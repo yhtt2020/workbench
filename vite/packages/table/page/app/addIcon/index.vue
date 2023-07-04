@@ -100,7 +100,7 @@ import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
-import Tab from "../../../components/card/components/Tab.vue";
+import Tab from "../../../components/card/components/tab/index.vue";
 import { mapActions, mapWritableState } from "pinia";
 export default {
   emits: ["update:navName"],
