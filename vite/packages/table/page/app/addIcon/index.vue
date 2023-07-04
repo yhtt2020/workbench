@@ -182,7 +182,6 @@ export default {
   methods: {
     ...mapActions(cardStore, ["addCard"]),
     updateData(data) {
-      console.log("data :>> ", data);
       this.selectApps = data;
     },
     handleResize() {

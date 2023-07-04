@@ -42,7 +42,6 @@ export default {
       selectApps: {},
       selectedIndexes: {},
       isSelectedArr: {},
-      isSelectedAll: true,
     };
   },
   watch: {
@@ -55,7 +54,7 @@ export default {
   },
   computed: {
     selectAll() {
-      return this.isSelectedAll[this.name] ? "全选" : "取消全选";
+      return this.isSelectedArr[this.name] ? "取消全选" : "全选";
     },
     appsLenght() {
       let length = this.data ? this.data.length : "";
@@ -65,11 +64,9 @@ export default {
   methods: {
     selectAllApp() {
       this.cancelAll();
-      if (!this.isSelectedArr[this.name])
-        this.isSelectedArr[this.name] = !this.isSelectedAll;
-
-      this.isSelectedAll = !this.isSelectedAll;
-      if (!this.isSelectedAll) {
+      if (!this.isSelectedArr[this.name]) this.isSelectedArr[this.name] = false;
+      this.isSelectedArr[this.name] = !this.isSelectedArr[this.name];
+      if (this.isSelectedArr[this.name]) {
         for (let i = 0; i < this.data.length; i++) {
           this.toggleSelect(i);
           this.selectApps[this.name].push(this.data[i]);
@@ -84,7 +81,7 @@ export default {
     // 选择app
     selectApp(item, index) {
       let state = false;
-
+      this.isSelectedArr[this.name] = false;
       // 二维数组不存在则开辟一个数组
       if (!this.selectApps[this.name]) this.selectApps[this.name] = [];
       this.toggleSelect(index);
