@@ -294,6 +294,6 @@ export default {
   background: rgba(255, 255, 255, 0.4) !important;
 }
 :deep(.ant-slider-track){
-  background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
+  // background: linear-gradient(90deg, rgba(98, 193, 255, 1) 0%, rgba(51, 141, 255, 1) 100%) !important;
 }
 </style>
