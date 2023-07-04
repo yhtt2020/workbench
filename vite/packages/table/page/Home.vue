@@ -22,7 +22,7 @@
           style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
-            <a-button @click="newAddCard" class="mr-10 " key="console" type="primary" style="color:var(--active-text)">添加第一张卡片</a-button>
+            <a-button @click="newAddCard" class="mr-10 xt-active-bg" key="console" type="primary" style="color:var(--active-text)">添加第一张卡片</a-button>
             <a-button key="buy" @click="learn"
               style="">学习</a-button>
           </template>
@@ -192,12 +192,12 @@
       距离顶部：
       <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
-    <div class="line-title">背景设置：</div>
+    <div class="line-title ">背景设置：</div>
     <div class="line" @click="setTransparent()">
       透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
     </div>
     <div class="line" v-if="!appSettings.transparent">
-      <a-button type="primary" class="mr-3" @click="goPaper">背景设置</a-button>
+      <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
       <a-button @click="clearWallpaper">清除背景</a-button>
     </div>
     <div v-if="!appSettings.transparent" class="line">
