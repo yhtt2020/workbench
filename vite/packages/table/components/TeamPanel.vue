@@ -6,18 +6,12 @@
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
-              <li  @click="closeDetail" class="flex pointer items-center justify-center">
+              <li  @click="closeDetail" class="flex pointer items-center mb-1 justify-center">
                 <div class="rounded-lg"  style="background: var(--secondary-bg);">
                   <Icon icon="doubleright"></Icon>
                 </div>
               </li>
 
-              <!-- 
-                <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
-             style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
-          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
-        </div>
-               -->
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
                 <div><icon icon="xiaoxi"></icon></div>
               </li>
@@ -412,5 +406,9 @@ export default {
 
 :deep(.nav-item){
   width: 50% !important;
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>

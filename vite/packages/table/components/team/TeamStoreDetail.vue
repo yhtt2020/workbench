@@ -29,69 +29,86 @@
       </vue-custom-scrollbar>
     </template>
     <template v-else>
-      已购
+      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 58vh;">
+        <div v-for="item in avatarShop " class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
+          <div class="avatar-top flex mb-4">
+            <div style="width: 100px;height: 100px;">
+              <img :src="item.avatar_url" class="w-full h-full object-fill" alt="">
+            </div>
+            <div class="flex flex-col justify-center ml-4" >
+              <span class="avatar-font" :style="avatarFontColor(item)">
+                {{item.title}}
+              </span>
+              <span class="w-11 h-6 rank-font rounded-md my-2.5" :style="avatarBgFontColor(item)">
+                {{item.avatar_rank}}
+              </span>
+              <span class="get-way-font">
+                {{ item.get_way }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </vue-custom-scrollbar>
     </template>
   </div>
 
   <!-- 点击价格购买头像框弹窗 -->
-  <a-modal v-model:visible="payVisible" :width="480" >
+  <a-modal v-model:visible="payVisible" :width="480"  :closable="false"
+   :height="0" :footer="null"  :header="null" :bodyStyle="{padding:'0'}"
+  >
+    <div class="flex p-3 mb-6">
+      <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;">收银台</div>
+      <div class="close-pay w-12 h-12 rounded-lg active-button" @click="payVisible = false">
+        <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+      </div>
+    </div>
     <!-- 未购买情况下走扫码支付的流程 -->
     <template v-if="isPay === false">
-       <div class="w-full h-full flex-col flex">
-          <div class="mx-3 mt-3 mb-8 h-12 flex ">
-            <div class="flex items-center justify-center" style="width: 90%;">
-              <span class="avatar-font">收银台</span>
+      <div class="w-full flex-col flex px-10">
+        <div class="h-24 flex rounded-lg p-4 mb-4" style="color: var(--primary-text);background: var(--secondary-bg);">
+          <div style="width:64px;height:64px;" class="flex items-center justify-center">
+            <img :src="needPayAvatar.url"  class="w-full h-full object-cover" alt="">
+          </div>
+          <div class="flex flex-col justify-center ml-4">
+            <span class="avatar-font" style="color: var(--primary-text);">{{ needPayAvatar.name }}</span>
+            <span class="avatar-font" style="color: var(--primary-text);">道具</span>
+          </div>
+        </div>
+        <HorzontanlPanelIcon :navList="payMethod" v-model:selectType="payWeixin"></HorzontanlPanelIcon>
+        <template v-if="payWeixin.type === 'wechat'">
+          <div class="flex my-8 px-1">
+            <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
+              <img src="/img/game.png" class="w-full h-full object-cover" alt="">
             </div>
-            <div class="close-pay w-12 h-12 rounded-lg active-button" @click="payVisible = false">
-              <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
+            <div class="flex flex-col ml-8 justify-center">
+              <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
+              <div class="flex items-center">
+                <Icon icon="weixinzhifu" style="font-size: 1em;"></Icon>
+                <span class="avatar-font" style="color: var(--primary-text);">微信扫码支付</span>
+              </div>
             </div>
           </div>
-          <div class="flex flex-col mx-10 mb-10">
-            <div class="h-24 flex rounded-lg p-4 mb-4" style="color: var(--primary-text);background: var(--secondary-bg);">
-              <div style="width:64px;height:64px;" class="flex items-center justify-center">
-                <img :src="needPayAvatar.url"  class="w-full h-full object-cover" alt="">
-              </div>
-              <div class="flex flex-col justify-center ml-4">
-                <span class="avatar-font" style="color: var(--primary-text);">{{ needPayAvatar.name }}</span>
-                <span class="avatar-font" style="color: var(--primary-text);">道具</span>
+        </template> 
+        <template v-else>
+          <div class="flex my-8 px-1">
+            <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
+              <img src="/img/game.png" class="w-full h-full object-cover" alt="">
+            </div>
+            <div class="flex flex-col ml-8 justify-center">
+              <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
+              <div class="flex items-center">
+                <Icon icon="zhifubao" style="font-size: 1em;"></Icon>
+                <span class="avatar-font" style="color: var(--primary-text);">支付宝扫码支付</span>
               </div>
             </div>
-            <HorzontanlPanelIcon :navList="payMethod" v-model:selectType="payWeixin"></HorzontanlPanelIcon>
-            <template v-if="payWeixin.type === 'alipay'">
-              <div class="flex mt-4 px-1">
-                <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
-                  <img src="/img/game.png" class="w-full h-full object-cover" alt="">
-                </div>
-                <div class="flex flex-col ml-8 justify-center">
-                  <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
-                  <div class="flex items-center">
-                    <Icon icon="zhifubao" style="font-size: 1em;"></Icon>
-                    <span class="avatar-font" style="color: var(--primary-text);">支付宝扫码支付</span>
-                  </div>
-                </div>
-              </div>
-            </template>
-            <template v-else>
-              <div class="flex mt-4 px-1">
-                <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
-                  <img src="/img/game.png" class="w-full h-full object-cover" alt="">
-                </div>
-                <div class="flex flex-col ml-8 justify-center">
-                  <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
-                  <div class="flex items-center">
-                    <Icon icon="weixinzhifu" style="font-size: 1em;"></Icon>
-                    <span class="avatar-font" style="color: var(--primary-text);">支付宝扫码支付</span>
-                  </div>
-                </div>
-              </div>
-            </template>
           </div>
-       </div>
+        </template>
+      </div>
     </template>
 
     <!-- 扫码支付完成以后的弹窗提示 -->
     <template v-else>
-      <div class="w-full h-full flex-col flex p-8">
+      <div class="w-full h-full flex-col flex">
         <div class="flex items-center justify-center mb-6">
           <Icon icon="chenggong" style="font-size: 0.5718em;"></Icon>
           <span class="avatar-font ml-3">购买成功</span>
@@ -101,22 +118,21 @@
           <a-button type="primary" class="rounded-md w-40" style="margin-right: 0;" @click="paymentCompletion">完成</a-button>
         </div>
       </div>
-      <!-- chenggong -->
     </template>
   </a-modal>
 
   <!-- 点击积分兑换时触发的弹窗 -->
-  <a-modal v-model:visible="pointsVisible" :width="480" >
-    <div class="w-full h-full flex-col flex">
-      <div class="mx-3 mt-3 mb-8 h-12 flex ">
-        <div class="flex items-center justify-center" style="width: 90%;">
-          <span class="avatar-font">收银台</span>
-        </div>
-        <div class="close-pay w-12 h-12 rounded-lg active-button" @click="pointsVisible = false">
-          <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
-        </div>
+  <a-modal  v-model:visible="pointsVisible" :width="480"  :closable="false"
+  :height="0" :footer="null"  :header="null" :bodyStyle="{padding:'0'}"
+  >
+    <div class="flex p-3 mb-6">
+      <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;">收银台</div>
+      <div class="close-pay w-12 h-12 rounded-lg active-button" @click="pointsVisible = false">
+       <Icon icon="guanbi" style="font-size: 0.65em;"></Icon>
       </div>
-      <div class="h-24 flex justify-between items-center rounded-lg p-4 mx-10 mb-4 mt-6" style="color: var(--primary-text);background: var(--secondary-bg);">
+    </div>
+    <div class="px-10 pb-10 flex flex-col">
+      <div class="h-24 flex justify-between mb-3 items-center rounded-lg p-4" style="color: var(--primary-text);background: var(--secondary-bg);">
         <div class="flex">
           <div style="width:64px;height:64px;" class="flex items-center justify-center">
             <img :src="needPayAvatar.url"  class="w-full h-full object-cover" alt="">
@@ -127,15 +143,20 @@
           </div>
         </div>
         <div class="avatar-price">
-           {{ needPayAvatar.score }}
+          {{ needPayAvatar.score }}
         </div>
       </div>
-      <div class="h-16 flex items-center justify-between mx-10 mb-4 rounded-lg" style="color: var(--primary-text);background: var(--secondary-bg);">
+      <div class="h-16 mb-3 flex items-center justify-between rounded-lg" style="color: var(--primary-text);background: var(--secondary-bg);">
         <div class="px-4 success-text">可用积分</div>
         <div class="px-4 success-text">2000积分</div>
       </div>
-      <a-button type="primary" class="rounded-md h-12 mx-10 mb-10" style="margin-right: 0;width: 400px;" @click="immediateExchange">
+      <a-button type="primary" v-if="isEnough" class="rounded-md h-12" style="margin-right: 0;width: 400px;" @click="immediateExchange">
         立即兑换
+      </a-button>
+      <a-button v-else class="rounded-md" disabled style="border:none;height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);" ]
+       @click="immediateExchange"
+      >
+        积分不足
       </a-button>
     </div>
   </a-modal>
@@ -176,6 +197,11 @@ export default {
       ],
       payWeixin:{ icon:'weixinzhifu',title:'微信支付',type:'wechat'}, // 默认微信支付
       isPay:false, // 判断是否扫码支付完成条件
+    }
+  },
+  computed:{
+    isEnough(){
+      return this.needPayAvatar.score > this.needPayAvatar.total ? true : false
     }
   },
   watch:{
@@ -246,6 +272,7 @@ export default {
       this.needPayAvatar.url = item.avatar_url
       this.needPayAvatar.price = item.price
       this.needPayAvatar.score = item.score
+      this.needPayAvatar.total = item.total
     },
     // 扫码支付完成后回调事件
     paymentCompletion(){
@@ -334,33 +361,5 @@ export default {
 }
 :deep(.active-item){
   background: rgba(80, 139, 254, 0.25) !important;
-}
-</style>
-
-<style>
-.ant-modal-footer{
-  display: none !important;
-}
-.ant-modal-header{
-  background: var(--primary-bg) !important;
-  color: var(--primary-text) !important;
-  border: none !important;
-  text-align: center !important;
-}
-.ant-modal-title{
-  color: var(--primary-text) !important;
-}
-.ant-modal{
-  padding: 0 !important;
-  top:150px !important;
-}
-.ant-modal-mask{
-  background: var(--main-mask-bg) !important;
-}
-.ant-modal-close{
-  display: none !important;
-}
-.ant-modal-body{
-  padding: 0 !important;
 }
 </style>

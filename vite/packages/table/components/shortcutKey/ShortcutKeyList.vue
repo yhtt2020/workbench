@@ -10,10 +10,16 @@
       <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(item.id)">
         <div class="flex">
           <div v-for="i in item.keys" :key="i" class="flex">
-            <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+            <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
           </div>
         </div>
         <div class="key-title truncate">{{ item.title}}</div>
+      </div>
+      <!-- <div v-if="item.addNote" class="key-item text-note">
+        <span class="note-val">{{ item.noteVal }}</span>
+      </div> -->
+      <div v-if="item.addNote" class="text-note">
+        <span class="note-val">{{ item.noteVal }}</span>
       </div>
     </div>
   </div>
@@ -108,4 +114,31 @@ export default {
     max-width: 160px;
     text-align: right;
   }
+
+  
+  .text-note{
+    margin: 0 20px 8px;
+    padding: 0 12px;
+    width: 350px;
+    height: 22px;
+    text-align:right;
+    position: relative;
+  }
+  .note-val{
+    position: relative;
+    top: -14px;
+    font-size: 16px;
+    color: var(--secondary-text);
+  }
+
+  .text-note::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 0;
+    height: 30px;
+    margin-left: 10px;
+    border-right: solid rgba(255,255,255,0.1) 1px;
+  }
+
 </style>

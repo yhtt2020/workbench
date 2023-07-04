@@ -85,7 +85,7 @@
               <div class="flex">
                 <template v-if="!item.isEdit">
                   <div v-for="i in item.keys" :key="i" class="flex">
-                    <span style="padding:0 10px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                    <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
                   </div>
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
@@ -117,9 +117,38 @@
                   @blur="lostFocus(item,'keyName')"
                   />
               </div>
-              <span @click.stop="delKey(index,item)" v-if="item.isEdit">
-                <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+              <span v-if="item.isEdit" class="flex"> 
+                <a-tooltip>
+                  <template #title>添加备注</template>
+                  <span @click.stop="setAddNote(index,item)" v-if="item.isEdit">
+                    <Icon class="ml-3" icon="edit-square" style="font-size:21px;color: #7A7A7A;"></Icon>
+                  </span>
+                </a-tooltip>
+                <span @click.stop="delKey(index,item)">
+                  <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                </span>
               </span>
+            </div>
+            <!-- 备注 -->
+            <div v-if="item.addNote">
+              <div class="key-item border-right" v-if="item.isNote">
+                <div class="flex items-center">
+                  <a-input class="input text-right"
+                    v-model:value="item.noteVal" 
+                    :ref="`note_${index}`"
+                    spellcheck="false" 
+                    placeholder="备注" 
+                    style="width:370px;height: 48px;"
+                    @blur="lostFocus(item,'note')"
+                  />
+                    <span @click.stop="delKey(index,item)">
+                      <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                    </span>
+                </div>
+              </div>
+              <div v-else class="text-note">
+                <span class="note-val">{{ item.noteVal }}</span>
+              </div>
             </div>
           </div>
           <!-- 添加单个快捷键 -->
@@ -315,7 +344,7 @@ export default {
         // let usedList = this.copyObj(this.recentlyUsedList)
         this.recentlyUsedList.find(i => {
           if(i.id == this.paramsId){
-           let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
+            let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
             this.appContent = item
             this.icon = item.icon
             this.keyList = item.keyList
@@ -352,15 +381,25 @@ export default {
       }
       return newObj;
     },
+    // 删除空数据
+    delNotData(){
+      // 检测快捷键列表中的空数据后进行删除操作
+      this.keyList = this.keyList.filter(item => {
+        return item.keyStr !== '' && item.groupName !== '' && item.title !== ''
+      })
+      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+    },
     // 保存
     saveScheme(){
       if(!this.applyName)return message.info('名称不能为空')
-        let sum = 0
-        this.keyList.map(item => {
-          if(item.keys){
-            sum += item.keys.length
-          }
-        })
+      this.delNotData()
+
+      let sum = 0
+      this.keyList.map(item => {
+        if(item.keys){
+          sum += item.keys.length
+        }
+      })
       if(this.paramsId !== -1){
         this.appContent.icon = this.icon || this.file.path 
         this.appContent.keyList = this.keyList
@@ -393,14 +432,53 @@ export default {
       message.success('成功保存');
       this.$router.go(-1)
     },
-    onBack(){
-      
-      // 检测快捷键列表中的空数据后进行删除操作
-      this.keyList = this.keyList.filter(item => {
-        return item.keyStr !== ''
-      })
-      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+    // 保存并分享
+    // setMarketList
+    saveShare(){
+      if(!this.applyName)return message.info('名称不能为空')
+      if(!this.keyList.length)return message.info('快捷键列表不能为空')
+      this.delNotData()
 
+      let sum = 0
+      this.keyList.map(item => {
+        if(item.keys){
+          sum += item.keys.length
+        }
+      })
+      if(this.paramsId !== -1){
+        this.appContent.icon = this.icon || this.file.path 
+        this.appContent.keyList = this.keyList
+        this.appContent.name = this.applyName
+        this.appContent.commonUse = this.introduce
+        this.appContent.number = sum
+        this.isShare = true
+        this.setMarketList(this.appContent)
+      }else{
+        const time = new Date().valueOf()
+        this.appContent =  {   
+          id: nanoid(),  //唯一标识
+          icon: this.file.path, //方案的图片
+          name: this.applyName, //方案名称
+          number: sum, //快捷键总数
+          commonUse: this.introduce, //方案简介
+          avatar: '/icons/logo128.png', //方案人
+          nickName: 'Victor Ruiz', //头像
+          sumLikes: 0, //总赞数
+          download: 0, //下载次数
+          key: '快捷键',
+          time, //时间轴
+          isLike: false,  //是否点赞
+          isMyCreate: true, //是否是自己创建
+          isShare: true, //是否分享到社区
+          isCommunity: false, //是否来自社区
+          keyList: this.keyList //快捷键列表
+        }
+        this.setMarketList(this.appContent)
+      }
+      this.shoreModal = true
+    },
+    onBack(){
+      this.delNotData()
       this.$router.go(-1)
     },
     nextStep(){
@@ -408,18 +486,17 @@ export default {
     },
     close(){
       this.shoreModal = false
+      this.$router.go(-1)
     },
     // 编辑内容
     editItem({id,groupName,keyStr,title},index,type){
-      if(!this.bulkEditKey){
-        this.keyList.forEach(i => {
-          if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === ''){
-            i.isEdit = true
-          }else{
-            i.isEdit = false
-          }
-        })
-      }
+      this.keyList.forEach(i => {
+        if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === '' || this.bulkEditKey){
+          i.isEdit = true
+        }else{
+          i.isEdit = false
+        }
+      })
       switch (type) {
         case 'name':
           this.groupName = groupName
@@ -457,10 +534,11 @@ export default {
               item.groupName = this.groupName
               return message.info('分组名称不能为空');
             }else{
-              this.keyList.forEach(kItem => {
-                if(kItem.id === item.id)kItem.isEdit = false
-              })
-              
+              if(!this.bulkEditKey){
+                 this.keyList.forEach(kItem => {
+                  if(kItem.id === item.id)kItem.isEdit = false
+                })
+              }
             }
             break;
           case 'keyName':
@@ -468,13 +546,25 @@ export default {
               item.title = this.keyName
               return message.info('快捷键名称不能为空');
             }else{
-              if(item.keys.length){
-                this.keyList.forEach(kItem => {
-                  if(kItem.id === item.id)kItem.isEdit = false
-                })
+              if(!item.keys.length){
+                item.keyStr = '?'
+                item.keys.push('?')
+              }
+              if(!this.bulkEditKey){
+                // if(item.keys.length){
+                  this.keyList.forEach(kItem => {
+                    if(kItem.id === item.id)kItem.isEdit = false
+                  })
+                // }
               }
             }
             break;
+          case 'note':
+          if(!this.bulkEditKey){
+            this.keyList.forEach(kItem => {
+              if(kItem.id === item.id)kItem.isNote = false
+            })
+          }
         }
       },200)
       
@@ -512,7 +602,7 @@ export default {
       this.keyBoard = false
       this.keyList.forEach((item,index) => {
         if(item.id === keyArr.id){
-          if(keyArr.title){
+          if(keyArr.title && !this.bulkEditKey){
             keyArr.isEdit = false
           }
           this.keyList.splice(index,1,keyArr)
@@ -561,10 +651,15 @@ export default {
         if(item.id === i.id)this.keyList.splice(index,1)
       })
       // this.keyList.splice(index,1)
-    },
-    addKey(){
+    },  
+    //添加备注
+    setAddNote(index,item){
+      item.addNote = true
+      item.isNote = true
+    },    
+    // addKey(){
 
-    },
+    // },
     // 删除暂存添加的内容
     delStaging(type){
       switch (type) {
@@ -764,11 +859,8 @@ export default {
     height: 90%;
   }
   .add-box{
-    padding: 0 12px;
-    margin: 0 36px 8px;
+    margin-left: 48px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     .add-btn{
       cursor: pointer;
       background: var(--secondary-bg);
@@ -803,13 +895,13 @@ export default {
   .right-text{
     margin: 0 40px;
   }
-  .border-right {
+  .border-right{
     position: relative;
   }
-  .border-right::after {
+  .border-right::after{
     content: '';
     position: absolute;
-    right: -58px;
+    right: -100px;
     top: 0;
     height: 56px;
     margin-left: 10px;
@@ -899,7 +991,7 @@ export default {
   }
   .key-item{
     padding: 0 12px;
-    margin: 0 48px 8px;
+    margin: 0 100px 8px 48px;
     width: 370px;
     height:48px;
     line-height:48px;
@@ -912,4 +1004,29 @@ export default {
     cursor: pointer;
     border-radius: 8px;
   }
+  .text-note{
+    margin: 0 100px 0 48px;
+    padding: 0 12px;
+    width: 370px;
+    height: 22px;
+    text-align:right;
+    position: relative;
+  }
+  .note-val{
+    position: relative;
+    top: -14px;
+    font-size: 16px;
+    color: var(--secondary-text);
+  }
+
+  .text-note::after {
+    content: '';
+    position: absolute;
+    right: -100px;
+    top: 0;
+    height: 22px;
+    margin-left: 10px;
+    border-right: solid rgba(255,255,255,0.1) 1px;
+  }
+  
 </style>

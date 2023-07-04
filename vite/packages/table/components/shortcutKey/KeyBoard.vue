@@ -16,7 +16,7 @@
                 :key="item" 
                 :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
                 @click="onKeyDown(item, index, 'modifierKeyOne')" 
-                class="key-item px-3">
+                class="key-item">
                 {{ item.key }}
               </div>
             </div>
@@ -69,7 +69,8 @@
         <div class="active">
           <span class="mr-3">当前选择</span>
           <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
-            <div class="key-item px-3">{{ item.key }}</div>
+            <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
+            <div class="key-item" style="min-width:44px;padding:0 10px;">{{ item.key }}</div>
             <span class="mx-3" v-if="keyContent.keyArr.length != (index + 1)">+</span>
           </div>
         </div>
@@ -411,7 +412,15 @@ export default {
     },
     // 确定
     confirm(){
-      if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      // if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      if(!this.keyContent.keyArr.length){
+        console.log(this.keyContent.keys)
+        this.keyContent.keyStr = '?'
+        this.keyContent.keys.splice(0,this.keyContent.keys.length,'?')
+        this.$emit('saveKey',this.keyContent)
+        this.$emit('closeKeyBoard')
+        return
+      }
       let keys = []
       this.keyContent.keyArr.map(item => {
         keys.push(item.key)
@@ -420,11 +429,12 @@ export default {
       this.keyContent.keys = keys
       this.keyContent.keyStr = keys.join(' + ')
 
-      let arr = this.keyContent.keys
       // 判断组合键是否重复
+      let arr = this.keyContent.keys
       let retArr = this.parentKeyList.find(item => {
         return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
       })
+      console.log(retArr)
       if(retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
       this.$emit('saveKey',this.keyContent)
       this.$emit('closeKeyBoard')
@@ -514,8 +524,10 @@ export default {
     justify-content: center;
   }
   .box{
-    width: 74%;
+    // width: 74%;
+    width: 942px;
     height: 634px;
+    overflow: auto;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -540,11 +552,11 @@ export default {
       }
     }
     .box-body{
-      width: 90%;
+      width: 92%;
       display: flex;
       justify-content: space-between;
       .box-left{
-        width: 25%;
+        width: 30%;
       }
       .key-box{
           display: flex;
@@ -557,13 +569,15 @@ export default {
             justify-content: center;
             align-items: center;
             margin: 0 12px 12px 0;
+            padding: 0 10px;
+            min-width: 44px;
           }
           .text-gray{
             opacity: 0.3;
           }
         }
       .box-right{
-        width: 62%;
+        width: 66%;
       }
     }
     .box-foot{
@@ -606,5 +620,8 @@ export default {
       font-size: 16px;
       color: rgba(255,255,255,0.85);
     }
+  }
+  .box::-webkit-scrollbar{
+    display: none;
   }
 </style>
