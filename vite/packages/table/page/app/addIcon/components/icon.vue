@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="w" style="height: 100%">
-      <slot></slot>
-    </div>
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
       <div>总共 {{ appsLenght }} 个应用图标</div>
@@ -11,7 +8,8 @@
       </div>
     </div>
     <div
-      class="flex h-full flex-wrap overflow-y-auto xt-container mt-3 w h"
+      class="flex h-full flex-wrap overflow-y-auto xt-container mt-3"
+      :style="[heightStyle, widthStyle]"
       style="align-content: flex-start"
     >
       <div
@@ -30,6 +28,7 @@
 
 <script>
 export default {
+  inject: ["width", "height"],
   props: {
     data: {},
     isSelect: {},
@@ -56,6 +55,7 @@ export default {
     // 全选状态
     selectAll() {
       if (
+        this.selectAppsLength &&
         this.selectAppsLength == this.appsLenght &&
         this.isSelectedArr[this.name] !== true
       ) {
@@ -74,6 +74,16 @@ export default {
     appsLenght() {
       let length = this.data ? this.data.length : "";
       return length;
+    },
+    heightStyle() {
+      return {
+        height: this.height() + "px",
+      };
+    },
+    widthStyle() {
+      return {
+        width: this.width() + "px",
+      };
     },
   },
   methods: {
@@ -136,5 +146,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./index.scss";
+// @import "./index.scss";
 </style>

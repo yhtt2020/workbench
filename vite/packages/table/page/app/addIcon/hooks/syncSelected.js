@@ -9,7 +9,6 @@ export default {
   methods: {
     updateSelectApps(selectApps) {
       this.selectApps = selectApps;
-      console.log('object :>> ', selectApps);
       this.$emit("updateData",selectApps)
     },
   },

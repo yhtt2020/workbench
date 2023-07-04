@@ -22,13 +22,13 @@
       </div>
     </header>
     <!-- 主体 -->
-    <main class="flex mt-3 h-full" style="">
+    <main class="flex mt-3 h-full" >
       <!-- 左侧 -->
       <div style="" class="h-full">
         <div
           class="overflow-y-auto xt-container"
           style="border-right: 1px solid var(--divider)"
-          :style="height"
+          :style="leftTabHeight"
         >
           <div
             :style="{
@@ -50,25 +50,23 @@
       </div>
       <!-- 右侧 -->
       <div class="pl-2 w-full h-full">
-        <slot>
-          <component
-            ref="apps"
-            :is="navName"
-            :type="type"
-            @updateData="updateData"
-          ></component
-        ></slot>
+        <component
+          ref="apps"
+          :is="navName"
+          :type="type"
+          @updateData="updateData"
+        ></component>
       </div>
     </main>
     <!-- 底部 -->
     <div class="flex items-center my-3" v-if="selectAppsLenght">
-      <div style="width: 100px" class="flex justify-end">
+      <div style="width: 130px" class="flex justify-end">
         已选 {{ selectAppsLenght }} ：
       </div>
       <div
         class="flex overflow-x-auto xt-container"
         v-scrollable
-        style="width: 590px"
+        :style="selectedWidth"
       >
         <template v-for="(v, k) of selectApps">
           <div v-for="item in selectApps[k]">
@@ -124,8 +122,19 @@ export default {
       default: "Links",
     },
   },
+  provide() {
+    return {
+      width: () => {
+        return this.width;
+      },
+      height: () => {
+        return this.height;
+      },
+    };
+  },
   data() {
     return {
+      screenWidth: 0,
       screenHeight: 0,
       selectApps: {},
       type: "internal",
@@ -167,18 +176,29 @@ export default {
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
     height() {
-      let h = 48;
-      if (this.screenHeight > 901) {
-        h += 415;
-      } else if (this.screenHeight > 600) {
-        h += 272;
-      } else {
-        h += 136;
-      }
-      // if (this.navName =="Links") h += 120
+      let h = this.screenHeight;
+      if (h > 901) return 415;
+      else if (h > 600) return 272;
+      else return 136;
+    },
+    leftTabHeight() {
+      let h = this.height;
       return {
-        height: `${h}px`,
+        height: `${h + 60}px`,
       };
+    },
+    selectedWidth() {
+      let w = this.width;
+      if (this.navName == "Links") w += 128;
+      return {
+        width: w + 8 + "px",
+      };
+    },
+    width() {
+      let w = this.screenWidth;
+      if (w > 1024) return 566;
+      else if (w > 768) return 424;
+      else return 282;
     },
     selectAppsLenght() {
       let i = 0;
@@ -191,6 +211,8 @@ export default {
   mounted() {
     this.screenHeight =
       window.innerHeight || document.documentElement.clientHeight;
+    this.screenWidth =
+      window.innerWidtht || document.documentElement.clientWidth;
     window.addEventListener("resize", this.handleResize);
   },
   beforeDestroy() {
@@ -204,6 +226,8 @@ export default {
     handleResize() {
       this.screenHeight =
         window.innerHeight || document.documentElement.clientHeight;
+      this.screenWidth =
+        window.innerWidtht || document.documentElement.clientWidth;
     },
     close() {
       this.$emit("close");
@@ -215,7 +239,6 @@ export default {
         this.close();
         return;
       }
-      let app = this.$refs.apps;
       for (let key in this.selectApps) {
         this.selectApps[key].forEach((item) => {
           let iconOption = { ...this.iconOption };

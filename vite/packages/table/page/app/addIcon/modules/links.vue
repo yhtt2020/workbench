@@ -1,31 +1,29 @@
 <template>
-  <div class="h-full" style="border: 1px solid">
-    <div class="flex relative">
-      <div class="w-32">
-        <div class="overflow-y-auto xt-container" style="height: 300px">
-          <div
-            v-for="(item, index) in webBtn"
-            @click="handleChange(index)"
-            class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl mr-2"
-            style="flex: 0 0 auto"
-            :class="{
-              'xt-bg-2': index === selectIndex,
-            }"
-          >
-            {{ item.label }}
-          </div>
+  <div class="flex relative">
+    <div class="w-32">
+      <div class="overflow-y-auto xt-container" :style="heightStyle">
+        <div
+          v-for="(item, index) in webBtn"
+          @click="handleChange(index)"
+          class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl mr-2"
+          style="flex: 0 0 auto"
+          :class="{
+            'xt-bg-2': index === selectIndex,
+          }"
+        >
+          {{ item.label }}
         </div>
       </div>
-      <Icon
-        ref="iconRef"
-        @updateSelectApps="updateSelectApps"
-        :isSelect="true"
-        :name="selectName"
-        style="height: calc(100% - 48px)"
-        :data="appList[selectName]"
-      >
-      </Icon>
     </div>
+    <Icon
+      ref="iconRef"
+      @updateSelectApps="updateSelectApps"
+      :isSelect="true"
+      :name="selectName"
+      style="height: calc(100% - 48px)"
+      :data="appList[selectName]"
+    >
+    </Icon>
   </div>
 </template>
 
@@ -37,6 +35,7 @@ import cache from "../hooks/cache";
 import { scrollable } from "../hooks/scrollable";
 
 export default {
+  inject: ["height"],
   mixins: [syncSelected],
   components: { Radio },
   props: {
@@ -48,7 +47,6 @@ export default {
         this.appList[this.selectName].forEach((item) => {
           item.open.type = this.type;
         });
-        console.log("2123 :>> ", this.appList[this.selectName][0].open);
       },
     },
   },
@@ -132,11 +130,17 @@ export default {
   async mounted() {
     this.getData(this.selectIndex);
   },
+  computed: {
+    heightStyle() {
+      return {
+        height: this.height() + 60 + "px",
+      };
+    },
+  },
   methods: {
     async getData(index) {
       index = this.webBtn[index].name;
       let appList = cache.get(`link-${index}`);
-      console.log("appList :>> ", appList);
       if (!appList) {
         appList = [];
         let res = await getSelect({
