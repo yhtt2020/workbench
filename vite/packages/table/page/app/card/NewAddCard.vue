@@ -56,7 +56,7 @@
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
 import { NavList } from "./navList"
-import CardState from '../../../components/card/cardState.vue';
+import CardState from '../../../components/card/components/State.vue';
 import _ from 'lodash-es'
 
 export default {
