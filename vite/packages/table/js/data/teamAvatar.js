@@ -3,17 +3,17 @@ export const avatarShop = [
   {
     avatar_url:'/img/epic_avatar.svg',title:'小恶魔头像框',
     avatar_rank:'史诗',get_way:'获得途径：商店购买、日常签到',
-    price:'9.9',score:'199积分'
+    price:'9.0',score:'199积分',total:'2000'
   },
   {
     avatar_url:'/img/fine_avatar.svg',title:'小狐狸头像框',
     avatar_rank:'精良',get_way:'获得途径：商店购买、日常签到',
-    price:'3.0',score:'99积分',
+    price:'3.0',score:'99积分',total:'2000'
   },
   {
     avatar_url:'/img/excellent _avatar.svg',title:'小青蛙头像框',
     avatar_rank:'优秀',get_way:'获得途径：商店购买、日常签到',
-    price:'4.0',score:'199积分'
+    price:'4.0',score:'199积分',total:'2000'
   }
 ]
 

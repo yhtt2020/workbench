@@ -56,7 +56,7 @@
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
             <div v-if="showDetail && currentTab==='store'">
-              <TeamStoreDetail></TeamStoreDetail>
+              <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
             </div>
           </a-col>
         </a-row>
@@ -412,5 +412,9 @@ export default {
 
 :deep(.nav-item){
   width: 50% !important;
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>
