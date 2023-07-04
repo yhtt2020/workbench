@@ -54,6 +54,7 @@
           <component
             ref="apps"
             :is="navName"
+            :type="type"
             @updateData="updateData"
           ></component
         ></slot>
@@ -69,7 +70,7 @@
         v-scrollable
         style="width: 590px"
       >
-        <template v-for="(v, k, i) of selectApps">
+        <template v-for="(v, k) of selectApps">
           <div v-for="item in selectApps[k]">
             <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
           </div>
@@ -77,12 +78,12 @@
       </div>
     </div>
     <footer class="flex items-center justify-center mt-2">
-      <div
-        class="xt-bg-2 flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120"
-        @click="close()"
-      >
-        取消
-      </div>
+      <Tab
+        v-if="navName == 'Links'"
+        style="width: 380px; height: 48px; font-size: 18px"
+        v-model:data="type"
+        :list="linkList"
+      ></Tab>
       <div
         class="xt-active-bg flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120 xt-active-text"
         @click="commitIcons()"
@@ -101,7 +102,7 @@ import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
-
+import Tab from "../../../components/card/components/Tab.vue";
 import { mapActions, mapWritableState } from "pinia";
 export default {
   emits: ["update:navName"],
@@ -127,6 +128,21 @@ export default {
     return {
       screenHeight: 0,
       selectApps: {},
+      type: "internal",
+      linkList: [
+        {
+          value: "internal",
+          name: "工作台内打开",
+        },
+        {
+          value: "thinksky",
+          name: "想天浏览器",
+        },
+        {
+          value: "default",
+          name: "系统默认",
+        },
+      ],
     };
   },
   directives: {
@@ -137,6 +153,7 @@ export default {
     MyApps,
     Desktop,
     QingApps,
+    Tab,
   },
   watch: {
     navName: {
@@ -191,15 +208,16 @@ export default {
     close() {
       this.$emit("close");
     },
+    // 提交icon 并格式化数据
     async commitIcons() {
       if (!this.desk) {
-        this.$emit("getSelectApps");
+        this.$emit("getSelectApps", this.selectApps);
         this.close();
         return;
       }
       let app = this.$refs.apps;
-      for (let key in app.selectApps) {
-        app.selectApps[key].forEach((item) => {
+      for (let key in this.selectApps) {
+        this.selectApps[key].forEach((item) => {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";

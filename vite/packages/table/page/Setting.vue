@@ -169,7 +169,7 @@
               </a-col>
               <a-col :span="6">
                 <div @click="styleVisible = true" class="btn">
-                  <Icon icon="yifu" style="font-size: 2em"></Icon>
+                  <Icon icon="bianji" style="font-size: 2em"></Icon>
                   <div>主题颜色</div>
                 </div>
               </a-col>

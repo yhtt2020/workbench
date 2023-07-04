@@ -26,12 +26,6 @@
       >
       </Icon>
     </div>
-    <!-- <Radio
-      :list="linkList"
-      v-model:data="type"
-      text="选择打开的浏览器方式"
-    ></Radio>
-    <div class="my-2 text-base mb-4">网址分类</div> -->
   </div>
 </template>
 
@@ -45,51 +39,21 @@ import { scrollable } from "../hooks/scrollable";
 export default {
   mixins: [syncSelected],
   components: { Radio },
+  props: {
+    type: {},
+  },
   watch: {
     type: {
       handler(newV) {
-        let data = []; // 临时存放数据不做取名
-        this.appList.forEach((item) => {
-          data.push({
-            ...item,
-            open: {
-              value: item.open.value,
-              type: this.type,
-            },
-          });
+        this.appList[this.selectName].forEach((item) => {
+          item.open.type = this.type;
         });
-        this.appList = data;
-        data = [];
-        this.selectApps.forEach((item) => {
-          data.push({
-            ...item,
-            open: {
-              value: item.open.value,
-              type: this.type,
-            },
-          });
-        });
-        this.selectApps = data;
+        console.log("2123 :>> ", this.appList[this.selectName][0].open);
       },
     },
   },
   data() {
     return {
-      type: "internal",
-      linkList: [
-        {
-          value: "internal",
-          name: "工作台内打开",
-        },
-        {
-          value: "thinksky",
-          name: "想天浏览器",
-        },
-        {
-          value: "default",
-          name: "系统默认浏览器",
-        },
-      ],
       webBtn: [
         {
           label: "设计工具",
@@ -172,6 +136,7 @@ export default {
     async getData(index) {
       index = this.webBtn[index].name;
       let appList = cache.get(`link-${index}`);
+      console.log("appList :>> ", appList);
       if (!appList) {
         appList = [];
         let res = await getSelect({
@@ -189,7 +154,12 @@ export default {
           });
         });
         cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
+      } else {
+        appList.forEach((item) => {
+          item.open.type = this.type;
+        });
       }
+
       this.appList[index] = appList;
       this.selectName = index;
     },

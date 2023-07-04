@@ -53,9 +53,24 @@ export default {
     },
   },
   computed: {
+    // 全选状态
     selectAll() {
+      if (
+        this.selectAppsLength == this.appsLenght &&
+        this.isSelectedArr[this.name] !== true
+      ) {
+        this.isSelectedArr[this.name] = !this.isSelectedArr[this.name];
+        return "取消全选";
+      }
       return this.isSelectedArr[this.name] ? "取消全选" : "全选";
     },
+    // 选中数组长度
+    selectAppsLength() {
+      return this.selectApps[this.name]
+        ? this.selectApps[this.name].length
+        : "";
+    },
+    // 数组总长度
     appsLenght() {
       let length = this.data ? this.data.length : "";
       return length;
