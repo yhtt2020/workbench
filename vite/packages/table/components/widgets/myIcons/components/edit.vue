@@ -132,23 +132,6 @@
     </div>
 
     <template v-if="_isBackground">
-      <!-- <div class="item-box">
-        <div>
-          <colorPicker
-          @click="colorPickerClick()"
-            v-if="_isBackground"
-            v-model:hex="_backgroundColor"
-          />
-        </div>
-        <div
-          class="item"
-          :key="item"
-          :style="{ background: backgroundColorList[`${'color' + item}`] }"
-          v-for="item in 15"
-          @click="backgroundClick(item)"
-          :class="{ active: _backgroundIndex == item }"
-        ></div>
-      </div> -->
       <Color v-model:color="_backgroundColor"></Color>
     </template>
   </div>
