@@ -318,7 +318,6 @@ import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
-import {setWallpaperColor}from "../components/card/hooks/styleSwitch/setStyle"
 import SmallRank from "../components/widgets/SmallRank.vue";
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -840,7 +839,6 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
 
     clearWallpaper() {
-      setWallpaperColor("none")
       this.setBackgroundImage({ path: "" });
       // const value = cache.get("style")
       // document.documentElement.classList.remove(value);
