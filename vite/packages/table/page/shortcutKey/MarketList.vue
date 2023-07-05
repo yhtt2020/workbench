@@ -9,16 +9,16 @@
               <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
             <span class="flex flex-col ml-4">
-              <span style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">{{ item.name }}</span>
-              <span class="mt-1" style="font-size: 16px;color: rgba(255,255,255,0.60);">{{ item.commonUse }}</span>
+              <span style="font-size: 18px;color: var(--primary-text);font-weight: 500;">{{ item.name }}</span>
+              <span class="mt-1" style="font-size: 16px;color: var(--secondary-text);">{{ item.commonUse }}</span>
             </span>
           </div>
-          <div class="flex flex-col justify-center items-center w-16 h-16 s-bg rounded-lg">
-            <span style="font-family: Oswald-SemiBold;font-size: 24px;color: rgba(255,255,255,0.85);font-weight: 600;">{{ item.number }}</span>
-            <span>{{item.key}}</span>
+          <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
+            <span style="font-family: Oswald-SemiBold;font-size: 24px;color: var(--primary-text);font-weight: 600;">{{ item.number }}</span>
+            <span class="xt-text">{{item.key}}</span>
           </div>
         </div>
-        <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
+        <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: var(--secondary-text);">
           <span class="flex items-center">
             <div @click="showCard(item.id)">
               <!-- <a-avatar size="24">
@@ -26,9 +26,9 @@
               </a-avatar> -->
               <a-avatar shape="square" :src="item.avatar" :size="32"></a-avatar>
             </div>
-            <span class="ml-3" style="color: rgba(255,255,255,0.60);">{{ item.userName }}</span>
+            <span class="ml-3" style="color: var(--secondary-text);">{{ item.userName }}</span>
           </span>
-          <span style="color: rgba(255,255,255,0.60);">
+          <span style="color: var(--secondary-text);">
             <span>
               <Icon icon="dianzan" class="mr-2"></Icon>
               <span>{{ item.sumLikes }}</span>
@@ -138,15 +138,12 @@ export default {
     display: none;
   }
   .recommend{
-    background: rgba(0,0,0,0.30);
+    background: var(--mask-bg);
     border-radius: 12px;
     width: 356px;
     height: 136px;
     margin: 0 8px 16px;
     padding: 12px;
-  }
-  .s-bg{
-    box-shadow: none !important;
   }
   .prompt-modal{
       position: absolute;
@@ -188,7 +185,7 @@ export default {
           line-height: 48px;
           padding: 0 25px;
           font-size: 16px;
-          color: rgba(255,255,255,0.60);
+          color: var(--secondary-text);
         }
       }
     }
