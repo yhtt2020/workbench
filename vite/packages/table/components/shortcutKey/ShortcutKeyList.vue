@@ -8,17 +8,14 @@
         <span class="truncate">{{ item.groupName }}</span>
       </div>
       <!-- 快捷键 -->
-      <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="toggleKey(item.id)">
+      <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: var(--mask-bg);':''" @click="toggleKey(item.id)">
         <div class="flex">
           <div v-for="i in item.keys" :key="i" class="flex">
-            <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+            <span style="min-width:32px;padding:0 8px;" class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
           </div>
         </div>
         <div class="key-title truncate">{{ item.title}}</div>
       </div>
-      <!-- <div v-if="item.addNote" class="key-item text-note">
-        <span class="note-val">{{ item.noteVal }}</span>
-      </div> -->
       <div v-if="item.addNote" class="text-note">
         <span class="note-val">{{ item.noteVal }}</span>
       </div>
@@ -112,15 +109,13 @@ export default {
     top: 0;
     height: 56px;
     margin-left: 10px;
-    border-right: solid rgba(255, 245, 245, 0.1) 1px;
+    border-right: solid var(--divider) 1px;
   }
-  .s-bg{
-    box-shadow: none !important;
-  }  
   .key-title{
     flex: 1;
     max-width: 160px;
     text-align: right;
+    color: var(--primary-text);
   }
 
   

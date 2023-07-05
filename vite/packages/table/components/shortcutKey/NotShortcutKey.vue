@@ -1,17 +1,5 @@
 <template>
     <div class="box">
-      <!-- 头部快捷软件
-      <div class="flex items-center mb-3" v-if="detailJump">
-        <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
-          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
-        </div>
-        <div class="head-item">
-          <span>
-            <a-avatar shape="square" :src="appMessage.icon" :size="38"></a-avatar>
-          </span>
-          <span class="ml-2" style="font-size: 16px;color: rgba(255,255,255,0.85);">{{ appMessage.name }}</span>
-        </div>
-      </div> -->
       <!-- 无内容 -->
       <div class="container rounded-lg flex flex-col items-center"
       :style="detailJump ? 'height: 90%;' : 'height: 100%;'">
@@ -32,16 +20,16 @@
                     <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
                   </span>
                   <span class="flex flex-col ml-4">
-                    <span style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">{{ item.name }}</span>
-                    <span class="mt-1" style="font-size: 16px;color: rgba(255,255,255,0.60);">{{ item.commonUse }}</span>
+                    <span style="font-size: 18px;color: var(--primary-text);font-weight: 500;">{{ item.name }}</span>
+                    <span class="mt-1" style="font-size: 16px;color: var(--secondary-text);">{{ item.commonUse }}</span>
                   </span>
                 </div>
-                <div class="flex flex-col justify-center items-center w-16 h-16 s-bg rounded-lg">
-                  <span style="font-family: Oswald-SemiBold;font-size: 24px;color: rgba(255,255,255,0.85);font-weight: 600;">{{ item.number }}</span>
-                  <span>快捷键</span>
+                <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
+                  <span style="font-family: Oswald-SemiBold;font-size: 24px;color: var(--primary-text);font-weight: 600;">{{ item.number }}</span>
+                  <span class="xt-text-2" style="font-size: 12px">快捷键</span>
                 </div>
             </div>
-            <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
+            <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: var(--secondary-text);">
               <span class="flex items-center">
                 <div @click="showCard(item.id)">
                   <a-avatar size="24">
@@ -174,34 +162,25 @@ export default {
       display: none;
   }
   .recommend{
-    background: rgba(0,0,0,0.30);
+    background: var(--mask-bg);
     border-radius: 12px;
     width: 356px;
     height: 136px;
     margin: 0 8px 16px;
     padding: 12px;
   }
-  .s-bg{
-    box-shadow: none !important;
-  }
   .btn-item{
     display: flex;
+    font-size: 16px;
     >div{
-      background: var(--primary-bg);
+      color: var(--primary-text);
+      background: var(--mask-bg);
       width: 160px;
       text-align: center;
       height: 48px;
       line-height: 48px;
       margin: 0 7px;
       border-radius: 12px;
-    }
-    >span{
-      background: var(--primary-bg);
-      border-radius: 12px;
-      width: 48px;
-      height: 48px;
-      line-height: 54px;
-      text-align: center;
     }
   }
   .button-active{

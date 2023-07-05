@@ -1,6 +1,6 @@
 <template>
   <!-- 预览 -->
-  <div class="prompt-modal s-bg" v-show="showModal">
+  <div class="prompt-modal xt-mask" v-show="showModal">
     <div class="head-icon">
       <div class="icon" @click="close">
         <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon>
@@ -18,6 +18,9 @@
   </div>
   <!-- 预览添加抽屉 -->
   <a-drawer v-model:visible="openDrawer" style="z-index:9999;" width="320" placement="right">
+    <template #closeIcon>
+      <Icon icon="xiangyou"></Icon>
+    </template>
      <template #extra v-if="!keyScheme.isMyCreate">
       <a-space>
         <div class="add-scheme" @click="addPlan(keyScheme)">立即添加</div>
@@ -27,17 +30,17 @@
       <span class="h-14 w-14 flex justify-center items-center">
         <a-avatar shape="square" :src="keyScheme.icon" :size="48"></a-avatar>
       </span>
-      <span class="mt-4" style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">{{ keyScheme.name }}</span>
-      <span class="mt-1" style="font-size: 16px;color: rgba(255,255,255,0.60);">{{ keyScheme.commonUse }}</span>
+      <span class="mt-4" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">{{ keyScheme.name }}</span>
+      <span class="mt-1" style="font-size: 16px;color: var(--secondary-text);">{{ keyScheme.commonUse }}</span>
       <span class="flex items-center my-4">
         <div>
           <a-avatar size="24">
               <template #icon><UserOutlined /></template>
           </a-avatar>
         </div>
-        <span class="ml-3" style="color: rgba(255,255,255,0.60);">{{ keyScheme.userName }}</span>
+        <span class="ml-3" style="color: var(--secondary-text);">{{ keyScheme.nickName }}</span>
       </span>
-      <span style="color: rgba(255,255,255,0.60);">
+      <span style="color: var(--secondary-text);">
         <span>
           <Icon icon="dianzan" class="mr-2"></Icon>
           <span>{{ keyScheme.sumLikes }}</span>
@@ -110,9 +113,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .s-bg{
-    box-shadow: none !important;
-  }
   .prompt-modal{
       position: absolute;
       top:0;
@@ -131,7 +131,8 @@ export default {
         justify-content: space-between;
         height: 10%;
         .icon{
-          background: #2A2A2A;
+          background: var(--secondary-bg);
+          color: var(--primary-text);
           border-radius: 12px;
           width: 48px;
           height: 48px;
@@ -147,20 +148,22 @@ export default {
         align-items: end;
         height: 10%;
         >div{
-          background: rgba(0,0,0,0.30);
+          background: var(--mask-bg);
           border-radius: 12px;
           height: 48px;
           line-height: 48px;
           padding: 0 25px;
           font-size: 16px;
-          color: rgba(255,255,255,0.60);
+          color: var(--secondary-text);
         }
       }
     }
     .add-scheme{
-      background: #2A2A2A;
+      background: var(--secondary-bg);
+      font-size: 16px;
+      color: var(--primary-text);
       border-radius: 12px;
-      width: 80px;
+      width: 128px;
       height: 48px;
       display: flex;
       justify-content: center;
