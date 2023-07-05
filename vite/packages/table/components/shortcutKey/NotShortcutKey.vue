@@ -25,7 +25,7 @@
           <div class="pointer" @click="share">我来分享</div>
         </div>
         <div class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">
-          <div v-for="item in notAppList" :key="item.id" class="pointer recommend">
+          <div v-for="item in notAppList" @click="previewKay(item)" :key="item.id" class="pointer recommend">
             <div class="flex justify-between">
                 <div class="flex">
                   <span class="h-14 w-14 flex justify-center items-center">
@@ -67,15 +67,19 @@
         </div>
       </div>
     </div>
+    <!-- 预览 -->
+    <Preview :keyScheme="keyScheme" :showModal="showModal" @closePreview="closePreview"></Preview>
 </template>
 
 <script>
 import { appStore } from '../../store';
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../../store/key'
+import Preview from './Preview.vue';
 export default {
   name: "NotShortcutKey",
   components: {
+    Preview
   },
   props: {
     detailJump: {
@@ -93,11 +97,13 @@ export default {
   },
   data() {
     return {
-      notAppList :[]
+      notAppList :[],
+      keyScheme: {},
+      showModal: false
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['sellSchemeList']),
+    ...mapWritableState(keyStore, ['marketList']),
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
@@ -115,13 +121,20 @@ export default {
     // 返回
     onBack(){
       this.$router.go(-1)
+    },
+    previewKay(item){
+      this.keyScheme = item
+      this.showModal = true
+    },
+    closePreview(val){
+      this.showModal = val
     }
   },
   mounted(){
     if(this.detailJump) {
-      this.notAppList = this.sellSchemeList.slice(0,3)
+      this.notAppList = this.marketList[0].children.slice(0,3)
     }else{
-      this.notAppList = this.sellSchemeList
+      this.notAppList = this.marketList[0].children
     }
   },
 }

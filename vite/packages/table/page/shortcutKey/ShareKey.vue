@@ -460,7 +460,9 @@ export default {
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
         this.appContent.number = sum
-        this.isShare = true
+        this.appContent.isShare = true
+        this.appContent.isMyCreate = true
+        this.appContent.isCommunity =  false
         this.setMarketList(this.appContent)
       }else{
         const time = new Date().valueOf()

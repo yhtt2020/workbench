@@ -45,65 +45,20 @@
     </div>
   </div>
   <!-- 预览 -->
-  <div class="prompt-modal s-bg" v-show="showModal">
-    <div class="head-icon">
-      <div class="icon" @click="showModal = false">
-        <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon>
-      </div>
-      <div class="icon" @click="openDrawer = true">
-        <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
-      </div>
-    </div>
-    <div style="width:98%;height:80%;">
-      <ShortcutKeyList :keyList="keyScheme.keyList" :keyBoxStyle="{background:'var(--primary-bg)'}"></ShortcutKeyList>  
-    </div>
-    <div class="foot">
-      <div>{{ keyScheme.number }}个快捷键</div>
-    </div>
-  </div>
-  <!-- 预览添加抽屉 -->
-  <a-drawer v-model:visible="openDrawer" style="z-index:9999;" width="320" placement="right">
-     <template #extra>
-      <a-space>
-        <div class="add-scheme" @click="addPlan">立即添加</div>
-      </a-space>
-    </template>
-    <div class="drawer-center">
-      <span class="h-14 w-14 flex justify-center items-center">
-        <a-avatar shape="square" :src="keyScheme.icon" :size="48"></a-avatar>
-      </span>
-      <span class="mt-4" style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">{{ keyScheme.name }}</span>
-      <span class="mt-1" style="font-size: 16px;color: rgba(255,255,255,0.60);">{{ keyScheme.commonUse }}</span>
-      <span class="flex items-center my-4">
-        <div>
-          <a-avatar size="24">
-              <template #icon><UserOutlined /></template>
-          </a-avatar>
-        </div>
-        <span class="ml-3" style="color: rgba(255,255,255,0.60);">{{ keyScheme.userName }}</span>
-      </span>
-      <span style="color: rgba(255,255,255,0.60);">
-        <span>
-          <Icon icon="dianzan" class="mr-2"></Icon>
-          <span>{{ keyScheme.sumLikes }}</span>
-        </span>
-        <span class="ml-3">
-          <Icon icon="xiazai" class="mr-2"></Icon>
-          <span>{{ keyScheme.download }}</span>
-        </span>
-      </span>
-    </div>
-  </a-drawer>
+  <Preview :keyScheme="keyScheme" :showModal="showModal" @closePreview="closePreview"></Preview>
 </template>
 
 <script>
-import { mapActions } from 'pinia';
 import { appStore } from '../../store';
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
+import { mapActions, mapWritableState } from "pinia";
+import { keyStore } from '../../store/key'
+import Preview from '../../components/shortcutKey/Preview.vue';
 export default {
   name: "MarketList",
   components: {
-    ShortcutKeyList
+    ShortcutKeyList,
+    Preview
   },
   data() {
     return {
@@ -146,6 +101,7 @@ export default {
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
+    ...mapActions(keyStore,['setShortcutKeyList']),
     showCard(id){
       this.showUserCard(id)
     },
@@ -162,8 +118,8 @@ export default {
       this.keyScheme = item
       this.showModal = true
     },
-    addPlan(){
-      // console.log(this.keyScheme)
+    closePreview(){
+      this.showModal = false
     }
   }
 }

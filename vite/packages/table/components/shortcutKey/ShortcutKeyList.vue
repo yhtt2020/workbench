@@ -1,7 +1,7 @@
 <template>
   <!-- 快捷键列表 -->
-<vue-custom-scrollbar :settings="settingsScroller" style="height:100%">
-  <div class="key-box" :style="keyBoxStyle" id="keyBox">
+<vue-custom-scrollbar :settings="settingsScroller" style="width:100%;height:100%;border-radius: 12px;" :style="keyBoxStyle">
+  <div class="key-box" id="keyBox">
     <div v-for="(item,index) in keyList" :key="item.id">
       <!-- 分组名称 -->
       <div class="key-item border-right" v-if="item.groupName">
@@ -74,7 +74,6 @@ export default {
 </script>
 <style lang="scss" scoped>
   .key-box{
-    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-content: flex-start;
@@ -95,7 +94,7 @@ export default {
     height:48px;
     line-height:48px;
     font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    color: var(--primary-text);
     display: flex;
     border-radius: 8px;
     justify-content: space-between;
