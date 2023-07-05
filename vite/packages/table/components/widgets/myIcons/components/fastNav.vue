@@ -29,13 +29,12 @@
         ></listItem>
       </vue-custom-scrollbar>
     </div>
-    <!-- <div
+    <div
       v-show="nowClassify === 'localApp'"
       class="flex flex-col items-start text-zinc-500 h-full xt-text"
     >
       <div>1. 点击选择需要添加的应用快捷方式</div>
       <div>2. 拖动应用快捷方式拖放到下方</div>
-      <div>3. 支持持批量添加</div>
       <div
         class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
         @dragover.prevent=""
@@ -73,7 +72,7 @@
       >
         确定添加
       </div>
-    </div> -->
+    </div>
   </Classification>
 </template>
 
@@ -90,6 +89,7 @@ export default {
         { name: "systemApp", cname: "系统应用" },
         { name: "coolApp", cname: "酷应用" },
         { name: "tableApp", cname: "Windows应用" },
+        // { name: 'localApp', cname: '自定义应用' },
         { name: "lightApp", cname: "轻应用" },
       ],
       ClassifyData: [
