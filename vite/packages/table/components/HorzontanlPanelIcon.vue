@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}" style="background: var(--primary-bg);">
-    <div v-for="(item,index) in navList" class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
-       @click.stop="clickNav(item,index)" :class="activeIndex===index ? 's-item':''" >
+  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{height:itemHeight}" style="background: var(--secondary-bg);">
+    <div v-for="(item,index) in navList" class=" w-40 h-full panel-icon flex justify-center btn-active items-center relative rounded-lg pointer"
+       @click.stop="clickNav(item,index)" :class="activeIndex===index ? 'active-item':''" >
        <Icon :icon="item.icon" style="font-size: 1.5em;"></Icon>
-       <span class="ml-2">{{ item.title }}</span>
+       <span class="ml-2 panel-title" style="color:var(--primary-text);">{{ item.title }}</span>
        <div v-if="item.state === true" class="state-dot ml-2"></div>
     </div>
   </div>
@@ -24,7 +24,7 @@ export default {
     },
     bgColor:{
       type:String,
-      default:'s-item'
+      default:'active-item'
     },
     height:{
       type:Number,
@@ -79,11 +79,8 @@ export default {
   background: #FF4D4F;
   border-radius: 4px;
 }
-.s-item{
-  background:var(--active-bg);
-  color: var( --active-text) !important;
-}
-.nav-item{
-  color: var(--primary-text);
+.active-item{
+  color: var(--active-text);
+  background: var(--active-bg)
 }
 </style>

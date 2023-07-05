@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row" style="height: 100%;width: 100%">
+  <div class="flex flex-row ml-1" style="height: 100%;width: 100%">
     <!--    <div class="w-40 mr-6">-->
     <!--      <div v-for="(item,index) in navList" class="pointer h-14  flex justify-center items-center mb-2 rounded-xl s-icon" :class="activeIndex===index?'s-bg':''" @click="clickNav(item,index)">-->
     <!--        <Icon v-if="item.icon" :icon="item.icon"></Icon>-->

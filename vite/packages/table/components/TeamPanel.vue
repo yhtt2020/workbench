@@ -1,31 +1,40 @@
 <template>
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
-       style="overflow: hidden;background: var(--primary-bg);color: var(--primary-text)">
+       style="overflow: hidden;background: var(--modal-bg);color: var(--primary-text)">
       <div v-if="showDetail"
-           style="width:350px;height: 100%;background: rgba(0,0,0,0.09);position: relative;display: flex;flex-direction: column;">
-        <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
-             style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
-          <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
-        </div>
+           style="width:445px;height: 100%;position: relative;display: flex;flex-direction: column;">
         <a-row style="height: 100%">
           <a-col :span="4">
             <ul class="nav-list">
-             
-              <li @click="currentTab='barrage'" :class="{'nav-active':currentTab==='barrage'}">
-                <div><icon icon="xiaoxi"></icon></div>
-              </li>
-              <li @click="currentTab='devote'" :class="{'nav-active':currentTab==='devote'}">
-                <div><icon icon="thunderbolt"></icon></div>
-              </li>
-              <li @click="currentTab='info'" :class="{'nav-active':currentTab==='info'}">
-                <div><icon icon="tishi-xianxing"></icon></div>
+              <li  @click="closeDetail" class="flex pointer items-center justify-center mb-3">
+                <div class="rounded-lg"  style="background: var(--secondary-bg);">
+                  <Icon icon="doubleright"></Icon>
+                </div>
               </li>
 
+              <!--
+                <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
+             style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
+          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
+        </div>
+               -->
+              <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
+                <div><icon icon="xiaoxi"></icon></div>
+              </li>
+              <li @click="currentTab='devote'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='devote'}">
+                <div><icon icon="thunderbolt"></icon></div>
+              </li>
+              <li @click="currentTab='info'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='info'}">
+                <div><icon icon="tishi-xianxing"></icon></div>
+              </li>
+              <li @click="currentTab = 'store'" class="flex items-center justify-center" :class="{'nav-active':currentTab === 'store'}">
+                <div><Icon icon="gift"></Icon></div>
+              </li>
 
             </ul>
           </a-col>
           <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
-            <a-row class="pointer" @click="showTeamDetail" :gutter="20">
+            <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
 
               <a-col>
                 <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
@@ -46,6 +55,9 @@
                  style="height: 100%;position: relative;width: 100%">
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
+            <div v-if="showDetail && currentTab==='store'">
+              <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
+            </div>
           </a-col>
         </a-row>
       </div>
@@ -58,7 +70,7 @@
         <vue-custom-scrollbar :settings="outerSettings"
                               style="position:relative;height:calc(100% - 60px);  ">
           <div class="mb-10">
-         
+
             <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo" :joinedTime="showUserMemberInfo.joinedTime"></UserDetail>
           </div>
         </vue-custom-scrollbar>
@@ -85,15 +97,15 @@
         </div>
       </div>
       <!-- 快速搜索 小队右边栏 -->
-    <div class="common-panel  flex" style="width: 80px;flex-direction: column;padding-bottom: 0;">
-      <div v-if="!teamDetail" @click="showBarragePanel"
+    <div class="common-panel  flex" style="width: 100px;flex-direction: column;padding-bottom: 0;">
+      <div v-if="!showDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
         <div>
           <a-avatar :size="50" shape="square" :src="team.avatar"></a-avatar>
         </div>
       </div>
-      <div v-if="teamDetail" class="text-center">小队成员</div>
+      <div v-if="showDetail" class="text-center">小队成员</div>
       <!-- <a-divider style="margin-top: 10px;margin-bottom: 10px;color: red;"></a-divider> -->
       <div style="margin-top: 10px;margin-bottom: 10px;text-align: center;">—————</div>
       <vue-custom-scrollbar :settings="outerSettings"
@@ -103,7 +115,7 @@
              v-if="teamLeader.userInfo">
 
           <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" ></UserAvatar>
+                      :avatar="teamLeader.userInfo.avatar" :rare="0" :url="''"></UserAvatar>
 
           <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
@@ -114,7 +126,7 @@
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
           <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''"></UserAvatar>
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="0" :url="''"></UserAvatar>
           <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
@@ -144,9 +156,11 @@ import LevelIcon from './small/LevelIcon.vue'
 import HorizontalPanel from './HorizontalPanel.vue'
 import TeamDevote from './team/TeamDevote.vue'
 import TeamDetail from './team/TeamDetail.vue'
+import TeamStoreDetail from './team/TeamStoreDetail.vue'
 import TeamBarrage from './comp/TeamBarrage.vue'
 import BarrageSender from './comp/BarrageSender.vue'
 import BarragePanel from './comp/BarragePanel.vue'
+
 
 export default {
   name: 'TeamPanel',
@@ -160,7 +174,8 @@ export default {
     UserAvatar,
     UserDetail,
     PlusOutlined,
-    HorizontalPanel
+    HorizontalPanel,
+    TeamStoreDetail
   },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
@@ -197,6 +212,8 @@ export default {
       showBarrage: true,
       teamDetail: false,
       showUid: 0,
+      rarity:4, // 稀有度
+      avatar_url:'/img/excellent _avatar.svg',
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
@@ -366,10 +383,13 @@ export default {
   li{
     list-style: none;
     font-size: 26px;
+    padding-top: 10px;
+    /**
     text-align: center;
     padding-left: 10px;
     padding-top: 10px;
     text-align: center;
+    **/
     cursor: pointer;
     &>div{
       padding:4px 8px 4px 8px;
@@ -386,8 +406,15 @@ export default {
         background: var(--active-bg);
         border-radius: 10px;
       }
-
     }
   }
+}
+
+:deep(.nav-item){
+  width: 50% !important;
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>

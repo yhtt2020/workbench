@@ -3,8 +3,8 @@
   <div class="mt-4 flex flex-col">
     <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 300px;">
       <template v-for="(item,index) in inputList" >
-        <div  :class="item.isDefaultForMultimedia ? 's-item':''"
-             @click="selectAudio(item,inputList)" class="flex rounded-lg voice-item-hover  pointer items-center xt-bg-2 " style="padding: 7px 10px;">
+        <div  :class="item.isDefaultForMultimedia ? 's-item xt-bg-2':''"
+             @click="selectAudio(item,inputList)" class="flex rounded-lg voice-item-hover  pointer items-center  " style="padding: 7px 10px;">
           <span class="item-name" style="font-size: 14.64px; font-weight: 400;">
             {{ item.name }}（{{item.deviceName}}）
           </span>

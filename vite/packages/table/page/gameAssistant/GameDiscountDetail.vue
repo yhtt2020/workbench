@@ -5,7 +5,7 @@
         <div class="w-12 h-12 flex items-center button-active cursor-pointer detail-bg justify-center rounded-lg "  @click="goBack">
           <Icon icon="xiangzuo" style="font-size:1.5em;"></Icon>
         </div>
-        <span style="font-size:20px;font-weight: 500;" id="detail-name" class="ml-4 px-2 py-2 rounded-lg detail-name truncate">{{ discountDetail.name }}</span>
+        <span style="font-size:20px;font-weight: 500;" class="ml-4 px-2 py-2 rounded-lg detail-name">{{ discountDetail.name }}</span>
       </div>
     </div>
     <div class="flex-grow-0">
@@ -50,8 +50,8 @@
           <div class="flex flex-col">
              <span class="line-through mr-2" style="text-align: right; color:rgba(255, 255, 255, 0.4);font-size: 14px; font-weight: 400;">{{ discountDetail.oldPrice }}</span>
              <div>
-                <span class="mr-2 rounded-lg" style="padding: 2px 4px 5px 4px;background: rgba(255, 77, 79, 1);"> -{{discountDetail.percent}}%</span>
-                <span style="font-size: 18px;color:rgba(255, 77, 79, 1);font-weight: 500;">{{ discountDetail.newPrice }}</span>
+                <span class="mr-2 rounded-lg oswald-font" style="color:var(--active-text); padding: 2px 4px 5px 4px;background: rgba(255, 77, 79, 1);"> -{{discountDetail.percent}}%</span>
+                <span class="oswald-font" style="font-size: 18px;color:rgba(255, 77, 79, 1);font-weight: 500;">{{ discountDetail.newPrice }}</span>
              </div>
           </div>
         </div>
@@ -214,6 +214,9 @@ export default {
       object-fit: cover;
     }
   }
+}
+.oswald-font{
+  font-family: Oswald-SemiBold;
 }
 
 @media screen and (max-width:1224px) {

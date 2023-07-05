@@ -10,10 +10,10 @@
              @click="enterWeek(weekItem)">
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
-          <div class="remainder-day">
+          <div class="remainder-day" style="color: var(--active-text);font-family: Oswald;">
             剩余{{ remainderDay(weekItem.promotions.promotionalOffers[0].promotionalOffers[0].endDate) }}天
           </div>
-          <div class="stablish-province">立省 {{ weekItem.price.totalPrice.fmtPrice.originalPrice }}</div>
+          <div class="stablish-province" style="font-family: Oswald;">立省 {{ weekItem.price.totalPrice.fmtPrice.originalPrice }}</div>
         </div>
       </div>
       <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
@@ -30,7 +30,7 @@
           <div class="remainder-day">
             还有{{ remainderDay(weekItem.promotions.upcomingPromotionalOffers[0].promotionalOffers[0].endDate) }}天
           </div>
-          <div class="stablish-province">立省 {{ weekItem.price.totalPrice.fmtPrice.originalPrice }}</div>
+          <div class="stablish-province ">立省{{weekItem.price.totalPrice.fmtPrice.originalPrice}}</div>
         </div>
       </div>
       <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
@@ -226,11 +226,11 @@ export default {
   padding: 3px 6px 2px 6px;
   text-align: center;
   width: 80px;
-  background: rgba(0, 0, 0, 0.65);
+  background:var(--secondary-bg);
   border-bottom-left-radius: 6px;
   font-size: 13px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.85);
+  color:var(--primary-text);
 }
 
 .epic-detail-image {

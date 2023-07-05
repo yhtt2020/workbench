@@ -24,10 +24,14 @@
 }
 .xt-btn {
   background: var(--secondary-bg);
+  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 12px;
   cursor: pointer;
-  color: var(--primary-text);
 }
+
 body {
   background: var(--main-bg) !important;
 }

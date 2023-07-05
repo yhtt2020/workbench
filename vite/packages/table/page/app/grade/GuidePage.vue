@@ -27,7 +27,7 @@
           >
           <!--  -->
             <div style="width: 100px;height: 100px;">
-              <img :src="'../../../../../public/img/state/'+ item.url " class="w-full h-full" alt="">
+              <img :src="guideImg(item.url)" class="w-full h-full" alt="">
             </div>
             <span class="my-4 primary-title">{{ item.title }}</span>
             <div class="container flex items-center justify-center">
@@ -54,7 +54,7 @@
               @click="selectThemeMode(item.id)"
              >
                <div style="width: 100px;height: 100px;">
-                <img :src="'../../../../../public/img/state/'+ item.url " class="w-full h-full" alt="">
+                <img :src="guideImg(item.url) " class="w-full h-full" alt="">
                </div>
                <span class="mt-4 primary-title">{{ item.title }}</span>
              </div>
@@ -71,8 +71,8 @@
         </div>
         <div class="flex">
           <div class="mode-image mr-9 flex items-center justify-center">
-            <img src="../../../../../public/img/state/homedark2.png" class="w-full h-full " alt="" v-if="defaultMode.name === 'intMode'">
-            <img src="../../../../../public/img/state/dark-backup.png" v-else class="w-full h-full object-cover" alt="">
+            <img :src="modeImg.initUrl" class="w-full h-full " alt="" v-if="defaultMode.name === 'intMode'">
+            <img :src="modeImg.simpleUrl" v-else class="w-full h-full object-cover" alt="">
           </div>
           <div class="flex flex-col">
             <HorizontalPanel :navList="modeData" v-model:selectType="defaultMode" class="mb-5"></HorizontalPanel>
@@ -81,7 +81,7 @@
             >
             <div class="flex items-center">
               <div style="width:40px;height:40px;">
-                <img :src="'../../../../../public/img/state/'+ item.img" class="w-full h-full" alt="">
+                <img :src="guideImg(item.img)" class="w-full h-full" alt="">
               </div>
               <span class="ml-4 guide-title primary-title xt-text">{{item.title}}</span>
              </div>
@@ -118,7 +118,7 @@
         </div>
         <div class="flex items-center flex-col justify-center">
           <div style="width: 64px;height: 64px;" class="mb-6">
-            <img :src="'../../../../../public/img/state/'+defaultTeamData.img" class="w-full h-full" alt="">
+            <img :src="guideImg(defaultTeamData.img)" class="w-full h-full" alt="">
           </div>
           <span class="mb-6 primary-text">{{ defaultTeamData.title}}</span>
           <span class="secondary-title mb-14" style="max-width: 380px;">{{defaultTeamData.content}}</span>
@@ -136,7 +136,7 @@ import { cardStore } from '../../../store/card';
 import GradeNotice from './GradeNotice.vue'
 import {
   guideData,workTheme,teamData,modeData,
-  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel
+  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg 
 } from '../../../js/data/guideData'
 import cache from '../addIcon/hooks/cache';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
@@ -151,7 +151,7 @@ export default {
       step:0,
       isShow:false,
       guideData,teamData,deskTemplate,
-      modeData,workTheme,
+      modeData,workTheme,modeImg,
       defaultMode:{title:'完整模式',name:'intMode'},
       showModal:false,
       defaultTeamData:{},
@@ -220,19 +220,30 @@ export default {
     nextButton(){
       this.step ++
       if(this.step > 2) this.isShow = true
-      if(this.step > 2 ){  // 最后一步生成
-        if(this.selectItem.length !==0 && this.selectItem.length > 1){  // 判断是不是多选
+      if(this.step > 2 ){  // 最后一步生成桌面
+        if(this.selectItem.length !==0 && this.selectItem.length > 1){ // 多选情况下
           for(let i=0;i<this.selectItem.length;i++){
            this.addSwitchDesk(this.guideData[i])
           }
-        }else{
-          // 单选情况下 分为极简和不极简, 
-          if(this.selectItem[0]){
-            this.addSwitchDesk({id:this.selectItem[0]})
-          }else{  
-            this.addSwitchDesk(this.guideData[this.statusIndex])
-          }
+        }else if(this.selectItem[0] && this.selectItem[0] !== undefined){ // 单选不极简情况下
+          this.addSwitchDesk({id:this.selectItem[0]})
+        }else if(this.statusIndex === 2){ // 单选极简情况下
+          this.addSwitchDesk(this.guideData[this.statusIndex])
         }
+
+        // console.log('多选:>>>',);
+        // console.log('单选::>>> 不极简',this.selectItem[0]);
+        // console.log('单选::>>> 极简',this.statusIndex === 2);
+        // if(this.selectItem.length !==0 && this.selectItem.length > 1){  // 判断是不是多选
+          
+        // }else{
+        //   // 单选情况下 分为极简和不极简, 
+        //   if(this.selectItem[0]){
+        //     this.addSwitchDesk({id:this.selectItem[0]})
+        //   }else{  
+        //     this.addSwitchDesk(this.guideData[this.statusIndex])
+        //   }
+        // }
       }else{
         return
       }
@@ -248,7 +259,6 @@ export default {
           }
           break;
         case 'wf': // 效率辅助
-          console.log('测试');
           this.addDesk(this.deskTemplate.workName,this.deskTemplate.work)
           if(this.selectItem.length === 1){
             this.updateLeftNavData(workPanel.left)
@@ -257,7 +267,7 @@ export default {
           break;
         case 'dy': // 极简diy
           this.addDesk(this.deskTemplate.emptyName,this.deskTemplate.empty)
-          if(this.selectItem.length === 1){
+          if(this.statusIndex === 2){
             this.updateLeftNavData(diyPanel.left)
             this.updateBottomNavData(diyPanel.bottom)
           }
@@ -269,6 +279,10 @@ export default {
       }
     },
 
+    // 图片转换
+    guideImg(url){
+      return '/img/state/' + url + '.png';
+    }
   },
   watch:{
     // 根据浅色模式监听

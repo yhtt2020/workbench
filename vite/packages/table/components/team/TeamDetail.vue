@@ -4,15 +4,15 @@
     <br>
     <a-row>
       <a-col>
-        小队等级：1级
+        小队等级：{{ team.rankInfo.grade.level }}级
       </a-col>
       <a-col>
-        <LevelIcon style="margin-top: -2px;margin-left: 5px" :level="1"></LevelIcon>
+        <LevelIcon style="margin-top: -2px;margin-left: 5px" :level="team.rankInfo.grade.level"></LevelIcon>
       </a-col>
     </a-row>
-    全网排名：-<br>
-    升级剩余时长：-<br>
-    累计在线时长：-<br>
+    全网排名：{{ team.rankInfo.no }}<br>
+    升级剩余时长：{{parseHours(getRemain(team.rankInfo.grade.level,team.rankInfo.onlineInfo.total_time),1)}} 小时<br>
+    累计在线时长：{{ parseHours(team.rankInfo.onlineInfo.total_time,1)  }} 小时<br>
     小队人数上限：{{team.member_limit}}<br>
     <a-divider></a-divider>
     加入方式：{{team.join_type===0?'公开加入':'其他'}}<br>
@@ -25,11 +25,11 @@
 
   </div>
 
-  <div style="position: absolute;bottom: 0;margin-left:20px;color: var(--primary-text);">
-    <a-row class="m-5" :gutter="10">
+  <div style="position: absolute;bottom: 0;margin-left:34px;color: var(--primary-text);">
+    <a-row class="m-5" :gutter="16">
       <a-col>
         <div  v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
-             class="rounded-lg bg-mask px-6 py-3 pointer " >
+             class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2" >
           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
           退出小队
         </div>
@@ -50,10 +50,11 @@
 
 <script>
 import LevelIcon from '../small/LevelIcon.vue'
-import { mapActions, mapState } from 'pinia'
+import { mapActions, mapState, mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 import { Modal } from 'ant-design-vue'
 import { teamStore } from '../../store/team'
+import grade from '../../js/common/grade'
 
 export default {
   name: 'TeamDetail',
@@ -61,9 +62,18 @@ export default {
   props:['team','teamLeader','online','effect'],
   computed:{
     ...mapState(appStore, ['userInfo']),
+    ...mapWritableState(teamStore,['team'])
+  },
+  mounted () {
+    this.updateTeam(this.team.no,false,true)
   },
   methods:{
     ...mapActions(teamStore, ['updateTeamShip', 'quitByNo','updateMy','closeTeam','updateTeam','cleanTeam']),
+    parseHours (minutes,fixed=0) {
+      return (minutes / 60).toFixed(fixed)
+    },
+    getRemain:grade.getRemain,
+
     dismiss(){
       Modal.error({content:'暂不支持解散小队',centered:true})
     },

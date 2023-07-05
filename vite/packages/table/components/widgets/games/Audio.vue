@@ -24,7 +24,7 @@
       <span class="mt-2 mb-2" style="font-size: 14px;font-weight: 400;">输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
         <template v-for="(item,index) in outputList">
-        <div   :class="item.isDefaultForMultimedia ? 's-item' :''" @click="selectDefaultDevice(item,outputList)" class="w-full py-1 flex btn-active voice-hover  items-center rounded-lg  pointer xt-bg-2" style="padding: 8px 10px 6px 10px;font-size: 14.64px;font-weight: 200;">
+        <div   :class="item.isDefaultForMultimedia ? 's-item xt-bg-2' :''" @click="selectDefaultDevice(item,outputList)" class="w-full py-1 flex btn-active voice-hover  items-center rounded-lg  pointer " style="padding: 8px 10px 6px 10px;font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}（{{item.deviceName}}）
           </span>
@@ -49,7 +49,7 @@
       <span class="mt-2 " style="font-size: 14px;font-weight: 400;">输入</span>
       <vue-custom-scrollbar class="mt-2" :settings="settingsScroller" style="height:200px;">
         <template v-for="(item,index) in inputList">
-        <div :class="item.isDefaultForMultimedia ? 's-item' :''" class="w-full py-1 voice-hover pointer voice-hover rounded-lg flex items-center  py-2 px-2 xt-bg-2 xt-text" @click="selectDefaultDevice(item,inputList)" style=" font-size: 15px;font-weight: 200;background: var(--secondary-bg) !important;color: var(--primary-text) !important;">
+        <div :class="item.isDefaultForMultimedia ? 's-item xt-bg-2' :''" class="w-full py-1 voice-hover pointer voice-hover rounded-lg flex items-center  py-2 px-2  xt-text" @click="selectDefaultDevice(item,inputList)" style=" font-size: 15px;font-weight: 200;color: var(--primary-text) !important;">
           <span class="item-name">
             {{ item.name }}（{{item.deviceName}}）
           </span>
@@ -112,22 +112,6 @@ export default {
     this.defaultMic=await getDefaultMic()
     this.muteShow=!this.defaultOutput.muted
     this.microphoneShow=!this.defaultMic.muted
-
-    // audio.getDevices(devices => {
-    //   this.devices = devices
-    //   this.inputList = devices.inputs
-    //   this.inputList.forEach(li => {
-    //     if (li.groupId === devices.defaultInput.groupId) {
-    //       li.default = true
-    //     }
-    //   })
-    //   this.outputList = devices.outputs
-    //   this.outputList.forEach(li => {
-    //     if (li.groupId === devices.defaultOutput.groupId) {
-    //       li.default = true
-    //     }
-    //   })
-    // })
   },
   data(){
     return{

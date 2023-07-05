@@ -13,7 +13,7 @@
           <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
             <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">
-                <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;color:rgba(255, 255, 255, 0.4);"
+                <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
                       :class="{ 'active-color': current(item) }"></Icon>
               </div>
               <a-avatar v-else :size="37" shape="square" :src="item.icon"></a-avatar>
@@ -164,24 +164,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.box {
-  :deep(.icon) {
-    fill: var(--secondary-text);
-  }
+
+:deep(.icon) {
+  fill: var(--secondary-text);
 }
+
 
 
 .item:hover {
   background: var(--active-bg) !important;
 
   :deep(.icon) {
-    fill: var(--primary-text) !important
+    // fill: var(--primary-text) !important
   }
 }
 
 .active-back {
   :deep(.icon) {
-    fill: var(--active-bg) !important
+    // fill: var(--active-bg) !important
   }
 }
 
@@ -206,9 +206,13 @@ export default {
 }
 
 .active-back {
+  // border: 1px solid red;
   background: var(--active-secondary-bg) !important;
-  color: var(--primary-text) !important;
-  fill: var(--primary-text) !important;
+  // color: var(--primary-text) !important;
+
+  :deep(.icon) {
+    fill: var(--active-bg) !important;
+  }
 }
 
 .active-color {
