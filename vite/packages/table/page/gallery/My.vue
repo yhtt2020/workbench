@@ -113,7 +113,6 @@ import Import from './Import.vue'
 import { message, Modal } from 'ant-design-vue'
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import Spotlight from 'spotlight.js'
-import cache from '../app/addIcon/hooks/cache';
 
 const fs = window.$models.fs
 const path = require('path')

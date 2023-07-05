@@ -184,7 +184,7 @@ import {Modal as AntModal} from 'ant-design-vue'
 import {getClientIcon, steamProtocol} from "../../js/common/game";
 import JumpNotice from '../../components/game/JumpNotice.vue'
 import { useToast} from 'vue-toastification'
-import cache from "../app/addIcon/hooks/cache";
+import cache from "../../components/card/hooks/cache";
 const toast=useToast()
 export default {
   name: "MyGame",

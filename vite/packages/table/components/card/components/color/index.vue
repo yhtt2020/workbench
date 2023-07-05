@@ -55,7 +55,6 @@ export default {
   watch: {
     colorData(newV) {
       this.$emit("update:color", newV);
-      this.$emit("onBtnClick", newV);
     },
   },
   methods: {

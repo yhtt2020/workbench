@@ -16,7 +16,7 @@
   </Widget>
 </template>
 <script>
-import CardState from '../../../components/card/cardState.vue';
+import CardState from '../../../components/card/components/state/index.vue';
 
 import Widget from '../../card/Widget.vue'
 import { steamUserStore } from '../../../store/steamUser'

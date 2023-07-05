@@ -169,7 +169,7 @@
               </a-col>
               <a-col :span="6">
                 <div @click="styleVisible = true" class="btn">
-                  <Icon icon="yifu" style="font-size: 2em"></Icon>
+                  <Icon icon="bianji" style="font-size: 2em"></Icon>
                   <div>主题颜色</div>
                 </div>
               </a-col>
@@ -253,7 +253,7 @@
 </template>
 
 <script>
-import Color from "../components/card/color/index.vue";
+import Color from "../components/card/components/color/index.vue";
 import {
   delBgColor,
   delSecondaryBgColor,
@@ -369,18 +369,18 @@ export default {
       this.$router.push({ path: "/power" });
     },
 
-    invite(){
+    invite() {
       this.$router.push({
-        name:'invite'
-      })
+        name: "invite",
+      });
     },
-    verify(){
+    verify() {
       this.$router.push({
-        name:'invite',
-        params:{
-          tab:'verify'
-        }
-      })
+        name: "invite",
+        params: {
+          tab: "verify",
+        },
+      });
     },
 
     async verifyCode() {

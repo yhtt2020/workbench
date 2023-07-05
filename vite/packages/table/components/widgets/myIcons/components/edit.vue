@@ -132,23 +132,6 @@
     </div>
 
     <template v-if="_isBackground">
-      <!-- <div class="item-box">
-        <div>
-          <colorPicker
-          @click="colorPickerClick()"
-            v-if="_isBackground"
-            v-model:hex="_backgroundColor"
-          />
-        </div>
-        <div
-          class="item"
-          :key="item"
-          :style="{ background: backgroundColorList[`${'color' + item}`] }"
-          v-for="item in 15"
-          @click="backgroundClick(item)"
-          :class="{ active: _backgroundIndex == item }"
-        ></div>
-      </div> -->
       <Color v-model:color="_backgroundColor"></Color>
     </template>
   </div>
@@ -157,10 +140,10 @@
 <script>
 // import "../../../../../../src/util/"
 // import "/"
-import Color from "../../../card/color/index.vue"
+import Color from "../../../card/components/color/index.vue"
 import fastNav from "./fastNav.vue";
-import Radio from "../../../card/hooks/Radio.vue";
-import { validateFile } from "../../../card/hooks/innerImgHook";
+import Radio from "../../../card/components/radio/index.vue";
+import { validateFile } from "../../../card/hooks/imageProcessing";
 import { sizeList, linkList, backgroundColorList } from "./edit";
 import { message } from "ant-design-vue";
 export default {

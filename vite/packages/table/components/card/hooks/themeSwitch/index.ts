@@ -1,4 +1,4 @@
-import cache from "../../../../page/app/addIcon/hooks/cache";
+import cache from "../cache";
 import { DARK_THEME, LIGHT_THEME, THEME_NAME, OLD_THEME_NAME, SUFFIX } from "./types";
 
 /**
@@ -8,7 +8,9 @@ import { DARK_THEME, LIGHT_THEME, THEME_NAME, OLD_THEME_NAME, SUFFIX } from "./t
 export const initTheme = () => {
     const className = compatible()
     if (className) setThemeName(className);
-    else setThemeName(DARK_THEME);
+    else {
+        setThemeName(DARK_THEME + SUFFIX);
+    }
 };
 
 /**

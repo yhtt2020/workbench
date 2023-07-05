@@ -22,13 +22,13 @@
       </div>
     </header>
     <!-- 主体 -->
-    <main class="flex mt-3 h-full" style="">
+    <main class="flex mt-3 h-full" >
       <!-- 左侧 -->
       <div style="" class="h-full">
         <div
           class="overflow-y-auto xt-container"
           style="border-right: 1px solid var(--divider)"
-          :style="height"
+          :style="leftTabHeight"
         >
           <div
             :style="{
@@ -50,26 +50,25 @@
       </div>
       <!-- 右侧 -->
       <div class="pl-2 w-full h-full">
-        <slot>
-          <component
-            ref="apps"
-            :is="navName"
-            @updateData="updateData"
-          ></component
-        ></slot>
+        <component
+          ref="apps"
+          :is="navName"
+          :type="type"
+          @updateData="updateData"
+        ></component>
       </div>
     </main>
     <!-- 底部 -->
     <div class="flex items-center my-3" v-if="selectAppsLenght">
-      <div style="width: 100px" class="flex justify-end">
+      <div style="width: 130px" class="flex justify-end">
         已选 {{ selectAppsLenght }} ：
       </div>
       <div
         class="flex overflow-x-auto xt-container"
         v-scrollable
-        style="width: 590px"
+        :style="selectedWidth"
       >
-        <template v-for="(v, k, i) of selectApps">
+        <template v-for="(v, k) of selectApps">
           <div v-for="item in selectApps[k]">
             <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
           </div>
@@ -77,12 +76,12 @@
       </div>
     </div>
     <footer class="flex items-center justify-center mt-2">
-      <div
-        class="xt-bg-2 flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120"
-        @click="close()"
-      >
-        取消
-      </div>
+      <Tab
+        v-if="navName == 'Links'"
+        style="width: 380px; height: 48px; font-size: 18px"
+        v-model:data="type"
+        :list="linkList"
+      ></Tab>
       <div
         class="xt-active-bg flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120 xt-active-text"
         @click="commitIcons()"
@@ -101,7 +100,7 @@ import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
-
+import Tab from "../../../components/card/components/tab/index.vue";
 import { mapActions, mapWritableState } from "pinia";
 export default {
   emits: ["update:navName"],
@@ -123,10 +122,36 @@ export default {
       default: "Links",
     },
   },
+  provide() {
+    return {
+      width: () => {
+        return this.width;
+      },
+      height: () => {
+        return this.height;
+      },
+    };
+  },
   data() {
     return {
+      screenWidth: 0,
       screenHeight: 0,
       selectApps: {},
+      type: "internal",
+      linkList: [
+        {
+          value: "internal",
+          name: "工作台内打开",
+        },
+        {
+          value: "thinksky",
+          name: "想天浏览器",
+        },
+        {
+          value: "default",
+          name: "系统默认",
+        },
+      ],
     };
   },
   directives: {
@@ -137,6 +162,7 @@ export default {
     MyApps,
     Desktop,
     QingApps,
+    Tab,
   },
   watch: {
     navName: {
@@ -150,18 +176,29 @@ export default {
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
     height() {
-      let h = 48;
-      if (this.screenHeight > 901) {
-        h += 415;
-      } else if (this.screenHeight > 600) {
-        h += 272;
-      } else {
-        h += 136;
-      }
-      // if (this.navName =="Links") h += 120
+      let h = this.screenHeight;
+      if (h > 901) return 415;
+      else if (h > 600) return 272;
+      else return 136;
+    },
+    leftTabHeight() {
+      let h = this.height;
       return {
-        height: `${h}px`,
+        height: `${h + 60}px`,
       };
+    },
+    selectedWidth() {
+      let w = this.width;
+      if (this.navName == "Links") w += 128;
+      return {
+        width: w + 8 + "px",
+      };
+    },
+    width() {
+      let w = this.screenWidth;
+      if (w > 1024) return 566;
+      else if (w > 768) return 424;
+      else return 282;
     },
     selectAppsLenght() {
       let i = 0;
@@ -174,6 +211,8 @@ export default {
   mounted() {
     this.screenHeight =
       window.innerHeight || document.documentElement.clientHeight;
+    this.screenWidth =
+      window.innerWidtht || document.documentElement.clientWidth;
     window.addEventListener("resize", this.handleResize);
   },
   beforeDestroy() {
@@ -182,25 +221,26 @@ export default {
   methods: {
     ...mapActions(cardStore, ["addCard"]),
     updateData(data) {
-      console.log("data :>> ", data);
       this.selectApps = data;
     },
     handleResize() {
       this.screenHeight =
         window.innerHeight || document.documentElement.clientHeight;
+      this.screenWidth =
+        window.innerWidtht || document.documentElement.clientWidth;
     },
     close() {
       this.$emit("close");
     },
+    // 提交icon 并格式化数据
     async commitIcons() {
       if (!this.desk) {
-        this.$emit("getSelectApps");
+        this.$emit("getSelectApps", this.selectApps);
         this.close();
         return;
       }
-      let app = this.$refs.apps;
-      for (let key in app.selectApps) {
-        app.selectApps[key].forEach((item) => {
+      for (let key in this.selectApps) {
+        this.selectApps[key].forEach((item) => {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";

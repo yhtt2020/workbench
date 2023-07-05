@@ -32,7 +32,7 @@
 import ModalList from "../../../comp/ModalList.vue";
 import { paperStore } from "../../../../store/paper";
 
-import { validateFile } from '../../../card/hooks/innerImgHook'
+import { validateFile } from '../../../card/hooks/imageProcessing'
 import { mapWritableState } from "pinia";
 export default {
   computed: {

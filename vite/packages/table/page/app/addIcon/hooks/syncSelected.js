@@ -10,7 +10,6 @@ export default {
     updateSelectApps(selectApps) {
       this.selectApps = selectApps;
       this.$emit("updateData",selectApps)
-      console.log('selectApps :>> ', selectApps);
     },
   },
 

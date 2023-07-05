@@ -3,8 +3,7 @@ import dbStorage from "./dbStorage";
 import {compareTime, randomData, sendRequest} from '../js/axios/api'
 import {nanoid} from "nanoid";
 import {steamProtocol} from "../js/common/game";
-import cache from '../page/app/addIcon/hooks/cache'
-
+import cache from "../components/card/hooks/cache";
 const {steamUser, steamSession, path, https, steamFs} = $models
 let client = new steamUser({
   enablePicsCache: true

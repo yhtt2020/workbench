@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import CardState from "../../../../components/card/cardState.vue";
+import CardState from "../../../../components/card/components/state/index.vue";
 import syncSelected from "../hooks/syncSelected";
 
 import { appsStore } from "../../../../store/apps";
