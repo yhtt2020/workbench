@@ -110,7 +110,7 @@
                 <a-input class="input text-right"
                   v-else
                   v-model:value="item.title" 
-                  :ref="`inputKeyEdit_${index}`"
+                  :id="`keyName_${item.id}`"
                   spellcheck="false" 
                   placeholder="快捷键名称" 
                   style="width:179px;height: 48px;"
@@ -118,30 +118,30 @@
                   />
               </div>
               <span v-if="item.isEdit" class="flex"> 
-                <a-tooltip>
+                <a-tooltip v-if="!item.addNote">
                   <template #title>添加备注</template>
                   <span @click.stop="setAddNote(index,item)" v-if="item.isEdit">
                     <Icon class="ml-3" icon="edit-square" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
                 </a-tooltip>
-                <span @click.stop="delKey(index,item)">
+                <span @click.stop="delNote(index,item)">
                   <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                 </span>
               </span>
             </div>
             <!-- 备注 -->
-            <div v-if="item.addNote">
+            <div v-if="item.addNote" @click="editItem(item,index,'note')">
               <div class="key-item border-right" v-if="item.isNote">
                 <div class="flex items-center">
                   <a-input class="input text-right"
                     v-model:value="item.noteVal" 
-                    :ref="`note_${index}`"
+                    :id="`note_${item.id}`"
                     spellcheck="false" 
                     placeholder="备注" 
                     style="width:370px;height: 48px;"
                     @blur="lostFocus(item,'note')"
                   />
-                    <span @click.stop="delKey(index,item)">
+                    <span @click.stop="delNote(index,item)">
                       <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                     </span>
                 </div>
@@ -493,8 +493,10 @@ export default {
       this.keyList.forEach(i => {
         if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === '' || this.bulkEditKey){
           i.isEdit = true
+          i.isNote = true
         }else{
           i.isEdit = false
+          i.isNote = false
         }
       })
       switch (type) {
@@ -504,13 +506,27 @@ export default {
             this.$refs[`inputNameEdit_${index}`][0].focus()
           })
           break;
-        // case 'item':
-        //   this.keyName = title
-        //   this.keyContent = keyStr
-        //   this.$nextTick(() => {
-        //     this.$refs[`inputKeyEdit_${index}`][0].focus()
-        //   })
-        //   break;
+        case 'item':
+          this.keyList.forEach(i => {
+            if(i.id === id){
+              i.isEdit = true
+              i.isNote = true
+            }
+          })
+          // this.keyName = title
+          // this.keyContent = keyStr
+          // this.$nextTick(() => {
+          //   this.$refs[`inputKeyEdit_${index}`][0].focus()
+          // })
+          break;
+        case 'note':
+          this.keyList.forEach(i => {
+            if(i.id === id){
+              i.isEdit = true
+              i.isNote = true
+            }
+          })
+          break;
       }
     },
     //添加的input获取焦点 (禁止拖拽导致需要手动获取焦点)
@@ -553,7 +569,19 @@ export default {
               if(!this.bulkEditKey){
                 // if(item.keys.length){
                   this.keyList.forEach(kItem => {
-                    if(kItem.id === item.id)kItem.isEdit = false
+                    if(kItem.id === item.id){
+                      // 查找你要判断的文本框
+                      var  myInput = document.getElementById( 'note_' + item.id );
+                      if(myInput != document.activeElement) {
+                        setTimeout(()=> {
+                          kItem.isEdit = false
+                          kItem.isNote = false
+                          if(!kItem.noteVal){
+                            kItem.addNote = false
+                          }
+                        }, 200)
+                      }
+                    }
                   })
                 // }
               }
@@ -562,7 +590,20 @@ export default {
           case 'note':
           if(!this.bulkEditKey){
             this.keyList.forEach(kItem => {
-              if(kItem.id === item.id)kItem.isNote = false
+              if(kItem.id === item.id){
+                
+                // 查找你要判断的文本框
+                var  myInput = document.getElementById( 'keyName_' + item.id );
+                if  (myInput != document.activeElement) {
+                  setTimeout(()=> {
+                    kItem.isEdit = false
+                    kItem.isNote = false
+                    if(!kItem.noteVal){
+                      kItem.addNote = false
+                    }
+                  }, 200)
+                }
+              }
             })
           }
         }
@@ -604,12 +645,14 @@ export default {
         if(item.id === keyArr.id){
           if(keyArr.title && !this.bulkEditKey){
             keyArr.isEdit = false
+            keyArr.isNote = false
           }
           this.keyList.splice(index,1,keyArr)
           this.keyContent = keyArr.keyStr
         }
         if(item.keyStr === '' || item.title === ''){
           item.isEdit = true
+          item.isNote = true
         }
       })
     },
@@ -652,6 +695,15 @@ export default {
       })
       // this.keyList.splice(index,1)
     },  
+    delNote(index,item){
+      this.keyList.forEach(i => {
+        if(item.id === i.id){
+          i.addNote = false
+          i.isNote = false
+          i.noteVal = ''
+        }
+      })
+    },
     //添加备注
     setAddNote(index,item){
       item.addNote = true
@@ -683,13 +735,16 @@ export default {
       if(this.bulkEditKey){
         this.keyList.forEach(item => {
           item.isEdit = true
+          item.isNote = true
         })
       }else{
         this.keyList.forEach(item => {
           if(item.title === '' || item.keys === '' || item.groupName === ''){
             item.isEdit = true
+            item.isNote = true
           }else{
             item.isEdit = false
+            item.isNote = false
           }
         })
       }
