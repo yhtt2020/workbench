@@ -94,7 +94,7 @@ export default {
     .input{
         width:320px;
         height: 48px;
-        background: var(--secondary-bg);
+        background: var(--mask-bg);
         border-radius: 12px;
         font-size: 18px;
         border: 1px solid rgba(255,255,255,0.2);

@@ -4,30 +4,30 @@
    <!-- 头部导航 -->
    <div class="flex justify-between items-center" style="height: 72px;width:98%">
     <div class="flex items-center">
-      <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+      <div @click="onBack" class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
         <div v-for="(item,index) in appList.slice(0,3)" :key="item.id" class="head-list"
-        :class="navIndex === index ? 's-bg':''" @click="toggleApp(index,item)">
+        :class="navIndex === index ? 'xt-mask-2':''" @click="toggleApp(index,item)">
           <span>
             <a-avatar shape="square" :src="item.icon" :size="38"></a-avatar>
           </span>
-          <span class="ml-2" style="font-size: 16px;color: rgba(255,255,255,0.85);">{{ item.name }}</span>
+          <span class="ml-2 xt-text" style="font-size: 16px;">{{ item.name }}</span>
         </div>
       </div>
-      <div @click="recentlyUsed = true" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center">
+      <div @click="recentlyUsed = true" class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center">
         <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
     <div class="flex">
       <a-tooltip placement="left">
         <template #title>展开或收起分类栏</template>
-        <div @click="showSide = !showSide" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+        <div @click="showSide = !showSide" class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="outdent" style="font-size: 1.5em;"></Icon>
         </div>
       </a-tooltip>
-      <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet = true">
+      <div class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet = true">
         <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
@@ -53,10 +53,10 @@
             <span class="truncate">{{ item.groupName }}</span>
           </div>
           <!-- 快捷键 -->
-          <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: rgba(0,0,0,0.30);':''" @click="setKeyItem(item.id)">
+          <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: var(--mask-bg);':''" @click="setKeyItem(item.id)">
             <div class="flex">
               <div v-for="i in item.keys" :key="i" class="flex">
-                <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                <span style="min-width:32px;padding:0 8px;" class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
               </div>
             </div>
             <div class="key-title truncate">{{ item.title}}</div>
@@ -80,7 +80,7 @@
       <span>
         <a-avatar shape="square" :src="appList[0].icon" :size="38"></a-avatar>
       </span>
-      <span class="ml-2" style="font-size: 16px;color: rgba(255,255,255,0.85);">{{ appList[0].name }}</span>
+      <span class="ml-2 xt-text" style="font-size: 16px;">{{ appList[0].name }}</span>
     </div>
   </div>
   <!-- 快捷推荐列表 -->
@@ -96,7 +96,7 @@
             <span>{{ item.name }}</span>
             <div class="flex flex-col justify-center items-center">
                 <span>{{ item.number }}</span>
-                <span>快捷键</span>
+                <span>{{item.key}}</span>
             </div>
         </div>
     </div>
@@ -113,16 +113,16 @@
             <a-avatar shape="square" :src="appContent.icon" :size="48"></a-avatar>
           </span>
           <span class="flex flex-col ml-4">
-            <span style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">{{ appContent.name }}</span>
-            <span class="mt-1" style="font-size: 16px;color: rgba(255,255,255,0.60);">{{ appContent.commonUse }}</span>
+            <span class="xt-text" style="font-size: 18px;font-weight: 500;">{{ appContent.name }}</span>
+            <span class="mt-1 xt-text-2" style="font-size: 16px;">{{ appContent.commonUse }}</span>
           </span>
         </div>
-        <div class="flex flex-col justify-center items-center w-16 h-16 s-bg rounded-lg">
-          <span style="font-family: Oswald-SemiBold;font-size: 24px;color: rgba(255,255,255,0.85);font-weight: 600;">{{ appContent.number }}</span>
+        <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
+          <span class="xt-text" style="font-family: Oswald-SemiBold;font-size: 24px;font-weight: 600;">{{ appContent.number }}</span>
           <span>{{appContent.key}}</span>
         </div>
       </div>
-      <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">
+      <div class="flex justify-between items-center mt-4 xt-text-2" style="font-size: 14px;">
         <span class="flex items-center">
           <div @click="showCard(appContent.id)">
             <a-avatar shape="square" :src="appContent.avatar" :size="32"></a-avatar>
@@ -273,12 +273,8 @@ export default {
   height: 100%;
 }
   .button-active{
-    &:active{
-      filter: brightness(0.8);
-      background: rgba(42, 42, 42, 0.25);
-    }
     &:hover{
-      background: rgba(42, 42, 42, 0.25);
+      opacity: 0.8;
     }
   }
   .s-bg{
@@ -286,7 +282,7 @@ export default {
   }
   .main-part{
         >div{
-            background: rgba(0,0,0,0.30);
+            background: var(--secondary-bg);
             border-radius: 12px;
             width:452px;
             height:88px;
@@ -298,12 +294,12 @@ export default {
                 right: 0;
                 width: 88px;
                 height: 88px;
-                background: rgba(0,0,0,0.30);
+                background: var(--mask-bg);
                 border-radius: 0px 12px 12px 0px;
                 >span:nth-child(1){
                     font-family: Oswald-SemiBold;
                     font-size: 28px;
-                    color: rgba(255,255,255,0.85);
+                    color: var(--primary-text);
                     font-weight: 600;
                 }
             }
@@ -320,21 +316,9 @@ export default {
     min-width: 80px;
     white-space: nowrap;
   }
-  .border-right {
-    position: relative;
-  }
-  .border-right::after {
-    content: '';
-    position: absolute;
-    right: -20px;
-    top: 0;
-    height: 56px;
-    margin-left: 10px;
-    border-right: solid rgba(255, 245, 245, 0.1) 1px;
-  }
   .recommend{
     margin: 24px 0;
-    background: #2A2A2A;
+    background: var(--secondary-bg);
     border-radius: 12px;
     // width: 452px;
     height: 136px;
@@ -342,17 +326,17 @@ export default {
   }
   .set-title{
     font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    color: var(--primary-text);
     font-weight: 500;
   }
   .set-item{
-    background: #2A2A2A;
+    background: var(--secondary-bg);
     border-radius: 12px;
     // width: 452px;
     height: 48px;
     margin-bottom: 16px;
     font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    color: var(--primary-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -361,7 +345,7 @@ export default {
   .key-list{
     width:98%;
     height:85%;
-    background: var(--primary-bg);
+    background: var(--main-mask-bg);
     border-radius: 12px;
     display: flex;
     .side-nav{
@@ -369,7 +353,7 @@ export default {
       max-width: 253px;
       // width: 20%;
       height: 100%;
-      background: var(--secondary-bg);
+      background: var(--mask-bg);
       border-top-left-radius: 12px;
       border-bottom-left-radius: 12px;
       padding: 16px;
@@ -388,6 +372,7 @@ export default {
           justify-content: center;
           align-items: center;
           font-size: 16px;
+          color: var(--primary-text);
         }
         .nav-item:hover{
           background: var(--active-bg);
@@ -419,7 +404,7 @@ export default {
     height:48px;
     line-height:48px;
     font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    color: var(--primary-text);
     display: flex;
     border-radius: 8px;
     justify-content: space-between;
@@ -437,7 +422,8 @@ export default {
     top: 0;
     height: 56px;
     margin-left: 10px;
-    border-right: solid rgba(255, 245, 245, 0.1) 1px;
+    // border-right: solid rgba(255, 245, 245, 0.1) 1px;
+    border-right: solid 1px var(--divider);
   }
   .s-bg{
     box-shadow: none !important;
