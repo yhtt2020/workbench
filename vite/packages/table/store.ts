@@ -5,7 +5,7 @@ import {sUrl} from './consts'
 const userCardUrl = sUrl('/app/com/userCard')
 import axios from 'axios'
 import {getConfig} from "./js/axios/serverApi";
-import cache from './page/app/addIcon/hooks/cache'
+import cache from '../table/components/card/hooks/cache'
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({

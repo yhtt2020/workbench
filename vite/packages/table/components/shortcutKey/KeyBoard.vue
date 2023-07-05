@@ -414,7 +414,6 @@ export default {
     confirm(){
       // if(!this.keyContent.keyArr.length) return message.info('不能为空')
       if(!this.keyContent.keyArr.length){
-        console.log(this.keyContent.keys)
         this.keyContent.keyStr = '?'
         this.keyContent.keys.splice(0,this.keyContent.keys.length,'?')
         this.$emit('saveKey',this.keyContent)
@@ -434,7 +433,6 @@ export default {
       let retArr = this.parentKeyList.find(item => {
         return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
       })
-      console.log(retArr)
       if(retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
       this.$emit('saveKey',this.keyContent)
       this.$emit('closeKeyBoard')

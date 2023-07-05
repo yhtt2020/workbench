@@ -108,7 +108,7 @@
               入口，以保持功能完整性。</span>
               <!-- <span class="my-5">在导航栏中至少保留一个「{{delMainItem.name}}」入口，以保持功能完整性。</span> -->
               <div class="modal-btn">
-                <div class="mr-3 rounded-lg" @click="promptModal = false">好的</div>
+                <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="promptModal = false">好的</div>
                 <!-- <div @click="delMainCore">移除</div> -->
               </div>
             </div>
