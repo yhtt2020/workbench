@@ -1,10 +1,10 @@
 <template>
-  <div class="p-3 s-bg rounded-lg box">
+  <div class="p-3 xt-bg rounded-lg box">
     <!-- 头部导航栏 -->
     <div class="flex items-center justify-between">
       <div class="flex">
-        <div @click="onBack" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
-          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+        <div @click="onBack" class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+          <Icon icon="xiangzuo" style="font-size: 1.5em;color:var(--primary-text)"></Icon>
         </div>
         <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
@@ -27,9 +27,9 @@
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
-        <div class="ml-10" style="font-family: PingFangSC-Regular;font-size: 16px;color: rgba(255,255,255,0.60);">
+        <div class="ml-10 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
-          <!-- <div class="pointer s-bg flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
+          <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
           
         <a-upload
           name="file"
@@ -38,15 +38,15 @@
           :beforeUpload="beforeUpload"
           accept="image/jpeg,image/jpg,image/png"
         >
-        <div class="pointer flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="background: #2A2A2A;width:120px; height:48px;">自定义上传</div>
+        <div class="pointer xt-bg-2 xt-text-2 flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div>
         </a-upload>
         </div>
       </div>
       <span>应用名称</span>
       <a-input v-model:value="applyName" spellcheck ="false" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
-      <a-textarea v-model:value="introduce" spellcheck="false" class="input"  placeholder="请输入描述" aria-placeholder="font-size: 14px;color: rgba(255,255,255,0.40);" :rows="4" style="width:480px;height: 100px;"/>
-      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6 xt-active-btn" style="width:480px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">下一步</div>
+      <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text"  placeholder="请输入描述" aria-placeholder="font-size: 14px;" :rows="4" style="width:480px;height: 100px;"/>
+      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6 xt-active-btn" style="width:480px;height:48px;font-size: 16px;">下一步</div>
     </div>
     <!-- 快捷键 -->
     <div class="key-content" v-show="defaultNavType.name === 'shortcutkey'">
@@ -54,7 +54,7 @@
       <div class="prompt mt-4 mx-3 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
           <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
-          <span class="mx-4">支持长按拖拽排序</span>
+          <span class="mx-4 xt-text">支持长按拖拽排序</span>
         </span>
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
       </div>
@@ -86,7 +86,7 @@
               <div class="flex">
                 <template v-if="!item.isEdit">
                   <div v-for="i in item.keys" :key="i" class="flex">
-                    <span style="min-width:32px;padding:0 8px;" class="s-bg h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                    <span style="min-width:32px;padding:0 8px;" class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
                   </div>
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
@@ -235,7 +235,7 @@
         同时分享到元社区
         </div>
         <div style="width: 160px;height: 48px;"
-            class=" ml-3 flex justify-center items-center s-bg rounded-lg pointer" @click="close">
+            class=" ml-3 flex justify-center items-center xt-bg-2 rounded-lg pointer" @click="close">
           完成
         </div>
       </div>
@@ -883,7 +883,7 @@ export default {
       align-items: center;
       font-family: PingFangSC-Regular;
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      color: var(--primary-text);
     }
     div:nth-child(1),
     div:nth-child(2){
@@ -905,7 +905,7 @@ export default {
     >span{
       font-family: PingFangSC-Medium;
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      color: var(--primary-text);
       font-weight: 500;
       margin: 21px 0;
       display: block;
@@ -938,7 +938,7 @@ export default {
       width:180px;
       height:48px;
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      color: var(--primary-text);
     }
   }
   .key-list{
@@ -954,7 +954,7 @@ export default {
     display: none;
   }
   .prompt{
-      background: rgba(0,0,0,0.30);
+      background: var(--mask-bg);
       border-radius: 12px;
       height: 56px;
     }
@@ -1000,11 +1000,8 @@ export default {
     background: var(--secondary-bg);
     border: 1px solid rgba(255,255,255,0.2);
   }
-  .s-bg{
-        box-shadow: none !important;
-    }
   .add-scheme{
-    background: #2A2A2A;
+    background: var(--secondary-bg);
     border-radius: 12px;
     width: 80px;
     height: 48px;
@@ -1015,11 +1012,11 @@ export default {
   .drawer-center{
     .title{
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      color: var(--primary-text);
       font-weight: 500;
     }
     .trend-content{
-      background: #2A2A2A;
+      background: var(--secondary-bg);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 12px;
       height:100px;
@@ -1030,7 +1027,7 @@ export default {
       align-items: center;
       margin: 24px 0;
       .btnCopy{
-        background: #2A2A2A;
+        background: var(--secondary-bg);
         border-radius: 12px;
         width: 128px;
         height: 48px;
@@ -1062,7 +1059,7 @@ export default {
     height:48px;
     line-height:48px;
     font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    color: var(--primary-text);
     display: flex;
     border-radius: 8px;
     justify-content: space-between;
