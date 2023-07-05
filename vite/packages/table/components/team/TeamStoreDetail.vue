@@ -2,58 +2,63 @@
   <div class="pl-4 pb-10 pt-4 h-full">
     <HorizontalPanel :navList="avatarList" v-model:selectType="listItem" class="mb-5"></HorizontalPanel>
     <template v-if="listItem.name === 'shop_store'">
-      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 62vh;">
-          <div v-for="item in avatarShop " class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
-              <div class="avatar-top flex mb-4">
-                <div style="width: 100px;height: 100px;">
-                  <img :src="item.avatar_url" class="w-full h-full object-fill" alt="">
-                </div>
-                <div class="flex flex-col justify-center ml-4" >
-                  <span class="avatar-font" :style="avatarFontColor(item)">
-                    {{item.title}}
-                  </span>
-                  <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarBgFontColor(item)">
-                    {{item.avatar_rank}}
-                  </span>
-                  <span class="get-way-font">
-                    {{ item.get_way }}
-                  </span>
-                </div>
-              </div>
-              <div class="avatar-bottom flex">
-                <a-button type="primary" class="mr-3 rounded-xl flex items-center justify-center" @click="buyNow(item)" 
-                 style="width: 104px;color: var(--active-text);height: 44px;"
-                >
-                  ￥ <span class="avatar-font" style="color: var(--active-text);">{{item.price}}</span>
-                </a-button>
-                <a-button type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center" @click="scorePay(item)" 
-                 style="width: 104px;color: var(--active-text);height: 44px;"
-                >
-                  {{ item.score }}
-                </a-button>
-                <a-button type="primary" class="rounded-xl" @click="teamGift(item)" style="width: 104px;height: 44px;color: var(--active-text);">
-                  赠送
-                </a-button>
-              </div>
+      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 75%;">
+        <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
+          <div class="avatar-top flex mb-4">
+            <div style="width: 100px;height: 100px;">
+              <img :src="item.cover" class="w-full h-full object-fill" alt="">
+            </div>
+            <div class="flex flex-col justify-center ml-4" >
+              <span class="avatar-font" :style="titleTagColor(item)">
+                {{item.alias}}
+              </span>
+              <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item)">
+                {{  textTag(item) }}
+              </span>
+              <span class="get-way-font">
+                获得途径：商店购买、日常签到
+              </span>
+            </div>
           </div>
+          <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
+            <a-button type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center"
+             @click="buyNow(item)" style="color: var(--active-text);height: 44px;" 
+             :style="getFrameScore(item) ? {width:'104px'}:{width:'50%'}"
+            >
+              ￥ {{ getFramePrice(item) }}
+            </a-button>
+            <a-button type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center" 
+             @click="scorePay(item)" v-if="getFrameScore(item)"  style="color: var(--active-text);height: 44px;"
+             
+            >
+              {{ getFrameScore(item) }}积分
+            </a-button>
+            <a-button type="primary" class="rounded-xl" @click="teamGift(item)" style="height: 44px;color: var(--active-text);"
+             :style="getFrameScore(item) ? {width:'104px'}:{width:'50%'}"
+            >
+              <Icon icon="gift" style="font-size: 1.35em;"></Icon>
+            </a-button>
+          </div>
+
+        </div>
       </vue-custom-scrollbar>
     </template>
     <template v-else>
-      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 62vh;">
-        <div v-for="item in avatarShop " class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
+      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 68%;">
+        <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
           <div class="avatar-top flex mb-4">
             <div style="width: 100px;height: 100px;">
-              <img :src="item.avatar_url" class="w-full h-full object-fill" alt="">
+              <img :src="item.cover" class="w-full h-full object-fill" alt="">
             </div>
             <div class="flex flex-col justify-center ml-4" >
-              <span class="avatar-font" :style="avatarFontColor(item)">
-                {{item.title}}
+              <span class="avatar-font" :style="titleTagColor(item)">
+                {{item.alias}}
               </span>
-              <span class="w-11 h-6 rank-font rounded-md my-2.5" :style="avatarBgFontColor(item)">
-                {{item.avatar_rank}}
+              <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item)">
+                {{  textTag(item) }}
               </span>
               <span class="get-way-font">
-                {{ item.get_way }}
+                获得途径：商店购买、日常签到
               </span>
             </div>
           </div>
@@ -200,7 +205,7 @@
           >
             <span class="avatar-font" style="color: var(--primary-text);">金额</span>
             <div class="flex items-center justify-center">
-              <span class="avatar-font mr-4" style="color: var(--primary-text);">￥9.0</span>
+              <span class="avatar-font mr-4" style="color: var(--primary-text);">￥{{needPayAvatar.price}}</span>
               <Icon icon="xiangyou" style="font-size: 0.4765em;color: var(--primary-text);"></Icon>
             </div>
           </div>
@@ -210,7 +215,7 @@
           >
             <span class="avatar-font" style="color: var(--primary-text);">积分（可用：2000）</span>
             <div class="flex items-center justify-center">
-              <span class="avatar-font mr-4" style="color: var(--primary-text);">￥9.0</span>
+              <span class="avatar-font mr-4" style="color: var(--primary-text);">199积分</span>
               <Icon icon="xiangyou" style="font-size: 0.4765em;color: var(--primary-text);"></Icon>
             </div>
           </div>
@@ -220,7 +225,23 @@
    
     <!-- 赠送支付方式 -->
     <template v-else>
-      <div class="w-full h-full flex-col flex pb-10 pt-4 px-3">
+      <div class="w-full h-full flex-col flex pb-10 pt-4 px-3" >
+        <div class="mb-3 h-12 flex justify-between">
+          <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftShow = false">
+            <Icon icon="xiangzuo" style="font-size: 0.5715em;"></Icon>
+          </div>
+          <div class="flex items-center justify-center" >
+            <span class="avatar-font" style="color: var(--primary-text);">选择用户</span>
+          </div>
+          <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftVisible = false">
+            <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!-- <template v-else>
+      v-if="payShow === false"
+      <div class="w-full h-full flex-col flex pb-10 pt-4 px-3" >
         <div class="mb-3 h-12 flex justify-between">
           <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftShow = false">
             <Icon icon="xiangzuo" style="font-size: 0.5715em;"></Icon>
@@ -238,7 +259,7 @@
           >
           </a-input>
         </div>
-        <!-- 当搜索为空时,默认自己小队成员数据 -->
+        当搜索为空时,默认自己小队成员数据
         <template v-if="teamSearch === ''">
           <span class="get-way-font mx-5 mb-3">我的小队成员</span>
           <div class=" flex flex-wrap mx-5 items-start">
@@ -252,11 +273,11 @@
           </div>
         </template>
 
-        <!-- 当搜索不为空时,则显示搜索的队伍数据 -->
+        当搜索不为空时,则显示搜索的队伍数据
         <template v-else>
           <span class="get-way-font mx-5 mb-4">搜索结果</span>
           <div class=" flex flex-wrap mx-5 items-start">
-            <!-- 搜索数据结果为空时 -->
+            搜索数据结果为空时
             <div class="flex w-full items-center justify-center" v-if="memberDevoteDisplay.length === 0" >
               <a-empty :image="simpleImage" />
             </div>
@@ -269,17 +290,34 @@
         </template>
 
       </div>
-    </template>
+      <div class="w-full h-full flex-col flex pb-10 pt-4 px-3" v-else>
+        <div class="mb-3 h-12 flex justify-between">
+          <div class="close-pay w-12 h-12 rounded-lg active-button" @click="payShow = false">
+            <Icon icon="xiangzuo" style="font-size: 0.5715em;"></Icon>
+          </div>
+          <div class="flex items-center justify-center" >
+            <span class="avatar-font" style="color: var(--primary-text);">收银台</span>
+          </div>
+          <div class="close-pay w-12 h-12 rounded-lg active-button" @click="giftVisible = false">
+            <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
+          </div>
+        </div>
+
+      </div>
+    </template> -->
   </a-modal>
+
+
 </template>
 
 <script>
-import {mapState,mapActions} from "pinia";
+import {mapState,mapActions, mapWritableState} from "pinia";
 import HorizontalPanel from '../HorizontalPanel.vue'
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
 import UserAvatar from '../small/UserAvatar.vue'
-import { avatarShop,rankColor } from '../../js/data/teamAvatar'
+import { rarityColor } from '../../js/common/teamAvatar'
 import {appStore} from "../../store";
+import {frameStore} from '../../store/avatarFrame'
 import {teamStore} from "../../store/team";
 import _ from 'lodash-es'
 
@@ -304,13 +342,11 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      rarity:3,
-      avatarShop, // 模拟数据
       payVisible:false, // 默认关闭头像框购买弹窗
       pointsVisible:false, // 默认关闭头像框积分兑换窗口
       giftVisible:false, // 默认关闭赠送弹窗
       giftShow:false, // 点击赠送头像框默认方式
-      needPayAvatar:{},  // 模拟接收需要付费的头像框数据
+      needPayAvatar:{},  // 接收需要付费的头像框数据
       payMethod:[   // 头像框购买的支付方式数据
         { icon:'weixinzhifu',title:'微信支付',type:'wechat'},
         { icon:'zhifubao',title:'支付宝',type:'alipay'}
@@ -319,14 +355,19 @@ export default {
       isPay:false, // 判断是否扫码支付完成条件
       teamSearch:'', // 小队头像框搜索
       simpleImage: '/img/state/null.png', // 数据空状态
-      teamIndex:'' // 队友选中下标
+      teamIndex:'', // 队友选中下标
+      payShow:false, // 选中需要赠送的人界面
+
     }
   },
   computed:{
     ...mapState(appStore, ['userInfo']),
     ...mapState(teamStore,['membersDevote']),
-    isEnough(){
-      return this.needPayAvatar.score < this.needPayAvatar.total ? true : false
+    ...mapWritableState(frameStore,['frameData']),
+    frameList(){
+      const data = this.frameData.list
+      const list = _.filter(data,function(o){ return o.frame.gainMethod !== 'rank' })
+      return list
     },
     memberDevoteDisplay(){
       let display=JSON.parse(JSON.stringify(this.teamMembers))
@@ -357,63 +398,63 @@ export default {
     }
   },
   mounted(){
-    
+    this.getFrameGoods()
   },
   methods:{
-    /**
-     * 根据不同头像框级别匹配头像框背景色
-     * 最外层容器的底部背景色
-     * **/
-    avatarBgColor(item){
-      const rankIndex = _.findIndex(rankColor,function(o){
-        return o.avatar_rank === item.avatar_rank
-      })
+    ...mapActions(frameStore,['getFrameGoods']),
+
+    avatarBgColor(item){ // 根据不同头像框级别匹配头像框背景色  
+      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return {
-        background:rankColor[rankIndex].bg_color
+        background: index.bg_color
       }
     },
 
-    /**
-     * 根据不同头像框级别匹配头像框名称颜色
-     * 例如：小狐狸头像框、小青蛙头像框、小恶魔头像框
-     * **/
-    avatarFontColor(item){
-      const rankIndex = _.findIndex(rankColor,function(o){
-        return o.avatar_rank === item.avatar_rank
-      })
+    avatarTagColor(item){  // 根据不同头像框级别区分头像框字体色  
+      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return {
-        color:rankColor[rankIndex].color
+        background:index.avatar_color,
       }
     },
 
-    /**
-     * 根据不同头像框级别的背景色
-     * 例如:史诗、优秀、精良等等这情况的的背景色
-     * **/
-    avatarBgFontColor(item){
-      const rankIndex = _.findIndex(rankColor,function(o){
-        return o.avatar_rank === item.avatar_rank
-      })
+    textTag(item){  // 获取头像框级别分类   
+      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
+      return index.avatar_tag
+    },
+
+    titleTagColor(item){  // 获取头像框名称颜色  
+      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return {
-        background:rankColor[rankIndex].color,
+        color:index.avatar_color,
+      }
+    },
+    
+    getFramePrice(item){  // 根据价格类型获取数据   
+      const money = _.find(item.prices,function(o){ return o.type === 'money' })
+      if(money !== undefined){
+        return money.price
+      }
+    },
+
+    getFrameScore(item){  // 根据积分类型获取数据
+      const score = _.find(item.prices,function(o){ return o.type === 'score' })
+      if(score !== undefined){
+       return score.price
       }
     },
 
     // 点击价格购买逻辑
     buyNow(item){
       this.payVisible = true // 打开支付弹窗
-      this.needPayAvatar.name = item.title
-      this.needPayAvatar.url = item.avatar_url
-      this.needPayAvatar.price = item.price
+      this.needPayAvatar.name = item.summary
+      this.needPayAvatar.url = item.cover
+      this.needPayAvatar.price = this.getFramePrice(item)
     },
     // 点击积分兑换回调事件
     scorePay(item){
-      console.log('测试',item);
       this.pointsVisible = true
-      this.needPayAvatar.url = item.avatar_url
-      this.needPayAvatar.name = item.title
-      this.needPayAvatar.score = item.score
-      this.needPayAvatar.total = item.total
+      this.needPayAvatar.url = item.cover
+      this.needPayAvatar.name = item.summary
     },
     // 扫码支付完成后回调事件
     paymentCompletion(){
@@ -425,6 +466,7 @@ export default {
     // 赠送回调事件
     teamGift(item){
       this.giftVisible = true
+      this.needPayAvatar.price = this.getFramePrice(item)
     },
     // 赠送使用价格支付方式回调事件
     pricePay(){
@@ -438,6 +480,7 @@ export default {
     // 选中队友后回调事件
     giftTeamMember(item){
       this.teamIndex = item.uid
+      this.payShow = true
     }
   }
 }
@@ -458,8 +501,8 @@ export default {
 .rank-font{
   font-family: PingFangSC-Medium;
   font-size: 14px;
-  font-weight: 500;
   color: var(--active-text);
+  font-weight: 500;
   text-align: center;
 }
 .get-way-font{
@@ -532,5 +575,11 @@ export default {
 .avatar-status{
   border: 1px solid var(--active-bg);
   background: var(--active-secondary-bg);
+}
+
+:deep(.ant-btn span){
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 </style>
