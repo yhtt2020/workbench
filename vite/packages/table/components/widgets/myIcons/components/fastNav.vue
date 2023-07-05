@@ -29,6 +29,51 @@
         ></listItem>
       </vue-custom-scrollbar>
     </div>
+    <!-- <div
+      v-show="nowClassify === 'localApp'"
+      class="flex flex-col items-start text-zinc-500 h-full xt-text"
+    >
+      <div>1. 点击选择需要添加的应用快捷方式</div>
+      <div>2. 拖动应用快捷方式拖放到下方</div>
+      <div>3. 支持持批量添加</div>
+      <div
+        class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
+        @dragover.prevent=""
+        @drop.prevent="drop"
+      >
+        <Icon
+          icon="tianjia2"
+          style="width: 18px; height: 18px"
+          class="mr-2"
+        ></Icon>
+        添加快捷方式
+      </div>
+      <ScrolX :height="66">
+        <div
+          class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4 pl-4 xt-text"
+        >
+          <div v-for="(item, index) in dropList" class="flex ml-4">
+            <a-badge>
+              <template #count>
+                <Icon
+                  icon="guanbi2"
+                  style="height: 24px; width: 24px"
+                  @click="deleteDropList(index)"
+                  class="pointer"
+                ></Icon>
+              </template>
+              <a-avatar :size="40" shape="square" :src="item.icon"> </a-avatar>
+            </a-badge>
+          </div>
+        </div>
+      </ScrolX>
+      <div
+        @click="clickRightListItem(dropList)"
+        class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg xt-bg xt-text"
+      >
+        确定添加
+      </div>
+    </div> -->
   </Classification>
 </template>
 
