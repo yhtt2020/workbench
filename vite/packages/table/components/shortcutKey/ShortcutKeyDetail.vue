@@ -221,7 +221,7 @@ export default {
       this.appContent = this.appList[0]
       if(!this.keyList.length)this.isData = false
       this.sideNav = this.keyList.filter(i => i.groupName)
-
+      
       if(this.sideNav.length < 4){
         this.showSide = false
       }else{
@@ -260,8 +260,8 @@ export default {
       setTimeout(() => {
         this.activeGroup = {}
       },100)
-
-      document.getElementById('scrollCus').scrollLeft = groupId.offsetLeft
+      let marginLeft = getComputedStyle(groupId,null).marginLeft
+      document.getElementById('scrollCus').scrollLeft = groupId.offsetLeft - parseInt(marginLeft.split('p')[0])
     }
   },
 }

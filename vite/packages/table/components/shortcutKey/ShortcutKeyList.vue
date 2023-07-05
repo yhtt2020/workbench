@@ -1,5 +1,6 @@
 <template>
   <!-- 快捷键列表 -->
+<vue-custom-scrollbar :settings="settingsScroller" style="height:100%">
   <div class="key-box" :style="keyBoxStyle" id="keyBox">
     <div v-for="(item,index) in keyList" :key="item.id">
       <!-- 分组名称 -->
@@ -23,6 +24,7 @@
       </div>
     </div>
   </div>
+</vue-custom-scrollbar>
 </template>
 
 <script>
@@ -52,6 +54,13 @@ export default {
   },
   data() {
     return {
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      }
     }
   },
   methods: {
@@ -69,7 +78,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-content: flex-start;
-    overflow: auto;
+    // overflow: auto;
     padding: 24px 0; 
     flex-wrap: wrap;
     height: 100%;

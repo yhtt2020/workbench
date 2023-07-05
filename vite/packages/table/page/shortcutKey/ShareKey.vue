@@ -59,7 +59,8 @@
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
       </div>
       <!-- 快捷键列表 -->
-      <div :style="closePrompt ? 'height:90%' : 'height:100%'">
+      <!-- <div :style="closePrompt ? 'height:90%' : 'height:100%'"> -->
+      <vue-custom-scrollbar :settings="settingsScroller" :style="closePrompt ? 'height:90%' : 'height:100%'">
         <div class="key-box" :style="keyBoxStyle" id="keyBox">
           <div v-for="(item,index) in keyList" :key="item.id">
             <!-- 分组名称 -->
@@ -211,7 +212,8 @@
             </div>
           <!-- </div> -->
         </div>
-      </div>
+      </vue-custom-scrollbar>
+      <!-- </div> -->
     </div>
   </div>
   <!-- 分享成功的模态框 -->
@@ -288,6 +290,13 @@ export default {
   },
   data(){
     return{
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      },
       navType:[
          {title:'基本信息',name:'message'},
          {title:'快捷键',name:'shortcutkey'}
@@ -1034,7 +1043,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-content: flex-start;
-    overflow: auto;
+    // overflow: auto;
     padding: 24px 0; 
     flex-wrap: wrap;
     height: 100%;
