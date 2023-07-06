@@ -24,6 +24,7 @@ export const myIcons = defineStore(
                 src: "", // 图标路径
                 isRadius: true, // 圆角开关
                 radius: 5, // 圆角弧度
+                imgState:"cover", // 图片显示状态
                 isBackground: false, // 背景开关
                 backgroundColor: "", // 背景颜色
                 backgroundIndex: 0, // 背景下标

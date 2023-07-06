@@ -88,8 +88,8 @@
         <img
           :src="_src"
           v-if="_src"
-          :style="radiusState"
-          style="width: 100%; height: 100%; object-fit: cover"
+          :style="[radiusState, imgStateStyle]"
+          style="width: 100%; height: 100%"
           @error="imgError"
         />
         <div
@@ -113,6 +113,12 @@
         <div @click="upIcon()" class="btn no-drag xt-bg-2">自定义上传</div>
       </div>
     </div>
+    <Radio
+      v-model:data="_imgState"
+      :list="imgSteteList"
+      text="设置图片显示状态"
+    ></Radio>
+
     <!-- 设置组件圆角 -->
     <div class="parent">
       <div class="text-base">图标圆角</div>
@@ -130,7 +136,6 @@
       <div class="text-base">图标背景</div>
       <a-switch v-model:checked="_isBackground"></a-switch>
     </div>
-
     <template v-if="_isBackground">
       <Color v-model:color="_backgroundColor"></Color>
     </template>
@@ -138,36 +143,16 @@
 </template>
 
 <script>
-// import "../../../../../../src/util/"
-// import "/"
-import Color from "../../../card/components/color/index.vue"
+import Color from "../../../card/components/color/index.vue";
 import fastNav from "./fastNav.vue";
 import Radio from "../../../card/components/radio/index.vue";
 import { validateFile } from "../../../card/hooks/imageProcessing";
-import { sizeList, linkList, backgroundColorList } from "./edit";
+import props from "../hooks/props";
+import { sizeList, linkList, imgSteteList, backgroundColorList } from "./edit";
 import { message } from "ant-design-vue";
 export default {
-  components: { fastNav, Radio ,Color},
-  props: {
-    isRadius: { type: Boolean },
-    radius: { type: Number },
-    isBackground: { type: Boolean },
-    backgroundColor: { type: String },
-    titleValue: { type: String },
-    link: { type: String },
-    linkValue: {},
-    size: { type: String, default: "mini" },
-    open: {
-      default: () => {
-        return {
-          value: "",
-          type: "internal",
-        };
-      },
-    },
-    src: { type: String },
-    backgroundIndex: { type: Number },
-  },
+  components: { fastNav, Radio, Color },
+  mixins: [props],
   mounted() {
     // 为了兼容旧版本
     if (this.backgroundColor == null) this._backgroundColor = "";
@@ -177,6 +162,7 @@ export default {
     return {
       sizeList,
       linkList,
+      imgSteteList,
       backgroundColorList,
       _isRadius: this.isRadius,
       _radius: this.radius,
@@ -188,6 +174,7 @@ export default {
       _size: this.size,
       _open: { ...this.open },
       _src: this.src,
+      _imgState: this.imgState,
       _backgroundIndex: this.backgroundIndex,
     };
   },
@@ -205,12 +192,13 @@ export default {
       if (this._isRadius) return { borderRadius: this._radius + "px" };
       else return { borderRadius: "0px" };
     },
+    imgStateStyle() {
+      return {
+        "object-fit": this._imgState,
+      };
+    },
   },
   methods: {
-    colorPickerClick(){
-      console.log('1 :>> ', 1);
-      // this._backgroundColor = ""
-    },
     imgError() {
       if (this._link === "link") {
         this._src = "";
@@ -329,6 +317,7 @@ export default {
         open: this._open,
         size: this._size,
         src: this._src,
+        imgState: this._imgState,
         backgroundIndex: this._backgroundIndex,
       };
     },
@@ -361,14 +350,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.zs-color-picker-btn) {
-  width: 60px;
-  height: 60px;
-  z-index: 99999;
-  border-radius: 10px;
-  margin: 7px;
-}
-
 .text-base {
   font-weight: 500;
   font-family: PingFangSC-Medium;
