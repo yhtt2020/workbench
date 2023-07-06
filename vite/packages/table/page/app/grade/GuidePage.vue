@@ -138,7 +138,7 @@ import {
   guideData,workTheme,teamData,modeData,
   deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg 
 } from '../../../js/data/guideData'
-import cache from '../addIcon/hooks/cache';
+import cache from '../../../components/card/hooks/cache';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import _ from 'lodash-es'
 export default {

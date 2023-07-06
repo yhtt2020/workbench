@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="w" style="height: 100%">
-      <slot></slot>
-    </div>
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
       <div>总共 {{ appsLenght }} 个应用图标</div>
@@ -11,7 +8,8 @@
       </div>
     </div>
     <div
-      class="flex h-full flex-wrap overflow-y-auto xt-container mt-3 w h"
+      class="flex h-full flex-wrap overflow-y-auto xt-container mt-3"
+      :style="[heightStyle, widthStyle]"
       style="align-content: flex-start"
     >
       <div
@@ -30,6 +28,7 @@
 
 <script>
 export default {
+  inject: ["width", "height"],
   props: {
     data: {},
     isSelect: {},
@@ -41,7 +40,7 @@ export default {
     return {
       selectApps: {},
       selectedIndexes: {},
-      isSelectedAll: true,
+      isSelectedArr: {},
     };
   },
   watch: {
@@ -53,19 +52,46 @@ export default {
     },
   },
   computed: {
+    // 全选状态
     selectAll() {
-      return this.isSelectedAll ? "全选" : "取消全选";
+      if (
+        this.selectAppsLength &&
+        this.selectAppsLength == this.appsLenght &&
+        this.isSelectedArr[this.name] !== true
+      ) {
+        this.isSelectedArr[this.name] = !this.isSelectedArr[this.name];
+        return "取消全选";
+      }
+      return this.isSelectedArr[this.name] ? "取消全选" : "全选";
     },
+    // 选中数组长度
+    selectAppsLength() {
+      return this.selectApps[this.name]
+        ? this.selectApps[this.name].length
+        : "";
+    },
+    // 数组总长度
     appsLenght() {
       let length = this.data ? this.data.length : "";
       return length;
+    },
+    heightStyle() {
+      return {
+        height: this.height() + "px",
+      };
+    },
+    widthStyle() {
+      return {
+        width: this.width() + "px",
+      };
     },
   },
   methods: {
     selectAllApp() {
       this.cancelAll();
-      this.isSelectedAll = !this.isSelectedAll;
-      if (!this.isSelectedAll) {
+      if (!this.isSelectedArr[this.name]) this.isSelectedArr[this.name] = false;
+      this.isSelectedArr[this.name] = !this.isSelectedArr[this.name];
+      if (this.isSelectedArr[this.name]) {
         for (let i = 0; i < this.data.length; i++) {
           this.toggleSelect(i);
           this.selectApps[this.name].push(this.data[i]);
@@ -80,7 +106,7 @@ export default {
     // 选择app
     selectApp(item, index) {
       let state = false;
-
+      this.isSelectedArr[this.name] = false;
       // 二维数组不存在则开辟一个数组
       if (!this.selectApps[this.name]) this.selectApps[this.name] = [];
       this.toggleSelect(index);
@@ -120,5 +146,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./index.scss";
+// @import "./index.scss";
 </style>

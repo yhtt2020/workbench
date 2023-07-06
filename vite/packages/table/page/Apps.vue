@@ -28,10 +28,6 @@
               { name: '桌面图标', component: 'Desktop' },
             ]"
           >
-            <div>
-              {{ navName }}
-              <Desktop ref="apps"></Desktop>
-            </div>
           </AddIcon>
         </Teleport>
       </div>
@@ -457,9 +453,8 @@ export default {
   },
   methods: {
     ...mapActions(appsStore, ['addApps']),
-    getSelectApps(){
-    let app = this.$refs.apps;
-    this.addApps(app.selectApps)
+    getSelectApps(data){
+    this.addApps(data["default"])
     },
     executeApp(appData) {
       this.$router.push({
