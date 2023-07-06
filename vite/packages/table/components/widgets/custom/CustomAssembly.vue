@@ -240,7 +240,7 @@
       >
         <div>1. 点击选择需要添加的应用快捷方式</div>
         <div>2. 拖动应用快捷方式拖放到下方</div>
-        <div>3. 支持持批量添加</div>
+        <div>3. 支持批量添加</div>
         <div
           class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
           @dragover.prevent=""

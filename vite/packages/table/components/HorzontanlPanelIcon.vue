@@ -3,7 +3,7 @@
     <div v-for="(item,index) in navList" class=" w-40 h-full panel-icon flex justify-center btn-active items-center relative rounded-lg pointer"
        @click.stop="clickNav(item,index)" :class="activeIndex===index ? 'active-item':''" >
        <Icon :icon="item.icon" style="font-size: 1.5em;"></Icon>
-       <span class="ml-2 panel-title" style="color:var(--primary-text);">{{ item.title }}</span>
+       <span class="ml-2 panel-title" style="color:var(--secondary-text);">{{ item.title }}</span>
        <div v-if="item.state === true" class="state-dot ml-2"></div>
     </div>
   </div>

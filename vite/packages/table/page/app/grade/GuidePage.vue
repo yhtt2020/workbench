@@ -139,6 +139,8 @@ import {
   deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg 
 } from '../../../js/data/guideData'
 import cache from '../../../components/card/hooks/cache';
+import {setThemeSwitch} from '../../../components/card/hooks/themeSwitch/index';
+
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import _ from 'lodash-es'
 export default {
@@ -288,13 +290,11 @@ export default {
     // 根据浅色模式监听
     'styles':{
       handler(newVal,oldVal){
-        const value = cache.get("style")
-        document.documentElement.classList.remove(value);
-        const background = cache.get("background")
-        let model = newVal || this.stylesIndex === 1 ? "light" : "dark"
-        let name = `${model}${background || ''}-model`
-        document.documentElement.classList.add(name);
-        cache.set("style",name)
+
+        let model = newVal || this.stylesIndex === 1 ? true : false
+
+
+        setThemeSwitch(model)
       },
       immediate:true,
     },

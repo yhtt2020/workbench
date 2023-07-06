@@ -8,27 +8,20 @@
             <ul class="nav-list">
               <li  @click="closeDetail" class="flex pointer items-center justify-center mb-3">
                 <div class="rounded-lg"  style="background: var(--secondary-bg);">
-                  <Icon icon="doubleright"></Icon>
+                  <Icon icon="doubleright" style="font-size: 0.9233em;"></Icon>
                 </div>
               </li>
-
-              <!--
-                <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
-             style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
-          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
-        </div>
-               -->
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
-                <div><icon icon="xiaoxi"></icon></div>
+                <div><icon icon="xiaoxi"  style="font-size: 0.9233em;"></icon></div>
               </li>
               <li @click="currentTab='devote'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='devote'}">
-                <div><icon icon="thunderbolt"></icon></div>
+                <div><icon icon="thunderbolt"  style="font-size: 0.9233em;"></icon></div>
               </li>
               <li @click="currentTab='info'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='info'}">
-                <div><icon icon="tishi-xianxing"></icon></div>
+                <div><icon icon="tishi-xianxing"  style="font-size: 0.9233em;"></icon></div>
               </li>
               <li @click="currentTab = 'store'" class="flex items-center justify-center" :class="{'nav-active':currentTab === 'store'}">
-                <div><Icon icon="gift"></Icon></div>
+                <div><Icon icon="gift"  style="font-size: 0.9233em;"></Icon></div>
               </li>
 
             </ul>
@@ -36,8 +29,12 @@
           <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
             <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
 
-              <a-col>
-                <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
+              <a-col style="padding: 0 !important;">
+                <div style="width:90px;height:90px;position: relative;" class="ml-5 pt-2">
+                  <img :src="avatar_url" class="w-full h-full object-cover" alt="">
+                  <a-avatar class="mt-3 ml-3 avatar-top" :size="50" shape="square" :src="team.avatar"></a-avatar>
+                </div>
+                <!--  -->
               </a-col>
               <a-col >
                 <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
@@ -97,7 +94,9 @@
         </div>
       </div>
       <!-- 快速搜索 小队右边栏 -->
-    <div class="common-panel  flex" style="width: 100px;flex-direction: column;padding-bottom: 0;">
+    <div class="common-panel  flex" style="flex-direction: column;padding-bottom: 0;"
+     :style="showDetail === false ? { width:'80px' } : { width:'100px' }"
+    >
       <div v-if="!showDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
@@ -213,13 +212,12 @@ export default {
       teamDetail: false,
       showUid: 0,
       rarity:4, // 稀有度
-      avatar_url:'/img/excellent _avatar.svg',
+      avatar_url:'/img/mg.png',
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
       userInfoKey: Date.now(),
       earningsShow: false,
-
     }
   },
   mounted () {
@@ -405,6 +403,7 @@ export default {
       &>div{
         background: var(--active-bg);
         border-radius: 10px;
+        color: var(--active-text);
       }
     }
   }
@@ -416,5 +415,12 @@ export default {
 
 :deep(.ps__rail-y){
   display: none !important;
+}
+
+.avatar-top{
+  position: absolute;
+  top: 13px;
+  left: 10px;
+  z-index: -3;
 }
 </style>

@@ -16,7 +16,8 @@
       >
         {{ tag }}
       </div>
-      <a-avatar :size="55"  :src="avatar" :style="rarityBorder"></a-avatar>
+      <a-avatar :size="55"  :src="avatar" ></a-avatar>
+      <!-- :style="rarityBorder" -->
       <OnlineTag style="position: absolute;right:12px;bottom: 0px;z-index: 99" v-if="online"></OnlineTag>
     </div>
   </div>
@@ -24,20 +25,20 @@
 
 <script>
 import OnlineTag from './OnlineTag.vue'
-import {rareColor} from '../../js/data/teamAvatar'
+// import {rareColor} from '../../js/data/teamAvatar'
 export default {
   name: 'UserAvatar',
   components: { OnlineTag },
   props: ['avatar', 'tag', 'online', 'tagColor','rare','url'],
   computed:{
-    rarityBorder(){ // 通过计算属性将稀有度边框UI进行渲染
-      const index = rareColor.find(el=>{
-       return el.id === this.rare
-      })
-      return{
-        border:`4px solid ${index.avatar_color}`
-      }
-    },
+    // rarityBorder(){ // 通过计算属性将稀有度边框UI进行渲染
+    //   const index = rareColor.find(el=>{
+    //    return el.id === this.rare
+    //   })
+    //   return{
+    //     border:`4px solid ${index.avatar_color}`
+    //   }
+    // },
   }
 }
 </script>
