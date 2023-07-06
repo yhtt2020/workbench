@@ -105,7 +105,7 @@
   <a-drawer v-model:visible="openSet" title="设置" width="500" placement="right">
     <span class="set-title" v-if="appContent.isCommunity">该快捷键方案来自创意市场</span>
     <span class="set-title" v-else-if="appContent.isMyCreate && appContent.isShare">该快捷键方案由我创建，并已分享至创意市场</span>
-    <span class="set-title" v-else-if="appContent.isMyCreate && !appContent.isShare">该快捷键方案未分享至社区，仅本地可用</span>
+    <span class="set-title" v-else-if="appContent.isMyCreate && !appContent.isShare">该快捷键方案未分享至创意市场，仅本地可用</span>
     <div  class="pointer recommend">
       <div class="flex justify-between">
         <div class="flex">

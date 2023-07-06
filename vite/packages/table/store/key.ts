@@ -3356,6 +3356,9 @@ export const keyStore = defineStore("key", {
       this.recentlyUsedList.map((i,index) => {
         if(item.id === i.id)this.recentlyUsedList.splice(index, 1)
       })
+      this.marketList[this.marketList.length-1].children.map((i,index) => {
+        if(item.id === i.id)this.marketList[this.marketList.length-1].children.splice(index, 1)
+      })
     },
     setMarketList(item){
       if(this.marketList[this.marketList.length-1].children.find(i => i.id === item.id )){

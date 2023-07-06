@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 xt-bg rounded-lg box">
+  <div class="p-3 xt-bg box">
     <!-- 头部导航栏 -->
     <div class="flex items-center justify-between">
       <div class="flex">
@@ -125,7 +125,7 @@
                     <Icon class="ml-3" icon="edit-square" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
                 </a-tooltip>
-                <span @click.stop="delNote(index,item)">
+                <span @click.stop="delKey(index,item)">
                   <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                 </span>
               </span>
@@ -216,16 +216,16 @@
       <!-- </div> -->
     </div>
   </div>
-  <!-- 分享成功的模态框 -->
-  <div class="fixed inset-0 home-blur" style="z-index: 99999;" v-if="shoreModal" >
+  <!-- 分享成功的模态框 -->.
+  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="shoreModal" >
     <div
-         class="fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
+         class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
          style="padding: 24px 32px;width: 480px;height: 221px;background:  #282828">
       <div>
         <Icon icon="yiwancheng" style="color:#52C41A;font-size:20px"></Icon>
-        <span class="ml-2" style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">分享成功</span>
+        <span class="ml-2" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">分享成功</span>
       </div>
-      <div style="font-size: 16px;margin:24px 0;color: rgba(255,255,255,0.60);">
+      <div style="font-size: 16px;margin:24px 0;color: var(--secondary-text);">
         「 {{ applyName }} 」成功分享至创意市场，选择分享到元社区让更多人看到吧～
       </div>
       <div class="flex">
@@ -235,7 +235,7 @@
         同时分享到元社区
         </div>
         <div style="width: 160px;height: 48px;"
-            class=" ml-3 flex justify-center items-center xt-bg-2 rounded-lg pointer" @click="close">
+            class=" ml-3 flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer" @click="close">
           完成
         </div>
       </div>
@@ -445,7 +445,8 @@ export default {
     // setMarketList
     saveShare(){
       if(!this.applyName)return message.info('名称不能为空')
-      if(!this.keyList.length)return message.info('快捷键列表不能为空')
+      if(!this.keyList.length || !this.keyList[0].title)return message.info('快捷键列表不能为空')
+      console.log(this.keyList)
       this.delNotData()
 
       let sum = 0

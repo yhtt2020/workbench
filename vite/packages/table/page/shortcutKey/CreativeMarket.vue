@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-bg rounded-lg px-6 box">
+  <div class="xt-bg px-6 box">
     <!-- 头部导航 -->
     <div class="flex items-center justify-between" style="height: 96px;">
       <div @click="onBack" class="pointer flex items-center rounded-lg justify-center" 
