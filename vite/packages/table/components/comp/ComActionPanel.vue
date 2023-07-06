@@ -56,7 +56,7 @@
         <div class="w-1/2 flex flex-col">
           <span class="update-title mb-6">昵称</span>
           <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-6" style="border: 1px solid var(--divider);">
-            <a-input v-model:value="nickname" :bordered="false" style="padding: 0;width:90%;"></a-input>
+            <a-input v-model:value="randomNickname" :bordered="false" style="padding: 0;width:90%;"></a-input>
             <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
               <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
             </div>
@@ -66,8 +66,10 @@
             <div class="avatar-box com-button pointer rounded-lg" @click="uploadPresetAvatar">
               <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
             </div>
-            <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3">
-              <a-avatar :size="48" :src="getAvatarUrl(item)"></a-avatar>
+            <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3"
+             :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)"
+            >
+              <a-avatar :size="48" :src="getAvatarUrl(item.id)"></a-avatar>
             </div>
           </div>
         </div>
@@ -84,22 +86,30 @@
         </div>
       </div>
       <div class="flex items-center justify-center mt-6"  style="width: 480px;">
-        <a-button type="primary" class="h-48 rounded-xl mr-3"  style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
+        <a-button type="primary" class="h-48 rounded-xl mr-3" @click="updateInfoVisible = false"
+         style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
           稍后设置
         </a-button>
-        <a-button type="primary" class="h-48 rounded-xl" style="width:120px;color: var(--active-text);">保存</a-button>
+        <a-button type="primary" class="h-48 rounded-xl" style="width:120px;color: var(--active-text);" @click="comSave">
+          保存
+        </a-button>
       </div>
     </div>
   </Modal>
 </template>
 
 <script>
+import { mapWritableState,mapActions } from 'pinia'
 import {IdcardFilled,GoldFilled,BellFilled,ApiFilled,LockFilled,ScheduleFilled} from '@ant-design/icons-vue'
 import browser from '../../js/common/browser'
 import Modal from '../Modal.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
 import { avatarNumber } from '../../js/common/teamAvatar'
+import { appStore } from '../../store'
+import cache from '../card/hooks/cache'
 // import RandomScreening from '../modal/RandomScreening.vue'
+
+const screenname = '灵魂虐杀,浅寐,夏微凉っ゛,鱼哭了,陌屿,彼岸,青山独归晚,温唇,忻芝兰,喵咕嘟,皂白七'
 export default {
   name: 'ComActionPanel',
   components:{
@@ -126,14 +136,26 @@ export default {
         {title:'女',name:'2'}
       ],
       gender:'',
-      areaValue:'测试',
-      nickname:'测试'
+      areaValue:'',
+      randomNickname:'',
+      presetIndex:'',
+      i: 1,
+      j: 1,
+      k: 0,
+      no: 0,
     }
   },
+  computed:{
+    ...mapWritableState(appStore,['userInfo'])
+  },
   mounted(){
-     this.gender = this.sexList[0]
+    this.gender = this.sexList[0]
+    if(this.userInfo){
+     this.randomNickname = this.userInfo.nickname
+    }
   },
   methods:{
+    ...mapActions(appStore,['editPresetAvatar']),
     modifyData(){ // 修改资料
       this.updateInfoVisible = true
     },
@@ -154,21 +176,17 @@ export default {
         }
         $('#touzi').addClass('animate-spin')
         this.timer=setTimeout(()=>{
-          // this.rollAvatar()
-          // this.rollName()
-          // this.rollNo()
+          this.rollName()
           $('#touzi').removeClass('animate-spin')
         },400)
       }else{
-        // this.rollAvatar()
-        // this.rollName()
-        // this.rollNo()
+        this.rollName()
       }
 
     },
     // 预设头像拼接
     getAvatarUrl(item){
-      return 'https://up.apps.vip/avatar/' +  item.id + '.png'
+      return 'https://up.apps.vip/avatar/' +  item + '.png'
     },
     // 自定义头像上传回调事件
     async uploadPresetAvatar(){
@@ -185,7 +203,38 @@ export default {
         properties: ["multiSelections"],
       })
       console.log('测试上传',openPath[0]);
-    }
+    },
+
+    rollName(){
+      let groups = screenname.split(',')
+      let j = Math.ceil((Math.random() * groups.length)) - 1
+      if (this.j === j) {
+        this.rollName()
+        return
+      }
+      this.j = j
+      this.randomNickname = groups[j]
+    },
+
+    // 点击选中预设头像
+    selectPreset(item){
+      this.presetIndex = item.id
+    },
+
+
+    // 点击保存
+    comSave(){
+      console.log('昵称',this.randomNickname);  //上传至服务器
+      console.log('性别',this.gender.name);  //上传至服务器
+      console.log('个性签名',this.areaValue);  //上传至服务器 
+      // console.log('预设头像',this.presetIndex); // 直接生效
+      if(this.presetIndex !== ''){
+        // cache.set('comAvatar',this.getAvatarUrl(this.presetIndex))
+        // this.editPresetAvatar()
+        // this.updateInfoVisible = false
+      }
+    },
+
   },
   watch:{
     'gender':{
@@ -262,6 +311,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 6px !important;
+}
+
+.select-active{
+  border: 1px solid var(--active-bg);
+  background: rgba(80,139,254,0.20);
 }
 
 :deep(.nav-item){
@@ -282,6 +337,9 @@ export default {
 @media screen and (max-width:840px) {
   .myinfo-container{
     width:780px !important;
+  }
+  .avatar-box{
+    margin-right: 5px !important;
   }
 }
 
