@@ -1,24 +1,24 @@
 <template>
     <!-- 有内容 -->
-  <div class="container s-bg rounded-lg" v-if="softwareList.length && !detailToggle">
+  <div class="container rounded-lg" v-if="softwareList.length && !detailToggle">
     <div class="flex justify-between px-4">
         <div class="flex items-center">
           <Search :searchValue="searchValue" @changeInput="changeInput"></Search>
-          <span class="ml-3" style="font-size: 16px;color: rgba(255,255,255,0.60);width:200px;">共{{ softwareList.length }}个应用快捷键方案</span>
+          <span class="ml-3" style="font-size: 16px;color: var(--secondary-text);width:200px;">共{{ softwareList.length }}个应用快捷键方案</span>
         </div>
         <div class="btn-item">
-            <div class="s-bg pointer" @click="market">创意市场</div>
-            <div class="s-bg pointer" @click="share">我来分享</div>
-            <span class="button-active pointer s-bg" @click="setShow = true">
-                <Icon icon="setting" style="width: 20px;height: 20px;color:rgba(255, 255, 255, 0.4);"></Icon>
+            <div class="pointer" @click="market">创意市场</div>
+            <div class="pointer" @click="share">我来分享</div>
+            <span class="button-active pointer" @click="setShow = true">
+                <Icon icon="setting" style="width: 20px;height: 20px;color:var(--primary-text);"></Icon>
             </span>
         </div>
     </div>
     <!-- 提示 -->
     <div class="prompt mt-4 mx-4 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
-            <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
-            <span class="mx-4">从工作台启动的Windows应用，默认会自动打开可用的快捷键方案。</span>
+            <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:var(--active-bg);"></Icon>
+            <span class="mx-4 xt-text">从工作台启动的Windows应用，默认会自动打开可用的快捷键方案。</span>
         </span>
         <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
     </div>
@@ -28,10 +28,10 @@
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
-            <span>{{ item.name }}</span>
+            <span class="xt-text">{{ item.name }}</span>
             <div class="flex flex-col justify-center items-center">
                 <span>{{ item.number }}</span>
-                <span>快捷键</span>
+                <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
             </div>
         </div>
         <div v-if="softwareList.length > 2" style="opacity:0;height: 1px;"></div>
@@ -198,13 +198,12 @@
       background: var(--primary-bg);
       overflow: hidden;
     }
-    .s-bg{
-        box-shadow: none !important;
-    }
     .btn-item{
         display: flex;
         >div{
-            background: var(--primary-bg);
+            color: var(--primary-text);
+            font-size: 16px;
+            background: var(--mask-bg);
             width: 160px;
             text-align: center;
             height: 48px;
@@ -213,7 +212,7 @@
             border-radius: 12px;
         }
         >span{
-            background: var(--primary-bg);
+            background: var(--mask-bg);
             border-radius: 12px;
             width: 48px;
             height: 48px;
@@ -222,13 +221,13 @@
         }
     }
     .prompt{
-        background: rgba(0,0,0,0.30);
+        background: var(--mask-bg);
         border-radius: 12px;
         height: 56px;
     }
     .main-part{
         >div{
-            background: rgba(0,0,0,0.30);
+            background: var(--mask-bg);
             border-radius: 12px;
             width:364px;
             height:88px;
@@ -241,12 +240,12 @@
                 right: 0;
                 width: 88px;
                 height: 88px;
-                background: rgba(0,0,0,0.30);
+                background: var(--mask-bg);
                 border-radius: 0px 12px 12px 0px;
                 >span:nth-child(1){
                     font-family: Oswald-SemiBold;
                     font-size: 28px;
-                    color: rgba(255,255,255,0.85);
+                    color: var(--primary-text);
                     font-weight: 600;
                 }
             }
@@ -266,7 +265,7 @@
         display: none;
     }
     .recommend{
-        background: rgba(0,0,0,0.30);
+        background: var(--mask-bg);
         border-radius: 12px;
         width: 356px;
         height: 136px;
@@ -292,14 +291,14 @@
     }
     .title{
         font-size: 16px;
-        color: rgba(255,255,255,0.85);
+        color: var(--primary-text);
         font-weight: 500;
         margin-bottom: 8px;
     }
     .text{
         font-family: PingFangSC-Medium;
         font-size: 14px;
-        color: rgba(255,255,255,0.60);
+        color: var(--secondary-text);
         font-weight: 500;
     }
  }

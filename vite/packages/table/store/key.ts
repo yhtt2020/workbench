@@ -526,8 +526,8 @@ let keyData = [
 export const keyStore = defineStore("key", {
   state: () => ({
     //快捷键方案列表
-    shortcutKeyList: [...keyData.concat()],
-    // shortcutKeyList: [],
+    // shortcutKeyList: [...keyData.concat()],
+    shortcutKeyList: [],
     // 最近使用的快捷键方案列表
     recentlyUsedList: [],
     // 推荐方案列表
@@ -3347,7 +3347,7 @@ export const keyStore = defineStore("key", {
       })
     },
     setShortcutKeyList(item){
-      this.shortcutKeyList.push(item)
+      this.shortcutKeyList.push(JSON.parse(JSON.stringify(item)))
     },
     removeShortcutKeyList(item){
       this.shortcutKeyList.map((i,index) => {
@@ -3372,7 +3372,6 @@ export const keyStore = defineStore("key", {
         }else{
           this.setShortcutKeyList(item)
         }
-        
       }
     },
     delRecentlyEmpty({keyList, id}){
@@ -3381,7 +3380,8 @@ export const keyStore = defineStore("key", {
           this.recentlyUsedList[index].keyList = keyList
         }
       })
-    }
+    },
+
   },
   persist: {
     enabled: true,

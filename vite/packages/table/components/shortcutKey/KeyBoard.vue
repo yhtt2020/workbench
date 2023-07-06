@@ -1,9 +1,9 @@
 <template>
-  <div class="prompt-modal s-bg">
-    <div class="s-bg box">
+  <div class="prompt-modal xt-mask">
+    <div class="xt-modal box">
       <div class="box-head">
         <span class="title">选择需要的组合健</span>
-        <div @click="onBack" class="head-icon">
+        <div @click="onBack" class="head-icon xt-text">
           <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
         </div>
       </div>
@@ -544,7 +544,7 @@ export default {
         justify-content: center;
         margin-right: 12px;
         position: absolute;
-        background: #2A2A2A;
+        background: var(--secondary-bg);
         top: 12px;
         right: 18px;
       }
@@ -559,8 +559,9 @@ export default {
       .key-box{
           display: flex;
           flex-wrap: wrap;
+          color: var(--primary-text);
           .key-item{
-            background: #2A2A2A;
+            background: var(--secondary-bg);
             border-radius: 8px;
             height: 44px;
             display: flex;
@@ -582,14 +583,15 @@ export default {
       width: 100%;
       font-size: 16px;
       margin: 24px 0;
-      color: rgba(255,255,255,0.85);
+      color: var(--primary-text);
       .active{
         display: flex;
         justify-content: center;
         align-items: center;
         height: 48px;
         .key-item{
-          background: #508BFE;
+          background: var(--active-bg);
+          color: var(--active-text);
           border-radius: 8px;
           height: 44px;
           display: flex;
@@ -604,7 +606,7 @@ export default {
         justify-content: center;
         margin-top: 24px;
         >div{
-          background: #2A2A2A;
+          background: var(--secondary-bg);
           border-radius: 12px;
           width: 120px;
           height: 48px;
@@ -616,7 +618,7 @@ export default {
     }
     .title{
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      color: var(--primary-text);
     }
   }
   .box::-webkit-scrollbar{
