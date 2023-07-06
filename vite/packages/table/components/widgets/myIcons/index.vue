@@ -154,7 +154,7 @@ export default {
       setData.groupTitle = "分组"; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     }
-
+    
     // 绑定右键事件
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,

@@ -1,9 +1,9 @@
 <template>
-  <div class="s-bg rounded-lg px-6 box">
+  <div class="xt-bg rounded-lg px-6 box">
     <!-- 头部导航 -->
     <div class="flex items-center justify-between" style="height: 96px;">
       <div @click="onBack" class="pointer flex items-center rounded-lg justify-center" 
-        style="background: rgba(0, 0, 0, 0.30);width:112px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);">
+        style="background: var(--mask-bg);width:112px;height:48px;font-size: 16px;color: var(--primary-text);">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
@@ -17,8 +17,8 @@
           @changeInput="changeInput"
         />
         <!-- 分享 -->
-        <div class="pointer s-bg flex items-center rounded-lg justify-center ml-3" 
-        style="width:134px;height:48px;font-size: 16px;color: rgba(255,255,255,0.85);"
+        <div class="pointer xt-mask flex items-center rounded-lg justify-center ml-3" 
+        style="width:134px;height:48px;font-size: 16px;color: var(--primary-text);"
         @click="share">我来分享</div>
       </div>
     </div>
@@ -585,9 +585,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .s-bg{
-    box-shadow: none !important;
-  }
   .box{
     z-index: 9999;
     position: fixed;
@@ -617,7 +614,7 @@ export default {
       }
 
       .active {
-        background: rgba(0, 0, 0, 0.30);
+        background: var(--mask-bg);
 
       }
     }

@@ -10,8 +10,8 @@
         <div class="ml-3" v-if="isFiltrate">
             <a-select :style="selectStyle"
                 @change="changeSelect($event)"
-                class="select rounded-lg  text-xs s-item flex items-center text-center" size="large" :bordered="false"
-                v-model:value="selectValue" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--secondary-bg)' }">
+                class="select rounded-lg  s-item flex items-center text-center" size="large" :bordered="false"
+                v-model:value="selectValue" :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--mask-bg)' }">
                 <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{ item.name }}</a-select-option>
             </a-select>
         </div>
@@ -94,7 +94,7 @@ export default {
     .input{
         width:320px;
         height: 48px;
-        background: var(--secondary-bg);
+        background: var(--mask-bg);
         border-radius: 12px;
         font-size: 18px;
         border: 1px solid rgba(255,255,255,0.2);
@@ -105,5 +105,6 @@ export default {
         color: var(--primary-text);
         border: 1px solid rgba(255, 255, 255, 0.1);
         font-size: 16px;
+        background: var(--mask-bg);
     }
 </style>

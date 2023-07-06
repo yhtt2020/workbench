@@ -39,6 +39,25 @@ export const linkList = [
     name: "系统默认浏览器",
   },
 ];
+
+export const imgSteteList = [
+  {
+    value: "cover",
+    name: "覆盖",
+  },
+  {
+    value: "fill",
+    name: "填充",
+  },
+  {
+    value: "scale-down",
+    name: "缩小",
+  },
+  {
+    value: "contain",
+    name: "包含",
+  },
+];
 export const backgroundColorList = {
   color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
   color2: "linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",

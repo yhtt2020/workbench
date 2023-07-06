@@ -111,41 +111,6 @@ export default {
 
     window.addEventListener("keydown", this.KeyDown, true)// 监听按键事件
 
-    // if (value) {
-    //   return JSON.parse(value)
-    // }
-    //先访问一下，确保数据被提取出来了，由于采用了db，db是异步导入的，无法保证立刻就能拉到数据
-    //  if (!this.init) {
-    //    console.log(this.init)
-    //    this.$router.push('/wizard')
-    //    return
-    //  }
-    //
-    // setTimeout(()=>{
-    //
-    //
-    //
-    // },3000)
-    //还原数据
-    // setTimeout(()=>{
-    //   let recoverPath=require('path').join(window.globalArgs['user-data-dir'],'temp.json')
-    //   if(require('fs').existsSync(recoverPath)){
-    //     let json= require('fs').readFileSync(recoverPath,'utf-8')
-    //     let j=JSON.parse(json)
-    //     Object.keys(j).forEach(key=>{
-    //       localStorage.setItem(key,j[key])
-    //     })
-    //     require('fs').rmSync(recoverPath)
-    //     localStorage.setItem('tipInfo','1')
-    //     location.reload()
-    //     console.log('检测到存在待回复的json文件')
-    //   }
-    //   if(localStorage.getItem('tipInfo')){
-    //     localStorage.removeItem('tipInfo')
-    //     Modal.info({content:'已为您迁移数据，目前可正常使用。'})
-    //   }
-    // },3000)
-
     window.restore = () => {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
@@ -204,9 +169,7 @@ export default {
         event.stopPropagation()
       }
       if(this.fullScreen){
-        console.log('全屏了')
         if(event.keyCode===27){
-          console.log('是esc')
           this.fullScreen=false
           event.preventDefault()
           event.stopPropagation()
