@@ -10,7 +10,7 @@
       <img
         :src="src"
         alt=""
-        :style="[imgSize, radiusState]"
+        :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index"
       />
     </div>
@@ -26,22 +26,14 @@
 
 <script>
 import { message } from "ant-design-vue";
+import myProps from "../hooks/props";
+
 export default {
+  mixins: [myProps],
   props: {
     isReSize: { type: Boolean, default: false },
     index: { type: Number },
-    // 下面是v-bind参数
-    isRadius: { type: Boolean },
-    radius: { type: Number },
-    isBackground: { type: Boolean },
-    backgroundColor: { type: String },
-    titleValue: { type: String },
-    link: { type: String },
-    linkValue: {},
-    open: {},
-    size: { type: String, default: "mini" },
-    src: { type: String },
-    backgroundIndex: { type: Number },
+    // ...myProps,
   },
   computed: {
     // 动态切换圆角状态
@@ -63,6 +55,11 @@ export default {
     imgSize() {
       return this.getSizeValues(this.size).imgSize;
     },
+    imgStateStyle() {
+      return {
+        "object-fit": this.imgState,
+      };
+    },
   },
   methods: {
     getSizeValues(size) {
@@ -76,7 +73,7 @@ export default {
           h = 96;
           val = 60;
           break;
-          case "mini1":
+        case "mini1":
           w = 280;
           h = 96;
           val = 70;
