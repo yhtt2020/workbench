@@ -446,7 +446,6 @@ export default {
     saveShare(){
       if(!this.applyName)return message.info('名称不能为空')
       if(!this.keyList.length || !this.keyList[0].title)return message.info('快捷键列表不能为空')
-      console.log(this.keyList)
       this.delNotData()
 
       let sum = 0
