@@ -350,7 +350,6 @@ export default {
       if(this.$route.params.id){
         this.paramsId = this.$route.params.id
         // let usedList = this.deepClone({},this.recentlyUsedList)
-        // let usedList = this.copyObj(this.recentlyUsedList)
         this.recentlyUsedList.find(i => {
           if(i.id == this.paramsId){
             let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
@@ -365,18 +364,6 @@ export default {
         this.addShortcutKey()
       }
     },
-    //写函数
-		copyObj(obj){
-			let newObj={};
-			for(let key in obj){
-				if(typeof obj[key] =='object'){//如:key是wife,引用类型,那就递归
-					newObj[key] = copyObj(obj[key])
-				}else{//基本类型,直接赋值
-					newObj[key] = obj[key];
-				}
-			}
-			return newObj;
-		},
     //深拷贝
     deepClone(obj, newObj) {
       var newObj = newObj || {};
