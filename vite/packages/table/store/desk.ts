@@ -11,6 +11,8 @@ export const deskStore = defineStore("desk", {
           {
             id: 1, //唯一标识
             deskImg: '/img/test/deckImg.jpg', //桌面图片
+            desk: '桌面1',
+            assort: '推荐',
             title: '效率桌面',
             avatar: '/icons/logo128.png',
             nickName: 'Cordelia Butler',
@@ -34,6 +36,8 @@ export const deskStore = defineStore("desk", {
           {
             id: 2, 
             deskImg: '/img/test/deckImg.jpg', 
+            desk: '桌面1',
+            assort: '推荐',
             title: '游戏玩家必备桌面',
             avatar: '/icons/logo128.png',
             nickName: 'Cordelia Butler',
@@ -55,8 +59,10 @@ export const deskStore = defineStore("desk", {
             ],
           },
           {
-            id: 3, //唯一标识
-            deskImg: '/img/test/deckImg.jpg', //桌面图片
+            id: 3,
+            deskImg: '/img/test/deckImg.jpg',
+            desk: '桌面1',
+            assort: '推荐',
             title: '效率桌面',
             avatar: '/icons/logo128.png',
             nickName: 'Cordelia Butler',

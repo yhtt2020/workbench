@@ -2,7 +2,7 @@
   <a-drawer v-model:visible="showDrawer" @close="close" style="z-index:9999;" width="500" placement="right">
      <template #extra>
       <a-space>
-        <div class="add-scheme" @click="addPlan(scheme)">立即分享</div>
+        <div class="add-scheme" @click="addPlan()">立即分享</div>
       </a-space>
     </template>
     <div>
@@ -16,9 +16,9 @@
         <a-select-option v-for="i in deskType" :key="i" :value="i.value">{{ i.name }}</a-select-option>
       </a-select>
       <span class="title">标题</span>
-      <a-input v-model:value="applyName" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+      <a-input v-model:value="shoreName" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
       <span class="title">简介</span>
-      <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text"  placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 100px;"/>
+      <a-textarea v-model:value="blurb" spellcheck="false" class="input xt-text"  placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 100px;"/>
       <span class="title">分类</span>
       <a-select v-model:value="assort" style="height:48px;border:none;" :bordered="false" size="large" 
       class="input rounded-lg  text-xs flex items-center" 
@@ -31,7 +31,7 @@
       <span class="title">标签</span>
       <div style="font-size: 14px;" class="xt-text-2 mt-2">最多添加四个标签</div>
       <div class="flex my-4">
-        <a-input v-model:value="labelVal" spellcheck ="false" class="input" style="width:340px;margin:0" placeholder="请输入应用名称" aria-placeholder="font-size: 16px;"/>
+        <a-input v-model:value="labelVal" spellcheck ="false" class="input" style="width:340px;margin:0" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
         <div class="add-label" @click="addLabel">添加</div>
       </div>
       <div v-if="labelList.length" class="flex">
@@ -42,31 +42,39 @@
       </div>
     </div>
   </a-drawer>
+  <!-- 分享成功的模态框和发布抽屉 -->
+  <ShareModal :shoreModal="shoreModal" :shoreName="shoreName" @closeShore="closeShore"></ShareModal>
 </template>
 
 <script>
 import { mapActions, mapWritableState } from "pinia";
 import { deskStore } from "../../store/desk";
 import { message } from 'ant-design-vue';
+import ShareModal from "../ShareModal.vue";
+import {nanoid} from 'nanoid'
 export default {
   name: "ShareDesk",
   components: {
+    ShareModal
   },
   data() {
     return {
       showDrawer: false,
-      desk: 'desk1',
+      desk: '桌面1',
       deskType: [
-        { name: '桌面1', value: 'desk1' },
-        { name: '桌面2', value: 'desk2' },
-        { name: '桌面3', value: 'desk3' },
-        { name: '桌面4', value: 'desk4' },
+        { name: '桌面1', value: '桌面1' },
+        { name: '桌面2', value: '桌面2' },
+        { name: '桌面3', value: '桌面3' },
+        { name: '桌面4', value: '桌面4' },
       ],
       assort: '',
       assortList: [],
       labelVal: '',
       labelList: [],
-      scheme: {}
+      scheme: {},
+      shoreModal: false,
+      shoreName: '',
+      blurb: '',
     }
   },
   props: {
@@ -89,7 +97,6 @@ export default {
     },
     addLabel(){
       if(this.labelList.length >= 4)return message.info('最多添加四个')
-      console.log(this.labelVal)
       if(this.labelVal.trim()){
         this.labelList.push(this.labelVal)
         this.labelVal = ''
@@ -98,15 +105,36 @@ export default {
     delLabel(index){
       this.labelList.splice(index,1)
     },
-    addPlan(val){
-      
-    }
+    addPlan(){
+      const time = new Date().valueOf()
+      this.scheme = {
+        id: nanoid(), 
+        deskImg: '',
+        desk: this.desk,
+        assort: this.assortList[this.assort],
+        title: this.shoreName,
+        avatar: '/icons/logo128.png',
+        nickName: 'Cordelia Butler',
+        sumLikes: 0,
+        download: 0,
+        time,
+        size: '1920x1080',
+        blurb: this.blurb,
+        labelList: this.labelList,
+        cardList: [],
+      }
+      this.close()
+      this.shoreModal = true
+      // console.log(this.scheme)
+    },
+    closeShore(val){
+      this.shoreModal = val
+    },
   },
   mounted() {
     this.assortList = this.deskList.map(item => item.cname)
     this.assortList.unshift('请选择')
     this.assort = this.assortList[0]
-    
   },
 }
 </script>
