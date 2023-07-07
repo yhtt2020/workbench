@@ -1,5 +1,5 @@
 <template>
-  <vueCustomScrollbar :settings="scrollbarSettings"
+  <vueCustomScrollbar :settings="scrollbarSettings" @touchstart.stop @touchmove.stop @touchend.stop
                       style="padding: 15px;white-space: nowrap;height: 100%">
 
     <div class="card half mr-3" style="width:330px;background: var(--primary-bg);color: var(--primary-text);">

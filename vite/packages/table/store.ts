@@ -182,7 +182,12 @@ export const appStore = defineStore('appStore', {
     // 修改当前极简模式
     updateSimple(val:boolean){
       this.simple = val
-    }
+    },
+
+    // 将原本头像修改成预设头像
+    // editPresetAvatar(){
+    //   // this.userInfo.avatar = cache.get('comAvatar')
+    // },
   },
   persist: {
     enabled: true,

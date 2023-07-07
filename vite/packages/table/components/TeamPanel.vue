@@ -31,7 +31,7 @@
 
               <a-col style="padding: 0 !important;">
                 <div style="width:90px;height:90px;position: relative;" class="ml-5 pt-2">
-                  <img :src="avatar_url" class="w-full h-full object-cover" alt="">
+                  <!-- <img :src="avatar_url" class="w-full h-full object-cover" alt=""> -->
                   <a-avatar class="mt-3 ml-3 avatar-top" :size="50" shape="square" :src="team.avatar"></a-avatar>
                 </div>
                 <!--  -->

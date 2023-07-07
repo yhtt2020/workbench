@@ -36,3 +36,12 @@ export const rarityColor = [
     color:'rgb(250,75,20)'
   }
 ]
+
+// 预设头像序号
+export const avatarNumber = [
+  {id:'001'},{id:'002'},{id:"003"},
+  {id:'004'},{id:'005'},{id:"006"},
+  {id:'007'},{id:'008'},{id:"009"},
+  {id:'010'},{id:'011'},{id:"012"},
+  {id:'013'},{id:'014'},
+]
