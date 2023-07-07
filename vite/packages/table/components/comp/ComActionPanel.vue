@@ -52,20 +52,19 @@
          <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
         </div>
       </div>
-      <div class="flex w-full justify-between">
+      <div class="flex w-full justify-between px-5">
         <div class="w-1/2 flex flex-col">
           <span class="update-title mb-6">昵称</span>
           <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-6" style="border: 1px solid var(--divider);">
-            <a-input v-model:value="randomNickname" :bordered="false" style="padding: 0;width:90%;"></a-input>
+            <a-input v-model:value="randomNickname" placeholder="请输入" :bordered="false" style="padding: 0;width:90%;"></a-input>
             <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
               <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
             </div>
           </div>
           <span class="update-title mb-6">头像</span>
           <div class="flex w-full mx-1.5 flex-wrap justify-between">
-            <div class="avatar-box com-button pointer rounded-lg" @click="uploadPresetAvatar">
-              <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
-            </div>
+            <!-- avatar-box该类名通过自己定义需要的大小以及样式 -->
+            <UploadImage class="avatar-box rounded-lg"></UploadImage>  
             <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3"
              :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)"
             >
@@ -76,9 +75,9 @@
         <a-divider type="vertical" class="mx-6"  style="height:404px;background: var(--divider);"/>
         <div class="w-1/2 flex flex-col">
           <span class="update-title mb-5">个性签名</span>
-          <a-textarea v-model:value="areaValue" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;"/>
+          <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;"/>
           <span class="update-title mb-6">性别</span>
-          <HorizontalPanel :navList="sexList" v-model:selectType="gender"></HorizontalPanel>
+          <HorizontalPanel :navList="sexType" v-model:selectType="gender"></HorizontalPanel>
           <div class="my-16 flex mx-auto">
             <span class="com-title" style="color: var(--secondary-text);">更多个人信息编辑、账号设置等，请前往</span>
             <span class="go-com pl-2 pointer"  @click="go('https://s.apps.vip/user/info')" >元社区</span>
@@ -104,9 +103,14 @@ import {IdcardFilled,GoldFilled,BellFilled,ApiFilled,LockFilled,ScheduleFilled} 
 import browser from '../../js/common/browser'
 import Modal from '../Modal.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
+import UploadImage from '../UploadImage.vue'
 import { avatarNumber } from '../../js/common/teamAvatar'
+import { frameStore } from '../../store/avatarFrame'
 import { appStore } from '../../store'
-import cache from '../card/hooks/cache'
+
+
+// import  api from '../../../../src/model/api'
+// import cache from '../card/hooks/cache'
 // import RandomScreening from '../modal/RandomScreening.vue'
 
 const screenname = '灵魂虐杀,浅寐,夏微凉っ゛,鱼哭了,陌屿,彼岸,青山独归晚,温唇,忻芝兰,喵咕嘟,皂白七'
@@ -114,7 +118,7 @@ export default {
   name: 'ComActionPanel',
   components:{
     IdcardFilled,GoldFilled,BellFilled,ApiFilled,LockFilled,ScheduleFilled,
-    HorizontalPanel,
+    HorizontalPanel,UploadImage,
     // RandomScreening,
     Modal
   },
@@ -130,15 +134,15 @@ export default {
       },
       avatarNumber,
       moreInfoShow:true,
-      sexList:[
-        {title:'保密',name:'0'},
-        {title:'男',name:'1'},
-        {title:'女',name:'2'}
+      sexType:[    // 性别类型
+        {title:'保密',sex:0},
+        {title:'男',sex:1},
+        {title:'女',sex:2}
       ],
-      gender:'',
-      areaValue:'',
+      gender:'', // 接收切换到的性别
+      areaValue:'',  // 接收文本输入框值
       randomNickname:'',
-      presetIndex:'',
+      presetIndex:'',  // 预设头像选中下标
       i: 1,
       j: 1,
       k: 0,
@@ -149,21 +153,17 @@ export default {
     ...mapWritableState(appStore,['userInfo'])
   },
   mounted(){
-    this.gender = this.sexList[0]
+    this.gender = this.sexType[0]
     if(this.userInfo){
      this.randomNickname = this.userInfo.nickname
     }
   },
   methods:{
     ...mapActions(appStore,['editPresetAvatar']),
-    modifyData(){ // 修改资料
+    ...mapActions(frameStore,['updateMyinfo']),
+    // 'uploadMyInfoAvatar'
+    modifyData(){ // 修改资料打开弹窗回调事件
       this.updateInfoVisible = true
-    },
-    infoShowClick(){  // 是否展开和收起按钮回调事件
-     this.moreInfoShow = !this.moreInfoShow
-    },
-    edit(){
-      browser.openInInner("https://s.apps.vip/user/info")
     },
     go(url){
       browser.openInInner(url)
@@ -188,24 +188,8 @@ export default {
     getAvatarUrl(item){
       return 'https://up.apps.vip/avatar/' +  item + '.png'
     },
-    // 自定义头像上传回调事件
-    async uploadPresetAvatar(){
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择导入的代码",
-        filters: [
-          { name: "图片", extensions: ["png", "jpg", "jpeg", "bmp", "gif"] },
-          {
-            name: "视频",
-            extensions: ["mp4", "mpeg", "avi", "rmvb"],
-          },
-          { name: "全部", extensions: ["*"] },
-        ],
-        properties: ["multiSelections"],
-      })
-      console.log('测试上传',openPath[0]);
-    },
 
-    rollName(){
+    rollName(){  // 掷骰子随机昵称 
       let groups = screenname.split(',')
       let j = Math.ceil((Math.random() * groups.length)) - 1
       if (this.j === j) {
@@ -224,15 +208,19 @@ export default {
 
     // 点击保存
     comSave(){
-      console.log('昵称',this.randomNickname);  //上传至服务器
-      console.log('性别',this.gender.name);  //上传至服务器
-      console.log('个性签名',this.areaValue);  //上传至服务器 
-      // console.log('预设头像',this.presetIndex); // 直接生效
-      if(this.presetIndex !== ''){
-        // cache.set('comAvatar',this.getAvatarUrl(this.presetIndex))
-        // this.editPresetAvatar()
-        // this.updateInfoVisible = false
+      const saveUpdateMyInfo = {
+        nickname:this.randomNickname,
+        sex:this.gender.sex,
+        signature:this.areaValue,
       }
+      this.updateMyinfo(saveUpdateMyInfo)
+      // console.log('测试',saveUpdateMyInfo);
+      // console.log('预设头像',this.presetIndex); // 直接生效
+      // if(this.presetIndex !== ''){
+      //   // cache.set('comAvatar',this.getAvatarUrl(this.presetIndex))
+      //   // this.editPresetAvatar()
+      //   // this.updateInfoVisible = false
+      // }
     },
 
   },
