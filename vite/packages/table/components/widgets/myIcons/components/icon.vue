@@ -15,6 +15,7 @@
       />
     </div>
     <div
+      v-if="isTitle"
       class="text-center xt-text h-5 truncate mx-auto"
       :style="[textSize]"
       :data-index="index"
@@ -33,7 +34,6 @@ export default {
   props: {
     isReSize: { type: Boolean, default: false },
     index: { type: Number },
-    // ...myProps,
   },
   computed: {
     // 动态切换圆角状态
@@ -63,53 +63,64 @@ export default {
   },
   methods: {
     getSizeValues(size) {
-      let w, h;
-      let val;
-      if (this.isReSize) size = "mini";
-      switch (size) {
-        case "mini":
-          // w = 134.5;
-          w = 110;
-          h = 96;
-          val = 60;
-          break;
-        case "mini1":
-          w = 280;
-          h = 96;
-          val = 70;
-          break;
-        case "small":
-          w = 280;
-          h = 205;
-          val = 170;
-          break;
-        case "default":
-          w = 280;
-          h = 420;
-          val = 270;
-          break;
-        case "long":
-          w = 570;
-          h = 205;
-          val = 175;
-          break;
-        case "big":
-          w = 570;
-          h = 420;
-          val = 390;
-          break;
+      if (this.isReSize) {
+        size = "mini";
       }
+
+      const sizeValues = {
+        mini: {
+          w: 110,
+          h: 96,
+          imgW: 100,
+          imgH: 66,
+        },
+        mini1: {
+          w: 280,
+          h: 96,
+          imgW: 270,
+          imgH: 66,
+        },
+        small: {
+          w: 280,
+          h: 205,
+          imgW: 270,
+          imgH: 175,
+        },
+        default: {
+          w: 280,
+          h: 420,
+          imgW: 270,
+          imgH: 390,
+        },
+        long: {
+          w: 570,
+          h: 205,
+          imgW: 560,
+          imgH: 175,
+        },
+        big: {
+          w: 570,
+          h: 420,
+          imgW: 560,
+          imgH: 390,
+        },
+      };
+
+      let { w, h, imgW, imgH } = sizeValues[size];
+
+      h = this.isTitle ? h - 20 : h + 20;
+      imgH = this.isTitle ? imgH : imgH + 40;
       return {
         iconSize: {
           width: `${w}px`,
-          height: `${h - 20}px`,
+          height: `${h}px`,
         },
         textSize: {
           width: `${w - 20}px`,
         },
         imgSize: {
-          width: `${val}px`,
-          height: `${val}px`,
+          width: `${imgW}px`,
+          height: `${imgH}px`,
           border: "0px solid red",
         },
       };
