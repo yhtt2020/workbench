@@ -92,6 +92,9 @@ export const teamStore = defineStore("teamStore", {
       }
     },
 
+    async openTeam(){
+      this.teamVisible=true
+    },
     async closeTeam() {
       this.team = {
         status: false
@@ -230,6 +233,7 @@ export const teamStore = defineStore("teamStore", {
         let data = myTeamResult.data
         this.my = data.data
         let teamNo = 0
+        console.log(this.my,'我的小队信息')
         if (this.my.created.hasOwnProperty('no')) {
           //自己是队长
           teamNo = this.my.created.no
