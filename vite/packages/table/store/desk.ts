@@ -15,20 +15,11 @@ export const deskStore = defineStore("desk", {
             avatar: '/icons/logo128.png',
             nickName: 'Cordelia Butler',
             sumLikes: 123,
-            download: 202,
+            download: 113,
             time: 1687881600000,
             size: '1920x1080',
             blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
-            label: [
-              {
-                id: 1,
-                name: '游戏'
-              },
-              {
-                id: 2,
-                name: '玩家'
-              }
-            ],
+            labelList: ['游戏','玩家'],
             cardList: [
               { 
                 icon: 'dianzan',
@@ -48,19 +39,10 @@ export const deskStore = defineStore("desk", {
             nickName: 'Cordelia Butler',
             sumLikes: 123,
             download: 202,
-            time: 1687881500000,
+            time: 1687881800000,
             size: '1920x1080',
             blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
-            label: [
-              {
-                id: 1,
-                name: '游戏'
-              },
-              {
-                id: 2,
-                name: '玩家'
-              }
-            ],
+            labelList: ['效率','产品经理'],
             cardList: [
               { 
                 icon: 'dianzan',
@@ -79,20 +61,11 @@ export const deskStore = defineStore("desk", {
             avatar: '/icons/logo128.png',
             nickName: 'Cordelia Butler',
             sumLikes: 123,
-            download: 202,
-            time: 1687881800000,
+            download: 300,
+            time: 1687881700000,
             size: '1920x1080',
             blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
-            label: [
-              {
-                id: 1,
-                name: '游戏'
-              },
-              {
-                id: 2,
-                name: '玩家'
-              }
-            ],
+            labelList: ['游戏','玩家'],
             cardList: [
               { 
                 icon: 'dianzan',

@@ -431,10 +431,9 @@ export default {
     // 保存并分享
     // setMarketList
     saveShare(){
-      if(!this.applyName)return message.info('名称不能为空')
-      if(!this.keyList.length || !this.keyList[0].title)return message.info('快捷键列表不能为空')
       this.delNotData()
-
+      if(!this.applyName)return message.info('名称不能为空')
+      if(!this.keyList.length)return message.info('快捷键列表不能为空')
       let sum = 0
       this.keyList.map(item => {
         if(item.keys){

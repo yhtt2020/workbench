@@ -10,7 +10,7 @@
         <div style="padding: 0 14px 14px">
           <div class="title">{{ item.title }}</div>
           <div class="flex">
-            <div class="label" v-for="x in item.label" :key="x">{{ x.name }}</div>
+            <div class="label" v-for="x in item.labelList" :key="x">{{ x }}</div>
           </div>
           <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
             <span class="flex items-center">

@@ -39,7 +39,7 @@
       <span class="drawer-title">{{ scheme.title }}</span>
       <span class="drawer-text">{{ scheme.blurb }}</span>
       <div class="flex">
-        <div class="label" v-for="x in scheme.label" :key="x">{{ x.name }}</div>
+        <div class="label" v-for="x in scheme.labelList" :key="x">{{ x }}</div>
       </div>
       <div class="flex justify-between items-center">
         <span class="flex items-center my-4">
@@ -74,10 +74,9 @@
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
 import { appStore } from '../../store';
 export default {
-  name: "Preview",
+  name: "DeskPreview",
   components: {
     ShortcutKeyList
   },
@@ -108,9 +107,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore,['setShortcutKeyList']),
     addPlan(scheme){
-      this.setShortcutKeyList(scheme)
       message.success('添加成功');
       this.openDrawer = false
       this.$emit('closePreview',false)

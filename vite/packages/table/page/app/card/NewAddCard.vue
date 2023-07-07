@@ -76,6 +76,7 @@
         <div class="ml-5 right no-drag" style="width:100%;height:90%;overflow: auto;">
           <DeskMarket :selected="searchValue" :navList="deskList[navDeskIndex].children"></DeskMarket>
         </div>
+        <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>
       </div>
     </div>
   </teleport>
@@ -92,10 +93,11 @@ import NavMenu from '../../../components/NavMenu.vue';
 import { deskStore } from '../../../store/desk'
 import { mapActions, mapWritableState } from "pinia";
 import DeskMarket from './DeskMarket.vue';
+import ShareDesk from '../../../components/desk/ShareDesk.vue';
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket },
+  components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk },
   props: ['desk'],
   data() {
     return {
@@ -114,7 +116,8 @@ export default {
          {title:'社区桌面分享',name:'desktop'}
       ],
       selectNav:{title:'小组件',name:'small'},
-      navDeskIndex: 0
+      navDeskIndex: 0,
+      openDrawer: false
     }
   },
 
@@ -217,6 +220,12 @@ export default {
       // console.log('选择下拉',event)
       this.searchValue = event
     },
+    share(){
+      this.openDrawer = true
+    },
+    closeShare(val){
+      this.openDrawer = val
+    }
   },
 }
 </script>
