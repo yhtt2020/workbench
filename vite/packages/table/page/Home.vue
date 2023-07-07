@@ -248,9 +248,22 @@
     <GuidePage ></GuidePage>
   </div>
 
-  <a-drawer v-model:visible="addDeskVisible">
-    <div class="line-title">添加桌面</div>
-    <div class="line">
+  <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面">
+    <span class="desk-title">标题</span>
+    <a-input v-model:value="newDesk.name" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+    <span class="desk-title">初始布局</span>
+    <div class="mt-6">
+      <HorizontalPanel :navList="deskList" v-model:selectType="selectDesk"></HorizontalPanel>
+    </div>
+    <div @click="doAddDesk" class="btn-item">立即添加</div>
+    <div @click="doAddDesk" class="btn-item">使用分享码添加</div>
+    <div>
+      <span class="flex items-center">
+        <span class="desk-title mr-2">热门桌面</span>
+        <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
+      </span>
+    </div>
+    <!-- <div class="line">
       <a-input v-model:value="newDesk.name" placeholder="桌面名称"></a-input>
     </div>
     <div class="line">选择初始布局：</div>
@@ -264,7 +277,7 @@
     </div>
     <div class="mt-5">
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
-    </div>
+    </div> -->
   </a-drawer>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
 </template>
@@ -548,7 +561,14 @@ export default {
           minBounceBackAngle: Math.PI / 2,
         },
       },
-      openDesk: false
+      openDesk: false,
+      deskList: [
+        {title:'日常桌面',name:'daily'},
+        {title:'游戏桌面',name:'game'},
+        {title:'办公桌面',name:'work'},
+        {title:'空白桌面',name:'empty'},
+      ],
+      selectDesk: {title:'日常桌面',name:'daily'}
     };
   },
   components: {
@@ -1068,6 +1088,32 @@ export default {
 
 .home-guide{
   background:var(--modal-bg) !important;
+}
+.desk-title{
+  font-size: 16px;
+  color: var(--primary-text);
+  font-weight: 500;
+}
+.input{
+  width: 452px;
+  height: 48px;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  color: var(--primary-text);
+  font-size: 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  margin: 21px 0 24px;
+}
+.btn-item{
+  height: 48px;
+  background: var(--secondary-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 24px 0;
+  border-radius: 12px;
+  font-size: 16px;
+  color: var(--primary-text);
 }
 </style>
 <style lang="scss">
