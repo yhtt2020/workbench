@@ -4,17 +4,18 @@ import {getConfig} from "../js/axios/serverApi";
 import dbStorage from "./dbStorage";
 import _ from 'lodash-es';
 import axios from 'axios';
+import {message} from "ant-design-vue";
+import cache from '../components/card/hooks/cache'
 
  
 const getFrameUrl = sUrl('/app/good/frame/list')  // 获取头像商品数据
 const editInfoUrl = sUrl('/app/com/updateUserInfo') // 修改文档信息
-// const uploadImgUrl = sUrl('/app/cosUpload')  // 上传图片
+
 
 //@ts-ignore
 export const frameStore = defineStore('frameStore',{
   state:()=>({
     frameData:{},
-    
   }),
 
   actions:{
@@ -25,15 +26,15 @@ export const frameStore = defineStore('frameStore',{
       }
     },
     async updateMyinfo(data){  // 修改我的信息  
-      console.log('修改我的信息>>>>',data.nickname);
-      console.log('修改我的信息>>>>',data.sex);
-      console.log('修改我的信息>>>>',data.signature);
-      // const updateMyInfoResult = await axios.post(editInfoUrl,{},await getConfig())
+      console.log('测试',data.nickname.length);
+      const updateMyInfoResult = await axios.post(editInfoUrl,data,await getConfig())
+      if(updateMyInfoResult.data.data.msg === 'ok' ){
+        message.success('修改成功')
+      }
     },
-    // async uploadMyInfoAvatar(fileName: any){
-    //   const result = await axios.post(uploadImgUrl,{file:fileName},await getConfig())
-    //   console.log('返回图片路径',result);
-    // }
+    saveAvatarUrl(){ // 将返回的图片路径进行缓存
+      this.frameData.avatar_url =  cache.get('avatar_url')
+    }
   },
 
 })

@@ -8,21 +8,25 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
 import api from '../../../src/model/api';
 import { message } from 'ant-design-vue';
+import cache from './card/hooks/cache';
+import { frameStore } from '../store/avatarFrame';
 export default {
   name:'UploadImage',
   methods:{
+    ...mapActions(frameStore,['saveAvatarUrl']),
     uplaodImageChange(info){  // info 上传文件的所有信息  
       const formData = new FormData();
       formData.append("file", info.fileList[0].originFileObj)
-      const fileName = formData.get("file")
-      api.getCosUpload({file:fileName.name},(err,data)=>{
+      api.getCosUpload(formData,(err,res)=>{
         if(!err){
-          console.log('数据获取失败',err);
           message.error('数据上传失败')
         }else{
-          console.log('数据获取成功',data.data);
+          const avatarUrl = 'http://'+ res.data.data
+          cache.set('avatar_url',avatarUrl)
+          this.saveAvatarUrl()
         }
       })
     },

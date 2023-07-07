@@ -150,7 +150,8 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(appStore,['userInfo'])
+    ...mapWritableState(appStore,['userInfo']),
+    ...mapWritableState(frameStore,['frameData'])
   },
   mounted(){
     this.gender = this.sexType[0]
@@ -212,15 +213,10 @@ export default {
         nickname:this.randomNickname,
         sex:this.gender.sex,
         signature:this.areaValue,
+        avatar:this.frameData.avatar_url
       }
       this.updateMyinfo(saveUpdateMyInfo)
-      // console.log('测试',saveUpdateMyInfo);
-      // console.log('预设头像',this.presetIndex); // 直接生效
-      // if(this.presetIndex !== ''){
-      //   // cache.set('comAvatar',this.getAvatarUrl(this.presetIndex))
-      //   // this.editPresetAvatar()
-      //   // this.updateInfoVisible = false
-      // }
+      
     },
 
   },
