@@ -42,7 +42,7 @@
               </a-col>
             </a-row>
             <div v-if="showDetail && currentTab==='info'">
-              <TeamDetail @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
+              <TeamDetail @closeTeam="closeTeam" @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
                           :teamLeader="teamLeader"></TeamDetail>
             </div>
             <div style="flex: 1;height:0" v-if="showDetail && currentTab==='barrage' ">
