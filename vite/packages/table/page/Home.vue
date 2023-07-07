@@ -176,6 +176,12 @@
           <div><span>隐藏桌面</span></div>
         </div>
       </a-col>
+      <a-col>
+        <div @click="shareDesk" class="btn">
+          <Icon style="font-size: 3em" icon="fenxiang"></Icon>
+          <div><span>分享桌面</span></div>
+        </div>
+      </a-col>
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
@@ -260,6 +266,7 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div>
   </a-drawer>
+  <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
 </template>
 
 <script>
@@ -320,6 +327,7 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import {setWallpaperColor}from "../components/card/hooks/styleSwitch/setStyle"
 import SmallRank from "../components/widgets/SmallRank.vue";
+import ShareDesk from '../components/desk/ShareDesk.vue';
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -540,6 +548,7 @@ export default {
           minBounceBackAngle: Math.PI / 2,
         },
       },
+      openDesk: false
     };
   },
   components: {
@@ -592,7 +601,8 @@ export default {
     GameStrategy,
     AddIcon,
     KeyBoard,
-    SmallRank
+    SmallRank,
+    ShareDesk
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -644,6 +654,7 @@ export default {
     },
   },
   async mounted() {
+    console.log(this.currentDesk)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
     //    password:'xyx86170060',
@@ -971,6 +982,13 @@ export default {
     }, setCustoms() {
       this.visibleAdd = false;
     },
+    shareDesk(){
+      this.openDesk = true
+      this.menuVisible = false;
+    },
+    closeShare(val){
+      this.openDesk = val
+    }
   },
   watch: {
     currentDeskIndex: {
