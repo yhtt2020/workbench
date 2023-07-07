@@ -71,12 +71,18 @@
       ref="fastNavRef"
     ></fastNav>
     <!-- 设置组件名称 -->
-    <div class="text-base" style="margin: 12px 0">图标名称</div>
-    <a-input
-      v-model:value="_titleValue"
-      placeholder="给你的图标组件取个名称吧"
-      class="xt-bg-2 xt-border input"
-    />
+    <div class="parent">
+      <div class="text-base">图标名称</div>
+      <a-switch v-model:checked="_isTitle"></a-switch>
+    </div>
+    <template v-if="_isTitle">
+      <div class="text-base" style="margin: 12px 0">设置图标名称</div>
+      <a-input
+        v-model:value="_titleValue"
+        placeholder="给你的图标组件取个名称吧"
+        class="xt-bg-2 xt-border input"
+      />
+    </template>
     <!-- 设置组件图标 -->
     <div class="text-base" style="margin: 12px 0">图标</div>
     <div class="parent" style="justify-content: start">
@@ -166,6 +172,7 @@ export default {
       backgroundColorList,
       _isRadius: this.isRadius,
       _radius: this.radius,
+      _isTitle: this.isTitle,
       _isBackground: this.isBackground,
       _backgroundColor: "",
       _titleValue: this.titleValue,
@@ -197,7 +204,36 @@ export default {
         "object-fit": this._imgState,
       };
     },
+    iconObj: {
+      immediate: true,
+      get() {
+        let iconObj = {
+          isRadius: this._isRadius,
+          radius: this._radius,
+          isBackground: this._isBackground,
+          backgroundColor: this._backgroundColor,
+          isTitle: this._isTitle,
+          titleValue: this._titleValue,
+          link: this._link,
+          linkValue: this._linkValue,
+          open: this._open,
+          size: this._size,
+          src: this._src,
+          imgState: this._imgState,
+          backgroundIndex: this._backgroundIndex,
+        };
+        // console.log("         isRadius: this._isRadius, :>> ", this._isRadius);
+        this.$emit("onIconObj", iconObj);
+        return iconObj;
+      },
+    },
   },
+  watch: {
+  iconObj: {
+    handler: () => {},
+    immediate: true,
+  },
+},
   methods: {
     imgError() {
       if (this._link === "link") {
@@ -306,20 +342,7 @@ export default {
     },
     save() {
       if (this._src.length == 0 || this._src == "") return "未上传图标";
-      return {
-        isRadius: this._isRadius,
-        radius: this._radius,
-        isBackground: this._isBackground,
-        backgroundColor: this._backgroundColor,
-        titleValue: this._titleValue,
-        link: this._link,
-        linkValue: this._linkValue,
-        open: this._open,
-        size: this._size,
-        src: this._src,
-        imgState: this._imgState,
-        backgroundIndex: this._backgroundIndex,
-      };
+      return this.iconObj;
     },
     async customClick() {
       let fileRef = this.$refs.fileRef;

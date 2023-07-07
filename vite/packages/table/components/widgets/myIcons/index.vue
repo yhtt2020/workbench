@@ -57,7 +57,7 @@
   </div>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <a-drawer
+  <!-- <a-drawer
     :width="500"
     v-if="settingVisible"
     v-model:visible="settingVisible"
@@ -65,6 +65,15 @@
     style="z-index: 99999999999"
   >
     <template #title>
+
+    </template>
+    <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
+  </a-drawer> -->
+  <EditVitew v-if="settingVisible">
+    <template #left>
+      <icon v-bind="iconObj"></icon>
+    </template>
+    <template #right>
       <div
         style="
           display: flex;
@@ -72,7 +81,14 @@
           align-items: center;
         "
       >
-        <div style="width: 50%; text-align: right">设置</div>
+        <div
+          class="xt-btn h-12 w-12"
+          style="padding: 10px; border-radius: 5px"
+          @click="settingVisible = false"
+        >
+          <Icon class="icon" icon="guanbi1"></Icon>
+        </div>
+        <div style="text-align: center">设置</div>
         <div
           style="padding: 10px; border-radius: 5px; cursor: pointer"
           class="xt-active-btn"
@@ -81,9 +97,13 @@
           保存
         </div>
       </div>
+      <edit
+        ref="editRef"
+        v-bind="customData.iconList[index]"
+        @onIconObj="getIconObj"
+      ></edit>
     </template>
-    <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
-  </a-drawer>
+  </EditVitew>
   <!-- 底部导航 -->
   <a-drawer
     v-if="menuVisible"
@@ -96,11 +116,11 @@
     <BottomEdit :menuList="menuList"></BottomEdit>
   </a-drawer>
 </template>
-
 <script>
 // components
 import Widget from "../../card/Widget.vue";
 import edit from "./components/edit.vue";
+import EditVitew from "./components/editView.vue";
 import icon from "./components/icon.vue";
 import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
@@ -136,9 +156,11 @@ export default {
     DragAndFollow,
     DroppableArea,
     BottomEdit,
+    EditVitew,
   },
   data() {
     return {
+      iconObj: "",
       menuVisible: false,
       index: 0, // 图标数组的下标
       dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
@@ -154,7 +176,7 @@ export default {
       setData.groupTitle = "分组"; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     }
-    
+
     // 绑定右键事件
     this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
       capture: true,
@@ -283,6 +305,9 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    getIconObj(data) {
+      this.iconObj = { ...data };
+    },
     // 开启框选
     dragSelection() {},
     // ctrl + 点击
@@ -462,7 +487,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.ant-drawer-body){
+:deep(.ant-drawer-body) {
   border: 22px solid red;
 }
 .icon-box {
