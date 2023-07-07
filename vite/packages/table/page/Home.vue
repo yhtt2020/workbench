@@ -674,7 +674,6 @@ export default {
     },
   },
   async mounted() {
-    console.log(this.currentDesk)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
     //    password:'xyx86170060',
