@@ -3,7 +3,7 @@ export default {
   props: {
     isRadius: { type: Boolean },
     radius: { type: Number },
-
+    isTitle:{default:true},
     titleValue: { type: String },
     link: { type: String },
     linkValue: {},
