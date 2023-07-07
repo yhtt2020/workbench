@@ -168,6 +168,21 @@ export default {
       desktopApps: [],
       dropFiles: [],
       storeApps: [
+      {
+          icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
+          name: 'AI助手',
+          summary: 'AI助手',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'ai',
+            type: 'system',
+            route: JSON.stringify({
+              name: 'ai',
+            })
+          }
+        },
         {
           icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
           name: '网页数据监控小助手',
