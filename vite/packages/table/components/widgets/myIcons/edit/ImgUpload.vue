@@ -1,6 +1,5 @@
 <template>
-  <div class="text-base" style="margin: 12px 0">图标</div>
-
+  <Title> 图标 </Title>
   <div class="parent flex" style="justify-content: start">
     <div
       class="image"
@@ -41,11 +40,9 @@
 import { validateFile } from "../../../card/hooks/imageProcessing";
 import { message } from "ant-design-vue";
 
-import editProxy from "../hooks/editProxy";
-import editProps from "../hooks/editProps";
-import editData from "../hooks/editData";
+import editConfig from "../hooks/editConfig";
 export default {
-  mixins: [editProxy,editProps,editData],
+  mixins: [editConfig],
   computed: {
     radiusStyle() {
       if (this.isRadius) return { borderRadius: this.radius + "px" };

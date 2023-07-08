@@ -1,25 +1,37 @@
 <template>
-  <Size v-model:size="_size"></Size>
-  <Name v-model:isTitle="_isTitle" v-model:titleValue="_titleValue"></Name>
-  <ImgUpload
-    v-model:src="_src"
-    :imgState="_imgState"
-    :isRadius="_isRadius"
-    :isBackground="_isBackground"
-    :radius="_radius"
-    :backgroundColor="_backgroundColor"
-  ></ImgUpload>
-  <ImgState v-model:imgState="_imgState"></ImgState>
-  <Radius v-model:isRadius="_isRadius" v-model:radius="_radius"></Radius>
-  <BgColor
-    v-model:isBackground="_isBackground"
-    v-model:backgroundColor="_backgroundColor"
-  ></BgColor>
+  <Header v-model:data="selectTab"></Header>
+  <template v-if="selectTab == 'config'">
+    <Size v-model:size="_size"></Size>
+    <Name v-model:isTitle="_isTitle" v-model:titleValue="_titleValue"></Name>
+    <Open
+      v-model:link="_link"
+      v-model:open="_open"
+      v-model:src="_src"
+      v-model:_linkValue="_linkValue"
+    ></Open>
+    <ImgUpload
+      v-model:src="_src"
+      :imgState="_imgState"
+      :isRadius="_isRadius"
+      :isBackground="_isBackground"
+      :radius="_radius"
+      :backgroundColor="_backgroundColor"
+    ></ImgUpload>
+  </template>
+  <template v-else>
+    <ImgState v-model:imgState="_imgState"></ImgState>
+    <Radius v-model:isRadius="_isRadius" v-model:radius="_radius"></Radius>
+    <BgColor
+      v-model:isBackground="_isBackground"
+      v-model:backgroundColor="_backgroundColor"
+    ></BgColor>
+  </template>
 </template>
 
 <script>
+import Header from "../edit/Header.vue";
 import Size from "../edit/Size.vue";
-
+import Open from "../edit/Open.vue";
 import Name from "../edit/Name.vue";
 import ImgUpload from "../edit/ImgUpload.vue";
 import ImgState from "../edit/ImgState.vue";
@@ -32,12 +44,19 @@ import editData from "../hooks/editData";
 export default {
   mixins: [editProxy, editProps, editData],
   components: {
+    Header,
     Size,
+    Open,
     Name,
     ImgUpload,
     ImgState,
     Radius,
     BgColor,
+  },
+  data() {
+    return {
+      selectTab: "config",
+    };
   },
   // 下面都是旧代码 后续 需要考虑重构
   computed: {

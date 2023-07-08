@@ -1,8 +1,10 @@
 <template>
-  <div class="flex justify-between items-center my-3">
-    <div class="text-base">图标圆角</div>
-    <a-switch v-model:checked="_isRadius"></a-switch>
-  </div>
+  <Title>
+    图标圆角
+    <template #right>
+      <a-switch v-model:checked="_isRadius"></a-switch>
+    </template>
+  </Title>
   <a-slider
     v-if="_isRadius"
     v-model:value="_radius"
@@ -13,11 +15,9 @@
 </template>
 
 <script>
-import editProxy from "../hooks/editProxy";
-import editProps from "../hooks/editProps";
-import editData from "../hooks/editData";
+import editConfig from "../hooks/editConfig";
 export default {
-  mixins: [editProxy,editProps,editData],
+  mixins: [editConfig],
 };
 </script>
 

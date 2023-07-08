@@ -1,4 +1,4 @@
-import { sizeList, linkList, imgStateList } from "../components/edit";
+import { sizeList, linkList, imgStateList } from "../edit/edit";
 export default {
   props: {
     isRadius: { type: Boolean },

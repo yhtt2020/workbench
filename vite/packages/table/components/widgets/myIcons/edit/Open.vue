@@ -1,5 +1,5 @@
 <template>
-  <div class="text-base" style="margin: 12px 0">链接/快捷方式</div>
+  <Title> 链接/快捷方式 </Title>
   <!-- 未选择打开方式 -->
   <div class="flex justify-between" v-if="_link == ''">
     <div
@@ -53,7 +53,7 @@
     <a-input
       v-model:value="title"
       placeholder=""
-      class="xt-bg-2 xt-border input"
+      class="xt-bg-2 xt-border h-12 rounded-xl"
       style="border: 0"
     >
       <template #suffix>
@@ -71,7 +71,7 @@
     style="display: none"
     ref="fileRef"
     type="file"
-    v-if="_link === 'nav'"
+    v-if="_link !== 'link' && _link !== 'fast'"
   />
   <fastNav
     v-if="_link != 'link' && _link != 'nav'"
@@ -83,16 +83,15 @@
 
 <script>
 import Radio from "../../../card/components/radio/index.vue";
+import FastNav from "../components/fastNav.vue";
 
-import editProxy from "../hooks/editProxy";
-import editProps from "../hooks/editProps";
-import editData from "../hooks/editData";
+import editConfig from "../hooks/editConfig";
 export default {
-  mixins: [editProxy,editProps,editData],
-  components: { Radio },
+  mixins: [editConfig],
+  components: { Radio, FastNav },
   computed: {
     title() {
-      // return this._open.name || this._linkValue.name || this._linkValue || "";
+      return this._open.name || this._linkValue.name || this._linkValue || "";
     },
   },
   methods: {
@@ -108,7 +107,6 @@ export default {
     },
     leaveInput(flag) {
       // 匹配icon放在失去焦点后在调用外部api 减少频繁请求被屏蔽
-      console.log("this._src :>> ", this._src);
       if (this._src.length === 0) {
         const url = new URL(this._open.value);
         const urlWithoutParams = url.origin;
@@ -182,6 +180,7 @@ export default {
     },
     navClick() {
       let fileRef = this.$refs.fileRef;
+
       fileRef.click();
       let that = this;
       // 用户选择执行
@@ -197,6 +196,7 @@ export default {
           value: file.path,
         };
         that._link = "nav";
+        this.value = "";
       };
     },
   },

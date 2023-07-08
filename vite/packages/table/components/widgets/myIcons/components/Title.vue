@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <div class="flex justify-between items-center text-base my-4">
+    <slot></slot>
+    <slot name="right"></slot>
+  </div>
 </template>
 
 <script>
