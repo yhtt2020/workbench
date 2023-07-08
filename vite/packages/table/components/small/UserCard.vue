@@ -1,6 +1,6 @@
 <template>
-  <div style="max-width: 100%;width: 360px" class="p-6 flex-col">
-    <div class="flex items-center mb-3">
+  <div style="max-width: 100%;width: 360px" class="flex-col">
+    <div class="flex items-center my-3 mx-3">
       <div style="width:100px;height: 100px;position:relative;">
         <img src="https://a.apps.vip/icons/frame/demon.png" class="w-full h-full object-cover" alt="">
         <a-avatar class="user-frame" :size="50" :src="displayUserInfo.avatar"></a-avatar>
@@ -16,19 +16,19 @@
       </div>
     </div>
     <div class="flex flex-col mb-4">
-      <div class="bg-mask rounded-lg py-3 px-2 m-3 mt-2 mb-2 " style="min-height: 24px;background: var(--primary-bg);color:var(--primary-text);">
+      <div class="bg-mask rounded-lg py-3 px-2 m-3 mx-5 mt-2 mb-2 " style="min-height: 24px;background: var(--primary-bg);color:var(--primary-text);">
         个性签名：
         {{ displayUserInfo.signature || '暂无签名' }}
       </div>
-      <div class="bg-mask rounded-lg p-3 m-3 mt-2 mb-0 " style="min-height: 77px;background: var(--primary-bg);color: var(--primary-text) ;">
+      <div class="bg-mask rounded-lg p-3 mx-5 m-3 mt-2 mb-0 " style="min-height: 77px;background: var(--primary-bg);color: var(--primary-text) ;">
         <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
       </div>
     </div>
     <div class="flex flex-col">
-      <div class="mb-4 pd-0 m-3 p-1 mt-0" style="color: var(--primary-text);">
+      <div class="mb-4 pd-0 m-3 p-1 mx-5 mt-0" style="color: var(--primary-text);">
         成就勋章
       </div>
-      <div class="bg-mask rounded-lg p-3 m-3 mt-0  " style="background: var(--primary-bg);color: var(--primary-text) ;">
+      <div class="bg-mask rounded-lg p-3 m-3 mx-5 mt-0  " style="background: var(--primary-bg);color: var(--primary-text) ;">
         <OnlineMedal  v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
         <Medal :medal="medal" v-for="medal in medals"></Medal>
       </div>
@@ -121,6 +121,6 @@ export default {
   position: absolute;
   top: 28%;
   left: 27%;
-  z-index: -10;
+  z-index: 0;
 }
 </style>
