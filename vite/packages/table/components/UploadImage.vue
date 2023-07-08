@@ -1,4 +1,5 @@
 <template>
+  <!-- 图片上传组件 -->
   <a-upload :style="size" class="pointer" 
    @change="uplaodImageChange" :before-upload="beforeUpload" 
    :show-upload-list="false"
