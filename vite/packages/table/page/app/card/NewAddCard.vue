@@ -74,7 +74,9 @@
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
         <NavMenu :list="deskList" :currenIndex="navDeskIndex" @changeNav="updateDeskIndex" />
         <div class="ml-5 right no-drag" style="width:100%;height:90%;overflow: auto;">
-          <DeskMarket :selected="searchValue" :navList="deskList[navDeskIndex].children"></DeskMarket>
+          <DeskMarket :selected="searchValue" :navList="deskList[navDeskIndex].children" @openPerview="openPerview"></DeskMarket>
+          <!-- 预览 -->
+          <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
         </div>
         <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>
       </div>
@@ -94,10 +96,11 @@ import { deskStore } from '../../../store/desk'
 import { mapActions, mapWritableState } from "pinia";
 import DeskMarket from './DeskMarket.vue';
 import ShareDesk from '../../../components/desk/ShareDesk.vue';
+import DeskPreview from '../../../components/desk/DeskPreview.vue';
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk },
+  components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
   props: ['desk'],
   data() {
     return {
@@ -117,7 +120,9 @@ export default {
       ],
       selectNav:{title:'小组件',name:'small'},
       navDeskIndex: 0,
-      openDrawer: false
+      openDrawer: false,
+      scheme: {},
+      showModal: false
     }
   },
 
@@ -225,6 +230,13 @@ export default {
     },
     closeShare(val){
       this.openDrawer = val
+    },
+    openPerview({scheme,showModal}){
+      this.scheme = scheme
+      this.showModal = showModal
+    },
+    closePreview(){
+      this.showModal = false
     }
   },
 }

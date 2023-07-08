@@ -250,18 +250,22 @@
 
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面">
     <span class="desk-title">标题</span>
-    <a-input v-model:value="newDesk.name" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+    <a-input v-model:value="deskTitle" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
     <span class="desk-title">初始布局</span>
     <div class="mt-6">
-      <HorizontalPanel :navList="deskList" v-model:selectType="selectDesk"></HorizontalPanel>
+      <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
     </div>
     <div @click="doAddDesk" class="btn-item">立即添加</div>
     <div @click="doAddDesk" class="btn-item">使用分享码添加</div>
-    <div>
+    <div class="flex justify-between">
       <span class="flex items-center">
         <span class="desk-title mr-2">热门桌面</span>
         <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
       </span>
+      <div class="btn-item" style="width:160px;">更多桌面分享</div>
+    </div>
+    <div>
+      <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
     </div>
     <!-- <div class="line">
       <a-input v-model:value="newDesk.name" placeholder="桌面名称"></a-input>
@@ -279,6 +283,7 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div> -->
   </a-drawer>
+  <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
 </template>
 
@@ -341,6 +346,9 @@ import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import {setWallpaperColor}from "../components/card/hooks/styleSwitch/setStyle"
 import SmallRank from "../components/widgets/SmallRank.vue";
 import ShareDesk from '../components/desk/ShareDesk.vue';
+import DeskMarket from "./app/card/DeskMarket.vue";
+import { deskStore } from "../store/desk";
+import DeskPreview from '../components/desk/DeskPreview.vue';
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -562,13 +570,17 @@ export default {
         },
       },
       openDesk: false,
-      deskList: [
+      deskType: [
         {title:'日常桌面',name:'daily'},
         {title:'游戏桌面',name:'game'},
         {title:'办公桌面',name:'work'},
         {title:'空白桌面',name:'empty'},
       ],
-      selectDesk: {title:'日常桌面',name:'daily'}
+      selectDesk: {title:'日常桌面',name:'daily'},
+      deskTitle: '',
+      hotDesk: [],
+      scheme: {},
+      showModal: false
     };
   },
   components: {
@@ -622,7 +634,9 @@ export default {
     AddIcon,
     KeyBoard,
     SmallRank,
-    ShareDesk
+    ShareDesk,
+    DeskMarket,
+    DeskPreview
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -644,6 +658,7 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
+    ...mapWritableState(deskStore, ['deskList']),
     desksList() {
       return this.desks.map((desk) => {
         return {
@@ -798,6 +813,7 @@ export default {
         this.customComponents = [];
       }
     }
+    this.hotDesk.push(this.deskList[0].children[0])
   },
   created() {
     if (this.currentDesk.cards.length) {
@@ -901,25 +917,36 @@ export default {
       this.addDeskVisible = true;
     },
     doAddDesk() {
-      if (this.newDesk.name.trim() === "") {
+      if (this.deskTitle.trim() === "") {
         message.error("请输入新桌面名称");
         return;
       }
-      if (this.newDesk.name.length >= 16) {
+      if (this.deskTitle.length >= 16) {
         message.error("新桌面名称长度不可超过16");
         return;
       }
-
+      // if (this.newDesk.name.trim() === "") {
+      //   message.error("请输入新桌面名称");
+      //   return;
+      // }
+      // if (this.newDesk.name.length >= 16) {
+      //   message.error("新桌面名称长度不可超过16");
+      //   return;
+      // }
       this.addDesk(
-        this.newDesk.name,
-        this.cleanMuuriData(deskTemplate[this.newDesk.template])
+        this.deskTitle,
+        this.cleanMuuriData(deskTemplate[this.selectDesk.name])
+        // this.newDesk.name,
+        // this.cleanMuuriData(deskTemplate[this.newDesk.template])
       );
       this.switchToDesk(this.desks.length - 1);
-      this.newDesk = {
-        name: "",
-        template: "daily",
-        data: {},
-      };
+      this.deskTitle = ''
+      this.selectDesk = {title:'日常桌面',name:'daily'}
+      // this.newDesk = {
+      //   name: "",
+      //   template: "daily",
+      //   data: {},
+      // };
       this.key = Date.now();
       this.addDeskVisible = false;
     },
@@ -1004,6 +1031,13 @@ export default {
     shareDesk(){
       this.openDesk = true
       this.menuVisible = false;
+    },
+    openPerview({scheme,showModal}){
+      this.scheme = scheme
+      this.showModal = showModal
+    },
+    closePreview(){
+      this.showModal = false
     },
     closeShare(val){
       this.openDesk = val
@@ -1113,6 +1147,7 @@ export default {
   border-radius: 12px;
   font-size: 16px;
   color: var(--primary-text);
+  cursor: pointer;
 }
 </style>
 <style lang="scss">

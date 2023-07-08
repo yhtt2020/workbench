@@ -2,10 +2,10 @@
   <!-- 方案列表 -->
   <div class="flex flex-row" style="height: 100%">
     <div class="item-content">
-      <div v-for="item in navLists" :key="item.id" class="pointer recommend" @click="previewKay(item)">
+      <div v-for="item in navLists" :key="item.id" class="pointer recommend" :style="deskItemStyle" @click="previewKay(item)">
         <div class="xt-mask" style="padding: 14px;">
           <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-          <img style="width:328px;height:185px;object-fit: cover;" :src="item.deskImg" />
+          <img style="width:100%;height:100%;object-fit: cover;" :src="item.deskImg" />
         </div>
         <div style="padding: 0 14px 14px">
           <div class="title">{{ item.title }}</div>
@@ -37,23 +37,23 @@
     </div>
   </div>
   <!-- 预览 -->
-  <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+  <!-- <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview> -->
 </template>
 
 <script>
 import { appStore } from '../../../store';
 import { mapActions, mapWritableState } from "pinia";
-import DeskPreview from '../../../components/desk/DeskPreview.vue';
+// import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
-  name: "MarketList",
+  name: "DeskMarket",
   components: {
     DeskPreview
   },
   data() {
     return {
       navLists: [],
-      // 快捷方案
-      scheme: {},
+      // 方案
+      // scheme: {},
       // 预览
       showModal: false,
       // 添加
@@ -63,12 +63,17 @@ export default {
   props: {
     //排序列表
     navList: {
-      type: Object,
-      default: {},
+      type: Array,
+      default: () => [],
     },
     //下拉框选中的类型
     selected: {
-      type: String
+      type: String,
+      default: () => ''
+    },
+    deskItemStyle: {
+      type: String,
+      default: () => ''
     }
   },
   watch: {
@@ -103,11 +108,12 @@ export default {
       })
     },
     previewKay(item){
-      this.scheme = item
-      this.showModal = true
+      this.$emit('openPerview',{scheme: item,showModal: true})
+      // this.scheme = item
+      // this.showModal = true
     },
     closePreview(){
-      this.showModal = false
+      // this.showModal = false
     }
   }
 }
