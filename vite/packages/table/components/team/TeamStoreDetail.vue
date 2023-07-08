@@ -75,10 +75,35 @@
   </div>
 
   <!-- 收款码付费弹窗组件 -->
-  <!-- <CollectionCodeModal ref="payRef" :needPayAvatar="needPayAvatar"></CollectionCodeModal> -->
+  <a-modal v-model:visible="payVisible" :footer="null" :width="480"  :closable="false"
+  :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
+  >
+    <div class="w-full flex items-center mb-6" v-if="isPay === false">
+      <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">
+        收银台
+      </div>
+      <div class="w-12 flex items-center justify-center h-12 rounded-lg active-button pointer" @click="payVisible = false" style="color: var(--secondary-text);background: var(--secondary-bg);">
+        <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
+      </div>
+    </div>
+    <CollectionCodeModal :needPayAvatar="needPayAvatar"></CollectionCodeModal> 
+  </a-modal>
 
   <!-- 积分付费弹窗组件 -->
-  <PointPayment ref="pointRef" :needPayAvatar="needPayAvatar"></PointPayment>
+  <a-modal v-model:visible="pointVisible" :footer="null" :width="480"  :closable="false"
+  :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
+  >
+   <div class="flex mb-6">
+    <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">收银台</div>
+    <div class="w-12 h-12 flex items-center pointer justify-center rounded-lg active-button" style="color: var(--secondary-text);background: var(--secondary-bg);"
+     @click="pointVisible = false" 
+    >
+      <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
+    </div>
+   </div>
+   <PointPayment :needPayAvatar="needPayAvatar"></PointPayment>
+  </a-modal>
+  <!--  -->
 
   <!-- 赠送弹窗组件 -->
   <GiftModal ref="giftRef" :needPayAvatar="needPayAvatar" :memberDevoteDisplay="memberDevoteDisplay"></GiftModal>
@@ -123,6 +148,9 @@ export default {
       },
       needPayAvatar:{},  // 接收需要付费的头像框数据
       simpleImage: '/img/state/null.png', // 数据空状态
+      payVisible:false, // 头像框收款码
+      pointVisible:false, // 头像框积分兑换
+      isPay:false,
     }
   },
   computed:{
@@ -204,7 +232,7 @@ export default {
     },
 
     buyNow(item){  // 点击价格购买逻辑 
-      this.$refs.payRef.openPayModal()
+      this.payVisible = true
       this.needPayAvatar.name = item.summary
       this.needPayAvatar.url = item.cover
       this.needPayAvatar.price = this.getFramePrice(item)
@@ -212,7 +240,7 @@ export default {
 
     
     scorePay(item){   // 点击积分兑换回调事件  
-      this.$refs.pointRef.openPointModal()
+      this.pointVisible = true
       this.needPayAvatar.url = item.cover
       this.needPayAvatar.name = item.summary
     },
@@ -254,5 +282,15 @@ export default {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+.active-button{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
 }
 </style>

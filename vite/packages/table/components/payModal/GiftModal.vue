@@ -96,24 +96,24 @@
         </div>
       </div>
       <template v-if="billingWay === 0">
-        <div class="flex flex-col px-7">
+        <div class="flex flex-col px-7 mb-4">
           <div class="flex items-center rounded-lg p-4" style="background: var(--secondary-bg);">
             <span class="secondary-title">赠送给:</span>
             <a-avatar class="mx-5" :size="32" :src="uid.url"></a-avatar>
             <span class="gift-name">{{uid.name}}</span>
           </div>
         </div>
-
+        <CollectionCodeModal :needPayAvatar="needPayAvatar"></CollectionCodeModal>
       </template>
       <template v-else>
-        <div class="flex flex-col px-7">
+        <div class="flex flex-col px-7 mb-4">
           <div class="flex items-center rounded-lg p-4" style="background: var(--secondary-bg);">
             <span class="secondary-title">赠送给:</span>
             <a-avatar class="mx-5" :size="32" :src="uid.url"></a-avatar>
             <span class="gift-name">{{uid.name}}</span>
           </div>
         </div>
-        
+        <PointPayment :needPayAvatar="needPayAvatar"></PointPayment>
       </template>
     </template>
   </a-modal>
@@ -121,11 +121,14 @@
 
 <script>
 import UserAvatar from '../small/UserAvatar.vue'
-
+import CollectionCodeModal from './CollectionCodeModal.vue'
+import PointPayment from './PointPayment.vue'
 export default {
   name:'GiftModal',
   components:{
     UserAvatar,
+    CollectionCodeModal,
+    PointPayment
   },
   props:{
     needPayAvatar:{

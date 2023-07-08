@@ -1,16 +1,5 @@
 <template>
-  <a-modal v-model:visible="pointVisible" :footer="null" :width="480"  :closable="false"
-  :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
-  >
-   <div class="flex mb-6">
-    <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">收银台</div>
-    <div class="w-12 h-12 flex items-center pointer justify-center rounded-lg active-button" style="color: var(--secondary-text);background: var(--secondary-bg);"
-     @click="pointVisible = false" 
-    >
-      <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
-    </div>
-   </div>
-   <div class="px-7 flex flex-col">
+  <div class="px-7 mb-10 flex flex-col">
     <div class="h-24 flex justify-between mb-4 items-center rounded-xl p-4" style="color:var(--primary-text);background:var(--secondary-bg);">
       <div class="flex">
         <div style="width:64px;height:64px;" class="flex items-center justify-center">
@@ -37,9 +26,7 @@
     >
       积分不足
     </a-button>
-   </div>
-   
-  </a-modal>
+  </div>
 </template>
 
 <script>
@@ -53,14 +40,10 @@ export default {
   },
   data(){
     return{
-      pointVisible:false,
       isEnough:true, // 判断积分是否足够
     }
   },
   methods:{
-    openPointModal(){
-      this.pointVisible = true
-    },
     // 积分足够的情况下的回调事件
     integralEnough(){},
     // 积分不足的情况下回调事件
