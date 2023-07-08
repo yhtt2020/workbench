@@ -157,6 +157,7 @@ export default {
     this.gender = this.sexType[0]
     if(this.userInfo){
      this.randomNickname = this.userInfo.nickname
+     this.areaValue = this.userInfo.signature
     }
   },
   methods:{
