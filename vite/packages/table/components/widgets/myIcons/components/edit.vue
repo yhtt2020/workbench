@@ -1,209 +1,46 @@
 <template>
-  <div class="xt-container">
-    <Radio v-model:data="_size" :list="sizeList" :marginR="10"></Radio>
-    <div class="text-base" style="margin: 12px 0">
-      链接/快捷方式 以http/https开头
-    </div>
-    <!-- 未选择打开方式 -->
-    <div class="link-box" v-if="_link == ''">
-      <div class="xt-bg-2 xt-text xt-hover" @click="_link = 'link'">
-        网页链接
-      </div>
-      <div class="xt-bg-2 xt-text xt-hover" @click="fastClick()">快捷方式</div>
-      <div class="xt-bg-2 xt-text xt-hover" @click="customClick()">
-        应用导航
-      </div>
-    </div>
-    <!-- 链接方式 -->
-    <template v-else-if="_link === 'link'">
-      <a-input
-        @blur="leaveInput()"
-        v-model:value="_open.value"
-        placeholder=""
-        class="xt-bg-2 xt-border input"
-      >
-        <template #suffix>
-          <div
-            style="border-radius: 50%; padding: 5px"
-            class="xt-bg-2 flex justify-center items-center xt-hover cursor-pointer"
-            @click="clear()"
-          >
-            <Icon class="icon xt-text no-drag" icon="guanbi"></Icon>
-          </div>
-        </template>
-      </a-input>
-      <Radio
-        :list="linkList"
-        v-model:data="_open.type"
-        :marginR="12"
-        text="选择打开的浏览器"
-      ></Radio>
-    </template>
-    <!-- 快捷和应用 -->
-    <template v-else>
-      <a-input
-        v-model:value="title"
-        placeholder=""
-        class="xt-bg-2 xt-border input"
-        style="border: 0"
-      >
-        <template #suffix>
-          <div
-            style="border-radius: 50%; padding: 5px; cursor: pointer"
-            class="xt-bg-2 flex justify-center items-center xt-hover"
-            @click="clear()"
-          >
-            <Icon class="icon xt-text no-drag" icon="guanbi"></Icon>
-          </div>
-        </template>
-      </a-input>
-    </template>
-    <input
-      style="display: none"
-      ref="fileRef"
-      type="file"
-      v-if="_link != 'link' && _link != 'fast'"
-    />
-    <fastNav
-      v-if="_link != 'link' && _link != 'nav'"
-      style="z-index: 999999999999999"
-      @returnApp="returnApp"
-      ref="fastNavRef"
-    ></fastNav>
-    <!-- 设置组件名称 -->
-    <div class="parent">
-      <div class="text-base">图标名称</div>
-      <a-switch v-model:checked="_isTitle"></a-switch>
-    </div>
-    <template v-if="_isTitle">
-      <div class="text-base" style="margin: 12px 0">设置图标名称</div>
-      <a-input
-        v-model:value="_titleValue"
-        placeholder="给你的图标组件取个名称吧"
-        class="xt-bg-2 xt-border input"
-      />
-    </template>
-    <!-- 设置组件图标 -->
-    <div class="text-base" style="margin: 12px 0">图标</div>
-    <div class="parent" style="justify-content: start">
-      <div
-        class="image"
-        :style="[backgroundState]"
-        :class="{ active: _src.length == 0 }"
-      >
-        <img
-          :src="_src"
-          v-if="_src"
-          :style="[radiusState, imgStateStyle]"
-          style="width: 100%; height: 100%"
-          @error="imgError"
-        />
-        <div
-          style="border-radius: 50%; padding: 5px; cursor: pointer"
-          class="xt-bg-2 flex justify-center items-center xt-hover clear"
-          @click="this._src = ''"
-        >
-          <Icon class="icon xt-text no-drag" icon="guanbi"></Icon>
-        </div>
-      </div>
-      <div class="img-info">
-        <div class="xt-text-2" style="font-size: 16px">
-          推荐图片尺寸：128*128，不能超过2MB
-        </div>
-        <input
-          style="display: none"
-          ref="imgRef"
-          type="file"
-          accept="image/jpg,image/jpeg,image/png"
-        />
-        <div @click="upIcon()" class="btn no-drag xt-bg-2">自定义上传</div>
-      </div>
-    </div>
-    <Radio
-      v-model:data="_imgState"
-      :list="imgStateList"
-      text="设置图片显示状态"
-    ></Radio>
-
-    <!-- 设置组件圆角 -->
-    <div class="parent">
-      <div class="text-base">图标圆角</div>
-      <a-switch v-model:checked="_isRadius"></a-switch>
-    </div>
-    <a-slider
-      v-if="_isRadius"
-      v-model:value="_radius"
-      :max="50"
-      :step="1"
-      class="no-drag"
-    />
-    <!-- 设置图标背景 -->
-    <div class="parent">
-      <div class="text-base">图标背景</div>
-      <a-switch v-model:checked="_isBackground"></a-switch>
-    </div>
-    <template v-if="_isBackground">
-      <Color v-model:color="_backgroundColor"></Color>
-    </template>
-  </div>
+  <Size v-model:size="_size"></Size>
+  <Name v-model:isTitle="_isTitle" v-model:titleValue="_titleValue"></Name>
+  <ImgUpload
+    v-model:src="_src"
+    :imgState="_imgState"
+    :isRadius="_isRadius"
+    :isBackground="_isBackground"
+    :radius="_radius"
+    :backgroundColor="_backgroundColor"
+  ></ImgUpload>
+  <ImgState v-model:imgState="_imgState"></ImgState>
+  <Radius v-model:isRadius="_isRadius" v-model:radius="_radius"></Radius>
+  <BgColor
+    v-model:isBackground="_isBackground"
+    v-model:backgroundColor="_backgroundColor"
+  ></BgColor>
 </template>
 
 <script>
-import Color from "../../../card/components/color/index.vue";
-import fastNav from "./fastNav.vue";
-import Radio from "../../../card/components/radio/index.vue";
-import { validateFile } from "../../../card/hooks/imageProcessing";
-import props from "../hooks/props";
-import { sizeList, linkList, imgStateList, backgroundColorList } from "./edit";
-import { message } from "ant-design-vue";
+import Size from "../edit/Size.vue";
+
+import Name from "../edit/Name.vue";
+import ImgUpload from "../edit/ImgUpload.vue";
+import ImgState from "../edit/ImgState.vue";
+import Radius from "../edit/Radius.vue";
+import BgColor from "../edit/BgColor.vue";
+
+import editProxy from "../hooks/editProxy";
+import editProps from "../hooks/editProps";
+import editData from "../hooks/editData";
 export default {
-  components: { fastNav, Radio, Color },
-  mixins: [props],
-  mounted() {
-    // 为了兼容旧版本
-    if (this.backgroundColor == null) this._backgroundColor = "";
-    else this._backgroundColor = this.backgroundColor;
+  mixins: [editProxy, editProps, editData],
+  components: {
+    Size,
+    Name,
+    ImgUpload,
+    ImgState,
+    Radius,
+    BgColor,
   },
-  data() {
-    return {
-      sizeList,
-      linkList,
-      imgStateList,
-      backgroundColorList,
-      _isRadius: this.isRadius,
-      _radius: this.radius,
-      _isTitle: this.isTitle,
-      _isBackground: this.isBackground,
-      _backgroundColor: "",
-      _titleValue: this.titleValue,
-      _link: this.link,
-      _linkValue: this.linkValue,
-      _size: this.size,
-      _open: { ...this.open },
-      _src: this.src,
-      _imgState: this.imgState,
-      _backgroundIndex: this.backgroundIndex,
-    };
-  },
+  // 下面都是旧代码 后续 需要考虑重构
   computed: {
-    title() {
-      return this._open.name || this._linkValue.name || this._linkValue || "";
-    },
-    backgroundState() {
-      if (this._isBackground) {
-        if (this._backgroundColor === null) this.backgroundClick(1);
-        return { background: this._backgroundColor };
-      } else return { background: "none" };
-    },
-    radiusState() {
-      if (this._isRadius) return { borderRadius: this._radius + "px" };
-      else return { borderRadius: "0px" };
-    },
-    imgStateStyle() {
-      return {
-        "object-fit": this._imgState,
-      };
-    },
     iconObj: {
       immediate: true,
       get() {
@@ -222,18 +59,17 @@ export default {
           imgState: this._imgState,
           backgroundIndex: this._backgroundIndex,
         };
-        // console.log("         isRadius: this._isRadius, :>> ", this._isRadius);
         this.$emit("onIconObj", iconObj);
         return iconObj;
       },
     },
   },
   watch: {
-  iconObj: {
-    handler: () => {},
-    immediate: true,
+    iconObj: {
+      handler: () => {},
+      immediate: true,
+    },
   },
-},
   methods: {
     imgError() {
       if (this._link === "link") {
@@ -247,219 +83,21 @@ export default {
       if (this._src.length === 0) {
         const url = new URL(this._open.value);
         const urlWithoutParams = url.origin;
-        this._src = urlWithoutParams + "/favicon.ico";
         if (flag == undefined) {
           this._src = urlWithoutParams + "/favicon.ico";
-          console.log("1 :>> ", this._src);
         } else {
           this._src =
             `https://www.svlik.com/t/favicon/ico.php?` + urlWithoutParams;
-          console.log("2 :>> ", this._src);
         }
-        // if (flag == undefined) {
-        //   // 这个api比下面的好用很多
-        //   this._src = `https://www.svlik.com/t/favicon/ico.php?` + result;
-        //   console.log("1 :>> ", this._src);
-        // } else {
-        //   console.log("2 :>> ", 2);
-        //   this._src =
-        //     `http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=` + result;
-        // }
       }
     },
-    backgroundClick(index) {
-      this._backgroundColor = this.backgroundColorList[`${"color" + index}`];
-      this._backgroundIndex = index;
-    },
-    clear() {
-      this._linkValue = "";
-      this._link = "";
-      this._open = { value: "", type: "internal" };
-    },
-    async upIcon() {
-      let imgRef = this.$refs.imgRef;
-      imgRef.click();
-      let that = this;
-      imgRef.onchange = async function (event) {
-        if (this.files.length === 0) return;
-        const file = this.files[0];
-        let validate = validateFile(file, 2);
-        if (validate !== true) return message.error(validate);
 
-        that._src = file.path;
-        event.target.value = "";
-      };
-    },
-    // 获取app信息
-    returnApp(item) {
-      this._open.name = item.name;
-      // 当图片状态为空时
-      if (!this._src) {
-        if (item.icon) {
-          this._src = item.icon;
-        }
-      }
-      // 当标题状态为空时
-      if (this._titleValue == "") {
-        if (item.name) this._titleValue = item.name;
-      }
-      if (item.type === "lightApp") {
-        // 轻应用数据
-        this._open = {
-          type: "lightApp",
-          value: item.package,
-          name: item.name,
-        };
-        item = this._open;
-      } else if (item.type === "coolApp") {
-        // 酷应用数据
-        this._open = {
-          type: "coolApp",
-          value: item.data,
-          name: item.name,
-        };
-        item = this._open;
-      } else if (item.type === "tableApp") {
-        // 本地应用数据
-        this._open = {
-          type: "tableApp",
-          value: item.path,
-          name: item.name,
-        };
-        item = this._open;
-      }
-      //  else if (item.type === "systemApp") {
-      //   // 本地应用数据
-      //   this._open = {
-      //     type: "systemApp",
-      //     value: item.event,
-      //     name: item.name,
-      //   };
-      //   item = this._open;
-      // }
-      this._linkValue = item;
-      this._link = "fast";
-    },
     save() {
       if (this._src.length == 0 || this._src == "") return "未上传图标";
       return this.iconObj;
-    },
-    async customClick() {
-      let fileRef = this.$refs.fileRef;
-      fileRef.click();
-      let that = this;
-      // 用户选择执行
-      fileRef.onchange = async function (event) {
-        if (this.files.length === 0) {
-          this.clear();
-          return;
-        }
-        const file = this.files[0];
-        that._open = {
-          type: "tableApp",
-          name: file.name,
-          value: file.path,
-        };
-        that._link = "nav";
-      };
-    },
-    fastClick() {
-      this.$nextTick(() => {
-        this.$refs.fastNavRef.showFastNav();
-      });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.text-base {
-  font-weight: 500;
-  font-family: PingFangSC-Medium;
-}
-
-.parent {
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  margin: 20px 0;
-
-  .btn {
-    cursor: pointer;
-    width: 120px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    border-radius: 12px;
-  }
-
-  .img-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-
-  .image {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    margin-right: 20px;
-
-    .clear {
-      position: absolute;
-      top: -10px;
-      right: -10px;
-    }
-  }
-}
-
-.item-box {
-  display: flex;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-  margin-left: 2px;
-
-  .item {
-    width: 56px;
-    height: 56px;
-    opacity: 0.65;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 9px;
-  }
-}
-
-.link-box {
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    width: 142px;
-    height: 48px;
-    cursor: pointer;
-    border-radius: 12px;
-    text-align: center;
-    line-height: 48px;
-  }
-}
-
-.input {
-  border-radius: 12px;
-  height: 48px;
-  border: 0;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-}
-
-.active {
-  border: 2px solid var(--active-bg);
-}
-</style>
+<style lang="scss" scoped></style>

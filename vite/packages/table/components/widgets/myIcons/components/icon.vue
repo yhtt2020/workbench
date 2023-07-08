@@ -27,10 +27,10 @@
 
 <script>
 import { message } from "ant-design-vue";
-import myProps from "../hooks/props";
+import editProps from "../hooks/editProps";
 
 export default {
-  mixins: [myProps],
+  mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
     index: { type: Number },
