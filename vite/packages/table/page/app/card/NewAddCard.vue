@@ -101,7 +101,16 @@ import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
   name: 'AddCard',
   components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
-  props: ['desk'],
+  props: {
+    desk: {
+      type: Object,
+      default: () => {}
+    },
+    panelIndex: {
+      type: Number,
+      default: () => 0
+    },
+  },
   data() {
     return {
       navIndex: 1,
@@ -165,6 +174,11 @@ export default {
       } else
         return item
     })
+    if(this.panelIndex === 1){
+      this.selectNav = this.navType[this.panelIndex]
+    }else{
+      this.selectNav = this.navType[0]
+    }
   },
   computed: {
     ...mapWritableState(deskStore, ['deskList']),

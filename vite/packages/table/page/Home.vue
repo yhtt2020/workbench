@@ -101,7 +101,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="visibleAdd">
-      <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk"></NewAddCard>
+      <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk" :panelIndex="panelIndex"></NewAddCard>
     </div>
   </transition>
 
@@ -268,7 +268,7 @@
           <span class="desk-title mr-2">热门桌面</span>
           <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
         </span>
-        <div class="btn-item" style="width:160px;">更多桌面分享</div>
+        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
       </div>
       <div>
         <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
@@ -593,7 +593,8 @@ export default {
       scheme: {},
       showModal: false,
       deskCode: '',
-      shareCode: false
+      shareCode: false,
+      panelIndex: 0
     };
   },
   components: {
@@ -1017,6 +1018,7 @@ export default {
       this.menuVisible = false;
     },
     newAddCard() {
+      this.panelIndex = 0
       this.visibleAdd = true;
       this.menuVisible = false;
     },
@@ -1054,7 +1056,12 @@ export default {
     },
     closeShare(val){
       this.openDesk = val
-    }
+    },
+    moreDesk() {
+      this.panelIndex = 1
+      this.visibleAdd = true;
+      this.addDeskVisible = false;
+    },
   },
   watch: {
     currentDeskIndex: {
