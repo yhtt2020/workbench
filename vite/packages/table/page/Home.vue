@@ -248,24 +248,35 @@
     <GuidePage ></GuidePage>
   </div>
 
-  <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面">
-    <span class="desk-title">标题</span>
-    <a-input v-model:value="deskTitle" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
-    <span class="desk-title">初始布局</span>
-    <div class="mt-6">
-      <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
+  <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
+    <template #extra v-if="shareCode">
+      <a-space>
+        <div class="btn-item xt-active-bg" style="width:120px;margin:0;">立即添加</div>
+      </a-space>
+    </template>
+    <div v-if="!shareCode">
+      <span class="desk-title">标题</span>
+      <a-input v-model:value="deskTitle" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+      <span class="desk-title">初始布局</span>
+      <div class="mt-6">
+        <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
+      </div>
+      <div @click="doAddDesk" class="btn-item">立即添加</div>
+      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
+      <div class="flex justify-between">
+        <span class="flex items-center">
+          <span class="desk-title mr-2">热门桌面</span>
+          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
+        </span>
+        <div class="btn-item" style="width:160px;">更多桌面分享</div>
+      </div>
+      <div>
+        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
+      </div>
     </div>
-    <div @click="doAddDesk" class="btn-item">立即添加</div>
-    <div @click="doAddDesk" class="btn-item">使用分享码添加</div>
-    <div class="flex justify-between">
-      <span class="flex items-center">
-        <span class="desk-title mr-2">热门桌面</span>
-        <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
-      </span>
-      <div class="btn-item" style="width:160px;">更多桌面分享</div>
-    </div>
-    <div>
-      <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
+    <div v-else>
+      <span class="desk-title">分享码</span>
+      <a-input v-model:value="deskCode" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
     </div>
     <!-- <div class="line">
       <a-input v-model:value="newDesk.name" placeholder="桌面名称"></a-input>
@@ -580,7 +591,9 @@ export default {
       deskTitle: '',
       hotDesk: [],
       scheme: {},
-      showModal: false
+      showModal: false,
+      deskCode: '',
+      shareCode: false
     };
   },
   components: {

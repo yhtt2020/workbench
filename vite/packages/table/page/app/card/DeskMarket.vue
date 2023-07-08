@@ -47,7 +47,7 @@ import { mapActions, mapWritableState } from "pinia";
 export default {
   name: "DeskMarket",
   components: {
-    DeskPreview
+    // DeskPreview
   },
   data() {
     return {
