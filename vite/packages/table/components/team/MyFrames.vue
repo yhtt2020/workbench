@@ -1,6 +1,6 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {avatarBgColor, avatarTagColor, textTag, titleTagColor} from "../../js/common/avatar";
+import {avatarBgColor, avatarGainMethodText, avatarTagColor, textTag, titleTagColor} from "../../js/common/avatar";
 import {mapActions} from "pinia";
 import {frameStore} from "../../store/avatarFrame";
 
@@ -26,7 +26,6 @@ export default defineComponent({
 
           return {
             ...itemOwner.item,
-            frame: itemOwner.item.detail
           }
         })
         console.log(this.frameList)
@@ -35,8 +34,9 @@ export default defineComponent({
     })
   },
   methods: {
+    avatarGainMethodText,
     ...mapActions(frameStore, ['getMyFrames']),
-    avatarTagColor, textTag, titleTagColor, avatarBgColor,
+    avatarTagColor, textTag, titleTagColor, avatarBgColor,avatarGainMethodText
   }
 })
 </script>
@@ -44,20 +44,20 @@ export default defineComponent({
 <template>
   <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         style="height: 68%;">
-    <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
+    <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item.detail.rarity)">
       <div class="avatar-top flex mb-4">
         <div style="width: 100px;height: 100px;">
           <img :src="item.image" class="w-full h-full object-fill" alt="">
         </div>
         <div class="flex flex-col justify-center ml-4">
-              <span class="avatar-font" :style="titleTagColor(item)">
+              <span class="avatar-font" :style="titleTagColor(item.detail.rarity)">
                 {{ item.alias }}
               </span>
-          <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item)">
-                {{ textTag(item) }}
+          <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item.detail.rarity)">
+                {{ textTag(item.detail.rarity) }}
               </span>
           <span class="get-way-font">
-                获得途径：商店购买、日常签到
+                获得途径：{{ avatarGainMethodText(item.detail.gainMethod) }}
               </span>
         </div>
       </div>
