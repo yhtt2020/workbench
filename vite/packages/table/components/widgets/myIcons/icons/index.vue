@@ -88,6 +88,7 @@ export default {
 }
 
 .item-list {
+  margin: 0 10px;
   width: 114px;
   height: 96px;
   display: flex;

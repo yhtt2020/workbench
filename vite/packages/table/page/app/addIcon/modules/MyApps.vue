@@ -1,7 +1,8 @@
 <template>
   <!-- 空置状态 -->
   <div
-    class="w-full h-full flex flex-col justify-center items-center w h"
+    class="w-full h-full flex flex-col justify-center items-center"
+    :style="[heightStyle, widthStyle]"
     v-if="myApps.length === 0"
   >
     <CardState :bg="false" state="null" :zoom="26" :text="{ null: '暂无应用' }">
@@ -29,6 +30,7 @@ import { appsStore } from "../../../../store/apps";
 import { mapWritableState } from "pinia";
 export default {
   mixins: [syncSelected],
+  inject: ["width", "height"],
   components: {
     CardState,
   },
@@ -39,6 +41,16 @@ export default {
   },
   computed: {
     ...mapWritableState(appsStore, ["myApps"]),
+    heightStyle() {
+      return {
+        height: this.height() + "px",
+      };
+    },
+    widthStyle() {
+      return {
+        width: this.width() + "px",
+      };
+    },
   },
   mounted() {
     let data = [];

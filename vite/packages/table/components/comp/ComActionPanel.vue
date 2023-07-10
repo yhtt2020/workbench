@@ -41,58 +41,60 @@
 
   <Modal v-model:visible="updateInfoVisible"  v-show="updateInfoVisible"  :blurFlag="true" style="z-index: 5000;">
     <div class="flex flex-col items-center myinfo-container justify-between w-full p-3">
-      <div class="flex justify-between items-center w-full h-12 mb-3">
-        <div class="flex items-center update-title justify-center" style="width:95%;">
-          我的信息
+      <vue-custom-scrollbar :settings="settingsScroller" style="height: 90vh;">
+        <div class="flex justify-between items-center w-full h-12 mb-3">
+          <div class="flex items-center update-title justify-center" style="width:95%;">
+            我的信息
+          </div>
+          <div class="w-12 h-12 flex items-center com-button pointer justify-center rounded-lg" 
+            style="background: var(--secondary-bg);"
+            @click="updateInfoVisible = false"
+          >
+           <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
+          </div>
         </div>
-        <div class="w-12 h-12 flex items-center com-button pointer justify-center rounded-lg" 
-          style="background: var(--secondary-bg);"
-          @click="updateInfoVisible = false"
-        >
-         <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
-        </div>
-      </div>
-      <div class="flex w-full justify-between px-5">
-        <div class="w-1/2 flex flex-col">
-          <span class="update-title mb-6">昵称</span>
-          <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-6" style="border: 1px solid var(--divider);">
-            <a-input v-model:value="randomNickname" placeholder="请输入" :bordered="false" style="padding: 0;width:90%;"></a-input>
-            <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
-              <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
+        <div class="flex w-full justify-between px-5">
+          <div class="w-1/2 flex flex-col">
+            <span class="update-title mb-6">昵称</span>
+            <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-6" style="border: 1px solid var(--divider);">
+              <a-input v-model:value="randomNickname" placeholder="请输入" :bordered="false" style="padding: 0;width:90%;"></a-input>
+              <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
+                <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
+              </div>
+            </div>
+            <span class="update-title mb-6">头像</span>
+            <div class="flex w-full mx-1.5 flex-wrap justify-between">
+              <!-- avatar-box该类名通过自己定义需要的大小以及样式 -->
+              <UploadImage class="avatar-box rounded-lg"></UploadImage>  
+              <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3"
+               :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)"
+              >
+                <a-avatar :size="48" :src="getAvatarUrl(item.id)"></a-avatar>
+              </div>
             </div>
           </div>
-          <span class="update-title mb-6">头像</span>
-          <div class="flex w-full mx-1.5 flex-wrap justify-between">
-            <!-- avatar-box该类名通过自己定义需要的大小以及样式 -->
-            <UploadImage class="avatar-box rounded-lg"></UploadImage>  
-            <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3"
-             :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)"
-            >
-              <a-avatar :size="48" :src="getAvatarUrl(item.id)"></a-avatar>
+          <a-divider type="vertical" class="mx-6"  style="height:404px;background: var(--divider);"/>
+          <div class="w-1/2 flex flex-col">
+            <span class="update-title mb-5">个性签名</span>
+            <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;"/>
+            <span class="update-title mb-6">性别</span>
+            <HorizontalPanel :navList="sexType" v-model:selectType="gender"></HorizontalPanel>
+            <div class="my-16 flex mx-auto">
+              <span class="com-title" style="color: var(--secondary-text);">更多个人信息编辑、账号设置等，请前往</span>
+              <span class="go-com pl-2 pointer"  @click="go('https://s.apps.vip/user/info')" >元社区</span>
             </div>
           </div>
         </div>
-        <a-divider type="vertical" class="mx-6"  style="height:404px;background: var(--divider);"/>
-        <div class="w-1/2 flex flex-col">
-          <span class="update-title mb-5">个性签名</span>
-          <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;"/>
-          <span class="update-title mb-6">性别</span>
-          <HorizontalPanel :navList="sexType" v-model:selectType="gender"></HorizontalPanel>
-          <div class="my-16 flex mx-auto">
-            <span class="com-title" style="color: var(--secondary-text);">更多个人信息编辑、账号设置等，请前往</span>
-            <span class="go-com pl-2 pointer"  @click="go('https://s.apps.vip/user/info')" >元社区</span>
-          </div>
+        <div class="flex w-full items-center justify-center mt-6" >
+          <a-button type="primary" class="h-48 rounded-xl mr-3" @click="updateInfoVisible = false"
+           style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
+            稍后设置
+          </a-button>
+          <a-button type="primary" class="h-48 rounded-xl" style="width:120px;color: var(--active-text);" @click="comSave">
+            保存
+          </a-button>
         </div>
-      </div>
-      <div class="flex items-center justify-center mt-6"  style="width: 480px;">
-        <a-button type="primary" class="h-48 rounded-xl mr-3" @click="updateInfoVisible = false"
-         style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
-          稍后设置
-        </a-button>
-        <a-button type="primary" class="h-48 rounded-xl" style="width:120px;color: var(--active-text);" @click="comSave">
-          保存
-        </a-button>
-      </div>
+      </vue-custom-scrollbar>
     </div>
   </Modal>
 </template>
