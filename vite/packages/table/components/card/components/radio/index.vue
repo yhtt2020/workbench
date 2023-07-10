@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="text" class="text-base" style="margin: 12px 0">{{ text }}</div>
+    <div v-if="text" class="text-base my-3">{{ text }}</div>
     <a-radio-group
       class=""
       v-model:value="select"
@@ -74,7 +74,7 @@ export default {
     },
     marginY: {
       type: Number,
-      default: 12,
+      default: 0,
     },
     fontSize: {
       type: Number,
