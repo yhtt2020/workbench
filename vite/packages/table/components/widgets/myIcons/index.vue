@@ -57,41 +57,12 @@
   </div>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <EditView v-if="settingVisible">
-    <template #left>
-      <icon v-bind="iconObj"></icon>
-    </template>
-    <template #right>
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <div
-          class="xt-btn h-12 w-12"
-          style="padding: 10px; border-radius: 5px"
-          @click="settingVisible = false"
-        >
-          <Icon class="icon" icon="guanbi1"></Icon>
-        </div>
-        <div style="text-align: center">设置</div>
-        <div
-          style="padding: 10px; border-radius: 5px; cursor: pointer"
-          class="xt-active-btn"
-          @click="save()"
-        >
-          保存
-        </div>
-      </div>
-      <edit
-        ref="editRef"
-        v-bind="customData.iconList[index]"
-        @onIconObj="getIconObj"
-      ></edit>
-    </template>
-  </EditView>
+  <Edit
+    v-if="settingVisible"
+    @close="settingVisible = false"
+    @save="save()"
+  >
+  </Edit>
   <!-- 底部导航 -->
   <a-drawer
     v-if="menuVisible"
@@ -107,8 +78,7 @@
 <script>
 // components
 import Widget from "../../card/Widget.vue";
-import edit from "./components/edit.vue";
-import EditView from "./components/editView.vue";
+import Edit from "./edit/index.vue";
 import icon from "./components/icon.vue";
 import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
@@ -121,7 +91,7 @@ import { myIcons } from "../../../store/myIcons.ts";
 // import { formatArrayAsFileSize } from './hooks/useFileSize.js';
 
 import { message } from "ant-design-vue";
-
+import _ from "lodash-es";
 export default {
   props: {
     customIndex: {
@@ -138,13 +108,12 @@ export default {
   },
   components: {
     Widget,
-    edit,
+    Edit,
     icons,
     icon,
     DragAndFollow,
     DroppableArea,
     BottomEdit,
-    EditView,
   },
   data() {
     return {
@@ -192,6 +161,7 @@ export default {
       "iconList",
       "iconsRefs",
       "iconSelect",
+      "edit",
     ]),
     dragStyle() {
       if (this.isSelect) {
@@ -230,6 +200,11 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
+            this.edit = _.cloneDeep(this.customData.iconList[this.index]);
+            this.edit = {
+              ...this.edit,
+              imgShape: "square",
+            };
             this.menuVisible = false;
             this.index = 0;
             this.settingVisible = true;
@@ -358,6 +333,7 @@ export default {
     editIcons(index) {
       this.index = index;
       this.settingVisible = true;
+      this.edit = this.customData.iconList[index];
     },
     // 全屏拖拽添加图标
     dragAddIcon(icon) {
@@ -462,10 +438,9 @@ export default {
     },
     // 保存图标
     save() {
-      let editOption = this.$refs.editRef.save(); // 获取编辑组件的最新数据
-      if (typeof editOption === "string") return message.error(editOption);
-      Object.keys(editOption).forEach(
-        (k) => (this.customData.iconList[this.index][k] = editOption[k])
+      if (this.edit.src.length === 0) return message.error("图标不能为空");
+      Object.keys(this.edit).forEach(
+        (k) => (this.customData.iconList[this.index][k] = this.edit[k])
       );
       message.success("保存成功");
       this.settingVisible = false;

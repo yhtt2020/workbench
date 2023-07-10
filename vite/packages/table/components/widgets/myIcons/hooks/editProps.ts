@@ -1,4 +1,4 @@
-import { sizeList, linkList, imgStateList } from "../edit/edit";
+import { sizeList, linkList, imgStateList } from "../edit/hooks/config";
 export default {
   props: {
     isRadius: { type: Boolean },
@@ -21,6 +21,7 @@ export default {
       type: String,
       default: imgStateList[0].value,
     },
+    imgShape: { default: "square" },
     isBackground: { type: Boolean },
     backgroundColor: { type: String, default: "" },
     backgroundIndex: { type: Number },

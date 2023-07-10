@@ -50,6 +50,7 @@ export default {
       else return { background: "none" };
     },
     iconSize() {
+      console.log('this.imgShape :>> ', this.imgShape);
       return this.getSizeValues(this.size).iconSize;
     },
     textSize() {
@@ -63,64 +64,101 @@ export default {
         "object-fit": this.imgState,
       };
     },
+
+  },
+  watch: {
+    imgShape(newV) {
+      console.log("123 :>> ", 123);
+    },
   },
   methods: {
     getSizeValues(size) {
       if (this.isReSize) {
         size = "mini";
       }
-
       const sizeValues = {
         mini: {
           w: 134,
           h: 96,
-          imgW: 66,
-          imgH: 56,
-          ratio: 1,
+          square: {
+            imgW: 66,
+            imgH: 66,
+          },
+          rectangle: {
+            imgW: 124,
+            imgH: 66,
+          },
         },
         mini1: {
           w: 280,
           h: 96,
-          imgW: 270,
-          imgH: 66,
-          ratio: 1,
+          square: {
+            imgW: 66,
+            imgH: 66,
+          },
+          rectangle: {
+            imgW: 270,
+            imgH: 66,
+          },
         },
         small: {
           w: 280,
           h: 205,
-          imgW: 270,
-          imgH: 175,
-          ratio: 2,
+          square: {
+            imgW: 175,
+            imgH: 175,
+          },
+          rectangle: {
+            imgW: 270,
+            imgH: 175,
+          },
         },
         default: {
           w: 280,
           h: 420,
-          imgW: 270,
-          imgH: 390,
-          ratio: 2,
+          square: {
+            imgW: 270,
+            imgH: 270,
+          },
+          rectangle: {
+            imgW: 270,
+            imgH: 390,
+          },
         },
         long: {
           w: 570,
           h: 205,
-          imgW: 560,
-          imgH: 175,
-          ratio: 2,
+          square: {
+            imgW: 175,
+            imgH: 175,
+          },
+          rectangle: {
+            imgW: 560,
+            imgH: 175,
+          },
         },
         big: {
           w: 570,
           h: 420,
-          imgW: 560,
-          imgH: 390,
-          ratio: 2,
+          square: {
+            imgW: 390,
+            imgH: 390,
+          },
+          rectangle: {
+            imgW: 560,
+            imgH: 390,
+          },
         },
       };
 
-      let { w, h, imgW, imgH, ratio } = sizeValues[size];
-
+      let { w, h } = sizeValues[size];
+      let imgW = sizeValues[size][this.imgShape].imgW;
+      let imgH = sizeValues[size][this.imgShape].imgH;
       h = this.isTitle ? h - 20 : h;
-      imgH = this.isTitle ? imgH : imgH + 20;
+      if (this.imgShape !== "square") {
+        imgH = this.isTitle ? imgH : imgH + 20;
+      }
       return {
-        ratio: ratio,
         iconSize: {
           width: `${w}px`,
           height: `${h}px`,
