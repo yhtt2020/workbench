@@ -22,14 +22,14 @@
           </div>
           <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
             <a-button type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center"
-             @click="buyNow(item)" style="color: var(--active-text);height: 44px;" 
+             @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
              :style="getFrameScore(item) ? {width:'104px'}:{width:'50%'}"
             >
               ￥ {{ getFramePrice(item) }}
             </a-button>
-            <a-button type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center" 
+            <a-button type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
              @click="scorePay(item)" v-if="getFrameScore(item)"  style="color: var(--active-text);height: 44px;"
-             
+
             >
               {{ getFrameScore(item) }}积分
             </a-button>
@@ -90,13 +90,16 @@
           <div class="flex flex-col justify-center ml-4">
             <span class="avatar-font" style="color: var(--primary-text);">{{ needPayAvatar.name }}</span>
             <span class="avatar-font" style="color: var(--primary-text);">道具</span>
+            <span class="avatar-font" style="color: var(--primary-text);">
+              <template v-if="gettingOrder">正在生成订单…</template>
+              <template v-else>订单号：{{currentOrder.nanoid}}</template></span>
           </div>
         </div>
         <HorzontanlPanelIcon :navList="payMethod" v-model:selectType="payWeixin" style="background: var(--secondary-bg);!important"></HorzontanlPanelIcon>
         <template v-if="payWeixin.type === 'wechat'">
           <div class="flex my-8 px-1">
             <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
-              <img src="/img/game.png" class="w-full h-full object-cover" alt="">
+              <a-avatar shape="square" :src="qrCode.wechat" class="w-full h-full object-cover" alt=""></a-avatar>
             </div>
             <div class="flex flex-col ml-8 justify-center">
               <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
@@ -106,11 +109,14 @@
               </div>
             </div>
           </div>
-        </template> 
+        </template>
         <template v-else>
           <div class="flex my-8 px-1">
             <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
-              <img src="/img/game.png" class="w-full h-full object-cover" alt="">
+              <div v-if="qrCode.alipay" style="background: white;padding: 10px;" class="w-full h-full rounded-sm">
+                <iframe style="border: none;background: transparent;width: 120px;height: 120px;overflow: hidden;transform: scale(1.3);margin-left: 30px;margin-top: 30px" scrolling="no" class=" object-cover" id="alipayCode"></iframe>
+              </div>
+              <a-avatar v-else shape="square"  class="w-full h-full object-cover" alt=""></a-avatar>
             </div>
             <div class="flex flex-col ml-8 justify-center">
               <span class="mb-2 avatar-price avatar-font">￥{{ needPayAvatar.price }}</span>
@@ -171,7 +177,7 @@
     <a-button type="primary" v-if="isEnough" style="border-radius: 12px; margin-right: 0;height: 48px; width: 400px;color: var(--active-text);" @click="immediateExchange">
       立即兑换
     </a-button>
-    <a-button v-else  disabled style="border:none;border-radius: 12px; height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);" 
+    <a-button v-else  disabled style="border:none;border-radius: 12px; height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);"
      @click="immediateExchange"
     >
       积分不足
@@ -199,7 +205,7 @@
       <div class="flex flex-col mx-10 pb-10">
         <span class="avatar-font mb-4" style="color: var(--primary-text);">选择购买方式</span>
         <div class="flex flex-col">
-          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-xl" 
+          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-xl"
            style="background: var(--secondary-bg);"
            @click="pricePay"
           >
@@ -209,7 +215,7 @@
               <Icon icon="xiangyou" style="font-size: 0.4765em;color: var(--primary-text);"></Icon>
             </div>
           </div>
-          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-xl" 
+          <div class="w-full px-6 flex pointer active-button justify-between py-5 mb-4 rounded-xl"
            style="background: var(--secondary-bg);"
            @click="pricePay"
           >
@@ -222,7 +228,7 @@
         </div>
       </div>
     </template>
-   
+
     <!-- 赠送支付方式 -->
     <template v-else>
       <div class="w-full h-full flex-col flex pb-10 pt-4 px-3" >
@@ -320,6 +326,7 @@ import {appStore} from "../../store";
 import {frameStore} from '../../store/avatarFrame'
 import {teamStore} from "../../store/team";
 import _ from 'lodash-es'
+import { message } from 'ant-design-vue'
 
 export default {
   components:{
@@ -358,6 +365,13 @@ export default {
       teamIndex:'', // 队友选中下标
       payShow:false, // 选中需要赠送的人界面
 
+      currentOrder:{},//当前订单信息
+      qrCode:{//二维码
+        wechat:'',
+        alipay:''
+      },
+      gettingOrder:true,//正在确认订单
+
     }
   },
   computed:{
@@ -393,6 +407,11 @@ export default {
     'payWeixin':{
       handler(){
         this.payWeixin = this.payWeixin
+        if(this.payWeixin==='wechat'){
+          this.getWechat()
+        }else{
+          this.getAlipay()
+        }
       },
       immediate:true,
     }
@@ -401,35 +420,35 @@ export default {
     this.getFrameGoods()
   },
   methods:{
-    ...mapActions(frameStore,['getFrameGoods']),
+    ...mapActions(frameStore,['getFrameGoods','ensureOrder','getQrcode']),
 
-    avatarBgColor(item){ // 根据不同头像框级别匹配头像框背景色  
+    avatarBgColor(item){ // 根据不同头像框级别匹配头像框背景色
       const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return {
         background: index.bg_color
       }
     },
 
-    avatarTagColor(item){  // 根据不同头像框级别区分头像框字体色  
+    avatarTagColor(item){  // 根据不同头像框级别区分头像框字体色
       const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return {
         background:index.avatar_color,
       }
     },
 
-    textTag(item){  // 获取头像框级别分类   
+    textTag(item){  // 获取头像框级别分类
       const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return index.avatar_tag
     },
 
-    titleTagColor(item){  // 获取头像框名称颜色  
+    titleTagColor(item){  // 获取头像框名称颜色
       const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
       return {
         color:index.avatar_color,
       }
     },
-    
-    getFramePrice(item){  // 根据价格类型获取数据   
+
+    getFramePrice(item){  // 根据价格类型获取数据
       const money = _.find(item.prices,function(o){ return o.type === 'money' })
       if(money !== undefined){
         return money.price
@@ -443,12 +462,63 @@ export default {
       }
     },
 
+    getFramePriceOrigin(item){
+     return _.find(item.prices,function(o){ return o.type === 'money' })
+    },
+
     // 点击价格购买逻辑
     buyNow(item){
       this.payVisible = true // 打开支付弹窗
       this.needPayAvatar.name = item.summary
       this.needPayAvatar.url = item.cover
       this.needPayAvatar.price = this.getFramePrice(item)
+      this.gettingOrder=true
+      this.ensureOrder(item.dataNanoid,this.getFramePriceOrigin(item).nanoid).then((rs)=>{
+        this.gettingOrder=false
+        if(rs.status){
+            this.currentOrder=rs.data
+
+
+          this.getWechat()
+
+          return
+        }
+
+        message.error('生成订单失败，请稍后再试。')
+      })
+    },
+    getWechat(){
+      this.qrCode.wechat = ''
+      this.getQrcode(this.currentOrder.nanoid, 'wechat').then((rs) => {
+        console.log('微信二维码返回', rs)
+        if (rs.status) {
+          this.qrCode.wechat = rs.data.qrCode
+          return
+        }
+        message.error('获取订单二维码失败，请稍后再试。')
+        return
+      })
+    },
+    getAlipay(){
+      this.qrCode.alipay = ''
+      this.getQrcode(this.currentOrder.nanoid, 'alipay').then((rs) => {
+        console.log('微信二维码返回', rs)
+        if (rs.status) {
+          this.qrCode.alipay = rs.data.qrCode
+          this.$nextTick(()=>{
+           let  alipay=document.getElementById('alipayCode')
+            if(alipay){
+              let iframedoc= alipay.contentDocument || alipay.contentWindow.document
+              iframedoc.body.innerHTML=this.qrCode.alipay
+             iframedoc.forms['alipaysubmit'].submit();
+            }
+          })
+
+          return
+        }
+        message.error('获取订单二维码失败，请稍后再试。')
+        return
+      })
     },
     // 点击积分兑换回调事件
     scorePay(item){
