@@ -319,6 +319,8 @@ import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
+import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
+
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -591,7 +593,8 @@ export default {
     GameStrategy,
     AddIcon,
     KeyBoard,
-    SmallRank
+    SmallRank,
+    AggregateSearch
   },
   computed: {
     ...mapWritableState(cardStore, [
