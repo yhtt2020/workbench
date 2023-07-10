@@ -48,29 +48,7 @@
       </vue-custom-scrollbar>
     </template>
     <template v-else>
-      <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 68%;">
-        <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item)">
-          <div class="avatar-top flex mb-4">
-            <div style="width: 100px;height: 100px;">
-              <img :src="item.cover" class="w-full h-full object-fill" alt="">
-            </div>
-            <div class="flex flex-col justify-center ml-4" >
-              <span class="avatar-font" :style="titleTagColor(item)">
-                {{item.alias}}
-              </span>
-              <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item)">
-                {{  textTag(item) }}
-              </span>
-              <span class="get-way-font">
-                获得途径：商店购买、日常签到
-              </span>
-            </div>
-          </div>
-          <a-button type="primary" class="rounded-xl h-12 w-full" style="margin-right: 0;color: var(--active-text);">
-            使用
-          </a-button>
-        </div>
-      </vue-custom-scrollbar>
+     <MyFrames></MyFrames>
     </template>
   </div>
 
@@ -123,10 +101,13 @@ import {frameStore} from '../../store/avatarFrame'
 import {teamStore} from "../../store/team";
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
+import MyFrames from './MyFrames.vue'
+import { avatarBgColor, avatarTagColor, textTag, titleTagColor } from '../../js/common/avatar'
 
 
 export default {
   components:{
+    MyFrames,
     HorizontalPanel,
     HorzontanlPanelIcon,
     CollectionCodeModal,
@@ -138,7 +119,7 @@ export default {
     return{
       avatarList:[    // 头像框是否购买的状态
         {title:'商店(开发中)',name:'shop_store'},
-        {title:'已购（开发中）',name:'have_bought'}
+        {title:'拥有',name:'have_bought'}
       ],
       listItem:{title:'商店',name:'shop_store'}, // 默认显示头像框未购买界面
       settingsScroller: {
@@ -148,8 +129,8 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      pointVisible:false, // 默认关闭头像框积分兑换窗口
       payVisible:false, // 默认关闭头像框购买弹窗
-      pointsVisible:false, // 默认关闭头像框积分兑换窗口
       giftVisible:false, // 默认关闭赠送弹窗
       giftShow:false, // 点击赠送头像框默认方式
       needPayAvatar:{},  // 接收需要付费的头像框数据
@@ -199,33 +180,7 @@ export default {
   },
   methods:{
     ...mapActions(frameStore,['getFrameGoods','ensureOrder']),
-
-    avatarBgColor(item){ // 根据不同头像框级别匹配头像框背景色
-      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
-      return {
-        background: index.bg_color
-      }
-    },
-
-    avatarTagColor(item){  // 根据不同头像框级别区分头像框字体色
-      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
-      return {
-        background:index.avatar_color,
-      }
-    },
-
-    textTag(item){  // 获取头像框级别分类
-      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
-      return index.avatar_tag
-    },
-
-    titleTagColor(item){  // 获取头像框名称颜色
-      const index = _.find(rarityColor,function(o){ return o.id === item.frame.rarity})
-      return {
-        color:index.avatar_color,
-      }
-    },
-
+    avatarTagColor,textTag,titleTagColor,avatarBgColor,
     getFramePrice(item){  // 根据价格类型获取数据
       const money = _.find(item.prices,function(o){ return o.type === 'money' })
       if(money !== undefined){
