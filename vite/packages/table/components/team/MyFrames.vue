@@ -42,7 +42,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+  <div v-if="frameList.length===0">
+    <a-empty style="margin-top:40%" image="/img/test/load-ail.png" description="暂无可用头像框" />
+  </div>
+  <vue-custom-scrollbar v-else @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         style="height: 68%;">
     <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item.detail.rarity)">
       <div class="avatar-top flex mb-4">
