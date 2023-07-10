@@ -40,7 +40,7 @@ export const linkList = [
   },
 ];
 
-export const imgSteteList = [
+export const imgStateList = [
   {
     value: "cover",
     name: "覆盖",

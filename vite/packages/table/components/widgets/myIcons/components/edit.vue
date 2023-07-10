@@ -121,7 +121,7 @@
     </div>
     <Radio
       v-model:data="_imgState"
-      :list="imgSteteList"
+      :list="imgStateList"
       text="设置图片显示状态"
     ></Radio>
 
@@ -154,7 +154,7 @@ import fastNav from "./fastNav.vue";
 import Radio from "../../../card/components/radio/index.vue";
 import { validateFile } from "../../../card/hooks/imageProcessing";
 import props from "../hooks/props";
-import { sizeList, linkList, imgSteteList, backgroundColorList } from "./edit";
+import { sizeList, linkList, imgStateList, backgroundColorList } from "./edit";
 import { message } from "ant-design-vue";
 export default {
   components: { fastNav, Radio, Color },
@@ -168,7 +168,7 @@ export default {
     return {
       sizeList,
       linkList,
-      imgSteteList,
+      imgStateList,
       backgroundColorList,
       _isRadius: this.isRadius,
       _radius: this.radius,

@@ -57,19 +57,7 @@
   </div>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <!-- <a-drawer
-    :width="500"
-    v-if="settingVisible"
-    v-model:visible="settingVisible"
-    placement="right"
-    style="z-index: 99999999999"
-  >
-    <template #title>
-
-    </template>
-    <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
-  </a-drawer> -->
-  <EditVitew v-if="settingVisible">
+  <EditView v-if="settingVisible">
     <template #left>
       <icon v-bind="iconObj"></icon>
     </template>
@@ -103,7 +91,7 @@
         @onIconObj="getIconObj"
       ></edit>
     </template>
-  </EditVitew>
+  </EditView>
   <!-- 底部导航 -->
   <a-drawer
     v-if="menuVisible"
@@ -120,7 +108,7 @@
 // components
 import Widget from "../../card/Widget.vue";
 import edit from "./components/edit.vue";
-import EditVitew from "./components/editView.vue";
+import EditView from "./components/editView.vue";
 import icon from "./components/icon.vue";
 import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
@@ -156,7 +144,7 @@ export default {
     DragAndFollow,
     DroppableArea,
     BottomEdit,
-    EditVitew,
+    EditView,
   },
   data() {
     return {

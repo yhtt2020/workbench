@@ -166,7 +166,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 99999;
+  z-index: 9999;
   background-repeat: no-repeat;
   display: flex;
   justify-content: center;
@@ -187,12 +187,12 @@ export default {
   left: 50%;
   width: 638px;
   height: 490px !important;
-  z-index: 9999999;
+  z-index: 10000;
   box-shadow: 0px 0px 10.23px 0px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   box-sizing: border-box;
   padding: 10px;
-  z-index: 999999;
+  z-index: 19900;
 
   .title {
     height: 48px;
