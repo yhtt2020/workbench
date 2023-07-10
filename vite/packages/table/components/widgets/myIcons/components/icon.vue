@@ -38,7 +38,10 @@ export default {
   computed: {
     // 动态切换圆角状态
     radiusState() {
-      if (this.isRadius) return { borderRadius: this.radius + "px" };
+      if (this.isRadius)
+        return {
+          borderRadius: this.radius + "%",
+        };
       else return { borderRadius: "0px" };
     },
     // 动态切换背景状态
@@ -69,48 +72,55 @@ export default {
 
       const sizeValues = {
         mini: {
-          w: 110,
+          w: 134,
           h: 96,
-          imgW: 100,
-          imgH: 66,
+          imgW: 66,
+          imgH: 56,
+          ratio: 1,
         },
         mini1: {
           w: 280,
           h: 96,
           imgW: 270,
           imgH: 66,
+          ratio: 1,
         },
         small: {
           w: 280,
           h: 205,
           imgW: 270,
           imgH: 175,
+          ratio: 2,
         },
         default: {
           w: 280,
           h: 420,
           imgW: 270,
           imgH: 390,
+          ratio: 2,
         },
         long: {
           w: 570,
           h: 205,
           imgW: 560,
           imgH: 175,
+          ratio: 2,
         },
         big: {
           w: 570,
           h: 420,
           imgW: 560,
           imgH: 390,
+          ratio: 2,
         },
       };
 
-      let { w, h, imgW, imgH } = sizeValues[size];
+      let { w, h, imgW, imgH, ratio } = sizeValues[size];
 
-      h = this.isTitle ? h - 20 : h + 20;
-      imgH = this.isTitle ? imgH : imgH + 40;
+      h = this.isTitle ? h - 20 : h;
+      imgH = this.isTitle ? imgH : imgH + 20;
       return {
+        ratio: ratio,
         iconSize: {
           width: `${w}px`,
           height: `${h}px`,
