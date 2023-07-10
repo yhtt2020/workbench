@@ -57,11 +57,7 @@
   </div>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Edit
-    v-if="settingVisible"
-    @close="settingVisible = false"
-    @save="save()"
-  >
+  <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit>
   <!-- 底部导航 -->
   <a-drawer
@@ -200,14 +196,7 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.edit = _.cloneDeep(this.customData.iconList[this.index]);
-            this.edit = {
-              ...this.edit,
-              imgShape: "square",
-            };
-            this.menuVisible = false;
-            this.index = 0;
-            this.settingVisible = true;
+            this.openEdit();
           },
         },
         {
@@ -268,8 +257,15 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-    getIconObj(data) {
-      this.iconObj = { ...data };
+    openEdit() {
+      let icon = this.customData.iconList[this.index];
+      this.edit = {};
+      Object.keys(this.iconOption).forEach((k) => {
+        this.edit[k] = icon[k] || this.iconOption[k];
+      });
+      this.menuVisible = false;
+      // this.index = 0;
+      this.settingVisible = true;
     },
     // 开启框选
     dragSelection() {},
@@ -334,6 +330,7 @@ export default {
       this.index = index;
       this.settingVisible = true;
       this.edit = this.customData.iconList[index];
+      // this.openEdit();
     },
     // 全屏拖拽添加图标
     dragAddIcon(icon) {

@@ -50,7 +50,6 @@ export default {
       else return { background: "none" };
     },
     iconSize() {
-      console.log('this.imgShape :>> ', this.imgShape);
       return this.getSizeValues(this.size).iconSize;
     },
     textSize() {
@@ -68,7 +67,6 @@ export default {
   },
   watch: {
     imgShape(newV) {
-      console.log("123 :>> ", 123);
     },
   },
   methods: {
