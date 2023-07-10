@@ -1,6 +1,6 @@
 <template>
   <Tab
-    class="h-12"
+    style="height: 52px"
     boxClass="p-1 xt-bg-2"
     v-model:data="selectTab"
     v-model:list="tabList"
@@ -17,11 +17,11 @@ export default {
       selectTab: "config",
       tabList: [
         {
-          name: "图标配置",
+          name: "配置",
           value: "config",
         },
         {
-          name: "图标样式",
+          name: "样式",
           value: "style",
         },
       ],

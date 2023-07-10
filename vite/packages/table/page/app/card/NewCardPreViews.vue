@@ -206,7 +206,6 @@ export default {
     addCardAchieve(item, i) {
       // 添加图标前处理
       if (item.name == "myIcons") {
-        console.log("this.iconConfig :>> ", this.iconOption);
         this.edit = _.cloneDeep(this.iconOption);
         this.settingVisible = true;
         return;

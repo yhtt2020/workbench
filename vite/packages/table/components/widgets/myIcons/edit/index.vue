@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      class="h-full w-full xt-mask-2 fixed top-0 left-0 flex"
+      class="h-full w-full xt-mask fixed top-0 left-0 flex"
       style="z-index: 99990"
     >
       <div

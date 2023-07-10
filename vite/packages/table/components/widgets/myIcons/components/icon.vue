@@ -8,6 +8,7 @@
       :data-index="index"
     >
       <img
+      v-if="src.length > 0"
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"

@@ -1,12 +1,12 @@
 <template>
   <Header v-model:data="selectTab"></Header>
   <template v-if="selectTab == 'config'">
-    <Size></Size>
     <Name></Name>
     <Open></Open>
     <ImgUpload></ImgUpload>
   </template>
   <template v-else>
+    <Size></Size>
     <ImgRadius></ImgRadius>
     <ImgShape></ImgShape>
     <ImgState></ImgState>

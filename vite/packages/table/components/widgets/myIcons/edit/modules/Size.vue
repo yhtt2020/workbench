@@ -1,5 +1,5 @@
 <template>
-  <Title> 组件大小 </Title>
+  <Title> 图标大小 </Title>
   <Radio v-model:data="edit.size" :list="sizeList" text=""></Radio>
 </template>
 
