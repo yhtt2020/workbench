@@ -26,21 +26,24 @@
             </a-button>
           </div>
           <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
-            <a-button type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center"
+            <a-button v-if="!item.owned" type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center"
                       @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
-                      :style="getFrameScore(item) ? {width:'104px'}:{width:'50%'}"
+                      :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
               ￥ {{ getFramePrice(item) }}
             </a-button>
-            <a-button type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
+            <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center" style="width: 100%">
+              已有
+            </a-button>
+            <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
                       @click="scorePay(item)" v-if="getFrameScore(item)" style="color: var(--active-text);height: 44px;"
 
             >
               {{ getFrameScore(item) }}积分
             </a-button>
-            <a-button type="primary" class="rounded-xl" @click="teamGift(item)"
+            <a-button hidden="" type="primary" class="rounded-xl" @click="teamGift(item)"
                       style="height: 44px;color: var(--active-text);"
-                      :style="getFrameScore(item) ? {width:'104px'}:{width:'50%'}"
+                      :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'50%'}"
             >
               赠送
             </a-button>
@@ -159,6 +162,7 @@ export default {
     frameList () {
       const data = this.frameData.list
       const list = _.filter(data, function (o) { return o.frame.gainMethod !== 'rank' })
+      console.log(list)
       return list
     },
     memberDevoteDisplay () {
