@@ -1,4 +1,4 @@
-import { sizeList, linkList, imgSteteList } from "../components/edit";
+import { sizeList, linkList, imgStateList } from "../components/edit";
 export default {
   props: {
     isRadius: { type: Boolean },
@@ -19,7 +19,7 @@ export default {
     src: { type: String },
     imgState: {
       type: String,
-      default: imgSteteList[0].value,
+      default: imgStateList[0].value,
     },
     isBackground: { type: Boolean },
     backgroundColor: { type: String },
