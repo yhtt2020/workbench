@@ -42,21 +42,22 @@ export const linkList = [
 
 export const imgSteteList = [
   {
+    value: "contain",
+    name: "适应居中",
+  },
+  {
     value: "cover",
-    name: "覆盖",
+    name: "居中裁剪",
   },
   {
     value: "fill",
-    name: "填充",
+    name: "拉伸填充",
   },
   {
     value: "scale-down",
-    name: "缩小",
+    name: "自动",
   },
-  {
-    value: "contain",
-    name: "包含",
-  },
+
 ];
 export const backgroundColorList = {
   color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
