@@ -64,7 +64,7 @@ export default {
     ...mapWritableState(teamStore,['team'])
   },
   methods: {
-    ...mapActions(teamStore, ['create']),
+    ...mapActions(teamStore, ['create','updateMy']),
     async doCreate () {
       if (this.avatar.trim() === '') {
         message.error('必须选择一个头像')
@@ -89,7 +89,10 @@ export default {
               content: '小队创建成功。',
               centered:true
             })
-            this.$emit('created')
+            this.updateMy().then(()=>{
+              this.$emit('created')
+            })
+
           }else{
             Modal.error({
               content:rs.data.info,

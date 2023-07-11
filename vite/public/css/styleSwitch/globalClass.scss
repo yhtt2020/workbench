@@ -1,31 +1,3 @@
-
-// 一些二次封装的类
-.xt-active-btn {
-  background: var(--active-bg) !important;
-  color: var(--active-text) !important;
-  fill: var(--active-text) !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  cursor: pointer;
-  &:active {
-    background: var(--active-secondary-bg) !important;
-  }
-}
-.xt-border {
-  border: 1px solid var(--divider);
-}
-.xt-btn {
-  background: var(--secondary-bg);
-  color: var(--primary-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
 body {
   background: var(--main-bg) !important;
 }
