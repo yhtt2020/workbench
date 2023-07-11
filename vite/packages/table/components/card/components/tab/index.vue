@@ -19,7 +19,7 @@
       @click="valueData = item[value]"
     >
       <Icon v-if="item[icon]" class="icon" :icon="item.icon"></Icon>
-      {{ item.name }}
+      <div v-if="showName">{{ item.name }}</div>
     </div>
   </div>
 </template>
@@ -77,6 +77,9 @@ export default {
         }
         return val;
       },
+    },
+    showName: {
+      default: true,
     },
     data: {
       type: String,
