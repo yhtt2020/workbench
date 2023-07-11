@@ -1,22 +1,28 @@
 <template>
-  <div class="pl-4 pb-10 pt-4 h-full">
+  <div class="pl-4  pt-4 h-full flex flex-col " >
     <HorizontalPanel :navList="avatarList" v-model:selectType="listItem" class="mb-5"></HorizontalPanel>
     <template v-if="listItem.name === 'shop_store'">
       <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                            style="height: 75%;">
-        <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3"
+                            style="flex:1;height:0">
+        <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col "
              :style="avatarBgColor(item.frame.rarity)">
           <div class="avatar-top flex mb-4">
             <div style="width: 100px;height: 100px;">
               <img :src="item.cover" class="w-full h-full object-fill" alt="">
             </div>
             <div class="flex flex-col justify-center ml-4">
-              <span class="avatar-font" :style="titleTagColor(item.frame.rarity)">
+              <div>
+                    <span class="avatar-font" :style="titleTagColor(item.frame.rarity)">
                 {{ item.alias }}
               </span>
-              <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item.frame.rarity)">
+                <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item.frame.rarity)">
                 {{ textTag(item.frame.rarity) }}
               </span>
+              </div>
+              <div class="xt-text-2">
+                {{item.summary}}
+              </div>
+
               <span class="get-way-font">
                 获得途径：{{ avatarGainMethodText(item.frame.gainMethod) }}
               </span>
@@ -129,7 +135,7 @@ export default {
   data () {
     return {
       avatarList: [    // 头像框是否购买的状态
-        { title: '商店(开发中)', name: 'shop_store' },
+        { title: '头像框商店', name: 'shop_store' },
         { title: '拥有', name: 'have_bought' }
       ],
       listItem: { title: '商店', name: 'shop_store' }, // 默认显示头像框未购买界面
@@ -161,9 +167,9 @@ export default {
     ...mapWritableState(frameStore, ['frameData']),
     frameList () {
       const data = this.frameData.list
-      const list = _.filter(data, function (o) { return o.frame.gainMethod !== 'rank' })
-      console.log(list)
-      return list
+      // const list = _.filter(data, function (o) { return o.frame.gainMethod !== 'rank' })
+      // console.log(list)
+      return data
     },
     memberDevoteDisplay () {
       let display = JSON.parse(JSON.stringify(this.teamMembers))
@@ -273,6 +279,8 @@ export default {
   color: var(--active-text);
   font-weight: 500;
   text-align: center;
+  margin-left: 10px;
+  padding-left: 5px;padding-right: 5px;
 }
 
 .get-way-font {

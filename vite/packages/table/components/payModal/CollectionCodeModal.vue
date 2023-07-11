@@ -9,7 +9,7 @@
         <span class="avatar-font" style="color: var(--primary-text);">道具</span>
         <span class="avatar-font" style="color: var(--primary-text);user-select: text">
               <template v-if="gettingOrder">正在生成订单…</template>
-              <template v-else>订单号：{{ order.nanoid }}</template></span>
+              <template v-else>订单号：{{ order.nanoid }} <icon class="pointer" style="font-size: 18px" @click="copyOrder(order.nanoid)" icon="fuzhi"></icon></template></span>
       </div>
     </div>
     <div v-if="error" style="font-size: 14px;line-height: 24px"><icon icon="tishi-xianxing" style="font-size: 14px"></icon> 拉取支付二维码出错，可能是系统正在维护，请稍后再试。</div>
@@ -133,6 +133,15 @@ export default {
         message.error('获取微信订单二维码失败，请稍后再试。')
         return
       })
+    },
+    copyOrder(text){
+      try{
+        require('electron').clipboard.writeText(text)
+        //Navigator.clipboard.writeText(text)
+        message.success('复制订单号成功')
+      }catch (e) {
+
+      }
     },
     getAlipay () {
       this.qrCode.alipay = ''

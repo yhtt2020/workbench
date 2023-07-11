@@ -52,7 +52,7 @@
                  style="height: 100%;position: relative;width: 100%">
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
-            <div v-if="showDetail && currentTab==='store'">
+            <div v-if="showDetail && currentTab==='store'" style="height: 100%">
               <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
             </div>
           </a-col>
