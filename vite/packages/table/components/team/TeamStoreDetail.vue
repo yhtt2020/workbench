@@ -32,13 +32,13 @@
             </a-button>
           </div>
           <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
-            <a-button v-if="!item.owned" type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center"
+            <a-button v-if="!item.owned" type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center m-3"
                       @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
               ￥ {{ getFramePrice(item) }}
             </a-button>
-            <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center" style="width: 100%">
+            <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
               已有
             </a-button>
             <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"

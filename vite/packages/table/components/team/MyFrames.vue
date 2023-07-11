@@ -20,6 +20,7 @@ export default defineComponent({
   },
   mounted() {
     this.getMyFrames().then(rs => {
+      console.log('获取回的我的头像',rs)
       if (rs.status) {
         console.log(rs.data)
         this.frameList = rs.data.map(itemOwner => {
@@ -46,7 +47,7 @@ export default defineComponent({
     <a-empty style="margin-top:40%" image="/img/test/load-ail.png" description="暂无可用头像框" />
   </div>
   <vue-custom-scrollbar v-else @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                        style="height: 68%;">
+                        style="flex:1;height: 0">
     <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3" :style="avatarBgColor(item.detail.rarity)">
       <div class="avatar-top flex mb-4">
         <div style="width: 100px;height: 100px;">
