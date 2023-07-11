@@ -1,19 +1,25 @@
-<script lang="ts">
-
+<script>
 import {ThunderboltFilled} from "@ant-design/icons-vue";
 import Template from "../../../user/pages/Template.vue";
+import BorderAavtar from "../avatar/BorderAavtar.vue";
+import FrameAvatar from '../avatar/FrameAvatar.vue';
 import {mapWritableState} from "pinia";
 import {messageStore} from "../../store/message";
 import {appStore} from "../../store";
 import {Modal} from "ant-design-vue";
 const { messageModel } = window.$models
+
+
 export default {
   components: {
-    ThunderboltFilled
+    ThunderboltFilled,
+    BorderAavtar,
+    FrameAvatar
   },
   data() {
     return {
       messages: [],
+      myFrameUrl:'https://a.apps.vip/icons/frame/demon.png',
     }
   },
   props: ['size','chat','level'],
@@ -132,16 +138,18 @@ export default {
 
   <div v-else :style="{ width: settings.enableChat && !simple ? '23em' : (simple ? '4.5em' : '11em') }">
     <a-row class="pointer" @click="social">
-      <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24"
-             style="padding: 0.6em;position:relative;">
+      <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24" style="padding: 0.6em;position:relative;">
+        <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10">
           <a-col>
-            <a-badge style="border:none;" :count="totalCount">
-              <a-avatar :src="userInfo.avatar" :size="size|| 50">{{ userInfo.nickname }}</a-avatar>
-            </a-badge>
+            <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
+            <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="myFrameUrl"></FrameAvatar>
+            <!-- <a-badge style="border:none;" :count="totalCount">
+              <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
+            </a-badge> -->
           </a-col>
           <!-- 等级 -->
-          <a-col v-if="!simple && level" @click.stop="goMy()" style="position: relative">
+          <a-col v-if="!simple && level" @click.stop="goMy()" style="position: relative;left:60px;">
             <span ref="minute" class="tip">+1</span>
             <div style="padding-top: 0.2em;">
               <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
@@ -158,7 +166,6 @@ export default {
                       </template>
                     </a-tooltip>
                   </span>
-
             </div>
 
             <!--                <span class="ts-grade-crown" v-for="item in this.userInfo.onlineGradeIcons.crown">-->
@@ -175,9 +182,8 @@ export default {
             <!--                </span>-->
           </a-col>
         </a-row>
-
-
       </a-col>
+      
       <a-col  class="chat" v-if="settings.enableChat && !simple && chat" :span="14"
              style="text-align: left;padding-top: 0.5em;line-height: 1.75">
         <div style="font-size: 13px;" v-if="messages.length === 0">
@@ -216,6 +222,12 @@ export default {
   line-height: 2em;
   display: inline-block;
   background: rgba(42, 40, 40, 0.51);
+}
+
+.frame{
+  position: fixed !important;
+  top: -9px !important;
+  left: 0 !important;
 }
 
 .thunder {
