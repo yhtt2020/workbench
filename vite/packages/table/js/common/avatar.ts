@@ -51,6 +51,20 @@ export function avatarBgColor(rarity) {
   }
 }
 
+/**
+ * 获取稀有度边框颜色
+ * @param rarity
+ * @param borderSize
+ * **/
+export function rarityBorderColor(borderSize,rarity){
+  const index = _.find(rarityColor, function (o) {
+    return o.id === rarity
+  })
+  return {
+    border:`${borderSize}px solid ${index.color}`
+  }
+}
+
 export function avatarGainMethodText(gainMethod){
    return  gainMethod.replaceAll('event','活动').replaceAll('sign','签到').replaceAll('store','商店').replace(',','，')
 }

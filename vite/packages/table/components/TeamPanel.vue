@@ -114,19 +114,18 @@
              v-if="teamLeader.userInfo">
 
           <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" :rare="0" :url="''"></UserAvatar>
+                      :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
-          <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
+          <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
-
           </div>
         </div>
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
           <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="0" :url="''"></UserAvatar>
-          <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
+          <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
           </div>
