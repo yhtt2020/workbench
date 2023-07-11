@@ -66,5 +66,5 @@ export function rarityBorderColor(borderSize,rarity){
 }
 
 export function avatarGainMethodText(gainMethod){
-   return  gainMethod.replaceAll('event','活动').replaceAll('sign','签到').replaceAll('store','商店').replace(',','，')
+   return  gainMethod.replaceAll('event','活动').replaceAll('sign','签到').replaceAll('store','商店').replace(',','，').replaceAll('rank','排行榜')
 }

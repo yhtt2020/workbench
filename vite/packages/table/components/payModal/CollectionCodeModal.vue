@@ -5,17 +5,18 @@
         <img :src="needPayAvatar.url" class="w-full h-full object-cover" alt="">
       </div>
       <div class="flex flex-col justify-center ml-4">
-        <span class="avatar-font" style="color: var(--primary-text);">{{ needPayAvatar.name }}</span>
+        <span class="avatar-font" style="color: var(--primary-text);user-select: text">{{ needPayAvatar.name }}</span>
         <span class="avatar-font" style="color: var(--primary-text);">道具</span>
-        <span class="avatar-font" style="color: var(--primary-text);">
+        <span class="avatar-font" style="color: var(--primary-text);user-select: text">
               <template v-if="gettingOrder">正在生成订单…</template>
-              <template v-else>订单号：{{ order.nanoid }}</template></span>
+              <template v-else>订单号：{{ order.nanoid }} <icon class="pointer" style="font-size: 18px" @click="copyOrder(order.nanoid)" icon="fuzhi"></icon></template></span>
       </div>
     </div>
-    <HorzontanlPanelIcon :navList="payMethod" v-model:selectType="payWeixin"
+    <div v-if="error" style="font-size: 14px;line-height: 24px"><icon icon="tishi-xianxing" style="font-size: 14px"></icon> 拉取支付二维码出错，可能是系统正在维护，请稍后再试。</div>
+    <HorzontanlPanelIcon v-if="!error" :navList="payMethod" v-model:selectType="payWeixin"
                          style="background: var(--secondary-bg);!important"></HorzontanlPanelIcon>
 
-    <template v-if="payWeixin.type === 'wechat'">
+    <template v-if="payWeixin.type === 'wechat' && !error">
       <div class="flex my-8 px-1">
         <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
           <a-avatar shape="square" :src="qrCode.wechat" class="w-full h-full object-cover" alt=""></a-avatar>
@@ -29,10 +30,10 @@
         </div>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="!error">
       <div class="flex my-8 px-1">
         <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
-          <div v-if="qrCode.alipay" style="background: white;padding: 10px;" class="w-full h-full rounded-sm">
+          <div v-if="qrCode.alipay " style="background: white;padding: 10px;" class="w-full h-full rounded-sm">
             <iframe
               style="border: none;background: transparent;width: 120px;height: 120px;overflow: hidden;transform: scale(1.3);margin-left: 30px;margin-top: 30px"
               scrolling="no" class=" object-cover" id="alipayCode"></iframe>
@@ -77,6 +78,7 @@ export default {
   },
   data () {
     return {
+      error:false,
       payMethod: [   // 头像框购买的支付方式数据
         { icon: 'weixinzhifu', title: '微信支付', type: 'wechat' },
         { icon: 'zhifubao', title: '支付宝', type: 'alipay' }
@@ -120,18 +122,30 @@ export default {
     },
     getWechat () {
       this.qrCode.wechat = ''
+      this.error=false
       this.getQrcode(this.order.nanoid, 'wechat').then((rs) => {
         console.log('微信二维码返回', rs)
         if (rs.status) {
           this.qrCode.wechat = rs.data.qrCode
           return
         }
+        this.error=true
         message.error('获取微信订单二维码失败，请稍后再试。')
         return
       })
     },
+    copyOrder(text){
+      try{
+        require('electron').clipboard.writeText(text)
+        //Navigator.clipboard.writeText(text)
+        message.success('复制订单号成功')
+      }catch (e) {
+
+      }
+    },
     getAlipay () {
       this.qrCode.alipay = ''
+      this.error=false
       this.getQrcode(this.order.nanoid, 'alipay').then((rs) => {
         console.log('微信二维码返回', rs)
         if (rs.status) {
@@ -147,6 +161,7 @@ export default {
 
           return
         }
+        this.error=true
         message.error('获取支付宝订单二维码失败，请稍后再试。')
         return
       })
