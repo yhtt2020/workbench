@@ -13,7 +13,7 @@ import Key from "../page/settings/Key.vue";
 import Apps from "../page/Apps.vue";
 import AppFrame from "../page/AppFrame.vue";
 import Music from "../page/Music.vue";
-import AIAssistant from "../page/AIAssistant/index.vue"
+//import AIAssistant from "../page/AIAssistant/index.vue"
 import Status from "../page/Status.vue";
 import Main from "../page/Main.vue";
 import Home from "../page/Home.vue";
@@ -157,11 +157,11 @@ export default [
           }
         ]
       },
-      {
-        path: "/ai",
-        name: "ai",
-        component: AIAssistant,
-      },
+      // {
+      //   path: "/ai",
+      //   name: "ai",
+      //   component: AIAssistant,
+      // },
       {
         path: "/music",
         name: "music",
