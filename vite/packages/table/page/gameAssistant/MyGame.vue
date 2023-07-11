@@ -69,7 +69,7 @@
     </div>
       <div v-else>
         <div class="text-center mt-20">
-          <a-empty></a-empty>
+          <a-empty image="/img/test/load-ail.png" description="" />
           <a-button v-if="gameType.name==='steam'" @click="goBind" type="primary">绑定Steam账号</a-button>
           <a-button v-else @click="openModal" type="primary">导入外部游戏</a-button>
         </div>
@@ -196,7 +196,7 @@ export default {
   },
   data(){
     return {
-      
+
       drawerVisible:false,
       //跳转到对应的桌面的弹窗
       jumpVisible:false,
