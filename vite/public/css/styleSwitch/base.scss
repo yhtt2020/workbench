@@ -24,6 +24,20 @@
   cursor: pointer;
 }
 
+.xt-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.xt-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  background: var(--active-bg);
+  border-radius: 3px;
+}
+
+.xt-scrollbar::-webkit-scrollbar-track {
+  // background: var(--active-bg);
+}
+
 .xt-border {
   border: 1px solid var(--divider);
 }
