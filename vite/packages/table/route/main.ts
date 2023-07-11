@@ -50,7 +50,8 @@ import DeckIndex from "../page/app/deck/DeckIndex.vue";
 import BrowserIndex from '../page/app/browser/Index.vue';
 import BrowserTabs from '../page/app/browser/Tabs.vue'
 import BrowserMain from '../page/app/browser/Browser.vue';
-import Rank from '../page/social/Rank.vue'
+import Rank from '../page/social/Rank.vue';
+import BillingRecord from '../page/social/BillingRecord.vue';
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
@@ -133,6 +134,11 @@ export default [
             name: "rank",
             component: Rank,
           },
+          {
+            path:"/bill",
+            name:'bill',
+            component:BillingRecord
+          }
         ],
       },
       {

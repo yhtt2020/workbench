@@ -76,6 +76,14 @@ export default {
         route:{
           name:'rank'
         }
+       },
+       {
+        title:'账单',
+        index:'bill',
+        icon:'zhangdan',
+        route:{
+          name:'bill',
+        }
        }
       ],
 

@@ -1,0 +1,16 @@
+<!-- 带边框头像组件 -->
+<template>
+  <div>
+
+  </div>
+</template>
+
+<script>
+export default {
+    
+}
+</script>
+
+<style lang="scss" scoped>
+
+</style>
