@@ -1,11 +1,10 @@
 <template>
   <a-row :gutter="20">
-    <a-col :span="5">
-      <a-avatar class="mt-3 ml-3" :size="50" :src="userInfo.avatar"></a-avatar>
+    <a-col :span="8">
+      <FrameAvatar :avatar-size="50" :frame-url="userInfo.equippedItems?.frameDetail.image" class="mt-3 ml-3" :size="50" :avatar-url="userInfo.avatar"></FrameAvatar>
     </a-col>
-    <a-col :span="19">
-      <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ userInfo.nickname }}
-
+    <a-col :span="16">
+      <div class="mt-8 mb-1 ml-2 font-bold truncate"> {{ userInfo.nickname }}
       </div>
       <div>
         <div class="rounded-md ml-2 px-2 bg-mask inline-block font-bold">UID: {{ userInfo.uid }}</div>
@@ -45,9 +44,10 @@ import { teamStore } from '../../store/team'
 import OnlineGradeDisplay from './OnlineGradeDisplay.vue'
 import OnlineMedal from './OnlineMedal.vue'
 import Medal from './Medal.vue'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
 export default {
   name: 'UserDetail',
-  components: { Medal, OnlineMedal, OnlineGradeDisplay },
+  components: { FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
   props:['userInfo','isLeader','memberInfo','joinedTime'],
   data(){
     return{

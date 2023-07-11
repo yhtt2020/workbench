@@ -6,6 +6,7 @@ import _ from 'lodash-es';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import cache from '../components/card/hooks/cache'
+import {post} from "../js/axios/request";
 
 
 const getFrameUrl = sUrl('/app/good/frame/list')  // 获取头像商品数据
@@ -13,6 +14,8 @@ const editInfoUrl = sUrl('/app/com/updateUserInfo') // 修改文档信息
 const ensureOrderUrl=sUrl('/app/order/ensure')
 const getQrcodeUrl=sUrl('/app/order/getQrcode')
 const getMyFramesUrl=sUrl('/app/good/frame/my')
+
+const equipFrameUrl=sUrl('/app/good/frame/equip')
 //@ts-ignore
 export const frameStore = defineStore('frameStore',{
   state:()=>({
@@ -51,7 +54,9 @@ export const frameStore = defineStore('frameStore',{
         goodNanoid,
         priceNanoid
       },await getConfig() )
+      console.log(result,'确认订单返回1')
       if(result.data.code === 1000){
+        console.log(result,'确认订单返回')
         return result.data.data
       }
     },
@@ -80,6 +85,15 @@ export const frameStore = defineStore('frameStore',{
       if(result.data.code===1000){
         return result.data.data
       }
+    },
+    /**
+     * 装备上头像框
+     * @param itemNanoid
+     */
+    async equipFrame(itemNanoid){
+      return post(equipFrameUrl,{
+        itemNanoid:itemNanoid
+      })
     }
   }
 

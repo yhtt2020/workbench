@@ -143,7 +143,7 @@ export default {
         <a-row style="text-align: left" :gutter="10">
           <a-col>
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
-            <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="myFrameUrl"></FrameAvatar>
+            <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.equippedItems.frameDetail?.image"></FrameAvatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->
@@ -183,7 +183,7 @@ export default {
           </a-col>
         </a-row>
       </a-col>
-      
+
       <a-col  class="chat" v-if="settings.enableChat && !simple && chat" :span="14"
              style="text-align: left;padding-top: 0.5em;line-height: 1.75">
         <div style="font-size: 13px;" v-if="messages.length === 0">

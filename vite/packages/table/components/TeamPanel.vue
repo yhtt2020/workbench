@@ -113,7 +113,7 @@
              :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
 
-          <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
+          <UserAvatar  :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
                       :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
           <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
@@ -123,7 +123,7 @@
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
-          <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
+          <UserAvatar :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online" :avatar="user.userInfo.avatar"
                       :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
           <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
@@ -326,8 +326,6 @@ export default {
 
 <style scoped lang="scss">
 :deep(.ant-avatar) {
-
-  background: var( --secondary-bg);
   border-radius: 50%;
 }
 .active {

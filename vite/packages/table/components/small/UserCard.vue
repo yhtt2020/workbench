@@ -2,25 +2,30 @@
   <div style="max-width: 100%;width: 360px" class="flex-col">
     <div class="flex items-center my-3 mx-3">
       <div style="width:100px;height: 100px;position:relative;">
-        <img src="https://a.apps.vip/icons/frame/demon.png" class="w-full h-full object-cover" alt="">
-        <a-avatar class="user-frame" :size="50" :src="displayUserInfo.avatar"></a-avatar>
+        <FrameAvatar :avatarSize="50" :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.equippedItems?.frameDetail.image">
+        </FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
-          :title="displayUserInfo.certification[0].name">
-         <a-avatar style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0;z-index: 999;"
-           :src="displayUserInfo.certification[0].attestation_icon"></a-avatar>
+                   :title="displayUserInfo.certification[0].name">
+          <a-avatar style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0;z-index: 999;"
+                    :src="displayUserInfo.certification[0].attestation_icon"></a-avatar>
         </a-tooltip>
       </div>
       <div class="flex flex-col">
         <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ displayUserInfo.nickname }}</div>
-        <div class="rounded-md px-2 bg-mask inline-block font-bold" style="background: var(--primary-bg);">UID: {{ uid }}</div>
+        <div class="rounded-md px-2 bg-mask inline-block font-bold" style="background: var(--primary-bg);">UID: {{
+            uid
+          }}
+        </div>
       </div>
     </div>
     <div class="flex flex-col mb-4">
-      <div class="bg-mask rounded-lg py-3 px-2 m-3 mx-5 mt-2 mb-2 " style="min-height: 24px;background: var(--primary-bg);color:var(--primary-text);">
+      <div class="bg-mask rounded-lg py-3 px-2 m-3 mx-5 mt-2 mb-2 "
+           style="min-height: 24px;background: var(--primary-bg);color:var(--primary-text);">
         个性签名：
         {{ displayUserInfo.signature || '暂无签名' }}
       </div>
-      <div class="bg-mask rounded-lg p-3 mx-5 m-3 mt-2 mb-0 " style="min-height: 77px;background: var(--primary-bg);color: var(--primary-text) ;">
+      <div class="bg-mask rounded-lg p-3 mx-5 m-3 mt-2 mb-0 "
+           style="min-height: 77px;background: var(--primary-bg);color: var(--primary-text) ;">
         <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
       </div>
     </div>
@@ -28,8 +33,9 @@
       <div class="mb-4 pd-0 m-3 p-1 mx-5 mt-0" style="color: var(--primary-text);">
         成就勋章
       </div>
-      <div class="bg-mask rounded-lg p-3 m-3 mx-5 mt-0  " style="background: var(--primary-bg);color: var(--primary-text) ;">
-        <OnlineMedal  v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
+      <div class="bg-mask rounded-lg p-3 m-3 mx-5 mt-0  "
+           style="background: var(--primary-bg);color: var(--primary-text) ;">
+        <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
         <Medal :medal="medal" v-for="medal in medals"></Medal>
       </div>
     </div>
@@ -43,10 +49,11 @@ import Medal from '../team/Medal.vue'
 import OnlineMedal from '../team/OnlineMedal.vue'
 import OnlineGradeDisplay from '../team/OnlineGradeDisplay.vue'
 import { appStore } from '../../store'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
 
 export default {
   name: 'UserCard',
-  components: { Medal, OnlineMedal, OnlineGradeDisplay },
+  components: { FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
   props: ['uid', 'visible', 'userInfo'],
   emits: ['visibleChanged'],
   data () {
@@ -54,7 +61,7 @@ export default {
       grade: {},
       medals: [],
       key: Date.now(),
-      userCardUserInfo:{}
+      userCardUserInfo: {}
     }
   },
   watch: {
@@ -68,13 +75,16 @@ export default {
   },
   computed: {
     displayUserInfo () {
-      if (this.userInfo) {
-        return this.userInfo
-      } else {
+      console.log(this.userCardUserInfo)
+      if (this.userCardUserInfo) {
         return {
           ...this.userCardUserInfo,
           certification: []
         }
+      } else if (this.userInfo) {
+        return this.userInfo
+      } else {
+        return {}
       }
     }
   },
@@ -83,27 +93,31 @@ export default {
       //如果存在用户数据，则使用此数据显示卡片
       this.userCardUserInfo = this.userInfo
     }
-    if(!this.uid){
+    if (!this.uid) {
       return
     }
     let response = await this.getUserCard(this.uid)
+    console.log(response, '用户信息')
     if (response.code === 200) {
+
       const data = response.data
       this.userCardUserInfo = {
         uid: this.uid,
         nickname: data.user.nickname,
         avatar: data.user.avatar_128,
         signature: data.user.signature,
-        certification: data.user.all_certification_entity_pc || []
+        certification: data.user.all_certification_entity_pc || [],
+        equippedItems: data.equippedItems
       }
     }
+    console.log(this.userCardUserInfo)
     this.updateUserMedal()
     this.grade = await this.getMemberGrade(this.uid)
   },
   methods: {
     ...mapActions(teamStore, ['getMemberGrade', 'getUserMedal']),
-    ...mapActions(appStore,['getUserCard']),
-    updateUserMedal(){
+    ...mapActions(appStore, ['getUserCard']),
+    updateUserMedal () {
       this.getUserMedal(this.uid).then(result => {
         if (result) {
           this.medals = result
@@ -117,7 +131,7 @@ export default {
 </script>
 
 <style scoped>
-.user-frame{
+.user-frame {
   position: absolute;
   top: 28%;
   left: 27%;
