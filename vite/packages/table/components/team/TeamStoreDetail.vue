@@ -235,7 +235,6 @@ export default {
     },
     // 点击价格购买逻辑
     buyNow (item) {
-      this.payVisible = true // 打开支付弹窗
       this.needPayAvatar.name = item.summary
       this.needPayAvatar.url = item.cover
       this.needPayAvatar.price = this.getFramePrice(item)
@@ -243,8 +242,15 @@ export default {
       this.ensureOrder(item.dataNanoid, this.getFramePriceOrigin(item).nanoid).then((rs) => {
         this.gettingOrder = false
         if (rs.status) {
-          this.order = rs.data
-          return
+          if(rs.data.code===200){
+            //证明已经支付了
+            message.info('已经支付了订单，无需重复支付。')
+            return
+          }else if(rs.data.code===400){
+            this.payVisible = true // 打开支付弹窗
+            this.order = rs.data.order
+            return
+          }
         }
 
         message.error('生成订单失败，请稍后再试。')
