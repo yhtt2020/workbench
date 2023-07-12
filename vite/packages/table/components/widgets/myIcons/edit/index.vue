@@ -38,6 +38,7 @@
 import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
 import editMixins from "./hooks/mixins";
+
 export default {
   mixins: [editMixins],
   props: {
@@ -52,6 +53,11 @@ export default {
       this.$emit("close");
     },
     save() {
+      // this.edit.linkValue = {
+      //   type: "systemApp",
+      //   event: "ai",
+      // };
+      // this.edit.open = {};
       this.$emit("save");
     },
   },
