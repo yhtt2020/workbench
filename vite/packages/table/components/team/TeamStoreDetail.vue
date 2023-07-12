@@ -28,7 +28,7 @@
               </span>
               <div class="mt-2" v-if="item.prices.length">
                 <a-avatar-group>
-                  <span class="mr-4 xt-text-2" > 已售 {{item.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar">K</a-avatar>
+                  <span class="mr-4 xt-text-2" > 已售 {{item.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar"></a-avatar>
                 </a-avatar-group>
               </div>
             </div>
