@@ -26,30 +26,30 @@
           </div>
         </div>
         <div class="mb-3" style="flex:1;height: 0;display: flex;">
-          <div>
-            <vueCustomScrollbar :settings="scrollbarSettingsBarrage" style="height:100%">
-              <a-row class="mb-3" v-if="!hideAdmin" :gutter="[10, 10]">
-                <a-col :span="4">
-                  <a-avatar :size="36" src="/icons/logo128.png"></a-avatar>
-                </a-col>
-                <a-col :span="20">
-                  <div class="barrage-name" style="color:var(--secondary-text)">
-                    弹幕管理员
-                  </div>
-                  <div class="barrage-content" style="color:var(--primary-text)">
-                    欢迎使用想天工作台弹幕功能，请文明发言。
-                  </div>
-                </a-col>
-              </a-row>
+          <div style="width: 100%">
+            <vueCustomScrollbar :settings="scrollbarSettingsBarrage" style="height:100%;padding-top: 10px;width: 100%">
+<!--              <a-row class="mb-3" v-if="!hideAdmin" :gutter="[10, 10]">-->
+<!--                <a-col :span="4">-->
+<!--                  <a-avatar :size="36" src="/icons/logo128.png"></a-avatar>-->
+<!--                </a-col>-->
+<!--                <a-col :span="20">-->
+<!--                  <div class="barrage-name" style="color:var(&#45;&#45;secondary-text)">-->
+<!--                    弹幕管理员-->
+<!--                  </div>-->
+<!--                  <div class="barrage-content" style="color:var(&#45;&#45;primary-text)">-->
+<!--                    欢迎使用想天工作台弹幕功能，请文明发言。-->
+<!--                  </div>-->
+<!--                </a-col>-->
+<!--              </a-row>-->
               <a-row class="mb-5" :gutter="[10, 15]">
 
 
                 <template v-for="barrage in barrages">
-                  <a-col :span="4">
-                    <a-avatar class="pointer" @click="showUserCard(barrage.uid)" :size="36"
-                      :src="barrage.avatar"></a-avatar>
+                  <a-col :span="5" style="min-width: 50px">
+                    <FrameAvatar :avatar-size="55" style="zoom:0.65;" @click="showUserCard(barrage.uid)" class="mt-2 pointer ml-5" :size="36" :avatar-url="barrage.avatar"
+                                 :frame-url="barrage.userInfo?.equippedItems?.frameDetail?.image"></FrameAvatar>
                   </a-col>
-                  <a-col :span="20">
+                  <a-col :span="19">
                     <div class="barrage-name">
                       <strong style="color:var(--secondary-text)">{{ barrage.nickname }}</strong> · {{
                         barrage.create_time_text }}
@@ -179,10 +179,11 @@ import { teamStore } from '../../store/team'
 import { mapState, mapActions } from 'pinia'
 import browser from '../../js/common/browser'
 import { appStore } from '../../store'
+import FrameAvatar from '../../components/avatar/FrameAvatar.vue'
 
 export default {
   name: 'Com',
-  components: { SingIn, VueCustomScrollbar, HorizontalPanel, GradePanel, vuuri },
+  components: { FrameAvatar, SingIn, VueCustomScrollbar, HorizontalPanel, GradePanel, vuuri },
   data() {
     return {
       channelList: [

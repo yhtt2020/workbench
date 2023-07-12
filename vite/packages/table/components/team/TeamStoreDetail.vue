@@ -31,7 +31,7 @@
                   <span class="mr-4 xt-text-2" > 已售 {{item.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar">K</a-avatar>
                 </a-avatar-group>
               </div>
-            </div><q> </q>
+            </div>
             <a-button hidden type="primary" class="rounded-xl" style="height: 44px;color: var(--active-text);">
               试穿
             </a-button>
