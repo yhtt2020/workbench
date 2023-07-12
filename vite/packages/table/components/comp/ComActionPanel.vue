@@ -41,7 +41,7 @@
 
   <Modal v-model:visible="updateInfoVisible"  v-show="updateInfoVisible"  :blurFlag="true" style="z-index: 5000;">
     <div class="flex flex-col items-center myinfo-container justify-between w-full p-3">
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 90vh;">
+      <vue-custom-scrollbar :settings="settingsScroller">
         <div class="flex justify-between items-center w-full h-12 mb-3">
           <div class="flex items-center update-title justify-center" style="width:95%;">
             我的信息
@@ -53,7 +53,7 @@
            <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
           </div>
         </div>
-        <div class="flex w-full justify-between px-5">
+        <div class="flex-grow flex w-full justify-between px-5">
           <div class="w-1/2 flex flex-col">
             <span class="update-title mb-6">昵称</span>
             <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-6" style="border: 1px solid var(--divider);">
@@ -207,6 +207,7 @@ export default {
     // 点击选中预设头像
     selectPreset(item){
       this.presetIndex = item.id
+      this.frameData.avatar_url = this.getAvatarUrl(item.id)
     },
 
 
@@ -219,7 +220,6 @@ export default {
         avatar:this.frameData.avatar_url
       }
       this.updateMyinfo(saveUpdateMyInfo)
-      
     },
 
   },
@@ -330,4 +330,21 @@ export default {
   }
 }
 
+@media screen and (max-height:500px) {
+  :deep(.ps-container){
+    height: 90vh !important;
+  }
+}
+
+@media screen and (min-height:550px)  and (max-height:900px) {
+  :deep(.ps-container){
+    height: 70vh !important;
+  }
+}
+
+@media screen and (min-height:900px) {
+  :deep(.ps-container){
+    height: 55vh !important;
+  }
+}
 </style>

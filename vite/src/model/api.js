@@ -1,4 +1,5 @@
 import axios from './baseURL'
+import { sUrl } from '../../packages/table/consts'
 const url = {
   homeRecommend:'/app/good/getGoodRecommend',//首页推挤接口
   select:'/app/good/app/selectApp',
@@ -37,12 +38,20 @@ const result = (res,callback)=>{
 }
 
 const api = {
-  async getCosUpload(data,callback) {
+  async getCosUpload(data,callback) {  // 非工作台图片上传请求方法
     let res = await axios.post(url.cosUpload,
       data,
       await getConfig()
     )
     result(res,callback)
   },
+ 
+  async postCosUpload(data,callback){  // 工作台图片上传请求方法
+    let res = await axios.post(sUrl(url.cosUpload),
+      data,
+      await getConfig()
+    )
+    result(res,callback)
+  }
 }
 export default api
