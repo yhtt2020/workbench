@@ -1,9 +1,10 @@
 <template>
   <!-- 图片上传组件 -->
   <a-upload :style="size" class="pointer" 
-   @change="uplaodImageChange" :before-upload="beforeUpload" 
+   @change="uplaodImageChange" :before-upload="beforeUpload"
    :show-upload-list="false"
   >
+  <!--   -->
     <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
   </a-upload>
 </template>
@@ -18,10 +19,10 @@ export default {
   name:'UploadImage',
   methods:{
     ...mapActions(frameStore,['saveAvatarUrl']),
-    uplaodImageChange(info){  // info 上传文件的所有信息  
+    uplaodImageChange(info){  // info 上传文件的所有信息 
       const formData = new FormData();
       formData.append("file", info.fileList[0].originFileObj)
-      api.getCosUpload(formData,(err,res)=>{
+      api.postCosUpload(formData,(err,res)=>{
         if(!err){
           message.error('数据上传失败')
         }else{

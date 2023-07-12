@@ -207,6 +207,7 @@ export default {
     // 点击选中预设头像
     selectPreset(item){
       this.presetIndex = item.id
+      this.frameData.avatar_url = this.getAvatarUrl(item.id)
     },
 
 
@@ -219,7 +220,6 @@ export default {
         avatar:this.frameData.avatar_url
       }
       this.updateMyinfo(saveUpdateMyInfo)
-      
     },
 
   },
