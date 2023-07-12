@@ -2,21 +2,21 @@
   <a-drawer v-model:visible="showDrawer" @close="close" style="z-index:9999;" width="500" placement="right">
      <template #extra>
       <a-space>
-        <div class="add-scheme" @click="addPlan()">立即分享</div>
+        <div class="add-scheme" @click="addPlan">立即分享</div>
       </a-space>
     </template>
     <div>
       <span class="title">桌面</span>
-      <a-select v-model:value="desk" style="height:48px; border:none;" 
+      <a-select v-model:value="desk" @change="setSelectVal" style="height:48px; border:none;" 
       :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center" 
       :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
         <template #suffixIcon>
           <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
         </template>
-        <a-select-option v-for="i in deskType" :key="i" :value="i.value">{{ i.name }}</a-select-option>
+        <a-select-option v-for="(item,index) in deskType" :key="index" :value="index">{{ item }}</a-select-option>
       </a-select>
       <span class="title">标题</span>
-      <a-input v-model:value="shoreName" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+      <a-input v-model:value="shareName" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
       <span class="title">简介</span>
       <a-textarea v-model:value="blurb" spellcheck="false" class="input xt-text"  placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 100px;"/>
       <span class="title">分类</span>
@@ -43,7 +43,7 @@
     </div>
   </a-drawer>
   <!-- 分享成功的模态框和发布抽屉 -->
-  <ShareModal :shoreModal="shoreModal" :shoreName="shoreName" @closeShore="closeShore"></ShareModal>
+  <ShareModal :shareModal="shareModal" :shareName="shareName" @closeShare="closeShare"></ShareModal>
 </template>
 
 <script>
@@ -51,6 +51,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { deskStore } from "../../store/desk";
 import { message } from 'ant-design-vue';
 import ShareModal from "../ShareModal.vue";
+import { cardStore } from "../../store/card";
 import {nanoid} from 'nanoid'
 export default {
   name: "ShareDesk",
@@ -60,21 +61,24 @@ export default {
   data() {
     return {
       showDrawer: false,
-      desk: '桌面1',
-      deskType: [
-        { name: '桌面1', value: '桌面1' },
-        { name: '桌面2', value: '桌面2' },
-        { name: '桌面3', value: '桌面3' },
-        { name: '桌面4', value: '桌面4' },
-      ],
+      // desk: '桌面1',
+      // deskType: [
+      //   { name: '桌面1', value: '桌面1' },
+      //   { name: '桌面2', value: '桌面2' },
+      //   { name: '桌面3', value: '桌面3' },
+      //   { name: '桌面4', value: '桌面4' },
+      // ],
+      desk: '',
+      deskType: [],
       assort: '',
       assortList: [],
       labelVal: '',
       labelList: [],
       scheme: {},
-      shoreModal: false,
-      shoreName: '',
+      shareModal: false,
+      shareName: '',
       blurb: '',
+      cards: [],
     }
   },
   props: {
@@ -84,7 +88,8 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(deskStore,['deskList'])
+    ...mapWritableState(deskStore,['deskList']),
+    ...mapWritableState(cardStore, ['desks','settings']),
   },
   watch: {
     openDrawer(newV){
@@ -112,7 +117,7 @@ export default {
         deskImg: '',
         desk: this.desk,
         assort: this.assortList[this.assort],
-        title: this.shoreName,
+        title: this.shareName,
         avatar: '/icons/logo128.png',
         nickName: 'Cordelia Butler',
         sumLikes: 0,
@@ -122,19 +127,32 @@ export default {
         blurb: this.blurb,
         labelList: this.labelList,
         cardList: [],
+        cards: this.cards,
+        settings: this.settings
       }
-      this.close()
-      this.shoreModal = true
+      // this.close()
+      // this.shareModal = true
       // console.log(this.scheme)
     },
-    closeShore(val){
-      this.shoreModal = val
+    closeShare(val){
+      this.shareModal = val
     },
+    setSelectVal(index){
+      this.desks.map((item,i) => {
+        if(index === i){
+          this.cards = item.cards
+        }
+      })
+    }
   },
   mounted() {
     this.assortList = this.deskList.map(item => item.cname)
     this.assortList.unshift('请选择')
     this.assort = this.assortList[0]
+    
+    this.deskType = this.desks.map(item => item.name)
+    this.desk = this.deskType[0]
+    this.cards = this.desks[0].cards
   },
 }
 </script>
@@ -165,6 +183,7 @@ export default {
     align-items: center;
     color: var(--primary-text);
     font-size: 16px;
+    cursor: pointer;
   }
   .add-label{
     width: 100px;

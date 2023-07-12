@@ -217,7 +217,7 @@
     </div>
   </div>
   <!-- 分享成功的模态框和发布抽屉 -->
-  <ShareModal :shoreModal="shoreModal" :shoreName="applyName" @closeShore="closeShore" :back="true"></ShareModal>
+  <ShareModal :shareModal="shareModal" :shareName="applyName" @closeShare="closeShare" :back="true"></ShareModal>
   <!-- 键盘 -->
   <KeyBoard v-if="keyBoard" 
   :selectKey="selectKey" 
@@ -269,7 +269,7 @@ export default {
       keyList: [], //快捷键列表
       imageUrl: '',
       file: {},
-      shoreModal: false, //分享
+      shareModal: false, //分享
       addKeyList: [''], //添加快捷键集合
       keyCombination: [], //添加组合键
       combinationName: [], //添加快捷键名称
@@ -434,7 +434,7 @@ export default {
         }
         this.setMarketList(this.appContent)
       }
-      this.shoreModal = true
+      this.shareModal = true
     },
     onBack(){
       this.delNotData()
@@ -444,11 +444,11 @@ export default {
       this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
     },
     // close(){
-    //   this.shoreModal = false
+    //   this.shareModal = false
     //   this.$router.go(-1)
     // },
-    closeShore(val){
-      this.shoreModal = val
+    closeShare(val){
+      this.shareModal = val
     },
     // 编辑内容
     editItem({id,groupName,keyStr,title},index,type){

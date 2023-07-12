@@ -87,46 +87,16 @@ export default {
       openDrawer: false,
       previewH: '100%',
       cards: {
-        "name": "主桌面",
-        "nanoid": "vrEg",
-        "cards": [
-          {
-            "name": "countdownDay",
-            "id": 1689081992412,
-            "customData": {},
-            "_$muuri_id": "b972fe4f-f9e1-4c71-aa01-ea7a41478f3e"
-          },
-          {
-            "name": "timer",
-            "id": 1689081873536,
-            "customData": {},
-            "_$muuri_id": "781c73cb-96ee-47f7-924c-a7fc2157df4d"
-          },
-          {
-            "name": "GamesDiscount",
-            "id": 1689081960276,
-            "customData": {
-              "id": "cn"
-            },
-            "_$muuri_id": "eafb4083-41d6-4cab-8f65-89ad3a28e1e4"
-          },
-          {
-            "name": "fish",
-            "id": 1689081869660,
-            "customData": {},
-            "_$muuri_id": "0cc78ee8-e1ab-41ef-ac24-1f1793786afa"
-          }
-        ],
-        "settings": {
-          "cardZoom": 100,
-          "marginTop": 0,
-          "cardMargin": 5
-        }
+        title: '',
+        nanoid: '',
+        cards: [],
+        settings: {}
       },
-      deskWidth: 1173,
-      deskHeight: 668,
-      cardsHeight: 519,
-      zoom: 1,
+      deskWidth: 0,
+      deskHeight: 0,
+      cardsHeight: 0,
+      zoom: 0,
+      cardZoom: 0,
       windowWidth: document.body.clientWidth,
       windowHeight: document.body.clientHeight,
       previewWidth: 0,
@@ -152,10 +122,22 @@ export default {
   watch: {
     showModal(newVal){
       if(newVal)this.fullScreen = true
-      var that = this
       if(this.fullScreen){
+        this.cardZoom = JSON.parse(JSON.stringify(this.scheme.settings.cardZoom))
+        this.zoom = this.cardZoom / 100
         this.getPreviewHeight()
+        this.cards = {
+          title: this.scheme.title,
+          nanoid: this.scheme.nanoid,
+          cards: this.scheme.cards,
+          settings: JSON.parse(JSON.stringify(this.scheme.settings))
+        }
+        this.deskWidth = this.scheme.deskWidth
+        this.deskHeight = this.scheme.deskHeight
+        this.cardsHeight = this.scheme.cardsHeight
       }
+
+      var that = this
       window.onresize = () => {
         return (() => {
           // that.windowHeight = document.documentElement.clientHeight // 高
@@ -164,11 +146,6 @@ export default {
         })()
       }
 
-      // if(this.cardHeight !== this.windowHeight){
-      //   let zoom = ((this.windowHeight / this.deskHeight) * 100).toFixed()
-      //   this.cards.settings.cardZoom = zoom
-      // }
-      // this.previewH = that.windowHeight+'px'
     },
     // windowHeight(val){
     //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
@@ -188,7 +165,7 @@ export default {
       this.close()
     },
     close(){
-      this.cards.settings.cardZoom = 100
+      this.cards.settings.cardZoom = this.cardZoom
       this.$emit('closePreview',false)
       this.fullScreen = false
     },
