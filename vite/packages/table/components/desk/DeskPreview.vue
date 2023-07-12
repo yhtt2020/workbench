@@ -1,6 +1,6 @@
 <template>
   <!-- 预览 -->
-  <div class="prompt-modal xt-mask" v-show="showModal">
+  <div class="prompt-modal xt-mask" v-if="showModal">
     <div class="head-icon">
       <div class="icon" @click="close">
         <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon>
@@ -9,9 +9,10 @@
         <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
       </div>
     </div>
-    <div class="flex justify-center items-center" style="width:60%;height:80%">
-      <a-image width="100%" :preview="false" src="../../../../../public/img/test/deckImg.jpg" />
-      <!-- <img style="width:100%;height:100%;object-fit: cover;" :src="scheme.deskImg" /> -->
+    <!-- 预览 -->
+    <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
+    <div class="flex justify-center items-center preview" id="previewContent">
+      <Desk :currentDesk="cards" :settings="cards.settings" :notTrigger="true"></Desk>
     </div>
     <div class="foot">
       <div class="flex items-center">
@@ -71,20 +72,66 @@
 </template>
 
 <script>
-import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
 import { appStore } from '../../store';
+import Desk from './Desk.vue'
 export default {
   name: "DeskPreview",
   components: {
-    ShortcutKeyList
+    Desk
   },
   data() {
     return {
       // 添加
-      openDrawer: false
-    }
+      openDrawer: false,
+      previewH: '100%',
+      cards: {
+        "name": "主桌面",
+        "nanoid": "vrEg",
+        "cards": [
+          {
+            "name": "countdownDay",
+            "id": 1689081992412,
+            "customData": {},
+            "_$muuri_id": "b972fe4f-f9e1-4c71-aa01-ea7a41478f3e"
+          },
+          {
+            "name": "timer",
+            "id": 1689081873536,
+            "customData": {},
+            "_$muuri_id": "781c73cb-96ee-47f7-924c-a7fc2157df4d"
+          },
+          {
+            "name": "GamesDiscount",
+            "id": 1689081960276,
+            "customData": {
+              "id": "cn"
+            },
+            "_$muuri_id": "eafb4083-41d6-4cab-8f65-89ad3a28e1e4"
+          },
+          {
+            "name": "fish",
+            "id": 1689081869660,
+            "customData": {},
+            "_$muuri_id": "0cc78ee8-e1ab-41ef-ac24-1f1793786afa"
+          }
+        ],
+        "settings": {
+          "cardZoom": 100,
+          "marginTop": 0,
+          "cardMargin": 5
+        }
+      },
+      deskWidth: 1173,
+      deskHeight: 668,
+      cardsHeight: 519,
+      zoom: 1,
+      windowWidth: document.body.clientWidth,
+      windowHeight: document.body.clientHeight,
+      previewWidth: 0,
+      previewHeight: 0,
+    } 
   },
   props: {
     // 方案
@@ -96,28 +143,69 @@ export default {
     showModal: {
       type: Boolean,
       default: () => false
-    }
+    },
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
+
   },
   watch: {
     showModal(newVal){
       if(newVal)this.fullScreen = true
-    }
+      var that = this
+      if(this.fullScreen){
+        this.getPreviewHeight()
+      }
+      window.onresize = () => {
+        return (() => {
+          // that.windowHeight = document.documentElement.clientHeight // 高
+          // that.windowWidth = document.documentElement.clientWidth // 宽
+          that.getPreviewHeight()
+        })()
+      }
+
+      // if(this.cardHeight !== this.windowHeight){
+      //   let zoom = ((this.windowHeight / this.deskHeight) * 100).toFixed()
+      //   this.cards.settings.cardZoom = zoom
+      // }
+      // this.previewH = that.windowHeight+'px'
+    },
+    // windowHeight(val){
+    //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
+    //   // this.cards.settings.cardZoom = zoom
+    //   let cardContent2 = window.getComputedStyle(document.getElementById("cardContent"));
+    //   let cardContent = document.getElementById("cardContent");
+    //   this.previewHeight = cardContent.offsetHeight
+    //   let previewHeight2 = cardContent.clientHeight
+    //   let cardZoom = (((this.zoom * this.previewHeight) / this.cardsHeight) * 100).toFixed()
+    //   this.cards.settings.cardZoom = cardZoom
+    // }
   },
   methods: {
     addPlan(scheme){
       message.success('添加成功');
       this.openDrawer = false
+      this.close()
+    },
+    close(){
+      this.cards.settings.cardZoom = 100
       this.$emit('closePreview',false)
       this.fullScreen = false
     },
-    close(){
-      this.$emit('closePreview',false)
-      this.fullScreen = false
+    getPreviewHeight(){
+      this.$nextTick(() => {
+        this.previewHeight = document.getElementById("previewContent").offsetHeight
+        let cardZoom = (((this.zoom * this.previewHeight) / this.cardsHeight) * 100).toFixed()
+        this.cards.settings.cardZoom = cardZoom
+      })
     }
-  }
+    // getScreenSize() {
+    //   this.screenWidth = window.innerWidth;
+    //   this.screenHeight = window.innerHeight;
+    // },
+  },
+  mounted() {
+  },
 }
 </script>
 
@@ -131,7 +219,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      // justify-content: space-between;
       padding: 12px;
       z-index: 9999;
       .head-icon{
@@ -156,6 +244,8 @@ export default {
         justify-items: center;
         align-items: end;
         height: 10%;
+        // position: absolute;
+        // bottom: 15px;
         >div{
           background: var(--mask-bg);
           border-radius: 12px;
@@ -215,4 +305,30 @@ export default {
         font-weight: 400;
       }
     }
+    .test-style{
+    height:100%;
+    width: 100%;
+    position: relative;
+ }
+ .desk-style{
+  position: relative;
+ }
+ .desk-style::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 9;
+ }
+ .preview{
+  width:95%;
+  height: 75%;
+  // height:var(--previewH);
+ }
+//  .preview2{
+//   width:95%;
+//   height: 90%;
+//  }
 </style>

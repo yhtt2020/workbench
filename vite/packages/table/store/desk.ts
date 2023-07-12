@@ -19,7 +19,8 @@ export const deskStore = defineStore("desk", {
             sumLikes: 123,
             download: 113,
             time: 1687881600000,
-            size: '1920x1080',
+            size: '1172x662',
+            cardsHeight: 519,
             blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
             labelList: ['游戏','玩家'],
             cardList: [

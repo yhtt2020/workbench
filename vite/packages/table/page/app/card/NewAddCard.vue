@@ -73,7 +73,7 @@
       </div>
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
         <NavMenu :list="deskList" :currenIndex="navDeskIndex" @changeNav="updateDeskIndex" />
-        <div class="ml-5 right no-drag" style="width:100%;height:90%;overflow: auto;">
+        <div class="ml-5 no-drag">
           <DeskMarket :selected="searchValue" :navList="deskList[navDeskIndex].children" @openPerview="openPerview"></DeskMarket>
           <!-- 预览 -->
           <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
@@ -131,7 +131,7 @@ export default {
       navDeskIndex: 0,
       openDrawer: false,
       scheme: {},
-      showModal: false
+      showModal: false,
     }
   },
 
@@ -246,8 +246,10 @@ export default {
       this.openDrawer = val
     },
     openPerview({scheme,showModal}){
+      // console.log(showModal)
       this.scheme = scheme
       this.showModal = showModal
+
     },
     closePreview(){
       this.showModal = false

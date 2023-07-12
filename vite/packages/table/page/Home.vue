@@ -49,7 +49,8 @@
           display: flex;
           align-items: center;
           align-content: center;
-        " :style="{ 'padding-top': this.settings.marginTop + 'px' }">
+        " :style="{ 'padding-top': this.settings.marginTop + 'px' }"
+        id="cardContent">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
         <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
@@ -294,7 +295,7 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div> -->
   </a-drawer>
-  <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+  <DeskPreview :scheme="scheme" :showModal="showModal" :fatherWidth="screenWidth" @closePreview="closePreview"></DeskPreview>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
 </template>
 
@@ -594,7 +595,8 @@ export default {
       showModal: false,
       deskCode: '',
       shareCode: false,
-      panelIndex: 0
+      panelIndex: 0,
+      screenWidth: 0,
     };
   },
   components: {
@@ -666,7 +668,8 @@ export default {
       "backgroundSettings",
       "backgroundImage",
       "styles",
-      "style"
+      "style",
+      "fullScreen"
     ]),
 
     ...mapWritableState(appStore, {
@@ -703,6 +706,11 @@ export default {
     },
   },
   async mounted() {
+    // this.$nextTick(() => {
+    //   let cardContent = document.getElementById("cardContent");
+    //   console.log(cardContent.offsetHeight)
+    // })
+    
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
     //    password:'xyx86170060',
@@ -1050,6 +1058,10 @@ export default {
     openPerview({scheme,showModal}){
       this.scheme = scheme
       this.showModal = showModal
+      this.getScreenSize()
+    },
+    getScreenSize() {
+      this.screenWidth = window.innerWidth;
     },
     closePreview(){
       this.showModal = false
@@ -1061,7 +1073,7 @@ export default {
       this.panelIndex = 1
       this.visibleAdd = true;
       this.addDeskVisible = false;
-    },
+    }
   },
   watch: {
     currentDeskIndex: {
@@ -1091,6 +1103,11 @@ export default {
         this.$refs.grid.update();
       },
     },
+    fullScreen: {
+      handler(newValue) {
+        this.$refs.grid.update();
+      },
+    }
   },
 };
 </script>
