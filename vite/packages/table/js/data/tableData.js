@@ -256,3 +256,74 @@ export default {
   ]
 }
 
+export const testData = [
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+]
+
+
+export const checkColumns = [
+  {
+    title: '日期',
+    dataIndex: 'date',
+    width: '20%',
+  },
+  {
+    title: '购买商品',
+    dataIndex: 'name',
+    width: '20%',
+  },
+  {
+    title: '金额',
+    dataIndex: 'price',
+    width: '20%',
+  },
+  {
+    title:'用途',
+    dataIndex:'use',
+  },
+  {
+    dataIndex:'controls',
+    width: '20%',
+  }
+]
+
+export const giftColumns = [
+  {
+    title: '日期',
+    dataIndex: 'date',
+    width: '20%',
+  },
+  {
+    title: '礼物',
+    dataIndex: 'name',
+    width: '20%',
+  },
+  {
+    title: '金额',
+    dataIndex: 'price',
+    width: '15%',
+  },
+  {
+    title:'来自',
+    dataIndex:'beFrom',
+  },
+  {
+    dataIndex:'controls',
+    width: '15%',
+  }
+]
