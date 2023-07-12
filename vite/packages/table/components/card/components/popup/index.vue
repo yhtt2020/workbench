@@ -31,6 +31,7 @@
 
 <script>
 export default {
+  name: "XtPopup",
   methods: {
     close() {
       this.$emit("close");

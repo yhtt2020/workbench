@@ -1,26 +1,32 @@
 <template>
-  <div class="rounded-xl "
-  
-  :class="isFull ? '' : 'p-3 xt-bg'">
-    <Header></Header>
-    <component :is="model"></component>
+  <div class="rounded-xl" :class="isFull ? '' : 'p-3 xt-bg'">
+    <!-- <div>
+      {{ isModel }}
+      <a-button @click="isModel = !isModel">click</a-button>
+    </div> -->
+    <template v-if="isModel">
+      <Use></Use>
+    </template>
+    <template v-else>
+      <component :is="model"></component>
+    </template>
   </div>
 </template>
 
 <script>
-import Header from "./Header.vue";
 import Default from "./defalut/index.vue";
 import My from "./user/index.vue";
+import Use from "./use/index.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../store/ai";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["model"]),
+    ...mapWritableState(aiStore, ["model", "isFull", "isModel"]),
   },
   components: {
-    Header,
     Default,
     My,
+    Use,
   },
   data() {
     return {};

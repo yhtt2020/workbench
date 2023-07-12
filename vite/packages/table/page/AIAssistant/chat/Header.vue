@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center mb-2">
+  <div class="flex justify-between items-center">
     <div class="flex items-center">
       <!-- 搜索 和 创建 -->
       <a-input
@@ -27,7 +27,6 @@
           style="font-size: 26px"
         ></Icon>
       </div>
-      <FullBtn></FullBtn>
     </div>
   </div>
   <Popup v-if="createChatVisible" @close="createChatVisible = false">
@@ -36,7 +35,6 @@
 </template>
 
 <script>
-import FullBtn from "../components/FullBtn.vue";
 import createTopic from "./createTopic.vue";
 import Popup from "../components/Popup.vue";
 
@@ -50,9 +48,6 @@ export default {
       createChatVisible: false,
       searchValue: "",
     };
-  },
-  components: {
-    FullBtn,
   },
 };
 </script>

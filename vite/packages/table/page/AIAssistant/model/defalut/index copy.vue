@@ -1,15 +1,16 @@
 <template>
   <div class="flex flex-col h-full">
+    {{ isModel }}
     <div
-      class="flex-grow h-full b-4"
-      style="margin-bottom: 50px; border: 1px solid red"
+      class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar"
+      style="margin-bottom: 50px"
     >
       <template v-for="data in dafalutData">
         <div class="text-base mt-4">{{ data.name }}</div>
         <div class="flex flex-wrap">
           <template v-for="item in data.children">
             <div
-              @click="useModel"
+              @click="useModel()"
               style="height: 150px; width: 280px"
               class="mt-4 mr-4 xt-bg-2 rounded-xl flex justify-center items-center flex-col p-8 cursor-pointer"
             >
@@ -29,7 +30,7 @@ import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["isModel"]),
+    ...mapWritableState(aiStore, ["isModel", "isFull"]),
   },
   data() {
     return {
@@ -39,8 +40,10 @@ export default {
   computed: {},
   methods: {
     useModel() {
-      console.log("isModel :>> ", this.isModel);
-      this.isModel = !this.isModel;
+      console.log("1 :>> ", this.isModel);
+      this.isModel = true;
+      this.isFull = true;
+      console.log('this.isFull :>> ', this.isFull);
     },
   },
 };

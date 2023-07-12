@@ -49,7 +49,6 @@ export default {
       this.popupVisible = true;
     },
     close() {
-      console.log("1 :>> ", 1);
       this.popupVisible = false;
     },
   },

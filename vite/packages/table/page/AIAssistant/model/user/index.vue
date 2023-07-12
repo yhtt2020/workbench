@@ -5,8 +5,10 @@
       style="margin-bottom: 50px"
     >
       <div class="flex flex-wrap">
+        {{ isModel }}
         <template v-for="item in userData">
           <div
+            @click="isModel = true"
             style="height: 150px; width: 280px"
             class="mt-4 mr-4 xt-bg-2 rounded-xl flex justify-center items-center flex-col p-8 cursor-pointer"
           >
@@ -21,7 +23,12 @@
 
 <script>
 import { userData } from "./userData";
+import { mapWritableState } from "pinia";
+import { aiStore } from "../../../../store/ai";
 export default {
+  computed: {
+    ...mapWritableState(aiStore, ["isModel"]),
+  },
   data() {
     return {
       userData,

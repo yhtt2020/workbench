@@ -1,6 +1,6 @@
 <template>
   <textarea
-    class="xt-border rounded-xl xt-bg-2 p-2"
+    class="xt-border rounded-xl xt-bg-2 p-2 xt-scrollbar"
     :class="border"
     style="
       resize: none;

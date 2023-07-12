@@ -1,5 +1,5 @@
 <template>
-  <component :is="selectTab" class="w-full"></component>
+  <component :is="selectTab" class="w-full h-full"></component>
 </template>
 
 <script>

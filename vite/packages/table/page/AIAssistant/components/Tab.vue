@@ -16,7 +16,6 @@ export default {
   computed: {
     ...mapWritableState(aiStore, ["selectTab", "isFull"]),
     showName() {
-      console.log("this.isFull :>> ", this.isFull);
       return this.isFull ? false : true;
     },
   },

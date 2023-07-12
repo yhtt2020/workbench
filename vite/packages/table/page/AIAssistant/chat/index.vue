@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="flex h-full w-full  rounded-xl flex-col"
-    :class="isFull ? '' : 'p-3 xt-bg'"
-  >
-    <Header></Header>
+  <div class="flex h-full w-full rounded-xl flex-col">
     <div class="flex h-full">
       <Topic></Topic>
       <div class="h-full w-full flex flex-col" style="border: 1px solid red">
@@ -22,7 +18,6 @@
 </template>
 
 <script>
-import Header from "./Header.vue";
 import Text from "../core/Text.vue";
 import Topic from "./topic.vue";
 
@@ -33,7 +28,6 @@ export default {
     ...mapWritableState(aiStore, ["isFull"]),
   },
   components: {
-    Header,
     Topic,
     Text,
   },

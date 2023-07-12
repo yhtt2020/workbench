@@ -7,6 +7,7 @@ export const aiStore = defineStore("aiStore", {
       fullState: {}, // 记录组件展示状态
       // 模板组件数据------------------------------
       model: "default",
+      isModel: false, // 模板使用中
     };
   },
   actions: {},
