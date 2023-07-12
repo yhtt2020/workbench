@@ -25,6 +25,7 @@
 <script>
 import { colorList } from "./color";
 export default {
+  name: "XtColor",
   data() {
     return {
       colorList,

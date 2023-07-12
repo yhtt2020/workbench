@@ -1,8 +1,5 @@
 <template>
   <Title> 链接/快捷方式 </Title>
-  <!-- 未选择打开方式 -->
-
-  {{ link }}
   <div class="flex justify-between" v-if="edit.link == ''">
     <div
       class="xt-btn xt-text xt-hover h-12"
@@ -108,6 +105,7 @@ export default {
       );
     },
   },
+
   methods: {
     clear() {
       this.edit.linkValue = "";
@@ -126,7 +124,8 @@ export default {
     fastClick() {
       this.$nextTick(() => {
         this.$refs.fastNavRef.showFastNav();
-      });i
+      });
+      i;
     },
     // 获取app信息
     returnApp(item) {
