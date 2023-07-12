@@ -1,8 +1,8 @@
 <template>
-  <div style="max-width: 100%;width: 360px" class="flex-col">
+  <div style="max-width: 100%;width: 360px" class="flex-col py-4">
     <div class="flex items-center my-3 mx-3">
-      <div style="width:100px;height: 100px;position:relative;">
-        <FrameAvatar :avatarSize="50" :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.equippedItems?.frameDetail.image">
+      <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
+        <FrameAvatar :avatarSize="60" :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.equippedItems?.frameDetail?.image">
         </FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
                    :title="displayUserInfo.certification[0].name">
@@ -10,12 +10,15 @@
                     :src="displayUserInfo.certification[0].attestation_icon"></a-avatar>
         </a-tooltip>
       </div>
-      <div class="flex flex-col">
-        <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ displayUserInfo.nickname }}</div>
-        <div class="rounded-md px-2 bg-mask inline-block font-bold" style="background: var(--primary-bg);">UID: {{
-            uid
-          }}
+      <div class="flex flex-col ml-2 " style="flex: 1">
+        <div class="mb-1  font-bold truncate"> {{ displayUserInfo.nickname }}</div>
+        <div>
+          <div class="rounded-md px-2 bg-mask inline-block font-bold" style="background: var(--primary-bg);width: auto">UID: {{
+              uid
+            }}
+          </div>
         </div>
+
       </div>
     </div>
     <div class="flex flex-col mb-4">
@@ -67,6 +70,7 @@ export default {
   watch: {
     'uid': {
       async handler () {
+        this.updateUserInfo()
         this.updateUserMedal()
         this.grade = await this.getMemberGrade(this.uid)
         this.key = Date.now()
@@ -96,27 +100,30 @@ export default {
     if (!this.uid) {
       return
     }
-    let response = await this.getUserCard(this.uid)
-    console.log(response, '用户信息')
-    if (response.code === 200) {
-
-      const data = response.data
-      this.userCardUserInfo = {
-        uid: this.uid,
-        nickname: data.user.nickname,
-        avatar: data.user.avatar_128,
-        signature: data.user.signature,
-        certification: data.user.all_certification_entity_pc || [],
-        equippedItems: data.equippedItems
-      }
-    }
-    console.log(this.userCardUserInfo)
+    this.updateUserInfo()
     this.updateUserMedal()
     this.grade = await this.getMemberGrade(this.uid)
   },
   methods: {
     ...mapActions(teamStore, ['getMemberGrade', 'getUserMedal']),
     ...mapActions(appStore, ['getUserCard']),
+    async updateUserInfo () {
+      let response = await this.getUserCard(this.uid)
+      console.log(response, '用户信息')
+      if (response.code === 200) {
+
+        const data = response.data
+        this.userCardUserInfo = {
+          uid: this.uid,
+          nickname: data.user.nickname,
+          avatar: data.user.avatar_128,
+          signature: data.user.signature,
+          certification: data.user.all_certification_entity_pc || [],
+          equippedItems: data.equippedItems
+        }
+      }
+      console.log(this.userCardUserInfo)
+    },
     updateUserMedal () {
       this.getUserMedal(this.uid).then(result => {
         if (result) {

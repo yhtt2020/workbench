@@ -108,7 +108,7 @@
       <!-- <a-divider style="margin-top: 10px;margin-bottom: 10px;color: red;"></a-divider> -->
       <div style="margin-top: 10px;margin-bottom: 10px;text-align: center;">—————</div>
       <vue-custom-scrollbar :settings="outerSettings"
-                            style="position:relative;height:100%;  ">
+                            style="position:relative;height:100%;padding-top: 5px  ">
         <div @click="showUserDetail(teamLeader.userInfo,teamLeader)"
              :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
@@ -116,7 +116,7 @@
           <UserAvatar  :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
                       :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
-          <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
+          <div v-if="showDetail" class="pt-1 truncate mt-3" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
           </div>
         </div>

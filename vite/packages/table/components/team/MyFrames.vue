@@ -1,10 +1,11 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import {avatarBgColor, avatarGainMethodText, avatarTagColor, textTag, titleTagColor} from "../../js/common/avatar";
-import {mapActions} from "pinia";
+import {mapActions, mapState} from "pinia";
 import {frameStore} from "../../store/avatarFrame";
 import {message} from 'ant-design-vue'
 import {appStore} from "../../store";
+import {teamStore} from "../../store/team";
 
 export default {
   name: "MyFrames",
@@ -19,6 +20,9 @@ export default {
       },
       frameList: []
     }
+  },
+  computed:{
+    ...mapState(teamStore,['team'])
   },
   mounted() {
     this.getMyFrames().then(rs => {
@@ -39,6 +43,7 @@ export default {
   methods: {
         ...mapActions(frameStore, ['getMyFrames', 'equipFrame']),
     ...mapActions(appStore,['getUserInfo']),
+    ...mapActions(teamStore,['refreshTeamUsers']),
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     async equip(item) {
       let rs = await this.equipFrame(item.nanoid)
@@ -49,6 +54,7 @@ export default {
         })
         item.equipped=true
         this.getUserInfo()
+        this.refreshTeamUsers()
         message.success('装备成功。')
       } else {
         message.error('装备失败，请稍后再试。')

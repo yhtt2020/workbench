@@ -200,6 +200,10 @@ export const teamStore = defineStore("teamStore", {
       }
     },
 
+    async refreshTeamUsers(){
+      await this.getTeamLeader(this.team.no,0,0)
+      await this.getTeamMembers(this.team.no,0,0)
+    },
 
     async updateTeam(no, cache,withRank=false) {
       let conf = await getConfig()
@@ -270,6 +274,7 @@ export const teamStore = defineStore("teamStore", {
         await this.closeTeam()
       }
     },
+
     /**
      * 检查自己是不是成员，此方法包括队长也算在内
      */

@@ -1,17 +1,17 @@
 <template>
-  <div style="position: relative;">
+  <div style="position: relative;text-align: center;height: 50px">
     <template v-if="showDetail === false">
       <div v-if="tag" class="rounded-lg w-10 tag" :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}">
         {{ tag }}
       </div>
-      <FrameAvatar style="transform: scale(0.75)" :avatarSize="42" :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
+      <FrameAvatar  :avatarSize="50" style="" :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
       <OnlineTag style="position: absolute;right:5px;bottom: 5px;z-index: 99" v-if="online"></OnlineTag>
     </template>
     <template v-else>
       <div v-if="tag" class="rounded-lg w-10 tag" :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)',}">
         {{ tag }}
       </div>
-      <FrameAvatar :avatarSize="42" :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
+      <FrameAvatar :avatarSize="50"  :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
       <OnlineTag style="position: absolute;right:20px;bottom: 15px;z-index: 99" v-if="online"></OnlineTag>
     </template>
   </div>

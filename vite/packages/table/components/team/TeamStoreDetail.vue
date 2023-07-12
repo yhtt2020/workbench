@@ -6,26 +6,31 @@
                             style="flex:1;height:0">
         <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col "
              :style="avatarBgColor(item.frame.rarity)">
-          <div class="avatar-top flex mb-4">
+          <div class="avatar-top flex ">
             <div style="width: 100px;height: 100px;">
               <img :src="item.cover" class="w-full h-full object-fill" alt="">
             </div>
             <div class="flex flex-col justify-center ml-4">
-              <div>
+              <div class="mt-2">
                     <span class="avatar-font" :style="titleTagColor(item.frame.rarity)">
                 {{ item.alias }}
               </span>
                 <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item.frame.rarity)">
                 {{ textTag(item.frame.rarity) }}
               </span>
-              </div>
-              <div class="xt-text-2">
+              </div >
+              <div class="xt-text-2 mt-1">
                 {{item.summary}}
               </div>
 
-              <span class="get-way-font">
+              <span class="get-way-font mt-1">
                 获得途径：{{ avatarGainMethodText(item.frame.gainMethod) }}
               </span>
+              <div class="mt-2" v-if="item.prices.length">
+                <a-avatar-group>
+                  <span class="mr-4 xt-text-2" > 已售 {{item.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar">K</a-avatar>
+                </a-avatar-group>
+              </div>
             </div>
             <a-button hidden type="primary" class="rounded-xl" style="height: 44px;color: var(--active-text);">
               试穿
@@ -66,7 +71,7 @@
   </div>
 
   <!-- 收款码付费弹窗组件 -->
-  <a-modal v-model:visible="payVisible" :footer="null" :width="480" :closable="false"
+  <a-modal v-model:visible="payVisible" :footer="null" :width="480" :closable="false" @cancel="closeCheckTimer"
            :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
   >
     <div class="w-full flex items-center mb-6" v-if="isPay === false">
@@ -74,11 +79,11 @@
         收银台
       </div>
       <div class="w-12 flex items-center justify-center h-12 rounded-lg active-button pointer"
-           @click="payVisible = false" style="color: var(--secondary-text);background: var(--secondary-bg);">
+           @click="payVisible = false;closeCheckTimer()" style="color: var(--secondary-text);background: var(--secondary-bg);">
         <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
       </div>
     </div>
-    <CollectionCodeModal :gettingOrder="gettingOrder" :order="order"
+    <CollectionCodeModal @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
                          :needPayAvatar="needPayAvatar"></CollectionCodeModal>
     <!-- 未购买情况下走扫码支付的流程 -->
   </a-modal>
@@ -197,6 +202,7 @@ export default {
   },
   methods: {
     ...mapActions(frameStore, ['getFrameGoods', 'ensureOrder']),
+    ...mapActions(appStore,['showUserCard']),
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     getFramePrice (item) {  // 根据价格类型获取数据
       const money = _.find(item.prices, function (o) { return o.type === 'money' })
@@ -239,6 +245,10 @@ export default {
       this.teamIndex = item.uid
       this.payShow = true
     },
+    closeCheckTimer(){
+      this.$refs.paymentPanel.closeTimer()
+      console.log('关闭支付状态监测')
+    },
     // 点击价格购买逻辑
     buyNow (item) {
       this.needPayAvatar.name = item.summary
@@ -251,10 +261,13 @@ export default {
           if(rs.data.code===200){
             //证明已经支付了
             message.info('已经支付了订单，无需重复支付。')
+            this.getFrameGoods()
             return
           }else if(rs.data.code===400){
             this.payVisible = true // 打开支付弹窗
             this.order = rs.data.order
+            this.$refs.paymentPanel.startTimer()
+            console.log('开始')
             return
           }
         }
