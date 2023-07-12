@@ -6,27 +6,32 @@
                             style="flex:1;height:0">
         <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col "
              :style="avatarBgColor(item.frame.rarity)">
-          <div class="avatar-top flex mb-4">
+          <div class="avatar-top flex ">
             <div style="width: 100px;height: 100px;">
               <img :src="item.cover" class="w-full h-full object-fill" alt="">
             </div>
             <div class="flex flex-col justify-center ml-4">
-              <div>
+              <div class="mt-2">
                     <span class="avatar-font" :style="titleTagColor(item.frame.rarity)">
                 {{ item.alias }}
               </span>
                 <span class="w-11 h-6 rank-font rounded my-2.5" :style="avatarTagColor(item.frame.rarity)">
                 {{ textTag(item.frame.rarity) }}
               </span>
-              </div>
-              <div class="xt-text-2">
+              </div >
+              <div class="xt-text-2 mt-1">
                 {{item.summary}}
               </div>
 
-              <span class="get-way-font">
+              <span class="get-way-font mt-1">
                 获得途径：{{ avatarGainMethodText(item.frame.gainMethod) }}
               </span>
-            </div>
+              <div class="mt-2" v-if="item.prices.length">
+                <a-avatar-group>
+                  <span class="mr-4 xt-text-2" > 已售 {{item.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar">K</a-avatar>
+                </a-avatar-group>
+              </div>
+            </div><q> </q>
             <a-button hidden type="primary" class="rounded-xl" style="height: 44px;color: var(--active-text);">
               试穿
             </a-button>
@@ -197,6 +202,7 @@ export default {
   },
   methods: {
     ...mapActions(frameStore, ['getFrameGoods', 'ensureOrder']),
+    ...mapActions(appStore,['showUserCard']),
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     getFramePrice (item) {  // 根据价格类型获取数据
       const money = _.find(item.prices, function (o) { return o.type === 'money' })
