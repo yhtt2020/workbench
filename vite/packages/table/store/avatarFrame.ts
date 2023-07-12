@@ -14,6 +14,9 @@ const editInfoUrl = sUrl('/app/com/updateUserInfo') // 修改文档信息
 const ensureOrderUrl=sUrl('/app/order/ensure')
 const getQrcodeUrl=sUrl('/app/order/getQrcode')
 const getMyFramesUrl=sUrl('/app/good/frame/my')
+const checkOrderPaidUrl=sUrl('/app/order/checkOrderPaid')
+
+
 
 const equipFrameUrl=sUrl('/app/good/frame/equip')
 //@ts-ignore
@@ -93,6 +96,16 @@ export const frameStore = defineStore('frameStore',{
     async equipFrame(itemNanoid){
       return post(equipFrameUrl,{
         itemNanoid:itemNanoid
+      })
+    },
+
+    /**
+     * 检查订单支付状态，一旦支付成功，自动完成发放业务
+     * @param orderNanoid
+     */
+    async checkOrderPaid(orderNanoid){
+      return post(checkOrderPaidUrl,{
+        nanoid:orderNanoid
       })
     }
   }

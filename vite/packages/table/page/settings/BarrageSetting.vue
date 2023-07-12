@@ -45,7 +45,7 @@ export default {
           ...this.settings.barrage
         }
       )
-      window.$manager.reload()
+      window.$manager.test()
       message.success('刷新成功。')
     }
   }

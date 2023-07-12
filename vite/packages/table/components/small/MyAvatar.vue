@@ -141,7 +141,7 @@ export default {
       <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10">
-          <a-col>
+          <a-col :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
             <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.equippedItems?.frameDetail?.image"></FrameAvatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
@@ -149,7 +149,7 @@ export default {
             </a-badge> -->
           </a-col>
           <!-- 等级 -->
-          <a-col v-if="!simple && level" @click.stop="goMy()" style="position: relative;left:60px;">
+          <a-col  :span="12" v-if="!simple && level" @click.stop="goMy()" style="position: relative;">
             <span ref="minute" class="tip">+1</span>
             <div style="padding-top: 0.2em;">
               <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
@@ -224,11 +224,7 @@ export default {
   background: rgba(42, 40, 40, 0.51);
 }
 
-.frame{
-  position: fixed !important;
-  top: -9px !important;
-  left: 0 !important;
-}
+
 
 .thunder {
   animation: twinkling 1.2s ease-in-out infinite;

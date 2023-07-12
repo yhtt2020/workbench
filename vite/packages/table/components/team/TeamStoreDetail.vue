@@ -66,7 +66,7 @@
   </div>
 
   <!-- 收款码付费弹窗组件 -->
-  <a-modal v-model:visible="payVisible" :footer="null" :width="480" :closable="false"
+  <a-modal v-model:visible="payVisible" :footer="null" :width="480" :closable="false" @cancel="closeCheckTimer"
            :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
   >
     <div class="w-full flex items-center mb-6" v-if="isPay === false">
@@ -74,11 +74,11 @@
         收银台
       </div>
       <div class="w-12 flex items-center justify-center h-12 rounded-lg active-button pointer"
-           @click="payVisible = false" style="color: var(--secondary-text);background: var(--secondary-bg);">
+           @click="payVisible = false;closeCheckTimer()" style="color: var(--secondary-text);background: var(--secondary-bg);">
         <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
       </div>
     </div>
-    <CollectionCodeModal :gettingOrder="gettingOrder" :order="order"
+    <CollectionCodeModal @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
                          :needPayAvatar="needPayAvatar"></CollectionCodeModal>
     <!-- 未购买情况下走扫码支付的流程 -->
   </a-modal>
@@ -239,6 +239,10 @@ export default {
       this.teamIndex = item.uid
       this.payShow = true
     },
+    closeCheckTimer(){
+      this.$refs.paymentPanel.closeTimer()
+      console.log('关闭支付状态监测')
+    },
     // 点击价格购买逻辑
     buyNow (item) {
       this.needPayAvatar.name = item.summary
@@ -251,10 +255,13 @@ export default {
           if(rs.data.code===200){
             //证明已经支付了
             message.info('已经支付了订单，无需重复支付。')
+            this.getFrameGoods()
             return
           }else if(rs.data.code===400){
             this.payVisible = true // 打开支付弹窗
             this.order = rs.data.order
+            this.$refs.paymentPanel.startTimer()
+            console.log('开始')
             return
           }
         }

@@ -90,6 +90,7 @@ export default {
       },
 
       pointVisible: false, // 头像框积分兑换
+      checkTimer:null,
     }
   },
   watch: {
@@ -106,9 +107,38 @@ export default {
     }
   },
   mounted () {
+ this.startTimer()
+  },
+  unmounted () {
+    this.closeTimer()
   },
   methods: {
-    ...mapActions(frameStore, ['getQrcode']),
+    ...mapActions(frameStore, ['getQrcode','checkOrderPaid']),
+    startTimer(){
+      if(!this.checkTimer){
+        this.checkTimer= setInterval(()=>{
+          this.checkOrderPaidStatus()
+        },1000)
+      }
+    },
+    closeTimer(){
+      if(this.checkTimer){
+        clearInterval(this.checkTimer)
+        this.checkTimer=null
+      }
+    },
+    async checkOrderPaidStatus () {
+      if (this.order) {
+        let rs = await this.checkOrderPaid(this.order.nanoid)
+        if (rs.status) {
+          message.success('感谢支持，系统已经为您自动发放道具。')
+          this.closeTimer()
+          this.$emit('payOk')
+        } else {
+          console.log('检测到订单待支付')
+        }
+      }
+    },
    generateQrcode(payment){
       if(!this.order.nanoid){
         console.log('订单还未获取到')
