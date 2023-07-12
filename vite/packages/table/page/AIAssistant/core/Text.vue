@@ -1,7 +1,7 @@
 <template>
     <div class="xt-bg-2 w-full p-2 rounded-xl relative mt-1">
       <textarea
-        class="w-full block resize-none overflow-y-auto text-base"
+        class="w-full block  overflow-y-auto text-base"
         style="
           resize: none;
           background-color: transparent;
