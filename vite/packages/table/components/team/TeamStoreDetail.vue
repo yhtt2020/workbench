@@ -71,8 +71,8 @@
   </div>
 
   <!-- 收款码付费弹窗组件 -->
-  <a-modal v-model:visible="payVisible" :footer="null" :width="480" :closable="false" @cancel="closeCheckTimer"
-           :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
+  <a-modal centered v-model:visible="payVisible" :footer="null" :width="480" :closable="false" @cancel="closeCheckTimer"
+           :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}"
   >
     <div class="w-full flex items-center mb-6" v-if="isPay === false">
       <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">
@@ -89,8 +89,8 @@
   </a-modal>
 
   <!-- 积分付费弹窗组件 -->
-  <a-modal v-model:visible="pointVisible" :footer="null" :width="480" :closable="false"
-           :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}" :height="0"
+  <a-modal centered v-model:visible="pointVisible" :footer="null" :width="480" :closable="false"
+           :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}"
   >
     <div class="flex mb-6">
       <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">
