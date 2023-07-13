@@ -257,22 +257,71 @@ export default {
 }
 
 export const testData = [
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'自用',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
-  {date:'2023-07-03',name:'小恶魔头像框',price:'￥9.99',use:'赠送',beFrom:'',avatar_url:'/img/001.png',username:'Victor Ruiz'},
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'赠送',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'赠送',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'赠送',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
+  {
+    date:'2023-07-03',name:'小恶魔头像框',price:'￥9.90',use:'自用',
+    user:{avatar_url:'/img/001.png',username:'Victor Ruiz'},
+    frame_url:'https://a.apps.vip/icons/frame/demon.png',
+    order_number:'kWOLwUAMcZ'
+  },
 ]
 
 
@@ -280,24 +329,29 @@ export const checkColumns = [
   {
     title: '日期',
     dataIndex: 'date',
+    key:'date',
     width: '20%',
   },
   {
     title: '购买商品',
     dataIndex: 'name',
+    key:'name',
     width: '20%',
   },
   {
     title: '金额',
     dataIndex: 'price',
+    key:'price',
     width: '20%',
   },
   {
     title:'用途',
     dataIndex:'use',
+    key:'use',
   },
   {
     dataIndex:'controls',
+    key:'controls',
     width: '20%',
   }
 ]
@@ -320,7 +374,9 @@ export const giftColumns = [
   },
   {
     title:'来自',
-    dataIndex:'beFrom',
+    dataIndex:'user',
+    key:'user',
+    width: '20%',
   },
   {
     dataIndex:'controls',
