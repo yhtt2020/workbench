@@ -319,6 +319,10 @@ import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
+import {setWallpaperColor} from "../components/card/hooks/styleSwitch/setStyle"
+import { delWallpaperColor} from "../components/card/hooks/styleSwitch/delStyle"
+import {setTransparent,detTransparent} from "../components/card/hooks/themeSwitch"
+
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -810,13 +814,20 @@ export default {
       this.menuVisible = false;
     },
     setTransparent() {
-      if (this.appSettings.transparent) {
-        window.localStorage.setItem("transparent", JSON.stringify("true"));
-        document.documentElement.classList.add("transparent");
-      } else {
-        window.localStorage.removeItem("transparent")
-        document.documentElement.classList.remove("transparent");
+      console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);
+      if ( this.appSettings.transparent) {
+        // setWallpaperColor('none')
+        setTransparent()
+      }else  {
+        detTransparent();
       }
+      // if (this.appSettings.transparent) {
+      //   window.localStorage.setItem("transparent", JSON.stringify("true"));
+      //   document.documentElement.classList.add("transparent");
+      // } else {
+      //   window.localStorage.removeItem("transparent")
+      //   document.documentElement.classList.remove("transparent");
+      // }
     },
     customEvent() {
       this.$refs.grid.update();
