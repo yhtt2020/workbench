@@ -708,11 +708,6 @@ export default {
     },
   },
   async mounted() {
-    // this.$nextTick(() => {
-    //   let cardContent = document.getElementById("cardContent");
-    //   console.log(cardContent.offsetHeight)
-    // })
-
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
     //    password:'xyx86170060',
@@ -831,17 +826,18 @@ export default {
     window.onresize = () => {
       this.scrollbar = Date.now();
 
-        this.$nextTick(() => {
-          let cardsHeight = document.getElementById("cardContent").offsetHeight;
-          let deskHeight = document.documentElement.clientHeight // 高
-          let deskWidth = document.documentElement.clientWidth // 宽
-          let size = {
-            deskWidth,
-            deskHeight,
-            cardsHeight,
-          }
-          this.setDeskSize(size)
-        })
+      this.$nextTick(() => {
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
+        let size = {
+          deskWidth,
+          deskHeight,
+          cardsHeight,
+        }
+        // console.log(deskHeight)
+        this.setDeskSize(size)
+      })
     };
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
@@ -1117,11 +1113,11 @@ export default {
         this.$refs.grid.update();
       },
     },
-    fullScreen: {
-      handler(newValue) {
-        this.$refs.grid.update();
-      },
-    }
+    // showModal: {
+    //   handler(newValue) {
+    //     this.$refs.grid.update();
+    //   },
+    // }
   },
 };
 </script>

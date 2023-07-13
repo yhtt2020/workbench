@@ -230,7 +230,6 @@ export const deskStore = defineStore("desk", {
   }),
   actions: {
     setDeskList(item){
-      console.log(item)
       this.deskList.map((desk,index) => {
         if(desk.cname === item.assort){
           this.deskList[index].children.push(item)

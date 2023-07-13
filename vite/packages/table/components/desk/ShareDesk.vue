@@ -28,6 +28,11 @@
         </template>
         <a-select-option v-for="(item,index) in assortList" :key="item" :value="index">{{ item }}</a-select-option>
       </a-select>
+      <div class="flex justify-between items-center">
+        <span class="title">隐私保护</span>
+        <a-switch v-model:checked="secretSwitch" aria-checked="false"/>
+      </div>
+      <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">你的隐私信息是否需要分享，例如便签等</div>
       <span class="title">标签</span>
       <div style="font-size: 14px;" class="xt-text-2 mt-2">最多添加四个标签</div>
       <div class="flex my-4">
@@ -72,6 +77,7 @@ export default {
       shareName: '',
       blurb: '',
       cards: [],
+      secretSwitch: true
     }
   },
   props: {
@@ -93,6 +99,7 @@ export default {
     ...mapActions(deskStore, ["setDeskList"]),
     close(){
       this.$emit('closeShare',false)
+      this.setInitialData()
     },
     addLabel(){
       if(this.labelList.length >= 4)return message.info('最多添加四个')
@@ -105,6 +112,26 @@ export default {
       this.labelList.splice(index,1)
     },
     addPlan(){
+      // let test = []
+      // test = this.cards.map((item,index) => {
+      //   if(item.customData)item.customData = {}
+      //   return item
+      //   // if(item.customData)
+      // })
+
+      let cards = JSON.parse(JSON.stringify(this.cards))
+      cards.forEach(item => {
+        switch (item.name) {
+          case 'notes':
+            if(item.customData){
+              item.customData.text = ''
+            }
+            break;
+          case 'countdownDay':
+            break;
+        }
+      })
+      if(this.assort === '请选择') return message.info('请选择分类')
       const time = new Date().valueOf()
       this.scheme = {
         id: nanoid(), 
@@ -122,18 +149,22 @@ export default {
         cardsHeight: this.deskSize.cardsHeight,
         blurb: this.blurb,
         labelList: this.labelList,
-        cards: this.cards,
+        cards: this.secretSwitch ? cards : this.cards,
         settings: this.settings,
         cardList: []
       }
       this.setDeskList(this.scheme)
       this.close()
       this.shareModal = true
+      this.setInitialData()
+    },
+    setInitialData(){
       this.desk = this.deskType[0]
       this.shareName = ''
       this.assort = this.assortList[0]
       this.blurb = ''
       this.labelList = []
+      this.secretSwitch = true
     },
     closeShare(val){
       this.shareModal = val
@@ -142,6 +173,7 @@ export default {
       this.desks.map((item,i) => {
         if(index === i){
           this.cards = item.cards
+          this.shareName = item.name
         }
       })
     }
@@ -154,6 +186,8 @@ export default {
     this.deskType = this.desks.map(item => item.name)
     this.desk = this.deskType[0]
     this.cards = this.desks[0].cards
+    this.shareName = this.desk
+    this.secretSwitch = true
   },
 }
 </script>
