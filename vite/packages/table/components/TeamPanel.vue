@@ -8,27 +8,20 @@
             <ul class="nav-list">
               <li  @click="closeDetail" class="flex pointer items-center justify-center mb-3">
                 <div class="rounded-lg"  style="background: var(--secondary-bg);">
-                  <Icon icon="doubleright"></Icon>
+                  <Icon icon="doubleright" style="font-size: 0.9233em;"></Icon>
                 </div>
               </li>
-
-              <!--
-                <div @click="closeDetail" class="p-2 rounded-md inline-block mx-3 mb-3 mt-4 pointer"
-             style="position:absolute;top:0;left:9px;width: 2.8em;text-align: center;z-index: 99;">
-          <Icon icon="doubleright" style="font-size: 1.5em"></Icon>
-        </div>
-               -->
               <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
-                <div><icon icon="xiaoxi"></icon></div>
+                <div><icon icon="xiaoxi"  style="font-size: 0.9233em;"></icon></div>
               </li>
               <li @click="currentTab='devote'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='devote'}">
-                <div><icon icon="thunderbolt"></icon></div>
+                <div><icon icon="thunderbolt"  style="font-size: 0.9233em;"></icon></div>
               </li>
               <li @click="currentTab='info'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='info'}">
-                <div><icon icon="tishi-xianxing"></icon></div>
+                <div><icon icon="tishi-xianxing"  style="font-size: 0.9233em;"></icon></div>
               </li>
               <li @click="currentTab = 'store'" class="flex items-center justify-center" :class="{'nav-active':currentTab === 'store'}">
-                <div><Icon icon="gift"></Icon></div>
+                <div><Icon icon="gift"  style="font-size: 0.9233em;"></Icon></div>
               </li>
 
             </ul>
@@ -36,8 +29,12 @@
           <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
             <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
 
-              <a-col>
-                <a-avatar class="mt-3 ml-3" :size="50" shape="square" :src="team.avatar"></a-avatar>
+              <a-col style="padding: 0 !important;">
+                <div style="width:90px;height:90px;position: relative;" class="ml-5 pt-2">
+                  <!-- <img :src="avatar_url" class="w-full h-full object-cover" alt=""> -->
+                  <a-avatar class="mt-3 ml-3 avatar-top" :size="50" shape="square" :src="team.avatar"></a-avatar>
+                </div>
+                <!--  -->
               </a-col>
               <a-col >
                 <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
@@ -45,7 +42,7 @@
               </a-col>
             </a-row>
             <div v-if="showDetail && currentTab==='info'">
-              <TeamDetail @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
+              <TeamDetail @closeTeam="closeTeam" @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
                           :teamLeader="teamLeader"></TeamDetail>
             </div>
             <div style="flex: 1;height:0" v-if="showDetail && currentTab==='barrage' ">
@@ -55,7 +52,7 @@
                  style="height: 100%;position: relative;width: 100%">
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
-            <div v-if="showDetail && currentTab==='store'">
+            <div v-if="showDetail && currentTab==='store'" style="height: 100%">
               <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
             </div>
           </a-col>
@@ -97,7 +94,9 @@
         </div>
       </div>
       <!-- 快速搜索 小队右边栏 -->
-    <div class="common-panel  flex" style="width: 100px;flex-direction: column;padding-bottom: 0;">
+    <div class="common-panel  flex" style="flex-direction: column;padding-bottom: 0;"
+     :style="showDetail === false ? { width:'80px' } : { width:'100px' }"
+    >
       <div v-if="!showDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
            style="font-size: 1.1em">
@@ -109,25 +108,24 @@
       <!-- <a-divider style="margin-top: 10px;margin-bottom: 10px;color: red;"></a-divider> -->
       <div style="margin-top: 10px;margin-bottom: 10px;text-align: center;">—————</div>
       <vue-custom-scrollbar :settings="outerSettings"
-                            style="position:relative;height:100%;  ">
+                            style="position:relative;height:100%;padding-top: 5px  ">
         <div @click="showUserDetail(teamLeader.userInfo,teamLeader)"
              :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
 
-          <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" :rare="0" :url="''"></UserAvatar>
+          <UserAvatar  :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
+                      :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
-          <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
+          <div v-if="showDetail" class="pt-1 truncate mt-3" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
-
           </div>
         </div>
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
-          <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="0" :url="''"></UserAvatar>
-          <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
+          <UserAvatar :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online" :avatar="user.userInfo.avatar"
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
+          <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
           </div>
@@ -213,13 +211,12 @@ export default {
       teamDetail: false,
       showUid: 0,
       rarity:4, // 稀有度
-      avatar_url:'/img/excellent _avatar.svg',
+      avatar_url:'/img/mg.png',
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
       userInfoKey: Date.now(),
       earningsShow: false,
-
     }
   },
   mounted () {
@@ -329,8 +326,6 @@ export default {
 
 <style scoped lang="scss">
 :deep(.ant-avatar) {
-
-  background: var( --secondary-bg);
   border-radius: 50%;
 }
 .active {
@@ -405,6 +400,7 @@ export default {
       &>div{
         background: var(--active-bg);
         border-radius: 10px;
+        color: var(--active-text);
       }
     }
   }
@@ -416,5 +412,12 @@ export default {
 
 :deep(.ps__rail-y){
   display: none !important;
+}
+
+.avatar-top{
+  position: absolute;
+  top: 13px;
+  left: 10px;
+  z-index: -3;
 }
 </style>

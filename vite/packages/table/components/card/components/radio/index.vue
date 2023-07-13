@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="text" class="text-base" style="margin: 12px 0">{{ text }}</div>
+    <div v-if="text" class="text-base my-3">{{ text }}</div>
     <a-radio-group
       class=""
       v-model:value="select"
@@ -21,6 +21,7 @@
 <script>
 const sizeList = ["large", "default", "small"];
 export default {
+  name: "XtRadio",
   watch: {
     select(newV) {
       // 执行回调
@@ -74,7 +75,7 @@ export default {
     },
     marginY: {
       type: Number,
-      default: 12,
+      default: 0,
     },
     fontSize: {
       type: Number,

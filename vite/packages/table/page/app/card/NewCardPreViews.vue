@@ -23,12 +23,7 @@
             />
           </div>
           <div class="bottom">
-            <img
-              v-for="i in item.option"
-              :src="getImg(i.name)"
-              alt=""
-             
-            />
+            <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
           </div>
         </template>
         <img
@@ -85,32 +80,7 @@
     :cardDetails="cardDetails"
   >
   </NewPreviewCardDetails>
-  <a-drawer
-    :width="500"
-    v-model:visible="settingVisible"
-    placement="right"
-    style="z-index: 9999999999"
-  >
-    <template #title>
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <div style="width: 50%; text-align: right">设置</div>
-        <div
-          style="padding: 10px; border-radius: 5px"
-          class="xt-active-btn"
-          @click="save()"
-        >
-          保存
-        </div>
-      </div>
-    </template>
-    <edit ref="editRef" v-if="settingVisible" v-bind="{...iconOption}"></edit>
-  </a-drawer>
+  <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit>
 </template>
 
 <script>
@@ -118,8 +88,10 @@ import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
-import Edit from "../../../components/widgets/myIcons/components/edit.vue";
+import Edit from "../../../components/widgets/myIcons/edit/index.vue";
 import { myIcons } from "../../../store/myIcons.ts";
+import _ from "lodash-es";
+
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -137,7 +109,7 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(myIcons, ["iconOption"]),
+    ...mapWritableState(myIcons, ["iconOption", "edit"]),
   },
   data() {
     return {
@@ -172,18 +144,20 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["addCard"]),
+    // 添加图标保存
     save() {
-      let editOption = this.$refs.editRef.save();
-      if (typeof editOption === "string") return message.error(editOption);
+ 
+      if (this.edit.src.length === 0) return message.error("图标不能为空");
       this.settingVisible = false;
       this.addCard(
         {
           name: "myIcons",
           id: Date.now(),
-          customData: { iconList: [{ ...editOption }] },
+          customData: { iconList: [{ ...this.edit }] },
         },
         this.desk
       );
+      this.edit = {};
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
@@ -230,8 +204,9 @@ export default {
       this.isCardDetails = true;
     },
     addCardAchieve(item, i) {
-
+      // 添加图标前处理
       if (item.name == "myIcons") {
+        this.edit = _.cloneDeep(this.iconOption);
         this.settingVisible = true;
         return;
       }
@@ -252,7 +227,6 @@ export default {
 
 <style lang="scss" scoped>
 .main-box {
-
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;

@@ -140,7 +140,8 @@ export default {
     let result = await this.getTeamList({
       take: this.take,
       skip: (this.page - 1) * this.take,
-      type:this.teamType.name
+      type:this.teamType.name,
+      cache:1
     })
     if (result) {
       this.list = result.data

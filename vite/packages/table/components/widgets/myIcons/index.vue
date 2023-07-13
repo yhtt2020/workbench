@@ -57,33 +57,8 @@
   </div>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <a-drawer
-    :width="500"
-    v-if="settingVisible"
-    v-model:visible="settingVisible"
-    placement="right"
-    style="z-index: 99999999999"
-  >
-    <template #title>
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <div style="width: 50%; text-align: right">设置</div>
-        <div
-          style="padding: 10px; border-radius: 5px; cursor: pointer"
-          class="xt-active-btn"
-          @click="save()"
-        >
-          保存
-        </div>
-      </div>
-    </template>
-    <edit ref="editRef" v-bind="customData.iconList[index]"></edit>
-  </a-drawer>
+  <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
+  </Edit>
   <!-- 底部导航 -->
   <a-drawer
     v-if="menuVisible"
@@ -96,11 +71,10 @@
     <BottomEdit :menuList="menuList"></BottomEdit>
   </a-drawer>
 </template>
-
 <script>
 // components
 import Widget from "../../card/Widget.vue";
-import edit from "./components/edit.vue";
+import Edit from "./edit/index.vue";
 import icon from "./components/icon.vue";
 import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
@@ -113,7 +87,7 @@ import { myIcons } from "../../../store/myIcons.ts";
 // import { formatArrayAsFileSize } from './hooks/useFileSize.js';
 
 import { message } from "ant-design-vue";
-
+import _ from "lodash-es";
 export default {
   props: {
     customIndex: {
@@ -130,7 +104,7 @@ export default {
   },
   components: {
     Widget,
-    edit,
+    Edit,
     icons,
     icon,
     DragAndFollow,
@@ -139,6 +113,7 @@ export default {
   },
   data() {
     return {
+      iconObj: "",
       menuVisible: false,
       index: 0, // 图标数组的下标
       dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
@@ -182,6 +157,7 @@ export default {
       "iconList",
       "iconsRefs",
       "iconSelect",
+      "edit",
     ]),
     dragStyle() {
       if (this.isSelect) {
@@ -220,9 +196,7 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.menuVisible = false;
-            this.index = 0;
-            this.settingVisible = true;
+            this.openEdit();
           },
         },
         {
@@ -283,6 +257,16 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    openEdit() {
+      let icon = this.customData.iconList[this.index];
+      this.edit = {};
+      Object.keys(this.iconOption).forEach((k) => {
+        this.edit[k] = icon[k] || this.iconOption[k];
+      });
+      this.menuVisible = false;
+      // this.index = 0;
+      this.settingVisible = true;
+    },
     // 开启框选
     dragSelection() {},
     // ctrl + 点击
@@ -345,6 +329,8 @@ export default {
     editIcons(index) {
       this.index = index;
       this.settingVisible = true;
+      this.edit = this.customData.iconList[index];
+      // this.openEdit();
     },
     // 全屏拖拽添加图标
     dragAddIcon(icon) {
@@ -449,10 +435,9 @@ export default {
     },
     // 保存图标
     save() {
-      let editOption = this.$refs.editRef.save(); // 获取编辑组件的最新数据
-      if (typeof editOption === "string") return message.error(editOption);
-      Object.keys(editOption).forEach(
-        (k) => (this.customData.iconList[this.index][k] = editOption[k])
+      if (this.edit.src.length === 0) return message.error("图标不能为空");
+      Object.keys(this.edit).forEach(
+        (k) => (this.customData.iconList[this.index][k] = this.edit[k])
       );
       message.success("保存成功");
       this.settingVisible = false;
@@ -462,7 +447,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.ant-drawer-body){
+:deep(.ant-drawer-body) {
   border: 22px solid red;
 }
 .icon-box {

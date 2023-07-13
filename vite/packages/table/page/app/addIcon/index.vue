@@ -22,7 +22,7 @@
       </div>
     </header>
     <!-- 主体 -->
-    <main class="flex mt-3 h-full" >
+    <main class="flex mt-3 h-full">
       <!-- 左侧 -->
       <div style="" class="h-full">
         <div
@@ -78,7 +78,8 @@
     <footer class="flex items-center justify-center mt-2">
       <Tab
         v-if="navName == 'Links'"
-        style="width: 380px; height: 48px; font-size: 18px"
+        style="width: 380px; height: 48px"
+        boxClass="my-2 p-1 xt-bg-2"
         v-model:data="type"
         :list="linkList"
       ></Tab>

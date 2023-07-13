@@ -355,8 +355,9 @@ import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
 import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
-import {setWallpaperColor}from "../components/card/hooks/styleSwitch/setStyle"
 import SmallRank from "../components/widgets/SmallRank.vue";
+import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
+
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
@@ -650,6 +651,8 @@ export default {
     AddIcon,
     KeyBoard,
     SmallRank,
+    AggregateSearch
+    SmallRank,
     ShareDesk,
     DeskMarket,
     DeskPreview
@@ -710,7 +713,7 @@ export default {
     //   let cardContent = document.getElementById("cardContent");
     //   console.log(cardContent.offsetHeight)
     // })
-    
+
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
     //    password:'xyx86170060',
@@ -908,7 +911,6 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
 
     clearWallpaper() {
-      setWallpaperColor("none")
       this.setBackgroundImage({ path: "" });
       // const value = cache.get("style")
       // document.documentElement.classList.remove(value);

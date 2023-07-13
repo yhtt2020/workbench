@@ -1,0 +1,98 @@
+body {
+  background: var(--main-bg) !important;
+}
+// 主题
+.xt-active-bg {
+  background: var(--active-bg) !important;
+}
+.xt-active-bg-2 {
+  background: var(--active-secondary-bg) !important;
+}
+.xt-active {
+  &:active {
+    background: var(--active-secondary-bg) !important;
+  }
+}
+
+.xt-active-text {
+  color: var(--active-text) !important;
+}
+.xt-active-text-2 {
+  color: var(--active-secondary-bg) !important;
+}
+
+// 文字
+.xt-text {
+  color: var(--primary-text) !important;
+}
+
+.xt-text-2 {
+  color: var(--secondary-text) !important;
+}
+
+.xt-text-3 {
+  color: var(--disable-text) !important;
+}
+
+// 背景
+.xt-main-bg {
+  background: var(--main-bg);
+}
+.xt-bg {
+  background: var(--primary-bg) !important;
+}
+
+.xt-bg-2 {
+  background: var(--secondary-bg) !important;
+}
+
+.xt-modal {
+  background: var(--modal-bg) !important;
+}
+
+.xt-mask {
+  background: var(--mask-bg) !important;
+  backdrop-filter: blur(8px);
+}
+.xt-mask-2 {
+  background: var(--main-mask-bg) !important;
+  backdrop-filter: blur(8px);
+}
+
+.xt-hover {
+  &:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+  }
+}
+// 分割线
+.xt-divider {
+  border: 1px solid var(--divider) !important;
+}
+// 功能
+.error-bg {
+  background: var(--error);
+}
+.error {
+  color: var(--error);
+}
+
+.link-bg {
+  background: var(--link);
+}
+.link {
+  color: var(--link);
+}
+
+.success-bg {
+  background: var(--success);
+}
+.success {
+  color: var(--success);
+}
+
+.warning-bg {
+  background: var(--warning);
+}
+.warning {
+  color: var(--warning);
+}

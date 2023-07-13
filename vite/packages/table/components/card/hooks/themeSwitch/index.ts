@@ -7,7 +7,10 @@ import { DARK_THEME, LIGHT_THEME, THEME_NAME, OLD_THEME_NAME, SUFFIX } from "./t
  */
 export const initTheme = () => {
     const className = compatible()
-    if (className) setThemeName(className);
+    if (className !== DARK_THEME + SUFFIX && className !== DARK_THEME + SUFFIX) {
+        setThemeName(DARK_THEME + SUFFIX);
+    }
+    else if (className) setThemeName(className);
     else {
         setThemeName(DARK_THEME + SUFFIX);
     }
@@ -40,6 +43,7 @@ export const setThemeName = (themeName) => {
  * @param {string} themeName - 必填，主题类名
  */
 export const delThemeName = (themeName) => {
+    if (!themeName) return
     document.documentElement.classList.remove(themeName);
     cache.del(themeName);
 };

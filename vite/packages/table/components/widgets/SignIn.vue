@@ -29,14 +29,14 @@
         <div v-else v-for="item in todayRank" :key="item.id"
              class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
-          <div class="flex-1 flex ml-3 items-center">
-            <a-avatar @click="showCard(item.uid)" :src="item.avatar">
+          <div class="flex-1 flex ml-3 items-center" style="width: 60px">
+            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar" :frame-url="item.equippedItems?.frameDetail?.image">
               <template #icon>
                 <UserOutlined/>
               </template>
-            </a-avatar>
+            </FrameAvatar>
             <div @click="showCard(item.uid)" class="ml-3 truncate"
-                 style="color: var(--primary-text);font-size: 16px;max-width: 120px;">
+                 style="color: var(--primary-text);font-size: 14px;max-width: 120px;">
               {{ item.nickname }}
             </div>
           </div>
@@ -122,10 +122,12 @@ import { comStore } from '../../store/com'
 import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
 import _ from 'lodash-es'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
 
 export default {
   name: 'SingIn',
   components: {
+    FrameAvatar,
     Widget,
     HorizontalPanel,
     UserOutlined
@@ -187,35 +189,35 @@ export default {
     ...mapActions(comStore, ['updateTodayRank', 'doSign', 'getSignInfo', 'getDailyNewUsers']),
     ...mapActions(appStore, ['showUserCard']),
     async popUsers () {
-      console.log('开始弹出用户')
+      // console.log('开始弹出用户')
       if (this.lastUsers.length > 0) {
-        console.log('剩余用户数组', this.lastUsers)
+        // console.log('剩余用户数组', this.lastUsers)
         if (this.lastUsers[0].length < 6) {
-          console.log('剩余用户不足6')
+          // console.log('剩余用户不足6')
           //证明已经没有下一页了
           this.newPeopleList = _.cloneDeep(this.lastUsers[0])
           this.lastUsers.splice(0, 1)//移除
         } else {
-          console.log('剩余用户充足')
+          // console.log('剩余用户充足')
           //如果还有数组
           this.newPeopleList = this.lastUsers[0]
           this.lastUsers.splice(0, 1)//移除
         }
       } else {
-        console.log('剩余用户组不足，翻页')
+        // console.log('剩余用户组不足，翻页')
         //已经没有足够的数组了，就请求下一页
         if (this.page >= this.max) {
-          console.log('已经到达最后一页')
+          // console.log('已经到达最后一页')
           //已经是最多的了，重新获取第一页
           this.page = 1
           await this.request(this.page)
         } else {
 
           this.page++
-          console.log('请求下一页', this.page)
+          // console.log('请求下一页', this.page)
           await this.request(this.page)
         }
-        console.log('再次执行弹出')
+        // console.log('再次执行弹出')
         await this.popUsers()
       }
     },
@@ -224,7 +226,7 @@ export default {
       this.lastUsers = _.chunk(dailyNew.list, 6)//按照每页6个分页
       this.max = dailyNew.pageInfo.pages
       this.total = dailyNew.pageInfo.count
-      console.log(dailyNew, '请求到一页的数据')
+      // console.log(dailyNew, '请求到一页的数据')
     },
     async getTodayList () {
       // let rankResponse = await this.getTodayRank()

@@ -6,6 +6,7 @@ const userCardUrl = sUrl('/app/com/userCard')
 import axios from 'axios'
 import {getConfig} from "./js/axios/serverApi";
 import cache from '../table/components/card/hooks/cache'
+import {post} from "./js/axios/request";
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
@@ -27,7 +28,7 @@ export const appStore = defineStore('appStore', {
     style: "", // 指定样式
     styles: false,  // 浅色切换功能
     stylesIndex:0, // 主题模式下标
-    saving: true,//性能模式 
+    saving: true,//性能模式
 
     simple: false,//极简模式
     agreeTest: false,
@@ -112,10 +113,7 @@ export const appStore = defineStore('appStore', {
      * @param uid
      */
     async getUserCard(uid) {
-      let response = await axios.post(userCardUrl, {uid: uid}, await getConfig())
-      if (response.data.code === 1000) {
-        return response.data.data
-      }
+      return post(userCardUrl,{uid: uid})
     },
 
     setBackgroundImage(value) {
@@ -178,11 +176,16 @@ export const appStore = defineStore('appStore', {
       const getIndex = cache.get('index')
       this.stylesIndex = getIndex
     },
-    
+
     // 修改当前极简模式
     updateSimple(val:boolean){
       this.simple = val
-    }
+    },
+
+    // 将原本头像修改成预设头像
+    // editPresetAvatar(){
+    //   // this.userInfo.avatar = cache.get('comAvatar')
+    // },
   },
   persist: {
     enabled: true,

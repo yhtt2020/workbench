@@ -77,12 +77,25 @@ export default {
             node.textContent ='[小队]'+node.textContent
           }
           let data = barrage.data
+
+          let frameAvatar=document.createElement('div')
+          frameAvatar.classList.add('frame-avatar')
           if (barrage.data.avatar) {
             let avatarEl = document.createElement('img')
             avatarEl.classList.add('barrage-avatar')
             avatarEl.src = data.avatar
-            node.appendChild(avatarEl)
+            frameAvatar.appendChild(avatarEl)
           }
+
+          if(data.userInfo?.equippedItems?.frameDetail?.image){
+            let frameEl=document.createElement('img')
+            frameEl.classList.add('barrage-avatar-frame')
+            frameEl.src=data.userInfo?.equippedItems?.frameDetail?.image
+            frameAvatar.appendChild(frameEl)
+          }
+
+
+          node.appendChild(frameAvatar)
           node.classList.add('barrage-style')
           node.onmouseenter = e => barrage.pause()
           node.onmouseleave = e => { if ($manager.runing) barrage.resume() }
@@ -118,6 +131,7 @@ export default {
     window.$manager = manager
     window.$manager.reload = this.getList
     window.$manager.sendChat = this.sendChat
+    window.$manager.test=this.test
     this.manager = manager
     window.addEventListener('resize', () => {
       manager.resize()
@@ -130,6 +144,10 @@ export default {
   },
   methods: {
     ...mapActions(teamStore,['updateMy']),
+    async test(){
+      this.getList()
+      this.getTeamBarrage()
+    },
     async loadAll(url){
       this.changeUrl(url).then()
       this.getTeamBarrage().then()
@@ -260,6 +278,7 @@ export default {
 }
 
 .barrage-style {
+  position: relative;
   -webkit-app-region: no-drag;
   user-select: none;
   border-radius: 100px;
@@ -270,17 +289,39 @@ export default {
   vertical-align: middle;
   line-height: 28px;
   z-index: 999;
+  padding-left: 50px;
+  margin-top: 10px;
 }
 
 .barrage-avatar {
   object-fit: cover;
   -webkit-app-region: no-drag;
   border-radius: 100%;
+  left: 50%;
+  top: 50%;
   width: 30px;
   height: 30px;
-  float: left;
-  margin-left: -10px;
-  margin-right: 6px;
+  object-fit: cover;
+  transform: translateY(-50%) translateX(-50%);
+  position: absolute;
   vertical-align: text-top;
+}
+.barrage-avatar-frame{
+  position: absolute;
+  left:50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  width: 60px;
+
+}
+.frame-avatar{
+  position: absolute;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+
+  left: -5px;
+  top: 0;
+  margin-top: -8px;
 }
 </style>

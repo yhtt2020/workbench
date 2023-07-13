@@ -8,13 +8,15 @@
       :data-index="index"
     >
       <img
+      v-if="src.length > 0"
         :src="src"
         alt=""
-        :style="[imgSize, radiusState]"
+        :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index"
       />
     </div>
     <div
+      v-if="isTitle"
       class="text-center xt-text h-5 truncate mx-auto"
       :style="[textSize]"
       :data-index="index"
@@ -26,27 +28,21 @@
 
 <script>
 import { message } from "ant-design-vue";
+import editProps from "../hooks/editProps";
+
 export default {
+  mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
     index: { type: Number },
-    // 下面是v-bind参数
-    isRadius: { type: Boolean },
-    radius: { type: Number },
-    isBackground: { type: Boolean },
-    backgroundColor: { type: String },
-    titleValue: { type: String },
-    link: { type: String },
-    linkValue: {},
-    open: {},
-    size: { type: String, default: "mini" },
-    src: { type: String },
-    backgroundIndex: { type: Number },
   },
   computed: {
     // 动态切换圆角状态
     radiusState() {
-      if (this.isRadius) return { borderRadius: this.radius + "px" };
+      if (this.isRadius)
+        return {
+          borderRadius: this.radius + "%",
+        };
       else return { borderRadius: "0px" };
     },
     // 动态切换背景状态
@@ -63,56 +59,115 @@ export default {
     imgSize() {
       return this.getSizeValues(this.size).imgSize;
     },
+    imgStateStyle() {
+      return {
+        "object-fit": this.imgState,
+      };
+    },
+
+  },
+  watch: {
+    imgShape(newV) {
+    },
   },
   methods: {
     getSizeValues(size) {
-      let w, h;
-      let val;
-      if (this.isReSize) size = "mini";
-      switch (size) {
-        case "mini":
-          // w = 134.5;
-          w = 110;
-          h = 96;
-          val = 60;
-          break;
-          case "mini1":
-          w = 280;
-          h = 96;
-          val = 70;
-          break;
-        case "small":
-          w = 280;
-          h = 205;
-          val = 170;
-          break;
-        case "default":
-          w = 280;
-          h = 420;
-          val = 270;
-          break;
-        case "long":
-          w = 570;
-          h = 205;
-          val = 175;
-          break;
-        case "big":
-          w = 570;
-          h = 420;
-          val = 390;
-          break;
+      if (this.isReSize) {
+        size = "mini";
+      }
+      const sizeValues = {
+        mini: {
+          w: 134,
+          h: 96,
+          square: {
+            imgW: 66,
+            imgH: 66,
+          },
+          rectangle: {
+            imgW: 124,
+            imgH: 66,
+          },
+        },
+        mini1: {
+          w: 280,
+          h: 96,
+          square: {
+            imgW: 66,
+            imgH: 66,
+          },
+          rectangle: {
+            imgW: 270,
+            imgH: 66,
+          },
+        },
+        small: {
+          w: 280,
+          h: 205,
+          square: {
+            imgW: 175,
+            imgH: 175,
+          },
+          rectangle: {
+            imgW: 270,
+            imgH: 175,
+          },
+        },
+        default: {
+          w: 280,
+          h: 420,
+          square: {
+            imgW: 270,
+            imgH: 270,
+          },
+          rectangle: {
+            imgW: 270,
+            imgH: 390,
+          },
+        },
+        long: {
+          w: 570,
+          h: 205,
+          square: {
+            imgW: 175,
+            imgH: 175,
+          },
+          rectangle: {
+            imgW: 560,
+            imgH: 175,
+          },
+        },
+        big: {
+          w: 570,
+          h: 420,
+          square: {
+            imgW: 390,
+            imgH: 390,
+          },
+          rectangle: {
+            imgW: 560,
+            imgH: 390,
+          },
+        },
+      };
+
+      let { w, h } = sizeValues[size];
+      let imgW = sizeValues[size][this.imgShape].imgW;
+      let imgH = sizeValues[size][this.imgShape].imgH;
+      h = this.isTitle ? h - 20 : h;
+      if (this.imgShape !== "square") {
+        imgH = this.isTitle ? imgH : imgH + 20;
       }
       return {
         iconSize: {
           width: `${w}px`,
-          height: `${h - 20}px`,
+          height: `${h}px`,
         },
         textSize: {
           width: `${w - 20}px`,
         },
         imgSize: {
-          width: `${val}px`,
-          height: `${val}px`,
+          width: `${imgW}px`,
+          height: `${imgH}px`,
           border: "0px solid red",
         },
       };
