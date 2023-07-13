@@ -1,5 +1,5 @@
 <template>
-  <div :class="typeBgClass" class="w-12 h-12 xt-active">
+  <div :class="typeClass" class="w-12 h-12 xt-active ">
     <Icon :icon="icon" :style="fontSizeStyle"></Icon>
   </div>
 </template>
@@ -13,13 +13,13 @@ export default {
         "font-size": this.size + "px",
       };
     },
-    typeBgClass() {
+    typeClass() {
       if (this.type === "default") {
         return "xt-btn";
       } else if (this.type === "active") {
         return "xt-active-btn";
       } else {
-        return "";
+        return "flex justify-center items-center";
       }
     },
   },

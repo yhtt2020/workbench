@@ -8,7 +8,7 @@
     <template v-for="(item, index) in navList">
       
         <div
-          class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer xt-active"
+          class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer "
           @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''" :data-index="index"
           :data-item="JSON.stringify(item)">
           <span>{{ item.title }}</span>

@@ -5,7 +5,7 @@
     style="z-index: 99999; box-sizing: border-box"
   >
     <!-- 左侧区域开始 -->
-    <div :class="setSpacing('mr')">
+    <div>
       <slot name="left"></slot>
     </div>
     <!-- 左侧区域结束 -->
