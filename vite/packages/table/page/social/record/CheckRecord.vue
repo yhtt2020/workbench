@@ -28,11 +28,12 @@
     </a-table>
     
   </div>
+  
   <Modal v-model:visible="checkDetailShow" v-show="checkDetailShow" :blurFlag="true">
     <div style="width: 480px;" class="flex flex-col">
       <div class="w-full flex p-3 mb-6">
         <div style="width: 90%;" class="flex items-center justify-center">
-          <span class="primary-title" style="color: var(--primary-text);">订单详情</span>
+          <span class="primary-title pl-10" style="color: var(--primary-text);">订单详情</span>
         </div>
         <div class="p-3 flex items-center pointer justify-center button-active rounded-lg" style="background: var(--secondary-bg);" @click="checkDetailShow = false">
           <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
@@ -136,9 +137,19 @@ export default {
   &::-webkit-scrollbar{
     width: 0 !important;
   }
+  color: var(--primary-text) !important;
 }
+
+:deep(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover){
+  color: var(-active-text) !important;
+  opacity: 0.8 !important;
+  background: transparent !important;
+}
+
 :deep(.ant-table-thead > tr > th){
   background: transparent !important;
+  color: var(--primary-text) !important;
+  border: none !important;
 }
 :deep(.ant-table){
   background: var(--primary-bg) !important;
@@ -163,5 +174,8 @@ export default {
 }
 :deep(.ant-table-tbody > tr:last-child > td:last-child){
   border-bottom-right-radius: 10px !important;
+}
+:deep(.ant-table-tbody > tr > td){
+  border-bottom: 1px solid var(--divider) !important;
 }
 </style>
