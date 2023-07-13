@@ -22,9 +22,9 @@
   --secondary-text: rgba(255, 255, 255, 0.6) !important;
   --disable-text: rgba(255, 255, 255, 0.85) !important;
   // 分割线
-  --divider: rgba(255, 255, 255, 0.3) !important;
+  --divider: rgba(255, 255, 255, 0.1) !important;
   // 点击
-  --active: rgba($color: var(--secondary-bg), $alpha: 0.1) !important;
+  --active: rgba(42, 42, 42, 0.6) !important;
 }
 
 .light-model {
@@ -34,7 +34,7 @@
   // 背景
   --main-bg: rgba(240, 240, 240, 1.55) !important;
   --primary-bg: rgba(255, 255, 255, 0.55) !important;
-  --secondary-bg: rgba(235, 235, 235, 1.75) !important;
+  --secondary-bg: rgba(235, 235, 235, 1) !important;
   --modal-bg: #ffffff !important;
   --mask-bg: rgba(255, 255, 255, 0.3) !important;
   --main-mask-bg: rgba(255, 255, 255, 0.8) !important;
@@ -45,6 +45,8 @@
   --disable-text: rgba(0, 0, 0, 0.25) !important;
   // 分割线
   --divider: rgba(255, 255, 255, 0.1) !important;
+  // 点击
+  --active: rgba(235, 235, 235, 0.8) !important;
 }
 
 // 下面已经遗弃

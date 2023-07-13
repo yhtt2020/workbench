@@ -1,6 +1,12 @@
 body {
   background: var(--main-bg) !important;
 }
+
+.transparent {
+  body {
+    background: none !important;
+  }
+}
 /**
 * 主题
 */
@@ -92,10 +98,10 @@ body {
 * 功能性颜色
 */
 // 错误
-.err-bg {
+.error-bg {
   background: var(--error);
 }
-.err {
+.error {
   color: var(--error);
 }
 // 链接

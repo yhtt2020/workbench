@@ -60,8 +60,7 @@ export const setColor = (text, color, opacity?) => {
   if ((opacity != undefined && opacity < 0) || opacity > 1) {
     console.warn("Opacity value 需要在 0 和 1 之间");
   }
-  const rgbaColor =
-    opacity !== undefined ? convertToRGBA(color, opacity) : color;
+  const rgbaColor = opacity !== undefined ? convertRGBA(color, opacity) : color;
   document.documentElement.style.cssText += `${text}:${rgbaColor} !important;`;
   return rgbaColor;
 };
@@ -72,7 +71,7 @@ export const setColor = (text, color, opacity?) => {
  * @param [opacity] - 可选，透明度参数，范围从 0 到 1，默认值为 1
  * @returns
  */
-export const convertToRGBA = (color, opacity) => {
+export const convertRGBA = (color, opacity) => {
   var r = parseInt(color.slice(1, 3), 16);
   var g = parseInt(color.slice(3, 5), 16);
   var b = parseInt(color.slice(5, 7), 16);

@@ -1,7 +1,15 @@
 /**
 * 一些二次封装的类
 */
-
+// 基础按钮
+.xt-base-btn {
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  cursor: pointer;
+}
 // 主题色按钮
 .xt-active-btn {
   // 防拖拽
@@ -38,13 +46,16 @@
   border-radius: 12px;
   // 手指
   cursor: pointer;
+  &:active {
+    background: var(--active) !important;
+  }
 }
 
 // 点击状态
 .xt-active {
-  &:hover {
-    opacity: 0.85;
-  }
+  // &:hover {
+  //   background: var(--active) !important;
+  // }
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
   &:active {
@@ -63,8 +74,6 @@
   background: var(--active-bg);
   border-radius: 3px;
 }
-
-
 
 /* 隐藏滚动条 */
 .xt-container {
