@@ -20,12 +20,10 @@
       </XtInput>
     </div>
     <div class="flex items-center">
-      <div
-        class="icons xt-btn w-12 h-12 xt-text text-lg"
+      <XtIcon
+        icon="tianjia2"
         @click="addModelVisible = true"
-      >
-        <Icon icon="tianjia2"></Icon>
-      </div>
+      ></XtIcon>
     </div>
   </div>
   <XtPopup

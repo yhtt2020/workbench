@@ -1,9 +1,9 @@
 <template>
   <div class="rounded-xl" :class="isFull ? '' : 'p-3 xt-bg'">
-    <!-- <div>
+    <div>
       {{ isModel }}
       <a-button @click="isModel = !isModel">click</a-button>
-    </div> -->
+    </div>
     <template v-if="isModel">
       <Use></Use>
     </template>
