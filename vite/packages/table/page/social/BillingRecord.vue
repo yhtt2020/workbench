@@ -10,7 +10,8 @@
     <GiftRecord></GiftRecord>
   </template>
  </div>
-
+ 
+ 
 </template>
 
 <script>
@@ -20,11 +21,13 @@ import CheckRecord from './record/CheckRecord.vue'
 
 export default {
   name:'BillingRecord',
+
   components:{
     HorizontalPanel,
     GiftRecord,
-    CheckRecord
+    CheckRecord,
   },
+
   data(){
     return{
       recordType:[
@@ -34,13 +37,14 @@ export default {
       defaultRecord:{title:'账单记录',name:'check'},
     }
   }, 
+
   watch:{
     defaultRecord:{
       handler(){
         this.defaultRecord = this.defaultRecord
       }
     }
-  }   
+  },
 }
 </script>
 

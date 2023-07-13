@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8 rounded-xl" style="background: var(--primary-bg);width: 702px;">
+  <div class="p-4 rounded-xl" style="background: var(--primary-bg);width: 702px;">
     <!-- 空状态 -->
     <div v-if="testData.length === 0">
       <div class="flex justify-between items-center">
@@ -8,18 +8,23 @@
         </div>
       </div>
       <div class="flex items-center justify-center py-10">
-        <a-empty :image="simpleImage" :description="暂无数据"></a-empty>
+        <a-empty :image="simpleImage" description="暂无账单记录"></a-empty>
       </div>
     </div>
 
     <!-- 账单记录列表数据展示区域 -->
     <a-table v-else :columns="giftColumns" :data-source="testData" :pagination="{ pageSize: 10 }"  :scroll="{ y: 400 }">
-      <template #bodyCell="{ column }">
-        <template v-if="column.dataIndex === 'beFrom'">
-          
+      <template #bodyCell="{ column,record }">
+        <template v-if="column.key === 'user'">
+          <div class="text-center truncate">
+            <a-avatar :src="record.user.avatar_url"></a-avatar>&nbsp;
+            <span style="color: var(--primary-text);">{{ record.user.username }}</span>
+          </div>
         </template>
         <template v-if="column.dataIndex === 'controls'">
-          <div>详情</div>
+          <div class="rounded-xl pointer button-active h-10 flex items-center justify-center" style="background: var(--active-secondary-bg);">
+            <span class="secondary-title" style="color: var(--active-bg);">领取</span>
+          </div>
         </template>
       </template>
     </a-table>
@@ -44,12 +49,18 @@ export default {
 .secondary-title{
   font-family: PingFangSC-Regular;
   font-size: 16px;
-  color: rgba(255,255,255,0.60);
   font-weight: 400;
 }
 
-
-
+.button-active{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
+}
 
 
 :deep(.ant-table-body){
