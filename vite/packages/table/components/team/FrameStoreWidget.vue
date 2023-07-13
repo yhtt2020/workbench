@@ -6,7 +6,7 @@
                             style="flex:1;height:0">
         <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col "
              :style="avatarBgColor(item.frame.rarity)">
-          <div class="avatar-top flex ">
+          <div class="avatar-top flex " style="position: relative">
             <div style="width: 100px;height: 100px;">
 
               <RayMedal v-if="item.frame.rarity>=4" medalStyle="transform:scale(250%) !important"  :size="120"  style="transform: translateX(-10%) translateY(-5%) " :src="item.cover">
@@ -36,9 +36,9 @@
                 </a-avatar-group>
               </div>
             </div>
-            <a-button hidden type="primary" class="rounded-xl" style="height: 44px;color: var(--active-text);">
-              试穿
-            </a-button>
+            <div title="试穿" @click="tryFrame(item.cover)"  class=" xt-bg px-3 py-1 rounded-full pointer" style="position: absolute;right: 10px;top: 10px" >
+              <icon icon="yifu" style="font-size: 18px"></icon>
+            </div>
           </div>
           <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
             <a-button v-if="!item.owned" type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center m-3"
@@ -113,6 +113,12 @@
 
   <!-- 赠送弹窗组件 -->
   <GiftModal ref="giftRef" :needPayAvatar="needPayAvatar" :memberDevoteDisplay="memberDevoteDisplay"></GiftModal>
+  <Modal :blur-flag="true" v-if="tryFrameVisible" v-model:visible="tryFrameVisible">
+    <div style="width: 200px;height:200px " class="p-8 text-center flex flex-col justify-center">
+          <FrameAvatar  :frame-url="tringFrame" :avatar-url="userInfo.avatar" :avatar-size="50" style="transform: scale(2)"></FrameAvatar>
+    </div>
+
+  </Modal>
 </template>
 
 <script>
@@ -131,16 +137,19 @@ import { message } from 'ant-design-vue'
 import MyFrames from './MyFrames.vue'
 import { avatarBgColor, avatarGainMethodText, avatarTagColor, textTag, titleTagColor } from '../../js/common/avatar'
 import RayMedal from '../small/RayMedal.vue'
-
+import FrameAvatar from '../avatar/FrameAvatar.vue'
+import Modal from '../Modal.vue'
 export default {
   components: {
+    FrameAvatar,
     RayMedal,
     MyFrames,
     HorizontalPanel,
     HorzontanlPanelIcon,
     CollectionCodeModal,
     PointPayment,
-    GiftModal
+    GiftModal,
+    Modal
   },
   props: [],
   data () {
@@ -170,6 +179,8 @@ export default {
 
       order: {},//订单
       gettingOrder: true,
+      tryFrameVisible:false,
+      tringFrame:''
     }
   },
   computed: {
@@ -197,6 +208,10 @@ export default {
   methods: {
     ...mapActions(frameStore, ['getFrameGoods', 'ensureOrder']),
     ...mapActions(appStore,['showUserCard']),
+    tryFrame(frameImage){
+      this.tryFrameVisible=true
+      this.tringFrame=frameImage
+    },
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     getFramePrice (item) {  // 根据价格类型获取数据
       const money = _.find(item.prices, function (o) { return o.type === 'money' })
