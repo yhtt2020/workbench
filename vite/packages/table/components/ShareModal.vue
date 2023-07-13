@@ -46,7 +46,7 @@
 <script>
 import { message } from 'ant-design-vue';
 export default {
-  name: "ShareDesk",
+  name: "ShareModal",
   components: {
   },
   data() {

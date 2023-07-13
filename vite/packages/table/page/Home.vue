@@ -651,8 +651,7 @@ export default {
     AddIcon,
     KeyBoard,
     SmallRank,
-    AggregateSearch
-    SmallRank,
+    AggregateSearch,
     ShareDesk,
     DeskMarket,
     DeskPreview
@@ -831,6 +830,18 @@ export default {
     this.fixData();
     window.onresize = () => {
       this.scrollbar = Date.now();
+
+        this.$nextTick(() => {
+          let cardsHeight = document.getElementById("cardContent").offsetHeight;
+          let deskHeight = document.documentElement.clientHeight // 高
+          let deskWidth = document.documentElement.clientWidth // 宽
+          let size = {
+            deskWidth,
+            deskHeight,
+            cardsHeight,
+          }
+          this.setDeskSize(size)
+        })
     };
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
@@ -909,6 +920,7 @@ export default {
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
+    ...mapActions(deskStore, ["setDeskSize"]),
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });

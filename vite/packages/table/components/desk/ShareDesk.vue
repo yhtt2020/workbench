@@ -61,13 +61,6 @@ export default {
   data() {
     return {
       showDrawer: false,
-      // desk: '桌面1',
-      // deskType: [
-      //   { name: '桌面1', value: '桌面1' },
-      //   { name: '桌面2', value: '桌面2' },
-      //   { name: '桌面3', value: '桌面3' },
-      //   { name: '桌面4', value: '桌面4' },
-      // ],
       desk: '',
       deskType: [],
       assort: '',
@@ -88,7 +81,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(deskStore,['deskList']),
+    ...mapWritableState(deskStore,['deskList','deskSize']),
     ...mapWritableState(cardStore, ['desks','settings']),
   },
   watch: {
@@ -97,6 +90,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(deskStore, ["setDeskList"]),
     close(){
       this.$emit('closeShare',false)
     },
@@ -114,7 +108,7 @@ export default {
       const time = new Date().valueOf()
       this.scheme = {
         id: nanoid(), 
-        deskImg: '',
+        deskImg: '/img/test/deckImg.jpg',
         desk: this.desk,
         assort: this.assortList[this.assort],
         title: this.shareName,
@@ -123,16 +117,23 @@ export default {
         sumLikes: 0,
         download: 0,
         time,
-        size: '1920x1080',
+        deskWidth: this.deskSize.deskWidth,
+        deskHeight: this.deskSize.deskHeight,
+        cardsHeight: this.deskSize.cardsHeight,
         blurb: this.blurb,
         labelList: this.labelList,
-        cardList: [],
         cards: this.cards,
-        settings: this.settings
+        settings: this.settings,
+        cardList: []
       }
-      // this.close()
-      // this.shareModal = true
-      // console.log(this.scheme)
+      this.setDeskList(this.scheme)
+      this.close()
+      this.shareModal = true
+      this.desk = this.deskType[0]
+      this.shareName = ''
+      this.assort = this.assortList[0]
+      this.blurb = ''
+      this.labelList = []
     },
     closeShare(val){
       this.shareModal = val

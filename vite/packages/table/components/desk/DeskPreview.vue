@@ -16,7 +16,7 @@
     </div>
     <div class="foot">
       <div class="flex items-center">
-        桌面尺寸 {{ scheme.size }}
+        桌面尺寸 {{ scheme.deskWidth + 'x' + scheme.deskHeight }}
         <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
       </div>
     </div>
@@ -145,7 +145,7 @@ export default {
           that.getPreviewHeight()
         })()
       }
-
+      
     },
     // windowHeight(val){
     //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
@@ -171,9 +171,12 @@ export default {
     },
     getPreviewHeight(){
       this.$nextTick(() => {
-        this.previewHeight = document.getElementById("previewContent").offsetHeight
+        if(this.fullScreen){
+          this.previewHeight = document.getElementById("previewContent").offsetHeight
         let cardZoom = (((this.zoom * this.previewHeight) / this.cardsHeight) * 100).toFixed()
         this.cards.settings.cardZoom = cardZoom
+        }
+        
       })
     }
     // getScreenSize() {

@@ -82,7 +82,7 @@ export const deskStore = defineStore("desk", {
             download: 202,
             time: 1687881800000,
             deskWidth: 1173,
-            deskHeight: 668,
+            deskHeight: 800,
             cardsHeight: 708,
             blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
             labelList: ['游戏','玩家'],
@@ -226,8 +226,20 @@ export const deskStore = defineStore("desk", {
         children: []
       },
     ],
+    deskSize: {}
   }),
   actions: {
+    setDeskList(item){
+      console.log(item)
+      this.deskList.map((desk,index) => {
+        if(desk.cname === item.assort){
+          this.deskList[index].children.push(item)
+        }
+      })
+    },
+    setDeskSize(item){
+      this.deskSize = item
+    }
   },
   persist: {
     enabled: true,
@@ -235,7 +247,7 @@ export const deskStore = defineStore("desk", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['deskList'],
+        paths: ['deskList','deskSize'],
         storage: sessionStorage,
         // state 中的字段名，按组打包储存
       },
