@@ -4,7 +4,7 @@ import {getConfig} from "../js/axios/serverApi";
 import dbStorage from "./dbStorage";
 import _ from 'lodash-es';
 import axios from 'axios';
-import {message} from "ant-design-vue";
+// import {message} from "ant-design-vue";
 import cache from '../components/card/hooks/cache'
 import {post} from "../js/axios/request";
 
@@ -36,10 +36,9 @@ export const frameStore = defineStore('frameStore',{
       }
     },
     async updateMyinfo(data){  // 修改我的信息
-      console.log('测试',data.nickname.length);
       const updateMyInfoResult = await axios.post(editInfoUrl,data,await getConfig())
       if(updateMyInfoResult.data.data.msg === 'ok' ){
-        message.success('修改成功')
+        // message.success('修改成功')
       }
     },
     saveAvatarUrl(){ // 将返回的图片路径进行缓存
