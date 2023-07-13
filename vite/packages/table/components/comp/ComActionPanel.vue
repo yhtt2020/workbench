@@ -310,13 +310,6 @@ export default {
   border-radius: 10px !important;
 }
 
-:deep(.ps__thumb-y){
-  display: none !important;
-}
-:deep(.ps__rail-y){
-  display: none !important;
-}
-
 .myinfo-container{
   width: 946px;
 }
@@ -330,21 +323,15 @@ export default {
   }
 }
 
-@media screen and (max-height:500px) {
+@media screen and (max-height:599px) {
   :deep(.ps-container){
     height: 90vh !important;
   }
 }
 
-@media screen and (min-height:550px)  and (max-height:900px) {
+@media screen and (min-height:600px) {
   :deep(.ps-container){
-    height: 70vh !important;
-  }
-}
-
-@media screen and (min-height:900px) {
-  :deep(.ps-container){
-    height: 55vh !important;
+    height: 578px !important;
   }
 }
 </style>
