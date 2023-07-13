@@ -220,6 +220,7 @@ export default {
         avatar:this.frameData.avatar_url
       }
       this.updateMyinfo(saveUpdateMyInfo)
+      this.updateInfoVisible = false
     },
 
   },
