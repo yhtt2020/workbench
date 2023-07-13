@@ -5,7 +5,7 @@
     style="z-index: 99999; box-sizing: border-box"
   >
     <!-- 左侧区域开始 -->
-    <div :class="setSpacing('mr')">
+    <div>
       <slot name="left"></slot>
     </div>
     <!-- 左侧区域结束 -->
@@ -16,16 +16,12 @@
           <!-- 头部插槽 -->
           <slot name="header"></slot>
         </div>
-        <div
-          class="xt-btn w-12 h-12 cursor-pointer"
+        <XtIcon
+          :icon="isFull ? 'quxiaoquanping_huaban' : 'quanping_huaban'"
           :class="setSpacing('ml')"
           @click="fullScreenClick()"
         >
-          <Icon
-            :icon="isFull ? 'quxiaoquanping_huaban' : 'quanping_huaban'"
-            style="font-size: 26px"
-          ></Icon>
-        </div>
+        </XtIcon>
       </div>
       <!-- 头部区域结束 -->
       <!-- 主体区域开始 -->
@@ -43,6 +39,7 @@
 
 <script>
 export default {
+  name: "XtFullScreen",
   props: {
     spacing: {
       type: String,

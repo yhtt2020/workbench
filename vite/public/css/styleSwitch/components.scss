@@ -1,9 +1,25 @@
-// 一些二次封装的类
-.xt-active-btn {
+/**
+* 一些二次封装的类
+*/
+// 基础按钮
+.xt-base-btn {
   -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  cursor: pointer;
+}
+// 主题色按钮
+.xt-active-btn {
+  // 防拖拽
+  -webkit-app-region: no-drag;
+  // 次要背景色
   background: var(--active-bg) !important;
+  // 主题字体颜色
   color: var(--active-text) !important;
   fill: var(--active-text) !important;
+  // 居中布局
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,32 +30,49 @@
   }
 }
 
+// 默认按钮
 .xt-btn {
+  // 防拖拽
   -webkit-app-region: no-drag;
+  // 次要背景色
   background: var(--secondary-bg);
+  // 主要字体颜色
+  color: var(--primary-text);
+  // 居中布局
   display: flex;
   align-items: center;
   justify-content: center;
+  // 圆角
   border-radius: 12px;
+  // 手指
   cursor: pointer;
+  &:active {
+    background: var(--active) !important;
+  }
 }
 
+// 点击状态
+.xt-active {
+  // &:hover {
+  //   background: var(--active) !important;
+  // }
+  --tw-scale-x: 1.05;
+  --tw-scale-y: 1.05;
+  &:active {
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+      rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+      scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+}
+
+// 滚动条
 .xt-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
-
 .xt-scrollbar::-webkit-scrollbar-thumb {
   background: #888;
   background: var(--active-bg);
   border-radius: 3px;
-}
-
-.xt-scrollbar::-webkit-scrollbar-track {
-  // background: var(--active-bg);
-}
-
-.xt-border {
-  border: 1px solid var(--divider);
 }
 
 /* 隐藏滚动条 */
