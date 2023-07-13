@@ -3,5 +3,6 @@ export const LIGHT_THEME = "light"
 export const SUFFIX = "-model"
 export const THEME_NAME = "themeName"
 export const OLD_THEME_NAME = "style"
+export const TRANSPARENT = "transparent"
 
 
