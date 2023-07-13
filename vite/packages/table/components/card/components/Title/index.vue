@@ -1,9 +1,12 @@
 <template>
-  <div class="flex justify-between items-center text-base my-5 xt-text">
+  <div
+    class="flex justify-between items-center text-base xt-text"
+    :class="titleClass"
+  >
     <div>
       <slot></slot>
     </div>
-    <div >
+    <div>
       <slot name="right"></slot>
     </div>
   </div>
@@ -13,6 +16,9 @@
 export default {
   props: {
     title: {},
+    titleClass: {
+      default: "my-4",
+    },
   },
 };
 </script>

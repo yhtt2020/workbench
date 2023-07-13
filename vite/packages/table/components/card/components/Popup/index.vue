@@ -17,12 +17,11 @@
         class="flex items-center justify-center h-12 w-full relative text-lg"
       >
         {{ title }}
-        <div
-          class="absolute rounded-xl xt-bg-2 flex items-center justify-center right-0 cursor-pointer h-12 w-12"
+        <XtIcon
+          class="absolute r right-0"
           @click="close()"
-        >
-          <Icon class="icon" icon="guanbi1"></Icon>
-        </div>
+          icon="guanbi1"
+        ></XtIcon>
       </header>
       <slot></slot>
     </div>

@@ -1,8 +1,15 @@
 <template>
+  <!-- 遮罩 -->
   <div
-    class="xt-text flex h-full"
-    :class="[modelStyle]"
-    style="z-index: 99999; box-sizing: border-box"
+    class="h-full w-full xt-mask fixed top-0 left-0"
+    style="z-index: 999"
+    @click="close()"
+    v-if="currentModel == 'popup'"
+  ></div>
+  <div
+    class="xt-text flex"
+    :class="[modelStyle, currentModel == 'popup' ? '' : 'h-full']"
+    style="z-index: 9999; box-sizing: border-box"
   >
     <!-- 左侧区域开始 -->
     <div>
@@ -11,12 +18,27 @@
     <!-- 左侧区域结束 -->
     <div class="h-full flex-grow flex flex-col">
       <!-- 头部区域开始 -->
-      <div class="flex items-center">
+      <div class="flex items-center relative">
+        <div
+          class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-lg"
+          v-if="title"
+        >
+          {{ title }}
+        </div>
         <div class="flex-1">
           <!-- 头部插槽 -->
-          <slot name="header"></slot>
+          <slot name="header"> </slot>
         </div>
         <XtIcon
+          class="no-darg"
+          v-if="currentModel == 'popup'"
+          icon="guanbi1"
+          :class="setSpacing('ml')"
+          @click="close()"
+        >
+        </XtIcon>
+        <XtIcon
+          v-if="showFull"
           :icon="isFull ? 'quxiaoquanping_huaban' : 'quanping_huaban'"
           :class="setSpacing('ml')"
           @click="fullScreenClick()"
@@ -26,7 +48,7 @@
       <!-- 头部区域结束 -->
       <!-- 主体区域开始 -->
       <div
-        class="flex-grow h-full overflow-hidden overflow-y-auto xt-scrollbar"
+        class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar"
         :class="setSpacing('mt')"
       >
         <!-- 主体插槽 -->
@@ -41,6 +63,12 @@
 export default {
   name: "XtFullScreen",
   props: {
+    title: {
+      default: "",
+    },
+    showFull: {
+      default: true,
+    },
     spacing: {
       type: String,
       default: 3,
@@ -78,6 +106,9 @@ export default {
     },
   },
   methods: {
+    close() {
+      this.$emit("close");
+    },
     setSpacing(name) {
       return name + "-" + this.spacing;
     },
