@@ -1,31 +1,36 @@
 import cache from "../cache";
-import { BG_COLOR, SECONDARY_BG_COLOR, TEXT_COLOR, WALLPAPER_COLOR } from "./types";
+import {
+  BG_COLOR,
+  SECONDARY_BG_COLOR,
+  TEXT_COLOR,
+  WALLPAPER_COLOR,
+} from "./types";
 /**
  * 清除背景颜色样式属性
  */
 export const delBgColor = () => {
-    delColor(BG_COLOR);
+  delColor(BG_COLOR);
 };
 
 /**
  * 清除次要背景颜色样式属性
  */
 export const delSecondaryBgColor = () => {
-    delColor(SECONDARY_BG_COLOR);
+  delColor(SECONDARY_BG_COLOR);
 };
 
 /**
  * 清除文字颜色样式属性
  */
 export const delTextColor = () => {
-    delColor(TEXT_COLOR);
+  delColor(TEXT_COLOR);
 };
 
 /**
  * 清除壁纸颜色样式属性
  */
 export const delWallpaperColor = () => {
-    delColor(WALLPAPER_COLOR);
+  delColor(WALLPAPER_COLOR);
 };
 
 /**
@@ -33,6 +38,6 @@ export const delWallpaperColor = () => {
  * @param {string} styleName - 必填，要清除样式的类名
  */
 export const delColor = (styleName) => {
-    document.documentElement.style.removeProperty(styleName);
-    cache.del(styleName);
+  cache.del(styleName);
+  document.documentElement.style.removeProperty(styleName);
 };
