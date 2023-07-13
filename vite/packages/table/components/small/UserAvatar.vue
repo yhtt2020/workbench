@@ -4,14 +4,14 @@
       <div v-if="tag" class="rounded-lg w-10 tag" :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)'}">
         {{ tag }}
       </div>
-      <FrameAvatar  :avatarSize="50" style="" :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
+      <FrameAvatar  :frame="frame" framePlacement="left" :avatarSize="50" style="" :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
       <OnlineTag style="position: absolute;right:5px;bottom: 5px;z-index: 99" v-if="online"></OnlineTag>
     </template>
     <template v-else>
       <div v-if="tag" class="rounded-lg w-10 tag" :style="{background:tagColor?tagColor:'rgba(0,0,0,0.8)',}">
         {{ tag }}
       </div>
-      <FrameAvatar :avatarSize="50"  :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
+      <FrameAvatar :frame="frame" framePlacement="left" :avatarSize="50"  :avatarUrl="avatar" :frameUrl="frameUrl"></FrameAvatar>
       <OnlineTag style="position: absolute;right:20px;bottom: 15px;z-index: 99" v-if="online"></OnlineTag>
     </template>
   </div>
@@ -21,11 +21,10 @@
 import OnlineTag from './OnlineTag.vue'
 import FrameAvatar from '../avatar/FrameAvatar.vue';
 import BorderAavtar from '../avatar/BorderAavtar.vue';
-// import {rareColor} from '../../js/data/teamAvatar'
 export default {
   name: 'UserAvatar',
   components: { OnlineTag,FrameAvatar,BorderAavtar},
-  props: ['avatar', 'tag', 'online', 'tagColor','showDetail','frameUrl'],
+  props: ['avatar', 'tag', 'online', 'tagColor','showDetail','frameUrl','frame'],
   computed:{
     // rarityBorder(){ // 通过计算属性将稀有度边框UI进行渲染
     //   const index = rareColor.find(el=>{

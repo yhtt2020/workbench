@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-4  pt-4 h-full flex flex-col " >
+  <div class="pl-4  pt-4 h-full flex flex-col " style="height: 100%" >
     <HorizontalPanel :navList="avatarList" v-model:selectType="listItem" class="mb-5"></HorizontalPanel>
     <template v-if="listItem.name === 'shop_store'">
       <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
@@ -8,7 +8,11 @@
              :style="avatarBgColor(item.frame.rarity)">
           <div class="avatar-top flex ">
             <div style="width: 100px;height: 100px;">
-              <img :src="item.cover" class="w-full h-full object-fill" alt="">
+
+              <RayMedal v-if="item.frame.rarity>=4" medalStyle="transform:scale(250%) !important"  :size="120"  style="transform: translateX(-10%) translateY(-5%) " :src="item.cover">
+
+              </RayMedal>
+              <img v-else :src="item.cover" class="w-full h-full object-fill" alt="">
             </div>
             <div class="flex flex-col justify-center ml-4">
               <div class="mt-2">
@@ -126,9 +130,11 @@ import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
 import MyFrames from './MyFrames.vue'
 import { avatarBgColor, avatarGainMethodText, avatarTagColor, textTag, titleTagColor } from '../../js/common/avatar'
+import RayMedal from '../small/RayMedal.vue'
 
 export default {
   components: {
+    RayMedal,
     MyFrames,
     HorizontalPanel,
     HorzontanlPanelIcon,
@@ -136,7 +142,7 @@ export default {
     PointPayment,
     GiftModal
   },
-  props: ['teamLeader', 'teamMembers', 'team'],
+  props: [],
   data () {
     return {
       avatarList: [    // 头像框是否购买的状态
@@ -175,18 +181,6 @@ export default {
       // const list = _.filter(data, function (o) { return o.frame.gainMethod !== 'rank' })
       // console.log(list)
       return data
-    },
-    memberDevoteDisplay () {
-      let display = JSON.parse(JSON.stringify(this.teamMembers))
-      display.unshift(JSON.parse(JSON.stringify(this.teamLeader)))
-
-      display.map(user => {
-        user.devote = this.membersDevote[user.uid] || 0
-      })
-
-      return display.filter(member => {
-        return Number(member.uid) !== Number(this.userInfo.uid)
-      })
     },
   },
   watch: {

@@ -29,6 +29,15 @@
 .ant-modal-body {
   background: var(--modal-bg);
 }
+.ant-btn-primary,.ant-btn-primary:hover, .ant-btn-primary:focus{
+  border-color: transparent !important;
+  background: var(--active-bg);
+
+}
+.ant-btn-primary:hover{
+  opacity: 0.8;
+}
+
 // 弹出层body开始
 .ant-drawer-body {
   -ms-overflow-style: none !important; /* IE 和 Edge */

@@ -10,7 +10,7 @@ export function avatarTagColor(rarity) {
     return o.id === rarity
   })
   return {
-    background: index.avatar_color,
+    background: index?.avatar_color,
   }
 }
 
@@ -22,7 +22,7 @@ export function textTag(rarity) {
   const index = _.find(rarityColor, function (o) {
     return o.id === rarity
   })
-  return index.avatar_tag
+  return index?.avatar_tag
 }
 
 /**
@@ -34,7 +34,7 @@ export function titleTagColor(rarity) {
     return o.id === rarity
   })
   return {
-    color: index.avatar_color,
+    color: index?.avatar_color,
   }
 }
 
@@ -47,7 +47,7 @@ export function avatarBgColor(rarity) {
     return o.id === rarity
   })
   return {
-    background: index.bg_color
+    background: index?.bg_color
   }
 }
 
@@ -61,7 +61,7 @@ export function rarityBorderColor(borderSize,rarity){
     return o.id === rarity
   })
   return {
-    border:`${borderSize}px solid ${index.color}`
+    border:`${borderSize}px solid ${index?.color}`
   }
 }
 
