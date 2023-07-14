@@ -3,7 +3,7 @@
     <div class="capture-bg rounded-md px-4 py-2 mb-2" style="height: 100%">
       <!--  选择录制源    -->
       <div style="width: 490px;height: 100%">
-        <div v-if="step===1" style="height: 100%">
+        <div v-if="step===1" style="height: 100%;display: flex;flex-direction: column">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center">
               <Icon icon="video" style="font-size: 1.75em;color:var(--primary-text);"></Icon>
@@ -18,7 +18,7 @@
           <div class="text-center" v-if="loading===true">
             <icon class=" animate-spin " icon="shuaxin" style="font-size:24px;vertical-align: top"></icon> 捕获源获取中…
           </div>
-          <div v-else style="height: 100%">
+          <div v-else style="flex:1;height:0">
             <template v-if="defaultRecordingType.name === 'recordGame'">
               <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                                     style="height:100%;">
