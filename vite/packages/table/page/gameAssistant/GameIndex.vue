@@ -34,7 +34,7 @@
 <!-- 卡片桌面  -->
   <div class="rounded-xl mx-5"  style="width: 100%;height: 0;flex: 1">
     <template v-if="(desks[selectDeskGame.appid] || selectDeskId==='0') && desks[selectDeskGame.appid] ">
-      <Desk :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
+      <Desk ref="currentDeskRef" :currentDesk="desks[selectDeskGame.appid]" :settings="desks[selectDeskGame.appid].settings"></Desk>
     </template>
     <div v-else>
       <div class="game-bg p-5 rounded-md" style="margin: auto;width: 400px;margin-top: 40px">
@@ -168,7 +168,17 @@ export default {
       this.recentVisible = true
     },
     setFullScreen(flag=true){
+      this.$refs.currentDeskRef.stashLayout()
       this.fullScreen=flag
+      this.$nextTick(()=>{
+        if(flag===false)
+        {
+          this.$refs.currentDeskRef.restoreLayout(1)
+        }else {
+          this.$refs.currentDeskRef.restoreLayout()
+        }
+
+      })
     }
   }
 }

@@ -23,7 +23,7 @@
     </div>
     <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
       style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
-      <div style="
+      <div ref="deskContainer" style="
           white-space: nowrap;
           height: 100%;
           display: flex;
@@ -39,7 +39,7 @@
       width: '100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
-            <div :style="{ pointerEvents: editing ? 'none' : '',zoom: (this.settings.cardZoom / 100).toFixed(2), }">
+            <div :style="{ pointerEvents: editing ? 'none' : '',zoom: (this.settings.cardZoom * this.adjustZoom / 100).toFixed(2), }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                 :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
@@ -258,6 +258,9 @@ export default {
   },
   data() {
     return {
+      stashBound:{width:0,height:0,zoom:0},
+      adjustZoom:1,
+
       settingVisible:false,
       hide:false,
       key:Date.now(),
@@ -330,6 +333,38 @@ export default {
     },
     showMenu(){
       this.menuVisible = true;
+    },
+    /**
+     * 暂存布局，与restore结对使用。
+     */
+    stashLayout()
+    {
+      let bound={
+        width:this.$refs.deskContainer.clientWidth,
+        height:this.$refs.deskContainer.clientHeight
+      }
+      this.stashBound = bound
+
+      console.log(bound,'贮存时的bound')
+    },
+    /**
+     * 恢复布局
+     */
+    restoreLayout(rate=0){
+      if(rate){
+        this.adjustZoom=1
+        this.update()
+        return
+      }
+      let bound={
+        width:this.$refs.deskContainer.clientWidth,
+        height:this.$refs.deskContainer.clientHeight
+      }
+      console.log(bound,'恢复时的bound')
+      this.adjustZoom=bound.height/this.stashBound.height
+      this.update()
+      console.log(this.adjustZoom,'需要条件的')
+
     }
   }
 }
