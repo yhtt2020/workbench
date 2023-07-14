@@ -5,8 +5,9 @@
    :show-upload-list="false"
    @preview="handlePreview"
   >  
-    <img v-if="frameData.avatar_url" :src="frameData.avatar_url" alt="avatar" style="height:48px;width:48px;"/>
-    <Icon v-else  icon="tianjia2" style="font-size: 2.3em;"></Icon>
+    <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
+    <!-- <img v-if="frameData.avatar_url" :src="frameData.avatar_url" alt="avatar" style="height:48px;width:48px;"/>
+     -->
   </a-upload>
 </template>
 
@@ -33,6 +34,7 @@ export default {
           const avatarUrl = 'http://'+ res.data.data
           if(avatarUrl){
             message.success('自定义头像上传成功')
+
           }
           cache.set('avatar_url',avatarUrl)
           this.saveAvatarUrl()

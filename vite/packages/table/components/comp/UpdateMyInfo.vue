@@ -6,7 +6,7 @@
           <div class="flex items-center update-title justify-center" style="width:95%;">
             我的信息
           </div>
-          <div class="w-12 h-12 flex items-center com-button pointer justify-center rounded-lg" style="background: var(--secondary-bg);" @click="updateInfoVisible = false">
+          <div class="w-12 h-12 flex items-center com-button pointer justify-center rounded-lg" style="background: var(--secondary-bg);" @click="closeUpdateMyInfo">
             <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
           </div>
         </div>
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="flex w-full items-center justify-center mt-6" >
-          <a-button type="primary" class="h-48 rounded-xl mr-3" @click="updateInfoVisible = false" style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
+          <a-button type="primary" class="h-48 rounded-xl mr-3" @click="closeUpdateMyInfo" style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
            稍后设置
           </a-button>
           <a-button type="primary" class="h-48 rounded-xl" style="width:120px;color: var(--active-text);" @click="comSave">
@@ -68,9 +68,15 @@ export default {
     Modal,UploadImage,
     HorizontalPanel
   },
+  props:{
+    updateVisible:{
+      type:Boolean,
+      default:false
+    }
+  },
   data(){
     return{
-      updateInfoVisible:false,
+      updateInfoVisible:this.updateVisible,
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -105,7 +111,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(appStore,['editPresetAvatar']),
+    ...mapActions(appStore,['editPresetAvatar','setInfoTest']),
     ...mapActions(frameStore,['updateMyinfo']),
     openMyInfo(){
       this.updateInfoVisible = true
@@ -151,16 +157,18 @@ export default {
         nickname:this.randomNickname,
         sex:this.gender.sex,
         signature:this.areaValue,
-        avatar:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8fbbdb55b72a8e6e8572f0187fa0bb3d.png?upload_type/Tencent_COS'
+        avatar:this.frameData.avatar_url
       }
       this.updateMyinfo(saveUpdateMyInfo)
       this.updateInfoVisible = false
+      this.setInfoTest(false)
     },
     go(url){
       browser.openInInner(url)
     },
     closeUpdateMyInfo(){
       this.updateInfoVisible = false
+      this.setInfoTest(false)
     }
   },
   watch:{

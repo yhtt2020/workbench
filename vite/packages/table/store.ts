@@ -32,6 +32,7 @@ export const appStore = defineStore('appStore', {
 
     simple: false,//极简模式
     agreeTest: false,
+    infoTest:false, // 修改我的信息显示时机
 
     init: false, //是否已经初始化
 
@@ -122,6 +123,9 @@ export const appStore = defineStore('appStore', {
     setAgreeTest(value) {
       this.agreeTest = value
     },
+    setInfoTest(value){
+      this.infoTest = value
+    },
     reset() {
       this.fullScreen = false
     },
@@ -192,7 +196,7 @@ export const appStore = defineStore('appStore', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen'],
+      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoTest','backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
