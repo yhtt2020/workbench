@@ -37,7 +37,7 @@
               </div>
             </div>
             <div title="试穿" @click="tryFrame(item.cover)"  class=" xt-bg px-3 py-1 rounded-full pointer" style="position: absolute;right: 10px;top: 10px" >
-              <icon icon="yifu" style="font-size: 18px"></icon>
+              <icon icon="yifu" style="font-size: 18px"></icon> 试穿
             </div>
           </div>
           <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
