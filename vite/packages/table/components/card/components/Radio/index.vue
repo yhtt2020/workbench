@@ -21,6 +21,7 @@
 <script>
 const sizeList = ["large", "default", "small"];
 export default {
+  name: "XtRadio",
   watch: {
     select(newV) {
       // 执行回调

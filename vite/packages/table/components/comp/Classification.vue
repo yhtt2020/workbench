@@ -1,5 +1,5 @@
 <template>
-  <div class="add-navigation xt-modal xt-divider">
+  <div class="add-navigation xt-modal xt-boder">
     <div class=" xt-text">添加导航</div>
     <div @click="closeAdd" class="pointer  xt-bg ">
       <Icon icon="guanbi" class="no-drag xt-text" style="width:18px;height:18px;" ></Icon>

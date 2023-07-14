@@ -18,14 +18,21 @@
       :style="[itemStyle]"
       @click="valueData = item[value]"
     >
-      <Icon v-if="item[icon]" class="icon" :icon="item.icon"></Icon>
-      {{ item.name }}
+      <Icon
+        v-if="item[icon]"
+        class="icon"
+     
+        style="font-size: 22"
+        :icon="item.icon"
+      ></Icon>
+      <div v-if="showName"    :class="[item[icon] ? 'ml-1' : '']">{{ item.name }}</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  name: "XtTab",
   data() {
     return {
       valueData: "", // 选中值
@@ -77,6 +84,9 @@ export default {
         }
         return val;
       },
+    },
+    showName: {
+      default: true,
     },
     data: {
       type: String,

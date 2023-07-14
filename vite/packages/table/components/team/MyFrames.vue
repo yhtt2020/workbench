@@ -1,16 +1,42 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
+<<<<<<< HEAD
 import {avatarBgColor, avatarGainMethodText, avatarTagColor, textTag, titleTagColor} from "../../js/common/avatar";
+=======
+import {
+  avatarBgColor,
+  avatarGainMethodText,
+  avatarTagColor,
+  drawHeaderImage,
+  textTag,
+  titleTagColor
+} from "../../js/common/avatar";
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 import {mapActions, mapState} from "pinia";
 import {frameStore} from "../../store/avatarFrame";
 import {message} from 'ant-design-vue'
 import {appStore} from "../../store";
 import {teamStore} from "../../store/team";
+<<<<<<< HEAD
 
 export default {
   name: "MyFrames",
   data() {
     return {
+=======
+import FrameAvatar from "../avatar/FrameAvatar.vue";
+import Modal from "../Modal.vue";
+import html2canvas from "html2canvas";
+
+
+export default {
+  name: "MyFrames",
+  components: {Modal, FrameAvatar},
+  data() {
+    return {
+      currentItem: {},
+      downloadVisible: false,//下载
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -18,11 +44,22 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+<<<<<<< HEAD
       frameList: []
     }
   },
   computed:{
     ...mapState(teamStore,['team'])
+=======
+      frameList: [],
+      canvas:null,
+      ctx:null
+    }
+  },
+  computed: {
+    ...mapState(teamStore, ['team']),
+    ...mapState(appStore, ['userInfo'])
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
   },
   mounted() {
     this.getMyFrames().then(rs => {
@@ -41,18 +78,31 @@ export default {
     })
   },
   methods: {
+<<<<<<< HEAD
         ...mapActions(frameStore, ['getMyFrames', 'equipFrame']),
     ...mapActions(appStore,['getUserInfo']),
     ...mapActions(teamStore,['refreshTeamUsers']),
+=======
+    ...mapActions(frameStore, ['getMyFrames', 'equipFrame']),
+    ...mapActions(appStore, ['getUserInfo']),
+    ...mapActions(teamStore, ['refreshTeamUsers']),
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     async equip(item) {
       let rs = await this.equipFrame(item.nanoid)
       console.log(rs)
       if (rs && rs.status) {
+<<<<<<< HEAD
         this.frameList.forEach(i=>{
           i.equipped=false
         })
         item.equipped=true
+=======
+        this.frameList.forEach(i => {
+          i.equipped = false
+        })
+        item.equipped = true
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
         this.getUserInfo()
         this.refreshTeamUsers()
         message.success('装备成功。')
@@ -60,7 +110,54 @@ export default {
         message.error('装备失败，请稍后再试。')
       }
     },
+<<<<<<< HEAD
     unequip(item){
+=======
+    unequip(item) {
+
+    },
+    download(item) {
+
+      this.currentItem = item
+
+      drawHeaderImage(128, 128, 80, 128, item.image, this.userInfo.avatar, (canvas, ctx) => {
+        document.getElementById('downloadContainer').appendChild(canvas)
+        this.canvas=canvas
+        this.ctx=ctx
+      })
+      this.downloadVisible = true
+
+    },
+    async doDownload() {
+
+      let filters = {name: '图片', extensions: ['png']}
+      let savePath = await tsbApi.dialog.showSaveDialog({
+        title: '选择保存位置',
+        defaultPath: this.recentFileName,
+        message: '选择保存的位置',
+        filters: [filters],
+        properties: [
+          'createDirectory',
+          'showOverwriteConfirmation'
+        ]
+      })
+      const base64 = this.canvas.toDataURL('image/png',1)
+      function dataURLToBlob(fileDataURL) {
+        let arr = fileDataURL.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n)
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n)
+        }
+        return new Blob([u8arr], { type: mime })
+      }
+      require('fs').writeFile(savePath,Buffer.from(await dataURLToBlob(base64).arrayBuffer()), (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+      });
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 
     }
   }
@@ -75,9 +172,16 @@ export default {
                         style="flex:1;height: 0">
     <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3"
          :style="avatarBgColor(item.detail.rarity)">
+<<<<<<< HEAD
       <div class="avatar-top flex mb-4">
         <div style="width: 100px;height: 100px;">
           <img :src="item.image" class="w-full h-full object-fill" alt="">
+=======
+      <div :id="'frameTop_'+item.nanoid" class="avatar-top flex mb-4">
+        <div style="width: 100px;height: 100px;" :id="'frame_'+item.nanoid" class="p-3">
+          <FrameAvatar :avatar-size="80" :frame-url="item.image" :avatar-url="userInfo.avatar"
+                       class="w-full h-full object-fill" alt=""></FrameAvatar>
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
         </div>
         <div class="flex flex-col justify-center ml-4">
               <span class="avatar-font" :style="titleTagColor(item.detail.rarity)">
@@ -91,6 +195,7 @@ export default {
               </span>
         </div>
       </div>
+<<<<<<< HEAD
       <a-button v-if="!item.equipped" @click="equip(item)" type="primary" class="rounded-xl h-12 w-full"
                 style="margin-right: 0;color: var(--active-text);">
         使用
@@ -101,6 +206,44 @@ export default {
       </a-button>
     </div>
   </vue-custom-scrollbar>
+=======
+      <a-row :gutter="10">
+        <a-col :span="12">
+          <a-button v-if="!item.equipped" @click="equip(item)" type="primary" class="rounded-xl h-12 w-full"
+                    style="margin-right: 0;color: var(--active-text);">
+            使用
+          </a-button>
+          <a-button v-else @click="unequip(item)" class="rounded-xl h-12  w-full xt-text-2"
+                    style="margin-right: 0;color: var(--active-text);">
+            使用中
+          </a-button>
+        </a-col>
+        <a-col :span="12">
+          <a-button @click="download(item)" class="rounded-xl h-12  w-full xt-bg xt-text-2">
+            下载头像
+          </a-button>
+        </a-col>
+      </a-row>
+
+
+    </div>
+  </vue-custom-scrollbar>
+  <Modal blur-flag="true" v-model:visible="downloadVisible" v-if="downloadVisible">
+    <div class="p-5">
+      <div class="m-4" id="downloadContainer">
+        <!--        <FrameAvatar id="downloadItem" :avatar-size="80"  :frame-url="currentItem.image" :avatar-url="userInfo.avatar" class="w-full h-full object-fill" alt=""></FrameAvatar>-->
+
+      </div>
+      <div class="mt-2">
+        <a-button @click="doDownload" block type="primary" class="rounded-full">
+          下载头像
+        </a-button>
+      </div>
+    </div>
+
+
+  </Modal>
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 </template>
 
 <style scoped lang="scss">

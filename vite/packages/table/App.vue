@@ -50,10 +50,18 @@
     {{ screenDetail.title || '主屏' }}
   </div>
 
-  <Modal style="z-index:999" v-model:visible="userCardVisible" v-show="userCardVisible" animationName="b-t"
+  <Modal style="z-index:999" v-model:visible="userCardVisible" v-if="userCardVisible" animationName="b-t"
          :blurFlag="true">
     <slot>
       <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
+    </slot>
+  </Modal>
+  <Modal v-model:visible="frameStoreVisible" v-if="frameStoreVisible" animationName="b-t"
+         :blurFlag="true">
+    <slot>
+    <div class="card half mr-3" style="padding:0;width: 370px;background: var(--primary-bg);max-height: 550px;height: 550px;z-index: 9999999;position: relative;overflow: hidden">
+      <FrameStoreWidget></FrameStoreWidget>
+    </div>
     </slot>
   </Modal>
 </template>
@@ -81,6 +89,7 @@ import {
 import {
   initTheme
 } from "./components/card/hooks/themeSwitch/";
+import FrameStoreWidget from "./components/team/FrameStoreWidget.vue";
 
 window.browser = browser
 const {appModel} = window.$models
@@ -93,7 +102,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {Modal, UserCard, Barrage},
+  components: {FrameStoreWidget, Modal, UserCard, Barrage},
   data() {
     return {
       touchDownRoutes: ["home", "lock"], //支持下滑的页面的白名单
@@ -102,12 +111,17 @@ export default {
       visible: false,
       dialogVisible: false,
       videoPath: '',
+      frameStoreVisible:false
     };
   },
 
   async mounted() {
     initTheme()
     initStyle()
+    window.toggleFrameStore=()=>{
+      this.frameStoreVisible=!this.frameStoreVisible
+      this.userCardVisible=false
+    }
 
     window.addEventListener("keydown", this.KeyDown, true)// 监听按键事件
 

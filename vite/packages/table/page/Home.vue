@@ -41,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
+      style="position: relative; border-radius: 8px; width: calc(100% - 20px); height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -327,7 +327,13 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
+<<<<<<< HEAD
 import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
+=======
+import {setWallpaperColor} from "../components/card/hooks/styleSwitch/setStyle"
+import { delWallpaperColor} from "../components/card/hooks/styleSwitch/delStyle"
+import {setTransparent,detTransparent} from "../components/card/hooks/themeSwitch"
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -772,7 +778,7 @@ export default {
     }
     this.fixData();
     window.onresize = () => {
-      this.scrollbar = Date.now();
+      //this.scrollbar = Date.now();
     };
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
@@ -823,13 +829,20 @@ export default {
       this.menuVisible = false;
     },
     setTransparent() {
-      if (this.appSettings.transparent) {
-        window.localStorage.setItem("transparent", JSON.stringify("true"));
-        document.documentElement.classList.add("transparent");
-      } else {
-        window.localStorage.removeItem("transparent")
-        document.documentElement.classList.remove("transparent");
+      console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);
+      if ( this.appSettings.transparent) {
+        // setWallpaperColor('none')
+        setTransparent()
+      }else  {
+        detTransparent();
       }
+      // if (this.appSettings.transparent) {
+      //   window.localStorage.setItem("transparent", JSON.stringify("true"));
+      //   document.documentElement.classList.add("transparent");
+      // } else {
+      //   window.localStorage.removeItem("transparent")
+      //   document.documentElement.classList.remove("transparent");
+      // }
     },
     customEvent() {
       this.$refs.grid.update();

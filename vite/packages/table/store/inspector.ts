@@ -74,7 +74,6 @@ export const inspectorStore = defineStore(
         }, this.frequent*1000)
       },
       setupAida() {
-        console.log(this.frequent)
         //根据当前选择数据源，启动定时器
         this.inspectorTimer = setInterval(() => {
           readAida64()

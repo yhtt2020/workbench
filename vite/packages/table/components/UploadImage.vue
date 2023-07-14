@@ -2,6 +2,10 @@
   <!-- 图片上传组件 -->
   <a-upload :style="size" class="pointer" 
    @change="uplaodImageChange" :before-upload="beforeUpload"
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> develop-50
    :show-upload-list="false" removeIcon
    :remove="deleteAvatar"
    @preview="handlePreview"
@@ -11,6 +15,15 @@
     <!-- <div v-if="showAvatar !== ''" class="pointer" style="position: absolute; top: 7px;left: 42px;">
       <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
     </div> -->
+<<<<<<< HEAD
+=======
+=======
+   :show-upload-list="false"
+  >
+  <!--   -->
+    <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
+>>>>>>> develop-50
   </a-upload>
 </template>
 

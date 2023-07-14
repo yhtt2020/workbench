@@ -27,6 +27,7 @@
 
 <script>
 export default {
+  name: "XtState",
   props: {
     // 显示的状态
     state: {

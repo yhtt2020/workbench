@@ -1,6 +1,10 @@
 import {rarityColor} from "./teamAvatar";
 import _ from 'lodash-es';
+<<<<<<< HEAD
 
+=======
+import {head} from "lodash";
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 /**
  * 根据不同头像框级别区分头像框字体色
  * @param rarity
@@ -10,7 +14,11 @@ export function avatarTagColor(rarity) {
     return o.id === rarity
   })
   return {
+<<<<<<< HEAD
     background: index.avatar_color,
+=======
+    background: index?.avatar_color,
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
   }
 }
 
@@ -22,7 +30,11 @@ export function textTag(rarity) {
   const index = _.find(rarityColor, function (o) {
     return o.id === rarity
   })
+<<<<<<< HEAD
   return index.avatar_tag
+=======
+  return index?.avatar_tag
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 }
 
 /**
@@ -34,7 +46,11 @@ export function titleTagColor(rarity) {
     return o.id === rarity
   })
   return {
+<<<<<<< HEAD
     color: index.avatar_color,
+=======
+    color: index?.avatar_color,
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
   }
 }
 
@@ -47,7 +63,11 @@ export function avatarBgColor(rarity) {
     return o.id === rarity
   })
   return {
+<<<<<<< HEAD
     background: index.bg_color
+=======
+    background: index?.bg_color
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
   }
 }
 
@@ -61,10 +81,87 @@ export function rarityBorderColor(borderSize,rarity){
     return o.id === rarity
   })
   return {
+<<<<<<< HEAD
     border:`${borderSize}px solid ${index.color}`
+=======
+    border:`${borderSize}px solid ${index?.color}`
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
   }
 }
 
 export function avatarGainMethodText(gainMethod){
    return  gainMethod.replaceAll('event','活动').replaceAll('sign','签到').replaceAll('store','商店').replace(',','，').replaceAll('rank','排行榜')
 }
+<<<<<<< HEAD
+=======
+
+
+
+export function drawHeaderImage(CANVAS_WIDTH,CANVAS_HEIGHT,headSize,frameSize,frame,avatar,cb){
+  let canvas,ctx
+
+// 初始化canvas
+  function initCanvas() {
+    canvas =document.createElement('canvas')
+    canvas.width=CANVAS_WIDTH
+    canvas.height=CANVAS_HEIGHT
+    ctx = canvas.getContext('2d');
+    ctx.fillStyle='#00000000'
+    // // 解决canvas绘图模糊问题
+    // canvas.width = CANVAS_WIDTH * dpr
+    // canvas.height = CANVAS_HEIGHT * dpr
+    // ctx.scale(dpr, dpr)
+  }
+  // 生成图片
+  function drawImage() {
+    // 背景
+    ctx.fillStyle = '#00000000'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // 背景
+    const backImg = new Image()
+    backImg.setAttribute("crossOrigin",'Anonymous')
+    backImg.src =frame //背景图片 shareBack
+    const backImgLoadPromise = new Promise((resolve) => {
+      backImg.onload = () => {
+        resolve(backImg)
+      }
+    })
+    // 头像
+    const userImg = new Image()
+    userImg.setAttribute("crossOrigin",'Anonymous')
+    userImg.src =avatar// 头像图片this.props.userIcon || avatarDefault
+    const userImgLoadPromise = new Promise((resolve) => {
+      userImg.onload = () => {
+        resolve(userImg)
+      }
+    })
+
+    return Promise.all([backImgLoadPromise,userImgLoadPromise]).then(res => {
+      return Promise.resolve(res)
+    })
+
+  }
+  initCanvas()
+  //绘制圆形图片
+  function drawCricleImg(ctx, url, x, y, width, height){
+    var avatarurl_width = width;
+    var avatarurl_heigth = height;
+    var avatarurl_x = x;
+    var avatarurl_y = y;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(avatarurl_width / 2 + avatarurl_x, avatarurl_heigth / 2 + avatarurl_y, avatarurl_width / 2, 0, Math.PI * 2, false);
+    ctx.clip();
+    ctx.drawImage(url, avatarurl_x, avatarurl_y, avatarurl_width, avatarurl_heigth);
+    ctx.restore();
+  }
+  drawImage().then(res=>{
+
+    ctx.restore()
+    drawCricleImg(ctx,res[1],CANVAS_WIDTH/2-headSize/2,CANVAS_HEIGHT/2-headSize/2,headSize,headSize)
+    ctx.drawImage(res[0], 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT) //绘制背景
+   // const canvasImg = canvas.toDataURL('image/png',1)
+    cb(canvas,ctx)
+  })
+}
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821

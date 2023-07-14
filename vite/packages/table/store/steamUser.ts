@@ -15,12 +15,14 @@ export const steamUserStore = defineStore("steamUser", {
   state: () => ({
     runningGame:{},
     recentGameList:[],
-    desks: {},
+    desks: {},//老数据格式
+    deskList:[],//最新的数据格式，用于替代desks
     steamLoginData: {
       accessToken: '',
       refreshToken: '',
       webCookies: ''
     },
+
     userData: {},
     gameList: [],
     originGameList: [],

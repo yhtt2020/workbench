@@ -2,7 +2,11 @@
   <div style="max-width: 100%;width: 360px" class="flex-col py-4">
     <div class="flex items-center my-3 mx-3">
       <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
+<<<<<<< HEAD
         <FrameAvatar :avatarSize="60" :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.equippedItems?.frameDetail?.image">
+=======
+        <FrameAvatar :frame="displayUserInfo?.equippedItems?.frameDetail" :avatarSize="60" :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.equippedItems?.frameDetail?.image">
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
         </FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
                    :title="displayUserInfo.certification[0].name">
@@ -43,6 +47,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -53,10 +58,18 @@ import OnlineMedal from '../team/OnlineMedal.vue'
 import OnlineGradeDisplay from '../team/OnlineGradeDisplay.vue'
 import { appStore } from '../../store'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
+<<<<<<< HEAD
 
 export default {
   name: 'UserCard',
   components: { FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
+=======
+import FrameStoreWidget from '../team/FrameStoreWidget.vue'
+
+export default {
+  name: 'UserCard',
+  components: { FrameStoreWidget, FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
   props: ['uid', 'visible', 'userInfo'],
   emits: ['visibleChanged'],
   data () {
