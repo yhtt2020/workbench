@@ -165,7 +165,6 @@ export default {
     if (typeof this.desks === 'object') {
       let deskList = Object.keys(this.desks).map(key => {
         let game=this.recentGameList.find(g=>{
-          console.log(g,'g=')
           return g.appid===key
         })
         if(game){
@@ -176,7 +175,6 @@ export default {
             name:game.chineseName
           }
         }else if(key==='0'){
-          console.log('需要转移的主桌面',this.desks[key])
           return {
             id: key,
             ...this.desks[key],
