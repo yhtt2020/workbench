@@ -762,7 +762,7 @@ export default {
     }
     this.fixData();
     window.onresize = () => {
-      this.scrollbar = Date.now();
+      //this.scrollbar = Date.now();
     };
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {

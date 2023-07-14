@@ -1,4 +1,7 @@
 <template>
+
+
+
   <div style="height:100%;width: calc(100% - 20px); " v-if="currentDesk.cards">
     <div  style="width: 100%;height: 100%" class="m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">

@@ -129,7 +129,6 @@ export default {
   },
   created() {},
   mounted() {
-    console.log(this.customData, "中标的");
     let setData = {};
     if (!this.customData.clockId) {
       setData.clockId = "clock4";
