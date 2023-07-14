@@ -46,7 +46,7 @@
             </a-col>
 
             <a-col :span="12">
-              <div style="cursor: help" class="btn relative">
+              <div  class="btn relative">
                 窗口控制<br />
                 <a-switch
                   @click.stop="() => {}"
@@ -55,7 +55,7 @@
               </div>
             </a-col>
             <a-col :span="12">
-              <div style="cursor: help" class="btn relative test">
+              <div  class="btn relative test">
                 浅色模式<br />
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
                 <a-switch
