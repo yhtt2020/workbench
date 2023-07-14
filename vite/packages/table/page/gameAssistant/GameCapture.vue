@@ -562,9 +562,6 @@ export default {
       })
     },
     pagedImages () {
-      console.log(this.images, '计算属性变化')
-      console.log(this.images.slice((this.imagePage - 1) * this.pageLimit, this.pageLimit), '得到的')
-      console.log((this.imagePage - 1) * this.pageLimit, this.pageLimit)
       let sorted = this.images.sort((img1, img2) => {
         return img2.stat.ctimeMs - img1.stat.ctimeMs
       })
@@ -596,7 +593,6 @@ export default {
       if (getNum === 0) {
         return 0
       }
-      console.log(sorted, length, getNum)
       return _.mean(_.take(sorted, getNum)).toFixed(1)
     }
   },
@@ -608,7 +604,6 @@ export default {
   async mounted () {
 
     getDefaultVolume().then((defaultVolume) => {
-      console.log(defaultVolume, 'defaultVolume')
       this.systemSound = {
         volume: defaultVolume.volume.toFixed(0),
         muted: defaultVolume.muted
@@ -881,7 +876,7 @@ export default {
       const dataBuffer = new Buffer(base64, 'base64') //把base64码转成buffer对象，
       fs.writeFile(path, dataBuffer, (err) => {//用fs写入文件
         if (err) {
-          console.log(err)
+          console.error(err)
           message.error('文件保存失败', err)
         } else {
           this.recentFileName = filename
@@ -1038,7 +1033,6 @@ export default {
       ]
       for (let i in types) {
         // 可以自行测试需要的编码的MIME Type是否支持
-        console.log('Is ' + types[i] + ' supported? ' + (MediaRecorder.isTypeSupported(types[i]) ? 'Yes' : 'No :('))
 
       }
 
