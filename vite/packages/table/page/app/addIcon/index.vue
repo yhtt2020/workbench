@@ -1,7 +1,7 @@
 <template>
   <!-- 遮罩 -->
   <div
-    class="h-full w-full xt-mask-2 fixed top-0 left-0"
+    class="h-full w-full xt-mask fixed top-0 left-0"
     @click="close()"
   ></div>
   <!-- 添加图标 -->

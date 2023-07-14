@@ -3,38 +3,41 @@
   <div>
     <a-row class="com-actions" :gutter="[20,20]">
       <a-col :span="8">
-        <div @click="openUpdateMyInfo">
-          <!--  @click="go('https://s.apps.vip/user/info')" -->
-          <idcard-filled />
-          <div>
-          修改资料
-        </div>
+        <div @click="modifyData">
+          <Emoji icon="edit"></Emoji>
+          <div class="mt-2">
+            修改资料
+          </div>
         </div>
       </a-col>
       <a-col :span="8">
         <div @click="go('https://s.apps.vip/user/points')">
-          <gold-filled />
-          <div>积分明细</div>
+          <Emoji icon="score"></Emoji>
+          <div class="mt-2">积分明细</div>
         </div>
       </a-col>
       <a-col :span="8">
         <div @click="go('https://s.apps.vip/user/message')">
-          <bell-filled /> <div>社区消息</div>
+          <Emoji icon="message"></Emoji>
+          <div class="mt-2">社区消息</div>
         </div>
       </a-col>
       <a-col :span="8">
         <div @click="go('https://s.apps.vip/user/account-info')">
-          <api-filled /> <div>账号绑定</div>
+          <Emoji icon="link"></Emoji>
+          <div class="mt-2">账号绑定</div>
         </div>
       </a-col>
       <a-col :span="8">
         <div @click="go('https://s.apps.vip/user/passwd')">
-          <lock-filled /> <div>修改密码</div>
+          <Emoji icon="key"></Emoji>
+          <div class="mt-2">修改密码</div>
         </div>
       </a-col>
       <a-col :span="8">
         <div @click="go('https://s.apps.vip/task')">
-          <schedule-filled /><div>社区任务</div>
+          <Emoji icon="task"></Emoji>
+          <div class="mt-2">社区任务</div>
         </div>
       </a-col>
     </a-row>
@@ -60,7 +63,7 @@ export default {
     edit(){
       browser.openInInner("https://s.apps.vip/user/info")
     },
-    go(url){
+    go (url) {
       browser.openInInner(url)
     }
   }
@@ -73,10 +76,11 @@ export default {
     cursor: pointer;
     border-radius: 0.2em;
     padding: 0.2em;
-    &:hover{
+
+    &:hover {
       background: rgba(0, 0, 0, 0.2);
     }
-}
+  }
 
   text-align: center;
   font-size: 1.1em;
