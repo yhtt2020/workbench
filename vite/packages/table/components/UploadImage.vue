@@ -3,20 +3,24 @@
   <a-upload :style="size" class="pointer" 
    @change="uplaodImageChange" :before-upload="beforeUpload"
    :show-upload-list="false"
-  >
-  <!--   -->
-    <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
+   @preview="handlePreview"
+  >  
+    <img v-if="frameData.avatar_url" :src="frameData.avatar_url" alt="avatar" style="height:48px;width:48px;"/>
+    <Icon v-else  icon="tianjia2" style="font-size: 2.3em;"></Icon>
   </a-upload>
 </template>
 
 <script>
-import { mapActions } from 'pinia';
+import { mapActions,mapWritableState } from 'pinia';
 import api from '../../../src/model/api';
 import { message } from 'ant-design-vue';
 import cache from './card/hooks/cache';
 import { frameStore } from '../store/avatarFrame';
 export default {
   name:'UploadImage',
+  computed:{
+    ...mapWritableState(frameStore,['frameData']),
+  },
   methods:{
     ...mapActions(frameStore,['saveAvatarUrl']),
     uplaodImageChange(info){  // info 上传文件的所有信息 
@@ -27,6 +31,9 @@ export default {
           message.error('数据上传失败')
         }else{
           const avatarUrl = 'http://'+ res.data.data
+          if(avatarUrl){
+            message.success('自定义头像上传成功')
+          }
           cache.set('avatar_url',avatarUrl)
           this.saveAvatarUrl()
         }
@@ -43,6 +50,9 @@ export default {
         message.error('上传图片不能大于2MB');
       }
       return isFileType && isLt2M;
+    },
+    handlePreview(){
+      
     },
   },
 }
