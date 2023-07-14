@@ -1,9 +1,9 @@
 <template>
   <!-- 遮罩 -->
   <div
-    class="h-full w-full xt-mask fixed top-0 left-0"
+    class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"
     style="z-index: 999"
-    @click="close()"
+    @click.stop.self="close()"
     v-if="currentModel == 'popup'"
   ></div>
   <div

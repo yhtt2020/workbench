@@ -1,24 +1,44 @@
 <template>
-  <div style="width: 392px" class="">
-    <Dialog></Dialog>
-    <div class="flex justify-center mt-1">
-      <div class="w-120 h-12 xt-btn mr-3">取消</div>
-      <div class="w-120 h-12 xt-active-btn">确认</div>
+  <div style="width: 392px">
+    {{ name }}
+    {{ icon }}
+    <Dialog v-model:icon="icon" v-model:name="name"></Dialog>
+    <div class="flex justify-center my-1">
+      <XtButton @click="close()">取消</XtButton>
+      <XtButton class="ml-3" type="theme" @click="add()">确认</XtButton>
     </div>
   </div>
 </template>
 
 <script>
 import Dialog from "./components/Dialog.vue";
-import { iconList } from "./topic";
+import { mapWritableState } from "pinia";
+import { aiStore } from "../../../store/ai";
 export default {
+  computed: {
+    ...mapWritableState(aiStore, ["todayList", "defaultData"]),
+  },
   components: {
     Dialog,
   },
   data() {
     return {
-      iconList,
+      icon: "",
+      name: "",
     };
+  },
+  methods: {
+    close() {
+      this.$emit("close");
+    },
+    add() {
+      let obj = { ...this.defaultData };
+      obj.time = Date.now();
+      obj.name = this.name;
+      obj.icon = this.icon;
+      this.todayList.push(obj);
+      this.close();
+    },
   },
 };
 </script>

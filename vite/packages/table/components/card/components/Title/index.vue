@@ -1,8 +1,14 @@
 <template>
   <div
-    class="flex justify-between items-center text-base xt-text"
-    :class="titleClass"
+    class="flex justify-between items-center relative"
+    :class="[typeClass, titleClass]"
   >
+    <div
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-lg"
+      v-if="title"
+    >
+      {{ title }}
+    </div>
     <div>
       <slot></slot>
     </div>
@@ -14,10 +20,23 @@
 
 <script>
 export default {
+  computed: {
+    typeClass() {
+      let typeList = {
+        default: "xt-text my-4 text-base",
+        header: "xt-text text-lg",
+        text: "xt-text-2 text-sm my-2",
+      };
+      return typeList[this.type];
+    },
+  },
   props: {
     title: {},
     titleClass: {
-      default: "my-4",
+      default: "",
+    },
+    type: {
+      default: "default",
     },
   },
 };

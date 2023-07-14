@@ -1,6 +1,7 @@
 <template>
-  <Dialog></Dialog>
-  <div class="flex    justify-evenly mt-4">
+  <Dialog v-model:name="value.name" v-model:icon="value.icon"></Dialog>
+  <div class="flex justify-evenly mt-4">
+    {{ data }}
     <XtButton w="200">清空对话记录</XtButton>
     <XtButton w="200">删除对话</XtButton>
   </div>
@@ -12,9 +13,12 @@ export default {
   components: {
     Dialog,
   },
+  props: {
+    data: {},
+  },
   data() {
     return {
-      search: "",
+      value: { ...this.data },
     };
   },
 };

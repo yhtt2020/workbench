@@ -9,7 +9,12 @@
         placeholder="搜索"
       >
         <template #suffix>
-          <Icon icon="sousuo" style="font-size: 20px"></Icon>
+          <Icon
+            icon="sousuo"
+            style="font-size: 20px"
+            class="cursor-pointer"
+            @click="searchTopic()"
+          ></Icon>
         </template>
       </a-input>
 
@@ -42,7 +47,7 @@
     :showFull="false"
     @close="createChatVisible = false"
   >
-    <createTopic></createTopic>
+    <createTopic @close="createChatVisible = false"></createTopic>
   </XtView>
   <!-- 充值 -->
   <XtView
@@ -57,14 +62,20 @@
   <!-- 编辑 -->
   <a-drawer :width="497" v-model:visible="settingVisible" placement="right">
     <template #title>
-      <XtTitle titleClass=""
-        >设置
+      <XtTitle titleClass="" type="header"
+        >设置 {{ selectTopicIndex }}
         <template #right>
-          <XtButton text="保 存" type="theme" h="40" w="80"></XtButton>
+          <XtButton
+            @click="saveEdit()"
+            text="保 存"
+            type="theme"
+            h="40"
+            w="80"
+          ></XtButton>
         </template>
       </XtTitle>
     </template>
-    <edit></edit>
+    <edit :data="topicList[selectTopicIndex]" ref="editRef"></edit>
   </a-drawer>
 </template>
 
@@ -74,7 +85,16 @@ import edit from "./edit.vue";
 import Store from "../account/Store.vue";
 import Popup from "../components/Popup.vue";
 
+import { mapWritableState } from "pinia";
+import { aiStore } from "../../../store/ai";
 export default {
+  computed: {
+    ...mapWritableState(aiStore, [
+      "serachTopic",
+      "selectTopicIndex",
+      "topicList",
+    ]),
+  },
   components: {
     Popup,
     createTopic,
@@ -88,6 +108,18 @@ export default {
       searchValue: "",
       settingVisible: false,
     };
+  },
+  methods: {
+    searchTopic() {
+      this.serachTopic = this.searchValue;
+    },
+    saveEdit() {
+      let editRef = this.$refs.editRef;
+      this.topicList[this.selectTopicIndex] = {
+        ...editRef.value,
+      };
+      this.settingVisible = false;
+    },
   },
 };
 </script>
