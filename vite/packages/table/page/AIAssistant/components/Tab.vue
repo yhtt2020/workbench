@@ -1,15 +1,16 @@
 <template>
-    <Tab
-      mode="col"
-      v-model:data="selectTab"
-      :list="tabList"
-      :showName="showName"
-      itemClass="mb-2 h-14"
-    ></Tab>
+  <XtTab
+    :style="widthStyle"
+    class="mr-2"
+    mode="col"
+    v-model:data="selectTab"
+    :list="tabList"
+    :showName="showName"
+    itemClass="mb-2 h-14"
+  ></XtTab>
 </template>
 
 <script>
-import Tab from "../../../components/card/components/tab/index.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../store/ai";
 export default {
@@ -18,9 +19,18 @@ export default {
     showName() {
       return this.isFull ? false : true;
     },
+    widthStyle() {
+      if (this.isFull) {
+        return {
+          width: "60px",
+        };
+      } else {
+        return {
+          width: "150px",
+        };
+      }
+    },
   },
-  components: { Tab },
-
   data() {
     return {
       tabList: [

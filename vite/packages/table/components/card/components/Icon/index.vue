@@ -1,5 +1,5 @@
 <template>
-  <div :class="typeClass" class="w-12 h-12 xt-active ">
+  <div :class="typeClass" :style="customStyle" class="xt-active">
     <Icon :icon="icon" :style="fontSizeStyle"></Icon>
   </div>
 </template>
@@ -8,6 +8,13 @@
 export default {
   name: "XtIcon",
   computed: {
+    // 自定义宽高
+    customStyle() {
+      return {
+        width: this.w + "px",
+        height: this.y + "px",
+      };
+    },
     fontSizeStyle() {
       return {
         "font-size": this.size + "px",
@@ -16,7 +23,7 @@ export default {
     typeClass() {
       if (this.type === "default") {
         return "xt-btn";
-      } else if (this.type === "active") {
+      } else if (this.type === "theme") {
         return "xt-active-btn";
       } else {
         return "flex justify-center items-center";
@@ -34,6 +41,14 @@ export default {
     size: {
       type: Number,
       default: 26,
+    },
+    w: {
+      type: Number,
+      default: 48,
+    },
+    y: {
+      type: Number,
+      default: 48,
     },
   },
 };

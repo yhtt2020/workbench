@@ -1,3 +1,10 @@
+.ant-drawer-mask {
+  z-index: 9999999;
+}
+.ant-drawer-content-wrapper,.ant-drawer-right  {
+  z-index: 999999999;
+
+}
 .ant-drawer-header,
 .ant-drawer-wrapper-body {
   background: var(--modal-bg);
@@ -9,6 +16,10 @@
 
   .ant-drawer-close {
     background: var(--secondary-bg);
+    width: 48px;
+    height: 48px;
+    font-size: 26px;
+    border-radius: 12px;
     color: var(--primary-text);
   }
 

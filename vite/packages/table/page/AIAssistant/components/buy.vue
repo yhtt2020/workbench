@@ -1,7 +1,7 @@
 <template>
   <div
     class="rounded-xl xt-bg-2 flex justify-between p-4 mt-4 items-center"
-    style="height: 80px"
+    style="height: 80px; z-index: 9999999999"
   >
     <div class="text-lg flex items-center">
       <div
@@ -23,9 +23,16 @@
       ￥ {{ data.price }}
     </div>
   </div>
-  <Popup v-if="popupVisible" @close="close" title="收银台">
+  <XtView
+    style="z-index: 9999999999"
+    model="popup"
+    :showFull="false"
+    v-if="popupVisible"
+    @close="close"
+    title="收银台"
+  >
     <pay :data="data"></pay>
-  </Popup>
+  </XtView>
 </template>
 
 <script>

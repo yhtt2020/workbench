@@ -1,6 +1,6 @@
 <template>
   <textarea
-    class="rounded-xl xt-bg-2 xt-scrollbar w-full"
+    class="rounded-xl xt-bg-2 xt-scrollbar w-full p-2"
     :class="border"
     style="
       resize: none;
@@ -62,4 +62,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
