@@ -44,7 +44,7 @@
             </div>
             <div class="flex flex-col">
               <div class="xt-text">{{item.name}}</div>
-              <div class="xt-text-3">{{item.appType||'轻应用'}}</div>
+              <div class="xt-text-2">{{item.appType||'轻应用'}}</div>
             </div>
           </div>
         </div>

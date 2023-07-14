@@ -11,6 +11,8 @@
     <!-- <div v-if="showAvatar !== ''" class="pointer" style="position: absolute; top: 7px;left: 42px;">
       <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
     </div> -->
+  <!--   -->
+    <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
   </a-upload>
 </template>
 

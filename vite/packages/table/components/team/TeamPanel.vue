@@ -53,7 +53,7 @@
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
             <div v-if="showDetail && currentTab==='store'" style="height: 100%">
-              <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
+              <FrameStoreWidget :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></FrameStoreWidget>
             </div>
           </a-col>
         </a-row>
@@ -113,7 +113,7 @@
              :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
 
-          <UserAvatar  :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
+          <UserAvatar  :frame="teamLeader.userInfo.equippedItems?.frameDetail"   :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
                       :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
           <div v-if="showDetail" class="pt-1 truncate mt-3" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
@@ -123,7 +123,7 @@
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
-          <UserAvatar :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online" :avatar="user.userInfo.avatar"
+          <UserAvatar :frame="user.userInfo.equippedItems?.frameDetail" :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online" :avatar="user.userInfo.avatar"
                       :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
           <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
@@ -144,20 +144,20 @@
 
 <script>
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { teamStore } from '../store/team'
+import { teamStore } from '../../store/team'
 import { mapWritableState, mapActions, mapState } from 'pinia'
-import { appStore } from '../store'
+import { appStore } from '../../store'
 import { Modal } from 'ant-design-vue'
-import UserDetail from './team/UserDetail.vue'
-import UserAvatar from './small/UserAvatar.vue'
-import LevelIcon from './small/LevelIcon.vue'
-import HorizontalPanel from './HorizontalPanel.vue'
-import TeamDevote from './team/TeamDevote.vue'
-import TeamDetail from './team/TeamDetail.vue'
-import TeamStoreDetail from './team/TeamStoreDetail.vue'
-import TeamBarrage from './comp/TeamBarrage.vue'
-import BarrageSender from './comp/BarrageSender.vue'
-import BarragePanel from './comp/BarragePanel.vue'
+import UserDetail from './UserDetail.vue'
+import UserAvatar from '../small/UserAvatar.vue'
+import LevelIcon from '../small/LevelIcon.vue'
+import HorizontalPanel from '../HorizontalPanel.vue'
+import TeamDevote from './TeamDevote.vue'
+import TeamDetail from './TeamDetail.vue'
+import FrameStoreWidget from './FrameStoreWidget.vue'
+import TeamBarrage from '../comp/TeamBarrage.vue'
+import BarrageSender from '../comp/BarrageSender.vue'
+import BarragePanel from '../comp/BarragePanel.vue'
 
 
 export default {
@@ -173,7 +173,7 @@ export default {
     UserDetail,
     PlusOutlined,
     HorizontalPanel,
-    TeamStoreDetail
+    FrameStoreWidget
   },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),

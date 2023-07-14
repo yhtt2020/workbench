@@ -3,7 +3,7 @@
     <img style="width: 280px;" class="rounded-md mb-2" :src="getCover(game.appid)" />
     <p style="width: 280px">
       <div>正在启动游戏…</div>
-      <div v-if="desks[game.appid]">将自动进入
+      <div v-if="getDesk()">将自动进入
         <div ><img class="rounded-md" style="width: 24px" :src="getClientIcon(game.appid,game.clientIcon)"/> <strong>{{ game.name }}</strong> 桌面</div></div>
       <div v-else>
         将跳转主桌面
@@ -35,7 +35,7 @@ export default defineComponent({
     }
   },
   computed:{
-    ...mapWritableState(steamUserStore,['desks'])
+    ...mapWritableState(steamUserStore,['desks','deskList'])
   },
   mounted() {
    this.timer= setTimeout(()=>{
@@ -52,6 +52,14 @@ export default defineComponent({
     getCover,
     switchToDesk() {
     },
+    getDesk(){
+      let found= this.deskList.find(desk=>{
+        console.log(desk,this.game.appid)
+        return desk.id===this.game.appid
+      })
+      console.log(found,'zhaodaod=')
+      return found && found?.cards.length > 0;
+    }
     // show(){
     //   notification.open({
     //     message:'正在调用steam启动游戏',

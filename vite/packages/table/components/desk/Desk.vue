@@ -1,5 +1,8 @@
 <template>
-  <div style="height:100%;width: 100%;" v-if="currentDesk.cards">
+
+
+
+  <div style="height:100%;width: calc(100% - 20px); " v-if="currentDesk.cards">
     <div  style="width: 100%;height: 100%" class="m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
@@ -23,7 +26,7 @@
     </div>
     <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
       style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
-      <div style="
+      <div ref="deskContainer" style="
           white-space: nowrap;
           height: 100%;
           display: flex;
@@ -39,7 +42,7 @@
       width: '100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
-            <div :style="{ pointerEvents: editing ? 'none' : '',zoom: (this.settings.cardZoom / 100).toFixed(2), }">
+            <div :style="{ pointerEvents: editing ? 'none' : '',zoom: (this.settings.cardZoom * this.adjustZoom / 100).toFixed(2), }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                 :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
@@ -251,13 +254,15 @@ export default {
   }
   ,
   mounted () {
-    console.log(this.currentDesk.cards)
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
   },
   data() {
     return {
+      stashBound:{width:0,height:0,zoom:0},
+      adjustZoom:1,
+
       settingVisible:false,
       hide:false,
       key:Date.now(),
@@ -330,6 +335,34 @@ export default {
     },
     showMenu(){
       this.menuVisible = true;
+    },
+    /**
+     * 暂存布局，与restore结对使用。
+     */
+    stashLayout()
+    {
+      let bound={
+        width:this.$refs.deskContainer.clientWidth,
+        height:this.$refs.deskContainer.clientHeight
+      }
+      this.stashBound = bound
+    },
+    /**
+     * 恢复布局
+     */
+    restoreLayout(rate=0){
+      if(rate){
+        this.adjustZoom=1
+        this.update()
+        return
+      }
+      let bound={
+        width:this.$refs.deskContainer.clientWidth,
+        height:this.$refs.deskContainer.clientHeight
+      }
+      this.adjustZoom=bound.height/this.stashBound.height
+      this.update()
+
     }
   }
 }
