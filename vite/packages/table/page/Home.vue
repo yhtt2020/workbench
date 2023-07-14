@@ -41,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
+      style="position: relative; border-radius: 8px; width: calc(100% - 20px); height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;
