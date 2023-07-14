@@ -127,13 +127,7 @@ export default {
       this.$emit('showMore')
     },
     setCurrentDeskId(id) {
-      // this.currentDeskId=id
       this.$emit('update:currentDeskId', id)
-      this.$nextTick(()=>{
-        console.log(this.currentDesk)
-      })
-
-      console.log(this.currentDeskId,'dangqianid')
     },
   }
 }

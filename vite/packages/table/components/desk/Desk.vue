@@ -254,7 +254,6 @@ export default {
   }
   ,
   mounted () {
-    console.log(this.currentDesk.cards)
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
@@ -347,8 +346,6 @@ export default {
         height:this.$refs.deskContainer.clientHeight
       }
       this.stashBound = bound
-
-      console.log(bound,'贮存时的bound')
     },
     /**
      * 恢复布局
@@ -363,10 +360,8 @@ export default {
         width:this.$refs.deskContainer.clientWidth,
         height:this.$refs.deskContainer.clientHeight
       }
-      console.log(bound,'恢复时的bound')
       this.adjustZoom=bound.height/this.stashBound.height
       this.update()
-      console.log(this.adjustZoom,'需要条件的')
 
     }
   }

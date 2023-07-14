@@ -231,7 +231,6 @@ export default {
   },
   mounted() {
     this.steamGameList = this.gameList
-    console.log(this.gameList[0])
     if(this.gameList.length>0) {
       if (this.gameList[0].appinfo) {
         console.log('重新格式化')
