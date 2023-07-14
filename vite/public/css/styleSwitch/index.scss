@@ -1,7 +1,9 @@
 // 全局变量 存储所有自定义变量数据
-@import "./globalStle.scss";
-@import "./globalClass.scss";
+@import "./style.scss";
+// 公共类
+@import "./class.scss";
+@import "./components.scss";
 // antd组件库 存储所有antd修改的样式
 @import "./antd.scss";
-// 二次封装公共类
-@import "./base.scss";
+
+@import "./base.scss"

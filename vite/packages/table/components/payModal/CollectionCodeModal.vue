@@ -54,7 +54,11 @@
 
 <script>
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
+<<<<<<< HEAD
 import { message } from 'ant-design-vue'
+=======
+import { message, Modal } from 'ant-design-vue'
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 import { mapActions } from 'pinia'
 import { frameStore } from '../../store/avatarFrame'
 
@@ -131,9 +135,23 @@ export default {
       if (this.order) {
         let rs = await this.checkOrderPaid(this.order.nanoid)
         if (rs.status) {
+<<<<<<< HEAD
           message.success('感谢支持，系统已经为您自动发放道具。')
           this.closeTimer()
           this.$emit('payOk')
+=======
+          this.closeTimer()
+          setTimeout(()=>{
+            this.$emit('payOk')
+          },500)
+          Modal.success({
+            centered:true,
+            content:'感谢支持，系统已经为您自动发放道具。',
+            onOk:()=>{
+
+            }
+          })
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
         } else {
           console.log('检测到订单待支付')
         }

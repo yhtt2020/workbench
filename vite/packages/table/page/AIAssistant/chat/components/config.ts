@@ -1,0 +1,17 @@
+export const iconList = [
+  "message",
+  "star",
+  "smile",
+  "shezhi1",
+  "aixin",
+  "yanjing",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+];

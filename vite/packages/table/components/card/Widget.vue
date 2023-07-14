@@ -72,7 +72,7 @@ declare interface IOption {
   //是否显示卡片标题
   noTitle: boolean,
   // 是否隐藏组件
-  hide?: boolean 
+  hide?: boolean
 }
 
 //菜单项
@@ -264,8 +264,15 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .no-frame {
+  background: none !important;
+  .no-title{
+    position: absolute;
+    right: 20px;top: 10px;
+    z-index: 99;
+  }
   position: relative;
 }
+
 </style>

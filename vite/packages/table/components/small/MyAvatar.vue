@@ -99,11 +99,12 @@ export default {
       })
     },
     social() {
-      if (this.totalCount) {
-        this.$router.push({name: 'message'})
-      } else {
-        this.$router.push({path: '/social/'})
-      }
+      // if (this.totalCount) {
+      //   this.$router.push({name: 'message'})
+      // } else {
+      //
+      // }
+      this.$router.push({name:'socialMy'})
     },
     enterIM() {
       this.$router.push({
@@ -143,7 +144,11 @@ export default {
         <a-row style="text-align: left" :gutter="10">
           <a-col :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
+<<<<<<< HEAD
             <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.equippedItems?.frameDetail?.image"></FrameAvatar>
+=======
+            <FrameAvatar :frame="userInfo.equippedItems?.frameDetail" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.equippedItems?.frameDetail?.image"></FrameAvatar>
+>>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->

@@ -28,7 +28,6 @@ export const captureStore = defineStore("captureStore", {
   actions: {
     bindCaptureIPC() {
       ipc.on('gotRecordSource', (event, args) => {
-        console.log('回传消息=', args)
         this.sources = args.sources
       })
     },
@@ -55,7 +54,7 @@ export const captureStore = defineStore("captureStore", {
       const dataBuffer = new Buffer(base64, 'base64') //把base64码转成buffer对象，
       require('fs').writeFile(path, dataBuffer, (err) => {//用fs写入文件
         if (err) {
-          console.log(err)
+          console.error(err)
           message.error('文件保存失败', err)
         } else {
           if (cb) {
@@ -212,7 +211,6 @@ export const captureStore = defineStore("captureStore", {
       ]
       for (let i in types) {
         // 可以自行测试需要的编码的MIME Type是否支持
-        console.log('Is ' + types[i] + ' supported? ' + (MediaRecorder.isTypeSupported(types[i]) ? 'Yes' : 'No :('))
 
       }
 

@@ -46,7 +46,7 @@
             </a-col>
 
             <a-col :span="12">
-              <div style="cursor: help" class="btn relative">
+              <div  class="btn relative">
                 窗口控制<br />
                 <a-switch
                   @click.stop="() => {}"
@@ -55,7 +55,7 @@
               </div>
             </a-col>
             <a-col :span="12">
-              <div style="cursor: help" class="btn relative test">
+              <div  class="btn relative test">
                 浅色模式<br />
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
                 <a-switch
@@ -210,24 +210,24 @@
     placement="right"
     style="z-index: 9999999"
   >
-    <Color
+    <XtColor
       v-model:color="bgColor"
       title="主题"
       btnText="恢复默认主题颜色"
       @onBtnClick="clearBgColor"
-    ></Color>
-    <Color
+    ></XtColor>
+    <XtColor
       v-model:color="textColor"
       title="文本"
       btnText="恢复默认文本颜色"
       @onBtnClick="clearTextColor"
-    ></Color>
-    <Color
+    ></XtColor>
+    <XtColor
       v-model:color="wallpaperColor"
       title="背景"
       @onBtnClick="clearWallpaperColor"
       btnText="恢复默认壁纸颜色"
-    ></Color>
+    ></XtColor>
   </a-drawer>
 
   <a-modal
@@ -253,7 +253,6 @@
 </template>
 
 <script>
-import Color from "../components/card/components/color/index.vue";
 import {
   delBgColor,
   delSecondaryBgColor,
@@ -284,7 +283,7 @@ import { isMain } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 export default {
   name: "Setting",
-  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip, Color },
+  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
   data() {
     return {
       bgColor: "",
@@ -337,15 +336,12 @@ export default {
     clearBgColor() {
       delBgColor();
       delSecondaryBgColor();
-      this.bgColor = "";
     },
     clearTextColor() {
       delTextColor();
-      this.textColor = "";
     },
     clearWallpaperColor() {
       delWallpaperColor();
-      this.wallpaperColor = "";
     },
     themeSwitch() {
       setThemeSwitch(this.styles);
