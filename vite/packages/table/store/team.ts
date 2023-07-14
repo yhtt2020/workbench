@@ -7,6 +7,7 @@ const {axios} = window.$models
 const createUrl = Server.baseUrl + '/app/team/create'
 const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
 const quitByNoUrl = Server.baseUrl + '/app/team/quitByNo'
+const disbandByNoUrl=Server.baseUrl+'/app/team/disbandByNo'
 const getTeamLeaderUrl = Server.baseUrl + '/app/team/getLeader'
 const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
 
@@ -91,6 +92,9 @@ export const teamStore = defineStore("teamStore", {
       }
     },
 
+    async openTeam(){
+      this.teamVisible=true
+    },
     async closeTeam() {
       this.team = {
         status: false
@@ -196,6 +200,10 @@ export const teamStore = defineStore("teamStore", {
       }
     },
 
+    async refreshTeamUsers(){
+      await this.getTeamLeader(this.team.no,0,0)
+      await this.getTeamMembers(this.team.no,0,0)
+    },
 
     async updateTeam(no, cache,withRank=false) {
       let conf = await getConfig()
@@ -229,6 +237,7 @@ export const teamStore = defineStore("teamStore", {
         let data = myTeamResult.data
         this.my = data.data
         let teamNo = 0
+        console.log(this.my,'我的小队信息')
         if (this.my.created.hasOwnProperty('no')) {
           //自己是队长
           teamNo = this.my.created.no
@@ -265,6 +274,7 @@ export const teamStore = defineStore("teamStore", {
         await this.closeTeam()
       }
     },
+
     /**
      * 检查自己是不是成员，此方法包括队长也算在内
      */
@@ -306,6 +316,24 @@ export const teamStore = defineStore("teamStore", {
     async quitByNo(no, uid) {
       try {
         let rs = await axios.post(quitByNoUrl, {no: no, uid: uid},
+          await getConfig())
+        return rs
+      } catch (e) {
+        return {
+          status: 0,
+          info: e.message
+        }
+      }
+
+    },
+    /**
+     * 解散小队
+     * @param no
+     * @param uid 如果不提交，则为自己退出
+     */
+    async disbandByNo(no) {
+      try {
+        let rs = await axios.post(disbandByNoUrl, {teamNo: no},
           await getConfig())
         return rs
       } catch (e) {

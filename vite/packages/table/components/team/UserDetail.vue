@@ -1,17 +1,19 @@
 <template>
-  <a-row :gutter="20">
-    <a-col :span="5">
-      <a-avatar class="mt-3 ml-3" :size="50" :src="userInfo.avatar"></a-avatar>
-    </a-col>
-    <a-col :span="19">
-      <div class="mt-3 mb-1 ml-2 font-bold truncate"> {{ userInfo.nickname }}
+  <div style="padding-top: 20px;padding-left: 20px">
+    <a-row :gutter="20">
+      <a-col :span="6" >
+        <FrameAvatar :avatar-size="50" :frame-url="userInfo.equippedItems?.frameDetail.image" class="mt-3 ml-3" :size="50" :avatar-url="userInfo.avatar"></FrameAvatar>
+      </a-col>
+      <a-col :span="18">
+        <div class=" mb-1 2 font-bold truncate"> {{ userInfo.nickname }}
+        </div>
+        <div>
+          <div class="rounded-md  px-2 bg-mask inline-block font-bold">UID: {{ userInfo.uid }}</div>
+        </div>
+      </a-col>
+    </a-row>
+  </div>
 
-      </div>
-      <div>
-        <div class="rounded-md ml-2 px-2 bg-mask inline-block font-bold">UID: {{ userInfo.uid }}</div>
-      </div>
-    </a-col>
-  </a-row>
   <div class="bg-mask rounded-lg p-3 m-3 mt-2 mb-0 " style="min-height: 77px">
     <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
   </div>
@@ -45,9 +47,10 @@ import { teamStore } from '../../store/team'
 import OnlineGradeDisplay from './OnlineGradeDisplay.vue'
 import OnlineMedal from './OnlineMedal.vue'
 import Medal from './Medal.vue'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
 export default {
   name: 'UserDetail',
-  components: { Medal, OnlineMedal, OnlineGradeDisplay },
+  components: { FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
   props:['userInfo','isLeader','memberInfo','joinedTime'],
   data(){
     return{

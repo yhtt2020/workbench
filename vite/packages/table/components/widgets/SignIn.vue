@@ -29,14 +29,14 @@
         <div v-else v-for="item in todayRank" :key="item.id"
              class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
-          <div class="flex-1 flex ml-3 items-center">
-            <a-avatar @click="showCard(item.uid)" :src="item.avatar">
+          <div class="flex-1 flex ml-3 items-center" style="width: 60px">
+            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar" :frame-url="item.equippedItems?.frameDetail?.image">
               <template #icon>
                 <UserOutlined/>
               </template>
-            </a-avatar>
+            </FrameAvatar>
             <div @click="showCard(item.uid)" class="ml-3 truncate"
-                 style="color: var(--primary-text);font-size: 16px;max-width: 120px;">
+                 style="color: var(--primary-text);font-size: 14px;max-width: 120px;">
               {{ item.nickname }}
             </div>
           </div>
@@ -122,10 +122,12 @@ import { comStore } from '../../store/com'
 import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
 import _ from 'lodash-es'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
 
 export default {
   name: 'SingIn',
   components: {
+    FrameAvatar,
     Widget,
     HorizontalPanel,
     UserOutlined

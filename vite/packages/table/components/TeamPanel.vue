@@ -42,7 +42,7 @@
               </a-col>
             </a-row>
             <div v-if="showDetail && currentTab==='info'">
-              <TeamDetail @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
+              <TeamDetail @closeTeam="closeTeam" @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
                           :teamLeader="teamLeader"></TeamDetail>
             </div>
             <div style="flex: 1;height:0" v-if="showDetail && currentTab==='barrage' ">
@@ -52,7 +52,7 @@
                  style="height: 100%;position: relative;width: 100%">
               <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
             </div>
-            <div v-if="showDetail && currentTab==='store'">
+            <div v-if="showDetail && currentTab==='store'" style="height: 100%">
               <TeamStoreDetail :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamStoreDetail>
             </div>
           </a-col>
@@ -108,25 +108,24 @@
       <!-- <a-divider style="margin-top: 10px;margin-bottom: 10px;color: red;"></a-divider> -->
       <div style="margin-top: 10px;margin-bottom: 10px;text-align: center;">—————</div>
       <vue-custom-scrollbar :settings="outerSettings"
-                            style="position:relative;height:100%;  ">
+                            style="position:relative;height:100%;padding-top: 5px  ">
         <div @click="showUserDetail(teamLeader.userInfo,teamLeader)"
              :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
 
-          <UserAvatar :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
-                      :avatar="teamLeader.userInfo.avatar" :rare="0" :url="''"></UserAvatar>
+          <UserAvatar  :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
+                      :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
-          <div v-if="showDetail" class="p-2 truncate" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
+          <div v-if="showDetail" class="pt-1 truncate mt-3" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
-
           </div>
         </div>
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
-          <UserAvatar :online="user.online" :avatar="user.userInfo.avatar"
-                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :rare="0" :url="''"></UserAvatar>
-          <div v-if="showDetail" class="p-2 pb-0 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
+          <UserAvatar :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online" :avatar="user.userInfo.avatar"
+                      :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
+          <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
             }}
           </div>
@@ -327,8 +326,6 @@ export default {
 
 <style scoped lang="scss">
 :deep(.ant-avatar) {
-
-  background: var( --secondary-bg);
   border-radius: 50%;
 }
 .active {

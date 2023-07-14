@@ -13,7 +13,7 @@ import Key from "../page/settings/Key.vue";
 import Apps from "../page/Apps.vue";
 import AppFrame from "../page/AppFrame.vue";
 import Music from "../page/Music.vue";
-import AIAssistant from "../page/AIAssistant/index.vue"
+//import AIAssistant from "../page/AIAssistant/index.vue"
 import Status from "../page/Status.vue";
 import Main from "../page/Main.vue";
 import Home from "../page/Home.vue";
@@ -51,7 +51,8 @@ import DeckIndex from "../page/app/deck/DeckIndex.vue";
 import BrowserIndex from '../page/app/browser/Index.vue';
 import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
-import Rank from '../page/social/Rank.vue'
+import Rank from '../page/social/Rank.vue';
+import BillingRecord from '../page/social/BillingRecord.vue';
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
@@ -134,6 +135,11 @@ export default [
             name: "rank",
             component: Rank,
           },
+          {
+            path:"/bill",
+            name:'bill',
+            component:BillingRecord
+          }
         ],
       },
       {
@@ -157,11 +163,11 @@ export default [
           }
         ]
       },
-      {
-        path: "/ai",
-        name: "ai",
-        component: AIAssistant,
-      },
+      // {
+      //   path: "/ai",
+      //   name: "ai",
+      //   component: AIAssistant,
+      // },
       {
         path: "/music",
         name: "music",

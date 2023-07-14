@@ -32,6 +32,7 @@ export const comStore = defineStore("comStore", {
               uid: r.uid,
               avatar: r.userInfo.avatar || '',
               nickname: r.userInfo.nickname || '',
+              equippedItems:r.userInfo.equippedItems,
               time: time.hours + ':' + time.minutes + ':' + time.seconds
             }
           })

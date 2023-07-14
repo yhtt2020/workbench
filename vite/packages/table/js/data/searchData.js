@@ -2,12 +2,12 @@
 export const AggregateList = [
   {
     title:'百度',
-    url:'	https://files.codelife.cc/itab/search/baidu.svg',
+    icon:'baidu',
     search_url:'https://www.baidu.com/s?&tn=68018901_2_oem_dgie=utf-8&wd=',
   },
   {
     title:'谷歌',
-    url:'https://files.codelife.cc/itab/search/google.svg',
+    icon:'google',
     search_url:'https://www.google.com/search?q='
   },
   {
@@ -17,17 +17,33 @@ export const AggregateList = [
   },
   {
     title:'知乎',
-    url:'	https://files.codelife.cc/itab/search/zhihu.svg',
+    icon:'zhihu-square-fill',
     search_url:'https://www.zhihu.com/search?type=content&q='
   },
   {
     title:'GitHub',
-    url:'https://files.codelife.cc/itab/search/github.svg',
+    icon:'github-fill',
     search_url:'https://github.com/search?q='
   },
   {
     title:'Bilibili',
-    url:'https://files.codelife.cc/itab/search/bilibili.svg',
+    icon:'bilibili1',
     search_url:'https://search.bilibili.com/all?keyword='
-  }
+  },
+  {
+    title:'微博',
+    icon:'weibo',
+    search_url:'https://s.weibo.com/?Refer=',
+  },
+  {
+    title:'优酷',
+    icon:'youku',
+    search_url:'https://so.youku.com/search_video/q_',
+  },
+  {
+    title:'豆瓣',
+    icon:'douban1',
+    search_url:'https://www.douban.com/search?q='
+  },
+
 ]

@@ -46,7 +46,7 @@
           <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4 ">
             <MedalNo :no="item.no"></MedalNo>
             <span class="mx-4">
-              <a-avatar :src="item.userInfo.avatar" :size="40"></a-avatar>
+              <FrameAvatar :avatar-url="item.userInfo.avatar" :frame-url="item.userInfo.equippedItems.frameDetail?.image" :avatar-size="50"></FrameAvatar>
             </span>
             <span class="xt-text truncate" style="font-size: 16px;">{{ item.userInfo.nickname }}</span>
           </a-col>
@@ -340,10 +340,12 @@ import { rankStore } from '../../store/rank'
 import Template from '../../../user/pages/Template.vue'
 import { teamStore } from '../../store/team'
 import MedalNo from './MedalNo.vue'
+import FrameAvatar from '../../components/avatar/FrameAvatar.vue'
 
 export default {
   name: 'Rank',
   components: {
+    FrameAvatar,
     MedalNo,
     Template,
     ThreeRank
