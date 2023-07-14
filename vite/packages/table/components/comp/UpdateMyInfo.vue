@@ -20,7 +20,7 @@
               </div>
             </div>
             <span class="update-title mb-6">头像</span>
-            <div class="flex w-full mx-1.5 flex-wrap justify-between">
+            <div class="flex w-full mx-1.5 flex-wrap justify-between" style="position: relative;">
               <UploadImage class="avatar-box rounded-lg"></UploadImage>  
               <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3" :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)">
                <a-avatar :size="48" :src="getAvatarUrl(item.id)"></a-avatar>

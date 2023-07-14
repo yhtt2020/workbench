@@ -2,25 +2,44 @@
   <!-- 图片上传组件 -->
   <a-upload :style="size" class="pointer" 
    @change="uplaodImageChange" :before-upload="beforeUpload"
-   :show-upload-list="false"
+   :show-upload-list="false" removeIcon
+   :remove="deleteAvatar"
    @preview="handlePreview"
   >  
-    <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
-    <!-- <img v-if="frameData.avatar_url" :src="frameData.avatar_url" alt="avatar" style="height:48px;width:48px;"/>
-     -->
+    <img v-if="showAvatar !== ''" :src="showAvatar" alt="avatar" class="rounded-full" style="height:48px;width:48px;"/>
+    <Icon v-else icon="tianjia2" style="font-size: 2.3em;"></Icon>
+    <!-- <div v-if="showAvatar !== ''" class="pointer" style="position: absolute; top: 7px;left: 42px;">
+      <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
+    </div> -->
   </a-upload>
 </template>
 
 <script>
+import { DeleteOutlined } from '@ant-design/icons-vue'
 import { mapActions,mapWritableState } from 'pinia';
 import api from '../../../src/model/api';
 import { message } from 'ant-design-vue';
 import cache from './card/hooks/cache';
 import { frameStore } from '../store/avatarFrame';
+import { appStore } from '../store';
 export default {
   name:'UploadImage',
+  components:{
+    DeleteOutlined
+  },
   computed:{
     ...mapWritableState(frameStore,['frameData']),
+    ...mapWritableState(appStore,['userInfo'])
+  },
+  data(){
+    return{
+      showAvatar:''
+    }
+  },
+  mounted(){
+    if(this.userInfo.avatar){
+      this.showAvatar = this.userInfo.avatar
+    }
   },
   methods:{
     ...mapActions(frameStore,['saveAvatarUrl']),
@@ -34,7 +53,7 @@ export default {
           const avatarUrl = 'http://'+ res.data.data
           if(avatarUrl){
             message.success('自定义头像上传成功')
-
+            this.showAvatar = avatarUrl
           }
           cache.set('avatar_url',avatarUrl)
           this.saveAvatarUrl()
@@ -52,6 +71,9 @@ export default {
         message.error('上传图片不能大于2MB');
       }
       return isFileType && isLt2M;
+    },
+    deleteAvatar(file){
+     console.log('测试',file);
     },
     handlePreview(){
       
