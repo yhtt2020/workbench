@@ -102,7 +102,6 @@ const cloudAdapter={
       await cloudSpaceModel.getUserInfo(uid)
       let result =await cloudSpaceModel.restore(spaceId)
       if(result.status===1){
-        console.log('获得云端数据',result.data.data)
         savedStringData=JSON.stringify(result.data.data)
       }
       //savedStringData = fs.readFileSync(sessionRestore.savePath, 'utf-8')

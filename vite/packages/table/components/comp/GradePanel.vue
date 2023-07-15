@@ -4,11 +4,8 @@
       <a-col :span="24">
         <a-row>
           <a-col :span="14">
-            <a-row>
-              <a-col :span="4" style="text-align: right">
-                <a-avatar style="position: relative;cursor: pointer" :size="50"
-                          :src="userInfo.avatar">
-                </a-avatar>
+            <a-row><a-col :span="4" style="text-align: right;margin-top: 5px">
+                <FrameAvatar :frame="userInfo.equippedItems?.frameDetail" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="50" :frameUrl="userInfo.equippedItems?.frameDetail?.image"></FrameAvatar>
               </a-col>
               <a-col :span="20" style="padding-left: 20px">
                 <div style="font-size: 16px;font-weight: bold">{{ userInfo.nickname }}</div>
@@ -89,9 +86,11 @@ import { defineComponent } from 'vue'
 import { mapState, mapActions } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../store'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
 
 export default defineComponent({
   name: 'grade-panel',
+  components: { FrameAvatar },
   props: {},
   computed: {
     ...mapState(appStore, ['userInfo']),

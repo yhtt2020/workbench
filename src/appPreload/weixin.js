@@ -47,7 +47,6 @@ $(()=>{
   //
   // })
 
-  console.log('完成界面重置')
   // $('[ui-view=contentView]').css({
   //   height:'100vh'
   // })

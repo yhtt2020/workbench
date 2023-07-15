@@ -6,7 +6,7 @@
     <vueCustomScrollbar v-if="currentTab.name === 'com'" :settings="scrollbarSettings"
       style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
       <div class="card mr-3"
-        style="height: 92%;overflow: hidden ;width: 310px;vertical-align: top;display: flex;flex-direction: column;background: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
+        style="height: 92%;overflow: hidden ;width: 300px;min-width:300px;vertical-align: top;display: flex;flex-direction: column;background: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
         <div class="line-title" style="">
           <HorizontalPanel v-if="Number(this.myTeamNo) > 0" :navList="channelList" v-model:select-type="currentChannel">
           </HorizontalPanel>
@@ -41,15 +41,16 @@
 <!--                  </div>-->
 <!--                </a-col>-->
 <!--              </a-row>-->
-              <a-row class="mb-5" :gutter="[10, 15]">
+
 
 
                 <template v-for="barrage in barrages">
-                  <a-col :span="5" style="min-width: 50px">
-                    <FrameAvatar :avatar-size="55" style="zoom:0.65;" @click="showUserCard(barrage.uid)" class="mt-2 pointer ml-5" :size="36" :avatar-url="barrage.avatar"
+                  <a-row class="mb-5" :gutter="[10, 15]">
+                  <a-col flex="70px" style="text-align: center;margin-left: -10px;margin-top: 5px">
+                    <FrameAvatar :avatar-size="55" style="zoom:0.65;" @click="showUserCard(barrage.uid)" class=" pointer ml-5" :size="36" :avatar-url="barrage.avatar"
                                  :frame-url="barrage.userInfo?.equippedItems?.frameDetail?.image"></FrameAvatar>
                   </a-col>
-                  <a-col :span="19">
+                  <a-col flex="auto" :wrap="true" style="width:0">
                     <div class="barrage-name">
                       <strong style="color:var(--secondary-text)">{{ barrage.nickname }}</strong> · {{
                         barrage.create_time_text }}
@@ -60,9 +61,11 @@
                     <div class="barrage-time">
 
                     </div>
+
                   </a-col>
+                  </a-row>
                 </template>
-              </a-row>
+
             </vueCustomScrollbar>
           </div>
         </div>

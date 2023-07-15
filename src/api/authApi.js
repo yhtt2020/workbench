@@ -10,7 +10,6 @@ const url = {
 }
 const authApi = {
   async loginBrowser(info) {
-    console.log('进入authapi')
     return baseApi.axios(url.loginBrowser, info, 'post', true)
   },
   async logoutBrowser () {

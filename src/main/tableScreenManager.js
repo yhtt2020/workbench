@@ -87,7 +87,6 @@ class TableScreenManager {
   }
 
   closeByDomain (domain) {
-    console.log('关闭分屏')
     let key = Object.keys(this.runningScreens).find(key => {
       return this.runningScreens[key].fullDomain === domain
     })
@@ -107,7 +106,6 @@ class TableScreenManager {
     if (this.runningScreens[key]) {
       const window = this.runningScreens[key].window
       if (window && !window.isDestroyed()) {
-        console.log('聚焦窗口')
         window.focus()
       }
     } else {
@@ -155,7 +153,6 @@ class TableScreenManager {
       window.loadURL(url)
       window.webContents.on('did-finish-load', async () => {
         setTimeout(async () => {
-          console.log('截图外发')
           //延迟3秒再截图，保证不截取到载入界面
           if (!window.isDestroyed()) {
             //如果用户手速够快，还是有可能被关闭了的。
@@ -216,7 +213,6 @@ class TableScreenManager {
     })
 
     ipc.on('sendToSubs', (event, argsOrigin) => {
-      console.log('接收到转发到全部分屏的消息',  argsOrigin)
       const {
         channel, args
       } = argsOrigin
@@ -225,7 +221,6 @@ class TableScreenManager {
       })
     })
     ipc.on('sendToSub', (event, argsOrigin) => {
-      console.log('接收到转发到指定分屏的消息',argsOrigin.key, argsOrigin)
       const {
         key, channel, args
       } = argsOrigin

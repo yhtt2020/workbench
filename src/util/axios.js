@@ -130,7 +130,6 @@ axios.interceptors.response.use(
       }
       // return response.data;
     } else {
-      console.log('axios reject')
       //todo else if 401  删掉凭证和数据，弹出错误
       return Promise.reject(response.data);
     }
@@ -146,7 +145,6 @@ axios.interceptors.response.use(
       if (error.message.endsWith('401')) {
         //此处是登录报401场景
         if (typeof window === 'undefined') {
-          console.log('主进程察觉到掉登录')
         } else if (!isRefreshing) {
           //且不在刷新令牌，证明已经无法刷新令牌了
           let userRs=await userModel.getCurrent()
@@ -156,7 +154,6 @@ axios.interceptors.response.use(
 
             ipc.send('message', {type: 'warn', config: {content: '您的登录信息已过期，请重新登录。', key: "401"}})
             //todo 通知侧边栏清理掉登录信息，以确保账号信息同步
-            console.log('渲染进程掉登录')
           }
         }
       }

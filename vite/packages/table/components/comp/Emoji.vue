@@ -3,12 +3,17 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: "Emoji",
-  props:['icon']
+  props:['icon'],
+  methods:{
+    getUrl(){
+      return '/emoji/'+this.icon+'.png'
+    }
+  }
 })
 </script>
 
 <template>
-  <a-avatar :src="'/public/emoji/'+icon+'.png'"></a-avatar>
+  <a-avatar :src="getUrl()"></a-avatar>
 </template>
 
 <style scoped lang="scss">
