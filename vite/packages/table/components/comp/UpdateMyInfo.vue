@@ -111,7 +111,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(appStore,['editPresetAvatar','setInfoVisible']),
+    ...mapActions(appStore,['editPresetAvatar','setInfoVisible','setSecondaryVisible']),
     ...mapActions(frameStore,['updateMyinfo']),
     openMyInfo(){
       this.updateInfoVisible = true
@@ -169,6 +169,7 @@ export default {
     closeUpdateMyInfo(){
       this.updateInfoVisible = false
       this.setInfoVisible(false)
+      this.setSecondaryVisible(false)
     }
   },
   watch:{
