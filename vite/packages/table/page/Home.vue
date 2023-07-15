@@ -242,7 +242,7 @@
   </div>
 
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
-  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="infoTest === true">
+  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
@@ -620,7 +620,7 @@ export default {
       "backgroundImage",
       "styles",
       "style",
-      "infoTest"
+      "infoVisible"
     ]),
 
     ...mapWritableState(appStore, {

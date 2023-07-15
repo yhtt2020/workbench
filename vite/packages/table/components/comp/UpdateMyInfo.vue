@@ -111,7 +111,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(appStore,['editPresetAvatar','setInfoTest']),
+    ...mapActions(appStore,['editPresetAvatar','setInfoVisible']),
     ...mapActions(frameStore,['updateMyinfo']),
     openMyInfo(){
       this.updateInfoVisible = true
@@ -161,14 +161,14 @@ export default {
       }
       this.updateMyinfo(saveUpdateMyInfo)
       this.updateInfoVisible = false
-      this.setInfoTest(false)
+      this.setInfoVisible(false)
     },
     go(url){
       browser.openInInner(url)
     },
     closeUpdateMyInfo(){
       this.updateInfoVisible = false
-      this.setInfoTest(false)
+      this.setInfoVisible(false)
     }
   },
   watch:{

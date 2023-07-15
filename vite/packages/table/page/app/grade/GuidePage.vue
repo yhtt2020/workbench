@@ -177,7 +177,7 @@ export default {
     this.selectItem = ['gr']
   },
   methods:{
-    ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoTest']),
+    ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoVisible']),
     ...mapActions(cardStore,['addDesk']),
     ...mapActions(navStore,['updateLeftNavData','updateBottomNavData']),
     // 点击返回按钮的回调事件
@@ -245,7 +245,7 @@ export default {
          const regex = new RegExp(avatar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
          const isUrlExists = _.some(defaultAvatar,function(o){ return regex.test(o.default_url) })
          if(isUrlExists){
-          this.setInfoTest(true)
+          this.setInfoVisible(true)
           clearTimeout(postTimer)
          }
         },60000)
