@@ -84,7 +84,6 @@ const PasswordModel = {
    * @param manager
    */
   setPasswordManager(manager){
-    console.log(manager,'manager123123')
     settings.set('passwordManager', {
       name:manager.name,
       filePath:manager.filePath,

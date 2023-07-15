@@ -36,7 +36,6 @@ class Watch extends Base {
     })
 
     this.on('startTask', (event, args, instance) => {
-      console.log(args, '接收到启动任务的命令')
       let task = args
       this.runTask(task, {
         background:true,
@@ -159,7 +158,6 @@ class Watch extends Base {
   }
 
   closeTestInstance(id){
-    console.log(id,'寻找id')
    let found=  this.taskInstances.findIndex(instance=>{
       return String(instance.task.id)===String(id)
     })
@@ -249,7 +247,6 @@ class Watch extends Base {
   async stopTask (task) {
     let taskInstance = this.findInstance(task.nanoid)
     if (taskInstance) {
-      console.log(task, '关闭任务')
       let window = taskInstance.window
       window.destroy()//强制关闭
       clearInterval(this.taskIntervals[task.nanoid])//移除定时任务

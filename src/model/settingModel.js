@@ -6,7 +6,6 @@ class SettingModel {
   async initDb(){
     let exists = await sqlDb.knex.schema.hasTable('setting')
     if (!exists) {
-      console.log('检测到setting表不存在，自动创建')
       await sqlDb.knex.schema.createTable('setting', function (t) {
         t.string('nanoid').primary().unique() //本地id
         t.string('sign').comment('标记，用于区隔，例如不同的应用，sign-group-key结合才是最终定位一个配置的关键')
