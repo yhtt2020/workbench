@@ -32,7 +32,7 @@
           <div class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet = true">
             <Icon icon="dianzan" style="font-size: 1.5em;"></Icon>
           </div>
-          <div class="add-scheme" @click="addPlan(scheme)">立即添加</div>
+          <div class="add-scheme" @click="addPlan">立即添加</div>
         </div>
       </a-space>
     </template>
@@ -76,6 +76,8 @@ import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
 import { appStore } from '../../store';
 import Desk from './Desk.vue'
+import { cardStore } from "../../store/card";
+import { deskStore } from "../../store/desk";
 export default {
   name: "DeskPreview",
   components: {
@@ -94,7 +96,7 @@ export default {
       },
       deskWidth: 0,
       deskHeight: 0,
-      cardsHeight: 0,
+      cardHeight: 0,
       zoom: 0,
       cardZoom: 0,
       windowWidth: document.body.clientWidth,
@@ -134,18 +136,13 @@ export default {
         }
         this.deskWidth = this.scheme.deskWidth
         this.deskHeight = this.scheme.deskHeight
-        this.cardsHeight = this.scheme.cardsHeight
-      }
+        this.cardHeight = this.scheme.cardsHeight
 
-      var that = this
-      window.onresize = () => {
-        return (() => {
-          // that.windowHeight = document.documentElement.clientHeight // 高
-          // that.windowWidth = document.documentElement.clientWidth // 宽
+        var that = this
+        window.addEventListener('resize',() => {
           that.getPreviewHeight()
-        })()
+        })
       }
-      
     },
     // windowHeight(val){
     //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
@@ -159,10 +156,24 @@ export default {
     // }
   },
   methods: {
-    addPlan(scheme){
+    ...mapActions(cardStore,['addShareDesk','setDeskSize']),
+    addPlan(){
+      this.close()
+      let card = JSON.parse(JSON.stringify(this.scheme))
+      this.addShareDesk(card)
       message.success('添加成功');
       this.openDrawer = false
-      this.close()
+      this.$nextTick(() => {
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
+        let size = {
+          deskWidth,
+          deskHeight,
+          cardsHeight,
+        }
+        this.setDeskSize(size)
+      })
     },
     close(){
       this.cards.settings.cardZoom = this.cardZoom
@@ -173,16 +184,12 @@ export default {
       this.$nextTick(() => {
         if(this.fullScreen){
           this.previewHeight = document.getElementById("previewContent").offsetHeight
-        let cardZoom = (((this.zoom * this.previewHeight) / this.cardsHeight) * 100).toFixed()
-        this.cards.settings.cardZoom = cardZoom
+          let cardZoom = (((this.zoom * this.previewHeight) / this.cardHeight) * 100).toFixed()
+          this.cards.settings.cardZoom = cardZoom
         }
-        
       })
     }
-    // getScreenSize() {
-    //   this.screenWidth = window.innerWidth;
-    //   this.screenHeight = window.innerHeight;
-    // },
+    
   },
   mounted() {
   },

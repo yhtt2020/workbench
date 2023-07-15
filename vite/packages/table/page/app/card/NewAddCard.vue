@@ -92,7 +92,8 @@ import HorizontalPanel from '../../../components/HorizontalPanel.vue';
 import _ from 'lodash-es'
 import Search from '../../../components/Search.vue';
 import NavMenu from '../../../components/NavMenu.vue';
-import { deskStore } from '../../../store/desk'
+import { deskStore } from '../../../store/desk';
+import { cardStore } from '../../../store/card';
 import { mapActions, mapWritableState } from "pinia";
 import DeskMarket from './DeskMarket.vue';
 import ShareDesk from '../../../components/desk/ShareDesk.vue';
@@ -215,6 +216,8 @@ export default {
 
   },
   methods: {
+    // ...mapActions(deskStore,['setDeskSize']),
+    ...mapActions(cardStore,['setDeskSize']),
     onClick() {
     },
     handleChange(value) {
@@ -246,13 +249,23 @@ export default {
       this.openDrawer = val
     },
     openPerview({scheme,showModal}){
-      // console.log(showModal)
       this.scheme = scheme
       this.showModal = showModal
 
     },
     closePreview(){
       this.showModal = false
+      this.$nextTick(() => {
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
+        let size = {
+          deskWidth,
+          deskHeight,
+          cardsHeight,
+        }
+        this.setDeskSize(size)
+      })
     }
   },
 }

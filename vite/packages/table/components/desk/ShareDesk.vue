@@ -87,8 +87,9 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(deskStore,['deskList','deskSize']),
-    ...mapWritableState(cardStore, ['desks','settings']),
+    // ...mapWritableState(deskStore,['deskList','deskSize']),
+    ...mapWritableState(deskStore,['deskList']),
+    ...mapWritableState(cardStore, ['desks','settings','deskSize']),
   },
   watch: {
     openDrawer(newV){
@@ -131,7 +132,10 @@ export default {
             break;
         }
       })
+      if (this.shareName.trim() === "")return message.info("请输入新桌面名称")
+      if (this.shareName.length >= 16)return message.error("新桌面名称长度不可超过16")
       if(this.assort === '请选择') return message.info('请选择分类')
+      
       const time = new Date().valueOf()
       this.scheme = {
         id: nanoid(), 

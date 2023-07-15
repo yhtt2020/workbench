@@ -49,7 +49,7 @@
           display: flex;
           align-items: center;
           align-content: center;
-        " :style="{ 'padding-top': this.settings.marginTop + 'px' }"
+        " :style="{ 'padding-top': this.cardSettings.marginTop + 'px' }"
         id="cardContent">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
@@ -65,7 +65,7 @@
         <!--          </template>-->
         <!--          </vuuri></div></div>-->
         <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
-            return settings.cardMargin + 'px';
+            return cardSettings.cardMargin + 'px';
           }
           " group-id="grid.id" v-model="currentDesk.cards" :key="key" :style="{
 
@@ -73,7 +73,7 @@
       width: '100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions" :drag-enabled="true">
           <template #item="{ item }">
-            <div  :style="{  zoom: (this.settings.cardZoom / 100).toFixed(2),}">
+            <div  :style="{  zoom: (this.cardSettings.cardZoom / 100).toFixed(2),}">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"  :editing="editing" :customData="item.customData" @customEvent="customEvent"></component>
             </div>
           </template>
@@ -186,59 +186,96 @@
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
-    <div class="line-title">卡片设置：</div>
-    <div class="line">
-      卡片缩放：
-      <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
-    </div>
-    <div class="line">
-      卡片空隙：(调大空隙可能变成瀑布流布局)
-      <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
-    </div>
-    <div class="line">
-      距离顶部：
-      <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
-    </div>
-    <div class="line-title ">背景设置：</div>
-    <div class="line" @click="setTransparent()">
-      透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
-    </div>
-    <div class="line" v-if="!appSettings.transparent">
-      <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
-      <a-button @click="clearWallpaper">清除背景</a-button>
-    </div>
-    <div v-if="!appSettings.transparent" class="line">
-      <div class="line">
-        背景模糊度：
-        <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
+    <!-- <Tab
+      style="height: 48px"
+      boxClass="p-1 xt-bg-2"
+      v-model:data="cardDesk"
+      v-model:list="cardDeskList"
+    ></Tab>
+    {{ cardDesk }} -->
+    <a-radio-group v-model:value="cardDesk">
+      <a-radio-button value="all">全部桌面</a-radio-button>
+      <a-radio-button value="current">当前桌面</a-radio-button>
+    </a-radio-group>
+    <div v-if="cardDesk === 'current'">
+      <div class="my-3"  style="font-size: 1.2em;font-weight: bold;" @click="setTransparent()">
+        卡片设置(关则使用通用设置)：<a-switch @change="switchChange" v-model:checked="cardSwitch"></a-switch>
       </div>
-      <!--      <div class="line">-->
-      <!--        遮罩浓度：-->
-      <!--        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>-->
-      <!--      </div>-->
+      <template v-if="cardSwitch">
+        <!-- <div class="flex items-center mb-3">
+          <div class="mr-3" style="font-size: 1.2em;font-weight: bold;">卡片设置：</div>
+        </div> -->
+        <div class="line">
+          卡片缩放：
+          <a-slider :min="20" :max="500" v-model:value="cardSettings.cardZoom"></a-slider>
+        </div>
+        <div class="line">
+          卡片空隙：(调大空隙可能变成瀑布流布局)
+          <a-slider :min="5" :max="30" v-model:value="cardSettings.cardMargin"></a-slider>
+        </div>
+        <div class="line">
+          距离顶部：
+          <a-slider :min="0" :max="200" v-model:value="cardSettings.marginTop"></a-slider>
+        </div>
+      </template>
     </div>
+    <template v-else>
+      <div class="flex items-center mb-3">
+        <div class="mr-3" style="font-size: 1.2em;font-weight: bold;">卡片设置：</div>
+      </div>
+      <div class="line">
+        卡片缩放：
+        <a-slider :min="20" :max="500" v-model:value="cardSettings.cardZoom"></a-slider>
+      </div>
+      <div class="line">
+        卡片空隙：(调大空隙可能变成瀑布流布局)
+        <a-slider :min="5" :max="30" v-model:value="cardSettings.cardMargin"></a-slider>
+      </div>
+      <div class="line">
+        距离顶部：
+        <a-slider :min="0" :max="200" v-model:value="cardSettings.marginTop"></a-slider>
+      </div>
+      <div class="line-title ">背景设置：</div>
+      <div class="line" @click="setTransparent()">
+        透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
+      </div>
+      <div class="line" v-if="!appSettings.transparent">
+        <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
+        <a-button @click="clearWallpaper">清除背景</a-button>
+      </div>
+      <div v-if="!appSettings.transparent" class="line">
+        <div class="line">
+          背景模糊度：
+          <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
+        </div>
+        <!--      <div class="line">-->
+        <!--        遮罩浓度：-->
+        <!--        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>-->
+        <!--      </div>-->
+      </div>
 
-    <div class="line-title">RGB<br />（此类功能性能消耗较高，请酌情开启）</div>
-    <div class="line">
-      边框跑马灯：
-      <a-switch v-model:checked="appSettings.houserun"></a-switch>
-    </div>
-    <div class="line">
-      飘落特效：
-      <a-switch v-model:checked="appSettings.down.enable"></a-switch>
-    </div>
-    <div class="line" v-if="appSettings.down.enable">
-      飘落物：
-      <a-radio-group v-model:value="appSettings.down.type">
-        <a-radio value="rain">雨</a-radio>
-        <a-radio value="snow">雪</a-radio>
-        <a-radio value="leaf">叶</a-radio>
-      </a-radio-group>
-    </div>
-    <div class="line" v-if="appSettings.down.enable">
-      飘落物数量：
-      <a-input-number v-model:value="appSettings.down.count"></a-input-number>
-    </div>
+      <div class="line-title">RGB<br />（此类功能性能消耗较高，请酌情开启）</div>
+      <div class="line">
+        边框跑马灯：
+        <a-switch v-model:checked="appSettings.houserun"></a-switch>
+      </div>
+      <div class="line">
+        飘落特效：
+        <a-switch v-model:checked="appSettings.down.enable"></a-switch>
+      </div>
+      <div class="line" v-if="appSettings.down.enable">
+        飘落物：
+        <a-radio-group v-model:value="appSettings.down.type">
+          <a-radio value="rain">雨</a-radio>
+          <a-radio value="snow">雪</a-radio>
+          <a-radio value="leaf">叶</a-radio>
+        </a-radio-group>
+      </div>
+      <div class="line" v-if="appSettings.down.enable">
+        飘落物数量：
+        <a-input-number v-model:value="appSettings.down.count"></a-input-number>
+      </div>
+    </template>
   </a-drawer>
   <!-- <div class="home-blur fixed inset-0 p-12" style="z-index: 999" >
     <GradeNotice></GradeNotice>
@@ -295,7 +332,7 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div> -->
   </a-drawer>
-  <DeskPreview :scheme="scheme" :showModal="showModal" :fatherWidth="screenWidth" @closePreview="closePreview"></DeskPreview>
+  <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
 </template>
 
@@ -362,6 +399,7 @@ import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
 import DeskPreview from '../components/desk/DeskPreview.vue';
+import Tab from "../components/card/components/tab/index.vue"
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -597,7 +635,13 @@ export default {
       deskCode: '',
       shareCode: false,
       panelIndex: 0,
-      screenWidth: 0,
+      cardSettings: {},
+      cardDesk: 'all',
+      cardDeskList: [
+        {name: "通用桌面设置",value: "all"},
+        {name: "当前桌面设置",value: "current"}
+      ],
+      cardSwitch: false
     };
   },
   components: {
@@ -654,7 +698,8 @@ export default {
     AggregateSearch,
     ShareDesk,
     DeskMarket,
-    DeskPreview
+    DeskPreview,
+    Tab
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -708,6 +753,7 @@ export default {
     },
   },
   async mounted() {
+    // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
     //    password:'xyx86170060',
@@ -823,22 +869,37 @@ export default {
       };
     }
     this.fixData();
-    window.onresize = () => {
-      this.scrollbar = Date.now();
+    window.addEventListener('resize',() => {
+        this.scrollbar = Date.now();
 
-      this.$nextTick(() => {
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        let deskHeight = document.documentElement.clientHeight // 高
-        let deskWidth = document.documentElement.clientWidth // 宽
-        let size = {
-          deskWidth,
-          deskHeight,
-          cardsHeight,
-        }
-        // console.log(deskHeight)
-        this.setDeskSize(size)
-      })
-    };
+        this.getHomeSize()
+    })
+    // window.onresize = () => {
+    //   this.scrollbar = Date.now();
+
+    //   this.$nextTick(() => {
+    //     let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+    //     let deskHeight = document.documentElement.clientHeight // 高
+    //     let deskWidth = document.documentElement.clientWidth // 宽
+    //     let size = {
+    //       deskWidth,
+    //       deskHeight,
+    //       cardsHeight,
+    //     }
+    //     console.log(cardsHeight)
+    //     this.setDeskSize(size)
+    //   })
+    // };
+    // this.setInitCard()
+    
+    // if(this.currentDesk?.settings === 'current'){
+    //   this.cardSettings = this.currentDesk.aloneSettings
+    //   this.cardDesk = 'current'
+    // }else{
+    //   this.cardSettings = this.settings
+    //   this.cardDesk = 'all'
+    // }
+
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
       if (typeof this.customComponents[0] === "string") {
@@ -913,10 +974,11 @@ export default {
       "switchToDesk",
       "removeDesk",
       "getCurrentIndex",
+      "setDeskSize"
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
-    ...mapActions(deskStore, ["setDeskSize"]),
+    // ...mapActions(deskStore, ["setDeskSize"]),
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
@@ -1024,7 +1086,18 @@ export default {
         });
       }
     },
+    // setInitCard(){
+    //   if(this.currentDesk.showSettings){
+    //     this.cardSettings = this.currentDesk.aloneSettings
+    //     this.cardDesk = 'current'
+    //     this.cardSwitch = true
+    //   }else{
+    //     this.cardSettings = this.settings
+    //     this.cardDesk = 'all'
+    //   }
+    // },
     showSetting() {
+      // this.setInitCard()
       this.settingVisible = true;
       this.menuVisible = false;
     },
@@ -1068,13 +1141,10 @@ export default {
     openPerview({scheme,showModal}){
       this.scheme = scheme
       this.showModal = showModal
-      this.getScreenSize()
-    },
-    getScreenSize() {
-      this.screenWidth = window.innerWidth;
     },
     closePreview(){
       this.showModal = false
+      this.getHomeSize()
     },
     closeShare(val){
       this.openDesk = val
@@ -1083,6 +1153,30 @@ export default {
       this.panelIndex = 1
       this.visibleAdd = true;
       this.addDeskVisible = false;
+    },
+    getHomeSize(){
+      this.$nextTick(() => {
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
+        let size = {
+          deskWidth,
+          deskHeight,
+          cardsHeight,
+        }
+        // console.log(cardsHeight)
+        this.setDeskSize(size)
+      })
+    },
+    switchChange(val){
+      if(!this.currentDesk.showSettings){
+        this.currentDesk.aloneSettings = {
+          cardMargin: 5,
+          cardZoom: 100,
+          marginTop: 0
+        }
+      }
+      this.currentDesk.showSettings = val
     }
   },
   watch: {
@@ -1113,6 +1207,70 @@ export default {
         this.$refs.grid.update();
       },
     },
+    currentDesk: {
+      deep: true,
+      handler(val){
+        if(val.showSettings){
+          this.cardSettings = this.currentDesk.aloneSettings
+          this.cardSwitch = true
+          this.cardDesk = 'current'
+        }else{
+          this.cardSettings = this.settings
+          this.cardDesk = 'all'
+        }
+      }
+    },
+    cardDesk(val){
+       switch (val) {
+        case 'all':
+          if(this.currentDesk.showSettings){
+            this.cardDesk = 'current'
+            return message.info('当前卡片关闭后可切换')
+          }
+          this.cardSettings = this.settings
+          break;
+        case 'current':
+          if(this.currentDesk.showSettings){
+            this.cardSettings = this.currentDesk.aloneSettings
+            this.cardSwitch = true
+          }else{
+            this.cardSwitch = false
+          }
+        // this.cardSettings = this.currentDesk.aloneSettings
+          break;
+      }
+
+      // if(this.currentDesk.aloneSettings){
+      //   this.cardSettings = this.currentDesk.aloneSettings
+      // }else{
+      //   this.cardSettings = this.settings
+      // }
+      // switch (val) {
+      //   case 'all':
+      //     console.log("a11",this.settings)
+      //     this.cardSettings = this.settings
+      //     break;
+      
+      //   case 'current':
+      //   this.cardSettings = this.currentDesk.aloneSettings
+      //     break;
+      // }
+    },
+    // cardSettings: {
+    //   deep: true,
+    //   handler(val){
+    //     switch (this.cardDesk) {
+    //       case 'all':
+    //         this.settings = val
+    //         // console.log("this.settings",this.settings)
+    //         break;
+        
+    //       case 'current':
+    //         if(this.currentDesk.showSettings)this.currentDesk.aloneSettings = val
+    //         break;
+    //   }
+    //   }
+    // }
     // showModal: {
     //   handler(newValue) {
     //     this.$refs.grid.update();
