@@ -121,6 +121,7 @@ export default {
       // })
 
       let cards = JSON.parse(JSON.stringify(this.cards))
+      console.log(cards)
       cards.cards.forEach(item => {
         switch (item.name) {
           case 'notes':
@@ -136,6 +137,13 @@ export default {
       if (this.shareName.length >= 16)return message.error("新桌面名称长度不可超过16")
       if(this.assort === '请选择') return message.info('请选择分类')
       const time = new Date().valueOf()
+      let settings = {}
+      if(cards.settings && cards.settings.enableZoom){
+        settings = cards.settings
+      }else{
+        settings = this.settings
+      }
+      
       this.scheme = {
         id: nanoid(), 
         deskImg: '/img/test/deckImg.jpg',
@@ -153,7 +161,7 @@ export default {
         blurb: this.blurb,
         labelList: this.labelList,
         cards: this.secretSwitch ? cards.cards : this.cards.cards,
-        settings: cards.showSettings ? cards.aloneSettings :  this.settings,
+        settings,
         cardList: []
       }
       this.setDeskList(this.scheme)

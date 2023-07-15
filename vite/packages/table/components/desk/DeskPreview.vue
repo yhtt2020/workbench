@@ -124,7 +124,6 @@ export default {
   watch: {
     showModal(newVal){
       if(newVal)this.fullScreen = true
-      // console.log("方案",this.scheme)
       if(this.fullScreen){
         this.cardZoom = JSON.parse(JSON.stringify(this.scheme.settings.cardZoom))
         this.zoom = this.cardZoom / 100
@@ -160,35 +159,30 @@ export default {
     ...mapActions(cardStore,['addShareDesk','setDeskSize']),
     addPlan(){
       this.close()
-      // console.log("将要传的方案",this.scheme)
       this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)))
       message.success('添加成功');
       this.openDrawer = false
-      this.$nextTick(() => {
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        let deskHeight = document.documentElement.clientHeight // 高
-        let deskWidth = document.documentElement.clientWidth // 宽
-        let size = {
-          deskWidth,
-          deskHeight,
-          cardsHeight,
-        }
-        this.setDeskSize(size)
-      })
+      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+      let deskHeight = document.documentElement.clientHeight // 高
+      let deskWidth = document.documentElement.clientWidth // 宽
+      let size = {
+        deskWidth,
+        deskHeight,
+        cardsHeight,
+      }
+      this.setDeskSize(size)
     },
     close(){
-      // console.log("关闭的zoom",this.cardZoom)
-      this.cards.settings.cardZoom = this.cardZoom
+      // this.cards.settings.cardZoom = this.cardZoom
       this.$emit('closePreview',false)
       this.fullScreen = false
     },
     getPreviewHeight(){
       this.$nextTick(() => {
         if(this.fullScreen){
-          this.previewHeight = document.getElementById("previewContent").offsetHeight
-          let cardZoom = (((this.zoom * this.previewHeight) / this.cardHeight) * 100).toFixed()
+          this.previewHeight = document.getElementById("previewContent")?.offsetHeight
+          let cardZoom = (this.cardZoom  * this.previewHeight/ this.cardHeight).toFixed()
           this.cards.settings.cardZoom = cardZoom
-          // console.log("详情zoom",cardZoom)
         }
       })
     }
