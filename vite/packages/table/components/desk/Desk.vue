@@ -372,8 +372,6 @@ export default {
       this.update()
 
     }
-      if(!this.notTrigger)this.menuVisible = true;
-    },
   }
 }
 </script>
