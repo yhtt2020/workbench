@@ -142,7 +142,7 @@ export default {
       <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10">
-          <a-col :span="12">
+          <a-col :span="12"  :style="{paddingLeft:simple?'20px':'5px'}">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
             <FrameAvatar :frame="userInfo.equippedItems?.frameDetail" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.equippedItems?.frameDetail?.image"></FrameAvatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
@@ -152,8 +152,8 @@ export default {
           <!-- 等级 -->
           <a-col  :span="12" v-if="!simple && level" @click.stop="goMy()" style="position: relative;">
             <span ref="minute" class="tip">+1</span>
-            <div style="padding-top: 0.2em;">
-              <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
+            <div style="padding-top: 0.1em; min-height: 50px">
+              <span style="font-size: 0.8em;"></span> {{ lvInfo.lv }}级 <br>
               <span>
                     <a-tooltip>
                       <a-progress strokeColor="#666" trailColor="#4d4d4d" :percent="lvInfo.percentage" :showInfo="false"
