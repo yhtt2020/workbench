@@ -24,6 +24,10 @@
     </div>
 
   </vueCustomScrollbar>
+
+  <div v-if="secondaryVisible === false">
+    <UpdateMyInfo ref="myInfoRef"></UpdateMyInfo>
+  </div>
 </template>
 
 <script>
@@ -32,14 +36,18 @@ import ComPanel from '../../components/comp/ComPanel.vue'
 import ComActionPanel from '../../components/comp/ComActionPanel.vue'
 import GroupPanel from '../../components/comp/GroupPanel.vue'
 import UserCard from '../../components/small/UserCard.vue'
-import { mapState } from 'pinia'
+import UpdateMyInfo from '../../components/comp/UpdateMyInfo.vue'
+import { mapActions, mapState } from 'pinia'
 import { appStore } from '../../store'
 import FrameStoreWidget from '../../components/team/FrameStoreWidget.vue'
+import { defaultAvatar } from '../../js/common/teamAvatar'
+import _ from 'lodash-es'
+
 export default {
   name: 'My',
-  components: { UserCard, GroupPanel, ComActionPanel, ComPanel, GradePanel,FrameStoreWidget },
+  components: { UserCard, GroupPanel, ComActionPanel, ComPanel, GradePanel,FrameStoreWidget,UpdateMyInfo },
   computed: {
-    ...mapState(appStore, ['userInfo'])
+    ...mapState(appStore, ['userInfo','secondaryVisible'])
   },
   data(){
     return {
@@ -53,11 +61,27 @@ export default {
         wheelPropagation: true
       },
     }
-  },methods:{
+  },
+  mounted(){
+    this.$nextTick(()=>{
+      if(!this.secondaryVisible){
+        const avatar = this.userInfo.avatar
+        const regex = new RegExp(avatar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const isUrlExists = _.some(defaultAvatar,function(o){ return regex.test(o.default_url) })
+        if(isUrlExists){
+          this.$refs.myInfoRef.openMyInfo()
+        }
+      }else{
+        return
+      }
+    })
+  },
+  methods:{
+    ...mapActions(appStore,['setSecondaryVisible']),
     toggleFrameStore(){
       window.toggleFrameStore()
     }
-  }
+  },
 }
 </script>
 

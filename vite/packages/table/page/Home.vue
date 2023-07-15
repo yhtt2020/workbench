@@ -282,8 +282,12 @@
   </div> -->
 
   <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="agreeTest === false">
-    <!-- v-if="agreeTest === false" -->
     <GuidePage ></GuidePage>
+  </div>
+
+  <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
+  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="infoVisible === true">
+    <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
@@ -394,9 +398,7 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
-import {setWallpaperColor} from "../components/card/hooks/styleSwitch/setStyle"
-import { delWallpaperColor} from "../components/card/hooks/styleSwitch/delStyle"
-import {setTransparent,detTransparent} from "../components/card/hooks/themeSwitch"
+import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
 
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
@@ -702,7 +704,8 @@ export default {
     ShareDesk,
     DeskMarket,
     DeskPreview,
-    Tab
+    Tab,
+    UpdateMyInfo
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -719,7 +722,8 @@ export default {
       "backgroundImage",
       "styles",
       "style",
-      "fullScreen"
+      "fullScreen",
+      "infoVisible"
     ]),
 
     ...mapWritableState(appStore, {

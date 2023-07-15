@@ -45,3 +45,9 @@ export const avatarNumber = [
   {id:'010'},{id:'011'},{id:"012"},
   {id:'013'},{id:'014'},
 ]
+
+export const defaultAvatar = [
+  {default_url:' https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8fbbdb55b72a8e6e8572f0187fa0bb3d.png?upload_type/Tencent_COS'},
+  {default_url:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/70b1df75209f53c3e57f9b7f38b4aac2.png?upload_type/Tencent_COS'},
+  {default_url:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/d149355d841836e0e085afb7cc25aec3.jpeg?upload_type/Tencent_COS'},
+]

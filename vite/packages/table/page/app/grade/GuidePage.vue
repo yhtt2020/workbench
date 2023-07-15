@@ -98,7 +98,7 @@
 
 
    <!-- 上下一步点击按钮 -->
-   <div v-if="isShow === false ">
+   <div>
     <a-button type="primary" class="mr-3 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
       上一步
     </a-button>
@@ -106,7 +106,10 @@
       {{ step === 2 ? 'GO':'下一步' }}
     </a-button>
    </div>
-   <GradeNotice v-else></GradeNotice>
+   <!-- 
+    新用户须知后期需要的话再考虑使用,现在暂时不使用
+    <GradeNotice v-else></GradeNotice> 
+  -->
   </div>
   <transition name="fade">
     <div class="guide-page-bg h-full flex items-center justify-center"  v-if="showModal === true">
@@ -133,19 +136,20 @@ import { mapWritableState,mapActions } from 'pinia';
 import {appStore} from '../../../store'
 import { navStore } from '../../../store/nav';
 import { cardStore } from '../../../store/card';
-import GradeNotice from './GradeNotice.vue'
+import {defaultAvatar} from '../../../js/common/teamAvatar'
+// import GradeNotice from './GradeNotice.vue'
 import {
   guideData,workTheme,teamData,modeData,
   deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg 
 } from '../../../js/data/guideData'
 import cache from '../../../components/card/hooks/cache';
 import {setThemeSwitch} from '../../../components/card/hooks/themeSwitch/index';
-
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import _ from 'lodash-es'
+
 export default {
   components:{
-    GradeNotice,
+    // GradeNotice,
     HorizontalPanel
   },
   data(){
@@ -163,7 +167,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(appStore,['styles','simple','stylesIndex']),
+    ...mapWritableState(appStore,['styles','simple','stylesIndex','userInfo']),
     //是否禁用下一步
     isNext(){
       return this.statusIndex === 2 || this.selectItem.length > 0
@@ -173,7 +177,7 @@ export default {
     this.selectItem = ['gr']
   },
   methods:{
-    ...mapActions(appStore,['updateMode','updateSimple']),
+    ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoVisible','setSecondaryVisible']),
     ...mapActions(cardStore,['addDesk']),
     ...mapActions(navStore,['updateLeftNavData','updateBottomNavData']),
     // 点击返回按钮的回调事件
@@ -232,6 +236,21 @@ export default {
         }else if(this.statusIndex === 2){ // 单选极简情况下
           this.addSwitchDesk(this.guideData[this.statusIndex])
         }
+
+        // 当所有步骤执行完以后
+        this.setAgreeTest(true)
+        this.$router.push({ name: 'home'})
+        let postTimer = setTimeout(()=>{
+         const avatar = this.userInfo.avatar
+         const regex = new RegExp(avatar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+         const isUrlExists = _.some(defaultAvatar,function(o){ return regex.test(o.default_url) })
+         if(isUrlExists){
+          this.setInfoVisible(true)
+          clearTimeout(postTimer)
+          this.setSecondaryVisible(false)
+         }
+        },60000)
+
 
         // console.log('多选:>>>',);
         // console.log('单选::>>> 不极简',this.selectItem[0]);
