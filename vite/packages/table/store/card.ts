@@ -347,14 +347,16 @@ export const cardStore = defineStore(
         return desk
       },
       addShareDesk(data){
+        // console.log("要添加的方案",data)
+        // console.log("home的卡片高",this.deskSize)
         let cardZoom = ((this.deskSize.cardsHeight * (data.settings.cardZoom / 100)/data.cardsHeight) * 100).toFixed()
-        data.settings.cardZoom = cardZoom
+        data.settings.cardZoom = parseInt(cardZoom)
         let desk = {
           name: data.title,
           nanoid: nanoid(4),
           cards: data.cards,
-          aloneSettings: data.settings,
-          showSettings: true
+          settings: {...data.settings,enableZoom:true},
+          // showSettings: true
         }
         this.aloneSettings = data.settings
         this.desks.push(desk)

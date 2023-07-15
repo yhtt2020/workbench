@@ -124,6 +124,7 @@ export default {
   watch: {
     showModal(newVal){
       if(newVal)this.fullScreen = true
+      // console.log("方案",this.scheme)
       if(this.fullScreen){
         this.cardZoom = JSON.parse(JSON.stringify(this.scheme.settings.cardZoom))
         this.zoom = this.cardZoom / 100
@@ -159,8 +160,8 @@ export default {
     ...mapActions(cardStore,['addShareDesk','setDeskSize']),
     addPlan(){
       this.close()
-      let card = JSON.parse(JSON.stringify(this.scheme))
-      this.addShareDesk(card)
+      // console.log("将要传的方案",this.scheme)
+      this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)))
       message.success('添加成功');
       this.openDrawer = false
       this.$nextTick(() => {
@@ -176,6 +177,7 @@ export default {
       })
     },
     close(){
+      // console.log("关闭的zoom",this.cardZoom)
       this.cards.settings.cardZoom = this.cardZoom
       this.$emit('closePreview',false)
       this.fullScreen = false
@@ -186,6 +188,7 @@ export default {
           this.previewHeight = document.getElementById("previewContent").offsetHeight
           let cardZoom = (((this.zoom * this.previewHeight) / this.cardHeight) * 100).toFixed()
           this.cards.settings.cardZoom = cardZoom
+          // console.log("详情zoom",cardZoom)
         }
       })
     }

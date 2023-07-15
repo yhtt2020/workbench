@@ -185,18 +185,14 @@
       </a-col>
     </a-row>
   </a-drawer>
-  <a-drawer v-model:visible="settingVisible" placement="right">
-    <!-- <Tab
+  <a-drawer v-model:visible="settingVisible" @close="cardDesk = 'all'" placement="right">
+    <Tab
+      v-if="settingVisible"
       style="height: 48px"
       boxClass="p-1 xt-bg-2"
       v-model:data="cardDesk"
       v-model:list="cardDeskList"
     ></Tab>
-    {{ cardDesk }} -->
-    <a-radio-group v-model:value="cardDesk">
-      <a-radio-button value="all">全部桌面</a-radio-button>
-      <a-radio-button value="current">当前桌面</a-radio-button>
-    </a-radio-group>
     <div v-if="cardDesk === 'current'">
       <div class="my-3"  style="font-size: 1.2em;font-weight: bold;" @click="setTransparent()">
         卡片设置(关则使用通用设置)：<a-switch @change="switchChange" v-model:checked="cardSwitch"></a-switch>
@@ -207,33 +203,33 @@
         </div> -->
         <div class="line">
           卡片缩放：
-          <a-slider :min="20" :max="500" v-model:value="cardSettings.cardZoom"></a-slider>
+          <a-slider :min="20" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>
         </div>
         <div class="line">
           卡片空隙：(调大空隙可能变成瀑布流布局)
-          <a-slider :min="5" :max="30" v-model:value="cardSettings.cardMargin"></a-slider>
+          <a-slider :min="5" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>
         </div>
         <div class="line">
           距离顶部：
-          <a-slider :min="0" :max="200" v-model:value="cardSettings.marginTop"></a-slider>
+          <a-slider :min="0" :max="200" v-model:value="currentDesk.settings.marginTop"></a-slider>
         </div>
       </template>
     </div>
     <template v-else>
-      <div class="flex items-center mb-3">
+      <div class="flex items-center my-3">
         <div class="mr-3" style="font-size: 1.2em;font-weight: bold;">卡片设置：</div>
       </div>
       <div class="line">
         卡片缩放：
-        <a-slider :min="20" :max="500" v-model:value="cardSettings.cardZoom"></a-slider>
+        <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
       </div>
       <div class="line">
         卡片空隙：(调大空隙可能变成瀑布流布局)
-        <a-slider :min="5" :max="30" v-model:value="cardSettings.cardMargin"></a-slider>
+        <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
       </div>
       <div class="line">
         距离顶部：
-        <a-slider :min="0" :max="200" v-model:value="cardSettings.marginTop"></a-slider>
+        <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
       </div>
       <div class="line-title ">背景设置：</div>
       <div class="line" @click="setTransparent()">
@@ -1169,14 +1165,17 @@ export default {
       })
     },
     switchChange(val){
-      if(!this.currentDesk.showSettings){
-        this.currentDesk.aloneSettings = {
+      if(!this.currentDesk.settings){
+        this.currentDesk.settings = {
           cardMargin: 5,
           cardZoom: 100,
-          marginTop: 0
+          marginTop: 0,
+          enableZoom: true
         }
+      }else{
+        this.currentDesk.settings.enableZoom = val
       }
-      this.currentDesk.showSettings = val
+      // this.currentDesk.settings.enableZoom = val
     }
   },
   watch: {
@@ -1210,35 +1209,38 @@ export default {
     currentDesk: {
       deep: true,
       handler(val){
-        if(val.showSettings){
-          this.cardSettings = this.currentDesk.aloneSettings
+        if(!val.settings){
+          this.cardSettings = this.settings
+          this.cardSwitch = false
+        }else if(val.settings.enableZoom){
+          this.cardSettings = this.currentDesk.settings
           this.cardSwitch = true
-          this.cardDesk = 'current'
         }else{
           this.cardSettings = this.settings
-          this.cardDesk = 'all'
+          this.cardSwitch = false
         }
       }
     },
     cardDesk(val){
-       switch (val) {
-        case 'all':
-          if(this.currentDesk.showSettings){
-            this.cardDesk = 'current'
-            return message.info('当前卡片关闭后可切换')
-          }
-          this.cardSettings = this.settings
-          break;
-        case 'current':
-          if(this.currentDesk.showSettings){
-            this.cardSettings = this.currentDesk.aloneSettings
-            this.cardSwitch = true
-          }else{
-            this.cardSwitch = false
-          }
-        // this.cardSettings = this.currentDesk.aloneSettings
-          break;
-      }
+      //  switch (val) {
+      //   case 'all':
+      //     // this.cardDesk = 'current'
+      //     // if(this.currentDesk.settings.enableZoom){
+      //     //   this.cardDesk = 'current'
+      //     //   return message.info('当前卡片关闭后可切换')
+      //     // }
+      //     // this.cardSettings = this.settings
+      //     break;
+      //   case 'current':
+      //     if(this.currentDesk.showSettings){
+      //       this.cardSettings = this.currentDesk.settings
+      //       this.cardSwitch = true
+      //     }else{
+      //       this.cardSwitch = false
+      //     }
+      //   // this.cardSettings = this.currentDesk.aloneSettings
+      //     break;
+      // }
 
       // if(this.currentDesk.aloneSettings){
       //   this.cardSettings = this.currentDesk.aloneSettings
