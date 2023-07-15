@@ -22,6 +22,11 @@ export const cardStore = defineStore(
           marginTop: 0,
           cardMargin: 5//卡片间隙
         },
+        aloneSettings: {
+          cardZoom: 100,
+          marginTop: 0,
+          cardMargin: 5
+        },
         countdownDay: [{
           "eventValue": "端午节",
           "dateValue": {
@@ -294,6 +299,7 @@ export const cardStore = defineStore(
         // ],
         routeParams: {},
         clockFlag: false,
+        deskSize: {}
       };
     },
 
@@ -339,6 +345,23 @@ export const cardStore = defineStore(
         }
         this.desks.push(desk)
         return desk
+      },
+      addShareDesk(data){
+        let cardZoom = ((this.deskSize.cardsHeight * (data.settings.cardZoom / 100)/data.cardsHeight) * 100).toFixed()
+        data.settings.cardZoom = cardZoom
+        let desk = {
+          name: data.title,
+          nanoid: nanoid(4),
+          cards: data.cards,
+          aloneSettings: data.settings,
+          showSettings: true
+        }
+        this.aloneSettings = data.settings
+        this.desks.push(desk)
+        return desk
+      },
+      setDeskSize(item){
+        this.deskSize = item
       },
       getCurrentDesk() {
         let desk = this.desks.find(item => {
@@ -507,7 +530,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved','deskSize'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 xt-bg rounded-lg box">
+  <div class="p-3 xt-bg box">
     <!-- 头部导航栏 -->
     <div class="flex items-center justify-between">
       <div class="flex">
@@ -125,7 +125,7 @@
                     <Icon class="ml-3" icon="edit-square" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
                 </a-tooltip>
-                <span @click.stop="delNote(index,item)">
+                <span @click.stop="delKey(index,item)">
                   <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                 </span>
               </span>
@@ -216,47 +216,8 @@
       <!-- </div> -->
     </div>
   </div>
-  <!-- 分享成功的模态框 -->
-  <div class="fixed inset-0 home-blur" style="z-index: 99999;" v-if="shoreModal" >
-    <div
-         class="fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
-         style="padding: 24px 32px;width: 480px;height: 221px;background:  #282828">
-      <div>
-        <Icon icon="yiwancheng" style="color:#52C41A;font-size:20px"></Icon>
-        <span class="ml-2" style="font-size: 18px;color: rgba(255,255,255,0.85);font-weight: 500;">分享成功</span>
-      </div>
-      <div style="font-size: 16px;margin:24px 0;color: rgba(255,255,255,0.60);">
-        「 {{ applyName }} 」成功分享至创意市场，选择分享到元社区让更多人看到吧～
-      </div>
-      <div class="flex">
-        <div style="width: 160px;height: 48px;"
-          @click="openDrawer"
-           class="flex justify-center items-center bg-blue-500 rounded-lg pointer">
-        同时分享到元社区
-        </div>
-        <div style="width: 160px;height: 48px;"
-            class=" ml-3 flex justify-center items-center xt-bg-2 rounded-lg pointer" @click="close">
-          完成
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 发布抽屉 -->
-  <a-drawer v-model:visible="releaseDrawer" style="z-index:999999;" width="500" placement="right">
-    <template #extra>
-      <a-space>
-        <div class="add-scheme" @click="saveVal">发布</div>
-      </a-space>
-    </template>
-    <div class="drawer-center">
-      <div class="mb-5 title">动态</div>
-      <div class="trend-content"></div>
-      <div class="drawer-img">
-        <div class="title">附图</div>
-        <div class="btnCopy">复制图片</div>
-      </div>
-    </div>
-  </a-drawer>
+  <!-- 分享成功的模态框和发布抽屉 -->
+  <ShareModal :shareModal="shareModal" :shareName="applyName" @closeShare="closeShare" :back="true"></ShareModal>
   <!-- 键盘 -->
   <KeyBoard v-if="keyBoard" 
   :selectKey="selectKey" 
@@ -270,6 +231,7 @@ import Sortable from 'sortablejs'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import KeyBoard from '../../components/shortcutKey/KeyBoard.vue';
+import ShareModal from '../../components/ShareModal.vue';
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../../store/key'
 import {nanoid} from 'nanoid'
@@ -279,7 +241,8 @@ export default {
   components: {
     HorizontalPanel,
     ShortcutKeyList,
-    KeyBoard
+    KeyBoard,
+    ShareModal
   },
   directives: {
       focus: {
@@ -306,7 +269,7 @@ export default {
       keyList: [], //快捷键列表
       imageUrl: '',
       file: {},
-      shoreModal: false, //分享
+      shareModal: false, //分享
       addKeyList: [''], //添加快捷键集合
       keyCombination: [], //添加组合键
       combinationName: [], //添加快捷键名称
@@ -315,7 +278,6 @@ export default {
       keyName: '', //当前修改的快捷键类名
       keyContent: '',//当前修改的组合键
       introduce: '', //方案简介
-      releaseDrawer: false,
       icon: '',
       applyName: '',
       appContent: {}, //当前方案
@@ -350,7 +312,6 @@ export default {
       if(this.$route.params.id){
         this.paramsId = this.$route.params.id
         // let usedList = this.deepClone({},this.recentlyUsedList)
-        // let usedList = this.copyObj(this.recentlyUsedList)
         this.recentlyUsedList.find(i => {
           if(i.id == this.paramsId){
             let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
@@ -365,18 +326,6 @@ export default {
         this.addShortcutKey()
       }
     },
-    //写函数
-		copyObj(obj){
-			let newObj={};
-			for(let key in obj){
-				if(typeof obj[key] =='object'){//如:key是wife,引用类型,那就递归
-					newObj[key] = copyObj(obj[key])
-				}else{//基本类型,直接赋值
-					newObj[key] = obj[key];
-				}
-			}
-			return newObj;
-		},
     //深拷贝
     deepClone(obj, newObj) {
       var newObj = newObj || {};
@@ -444,10 +393,9 @@ export default {
     // 保存并分享
     // setMarketList
     saveShare(){
+      this.delNotData()
       if(!this.applyName)return message.info('名称不能为空')
       if(!this.keyList.length)return message.info('快捷键列表不能为空')
-      this.delNotData()
-
       let sum = 0
       this.keyList.map(item => {
         if(item.keys){
@@ -486,7 +434,7 @@ export default {
         }
         this.setMarketList(this.appContent)
       }
-      this.shoreModal = true
+      this.shareModal = true
     },
     onBack(){
       this.delNotData()
@@ -495,9 +443,12 @@ export default {
     nextStep(){
       this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
     },
-    close(){
-      this.shoreModal = false
-      this.$router.go(-1)
+    // close(){
+    //   this.shareModal = false
+    //   this.$router.go(-1)
+    // },
+    closeShare(val){
+      this.shareModal = val
     },
     // 编辑内容
     editItem({id,groupName,keyStr,title},index,type){
@@ -720,9 +671,6 @@ export default {
       item.addNote = true
       item.isNote = true
     },    
-    // addKey(){
-
-    // },
     // 删除暂存添加的内容
     delStaging(type){
       switch (type) {
@@ -735,10 +683,6 @@ export default {
           this.addGroupName = ''
           break;
       }
-    },
-    openDrawer(){
-      this.shoreModal = false
-      this.releaseDrawer = true
     },
     // 批量编辑
     bulkEdit(){

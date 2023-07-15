@@ -18,7 +18,7 @@ export default defineComponent({
               <a-avatar src="/img/rankingList/three.png" :size="32"></a-avatar>
             </span>
 
-  <div v-else class="ranking-back">{{ no }}</div>
+  <div v-else class="ranking-back flex justify-center items-center" :style="no < 11 ? 'width:32px' : ''">{{ no }}</div>
 </template>
 
 <style scoped lang="scss">

@@ -2,42 +2,34 @@
   <!-- 方案列表 -->
   <div class="flex flex-row" style="height: 100%">
     <div class="item-content">
-      <div v-for="item in navLists" :key="item.id" class="pointer recommend" @click="previewKay(item)">
-        <div class="flex justify-between">
-          <div class="flex">
-            <span class="h-14 w-14 flex justify-center items-center">
-              <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
-            </span>
-            <span class="flex flex-col ml-4">
-              <span style="font-size: 18px;color: var(--primary-text);font-weight: 500;">{{ item.name }}</span>
-              <span class="mt-1" style="font-size: 16px;color: var(--secondary-text);">{{ item.commonUse }}</span>
-            </span>
-          </div>
-          <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
-            <span style="font-family: Oswald-SemiBold;font-size: 24px;color: var(--primary-text);font-weight: 600;">{{ item.number }}</span>
-            <span class="xt-text">{{item.key}}</span>
-          </div>
+      <div v-for="item in navLists" :key="item.id" class="pointer recommend" :style="deskItemStyle" @click="previewKay(item)">
+        <div class="xt-mask" style="padding: 14px;">
+          <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
+          <img style="width:100%;height:100%;object-fit: cover;" :src="item.deskImg" />
         </div>
-        <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: var(--secondary-text);">
-          <span class="flex items-center">
-            <div @click="showCard(item.id)">
-              <!-- <a-avatar size="24">
-                  <template #icon><UserOutlined /></template>
-              </a-avatar> -->
-              <a-avatar shape="square" :src="item.avatar" :size="32"></a-avatar>
-            </div>
-            <span class="ml-3" style="color: var(--secondary-text);">{{ item.nickName }}</span>
-          </span>
-          <span style="color: var(--secondary-text);">
-            <span>
-              <Icon icon="dianzan" class="mr-2"></Icon>
-              <span>{{ item.sumLikes }}</span>
+        <div style="padding: 0 14px 14px">
+          <div class="title">{{ item.title }}</div>
+          <div class="flex">
+            <div class="label" v-for="x in item.labelList" :key="x">{{ x }}</div>
+          </div>
+          <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
+            <span class="flex items-center">
+              <div @click="showCard(item.id)">
+                <a-avatar shape="square" :src="item.avatar" :size="32"></a-avatar>
+              </div>
+              <span class="ml-3" style="color: var(--secondary-text);">{{ item.nickName }}</span>
             </span>
-            <span class="ml-3">
-              <Icon icon="xiazai" class="mr-2"></Icon>
-              <span>{{ item.download }}</span>
+            <span style="color: var(--secondary-text);">
+              <span>
+                <Icon icon="dianzan" class="mr-2"></Icon>
+                <span>{{ item.sumLikes }}</span>
+              </span>
+              <span class="ml-3">
+                <Icon icon="xiazai" class="mr-2"></Icon>
+                <span>{{ item.download }}</span>
+              </span>
             </span>
-          </span>
+          </div>
         </div>
       </div>
       <div class="recommend" style="opacity: 0;height: 1px;"></div>
@@ -45,26 +37,23 @@
     </div>
   </div>
   <!-- 预览 -->
-  <Preview :keyScheme="keyScheme" :showModal="showModal" @closePreview="closePreview"></Preview>
+  <!-- <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview> -->
 </template>
 
 <script>
-import { appStore } from '../../store';
-import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
+import { appStore } from '../../../store';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
-import Preview from '../../components/shortcutKey/Preview.vue';
+// import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
-  name: "MarketList",
+  name: "DeskMarket",
   components: {
-    ShortcutKeyList,
-    Preview
+    // DeskPreview
   },
   data() {
     return {
       navLists: [],
-      // 快捷方案
-      keyScheme: {},
+      // 方案
+      // scheme: {},
       // 预览
       showModal: false,
       // 添加
@@ -74,12 +63,17 @@ export default {
   props: {
     //排序列表
     navList: {
-      type: Object,
-      default: {},
+      type: Array,
+      default: () => [],
     },
     //下拉框选中的类型
     selected: {
-      type: String
+      type: String,
+      default: () => ''
+    },
+    deskItemStyle: {
+      type: String,
+      default: () => ''
     }
   },
   watch: {
@@ -101,7 +95,6 @@ export default {
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
-    ...mapActions(keyStore,['setShortcutKeyList']),
     showCard(id){
       this.showUserCard(id)
     },
@@ -115,11 +108,12 @@ export default {
       })
     },
     previewKay(item){
-      this.keyScheme = item
-      this.showModal = true
+      this.$emit('openPerview',{scheme: item,showModal: true})
+      // this.scheme = item
+      // this.showModal = true
     },
     closePreview(){
-      this.showModal = false
+      // this.showModal = false
     }
   }
 }
@@ -138,12 +132,27 @@ export default {
     display: none;
   }
   .recommend{
-    background: var(--mask-bg);
+    background: var(--secondary-bg);
     border-radius: 12px;
     width: 356px;
-    height: 136px;
+    height: 340px;
     margin: 0 8px 16px;
-    padding: 12px;
+    overflow: hidden;
+    .title{
+      font-family: PingFangSC-Medium;
+      font-size: 18px;
+      color: var(--primary-text);
+      margin: 10px 0;
+      font-weight: 500;
+    }
+    .label{
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      font-size: 14px;
+      padding: 0 8px;
+      color: var(--secondary-text);
+      margin-right: 12px;
+    }
   }
   .prompt-modal{
       position: absolute;

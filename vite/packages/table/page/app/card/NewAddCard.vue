@@ -4,10 +4,15 @@
     <div class="controller drag" style="color: var(--primary-text);">
       <div class="header">
         <div class="left">
-          <div class="btn no-drag xt-bg-2" @click="onBack" style="color:var(--primary-text);  ">
+          <!-- <div class="btn no-drag xt-bg-2" @click="onBack" style="color:var(--primary-text);  ">
             <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
+          </div> -->
+          <div @click="onBack" class="pointer flex items-center rounded-lg justify-center no-drag" 
+            style="background: var(--secondary-bg);width:48px;height:48px;font-size: 16px;color: var(--primary-text);">
+            <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
-          <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
+          <div class="box-title no-drag">{{ selectNav.name === 'small' ? '小卡片' : '桌面市场' }}</div>
+          <!-- <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
             <template #prefix>
               <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
             </template>
@@ -19,12 +24,30 @@
               item.name
             }}
             </a-select-option>
-          </a-select>
+          </a-select> -->
         </div>
-        <div class="right">
+        <div class="flex no-grag">
+          <div class="no-drag mr-3">
+            <HorizontalPanel :navList="navType" v-model:selectType="selectNav"></HorizontalPanel>
+          </div>
+          <!-- 头部搜索和下拉列表 -->
+          <div class="no-drag">
+            <Search 
+              :searchValue="selectContent"
+              :defaultSelect="searchValue"
+              :sortType="searchOptions"
+              :isFiltrate="true"
+              @changeSelect="changeSelect"
+              @changeInput="changeInput"
+            />
+          </div>
+          <!-- 分享 -->
+          <div v-if="selectNav.name === 'desktop'" class="pointer xt-mask flex items-center rounded-lg justify-center ml-3 no-drag" 
+          style="width:134px;height:48px;font-size: 16px;color: var(--primary-text);"
+          @click="share">我来分享</div>
         </div>
       </div>
-      <div class="mian">
+      <div class="mian" v-if="selectNav.name === 'small'">
         <div class="left">
           <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': navIndex == index }"
             @click="updateNavIndex(index)" v-for="( item, index ) in  baseNavList " :key="item.name">{{
@@ -37,7 +60,6 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-
           <NewCardPreViews  @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
             :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
           </NewCardPreViews>
@@ -49,6 +71,15 @@
           </template>
         </div>
       </div>
+      <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
+        <NavMenu :list="deskList" :currenIndex="navDeskIndex" @changeNav="updateDeskIndex" />
+        <div class="ml-5 no-drag">
+          <DeskMarket :selected="searchValue" :navList="deskList[navDeskIndex].children" @openPerview="openPerview"></DeskMarket>
+          <!-- 预览 -->
+          <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+        </div>
+        <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>
+      </div>
     </div>
   </teleport>
 </template>
@@ -57,12 +88,30 @@
 import NewCardPreViews from './NewCardPreViews.vue'
 import { NavList } from "./navList"
 import CardState from '../../../components/card/components/state/index.vue';
+import HorizontalPanel from '../../../components/HorizontalPanel.vue';
 import _ from 'lodash-es'
+import Search from '../../../components/Search.vue';
+import NavMenu from '../../../components/NavMenu.vue';
+import { deskStore } from '../../../store/desk';
+import { cardStore } from '../../../store/card';
+import { mapActions, mapWritableState } from "pinia";
+import DeskMarket from './DeskMarket.vue';
+import ShareDesk from '../../../components/desk/ShareDesk.vue';
+import DeskPreview from '../../../components/desk/DeskPreview.vue';
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews, CardState },
-  props: ['desk'],
+  components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
+  props: {
+    desk: {
+      type: Object,
+      default: () => {}
+    },
+    panelIndex: {
+      type: Number,
+      default: () => 0
+    },
+  },
   data() {
     return {
       navIndex: 1,
@@ -74,7 +123,16 @@ export default {
         { value: '默认排序', name: '默认排序' },
         { value: '下载次数', name: '下载次数' },
         { value: '更新时间', name: '更新时间' },
-      ]
+      ],
+      navType:[
+         {title:'小组件',name:'small'},
+         {title:'社区桌面分享',name:'desktop'}
+      ],
+      selectNav:{title:'小组件',name:'small'},
+      navDeskIndex: 0,
+      openDrawer: false,
+      scheme: {},
+      showModal: false,
     }
   },
 
@@ -117,8 +175,14 @@ export default {
       } else
         return item
     })
+    if(this.panelIndex === 1){
+      this.selectNav = this.navType[this.panelIndex]
+    }else{
+      this.selectNav = this.navType[0]
+    }
   },
   computed: {
+    ...mapWritableState(deskStore, ['deskList']),
     displayList() {
       // return this.apiList.filter
     }
@@ -152,10 +216,12 @@ export default {
 
   },
   methods: {
+    // ...mapActions(deskStore,['setDeskSize']),
+    ...mapActions(cardStore,['setDeskSize']),
     onClick() {
     },
     handleChange(value) {
-      console.log(`selected ${value}`)
+      // console.log(`selected ${value}`)
     },
     getTimes() {
       const currentTime = Date.now()
@@ -169,6 +235,38 @@ export default {
     updateNavIndex(index) {
       this.navIndex = index
     },
+    updateDeskIndex({index}){
+      this.navDeskIndex = index
+    },
+    changeSelect(event){
+      // console.log('选择下拉',event)
+      this.searchValue = event
+    },
+    share(){
+      this.openDrawer = true
+    },
+    closeShare(val){
+      this.openDrawer = val
+    },
+    openPerview({scheme,showModal}){
+      this.scheme = scheme
+      this.showModal = showModal
+
+    },
+    closePreview(){
+      this.showModal = false
+      this.$nextTick(() => {
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
+        let size = {
+          deskWidth,
+          deskHeight,
+          cardsHeight,
+        }
+        this.setDeskSize(size)
+      })
+    }
   },
 }
 </script>
@@ -241,7 +339,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 112px;
+        width: 48px;
         height: 48px;
         margin-right: 20px;
       }
@@ -346,5 +444,12 @@ export default {
 
     }
   }
+}
+.box-title{
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  font-size: 18px;
+  color: var(--primary-text);
 }
 </style>
