@@ -5,7 +5,7 @@
     <div class="card half mr-3" style="width:330px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
       <userCard :uid="userInfo.uid" :userInfo="userInfo">
       </userCard>
-      <span @click="toggleFrameStore()" style="position: absolute;right: 20px;top: 40px;" class="px-4 py-2 xt-active-bg rounded-full  pointer"><icon icon="gift" style="font-size: 18px"></icon> 头像框商店</span>
+      <span @click="toggleFrameStore()" style="position: absolute;right: 20px;top: 40px;" class="px-3 py-1 xt-active-bg rounded-full  pointer"><icon icon="gift" style="font-size: 18px"></icon> 头像框</span>
     </div>
 
 
