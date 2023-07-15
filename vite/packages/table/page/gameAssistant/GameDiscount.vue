@@ -286,6 +286,10 @@ export default {
   }
 }
 
+:deep(.nav-item){
+  border-radius: 6px !important;
+} 
+
 
 
 @media screen and (max-width:840px) {
