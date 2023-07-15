@@ -177,7 +177,7 @@ export default {
     this.selectItem = ['gr']
   },
   methods:{
-    ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoVisible']),
+    ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoVisible','setSecondaryVisible']),
     ...mapActions(cardStore,['addDesk']),
     ...mapActions(navStore,['updateLeftNavData','updateBottomNavData']),
     // 点击返回按钮的回调事件
@@ -247,6 +247,7 @@ export default {
          if(isUrlExists){
           this.setInfoVisible(true)
           clearTimeout(postTimer)
+          this.setSecondaryVisible(false)
          }
         },60000)
 

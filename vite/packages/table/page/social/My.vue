@@ -25,7 +25,7 @@
 
   </vueCustomScrollbar>
 
-  <div v-if="secondaryVisible === true">
+  <div v-if="secondaryVisible === false">
     <UpdateMyInfo ref="myInfoRef"></UpdateMyInfo>
   </div>
 </template>
@@ -64,12 +64,15 @@ export default {
   },
   mounted(){
     this.$nextTick(()=>{
-      const avatar = this.userInfo.avatar
-      const regex = new RegExp(avatar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-      const isUrlExists = _.some(defaultAvatar,function(o){ return regex.test(o.default_url) })
-      if(isUrlExists){
-        this.setSecondaryVisible(true)
-        this.$refs.myInfoRef.openMyInfo()
+      if(!this.secondaryVisible){
+        const avatar = this.userInfo.avatar
+        const regex = new RegExp(avatar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const isUrlExists = _.some(defaultAvatar,function(o){ return regex.test(o.default_url) })
+        if(isUrlExists){
+          this.$refs.myInfoRef.openMyInfo()
+        }
+      }else{
+        return
       }
     })
   },

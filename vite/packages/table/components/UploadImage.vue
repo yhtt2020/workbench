@@ -37,9 +37,9 @@ export default {
   },
   methods:{
     ...mapActions(frameStore,['saveAvatarUrl']),
-    uplaodImageChange(info){  // info 上传文件的所有信息 
+    uplaodImageChange(info){  // info 上传文件的所有信息
       const formData = new FormData();
-      formData.append("file", info.fileList[0].originFileObj)
+      formData.append("file", info.file)
       api.postCosUpload(formData,(err,res)=>{
         if(!err){
           message.error('数据上传失败')

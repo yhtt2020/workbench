@@ -34,9 +34,9 @@
     @close="onClose"
   >
     <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-      <div class="primary-title mb-6" style="color: var(--primary-text);">小组件尺寸</div>
-      <HorizontalPanel :navList="smallSize" v-model:selectType="defaultMinSize"></HorizontalPanel>
-      <div class="primary-title mt-6" style="color: var(--primary-text);">搜索引擎</div>
+      <!-- <div class="primary-title mb-6" style="color: var(--primary-text);">小组件尺寸</div>
+      <HorizontalPanel :navList="smallSize" v-model:selectType="defaultMinSize"></HorizontalPanel> -->
+      <div class="primary-title" style="color: var(--primary-text);">搜索引擎</div>
       <div class="secondary-title mt-2 mb-6" style="color: var(--secondary-text);">长按拖拽排序，最多支持在卡片上的展示5个搜索引擎</div>
       <div class="mb-6">
         <transition name="fade">
@@ -143,18 +143,21 @@ export default {
   },
   mounted(){
     this.searchEngineIcon = AggregateList[0].url
-    if(this.aggSearchShow){
-      
-    }
   },
   methods:{
-    aggSearchDrop(){
-      let that = this
-      let aggregateDrop = document.querySelector('#aggregate-drop')
-      Sortable.create(aggregateDrop,{
-
-      })
-    }
+    // aggSearchDrop(){
+    //   let that = this
+    //   let aggregateDrop = document.querySelector('#aggregate-drop')
+    //   Sortable.create(aggregateDrop,{
+    //     sort: true,
+    //     animation: 150,
+    //     direction: 'vertical',
+    //     delay: 0,
+    //     onStart:function(event){
+    //       console.log('拖拽测试::>>',event);
+    //     }
+    //   })
+    // }
   },
   watch:{
     openByDefault:{ // 监听设置中链接打开方式切换状态  

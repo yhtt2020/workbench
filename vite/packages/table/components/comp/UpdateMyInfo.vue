@@ -54,6 +54,7 @@
 
 <script>
 import { mapWritableState,mapActions } from 'pinia'
+import {message} from 'ant-design-vue'
 import Modal from '../Modal.vue'
 import UploadImage from '../UploadImage.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
@@ -160,8 +161,10 @@ export default {
         avatar:this.frameData.avatar_url
       }
       this.updateMyinfo(saveUpdateMyInfo)
+      message.success('信息修改成功')
       this.updateInfoVisible = false
       this.setInfoVisible(false)
+      this.setSecondaryVisible(true)
     },
     go(url){
       browser.openInInner(url)
@@ -169,7 +172,7 @@ export default {
     closeUpdateMyInfo(){
       this.updateInfoVisible = false
       this.setInfoVisible(false)
-      this.setSecondaryVisible(false)
+      this.setSecondaryVisible(true)
     }
   },
   watch:{
