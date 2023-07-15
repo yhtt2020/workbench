@@ -121,7 +121,12 @@ export default {
     },
     // 进入详情
     enterDiscountDetail(val){
-      this.$router.push({name:'GameDiscountDetail',params:{id:val.id,exTime:val.discount_expiration}})
+      if(val.type === 1){  //  解决steam折扣列表，type1 组合包问题
+        const storeUrl = `https://store.steampowered.com/sub/${val.id}/`
+        browser.openInInner(storeUrl)
+      }else{
+        this.$router.push({name:'GameDiscountDetail',params:{id:val.id,exTime:val.discount_expiration}})
+      }
     },
 
     // 获取特惠数据
