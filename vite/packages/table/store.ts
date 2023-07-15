@@ -32,7 +32,8 @@ export const appStore = defineStore('appStore', {
 
     simple: false,//极简模式
     agreeTest: false,
-
+    infoVisible:false, // 修改我的信息显示时机
+    secondaryVisible:false, // 我的信息页面二次判断是否为默认头像
     init: false, //是否已经初始化
 
     fullScreen: false, //是否是全屏模式
@@ -122,6 +123,12 @@ export const appStore = defineStore('appStore', {
     setAgreeTest(value) {
       this.agreeTest = value
     },
+    setInfoVisible(value){
+      this.infoVisible = value
+    },
+    setSecondaryVisible(value){
+      this.secondaryVisible = value
+    },
     reset() {
       this.fullScreen = false
     },
@@ -182,17 +189,13 @@ export const appStore = defineStore('appStore', {
       this.simple = val
     },
 
-    // 将原本头像修改成预设头像
-    // editPresetAvatar(){
-    //   // this.userInfo.avatar = cache.get('comAvatar')
-    // },
   },
   persist: {
     enabled: true,
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen'],
+      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible','backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

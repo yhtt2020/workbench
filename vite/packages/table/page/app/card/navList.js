@@ -593,20 +593,6 @@ export const NavList = [
         ],
         time: '2023/5/31'
       },
-      {
-        name: 'search',
-        cname:'聚合搜索',
-        detail:'集成必应、百度、Google、B站等主流搜索。',
-        sizes: ['2x2', '4x2'],
-        option:[
-          {
-            name: 'AggregateSearch',
-            size: '2x4',
-            zoom: '20'
-          }
-        ],
-        time: '2023/5/24'
-      }
     ],
   },
   {
@@ -693,6 +679,20 @@ export const NavList = [
         time: '2023/6/29'
 
       },
+      {
+        name: 'search',
+        cname:'聚合搜索',
+        detail:'集成必应、百度、Google、B站等主流搜索。',
+        sizes: ['2x2', '4x2'],
+        option:[
+          {
+            name: 'AggregateSearch',
+            size: '2x4',
+            zoom: '20'
+          }
+        ],
+        time: '2023/5/24'
+      }
     ]
   },
 ]
