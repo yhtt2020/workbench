@@ -69,7 +69,6 @@ class SaApp {
           ext = 'svg'
         }
         if (ext === 'svg') {
-          console.log('要转化svg')
           fs.copyFileSync(logoLocal + '.tmp', logoLocal + '.svg')
           await this.convertSvgToPng(logoLocal + '.svg', logoLocal) //将svg转为Png
           fs.unlinkSync(logoLocal + '.svg')

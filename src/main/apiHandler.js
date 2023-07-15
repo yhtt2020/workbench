@@ -88,7 +88,6 @@ class ApiHandler {
         args.webContentsId=webContents.id
 
         ApiHandler.downloadingItems.push(args)
-      console.log('开始下载事件',args)
       /*
       * url:this.getVideo(item),
         savePath: this.appData.papers.settings.savePath+'/lively/'+item.name,
@@ -169,7 +168,6 @@ class ApiHandler {
           })
 
           ApiHandler.downloadWebContents.push(webContents)
-          console.log('成功绑定'+webContents.id+'的下载事件')
         }
       }
       try{

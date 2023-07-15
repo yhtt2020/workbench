@@ -115,7 +115,6 @@ ipc.invoke('appPreloadReady', tools.execDomain(location.href)).then(args => {
         })
         break;
     }
-    console.log(eventName, '无ipc的三方应用也被监听中。。。。')
   })
 
   tsbSdk.onThirdAutoLogin(ipc)
