@@ -45,7 +45,7 @@
                       @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
-              ￥ {{ getFramePrice(item) }}
+             赞助 ￥ {{ getFramePrice(item) }}
             </a-button>
             <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
               已有
