@@ -159,7 +159,7 @@ export default {
       }
     }
     .add-scheme{
-      background: var(--secondary-bg);
+      background: var(--active-bg);
       font-size: 16px;
       color: var(--primary-text);
       border-radius: 12px;

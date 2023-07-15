@@ -3356,6 +3356,9 @@ export const keyStore = defineStore("key", {
       this.recentlyUsedList.map((i,index) => {
         if(item.id === i.id)this.recentlyUsedList.splice(index, 1)
       })
+      this.marketList[this.marketList.length-1].children.map((i,index) => {
+        if(item.id === i.id)this.marketList[this.marketList.length-1].children.splice(index, 1)
+      })
     },
     setMarketList(item){
       if(this.marketList[this.marketList.length-1].children.find(i => i.id === item.id )){
@@ -3390,7 +3393,7 @@ export const keyStore = defineStore("key", {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
         paths: ['shortcutKeyList','recentlyUsedList','sellSchemeList','marketList'],
-        storage: localStorage,
+        storage: sessionStorage,
         // state 中的字段名，按组打包储存
       },
     ],

@@ -105,7 +105,7 @@
   <a-drawer v-model:visible="openSet" title="设置" width="500" placement="right">
     <span class="set-title" v-if="appContent.isCommunity">该快捷键方案来自创意市场</span>
     <span class="set-title" v-else-if="appContent.isMyCreate && appContent.isShare">该快捷键方案由我创建，并已分享至创意市场</span>
-    <span class="set-title" v-else-if="appContent.isMyCreate && !appContent.isShare">该快捷键方案未分享至社区，仅本地可用</span>
+    <span class="set-title" v-else-if="appContent.isMyCreate && !appContent.isShare">该快捷键方案未分享至创意市场，仅本地可用</span>
     <div  class="pointer recommend">
       <div class="flex justify-between">
         <div class="flex">
@@ -145,7 +145,7 @@
       <Icon icon="xiazai" class="mr-2"></Icon>
       <span>下载更新</span>
     </div>
-    <div class="set-item" v-if="appContent.isMyCreate && !appContent.isShare">
+    <div class="set-item" v-if="appContent.isMyCreate && !appContent.isShare" @click="share">
       <Icon icon="upload" class="mr-2"></Icon>
       <span>立即上传</span>
     </div>
@@ -214,7 +214,7 @@ export default {
     this.getData()
   },
   methods:{
-    ...mapActions(keyStore,['removeShortcutKeyList']),
+    ...mapActions(keyStore,['removeShortcutKeyList','setMarketList']),
     getData(){
       this.appList = this.recentlyUsedList
       this.keyList = this.appList[0].keyList
@@ -262,6 +262,13 @@ export default {
       },500)
       let marginLeft = getComputedStyle(groupId,null).marginLeft
       document.getElementById('scrollCus').scrollLeft = groupId.offsetLeft - parseInt(marginLeft.split('p')[0])
+    },
+    share(){
+      if(!this.appContent.keyList.length)return message.info('无快捷键列表，请前往编辑')
+      this.appContent.isShare = true
+      this.setMarketList(this.appContent)
+      message.success('上传成功')
+      this.openSet = false
     }
   },
 }

@@ -3,7 +3,7 @@
 
 
   <div style="height:100%;width: calc(100% - 20px); " v-if="currentDesk.cards">
-    <div  style="width: 100%;height: 100%" class="m-auto" v-if="this.currentDesk.cards.length === 0">
+    <div  style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto" v-if="this.currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
           sub-title="您可以长按空白处、右键添加卡片。">
@@ -24,7 +24,7 @@
         </a-result>
       </div>
     </div>
-    <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
+      <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
       style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
       <div ref="deskContainer" style="
           white-space: nowrap;
@@ -32,7 +32,9 @@
           display: flex;
           align-items: center;
           align-content: center;
-        " :style="{ 'padding-top': this.settings.marginTop + 'px' }">
+        " :style="{ 'padding-top': this.settings.marginTop + 'px'}"
+        :class="notTrigger ? 'trigger' : '' "
+        >
         <vuuri  v-if="currentDesk.cards && !hide" :get-item-margin="() => {
             return settings.cardMargin + 'px';
           }
@@ -139,6 +141,8 @@
 
 import Muuri from 'muuri'
 import Vuuri from '../vuuriHome/Vuuri.vue'
+import { defineAsyncComponent } from 'vue';
+
 
 import CPULineChart from "../widgets/supervisory/CPULineChart.vue";
 import CPUFourCard from "../widgets/supervisory/CPUFourCard.vue";
@@ -173,7 +177,7 @@ import SmallCountdownDay from "../widgets/SmallCountdownDay.vue";
 import Clock from "../widgets/Clock.vue";
 import CountdownDay from "../widgets/CountdownDay.vue";
 import Notes from '../widgets/note/index.vue'
-import NewAddCard from "../../page/app/card/NewAddCard.vue";
+const NewAddCard = defineAsyncComponent(() => import("../../page/app/card/NewAddCard.vue"))
 import GameStrategy from '../widgets/games/GameStrategy.vue';
 import {message, Modal} from "ant-design-vue";
 import {mapWritableState} from "pinia";
@@ -250,6 +254,10 @@ export default {
         marginTop: 0,
         cardMargin: 5//卡片间隙
       }
+    },
+    notTrigger: {
+      type: Boolean,
+      default: () => false
     }
   }
   ,
@@ -334,7 +342,7 @@ export default {
       this.menuVisible = false;
     },
     showMenu(){
-      this.menuVisible = true;
+      if(!this.notTrigger)this.menuVisible = true;
     },
     /**
      * 暂存布局，与restore结对使用。
@@ -380,6 +388,9 @@ export default {
   height: 100%;
   width: 100%;
 }
+ .trigger{
+  pointer-events: none;
+ }
 </style>
 <style lang="scss">
 .home-widgets {
