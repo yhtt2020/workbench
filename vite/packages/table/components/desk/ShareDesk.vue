@@ -121,7 +121,7 @@ export default {
       // })
 
       let cards = JSON.parse(JSON.stringify(this.cards))
-      cards.forEach(item => {
+      cards.cards.forEach(item => {
         switch (item.name) {
           case 'notes':
             if(item.customData){
@@ -135,7 +135,6 @@ export default {
       if (this.shareName.trim() === "")return message.info("请输入新桌面名称")
       if (this.shareName.length >= 16)return message.error("新桌面名称长度不可超过16")
       if(this.assort === '请选择') return message.info('请选择分类')
-      
       const time = new Date().valueOf()
       this.scheme = {
         id: nanoid(), 
@@ -153,8 +152,8 @@ export default {
         cardsHeight: this.deskSize.cardsHeight,
         blurb: this.blurb,
         labelList: this.labelList,
-        cards: this.secretSwitch ? cards : this.cards,
-        settings: this.settings,
+        cards: this.secretSwitch ? cards.cards : this.cards.cards,
+        settings: cards.showSettings ? cards.aloneSettings :  this.settings,
         cardList: []
       }
       this.setDeskList(this.scheme)
@@ -164,7 +163,7 @@ export default {
     },
     setInitialData(){
       this.desk = this.deskType[0]
-      this.shareName = ''
+      this.shareName = this.desk
       this.assort = this.assortList[0]
       this.blurb = ''
       this.labelList = []
@@ -176,7 +175,7 @@ export default {
     setSelectVal(index){
       this.desks.map((item,i) => {
         if(index === i){
-          this.cards = item.cards
+          this.cards = item
           this.shareName = item.name
         }
       })
@@ -189,7 +188,7 @@ export default {
     
     this.deskType = this.desks.map(item => item.name)
     this.desk = this.deskType[0]
-    this.cards = this.desks[0].cards
+    this.cards = this.desks[0]
     this.shareName = this.desk
     this.secretSwitch = true
   },
