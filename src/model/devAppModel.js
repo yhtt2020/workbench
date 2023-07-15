@@ -24,7 +24,6 @@ const devAppModel = {
      */
     let exists = await sqlDb.knex.schema.hasTable('dev_app')
     if (!exists) {
-      console.log('检测到app开发表不存在，自动创建')
       await sqlDb.knex.schema.createTable('dev_app', function (t) {
         t.string('nanoid').primary().unique().comment('本地id和应用id无关') //本地id
         t.string('app_nanoid').comment('appstore的应用nanoid，需要从远端获取，和package差不多')//

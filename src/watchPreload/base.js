@@ -46,7 +46,6 @@ class TaskHandler {
 
     $(() => {
       if (loaded) {
-        console.log('已经初始化过了')
         return
       }
       loaded=true

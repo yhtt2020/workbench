@@ -79,7 +79,6 @@ if (!window.location.href.endsWith('iframe.html')) {
         console.log(data)
         return data
       } catch (e) {
-        console.log('抓取测试失败', e)
         return undefined
       }
 
@@ -109,7 +108,6 @@ if (!window.location.href.endsWith('iframe.html')) {
               clearInterval(timer)
             } catch (e) {
               console.log(e)
-              console.log('视频还不存在，无法删除')
             }
           }, 1000)
           //$('.bpx-player-row-dm-wrap').remove()

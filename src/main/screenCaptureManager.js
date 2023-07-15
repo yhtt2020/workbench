@@ -10,7 +10,6 @@ class ScreenCaptureManager {
       },
       fetchWindowIcons: true // 如果视频源是窗口且有图标，则设置该值可以捕获到的窗口图标
     })
-    console.log('抓取到source',sources)
     return sources
     // .then(sources => {
     //
