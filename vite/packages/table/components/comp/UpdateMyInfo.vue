@@ -27,10 +27,10 @@
               </div>
             </div>
           </div>
-          <a-divider type="vertical" class="mx-6"  style="height:404px;background: var(--divider);"/>
+          <a-divider type="vertical" class="mx-6"  style="height:404px;"/>
           <div class="w-1/2 flex flex-col">
             <span class="update-title mb-5">个性签名</span>
-            <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;"/>
+            <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;background: var(--secondary-bg);border: 1px solid var(--divider);"/>
             <span class="update-title mb-6">性别</span>
             <HorizontalPanel :navList="sexType" v-model:selectType="gender"></HorizontalPanel>
             <div class="my-16 flex mx-auto">

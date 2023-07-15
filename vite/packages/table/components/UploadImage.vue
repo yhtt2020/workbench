@@ -2,22 +2,17 @@
   <!-- 图片上传组件 -->
   <a-upload :style="size" class="pointer" 
    @change="uplaodImageChange" :before-upload="beforeUpload"
-   :show-upload-list="false" removeIcon
-   :remove="deleteAvatar"
-   @preview="handlePreview"
+   :show-upload-list="false"
   >  
     <img v-if="showAvatar !== ''" :src="showAvatar" alt="avatar" class="rounded-full" style="height:48px;width:48px;"/>
     <Icon v-else icon="tianjia2" style="font-size: 2.3em;"></Icon>
-    <!-- <div v-if="showAvatar !== ''" class="pointer" style="position: absolute; top: 7px;left: 42px;">
-      <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
-    </div> -->
-  <!--   -->
-    <Icon icon="tianjia2" style="font-size: 2.3em;"></Icon>
+    <div v-if="showAvatar !== ''" class="rounded-xl pointer"  @click.stop="deleteAvatar" style="width:20p;height:20px;position: absolute;top:6px;left: 47px;">
+      <Icon icon="close-circle-fill" style="color: var(--secondary-text);font-size: 1.25em;"></Icon>
+    </div>
   </a-upload>
 </template>
 
 <script>
-import { DeleteOutlined } from '@ant-design/icons-vue'
 import { mapActions,mapWritableState } from 'pinia';
 import api from '../../../src/model/api';
 import { message } from 'ant-design-vue';
@@ -26,9 +21,6 @@ import { frameStore } from '../store/avatarFrame';
 import { appStore } from '../store';
 export default {
   name:'UploadImage',
-  components:{
-    DeleteOutlined
-  },
   computed:{
     ...mapWritableState(frameStore,['frameData']),
     ...mapWritableState(appStore,['userInfo'])
@@ -74,11 +66,9 @@ export default {
       }
       return isFileType && isLt2M;
     },
-    deleteAvatar(file){
-     console.log('测试',file);
-    },
-    handlePreview(){
-      
+    deleteAvatar(){
+      this.showAvatar = ''
+      cache.del('avatar_url')
     },
   },
 }

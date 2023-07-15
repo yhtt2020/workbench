@@ -3,7 +3,7 @@
   <div>
     <a-row class="com-actions" :gutter="[20,20]">
       <a-col :span="8">
-        <div @click="modifyData">
+        <div @click="openUpdateMyInfo">
           <Emoji icon="edit"></Emoji>
           <div class="mt-2">
             修改资料
@@ -61,7 +61,10 @@ export default {
     },
     edit(){
       browser.openInInner("https://s.apps.vip/user/info")
-    }
+    },
+    go(url){
+      browser.openInInner(url)
+    },
   }
 }
 </script>
