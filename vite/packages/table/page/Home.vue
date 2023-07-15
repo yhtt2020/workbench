@@ -327,13 +327,7 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
-<<<<<<< HEAD
 import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
-=======
-import {setWallpaperColor} from "../components/card/hooks/styleSwitch/setStyle"
-import { delWallpaperColor} from "../components/card/hooks/styleSwitch/delStyle"
-import {setTransparent,detTransparent} from "../components/card/hooks/themeSwitch"
->>>>>>> 8bb1f868fa0a641a9af49bef0f7f54328ab2c821
 
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
