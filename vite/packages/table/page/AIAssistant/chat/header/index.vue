@@ -41,9 +41,9 @@
   </div>
   <!-- 新建模板 -->
   <XtView
-    model="popup"
     v-if="createChatVisible"
-    title="新建模板1"
+    model="popup"
+    title="新建模板"
     :showFull="false"
     @close="createChatVisible = false"
   >
@@ -63,7 +63,7 @@
   <a-drawer :width="497" v-model:visible="settingVisible" placement="right">
     <template #title>
       <XtTitle titleClass="" type="header"
-        >设置 {{ selectTopicIndex }}
+        >设置
         <template #right>
           <XtButton
             @click="saveEdit()"
@@ -82,11 +82,10 @@
 <script>
 import createTopic from "./createTopic.vue";
 import edit from "./edit.vue";
-import Store from "../account/Store.vue";
-import Popup from "../components/Popup.vue";
+import Store from "../../account/Store.vue";
 
 import { mapWritableState } from "pinia";
-import { aiStore } from "../../../store/ai";
+import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
     ...mapWritableState(aiStore, [
@@ -96,7 +95,6 @@ export default {
     ]),
   },
   components: {
-    Popup,
     createTopic,
     Store,
     edit,

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Chat from "../chat/Header.vue";
+import Chat from "../chat/header/index.vue";
 import Model from "../model/header/index.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../store/ai";

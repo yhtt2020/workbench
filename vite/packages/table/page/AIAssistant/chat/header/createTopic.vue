@@ -1,7 +1,5 @@
 <template>
   <div style="width: 392px">
-    {{ name }}
-    {{ icon }}
     <Dialog v-model:icon="icon" v-model:name="name"></Dialog>
     <div class="flex justify-center my-1">
       <XtButton @click="close()">取消</XtButton>
@@ -11,12 +9,12 @@
 </template>
 
 <script>
-import Dialog from "./components/Dialog.vue";
+import Dialog from "../components/Dialog.vue";
 import { mapWritableState } from "pinia";
-import { aiStore } from "../../../store/ai";
+import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["todayList", "defaultData"]),
+    ...mapWritableState(aiStore, ["defaultData", "topicList"]),
   },
   components: {
     Dialog,
@@ -36,7 +34,7 @@ export default {
       obj.time = Date.now();
       obj.name = this.name;
       obj.icon = this.icon;
-      this.todayList.push(obj);
+      this.topicList.push(obj);
       this.close();
     },
   },
