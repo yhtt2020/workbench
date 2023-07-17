@@ -39,7 +39,7 @@ export default {
     topicList: {
       handler(newV) {
         this.initList();
-        console.log("123 :>> ", 123);
+        console.log("123 :>> ", 133323);
       },
       deep: true,
     },

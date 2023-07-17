@@ -27,6 +27,7 @@ export default {
   },
   watch: {
     selectTopicIndex(newV) {
+      console.log("newV :>> ", newV);
       let chat = this.topicList[newV];
       // 这一步去api地址请求
 
