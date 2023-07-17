@@ -306,7 +306,7 @@
       </div>
       <div @click="doAddDesk" class="btn-item">立即添加</div>
       <div>
-        <div @click="doAddDesk" class="btn-item">导入桌面</div>
+        <div @click="importDesk" class="btn-item">导入桌面</div>
       </div>
       <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
       <div class="flex justify-between">
@@ -342,7 +342,7 @@
   </a-drawer>
   <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
-  <ExportDesk :openModal="exportModal"></ExportDesk>
+  <ExportDesk :openModal="exportModal" @closeExport="closeExport"></ExportDesk>
 </template>
 
 <script>
@@ -1067,6 +1067,7 @@ export default {
     },
     exportDesk(){
       this.exportModal = true
+      this.menuVisible = false
     },
     cleanMuuriData(list) {
       list.forEach((li) => {
@@ -1204,7 +1205,37 @@ export default {
         this.currentDesk.settings.enableZoom = val
       }
       // this.currentDesk.settings.enableZoom = val
-    }
+    },
+    closeExport(val){
+      this.exportModal = val
+    },
+    async importDesk() {
+      let openPath = await tsbApi.dialog.showOpenDialog({
+        title: '选择导入的代码',
+        filters: [{ name: 'desk存档', extensions: ['desk'] }],
+      })
+      if (!openPath) {
+        return
+      }
+      let importJsonTxt = require('fs').readFileSync(openPath[0], 'utf-8')
+      let needImportDesk = []
+      try {
+        needImportDesk = JSON.parse(importJsonTxt)
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        
+        needImportDesk.forEach(g => {
+          let cardZoom = (g.settings.cardZoom * cardsHeight/g.cardsHeight).toFixed()
+          g.settings.cardZoom = parseInt(cardZoom)
+          g.nanoid = window.$models.nanoid.nanoid(8)
+          this.desks.push(g)
+        })
+        this.addDeskVisible = false
+        message.success('为您成功导入' + needImportDesk.length + '个方案分组。')
+      } catch (e) {
+        console.warn(e)
+        message.error('导入失败，请检查代码。')
+      }
+    },
   },
   watch: {
     currentDeskIndex: {

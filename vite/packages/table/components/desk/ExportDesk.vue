@@ -2,24 +2,45 @@
   <!-- 导出模态框 -->
   <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="openModal" >
     <div
-         class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
-         style="padding: 24px 32px;width: 480px;height: 221px;background:  #282828">
-      <div>
-        <Icon icon="yiwancheng" style="color:#52C41A;font-size:20px"></Icon>
-        <span class="ml-2" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">分享成功</span>
-      </div>
-      <div style="font-size: 16px;margin:24px 0;color: var(--secondary-text);">
-        「 {{ shareName }} 」成功分享至创意市场，选择分享到元社区让更多人看到吧～
-      </div>
-      <div class="flex">
-        <div style="width: 160px;height: 48px;"
-          @click="openDrawer"
-           class="flex justify-center items-center bg-blue-500 rounded-lg pointer">
-        同时分享到元社区
+         class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col"
+         style=";width: 480px;height: 425px;background:  #282828">
+      <div class="head-nav">
+        <span class="ml-2" style="font-size: 16px;color: var(--primary-text);font-weight: 500;">导出桌面</span>
+        <div @click="close" class="h-11 w-11 flex justify-center items-center xt-bg-2 rounded-lg pointer">
+          <Icon icon="guanbi" style="color:var(--primary-text);font-size:24px"></Icon>
         </div>
-        <div style="width: 160px;height: 48px;"
-            class=" ml-3 flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer" @click="close">
-          完成
+      </div>
+      <div class="px-8">
+        <span class="title">选择桌面</span>
+        <a-select
+          :bordered="false"
+          class="input rounded-lg  text-xs"
+          size="large"
+          mode="multiple"
+          :dropdownStyle="{ 'z-index': 9999999,backgroundColor: 'var(--secondary-bg)' }"
+          :default-value="desk"
+          style="width:416px;height:48px; border:none;"
+          placeholder="请选择"
+          @change="onChange"
+        >
+          <template #suffixIcon>
+            <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
+          </template>
+          <a-select-option v-for="(item,index) in deskType" :key="index" :value="index">{{ item }}</a-select-option>
+        </a-select>
+        <span class="title">桌面数据</span>
+        <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留你在小组件自定义编辑的设置或数据，比如「倒数日小组件」中的事件数据。</div>
+        <HorizonTalTab :navList="dataType" v-model:selectType="defaultType"></HorizonTalTab>
+      </div>
+      <div class="flex justify-center mt-6">
+        <div style="width: 120px;height: 48px;"
+          @click="close"
+           class="flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer">
+        取消
+        </div>
+        <div style="width: 120px;height: 48px;"
+            class=" ml-3 flex justify-center items-center bg-blue-500 rounded-lg pointer" @click="exportBtn">
+          确定导出
         </div>
       </div>
     </div>
@@ -27,13 +48,25 @@
 </template>
 
 <script>
+import HorizonTalTab from '../HorizonTalTab.vue'
+import {cardStore} from '../../store/card'
+import { mapActions, mapWritableState } from 'pinia'
+import { message } from 'ant-design-vue'
 export default {
   name: "ExportDesk",
   components: {
+    HorizonTalTab
   },
   data() {
     return {
-      release: false,
+      dataType: [
+        {title: '保留数据', icon: 'yk_yuanquan_fill', name: 'data'},
+        {title: '不保留数据', icon: 'yk_yuanquan', name: 'notData'}
+      ],
+      defaultType: {title: '不保留数据', icon: 'yuanquan', name: 'notData'},
+      deskType: [],
+      desk: [0],
+      selectedDesk: []
     }  
   },
   props: {
@@ -41,69 +74,110 @@ export default {
       type: Boolean,
       default: () => false
     },
-    shareName: {
-      type: String,
-      default: () => ''
-    },
-    back: {
-      type: Boolean,
-      default: () => false
-    }
   },
-  
+  computed: {
+    ...mapWritableState(cardStore, ['desks','settings','deskSize','countdownDay']),
+  },
   methods: {
     close(){
-      this.$emit('closeShare',false)
-      if(this.back){
-        this.$router.go(-1)
-      }
+      this.$emit('closeExport',false)
     },
-    openDrawer(){
-      this.$emit('closeShare',false)
-      this.release = true
+    onChange(val){
+      this.selectedDesk = []
+      let desks = JSON.parse(JSON.stringify(this.desks))
+      desks.map((item,index) => {
+        let settings = {}
+        if(item.settings && item.settings.enableZoom){
+          settings = item.settings
+        }else{
+          settings = this.settings
+        }
+        item.cardsHeight = this.deskSize.cardsHeight
+        item.settings = settings
+        val.map((i) => {
+          if(index === i){
+            this.selectedDesk.push(item)
+          }
+        })
+      })
+      // console.log(this.selectedDesk)
+    },
+    async exportBtn() {
+      if (!this.selectedDesk.length) {
+        message.error('您至少选择一个桌面。')
+        return
+      }
+      let savePath = await tsbApi.dialog.showSaveDialog({
+        title: '选择保存位置',
+        defaultPath: '我的桌面分享.desk',
+        message: '选择保存分享代码位置',
+        filters: [{ name: 'desk存档', extensions: ['desk'] }],
+        properties: [
+          'createDirectory',
+          'showOverwriteConfirmation'
+        ]
+      })
+      const fs = require('fs')
+      if (!savePath) {
+        return
+      }
+      fs.writeFile(savePath, this.getShareJson(), (err) => {
+        if (!err) {
+          message.success('导出成功。为您的分享精神点赞！')
+          require('electron').shell.showItemInFolder(savePath)
+          this.close()
+          return
+        } else {
+          message.error('导出失败，请确认文件权限。')
+        }
+      })
+    },
+    getShareJson() {
+      return JSON.stringify(this.selectedDesk)
     },
   },
+  watch: {
+    openModal(val){
+      if(val){
+        this.deskType = this.desks.map(item => item.name)
+        let desks = JSON.parse(JSON.stringify(this.desks))
+        this.selectedDesk.push(desks[0])
+      }
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-  .add-scheme{
-    background: var(--secondary-bg);
-    border-radius: 12px;
-    width: 80px;
-    height: 48px;
+  .head-nav{
+    width: 100%;
+    height: 72px;
+    padding: 12px;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    >div{
+      position: absolute;
+      right: 12px;
+    }
   }
-  .drawer-center{
-    .title{
-      font-size: 16px;
-      color: var(--primary-text);
-      font-weight: 500;
-    }
-    .trend-content{
-      background: var(--secondary-bg);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      height:100px;
-    }
-    .drawer-img{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 24px 0;
-      .btnCopy{
-        background: var(--secondary-bg);
-        border-radius: 12px;
-        width: 128px;
-        height: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-      }
-    }
+  .title{
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 500;
+  }
+  .input{
+    width: 416px;
+    height: 48px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    color: var(--primary-text);
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    margin: 21px 0 24px;
+  }
+  ::v-deep .ant-select-selector{
+    height: 48px;
   }
 </style>
