@@ -1,0 +1,44 @@
+@import url("../../../../../styles/common.scss");
+@import url("../../../../../styles/icon.scss");
+.face-main {
+  background: #ffffff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); }
+
+.face {
+  display: inline-block;
+  position: relative;
+  cursor: pointer; }
+  .face-main {
+    position: absolute;
+    z-index: 5;
+    width: 435px;
+    height: 250px;
+    top: -270px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column; }
+  .face-list {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto; }
+    .face-list-item {
+      padding: 5px; }
+    .face-list img {
+      width: 30px; }
+    .face-list .face-img {
+      width: 60px; }
+  .face-tab {
+    display: flex;
+    align-items: center; }
+    .face-tab-item {
+      padding: 0 10px; }
+      .face-tab-item img {
+        width: 30px; }
+
+.face-H5-main {
+  position: static !important;
+  width: 100%;
+  box-shadow: none; }
+
+/*# sourceMappingURL=index.css.map */
