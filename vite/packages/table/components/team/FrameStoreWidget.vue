@@ -91,8 +91,8 @@
         <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
       </div>
     </div>
-    <CollectionCodeModal @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
-                         :needPayAvatar="needPayAvatar"></CollectionCodeModal>
+    <PaymentMoney @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
+                         :needPayAvatar="needPayAvatar"></PaymentMoney>
     <!-- 未购买情况下走扫码支付的流程 -->
   </a-modal>
 
@@ -129,7 +129,7 @@
 import { mapState, mapActions, mapWritableState } from 'pinia'
 import HorizontalPanel from '../HorizontalPanel.vue'
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
-import CollectionCodeModal from '../payModal/CollectionCodeModal.vue'
+import PaymentMoney from '../payModal/PaymentMoney.vue'
 import PointPayment from '../payModal/PointPayment.vue'
 import GiftModal from '../payModal/GiftModal.vue'
 import { rarityColor } from '../../js/common/teamAvatar'
@@ -150,7 +150,7 @@ export default {
     MyFrames,
     HorizontalPanel,
     HorzontanlPanelIcon,
-    CollectionCodeModal,
+    PaymentMoney,
     PointPayment,
     GiftModal,
     Modal
