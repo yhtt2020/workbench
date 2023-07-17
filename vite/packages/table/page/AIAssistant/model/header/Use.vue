@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between">
-    <div class="flex">
-      <div>返回按钮</div>
+    <div class="flex justify-center">
+      <XtIcon icon="xiangzuo"></XtIcon>
       <div class="flex flex-col ml-2">
         <div class="text-base mb-1">PPT大钢</div>
         <div class="text-sm xt-text-2">
@@ -12,7 +12,7 @@
     <div class="flex">
       <div class="xt-btn h-12 w-120 mr-2">生成对话</div>
       <div class="xt-active-btn h-12 w-120 mr-2">立即生成</div>
-      <div>编辑按钮</div>
+      <XtIcon icon="bianji"></XtIcon>
     </div>
   </div>
 </template>

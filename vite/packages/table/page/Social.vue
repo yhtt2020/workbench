@@ -77,14 +77,14 @@ export default {
           name:'rank'
         }
        },
-       {
-        title:'账单',
-        index:'bill',
-        icon:'zhangdan',
-        route:{
-          name:'bill',
-        }
-       }
+      //  {
+      //   title:'账单(开发中)',
+      //   index:'bill',
+      //   icon:'zhangdan',
+      //   route:{
+      //     name:'bill',
+      //   }
+      //  }
       ],
 
 

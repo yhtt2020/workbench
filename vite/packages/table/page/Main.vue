@@ -39,7 +39,7 @@ import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
 import { mapWritableState } from 'pinia'
 import { appStore } from '../store'
-import TeamPanel from "../components/TeamPanel.vue";
+import TeamPanel from "../components/team/TeamPanel.vue";
 import { teamStore } from '../store/team'
 import { isMain } from '../js/common/screenUtils'
 import {navStore} from "../store/nav";

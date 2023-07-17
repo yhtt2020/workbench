@@ -61,7 +61,6 @@ wanted to keep it lightweight and not impact browser performace too much.
 希望保持轻量级并且不会过多地影响浏览器性能。
 * */
 function sendIpc(event,args){
-  console.log('发送一个IPc', { event,args })
   ipc.send('app.ipc',{ event,args })
 }
 /**

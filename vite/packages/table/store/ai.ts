@@ -8,6 +8,20 @@ export const aiStore = defineStore("aiStore", {
       // 模板组件数据------------------------------
       model: "default",
       isModel: false, // 模板使用中
+      // topic组件数据----------------------------
+      selectTopicIndex: 1,
+      // 初始值 提供用于全局状态维护
+      defaultData: {
+        icon: "",
+        time: "",
+        name: "",
+        top: false,
+      },
+      topicList: [],
+      serachTopic: "",
+      topList: [],
+      todayList: [],
+      previousList: [],
     };
   },
   actions: {},

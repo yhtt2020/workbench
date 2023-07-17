@@ -80,10 +80,8 @@ function website () {
 
 $(() => {
   if ($('.m-playbar').length > 0) {
-    console.log('播放器')
     frame()
   } else {
-    console.log('网页')
     website()
     if (location.href === 'https://music.163.com/discover') {
       insertCss(`body{

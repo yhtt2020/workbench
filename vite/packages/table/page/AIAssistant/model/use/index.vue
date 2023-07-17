@@ -2,7 +2,6 @@
   <div class="flex flex-col h-full">
     <div
       class="flex-grow overflow-hidden h-full flex justify-between"
-      style="border: 1px solid red"
     >
       <XtTextarea
         placeholder="1"

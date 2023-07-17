@@ -126,7 +126,7 @@
            @click="goBil"  style="color:var(--primary-text);">访问官网
       </div>
       <div class="mt-3">图文攻略数据均来自「游民星空」，本应用不提供任何攻略数据</div>
-      <div class="h-10 rounded-lg xt-bg-2 w-20 mx-auto flex justify-center items-center mt-3 pointer" 
+      <div class="h-10 rounded-lg xt-bg-2 w-20 mx-auto flex justify-center items-center mt-3 pointer"
        style="color:var(--primary-text);" @click="goYm">访问官网
       </div>
     </div>
@@ -197,7 +197,6 @@ export default {
   },
   mounted() {
     //this.searchWords={}
-    console.log(this.searchWords,'wd')
     if(this.recentGameList.length===0){
       return
     }
@@ -206,7 +205,6 @@ export default {
       name:this.recentGameList[0].name,
       chineseName: this.recentGameList[0].chineseName
     }
-    console.log(this.recentGameList)
     this.ensureSearchWords()
     this.loadArticleData()
     this.loadBiliData()
@@ -376,7 +374,6 @@ export default {
         dom('.t2').children().each((i, el) => {
           const href = dom(el).eq(0).attr('href')
           const title = dom(el).eq(0).text()
-          // console.log({href,title});
           this.gameIntroductionList.push({href, title})
         })
       })

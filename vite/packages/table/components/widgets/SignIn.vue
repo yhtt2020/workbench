@@ -21,12 +21,12 @@
         </div>
       </div>
       <HorizontalPanel :navList="signInTitle" v-model:selectType="signInType" :height="44"
-                       class="mt-3"></HorizontalPanel>
-      <div v-if="signInType.name === 'today'" class="flex flex-col overflow content-box pt-1">
+                       class="mt-3 mb-2"></HorizontalPanel>
+      <div v-if="signInType.name === 'today'" class="flex flex-col overflow content-box pt-1 ">
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
-        <div v-if="!todayRank.length" class="not-sign h-full flex justify-center items-center">还没有人签到，快来抢第一
+        <div v-if="!todayRank.length" class="not-sign h-full flex justify-center items-center ">还没有人签到，快来抢第一
         </div>
-        <div v-else v-for="item in todayRank" :key="item.id"
+        <div v-else v-for="item in todayRank.slice(0,5)" :key="item.id"
              class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
           <div class="flex-1 flex ml-3 items-center" style="width: 60px">

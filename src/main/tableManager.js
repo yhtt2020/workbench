@@ -334,9 +334,7 @@ app.whenReady().then(() => {
   })
 
   ipc.on('getRecordSource', () => {
-    console.log('ipc获得陆平原')
     screenCaptureManager.getSource().then(sources => {
-      console.log('获取到源了')
       require('fs-extra').ensureDirSync(path.join(app.getPath('userData'), 'tmp'))
       let returnData = sources.map(s => {
         let file = path.join(app.getPath('userData'), 'tmp', 'capture_' + s.id.replaceAll(':', '_') + '.jpg')
@@ -357,7 +355,6 @@ app.whenReady().then(() => {
           icon: icon
         }
       })
-      console.log(returnData,'最终返回的=')
       global.tableManager.send('gotRecordSource', {
         sources: returnData
       })

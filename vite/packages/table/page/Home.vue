@@ -41,7 +41,7 @@
       </div>
     </div>
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: 100%; height: 100%;">
+      style="position: relative; border-radius: 8px; width: calc(100% - 20px); height: 100%;">
       <div style="
           white-space: nowrap;
           height: 100%;
@@ -283,8 +283,12 @@
   </div> -->
 
   <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="agreeTest === false">
-    <!-- v-if="agreeTest === false" -->
     <GuidePage ></GuidePage>
+  </div>
+
+  <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
+  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="infoVisible === true">
+    <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
@@ -399,6 +403,7 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
+import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
 
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
@@ -707,6 +712,7 @@ export default {
     DeskMarket,
     DeskPreview,
     Tab,
+    UpdateMyInfo,
     ExportDesk
   },
   computed: {
@@ -724,7 +730,8 @@ export default {
       "backgroundImage",
       "styles",
       "style",
-      "fullScreen"
+      "fullScreen",
+      "infoVisible"
     ]),
 
     ...mapWritableState(appStore, {
@@ -899,7 +906,7 @@ export default {
     //   })
     // };
     // this.setInitCard()
-    
+
     // if(this.currentDesk?.settings === 'current'){
     //   this.cardSettings = this.currentDesk.aloneSettings
     //   this.cardDesk = 'current'
@@ -907,7 +914,6 @@ export default {
     //   this.cardSettings = this.settings
     //   this.cardDesk = 'all'
     // }
-
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
       if (typeof this.customComponents[0] === "string") {
@@ -958,13 +964,20 @@ export default {
       this.menuVisible = false;
     },
     setTransparent() {
-      if (this.appSettings.transparent) {
-        window.localStorage.setItem("transparent", JSON.stringify("true"));
-        document.documentElement.classList.add("transparent");
-      } else {
-        window.localStorage.removeItem("transparent")
-        document.documentElement.classList.remove("transparent");
+      console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);
+      if ( this.appSettings.transparent) {
+        // setWallpaperColor('none')
+        setTransparent()
+      }else  {
+        detTransparent();
       }
+      // if (this.appSettings.transparent) {
+      //   window.localStorage.setItem("transparent", JSON.stringify("true"));
+      //   document.documentElement.classList.add("transparent");
+      // } else {
+      //   window.localStorage.removeItem("transparent")
+      //   document.documentElement.classList.remove("transparent");
+      // }
     },
     customEvent() {
       this.$refs.grid.update();
@@ -1267,7 +1280,7 @@ export default {
       //     console.log("a11",this.settings)
       //     this.cardSettings = this.settings
       //     break;
-      
+
       //   case 'current':
       //   this.cardSettings = this.currentDesk.aloneSettings
       //     break;
@@ -1281,7 +1294,7 @@ export default {
     //         this.settings = val
     //         // console.log("this.settings",this.settings)
     //         break;
-        
+
     //       case 'current':
     //         if(this.currentDesk.showSettings)this.currentDesk.aloneSettings = val
     //         break;

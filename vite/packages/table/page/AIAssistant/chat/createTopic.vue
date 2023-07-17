@@ -1,35 +1,44 @@
 <template>
-  <div style="width: 412px" class="p-2 mt-2">
-    <a-input
-      style="width: 96%; height: 48px"
-      class="xt-border rounded-xl xt-bg-2 pl-4  mx-auto ml-2"
-      v-model:value="searchValue"
-      placeholder="请输入名称"
-    >
-    </a-input>
-    <div class="my-2 text-base ml-2">图标</div>
-    <div class="flex flex-wrap">
-      <div
-        v-for="item in iconList"
-        class="xt-bg-2 w-10 h-10 rounded-xl m-2 flex justify-center items-center cursor-pointer"
-      >
-        <Icon :icon="item.icon" class="text-xl"></Icon>
-      </div>
-    </div>
-    <div class="flex  justify-center mt-1">
-      <div class="w-120 h-12 xt-btn mr-3">取消</div>
-      <div class="w-120 h-12 xt-active-btn">确认</div>
+  <div style="width: 392px">
+    {{ name }}
+    {{ icon }}
+    <Dialog v-model:icon="icon" v-model:name="name"></Dialog>
+    <div class="flex justify-center my-1">
+      <XtButton @click="close()">取消</XtButton>
+      <XtButton class="ml-3" type="theme" @click="add()">确认</XtButton>
     </div>
   </div>
 </template>
 
 <script>
-import { iconList } from "./topic";
+import Dialog from "./components/Dialog.vue";
+import { mapWritableState } from "pinia";
+import { aiStore } from "../../../store/ai";
 export default {
+  computed: {
+    ...mapWritableState(aiStore, ["todayList", "defaultData"]),
+  },
+  components: {
+    Dialog,
+  },
   data() {
     return {
-      iconList,
+      icon: "",
+      name: "",
     };
+  },
+  methods: {
+    close() {
+      this.$emit("close");
+    },
+    add() {
+      let obj = { ...this.defaultData };
+      obj.time = Date.now();
+      obj.name = this.name;
+      obj.icon = this.icon;
+      this.todayList.push(obj);
+      this.close();
+    },
   },
 };
 </script>

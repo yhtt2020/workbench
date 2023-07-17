@@ -101,7 +101,6 @@ class TableAppManager {
    * @param position
    */
   setBounds (name, position) {
-    console.log('setbounds', name, position)
     this.setViewPos(this.get(this.getName(name)).view, position)
   }
 

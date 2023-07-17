@@ -77,7 +77,7 @@
       </div>
     </vue-custom-scrollbar>
     </div>
-    <Modal v-model:visible="modalVisibility"  v-show="modalVisibility" animationName="b-t" :blurFlag="true">
+    <Modal v-model:visible="modalVisibility"  v-if="modalVisibility" animationName="b-t" :blurFlag="true">
       <div class="p-6 my-bg" @click.stop>
     <!--      <div class="flex flex-row items-center">-->
     <!--        <Icon style="height: 26px;width: 26px" icon="steam"></Icon>-->
@@ -103,7 +103,7 @@
         </div>
       </div>
     </Modal>
-      <Modal v-model:visible="steamShow" v-show="steamShow" animationName="bounce-in" :blurFlag="true">
+      <Modal v-model:visible="steamShow" v-if="steamShow" animationName="bounce-in" :blurFlag="true">
         <div class=" flex flex-col" style="border-radius: 6px;overflow: hidden" v-if="currentSteam">
           <div class=" relative" style="height: 188px;width: 400px" v-if="currentSteam">
             <img  :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteam.appid+'/header.jpg'" style=" " class="w-full h-full object-cover" alt="">
@@ -231,7 +231,6 @@ export default {
   },
   mounted() {
     this.steamGameList = this.gameList
-    console.log(this.gameList[0])
     if(this.gameList.length>0) {
       if (this.gameList[0].appinfo) {
         console.log('重新格式化')

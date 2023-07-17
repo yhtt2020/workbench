@@ -1,31 +1,32 @@
 <template>
-    <div class="xt-bg-2 w-full p-2 rounded-xl relative mt-1">
-      <textarea
-        class="w-full block  overflow-y-auto text-base"
-        style="
-          resize: none;
-          background-color: transparent;
-          outline: 0px solid transparent;
-          outline-offset: 0px;
-          border: 0;
-          max-height: 200px;
-        "
-        :class="{ 'xt-scrollbar': isScrollbar }"
-        :style="[initHeight ? '' : 'height: 28px;']"
-        rows="1"
-        spellcheck="false"
-        placeholder="开始聊天吧"
-        @input="onInput"
-        @keydown.enter.exact.prevent="onSearch"
-        v-model="search"
-      >
-      </textarea>
-      <Icon
-        class="absolute top-1/2 -translate-y-1/2 cursor-pointer"
-        @click="isSearch ? onSearch() : test()"
-        :icon="isSearch ? 'sousuo' : 'gengduo1'"
-        style="font-size: 26px; right: 20px"
-      ></Icon>
+  <div class="xt-bg-2 w-full p-2 rounded-xl relative mt-1">
+    <textarea
+      class="w-full block overflow-y-auto text-base"
+      style="
+        resize: none;
+        background-color: transparent;
+        outline: 0px solid transparent;
+        outline-offset: 0px;
+        border: 0;
+        max-height: 200px;
+      "
+      :class="{ 'xt-scrollbar': isScrollbar }"
+      :style="[initHeight ? '' : 'height: 28px;']"
+      rows="1"
+      spellcheck="false"
+      placeholder="开始聊天吧"
+      @input="onInput"
+      @keydown.enter.exact.prevent="onSearch"
+      v-model="search"
+    >
+    </textarea>
+
+    <Icon
+      class="absolute top-1/2 -translate-y-1/2 cursor-pointer"
+      @click="isSearch ? onSearch() : test()"
+      :icon="isSearch ? 'sousuo' : 'gengduo1'"
+      style="font-size: 26px; right: 20px"
+    ></Icon>
   </div>
 </template>
 
@@ -60,6 +61,7 @@ const onInput = (e) => {
 // 搜索
 const onSearch = () => {
   if (props.isSearch && search.value.trim()) {
+    console.log("1 :>> ", 121);
     initHeight.value = false;
     isScrollbar.value = false;
     emits("onSearch", search.value);
