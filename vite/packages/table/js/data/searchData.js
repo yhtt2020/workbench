@@ -4,6 +4,7 @@ export const AggregateList = [
     title:'百度',
     icon:'baidu',
     search_url:'https://www.baidu.com/s?&tn=68018901_2_oem_dgie=utf-8&wd=',
+    recommend_url:'https://www.baidu.com/sugrec?prod=pc&wd=',
   },
   {
     title:'谷歌',
@@ -14,21 +15,25 @@ export const AggregateList = [
     title:'必应',
     icon:'bing',
     search_url:'https://www.bing.com/search?q=',
+    recommend_url:'https://api.bing.com/osjson.aspx?query='
   },
   {
     title:'知乎',
     icon:'zhihu-square-fill',
-    search_url:'https://www.zhihu.com/search?type=content&q='
+    search_url:'https://www.zhihu.com/search?type=content&q=',
+    recommend_url:'https://www.zhihu.com/api/v4/search/suggest?q='
   },
   {
     title:'GitHub',
     icon:'github-fill',
-    search_url:'https://github.com/search?q='
+    search_url:'https://github.com/search?q=',
+    recommend_url:'https://api.github.com/search/repositories?q='
   },
   {
     title:'Bilibili',
     icon:'bilibili1',
-    search_url:'https://search.bilibili.com/all?keyword='
+    search_url:'https://search.bilibili.com/all?keyword=',
+    recommend_url:'https://s.search.bilibili.com/main/suggest?term='
   },
   {
     title:'微博',
@@ -39,6 +44,7 @@ export const AggregateList = [
     title:'优酷',
     icon:'youku',
     search_url:'https://so.youku.com/search_video/q_',
+    recommend_url:'https://suggest.video.iqiyi.com/?key='
   },
   {
     title:'豆瓣',

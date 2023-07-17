@@ -5,8 +5,8 @@
     <div class="mb-6">
       <transition name="fade">
         <div class="flex flex-col" id="aggregate-drop">
-          <div v-for="item in AggregateList" class="flex items-center agg-set mb-4 p-3 rounded-xl">
-            <div class="flex items-center" style="width: 40%;">
+          <div v-for="(item,index) in AggregateList" class="flex items-center agg-set mb-4 p-3 rounded-xl" :data-index="index">
+            <div class="flex items-center cursor-move search-engine" style="width: 40%;">
                <HolderOutlined style="font-size: 20px;"></HolderOutlined>
             </div>
             <div class="flex items-center">
@@ -26,10 +26,15 @@
 </template>
 
 <script>
+import { mapActions,mapWritableState } from 'pinia';
 import { AggregateList } from '../../../js/data/searchData'
 import { HolderOutlined } from '@ant-design/icons-vue'
 import HorizontalPanel from '../../HorizontalPanel.vue';
-// import Sortable from 'sortablejs'
+import Sortable from 'sortablejs';
+import _ from 'lodash-es'
+import cache from '../../card/hooks/cache';
+import { appStore } from '../../../store';
+
 
 export default {
   components:{
@@ -52,6 +57,47 @@ export default {
         {title:'系统默认浏览器',name:'system'}
       ],
       openByDefault:{title:'工作台内打开',name:'work'}, // 默认打开链接方式
+      
+    }
+  },
+  computed:{
+    ...mapWritableState(appStore,['aggList'])
+  },
+  mounted(){
+    let aggregateDrop = document.getElementById("aggregate-drop")
+    aggregateDrop.addEventListener('ondragover',()=>{
+      ev.preventDefault()
+    })
+    aggregateDrop.addEventListener('drop',()=>{
+      this.aggDarggingCore = false
+    })
+    this.$nextTick(()=>{
+      this.searchEngineList()
+      // this.AggregateList = this.aggList
+    })
+  },
+  methods:{
+    ...mapActions(appStore,['getAggList']),
+    searchEngineList(){
+      let that = this
+      let listDrag = document.getElementById('aggregate-drop') // 获取外层容器实现拖拽
+      Sortable.create(listDrag,{
+        sort: true,  // 开启排序
+        animation: 150,
+        direction: 'vertical', 
+        delay: 0,
+        onStart:function(event){},
+        onUpdate:function(event){
+          const items = event.target.children // 获取拖拽的使用子项
+          const newItems = []
+          for (let i = 0; i < items.length; i++) { // 遍历获取每一项
+           const index = parseInt(items[i].getAttribute('data-index'));  // 获取到指定的data-index属性
+           newItems.push(that.AggregateList[index]); // 将数据更新
+          }   
+          cache.set('aggSortList',newItems)
+          that.getAggList()
+        },
+      })
     }
   },
   watch:{
