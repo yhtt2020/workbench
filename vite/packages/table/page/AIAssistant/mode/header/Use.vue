@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between">
     <div class="flex justify-center">
-      <XtIcon icon="xiangzuo"></XtIcon>
+      <XtIcon icon="xiangzuo" @click="isMode = true"></XtIcon>
       <div class="flex flex-col ml-2">
         <div class="text-base mb-1">PPT大钢</div>
         <div class="text-sm xt-text-2">
@@ -10,15 +10,21 @@
       </div>
     </div>
     <div class="flex">
-      <div class="xt-btn h-12 w-120 mr-2">生成对话</div>
-      <div class="xt-active-btn h-12 w-120 mr-2">立即生成</div>
+      <div class="xt-active-btn h-12 w-120 mr-2">使用模板</div>
+      <div class="xt-btn h-12 w-120 mr-2">更新模板</div>
       <XtIcon icon="bianji"></XtIcon>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapWritableState } from "pinia";
+import { aiStore } from "../../../../store/ai";
+export default {
+  computed: {
+    ...mapWritableState(aiStore, ["isMode"]),
+  },
+};
 </script>
 
 <style lang="scss" scoped></style>

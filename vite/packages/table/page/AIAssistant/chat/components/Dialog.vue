@@ -14,7 +14,7 @@
       :class="{ 'xt-theme-b': item.id == selectIndex }"
       class="xt-bg-2 w-10 h-10 rounded-xl m-2 flex justify-center items-center cursor-pointer"
     >
-      <Icon :icon="item.icon" class="text-xl"></Icon>
+      <Icon :icon="item.name" class="text-xl"></Icon>
     </div>
   </div>
 </template>

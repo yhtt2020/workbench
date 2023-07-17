@@ -1,26 +1,26 @@
 export const iconList = [
   {
-    icon: "message",
+    name: "message",
     id: 0,
   },
   {
-    icon: "star",
+    name: "star",
     id: 1,
   },
   {
-    icon: "smile",
+    name: "smile",
     id: 2,
   },
   {
-    icon: "shezhi1",
+    name: "shezhi1",
     id: 3,
   },
   {
-    icon: "aixin",
+    name: "aixin",
     id: 4,
   },
   {
-    icon: "yanjing",
+    name: "yanjing",
     id: 5,
   },
 ];

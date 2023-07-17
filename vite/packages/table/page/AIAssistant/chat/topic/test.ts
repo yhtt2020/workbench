@@ -6,10 +6,13 @@ for (let i = 0; i < 10; i++) {
 
   const item: any = {
     id: i,
-    icon: "message",
+    icon: {
+      name: "message",
+      id: 0,
+    },
     name: `AI助手${i + 1}`,
     top: Math.random() < 0.3,
-    children: [],
+    chatId: null,
   };
 
   if (Math.random() < 0.5) {

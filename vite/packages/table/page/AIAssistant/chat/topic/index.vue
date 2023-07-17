@@ -1,5 +1,5 @@
 <template>
-  <div class="mr-0" style="width: 220px">
+  <div class="mr-0 xt-br" style="width: 220px">
     <Search v-if="serachTopic"></Search>
     <template v-else>
       <Top></Top>

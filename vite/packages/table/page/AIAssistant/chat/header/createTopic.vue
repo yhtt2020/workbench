@@ -1,7 +1,7 @@
 <template>
   <div style="width: 392px">
     <Dialog v-model:icon="icon" v-model:name="name"></Dialog>
-    <div class="flex justify-center my-1">
+    <div class="flex justify-center my-3">
       <XtButton @click="close()">取消</XtButton>
       <XtButton class="ml-3" type="theme" @click="add()">确认</XtButton>
     </div>
