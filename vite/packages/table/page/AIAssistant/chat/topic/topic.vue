@@ -46,7 +46,7 @@ export default {
       this.topicList = this.topicList.filter((item) => {
         if (item.id === id) {
           if (this.selectTopicIndex === id) {
-            console.log('2 :>> ', 2);
+            this.selectTopicIndex = -1;
           }
           return false;
         } else {
