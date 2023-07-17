@@ -299,7 +299,7 @@ export const cardStore = defineStore(
         // ],
         routeParams: {},
         clockFlag: false,
-        deskSize: {}
+        deskSize: {},
       };
     },
 

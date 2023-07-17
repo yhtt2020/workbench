@@ -15,7 +15,10 @@
         </template>
         <a-select-option v-for="(item,index) in deskType" :key="index" :value="index">{{ item }}</a-select-option>
       </a-select>
-      <span class="title">标题</span>
+      <span class="title">桌面数据</span>
+      <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留你在小组件自定义编辑的设置或数据，比如「倒数日小组件」中的事件数据。</div>
+      <HorizonTalTab :navList="dataType" v-model:selectType="defaultType"></HorizonTalTab>
+      <span class="title mt-5">标题</span>
       <a-input v-model:value="shareName" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
       <span class="title">简介</span>
       <a-textarea v-model:value="blurb" spellcheck="false" class="input xt-text"  placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 100px;"/>
@@ -28,11 +31,12 @@
         </template>
         <a-select-option v-for="(item,index) in assortList" :key="item" :value="index">{{ item }}</a-select-option>
       </a-select>
-      <div class="flex justify-between items-center">
+
+      <!-- <div class="flex justify-between items-center">
         <span class="title">隐私保护</span>
         <a-switch v-model:checked="secretSwitch" aria-checked="false"/>
-      </div>
-      <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">你的隐私信息是否需要分享，例如便签等</div>
+      </div> -->
+      <!-- <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">你的隐私信息是否需要分享，例如便签等</div> -->
       <span class="title">标签</span>
       <div style="font-size: 14px;" class="xt-text-2 mt-2">最多添加四个标签</div>
       <div class="flex my-4">
@@ -58,10 +62,12 @@ import { message } from 'ant-design-vue';
 import ShareModal from "../ShareModal.vue";
 import { cardStore } from "../../store/card";
 import {nanoid} from 'nanoid'
+import HorizonTalTab from "../HorizonTalTab.vue"
 export default {
   name: "ShareDesk",
   components: {
-    ShareModal
+    ShareModal,
+    HorizonTalTab
   },
   data() {
     return {
@@ -77,7 +83,12 @@ export default {
       shareName: '',
       blurb: '',
       cards: [],
-      secretSwitch: true
+      secretSwitch: true,
+      dataType: [
+        {title: '保留数据', icon: 'yk_yuanquan_fill', name: 'data'},
+        {title: '不保留数据', icon: 'yk_yuanquan', name: 'notData'}
+      ],
+      defaultType: {title: '不保留数据', icon: 'yuanquan', name: 'notData'},
     }
   },
   props: {
@@ -89,7 +100,7 @@ export default {
   computed: {
     // ...mapWritableState(deskStore,['deskList','deskSize']),
     ...mapWritableState(deskStore,['deskList']),
-    ...mapWritableState(cardStore, ['desks','settings','deskSize']),
+    ...mapWritableState(cardStore, ['desks','settings','deskSize','countdownDay']),
   },
   watch: {
     openDrawer(newV){
@@ -113,16 +124,17 @@ export default {
       this.labelList.splice(index,1)
     },
     addPlan(){
+      if (this.shareName.trim() === "")return message.info("请输入新桌面名称")
+      if (this.shareName.length >= 16)return message.error("新桌面名称长度不可超过16")
+      if(this.assort === '请选择') return message.info('请选择分类')
       // let test = []
       // test = this.cards.map((item,index) => {
       //   if(item.customData)item.customData = {}
       //   return item
       //   // if(item.customData)
       // })
-
       let cards = JSON.parse(JSON.stringify(this.cards))
-      console.log(cards)
-      cards.cards.forEach(item => {
+      cards.cards.forEach((item,index) => {
         switch (item.name) {
           case 'notes':
             if(item.customData){
@@ -130,12 +142,11 @@ export default {
             }
             break;
           case 'countdownDay':
+            item.customData.notRetain = true
             break;
         }
       })
-      if (this.shareName.trim() === "")return message.info("请输入新桌面名称")
-      if (this.shareName.length >= 16)return message.error("新桌面名称长度不可超过16")
-      if(this.assort === '请选择') return message.info('请选择分类')
+      
       const time = new Date().valueOf()
       let settings = {}
       if(cards.settings && cards.settings.enableZoom){
@@ -160,7 +171,7 @@ export default {
         cardsHeight: this.deskSize.cardsHeight,
         blurb: this.blurb,
         labelList: this.labelList,
-        cards: this.secretSwitch ? cards.cards : this.cards.cards,
+        cards: this.defaultType.name === 'notData' ? cards.cards : this.cards.cards,
         settings,
         cardList: []
       }
@@ -176,6 +187,7 @@ export default {
       this.blurb = ''
       this.labelList = []
       this.secretSwitch = true
+      this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'}
     },
     closeShare(val){
       this.shareModal = val

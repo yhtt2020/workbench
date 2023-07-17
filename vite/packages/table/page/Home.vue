@@ -155,7 +155,12 @@
           <div><span>清空卡片</span></div>
         </div>
       </a-col>
-
+      <a-col>
+        <div @click="exportDesk" class="btn">
+          <Icon style="font-size: 3em" icon="export"></Icon>
+          <div><span>导出桌面</span></div>
+        </div>
+      </a-col>
 
     </a-row>
     <a-row style="margin-top: 2em" :gutter="[20, 20]">
@@ -296,6 +301,9 @@
         <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
       </div>
       <div @click="doAddDesk" class="btn-item">立即添加</div>
+      <div>
+        <div @click="doAddDesk" class="btn-item">导入桌面</div>
+      </div>
       <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
       <div class="flex justify-between">
         <span class="flex items-center">
@@ -330,6 +338,7 @@
   </a-drawer>
   <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
+  <ExportDesk :openModal="exportModal"></ExportDesk>
 </template>
 
 <script>
@@ -396,6 +405,7 @@ import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
 import DeskPreview from '../components/desk/DeskPreview.vue';
 import Tab from "../components/card/components/tab/index.vue"
+import ExportDesk from "../components/desk/ExportDesk.vue"
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -637,7 +647,8 @@ export default {
         {name: "通用桌面设置",value: "all"},
         {name: "当前桌面设置",value: "current"}
       ],
-      cardSwitch: false
+      cardSwitch: false,
+      exportModal: false
     };
   },
   components: {
@@ -695,7 +706,8 @@ export default {
     ShareDesk,
     DeskMarket,
     DeskPreview,
-    Tab
+    Tab,
+    ExportDesk
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -1039,6 +1051,9 @@ export default {
       // };
       this.key = Date.now();
       this.addDeskVisible = false;
+    },
+    exportDesk(){
+      this.exportModal = true
     },
     cleanMuuriData(list) {
       list.forEach((li) => {

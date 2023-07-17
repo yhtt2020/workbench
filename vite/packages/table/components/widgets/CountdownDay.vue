@@ -1,6 +1,6 @@
 <template>
   <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot">
-    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDay.length <= 0">
+    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDays.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
     </div>
@@ -10,7 +10,7 @@
 
     <div
       class="event-list px-4 mb-3 s-item xt-bg-2" style=""
-      v-for="(item) in countdownDay"
+      v-for="(item) in countdownDays"
     >
       <div class="flex flex-row items-center">
         <div class="round-dot mr-4"></div>
@@ -47,7 +47,7 @@
           >
             <div
               class="event-list px-4 mb-3 s-item xt-bg-2 xt-text"
-              v-for="(item,index) in countdownDay"
+              v-for="(item,index) in countdownDays"
             >
               <a-dropdown :trigger="['contextmenu']" class="w-full">
                 <div class="flex flex-row justify-between items-center">
@@ -176,7 +176,8 @@ export default {
       status: "pause",
       value: null,
       visible:false,
-      goAddFlag:false
+      goAddFlag:false,
+      countdownDays: []
     };
   },
   computed: {
@@ -185,6 +186,7 @@ export default {
   },
   mounted() {
       this.sortCountdown()
+      this.setCountdownDay()
   },
   methods: {
     ...mapActions(cardStore, ["removeCountdownDay",'addCountdownDay','sortCountdown']),
@@ -234,8 +236,30 @@ export default {
       this.eventValue = ""
       this.dateValue = null
         message.info("添加成功！");
+    },
+    setCountdownDay(){
+      let countdownDay = JSON.parse(JSON.stringify(this.countdownDay))
+      if(this.customData.notRetain){
+        for(let i=0;i < countdownDay.length;i++){
+          if(countdownDay[i].customIndex){
+            countdownDay.splice(i,1)
+            i--;
+          }
+        }
+        this.countdownDays = countdownDay
+      }else{
+        this.countdownDays = this.countdownDay
+      }
     }
   },
+  watch: {
+    countdownDay: {
+      deep: true,
+      handler(val){
+        this.setCountdownDay()
+      }
+    }
+  }
 };
 </script>
 
