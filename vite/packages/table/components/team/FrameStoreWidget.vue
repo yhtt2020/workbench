@@ -45,10 +45,14 @@
                       @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
-             赞助 ￥ {{ getFramePrice(item) }}
+              赞助 ￥ {{ getFramePrice(item).price }}
+              <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
+                <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
             </a-button>
             <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
-              已有
+              已有 <span class=" ml-2">￥ {{ getFramePrice(item).price }}</span> <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
+            </template>
+
             </a-button>
             <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
                       @click="scorePay(item)" v-if="getFrameScore(item)" style="color: var(--active-text);height: 44px;"
@@ -87,8 +91,8 @@
         <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
       </div>
     </div>
-    <CollectionCodeModal @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
-                         :needPayAvatar="needPayAvatar"></CollectionCodeModal>
+    <PaymentMoney @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
+                         :needPayAvatar="needPayAvatar"></PaymentMoney>
     <!-- 未购买情况下走扫码支付的流程 -->
   </a-modal>
 
@@ -125,7 +129,7 @@
 import { mapState, mapActions, mapWritableState } from 'pinia'
 import HorizontalPanel from '../HorizontalPanel.vue'
 import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
-import CollectionCodeModal from '../payModal/CollectionCodeModal.vue'
+import PaymentMoney from '../payModal/PaymentMoney.vue'
 import PointPayment from '../payModal/PointPayment.vue'
 import GiftModal from '../payModal/GiftModal.vue'
 import { rarityColor } from '../../js/common/teamAvatar'
@@ -146,7 +150,7 @@ export default {
     MyFrames,
     HorizontalPanel,
     HorzontanlPanelIcon,
-    CollectionCodeModal,
+    PaymentMoney,
     PointPayment,
     GiftModal,
     Modal
@@ -216,10 +220,12 @@ export default {
     getFramePrice (item) {  // 根据价格类型获取数据
       const money = _.find(item.prices, function (o) { return o.type === 'money' })
       if (money !== undefined) {
-        return money.price
+        return money
       }
     },
-
+    getDiscount(price){
+      return '-'+ ((1-price.price/price.originPrice)*100).toFixed(1)+'%'
+    },
     getFrameScore (item) {  // 根据积分类型获取数据
       const score = _.find(item.prices, function (o) { return o.type === 'score' })
       if (score !== undefined) {
@@ -227,9 +233,6 @@ export default {
       }
     },
 
-    getFramePriceOrigin (item) {
-      return _.find(item.prices, function (o) { return o.type === 'money' })
-    },
     scorePay (item) {   // 点击积分兑换回调事件
       this.pointVisible = true
       this.needPayAvatar.url = item.cover
@@ -264,7 +267,7 @@ export default {
       this.needPayAvatar.url = item.cover
       this.needPayAvatar.price = this.getFramePrice(item)
       this.gettingOrder = true
-      this.ensureOrder(item.dataNanoid, this.getFramePriceOrigin(item).nanoid).then((rs) => {
+      this.ensureOrder(item.dataNanoid, this.getFramePrice(item).nanoid).then((rs) => {
         this.gettingOrder = false
         if (rs.status) {
           if(rs.data.code===200){

@@ -240,7 +240,7 @@ export default {
     this.updateGameTime()
   },
   computed:{
-    ...mapWritableState(steamUserStore, ['gameList','myGameList','runningGame','showTime']),
+    ...mapWritableState(steamUserStore, ['gameList','myGameList','runningGame','showTime','deskList']),
     ...mapWritableState(appStore,['fullScreen']),
     selectSteamList(){
       if(this.selectName.trim()!==''){
@@ -292,6 +292,11 @@ export default {
       this.playGame(this.currentSteam)
       console.log(toast)
      // toast(JumpNotice)
+      this.deskList.forEach(desk=>{
+        if(desk.id===this.currentSteam.appid){
+          desk.order=Date.now()
+        }
+      })
 
       toast({
         component:JumpNotice,

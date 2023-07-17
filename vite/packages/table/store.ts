@@ -58,7 +58,7 @@ export const appStore = defineStore('appStore', {
         height: 100, //单个轨道的高度
         limit: 10, //单个屏幕允许的数量
         repeat: 3, //重复次数
-        direction: "left",
+        direction: "right",
         browserLink: true, //和浏览器联动
       }, //弹幕设置
       ui: {}, //ui设置

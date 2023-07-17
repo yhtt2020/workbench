@@ -22,7 +22,8 @@
           <a-avatar shape="square" :src="qrCode.wechat" class="w-full h-full object-cover" alt=""></a-avatar>
         </div>
         <div class="flex flex-col ml-8 justify-center">
-          <span class="mb-2 avatar-price">￥{{ needPayAvatar.price }}</span>
+          <span v-if="needPayAvatar.price.originPrice" class="mb-2  " style="font-size: 18px">原价： <span class="  line-through">￥{{ needPayAvatar.price.originPrice }}</span></span>
+          <span class="mb-2 avatar-price">￥{{ needPayAvatar.price.price }}</span>
           <div class="flex items-center">
             <Icon icon="weixinzhifu" style="font-size: 0.55em;"></Icon>
             <span class="avatar-font  ml-2" style="color: var(--primary-text);">微信扫码支付</span>
@@ -41,7 +42,8 @@
           <a-avatar v-else shape="square" class="w-full h-full object-cover" alt=""></a-avatar>
         </div>
         <div class="flex flex-col ml-8 justify-center">
-          <span class="mb-2 avatar-price avatar-font">￥{{ needPayAvatar.price }}</span>
+          <span v-if="needPayAvatar.price.originPrice" class="mb-2  " style="font-size: 18px">原价： <span class="  line-through">￥{{ needPayAvatar.price.originPrice }}</span></span>
+          <span class="mb-2 avatar-price avatar-font">￥{{ needPayAvatar.price.price }}</span>
           <div class="flex items-center">
             <Icon icon="zhifubao" style="font-size: 0.55em;"></Icon>
             <span class="avatar-font ml-2" style="color: var(--primary-text);">支付宝扫码支付</span>
