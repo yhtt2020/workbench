@@ -50,14 +50,23 @@
           </div>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 flex flex-col">
           <div class="flex items-center rounded-xl p-2 w-full justify-center" style="border: 1px solid var(--secondary-bg);width: 480px;">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
             </div>
             <a-input v-model:value="aggSearchWord" placeholder="搜索" :bordered="false" class="search" @change="dataSearch"></a-input>
           </div>
+          <div class="flex flex-col">
+            <div v-for="item in suggestList">
+              {{ 
+                item.q ? item.q : item.value ? item.value : item.query ? item.query 
+                : item.name
+              }}
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </transition>
@@ -117,6 +126,7 @@ export default {
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.aggSearchShow = true;this.$refs.aggregateSearchSlot.visible = false } } ],
       aggSelectIndex:'', // 全屏状态搜索引擎下标
       aggSelectIcon:{},
+      suggestList:[]
     }
   },
 
@@ -152,7 +162,39 @@ export default {
       const words = encodeURIComponent(this.aggSearchWord)
       const url = `${this.aggList.list[this.aggSelectIndex].recommend_url}${words}`
       axios.get(url).then(res=>{
-        console.log('返回结果::>>>',res);
+        console.log('测试结果::>>>',res.data);
+        switch (this.aggList.list[this.aggSelectIndex].id) {
+          case 0:
+            this.suggestList  = res.data.g
+            break;
+          case 1: 
+            // 谷歌接口暂时不能使用,还没有找到api
+            // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
+            break;
+          case 2:
+            this.suggestList  = res.data[1]
+            break;
+          case 3:
+            this.suggestList  = res.data.suggest
+            break;
+          case 4:
+            // github搜索引擎api暂时没有找到关键字搜索推荐
+            break;
+          case 5:
+            this.suggestList  = res.data
+            break;
+          case 6:
+            // 微博搜索引擎api暂时没有找到关键字搜索推荐
+            break;
+          case 7:
+            this.suggestList  = res.data.data
+            break;  
+          case 8:
+            // 豆瓣搜索引擎api暂时没有找到关键字搜索推荐
+            break;
+          default:
+            break;
+        }
       })
     }
   }
