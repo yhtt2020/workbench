@@ -45,10 +45,10 @@
                       @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
-             赞助 ￥ {{ getFramePrice(item) }}
+              赞助 ￥ {{ getFramePrice(item).price }} <span class="line-through ml-2" v-if="getFramePrice(item).originPrice">￥{{getFramePrice(item).originPrice}}</span>
             </a-button>
             <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
-              已有
+              已有 <span class=" ml-2">￥ {{ getFramePrice(item).price }}</span> <span class="line-through ml-2" v-if="getFramePrice(item).originPrice">￥{{getFramePrice(item).originPrice}}</span>
             </a-button>
             <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
                       @click="scorePay(item)" v-if="getFrameScore(item)" style="color: var(--active-text);height: 44px;"
@@ -216,10 +216,9 @@ export default {
     getFramePrice (item) {  // 根据价格类型获取数据
       const money = _.find(item.prices, function (o) { return o.type === 'money' })
       if (money !== undefined) {
-        return money.price
+        return money
       }
     },
-
     getFrameScore (item) {  // 根据积分类型获取数据
       const score = _.find(item.prices, function (o) { return o.type === 'score' })
       if (score !== undefined) {
@@ -227,9 +226,6 @@ export default {
       }
     },
 
-    getFramePriceOrigin (item) {
-      return _.find(item.prices, function (o) { return o.type === 'money' })
-    },
     scorePay (item) {   // 点击积分兑换回调事件
       this.pointVisible = true
       this.needPayAvatar.url = item.cover
@@ -264,7 +260,7 @@ export default {
       this.needPayAvatar.url = item.cover
       this.needPayAvatar.price = this.getFramePrice(item)
       this.gettingOrder = true
-      this.ensureOrder(item.dataNanoid, this.getFramePriceOrigin(item).nanoid).then((rs) => {
+      this.ensureOrder(item.dataNanoid, this.getFramePrice(item).nanoid).then((rs) => {
         this.gettingOrder = false
         if (rs.status) {
           if(rs.data.code===200){
