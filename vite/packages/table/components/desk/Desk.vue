@@ -33,21 +33,27 @@
           align-items: center;
           align-content: center;
         " :style="{ 'padding-top': this.settings.marginTop + 'px'}"
-        :class="notTrigger ? 'trigger' : '' "
+           :class="notTrigger ? 'trigger' : '' "
         >
         <vuuri  v-if="currentDesk.cards && !hide" :get-item-margin="() => {
             return settings.cardMargin + 'px';
           }
-          " group-id="grid.id" :drag-enabled="true" v-model="currentDesk.cards" :key="key" :style="{
+          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
 
       height: '100%',
       width: '100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
-            <div :style="{ pointerEvents: editing ? 'none' : '',zoom: (this.settings.cardZoom * this.adjustZoom / 100).toFixed(2), }">
+            <div
+              :class="{editing:editing}"
+                  :editing="editing"
+                  :style="{ zoom: (this.settings.cardZoom * this.adjustZoom / 100).toFixed(2), }">
+
+
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                 :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
+
           </template>
         </vuuri>
       </div>
@@ -196,6 +202,11 @@ export default {
   },
   props:
   {
+    editing:{
+      type:Boolean,
+      required:true,
+      default:false,
+    },
     currentDesk: {
       type: Object,
       required: true,
@@ -209,10 +220,10 @@ export default {
       required: false,
       default: () => {
         return {
-          dragStartPredicate: {
-            distance: 10,
-            delay: 1000,
-          },
+          // dragStartPredicate: {
+          //   distance: 10,
+          //   delay: 1000,
+          // },
           dragAutoScroll: {
             layout:{
               fillGaps: true,
@@ -276,7 +287,6 @@ export default {
       key:Date.now(),
       menuVisible: false,
       visibleAdd: false,
-      editing: false,
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -429,6 +439,10 @@ export default {
   left: 0;
   right: 0;
   margin-right: 1em;
+  .editing{
+    pointer-events: none;
+    cursor: move;
+  }
 }
 
 .btn {

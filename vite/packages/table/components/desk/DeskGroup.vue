@@ -14,24 +14,42 @@
         <span class="">{{ item.name }}</span>
         <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
       </div>
-
-      <div @click="showAll" class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-        <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
-      </div>
+      <a-tooltip title="全部桌面" placement="bottom">
+        <div @click="showAll"
+             class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+          <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
+        </div>
+      </a-tooltip>
 
     </div>
 
     <div v-if="showTools">
 
       <div class="flex flex-row">
-        <div @click="showMore"
-             class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-          <icon class="icon" style="font-size: 22px" icon="tianjia1"></icon>
-        </div>
-        <div @click="setFullScreen"
-             class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-          <Icon style="font-size: 18px" icon="fullscreen"></Icon>
-        </div>
+        <a-tooltip title="添加游戏桌面" placement="bottom">
+          <div @click="showMore"
+               class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+            <icon class="icon" style="font-size: 22px" icon="tianjia1"></icon>
+          </div>
+        </a-tooltip>
+        <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
+          <div @click="startEdit"
+               class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+            <icon class="icon" style="font-size: 22px" icon="line-dragdroptuofang"></icon>
+          </div>
+        </a-tooltip>
+        <a-tooltip v-else title="停止调整桌面" placement="bottom">
+          <div @click="stopEdit"
+               class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+            <icon class="icon" style="font-size: 22px;color:red" icon="tingzhi"></icon>
+          </div>
+        </a-tooltip>
+        <a-tooltip title="全屏" placement="bottom">
+          <div @click="setFullScreen"
+               class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+            <Icon style="font-size: 18px" icon="fullscreen"></Icon>
+          </div>
+        </a-tooltip>
       </div>
     </div>
   </div>
@@ -44,20 +62,20 @@
     </div>
   </div>
   <template v-if="currentDesk && currentDesk?.cards?.length>0 ">
-    <Desk ref="currentDeskRef" :currentDesk="currentDesk"
-          :settings="currentDesk.settings"></Desk>
+    <Desk :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
+          :settings="currentDesk.settings" :key="key"></Desk>
   </template>
   <template v-else>
     <slot name="empty">
 
     </slot>
     <span v-show="false">
-       <Desk ref="currentDeskRef" :currentDesk="currentDesk"></Desk>
+       <Desk ref="currentDeskRef" :currentDesk="currentDesk"  :key="key"></Desk>
     </span>
 
   </template>
   <a-drawer height="220" placement="bottom" v-model:visible="allDeskListVisible">
-    <AllDeskList  :activeId="currentDeskId" :items="deskList" @visibleChanged=""
+    <AllDeskList :activeId="currentDeskId" :items="deskList" @visibleChanged=""
                  @valueChanged="(event)=>{setCurrentDeskId(event.id);this.allDeskListVisible=false}"
     ></AllDeskList>
   </a-drawer>
@@ -104,8 +122,10 @@ export default {
   },
   data() {
     return {
+      key:Date.now(),
       moreDesksVisible: false,//显示更多桌面
-      allDeskListVisible: false
+      allDeskListVisible: false,
+      editing: false//编辑桌面
     }
   },
   mounted() {
@@ -127,16 +147,25 @@ export default {
         ...this.deskList.filter(desk => {
           return !desk.pin
         })
-      ].slice(0, 4).sort((a,b)=>{
-        if(b.pin){
+      ].slice(0, 4).sort((a, b) => {
+        if (b.pin) {
           //置顶的桌面排最前面
           return 9999999999999
         }
-        return  Number(b.order ||0 )-Number(a.order||0 )
+        return Number(b.order || 0) - Number(a.order || 0)
       })
     }
   },
   methods: {
+    startEdit() {
+      this.key=Date.now()
+      this.editing = true
+      this.$refs.currentDeskRef.update()
+    },
+    stopEdit() {
+      this.key=Date.now()
+      this.editing = false
+    },
     addCard() {
       this.$refs.currentDeskRef.newAddCard()
     },
