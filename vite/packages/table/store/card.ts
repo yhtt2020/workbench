@@ -299,7 +299,7 @@ export const cardStore = defineStore(
         // ],
         routeParams: {},
         clockFlag: false,
-        deskSize: {}
+        deskSize: {},
       };
     },
 
@@ -347,18 +347,21 @@ export const cardStore = defineStore(
         return desk
       },
       addShareDesk(data){
-        let cardZoom = ((this.deskSize.cardsHeight * (data.settings.cardZoom / 100)/data.cardsHeight) * 100).toFixed()
-        data.settings.cardZoom = cardZoom
-        let desk = {
-          name: data.title,
-          nanoid: nanoid(4),
-          cards: data.cards,
-          aloneSettings: data.settings,
-          showSettings: true
-        }
-        this.aloneSettings = data.settings
-        this.desks.push(desk)
-        return desk
+        setTimeout(() => {
+          let cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
+          data.settings.cardZoom = parseInt(cardZoom)
+          let desk = {
+            name: data.title,
+            nanoid: nanoid(4),
+            cards: data.cards,
+            settings: {...data.settings,enableZoom:true},
+            // showSettings: true
+          }
+          this.aloneSettings = data.settings
+          this.desks.push(desk)
+          this.switchToDesk(this.desks.length - 1)
+          return desk
+          }, 350);
       },
       setDeskSize(item){
         this.deskSize = item

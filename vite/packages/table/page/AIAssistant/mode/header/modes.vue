@@ -5,7 +5,7 @@
         style="width: 320px; height: 48px"
         boxClass="p-1 xt-bg-2"
         :list="modelList"
-        v-model:data="model"
+        v-model:data="mode"
       ></XtTab>
       <XtInput
         class="ml-4"
@@ -20,10 +20,7 @@
       </XtInput>
     </div>
     <div class="flex items-center">
-      <XtIcon
-        icon="tianjia2"
-        @click="addModelVisible = true"
-      ></XtIcon>
+      <XtIcon icon="tianjia2" @click="addModelVisible = true"></XtIcon>
     </div>
   </div>
   <XtPopup
@@ -35,12 +32,12 @@
   </XtPopup>
 </template>
 <script>
-import edit from "../edit.vue";
+import edit from "./edit.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["model", "isUseModel"]),
+    ...mapWritableState(aiStore, ["mode"]),
   },
   components: {
     edit,
@@ -51,11 +48,11 @@ export default {
       searchValue: "",
       modelList: [
         {
-          value: "default",
+          value: "Default",
           name: "系统预设",
         },
         {
-          value: "my",
+          value: "User",
           name: "我的模板",
         },
       ],

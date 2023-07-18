@@ -14,9 +14,11 @@ import {
  */
 export const initTheme = () => {
   const className = compatible();
-  if (className !== DARK_THEME + SUFFIX && className !== DARK_THEME + SUFFIX) {
+  if (className !== DARK_THEME + SUFFIX && className !== LIGHT_THEME + SUFFIX) {
     setThemeName(DARK_THEME + SUFFIX);
-  } else if (className) setThemeName(className);
+  } else if (className) {
+    setThemeName(className);
+  }
   initTransparent();
 };
 

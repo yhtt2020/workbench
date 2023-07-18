@@ -41,13 +41,13 @@
   </div>
   <!-- 新建模板 -->
   <XtView
-    model="popup"
     v-if="createChatVisible"
-    title="新建模板1"
+    model="popup"
+    title="新建模板"
     :showFull="false"
     @close="createChatVisible = false"
   >
-    <createTopic @close="createChatVisible = false"></createTopic>
+    <CreateTopic @close="createChatVisible = false"></CreateTopic>
   </XtView>
   <!-- 充值 -->
   <XtView
@@ -60,10 +60,15 @@
     <Store style="width: 440px"></Store>
   </XtView>
   <!-- 编辑 -->
-  <a-drawer :width="497" v-model:visible="settingVisible" placement="right">
+  <a-drawer
+    :width="497"
+    v-model:visible="settingVisible"
+    placement="right"
+    v-if="settingVisible"
+  >
     <template #title>
       <XtTitle titleClass="" type="header"
-        >设置 {{ selectTopicIndex }}
+        >设置
         <template #right>
           <XtButton
             @click="saveEdit()"
@@ -75,18 +80,15 @@
         </template>
       </XtTitle>
     </template>
-    <edit :data="topicList[selectTopicIndex]" ref="editRef"></edit>
+    <Edit :data="topicList[selectTopicIndex]" ref="editRef"></Edit>
   </a-drawer>
 </template>
 
 <script>
-import createTopic from "./createTopic.vue";
-import edit from "./edit.vue";
-import Store from "../account/Store.vue";
-import Popup from "../components/Popup.vue";
-
+import { defineAsyncComponent } from "vue";
+import _ from "lodash-es";
 import { mapWritableState } from "pinia";
-import { aiStore } from "../../../store/ai";
+import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
     ...mapWritableState(aiStore, [
@@ -96,10 +98,9 @@ export default {
     ]),
   },
   components: {
-    Popup,
-    createTopic,
-    Store,
-    edit,
+    Store: defineAsyncComponent(() => import("../../account/Store.vue")),
+    Edit: defineAsyncComponent(() => import("./edit.vue")),
+    CreateTopic: defineAsyncComponent(() => import("./createTopic.vue")),
   },
   data() {
     return {
@@ -115,10 +116,12 @@ export default {
     },
     saveEdit() {
       let editRef = this.$refs.editRef;
-      this.topicList[this.selectTopicIndex] = {
-        ...editRef.value,
-      };
+      this.topicList[this.selectTopicIndex] = _.cloneDeep(editRef.value);
       this.settingVisible = false;
+      console.log(
+        "    this.topicList[this.selectTopicIndex]  :>> ",
+        this.topicList[this.selectTopicIndex]
+      );
     },
   },
 };

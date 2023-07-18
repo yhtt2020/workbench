@@ -5,7 +5,7 @@
    :show-upload-list="false"
   >  
     <img v-if="showAvatar !== ''" :src="showAvatar" alt="avatar" class="rounded-full" style="height:48px;width:48px;"/>
-    <Icon v-else icon="tianjia2" style="font-size: 2.3em;"></Icon>
+    <Icon v-else icon="tianjia2" style="font-size: 3em;"></Icon>
     <div v-if="showAvatar !== ''" class="rounded-xl pointer"  @click.stop="deleteAvatar" style="width:20p;height:20px;position: absolute;top:6px;left: 47px;">
       <Icon icon="close-circle-fill" style="color: var(--secondary-text);font-size: 1.25em;"></Icon>
     </div>

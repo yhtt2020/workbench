@@ -226,7 +226,7 @@ export const deskStore = defineStore("desk", {
         children: []
       },
     ],
-    deskSize: {}
+    // deskSize: {}
   }),
   actions: {
     setDeskList(item){
@@ -236,9 +236,9 @@ export const deskStore = defineStore("desk", {
         }
       })
     },
-    setDeskSize(item){
-      this.deskSize = item
-    }
+    // setDeskSize(item){
+    //   this.deskSize = item
+    // }
   },
   persist: {
     enabled: true,
@@ -246,7 +246,7 @@ export const deskStore = defineStore("desk", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['deskList','deskSize'],
+        paths: ['deskList'],
         storage: sessionStorage,
         // state 中的字段名，按组打包储存
       },

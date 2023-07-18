@@ -42,7 +42,7 @@ export default {
         {
           name: "推荐模板",
           icon: "wanggeshitu",
-          value: "Model",
+          value: "Mode",
         },
         {
           name: "我的账号",

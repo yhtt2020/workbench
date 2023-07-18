@@ -82,17 +82,20 @@ body {
 .xt-b {
   border: 1px solid var(--divider);
 }
-.xt-b-l {
+.xt-bl {
   border-left: 1px solid var(--divider);
 }
-.xt-b-r {
+.xt-br {
   border-right: 1px solid var(--divider);
 }
-.xt-b-t {
+.xt-bt {
   border-top: 1px solid var(--divider);
 }
-.xt-b-m {
+.xt-bm {
   border-bottom: 1px solid var(--divider);
+}
+.xt-theme-b {
+  border: 1px solid var(--active-bg);
 }
 /**
 * 功能性颜色

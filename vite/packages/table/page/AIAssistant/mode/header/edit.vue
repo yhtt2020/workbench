@@ -12,8 +12,8 @@
       v-model:data="text"
     ></XtTextarea>
   </div>
-  <div class="flex justify-center mt-4">
-    <div class="xt-btn" style="width: 120px; height: 48px">取消</div>
+  <div class="flex justify-center mt-3">
+    <div class="xt-btn mr-3"  style="width: 120px; height: 48px">取消</div>
     <div class="xt-active-btn" style="width: 120px; height: 48px">
       创建并使用
     </div>
