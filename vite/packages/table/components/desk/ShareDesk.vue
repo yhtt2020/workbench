@@ -105,6 +105,17 @@ export default {
   watch: {
     openDrawer(newV){
       this.showDrawer = newV
+      if(this.showDrawer){
+        this.assortList = this.deskList.map(item => item.cname)
+        this.assortList.unshift('请选择')
+        this.assort = this.assortList[0]
+        
+        this.deskType = this.desks.map(item => item.name)
+        this.desk = this.deskType[0]
+        this.cards = this.desks[0]
+        this.shareName = this.desk
+        this.secretSwitch = true
+      }
     },
   },
   methods: {
@@ -200,17 +211,6 @@ export default {
         }
       })
     }
-  },
-  mounted() {
-    this.assortList = this.deskList.map(item => item.cname)
-    this.assortList.unshift('请选择')
-    this.assort = this.assortList[0]
-    
-    this.deskType = this.desks.map(item => item.name)
-    this.desk = this.deskType[0]
-    this.cards = this.desks[0]
-    this.shareName = this.desk
-    this.secretSwitch = true
   },
 }
 </script>

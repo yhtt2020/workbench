@@ -137,7 +137,6 @@ export default {
         this.deskWidth = this.scheme.deskWidth
         this.deskHeight = this.scheme.deskHeight
         this.cardHeight = this.scheme.cardsHeight
-
         var that = this
         window.addEventListener('resize',() => {
           that.getPreviewHeight()
@@ -162,15 +161,18 @@ export default {
       this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)))
       message.success('添加成功');
       this.openDrawer = false
-      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-      let deskHeight = document.documentElement.clientHeight // 高
-      let deskWidth = document.documentElement.clientWidth // 宽
-      let size = {
-        deskWidth,
-        deskHeight,
-        cardsHeight,
-      }
-      this.setDeskSize(size)
+      setTimeout(() => {
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
+        let size = {
+          deskWidth,
+          deskHeight,
+          cardsHeight,
+        }
+        this.setDeskSize(size)
+        this.cardsHeight
+      },300)
     },
     close(){
       // this.cards.settings.cardZoom = this.cardZoom
@@ -205,7 +207,7 @@ export default {
       align-items: center;
       // justify-content: space-between;
       padding: 12px;
-      z-index: 9999;
+      z-index: 99999;
       .head-icon{
         width: 100%;
         display: flex;

@@ -90,23 +90,41 @@ export default {
         if(item.settings && item.settings.enableZoom){
           settings = item.settings
         }else{
-          settings = this.settings
+          // settings = this.settings
+          settings = {...this.settings,enableZoom:true}
         }
         item.cardsHeight = this.deskSize.cardsHeight
         item.settings = settings
         val.map((i) => {
           if(index === i){
             this.selectedDesk.push(item)
+            // console.log(item)
           }
         })
       })
-      // console.log(this.selectedDesk)
+    },
+    setData(cards){
+      cards.cards.forEach((item,index) => {
+        switch (item.name) {
+          case 'notes':
+            if(item.customData){
+              item.customData.text = ''
+            }
+            break;
+          case 'countdownDay':
+            item.customData.notRetain = true
+            break;
+        }
+      })
     },
     async exportBtn() {
       if (!this.selectedDesk.length) {
         message.error('您至少选择一个桌面。')
         return
       }
+      this.selectedDesk.forEach(item => {
+        if(this.defaultType.name === 'notData')this.setData(item)
+      })
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
         defaultPath: '我的桌面分享.desk',
@@ -139,8 +157,10 @@ export default {
   watch: {
     openModal(val){
       if(val){
+        this.selectedDesk = []
         this.deskType = this.desks.map(item => item.name)
         let desks = JSON.parse(JSON.stringify(this.desks))
+        this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'},
         this.selectedDesk.push(desks[0])
       }
     }

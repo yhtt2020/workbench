@@ -995,7 +995,8 @@ export default {
       "switchToDesk",
       "removeDesk",
       "getCurrentIndex",
-      "setDeskSize"
+      "setDeskSize",
+      "addShareDesk"
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
@@ -1189,7 +1190,7 @@ export default {
           deskHeight,
           cardsHeight,
         }
-        // console.log(cardsHeight)
+        console.log(cardsHeight)
         this.setDeskSize(size)
       })
     },
@@ -1222,7 +1223,6 @@ export default {
       try {
         needImportDesk = JSON.parse(importJsonTxt)
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        
         needImportDesk.forEach(g => {
           let cardZoom = (g.settings.cardZoom * cardsHeight/g.cardsHeight).toFixed()
           g.settings.cardZoom = parseInt(cardZoom)
