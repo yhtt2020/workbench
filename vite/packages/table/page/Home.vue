@@ -308,17 +308,17 @@
       <div>
         <div @click="importDesk" class="btn-item">导入桌面</div>
       </div>
-      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
-      <div class="flex justify-between">
-        <span class="flex items-center">
-          <span class="desk-title mr-2">热门桌面</span>
-          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
-        </span>
-        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
-      </div>
-      <div>
-        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
-      </div>
+<!--      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>-->
+<!--      <div class="flex justify-between">-->
+<!--        <span class="flex items-center">-->
+<!--          <span class="desk-title mr-2">热门桌面</span>-->
+<!--          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>-->
+<!--        </span>-->
+<!--        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>-->
+<!--      </div>-->
     </div>
     <div v-else>
       <span class="desk-title">分享码</span>
