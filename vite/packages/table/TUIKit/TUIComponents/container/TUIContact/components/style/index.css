@@ -1,0 +1,79 @@
+@import url("../../../../styles/common.scss");
+@import url("../../../../styles/icon.scss");
+.list li {
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0; }
+
+.icon-warn {
+  background: coral;
+  color: #FFFFFF;
+  font-style: normal; }
+
+.btn {
+  font-weight: 400;
+  color: #FFFFFF;
+  letter-spacing: 0; }
+  .btn-cancel {
+    border: 1px solid #dddddd;
+    color: #666666; }
+  .btn-default {
+    background: #006EFF;
+    border: 1px solid #006EFF; }
+  .btn:disabled {
+    opacity: 0.3; }
+
+.message-system {
+  flex: 1; }
+
+.list {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  min-width: 600px; }
+  .list li {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 10px 20px;
+    font-size: 14px; }
+    .list li .icon {
+      margin-right: 10px;
+      border-radius: 100%; }
+    .list li .message-label {
+      max-width: 50px; }
+    .list li .btn-box {
+      padding: 0 12px; }
+
+.icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px; }
+  .icon-warn {
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+
+.btn {
+  padding: 2px 10px;
+  margin-right: 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px; }
+  .btn:last-child {
+    margin-right: 0; }
+
+.message-system-h5 .list {
+  width: 100%;
+  min-width: 0; }
+  .message-system-h5 .list li span {
+    flex: 1;
+    width: 0;
+    word-break: break-all; }
+  .message-system-h5 .list .btn-box {
+    padding-right: 0; }
+
+/*# sourceMappingURL=index.css.map */
