@@ -290,6 +290,12 @@
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
+  <!-- 聚合搜索全屏下的页面 -->
+  <div class="fixed inset-0" style="z-index: 999;" v-if="searchFullScreen === true">
+    <!-- style=""  -->
+    <AggregateSearchFullScreen></AggregateSearchFullScreen>
+  </div>
+
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
     <template #extra v-if="shareCode">
       <a-space>
@@ -399,7 +405,7 @@ import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
 import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
-
+import AggregateSearchFullScreen from "../components/widgets/aggregate/AggregateSearchFullScreen.vue";
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
@@ -705,7 +711,8 @@ export default {
     DeskMarket,
     DeskPreview,
     Tab,
-    UpdateMyInfo
+    UpdateMyInfo,
+    AggregateSearchFullScreen
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -723,7 +730,8 @@ export default {
       "styles",
       "style",
       "fullScreen",
-      "infoVisible"
+      "infoVisible",
+      "searchFullScreen",
     ]),
 
     ...mapWritableState(appStore, {
