@@ -1,6 +1,7 @@
 const { Tray } = require('electron')
 const baseApi = require('./src/api/baseApi.js')
 var osu = require('node-os-utils')
+const ToolboxManager = require('./src/main/toolboxManager')
 // const {require} = require("@electron/remote");
 // var viewMap = require('viewManager.js')
 
@@ -105,6 +106,11 @@ function openWorktable(){
     })
   }
 }
+
+function openToolbox(){
+    ToolboxManager.ensure()
+    global.toolboxManager.open()
+}
 function openBrowser(){
   if (!mainWindow) {
     createWindow()
@@ -201,6 +207,12 @@ app.whenReady().then(() => {
         label: '打开工作台',
         click: () => {
          openWorktable()
+        }
+      },
+      {
+        label: '打开工具箱',
+        click: () => {
+          openToolbox()
         }
       },
       {
