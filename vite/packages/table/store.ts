@@ -81,7 +81,8 @@ export const appStore = defineStore('appStore', {
     },
     backgroundImage: {
       path: ''
-    }
+    },
+    aggList:{ },
 
 
   }),
@@ -188,6 +189,9 @@ export const appStore = defineStore('appStore', {
     updateSimple(val:boolean){
       this.simple = val
     },
+    getAggList(){ // 将聚合搜索拖拽列表排序后的数组进行存储
+      this.aggList.list = cache.get('aggSortList')
+    }
 
   },
   persist: {
