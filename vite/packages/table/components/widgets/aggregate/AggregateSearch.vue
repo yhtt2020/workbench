@@ -16,7 +16,7 @@
            <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
             <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
            </div>
-           <span class="ml-2">{{item.title}}</span> 
+           <span class="ml-2">{{item.title}}</span>
           </div>
         </div>
       </template>
@@ -29,20 +29,20 @@
             <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
              <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
-            <span class="ml-2">{{item.title}}</span> 
+            <span class="ml-2">{{item.title}}</span>
           </div>
         </div>
       </template>
 
 
-      <div class="w-11 h-11 active-button flex items-center justify-center rounded-xl pointer" 
+      <div class="w-11 h-11 active-button flex items-center justify-center rounded-xl pointer"
        style="background: var(--secondary-bg);" @click="aggSearchShow = true">
         <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
   </Widget>
 
- 
+
   <a-drawer :width="500" title="设置" :placement="right" v-model:visible="aggSearchShow" @close="aggSearchShow = false">
     <AggregateSearchDrawer></AggregateSearchDrawer>
   </a-drawer>
@@ -94,7 +94,7 @@ export default {
       },
 
       aggSearchShow:false, // 控制右侧抽屉显示
-      
+
       AggregateList, // 没有排序过的聚合搜索数据
 
       bottomSizeList:[{title:'2x2',width:1,height:1,name:'2x2'},{title:'4x2',width:2,height:1,name:'4x2'}], // 底部设置中尺寸大小切换
@@ -105,7 +105,7 @@ export default {
 
   computed:{
     ...mapWritableState(appStore,['fullScreen','aggList']),
-    aggSearchList(){ 
+    aggSearchList(){
       if(Object.keys(this.aggList).length !== 0){
         return this.aggList.list
       }
@@ -132,7 +132,7 @@ export default {
          }
        })
       }else{
-        this. setSearchFullScreen(true) 
+        this. setSearchFullScreen(true)
       }
     },
     clickSearchItem(index){ // 点击选中打开
@@ -145,7 +145,7 @@ export default {
          }
        })
       }else{
-        this. setSearchFullScreen(true) 
+        this.setSearchFullScreen(true)
         this.setSearchIndex(index)
       }
     }
