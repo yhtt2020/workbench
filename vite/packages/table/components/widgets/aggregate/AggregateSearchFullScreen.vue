@@ -29,11 +29,15 @@
            </div>
            <div class="flex flex-col">
             <vue-custom-scrollbar :settings="settingsScroller" style="height:50vh;">
-              <div v-for="item in suggestList" class="py-2.5 px-3 secondary-title" >
-               {{ 
-                item.q ? item.q : item.value ? item.value : item.query ? item.query 
-                : item.name ? item.name : item.suggestion ? item.suggestion : item 
-               }}
+              <div v-for="(item, index) in suggestList" :class="{'':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
+               @click="getSuggestItem(item)" 
+              >
+                <span style="color: var(--secondary-text);">
+                  {{ 
+                    item.q ? item.q : item.value ? item.value : item.query ? item.query 
+                    : item.name ? item.name : item.suggestion ? item.suggestion : item 
+                   }}
+                </span>
               </div>
             </vue-custom-scrollbar>
            </div>
@@ -62,7 +66,8 @@ export default {
       suppressScrollX: true,
       wheelPropagation: true
     },
-    aggSelectIndex:''  // 获取选中状态下标
+    aggSelectIndex:'',  // 获取选中状态下标
+    suggestIndex:'' // 搜索关键字推荐选中状态
   }
  },
  computed:{
@@ -104,42 +109,80 @@ export default {
     const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
     axios.get(url).then(res=>{
       switch (this.aggList.list[this.aggSelectIndex].id){
-        case 0: // 百度搜索
+         case 0: // 百度搜索
           this.suggestList  = res.data.g
           break;
-        case 1: 
+         case 1: 
           // 谷歌接口暂时不能使用,还没有找到api
           // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
          break;
-        case 2: // 必应搜索
+         case 2: // 必应搜索
           this.suggestList  = res.data[1]
           break;
-        case 3: // 知乎搜索
+         case 3: // 知乎搜索
           this.suggestList  = res.data.suggest
           break;
-        case 4:
+         case 4:
           // github搜索引擎api暂时没有找到关键字搜索推荐
           this.suggestList = res.data.items
           break;
-        case 5: // B站搜索
+         case 5: // B站搜索
           this.suggestList  = res.data
           break;
-        case 6:  // 微博搜索
+         case 6:  // 微博搜索
           this.suggestList = res.data.data.hotquery
           break;
-        case 7:  // 优酷搜索
+         case 7:  // 优酷搜索
           this.suggestList  = res.data.data
           break; 
-        case 8:
+         case 8:
           this.suggestList = res.data.words
           break; 
-        default:
+         default:
           break;
       }
     })
   },
-  
-
+  getSuggestItem(item){ // 选择推荐关键字  
+    switch (this.aggList.list[this.aggSelectIndex].id){
+      case 0: // 百度搜索
+        this.aggSearchWord = item.q
+        break;
+      case 1: 
+        // 谷歌接口暂时不能使用,还没有找到api
+        // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
+        break;
+      case 2: // 必应搜索
+        this.aggSearchWord = item
+        break;
+      case 3: // 知乎搜索
+        this.aggSearchWord  = item.suggest
+        break;
+      case 4:
+        // github搜索引擎api暂时没有找到关键字搜索推荐
+        this.aggSearchWord = item.name
+        break;
+      case 5: // B站搜索
+        this.aggSearchWord = item.value
+        break;
+      case 6:  // 微博搜索
+        this.aggSearchWord = item.suggestion
+        break;
+      case 7:  // 优酷搜索
+        this.aggSearchWord = item.name
+        break; 
+      case 8:
+        this.aggSearchWord = item
+        break; 
+      default:
+        break;
+    }
+  },
+  enterSearch(){
+    const words = encodeURIComponent(this.aggSearchWord)
+    const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
+    // console.log(url);
+  }
  }    
 
 }
@@ -175,5 +218,11 @@ export default {
 .active-bg{
   background: var(--secondary-bg);
   color: var(--secondary-text);
+}
+
+.search-hover{
+  &:hover{
+    background: var(--secondary-bg);
+  }
 }
 </style>

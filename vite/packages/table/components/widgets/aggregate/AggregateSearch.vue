@@ -1,7 +1,7 @@
 <template>
   <Widget :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
   :menuList="gameMiddleBare" ref="aggregateSearchSlot" :sizeList="bottomSizeList">
-    <div class="flex items-center rounded-xl p-2 w-full justify-center mt-8 mb-3" style="border: 1px solid var(--divider);" @click="handleSearchEngine">
+    <div class="flex items-center rounded-xl p-2 w-full justify-center mt-8 mb-3" style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click="handleSearchEngine">
       <div class="flex items-center justify-center" style="width: 20px;height:20px;">
         <Icon :icon="aggInputValue" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
       </div>
@@ -123,7 +123,17 @@ export default {
   methods:{
     ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
     handleSearchEngine(){
-      this. setSearchFullScreen(true) 
+      if(Object.keys(this.aggList).length === 0){
+        Modal.confirm({
+         content: '需要将搜索引擎排个序',
+         okText: '确定',
+         onOk: async () => {
+          this.aggSearchShow = true
+         }
+       })
+      }else{
+        this. setSearchFullScreen(true) 
+      }
     },
     clickSearchItem(index){ // 点击选中打开
       if(Object.keys(this.aggList).length === 0){
