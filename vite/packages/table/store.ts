@@ -37,6 +37,7 @@ export const appStore = defineStore('appStore', {
     init: false, //是否已经初始化
 
     fullScreen: false, //是否是全屏模式
+    searchFullScreen:false, // 聚合搜索全屏
 
     showWindowController:true,//窗口全屏，这个和上面的全屏不是同一个，区别是这个只影响窗体在系统层面上的最大化。
 
@@ -83,7 +84,7 @@ export const appStore = defineStore('appStore', {
       path: ''
     },
     aggList:{ },
-
+    
   }),
   getters: {},
 
@@ -191,7 +192,13 @@ export const appStore = defineStore('appStore', {
     },
     getAggList(){ // 将聚合搜索拖拽列表排序后的数组进行存储
       this.aggList.list = cache.get('aggSortList')
-    }
+    },
+    setSearchFullScreen(value:boolean){  // 设置聚合搜索全屏
+      this.searchFullScreen = value
+    },
+    setSearchIndex(index:number){  // 设置小卡片底部选中状态
+      this.aggList.select_status = index
+    },
 
   },
   persist: {

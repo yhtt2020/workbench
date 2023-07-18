@@ -160,8 +160,16 @@ export default {
         this.selectedDesk = []
         this.deskType = this.desks.map(item => item.name)
         let desks = JSON.parse(JSON.stringify(this.desks))
-        this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'},
-        this.selectedDesk.push(desks[0])
+        this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'}
+        this.onChange([0])
+        // if(desks[0].settings && desks[0].settings.enableZoom){
+        //   settings = item.settings
+        // }else{
+        //   console.log(this.settings)
+        //   settings = {...this.settings,enableZoom:true}
+        // }
+        // desks[0].settings = settings
+        // this.selectedDesk.push(desks[0])
       }
     }
   }

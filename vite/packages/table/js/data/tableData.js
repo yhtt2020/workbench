@@ -268,6 +268,12 @@ export default {
           security: true
         }
     },
+    {
+      type: 'systemApp',
+      icon: 'shop',
+      name: '创意市场',
+      event: 'market',
+    },
   ]
 }
 
