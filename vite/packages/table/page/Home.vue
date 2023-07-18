@@ -1190,7 +1190,7 @@ export default {
           deskHeight,
           cardsHeight,
         }
-        console.log(cardsHeight)
+        // console.log(cardsHeight)
         this.setDeskSize(size)
       })
     },
