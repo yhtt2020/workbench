@@ -5,8 +5,8 @@
     :style="[heightStyle, widthStyle]"
     v-if="myApps.length === 0"
   >
-    <CardState :bg="false" state="null" :zoom="26" :text="{ null: '暂无应用' }">
-    </CardState>
+    <XtState :bg="false" state="null" :zoom="26" :text="{ null: '暂无应用' }">
+    </XtState>
     <!-- <div @click="goAddMyApps()">123</div> -->
   </div>
 
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import CardState from "../../../../components/card/components/state/index.vue";
 import syncSelected from "../hooks/syncSelected";
 
 import { appsStore } from "../../../../store/apps";
@@ -32,7 +31,6 @@ export default {
   mixins: [syncSelected],
   inject: ["width", "height"],
   components: {
-    CardState,
   },
   data() {
     return {

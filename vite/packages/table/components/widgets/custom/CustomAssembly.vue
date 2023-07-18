@@ -48,7 +48,7 @@
       </div>
       <div v-else class="flex justify-center items-center flex-col h-full">
         <!-- <a-empty description="" /> -->
-        <CardState  class="mt-5"  zoom="30" :state="'null'" :text="{'null':' '}" style="width: 100%;height: 30%;"></CardState>
+        <XtState  class="mt-5"  zoom="30" :state="'null'" :text="{'null':' '}" style="width: 100%;height: 30%;" bg=""></XtState>
         <div
           class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-40 pointer mt-3 text-base"
           style="background: var(--secondary-bg);color: var(--primary-text);"
@@ -293,7 +293,7 @@
 
 <script>
 import Radio from '../../card/components/radio/index.vue';
-import CardState from '../../../components/card/components/state/index.vue';
+
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
 import Classification from "../../comp/Classification.vue";
@@ -316,7 +316,6 @@ export default {
     Classification,
     listItem,
     ModalList,
-    CardState,
     Radio
   },
   props: {

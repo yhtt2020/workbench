@@ -3,7 +3,7 @@
     <!-- <a-empty style="margin-top: 10px" description="您还没有好友或未绑定Steam">
 
     </a-empty> -->
-    <CardState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" style="width: 100%;height: 80%;" class="mt-2"></CardState>
+    <XtState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" bg="" style="width: 100%;height: 80%;" class="mt-2"></XtState>
     <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 90%">
       <div class="mt-5 my-friends"  >
           <div v-for="item in myFriends" class=" avatar-item">
@@ -16,7 +16,6 @@
   </Widget>
 </template>
 <script>
-import CardState from '../../../components/card/components/state/index.vue';
 
 import Widget from '../../card/Widget.vue'
 import { steamUserStore } from '../../../store/steamUser'
@@ -27,7 +26,6 @@ export default {
   components:{
     VueCustomScrollbar,
     Widget,
-    CardState
   },
   props:{
     customIndex: {
