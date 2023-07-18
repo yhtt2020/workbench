@@ -14,6 +14,7 @@
     "@codemirror/lang-json": "^6.0.1",
     "@lk77/vue3-color": "^3.0.6",
     "@popperjs/core": "^2.11.7",
+    "@tencentcloud/chat-uikit-vue": "^1.4.4",
     "@types/node": "^18.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
