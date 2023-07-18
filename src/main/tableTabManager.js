@@ -7,6 +7,7 @@ class TableTabManager {
   runningTabs = []
   tableWin = null //方便调用
   runningTabsInstance = []
+  lastPosition={}
 
   setTableWin (tableWin) {
     this.tableWin = tableWin
@@ -49,6 +50,9 @@ class TableTabManager {
   async addTab (args) {
     //app args silent静默
     let { url, position, silent } = args
+    if(!position){
+      position=this.lastPosition
+    }
     let id = nanoid(4)
     let tab = {
       url: url,
@@ -102,10 +106,27 @@ class TableTabManager {
       tab.favicons=favicons
       this.sendToBrowser('updateTabFavicon', { id: id, favicons: favicons })
     })
+
+    view.webContents.setWindowOpenHandler( async (details) => {
+      const { url } = details
+      let result = await this.addTab({
+        url: url
+      })
+      let tab = result.tab
+      this.sendToBrowser('addedTableTab', {
+        tab: tab
+      })
+      return false
+    })
+    // view.webContents.on('-add-new-contents',  async (e, webContents, disposition, _userGesture, _left, _top, _width, _height, url, frameName, referrer, rawFeatures, postData) => {
+    //   e.preventDefault()
+    //
+    // })
     if (!silent) {//静默则不设置位置
       this.tableWin.setBrowserView(view)//置入app
       view.webContents.on('dom-ready', () => {
         this.setViewPos(tabInstance.view, position)
+        this.lastPosition=position
         setTimeout(()=>{
           capture(view.webContents,undefined,'tab_'+id).then((image) => {
             this.sendToBrowser('updateTabCapture', { id: tab.id, image: image })
@@ -130,6 +151,7 @@ class TableTabManager {
     let tabInstance = this.get(this.getName(id))
     if (tabInstance) {
       this.setViewPos(tabInstance.view, position)
+      this.lastPosition={}
     } else {
       console.error('不存在的tableTab', id)
     }
@@ -249,17 +271,19 @@ class TableTabManager {
     })
 
     ipc.on('addTableTab', async (event, args) => {
+      console.log('需要添加tab',args)
       let tab = {}
       try {
         let result = await this.addTab({ url: args.url, position: args.position })
         tab = result.tab
+        console.log('完成添加',tab)
+         this.sendToBrowser('addedTableTab',{
+           tab:tab
+         })
       } catch (e) {
         console.error(e, '创建出错')
-        tab = {
-          error: e
-        }
       }
-      event.returnValue = tab
+
     })
 
     ipc.on('ensureTableTab', async (event, args) => {
