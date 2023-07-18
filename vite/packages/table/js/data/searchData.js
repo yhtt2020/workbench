@@ -7,12 +7,12 @@ export const AggregateList = [
     recommend_url:'https://www.baidu.com/sugrec?prod=pc&wd=',
     id:0,
   },
-  {
-    id:1,
-    title:'谷歌',
-    icon:'google',
-    search_url:'https://www.google.com/search?q='
-  },
+  // {
+  //   id:1,
+  //   title:'谷歌',
+  //   icon:'google',
+  //   search_url:'https://www.google.com/search?q='
+  // },
   {
     id:2,
     title:'必应',
@@ -46,6 +46,7 @@ export const AggregateList = [
     title:'微博',
     icon:'weibo',
     search_url:'https://s.weibo.com/?Refer=',
+    recommend_url:'https://weibo.com/ajax/side/search?q='
   },
   {
     id:7,
@@ -58,7 +59,7 @@ export const AggregateList = [
     id:8,
     title:'豆瓣',
     icon:'douban1',
-    search_url:'https://www.douban.com/search?q='
+    search_url:'https://www.douban.com/search?q=',
+    recommend_url:'https://www.douban.com/j/search_suggest?debug=true&q='
   },
-
 ]
