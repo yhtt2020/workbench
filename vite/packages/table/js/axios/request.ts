@@ -1,7 +1,7 @@
 import axios from "axios";
 import {getConfig} from "./serverApi";
 
-export async function get(url, params) {
+export async function get(url, params={}) {
   const result = await axios.get(url, {
     params: params,
     ...await getConfig()

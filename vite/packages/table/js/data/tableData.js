@@ -52,6 +52,21 @@ export default {
       data: {
         security: true
       }
+    }, {
+      icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
+      name: '聊天',
+      type: 'coolApp',
+      summary: '一个用于检测网页数据的工具，可以实时监测一个网页数据动态，并组织成可视化的报表，目前支持B站视频数据追踪。',
+      needInstall: false,
+      data: {
+        fullScreen: false,
+        theme: '#030c13',
+        name: 'chat',
+        type: 'system',//网页助手
+        route: JSON.stringify({
+          name: 'chat',
+        })
+      }
     },
     {
       icon: 'https://a.apps.vip/wallpaper/favicon.png',

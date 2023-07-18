@@ -1,0 +1,64 @@
+.home-TUIKit-main {
+  height: 100% !important;
+}
+
+.message-input-container {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.home-TUIKit-main {
+
+  .main {
+    position: relative;
+  }
+
+  .collapse {
+    visibility: visible;
+  }
+}
+
+.TUI-conversation {
+  background: transparent !important;
+  height: calc(100% - 53px) !important;
+
+  .content-footer .time {
+    color: var(--secondary-text) !important;
+  }
+}
+
+.TUI-conversation-item {
+  .left .avatar {
+    object-fit: cover;
+  }
+
+  .name {
+    color: var(--primary-text) !important;
+  }
+}
+
+.memberList-box img {
+  height: auto !important;
+}
+
+.chat {
+  h1 {
+    color: var(--main-text);
+  }
+}
+
+.TUI-search header h1 {
+  color: var(--primary-text) !important;
+}
+
+.conversation {
+  border-right-color: var(--secondary-bg) !important;
+}
+.TUIChat-footer{
+  border-top-color: var(--secondary-bg) !important;
+}
+.TUIChat-header h1{
+  color: var(--parimary-text) !important;
+}
+

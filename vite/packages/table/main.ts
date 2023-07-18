@@ -46,6 +46,26 @@ import dayjs from 'dayjs';
 import "../../public/css/styleSwitch/index.scss"
 import "../../public/css/styleSwitch/codemirror.scss"
 import {router}from './router'
+
+
+import {TUIComponents,TUICore,genTestUserSig} from './TUIKit'
+import {TUICallKit} from '@tencentcloud/call-uikit-vue'
+import {SDKAppID} from "./js/chat/chat";
+ // Your SDKAppID
+// init TUIKit
+const TUIKit = TUICore.init({
+  SDKAppID,
+});
+// TUIKit add TUIComponents
+TUIKit.use(TUIComponents);
+// TUIKit add TUICallKit
+TUIKit.use(TUICallKit);
+
+
+window.$TUIKit=TUIKit
+
+
+
 dayjs.locale('zh-cn');
 
 const app = createApp(App)
@@ -71,7 +91,7 @@ const $app=app.use(pinia).use(Antd).use(ColorPicker).use(router).use(VueViewer).
       trigger:"mouseenter click"
     }, // => Global default options * see all props
   }
-).use(Toast,options).mount('#app')
+).use(Toast,options).use(TUIKit).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

@@ -1,6 +1,11 @@
 <template>
-  <span class="upload-btn icon icon-files">
-      <input title="文件" v-if="!isMute" type="file" data-type="file" accept="*" @change="sendUploadMessage" />
+  <a-tooltip title="文件"  @click="document.getElementById('#fileIcon').click()" >
+    <icon icon="file"></icon>
+  </a-tooltip>
+  <span  id="fileIcon" class="upload-btn icon icon-files" hidden="">
+
+
+      <input   title="文件" v-if="!isMute" type="file" data-type="file" accept="*" @change="sendUploadMessage" />
       <slot />
   </span>
 </template>
