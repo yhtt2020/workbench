@@ -53,6 +53,8 @@ import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
 import Rank from '../page/social/Rank.vue';
 import BillingRecord from '../page/social/BillingRecord.vue';
+import MarketIndex from '../page/market/MarketIndex.vue';
+import MarketHome from '../page/market/MarketHome.vue'
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
@@ -352,6 +354,18 @@ export default [
         path:'/shortcutKey',
         name:'shortcutKey',
         component:ShortcutKey,
+      },
+      {
+        path: "/market",
+        name: "market",
+        component: MarketIndex,
+        children: [
+          {
+            path: '',
+            name: 'market',
+            component: MarketHome
+          }
+        ]
       },
     ],
   },
