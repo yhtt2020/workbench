@@ -30,6 +30,11 @@ class ToolboxManager{
             ]
           }
         })
+        const window=this.windowInstance.window
+        window.on('blur',()=>{
+          this.windowInstance.close()
+          this.windowInstance=null
+        })
       }else{
         this.windowInstance.window.focus()
       }
