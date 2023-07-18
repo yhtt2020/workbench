@@ -137,7 +137,6 @@ export default {
         this.deskWidth = this.scheme.deskWidth
         this.deskHeight = this.scheme.deskHeight
         this.cardHeight = this.scheme.cardsHeight
-
         var that = this
         window.addEventListener('resize',() => {
           that.getPreviewHeight()
@@ -159,11 +158,10 @@ export default {
     ...mapActions(cardStore,['addShareDesk','setDeskSize']),
     addPlan(){
       this.close()
-      let card = JSON.parse(JSON.stringify(this.scheme))
-      this.addShareDesk(card)
+      this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)))
       message.success('添加成功');
       this.openDrawer = false
-      this.$nextTick(() => {
+      setTimeout(() => {
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         let deskHeight = document.documentElement.clientHeight // 高
         let deskWidth = document.documentElement.clientWidth // 宽
@@ -173,18 +171,19 @@ export default {
           cardsHeight,
         }
         this.setDeskSize(size)
-      })
+        this.cardsHeight
+      },300)
     },
     close(){
-      this.cards.settings.cardZoom = this.cardZoom
+      // this.cards.settings.cardZoom = this.cardZoom
       this.$emit('closePreview',false)
       this.fullScreen = false
     },
     getPreviewHeight(){
       this.$nextTick(() => {
         if(this.fullScreen){
-          this.previewHeight = document.getElementById("previewContent").offsetHeight
-          let cardZoom = (((this.zoom * this.previewHeight) / this.cardHeight) * 100).toFixed()
+          this.previewHeight = document.getElementById("previewContent")?.offsetHeight
+          let cardZoom = (this.cardZoom  * this.previewHeight/ this.cardHeight).toFixed()
           this.cards.settings.cardZoom = cardZoom
         }
       })
@@ -208,7 +207,7 @@ export default {
       align-items: center;
       // justify-content: space-between;
       padding: 12px;
-      z-index: 9999;
+      z-index: 99999;
       .head-icon{
         width: 100%;
         display: flex;

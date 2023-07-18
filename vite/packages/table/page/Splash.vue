@@ -142,7 +142,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
-    this.initStore(browserStore,'browserStore')
+    // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
     clipboardStore()

@@ -85,11 +85,11 @@ export const appStore = defineStore('appStore', {
     },
     aggList:{ },
     
-
   }),
   getters: {},
 
   actions: {
+
     async showUserCard(uid, userInfo = null) {
       this.userCardUid = Number(uid)
       if (userInfo) {

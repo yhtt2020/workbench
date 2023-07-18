@@ -1,19 +1,19 @@
 <template>
-  <Use v-if="isModel"></Use>
-  <Model v-else></Model>
+  <Modes v-if="isMode"></Modes>
+  <Use v-else></Use>
 </template>
 
 <script>
-import Model from "./Model.vue";
+import Modes from "./Modes.vue";
 import Use from "./Use.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["isModel"]),
+    ...mapWritableState(aiStore, ["isMode"]),
   },
   components: {
-    Model,
+    Modes,
     Use,
   },
 };
