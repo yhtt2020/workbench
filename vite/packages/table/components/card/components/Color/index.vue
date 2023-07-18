@@ -12,14 +12,9 @@
       class="w-14 h-14 rounded-xl cursor-pointer"
     ></div>
   </div>
-  <div
-    v-if="btnText"
-    @click="btnClick()"
-    class="xt-btn h-12 my-4 px-2"
-    style="width: 150px"
-  >
+  <XtButton v-if="btnText" @click="btnClick()" w="150" class="my-2">
     恢复默认主题颜色
-  </div>
+  </XtButton>
 </template>
 
 <script>

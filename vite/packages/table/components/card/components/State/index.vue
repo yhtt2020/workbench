@@ -1,11 +1,13 @@
 <template>
   <div
     class="controller-state"
-    :style="{
-      width: window.w,
-      height: window.h,
-      background: bg == true ? 'var(--primary-bg)' : '',
-    }"
+    :class="bg"
+    :style="[
+      {
+        width: window.w,
+        height: window.h,
+      },
+    ]"
     v-if="state !== ''"
   >
     <img
@@ -70,10 +72,10 @@ export default {
         };
       },
     },
-    // 是否显示背景
+    // 背景
     bg: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: "xt-bg",
     },
   },
   methods: {
@@ -86,7 +88,6 @@ export default {
 
 <style lang="scss" scoped>
 .controller-state {
-  // background: var(--active-bg);
   color: var(--primary-text);
   display: flex;
   justify-content: center;

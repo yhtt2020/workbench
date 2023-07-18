@@ -11,10 +11,10 @@
     <div
       v-for="(item, index) in iconList"
       @click="itemClick(item, index)"
-      :class="{ 'xt-b': index == selectIndex }"
+      :class="{ 'xt-theme-b': item.id == selectIndex }"
       class="xt-bg-2 w-10 h-10 rounded-xl m-2 flex justify-center items-center cursor-pointer"
     >
-      <Icon :icon="item" class="text-xl"></Icon>
+      <Icon :icon="item.name" class="text-xl"></Icon>
     </div>
   </div>
 </template>
@@ -24,9 +24,9 @@ import { iconList } from "./config.ts";
 export default {
   data() {
     return {
-      selectIndex: null,
+      selectIndex: this.index,
       iconList,
-      iconValue: "",
+      iconValue: iconList[0],
       namehValue: this.name,
     };
   },
@@ -39,10 +39,17 @@ export default {
   props: {
     icon: {},
     name: {},
+    index: {
+      default: 0,
+    },
   },
   watch: {
-    iconValue(newV) {
-      this.$emit("update:icon", newV);
+    iconValue: {
+      handler(newV) {
+        console.log("newV :>> ", newV);
+        this.$emit("update:icon", newV);
+      },
+      immediate: true,
     },
     namehValue(newV) {
       this.$emit("update:name", newV);

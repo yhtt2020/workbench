@@ -3,9 +3,7 @@
 </template>
 
 <script>
-import Chat from "../chat/index.vue";
-import Model from "../model/index.vue";
-import Account from "../account/index.vue";
+import { defineAsyncComponent } from "vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../store/ai";
 export default {
@@ -13,9 +11,10 @@ export default {
     ...mapWritableState(aiStore, ["selectTab"]),
   },
   components: {
-    Chat,
-    Model,
-    Account,
+    Chat: defineAsyncComponent(() => import("../chat/index.vue")),
+    // Model: defineAsyncComponent(() => import("../model/index.vue")),
+    Mode: defineAsyncComponent(() => import("../mode/index.vue")),
+    Account: defineAsyncComponent(() => import("../account/index.vue")),
   },
 };
 </script>
