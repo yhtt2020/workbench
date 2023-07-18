@@ -24,12 +24,12 @@ class Updater {
     if ( this.showedError === false) {
       const content = {
         title: '自动更新',
-        body: '自动更新程序意外终止,错误原因： ' + errInfo + ' ，请检查系统代理和网络。将为您打开产品官网www.apps.vip，请至官网手动下载最新版本更新。'
+        body: '自动更新程序意外终止,错误原因： ' + errInfo + ' ，请检查系统代理和网络。或者到www.apps.vip手动下载更新。'
       }
       const notification = new Notification(content)
       notification.show()
       this.showedError = true
-      require('electron').shell.openExternal('https://www.apps.vip/#download') //更改为打开系统默认浏览器
+      // require('electron').shell.openExternal('https://www.apps.vip/#download') //更改为打开系统默认浏览器
     }
   }
 
