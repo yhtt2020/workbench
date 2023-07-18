@@ -144,6 +144,7 @@ export default {
     })
   },
   getSuggestItem(item){ // 选择推荐关键字  
+    console.log(item);
     switch (this.aggList.list[this.aggSelectIndex].id){
       case 0: // 百度搜索
         this.aggSearchWord = item.q
@@ -156,7 +157,7 @@ export default {
         this.aggSearchWord = item
         break;
       case 3: // 知乎搜索
-        this.aggSearchWord  = item.suggest
+        this.aggSearchWord  = item.query
         break;
       case 4:
         // github搜索引擎api暂时没有找到关键字搜索推荐
