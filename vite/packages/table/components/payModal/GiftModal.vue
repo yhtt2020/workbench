@@ -9,7 +9,7 @@
           <div class="flex items-center justify-center" style="width: 90%;">
             <span class="avatar-font" style="color: var(--primary-text);">收银台</span>
           </div>
-          <div class="w-12 flex items-center pointer justify-center h-12 rounded-lg active-button" 
+          <div class="w-12 flex items-center pointer justify-center h-12 rounded-lg active-button"
             @click="giftVisible = false"  style="color: var(--secondary-text);background: var(--secondary-bg);"
           >
             <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
@@ -20,7 +20,7 @@
         <span class="avatar-font mb-4" style="color: var(--primary-text);">选择购买方式</span>
         <div class="flex flex-col">
           <!-- 现金方式 -->
-          <div class="w-full px-6 flex pointer items-center active-button justify-between py-5 mb-4 rounded-xl" 
+          <div class="w-full px-6 flex pointer items-center active-button justify-between py-5 mb-4 rounded-xl"
            style="background: var(--secondary-bg);"  @click="cashPay"
           >
            <!-- @click="pricePay" -->
@@ -31,7 +31,7 @@
            </div>
           </div>
           <!-- 积分方式 -->
-          <div class="w-full px-6 flex pointer active-button items-center justify-between py-5 mb-4 rounded-xl" 
+          <div class="w-full px-6 flex pointer active-button items-center justify-between py-5 mb-4 rounded-xl"
            style="background: var(--secondary-bg);" @click="pointPay"
           >
             <span class="avatar-font" style="color: var(--secondary-text);">积分（可用：2000）</span>
@@ -81,7 +81,7 @@
         </div>
       </template>
     </template>
-    
+
     <!-- 最后的结算界面 -->
     <template v-else>
       <div class="w-full h-full flex justify-between pb-10" >
@@ -103,7 +103,7 @@
             <span class="gift-name">{{uid.name}}</span>
           </div>
         </div>
-        <CollectionCodeModal :needPayAvatar="needPayAvatar"></CollectionCodeModal>
+        <PaymentMoney :needPayAvatar="needPayAvatar"></PaymentMoney>
       </template>
       <template v-else>
         <div class="flex flex-col px-7 mb-4">
@@ -121,13 +121,13 @@
 
 <script>
 import UserAvatar from '../small/UserAvatar.vue'
-import CollectionCodeModal from './CollectionCodeModal.vue'
+import PaymentMoney from '../payModal/PaymentMoney.vue'
 import PointPayment from './PointPayment.vue'
 export default {
   name:'GiftModal',
   components:{
     UserAvatar,
-    CollectionCodeModal,
+    PaymentMoney,
     PointPayment
   },
   props:{
@@ -146,7 +146,7 @@ export default {
       giftVisible:false,
       giftShow:false, // 选择赠送方式
       isSearch:false, // 是否搜索用户
-      userNickName:'', // 搜索用户昵称 
+      userNickName:'', // 搜索用户昵称
       rarity:0,
       teamIndex:'',  // 点击选中用户状态
       isBilling:false, // 是否结算
@@ -154,12 +154,12 @@ export default {
       uid:{}
     }
   },
-  
+
   methods:{
     openGiftModal(){
       this.giftVisible = true
     },
-    pointPay(){  // 积分方式赠送   
+    pointPay(){  // 积分方式赠送
       this.giftShow = true
       this.billingWay = 1
     },
@@ -167,7 +167,7 @@ export default {
       this.giftShow = true
       this.billingWay = 0
     },
-    searchGiftUser(){  // 搜索需要将头像赠送的用户回调事件  
+    searchGiftUser(){  // 搜索需要将头像赠送的用户回调事件
       if(this.userNickName !== ''){
         this.isSearch = true
       }else{
