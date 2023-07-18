@@ -8,20 +8,26 @@
       <!--        主桌面-->
       <!--      </div>-->
       <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
-           class="truncate pr-3 tab tab-bg" v-for="(item,index) in [...deskList].slice(0,4)">
+           class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
         <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
         <icon v-else :icon="item.icon" style="font-size: 18px;vertical-align: middle" class="mr-2"></icon>
         <span class="">{{ item.name }}</span>
         <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
       </div>
-      <div @click="showMore" v-if="deskList.length>4" class=" tab btn-bg more">
+
+      <div @click="showAll" class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
         <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
-        更多
       </div>
+
     </div>
 
     <div v-if="showTools">
-      <div>
+
+      <div class="flex flex-row">
+        <div @click="showMore"
+             class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+          <icon class="icon" style="font-size: 22px" icon="tianjia1"></icon>
+        </div>
         <div @click="setFullScreen"
              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
           <Icon style="font-size: 18px" icon="fullscreen"></Icon>
@@ -45,11 +51,16 @@
     <slot name="empty">
 
     </slot>
-    <span  v-show="false">
+    <span v-show="false">
        <Desk ref="currentDeskRef" :currentDesk="currentDesk"></Desk>
     </span>
 
   </template>
+  <a-drawer height="220" placement="bottom" v-model:visible="allDeskListVisible">
+    <AllDeskList  :activeId="currentDeskId" :items="deskList" @visibleChanged=""
+                 @valueChanged="(event)=>{setCurrentDeskId(event.id);this.allDeskListVisible=false}"
+    ></AllDeskList>
+  </a-drawer>
 
 </template>
 
@@ -58,11 +69,13 @@
 import Desk from "./Desk.vue";
 import {appStore} from "../../store";
 import {mapWritableState, mapWritableState} from "pinia";
+import GameListDrawer from "../game/GameListDrawer.vue";
+import AllDeskList from "./AllDeskList.vue";
 
 export default {
   name: "DeskGroup",
-  components: {Desk},
-  emits:['update:currentDeskId','showMore'],
+  components: {AllDeskList, GameListDrawer, Desk},
+  emits: ['update:currentDeskId', 'showMore'],
   props: {
     deskList: {
       type: Array,
@@ -91,7 +104,8 @@ export default {
   },
   data() {
     return {
-      moreDesksVisible: false//显示更多桌面
+      moreDesksVisible: false,//显示更多桌面
+      allDeskListVisible: false
     }
   },
   mounted() {
@@ -101,14 +115,29 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
-    currentDesk(){
-      return this.deskList.find(desk=>{
-        return desk.id===this.currentDeskId
+    currentDesk() {
+      return this.deskList.find(desk => {
+        return desk.id === this.currentDeskId
+      })
+    },
+    displayDesks() {
+      return [...this.deskList.filter(desk => {
+        return desk.pin
+      }),
+        ...this.deskList.filter(desk => {
+          return !desk.pin
+        })
+      ].slice(0, 4).sort((a,b)=>{
+        if(b.pin){
+          //置顶的桌面排最前面
+          return 9999999999999
+        }
+        return  Number(b.order ||0 )-Number(a.order||0 )
       })
     }
   },
   methods: {
-    addCard(){
+    addCard() {
       this.$refs.currentDeskRef.newAddCard()
     },
     setFullScreen(flag = true) {
@@ -129,6 +158,9 @@ export default {
     setCurrentDeskId(id) {
       this.$emit('update:currentDeskId', id)
     },
+    showAll() {
+      this.allDeskListVisible = true
+    }
   }
 }
 </script>
@@ -176,7 +208,8 @@ export default {
   color: var(--primary-text);
   height: 42px;
   line-height: 42px;
-  &:hover{
+
+  &:hover {
     opacity: 0.8;
   }
 }

@@ -15,7 +15,10 @@ export const steamUserStore = defineStore("steamUser", {
   state: () => ({
     runningGame:{},
     recentGameList:[],
-    desks: {},//老数据格式
+
+    currentDeskId:'0',//当前的桌面id
+    desks: [],//老数据格式
+    desksOld:{},//老数据备份
     deskList:[],//最新的数据格式，用于替代desks
     steamLoginData: {
       accessToken: '',
@@ -194,7 +197,7 @@ export const steamUserStore = defineStore("steamUser", {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList','recentGameList','desks','searchWords'],
+      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList','recentGameList','desks','searchWords','deskList','desksOld'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
