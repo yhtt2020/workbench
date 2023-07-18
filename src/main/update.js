@@ -116,6 +116,7 @@ class Updater {
       })
       updaterWindow.on('close', () => updaterWindow = null)
       updaterWindow.setMenu(null)
+      updaterWindow.webContents.openDevTools()
       updaterWindow.webContents.loadURL('file://' + __dirname + '/../../pages/update/index.html')
       updaterWindow.on('ready-to-show', () => {
         updaterWindow.show()
