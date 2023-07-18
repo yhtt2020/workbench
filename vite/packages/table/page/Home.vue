@@ -182,12 +182,12 @@
           <div><span>隐藏桌面</span></div>
         </div>
       </a-col>
-      <a-col>
-        <div @click="shareDesk" class="btn">
-          <Icon style="font-size: 3em" icon="fenxiang"></Icon>
-          <div><span>分享桌面</span></div>
-        </div>
-      </a-col>
+<!--      <a-col>-->
+<!--        <div @click="shareDesk" class="btn">-->
+<!--          <Icon style="font-size: 3em" icon="fenxiang"></Icon>-->
+<!--          <div><span>分享桌面</span></div>-->
+<!--        </div>-->
+<!--      </a-col>-->
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" @close="cardDesk = 'all'" placement="right">
@@ -208,11 +208,11 @@
         </div> -->
         <div class="line">
           卡片缩放：
-          <a-slider :min="20" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>
+          <a-slider :min="20" @afterChange="updateLayout" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>
         </div>
         <div class="line">
           卡片空隙：(调大空隙可能变成瀑布流布局)
-          <a-slider :min="5" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>
+          <a-slider :min="5"  @afterChange="updateLayout" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>
         </div>
         <div class="line">
           距离顶部：
@@ -226,11 +226,11 @@
       </div>
       <div class="line">
         卡片缩放：
-        <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+        <a-slider :min="20"  @afterChange="updateLayout" :max="500" v-model:value="settings.cardZoom"></a-slider>
       </div>
       <div class="line">
         卡片空隙：(调大空隙可能变成瀑布流布局)
-        <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+        <a-slider :min="5"  @afterChange="updateLayout" :max="30" v-model:value="settings.cardMargin"></a-slider>
       </div>
       <div class="line">
         距离顶部：
@@ -949,6 +949,9 @@ export default {
     }
   },
   methods: {
+    updateLayout(){
+      this.$refs.grid.update()
+    },
     learn(){
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },
