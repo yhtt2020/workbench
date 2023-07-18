@@ -959,6 +959,16 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
+@media screen and (max-height: 660px) {
+  .side-nav{
+    max-height: 350px;
+  }
+}
+@media screen and (min-height: 660px) {
+  .side-nav{
+    max-height: 508px;
+  }
+}
 .box-content {
   height: 100%;
 
@@ -978,7 +988,7 @@ export default {
       text-align: center;
       border-radius: 12px;
       background: var(--primary-bg);
-      max-height: 508px;
+      // max-height: 508px;
       overflow: hidden;
       padding: 24px 0 24px;
     }

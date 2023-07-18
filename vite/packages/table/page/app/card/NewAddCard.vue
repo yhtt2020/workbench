@@ -254,7 +254,7 @@ export default {
     },
     closePreview(){
       this.showModal = false
-      this.$nextTick(() => {
+      setTimeout(() => {
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         let deskHeight = document.documentElement.clientHeight // 高
         let deskWidth = document.documentElement.clientWidth // 宽
@@ -264,7 +264,7 @@ export default {
           cardsHeight,
         }
         this.setDeskSize(size)
-      })
+      },300)
     }
   },
 }

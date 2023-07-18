@@ -155,7 +155,12 @@
           <div><span>清空卡片</span></div>
         </div>
       </a-col>
-
+      <a-col>
+        <div @click="exportDesk" class="btn">
+          <Icon style="font-size: 3em" icon="export"></Icon>
+          <div><span>导出桌面</span></div>
+        </div>
+      </a-col>
 
     </a-row>
     <a-row style="margin-top: 2em" :gutter="[20, 20]">
@@ -185,18 +190,14 @@
       </a-col>
     </a-row>
   </a-drawer>
-  <a-drawer v-model:visible="settingVisible" placement="right">
-    <!-- <Tab
+  <a-drawer v-model:visible="settingVisible" @close="cardDesk = 'all'" placement="right">
+    <Tab
+      v-if="settingVisible"
       style="height: 48px"
       boxClass="p-1 xt-bg-2"
       v-model:data="cardDesk"
       v-model:list="cardDeskList"
     ></Tab>
-    {{ cardDesk }} -->
-    <a-radio-group v-model:value="cardDesk">
-      <a-radio-button value="all">全部桌面</a-radio-button>
-      <a-radio-button value="current">当前桌面</a-radio-button>
-    </a-radio-group>
     <div v-if="cardDesk === 'current'">
       <div class="my-3"  style="font-size: 1.2em;font-weight: bold;" @click="setTransparent()">
         卡片设置(关则使用通用设置)：<a-switch @change="switchChange" v-model:checked="cardSwitch"></a-switch>
@@ -207,33 +208,33 @@
         </div> -->
         <div class="line">
           卡片缩放：
-          <a-slider :min="20" :max="500" v-model:value="cardSettings.cardZoom"></a-slider>
+          <a-slider :min="20" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>
         </div>
         <div class="line">
           卡片空隙：(调大空隙可能变成瀑布流布局)
-          <a-slider :min="5" :max="30" v-model:value="cardSettings.cardMargin"></a-slider>
+          <a-slider :min="5" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>
         </div>
         <div class="line">
           距离顶部：
-          <a-slider :min="0" :max="200" v-model:value="cardSettings.marginTop"></a-slider>
+          <a-slider :min="0" :max="200" v-model:value="currentDesk.settings.marginTop"></a-slider>
         </div>
       </template>
     </div>
     <template v-else>
-      <div class="flex items-center mb-3">
+      <div class="flex items-center my-3">
         <div class="mr-3" style="font-size: 1.2em;font-weight: bold;">卡片设置：</div>
       </div>
       <div class="line">
         卡片缩放：
-        <a-slider :min="20" :max="500" v-model:value="cardSettings.cardZoom"></a-slider>
+        <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
       </div>
       <div class="line">
         卡片空隙：(调大空隙可能变成瀑布流布局)
-        <a-slider :min="5" :max="30" v-model:value="cardSettings.cardMargin"></a-slider>
+        <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
       </div>
       <div class="line">
         距离顶部：
-        <a-slider :min="0" :max="200" v-model:value="cardSettings.marginTop"></a-slider>
+        <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
       </div>
       <div class="line-title ">背景设置：</div>
       <div class="line" @click="setTransparent()">
@@ -304,6 +305,9 @@
         <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
       </div>
       <div @click="doAddDesk" class="btn-item">立即添加</div>
+      <div>
+        <div @click="importDesk" class="btn-item">导入桌面</div>
+      </div>
       <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
       <div class="flex justify-between">
         <span class="flex items-center">
@@ -338,6 +342,7 @@
   </a-drawer>
   <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
+  <ExportDesk :openModal="exportModal" @closeExport="closeExport"></ExportDesk>
 </template>
 
 <script>
@@ -405,6 +410,7 @@ import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
 import DeskPreview from '../components/desk/DeskPreview.vue';
 import Tab from "../components/card/components/tab/index.vue"
+import ExportDesk from "../components/desk/ExportDesk.vue"
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -646,7 +652,8 @@ export default {
         {name: "通用桌面设置",value: "all"},
         {name: "当前桌面设置",value: "current"}
       ],
-      cardSwitch: false
+      cardSwitch: false,
+      exportModal: false
     };
   },
   components: {
@@ -705,7 +712,8 @@ export default {
     DeskMarket,
     DeskPreview,
     Tab,
-    UpdateMyInfo
+    UpdateMyInfo,
+    ExportDesk
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -987,7 +995,8 @@ export default {
       "switchToDesk",
       "removeDesk",
       "getCurrentIndex",
-      "setDeskSize"
+      "setDeskSize",
+      "addShareDesk"
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
@@ -1056,6 +1065,10 @@ export default {
       // };
       this.key = Date.now();
       this.addDeskVisible = false;
+    },
+    exportDesk(){
+      this.exportModal = true
+      this.menuVisible = false
     },
     cleanMuuriData(list) {
       list.forEach((li) => {
@@ -1182,15 +1195,47 @@ export default {
       })
     },
     switchChange(val){
-      if(!this.currentDesk.showSettings){
-        this.currentDesk.aloneSettings = {
+      if(!this.currentDesk.settings){
+        this.currentDesk.settings = {
           cardMargin: 5,
           cardZoom: 100,
-          marginTop: 0
+          marginTop: 0,
+          enableZoom: true
         }
+      }else{
+        this.currentDesk.settings.enableZoom = val
       }
-      this.currentDesk.showSettings = val
-    }
+      // this.currentDesk.settings.enableZoom = val
+    },
+    closeExport(val){
+      this.exportModal = val
+    },
+    async importDesk() {
+      let openPath = await tsbApi.dialog.showOpenDialog({
+        title: '选择导入的代码',
+        filters: [{ name: 'desk存档', extensions: ['desk'] }],
+      })
+      if (!openPath) {
+        return
+      }
+      let importJsonTxt = require('fs').readFileSync(openPath[0], 'utf-8')
+      let needImportDesk = []
+      try {
+        needImportDesk = JSON.parse(importJsonTxt)
+        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        needImportDesk.forEach(g => {
+          let cardZoom = (g.settings.cardZoom * cardsHeight/g.cardsHeight).toFixed()
+          g.settings.cardZoom = parseInt(cardZoom)
+          g.nanoid = window.$models.nanoid.nanoid(8)
+          this.desks.push(g)
+        })
+        this.addDeskVisible = false
+        message.success('为您成功导入' + needImportDesk.length + '个方案分组。')
+      } catch (e) {
+        console.warn(e)
+        message.error('导入失败，请检查代码。')
+      }
+    },
   },
   watch: {
     currentDeskIndex: {
@@ -1223,35 +1268,38 @@ export default {
     currentDesk: {
       deep: true,
       handler(val){
-        if(val.showSettings){
-          this.cardSettings = this.currentDesk.aloneSettings
+        if(!val.settings){
+          this.cardSettings = this.settings
+          this.cardSwitch = false
+        }else if(val.settings.enableZoom){
+          this.cardSettings = this.currentDesk.settings
           this.cardSwitch = true
-          this.cardDesk = 'current'
         }else{
           this.cardSettings = this.settings
-          this.cardDesk = 'all'
+          this.cardSwitch = false
         }
       }
     },
     cardDesk(val){
-       switch (val) {
-        case 'all':
-          if(this.currentDesk.showSettings){
-            this.cardDesk = 'current'
-            return message.info('当前卡片关闭后可切换')
-          }
-          this.cardSettings = this.settings
-          break;
-        case 'current':
-          if(this.currentDesk.showSettings){
-            this.cardSettings = this.currentDesk.aloneSettings
-            this.cardSwitch = true
-          }else{
-            this.cardSwitch = false
-          }
-        // this.cardSettings = this.currentDesk.aloneSettings
-          break;
-      }
+      //  switch (val) {
+      //   case 'all':
+      //     // this.cardDesk = 'current'
+      //     // if(this.currentDesk.settings.enableZoom){
+      //     //   this.cardDesk = 'current'
+      //     //   return message.info('当前卡片关闭后可切换')
+      //     // }
+      //     // this.cardSettings = this.settings
+      //     break;
+      //   case 'current':
+      //     if(this.currentDesk.showSettings){
+      //       this.cardSettings = this.currentDesk.settings
+      //       this.cardSwitch = true
+      //     }else{
+      //       this.cardSwitch = false
+      //     }
+      //   // this.cardSettings = this.currentDesk.aloneSettings
+      //     break;
+      // }
 
       // if(this.currentDesk.aloneSettings){
       //   this.cardSettings = this.currentDesk.aloneSettings
