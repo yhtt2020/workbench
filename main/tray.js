@@ -204,6 +204,12 @@ app.whenReady().then(() => {
         }
       },
       {
+        label: '打开工具箱',
+        click: () => {
+         openBrowser()
+        }
+      },
+      {
         type: 'separator'
       },
       {

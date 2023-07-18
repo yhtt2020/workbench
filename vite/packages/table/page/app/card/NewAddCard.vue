@@ -66,7 +66,7 @@
           <template v-else>
 
             <div class="warn-boxs">
-              <CardState :state="'null'" @onClick="onClick" style="width: 320px;height: 320px;"></CardState>
+              <XtState :state="'null'" @onClick="onClick" style="width: 320px;height: 320px;" bg=""></XtState>
             </div>
           </template>
         </div>
@@ -87,7 +87,6 @@
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
 import { NavList } from "./navList"
-import CardState from '../../../components/card/components/state/index.vue';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue';
 import _ from 'lodash-es'
 import Search from '../../../components/Search.vue';
@@ -101,7 +100,7 @@ import DeskPreview from '../../../components/desk/DeskPreview.vue';
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews, CardState,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
+  components: { NewCardPreViews,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
   props: {
     desk: {
       type: Object,

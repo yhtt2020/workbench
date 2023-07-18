@@ -14,7 +14,7 @@ import Today from "./today.vue";
 import Search from "./Search.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
-import { apiList } from "./test.ts";
+import { getTopic } from "../api/test";
 import _ from "lodash-es";
 export default {
   computed: {
@@ -31,21 +31,23 @@ export default {
     Today,
     Search,
   },
-  mounted() {
-    this.topicList = apiList;
+  async mounted() {
+    let res = await getTopic();
+    this.topicList = res;
     this.initList();
   },
   watch: {
     topicList: {
       handler(newV) {
         this.initList();
-        console.log("123 :>> ", 133323);
       },
       deep: true,
     },
   },
   methods: {
     initList() {
+      console.log("触发更新 :>> ");
+      console.log('object :>> ',     this.topicList);
       this.topList = [];
       this.todayList = [];
       this.previousList = [];

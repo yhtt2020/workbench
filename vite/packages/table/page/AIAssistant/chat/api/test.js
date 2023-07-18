@@ -1,7 +1,13 @@
-import request from "./request"
+import request from "./request";
 
 export const getMd = () => {
   return request({
-    url: "/md"
-  })
-}
+    url: "/md",
+  });
+};
+
+export const getTopic = () => {
+  return request({
+    url: "/topic",
+  });
+};

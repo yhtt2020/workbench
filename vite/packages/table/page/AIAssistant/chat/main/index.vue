@@ -28,17 +28,30 @@ export default {
   watch: {
     selectTopicIndex(newV) {
       if (newV === -1) return;
+      let item = this.topicList.find((item) => {
+        if (item.id == newV) {
+          return item;
+        }
+      });
+      if (!item.chatId) {
+        item.chatId = Date.now();
+        this.chatObj[item.chatId] = [];
+      }
+      this.chatList = this.chatObj[item.chatId];
+      console.log("object :>> ", this.chatObj[item.chatId]);
+      // console.log("item :>> ", item);
+      return;
       let chat = this.topicList[newV];
-      // 这一步去api地址请求
-
-      // 当前是空值 所以去添加
-      if (!chat.chatId) {
-        // 伪api
-        chat.chatId = Date.now();
-        this.chatObj[chat.chatId] = [];
+      console.log("chat :>> ", chat);
+      if (this.topicList[newV].chatId == null) {
+        console.log("123 :>> ", 123);
+        chat = {}; // 设置 chat 为空对象或其他默认值
+        chat.chatId = Date.now(); // 设置 chat.chatId 为当前时间戳或其他默认值
+        this.chatObj[chat.chatId] = []; // 初始化 chatId 对应的数组
       }
       this.chatList = this.chatObj[chat.chatId];
-      console.log("object :>> ", this.chatList);
+      console.log("chatObj :>> ", this.chatObj);
+      console.log("chatId :>> ", chat.chatId);
     },
   },
   components: {
@@ -56,7 +69,7 @@ export default {
   methods: {
     async getMdData() {
       let res = await getMd();
-      this.markdown = res.data.data;
+      this.markdown = res;
     },
     async onSearch(serach) {
       let user = {

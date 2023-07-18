@@ -11,14 +11,17 @@ export const aiStore = defineStore("aiStore", {
       isssssssssssssMode: 12, // 模板使用中
       // chat组件数据-----------------------------
       // 记录当前请求过的数据
-      chatObj: {
-        1: ["hello"],
-      },
+      chatObj: {},
       // topic组件数据----------------------------
       selectTopicIndex: 1,
       // 初始值 提供用于全局状态维护
       defaultData: {
-        icon: "",
+        chatId: "",
+        icon: {
+          name: "",
+          id: "",
+        },
+        id: "",
         time: "",
         name: "",
         top: false,

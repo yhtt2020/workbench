@@ -36,7 +36,6 @@ export default {
       let id = this.data.id;
       this.topicList.filter((item) => {
         if (item.id == id) {
-          console.log("item :>> ", item);
           item.top = !item.top;
         }
       });
@@ -46,18 +45,16 @@ export default {
       this.topicList = this.topicList.filter((item) => {
         if (item.id === id) {
           if (this.selectTopicIndex === id) {
-            this.selectTopicIndex = -1;
+            this.selectTopicIndex = -1; 
           }
           return false;
         } else {
           return true;
         }
       });
-      // this.selectTopicIndex = -1;
     },
     addIndex(id) {
       this.selectTopicIndex = id;
-      console.log("this.selectTopicIndex :>> ", this.selectTopicIndex);
     },
   },
   props: {

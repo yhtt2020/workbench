@@ -5,7 +5,7 @@
 <script setup>
 import { computed } from "vue";
 // @import url(github-markdown-css/github-markdown-dark.css);
-import "github-markdown-css/github-markdown-dark.css";
+import "github-markdown-css/github-markdown-light.css";
 import { marked } from "marked";
 
 import hljs from "highlight.js";
@@ -57,5 +57,6 @@ const htmlContent = computed(() => {
 <style lang="scss" scoped>
 .markdown-body {
   background: none;
+  user-select: text;
 }
 </style>

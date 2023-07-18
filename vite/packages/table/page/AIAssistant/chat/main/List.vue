@@ -7,7 +7,7 @@
           style="max-width: 80%"
           v-html="item.content"
         ></div>
-        <div @click="copy(item)">复制</div>
+        <div @click="copy(item.content)">复制</div>
       </div>
       <div v-else>
         <div
@@ -16,28 +16,49 @@
         >
           <GPT :content="item.content"></GPT>
         </div>
+        <div @click="copy(item.content)">复制</div>
       </div>
     </template>
   </div>
 </template>
+<script>
 
-<script setup>
 import GPT from "./GPT.vue";
-const props = defineProps({
-  chatList: {
-    type: Array,
+export default {
+  components: {
+    GPT,
   },
-});
+  methods: {
+    copyToClipboard(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
 
-const copy = (str) => {
-  navigator.clipboard
-    .writeText(str)
-    .then(() => {
-      console.log("文本已复制到剪贴板");
-    })
-    .catch((error) => {
-      console.error("无法复制文本:", error);
-    });
+      // 将 textarea 元素添加到 DOM 树中，以便可以执行复制操作
+      document.body.appendChild(textarea);
+
+      // 选择文本并执行复制操作
+      textarea.select();
+      const copySuccessful = document.execCommand("copy");
+
+      // 清理创建的 textarea 元素
+      document.body.removeChild(textarea);
+
+      return copySuccessful;
+    },
+    copy(str) {
+      console.log("str :>> ", str);
+      if (this.copyToClipboard(str)) {
+        console.log("已成功复制到剪贴板");
+      } else {
+        console.error("复制到剪贴板失败");
+      }
+    },
+  },
+  props: {
+    chatList: {
+      type: Array,
+    },
+  },
 };
 </script>
 

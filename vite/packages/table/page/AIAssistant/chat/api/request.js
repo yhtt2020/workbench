@@ -4,4 +4,8 @@ const service = axios.create({
   timeout: 5000,
 });
 
+service.interceptors.response.use((response) => {
+  const { data } = response.data;
+  return data;
+});
 export default service;

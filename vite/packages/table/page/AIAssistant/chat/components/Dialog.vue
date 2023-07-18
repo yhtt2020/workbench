@@ -44,8 +44,12 @@ export default {
     },
   },
   watch: {
-    iconValue(newV) {
-      this.$emit("update:icon", newV);
+    iconValue: {
+      handler(newV) {
+        console.log("newV :>> ", newV);
+        this.$emit("update:icon", newV);
+      },
+      immediate: true,
     },
     namehValue(newV) {
       this.$emit("update:name", newV);
