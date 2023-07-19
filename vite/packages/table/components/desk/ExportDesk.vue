@@ -38,8 +38,8 @@
            class="flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer">
         取消
         </div>
-        <div style="width: 120px;height: 48px;"
-            class=" ml-3 flex justify-center items-center bg-blue-500 rounded-lg pointer" @click="exportBtn">
+        <div style="width: 120px;height: 48px;background-color: var(--active-bg);"
+            class=" ml-3 flex justify-center items-center rounded-lg pointer" @click="exportBtn">
           确定导出
         </div>
       </div>
@@ -159,7 +159,6 @@ export default {
       if(val){
         this.selectedDesk = []
         this.deskType = this.desks.map(item => item.name)
-        let desks = JSON.parse(JSON.stringify(this.desks))
         this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'}
         this.onChange([0])
         // if(desks[0].settings && desks[0].settings.enableZoom){

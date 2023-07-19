@@ -723,6 +723,7 @@ export default {
       "desks",
       "moved",
       "currentDeskIndex",
+      "lastHeight"
     ]),
     ...mapWritableState(appStore, [
       "agreeTest",
@@ -1337,6 +1338,11 @@ export default {
     //     this.$refs.grid.update();
     //   },
     // }
+  },
+  beforeUnmount() {
+    let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+    this.lastHeight = cardsHeight
+    // console.log("销毁组件",cardsHeight);
   },
 };
 </script>

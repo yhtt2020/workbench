@@ -54,7 +54,8 @@ import BrowserMain from '../page/app/browser/Browser.vue';
 import Rank from '../page/social/Rank.vue';
 import BillingRecord from '../page/social/BillingRecord.vue';
 import MarketIndex from '../page/market/MarketIndex.vue';
-import MarketHome from '../page/market/MarketHome.vue'
+import MarketHome from '../page/market/MarketHome.vue';
+import Prop from '../page/market/Prop.vue';
 
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
@@ -357,13 +358,18 @@ export default [
       },
       {
         path: "/market",
-        name: "market",
+        name: "marketIndex",
         component: MarketIndex,
         children: [
           {
             path: '',
             name: 'market',
             component: MarketHome
+          },
+          {
+            path: '/prop',
+            name: 'prop',
+            component: Prop
           }
         ]
       },
