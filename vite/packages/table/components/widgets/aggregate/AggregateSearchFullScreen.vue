@@ -122,7 +122,8 @@ export default {
   this.$nextTick(()=>{
     this.$refs.searchRef.focus()
   })
-
+  // 监听键盘触发事件
+  window.addEventListener('keydown',this.keyBoardTrigger)
  },
 
  methods:{
@@ -247,6 +248,17 @@ export default {
         this.aggSearchWord = ''
         break;
       default:
+        break;
+    }
+  },
+
+  keyBoardTrigger(e){  // 键盘触发事件
+    switch(e.keyCode){
+      case 27: // 按下esc键
+        this.closeSearchFullScreen()
+        break;
+      case 9: // 按下tab键
+        // console.log('');
         break;
     }
   }
