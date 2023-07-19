@@ -3,6 +3,8 @@
  * @data: 2023/4/2 08:52
  */
 
+import api from "../../../../../src/model/api";
+
 /**
  * 将文件转换为经过压缩和等比裁切的 base64 图片
  * @param file 待转换的图片文件
@@ -140,7 +142,7 @@ export const base64Image = (
     height,
   };
 };
-export const base64Flie = (str: string) => {
+export const base64File = (str: string) => {
   // 分离文件类型和数据部分
   let parts = str.split(";base64,");
   let contentType = parts[0].split(":")[1];
@@ -153,9 +155,22 @@ export const base64Flie = (str: string) => {
   }
 
   // 创建文件对象
-  let file = new File([uint8Array], "base64Flie", {
+  let file = new File([uint8Array], "base64File", {
     type: contentType,
   });
 
   return file;
+};
+export const fileUpload = async (file: any) => {
+  let url: any = null;
+  const formData = new FormData();
+  formData.append("file", file);
+  await api.postCosUpload(formData, (err, res) => {
+    if (!err) {
+      url = false;
+    } else {
+      url = "http://" + res.data.data;
+    }
+  });
+  return url;
 };

@@ -54,12 +54,13 @@
 </template>
 
 <script>
-import { validateFile } from "../../../../card/hooks/imageProcessing";
+import {
+  validateFile,
+  fileUpload,
+} from "../../../../card/hooks/imageProcessing";
 import { getHostAddress } from "../hooks/getHostAddress";
 import { message } from "ant-design-vue";
 import editMixins from "../hooks/mixins";
-
-import api from "../../../../../../../src/model/api";
 
 export default {
   mixins: [editMixins],
@@ -103,17 +104,9 @@ export default {
       if (validate !== true) return message.error(validate);
       this.imgUpload(file);
     },
-    imgUpload(file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      api.postCosUpload(formData, (err, res) => {
-        if (!err) {
-          message.error("数据上传失败");
-        } else {
-          const url = "http://" + res.data.data;
-          this.edit.src = url;
-        }
-      });
+    async imgUpload(file) {
+      let url = await fileUpload(file);
+      if (url) this.edit.src = url;
     },
     imgError() {
       if (this.edit.link === "link") {

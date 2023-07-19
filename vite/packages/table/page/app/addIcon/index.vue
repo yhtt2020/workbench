@@ -1,9 +1,6 @@
 <template>
   <!-- 遮罩 -->
-  <div
-    class="h-full w-full xt-mask fixed top-0 left-0"
-    @click="close()"
-  ></div>
+  <div class="h-full w-full xt-mask fixed top-0 left-0" @click="close()"></div>
   <!-- 添加图标 -->
   <div
     class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
@@ -103,6 +100,10 @@ import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
 import Tab from "../../../components/card/components/tab/index.vue";
 import { mapActions, mapWritableState } from "pinia";
+import {
+  base64File,
+  fileUpload,
+} from "../../../../table/components/card/hooks/imageProcessing";
 export default {
   emits: ["update:navName"],
   props: {
@@ -234,18 +235,26 @@ export default {
       this.$emit("close");
     },
     // 提交icon 并格式化数据
-    async commitIcons() {
+    commitIcons() {
       if (!this.desk) {
         this.$emit("getSelectApps", this.selectApps);
         this.close();
         return;
       }
       for (let key in this.selectApps) {
-        this.selectApps[key].forEach((item) => {
+        this.selectApps[key].forEach(async (item) => {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";
-          iconOption.src = item.icon;
+          if (this.navName !== "Desktop" && this.navName !== "MyApps") {
+            iconOption.src = item.icon;
+          } else {
+            let file = base64File(item.icon);
+            const formData = new FormData();
+            formData.append("file", file);
+            let url = await fileUpload(file);
+            if (url) iconOption.src = url;
+          }
           if (item.open) {
             iconOption.open = item.open;
           } else {

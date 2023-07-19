@@ -84,8 +84,7 @@ import Radio from "../../../../card/components/radio/index.vue";
 import { linkList } from "../hooks/config";
 import { getHostAddress } from "../hooks/getHostAddress";
 import editMixins from "../hooks/mixins";
-import api from "../../../../../../../src/model/api";
-import { base64Flie } from "../../../../card/hooks/imageProcessing";
+import { base64File, fileUpload } from "../../../../card/hooks/imageProcessing";
 
 export default {
   mixins: [editMixins],
@@ -130,23 +129,18 @@ export default {
       });
     },
     // 获取app信息
-    returnApp(item) {
+    async returnApp(item) {
       this.edit.open.name = item.name;
       // 当图片状态为空时
       if (!this.edit.src) {
         if (item.icon && item.type !== "tableApp") {
           this.edit.src = item.icon;
         } else {
-          let file = base64Flie(item.icon);
-          const formData = new FormData();
-          formData.append("file", file);
-          api.postCosUpload(formData, (err, res) => {
-            if (!err) {
-            } else {
-              const url = "http://" + res.data.data;
-              this.edit.src = url;
-            }
-          });
+          let file = base64File(item.icon);
+          let url = await fileUpload(file);
+          if (url) {
+            this.edit.src = url;
+          }
         }
       }
       // 当标题状态为空时
