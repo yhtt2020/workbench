@@ -1,32 +1,53 @@
 <template>
-  <div class="xt-bg px-6 box">
-    <!-- 头部导航 -->
-    <div class="flex items-center justify-between" style="height: 96px;">
-      <div class="flex">
-        <div @click="onBack" class="w-11 h-11 pointer flex items-center rounded-lg justify-center" 
-          style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
-          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+  <div class="xt-bg pl-6 box">
+    <div class="pr-4" :style="showPreview ? 'width:70%' : 'width:100%'">
+      <!-- 头部导航 -->
+      <div class="flex items-center justify-between" style="height: 96px;">
+        <div class="flex">
+          <div @click="onBack" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+            style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
+            <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+          </div>
+          <div class="box-title no-drag">道具市场</div>
         </div>
-        <div class="box-title no-drag">道具市场</div>
+        <div class="flex items-center">
+          <!-- 头部搜索和下拉列表 -->
+          <Search 
+            :searchValue="inputSearchValue"
+            :defaultSelect="sort"
+            :sortType="sortType"
+            :isFiltrate="true"
+            @changeSelect="changeSelect"
+            @changeInput="changeInput"
+          />
+          <div v-if="!showPreview" @click="openPreview" class="px-6 ml-3 flex items-center xt-mask rounded-lg h-12 pointer">
+            <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
+            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
+          </div>
+        </div>
       </div>
-      <div class="flex">
-        <!-- 头部搜索和下拉列表 -->
-        <Search 
-          :searchValue="inputSearchValue"
-          :defaultSelect="sort"
-          :sortType="sortType"
-          :isFiltrate="true"
-          @changeSelect="changeSelect"
-          @changeInput="changeInput"
-        />
+      <div class="flex" style="height: 90%;">
+        <!-- 侧边导航 -->
+        <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
+        <!-- 列表内容 -->
+        <div class="ml-5 right no-drag">
+          <Props :selected="sort" :navList="marketList[navIndex].children"></Props>
+        </div>
       </div>
     </div>
-    <div class="flex" style="height: 90%;">
-      <!-- 侧边导航 -->
-      <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
-      <!-- 列表内容 -->
-      <div class="ml-5 right no-drag" style="width:100%;height:90%;overflow: auto;">
-        <!-- <MarketList :selected="sort" :navList="marketList[navIndex].children"></MarketList> -->
+    <div class="preview" v-if="showPreview">
+      <div class="flex items-center justify-between mb-6" style="height: 48px;">
+       <div class="flex items-center">
+          <div @click="showPreview = false" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+            style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
+            <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
+          </div>
+          <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
+       </div>
+       <div @click="onBack" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+          style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
+          <Icon icon="clear" style="font-size: 1.5em;"></Icon>
+        </div>
       </div>
     </div>
   </div>
@@ -38,11 +59,13 @@ import NavMenu from '../../components/NavMenu.vue'
 import { mapActions, mapWritableState } from "pinia";
 import { appStore } from '../../store';
 import { frameStore } from '../../store/avatarFrame'
+import Props from '../../components/market/Props.vue';
 export default {
   name: "CreativeMarket",
   components: {
     Search,
-    NavMenu
+    NavMenu,
+    Props
   },
   data() {
     return {
@@ -57,7 +80,14 @@ export default {
         { value: '更新时间', name: '更新时间' },
       ],
       inputSearchValue: '',
-      
+      marketList: [
+        {cname: '头像框',children: []},
+        {cname: '卡面',children: []},
+        {cname: '宠物',children: []},
+        {cname: '主题',children: []},
+        {cname: '道具',children: []},
+      ],
+      showPreview: true
     }
   },
   computed: {
@@ -70,9 +100,11 @@ export default {
   },
   mounted() {
     this.fullScreen = true
-    console.log(this.frameList)
+    this.getFrameGoods()
+    this.marketList[0].children = this.frameList
   },
   methods: {
+    ...mapActions(frameStore, ['getFrameGoods', 'ensureOrder']),
     changeTab(args) {
       this.tab = args.index
     },
@@ -89,6 +121,9 @@ export default {
     changeInput(event){
       // console.log('输入框',event)
     },
+    openPreview(){
+      this.showPreview = true
+    }
   },
 }
 </script>
@@ -101,6 +136,8 @@ export default {
     bottom: 0;
     background: var(--primary-bg);
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
   }
   .left {
       height: 95%;
@@ -123,11 +160,15 @@ export default {
         background: var(--mask-bg);
 
       }
-    }
-    .left::-webkit-scrollbar,
-    .right::-webkit-scrollbar {
-      display: none;
-    }
+  }
+  .right{
+    width:100%;
+    height:90%;
+    display: flex;
+  }
+  .left::-webkit-scrollbar{
+    display: none;
+  }
   .box-title{
     display: flex;
     align-items: center;
@@ -135,5 +176,13 @@ export default {
     font-size: 18px;
     font-weight: 500;
     color: var(--primary-text);
+  }
+  .preview{
+    width: 413px;
+    z-index: 9;
+    margin-top: 24px;
+    padding: 0 20px 0 16px;
+    border-left: 1px solid var(--divider);
+    // border-left: 1px solid rgba(255,255,255,0.10);
   }
 </style>
