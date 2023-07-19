@@ -34,8 +34,8 @@
             </div>
             <div class="flex flex-col" v-if="suggestShow === false">
               <vue-custom-scrollbar :settings="settingsScroller" style="max-height:366px;">
-                <div v-for="(item, index) in suggestList" :class="{'':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
-                @click="getSuggestItem(item)" 
+                <div v-for="(item, index) in suggestList" :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
+                @click="getSuggestItem(item,index)" 
                 >
                  <span style="color: var(--secondary-text);">
                    {{ 
@@ -93,7 +93,7 @@ export default {
       wheelPropagation: true
     },
     aggSelectIndex:'',  // 获取选中状态下标
-    suggestIndex:'', // 搜索关键字推荐选中状态
+    suggestIndex:0, // 搜索关键字推荐选中状态
     suggestShow:false, // 选中后将推荐不显示 
   }
  },
@@ -180,8 +180,9 @@ export default {
       }
     })
   },
-  getSuggestItem(item){ // 选择推荐关键字  
+  getSuggestItem(item,index){ // 选择推荐关键字  
     this.suggestShow = true
+    this.suggestIndex = index
     switch (this.aggList.list[this.aggSelectIndex].id){
       case 0: // 百度搜索
         // this.aggSearchWord = item.q
