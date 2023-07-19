@@ -355,7 +355,6 @@ export const cardStore = defineStore(
           }else{
             cardZoom = (data.settings.cardZoom * this.lastHeight/data.cardsHeight).toFixed()
           }
-          console.log(cardZoom)
           // let cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
           data.settings.cardZoom = parseInt(cardZoom)
           let desk = {
