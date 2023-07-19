@@ -153,7 +153,6 @@ export const diyPanel = {
     { 'type': 'systemApp', 'icon': 'setting', 'name': '基础设置', 'event': 'setting' },
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏显示', 'event': 'fullscreen' },
     { 'type': 'systemApp', 'icon': 'laptop', 'name': '设备设置', 'event': 'status' },
-    { 'type': 'systemApp', 'icon': 'setting', 'name': '基础设置', 'event': 'setting' },
     { 'type': 'systemApp', 'icon': 'tuichu', 'name': '电源', 'event': 'power' }
   ]
 }
