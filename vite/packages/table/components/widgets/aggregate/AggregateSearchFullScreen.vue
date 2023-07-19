@@ -1,49 +1,74 @@
 <template>
-  <div class="w-full h-full search-full"  >
-    <div class="w-full flex flex-col p-3">
-      <div class="w-full flex justify-end mb-8">
-        <div class="flex items-center rounded-lg pointer justify-center active-button h-12 w-12" @click="closeSearchFullScreen" style="background: var(--secondary-bg);">
-          <Icon icon="guanbi" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
-        </div>
-      </div>
-      <div class="w-full flex  justify-center">
-        <div class="mr-3 flex flex-col">
-          <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
-          <div v-for="(item,index) in searchList"  class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
-           @click="selectAggSearch(item,index)" :class="{'active-bg':aggSelectIndex === index}" 
-          >
-            <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
-              <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
-            </div>
-            <span class="ml-2 secondary-title" style="color: var(--secondary-text);">{{item.title}}</span>
-          </div>
-        </div>
-        <div  class="mt-4 flex flex-col">
-           <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
-             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
-              <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
-             </div>
-             <a-input v-model:value="aggSearchWord" placeholder="搜索" :bordered="false" class="search" @change="dataSearch($event)"
-             @pressEnter="enterSearch"
-             ></a-input>
-           </div>
-           <div class="flex flex-col" v-if="suggestShow === false">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:57vh;">
-              <div v-for="(item, index) in suggestList" :class="{'':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
-               @click="getSuggestItem(item)" 
+  <div class="w-full h-full flex" style="background:rgba(0, 0, 0, 0.45);">
+    <!-- 点击左边空白区域关闭 -->
+    <div class="pointer" style="width: 25%;" @click="closeSearchFullScreen"></div>
+
+
+    <!-- 搜索内容区域展示 -->
+    <div class="flex items-center justify-center" style="width: 50%;">
+      <div class="search-content search-full flex flex-col justify-between rounded-lg">
+        <div class="p-4 flex">
+          <!-- 聚合搜索左侧tab栏 -->
+          <div class="flex flex-col mr-4">
+            <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div> 
+            <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
+              <div v-for="(item,index) in searchList"  class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
+              @click="selectAggSearch(item,index)" :class="{'active-bg':aggSelectIndex === index}" 
               >
-                <span style="color: var(--secondary-text);">
-                  {{ 
-                    item.q ? item.q : item.value ? item.value : item.query ? item.query 
-                    : item.name ? item.name : item.suggestion ? item.suggestion : item 
-                   }}
-                </span>
+               <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
+                <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
+               </div>
+               <span class="ml-2 primary-title" style="color: var(--primary-text);">{{item.title}}</span>
               </div>
             </vue-custom-scrollbar>
-           </div>
+          </div>
+          <!-- 右侧搜索数据展示 -->
+          <div class="flex flex-col">
+            <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
+              <div class="flex items-center justify-center" style="width: 20px;height:20px;">
+               <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
+              </div>
+              <a-input v-model:value="aggSearchWord" placeholder="搜索" :bordered="false" class="search" @change="dataSearch($event)"
+              @pressEnter="enterSearch"  ref="searchRef" allowClear
+              ></a-input>
+            </div>
+            <div class="flex flex-col" v-if="suggestShow === false">
+              <vue-custom-scrollbar :settings="settingsScroller" style="max-height:366px;">
+                <div v-for="(item, index) in suggestList" :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
+                @click="getSuggestItem(item,index)" 
+                >
+                 <span style="color: var(--secondary-text);">
+                   {{ 
+                     item.q ? item.q : item.value ? item.value : item.query ? item.query 
+                     : item.name ? item.name : item.suggestion ? item.suggestion : item 
+                    }}
+                 </span>
+                </div>
+              </vue-custom-scrollbar>
+            </div>
+          </div>
+          
+        </div>
+        <div class="rounded-b-lg flex items-center h-12 px-4 py-3" style="background: var(--secondary-bg);">
+          <div class="secondary-title " style="color: var(--secondary-text);">按下</div>
+          <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2" style="background: var(--disable-text);color: var(--secondary-text);">Tab</div>
+          <div class="secondary-title " style="color: var(--secondary-text);">快速切换搜索引擎，支持使用</div>
+          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2" style="background: var(--disable-text);">
+            <Icon icon="arrowup" style="color: var(--secondary-text);font-size: 1.5em;"></Icon>
+          </div>
+          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2" style="background: var(--disable-text);">
+            <Icon icon="arrowdown" style="color: var(--secondary-text);font-size: 1.5em;"></Icon>
+          </div>
+          <div class="secondary-title " style="color: var(--secondary-text);">
+            快速选择候选项
+          </div>
         </div>
       </div>
     </div>
+
+
+    <!-- 点击右边空白区域关闭 -->
+    <div class="pointer" style="width: 25%;" @click="closeSearchFullScreen"></div>
   </div>
 </template>
 
@@ -68,7 +93,7 @@ export default {
       wheelPropagation: true
     },
     aggSelectIndex:'',  // 获取选中状态下标
-    suggestIndex:'', // 搜索关键字推荐选中状态
+    suggestIndex:0, // 搜索关键字推荐选中状态
     suggestShow:false, // 选中后将推荐不显示 
   }
  },
@@ -94,16 +119,23 @@ export default {
  mounted(){
   this.aggSelectIndex = this.defaultIndex
   this.aggSelectIcon.icon = this.searchList[this.aggSelectIndex].icon
+  this.$nextTick(()=>{
+    this.$refs.searchRef.focus()
+  })
+  // 监听键盘触发事件
+  window.addEventListener('keydown',this.keyBoardTrigger)
  },
 
  methods:{
-  ...mapActions(appStore,['setSearchFullScreen']),
+  ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
   closeSearchFullScreen(){  // 关闭聚合搜索全屏  
     this.setSearchFullScreen(false) 
   },
   selectAggSearch(item,index){  //  聚合搜索框在全屏情况下的筛选 
     this.aggSelectIndex = index
     this.aggSelectIcon.icon = item.icon
+    this.setSearchIndex(index)
+    this.$refs.searchRef.focus()
   },
   dataSearch(e){ // 聚合搜索关键字推荐  
     if(e.target.value.trim() === ''){ // 检查输入框是否为空状态
@@ -148,44 +180,60 @@ export default {
       }
     })
   },
-  getSuggestItem(item){ // 选择推荐关键字  
+  getSuggestItem(item,index){ // 选择推荐关键字  
     this.suggestShow = true
+    this.suggestIndex = index
     switch (this.aggList.list[this.aggSelectIndex].id){
       case 0: // 百度搜索
-        this.aggSearchWord = item.q
+        // this.aggSearchWord = item.q
+        const baiduWords = encodeURIComponent(item.q)
+        this.openSearchSuggest(baiduWords)
         break;
       case 1: 
         // 谷歌接口暂时不能使用,还没有找到api
         // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
         break;
       case 2: // 必应搜索
-        this.aggSearchWord = item
+        // this.aggSearchWord = item
+        const bingWords = encodeURIComponent(item)
+        this.openSearchSuggest(bingWords)
         break;
       case 3: // 知乎搜索
-        this.aggSearchWord  = item.query
+        const zhihuWords = encodeURIComponent(item.query)
+        this.openSearchSuggest(zhihuWords)
         break;
       case 4:
         // github搜索引擎api暂时没有找到关键字搜索推荐
-        this.aggSearchWord = item.name
+        const githubWords = encodeURIComponent(item.name)
+        this.openSearchSuggest(githubWords)
         break;
       case 5: // B站搜索
-        this.aggSearchWord = item.value
+        const biliWords = encodeURIComponent(item.value)
+        this.openSearchSuggest(biliWords)
         break;
       case 6:  // 微博搜索
-        this.aggSearchWord = item.suggestion
+        const weiboWords = encodeURIComponent(item.suggestion)
+        this.openSearchSuggest(weiboWords)
         break;
       case 7:  // 优酷搜索
-        this.aggSearchWord = item.name
+        const youkuWords = encodeURIComponent(item.name)
+        this.openSearchSuggest(youkuWords)
         break; 
-      case 8:
-        this.aggSearchWord = item
+      case 8:  // 豆瓣搜索
+        const doubanWords = encodeURIComponent(item)
+        this.openSearchSuggest(doubanWords)
         break; 
       default:
         break;
     }
   },
+
   enterSearch(){  // 回车进行搜索
-    const words = encodeURIComponent(this.aggSearchWord)
+    const enterWords = encodeURIComponent(this.aggSearchWord)
+    this.openSearchSuggest(enterWords)
+  },
+
+  openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开
     const url = `${this.searchList[this.aggSelectIndex].search_url}${words}`
     switch (this.aggList.type) { 
       case 'work':
@@ -203,7 +251,19 @@ export default {
       default:
         break;
     }
+  },
+
+  keyBoardTrigger(e){  // 键盘触发事件
+    switch(e.keyCode){
+      case 27: // 按下esc键
+        this.closeSearchFullScreen()
+        break;
+      case 9: // 按下tab键
+        // console.log('');
+        break;
+    }
   }
+
  }    
 
 }
@@ -212,7 +272,7 @@ export default {
 <style lang="scss" scoped>
 .search-full{
   background: var(--mask-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(40px);
 }
 .active-button{
   &:active{
@@ -232,6 +292,12 @@ export default {
 
 .secondary-title{
   font-family: PingFangSC-Regular;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ping-title{
+  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
@@ -245,5 +311,17 @@ export default {
   &:hover{
     background: var(--secondary-bg);
   }
+}
+
+.search-content{
+  width:649px;
+  height: 500px;
+  background: var(--primary-bg);
+}
+
+:deep(.anticon.ant-input-clear-icon-has-suffix){
+ background: var(--secondary-bg) !important;
+ color: var(--secondary-text) !important;
+ font-size: 1.5em !important;
 }
 </style>
