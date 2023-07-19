@@ -1,13 +1,13 @@
 <template>
-  <Widget :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
-  :menuList="gameMiddleBare" ref="aggregateSearchSlot" :sizeList="bottomSizeList">
-     <div class="flex items-center rounded-xl p-2 w-full justify-center mt-8 mb-3" style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click.stop="handleSearchEngine">
+  <Widget :sizeList="bottomSizeList" :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
+  :menuList="gameMiddleBare" ref="aggregateSearchSlot" >
+    <div class="flex items-center rounded-xl p-2 w-full justify-center mt-8 mb-3" style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click.stop="handleSearchEngine">
       <div class="flex items-center justify-center" style="width: 20px;height:20px;">
         <Icon :icon="aggInputValue" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
       </div>
       <a-input placeholder="搜索" :bordered="false" class="search"></a-input>
     </div>
-    
+
     <div class="flex">
       <template v-if="Object.keys(customData).length === 0 ||  customData.width === 1">
         <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
@@ -39,7 +39,7 @@
        style="background: var(--secondary-bg);" @click="aggSearchShow = true">
         <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
       </div>
-    </div>
+    </div> 
   </Widget>
 
 
@@ -96,7 +96,7 @@ export default {
 
       AggregateList, // 没有排序过的聚合搜索数据
 
-      bottomSizeList:[{title:'2x2',width:1,height:1,name:'2x2'},{title:'4x2',width:2,height:1,name:'4x2'}], // 底部设置中尺寸大小切换
+      bottomSizeList:[{title:'2x2',width:1,height:1,name:'1x2'},{title:'4x2',width:2,height:1,name:'2x2'}], // 底部设置中尺寸大小切换
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.aggSearchShow = true;this.$refs.aggregateSearchSlot.visible = false } } ],
     }
   },
@@ -105,7 +105,7 @@ export default {
   computed:{
     ...mapWritableState(appStore,['fullScreen','aggList']),
     aggSearchList(){
-      if(Object.keys(this.aggList).length !== 0){
+      if(Object.keys(this.aggList).length !== 0 && this.aggList.list){
         return this.aggList.list
       }else{
         return this.AggregateList

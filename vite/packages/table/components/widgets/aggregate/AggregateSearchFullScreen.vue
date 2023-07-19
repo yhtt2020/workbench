@@ -15,7 +15,7 @@
             <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
               <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
-            <span class="ml-2 secondary-title" style="color: var(--secondary-text);">{{item.title}}</span>
+            <span class="ml-2 primary-title" style="color: var(--primary-text);">{{item.title}}</span>
           </div>
         </div>
         <div  class="mt-4 flex flex-col">
@@ -24,7 +24,7 @@
               <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
              </div>
              <a-input v-model:value="aggSearchWord" placeholder="搜索" :bordered="false" class="search" @change="dataSearch($event)"
-             @pressEnter="enterSearch"
+             @pressEnter="enterSearch"  ref="searchRef"
              ></a-input>
            </div>
            <div class="flex flex-col" v-if="suggestShow === false">
@@ -94,16 +94,21 @@ export default {
  mounted(){
   this.aggSelectIndex = this.defaultIndex
   this.aggSelectIcon.icon = this.searchList[this.aggSelectIndex].icon
+  this.$nextTick(()=>{
+    this.$refs.searchRef.focus()
+  })
  },
 
  methods:{
-  ...mapActions(appStore,['setSearchFullScreen']),
+  ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
   closeSearchFullScreen(){  // 关闭聚合搜索全屏  
     this.setSearchFullScreen(false) 
   },
   selectAggSearch(item,index){  //  聚合搜索框在全屏情况下的筛选 
     this.aggSelectIndex = index
     this.aggSelectIcon.icon = item.icon
+    this.setSearchIndex(index)
+    this.$refs.searchRef.focus()
   },
   dataSearch(e){ // 聚合搜索关键字推荐  
     if(e.target.value.trim() === ''){ // 检查输入框是否为空状态
@@ -212,7 +217,7 @@ export default {
 <style lang="scss" scoped>
 .search-full{
   background: var(--mask-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(50px);
 }
 .active-button{
   &:active{
