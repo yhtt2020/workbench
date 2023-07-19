@@ -83,7 +83,9 @@ export const appStore = defineStore('appStore', {
     backgroundImage: {
       path: ''
     },
-    aggList:{ },
+    aggList:{
+      type:'work'
+    },
 
   }),
   getters: {},
@@ -199,6 +201,9 @@ export const appStore = defineStore('appStore', {
     setSearchIndex(index:number){  // 设置小卡片底部选中状态
       this.aggList.select_status = index
     },
+    setSearchUrlOpenType(value:object){  // 设置搜索路径打开方式类型
+      this.aggList.type = value
+    }
 
   },
   persist: {
