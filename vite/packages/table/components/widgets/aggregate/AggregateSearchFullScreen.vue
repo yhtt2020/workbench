@@ -186,7 +186,6 @@ export default {
   },
   enterSearch(){  // 回车进行搜索
     const words = encodeURIComponent(this.aggSearchWord)
-    console.log('搜索::>>>',this.searchList[this.aggSelectIndex].search_url);
     const url = `${this.searchList[this.aggSelectIndex].search_url}${words}`
     switch (this.aggList.type) { 
       case 'work':
