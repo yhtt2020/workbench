@@ -19,7 +19,7 @@
           </div>
         </div>
         <div  class="mt-4 flex flex-col">
-           <div class="flex items-center justify-center rounded-lg h-12 p-3" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
+           <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
              <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
              </div>
@@ -27,8 +27,8 @@
              @pressEnter="enterSearch"
              ></a-input>
            </div>
-           <div class="flex flex-col">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:50vh;">
+           <div class="flex flex-col" v-if="suggestShow === false">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:57vh;">
               <div v-for="(item, index) in suggestList" :class="{'':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
                @click="getSuggestItem(item)" 
               >
@@ -52,6 +52,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { appStore } from "../../../store";
 import { AggregateList } from "../../../js/data/searchData";
 import axios from "axios";
+import browser from '../../../js/common/browser'
 
 export default {
  data(){
@@ -67,7 +68,8 @@ export default {
       wheelPropagation: true
     },
     aggSelectIndex:'',  // 获取选中状态下标
-    suggestIndex:'' // 搜索关键字推荐选中状态
+    suggestIndex:'', // 搜索关键字推荐选中状态
+    suggestShow:false, // 选中后将推荐不显示 
   }
  },
  computed:{
@@ -75,14 +77,16 @@ export default {
   searchList(){
     if(Object.keys(this.aggList).length !== 0){
       return this.aggList.list
+    }else{
+      return AggregateList
     }
-    return AggregateList
   },
   defaultIndex(){
     if(this.aggList.select_status && Object.keys(this.aggList).length !== 0){
       return this.aggList.select_status
+    }else{
+      return 0
     }
-    return 0
   }
 
  },
@@ -103,6 +107,7 @@ export default {
   },
   dataSearch(e){ // 聚合搜索关键字推荐  
     if(e.target.value.trim() === ''){ // 检查输入框是否为空状态
+      this.suggestShow = false
       this.suggestList = []
     }
     const words = encodeURIComponent(this.aggSearchWord)
@@ -144,7 +149,7 @@ export default {
     })
   },
   getSuggestItem(item){ // 选择推荐关键字  
-    console.log(item);
+    this.suggestShow = true
     switch (this.aggList.list[this.aggSelectIndex].id){
       case 0: // 百度搜索
         this.aggSearchWord = item.q
@@ -179,10 +184,25 @@ export default {
         break;
     }
   },
-  enterSearch(){
+  enterSearch(){  // 回车进行搜索
     const words = encodeURIComponent(this.aggSearchWord)
-    const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
-    // console.log(url);
+    const url = `${this.searchList[this.aggSelectIndex].search_url}${words}`
+    switch (this.aggList.type) { 
+      case 'work':
+        browser.openInTable(url)  // 在工作台中打开
+        this.aggSearchWord = ''
+        break;
+      case 'thisky':
+        browser.openInInner(url) // 在想天浏览器打开
+        this.aggSearchWord = ''
+        break;
+      case 'system':
+        browser.openInSystem(url) // 在系统默认的浏览器打开
+        this.aggSearchWord = ''
+        break;
+      default:
+        break;
+    }
   }
  }    
 

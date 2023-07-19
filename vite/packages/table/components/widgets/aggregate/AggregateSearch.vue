@@ -1,13 +1,13 @@
 <template>
   <Widget :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
   :menuList="gameMiddleBare" ref="aggregateSearchSlot" :sizeList="bottomSizeList">
-    <div class="flex items-center rounded-xl p-2 w-full justify-center mt-8 mb-3" style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click="handleSearchEngine">
+     <div class="flex items-center rounded-xl p-2 w-full justify-center mt-8 mb-3" style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click.stop="handleSearchEngine">
       <div class="flex items-center justify-center" style="width: 20px;height:20px;">
         <Icon :icon="aggInputValue" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
       </div>
       <a-input placeholder="搜索" :bordered="false" class="search"></a-input>
     </div>
-
+    
     <div class="flex">
       <template v-if="Object.keys(customData).length === 0 ||  customData.width === 1">
         <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
@@ -55,7 +55,6 @@ import Widget from "../../card/Widget.vue";
 import AggregateSearchDrawer from "./AggregateSearchDrawer.vue";
 import { appStore } from "../../../store";
 import { AggregateList } from "../../../js/data/searchData";
-import { Modal } from "ant-design-vue";
 
 export default {
   name: "AggregateSearch",
@@ -108,14 +107,16 @@ export default {
     aggSearchList(){
       if(Object.keys(this.aggList).length !== 0){
         return this.aggList.list
+      }else{
+        return this.AggregateList
       }
-      return this.AggregateList
     },
     aggInputValue(){
       if(Object.keys(this.aggList).length !== 0){
         return this.aggSearchList[0].icon
+      }else{
+        return this.AggregateList[0].icon
       }
-      return this.AggregateList[0].icon
     }
   },
 
@@ -123,31 +124,12 @@ export default {
   methods:{
     ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
     handleSearchEngine(){
-      if(Object.keys(this.aggList).length === 0){
-        Modal.confirm({
-         content: '需要将搜索引擎排个序',
-         okText: '确定',
-         onOk: async () => {
-          this.aggSearchShow = true
-         }
-       })
-      }else{
-        this. setSearchFullScreen(true)
-      }
+      this.setSearchFullScreen(true)
+      this.setSearchIndex(0)
     },
     clickSearchItem(index){ // 点击选中打开
-      if(Object.keys(this.aggList).length === 0){
-        Modal.confirm({
-         content: '需要将搜索引擎排个序',
-         okText: '确定',
-         onOk: async () => {
-          this.aggSearchShow = true
-         }
-       })
-      }else{
-        this.setSearchFullScreen(true)
-        this.setSearchIndex(index)
-      }
+      this.setSearchFullScreen(true)
+      this.setSearchIndex(index)
     }
   },
 }
