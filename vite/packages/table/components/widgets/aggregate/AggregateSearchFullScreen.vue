@@ -19,7 +19,7 @@
           </div>
         </div>
         <div  class="mt-4 flex flex-col">
-           <div class="flex items-center justify-center rounded-lg h-12 p-3" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
+           <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
              <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
              </div>
@@ -28,7 +28,7 @@
              ></a-input>
            </div>
            <div class="flex flex-col" v-if="suggestShow === false">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:50vh;">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:57vh;">
               <div v-for="(item, index) in suggestList" :class="{'':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
                @click="getSuggestItem(item)" 
               >
