@@ -1,37 +1,54 @@
 <template>
   <Title> 图标 </Title>
-  <div class="parent flex" style="justify-content: start">
-    <div
-      class="image"
-      :style="[backgroundState]"
-      :class="{ active: edit.src.length == 0 }"
+  <div class="relative items-center">
+    <a-upload
+      name="avatar"
+      list-type="picture-card"
+      class="avatar-uploader relative"
+      :show-upload-list="false"
+      :before-upload="beforeUpload"
+      style="border: 1px springgreen solid"
     >
       <img
-        :src="edit.src"
         v-if="edit.src"
-        :style="[radiusStyle, imgStateStyle]"
-        class="h-full w-full"
-        @error="imgError"
+        :src="edit.src"
+        alt="avatar"
+        style="width: 100px; height: 100px"
       />
       <div
-        style="border-radius: 50%; padding: 5px; cursor: pointer"
-        class="xt-bg-2 flex justify-center items-center xt-hover clear"
-        @click="clear()"
+        v-if="edit.src"
+        style="
+          border-radius: 50%;
+          padding: 5px;
+          cursor: pointer;
+          left: 90px;
+          top: -10px;
+        "
+        class="xt-bg-2 flex justify-center items-center xt-hover absolute"
+        @click.stop="clear()"
       >
         <Icon class="icon xt-text no-drag" icon="guanbi"></Icon>
       </div>
-    </div>
-    <div class="img-info">
+      <div v-else>
+        <div class="ant-upload-text"></div>
+      </div>
+    </a-upload>
+    <div
+      class="absolute"
+      style="top: 50%; transform: translateY(-50%); left: 120px"
+    >
       <div class="xt-text-2" style="font-size: 16px">
         推荐图片尺寸：128*128，不能超过2MB
       </div>
+      <XtButton @click="imgUp()" class="btn no-drag xt-bg-2 mt-3"
+        >自定义上传</XtButton
+      >
       <input
         style="display: none"
         ref="imgRef"
         type="file"
         accept="image/jpg,image/jpeg,image/png"
       />
-      <div @click="imgUpload()" class="btn no-drag xt-bg-2">自定义上传</div>
     </div>
   </div>
 </template>
@@ -41,6 +58,9 @@ import { validateFile } from "../../../../card/hooks/imageProcessing";
 import { getHostAddress } from "../hooks/getHostAddress";
 import { message } from "ant-design-vue";
 import editMixins from "../hooks/mixins";
+
+import api from "../../../../../../../src/model/api";
+
 export default {
   mixins: [editMixins],
   data() {
@@ -65,22 +85,35 @@ export default {
     },
   },
   methods: {
-    clear() {
-      this.edit.src = "";
-    },
-    imgUpload() {
+    imgUp() {
       let imgRef = this.$refs.imgRef;
       imgRef.click();
       let that = this;
       imgRef.onchange = function (event) {
         if (this.files.length === 0) return;
         const file = this.files[0];
-        let validate = validateFile(file, 2);
-        if (validate !== true) return message.error(validate);
-
-        that.edit.src = file.path;
-        event.target.value = "";
+        that.beforeUpload(file);
       };
+    },
+    clear() {
+      this.edit.src = "";
+    },
+    beforeUpload(file) {
+      let validate = validateFile(file, 2);
+      if (validate !== true) return message.error(validate);
+      this.imgUpload(file);
+    },
+    imgUpload(file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      api.postCosUpload(formData, (err, res) => {
+        if (!err) {
+          message.error("数据上传失败");
+        } else {
+          const url = "http://" + res.data.data;
+          this.edit.src = url;
+        }
+      });
     },
     imgError() {
       if (this.edit.link === "link") {
@@ -101,47 +134,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.parent {
-  justify-content: space-between;
-  align-content: center;
-  margin: 20px 0;
-
-  .btn {
-    cursor: pointer;
-    width: 120px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    border-radius: 12px;
-  }
-
-  .img-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-
-  .image {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    margin-right: 20px;
-
-    .clear {
-      position: absolute;
-      top: -10px;
-      right: -10px;
-    }
-  }
-}
-
-.active {
-  border: 2px solid var(--active-bg);
-}
-</style>
+<style lang="scss" scoped></style>
