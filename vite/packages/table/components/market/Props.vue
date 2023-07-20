@@ -191,11 +191,15 @@ export default {
       immediate: true,
       deep: true,
       handler (newV, oldV) {
-        if (newV == '下载次数') this.navLists = this.mySort(this.navLists, 'download')
-        else if (newV == '更新时间') this.navLists = this.mySort(this.navLists, 'time')
+        this.navLists.forEach((item) => {
+          var date = new Date(item.createTime);
+          item.sortTime = date.getTime()
+        })
+        if (newV == '购买次数') this.navLists = this.mySort(this.navLists, 'ownersCount')
+        else if (newV == '创建时间') this.navLists = this.mySort(this.navLists, 'sortTime')
         else this.navLists = this.navList
       }
-    },
+    }
   },
   mounted () {
     this.getFrameGoods()
@@ -205,6 +209,24 @@ export default {
     ...mapActions(appStore,['showUserCard']),
     tryFrame(frameImage){
       this.$emit('getFrameImage',frameImage)
+    },
+    mySort (data, property, asc) {
+      let datas = [...data]
+      if(property === 'ownersCount'){
+        return datas.sort(function (a, b) {
+          a = a[property][1]
+          b = b[property][1]
+          if (asc) return a - b
+          else return b - a
+        })
+      }else if(property === 'sortTime'){
+        return datas.sort(function (a, b) {
+          a = a[property]
+          b = b[property]
+          if (asc) return a - b
+          else return b - a
+        })
+      }
     },
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     getFramePrice (item) {  // 根据价格类型获取数据
