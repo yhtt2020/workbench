@@ -112,6 +112,7 @@ import { navStore } from '../store/nav'
 import {clipboardStore} from "../store/clipboard";
 import { browserStore } from '../store/browser'
 import RayMedal from '../components/small/RayMedal.vue'
+import { chatStore } from '../store/chat'
 
 export default {
   name: 'Code',
@@ -142,7 +143,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
-    this.initStore(browserStore,'browserStore')
+    // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
     clipboardStore()
@@ -211,6 +212,7 @@ export default {
     },
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
+      chatStore().login()
       this.$router.replace({ name: 'home' })
     },
     bindUserInfoResponse () {
@@ -344,7 +346,7 @@ export default {
           okText: '直接进入',
           centered: true,
           onOk: () => {
-            this.$router.replace({ name: 'home' })
+            this.enter()// this.$router.replace({ name: 'home' })
           },
         })
       }).finally(() => {
@@ -385,7 +387,10 @@ export default {
             okText: '发车'
           })
           return
+
         }
+
+
       }).catch(e => {
         this.loading = false
         message.error('服务器无响应，请稍后再试')

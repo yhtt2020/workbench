@@ -73,11 +73,10 @@ export default {
     })
     this.$nextTick(()=>{
       this.searchEngineList()
-      // this.AggregateList = this.aggList
     })
   },
   methods:{
-    ...mapActions(appStore,['getAggList']),
+    ...mapActions(appStore,['getAggList','setSearchUrlOpenType']),
     searchEngineList(){
       let that = this
       let listDrag = document.getElementById('aggregate-drop') // 获取外层容器实现拖拽
@@ -104,6 +103,7 @@ export default {
     openByDefault:{ // 监听设置中链接打开方式切换状态  
       handler(){
         this.openByDefault = this.openByDefault
+        this.setSearchUrlOpenType(this.openByDefault.name)
       }
     },
   }

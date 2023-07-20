@@ -233,6 +233,7 @@ export default {
     ...mapWritableState(browserStore, ['currentTab', 'runningTabs'])
   },
   mounted () {
+    this.setEvent('addedTab',this.addedTab)
     ipc.send('getRunningTableTabs')
     let params = this.$route.params
     if (typeof params.fullScreen === 'undefined') {
@@ -271,12 +272,13 @@ export default {
         }, 1000)
       })
     })
+
   },
   beforeUnmount () {
     this.handleLeave()
   },
   methods: {
-    ...mapActions(browserStore, ['updateTabCapture']),
+    ...mapActions(browserStore, ['updateTabCapture','setEvent']),
     switchToTab(id){
       let found=this.runningTabs.find(tab=>{
         return tab.id===id
@@ -319,7 +321,11 @@ export default {
         position: this.getContentBounds(),
         url: tab.url,
       }
-      this.currentTab = await ipc.sendSync('addTableTab', JSON.parse(JSON.stringify(args)))
+      await ipc.send('addTableTab', JSON.parse(JSON.stringify(args)))
+    },
+    addedTab(args){
+      const {tab}=args
+      this.currentTab =tab
       this.urlInput = this.currentTab.url
       console.log('当前tab', this.currentTab)
       this.runningTabs.push(JSON.parse(JSON.stringify(this.currentTab)))

@@ -37,6 +37,7 @@ export const appStore = defineStore('appStore', {
     init: false, //是否已经初始化
 
     fullScreen: false, //是否是全屏模式
+    searchFullScreen:false, // 聚合搜索全屏
 
     showWindowController:true,//窗口全屏，这个和上面的全屏不是同一个，区别是这个只影响窗体在系统层面上的最大化。
 
@@ -82,13 +83,15 @@ export const appStore = defineStore('appStore', {
     backgroundImage: {
       path: ''
     },
-    aggList:{ },
-
+    aggList:{
+      type:'work'
+    },
 
   }),
   getters: {},
 
   actions: {
+
     async showUserCard(uid, userInfo = null) {
       this.userCardUid = Number(uid)
       if (userInfo) {
@@ -191,6 +194,15 @@ export const appStore = defineStore('appStore', {
     },
     getAggList(){ // 将聚合搜索拖拽列表排序后的数组进行存储
       this.aggList.list = cache.get('aggSortList')
+    },
+    setSearchFullScreen(value:boolean){  // 设置聚合搜索全屏
+      this.searchFullScreen = value
+    },
+    setSearchIndex(index:number){  // 设置小卡片底部选中状态
+      this.aggList.select_status = index
+    },
+    setSearchUrlOpenType(value:object){  // 设置搜索路径打开方式类型
+      this.aggList.type = value
     }
 
   },
@@ -199,7 +211,7 @@ export const appStore = defineStore('appStore', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible','backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen'],
+      paths: ['status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible','backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen','aggList'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

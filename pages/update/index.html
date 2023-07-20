@@ -39,11 +39,14 @@
                 发布日期： <strong>{{ renderTime(info.releaseDate) }}</strong>
               </p>
             </div>
-            <p>
-              如更新后无法打开浏览器，请至官网
-              <a @click="send('addTab',{url:'https://apps.vip'})">apps.vip</a>
-              重新下载最新稳定版本。
-            </p>
+            <div style="margin-bottom: -10px;margin-top: 5px">
+              更新内容：
+              <div style="overflow-y: auto;height: 120px">
+                <div v-for="li in currentLog.list " >
+                  {{li}}
+                </div>
+              </div>
+            </div>
           </div>
           <template #extra>
             <div v-if="canUpdate">
@@ -60,6 +63,8 @@
       </template>
     </div>
     <script>
+      const  axios =require('axios')
+
       const ipc = require("electron").ipcRenderer;
       window.ipc = ipc;
       function toNum(a) {
@@ -94,9 +99,28 @@
             currentVersion: "",
             canUpdate: false,
             tip: "",
+            updateLog:null
           };
         },
-        mounted() {},
+        mounted() {
+          axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
+            this.updateLog = data.data
+            console.log( this.updateLog)
+          })
+
+        },
+        computed:{
+          currentLog(){
+            if(this.updateLog){
+             return this.updateLog.find(li=>{
+               return li.name===this.info.version
+             })
+            }else{
+              return {}
+            }
+
+          }
+        },
         methods: {
           startInstall() {
             ipc.send("startInstall");
@@ -142,7 +166,7 @@
     </script>
     <style>
       .desc p {
-        margin-bottom: 1em;
+        margin-bottom:5px;
       }
     </style>
   </body>

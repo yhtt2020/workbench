@@ -7,8 +7,10 @@ export default defineComponent({
 </script>
 
 <template>
-这里是工具箱
-  <a-button>按钮</a-button>
+  <div style="padding:20px">
+    <h2>我是超级工具箱，我正在开发中，即将上线，敬请期待！</h2>
+  </div>
+
 </template>
 
 <style scoped lang="scss">

@@ -2,7 +2,6 @@
   <div @contextmenu.stop="showDrawer" :class="classes"
        style=" background: var( --primary-bg); color: var(--primary-text)"
        :style="{
-      pointerEvents: editing ? 'none' : '',
       display: options.hide == true ? 'none' : '',
       width: customSize.width,
       height: customSize.height,

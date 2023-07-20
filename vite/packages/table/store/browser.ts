@@ -5,9 +5,21 @@ import dbStorage from "./dbStorage";
 export const browserStore = defineStore("browserStore", {
   state: () => ({
     runningTabs:[],
-    currentTab:{}
+    currentTab:{},
+
+    eventList:{
+      addedTab:null
+    }
   }),
   actions:{
+    setEvent(event,fn){
+      this.eventList[event]=fn
+    },
+    callEvent(event,args){
+      if(this.eventList[event]){
+        this.eventList[event](args)
+      }
+    },
     bindIPC(){
       ipc.on('updateRunningTableTabs',(event,args)=>{
           console.log(args)
@@ -27,7 +39,6 @@ export const browserStore = defineStore("browserStore", {
             this.currentTab=tab
           }
         }
-
       })
       ipc.on('updateTabFavicon',(event,args)=>{
         let tab=this.getTab(args.id)
@@ -37,7 +48,10 @@ export const browserStore = defineStore("browserStore", {
             this.currentTab=tab
           }
         }
-
+      })
+      ipc.on('addedTableTab',(event,args)=>{
+        console.log('添加tab',args)
+        this.callEvent('addedTab',args)
       })
     },
     getTab(id){
@@ -54,7 +68,7 @@ export const browserStore = defineStore("browserStore", {
     }
   },
   persist: {
-    enabled: true,
+    enabled: false,
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage

@@ -53,12 +53,15 @@ import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
 import Rank from '../page/social/Rank.vue';
 import BillingRecord from '../page/social/BillingRecord.vue';
+import Chat from '../page/chat/chat.vue'
+import ChatIndex from '../page/chat/index.vue'
+import Contact from '../page/chat/contact.vue'
 import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
-
 // @ts-ignore
 import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
+
 export default [
   {
     path: "/main",
@@ -139,9 +142,9 @@ export default [
             component: Rank,
           },
           {
-            path:"/bill",
-            name:'bill',
-            component:BillingRecord
+            path: "/bill",
+            name: 'bill',
+            component: BillingRecord
           }
         ],
       },
@@ -160,11 +163,27 @@ export default [
             component: BrowserIndex
           },
           {
-            path:'/tabs',
-            name:'browserTabs',
-            component:BrowserTabs
+            path: '/tabs',
+            name: 'browserTabs',
+            component: BrowserTabs
           }
         ]
+      },
+      {
+        path: '/chat',
+        component: ChatIndex,
+        name: 'chatIndex',
+        children: [
+          {
+            path: '',
+            name: 'chat',
+            component: Chat,
+          },
+          {
+            path: '/contact',
+            name: 'contact',
+            component: Contact,
+          }]
       },
       {
         path: "/ai",
@@ -352,9 +371,9 @@ export default [
         component: Clipboard,
       },
       {
-        path:'/shortcutKey',
-        name:'shortcutKey',
-        component:ShortcutKey,
+        path: '/shortcutKey',
+        name: 'shortcutKey',
+        component: ShortcutKey,
       },
       {
         path: "/market",

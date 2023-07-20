@@ -182,12 +182,12 @@
           <div><span>隐藏桌面</span></div>
         </div>
       </a-col>
-      <a-col>
-        <div @click="shareDesk" class="btn">
-          <Icon style="font-size: 3em" icon="fenxiang"></Icon>
-          <div><span>分享桌面</span></div>
-        </div>
-      </a-col>
+<!--      <a-col>-->
+<!--        <div @click="shareDesk" class="btn">-->
+<!--          <Icon style="font-size: 3em" icon="fenxiang"></Icon>-->
+<!--          <div><span>分享桌面</span></div>-->
+<!--        </div>-->
+<!--      </a-col>-->
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" @close="cardDesk = 'all'" placement="right">
@@ -208,11 +208,11 @@
         </div> -->
         <div class="line">
           卡片缩放：
-          <a-slider :min="20" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>
+          <a-slider :min="20" @afterChange="updateLayout" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>
         </div>
         <div class="line">
           卡片空隙：(调大空隙可能变成瀑布流布局)
-          <a-slider :min="5" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>
+          <a-slider :min="5"  @afterChange="updateLayout" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>
         </div>
         <div class="line">
           距离顶部：
@@ -226,11 +226,11 @@
       </div>
       <div class="line">
         卡片缩放：
-        <a-slider :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+        <a-slider :min="20"  @afterChange="updateLayout" :max="500" v-model:value="settings.cardZoom"></a-slider>
       </div>
       <div class="line">
         卡片空隙：(调大空隙可能变成瀑布流布局)
-        <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+        <a-slider :min="5"  @afterChange="updateLayout" :max="30" v-model:value="settings.cardMargin"></a-slider>
       </div>
       <div class="line">
         距离顶部：
@@ -291,6 +291,12 @@
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
+  <!-- 聚合搜索全屏下的页面 -->
+  <div class="fixed inset-0" style="z-index: 999;" v-if="searchFullScreen === true">
+    <!-- style=""  -->
+    <AggregateSearchFullScreen></AggregateSearchFullScreen>
+  </div>
+
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
     <template #extra v-if="shareCode">
       <a-space>
@@ -308,17 +314,17 @@
       <div>
         <div @click="importDesk" class="btn-item">导入桌面</div>
       </div>
-      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
-      <div class="flex justify-between">
-        <span class="flex items-center">
-          <span class="desk-title mr-2">热门桌面</span>
-          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
-        </span>
-        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
-      </div>
-      <div>
-        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
-      </div>
+<!--      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>-->
+<!--      <div class="flex justify-between">-->
+<!--        <span class="flex items-center">-->
+<!--          <span class="desk-title mr-2">热门桌面</span>-->
+<!--          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>-->
+<!--        </span>-->
+<!--        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>-->
+<!--      </div>-->
     </div>
     <div v-else>
       <span class="desk-title">分享码</span>
@@ -406,7 +412,7 @@ import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
 import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
-
+import AggregateSearchFullScreen from "../components/widgets/aggregate/AggregateSearchFullScreen.vue";
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
@@ -715,7 +721,8 @@ export default {
     DeskPreview,
     Tab,
     UpdateMyInfo,
-    ExportDesk
+    ExportDesk,
+    AggregateSearchFullScreen
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -734,7 +741,8 @@ export default {
       "styles",
       "style",
       "fullScreen",
-      "infoVisible"
+      "infoVisible",
+      "searchFullScreen",
     ]),
 
     ...mapWritableState(appStore, {
@@ -952,6 +960,9 @@ export default {
     }
   },
   methods: {
+    updateLayout(){
+      this.$refs.grid.update()
+    },
     learn(){
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },
