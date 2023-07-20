@@ -279,16 +279,25 @@ export default {
     if(e.key === 'Tab'){ // 触发tab键切换功能
       e.preventDefault();
       this.aggSelectIndex = (this.aggSelectIndex + 1) %  this.searchList.length
+      this.aggSelectIcon.icon = this.searchList[this.aggSelectIndex].icon
       const words = encodeURIComponent(this.aggSearchWord)
       const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
       this.searchFetch(url)
     }
     if(e.key === 'ArrowUp'){
-      
+      if((this.suggestIndex - 1) %  this.suggestList.length >= -1){
+        e.preventDefault()
+        this.suggestIndex = 0
+      }else{
+        this.suggestIndex --
+      }
     }else if(e.key === 'ArrowDown'){
-
+      this.suggestIndex = (this.suggestIndex + 1) %  this.suggestList.length
     }
-   
+    // if(e.key === 'Enter'){
+    //   // const enterWords = encodeURIComponent(this.)
+    //   // this.openSearchSuggest(enterWords)
+    // }
   },
  
   matchingKey(val){ // 匹配搜索关键字是否存在  
@@ -340,7 +349,7 @@ export default {
          default:
           break;
     }
-  }
+  },
 
  }    
 
