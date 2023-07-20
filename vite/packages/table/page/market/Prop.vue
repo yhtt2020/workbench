@@ -118,6 +118,7 @@ export default {
       this.tab = args.index
     },
     onBack(){
+      this.fullScreen = false
       this.$router.go(-1)
     },
     updateNavIndex({index}){
