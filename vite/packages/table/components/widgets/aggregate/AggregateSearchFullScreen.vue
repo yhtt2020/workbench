@@ -35,62 +35,32 @@
             <div class="flex flex-col" v-if="suggestShow === false">
               <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
                 <div v-for="(item, index) in suggestList"  :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
-                @click="getSuggestItem(item,index)"  
+                @click="getSuggestItem(item,index)"
                 >  
                   <!-- 百度搜索关键字 -->
                   <div v-if="item.q" class="flex">
-                     <span class="ping-title" style="color: var(--active-bg);">
-                      {{ matchingKey(item.q) }}
-                     </span>
-                     <span class="ping-title" style="color: var(--secondary-text);">
-                      {{ matchingOther(item.q) }}
-                     </span>
+                    <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(item.q)"></span>
                   </div>
 
                   <!-- bili搜索关键字 -->
                   <div v-else-if="item.value" class="flex">
-                    <span class="ping-title" style="color: var(--active-bg);">
-                     {{ matchingKey(item.value) }}
-                    </span>
-                    <span class="ping-title" style="color: var(--secondary-text);">
-                     {{ matchingOther(item.value) }}
-                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.value)"></span>
                   </div>
 
                   <div v-else-if="item.name">
-                    <span class="ping-title" style="color: var(--active-bg);">
-                      {{ matchingKey(item.name) }}
-                    </span>
-                    <span class="ping-title" style="color: var(--secondary-text);">
-                      {{ matchingOther(item.name) }}
-                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.name) "></span>
                   </div>
 
                   <div v-else-if="item.query">
-                    <span class="ping-title" style="color: var(--active-bg);">
-                      {{ matchingKey(item.query) }}
-                    </span>
-                    <span class="ping-title" style="color: var(--secondary-text);">
-                      {{ matchingOther(item.query) }}
-                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.query)"></span>
                   </div>
 
                   <div v-else-if="item.suggestion">
-                    <span class="ping-title" style="color: var(--active-bg);">
-                      {{ matchingKey(item.suggestion) }}
-                    </span>
-                    <span class="ping-title" style="color: var(--secondary-text);">
-                      {{ matchingOther(item.suggestion) }}
-                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.suggestion)"></span>
                   </div>
 
                   <div v-else>
-                    <span class="ping-title" style="color: var(--active-bg);">
-                      {{ matchingKey(item) }}
-                     </span>
-                     <span class="ping-title" style="color: var(--secondary-text);">
-                      {{ matchingOther(item) }}
-                     </span>
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item)"></span>
                   </div>
       
                 </div>
@@ -285,31 +255,25 @@ export default {
       this.searchFetch(url)
     }
     if(e.key === 'ArrowUp'){
-      if((this.suggestIndex - 1) %  this.suggestList.length >= -1){
+      if(this.suggestIndex <= 0){
         e.preventDefault()
-        this.suggestIndex = 0
       }else{
-        this.suggestIndex --
+        this.suggestIndex  -- 
+        this.updateInputValue()
       }
     }else if(e.key === 'ArrowDown'){
       this.suggestIndex = (this.suggestIndex + 1) %  this.suggestList.length
+      this.updateInputValue()
     }
-    // if(e.key === 'Enter'){
-    //   // const enterWords = encodeURIComponent(this.)
-    //   // this.openSearchSuggest(enterWords)
-    // }
+    
   },
  
   matchingKey(val){ // 匹配搜索关键字是否存在  
     const isMatched = val.includes(this.aggSearchWord);
     if(isMatched){
-      const resultVal = val.slice(0,this.aggSearchWord.length)
-      return resultVal
+      const regex = new RegExp(this.aggSearchWord, 'gi');
+      return val.replace(regex, `<span style="color:var(--active-bg);">${this.aggSearchWord}</span>`);
     }
-  },
-
-  matchingOther(val){ // 除了搜索关键字之外的字符串
-    return val.slice(this.aggSearchWord.length)
   },
 
   async searchFetch(url){  // 搜索api数据请求
@@ -332,7 +296,9 @@ export default {
           break;
          case 4:
           // github搜索引擎api暂时没有找到关键字搜索推荐
-          this.suggestList = result.data.items
+          if(this.aggSearchWord !== '' ){
+            this.suggestList = result.data.items
+          }
           break;
          case 5: // B站搜索
           this.suggestList  = result.data
@@ -351,6 +317,43 @@ export default {
     }
   },
 
+  updateInputValue() {  // 更新输入框值
+    switch (this.aggList.list[this.aggSelectIndex].id) {
+      case 0:
+        if(this.suggestList[this.suggestIndex].q !== undefined){
+          this.aggSearchWord = this.suggestList[this.suggestIndex].q
+        }
+        // this.aggSearchWord = this.suggestList[this.suggestIndex].q
+        break;
+      case 1:
+        
+        break;
+      case 2:
+        this.aggSearchWord = this.suggestList[this.suggestIndex]
+        break;
+      case 3:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].query
+        break;
+      case 4:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].name
+        break;
+      case 5:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].value
+        break;
+      case 6:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].suggestion
+        break;
+      case 7:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].name
+        break;
+      case 8:
+        this.aggSearchWord = this.suggestList[this.suggestIndex]
+        break;
+      default:
+        break;
+    }
+  },
+  
  }    
 
 }
