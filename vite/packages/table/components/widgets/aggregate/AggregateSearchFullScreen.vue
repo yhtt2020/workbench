@@ -33,16 +33,66 @@
               ></a-input>
             </div>
             <div class="flex flex-col" v-if="suggestShow === false">
-              <vue-custom-scrollbar :settings="settingsScroller" style="max-height:366px;">
-                <div v-for="(item, index) in suggestList" :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
-                @click="getSuggestItem(item,index)" 
-                >
-                 <span style="color: var(--secondary-text);">
-                   {{ 
-                     item.q ? item.q : item.value ? item.value : item.query ? item.query 
-                     : item.name ? item.name : item.suggestion ? item.suggestion : item 
-                    }}
-                 </span>
+              <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
+                <div v-for="(item, index) in suggestList"  :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
+                @click="getSuggestItem(item,index)"  
+                >  
+                  <!-- 百度搜索关键字 -->
+                  <div v-if="item.q" class="flex">
+                     <span class="ping-title" style="color: var(--active-bg);">
+                      {{ matchingKey(item.q) }}
+                     </span>
+                     <span class="ping-title" style="color: var(--secondary-text);">
+                      {{ matchingOther(item.q) }}
+                     </span>
+                  </div>
+
+                  <!-- bili搜索关键字 -->
+                  <div v-else-if="item.value" class="flex">
+                    <span class="ping-title" style="color: var(--active-bg);">
+                     {{ matchingKey(item.value) }}
+                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);">
+                     {{ matchingOther(item.value) }}
+                    </span>
+                  </div>
+
+                  <div v-else-if="item.name">
+                    <span class="ping-title" style="color: var(--active-bg);">
+                      {{ matchingKey(item.name) }}
+                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);">
+                      {{ matchingOther(item.name) }}
+                    </span>
+                  </div>
+
+                  <div v-else-if="item.query">
+                    <span class="ping-title" style="color: var(--active-bg);">
+                      {{ matchingKey(item.query) }}
+                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);">
+                      {{ matchingOther(item.query) }}
+                    </span>
+                  </div>
+
+                  <div v-else-if="item.suggestion">
+                    <span class="ping-title" style="color: var(--active-bg);">
+                      {{ matchingKey(item.suggestion) }}
+                    </span>
+                    <span class="ping-title" style="color: var(--secondary-text);">
+                      {{ matchingOther(item.suggestion) }}
+                    </span>
+                  </div>
+
+                  <div v-else>
+                    <span class="ping-title" style="color: var(--active-bg);">
+                      {{ matchingKey(item) }}
+                     </span>
+                     <span class="ping-title" style="color: var(--secondary-text);">
+                      {{ matchingOther(item) }}
+                     </span>
+                  </div>
+      
                 </div>
               </vue-custom-scrollbar>
             </div>
@@ -112,8 +162,8 @@ export default {
     }else{
       return 0
     }
-  }
-
+  },
+  
  },
 
  mounted(){
@@ -136,6 +186,7 @@ export default {
     this.aggSelectIcon.icon = item.icon
     this.setSearchIndex(index)
     this.$refs.searchRef.focus()
+    this.suggestList = []
   },
   dataSearch(e){ // 聚合搜索关键字推荐  
     if(e.target.value.trim() === ''){ // 检查输入框是否为空状态
@@ -262,6 +313,18 @@ export default {
         // console.log('');
         break;
     }
+  },
+ 
+  matchingKey(val){ // 匹配搜索关键字是否存在  
+    const isMatched = val.includes(this.aggSearchWord);
+    if(isMatched){
+      const resultVal = val.slice(0,this.aggSearchWord.length)
+      return resultVal
+    }
+  },
+
+  matchingOther(val){ // 除了搜索关键字之外的字符串
+    return val.slice(this.aggSearchWord.length)
   }
 
  }    
