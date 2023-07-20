@@ -85,7 +85,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 // import { formatArrayAsFileSize } from './hooks/useFileSize.js';
-
+const {fs} = window.$models
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
 export default {
@@ -124,6 +124,8 @@ export default {
   },
   mounted() {
     // 是否需要初始化
+    // console.log('this.customData :>> ', this.customData.iconList[0].src);
+    // console.log("window.globalArgs :>> ", window.globalArgs);
     if (this.customData.groupTitle == undefined) {
       let setData = {};
       setData.groupTitle = "分组"; // 初始化分组名称

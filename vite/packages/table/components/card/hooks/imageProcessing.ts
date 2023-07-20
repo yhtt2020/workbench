@@ -143,23 +143,48 @@ export const base64Image = (
   };
 };
 export const base64File = (str: string) => {
-  // 分离文件类型和数据部分
-  let parts = str.split(";base64,");
-  let contentType = parts[0].split(":")[1];
-  let raw = window.atob(parts[1]);
+  // 截取Base64字符串和内容类型
+  const base64Data = str.split(",")[1];
+  const contentType = str.split(":")[1].split(";")[0];
 
-  // 转换为Unit8Array
-  let uint8Array = new Uint8Array(raw.length);
-  for (var i = 0; i < raw.length; i++) {
-    uint8Array[i] = raw.charCodeAt(i);
+  // 转换为Blob对象
+  const byteCharacters = window.atob(base64Data);
+  const byteArrays: any = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+    const slice = byteCharacters.slice(offset, offset + 1024);
+    const byteNumbers = new Array(slice.length);
+
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
   }
 
-  // 创建文件对象
-  let file = new File([uint8Array], "base64File", {
-    type: contentType,
-  });
+  const blob = new Blob(byteArrays, { type: contentType });
+  // 获取临时路径
+  const temporaryUrl = URL.createObjectURL(blob);
+  console.log('blob :>> ', blob);
+  return temporaryUrl;
+  // 分离文件类型和数据部分
+  // let parts = str.split(";base64,");
+  // let contentType = parts[0].split(":")[1];
+  // let raw = window.atob(parts[1]);
 
-  return file;
+  // // 转换为Unit8Array
+  // let uint8Array = new Uint8Array(raw.length);
+  // for (var i = 0; i < raw.length; i++) {
+  //   uint8Array[i] = raw.charCodeAt(i);
+  // }
+
+  // // 创建文件对象
+  // let file = new File([uint8Array], "base64File", {
+  //   type: contentType,
+  // });
+
+  // return file;
 };
 export const fileUpload = async (file: any) => {
   let url: any = null;

@@ -249,11 +249,14 @@ export default {
           if (this.navName !== "Desktop" && this.navName !== "MyApps") {
             iconOption.src = item.icon;
           } else {
-            let file = base64File(item.icon);
-            const formData = new FormData();
-            formData.append("file", file);
-            let url = await fileUpload(file);
-            if (url) iconOption.src = url;
+            iconOption.src = item.icon;
+            // let file = base64File(item.icon);
+            // console.log('file :>> ', file);
+            // const formData = new FormData();
+            // formData.append("file", file);
+            // let url = await fileUpload(file);
+            // console.log('url :>> ', url);
+            // if (url) iconOption.src = url;
           }
           if (item.open) {
             iconOption.open = item.open;
