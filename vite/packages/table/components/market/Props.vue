@@ -69,6 +69,44 @@
       <div class="mb-3 mx-2" style="width:337px;opacity: 0;height: 1px;"></div>
     </div>
   </div>
+
+  <!-- 收款码付费弹窗组件 -->
+  <a-modal centered v-model:visible="payVisible" :footer="null" :width="480" :closable="false" @cancel="closeCheckTimer"
+           :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}"
+  >
+    <div class="w-full flex items-center mb-6" v-if="isPay === false">
+      <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">
+        收银台
+      </div>
+      <div class="w-12 flex items-center justify-center h-12 rounded-lg active-button pointer"
+           @click="payVisible = false;closeCheckTimer()" style="color: var(--secondary-text);background: var(--secondary-bg);">
+        <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
+      </div>
+    </div>
+    <PaymentMoney @payOk="getFrameGoods();payVisible=false" :gettingOrder="gettingOrder" :order="order" ref="paymentPanel"
+                         :needPayAvatar="needPayAvatar"></PaymentMoney>
+    <!-- 未购买情况下走扫码支付的流程 -->
+  </a-modal>
+
+  <!-- 积分付费弹窗组件 -->
+  <a-modal centered v-model:visible="pointVisible" :footer="null" :width="480" :closable="false"
+           :header="null" :bodyStyle="{borderRadius:'12px',padding:'12px',}"
+  >
+    <div class="flex mb-6">
+      <div class="avatar-font h-12 flex items-center justify-center" style="width: 90%;color: var(--primary-text);">
+        收银台
+      </div>
+      <div class="w-12 h-12 flex items-center pointer justify-center rounded-lg active-button"
+           style="color: var(--secondary-text);background: var(--secondary-bg);"
+           @click="pointVisible = false"
+      >
+        <Icon icon="guanbi" style="font-size: 0.5715em;"></Icon>
+      </div>
+    </div>
+    <PointPayment :needPayAvatar="needPayAvatar"></PointPayment>
+  </a-modal>
+
+  <GiftModal ref="giftRef" :needPayAvatar="needPayAvatar" :memberDevoteDisplay="memberDevoteDisplay"></GiftModal>
 </template>
 
 <script>
@@ -166,8 +204,7 @@ export default {
     ...mapActions(frameStore, ['getFrameGoods', 'ensureOrder']),
     ...mapActions(appStore,['showUserCard']),
     tryFrame(frameImage){
-      this.tryFrameVisible=true
-      this.tringFrame=frameImage
+      this.$emit('getFrameImage',frameImage)
     },
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     getFramePrice (item) {  // 根据价格类型获取数据
@@ -203,7 +240,7 @@ export default {
 
     // 头像框人物搜索回调事件
     avatarSearch (e) {
-      console.log('测试', e)
+      // console.log('测试', e)
     },
     // 选中队友后回调事件
     giftTeamMember (item) {

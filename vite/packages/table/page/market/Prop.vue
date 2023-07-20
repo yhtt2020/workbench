@@ -31,7 +31,7 @@
         <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
         <!-- 列表内容 -->
         <div class="ml-5 right no-drag">
-          <Props :selected="sort" :navList="marketList[navIndex].children"></Props>
+          <Props :selected="sort" :navList="marketList[navIndex].children" @getFrameImage="getFrameImage"></Props>
         </div>
       </div>
     </div>
@@ -44,10 +44,13 @@
           </div>
           <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
        </div>
-       <div @click="onBack" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+       <div @click="clearExtra" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
           style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
           <Icon icon="clear" style="font-size: 1.5em;"></Icon>
         </div>
+      </div>
+      <div class="card half mr-3" style="width:376px;height:600px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
+        <PropPreview :uid="userInfo.uid" :userInfo="userInfo" :frameImage="frameImage"></PropPreview>
       </div>
     </div>
   </div>
@@ -60,12 +63,14 @@ import { mapActions, mapWritableState } from "pinia";
 import { appStore } from '../../store';
 import { frameStore } from '../../store/avatarFrame'
 import Props from '../../components/market/Props.vue';
+import PropPreview from '../../components/market/PropPreview.vue';
 export default {
   name: "CreativeMarket",
   components: {
     Search,
     NavMenu,
-    Props
+    Props,
+    PropPreview
   },
   data() {
     return {
@@ -76,32 +81,36 @@ export default {
       sort: '综合排序',
       sortType: [
         { value: '综合排序', name: '综合排序' },
-        { value: '下载次数', name: '下载次数' },
-        { value: '更新时间', name: '更新时间' },
+        { value: '购买次数', name: '购买次数' },
+        { value: '创建时间', name: '创建时间' },
       ],
       inputSearchValue: '',
       marketList: [
         {cname: '头像框',children: []},
-        {cname: '卡面',children: []},
-        {cname: '宠物',children: []},
-        {cname: '主题',children: []},
-        {cname: '道具',children: []},
+        // {cname: '卡面',children: []},
+        // {cname: '宠物',children: []},
+        // {cname: '主题',children: []},
+        // {cname: '道具',children: []},
       ],
-      showPreview: true
+      showPreview: true,
+      frameImage: ''
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen']),
+    ...mapWritableState(appStore, ['fullScreen','userInfo']),
     ...mapWritableState(frameStore, ['frameData']),
-    frameList () {
-      const data = this.frameData.list
-      return data
-    },
+  },
+  watch: {
+    frameData: {
+      deep: true,
+      handler(val){
+        this.marketList[0].children = val.list
+      }
+    }
   },
   mounted() {
     this.fullScreen = true
     this.getFrameGoods()
-    this.marketList[0].children = this.frameList
   },
   methods: {
     ...mapActions(frameStore, ['getFrameGoods', 'ensureOrder']),
@@ -123,6 +132,13 @@ export default {
     },
     openPreview(){
       this.showPreview = true
+    },
+    getFrameImage(frameImage){
+      this.frameImage = frameImage
+      this.showPreview = true
+    },
+    clearExtra(){
+      this.frameImage = ''
     }
   },
 }
@@ -182,7 +198,7 @@ export default {
     z-index: 9;
     margin-top: 24px;
     padding: 0 20px 0 16px;
+    margin-bottom: 24px;
     border-left: 1px solid var(--divider);
-    // border-left: 1px solid rgba(255,255,255,0.10);
   }
 </style>

@@ -68,10 +68,11 @@ export default {
           imgBack: '/img/market/deck.png',
           title: '快捷指令',
           children: [],
-          route: {
-            name: 'deck'
-          },
-          type: 'route',
+          // route: {
+          //   name: 'deck'
+          // },
+          // type: 'route',
+          type: 'deck'
         },
         {
           imgBack: '/img/market/prop.png',
@@ -103,7 +104,6 @@ export default {
     jumpMarket(val,market){
       switch(val){
         case 'route':
-          console.log(val,market)
           this.fullScreen = false
           // if(market.route.name === 'prop'){
           //   window.toggleFrameStore()
