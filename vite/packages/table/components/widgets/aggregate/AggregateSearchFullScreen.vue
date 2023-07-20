@@ -314,7 +314,9 @@ export default {
           // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
          break;
          case 2: // 必应搜索
-          this.suggestList  = result.data[1]
+           if(this.aggSearchWord !== '' ){  // 处理必应搜索为空时显示自带的数据
+            this.suggestList  = result.data[1]
+           }
           break;
          case 3: // 知乎搜索
           this.suggestList  = result.data.suggest
