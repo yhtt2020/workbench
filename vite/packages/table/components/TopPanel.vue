@@ -1,5 +1,5 @@
 <template>
-  <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="10">
+  <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="16">
     <a-col :span="8">
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
            v-if="runningGame.appid">
@@ -23,6 +23,7 @@
         <!--        </span>-->
       </div>
     </a-col>
+
     <a-col :span="8" style="text-align: right;color: var(--secondary-text);" class="s-text">
       <div :style="{marginRight:showWindowController?'220px':0}" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="no-drag truncate" v-if="!loading">
@@ -43,9 +44,21 @@
   <a-row style="height: 1em;cursor: move" class="drag text-right" v-else>
 
   </a-row>
+
+  <div class="new-message  flex items-center justify-center  no-drag pointer" @click="messageAlert">
+    <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
+      <img src="/icons/logo128.png" class="w-full h-full object-cover">
+    </div>
+    <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
+  </div>
+
   <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg " style=" background: var(--primary-bg) !important;">
     <WindowController></WindowController>
   </div>
+
+  <a-drawer :width="500" :closable="false" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px'}">
+    <MessagePopup></MessagePopup>
+  </a-drawer>
 </template>
 
 <script>
@@ -58,6 +71,7 @@ import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
 import WindowController from './WindowController.vue'
+import MessagePopup from '../page/MessagePopup/index.vue'
 import {steamUserStore} from "../store/steamUser";
 import {getClientIcon, getCover, getIcon} from "../js/common/game";
 
@@ -65,6 +79,7 @@ export default {
   name: 'TopPanel',
   components:{
     WindowController,
+    MessagePopup
   },
   data () {
     return {
@@ -72,7 +87,8 @@ export default {
       dateTime: {},
       timer: null,
       lockTimer: null,
-      showLockTip: false
+      showLockTip: false,
+      messageDrawer:false,
     }
   },
   computed: {
@@ -192,7 +208,11 @@ export default {
           appid:appid
         }
       })
+    },
+    messageAlert(){
+      this.messageDrawer = true
     }
+
   },
 }
 </script>
@@ -214,4 +234,18 @@ export default {
   top: 0;
   overflow: hidden;
 }
+
+.new-message{
+  position:fixed;
+  top:11px;
+  left:71.5%;
+}
+
+.primary-title{
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
 </style>

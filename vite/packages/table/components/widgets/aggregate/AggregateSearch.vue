@@ -131,8 +131,10 @@ export default {
   computed:{
     aggSearchList(){
       if(this.customData && this.customData.sort_list){
+        this.getAggList(this.customData.sort_list)
         return this.customData.sort_list
       }else{
+        this.getAggList(this.AggregateList)
         return this.AggregateList
       }
     },
@@ -172,15 +174,24 @@ export default {
     setSortedList(arr){
       this.customData.sort_list = arr
     },
-    ...mapActions(appStore,['setSearchFullScreen','setSearchIndex','setSearchUrlOpenType']),
+    ...mapActions(appStore,['setSearchFullScreen','setSearchIndex','setSearchUrlOpenType','getAggList']),
     ...mapActions(cardStore,['updateCustomData']),
     handleSearchEngine(){
       this.setSearchFullScreen(true)
-      this.setSearchIndex(0)
+      if(this.customData && this.customData.sort_list){
+        this.setSearchIndex(0)
+      }else{
+        this.setSearchIndex(this.AggregateList[0].id)
+      }
+      //
     },
     clickSearchItem(index){ // 点击选中打开
       this.setSearchFullScreen(true)
-      this.setSearchIndex(index)
+      if(this.customData && this.customData.sort_list){
+        this.setSearchIndex(index)
+      }else{
+        this.setSearchIndex(this.AggregateList[index].id)
+      }
     },
   },
 
