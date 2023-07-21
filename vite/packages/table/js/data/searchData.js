@@ -7,12 +7,12 @@ export const AggregateList = [
     recommend_url:'https://www.baidu.com/sugrec?prod=pc&wd=',
     id:0,
   },
-  // {
-  //   id:1,
-  //   title:'谷歌',
-  //   icon:'google',
-  //   search_url:'https://www.google.com/search?q='
-  // },
+  {
+    id:1,
+    title:'谷歌',
+    icon:'google',
+    search_url:'https://www.google.com/search?q='
+  },
   {
     id:2,
     title:'必应',

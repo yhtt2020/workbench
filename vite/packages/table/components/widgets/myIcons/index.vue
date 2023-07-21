@@ -125,7 +125,7 @@ export default {
   mounted() {
     // 是否需要初始化
     if (this.customData.groupTitle == undefined) {
-      let setData = {};
+      let setData = {}; 
       setData.groupTitle = "分组"; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     }
