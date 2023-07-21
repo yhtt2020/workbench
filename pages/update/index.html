@@ -1,173 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>自动升级</title>
-    <script src="../../ext/vue/vue.js"></script>
-    <script src="../../ext/vue/antd.min.js"></script>
-    <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-  </head>
-  <body style="overflow: hidden">
-    <script>
-      Vue.use(antd);
-    </script>
-    <div id="appVue">
-      <template>
-        <a-result>
-          <!--      <template #extra>-->
-          <!--        <a-button key="console" type="primary">-->
-          <!--          下载更新-->
-          <!--        </a-button>-->
-          <!--      -->
-          <!--       -->
-          <!--      </template>-->
-          <span slot="title"> {{tip}} </span>
-          <div class="desc">
-            <p>您当前的版本号：{{currentVersion}}</p>
-            <div v-if="!info.version" style="color: red; margin-bottom: 10px">
-              暂未检测到新版本，请确认网络或者版本类型。
-            </div>
-            <div v-else>
-              <p>
-                最新发行版本号：<strong>{{ info.version }}</strong>
-                <a
-                  @click="send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rvo0kt'})"
-                  >了解更多 &gt;</a
-                >
-              </p>
-              <p>
-                发布日期： <strong>{{ renderTime(info.releaseDate) }}</strong>
-              </p>
-            </div>
-            <div style="margin-bottom: -10px;margin-top: 5px">
-              更新内容：
-              <div style="overflow-y: auto;height: 120px">
-                <div v-for="li in currentLog.list " >
-                  {{li}}
-                </div>
-              </div>
+<head>
+  <meta charset="UTF-8"/>
+  <title>自动升级</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+</head>
+<body style="overflow: hidden">
+<script>
+  Vue.use(antd)
+</script>
+<div id="appVue">
+  <template>
+    <a-result>
+      <!--      <template #extra>-->
+      <!--        <a-button key="console" type="primary">-->
+      <!--          下载更新-->
+      <!--        </a-button>-->
+      <!--      -->
+      <!--       -->
+      <!--      </template>-->
+      <span slot="title"> {{ tip }} </span>
+      <div class="desc">
+        <p>您当前的版本号：{{ currentVersion }}</p>
+        <div v-if="!info.version" style="color: red; margin-bottom: 10px">
+          暂未检测到新版本，请确认网络或者版本类型。
+        </div>
+        <div v-else>
+          <p>
+            最新发行版本号：<strong>{{ info.version }}</strong>
+            <a
+              @click="send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rvo0kt'})"
+            >了解更多 &gt;</a
+            >
+          </p>
+          <p>
+            发布日期： <strong>{{ renderTime(info.releaseDate) }}</strong>
+          </p>
+        </div>
+        <div style="margin-bottom: -10px;margin-top: 5px">
+          更新内容：
+          <div style="overflow-y: auto;height: 120px">
+            <div v-for="li in currentLog ">
+              {{ li }}
             </div>
           </div>
-          <template #extra>
-            <div v-if="canUpdate">
-              <a-button @click="startInstall" type="primary">
-                重新打开并更新
-              </a-button>
-              <a-button @click="cancel"> 下次启动更新 </a-button>
-            </div>
-            <div v-else>
-              <a-button @click="cancel"> 关闭 </a-button>
-            </div>
-          </template>
-        </a-result>
+        </div>
+      </div>
+      <template #extra>
+        <div v-if="canUpdate">
+          <a-button @click="startInstall" type="primary">
+            重新打开并更新
+          </a-button>
+          <a-button @click="cancel"> 下次启动更新</a-button>
+        </div>
+        <div v-else>
+          <a-button @click="cancel"> 关闭</a-button>
+        </div>
       </template>
-    </div>
-    <script>
-      const  axios =require('axios')
+    </a-result>
+  </template>
+</div>
+<script>
+  const axios = require('axios')
 
-      const ipc = require("electron").ipcRenderer;
-      window.ipc = ipc;
-      function toNum(a) {
-        var a = a.toString();
-        //也可以这样写 var c=a.split(/\./);
-        var c = a.split(".");
-        var num_place = ["", "0", "00", "000", "0000"],
-          r = num_place.reverse();
-        for (var i = 0; i < c.length; i++) {
-          var len = c[i].length;
-          c[i] = r[len] + c[i];
+  const ipc = require('electron').ipcRenderer
+  window.ipc = ipc
+
+  function toNum (a) {
+    var a = a.toString()
+    //也可以这样写 var c=a.split(/\./);
+    var c = a.split('.')
+    var num_place = ['', '0', '00', '000', '0000'],
+      r = num_place.reverse()
+    for (var i = 0; i < c.length; i++) {
+      var len = c[i].length
+      c[i] = r[len] + c[i]
+    }
+    var res = c.join('')
+    return res
+  }
+
+  function cpr_version (a, b) {
+    var _a = toNum(a),
+      _b = toNum(b)
+    if (_a === _b) return a
+    if (_a > _b) return a
+    if (_a < _b) return b
+  }
+
+  let appVue = new Vue({
+    el: '#appVue',
+    components: {},
+    data () {
+      return {
+        info: {
+          version: '0.0.0',
+          releaseDate: '读取数据中',
+        },
+        currentVersion: '',
+        canUpdate: false,
+        tip: '',
+        updateLog: []
+      }
+    },
+    mounted () {
+      axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
+        try{
+          this.updateLog = data.data
+        }catch (e) {
+
         }
-        var res = c.join("");
-        return res;
-      }
-      function cpr_version(a, b) {
-        var _a = toNum(a),
-          _b = toNum(b);
-        if (_a === _b) return a;
-        if (_a > _b) return a;
-        if (_a < _b) return b;
-      }
-      let appVue = new Vue({
-        el: "#appVue",
-        components: {},
-        data() {
-          return {
-            info: {
-              version: "读取数据中",
-              releaseDate: "读取数据中",
-            },
-            currentVersion: "",
-            canUpdate: false,
-            tip: "",
-            updateLog:null
-          };
-        },
-        mounted() {
-          axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
-            this.updateLog = data.data
-            console.log( this.updateLog)
-          })
 
-        },
-        computed:{
-          currentLog(){
-            if(this.updateLog){
-             return this.updateLog.find(li=>{
-               return li.name===this.info.version
-             })
-            }else{
-              return {}
+      })
+
+    },
+    computed: {
+      currentLog () {
+        if (this.updateLog) {
+          if (this.info.version === '0.0.0') return []
+          let all = this.updateLog.filter(li => {
+            if (cpr_version(li.name, this.info.version) === li.name && li.name!==this.info.version) {
+              return true
             }
+          })
+          let logs = []
 
-          }
-        },
-        methods: {
-          startInstall() {
-            ipc.send("startInstall");
-          },
-          cancel() {
-            ipc.send("closeUpdate");
-          },
-          renderTime(date) {
-            var dateee = new Date(date).toJSON();
-            return new Date(+new Date(dateee) + 8 * 3600 * 1000)
-              .toISOString()
-              .replace(/T/g, " ")
-              .replace(/\.[\d]{3}Z/, "");
-          },
-          send(event, args) {
-            ipc.send(event, args);
-          },
-        },
-      });
-      ipc.on("downloadProgress", (args) => {
-        console.log(args);
-      });
-      ipc.on("getInfo", (event, args) => {
-        // files: [{…}]
-        // path: "想天浏览器 Setup 0.8.6.exe"
-        // releaseDate: "2021-11-09T12:54:39.593Z"
-        // sha512: "ercXqvkbZdTDhR4u1YjXsvrqurXIsWuX52iCSToCeT3dDMWOt9mRUc/sCqDh3UoxBXv84Kd+bpZgJs3BG2mEJw=="
-        // version: "0.8.6"
-        appVue.info = args.updateInfo;
-        appVue.currentVersion = args.currentVersion;
-        if (appVue.info.version) {
-          appVue.canUpdate =
-            cpr_version(args.updateInfo.version, args.currentVersion) ===
-              args.updateInfo.version &&
-            args.updateInfo.version !== args.currentVersion;
-        }
-        if (appVue.canUpdate) {
-          appVue.tip = "您有新的升级可用";
+          all.forEach(li => {
+            if (li.list) {
+             li.list.forEach(item => {
+               if(li.name){
+                 logs.push(item +'['+li.name+']')
+               }
+              })
+            }
+          })
+          return logs
+
         } else {
-          appVue.tip = "暂无更新可用";
+          return []
         }
-      });
-    </script>
-    <style>
-      .desc p {
-        margin-bottom:5px;
+
       }
-    </style>
-  </body>
+    },
+    methods: {
+      startInstall () {
+        ipc.send('startInstall')
+      },
+      cancel () {
+        ipc.send('closeUpdate')
+      },
+      renderTime (date) {
+        var dateee = new Date(date).toJSON()
+        return new Date(+new Date(dateee) + 8 * 3600 * 1000)
+          .toISOString()
+          .replace(/T/g, ' ')
+          .replace(/\.[\d]{3}Z/, '')
+      },
+      send (event, args) {
+        ipc.send(event, args)
+      },
+    },
+  })
+  ipc.on('downloadProgress', (args) => {
+    console.log(args)
+  })
+  ipc.on('getInfo', (event, args) => {
+    // files: [{…}]
+    // path: "想天浏览器 Setup 0.8.6.exe"
+    // releaseDate: "2021-11-09T12:54:39.593Z"
+    // sha512: "ercXqvkbZdTDhR4u1YjXsvrqurXIsWuX52iCSToCeT3dDMWOt9mRUc/sCqDh3UoxBXv84Kd+bpZgJs3BG2mEJw=="
+    // version: "0.8.6"
+    appVue.info = args.updateInfo
+    appVue.currentVersion = args.currentVersion
+    if (appVue.info.version) {
+      appVue.canUpdate =
+        cpr_version(args.updateInfo.version, args.currentVersion) ===
+        args.updateInfo.version &&
+        args.updateInfo.version !== args.currentVersion
+    }
+    if (appVue.canUpdate) {
+      appVue.tip = '您有新的升级可用'
+    } else {
+      appVue.tip = '暂无更新可用'
+    }
+  })
+</script>
+<style>
+  .desc p {
+    margin-bottom: 5px;
+  }
+</style>
+</body>
 </html>
