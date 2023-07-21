@@ -1443,6 +1443,7 @@ app.whenReady().then(() => {
         }
       })
       loginWindow.setMenu(null)
+     // loginWindow.webContents.openDevTools()
       loginWindow.on('close', () => {
         loginWindow = null
       })

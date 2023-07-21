@@ -55,7 +55,6 @@ app.whenReady().then(async () => {
     try {
       const code = arg
       result = await userModel.loginWithCode(code)
-      console.log(result,'登录返回')
       event.reply('callback-loginBrowser', result)
       afterGuide('noobGuide', 'accountLogin')
     } catch (err) {
