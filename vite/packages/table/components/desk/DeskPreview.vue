@@ -5,9 +5,13 @@
       <div class="icon" @click="close">
         <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon>
       </div>
-      <div class="icon" @click="openDrawer = true">
-        <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
+      <div class="flex">
+        <div class="add-scheme mr-3" @click="addPlan">立即添加</div>
+        <div class="icon" @click="openDrawer = true">
+          <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
+        </div>
       </div>
+      
     </div>
     <!-- 预览 -->
     <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
@@ -22,7 +26,7 @@
     </div>
   </div>
   <!-- 预览添加抽屉 -->
-  <a-drawer v-model:visible="openDrawer" style="z-index:9999;" width="320" placement="right">
+  <a-drawer v-model:visible="openDrawer" style="z-index:9999999999;" width="320" placement="right">
     <template #closeIcon>
       <Icon icon="xiangyou"></Icon>
     </template>
@@ -207,7 +211,7 @@ export default {
       align-items: center;
       // justify-content: space-between;
       padding: 12px;
-      z-index: 99999;
+      z-index: 9999999999;
       .head-icon{
         width: 100%;
         display: flex;

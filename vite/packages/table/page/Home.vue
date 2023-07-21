@@ -346,7 +346,9 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div> -->
   </a-drawer>
-  <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+  <div style="z-index:9999;">
+    <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+  </div>
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
   <ExportDesk :openModal="exportModal" @closeExport="closeExport"></ExportDesk>
 </template>
@@ -730,6 +732,7 @@ export default {
       "desks",
       "moved",
       "currentDeskIndex",
+      "lastHeight"
     ]),
     ...mapWritableState(appStore, [
       "agreeTest",
@@ -1348,6 +1351,11 @@ export default {
     //     this.$refs.grid.update();
     //   },
     // }
+  },
+  beforeUnmount() {
+    let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+    this.lastHeight = cardsHeight
+    // console.log("销毁组件",cardsHeight);
   },
 };
 </script>
