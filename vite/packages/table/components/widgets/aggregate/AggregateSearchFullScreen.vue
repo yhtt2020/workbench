@@ -33,16 +33,36 @@
               ></a-input>
             </div>
             <div class="flex flex-col" v-if="suggestShow === false">
-              <vue-custom-scrollbar :settings="settingsScroller" style="max-height:366px;">
-                <div v-for="(item, index) in suggestList" :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
-                @click="getSuggestItem(item,index)" 
-                >
-                 <span style="color: var(--secondary-text);">
-                   {{ 
-                     item.q ? item.q : item.value ? item.value : item.query ? item.query 
-                     : item.name ? item.name : item.suggestion ? item.suggestion : item 
-                    }}
-                 </span>
+              <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
+                <div v-for="(item, index) in suggestList"  :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
+                @click="getSuggestItem(item,index)"
+                >  
+                  <!-- 百度搜索关键字 -->
+                  <div v-if="item.q" class="flex">
+                    <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(item.q)"></span>
+                  </div>
+
+                  <!-- bili搜索关键字 -->
+                  <div v-else-if="item.value" class="flex">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.value)"></span>
+                  </div>
+
+                  <div v-else-if="item.name">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.name) "></span>
+                  </div>
+
+                  <div v-else-if="item.query">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.query)"></span>
+                  </div>
+
+                  <div v-else-if="item.suggestion">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.suggestion)"></span>
+                  </div>
+
+                  <div v-else>
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item)"></span>
+                  </div>
+      
                 </div>
               </vue-custom-scrollbar>
             </div>
@@ -51,13 +71,15 @@
         </div>
         <div class="rounded-b-lg flex items-center h-12 px-4 py-3" style="background: var(--secondary-bg);">
           <div class="secondary-title " style="color: var(--secondary-text);">按下</div>
-          <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2" style="background: var(--disable-text);color: var(--secondary-text);">Tab</div>
-          <div class="secondary-title " style="color: var(--secondary-text);">快速切换搜索引擎，支持使用</div>
-          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2" style="background: var(--disable-text);">
-            <Icon icon="arrowup" style="color: var(--secondary-text);font-size: 1.5em;"></Icon>
+          <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">
+            Tab
           </div>
-          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2" style="background: var(--disable-text);">
-            <Icon icon="arrowdown" style="color: var(--secondary-text);font-size: 1.5em;"></Icon>
+          <div class="secondary-title " style="color: var(--secondary-text);">快速切换搜索引擎，支持使用</div>
+          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
+            <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
+          </div>
+          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
+            <Icon icon="arrowdown" style="color: rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
           </div>
           <div class="secondary-title " style="color: var(--secondary-text);">
             快速选择候选项
@@ -112,8 +134,8 @@ export default {
     }else{
       return 0
     }
-  }
-
+  },
+  
  },
 
  mounted(){
@@ -136,6 +158,9 @@ export default {
     this.aggSelectIcon.icon = item.icon
     this.setSearchIndex(index)
     this.$refs.searchRef.focus()
+    const words = encodeURIComponent(this.aggSearchWord)
+    const url = `${item.recommend_url}${words}`
+    this.searchFetch(url)
   },
   dataSearch(e){ // 聚合搜索关键字推荐  
     if(e.target.value.trim() === ''){ // 检查输入框是否为空状态
@@ -144,42 +169,9 @@ export default {
     }
     const words = encodeURIComponent(this.aggSearchWord)
     const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
-    axios.get(url).then(res=>{
-      switch (this.aggList.list[this.aggSelectIndex].id){
-         case 0: // 百度搜索
-          this.suggestList  = res.data.g
-          break;
-         case 1: 
-          // 谷歌接口暂时不能使用,还没有找到api
-          // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
-         break;
-         case 2: // 必应搜索
-          this.suggestList  = res.data[1]
-          break;
-         case 3: // 知乎搜索
-          this.suggestList  = res.data.suggest
-          break;
-         case 4:
-          // github搜索引擎api暂时没有找到关键字搜索推荐
-          this.suggestList = res.data.items
-          break;
-         case 5: // B站搜索
-          this.suggestList  = res.data
-          break;
-         case 6:  // 微博搜索
-          this.suggestList = res.data.data.hotquery
-          break;
-         case 7:  // 优酷搜索
-          this.suggestList  = res.data.data
-          break; 
-         case 8:
-          this.suggestList = res.data.words
-          break; 
-         default:
-          break;
-      }
-    })
+    this.searchFetch(url)
   },
+
   getSuggestItem(item,index){ // 选择推荐关键字  
     this.suggestShow = true
     this.suggestIndex = index
@@ -254,16 +246,114 @@ export default {
   },
 
   keyBoardTrigger(e){  // 键盘触发事件
-    switch(e.keyCode){
-      case 27: // 按下esc键
-        this.closeSearchFullScreen()
+    if(e.key === 'Tab'){ // 触发tab键切换功能
+      e.preventDefault();
+      this.aggSelectIndex = (this.aggSelectIndex + 1) %  this.searchList.length
+      this.aggSelectIcon.icon = this.searchList[this.aggSelectIndex].icon
+      const words = encodeURIComponent(this.aggSearchWord)
+      const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
+      this.searchFetch(url)
+    }
+    if(e.key === 'ArrowUp'){
+      if(this.suggestIndex <= 0){
+        e.preventDefault()
+      }else{
+        this.suggestIndex  -- 
+        this.updateInputValue()
+      }
+    }else if(e.key === 'ArrowDown'){
+      this.suggestIndex = (this.suggestIndex + 1) %  this.suggestList.length
+      this.updateInputValue()
+    }
+    
+  },
+ 
+  matchingKey(val){ // 匹配搜索关键字是否存在  
+    const isMatched = val.includes(this.aggSearchWord);
+    if(isMatched){
+      const regex = new RegExp(this.aggSearchWord, 'gi');
+      return val.replace(regex, `<span style="color:var(--active-bg);">${this.aggSearchWord}</span>`);
+    }
+  },
+
+  async searchFetch(url){  // 搜索api数据请求
+    const result = await axios.get(url)
+    switch (this.aggList.list[this.aggSelectIndex].id){
+      case 0: // 百度搜索
+          this.suggestList  = result.data.g
+          break;
+         case 1: 
+          // 谷歌接口暂时不能使用,还没有找到api
+          // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
+         break;
+         case 2: // 必应搜索
+           if(this.aggSearchWord !== '' ){  // 处理必应搜索为空时显示自带的数据
+            this.suggestList  = result.data[1]
+           }
+          break;
+         case 3: // 知乎搜索
+          this.suggestList  = result.data.suggest
+          break;
+         case 4:
+          // github搜索引擎api暂时没有找到关键字搜索推荐
+          if(this.aggSearchWord !== '' ){
+            this.suggestList = result.data.items
+          }
+          break;
+         case 5: // B站搜索
+          this.suggestList  = result.data
+          break;
+         case 6:  // 微博搜索
+          this.suggestList = result.data.data.hotquery
+          break;
+         case 7:  // 优酷搜索
+          this.suggestList  = result.data.data
+          break; 
+         case 8:
+          this.suggestList = result.data.words
+          break; 
+         default:
+          break;
+    }
+  },
+
+  updateInputValue() {  // 更新输入框值
+    switch (this.aggList.list[this.aggSelectIndex].id) {
+      case 0:
+        if(this.suggestList[this.suggestIndex].q !== undefined){
+          this.aggSearchWord = this.suggestList[this.suggestIndex].q
+        }
+        // this.aggSearchWord = this.suggestList[this.suggestIndex].q
         break;
-      case 9: // 按下tab键
-        // console.log('');
+      case 1:
+        
+        break;
+      case 2:
+        this.aggSearchWord = this.suggestList[this.suggestIndex]
+        break;
+      case 3:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].query
+        break;
+      case 4:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].name
+        break;
+      case 5:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].value
+        break;
+      case 6:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].suggestion
+        break;
+      case 7:
+        this.aggSearchWord = this.suggestList[this.suggestIndex].name
+        break;
+      case 8:
+        this.aggSearchWord = this.suggestList[this.suggestIndex]
+        break;
+      default:
         break;
     }
-  }
-
+  },
+  
  }    
 
 }
@@ -323,5 +413,11 @@ export default {
  background: var(--secondary-bg) !important;
  color: var(--secondary-text) !important;
  font-size: 1.5em !important;
+}
+
+.search-tag{
+  opacity: 0.5;
+  background:var(--disable-text);
+  border-radius: 6px;
 }
 </style>

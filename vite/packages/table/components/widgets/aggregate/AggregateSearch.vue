@@ -96,7 +96,7 @@ export default {
 
       AggregateList, // 没有排序过的聚合搜索数据
 
-      bottomSizeList:[{title:'2x2',width:1,height:1,name:'1x2'},{title:'4x2',width:2,height:1,name:'2x2'}], // 底部设置中尺寸大小切换
+      bottomSizeList:[{title:'2x2',width:1,height:1,name:'1x1'},{title:'4x2',width:2,height:1,name:'2x1'}], // 底部设置中尺寸大小切换
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.aggSearchShow = true;this.$refs.aggregateSearchSlot.visible = false } } ],
     }
   },
