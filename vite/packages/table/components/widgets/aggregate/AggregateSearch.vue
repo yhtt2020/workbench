@@ -7,6 +7,7 @@
       </div>
       <a-input placeholder="搜索" :bordered="false" class="search"></a-input>
     </div>
+
     <div class="flex">
        <template v-if="showSize.width === 1">
         <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
@@ -162,7 +163,7 @@ export default {
   mounted(){
     if (this.customData.sort_type === undefined) {
       let setData = {}; 
-      setData.sort_type =  '工作台内打开'; // 初始化分组名称
+      setData.sort_type =  'work'; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     } 
   },
