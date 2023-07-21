@@ -231,14 +231,17 @@ export default {
       case 'work':
         browser.openInTable(url)  // 在工作台中打开
         this.aggSearchWord = ''
+        this.suggestList = []
         break;
       case 'thisky':
         browser.openInInner(url) // 在想天浏览器打开
         this.aggSearchWord = ''
+        this.suggestList = []
         break;
       case 'system':
         browser.openInSystem(url) // 在系统默认的浏览器打开
         this.aggSearchWord = ''
+        this.suggestList = []
         break;
       default:
         break;
