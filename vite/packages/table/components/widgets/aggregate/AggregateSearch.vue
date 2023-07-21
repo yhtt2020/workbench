@@ -9,10 +9,10 @@
     </div>
 
     <div class="flex">
-      <template v-if="aggSizeShow">
+       <template v-if="showSize.width === 1">
         <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-          style="background: var(--secondary-bg);" :style="customData.width === 1 || Object.keys(customData).length === 0 ? {width:'92px'} : {width:'113px'}">
+          style="background: var(--secondary-bg);" :style="showSize.width === 1 ? {width:'92px'} : {width:'113px'}">
            <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
             <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
            </div>
@@ -25,7 +25,7 @@
       <template v-else>
         <div v-for="(item,index) in  aggSearchList.slice(0,5)" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-          style="background: var(--secondary-bg);" :style="customData.width !== 1 ? {width:'113px'} : {width:'92px'}">
+          style="background: var(--secondary-bg);" :style="showSize.width === 2 ? {width:'113px'} : {width:'92px'}">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
              <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
@@ -135,13 +135,19 @@ export default {
         return this.AggregateList
       }
     },
-    aggSizeShow(){
-      if(this.customData && this.customData.width === 1){
-        return true
-      }else{
-        return false
+    showSize(){
+      if(this.customData && this.customData.width && this.customData.height){
+        return {width:this.customData.width,height:this.customData.height}
       }
+      return this.bottomSizeList[0]
     },
+    // aggSizeShow(){
+    //   // if(this.customData && this.customData.width === 1){
+    //   //   return true
+    //   // }else{
+    //   //   return false
+    //   // }
+    // },
     aggInputValue(){
       if(this.customData && this.customData.sort_list){
         if(this.aggSearchList !== undefined){
@@ -154,7 +160,7 @@ export default {
   },
 
   mounted(){
-    if (this.customData.sort_type == undefined) {
+    if (this.customData.sort_type === undefined) {
       let setData = {}; 
       setData.sort_type =  '工作台内打开'; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
