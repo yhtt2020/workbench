@@ -7,7 +7,6 @@
       </div>
       <a-input placeholder="搜索" :bordered="false" class="search"></a-input>
     </div>
-
     <div class="flex">
        <template v-if="showSize.width === 1">
         <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
@@ -49,7 +48,7 @@
       <div class="secondary-title mt-2 mb-6" style="color: var(--secondary-text);">长按拖拽排序，最多支持在卡片上的展示5个搜索引擎</div>
       <AggregateSearchDrawer @setSortedList="setSortedList" :drawerList="aggSearchList"></AggregateSearchDrawer>
       <div class="mb-6 primary-title " style="color: var(--primary-text);">链接打开方式</div>
-      <XtTab   style="height: 52px" boxClass="p-1 xt-bg-2" v-model:list="linkType"  v-model:data="customData.sort_type.name">
+      <XtTab   style="height: 52px" boxClass="p-1 xt-bg-2" v-model:list="linkType"  v-model:data="customData.sort_type">
       </XtTab>
     </vue-custom-scrollbar>
   </a-drawer>
@@ -64,6 +63,7 @@ import Widget from "../../card/Widget.vue";
 import AggregateSearchDrawer from "./AggregateSearchDrawer.vue";
 import { AggregateList } from "../../../js/data/searchData";
 import HorizontalPanel from '../../HorizontalPanel.vue';
+import _ from 'lodash-es'
 
 export default {
   name: "AggregateSearch",
@@ -169,7 +169,6 @@ export default {
 
   methods:{
     setSortedList(arr){
-      console.log('获取排序后的数据>>>>',arr);
       this.customData.sort_list = arr
     },
     ...mapActions(appStore,['setSearchFullScreen','setSearchIndex','setSearchUrlOpenType']),
@@ -184,7 +183,13 @@ export default {
     },
   },
 
-
+  watch:{
+    'customData.sort_type':{
+      handler(newVal){
+        this.setSearchUrlOpenType(newVal)
+      }
+    }
+  }
 }
 </script>
 
