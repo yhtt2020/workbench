@@ -8,24 +8,25 @@
     <!-- 循环渲染子项 -->
     <div
       v-for="item in list"
-      :key="item[value]"
+      :key="item[`${value}`]"
       class="flex justify-center items-center rounded-xl text-base cursor-pointer"
       :class="[
-        valueData === item[value] ? active : '',
+        valueData === item[`${value}`] ? active : '',
         mode == 'row' ? 'flex-1 ' : '',
         itemClass,
       ]"
       :style="[itemStyle]"
-      @click="valueData = item[value]"
+      @click="valueData = item[`${value}`]"
     >
       <Icon
-        v-if="item[icon]"
+        v-if="item[`${icon}`]"
         class="icon"
-     
         style="font-size: 22"
-        :icon="item.icon"
+        :icon="item[`${icon}`]"
       ></Icon>
-      <div v-if="showName"    :class="[item[icon] ? 'ml-1' : '']">{{ item.name }}</div>
+      <div v-if="showName" :class="[item[`${icon}`] ? 'ml-1' : '']">
+        {{ item[`${name}`] }}
+      </div>
     </div>
   </div>
 </template>
@@ -40,7 +41,7 @@ export default {
   },
   mounted() {
     // 在组件挂载时设置初始选中值
-    this.valueData = this.data || this.list[0][this.value] || "";
+    this.valueData = this.data || this.list[0][`${this.value}`] || "";
   },
   watch: {
     valueData(newV) {
