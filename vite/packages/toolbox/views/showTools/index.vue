@@ -5,7 +5,7 @@
       :key="tool.route"
       class="xt-text flex flex-col items-center justify-center m-1 cursor-pointer"
       style="width: 100px; height: 100px"
-      @click="toolClick(tool.route)"
+      @click="toolClick(tool)"
     >
       <img
         class="w-12 h-12 mb-2"
@@ -18,7 +18,12 @@
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useMainStore } from "../../store/main";
 export default {
+  computed: {
+    ...mapWritableState(useMainStore, ["useTool"]),
+  },
   data() {
     return {
       toolsList: [
@@ -56,8 +61,9 @@ export default {
     };
   },
   methods: {
-    toolClick(route) {
-      this.$router.push(route);
+    toolClick(tool) {
+      this.$router.push(tool.route);
+      this.useTool = tool;
     },
   },
 };

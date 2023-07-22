@@ -83,7 +83,10 @@ export default {
       this.selectIndex = i;
     },
     handleBlur(index) {
-      if (this.computeList[index] === "" && this.calculators > 1) {
+      if (
+        this.computeList[index] === "" &&
+        index !== this.computeList.length - 1
+      ) {
         this.computeList.splice(index, 1);
         this.countList.splice(index, 1);
         this.calculators--;
