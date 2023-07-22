@@ -116,15 +116,15 @@ class Updater {
       })
       updaterWindow.on('close', () => updaterWindow = null)
       updaterWindow.setMenu(null)
-      updaterWindow.webContents.openDevTools()
+
       updaterWindow.webContents.loadURL('file://' + __dirname + '/../../pages/update/index.html')
+      updaterWindow.webContents.openDevTools()
       updaterWindow.on('ready-to-show', () => {
-        updaterWindow.show()
         updaterWindow.webContents.send('getInfo', { updateInfo: updateInfo, currentVersion: app.getVersion() })
-        if (isDevelopmentMode) {
-          // updaterWindow.openDevTools()
-        }
+        updaterWindow.show()
+
       })
+
       updaterWindow.focus()
     } else {
       updaterWindow.focus()
