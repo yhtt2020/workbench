@@ -2,9 +2,13 @@
   <div class="flex h-full">
    <!-- 消息弹窗 -->
    <div class="flex flex-col items-center w-20">
-      <div v-for="item in messageNotice.session" class="flex pointer items-center flex-col  justify-center" style="width: 56px;height: 56px;">
+      <div v-for="item in messageNotice.session" 
+        class="flex pointer items-center rounded-lg flex-col  justify-center" 
+        style="width: 56px;height: 56px;" :class="{'active-bg':selectIndex === item.id}"
+        @click="switchSession(item.id)"
+      >
         <div class="flex items-center rounded-lg justify-center session-item" v-if="item.icon" style="background: var(--active-bg);">
-          <Icon :icon="item.icon" style="font-size: 2em;"></Icon>
+          <Icon :icon="item.icon" style="font-size: 2em;color: var(--active-text);"></Icon>
         </div>
         <div class="flex items-center rounded-lg justify-center session-item" v-else>
           <img :src="item.url" class="w-full h-full" alt="">
@@ -28,7 +32,7 @@
        </div>
      </div>
      <div class="flex-grow">
-      
+        <NoticeDetail :noticeId="noticeDetailList"></NoticeDetail>
      </div>
    </div>
   </div>
@@ -37,13 +41,36 @@
 <script>
 import { mapActions,mapWritableState } from 'pinia';
 import { noticeStore } from '../../store/notice'
+import NoticeDetail from './NoticeDetail.vue';
+
+
 export default {
+  components:{
+    NoticeDetail
+  },
+
+  data(){
+    return{
+      selectIndex:'',
+      noticeDetailList:{},
+    }
+  },
+
   computed:{
     ...mapWritableState(noticeStore,['messageNotice'])
 
   },
+
+  mounted(){
+    this.selectIndex = 0
+    this.noticeDetailList = this.messageNotice.notice[0]
+  },
+
   methods:{
-  
+    switchSession(index){  // 切换会话 
+     this.selectIndex = index
+     this.noticeDetailList  = this.messageNotice.notice[index]
+    }
   }
 }
 </script>
@@ -52,5 +79,9 @@ export default {
 .session-item{
   width: 36px;
   height: 36px;
+}
+
+.active-bg{
+  background: var(--active-secondary-bg);
 }
 </style>

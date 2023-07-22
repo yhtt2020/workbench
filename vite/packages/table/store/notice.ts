@@ -11,34 +11,64 @@ export const noticeStore = defineStore('notice',{
           name:'系统',
           alias:'system',
           icon:'appstore',
-          url:''
+          url:'',
+          del_id:0,
         },
         {
           id:1,
           name:'ChatGpt',
           alias:'ChatGpt',
           icon:'',
-          url:'/icons/bg5.png'
+          url:'/icons/bg5.png',
+          del_id:0,
         },
         {
           id:2,
+          name:'Time machine',
+          alias:'时光机',
+          icon:'',
+          url:'/icons/bg3.png',
+          del_id:0,
+        },
+        {
+          id:3,
+          name:'AI ChatGpt',
+          alias:'AI ChatGpt',
+          icon:'',
+          url:'/icons/bg4.png',
+          del_id:0,
+        },
+        {
+          id:4,
+          name:'yuque',
+          alias:'语雀',
+          icon:'',
+          url:'/icons/bg2.png',
+          del_id:0,
+        },
+        {
+          id:5,
+          name:'Apis',
+          alias:'小蜜蜂',
+          icon:'',
+          url:'/icons/bg.png',
+          del_id:0,
         }
       ],
       notice:[
         {
           id:0,
-          system:[
+          notice_list:[
             {
               id:1,
               title:'',
+              from:{
+                username:'Victor Ruiz',
+                avatar_url:'https://up.apps.vip/avatar/006.png',
+              },
               content:'礼物：小恶魔头像框挂件',
               time: Date.now(),
-              from:[
-               {
-                username:'Victor Ruiz',
-                avatar:'https://up.apps.vip/avatar/006.png',
-               }
-              ],
+             
             },
             {
               id:2,
@@ -52,9 +82,18 @@ export const noticeStore = defineStore('notice',{
               content:'这是消息正文部分，根据业务需要显示具体内容',
               time:Date.now(),
             }
-          ]
-          
+          ],
+          notice_icon:'/icons/logo128.png'
         },
+        {
+          id:1,
+          notice_list:[
+            {
+              content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用'
+            }
+          ],
+          notice_icon:'',
+        }
       ]
     },
   }),
