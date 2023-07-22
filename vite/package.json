@@ -23,6 +23,7 @@
     "cheerio": "^1.0.0-rc.12",
     "codemirror": "5.65.13",
     "colorpicker-v3": "^2.10.2",
+    "crypto-js": "^4.1.1",
     "dayjs": "^1.11.9",
     "dompurify": "^3.0.5",
     "echarts": "^5.4.1",

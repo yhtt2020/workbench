@@ -37,12 +37,12 @@
 <script>
 import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
-import editMixins from "./hooks/mixins";
 
+import mixins from "./hooks/mixins";
 const { fs } = window.$models;
-const { join } = require("path");
+
 export default {
-  mixins: [editMixins],
+mixins:[mixins],
   props: {
     data: {},
   },
@@ -54,37 +54,9 @@ export default {
     close() {
       this.$emit("close");
     },
-    save() {
-      // let userPath = window.globalArgs["user-data-path"];
-      // let temporaryIconPath = "temporaryIcon";
-      // let fileDir = join(userPath, temporaryIconPath);
-      // console.log("fileDir :>> ", fileDir);
-      // // 应该做随机处理
-      // const fileName = "newfile.png";
-      // const filePath = join(fileDir, fileName);
-      // fs.pathExists(fileDir, (err, exists) => {
-      //   if (exists) {
-      //     // 有文件夹
-      //     console.log("Directory already exists.");
 
-      //     fs.writeFile(filePath, this.edit.src, (err) => {
-      //       if (err) {
-      //         console.error("Error saving the image:", err);
-      //       } else {
-      //         console.log("Image saved successfully!");
-      //         this.edit.src = filePath;
-      //       }
-      //     });
-      //   } else {
-      //     // 无文件夹
-      //     // 目录不存在，使用 fs-extra 的 mkdirp 方法创建多级目录
-      //     fs.mkdirp(fileDir, (err) => {
-      //       console.log("Directory created successfully!");
-      //     });
-      //   }
-      // });
-      // return;
-
+    async save() {
+ 
       // this.edit.linkValue = {
       //   type: "systemApp",
       //   event: "ai",

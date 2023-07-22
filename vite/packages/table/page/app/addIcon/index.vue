@@ -100,10 +100,7 @@ import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
 import Tab from "../../../components/card/components/tab/index.vue";
 import { mapActions, mapWritableState } from "pinia";
-import {
-  base64File,
-  fileUpload,
-} from "../../../../table/components/card/hooks/imageProcessing";
+import {useBase64AsImage} from "../../../../table/components/widgets/myIcons/edit/hooks/base64"
 export default {
   emits: ["update:navName"],
   props: {
@@ -249,7 +246,7 @@ export default {
           if (this.navName !== "Desktop" && this.navName !== "MyApps") {
             iconOption.src = item.icon;
           } else {
-            iconOption.src = item.icon;
+            iconOption.src = await useBase64AsImage( item.icon);
             // let file = base64File(item.icon);
             // console.log('file :>> ', file);
             // const formData = new FormData();
