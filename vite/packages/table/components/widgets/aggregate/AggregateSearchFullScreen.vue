@@ -8,72 +8,77 @@
     <div class="flex items-center justify-center" style="width: 50%;">
       <div class="search-content search-full flex flex-col justify-between rounded-lg">
         <div class="p-4 flex">
-          <!-- 聚合搜索左侧tab栏 -->
+          <!-- 左侧 -->
           <div class="flex flex-col mr-4">
-            <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div> 
+            <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
             <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
-              <div v-for="(item,index) in searchList"  class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
-              @click="selectAggSearch(item,index)" :class="{'active-bg':aggSelectIndex === index}" 
+              <div v-for="(item,index) in searchList" 
+               class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
+               :class="{'active-bg':searchIconIndex === index}"
+               @click="selectAggSearch(item,index)" 
               >
-               <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
-                <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
-               </div>
-               <span class="ml-2 primary-title" style="color: var(--primary-text);">{{item.title}}</span>
+                <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
+                  <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
+                </div>
+                <span class="ml-2 primary-title" style="color: var(--primary-text);">{{item.title}}</span>
               </div>
             </vue-custom-scrollbar>
           </div>
-          <!-- 右侧搜索数据展示 -->
+
+          <!-- 右侧 -->
           <div class="flex flex-col">
             <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
               <div class="flex items-center justify-center" style="width: 20px;height:20px;">
-               <Icon :icon="aggSelectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
+                <Icon :icon="searchEngineIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
               </div>
-              <a-input v-model:value="aggSearchWord" placeholder="搜索" :bordered="false" class="search" @change="dataSearch($event)"
-              @pressEnter="enterSearch"  ref="searchRef" allowClear
-              ></a-input>
+              <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef" @input="dataSearch" @pressEnter="enterSearch">
+
+              </a-input>
             </div>
-            <div class="flex flex-col" v-if="suggestShow === false">
-              <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
-                <div v-for="(item, index) in suggestList"  :class="{'active-bg':suggestIndex === index}"  class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer" 
-                @click="getSuggestItem(item,index)"
-                >  
-                  <!-- 百度搜索关键字 -->
-                  <div v-if="item.q" class="flex">
-                    <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(item.q)"></span>
+            <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
+              <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
+                <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
+                 :class="{'active-bg':suggestIndex === index}" 
+                 class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer"
+                 @click="getSuggestItem(suggestion,index)"
+                >
+                  <!-- 百度搜索 -->
+                  <div v-if="suggestion.q" class="flex">
+                    <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(suggestion.q)"></span>
                   </div>
 
-                  <!-- bili搜索关键字 -->
-                  <div v-else-if="item.value" class="flex">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.value)"></span>
+                  <!-- bili搜索 -->
+                  <div v-else-if="suggestion.value" class="flex">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.value)"></span>
                   </div>
 
-                  <div v-else-if="item.name">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.name) "></span>
+                  <!-- 豆瓣、微博搜索 -->
+                  <div v-else-if="suggestion.suggestion">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.suggestion)"></span>
                   </div>
 
-                  <div v-else-if="item.query">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.query)"></span>
+                  <!-- github、优酷搜索 -->
+                  <div v-else-if="suggestion.name">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.name) "></span>
                   </div>
 
-                  <div v-else-if="item.suggestion">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item.suggestion)"></span>
+                  <!-- 知乎搜索 -->
+                  <div v-else-if="suggestion.query">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.query)"></span>
                   </div>
 
-                  <div v-else>
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(item)"></span>
+                  <!-- 必应搜索 -->
+                  <div v-else-if="suggestion">
+                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion)"></span>
                   </div>
-      
-                </div>
-              </vue-custom-scrollbar>
-            </div>
+                </li>
+              </ul> 
+            </vue-custom-scrollbar>
           </div>
-          
         </div>
         <div class="rounded-b-lg flex items-center h-12 px-4 py-3" style="background: var(--secondary-bg);">
           <div class="secondary-title " style="color: var(--secondary-text);">按下</div>
-          <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">
-            Tab
-          </div>
+          <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
           <div class="secondary-title " style="color: var(--secondary-text);">快速切换搜索引擎，支持使用</div>
           <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
             <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
@@ -102,80 +107,239 @@ import axios from "axios";
 import browser from '../../../js/common/browser'
 
 export default {
- data(){
-  return{
-    suggestList:[],  // 接收搜索返回的推荐数据
-    aggSearchWord:'', // 接收搜索关键字
-    aggSelectIcon:{}, // 接收选中状态的图标
-    settingsScroller: {  // 滚动条配置 
-      useBothWheelAxes: true,
-      swipeEasing: true,
-      suppressScrollY: false,
-      suppressScrollX: true,
-      wheelPropagation: true
-    },
-    aggSelectIndex:'',  // 获取选中状态下标
-    suggestIndex:0, // 搜索关键字推荐选中状态
-    suggestShow:false, // 选中后将推荐不显示 
-  }
- },
- computed:{
-  ...mapWritableState(appStore,['aggList']),
-  searchList(){
-    if(Object.keys(this.aggList).length !== 0){
-      return this.aggList.list
-    }else{
-      return AggregateList
-    }
-  },
-  defaultIndex(){
-    if(this.aggList.select_status && Object.keys(this.aggList).length !== 0){
-      return this.aggList.select_status
-    }else{
-      return 0
+
+  data(){
+    return{
+      
+      searchKeyWords:'', // 搜索关键字
+      searchIconIndex:'', // 搜索引擎图标下标
+      searchEngineIcon:{}, // 搜索引擎图标
+      searchSuggestionList:[], // 搜索建议列表
+      suggestIndex:-1, // 搜索建议列表下标
+
+      settingsScroller: {  // 滚动条配置 
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
     }
   },
   
- },
-
- mounted(){
-  this.aggSelectIndex = this.defaultIndex
-  this.aggSelectIcon.icon = this.searchList[this.aggSelectIndex].icon
-  this.$nextTick(()=>{
-    this.$refs.searchRef.focus()
-  })
-  // 监听键盘触发事件
-  window.addEventListener('keydown',this.keyBoardTrigger)
- },
-
- methods:{
-  ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
-  closeSearchFullScreen(){  // 关闭聚合搜索全屏  
-    this.setSearchFullScreen(false) 
-  },
-  selectAggSearch(item,index){  //  聚合搜索框在全屏情况下的筛选 
-    this.aggSelectIndex = index
-    this.aggSelectIcon.icon = item.icon
-    this.setSearchIndex(index)
-    this.$refs.searchRef.focus()
-    const words = encodeURIComponent(this.aggSearchWord)
-    const url = `${item.recommend_url}${words}`
-    this.searchFetch(url)
-  },
-  dataSearch(e){ // 聚合搜索关键字推荐  
-    if(e.target.value.trim() === ''){ // 检查输入框是否为空状态
-      this.suggestShow = false
-      this.suggestList = []
+  computed:{
+    ...mapWritableState(appStore,['aggList']),
+    searchList(){ // 获取左侧tab栏列表数据  
+      if(this.aggList && this.aggList.list){
+        return this.aggList.list
+      }else{
+        return AggregateList
+      }
+    },
+    selectIcon(){  // 获取选中的图标 
+      if(this.aggList && this.aggList.select_status){
+        return this.aggList.select_status
+      }else{
+        return 0
+      }
+    },
+    showSearchResults(){  // 显示搜索建议列表
+      if(this.searchSuggestionList !== undefined && this.searchKeyWords === ''){
+        return false
+      }else{
+        return true
+      }
     }
-    const words = encodeURIComponent(this.aggSearchWord)
-    const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
-    this.searchFetch(url)
   },
 
-  getSuggestItem(item,index){ // 选择推荐关键字  
-    this.suggestShow = true
-    this.suggestIndex = index
-    switch (this.aggList.list[this.aggSelectIndex].id){
+
+  mounted(){
+    this.searchIconIndex = this.selectIcon
+    this.searchEngineIcon.icon = this.searchList[this.searchIconIndex].icon
+    this.$nextTick(()=>{
+     this.$refs.searchRef.focus()
+    })
+    // 监听键盘触发事件
+    window.addEventListener('keydown',this.keyBoardTrigger)
+  },
+
+  methods:{
+    ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
+    closeSearchFullScreen(){  // 关闭聚合搜索全屏  
+      this.setSearchFullScreen(false) 
+    },
+
+    keyBoardTrigger(e){  // 键盘触发  
+      if(e.key === 'Tab'){ // 触发tab键切换功能  
+        e.preventDefault();
+        this.searchIconIndex = (this.searchIconIndex + 1) %  this.searchList.length
+        this.searchEngineIcon.icon = this.searchList[this.searchIconIndex].icon
+      }
+      if(e.key === 'ArrowUp'){  // 上切换键
+      this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+      this.updateInputValue()
+    }else if(e.key === 'ArrowDown'){  // 下切换键
+      this.suggestIndex = (this.suggestIndex + 1) %  this.searchSuggestionList.length
+      this.updateInputValue()
+    }
+    },
+
+    dataSearch(){  // 输入关键字词 
+      if(this.searchKeyWords === ''){
+        this.searchSuggestionList = [];
+        return;
+      }
+      this.fetchSuggestions(true)
+    },
+
+    async fetchSuggestions(val){  // 获取搜索建议列表 数据请求 
+      if(val){
+        const words = encodeURIComponent(this.searchKeyWords)
+        const url = `${this.searchList[this.searchIconIndex].recommend_url}${words}`
+        const result = await axios.get(url)
+        console.log('更新数据::>>',result);
+        switch (this.aggList.list[this.searchIconIndex].id){
+        case 0: // 百度搜索
+          this.searchSuggestionList  = result.data.g
+          break;
+        case 1: 
+          // 谷歌接口暂时不能使用,还没有找到api
+          // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
+         break;
+        case 2: // 必应搜索
+           if(this.aggSearchWord !== '' ){  // 处理必应搜索为空时显示自带的数据
+            this.searchSuggestionList = result.data[1]
+           }
+          break;
+        case 3: // 知乎搜索
+          this.searchSuggestionList  = result.data.suggest
+          break;
+        case 4:
+          // github搜索引擎api暂时没有找到关键字搜索推荐
+          if(this.aggSearchWord !== '' ){
+            this.searchSuggestionList = result.data.items
+          }
+          break;
+        case 5: // B站搜索
+          this.searchSuggestionList  = result.data
+          break;
+        case 6:  // 微博搜索
+          this.searchSuggestionList = result.data.data.hotquery
+          break;
+        case 7:  // 优酷搜索
+          this.searchSuggestionList  = result.data.data
+          break; 
+        case 8:
+          this.searchSuggestionList = result.data.words
+          break; 
+        default:
+          break;
+        }
+      }else{
+        return
+      }
+      
+    },
+
+    matchingKey(val){ // 匹配搜索关键字是否存在  
+      const isMatched = val.includes(this.searchKeyWords);
+      if(isMatched && this.searchSuggestionList.length !== 1){
+       const regex = new RegExp(this.searchKeyWords,'gi');
+       return val.replace(regex, `<span style="color:var(--active-bg);">${this.searchKeyWords}</span>`);
+      }else{
+        return val
+      }
+    },
+
+    updateInputValue(){ // 搜索建议列表项选中赋值给搜索关键词 
+      const id = this.aggList.list[this.searchIconIndex].id
+      switch (id) {
+        case 0:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].q
+            this.fetchSuggestions(false)
+          }
+          break;
+        case 1:
+          break;
+        case 2:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex]
+            this.fetchSuggestions(false)
+          }
+         break;
+        case 3:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].query
+            this.fetchSuggestions(false)
+          }
+         break;
+        case 4:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].name
+            this.fetchSuggestions(false)
+          }
+          break;
+        case 5:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].value
+            this.fetchSuggestions(false)
+          }
+          break;
+        case 6:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].suggestion
+            this.fetchSuggestions(false)
+          }
+          break;
+        case 7:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].name
+            this.fetchSuggestions(false)
+          }
+          break;
+        case 8:
+          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex]
+            this.fetchSuggestions(false)
+          }
+          break;
+        default:
+          break;
+      }
+    },
+
+    enterSearch(){  // 回车进行搜索
+     const enterWords = encodeURIComponent(this.searchKeyWords)
+     this.openSearchSuggest(enterWords)
+    },
+
+    openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开
+     const url = `${this.searchList[this.searchIconIndex].search_url}${words}`
+     switch (this.aggList.type) { 
+      case 'work':
+        browser.openInTable(url)  // 在工作台中打开
+        this.aggSearchWord = ''
+        this.suggestList = []
+        break;
+      case 'thisky':
+        browser.openInInner(url) // 在想天浏览器打开
+        this.aggSearchWord = ''
+        this.suggestList = []
+        break;
+      case 'system':
+        browser.openInSystem(url) // 在系统默认的浏览器打开
+        this.aggSearchWord = ''
+        this.suggestList = []
+        break;
+      default:
+        break;
+     }
+    },
+
+    getSuggestItem(item,index){ // 选择推荐关键字  
+     this.suggestIndex = index
+     switch (this.aggList.list[this.searchIconIndex].id){
       case 0: // 百度搜索
         // this.aggSearchWord = item.q
         const baiduWords = encodeURIComponent(item.q)
@@ -217,148 +381,18 @@ export default {
         break; 
       default:
         break;
-    }
-  },
+     }
+    },
 
-  enterSearch(){  // 回车进行搜索
-    const enterWords = encodeURIComponent(this.aggSearchWord)
-    this.openSearchSuggest(enterWords)
-  },
+    selectAggSearch(item,index){  //  聚合搜索框在全屏情况下的筛选 
+     this.searchIconIndex = index
+     this.searchEngineIcon.icon = item.icon
+     this.setSearchIndex(index)
+     this.$refs.searchRef.focus()
+     this.fetchSuggestions(true)
+    },
 
-  openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开
-    const url = `${this.searchList[this.aggSelectIndex].search_url}${words}`
-    switch (this.aggList.type) { 
-      case 'work':
-        browser.openInTable(url)  // 在工作台中打开
-        this.aggSearchWord = ''
-        this.suggestList = []
-        break;
-      case 'thisky':
-        browser.openInInner(url) // 在想天浏览器打开
-        this.aggSearchWord = ''
-        this.suggestList = []
-        break;
-      case 'system':
-        browser.openInSystem(url) // 在系统默认的浏览器打开
-        this.aggSearchWord = ''
-        this.suggestList = []
-        break;
-      default:
-        break;
-    }
   },
-
-  keyBoardTrigger(e){  // 键盘触发事件
-    if(e.key === 'Tab'){ // 触发tab键切换功能
-      e.preventDefault();
-      this.aggSelectIndex = (this.aggSelectIndex + 1) %  this.searchList.length
-      this.aggSelectIcon.icon = this.searchList[this.aggSelectIndex].icon
-      const words = encodeURIComponent(this.aggSearchWord)
-      const url = `${this.searchList[this.aggSelectIndex].recommend_url}${words}`
-      this.searchFetch(url)
-    }
-    if(e.key === 'ArrowUp'){
-      if(this.suggestIndex <= 0){
-        e.preventDefault()
-      }else{
-        this.suggestIndex  -- 
-        this.updateInputValue()
-      }
-    }else if(e.key === 'ArrowDown'){
-      this.suggestIndex = (this.suggestIndex + 1) %  this.suggestList.length
-      this.updateInputValue()
-    }
-    
-  },
- 
-  matchingKey(val){ // 匹配搜索关键字是否存在  
-    const isMatched = val.includes(this.aggSearchWord);
-    if(isMatched){
-      const regex = new RegExp(this.aggSearchWord, 'gi');
-      return val.replace(regex, `<span style="color:var(--active-bg);">${this.aggSearchWord}</span>`);
-    }
-  },
-
-  async searchFetch(url){  // 搜索api数据请求
-    const result = await axios.get(url)
-    switch (this.aggList.list[this.aggSelectIndex].id){
-      case 0: // 百度搜索
-          this.suggestList  = result.data.g
-          break;
-         case 1: 
-          // 谷歌接口暂时不能使用,还没有找到api
-          // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
-         break;
-         case 2: // 必应搜索
-           if(this.aggSearchWord !== '' ){  // 处理必应搜索为空时显示自带的数据
-            this.suggestList  = result.data[1]
-           }
-          break;
-         case 3: // 知乎搜索
-          this.suggestList  = result.data.suggest
-          break;
-         case 4:
-          // github搜索引擎api暂时没有找到关键字搜索推荐
-          if(this.aggSearchWord !== '' ){
-            this.suggestList = result.data.items
-          }
-          break;
-         case 5: // B站搜索
-          this.suggestList  = result.data
-          break;
-         case 6:  // 微博搜索
-          this.suggestList = result.data.data.hotquery
-          break;
-         case 7:  // 优酷搜索
-          this.suggestList  = result.data.data
-          break; 
-         case 8:
-          this.suggestList = result.data.words
-          break; 
-         default:
-          break;
-    }
-  },
-
-  updateInputValue() {  // 更新输入框值
-    switch (this.aggList.list[this.aggSelectIndex].id) {
-      case 0:
-        if(this.suggestList[this.suggestIndex].q !== undefined){
-          this.aggSearchWord = this.suggestList[this.suggestIndex].q
-        }
-        // this.aggSearchWord = this.suggestList[this.suggestIndex].q
-        break;
-      case 1:
-        
-        break;
-      case 2:
-        this.aggSearchWord = this.suggestList[this.suggestIndex]
-        break;
-      case 3:
-        this.aggSearchWord = this.suggestList[this.suggestIndex].query
-        break;
-      case 4:
-        this.aggSearchWord = this.suggestList[this.suggestIndex].name
-        break;
-      case 5:
-        this.aggSearchWord = this.suggestList[this.suggestIndex].value
-        break;
-      case 6:
-        this.aggSearchWord = this.suggestList[this.suggestIndex].suggestion
-        break;
-      case 7:
-        this.aggSearchWord = this.suggestList[this.suggestIndex].name
-        break;
-      case 8:
-        this.aggSearchWord = this.suggestList[this.suggestIndex]
-        break;
-      default:
-        break;
-    }
-  },
-  
- }    
-
 }
 </script>
 
@@ -401,6 +435,8 @@ export default {
 }
 
 .search-hover{
+  color: var(--primary-text);
+  list-style: none;
   &:hover{
     background: var(--secondary-bg);
   }
