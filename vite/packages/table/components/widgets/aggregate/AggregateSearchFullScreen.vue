@@ -193,11 +193,10 @@ export default {
     },
 
     async fetchSuggestions(val){  // 获取搜索建议列表 数据请求 
-      if(val){
+      if(val){  // 防止重复请求
         const words = encodeURIComponent(this.searchKeyWords)
         const url = `${this.searchList[this.searchIconIndex].recommend_url}${words}`
         const result = await axios.get(url)
-        console.log('更新数据::>>',result);
         switch (this.aggList.list[this.searchIconIndex].id){
         case 0: // 百度搜索
           this.searchSuggestionList  = result.data.g
@@ -238,7 +237,6 @@ export default {
       }else{
         return
       }
-      
     },
 
     matchingKey(val){ // 匹配搜索关键字是否存在  
@@ -341,7 +339,6 @@ export default {
      this.suggestIndex = index
      switch (this.aggList.list[this.searchIconIndex].id){
       case 0: // 百度搜索
-        // this.aggSearchWord = item.q
         const baiduWords = encodeURIComponent(item.q)
         this.openSearchSuggest(baiduWords)
         break;
@@ -350,7 +347,6 @@ export default {
         // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
         break;
       case 2: // 必应搜索
-        // this.aggSearchWord = item
         const bingWords = encodeURIComponent(item)
         this.openSearchSuggest(bingWords)
         break;
