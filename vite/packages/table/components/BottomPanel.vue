@@ -26,10 +26,10 @@ align-items: start;
           <div class="scroll-content mr-6" style="overflow-y:hidden;overflow-x: auto;flex:1;display: flex;"
                ref="content">
 
-            <div style="white-space: nowrap;display: flex;align-items: center">
+            <div style="white-space: nowrap;display: flex;align-items: center" id="bottomContent">
               <div v-if="footNavigationList.length <= 0" style="">
               </div>
-              <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList ">
+              <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList " :key="item.name">
                 <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;"
                      @click="clickNavigation(item)">
                   <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
@@ -234,6 +234,7 @@ import { screenStore } from '../store/screen'
 import { toggleFullScreen } from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
+import Sortable from 'sortablejs'
 
 export default {
   name: 'BottomPanel',
@@ -336,7 +337,9 @@ export default {
       // console.log('wheel',event)
       content.scrollLeft += event.deltaY
     })
-
+    this.$nextTick(() => {
+      this.rowDrop()
+    })
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -381,6 +384,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
+    ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList']),
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -528,7 +532,32 @@ export default {
         default:
           require('electron').shell.openPath(item.path)
       }
-    }
+    },
+    rowDrop () {
+      let that = this
+      let drop = document.getElementById('bottomContent')
+      Sortable.create(drop,{
+        sort: true,
+        animation: 150,
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let newItem = drop.children[newIndex]
+          let oldItem = drop.children[oldIndex]
+
+          // 先删除移动的节点
+          drop.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if (newIndex > oldIndex) {
+            drop.insertBefore(newItem, oldItem)
+          } else {
+            drop.insertBefore(newItem, oldItem.nextSibling)
+          }
+          console.log(event)
+          that.sortFootNavigationList(event)
+        },
+      })
+    },
   }
 }
 </script>

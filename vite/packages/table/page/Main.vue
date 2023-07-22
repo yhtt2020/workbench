@@ -9,7 +9,7 @@
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;padding: 8px;margin: -3px">
       <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
-        <SidePanel :sideNavigationList="sideNavigationList"></SidePanel>
+        <SidePanel :sideNavigationList="sideNavigationList" sortId="left" :sortNavigationList="sortSideNavigationList"></SidePanel>
       </div>
       <div
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
@@ -24,7 +24,7 @@
       </Transition>
       <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
-        <SidePanel :sideNavigationList="rightNavigationList"></SidePanel>
+        <SidePanel :sideNavigationList="rightNavigationList" sortId="right" :sortNavigationList="sortRightNavigationList"></SidePanel>
       </div>
     </div>
     <div style="flex: 0;">
@@ -37,7 +37,7 @@
 import SidePanel from '../components/SidePanel.vue'
 import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions,mapWritableState } from 'pinia'
 import { appStore } from '../store'
 import TeamPanel from "../components/team/TeamPanel.vue";
 import { teamStore } from '../store/team'
@@ -68,6 +68,9 @@ export default {
         wheelPropagation: true
       },
     }
+  },
+  methods: {
+    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList']),
   }
 }
 </script>

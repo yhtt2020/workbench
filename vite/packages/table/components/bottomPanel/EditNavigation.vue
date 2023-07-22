@@ -62,7 +62,7 @@
             </div>
             <div style="width: 650px;text-align: center">
               <div class="mb-2 mt-2" style="color:var(--secondary-text);">推荐图标</div>
-              <div class="suggest-nav" id="suggestList">
+              <div class="main-nav" id="suggestList" style="width:100%">
                 <div v-for="item in suggestNavList" :key="item.name">
                   <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
                     <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
@@ -1047,42 +1047,6 @@ export default {
     color:var(--secondary-text);
     font-family: PingFangSC-Regular;
     font-size: 16px;
-  }
-}
-.suggest-nav{
-  width: 100%;
-  height: 112px;
-  padding: 12px;
-  background: var(--modal-bg);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  > div {
-    width: 88px;
-    height: 88px;
-    background: var(--secondary-bg);
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .add-toggle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 16px;
-    // background: rgba(0, 0, 0, 0.5);
-    // background: rgba(255,255,255,0.50);
   }
 }
 .main-nav {
