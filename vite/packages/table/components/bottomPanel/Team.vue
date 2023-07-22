@@ -12,14 +12,20 @@
     </div>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
+  <MyProp :showMyProp="showMyProp" @closeMyProp="closeMyProp"></MyProp>
 </template>
 
 <script>
 import TeamTip from '../TeamTip.vue'
 import { mapWritableState, mapActions } from 'pinia'
 import { teamStore } from '../../store/team'
+import MyProp from '../team/MyProp.vue'
 export default {
   name: "Team",
+  components: {
+    TeamTip,
+    MyProp
+  },
   props: {
     
   },
@@ -47,14 +53,11 @@ export default {
           },
           type: 'route'
         },
-        // {
-        //   img: '/img/bottomPanel/prop.png',
-        //   title: '我的道具',
-        //   route: {
-        //     name: 'socialMy'
-        //   },
-        //   type: 'route'
-        // },
+        {
+          img: '/img/bottomPanel/prop.png',
+          title: '我的道具',
+          type: 'prop'
+        },
         {
           img: '/img/bottomPanel/market.png',
           title: '道具商城',
@@ -66,7 +69,8 @@ export default {
       ],
       //显示小组提示
       showTeamTip: false,
-      openTeam: false
+      openTeam: false,
+      showMyProp: false
     }
   },
   computed: {
@@ -80,19 +84,26 @@ export default {
           this.$router.push(val.route)
           break;
         case 'team':  
-        await this.updateMy(0)
-        if (this.team.status === false) {
-          this.teamKey = Date.now()
-          this.showTeamTip = true
-        } else {
-          this.teamVisible = !this.teamVisible
-        }
+          await this.updateMy(0)
+          if (this.team.status === false) {
+            this.teamKey = Date.now()
+            this.showTeamTip = true
+          } else {
+            this.teamVisible = !this.teamVisible
+          }
+          break;
+         case 'prop':
+          this.showMyProp = true
+          break;
       }
       this.openTeam = false
     },
     toggleTeam () {
       this.openTeam = !this.openTeam
     },
+    closeMyProp(val){
+      this.showMyProp = val
+    }
   },
 }
 </script>
