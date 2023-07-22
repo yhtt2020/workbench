@@ -14,7 +14,11 @@
       <div
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
         <!--主题区域，自动滚动条        -->
-        <router-view></router-view>
+        <template v-if="!delZone">
+          <router-view></router-view>
+        </template>
+        <!-- 删除区域 -->
+        <div class="del-icon" id="delIcon2" v-show="delZone">拖到此处删除图标</div>
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
@@ -28,7 +32,7 @@
       </div>
     </div>
     <div style="flex: 0;">
-      <BottomPanel v-if="!fullScreen"></BottomPanel>
+      <BottomPanel v-if="!fullScreen" :delZone="delZone" @getDelIcon="getDelIcon"></BottomPanel>
     </div>
   </div>
 </template>
@@ -67,10 +71,14 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      delZone: false
     }
   },
   methods: {
     ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList']),
+    getDelIcon(val){
+      this.delZone = val
+    }
   }
 }
 </script>
@@ -96,5 +104,21 @@ export default {
   100% {
     transform: scale(1);
   }
+}
+</style>
+<style lang="scss" scoped>
+.del-icon {
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: var(--secondary-bg);
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--primary-text);
+  font-weight: 500;
 }
 </style>
