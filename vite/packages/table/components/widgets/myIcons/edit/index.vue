@@ -37,10 +37,12 @@
 <script>
 import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
-import editMixins from "./hooks/mixins";
+
+import mixins from "./hooks/mixins";
+const { fs } = window.$models;
 
 export default {
-  mixins: [editMixins],
+mixins:[mixins],
   props: {
     data: {},
   },
@@ -52,7 +54,9 @@ export default {
     close() {
       this.$emit("close");
     },
-    save() {
+
+    async save() {
+ 
       // this.edit.linkValue = {
       //   type: "systemApp",
       //   event: "ai",

@@ -7,8 +7,9 @@
       @click="iconClick($event)"
       :data-index="index"
     >
+      <!-- src="../../../../../../temporaryIcon/my_image.png" -->
       <img
-      v-if="src.length > 0"
+        v-if="src.length > 0"
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
@@ -64,11 +65,9 @@ export default {
         "object-fit": this.imgState,
       };
     },
-
   },
   watch: {
-    imgShape(newV) {
-    },
+    imgShape(newV) {},
   },
   methods: {
     getSizeValues(size) {
