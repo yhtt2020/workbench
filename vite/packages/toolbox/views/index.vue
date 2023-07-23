@@ -1,5 +1,5 @@
 <template>
-    <!-- <div class="w-full h-full xt-modal xt-text flex flex-col">
+   <div class="w-full h-full xt-modal xt-text flex flex-col">
       <GlobaSearch></GlobaSearch>
       <XtButton @click="go" style="height: 48px" class="flex-1">1</XtButton>
       <div
@@ -7,9 +7,9 @@
       >
         <router-view></router-view>
       </div>
-    </div> -->
+    </div>
   </template>
-  
+
   <script>
   import GlobaSearch from "./globalSearch/index.vue";
   export default {
@@ -26,7 +26,7 @@
     },
   };
   </script>
-  
+
   <style lang="scss">
   #app {
     width: 100%;
@@ -35,4 +35,3 @@
     user-select: none;
   }
   </style>
-  
