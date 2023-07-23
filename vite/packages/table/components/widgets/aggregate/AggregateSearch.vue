@@ -9,10 +9,10 @@
     </div>
 
     <div class="flex">
-      <template v-if="Object.keys(customData).length === 0 ||  customData.width === 1">
+       <template v-if="showSize.width === 1">
         <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-          style="background: var(--secondary-bg);" :style="customData.width === 1 || Object.keys(customData).length === 0 ? {width:'92px'} : {width:'113px'}">
+          style="background: var(--secondary-bg);" :style="showSize.width === 1 ? {width:'92px'} : {width:'113px'}">
            <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
             <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
            </div>
@@ -25,7 +25,7 @@
       <template v-else>
         <div v-for="(item,index) in  aggSearchList.slice(0,5)" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-          style="background: var(--secondary-bg);" :style="customData.width !== 1 ? {width:'113px'} : {width:'92px'}">
+          style="background: var(--secondary-bg);" :style="showSize.width === 2 ? {width:'113px'} : {width:'92px'}">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
              <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
@@ -44,17 +44,27 @@
 
 
   <a-drawer :width="500" title="设置" :placement="right" v-model:visible="aggSearchShow" @close="aggSearchShow = false">
-    <AggregateSearchDrawer></AggregateSearchDrawer>
+    <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+      <div class="primary-title" style="color: var(--primary-text);">搜索引擎</div>
+      <div class="secondary-title mt-2 mb-6" style="color: var(--secondary-text);">长按拖拽排序，最多支持在卡片上的展示5个搜索引擎</div>
+      <AggregateSearchDrawer @setSortedList="setSortedList" :drawerList="aggSearchList"></AggregateSearchDrawer>
+      <div class="mb-6 primary-title " style="color: var(--primary-text);">链接打开方式</div>
+      <XtTab   style="height: 52px" boxClass="p-1 xt-bg-2" v-model:list="linkType"  v-model:data="customData.sort_type">
+      </XtTab>
+    </vue-custom-scrollbar>
   </a-drawer>
-
+<!--  -->
 </template>
 
 <script>
-import { mapActions, mapWritableState } from "pinia";
+import { mapActions,mapWritableState } from 'pinia';
+import { appStore } from '../../../store';
+import { cardStore } from '../../../store/card' 
 import Widget from "../../card/Widget.vue";
 import AggregateSearchDrawer from "./AggregateSearchDrawer.vue";
-import { appStore } from "../../../store";
 import { AggregateList } from "../../../js/data/searchData";
+import HorizontalPanel from '../../HorizontalPanel.vue';
+import _ from 'lodash-es'
 
 export default {
   name: "AggregateSearch",
@@ -62,6 +72,7 @@ export default {
   components: {
     Widget,
     AggregateSearchDrawer,
+    HorizontalPanel
   },
 
   props: {
@@ -98,42 +109,112 @@ export default {
 
       bottomSizeList:[{title:'2x2',width:1,height:1,name:'1x1'},{title:'4x2',width:2,height:1,name:'2x1'}], // 底部设置中尺寸大小切换
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.aggSearchShow = true;this.$refs.aggregateSearchSlot.visible = false } } ],
+
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
+
+      linkType:[  // 设置中打开方式类型
+        {name:'工作台内打开',value:'work'},
+        {name:'想天浏览器',value:'thisky'},
+        {name:'系统默认浏览器',value:'system'}
+      ],
+      defaultLink:this.updateLink,
     }
   },
 
 
   computed:{
-    ...mapWritableState(appStore,['fullScreen','aggList']),
     aggSearchList(){
-      if(Object.keys(this.aggList).length !== 0 && this.aggList.list){
-        return this.aggList.list
+      if(this.customData && this.customData.sort_list){
+        this.getAggList(this.customData.sort_list)
+        return this.customData.sort_list
       }else{
+        this.getAggList(this.AggregateList)
         return this.AggregateList
       }
     },
+    showSize(){
+      if(this.customData && this.customData.width && this.customData.height){
+        return {width:this.customData.width,height:this.customData.height}
+      }
+      return this.bottomSizeList[0]
+    },
+    // aggSizeShow(){
+    //   // if(this.customData && this.customData.width === 1){
+    //   //   return true
+    //   // }else{
+    //   //   return false
+    //   // }
+    // },
     aggInputValue(){
-      if(Object.keys(this.aggList).length !== 0){
-        return this.aggSearchList[0].icon
+      if(this.customData && this.customData.sort_list){
+        if(this.aggSearchList !== undefined){
+          return this.aggSearchList[0].icon
+        }
       }else{
         return this.AggregateList[0].icon
       }
-    }
+    },
   },
 
+  mounted(){
+    if (this.customData.sort_type === undefined) {
+      let setData = {}; 
+      setData.sort_type =  'work'; // 初始化分组名称
+      this.updateCustomData(this.customIndex, setData, this.desk);
+    } 
+  },
 
   methods:{
-    ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
+    setSortedList(arr){
+      this.customData.sort_list = arr
+    },
+    ...mapActions(appStore,['setSearchFullScreen','setSearchIndex','setSearchUrlOpenType','getAggList']),
+    ...mapActions(cardStore,['updateCustomData']),
     handleSearchEngine(){
       this.setSearchFullScreen(true)
-      this.setSearchIndex(0)
+      if(this.customData && this.customData.sort_list){
+        this.setSearchIndex(0)
+      }else{
+        this.setSearchIndex(this.AggregateList[0].id)
+      }
+      //
     },
     clickSearchItem(index){ // 点击选中打开
       this.setSearchFullScreen(true)
-      this.setSearchIndex(index)
-    }
+      if(this.customData && this.customData.sort_list){
+        this.setSearchIndex(index)
+      }else{
+        this.setSearchIndex(this.AggregateList[index].id)
+      }
+    },
   },
+
+  watch:{
+    'customData.sort_type':{
+      handler(newVal){
+        this.setSearchUrlOpenType(newVal)
+      }
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.primary-title{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  font-weight: 500;
+}
+.secondary-title{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
+}
+
 </style>

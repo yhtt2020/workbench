@@ -26,10 +26,10 @@ align-items: start;
           <div class="scroll-content mr-6" style="overflow-y:hidden;overflow-x: auto;flex:1;display: flex;"
                ref="content">
 
-            <div style="white-space: nowrap;display: flex;align-items: center">
+            <div style="white-space: nowrap;display: flex;align-items: center" id="bottomContent">
               <div v-if="footNavigationList.length <= 0" style="">
               </div>
-              <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList ">
+              <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList " :key="item.name">
                 <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;"
                      @click="clickNavigation(item)">
                   <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
@@ -234,6 +234,8 @@ import { screenStore } from '../store/screen'
 import { toggleFullScreen } from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
+import Sortable from 'sortablejs'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'BottomPanel',
@@ -277,8 +279,17 @@ export default {
       },
       changeFlag: false,
       timerRunning: false,
-      showScreen: false
+      showScreen: false,
+      leftNav: false,
+      rightNav: false,
+      delNav: false
       //screenWidth: document.body.clientWidth
+    }
+  },
+  props: {
+    delZone: {
+      type: Boolean,
+      default: () => false
     }
   },
   unmounted () {
@@ -336,7 +347,9 @@ export default {
       // console.log('wheel',event)
       content.scrollLeft += event.deltaY
     })
-
+    this.$nextTick(() => {
+      this.rowDrop()
+    })
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -344,7 +357,7 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore, ['screens']),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(navStore, ['footNavigationList', 'builtInFeatures', 'navigationToggle']),
+    ...mapWritableState(navStore, ['footNavigationList', 'builtInFeatures', 'navigationToggle','sideNavigationList','rightNavigationList','mainNavigationList']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
@@ -376,11 +389,23 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    delZone(val){
+      this.delNav = val
+    },
+    navigationToggle:{
+      immediate: true,
+      deep: true,
+      handler(val){
+        this.leftNav = val[0]
+        this.rightNav = val[1]
+      }
     }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
+    ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList','removeFootNavigationList']),
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -528,7 +553,81 @@ export default {
         default:
           require('electron').shell.openPath(item.path)
       }
-    }
+    },
+    rowDrop () {
+      let that = this
+      let drop = document.getElementById('bottomContent')
+      Sortable.create(drop,{
+        sort: true,
+        animation: 150,
+        onStart: function (event) {
+          let delIcon = document.getElementById('delIcon2')
+          that.$emit('getDelIcon',true)
+          this.delNav = true
+          if (this.delNav) {
+            delIcon.ondragover = function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop = function (ev) {
+            let oneNav = that.footNavigationList[event.oldIndex]
+            //将要删除的是否是主要功能
+            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
+              that.removeFootNavigationList(event.oldIndex)
+              return
+            }
+            let sumList = []
+            // 判断其他导航栏是否是打开状态，是则获取功能列表
+            if (that.leftNav && that.rightNav) {
+              sumList = that.sideNavigationList.concat(that.rightNavigationList)
+            } else if (that.leftNav && !that.rightNav) {
+              sumList = that.sideNavigationList
+            } else if (!that.leftNav && that.rightNav) {
+              sumList = that.rightNavigationList
+            } else{
+              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+              // console.log('不可删除')
+              return
+            }
+            that.delNavigation(sumList, oneNav, event.oldIndex, that.removeFootNavigationList)
+          }
+        },
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let newItem = drop.children[newIndex]
+          let oldItem = drop.children[oldIndex]
+
+          // 先删除移动的节点
+          drop.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if (newIndex > oldIndex) {
+            drop.insertBefore(newItem, oldItem)
+          } else {
+            drop.insertBefore(newItem, oldItem.nextSibling)
+          }
+          that.sortFootNavigationList(event)
+        },
+        onEnd: function (event) {
+          that.$emit('getDelIcon',false)
+
+        }
+      })
+    },
+    delNavigation (sumList, oneNav, index, delMethod) {
+      if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
+        //如果不是必须的
+        delMethod(index)
+      } else {
+        if (sumList.find(item => item.name === oneNav.name)) {
+          //正常移除
+          delMethod(index)
+        } else {
+          //不可移除
+          message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+        }
+      }
+    },
   }
 }
 </script>

@@ -9,7 +9,7 @@
           padding-top: 0;padding-bottom: 0;position:relative;" ref="sideContent"
          @contextmenu.stop="showMenu">
       <div style="width: 67px;overflow-x: hidden">
-        <div class="scroller-wrapper xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
+        <div :id="sortId" class="scroller-wrapper xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
           <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
             <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">
@@ -54,6 +54,7 @@ import { mapWritableState } from 'pinia';
 import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { navStore } from "../store/nav";
 import { cardStore } from '../store/card';
+import Sortable from 'sortablejs'
 export default {
   name: 'SidePanel',
   components: {
@@ -69,13 +70,22 @@ export default {
     sideNavigationList: {
       type: Array,
       default: () => []
-    }
+    },
+    sortNavigationList: {
+      type: Function,
+      default: () => {}
+    },
+    sortId: {
+      type: Function,
+      default: () => {}
+    },
   },
   computed: {
     ...mapWritableState(navStore, ['builtInFeatures']),
     ...mapWritableState(cardStore, ['routeParams']),
   },
   mounted() {
+    this.colDrop()
   // this.scrollNav('sideContent', 'scrollTop')
   },
   methods: {
@@ -158,7 +168,32 @@ export default {
     onClose() {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
-    }
+    },
+    colDrop () {
+      let that = this
+      let drop = document.getElementById(this.sortId)
+      Sortable.create(drop,{
+        sort: true,
+        animation: 150,
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let newItem = drop.children[newIndex]
+          let oldItem = drop.children[oldIndex]
+
+          // 先删除移动的节点
+          drop.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if (newIndex > oldIndex) {
+            drop.insertBefore(newItem, oldItem)
+          } else {
+            drop.insertBefore(newItem, oldItem.nextSibling)
+          }
+          console.log(event)
+          that.sortNavigationList(event)
+        },
+      })
+    },
   }
 }
 </script>
