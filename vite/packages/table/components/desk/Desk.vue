@@ -92,7 +92,7 @@
       </a-col>
       <a-col>
         <div @click="newAddIcon" class="btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
           <div><span>添加图标</span></div>
         </div>
       </a-col>
@@ -137,6 +137,8 @@
     <slot name="outMenu"></slot>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
+
+
     <div class="line-title">卡片设置：</div>
     <div class="line">
       卡片缩放：
@@ -150,6 +152,9 @@
       距离顶部：
       <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
+
+    <slot name="settingsAllAfter">
+    </slot>
   </a-drawer>
 
   <transition name="fade">

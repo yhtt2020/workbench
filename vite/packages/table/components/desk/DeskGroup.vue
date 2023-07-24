@@ -60,6 +60,10 @@
     <Desk :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
           :settings="currentDesk.settings" :key="key">
 
+      <template #settingsAllAfter>
+        <slot name="settingsAll" ></slot>
+      </template>
+
       <template #outMenu>
         <a-row class="text-center" style="margin-top: 20px" :gutter="20">
           <a-col>
@@ -175,10 +179,11 @@ import {message, Modal} from "ant-design-vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import ExportDesk from "./ExportDesk.vue";
 import {nanoid} from "nanoid";
+import Template from "../../../user/pages/Template.vue";
 
 export default {
   name: "DeskGroup",
-  components: {ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk},
+  components: {Template, ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk},
   emits: ['update:currentDeskId', 'showMore'],
   props: {
     deskList: {

@@ -81,7 +81,51 @@
 <!--      </div>-->
 <!--    </vue-custom-scrollbar>-->
 <!--  </div>-->
-  <desk-group :desk-list="desks" v-model:current-desk-id="this.currentDeskId"></desk-group>
+  <desk-group :desk-list="desks" v-model:current-desk-id="this.currentDeskId">
+    <template #settingsAll >
+      <div class="line-title ">背景设置：</div>
+      <div class="line" @click="setTransparent()">
+        透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
+      </div>
+      <div class="line" v-if="!appSettings.transparent">
+        <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
+        <a-button @click="clearWallpaper">清除背景</a-button>
+      </div>
+      <div v-if="!appSettings.transparent" class="line">
+        <div class="line">
+          背景模糊度：
+          <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
+        </div>
+        <!--      <div class="line">-->
+        <!--        遮罩浓度：-->
+        <!--        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>-->
+        <!--      </div>-->
+      </div>
+
+      <div class="line-title">RGB<br />（此类功能性能消耗较高，请酌情开启）</div>
+      <div class="line">
+        边框跑马灯：
+        <a-switch v-model:checked="appSettings.houserun"></a-switch>
+      </div>
+      <div class="line">
+        飘落特效：
+        <a-switch v-model:checked="appSettings.down.enable"></a-switch>
+      </div>
+      <div class="line" v-if="appSettings.down.enable">
+        飘落物：
+        <a-radio-group v-model:value="appSettings.down.type">
+          <a-radio value="rain">雨</a-radio>
+          <a-radio value="snow">雪</a-radio>
+          <a-radio value="leaf">叶</a-radio>
+        </a-radio-group>
+      </div>
+      <div class="line" v-if="appSettings.down.enable">
+        飘落物数量：
+        <a-input-number v-model:value="appSettings.down.count"></a-input-number>
+      </div>
+    </template>
+
+  </desk-group>
   <transition name="fade">
     <div class="home-blur" style="
         position: fixed;
