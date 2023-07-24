@@ -17,7 +17,7 @@ export default {
     },
     fontSizeStyle() {
       return {
-        "font-size": this.size + "px",
+        "font-size": this.size + "px ",
       };
     },
     typeClass() {

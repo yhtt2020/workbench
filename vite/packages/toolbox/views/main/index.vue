@@ -1,12 +1,10 @@
 <template>
   <div class="w-full h-full xt-modal xt-text flex flex-col">
     <div class="xt-border">
-      <GlobaSearch></GlobaSearch>
- 
+      <Search></Search>
     </div>
     <div
       class="m-3 h-full flex-grow overflow-hidden overflow-y-auto xt-scrollbar no-darg"
-      style="border: 1px solid red"
     >
       <router-view></router-view>
     </div>
@@ -14,17 +12,17 @@
 </template>
 
 <script>
-import GlobaSearch from "../globalSearch/index.vue";
+import Search from "./search.vue";
+import Tools from "./tools.vue";
 export default {
   components: {
-    GlobaSearch,
+    Search,
+    Tools,
   },
   mounted() {
     document.documentElement.classList.add("dark-model");
   },
-  methods: {
- 
-  },
+  methods: {},
 };
 </script>
 

@@ -8,29 +8,28 @@ tools.getWindowArgs(window);
 
 import router from "./router";
 import Antd from "ant-design-vue";
+
 import { createPinia } from "pinia";
+import piniaPersist from "../table/js/ext/pinia-plugin-persist/index";
 const pinia = createPinia();
+pinia.use(piniaPersist);
+
 // 基础样式
 import "./styles/index.scss";
 // 主题样式
 import "../../public/css/styleSwitch/index.scss";
-// 基础组件
+// 组件
 import baseComponents from "../table/components/card/components/index";
-// 缓存
+import toolBaseComponents from "./commponts/index";
+import Icon from "../table/components/Icon.vue";
+
 const app = createApp(App);
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\components\Icon.vue
-import Icon from "../table/components/Icon.vue"
 
+app.use(Antd).use(pinia).use(router);
 
-// 挂载Antd
-app.use(Antd);
+app.component("Icon", Icon);
+app.use(baseComponents).use(toolBaseComponents);
 
-app.use(pinia).use(router);
-
-// 全局注册基础组件
-app.use(baseComponents);
-
-// 全局挂载缓存
 import cache from "../table/components/card/hooks/cache";
 app.config.globalProperties.$cache = cache;
 

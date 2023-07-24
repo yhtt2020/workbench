@@ -3,7 +3,7 @@ let routes = [
   {
     path: "/",
     name: "show",
-    component: () => import("../views/showTools/index.vue"),
+    component: () => import("../views/main/tools.vue"),
   },
 ];
 
