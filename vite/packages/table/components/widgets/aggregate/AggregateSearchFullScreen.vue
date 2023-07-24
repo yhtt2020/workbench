@@ -1,17 +1,12 @@
 <template>
-  <div class="w-full h-full flex" style="background:rgba(0, 0, 0, 0.45);">
-    <!-- 点击左边空白区域关闭 -->
-    <div class="pointer" style="width: 25%;" @click="closeSearchFullScreen"></div>
-
-
-    <!-- 搜索内容区域展示 -->
-    <div class="flex items-center justify-center" style="width: 50%;">
-      <div class="search-content search-full flex flex-col justify-between rounded-lg">
-        <div class="p-4 flex">
-          <!-- 左侧 -->
-          <div class="flex flex-col mr-4">
-            <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
-            <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
+  <div class="w-full h-full" style="position: relative;">
+    <div class="search-mask pointer w-full h-full" @click="closeSearchFullScreen"></div>
+    <div class="search-content search-full rounded-lg flex flex-col justify-between">
+      <div class="p-4 flex">
+        <!-- 左侧 -->
+        <div class="flex flex-col mr-4">
+          <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
+          <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
               <div v-for="(item,index) in searchList" 
                class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
                :class="{'active-bg':searchIconIndex === index}"
@@ -22,80 +17,80 @@
                 </div>
                 <span class="ml-2 primary-title" style="color: var(--primary-text);">{{item.title}}</span>
               </div>
-            </vue-custom-scrollbar>
-          </div>
+          </vue-custom-scrollbar>
+        </div>
 
-          <!-- 右侧 -->
-          <div class="flex flex-col">
-            <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
-              <div class="flex items-center justify-center" style="width: 20px;height:20px;">
-                <Icon :icon="searchEngineIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
-              </div>
-              <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef" @input="dataSearch" @pressEnter="enterSearch">
-
-              </a-input>
+        <!-- 右侧 -->
+        <div class="flex flex-col">
+          {{ selectIcon }}
+          <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
+            <div class="flex items-center justify-center" style="width: 20px;height:20px;">
+              <Icon :icon="searchEngineIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
             </div>
-            <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
-              <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
-                <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
-                 :class="{'active-bg':suggestIndex === index}" 
-                 class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer"
-                 @click="getSuggestItem(suggestion,index)"
-                >
-                  <!-- 百度搜索 -->
-                  <div v-if="suggestion.q" class="flex">
-                    <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(suggestion.q)"></span>
-                  </div>
-
-                  <!-- bili搜索 -->
-                  <div v-else-if="suggestion.value" class="flex">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.value)"></span>
-                  </div>
-
-                  <!-- 豆瓣、微博搜索 -->
-                  <div v-else-if="suggestion.suggestion">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.suggestion)"></span>
-                  </div>
-
-                  <!-- github、优酷搜索 -->
-                  <div v-else-if="suggestion.name">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.name) "></span>
-                  </div>
-
-                  <!-- 知乎搜索 -->
-                  <div v-else-if="suggestion.query">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.query)"></span>
-                  </div>
-
-                  <!-- 必应搜索 -->
-                  <div v-else-if="suggestion">
-                    <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion)"></span>
-                  </div>
-                </li>
-              </ul> 
-            </vue-custom-scrollbar>
+            <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef" @input="dataSearch" @pressEnter="enterSearch"></a-input>
+            <!-- <a-select class="w-56 h-auto rounded-lg  text-xs s-item" size="large" :bordered="false">
+              <a-select-option></a-select-option>
+            </a-select> -->
           </div>
+          <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
+            <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
+              <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
+               :class="{'active-bg':suggestIndex === index}" 
+               class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer"
+               @click="getSuggestItem(suggestion,index)"
+              >
+                <!-- 百度搜索 -->
+                <div v-if="suggestion.q" class="flex">
+                  <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(suggestion.q)"></span>
+                </div>
+
+                <!-- bili搜索 -->
+                <div v-else-if="suggestion.value" class="flex">
+                  <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.value)"></span>
+                </div>
+
+                <!-- 豆瓣、微博搜索 -->
+                <div v-else-if="suggestion.suggestion">
+                  <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.suggestion)"></span>
+                </div>
+
+                <!-- github、优酷搜索 -->
+                <div v-else-if="suggestion.name">
+                  <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.name) "></span>
+                </div>
+
+                <!-- 知乎搜索 -->
+                <div v-else-if="suggestion.query">
+                  <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.query)"></span>
+                </div>
+
+                <!-- 必应搜索 -->
+                <div v-else-if="suggestion">
+                  <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion)"></span>
+                </div>
+              </li>
+            </ul> 
+          </vue-custom-scrollbar>
         </div>
-        <div class="rounded-b-lg flex items-center h-12 px-4 py-3" style="background: var(--secondary-bg);">
-          <div class="secondary-title " style="color: var(--secondary-text);">按下</div>
-          <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
-          <div class="secondary-title " style="color: var(--secondary-text);">快速切换搜索引擎，支持使用</div>
-          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
-            <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
-          </div>
-          <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
-            <Icon icon="arrowdown" style="color: rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
-          </div>
-          <div class="secondary-title " style="color: var(--secondary-text);">
-            快速选择候选项
-          </div>
+      </div>
+
+      <!-- 底部 -->
+      <div class="rounded-b-lg flex items-center h-12 px-3 py-3" style="background: var(--secondary-bg);">
+        <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
+        <div class="secondary-title " style="color: var(--secondary-text);">切换搜索引擎</div>
+        <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
+          <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
         </div>
+        <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
+          <Icon icon="arrowdown" style="color: rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
+        </div>
+        <div class="secondary-title " style="color: var(--secondary-text);">切换选择候选项</div>
+        <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Ctrl</div>
+        <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
+        <div class="secondary-title " style="color: var(--secondary-text);">切换打开方式</div>
       </div>
     </div>
 
-
-    <!-- 点击右边空白区域关闭 -->
-    <div class="pointer" style="width: 25%;" @click="closeSearchFullScreen"></div>
   </div>
 </template>
 
@@ -105,6 +100,7 @@ import { appStore } from "../../../store";
 import { AggregateList } from "../../../js/data/searchData";
 import axios from "axios";
 import browser from '../../../js/common/browser'
+import _ from 'lodash-es'
 
 export default {
 
@@ -137,8 +133,11 @@ export default {
       }
     },
     selectIcon(){  // 获取选中的图标 
+   
       if(this.aggList && this.aggList.select_status){
-        return this.aggList.select_status
+        const statusIndex = this.aggList.select_status
+        const index = _.findIndex(this.searchList,function(o){ return statusIndex === o.id })
+        return index
       }else{
         return 0
       }
@@ -175,13 +174,17 @@ export default {
         this.searchIconIndex = (this.searchIconIndex + 1) %  this.searchList.length
         this.searchEngineIcon.icon = this.searchList[this.searchIconIndex].icon
       }
-      if(e.key === 'ArrowUp'){  // 上切换键
-      this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
-      this.updateInputValue()
-    }else if(e.key === 'ArrowDown'){  // 下切换键
-      this.suggestIndex = (this.suggestIndex + 1) %  this.searchSuggestionList.length
-      this.updateInputValue()
-    }
+      if(e.key === 'ArrowUp'){  // 上切换键 
+       e.preventDefault()
+       this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+       this.updateInputValue()
+      }else if(e.key === 'ArrowDown'){  // 下切换键
+       this.suggestIndex = (this.suggestIndex + 1) %  this.searchSuggestionList.length
+       this.updateInputValue()
+      }
+      if(e.key === 'Escape'){ // 触发esc键关闭弹窗
+        this.setSearchFullScreen(false) 
+      }
     },
 
     dataSearch(){  // 输入关键字词 
@@ -438,12 +441,6 @@ export default {
   }
 }
 
-.search-content{
-  width:649px;
-  height: 500px;
-  background: var(--primary-bg);
-}
-
 :deep(.anticon.ant-input-clear-icon-has-suffix){
  background: var(--secondary-bg) !important;
  color: var(--secondary-text) !important;
@@ -454,5 +451,24 @@ export default {
   opacity: 0.5;
   background:var(--disable-text);
   border-radius: 6px;
+}
+
+.search-mask{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background:rgba(0, 0, 0, 0.45);
+}
+
+.search-content{
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 1000;
+  width:649px;
+  height: 500px;
+  background: var(--primary-bg);
 }
 </style>

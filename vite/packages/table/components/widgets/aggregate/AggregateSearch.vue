@@ -7,10 +7,9 @@
       </div>
       <a-input placeholder="搜索" :bordered="false" class="search"></a-input>
     </div>
-
     <div class="flex">
        <template v-if="showSize.width === 1">
-        <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(index)">
+        <div v-for="(item,index) in  aggSearchList.slice(0,3)" @click="clickSearchItem(item.id)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
           style="background: var(--secondary-bg);" :style="showSize.width === 1 ? {width:'92px'} : {width:'113px'}">
            <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
@@ -23,7 +22,7 @@
 
 
       <template v-else>
-        <div v-for="(item,index) in  aggSearchList.slice(0,5)" @click="clickSearchItem(index)">
+        <div v-for="(item,index) in  aggSearchList.slice(0,5)" @click="clickSearchItem(item.id)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
           style="background: var(--secondary-bg);" :style="showSize.width === 2 ? {width:'113px'} : {width:'92px'}">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
@@ -65,6 +64,7 @@ import AggregateSearchDrawer from "./AggregateSearchDrawer.vue";
 import { AggregateList } from "../../../js/data/searchData";
 import HorizontalPanel from '../../HorizontalPanel.vue';
 import _ from 'lodash-es'
+import cache from '../../card/hooks/cache';
 
 export default {
   name: "AggregateSearch",
@@ -130,11 +130,9 @@ export default {
 
   computed:{
     aggSearchList(){
-      if(this.customData && this.customData.sort_list){
-        this.getAggList(this.customData.sort_list)
-        return this.customData.sort_list
+      if(this.customData && this.customData.sortList){
+        return this.customData.sortList
       }else{
-        this.getAggList(this.AggregateList)
         return this.AggregateList
       }
     },
@@ -152,7 +150,7 @@ export default {
     //   // }
     // },
     aggInputValue(){
-      if(this.customData && this.customData.sort_list){
+      if(this.customData && this.customData.sortList){
         if(this.aggSearchList !== undefined){
           return this.aggSearchList[0].icon
         }
@@ -172,25 +170,28 @@ export default {
 
   methods:{
     setSortedList(arr){
-      this.customData.sort_list = arr
+      this.customData.sortList = arr
     },
     ...mapActions(appStore,['setSearchFullScreen','setSearchIndex','setSearchUrlOpenType','getAggList']),
     ...mapActions(cardStore,['updateCustomData']),
     handleSearchEngine(){
       this.setSearchFullScreen(true)
-      if(this.customData && this.customData.sort_list){
-        this.setSearchIndex(0)
+      if(this.customData && this.customData.sortList){
+        this.setSearchIndex(this.aggSearchList[0].id)
+        cache.set('aggSortList',this.customData.sortList)
+        this.getAggList()
       }else{
         this.setSearchIndex(this.AggregateList[0].id)
+        cache.set('aggSortList',this.AggregateList)
+        this.getAggList()
       }
-      //
     },
-    clickSearchItem(index){ // 点击选中打开
+    clickSearchItem(id){ // 点击选中打开
       this.setSearchFullScreen(true)
-      if(this.customData && this.customData.sort_list){
-        this.setSearchIndex(index)
+      if(this.customData && this.customData.sortList){
+        this.setSearchIndex(id)
       }else{
-        this.setSearchIndex(this.AggregateList[index].id)
+        this.setSearchIndex(id)
       }
     },
   },

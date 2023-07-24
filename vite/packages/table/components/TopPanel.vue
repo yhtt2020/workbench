@@ -1,57 +1,41 @@
 <template>
-  <a-row v-if="isMain" class="top-panel drag" type="flex" :gutter="16">
-    <a-col :span="8">
-      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
-           v-if="runningGame.appid">
+  <div v-if="isMain" class="top-panel drag w-full flex items-center justify-between" style="width: calc(100% - 220px);">
+    <div class="flex items-center pr-2.5" >
+      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"  v-if="runningGame.appid">
         <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
       </div>
-      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);" @click="enterMusic"
-           v-else-if="status.music.playing && status.music.title && status.music">
+      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);" @click="enterMusic"  v-else-if="status.music.playing && status.music.title && status.music">
         <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>
-    </a-col>
-    <a-col :span="8" style="text-align: center">
-      <!-- 快速搜索 头部 搜索栏 -->
-      <div hidden="" @click="openGlobalSearch" class="input-box no-drag pointer inline-block"
-           style=" background: var( --primary-bg); color: var(--secondary-text);width: 40px">
+    </div>
+    <div class="flex max-search" >
+      <div hidden="" @click="openGlobalSearch" class="input-box no-drag pointer inline-block" style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
-<!--        搜索 网页内容、标签-->
-        <!--        <span style="float: right; padding-right: 10px">-->
-        <!--          <span style="margin-right: 3px" class="key-button">Alt</span-->
-        <!--          ><span class="key-button">F</span>-->
-        <!--        </span>-->
       </div>
-    </a-col>
-
-    <a-col :span="8" style="text-align: right;color: var(--secondary-text);" class="s-text">
-      <div :style="{marginRight:showWindowController?'220px':0}" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
-        <div class="no-drag truncate" v-if="!loading">
-            <span style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
-        <!-- {{ lockTimeoutDisplay }}后锁屏 -->
-      </span>{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{
-            dateTime.minutes
-          }}
+    </div>
+    <div class="flex items-center">
+      <div class="no-drag flex items-center pointer" @click="messageAlert">
+        <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
+          <img src="/icons/logo128.png" class="w-full h-full object-cover">
+        </div>
+        <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
+      </div>
+      <a-divider type="vertical" style="height: 15px;width: 2px; background-color: rgba(255,255,255,0.40);" />
+      <div :style="{marginRight:showWindowController?'10px':0}" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
+        <div class="no-drag truncate" v-if="!loading" >
+          <span style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
+            <!-- {{ lockTimeoutDisplay }}后锁屏 -->
+          </span>
+          {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{dateTime.minutes}}
           {{ dateTime.week }}
           <span v-if="hasWeather && city.now">
-          <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
-        </span>
+            <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
+          </span>
         </div>
       </div>
-    </a-col>
-
-  </a-row>
-  <a-row style="height: 1em;cursor: move" class="drag text-right" v-else>
-
-  </a-row>
-
-  <div class="new-message  flex items-center justify-center  no-drag pointer" @click="messageAlert">
-    <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
-      <img src="/icons/logo128.png" class="w-full h-full object-cover">
     </div>
-    <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
   </div>
-
   <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg " style=" background: var(--primary-bg) !important;">
     <WindowController></WindowController>
   </div>
@@ -59,6 +43,7 @@
   <a-drawer :width="500" :closable="false" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px'}">
     <MessagePopup></MessagePopup>
   </a-drawer>
+
 </template>
 
 <script>
@@ -219,7 +204,7 @@ export default {
 
 <style lang="scss" scoped>
 .top-panel {
-  padding: 0.8em;
+  padding: 0.8em 0 0.8em 0.8em;
   padding-bottom: 0;
 }
 
@@ -247,5 +232,18 @@ export default {
   font-weight: 500;
 }
 
+.max-search{
+  width: 320px;
+}
 
+@media screen and(max-width:840px) {
+  .max-search{
+    width: 60px !important;
+  }
+}
+@media screen and(min-width:1050px) {
+  .max-search{
+    width: 320px !important;
+  }
+}
 </style>
