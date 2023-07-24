@@ -57,7 +57,7 @@
     </div>
   </div>
   <template v-if="currentDesk && currentDesk?.cards?.length>0 ">
-    <Desk :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
+    <Desk :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
           :settings="currentDesk.settings" :key="key">
 
       <template #settingsAllAfter>
@@ -186,6 +186,12 @@ export default {
   components: {Template, ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk},
   emits: ['update:currentDeskId', 'showMore'],
   props: {
+    settings:{
+      type:Object,
+      default:{
+
+      }
+    },
     deskList: {
       type: Array,
       default: []
