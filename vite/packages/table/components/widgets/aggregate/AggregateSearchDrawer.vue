@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6">
     <transition name="fade">
-      <div class="flex flex-col" id="aggregate-drop">
+      <div class="flex flex-col" id="aggregate-drop" ref="aggDropRef">
         <div v-for="item in drawerList" class="flex items-center agg-set mb-4 p-3 rounded-xl" :data-index="item.id">
           <div class="flex items-center cursor-move search-engine" style="width: 40%;">
              <HolderOutlined style="font-size: 20px;"></HolderOutlined>
@@ -50,41 +50,54 @@ export default {
   computed:{},
 
   mounted(){
-    let aggregateDrop = document.getElementById("aggregate-drop")
-    aggregateDrop.addEventListener('ondragover',()=>{
-      ev.preventDefault()
+    // let aggregateDrop = document.getElementById("aggregate-drop")
+    // aggregateDrop.addEventListener('ondragover',()=>{
+    //   ev.preventDefault()
+    // })
+    // aggregateDrop.addEventListener('drop',()=>{
+    //   this.aggDarggingCore = false
+    // })
+    // this.$nextTick(()=>{
+    //   this.searchEngineList()
+    // })
+    
+    const el = this.$refs.aggDropRef
+    new Sortable(el,{
+      group: 'sortableGroup',
+      onEnd: this.onSortEnd // 拖拽结束时触发的回调函数
     })
-    aggregateDrop.addEventListener('drop',()=>{
-      this.aggDarggingCore = false
-    })
-    this.$nextTick(()=>{
-      this.searchEngineList()
-    })
+
   },
 
   methods:{
     ...mapActions(appStore,['getAggList']),
-    searchEngineList(){
-      let that = this
-      let listDrag = document.getElementById('aggregate-drop') // 获取外层容器实现拖拽
-      Sortable.create(listDrag,{
-        sort: true,  // 开启排序
-        animation: 150,
-        direction: 'vertical', 
-        delay: 0,
-        onStart:function(event){},
-        onUpdate:function(event){
-          const items = event.target.children // 获取拖拽的使用子项
-          const newItems = []
-          for (let i = 0; i < items.length; i++) { // 遍历获取每一项
-           const index = parseInt(items[i].getAttribute('data-index'));  // 获取到指定的data-index属性
-           newItems.push(that.AggregateList[index]); // 将数据更新
-          } 
-          that.$emit('setSortedList',newItems)
-          cache.set('aggSortList',newItems)
-          that.getAggList()
-        },
-      })
+    // searchEngineList(){
+    //   let that = this
+    //   let listDrag = document.getElementById('aggregate-drop') // 获取外层容器实现拖拽
+    //   Sortable.create(listDrag,{
+    //     sort: true,  // 开启排序
+    //     animation: 150,
+    //     direction: 'vertical', 
+    //     delay: 0,
+    //     onStart:function(event){},
+    //     onUpdate:function(event){
+    //       const items = event.target.children // 获取拖拽的使用子项
+    //       const newItems = []
+    //       for (let i = 0; i < items.length; i++) { // 遍历获取每一项
+    //        const index = parseInt(items[i].getAttribute('data-index'));  // 获取到指定的data-index属性
+    //        newItems.push(that.AggregateList[index]); // 将数据更新
+    //       } 
+          
+    //     },
+    //   })
+    // }
+    onSortEnd(evt){
+      // 更新排序后的列表数据
+      this.drawerList.splice(evt.newIndex, 0, this.drawerList.splice(evt.oldIndex, 1)[0]);
+      // console.log('更新::>>>',this.drawerList);
+      this.$emit('setSortedList',this.drawerList)
+      cache.set('aggSortList',this.drawerList)
+      this.getAggList()
     }
   }
 }
