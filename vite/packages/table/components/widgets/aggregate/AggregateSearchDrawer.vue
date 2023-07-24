@@ -2,7 +2,7 @@
   <div class="mb-6">
     <transition name="fade">
       <div class="flex flex-col" id="aggregate-drop" ref="aggDropRef">
-        <div v-for="item in drawerList" class="flex items-center agg-set mb-4 p-3 rounded-xl" :data-index="item.id">
+        <div v-for="item in drawerList" class="flex items-center cursor-move agg-set mb-4 p-3 rounded-xl" :data-index="item.id">
           <div class="flex items-center cursor-move search-engine" style="width: 40%;">
              <HolderOutlined style="font-size: 20px;"></HolderOutlined>
           </div>
