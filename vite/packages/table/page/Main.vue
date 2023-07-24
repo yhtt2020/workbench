@@ -9,7 +9,16 @@
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;padding: 8px;margin: -3px">
       <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
-        <SidePanel :sideNavigationList="sideNavigationList" sortId="left" :sortNavigationList="sortSideNavigationList"></SidePanel>
+        <SidePanel sortId="left" 
+        :sideNavigationList="sideNavigationList" 
+        :sortNavigationList="sortSideNavigationList" 
+        :delNavList="removeSideNavigationList"
+        :otherSwitch1="navigationToggle[1]"
+        :otherSwitch2="navigationToggle[2]"
+        :otherNavList1="rightNavigationList"
+        :otherNavList2="footNavigationList"
+        @getDelIcon="getDelIcon"
+        ></SidePanel>
       </div>
       <div
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
@@ -28,7 +37,16 @@
       </Transition>
       <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
-        <SidePanel :sideNavigationList="rightNavigationList" sortId="right" :sortNavigationList="sortRightNavigationList"></SidePanel>
+        <SidePanel sortId="right" 
+        :sideNavigationList="rightNavigationList" 
+        :sortNavigationList="sortRightNavigationList"
+        :delNavList="removeRightNavigationList"
+        :otherSwitch1="navigationToggle[0]"
+        :otherSwitch2="navigationToggle[2]"
+        :otherNavList1="leftNavigationList"
+        :otherNavList2="footNavigationList"
+        @getDelIcon="getDelIcon"
+        ></SidePanel>
       </div>
     </div>
     <div style="flex: 0;">
@@ -59,7 +77,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
-    ...mapWritableState(navStore,['sideNavigationList','rightNavigationList','navigationToggle']),
+    ...mapWritableState(navStore,['sideNavigationList','rightNavigationList','navigationToggle','footNavigationList']),
     isMain
   },
   data() {
