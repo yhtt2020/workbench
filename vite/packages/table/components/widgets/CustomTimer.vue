@@ -11,12 +11,12 @@
         <a-col :span="11" class="flex flex-row items-center pl-2 py-2" >
           <div class="round-dot mr-3"></div>
           <div class="flex flex-col" s>
-            <span>端午节</span>
-            <span style="font-size: 12px;">农历五月初五</span>
+            <span>中秋/国庆节</span>
+            <span style="font-size: 12px;">放假8天</span>
           </div>
 
         </a-col>
-        <a-col :span="13" class="flex flex-row items-center justify-end pr-2" >6月22日~6月24日</a-col>
+        <a-col :span="13" class="flex flex-row items-center justify-end pr-2" >9月29日~10月6日</a-col>
       </a-row>
 <!--      <a-row class="festival mt-2 " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
 <!--        <a-col :span="11" class="flex flex-row items-center pl-2">-->
