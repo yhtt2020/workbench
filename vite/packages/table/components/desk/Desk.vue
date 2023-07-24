@@ -91,6 +91,12 @@
         </div>
       </a-col>
       <a-col>
+        <div @click="newAddIcon" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>添加图标</span></div>
+        </div>
+      </a-col>
+      <a-col>
         <div @click="showSetting" class="btn">
           <Icon style="font-size: 3em" icon="shezhi1"></Icon>
           <div><span>设置</span></div>
@@ -146,7 +152,18 @@
     </div>
   </a-drawer>
 
-
+  <transition name="fade">
+    <div class="" style="
+         position: fixed;
+         top: 0;
+         right: 0;
+         left: 0;
+         bottom: 0;
+         z-index: 999;
+       " v-if="iconVisible">
+      <AddIcon @setCustoms="setCustoms" @close="iconHide"  :desk="currentDesk"></AddIcon>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -190,7 +207,7 @@ import Clock from "../widgets/Clock.vue";
 import CountdownDay from "../widgets/CountdownDay.vue";
 import Notes from '../widgets/note/index.vue'
 const NewAddCard = defineAsyncComponent(() => import("../../page/app/card/NewAddCard.vue"))
-
+import myIcons from "../widgets/myIcons/index.vue"
 import AggregateSearch from '../widgets/aggregate/AggregateSearch.vue'
 import AggregateSearchFullScreen from "../widgets/aggregate/AggregateSearchFullScreen.vue";
 import GameStrategy from '../widgets/games/GameStrategy.vue';
@@ -199,6 +216,7 @@ import {mapWritableState} from "pinia";
 import {appStore} from "../../store";
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
+import AddIcon from "../../page/app/addIcon/index.vue"
 export default {
   name: 'Desk',
   components: {
@@ -209,7 +227,7 @@ export default {
     Music, Stock, Dou, Fish, CustomTimer, SmallCountdownDay, Clock, CountdownDay,
     Timer, Weather, SteamFriends, Remote, SignIn, SingleFilm, ManyFilm,
     CaptureNewCard, Voice, Audio, Capture, CustomAssembly, MyGameSmall, SmallWallpaper,
-    MiddleWallpaper,NewAddCard,Clocks,Notes,GameStrategy,AggregateSearch,AggregateSearchFullScreen
+    MiddleWallpaper,NewAddCard,Clocks,Notes,GameStrategy,AggregateSearch,AggregateSearchFullScreen,myIcons,AddIcon
   },
   props:
   {
@@ -293,6 +311,7 @@ export default {
       stashBound:{width:0,height:0,zoom:0},
       adjustZoom:1,
 
+      iconVisible:false,
       settingVisible:false,
       hide:false,
       key:Date.now(),
@@ -341,6 +360,9 @@ export default {
       this.hide = !this.hide;
       this.menuVisible = false;
     },
+    iconHide() {
+      this.iconVisible =false;
+    },
     showDesk() {
       this.hide = !this.hide;
       this.menuVisible = false;
@@ -372,6 +394,11 @@ export default {
     },
     showMenu(){
       if(!this.notTrigger)this.menuVisible = true;
+    },
+    // 添加图标
+    newAddIcon() {
+      this.iconVisible=true
+      this.menuVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。
