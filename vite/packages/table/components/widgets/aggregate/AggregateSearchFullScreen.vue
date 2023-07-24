@@ -22,6 +22,7 @@
 
         <!-- 右侧 -->
         <div class="flex flex-col">
+          {{ selectIcon }}
           <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="searchEngineIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
@@ -96,6 +97,7 @@ import { appStore } from "../../../store";
 import { AggregateList } from "../../../js/data/searchData";
 import axios from "axios";
 import browser from '../../../js/common/browser'
+import _ from 'lodash-es'
 
 export default {
 
@@ -128,8 +130,11 @@ export default {
       }
     },
     selectIcon(){  // 获取选中的图标 
+   
       if(this.aggList && this.aggList.select_status){
-        return this.aggList.select_status
+        const statusIndex = this.aggList.select_status
+        const index = _.findIndex(this.searchList,function(o){ return statusIndex === o.id })
+        return index
       }else{
         return 0
       }

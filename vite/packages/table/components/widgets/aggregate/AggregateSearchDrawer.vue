@@ -96,8 +96,8 @@ export default {
       this.drawerList.splice(evt.newIndex, 0, this.drawerList.splice(evt.oldIndex, 1)[0]);
       // console.log('更新::>>>',this.drawerList);
       this.$emit('setSortedList',this.drawerList)
-      cache.set('aggSortList',this.drawerList)
-      this.getAggList()
+      // cache.set('aggSortList',this.drawerList)
+      // this.getAggList()
     }
   }
 }
