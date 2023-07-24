@@ -7,10 +7,10 @@
         <div class="flex flex-col mr-4">
           <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
           <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
-              <div v-for="(item,index) in searchList" 
+              <div v-for="(item,index) in searchList"
                class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
                :class="{'active-bg':searchIconIndex === index}"
-               @click="selectAggSearch(item,index)" 
+               @click="selectAggSearch(item,index)"
               >
                 <div class="flex items-center justify-center" style="width: 20px;height:20px;" >
                   <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
@@ -22,7 +22,7 @@
 
         <!-- 右侧 -->
         <div class="flex flex-col">
-          {{ selectIcon }}
+<!--          {{ selectIcon }}-->
           <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="searchEngineIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
@@ -34,8 +34,8 @@
           </div>
           <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
             <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
-              <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
-               :class="{'active-bg':suggestIndex === index}" 
+              <li v-for="(suggestion,index) in searchSuggestionList" :key="index"
+               :class="{'active-bg':suggestIndex === index}"
                class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer"
                @click="getSuggestItem(suggestion,index)"
               >
@@ -69,7 +69,7 @@
                   <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion)"></span>
                 </div>
               </li>
-            </ul> 
+            </ul>
           </vue-custom-scrollbar>
         </div>
       </div>
@@ -106,14 +106,14 @@ export default {
 
   data(){
     return{
-      
+
       searchKeyWords:'', // 搜索关键字
       searchIconIndex:'', // 搜索引擎图标下标
       searchEngineIcon:{}, // 搜索引擎图标
       searchSuggestionList:[], // 搜索建议列表
       suggestIndex:-1, // 搜索建议列表下标
 
-      settingsScroller: {  // 滚动条配置 
+      settingsScroller: {  // 滚动条配置
        useBothWheelAxes: true,
        swipeEasing: true,
        suppressScrollY: false,
@@ -122,18 +122,18 @@ export default {
       },
     }
   },
-  
+
   computed:{
     ...mapWritableState(appStore,['aggList']),
-    searchList(){ // 获取左侧tab栏列表数据  
+    searchList(){ // 获取左侧tab栏列表数据
       if(this.aggList && this.aggList.list){
         return this.aggList.list
       }else{
         return AggregateList
       }
     },
-    selectIcon(){  // 获取选中的图标 
-   
+    selectIcon(){  // 获取选中的图标
+
       if(this.aggList && this.aggList.select_status){
         const statusIndex = this.aggList.select_status
         const index = _.findIndex(this.searchList,function(o){ return statusIndex === o.id })
@@ -164,17 +164,17 @@ export default {
 
   methods:{
     ...mapActions(appStore,['setSearchFullScreen','setSearchIndex']),
-    closeSearchFullScreen(){  // 关闭聚合搜索全屏  
-      this.setSearchFullScreen(false) 
+    closeSearchFullScreen(){  // 关闭聚合搜索全屏
+      this.setSearchFullScreen(false)
     },
 
-    keyBoardTrigger(e){  // 键盘触发  
-      if(e.key === 'Tab'){ // 触发tab键切换功能  
+    keyBoardTrigger(e){  // 键盘触发
+      if(e.key === 'Tab'){ // 触发tab键切换功能
         e.preventDefault();
         this.searchIconIndex = (this.searchIconIndex + 1) %  this.searchList.length
         this.searchEngineIcon.icon = this.searchList[this.searchIconIndex].icon
       }
-      if(e.key === 'ArrowUp'){  // 上切换键 
+      if(e.key === 'ArrowUp'){  // 上切换键
        e.preventDefault()
        this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
        this.updateInputValue()
@@ -183,11 +183,11 @@ export default {
        this.updateInputValue()
       }
       if(e.key === 'Escape'){ // 触发esc键关闭弹窗
-        this.setSearchFullScreen(false) 
+        this.setSearchFullScreen(false)
       }
     },
 
-    dataSearch(){  // 输入关键字词 
+    dataSearch(){  // 输入关键字词
       if(this.searchKeyWords === ''){
         this.searchSuggestionList = [];
         return;
@@ -195,7 +195,7 @@ export default {
       this.fetchSuggestions(true)
     },
 
-    async fetchSuggestions(val){  // 获取搜索建议列表 数据请求 
+    async fetchSuggestions(val){  // 获取搜索建议列表 数据请求
       if(val){  // 防止重复请求
         const words = encodeURIComponent(this.searchKeyWords)
         const url = `${this.searchList[this.searchIconIndex].recommend_url}${words}`
@@ -204,7 +204,7 @@ export default {
         case 0: // 百度搜索
           this.searchSuggestionList  = result.data.g
           break;
-        case 1: 
+        case 1:
           // 谷歌接口暂时不能使用,还没有找到api
           // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
          break;
@@ -230,10 +230,10 @@ export default {
           break;
         case 7:  // 优酷搜索
           this.searchSuggestionList  = result.data.data
-          break; 
+          break;
         case 8:
           this.searchSuggestionList = result.data.words
-          break; 
+          break;
         default:
           break;
         }
@@ -242,7 +242,7 @@ export default {
       }
     },
 
-    matchingKey(val){ // 匹配搜索关键字是否存在  
+    matchingKey(val){ // 匹配搜索关键字是否存在
       const isMatched = val.includes(this.searchKeyWords);
       if(isMatched && this.searchSuggestionList.length !== 1){
        const regex = new RegExp(this.searchKeyWords,'gi');
@@ -252,7 +252,7 @@ export default {
       }
     },
 
-    updateInputValue(){ // 搜索建议列表项选中赋值给搜索关键词 
+    updateInputValue(){ // 搜索建议列表项选中赋值给搜索关键词
       const id = this.aggList.list[this.searchIconIndex].id
       switch (id) {
         case 0:
@@ -317,7 +317,7 @@ export default {
 
     openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开
      const url = `${this.searchList[this.searchIconIndex].search_url}${words}`
-     switch (this.aggList.type) { 
+     switch (this.aggList.type) {
       case 'work':
         browser.openInTable(url)  // 在工作台中打开
         this.aggSearchWord = ''
@@ -338,14 +338,14 @@ export default {
      }
     },
 
-    getSuggestItem(item,index){ // 选择推荐关键字  
+    getSuggestItem(item,index){ // 选择推荐关键字
      this.suggestIndex = index
      switch (this.aggList.list[this.searchIconIndex].id){
       case 0: // 百度搜索
         const baiduWords = encodeURIComponent(item.q)
         this.openSearchSuggest(baiduWords)
         break;
-      case 1: 
+      case 1:
         // 谷歌接口暂时不能使用,还没有找到api
         // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
         break;
@@ -373,17 +373,17 @@ export default {
       case 7:  // 优酷搜索
         const youkuWords = encodeURIComponent(item.name)
         this.openSearchSuggest(youkuWords)
-        break; 
+        break;
       case 8:  // 豆瓣搜索
         const doubanWords = encodeURIComponent(item)
         this.openSearchSuggest(doubanWords)
-        break; 
+        break;
       default:
         break;
      }
     },
 
-    selectAggSearch(item,index){  //  聚合搜索框在全屏情况下的筛选 
+    selectAggSearch(item,index){  //  聚合搜索框在全屏情况下的筛选
      this.searchIconIndex = index
      this.searchEngineIcon.icon = item.icon
      this.setSearchIndex(index)
