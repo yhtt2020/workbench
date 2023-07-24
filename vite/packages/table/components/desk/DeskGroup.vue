@@ -10,7 +10,7 @@
       <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
            class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
         <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
-        <icon v-else :icon="item.icon" style="font-size: 18px;vertical-align: middle" class="mr-2"></icon>
+        <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle" class="mr-2"></icon>
         <span class="">{{ item.name }}</span>
         <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
       </div>
@@ -26,12 +26,7 @@
     <div v-if="showTools">
 
       <div class="flex flex-row">
-        <a-tooltip title="添加游戏桌面" placement="bottom">
-          <div @click="showMore"
-               class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-            <icon class="icon" style="font-size: 22px" icon="tianjia1"></icon>
-          </div>
-        </a-tooltip>
+        <slot name="toolsBefore"></slot>
         <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
           <div @click="startEdit"
                class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
@@ -74,6 +69,13 @@
             </div>
           </a-col>
           <a-col>
+
+            <div @click="importDesk" class="btn">
+              <Icon style="font-size: 3em" icon="daoru"></Icon>
+              <div><span>导入桌面</span></div>
+            </div>
+          </a-col>
+          <a-col>
             <div v-if="this.currentDesk.lock" class="btn" style="opacity: 0.5">
               <Icon style="font-size: 3em" icon="shanchu"></Icon>
               <div><span>删除桌面</span></div>
@@ -85,7 +87,7 @@
           </a-col>
           <a-col>
             <div @click="exportDesk" class="btn">
-              <Icon style="font-size: 3em" icon="export"></Icon>
+              <Icon style="font-size: 3em" icon="upload"></Icon>
               <div><span>导出桌面</span></div>
             </div>
           </a-col>
@@ -172,6 +174,7 @@ import AllDeskList from "./AllDeskList.vue";
 import {message, Modal} from "ant-design-vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import ExportDesk from "./ExportDesk.vue";
+import {nanoid} from "nanoid";
 
 export default {
   name: "DeskGroup",
@@ -232,6 +235,7 @@ export default {
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0]
     }
+    console.log(this.deskList)
     this.deskList.forEach(desk=>{
       if(!desk.id){
         desk.id=desk.nanoid

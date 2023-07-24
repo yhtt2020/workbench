@@ -190,6 +190,9 @@ import Clock from "../widgets/Clock.vue";
 import CountdownDay from "../widgets/CountdownDay.vue";
 import Notes from '../widgets/note/index.vue'
 const NewAddCard = defineAsyncComponent(() => import("../../page/app/card/NewAddCard.vue"))
+
+import AggregateSearch from '../widgets/aggregate/AggregateSearch.vue'
+import AggregateSearchFullScreen from "../widgets/aggregate/AggregateSearchFullScreen.vue";
 import GameStrategy from '../widgets/games/GameStrategy.vue';
 import {message, Modal} from "ant-design-vue";
 import {mapWritableState} from "pinia";
@@ -206,7 +209,7 @@ export default {
     Music, Stock, Dou, Fish, CustomTimer, SmallCountdownDay, Clock, CountdownDay,
     Timer, Weather, SteamFriends, Remote, SignIn, SingleFilm, ManyFilm,
     CaptureNewCard, Voice, Audio, Capture, CustomAssembly, MyGameSmall, SmallWallpaper,
-    MiddleWallpaper,NewAddCard,Clocks,Notes,GameStrategy
+    MiddleWallpaper,NewAddCard,Clocks,Notes,GameStrategy,AggregateSearch,AggregateSearchFullScreen
   },
   props:
   {

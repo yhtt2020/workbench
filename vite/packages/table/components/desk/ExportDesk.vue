@@ -31,7 +31,7 @@
         <span class="title">桌面数据：</span>
         <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留卡片的设置或数据，比如「便签」中的内容。</div>
         <HorizonTalTab :navList="dataType" v-model:selectType="defaultType"></HorizonTalTab>
-        <div class="title mt-2">桌面显示尺寸：{{layoutSize.width}} * {{layoutSize.height}}</div>
+        <div class="title mt-2">桌面显示尺寸：{{displaySize.width}} * {{displaySize.height}}</div>
 
       </div>
       <div class="flex justify-center mt-4">
@@ -86,6 +86,13 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['settings','deskSize','countdownDay']),
+    displaySize(){
+      if(this.layoutSize){
+        return this.layoutSize
+      }else{
+        return this.deskSize
+      }
+    }
   },
   methods: {
     close(){
