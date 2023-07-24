@@ -137,7 +137,8 @@ export default {
         if (item.icon && item.type !== "tableApp") {
           this.edit.src = item.icon;
         } else {
-          this.edit.src = await useBase64AsImage(this.edit.src);
+
+          this.edit.src = await useBase64AsImage(item.icon);
         }
         this.edit.src = item.icon;
       }

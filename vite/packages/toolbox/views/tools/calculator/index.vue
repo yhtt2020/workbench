@@ -14,42 +14,63 @@
         @change="handleChange()"
         @blur="handleBlur(index)"
       ></a-input>
+      <!-- <Tinput
+        :key="index"
+        class="xt-text flex-1"
+        placeholder="请输入计算式，如 99+99 "
+        style="height: 48px"
+        :class="border"
+        v-model:data="computeList[index]"
+        @focus="handleFocus(index)"
+        @change="handleChange()"
+        @blur="handleBlur(index)"
+      ></Tinput> -->
       <div
-        class="px-3 flex items-center success overflow-hidden cursor-pointer xt-active"
-        style="max-width: 30%"
+        v-if="countList[index]"
+        class="px-3 flex items-center success cursor-pointer xt-active res truncate"
+        style="
+          max-width: 30%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        "
         @click="copyToClipboard(countList[index])"
+        @mouseover="showCopy()"
+        @mouseout="hideCopy()"
       >
         {{ countList[index] }}
       </div>
+    </div>
+    <div
+      class="absolute left-1/2 -translate-x-1/2 res-copy"
+      style="bottom: 22px"
+    >
+      点击复制
     </div>
   </div>
 </template>
 
 <script>
 import { message } from "ant-design-vue";
-
+import { useCalculatorStore } from "../../../store/globalSearch";
+import { mapWritableState } from "pinia";
 export default {
-  data() {
-    return {
-      computeList: [null],
-      countList: [null],
-      selectIndex: 0,
-      calculators: 1,
-    };
+  computed: {
+    ...mapWritableState(useCalculatorStore, [
+      "computeList",
+      "countList",
+      "calculators",
+      "selectIndex",
+    ]),
   },
-  mounted() {
-    let calculator = this.$cache.get("calculator");
-    if (calculator) {
-      const { computeList, countList, calculators } = calculator;
-      this.computeList = computeList;
-      this.countList = countList;
-      this.calculators = calculators;
-    }
+  data() {
+    return {};
   },
   watch: {
     computeList: {
       handler() {
         let formula = this.computeList[this.selectIndex];
+        formula = this.pretreatment(formula);
         let res = 0;
         const regex =
           /^\(*[+-]?(?:\d{1,15}|\d{1,3}(?:,\d\d\d){1,4})(?:\.\d{1,15})?%?\)*(?:\s*[+*/^%-]\s*\(*[+-]?(?:\d{1,15}|\d{1,3}(?:,\d\d\d){1,4})(?:\.\d{1,15})?%?\)*)+$/;
@@ -60,17 +81,28 @@ export default {
           res = formula;
         }
         this.countList[this.selectIndex] = res;
-        let calculator = {
-          computeList: this.computeList,
-          countList: this.countList,
-          calculators: this.calculators,
-        };
-        this.$cache.set("calculator", calculator);
+        this.handleChange();
       },
       deep: true,
     },
   },
   methods: {
+    // 复制状态显示
+    showCopy() {
+      const resCopy = document.querySelector(".res-copy");
+      resCopy.style.display = "block";
+    },
+    hideCopy() {
+      const resCopy = document.querySelector(".res-copy");
+      resCopy.style.display = "none";
+    },
+    pretreatment(str) {
+      return str.replace(/[（）]/g, (match) => {
+        if (match === "（") return "(";
+        if (match === "）") return ")";
+        return match;
+      });
+    },
     copyToClipboard(text) {
       navigator.clipboard
         .writeText(text)
@@ -83,7 +115,10 @@ export default {
       this.selectIndex = i;
     },
     handleBlur(index) {
-      if (this.computeList[index] === "" && this.calculators > 1) {
+      if (
+        this.computeList[index] === "" &&
+        index !== this.computeList.length - 1
+      ) {
         this.computeList.splice(index, 1);
         this.countList.splice(index, 1);
         this.calculators--;
@@ -102,6 +137,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.res {
+  &:hover {
+    background: var(--success);
+    border-radius: 12px;
+    color: var(--primary-text);
+  }
+}
+.res-copy {
+  display: none;
+}
 input {
   border: none;
   background: none;

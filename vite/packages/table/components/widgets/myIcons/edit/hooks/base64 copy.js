@@ -3,6 +3,7 @@ import { myIcons } from "../../../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";
 const { join } = require("path");
+
 const dataURLToBlob = (fileDataURL) => {
   let arr = fileDataURL.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
@@ -24,16 +25,14 @@ const saveFile = async (filePath, file) => {
 };
 const saveBase64AsImage = async (filePath, base64) => {
   let file = Buffer.from(await dataURLToBlob(base64).arrayBuffer());
-  let fileDir = await fileDirs();
+  let fileDir = fileDir();
   fs.pathExists(fileDir, (err, exists) => {
     if (exists) {
-      console.log("1 :>> ", 1);
       saveFile(filePath, file);
     } else {
       fs.mkdirp(fileDir, (err) => {
-        console.log("1 :>> ", 2);
-
         if (err) throw err;
+        console.log("文件夹创建成功 :>> ");
         saveFile(filePath, file);
       });
     }
@@ -41,34 +40,40 @@ const saveBase64AsImage = async (filePath, base64) => {
 };
 
 // 用户路径拼接
-const fileDirs = () => {
-  let fileDir = window.globalArgs["user-data-path"];
-  fileDir = join(fileDir, "temporaryIcon");
+// const fileDirs = () => {
+//   // console.log("object :>> ", window.globalArgs);
+//   let fileDir = window.globalArgs["app-dir_name"];
+//   fileDir = fileDir.replace(/\\src\\main/, "");
+//   fileDir = join(fileDir, "vite", "temporaryIcon");
+//   console.log("2222 :>> ", 2222);
+//   return fileDir;
+// };
 
-  return fileDir;
-};
+// 主入口
 export const useBase64AsImage = async (base64) => {
-  let fileDir = await fileDirs();
+  let filePath = window.globalArgs["app-dir_name"];
+  filePath = filePath.replace(/\\src\\main/, "");
+  filePath = join(filePath, "vite", "temporaryIcon");
   let name = Date.now() + ".png";
-  const fileSavePath = join(fileDir, name);
-  let fileUsePath = join("file://", fileDir, name);
+  const fileSavePath = join(filePath, name);
+  let fileUsePath = "../../../../../../temporaryIcon/" + name;
   console.log("fileUsePath :>> ", fileUsePath);
-  // 拿到哈希去匹配
-  let sha256Hash = SHA256(base64).toString();
-  const store = myIcons();
-  const temporaryIcon = store.temporaryIcon;
+  // // 拿到哈希去匹配
+  // let sha256Hash = SHA256(base64).toString();
+  // const store = myIcons();
+  // const temporaryIcon = store.temporaryIcon;
 
-  if (temporaryIcon.length != 0) {
-    let file = temporaryIcon.find((item) => {
-      return item.hash == sha256Hash;
-    });
-    if (file) return file.src;
-  }
-  let file = {
-    hash: sha256Hash,
-    src: fileUsePath,
-  };
-  temporaryIcon.push(file);
+  // if (temporaryIcon.length != 0) {
+  //   let file = temporaryIcon.find((item) => {
+  //     return item.hash == sha256Hash;
+  //   });
+  //   if (file) return file.src;
+  // }
+  // let file = {
+  //   hash: sha256Hash,
+  //   src: fileUsePath,
+  // };
+  // temporaryIcon.push(file);
   await saveBase64AsImage(fileSavePath, base64);
   return fileUsePath;
 };
