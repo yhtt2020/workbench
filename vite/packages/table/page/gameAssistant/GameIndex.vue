@@ -1,5 +1,5 @@
 <template>
-  <desk-group @changeDesk="changeDesk" ref="deskGroupRef" @showMore="showMore" :desk-list="deskList" v-model:current-desk-id="currentDeskId">
+  <desk-group :settings="deskSettings" @changeDesk="changeDesk" ref="deskGroupRef" @showMore="showMore" :desk-list="deskList" v-model:current-desk-id="currentDeskId">
     <template #empty>
       <div v-if="currentDeskId!=='0' && currentDesk.iconUrl" class="game-bg p-5 rounded-md" style="margin: auto;width: 400px;margin-top: 40px">
         <p>
@@ -138,7 +138,7 @@ const toast = useToast()
 export default {
   components: { Emoji, Template, DeskGroup, GameListDrawer, Desk },
   computed: {
-    ...mapWritableState(steamUserStore, ['desks', 'runningGame', 'recentGameList', 'deskList', 'currentDeskId', 'desksOld']),
+    ...mapWritableState(steamUserStore, ['deskSettings','desks', 'runningGame', 'recentGameList', 'deskList', 'currentDeskId', 'desksOld']),
     ...mapWritableState(appStore, ['fullScreen']),
     selectDeskGame () {
       let found = this.recentGameList.find(g => {

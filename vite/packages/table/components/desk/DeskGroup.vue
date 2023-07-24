@@ -1,116 +1,120 @@
 <template>
-  <!--  工具栏-->
-  <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
-    <!-- tabs   -->
-    <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs">
-      <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
-      <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
-      <!--        主桌面-->
-      <!--      </div>-->
-      <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
-           class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
-        <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
-        <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle" class="mr-2"></icon>
-        <span class="">{{ item.name }}</span>
-        <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
-      </div>
-      <a-tooltip title="全部桌面" placement="bottom">
-        <div @click="showAll"
-             class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-          <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
+  <div class="flex flex-col h-full">
+    <!--  工具栏-->
+    <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
+      <!-- tabs   -->
+      <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs">
+        <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
+        <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
+        <!--        主桌面-->
+        <!--      </div>-->
+        <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
+             class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
+          <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
+          <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle" class="mr-2"></icon>
+          <span class="">{{ item.name }}</span>
+          <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
         </div>
-      </a-tooltip>
-
-    </div>
-
-    <div v-if="showTools">
-
-      <div class="flex flex-row">
-        <slot name="toolsBefore"></slot>
-        <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
-          <div @click="startEdit"
-               class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-            <icon class="icon" style="font-size: 22px" icon="line-dragdroptuofang"></icon>
+        <a-tooltip title="全部桌面" placement="bottom">
+          <div @click="showAll"
+               class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+            <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
           </div>
         </a-tooltip>
-        <a-tooltip v-else title="停止调整桌面" placement="bottom">
-          <div @click="stopEdit"
-               class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-            <icon class="icon" style="font-size: 22px;color:red" icon="tingzhi"></icon>
-          </div>
-        </a-tooltip>
-        <a-tooltip title="全屏" placement="bottom">
-          <div @click="setFullScreen"
-               class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-            <Icon style="font-size: 18px" icon="fullscreen"></Icon>
-          </div>
-        </a-tooltip>
+
+      </div>
+
+      <div v-if="showTools">
+
+        <div class="flex flex-row">
+          <slot name="toolsBefore"></slot>
+          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
+            <div @click="startEdit"
+                 class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+              <icon class="icon" style="font-size: 22px" icon="line-dragdroptuofang"></icon>
+            </div>
+          </a-tooltip>
+          <a-tooltip v-else title="停止调整桌面" placement="bottom">
+            <div @click="stopEdit"
+                 class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+              <icon class="icon" style="font-size: 22px;color:red" icon="tingzhi"></icon>
+            </div>
+          </a-tooltip>
+          <a-tooltip title="全屏" placement="bottom">
+            <div @click="setFullScreen"
+                 class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+              <Icon style="font-size: 18px" icon="fullscreen"></Icon>
+            </div>
+          </a-tooltip>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-if="fullScreen" class="no-drag">
-    <div style="position: absolute;right: 10px;top: 10px;z-index: 999">
-      <div @click="setFullScreen(false)"
-           class="btn-bg no-drag pointer  w-10 rounded-md flex justify-center items-center ml-3">
-        <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
+    <div v-if="fullScreen" class="no-drag">
+      <div style="position: absolute;right: 10px;top: 10px;z-index: 999">
+        <div @click="setFullScreen(false)"
+             class="btn-bg no-drag pointer  w-10 rounded-md flex justify-center items-center ml-3">
+          <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
+        </div>
       </div>
     </div>
-  </div>
-  <template v-if="currentDesk && currentDesk?.cards?.length>0 ">
-    <Desk :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
-          :settings="currentDesk.settings" :key="key">
+    <div style="flex:1;height: 0" v-if="currentDesk && currentDesk?.cards?.length>0 ">
+      <Desk :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
+            :settings="currentDesk.settings" :key="key">
 
-      <template #settingsAllAfter>
-        <slot name="settingsAll" ></slot>
-      </template>
+        <template #settingsAllAfter>
+          <slot name="settingsAll" ></slot>
+        </template>
 
-      <template #outMenu>
-        <a-row class="text-center" style="margin-top: 20px" :gutter="20">
-          <a-col>
-            <div @click="showAddDeskForm" class="btn">
-              <Icon style="font-size: 3em" icon="desktop"></Icon>
-              <div><span>添加桌面</span></div>
-            </div>
-          </a-col>
-          <a-col>
+        <template #outMenu>
+          <a-row class="text-center" style="margin-top: 20px" :gutter="20">
+            <a-col>
+              <div @click="showAddDeskForm" class="btn">
+                <Icon style="font-size: 3em" icon="desktop"></Icon>
+                <div><span>添加桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
 
-            <div @click="importDesk" class="btn">
-              <Icon style="font-size: 3em" icon="daoru"></Icon>
-              <div><span>导入桌面</span></div>
-            </div>
-          </a-col>
-          <a-col>
-            <div v-if="this.currentDesk.lock" class="btn" style="opacity: 0.5">
-              <Icon style="font-size: 3em" icon="shanchu"></Icon>
-              <div><span>删除桌面</span></div>
-            </div>
-            <div v-else @click="delDesk" class="btn">
-              <Icon style="font-size: 3em" icon="shanchu"></Icon>
-              <div><span>删除桌面</span></div>
-            </div>
-          </a-col>
-          <a-col>
-            <div @click="exportDesk" class="btn">
-              <Icon style="font-size: 3em" icon="upload"></Icon>
-              <div><span>导出桌面</span></div>
-            </div>
-          </a-col>
+              <div @click="importDesk" class="btn">
+                <Icon style="font-size: 3em" icon="daoru"></Icon>
+                <div><span>导入桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div v-if="this.currentDesk.lock" class="btn" style="opacity: 0.5">
+                <Icon style="font-size: 3em" icon="shanchu"></Icon>
+                <div><span>删除桌面</span></div>
+              </div>
+              <div v-else @click="delDesk" class="btn">
+                <Icon style="font-size: 3em" icon="shanchu"></Icon>
+                <div><span>删除桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div @click="exportDesk" class="btn">
+                <Icon style="font-size: 3em" icon="upload"></Icon>
+                <div><span>导出桌面</span></div>
+              </div>
+            </a-col>
 
 
-        </a-row>
-      </template>
+          </a-row>
+        </template>
 
-    </Desk>
-  </template>
-  <template v-else>
-    <slot name="empty">
+      </Desk>
+    </div>
+    <template v-else>
+      <slot name="empty">
 
-    </slot>
-    <span v-show="false">
+      </slot>
+      <span v-show="false">
        <Desk ref="currentDeskRef" :currentDesk="currentDesk"  :key="key" :editing="editing"></Desk>
     </span>
 
-  </template>
+    </template>
+  </div>
+
+
   <a-drawer height="220" placement="bottom" v-model:visible="allDeskListVisible">
     <AllDeskList :activeId="currentDeskId" :items="deskList" @visibleChanged=""
                  @valueChanged="(event)=>{setCurrentDeskId(event.id);this.allDeskListVisible=false}"
@@ -181,6 +185,7 @@ import ExportDesk from "./ExportDesk.vue";
 import {nanoid} from "nanoid";
 import Template from "../../../user/pages/Template.vue";
 
+import {deskTemplates} from '../../js/data/deskTemplates'
 export default {
   name: "DeskGroup",
   components: {Template, ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk},
@@ -390,30 +395,23 @@ export default {
         message.error("新桌面名称长度不可超过16");
         return;
       }
-      // if (this.newDesk.name.trim() === "") {
-      //   message.error("请输入新桌面名称");
-      //   return;
-      // }
-      // if (this.newDesk.name.length >= 16) {
-      //   message.error("新桌面名称长度不可超过16");
-      //   return;
-      // }
-      this.addDesk(
-        this.deskTitle,
-        this.cleanMuuriData(deskTemplate[this.selectDesk.name])
-        // this.newDesk.name,
-        // this.cleanMuuriData(deskTemplate[this.newDesk.template])
-      );
-      this.switchToDesk(this.desks.length - 1);
+      let desk = {
+        name: this.deskTitle,
+        id: nanoid(4),
+        icon:'desktop',
+        cards:  this.cleanMuuriData(deskTemplates[this.selectDesk.name])
+      }
+      this.deskList.unshift(desk)
       this.deskTitle = ''
-      this.selectDesk = {title:'日常桌面',name:'daily'}
-      // this.newDesk = {
-      //   name: "",
-      //   template: "daily",
-      //   data: {},
-      // };
       this.key = Date.now();
       this.addDeskVisible = false;
+    },
+    cleanMuuriData(list) {
+      list.forEach((li) => {
+        li.id = Date.now();
+        delete li["_$muuri_id"];
+      });
+      return list;
     },
   }
 }

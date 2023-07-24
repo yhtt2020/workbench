@@ -3,7 +3,7 @@
 
   <div style="height:100%;width: calc(100% - 20px); " v-if="currentDesk.cards">
     <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
-         v-if="this.currentDesk.cards.length === 0">
+         v-if="currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
                   sub-title="您可以长按空白处、右键添加卡片。">
@@ -35,11 +35,11 @@
           display: flex;
           align-items: center;
           align-content: center;
-        " :style="{ 'padding-top': this.settings.marginTop + 'px'}"
+        " :style="{ 'padding-top': this.usingSettings.marginTop + 'px'}"
            :class="notTrigger ? 'trigger' : '' "
       >
         <vuuri v-if="currentDesk.cards && !hide" :get-item-margin="() => {
-            return settings.cardMargin + 'px';
+            return usingSettings.cardMargin + 'px';
           }
           " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
 
@@ -265,7 +265,6 @@ import HorizontalPanel from '../HorizontalPanel.vue'
 import AddIcon from '../../page/app/addIcon/index.vue'
 import Tab from '../card/components/Tab/index.vue'
 import Template from '../../../user/pages/Template.vue'
-
 export default {
   name: 'Desk',
   components: {
@@ -461,6 +460,9 @@ export default {
     iconHide () {
       this.iconVisible = false
     },
+
+
+
     showDesk () {
       this.hide = !this.hide
       this.menuVisible = false
