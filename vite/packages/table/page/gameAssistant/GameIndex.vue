@@ -34,6 +34,14 @@
         </a-row>
       </div>
     </template>
+    <template #toolsBefore>
+      <a-tooltip title="添加游戏桌面" placement="bottom">
+        <div @click="showMore"
+             class=" btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+          <icon class="icon" style="font-size: 22px" icon="tianjia1"></icon>
+        </div>
+      </a-tooltip>
+    </template>
   </desk-group>
 
 
@@ -395,4 +403,15 @@ export default {
   background: var(--primary-bg);
   color: var(--primary-text);
 }
+.btn-bg {
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  height: 42px;
+  line-height: 42px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 </style>
