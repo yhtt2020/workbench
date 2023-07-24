@@ -36,7 +36,7 @@
              v-for="(item,index) in gameVideoList">
           <div class=" rounded-lg w-auto pointer mb-2" style="height: 65.5%;position: relative;">
             <img :src="`${getVideoCover(item.pic)}`" class="w-full h-full rounded-lg object-cover" alt="">
-            <div class="bfl px-4 mb-1 flex justify-between">
+            <div class="bfl px-2 mb-1 flex justify-between">
               <div class="flex">
                 <div class="flex items-center justify-center">
                   <Icon icon="play-square" class="text-color" style="font-size: 1.2em;"></Icon>
