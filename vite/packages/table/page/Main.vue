@@ -23,9 +23,7 @@
       <div
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
         <!--主题区域，自动滚动条        -->
-        <template v-if="!delZone">
           <router-view></router-view>
-        </template>
         <!-- 删除区域 -->
         <div class="del-icon" id="delIcon2" v-show="delZone">拖到此处删除图标</div>
       </div>
@@ -128,8 +126,9 @@ export default {
 .del-icon {
   width: 100%;
   height: 100%;
-  opacity: 0.5;
+  // opacity: 0.5;
   background: var(--secondary-bg);
+  backdrop-filter: blur(8px);
   border: 1px dashed rgba(255, 255, 255, 0.4);
   border-radius: 16px;
   display: flex;
@@ -138,5 +137,11 @@ export default {
   font-size: 18px;
   color: var(--primary-text);
   font-weight: 500;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9;
 }
 </style>
