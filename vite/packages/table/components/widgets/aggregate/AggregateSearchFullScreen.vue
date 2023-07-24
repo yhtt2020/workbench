@@ -28,6 +28,9 @@
               <Icon :icon="searchEngineIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
             </div>
             <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef" @input="dataSearch" @pressEnter="enterSearch"></a-input>
+            <!-- <a-select class="w-56 h-auto rounded-lg  text-xs s-item" size="large" :bordered="false">
+              <a-select-option></a-select-option>
+            </a-select> -->
           </div>
           <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
             <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
@@ -72,19 +75,19 @@
       </div>
 
       <!-- 底部 -->
-      <div class="rounded-b-lg flex items-center h-12 px-4 py-3" style="background: var(--secondary-bg);">
-        <div class="secondary-title " style="color: var(--secondary-text);">按下</div>
+      <div class="rounded-b-lg flex items-center h-12 px-3 py-3" style="background: var(--secondary-bg);">
         <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
-        <div class="secondary-title " style="color: var(--secondary-text);">快速切换搜索引擎，支持使用</div>
+        <div class="secondary-title " style="color: var(--secondary-text);">切换搜索引擎</div>
         <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
           <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
         </div>
         <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
           <Icon icon="arrowdown" style="color: rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
         </div>
-        <div class="secondary-title " style="color: var(--secondary-text);">
-          快速选择候选项
-        </div>
+        <div class="secondary-title " style="color: var(--secondary-text);">切换选择候选项</div>
+        <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Ctrl</div>
+        <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
+        <div class="secondary-title " style="color: var(--secondary-text);">切换打开方式</div>
       </div>
     </div>
 
@@ -172,8 +175,9 @@ export default {
         this.searchEngineIcon.icon = this.searchList[this.searchIconIndex].icon
       }
       if(e.key === 'ArrowUp'){  // 上切换键 
-      this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
-      this.updateInputValue()
+       e.preventDefault()
+       this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+       this.updateInputValue()
       }else if(e.key === 'ArrowDown'){  // 下切换键
        this.suggestIndex = (this.suggestIndex + 1) %  this.searchSuggestionList.length
        this.updateInputValue()
