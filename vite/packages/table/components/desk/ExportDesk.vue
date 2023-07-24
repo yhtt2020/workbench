@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="px-8">
-        <span class="title">选择桌面</span>
+        <span class="title">选择导出桌面：</span>
         <a-select
           :bordered="false"
           class="input rounded-lg  text-xs"
@@ -28,11 +28,13 @@
           </template>
           <a-select-option v-for="(item,index) in deskType" :key="index" :value="index">{{ item }}</a-select-option>
         </a-select>
-        <span class="title">桌面数据</span>
-        <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留你在小组件自定义编辑的设置或数据，比如「倒数日小组件」中的事件数据。</div>
+        <span class="title">桌面数据：</span>
+        <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留卡片的设置或数据，比如「便签」中的内容。</div>
         <HorizonTalTab :navList="dataType" v-model:selectType="defaultType"></HorizonTalTab>
+        <div class="title mt-2">桌面显示尺寸：{{layoutSize.width}} * {{layoutSize.height}}</div>
+
       </div>
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-4">
         <div style="width: 120px;height: 48px;"
           @click="close"
            class="flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer">
@@ -67,16 +69,23 @@ export default {
       deskType: [],
       desk: [0],
       selectedDesk: []
-    }  
+    }
   },
   props: {
     openModal: {
       type: Boolean,
       default: () => false
     },
+    desks:{
+      type:Array,
+    },
+    layoutSize:{ //传入此参数，则使用此参数作为桌面布局尺寸，否则则取系统级的
+      type:Object,
+      default:null
+    }
   },
   computed: {
-    ...mapWritableState(cardStore, ['desks','settings','deskSize','countdownDay']),
+    ...mapWritableState(cardStore, ['settings','deskSize','countdownDay']),
   },
   methods: {
     close(){
@@ -84,16 +93,23 @@ export default {
     },
     onChange(val){
       this.selectedDesk = []
+      const deskSize=this.layoutSize||this.deskSize //取出布局尺寸
       let desks = JSON.parse(JSON.stringify(this.desks))
       desks.map((item,index) => {
         let settings = {}
+
+        item.cards.forEach(card=>{
+          //遍历处理原卡片
+          //移除id
+          delete(card._$muuri_id)
+        })
         if(item.settings && item.settings.enableZoom){
           settings = item.settings
         }else{
           // settings = this.settings
           settings = {...this.settings,enableZoom:true}
         }
-        item.cardsHeight = this.deskSize.cardsHeight
+        item.deskHeight =deskSize.height //新版导出修正命名
         item.settings = settings
         val.map((i) => {
           if(index === i){
@@ -202,7 +218,7 @@ export default {
     color: var(--primary-text);
     font-size: 16px;
     border: 1px solid rgba(255,255,255,0.2);
-    margin: 21px 0 24px;
+    margin: 12px 0 12px;
   }
   ::v-deep .ant-select-selector{
     height: 48px;

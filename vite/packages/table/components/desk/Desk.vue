@@ -26,7 +26,7 @@
     </div>
       <vue-custom-scrollbar class="no-drag"  key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
       style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
-      <div ref="deskContainer" style="
+      <div id="cardContent" ref="deskContainer" style="
           white-space: nowrap;
           height: 100%;
           display: flex;
@@ -72,7 +72,7 @@
       <NewAddCard @close="hideAddCard" @addSuccess="hideAddCard" :desk="currentDesk" @onBack="() => { this.visibleAdd = false }"></NewAddCard>
     </div>
   </transition>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="220" class="drawer"
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
 <!--      <a-col>-->
@@ -102,6 +102,16 @@
           <div><span>清空卡片</span></div>
         </div>
       </a-col>
+      <a-col>
+        <div v-if="!hide" @click="hideDesk" class="btn">
+          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
+          <div><span>隐藏卡片</span></div>
+        </div>
+        <div v-else @click="showDesk" class="btn">
+          <Icon style="font-size: 3em" icon="yanjing"></Icon>
+          <div><span>显示卡片</span></div>
+        </div>
+      </a-col>
 <!--      <a-col>-->
 <!--        <div @click="showAddDeskForm" class="btn">-->
 <!--          <Icon style="font-size: 3em" icon="desktop"></Icon>-->
@@ -114,17 +124,11 @@
 <!--          <div><span>删除桌面</span></div>-->
 <!--        </div>-->
 <!--      </a-col>-->
-      <a-col>
-        <div v-if="!hide" @click="hideDesk" class="btn">
-          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
-          <div><span>隐藏桌面</span></div>
-        </div>
-        <div v-else @click="showDesk" class="btn">
-          <Icon style="font-size: 3em" icon="yanjing"></Icon>
-          <div><span>显示桌面</span></div>
-        </div>
-      </a-col>
+
+      <!--   菜单插槽    -->
+      <slot name="currentDeskMenu"></slot>
     </a-row>
+    <slot name="outMenu"></slot>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
     <div class="line-title">卡片设置：</div>
@@ -141,6 +145,8 @@
       <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
     </div>
   </a-drawer>
+
+
 </template>
 
 <script>
@@ -189,9 +195,11 @@ import {message, Modal} from "ant-design-vue";
 import {mapWritableState} from "pinia";
 import {appStore} from "../../store";
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
+import HorizontalPanel from '../HorizontalPanel.vue'
 export default {
   name: 'Desk',
   components: {
+    HorizontalPanel,
     VueCustomScrollbar,
     Vuuri, CPUFourCard, CPULineChart, InternalList,
     SmallCPUCard, SmallGPUCard, DiscountPercentage, GamesDiscount, GameEpic,
@@ -295,14 +303,22 @@ export default {
         wheelPropagation: true,
         currentItemId: -1,
       },
+
+
+
+
     }
   },
   methods: {
+
     learn(){
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },
     update(){
       this.$refs.grid.update()
+    },
+    hideMenu(){
+      this.menuVisible=false
     },
     toggleEditing() {
       this.editing = !this.editing;
@@ -381,6 +397,12 @@ export default {
       this.adjustZoom=bound.height/this.stashBound.height
       this.update()
 
+    },
+    getLayoutSize(){
+      return {
+        width:this.$refs.deskContainer.clientWidth,
+        height:this.$refs.deskContainer.clientHeight
+      }
     }
   }
 }
@@ -468,4 +490,5 @@ export default {
     }
   }
 }
+
 </style>
