@@ -55,7 +55,7 @@ export const appStore = defineStore('appStore', {
       enableChat: false,//主界面显示聊天
       preventLock: false,//阻止锁屏
 
-      enableBarrage: true, //启用弹幕
+      enableBarrage: false, //启用弹幕
       barrage: {
         height: 100, //单个轨道的高度
         limit: 5, //单个屏幕允许的数量
