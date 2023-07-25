@@ -57,7 +57,7 @@
 
   <teleport to="body">
     <Modal v-if="searchVisible" v-model:visible="searchVisible" :blurFlag="true">
-      <AggregateSearchFullScreen :list="aggList" :listId="openId"></AggregateSearchFullScreen>
+      <AggregateSearchFullScreen :list="aggList" :listId="openId" :urlType="customData.sortType"></AggregateSearchFullScreen>
     </Modal>
   </teleport>
 

@@ -15,49 +15,49 @@ export const AggregateList = [
     searchUrl:'https://www.google.com/search?q='
   },
   {
-    id:4,
+    id:3,
     title:'必应',
     icon:'bing',
     searchUrl:'https://www.bing.com/search?q=',
     recommendUrl:'https://api.bing.com/osjson.aspx?query='
   },
   {
-    id:5,
+    id:4,
     title:'知乎',
     icon:'zhihu-square-fill',
     searchUrl:'https://www.zhihu.com/search?type=content&q=',
     recommendUrl:'https://www.zhihu.com/api/v4/search/suggest?q='
   },
   {
-    id:6,
+    id:5,
     title:'GitHub',
     icon:'github-fill',
     searchUrl:'https://github.com/search?q=',
     recommendUrl:'https://api.github.com/search/repositories?q='
   },
   {
-    id:7,
+    id:6,
     title:'Bilibili',
     icon:'bilibili1',
     searchUrl:'https://search.bilibili.com/all?keyword=',
     recommendUrl:'https://s.search.bilibili.com/main/suggest?term='
   },
   {
-    id:8,
+    id:7,
     title:'微博',
     icon:'weibo',
     searchUrl:'https://s.weibo.com/?Refer=',
     recommendUrl:'https://weibo.com/ajax/side/search?q='
   },
   {
-    id:9,
+    id:8,
     title:'优酷',
     icon:'youku',
     searchUrl:'https://so.youku.com/search_video/q_',
     recommendUrl:'https://suggest.video.iqiyi.com/?key='
   },
   {
-    id:10,
+    id:9,
     title:'豆瓣',
     icon:'douban1',
     searchUrl:'https://www.douban.com/search?q=',
