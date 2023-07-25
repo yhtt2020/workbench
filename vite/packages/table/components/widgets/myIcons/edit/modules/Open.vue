@@ -84,6 +84,8 @@ import Radio from "../../../../card/components/radio/index.vue";
 import { linkList } from "../hooks/config";
 import { getHostAddress } from "../hooks/getHostAddress";
 import editMixins from "../hooks/mixins";
+
+import { useBase64AsImage } from "../hooks/base64";
 export default {
   mixins: [editMixins],
   components: {
@@ -125,16 +127,20 @@ export default {
       this.$nextTick(() => {
         this.$refs.fastNavRef.showFastNav();
       });
-      i;
     },
     // 获取app信息
-    returnApp(item) {
+
+    async returnApp(item) {
       this.edit.open.name = item.name;
       // 当图片状态为空时
       if (!this.edit.src) {
-        if (item.icon) {
+        if (item.icon && item.type !== "tableApp") {
           this.edit.src = item.icon;
+        } else {
+
+          this.edit.src = await useBase64AsImage(item.icon);
         }
+        this.edit.src = item.icon;
       }
       // 当标题状态为空时
       if (this.edit.titleValue == "") {
@@ -158,6 +164,7 @@ export default {
         item = this.edit.open;
       } else if (item.type === "tableApp") {
         // 本地应用数据
+
         this.edit.open = {
           type: "tableApp",
           value: item.path,

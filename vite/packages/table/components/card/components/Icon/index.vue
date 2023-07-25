@@ -12,12 +12,12 @@ export default {
     customStyle() {
       return {
         width: this.w + "px",
-        height: this.y + "px",
+        height: this.h + "px",
       };
     },
     fontSizeStyle() {
       return {
-        "font-size": this.size + "px",
+        "font-size": this.size + "px ",
       };
     },
     typeClass() {
@@ -46,7 +46,7 @@ export default {
       type: Number,
       default: 48,
     },
-    y: {
+    h: {
       type: Number,
       default: 48,
     },

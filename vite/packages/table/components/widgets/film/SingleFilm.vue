@@ -1,5 +1,6 @@
 <template>
-    <Widget :options="options" v-if="!detailToggle">
+    <Widget :desk="desk" :options="options" v-if="!detailToggle">
+      <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
       <div v-if="pageToggle">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
@@ -42,6 +43,9 @@
       DataStatu
     },
     props: {
+      desk:{
+        type:Object,
+      },
       customIndex:{
         type:Number,
         default:0

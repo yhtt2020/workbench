@@ -1,6 +1,6 @@
 <template>
   <a-input
-    class="rounded-xl xt-bg-2 pl-2"
+    class="rounded-xl xt-bg-2 pl-2 no-darg"
     :class="border"
     v-model:value="searchValue"
     :placeholder="placeholder"
@@ -66,4 +66,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ant-input) {
+  background: var(--secondary-bg);
+}
+
+</style>

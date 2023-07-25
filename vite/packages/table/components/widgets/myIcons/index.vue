@@ -4,44 +4,44 @@
   <div ref="iconRef" class="icon-box box-border" :style="dragStyle">
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
-      <drag-and-follow
+      <!-- <drag-and-follow
         :isSelect="isSelect"
         :length="this.iconsRefs.length"
         @drag-end="handleDragEnd"
         @drag-start="handleDragStart"
+      > -->
+      <!-- 多图标组件 -->
+      <template
+        v-if="
+          customData.iconList !== undefined && customData.iconList.length > 1
+        "
       >
-        <!-- 多图标组件 -->
-        <template
-          v-if="
-            customData.iconList !== undefined && customData.iconList.length > 1
-          "
-        >
-          <div>
-            <icons
-              :groupTitle="customData.groupTitle"
-              :iconList="customData.iconList"
-              @custom-event="handleCustomEvent"
-              @disbandGroup="disbandGroup"
-              @updateGroupTitle="updateGroupTitle"
-              @deleteIcons="deleteIcons"
-              @editIcons="editIcons"
-              @dragAddIcon="dragAddIcon"
-            ></icons>
-          </div>
-        </template>
-        <!-- 单图标组件 -->
-        <template
-          v-else-if="
-            customData.iconList !== undefined && customData.iconList.length > 0
-          "
-        >
-          <icon
-            v-bind="customData.iconList[0]"
-            @rightClick="rightClick"
+        <div>
+          <icons
+            :groupTitle="customData.groupTitle"
+            :iconList="customData.iconList"
             @custom-event="handleCustomEvent"
-          ></icon>
-        </template>
-      </drag-and-follow>
+            @disbandGroup="disbandGroup"
+            @updateGroupTitle="updateGroupTitle"
+            @deleteIcons="deleteIcons"
+            @editIcons="editIcons"
+            @dragAddIcon="dragAddIcon"
+          ></icons>
+        </div>
+      </template>
+      <!-- 单图标组件 -->
+      <template
+        v-else-if="
+          customData.iconList !== undefined && customData.iconList.length > 0
+        "
+      >
+        <icon
+          v-bind="customData.iconList[0]"
+          @rightClick="rightClick"
+          @custom-event="handleCustomEvent"
+        ></icon>
+      </template>
+      <!-- </drag-and-follow> -->
     </droppable-area>
     <!-- 卡片核心 -->
     <Widget
@@ -84,7 +84,6 @@ import BottomEdit from "./components/bottomEdit.vue";
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
-// import { formatArrayAsFileSize } from './hooks/useFileSize.js';
 
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
@@ -123,6 +122,9 @@ export default {
     };
   },
   mounted() {
+    // console.log("this.customData :>> ", this.customData.iconList[0].src);
+    // console.log("window.globalArgs :>> ", window.globalArgs);
+
     // 是否需要初始化
     if (this.customData.groupTitle == undefined) {
       let setData = {}; 

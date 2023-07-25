@@ -9,12 +9,16 @@
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;padding: 8px;margin: -3px">
       <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
-        <SidePanel :sideNavigationList="sideNavigationList"></SidePanel>
+        <SidePanel :sideNavigationList="sideNavigationList" sortId="left" :sortNavigationList="sortSideNavigationList"></SidePanel>
       </div>
       <div
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
         <!--主题区域，自动滚动条        -->
-        <router-view></router-view>
+        <template v-if="!delZone">
+          <router-view></router-view>
+        </template>
+        <!-- 删除区域 -->
+        <div class="del-icon" id="delIcon2" v-show="delZone">拖到此处删除图标</div>
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
@@ -24,11 +28,11 @@
       </Transition>
       <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
-        <SidePanel :sideNavigationList="rightNavigationList"></SidePanel>
+        <SidePanel :sideNavigationList="rightNavigationList" sortId="right" :sortNavigationList="sortRightNavigationList"></SidePanel>
       </div>
     </div>
     <div style="flex: 0;">
-      <BottomPanel v-if="!fullScreen"></BottomPanel>
+      <BottomPanel v-if="!fullScreen" :delZone="delZone" @getDelIcon="getDelIcon"></BottomPanel>
     </div>
   </div>
 </template>
@@ -37,7 +41,7 @@
 import SidePanel from '../components/SidePanel.vue'
 import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions,mapWritableState } from 'pinia'
 import { appStore } from '../store'
 import TeamPanel from "../components/team/TeamPanel.vue";
 import { teamStore } from '../store/team'
@@ -67,6 +71,13 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      delZone: false
+    }
+  },
+  methods: {
+    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList']),
+    getDelIcon(val){
+      this.delZone = val
     }
   }
 }
@@ -93,5 +104,21 @@ export default {
   100% {
     transform: scale(1);
   }
+}
+</style>
+<style lang="scss" scoped>
+.del-icon {
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: var(--secondary-bg);
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--primary-text);
+  font-weight: 500;
 }
 </style>

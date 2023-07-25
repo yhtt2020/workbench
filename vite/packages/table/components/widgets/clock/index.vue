@@ -271,13 +271,22 @@ export default {
       return (zero + num).slice(-digit);
     },
     updateTime() {
-      let cd = new Date();
-      this.options.title =
-        this.zeroPadding(cd.getMonth() + 1, 2) +
-        "月" +
-        this.zeroPadding(cd.getDate(), 2) +
-        "日 " +
-        this.week[cd.getDay()];
+      let currentDate = new Date();
+
+      const month = currentDate.getMonth() + 1; // 注意：月份从0开始，所以需要加1
+      const day = currentDate.getDate();
+      const daysOfWeek = [
+        "周日",
+        "周一",
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+      ];
+      const dayOfWeek = daysOfWeek[currentDate.getDay()];
+      console.log("object :>> ", currentDate);
+      this.options.title = month + "月" + day + "日 " + dayOfWeek;
     },
   },
 };

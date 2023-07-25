@@ -11,6 +11,7 @@ export const cardStore = defineStore(
       return {
         moved: false,
         currentDeskIndex: {},
+        currentDeskId:'',//当前桌面的deskId
         desks: [{
           name: '基础桌面',
           nanoid: nanoid(4),
