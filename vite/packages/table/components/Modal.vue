@@ -31,10 +31,16 @@ export default {
       }else{
         this.$emit('update:visible',false)
       }
+    },
+    Keyboard(e){  // 键盘关闭事件
+      if(e.key === 'Escape'){
+        this.closeModal()
+      }
     }
   },
   mounted() {
     this.className = this.animationName
+    window.addEventListener('keydown',this.Keyboard)
   },
 }
 </script>

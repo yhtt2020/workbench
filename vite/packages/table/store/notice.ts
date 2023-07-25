@@ -58,13 +58,13 @@ export const noticeStore = defineStore('notice',{
       notice:[
         {
           id:0,
-          notice_list:[
+          noticeList:[
             {
               id:1,
               title:'',
               from:{
                 username:'Victor Ruiz',
-                avatar_url:'https://up.apps.vip/avatar/006.png',
+                avatarUrl:'https://up.apps.vip/avatar/006.png',
               },
               content:'礼物：小恶魔头像框挂件',
               time: Date.now(),
@@ -83,16 +83,19 @@ export const noticeStore = defineStore('notice',{
               time:Date.now(),
             }
           ],
-          notice_icon:'/icons/logo128.png'
+          noticeIcon:'/icons/logo128.png'
         },
         {
           id:1,
-          notice_list:[
+          noticeList:[
             {
-              content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用'
+              id:0,
+              title:'',
+              content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用',
+              
             }
           ],
-          notice_icon:'',
+          noticeIcon:'',
         }
       ]
     },
