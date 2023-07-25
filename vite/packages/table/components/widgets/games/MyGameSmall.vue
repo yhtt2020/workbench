@@ -94,6 +94,9 @@ export default {
     MyGameSmallDetail,
   },
   mounted(){
+    if(!this.customData){
+      this.customData={}
+    }
   },
   props:{
     customIndex: {
@@ -102,11 +105,15 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {}
+      default: () => {
+        return {}
+      }
     },
     confirmCCData: {
       type: Function,
-      default: () => {}
+      default: () => {
+        return {}
+      }
     },
     desk:{
       type:Object
@@ -152,17 +159,6 @@ export default {
 
       otherGameList:[
         {title:'小缇娜的奇幻之地',src:'/img/test/1.png'},
-        {title:'无地之主3',src:'/img/test/2.jpg'},
-        {title:'FIFA 23',src:'/img/test/2.jpg'},
-        {title:'艾尔登法环',src:'/img/test/2.jpg'},
-        {title:'黑暗之魂3',src:'/img/test/2.jpg'},
-        {title:'只狼',src:'/img/test/1.png'},
-        {title:'生化危机3重制版', src:'/img/test/1.png'},
-        {title:'地平线5',src:'/img/test/1.png'},
-        {title:'大富翁11',src:'/img/test/2.jpg'},
-        {title:'APEX',src:'/img/test/2.jpg'},
-        {title:'Valorant',src:'/img/test/1.png'},
-        {title:'双人成行',src:'/img/test/1.png'},
       ],
       otherData:{},
 
