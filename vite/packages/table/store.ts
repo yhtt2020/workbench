@@ -58,8 +58,8 @@ export const appStore = defineStore('appStore', {
       enableBarrage: true, //启用弹幕
       barrage: {
         height: 100, //单个轨道的高度
-        limit: 10, //单个屏幕允许的数量
-        repeat: 3, //重复次数
+        limit: 5, //单个屏幕允许的数量
+        repeat: 2, //重复次数
         direction: "right",
         browserLink: true, //和浏览器联动
       }, //弹幕设置
