@@ -296,6 +296,7 @@ export default {
     }
   },
   async mounted () {
+    this.settings.enableBarrage=false
     let keyMap = await tsbApi.settings.get('keyMap')
     if (keyMap.table) {
       this.shortKeysTable = keyMap.table
@@ -308,7 +309,9 @@ export default {
     this.getSize()
 
   },
-
+  unmounted () {
+    this.settings.enableBarrage=true
+  },
 
   methods: {
     ...mapActions(appStore, ['finishWizard','settings']),
