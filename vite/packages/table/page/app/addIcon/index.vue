@@ -247,7 +247,7 @@ export default {
             iconOption.src = item.icon;
           } else {
             iconOption.src = await useBase64AsImage(item.icon);
-            console.log("object :>> ", iconOption.src);
+            // console.log("object :>> ", iconOption.src);
             // let file = base64File(item.icon);
             // console.log('file :>> ', file);
             // const formData = new FormData();

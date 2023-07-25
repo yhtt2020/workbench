@@ -17,9 +17,9 @@ const dataURLToBlob = (fileDataURL) => {
 const saveFile = async (filePath, file) => {
   try {
     await fs.writeFile(filePath, file); // 写入文件
-    console.log(`文件成功保存在 : ${filePath}`);
+    // console.log(`文件成功保存在 : ${filePath}`);
   } catch (err) {
-    console.error(`Error saving file: ${err}`);
+    // console.error(`Error saving file: ${err}`);
   }
 };
 const saveBase64AsImage = async (filePath, base64) => {
@@ -27,11 +27,11 @@ const saveBase64AsImage = async (filePath, base64) => {
   let fileDir = await fileDirs();
   fs.pathExists(fileDir, (err, exists) => {
     if (exists) {
-      console.log("1 :>> ", 1);
+      // console.log("1 :>> ", 1);
       saveFile(filePath, file);
     } else {
       fs.mkdirp(fileDir, (err) => {
-        console.log("1 :>> ", 2);
+        // console.log("1 :>> ", 2);
 
         if (err) throw err;
         saveFile(filePath, file);
@@ -52,7 +52,6 @@ export const useBase64AsImage = async (base64) => {
   let name = Date.now() + ".png";
   const fileSavePath = join(fileDir, name);
   let fileUsePath = join("file://", fileDir, name);
-  console.log("fileUsePath :>> ", fileUsePath);
   // 拿到哈希去匹配
   let sha256Hash = SHA256(base64).toString();
   const store = myIcons();
