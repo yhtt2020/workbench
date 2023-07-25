@@ -43,6 +43,7 @@ export const appStore = defineStore('appStore', {
 
     settings: {
       transparent: false,//透明背景
+      duck:false,//音量控制的时候，鸭子叫
       down: {
         enable: false,
         count: 100,
