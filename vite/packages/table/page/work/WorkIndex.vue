@@ -30,6 +30,14 @@ export default defineComponent({
           }
         },
         {
+          title:'AI助手',
+          name:'ai',
+          icon:'CPU',
+          route:{
+            name:'ai'
+          }
+        },
+        {
           title:'快捷键',
           name:'shortcut',
           icon:'jianpan-xianxing',

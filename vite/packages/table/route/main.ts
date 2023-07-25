@@ -188,11 +188,7 @@ export default [
             component: Contact,
           }]
       },
-      {
-        path: "/ai",
-        name: "ai",
-        component: AIAssistant,
-      },
+
       {
         path: "/music",
         name: "music",
@@ -266,6 +262,11 @@ export default [
             path: '/desk',
             name: 'workDesk',
             component: WorkDesk,
+          },
+          {
+            path: "/ai",
+            name: "ai",
+            component: AIAssistant,
           },
           {
             path: '/clipboard',
