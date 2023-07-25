@@ -1,13 +1,16 @@
 <template>
+  <back-btn></back-btn>
   <div v-if="loaded" style="">
     <vue-custom-scrollbar :settings="scrollbarSettings"
-      style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+      style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)" class="ml-16">
       <div style="width: auto;   ">
         <div style="display: inline-block;vertical-align: top">
           <div
           class="xt-bg xt-text"
             style="margin: 2em;padding:2em;border-radius: 0.5em;width: 40em; ">
-            <h3 class="xt-text">音量</h3>
+            <h3 class="xt-text">音量
+              <span style="float:right">提示音 <a-switch  v-model:checked="settings.duck"></a-switch></span>
+            </h3>
             <a-row>
               <a-col :span="3">
                 <div style="cursor: pointer" class="xt-text" v-if="!muted" @click="setMuted">
@@ -90,14 +93,18 @@
 </template>
 
 <script>
+import { appStore } from '../store'
+
 const loudness = window.loudness
 const brightness = window.brightness
 import { getResPathJoin } from '../js/common/exec'
 // const {listOutputs,setAsDefault} =require('@josephuspaye/win-audio-outputs')
 import { listInputs, listOutputs, setAsDefault } from '../js/ext/audio/audio'
-
+import {mapWritableState} from 'pinia'
+import BackBtn from '../components/comp/BackBtn.vue'
 export default {
   name: 'Status',
+  components: { BackBtn },
   data() {
     return {
       muted: false,
@@ -116,6 +123,9 @@ export default {
         wheelPropagation: true
       },
     }
+  },
+  computed:{
+    ...mapWritableState(appStore,['settings']),
   },
   async mounted() {
     this.micList=await listInputs()
@@ -208,16 +218,10 @@ export default {
       // navigator.mediaDevices.selectAudioOutput()
     },
     async gua() {
+      if(!this.settings.duck){
+        return
+      }
       let audioSpeaker = document.getElementById('speakerAudio')
-      await this.getSpeakerList()
-      // console.log(audioSpeaker)
-      // let re=new RegExp("")
-      //
-      // let label=audio.label
-      // let name=label.substring(0,label.indexOf('(')-1)
-      // console.log(name)
-      // console.log(audio)
-      //  this.shell('setdefaultsounddevice "'+audio.label+'"')
       audioSpeaker.play()
     },
     async setMuted() {

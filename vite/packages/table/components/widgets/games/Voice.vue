@@ -1,6 +1,9 @@
 <template>
   <Widget :customIndex="customIndex" :customData="customData" :options="options" :desk="desk">
-    <div class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
+    <a-tooltip title="更多管理" placement="top">
+      <div class=" px-2 rounded-full" @click="goStatus" style="position: absolute;top: 16px;right:40px;cursor: pointer;font-size: 12px"><icon icon="tiaoduguanli"></icon> </div>
+    </a-tooltip>
+     <div  class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
       <div class="flex">
         <div class="flex-1 flex flex-col mr-4">
           <div class="flex my-1 justify-between" >
@@ -9,19 +12,19 @@
           </div>
           <div class="flex items-center justify-between">
             <div style="width:180px;">
-              <a-slider v-model:value="defaultOutput.volume"  @afterChange="changeVolume()"  :tooltip-visible="false" />
+              <a-slider v-model:value="defaultOutput.volume" @click.stop  @afterChange="changeVolume()"  :tooltip-visible="false" />
             </div>
           </div>
         </div>
         <div class="flex-1">
-          <div @click="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2"  >
+          <div @click.stop="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2"  >
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
       <span class="mt-2" style=" font-size: 14px;font-weight: 400;">输出</span>
-      <div @click="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
+      <div @click.stop="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
         <div class="item-name">{{ defaultOutput.name }}（{{defaultOutput.deviceName}}）</div>
         <Icon icon="xiangxia" style="font-size: 1.5em"></Icon>
       </div>
@@ -36,13 +39,16 @@
         </div>
       </div>
       <span style="font-size: 14px;font-weight: 400;">输入</span>
-      <div @click="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
+      <div @click.stop="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
         <span class="item-name">{{ defaultMic.name }}（{{defaultMic.deviceName}}）</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
     <VoiceOutputDetail v-if="outputShow" @updateOutput="receiveOutput"></VoiceOutputDetail>
     <VoiceInputDetail v-if="inputShow" @updateInput="receiveInput"></VoiceInputDetail>
+    <audio id="speakerAudio" src='/sound/gua.mp3'>
+      您的浏览器暂不支持音频播放
+    </audio>
   </Widget>
 </template>
 
@@ -54,6 +60,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { inspectorStore } from '../../../store/inspector'
 import audio from '../../../js/common/audio'
 import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../../js/ext/audio/audio'
+import { appStore } from '../../../store'
 export default {
   name:'Voice',
   components:{
@@ -98,7 +105,8 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(inspectorStore,['audioTest'])
+    ...mapWritableState(inspectorStore,['audioTest']),
+    ...mapWritableState(appStore,['settings'])
   },
   async mounted () {
     this.defaultOutput = await getDefaultVolume()
@@ -135,12 +143,24 @@ export default {
       this.inputContent = v.name
       this.inputShow = false
     },
+    async gua() {
+      if(!this.settings.duck){
+        return
+      }
+      let audioSpeaker = document.getElementById('speakerAudio')
+      audioSpeaker.play()
+    },
     clickMute(){
       this.muteShow = !this.muteShow
       setDefaultVolume({
         volume:this.defaultOutput.volume,
         muted:!this.muteShow
       })
+      if(this.muteShow){
+        setTimeout(()=>{
+          this.gua()
+        },800)
+      }
     },
     closeMicrophone(){
       this.microphoneShow = !this.microphoneShow
@@ -149,6 +169,12 @@ export default {
     changeVolume(){
       setDefaultVolume({
         volume:this.defaultOutput.volume
+      })
+      this.gua()
+    },
+    goStatus(){
+      this.$router.push({
+        name:'status'
       })
     }
   },
