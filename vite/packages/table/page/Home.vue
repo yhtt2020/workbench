@@ -1083,9 +1083,7 @@ export default {
       this.menuVisible = false;
     },
     newAddCard() {
-      this.panelIndex = 0
-      this.visibleAdd = true;
-      this.menuVisible = false;
+      this.$refs.deskGroupRef.addCard()
     },
     showMenu() {
       this.menuVisible = true;
