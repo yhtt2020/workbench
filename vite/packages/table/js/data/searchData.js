@@ -60,7 +60,7 @@ export const AggregateList = [
     id:10,
     title:'豆瓣',
     icon:'douban1',
-    search_url:'https://www.douban.com/search?q=',
-    recommend_url:'https://www.douban.com/j/search_suggest?debug=true&q='
+    searchUrl:'https://www.douban.com/search?q=',
+    recommendUrl:'https://www.douban.com/j/search_suggest?debug=true&q='
   },
 ]
