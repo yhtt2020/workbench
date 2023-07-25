@@ -11,6 +11,7 @@ export const cardStore = defineStore(
       return {
         moved: false,
         currentDeskIndex: {},
+        currentDeskId:'',//当前桌面的deskId
         desks: [{
           name: '基础桌面',
           nanoid: nanoid(4),
@@ -27,19 +28,7 @@ export const cardStore = defineStore(
           marginTop: 0,
           cardMargin: 5
         },
-        countdownDay: [{
-          "eventValue": "端午节",
-          "dateValue": {
-            "year": 2023,
-            "month": 6,
-            "day": 22,
-            "hours": 0,
-            "minutes": 0,
-            "seconds": 0,
-            "week": "星期四"
-          },
-          "type": 'noOver'
-        }, {
+        countdownDay: [ {
           "eventValue": "中秋节",
           "dateValue": {
             "year": 2023,

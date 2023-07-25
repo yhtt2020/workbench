@@ -43,6 +43,7 @@ export const appStore = defineStore('appStore', {
 
     settings: {
       transparent: false,//透明背景
+      duck:false,//音量控制的时候，鸭子叫
       down: {
         enable: false,
         count: 100,
@@ -54,11 +55,11 @@ export const appStore = defineStore('appStore', {
       enableChat: false,//主界面显示聊天
       preventLock: false,//阻止锁屏
 
-      enableBarrage: true, //启用弹幕
+      enableBarrage: false, //启用弹幕
       barrage: {
         height: 100, //单个轨道的高度
-        limit: 10, //单个屏幕允许的数量
-        repeat: 3, //重复次数
+        limit: 5, //单个屏幕允许的数量
+        repeat: 2, //重复次数
         direction: "right",
         browserLink: true, //和浏览器联动
       }, //弹幕设置

@@ -8,6 +8,7 @@
     :menuList="menuList"
     v-if="!detailToggle"
     >
+      <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
       <div v-if="pageToggle">
         <div class="example" v-if="isLoading">
           <a-spin />

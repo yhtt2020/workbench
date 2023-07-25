@@ -308,7 +308,8 @@ export default {
     this.getSize()
 
   },
-
+  unmounted () {
+  },
 
   methods: {
     ...mapActions(appStore, ['finishWizard','settings']),

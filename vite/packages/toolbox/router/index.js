@@ -3,15 +3,13 @@ let routes = [
   {
     path: "/",
     name: "show",
-    component: () => import("../views/showTools/index.vue"),
+    component: () => import("../views/main/tools.vue"),
   },
 ];
 
-const components = import.meta.glob("../views/*/index.vue");
+const components = import.meta.glob("../views/tools/*/index.vue");
 for (const path in components) {
-  const name = path.match(/\/views\/(\w+)\/index\.vue/)?.[1];
-  console.log('name :>> ', name);
-  console.log('path :>> ', path);
+  const name = path.match(/\/views\/tools\/(\w+)\/index\.vue/)?.[1];
   const route = {
     path: "/" + name,
     name: name,

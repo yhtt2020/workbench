@@ -124,7 +124,11 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {}
+      default: () => {
+        return {
+          id:0
+        }
+      }
     },
     confirmCCData: {
       type: Function,

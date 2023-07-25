@@ -6,87 +6,91 @@
     class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
     style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%)"
   >
-    <!-- 头部 -->
-    <header
-      class="flex items-center justify-center h-12 w-full relative text-lg"
-    >
-      批量导入图标
-      <div
-        class="absolute rounded-xl xt-bg-2 flex items-center justify-center right-0 cursor-pointer h-12 w-12"
-        @click="close()"
+    <div class="flex flex-col" style="max-height: 80vh;min-height: 480px">
+      <header
+        class="flex items-center justify-center h-12 w-full relative text-lg"
       >
-        <Icon class="icon" icon="guanbi1"></Icon>
-      </div>
-    </header>
-    <!-- 主体 -->
-    <main class="flex mt-3 h-full">
-      <!-- 左侧 -->
-      <div style="" class="h-full">
+        批量导入图标
         <div
-          class="overflow-y-auto xt-container"
-          style="border-right: 1px solid var(--divider)"
-          :style="leftTabHeight"
+          class="absolute rounded-xl xt-bg-2 flex items-center justify-center right-0 cursor-pointer h-12 w-12"
+          @click="close()"
         >
+          <Icon class="icon" icon="guanbi1"></Icon>
+        </div>
+      </header>
+      <!-- 主体 -->
+      <main class="flex mt-3 h-full">
+        <!-- 左侧 -->
+        <div style="" class="h-full">
           <div
-            :style="{
+            class="overflow-y-auto xt-container"
+            style="border-right: 1px solid var(--divider)"
+            :style="leftTabHeight"
+          >
+            <div
+              :style="{
               'border-right':
                 item.component == navName ? '1px solid var(--active-bg)' : '',
             }"
-            v-for="item in navList"
-          >
-            <div
-              class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
-              :key="item.name"
-              @click="navName = item.component"
-              :class="{ 'xt-bg-2': item.component == navName }"
+              v-for="item in navList"
             >
-              {{ item.name }}
+              <div
+                class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+                :key="item.name"
+                @click="navName = item.component"
+                :class="{ 'xt-bg-2': item.component == navName }"
+              >
+                {{ item.name }}
+              </div>
             </div>
           </div>
         </div>
+        <!-- 右侧 -->
+        <div class="pl-2 w-full h-full">
+          <component
+            ref="apps"
+            :is="navName"
+            :type="type"
+            @updateData="updateData"
+          ></component>
+        </div>
+      </main>
+      <!-- 底部 -->
+      <div class="flex items-center my-3" v-if="selectAppsLenght">
+        <div style="width: 130px" class="flex justify-end">
+          已选 {{ selectAppsLenght }} ：
+        </div>
+        <div
+          class="flex overflow-x-auto xt-container"
+          v-scrollable
+          :style="selectedWidth"
+        >
+          <template v-for="(v, k) of selectApps">
+            <div v-for="item in selectApps[k]">
+              <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
+            </div>
+          </template>
+        </div>
       </div>
-      <!-- 右侧 -->
-      <div class="pl-2 w-full h-full">
-        <component
-          ref="apps"
-          :is="navName"
-          :type="type"
-          @updateData="updateData"
-        ></component>
-      </div>
-    </main>
-    <!-- 底部 -->
-    <div class="flex items-center my-3" v-if="selectAppsLenght">
-      <div style="width: 130px" class="flex justify-end">
-        已选 {{ selectAppsLenght }} ：
-      </div>
-      <div
-        class="flex overflow-x-auto xt-container"
-        v-scrollable
-        :style="selectedWidth"
-      >
-        <template v-for="(v, k) of selectApps">
-          <div v-for="item in selectApps[k]">
-            <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
-          </div>
-        </template>
-      </div>
+      <footer class="flex items-center justify-center mt-2">
+        <Tab
+          v-if="navName == 'Links'"
+          style="width: 380px; height: 48px"
+          boxClass="my-2 p-1 xt-bg-2"
+          v-model:data="type"
+          :list="linkList"
+        ></Tab>
+        <div
+          class="xt-active-bg flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120 xt-active-text"
+          @click="commitIcons()"
+        >
+          确认
+        </div>
+      </footer>
     </div>
-    <footer class="flex items-center justify-center mt-2">
-      <Tab
-        v-if="navName == 'Links'"
-        style="width: 380px; height: 48px"
-        boxClass="my-2 p-1 xt-bg-2"
-        v-model:data="type"
-        :list="linkList"
-      ></Tab>
-      <div
-        class="xt-active-bg flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120 xt-active-text"
-        @click="commitIcons()"
-      >
-        确认
-      </div>
-    </footer>
+    <!-- 头部 -->
+
+
   </div>
 </template>
 
@@ -100,7 +104,8 @@ import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
 import Tab from "../../../components/card/components/tab/index.vue";
 import { mapActions, mapWritableState } from "pinia";
-import {useBase64AsImage} from "../../../../table/components/widgets/myIcons/edit/hooks/base64"
+import { useBase64AsImage } from "../../../../table/components/card/hooks/base64";
+
 export default {
   emits: ["update:navName"],
   props: {
@@ -232,7 +237,7 @@ export default {
       this.$emit("close");
     },
     // 提交icon 并格式化数据
-    commitIcons() {
+    async commitIcons() {
       if (!this.desk) {
         this.$emit("getSelectApps", this.selectApps);
         this.close();
@@ -246,14 +251,7 @@ export default {
           if (this.navName !== "Desktop" && this.navName !== "MyApps") {
             iconOption.src = item.icon;
           } else {
-            iconOption.src = await useBase64AsImage( item.icon);
-            // let file = base64File(item.icon);
-            // console.log('file :>> ', file);
-            // const formData = new FormData();
-            // formData.append("file", file);
-            // let url = await fileUpload(file);
-            // console.log('url :>> ', url);
-            // if (url) iconOption.src = url;
+            iconOption.src = await useBase64AsImage(item.icon);
           }
           if (item.open) {
             iconOption.open = item.open;

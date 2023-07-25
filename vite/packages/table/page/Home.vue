@@ -1,86 +1,160 @@
 <template>
   <div v-if="hide" style="position: fixed; top: 0; bottom: 0; right: 0; left: 0" @click="hideDesk"
     @contextmenu="hideDesk"></div>
-  <div v-if="!hide" @contextmenu="showMenu" style="
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      justify-content: left;
-      flex-grow: 1;
-      flex-shrink: 1;
-      height: 100%;
-      width: 100%;
-      margin-left: 15px;
-    ">
-    <div class="text-left mb-2" v-if="desks.length > 1">
-      <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">
-      </HorizontalPanel>
-    </div>
-    <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">
-      <div style="width: 100%;">
-        <a-result class="s-bg rounded-lg m-auto"
-          style="margin: auto;background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用卡片桌面"
-          sub-title="您可以长按空白处、右键添加卡片。">
-          <template #extra>
-            <a-button @click="newAddCard" class="mr-10 xt-active-bg" key="console" type="primary" style="color:var(--active-text)">添加第一张卡片</a-button>
-            <a-button key="buy" @click="learn"
-              style="">学习</a-button>
-          </template>
+<!--  <div v-if="!hide" @contextmenu="showMenu" style="-->
+<!--      display: flex;-->
+<!--      align-items: flex-start;-->
+<!--      flex-direction: column;-->
+<!--      justify-content: left;-->
+<!--      flex-grow: 1;-->
+<!--      flex-shrink: 1;-->
+<!--      height: 100%;-->
+<!--      width: 100%;-->
+<!--      margin-left: 15px;-->
+<!--    ">-->
+<!--    <div class="text-left mb-2" v-if="desks.length > 1">-->
+<!--      <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">-->
+<!--      </HorizontalPanel>-->
+<!--    </div>-->
+<!--    <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">-->
+<!--      <div style="width: 100%;">-->
+<!--        <a-result class="s-bg rounded-lg m-auto"-->
+<!--          style="margin: auto;background: var(&#45;&#45;primary-bg);color: var(&#45;&#45;primary-text);" status="success" title="使用卡片桌面"-->
+<!--          sub-title="您可以长按空白处、右键添加卡片。">-->
+<!--          <template #extra>-->
+<!--            <a-button @click="newAddCard" class="mr-10 xt-active-bg" key="console" type="primary" style="color:var(&#45;&#45;active-text)">添加第一张卡片</a-button>-->
+<!--            <a-button key="buy" @click="learn"-->
+<!--              style="">学习</a-button>-->
+<!--          </template>-->
 
-          <div class="desc">
-            <p style="font-size: 16px">
-              <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
-            </p>
-            <p>
-              <close-circle-outlined :style="{ color: 'red' }" />
-              从社区获得分享代码（此功能暂未上线，请耐心等待）
-              <a>从社区导入 &gt;</a>
-            </p>
+<!--          <div class="desc">-->
+<!--            <p style="font-size: 16px">-->
+<!--              <strong>您可以通过桌面设置调节卡片到合适的大小</strong>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--              <close-circle-outlined :style="{ color: 'red' }" />-->
+<!--              从社区获得分享代码（此功能暂未上线，请耐心等待）-->
+<!--              <a>从社区导入 &gt;</a>-->
+<!--            </p>-->
+<!--          </div>-->
+<!--        </a-result>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"-->
+<!--      style="position: relative; border-radius: 8px; width: calc(100% - 20px); height: 100%;">-->
+<!--      <div style="-->
+<!--          white-space: nowrap;-->
+<!--          height: 100%;-->
+<!--          width: 100%;-->
+<!--          display: flex;-->
+<!--          align-items: center;-->
+<!--          align-content: center;-->
+<!--        " :style="{ 'padding-top': this.cardSettings.marginTop + 'px' }"-->
+<!--        id="cardContent">-->
+<!--        &lt;!&ndash;      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">&ndash;&gt;-->
+<!--        &lt;!&ndash;        <div>&ndash;&gt;-->
+<!--        &lt;!&ndash;          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">&ndash;&gt;-->
+<!--        &lt;!&ndash;          <template #item="{ item }">&ndash;&gt;-->
+<!--        &lt;!&ndash;              <div style="display: inline-block" >&ndash;&gt;-->
+<!--        &lt;!&ndash;                <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"&ndash;&gt;-->
+<!--        &lt;!&ndash;                    :uniqueKey="String(item.id)"&ndash;&gt;-->
+<!--        &lt;!&ndash;                    :showDelete="true"&ndash;&gt;-->
+<!--        &lt;!&ndash;                    :resizable="true"&ndash;&gt;-->
+<!--        &lt;!&ndash;            >&ndash;&gt;-->
+<!--        &lt;!&ndash;            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>&ndash;&gt;-->
+<!--        &lt;!&ndash;          </template>&ndash;&gt;-->
+<!--        &lt;!&ndash;          </vuuri></div></div>&ndash;&gt;-->
+<!--        <vuuri v-if="currentDesk.cards" :get-item-margin="() => {-->
+<!--            return cardSettings.cardMargin + 'px';-->
+<!--          }-->
+<!--          " group-id="grid.id" v-model="currentDesk.cards" :key="key" :style="{-->
+
+<!--      height: '100%',-->
+<!--      width: '100%',-->
+<!--    }" class="grid home-widgets" ref="grid" :options="muuriOptions" :drag-enabled="true">-->
+<!--          <template #item="{ item }">-->
+<!--            <div  :style="{  zoom: (this.cardSettings.cardZoom / 100).toFixed(2),}">-->
+<!--              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"  :editing="editing" :customData="item.customData" @customEvent="customEvent"></component>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--        </vuuri>-->
+<!--      </div>-->
+<!--    </vue-custom-scrollbar>-->
+<!--  </div>-->
+  <div style="height: 100%">
+    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks" v-model:current-desk-id="this.currentDeskId">
+      <template #settingsAll >
+        <div class="line-title ">背景设置：</div>
+        <div class="line" @click="setTransparent()">
+          透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
+        </div>
+        <div class="line" v-if="!appSettings.transparent">
+          <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
+          <a-button @click="clearWallpaper">清除背景</a-button>
+        </div>
+        <div v-if="!appSettings.transparent" class="line">
+          <div class="line">
+            背景模糊度：
+            <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
           </div>
-        </a-result>
-      </div>
-    </div>
-    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; width: calc(100% - 20px); height: 100%;">
-      <div style="
-          white-space: nowrap;
-          height: 100%;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          align-content: center;
-        " :style="{ 'padding-top': this.cardSettings.marginTop + 'px' }"
-        id="cardContent">
-        <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
-        <!--        <div>-->
-        <!--          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">-->
-        <!--          <template #item="{ item }">-->
-        <!--              <div style="display: inline-block" >-->
-        <!--                <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"-->
-        <!--                    :uniqueKey="String(item.id)"-->
-        <!--                    :showDelete="true"-->
-        <!--                    :resizable="true"-->
-        <!--            >-->
-        <!--            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>-->
-        <!--          </template>-->
-        <!--          </vuuri></div></div>-->
-        <vuuri v-if="currentDesk.cards" :get-item-margin="() => {
-            return cardSettings.cardMargin + 'px';
-          }
-          " group-id="grid.id" v-model="currentDesk.cards" :key="key" :style="{
+          <!--      <div class="line">-->
+          <!--        遮罩浓度：-->
+          <!--        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>-->
+          <!--      </div>-->
+        </div>
 
-      height: '100%',
-      width: '100%',
-    }" class="grid home-widgets" ref="grid" :options="muuriOptions" :drag-enabled="true">
-          <template #item="{ item }">
-            <div  :style="{  zoom: (this.cardSettings.cardZoom / 100).toFixed(2),}">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"  :editing="editing" :customData="item.customData" @customEvent="customEvent"></component>
-            </div>
-          </template>
-        </vuuri>
-      </div>
-    </vue-custom-scrollbar>
+        <div class="line-title">RGB<br />（此类功能性能消耗较高，请酌情开启）</div>
+        <div class="line">
+          边框跑马灯：
+          <a-switch v-model:checked="appSettings.houserun"></a-switch>
+        </div>
+        <div class="line">
+          飘落特效：
+          <a-switch v-model:checked="appSettings.down.enable"></a-switch>
+        </div>
+        <div class="line" v-if="appSettings.down.enable">
+          飘落物：
+          <a-radio-group v-model:value="appSettings.down.type">
+            <a-radio value="rain">雨</a-radio>
+            <a-radio value="snow">雪</a-radio>
+            <a-radio value="leaf">叶</a-radio>
+          </a-radio-group>
+        </div>
+        <div class="line" v-if="appSettings.down.enable">
+          飘落物数量：
+          <a-input-number v-model:value="appSettings.down.count"></a-input-number>
+        </div>
+      </template>
+      <template #empty>
+        <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
+             v-if="currentDesk.cards.length === 0">
+          <div style="width: 100%;height: 100%">
+            <a-result class="s-bg xt-bg rounded-lg m-auto" style="margin: auto;width: 580px" status="success" title="使用卡片桌面"
+                      sub-title="您可以长按空白处、右键添加卡片。">
+              <template #extra>
+                <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"
+                          type="primary"><icon class="mr-1" icon="tianjia2"></icon>&nbsp;添加第一张卡片
+                </a-button>
+                <a-button class="xt-bg-2"  key="buy" @click="learn"><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button>
+                <a-button class="xt-bg-2" key="buy" @click="delDesk"><icon class="mr-1" icon="shanchu"></icon>&nbsp;删除桌面</a-button>
+              </template>
+
+              <div class="desc xt-text">
+                <p style="font-size: 16px">
+                  <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
+                </p>
+                <p>
+                  从社区获得分享代码（此功能暂未上线，请耐心等待）
+                  <a>从社区导入 &gt;</a>
+                </p>
+              </div>
+            </a-result>
+          </div>
+        </div>
+      </template>
+    </desk-group>
   </div>
+
   <transition name="fade">
     <div class="home-blur" style="
         position: fixed;
@@ -291,12 +365,6 @@
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
-  <!-- 聚合搜索全屏下的页面 -->
-  <div class="fixed inset-0" style="z-index: 999;" v-if="searchFullScreen === true">
-    <!-- style=""  -->
-    <AggregateSearchFullScreen></AggregateSearchFullScreen>
-  </div>
-
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
     <template #extra v-if="shareCode">
       <a-space>
@@ -346,11 +414,13 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div> -->
   </a-drawer>
+
   <div style="z-index:9999;">
     <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   </div>
+
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
-  <ExportDesk :openModal="exportModal" @closeExport="closeExport"></ExportDesk>
+  <ExportDesk :openModal="exportModal" :desks="desks" @closeExport="closeExport"></ExportDesk>
 </template>
 
 <script>
@@ -411,14 +481,16 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
-import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
-import AggregateSearchFullScreen from "../components/widgets/aggregate/AggregateSearchFullScreen.vue";
+import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue';
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
 import DeskPreview from '../components/desk/DeskPreview.vue';
 import Tab from "../components/card/components/tab/index.vue"
 import ExportDesk from "../components/desk/ExportDesk.vue"
+import DeskGroup from '../components/desk/DeskGroup.vue'
+import Template from '../../user/pages/Template.vue'
+import Icon from '../components/Icon.vue'
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -426,160 +498,7 @@ let client = new steamUser({
   enablePicsCache: true,
 });
 let List = [];
-const deskTemplate = {
-  daily: [
-    {
-      name: "GamesDiscount",
-      id: 1681304819425,
-      _$muuri_id: "55c84b95-d86c-44af-b762-2670a0b46402",
-      data: {
-        Code: {
-          id: 1682157435113,
-          value: {
-            id: "cn",
-            name: "国区",
-          },
-        },
-      },
-    },
-    {
-      name: "weather",
-      id: 1681303795258,
-      _$muuri_id: "3b0a3701-25e5-4324-b1b0-a25f7cc91d02",
-      data: {},
-    },
-    {
-      name: "music",
-      id: 1681736564285,
-      _$muuri_id: "64c17a09-b036-44b3-99b9-4c2c13e4ca3b",
-      data: {},
-    },
-    {
-      name: "DiscountPercentage",
-      id: 1681479859424,
-      _$muuri_id: "361290b7-f0f9-44d6-b213-39d0dfb34c97",
-      data: {},
-    },
-    {
-      name: "timer",
-      id: 1681303805239,
-      _$muuri_id: "f508d0b1-046f-46f1-b423-e39226b91256",
-      data: {},
-    },
-    {
-      name: "fish",
-      id: 1681303797561,
-      _$muuri_id: "6a6bf415-1491-4a70-bc45-c72877843a34",
-      data: {},
-    },
-    {
-      name: "customTimer",
-      id: 1681303790200,
-      _$muuri_id: "5084aec4-5597-40e3-9b71-8eda52328eb1",
-      data: {},
-    },
-    {
-      name: "smallCountdownDay",
-      id: 1681303811893,
-      _$muuri_id: "e7652694-bad4-4688-80ac-b8cb89111ae2",
-      data: {},
-    },
-    {
-      name: "clock",
-      id: 1681303836730,
-      _$muuri_id: "799e50c0-9c51-46c5-9134-6d70a107d6bf",
-      data: {},
-    },
-    {
-      name: "middleWallpaper",
-      id: 1682158281403,
-      data: {},
-      _$muuri_id: "9eae01ee-7184-47f3-ad73-a62d90ba4630",
-    },
-  ],
-  game: [
-    {
-      name: "GamesDiscount",
-      id: 1683361279519,
-      data: {
-        id: "cn",
-      },
-      _$muuri_id: "afe08db5-591c-4c03-8535-302485228da7",
-    },
-    {
-      name: "GameEpic",
-      id: 1683361479503,
-      data: {},
-      _$muuri_id: "d9775365-ac7a-44eb-9643-f5afd2ce1927",
-    },
-    {
-      name: "CPULineChart",
-      id: 1683361318879,
-      data: {},
-      _$muuri_id: "cddb3c87-1dd9-429c-8db5-b626a41b520e",
-    },
-    {
-      name: "capture",
-      id: 1683361487658,
-      data: {},
-      _$muuri_id: "4f68f51f-12c3-4dfd-a56f-a317eefb2a8d",
-    },
-    {
-      name: "MyGameSmall",
-      id: 1683361327075,
-      data: {},
-      _$muuri_id: "27f6b805-9460-4b4f-b48a-0fe9f861d4fb",
-    },
-  ],
-  work: [
-    {
-      name: "customTimer",
-      id: 1683361408159,
-      data: {},
-      _$muuri_id: "b9da8e82-b907-45b8-b4f7-404409a53625",
-    },
-    {
-      name: "clock",
-      id: 1683361412293,
-      data: {},
-      _$muuri_id: "43c55d51-7ffb-4fbd-994c-64a4b8a503d0",
-    },
-    {
-      name: "weather",
-      id: 1683361418237,
-      data: {},
-      _$muuri_id: "d6e03889-a8ea-4328-97b4-599350aa4002",
-    },
-    {
-      name: "timer",
-      id: 1683361422401,
-      data: {},
-      _$muuri_id: "75ed0b65-5b37-4f79-82e5-3b1c46b9df53",
-    },
-    {
-      name: "smallCountdownDay",
-      id: 1683361434496,
-      data: {},
-      _$muuri_id: "698a7d80-23c9-42cf-9e7b-3a580acc7be8",
-    },
-    {
-      name: "smallWallpaper",
-      id: 1683361445577,
-      data: {
-        Code: {
-          id: 1683361445577,
-          value: {
-            value: "贪食鬼",
-            path: "https://api.nguaduot.cn/glutton/journal",
-            name: "PickingPaper",
-          },
-        },
-      },
-      _$muuri_id: "d6f9dfae-8098-4da3-8f15-3913cb506bf7",
-    },
-  ],
-  empty: [],
-};
+
 export default {
   name: "Home",
   data() {
@@ -665,6 +584,9 @@ export default {
     };
   },
   components: {
+    Icon,
+    Template,
+    DeskGroup,
     HorizontalPanel,
     Modal,
     Dou,
@@ -722,7 +644,6 @@ export default {
     Tab,
     UpdateMyInfo,
     ExportDesk,
-    AggregateSearchFullScreen
   },
   computed: {
     ...mapWritableState(cardStore, [
@@ -730,6 +651,7 @@ export default {
       "clockEvent",
       "settings",
       "desks",
+      "currentDeskId",
       "moved",
       "currentDeskIndex",
       "lastHeight"
@@ -885,8 +807,13 @@ export default {
     //      }
     //    });
     if (!this.moved) {
+      //最早的修复
       this.desks[0].cards = this.customComponents;
       this.moved = true;
+    }
+    if(this.currentDeskId==='')
+    {
+      this.currentDeskId=this.desks[0].id
     }
     if (this.desks.length > 0 && !this.currentDeskIndex.name) {
       this.currentDeskIndex = {
@@ -1046,6 +973,12 @@ export default {
       this.menuVisible = false;
       this.addDeskVisible = true;
     },
+    delDesk(){
+      this.$refs.deskGroupRef.delDesk()
+    },
+    changeDesk(p){
+      this.currentDeskId=p.id
+    },
     doAddDesk() {
       if (this.deskTitle.trim() === "") {
         message.error("请输入新桌面名称");
@@ -1082,15 +1015,10 @@ export default {
     },
     exportDesk(){
       this.exportModal = true
+      this.getHomeSize()
       this.menuVisible = false
     },
-    cleanMuuriData(list) {
-      list.forEach((li) => {
-        li.id = Date.now();
-        delete li["_$muuri_id"];
-      });
-      return list;
-    },
+
     clear() {
       this.menuVisible = false;
       let desk = this.getCurrentDesk();
@@ -1106,26 +1034,26 @@ export default {
         });
       }
     },
-    delDesk() {
-      if (this.desks.length === 1) {
-        Modal.info({
-          content: "至少保留一个桌面",
-          centered: true,
-        });
-        return;
-      } else {
-        Modal.confirm({
-          centered: true,
-          content: "删除当前桌面？此操作不可还原。",
-          onOk: () => {
-            this.menuVisible = false;
-            this.removeDesk(this.getCurrentIndex());
-            this.key = Date.now();
-          },
-          okText: "删除桌面",
-        });
-      }
-    },
+    // delDesk() {
+    //   if (this.desks.length === 1) {
+    //     Modal.info({
+    //       content: "至少保留一个桌面",
+    //       centered: true,
+    //     });
+    //     return;
+    //   } else {
+    //     Modal.confirm({
+    //       centered: true,
+    //       content: "删除当前桌面？此操作不可还原。",
+    //       onOk: () => {
+    //         this.menuVisible = false;
+    //         this.desksList.
+    //         this.key = Date.now();
+    //       },
+    //       okText: "删除桌面",
+    //     });
+    //   }
+    // },
     // setInitCard(){
     //   if(this.currentDesk.showSettings){
     //     this.cardSettings = this.currentDesk.aloneSettings
@@ -1149,9 +1077,7 @@ export default {
       this.menuVisible = false;
     },
     newAddCard() {
-      this.panelIndex = 0
-      this.visibleAdd = true;
-      this.menuVisible = false;
+      this.$refs.deskGroupRef.addCard()
     },
     showMenu() {
       this.menuVisible = true;
@@ -1196,15 +1122,18 @@ export default {
     },
     getHomeSize(){
       this.$nextTick(() => {
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        let deskHeight = document.documentElement.clientHeight // 高
-        let deskWidth = document.documentElement.clientWidth // 宽
+        let height = document.getElementById("cardContent")?.offsetHeight;
+        let width= document.getElementById("cardContent")?.offsetWidth;
+        const windowHeight = document.documentElement.clientHeight // 高
+        let windowWidth = document.documentElement.clientWidth // 宽
         let size = {
-          deskWidth,
-          deskHeight,
-          cardsHeight,
+          width,
+          height,
+          windowHeight,
+          windowWidth,
         }
         // console.log(cardsHeight)
+        console.log(size,'输出')
         this.setDeskSize(size)
       })
     },
@@ -1239,15 +1168,16 @@ export default {
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         needImportDesk.forEach(g => {
           let cardZoom = (g.settings.cardZoom * cardsHeight/g.cardsHeight).toFixed()
+
           g.settings.cardZoom = parseInt(cardZoom)
           g.nanoid = window.$models.nanoid.nanoid(8)
           this.desks.push(g)
         })
         this.addDeskVisible = false
-        message.success('为您成功导入' + needImportDesk.length + '个方案分组。')
+        message.success('为您成功导入' + needImportDesk.length + '个桌面。')
       } catch (e) {
-        console.warn(e)
-        message.error('导入失败，请检查代码。')
+        console.error(e)
+        message.error('导入失败，请检查代码。',e)
       }
     },
   },
@@ -1361,6 +1291,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 :deep(.ant-result-title) {
   color: var(--primary-text);
 }
