@@ -58,7 +58,7 @@
                 <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion)"></span>
               </div>
             </li>
-          </ul> 
+          </ul>
         </vue-custom-scrollbar>
       </div>
     </div>
@@ -117,6 +117,7 @@ export default {
     }
   },
 
+
   computed:{
     showSearchResults(){  // 显示搜索建议列表
       if(this.searchSuggestionList !== undefined && this.searchKeyWords === ''){
@@ -142,7 +143,7 @@ export default {
         this.selectIcon.icon = this.list[this.selectIndex].icon
         this.fetchSuggestions(true)
       }
-      if(e.key === 'ArrowUp'){  // 上切换键 
+      if(e.key === 'ArrowUp'){  // 上切换键
        e.preventDefault()
        this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
        this.updateInputValue()
@@ -159,7 +160,7 @@ export default {
       this.fetchSuggestions(true)
     },
     
-    async fetchSuggestions(val){  // 获取搜索建议列表 数据请求 
+    async fetchSuggestions(val){  // 获取搜索建议列表 数据请求
       if(val){  // 防止重复请求
         const words = encodeURIComponent(this.searchKeyWords)
         const url = `${this.list[this.selectIndex].recommendUrl}${words}`
@@ -197,7 +198,7 @@ export default {
           break; 
          case 9:
           this.searchSuggestionList = result.data.words
-          break; 
+          break;
          default:
            break;
         }
@@ -237,7 +238,7 @@ export default {
      }
     },
 
-    matchingKey(val){ // 匹配搜索关键字是否存在  
+    matchingKey(val){ // 匹配搜索关键字是否存在
       const isMatched = val.includes(this.searchKeyWords);
       if(isMatched && this.searchSuggestionList.length !== 1){
        const regex = new RegExp(this.searchKeyWords,'gi');
@@ -305,7 +306,7 @@ export default {
       }
     },
 
-    getSuggestItem(item,index){ // 选择推荐关键字  
+    getSuggestItem(item,index){ // 选择推荐关键字
      this.suggestIndex = index
      switch (this.list[this.selectIndex].id){
       case 1: // 百度搜索
@@ -344,7 +345,7 @@ export default {
       case 9:  // 豆瓣搜索
         const doubanWords = encodeURIComponent(item)
         this.openSearchSuggest(doubanWords)
-        break; 
+        break;
       default:
         break;
      }

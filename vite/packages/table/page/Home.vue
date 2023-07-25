@@ -129,7 +129,7 @@
         <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
              v-if="currentDesk.cards.length === 0">
           <div style="width: 100%;height: 100%">
-            <a-result class="s-bg rounded-lg m-auto" style="margin: auto;width: 580px" status="success" title="使用卡片桌面"
+            <a-result class="s-bg xt-bg rounded-lg m-auto" style="margin: auto;width: 580px" status="success" title="使用卡片桌面"
                       sub-title="您可以长按空白处、右键添加卡片。">
               <template #extra>
                 <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"
@@ -139,7 +139,7 @@
                 <a-button class="xt-bg-2" key="buy" @click="delDesk"><icon class="mr-1" icon="shanchu"></icon>&nbsp;删除桌面</a-button>
               </template>
 
-              <div class="desc">
+              <div class="desc xt-text">
                 <p style="font-size: 16px">
                   <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
                 </p>
@@ -1077,9 +1077,7 @@ export default {
       this.menuVisible = false;
     },
     newAddCard() {
-      this.panelIndex = 0
-      this.visibleAdd = true;
-      this.menuVisible = false;
+      this.$refs.deskGroupRef.addCard()
     },
     showMenu() {
       this.menuVisible = true;

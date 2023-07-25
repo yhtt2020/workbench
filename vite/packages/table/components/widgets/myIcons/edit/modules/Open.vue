@@ -85,7 +85,8 @@ import { linkList } from "../hooks/config";
 import { getHostAddress } from "../hooks/getHostAddress";
 import editMixins from "../hooks/mixins";
 
-import { useBase64AsImage } from "../hooks/base64";
+import { useBase64AsImage } from "../../../../card/hooks/base64";
+
 export default {
   mixins: [editMixins],
   components: {
@@ -137,10 +138,8 @@ export default {
         if (item.icon && item.type !== "tableApp") {
           this.edit.src = item.icon;
         } else {
-
           this.edit.src = await useBase64AsImage(item.icon);
         }
-        this.edit.src = item.icon;
       }
       // 当标题状态为空时
       if (this.edit.titleValue == "") {

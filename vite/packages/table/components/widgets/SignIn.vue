@@ -218,7 +218,13 @@ export default {
           await this.request(this.page)
         }
         // console.log('再次执行弹出')
-        await this.popUsers()
+        if(this.page===1 && this.lastUsers.length===0 && this.total===0){
+          //如果是第一页，且已经没有空余的了，不需要再请求
+          return
+        }else{
+          await this.popUsers()
+        }
+
       }
     },
     async request (page) {

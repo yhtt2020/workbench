@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       messages: [],
-      myFrameUrl:'https://a.apps.vip/icons/frame/demon.png',
+      myFrameUrl:'',
     }
   },
   props: ['size','chat','level'],
