@@ -4,12 +4,12 @@
       class="xt-text w-full no-darg h-full"
       :placeholder="placeholder"
       v-model:value="searchValue"
-      @input="handleInput"
-      @keydown.enter.exact.prevent="handleEnter"
+      @input="handleInput()"
+      @keydown.enter.exact.prevent="handleEnter()"
       @focus="handleFocus()"
       @blur="handleBlur()"
       @change="handleChange()"
-      @keyup="handleKeyUp"
+      @keyup="handleKeyUp()"
     >
       <template #addonBefore> <slot name="addonBefore"></slot></template>
       <template #addonAfter> <slot name="addonAfter"></slot> </template>
@@ -29,7 +29,7 @@ export default {
   computed: {},
   data() {
     return {
-      searchValue: "",
+      searchValue: this.data,
     };
   },
   props: {
@@ -77,7 +77,9 @@ export default {
       this.$emit("update:data", newV);
     },
     data(newV) {
-      this.searchValue = newV;
+      if (newV !== this.searchValue) {
+        this.searchValue = newV;
+      }
     },
   },
 };
