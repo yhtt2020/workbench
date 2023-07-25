@@ -402,6 +402,7 @@ export default {
         cards:  this.cleanMuuriData(deskTemplates[this.selectDesk.name])
       }
       this.deskList.unshift(desk)
+      this.$emit('changeDesk',{id:desk.id})
       this.deskTitle = ''
       this.key = Date.now();
       this.addDeskVisible = false;
