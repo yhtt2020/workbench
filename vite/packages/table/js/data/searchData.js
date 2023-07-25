@@ -1,62 +1,63 @@
 // 聚合搜索数据
 export const AggregateList = [
   {
+    id:1,
     title:'百度',
     icon:'baidu',
     searchUrl:'https://www.baidu.com/s?wd=',
     recommendUrl:'https://www.baidu.com/sugrec?prod=pc&wd=',
-    id:0,
+    
   },
   {
-    id:1,
+    id:2,
     title:'谷歌',
     icon:'google',
     searchUrl:'https://www.google.com/search?q='
   },
   {
-    id:2,
+    id:4,
     title:'必应',
     icon:'bing',
     searchUrl:'https://www.bing.com/search?q=',
     recommendUrl:'https://api.bing.com/osjson.aspx?query='
   },
   {
-    id:3,
+    id:5,
     title:'知乎',
     icon:'zhihu-square-fill',
     searchUrl:'https://www.zhihu.com/search?type=content&q=',
     recommendUrl:'https://www.zhihu.com/api/v4/search/suggest?q='
   },
   {
-    id:4,
+    id:6,
     title:'GitHub',
     icon:'github-fill',
     searchUrl:'https://github.com/search?q=',
     recommendUrl:'https://api.github.com/search/repositories?q='
   },
   {
-    id:5,
+    id:7,
     title:'Bilibili',
     icon:'bilibili1',
     searchUrl:'https://search.bilibili.com/all?keyword=',
     recommendUrl:'https://s.search.bilibili.com/main/suggest?term='
   },
   {
-    id:6,
+    id:8,
     title:'微博',
     icon:'weibo',
     searchUrl:'https://s.weibo.com/?Refer=',
     recommendUrl:'https://weibo.com/ajax/side/search?q='
   },
   {
-    id:7,
+    id:9,
     title:'优酷',
     icon:'youku',
     searchUrl:'https://so.youku.com/search_video/q_',
     recommendUrl:'https://suggest.video.iqiyi.com/?key='
   },
   {
-    id:8,
+    id:10,
     title:'豆瓣',
     icon:'douban1',
     search_url:'https://www.douban.com/search?q=',
