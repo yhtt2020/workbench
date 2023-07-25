@@ -296,7 +296,6 @@ export default {
     }
   },
   async mounted () {
-    this.settings.enableBarrage=false
     let keyMap = await tsbApi.settings.get('keyMap')
     if (keyMap.table) {
       this.shortKeysTable = keyMap.table
@@ -310,7 +309,6 @@ export default {
 
   },
   unmounted () {
-    this.settings.enableBarrage=true
   },
 
   methods: {
