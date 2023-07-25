@@ -106,11 +106,19 @@ export default {
     },
     customData:{
       type:Object,
-      default: ()=>{}
+      default: ()=>{
+        return {
+
+        }
+      }
     },
     confirmCCData:{
       type:Function,
-      default:()=>{}
+      default:()=>{
+        return {
+
+        }
+      }
     },
     desk:{
       type:Object
