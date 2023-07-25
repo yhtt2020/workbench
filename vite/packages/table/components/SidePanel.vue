@@ -54,7 +54,8 @@ import { mapWritableState } from 'pinia';
 import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { navStore } from "../store/nav";
 import { cardStore } from '../store/card';
-import Sortable from 'sortablejs'
+import Sortable from 'sortablejs';
+import { message } from 'ant-design-vue';
 export default {
   name: 'SidePanel',
   components: {
@@ -63,35 +64,72 @@ export default {
   data() {
     return {
       menuVisible: false,
-      quick: false
+      quick: false,
+      delNav: false
     }
   },
   props: {
+    // 当前导航列表
     sideNavigationList: {
       type: Array,
       default: () => []
     },
+    // 排序的方法
     sortNavigationList: {
       type: Function,
       default: () => {}
     },
+    //要排序的容器id
     sortId: {
       type: Function,
       default: () => {}
     },
+    //删除的方法
+    delNavList: {
+      type: Function,
+      default: () => {}
+    },
+    // 其他开关1
+    otherSwitch1: {
+      type: Boolean,
+      default: () => false
+    },
+    // 其他开关2
+    otherSwitch2: {
+      type: Boolean,
+      default: () => false
+    },
+    // 其他导航列表1
+    otherNavList1: {
+      type: Array,
+      default: () => []
+    },
+    // 其他导航列表2
+    otherNavList2: {
+      type: Array,
+      default: () => []
+    },
+    // 删除区域的开关
+    delZone: {
+      type: Boolean,
+      default: () => false
+    }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures']),
+    ...mapWritableState(navStore, ['builtInFeatures','mainNavigationList']),
     ...mapWritableState(cardStore, ['routeParams']),
   },
   mounted() {
     this.colDrop()
   // this.scrollNav('sideContent', 'scrollTop')
   },
+  watch: {
+    delZone(val){
+      this.delNav = val
+    }
+  },
   methods: {
     current(item) {
-      // console.log(item)
-      // console.log("route123",this.$route)
       if (item.data?.name) {
         return this.$route.params.name === item.data.name
       } else if (item.event) {
@@ -101,7 +139,6 @@ export default {
       }
     },
     clickNavigation(item) {
-      // console.log("item",item)
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
@@ -175,6 +212,38 @@ export default {
       Sortable.create(drop,{
         sort: true,
         animation: 150,
+        onStart: function (event) {
+          let delIcon = document.getElementById('delIcon2')
+          that.$emit('getDelIcon',true)
+          this.delNav = true
+          if (this.delNav) {
+            delIcon.ondragover = function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop = function (ev) {
+            let oneNav = that.sideNavigationList[event.oldIndex]
+            //将要删除的是否是主要功能
+            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
+              that.delNavList(event.oldIndex)
+              return
+            }
+            let sumList = []
+            // 判断其他导航栏是否是打开状态，是则获取功能列表
+            if (that.otherSwitch1 && that.otherSwitch2) {
+              sumList = that.otherNavList1.concat(that.otherNavList2)
+            } else if (that.otherSwitch1 && !that.otherSwitch2) {
+              sumList = that.otherNavList1
+            } else if (!that.otherSwitch1 && that.otherSwitch2) {
+              sumList = that.otherNavList2
+            } else{
+              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+              // console.log('不可删除')
+              return
+            }
+            that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
+          }
+        },
         onUpdate:function(event){
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
@@ -189,10 +258,26 @@ export default {
           } else {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
-          console.log(event)
           that.sortNavigationList(event)
         },
+        onEnd: function (event) {
+          that.$emit('getDelIcon',false)
+        }
       })
+    },
+    delNavigation (sumList, oneNav, index, delMethod) {
+      if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
+        //如果不是必须的
+        delMethod(index)
+      } else {
+        if (sumList.find(item => item.name === oneNav.name)) {
+          //正常移除
+          delMethod(index)
+        } else {
+          //不可移除
+          message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+        }
+      }
     },
   }
 }

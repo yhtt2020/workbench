@@ -20,7 +20,7 @@
             <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:var(--active-bg);"></Icon>
             <span class="mx-4 xt-text">从工作台启动的Windows应用，默认会自动打开可用的快捷键方案。</span>
         </span>
-        <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
+        <Icon icon="guanbi2" class="pointer" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
     </div>
     <!-- 列表 -->
     <div class="main-part item-content" :style="closePrompt ? 'height:80%' : 'height:90%'">

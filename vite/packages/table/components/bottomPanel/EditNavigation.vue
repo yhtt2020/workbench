@@ -7,7 +7,6 @@
   </transition>
   <transition name="fade">
     <div class="box-content" v-show="!editFlag" id="boxContent">
-      <!-- <SideNavigation></SideNavigation> -->
       <div class="box-center">
         <div style="width: 100px;">
           <div class="side-nav" v-show="leftNav" id="leftBox">
@@ -188,13 +187,16 @@
         <div>3. 支持批量添加</div>
         <div class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
              @dragover.prevent="" @drop.prevent="drop">
-          <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
-          添加快捷方式
+          
+          <div class="p-2 pointer" @click="showOpenFileDialog">
+            <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
+            添加快捷方式
+          </div>
         </div>
         <ScrolX :height="66">
           <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
             <div v-for="(item,index) in dropList" class="flex  ml-4">
-              {{ item }}
+              <!-- {{ item }} -->
               <a-badge>
                 <template #count>
                   <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)"
@@ -228,7 +230,6 @@ import Sortable from 'sortablejs'
 import navigationData from '../../js/data/tableData'
 import Classification from '../comp/Classification.vue'
 import { message } from 'ant-design-vue'
-// import SideNavigation from "../SideNavigation.vue"
 const { appModel } = window.$models
 const suggestNavigationList= [
   {
@@ -323,6 +324,7 @@ export default {
       delMainIndex: -1,
       delMainItem: [],
       delNavType: '',
+      testVal: ''
     }
   },
   computed: {
@@ -336,8 +338,7 @@ export default {
     vuuri,
     ScrolX,
     listItem,
-    Classification,
-    // SideNavigation
+    Classification
   },
   created () {
     this.loadDeskIconApps()
@@ -860,6 +861,7 @@ export default {
       this.selectNav = val
       this.editFlag = true
       this.nowClassify = 'systemApp'
+      this.dropList = []
     },
     closeAdd () {
       this.editFlag = false
@@ -874,12 +876,14 @@ export default {
               this.updateMainNav(item[i], 'add')
               item[i].addNav = true
               this.setFootNavigationList(item[i])
+            }else{
+              message.info('已添加', 1)
             }
           }
           this.dropList = []
         } else {
           for (let i = 0; i < this.footNavigationList.length; i++) {
-            if (this.footNavigationList[i].name === item.name) return
+            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
           }
           this.updateMainNav(item, 'add')
           item.addNav = true
@@ -896,12 +900,14 @@ export default {
               this.updateMainNav(item[i], 'add')
               item[i].addNav = true
               this.setSideNavigationList(item[i])
+            }else{
+              message.info('已添加', 1)
             }
           }
           this.dropList = []
         } else {
           for (let i = 0; i < this.sideNavigationList.length; i++) {
-            if (this.sideNavigationList[i].name === item.name) return
+            if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
           }
           this.updateMainNav(item, 'add')
           item.addNav = true
@@ -918,19 +924,41 @@ export default {
               this.updateMainNav(item[i], 'add')
               item[i].addNav = true
               this.setRightNavigationList(item[i])
+            }else{
+              message.info('已添加', 1)
             }
           }
           this.dropList = []
         } else {
           for (let i = 0; i < this.rightNavigationList.length; i++) {
-            if (this.rightNavigationList[i].name === item.name) return
+            if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
           }
           this.updateMainNav(item, 'add')
           item.addNav = true
           this.setRightNavigationList(item)
         }
       }
-    }
+    },
+    async showOpenFileDialog () {
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: '选择', message: '请选择文件', multiple: "true", properties: [
+          'openFile ',
+          'multiSelections'
+        ]
+      })
+      if (savePath) {
+        let filesArr = []
+        if (savePath && savePath.length > 0) {
+          for (let i = 0; i < savePath.length; i++) {
+            filesArr.push(savePath[i])
+          }
+        }
+        let dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
+        this.dropList.push(...dropFiles)
+      } else {
+        // console.log('取消选择')
+      }
+    },
   },
   watch: {
     leftNav (newVal) {
