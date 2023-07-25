@@ -30,7 +30,7 @@
         <div class="ml-10 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
-          
+
         <a-upload
           name="file"
           :showUploadList="false"
@@ -67,10 +67,10 @@
             <div v-if="!item.keys" class="key-item border-right" @click="editItem(item,index,'name')">
               <div class="flex items-center" v-if="item.isEdit">
                 <a-input class="input"
-                  v-model:value="item.groupName" 
+                  v-model:value="item.groupName"
                   :ref="`inputNameEdit_${index}`"
-                  spellcheck="false" 
-                  placeholder="分类名称" 
+                  spellcheck="false"
+                  placeholder="分类名称"
                   style="width:370px;height: 48px;"
                   @blur="lostFocus(item,'groupName')"
                 />
@@ -81,7 +81,7 @@
               <span v-else class="truncate">{{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item" 
+            <div v-else class="border-right key-item"
             @click="editItem(item,index,'item')">
               <div class="flex">
                 <template v-if="!item.isEdit">
@@ -91,14 +91,14 @@
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
                   <a-input class="input pointer"
-                    v-model:value="item.keyStr" 
+                    v-model:value="item.keyStr"
                     readonly
-                    spellcheck="false" 
-                    placeholder="按下组合键" 
+                    spellcheck="false"
+                    placeholder="按下组合键"
                     style="width:179px;height: 48px;"
                   >
                     <template #suffix>
-                    <div class="w-8 h-8 flex rounded-lg justify-center items-center" 
+                    <div class="w-8 h-8 flex rounded-lg justify-center items-center"
                     style="background: rgba(80,139,254,0.20);">
                       <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
                     </div>
@@ -110,15 +110,15 @@
                 <div class="key-title truncate" v-if="!item.isEdit">{{ item.title}}</div>
                 <a-input class="input text-right"
                   v-else
-                  v-model:value="item.title" 
+                  v-model:value="item.title"
                   :id="`keyName_${item.id}`"
-                  spellcheck="false" 
-                  placeholder="快捷键名称" 
+                  spellcheck="false"
+                  placeholder="快捷键名称"
                   style="width:179px;height: 48px;"
                   @blur="lostFocus(item,'keyName')"
                   />
               </div>
-              <span v-if="item.isEdit" class="flex"> 
+              <span v-if="item.isEdit" class="flex">
                 <a-tooltip v-if="!item.addNote">
                   <template #title>添加备注</template>
                   <span @click.stop="setAddNote(index,item)" v-if="item.isEdit">
@@ -135,10 +135,10 @@
               <div class="key-item border-right" v-if="item.isNote">
                 <div class="flex items-center">
                   <a-input class="input text-right"
-                    v-model:value="item.noteVal" 
+                    v-model:value="item.noteVal"
                     :id="`note_${item.id}`"
-                    spellcheck="false" 
-                    placeholder="备注" 
+                    spellcheck="false"
+                    placeholder="备注"
                     style="width:370px;height: 48px;"
                     @blur="lostFocus(item,'note')"
                   />
@@ -159,15 +159,15 @@
             <!-- <div class="border-right key-item input-item" v-for="(item,i) in addKeyList" :key="i">
               <div class="flex">
                 <div class="flex items-center mr-3" @click="openKeyBoard(i,'addKey')">
-                  <a-input class="input pointer" 
+                  <a-input class="input pointer"
                     :value="keyCombination[i]"
                     readonly
-                    spellcheck="false" 
-                    placeholder="按下组合键" 
+                    spellcheck="false"
+                    placeholder="按下组合键"
                     style="width:179px;height: 48px;"
                   >
                     <template #suffix>
-                    <div class="w-8 h-8 flex rounded-lg justify-center items-center" 
+                    <div class="w-8 h-8 flex rounded-lg justify-center items-center"
                     style="background: rgba(80,139,254,0.20);">
                       <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
                     </div>
@@ -177,9 +177,9 @@
               </div>
               <div>
                 <a-input class="input text-right"
-                  v-model:value="combinationName[i]" 
-                  spellcheck="false" 
-                  placeholder="快捷键名称" 
+                  v-model:value="combinationName[i]"
+                  spellcheck="false"
+                  placeholder="快捷键名称"
                   style="width:179px;height: 48px;"
                   :ref="'inputFocusKey_'+ i"
                   @click="getFocus('key',i)"
@@ -194,9 +194,9 @@
             <!-- <div class="key-item border-right input-item">
               <div class="flex items-center">
                 <a-input class="input"
-                  v-model:value="addGroupName" 
-                  spellcheck="false" 
-                  placeholder="分类名称" 
+                  v-model:value="addGroupName"
+                  spellcheck="false"
+                  placeholder="分类名称"
                   style="width:370px;height: 48px;"
                   ref="inputFocusName"
                   @click="getFocus('name')"
@@ -219,8 +219,8 @@
   <!-- 分享成功的模态框和发布抽屉 -->
   <ShareModal :shareModal="shareModal" :shareName="applyName" @closeShare="closeShare" :back="true"></ShareModal>
   <!-- 键盘 -->
-  <KeyBoard v-if="keyBoard" 
-  :selectKey="selectKey" 
+  <KeyBoard v-if="keyBoard"
+  :selectKey="selectKey"
   :parentKeyList="keyList"
   @closeKeyBoard="closeKeyBoard"
   @saveKey="saveKey"></KeyBoard>
@@ -228,12 +228,12 @@
 
 <script>
 import Sortable from 'sortablejs'
-import HorizontalPanel from '../../components/HorizontalPanel.vue'
-import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
-import KeyBoard from '../../components/shortcutKey/KeyBoard.vue';
-import ShareModal from '../../components/ShareModal.vue';
+import HorizontalPanel from '../../../components/HorizontalPanel.vue'
+import ShortcutKeyList from '../../../components/shortcutKey/ShortcutKeyList.vue';
+import KeyBoard from '../../../components/shortcutKey/KeyBoard.vue';
+import ShareModal from '../../../components/ShareModal.vue';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from '../../../store/key'
 import {nanoid} from 'nanoid'
 import { message } from 'ant-design-vue';
 export default {
@@ -359,7 +359,7 @@ export default {
         }
       })
       if(this.paramsId !== -1){
-        this.appContent.icon = this.icon || this.file.path 
+        this.appContent.icon = this.icon || this.file.path
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
@@ -367,7 +367,7 @@ export default {
         this.setSchemeList(this.appContent)
       }else{
         const time = new Date().valueOf()
-        this.appContent =  {   
+        this.appContent =  {
           id: nanoid(),  //唯一标识
           icon: this.file.path, //方案的图片
           name: this.applyName, //方案名称
@@ -403,7 +403,7 @@ export default {
         }
       })
       if(this.paramsId !== -1){
-        this.appContent.icon = this.icon || this.file.path 
+        this.appContent.icon = this.icon || this.file.path
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
@@ -414,7 +414,7 @@ export default {
         this.setMarketList(this.appContent)
       }else{
         const time = new Date().valueOf()
-        this.appContent =  {   
+        this.appContent =  {
           id: nanoid(),  //唯一标识
           icon: this.file.path, //方案的图片
           name: this.applyName, //方案名称
@@ -501,7 +501,7 @@ export default {
         this.$refs.inputFocusName.focus()
           break;
       }
-      
+
     },
     // 失去焦点，保存修改
     lostFocus(item,type){
@@ -553,7 +553,7 @@ export default {
           if(!this.bulkEditKey){
             this.keyList.forEach(kItem => {
               if(kItem.id === item.id){
-                
+
                 // 查找你要判断的文本框
                 var  myInput = document.getElementById( 'keyName_' + item.id );
                 if  (myInput != document.activeElement) {
@@ -570,7 +570,7 @@ export default {
           }
         }
       },200)
-      
+
     },
     // 开启键盘
     openKeyBoard(item,type){
@@ -580,7 +580,7 @@ export default {
           break;
         case 'addKey':
           this.addNumber = item
-          // this.stagingKey.id ? this.stagingKey : 
+          // this.stagingKey.id ? this.stagingKey :
           this.selectKey = {
             id: nanoid(),
             keys: item.keys ? item.keys : [],
@@ -592,7 +592,7 @@ export default {
           }
           break;
       }
-      
+
       this.keyBoard = true
     },
     // 关闭键盘
@@ -656,7 +656,7 @@ export default {
         if(item.id === i.id)this.keyList.splice(index,1)
       })
       // this.keyList.splice(index,1)
-    },  
+    },
     delNote(index,item){
       this.keyList.forEach(i => {
         if(item.id === i.id){
@@ -670,7 +670,7 @@ export default {
     setAddNote(index,item){
       item.addNote = true
       item.isNote = true
-    },    
+    },
     // 删除暂存添加的内容
     delStaging(type){
       switch (type) {
@@ -733,7 +733,7 @@ export default {
     },
     // 删除上传的方案图标
     delIcon(){
-      this.file = {} 
+      this.file = {}
       this.icon = ''
     },
     // 上传头像前校验
@@ -887,7 +887,7 @@ export default {
   }
   .key-list{
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
     flex-wrap: wrap;
     overflow: hidden;
     align-content: flex-start;
@@ -987,11 +987,11 @@ export default {
     flex-direction: column;
     align-content: flex-start;
     // overflow: auto;
-    padding: 24px 0; 
+    padding: 24px 0;
     flex-wrap: wrap;
     height: 100%;
     width: 100%;
-    
+
   }
   .key-box::-webkit-scrollbar{
     display: none;
@@ -1035,5 +1035,5 @@ export default {
     margin-left: 10px;
     border-right: solid rgba(255,255,255,0.1) 1px;
   }
-  
+
 </style>

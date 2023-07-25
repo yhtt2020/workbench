@@ -1,222 +1,228 @@
 <template>
-<div style="background: var(--main-mask-bg) !important;width: 100%;height:100%;" class="pt-6">
-  <transition name="fade">
-    <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
-      <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px"></Icon>
-    </div>
-  </transition>
-  <transition name="fade">
-    <div class="box-content" v-show="!editFlag" id="boxContent">
-      <div class="box-center">
-        <div style="width: 100px;">
-          <div class="side-nav" v-show="leftNav" id="leftBox">
-            <div style="width: 73px;overflow: hidden;" class="flex flex-col  items-center w-full">
-              <div style="overflow: hidden;" id="sideNavList"
-                   class="flex flex-col items-center  flex-nowrap scroll-content" ref="sideContent">
-                <div v-for="item in sideNavigationList" :key="item.name" style="margin: 20px 0;">
-                  <a-dropdown :trigger="['contextmenu']">
-                    <div v-if="item.type==='systemApp'"
-                         style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
-                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text)"></Icon>
-                    </div>
-                    <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
-                  </a-dropdown>
+  <div style="background: var(--main-mask-bg) !important;width: 100%;height:100%;" class="pt-6">
+    <transition name="fade">
+      <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
+        <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px"></Icon>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div class="box-content" v-show="!editFlag" id="boxContent">
+        <div class="box-center">
+          <div style="width: 100px;">
+            <div class="side-nav" v-show="leftNav" id="leftBox">
+              <div style="width: 73px;overflow: hidden;" class="flex flex-col  items-center w-full">
+                <div style="overflow: hidden;" id="sideNavList"
+                     class="flex flex-col items-center  flex-nowrap scroll-content" ref="sideContent">
+                  <div v-for="item in sideNavigationList" :key="item.name" style="margin: 20px 0;">
+                    <a-dropdown :trigger="['contextmenu']">
+                      <div v-if="item.type==='systemApp'"
+                           style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
+                        <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text)"></Icon>
+                      </div>
+                      <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
+                    </a-dropdown>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <Icon icon="tianjia" style="width: 56px;height: 56px;color:var(--secondary-text);" class="pointer"
-                    @click="addEdit('left')"></Icon>
+              <div>
+                <Icon icon="tianjia" style="width: 56px;height: 56px;color:var(--secondary-text);" class="pointer"
+                      @click="addEdit('left')"></Icon>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="center-text" style="transform: translateY(-20px)">
-          <div class="con-center" v-show="navText && !promptModal" style="width:800px">
-            <span class="mt-5 mb-4">支持长按拖拽排序，滑动查看更多。</span>
-            <div class="   mb-2">
-              <div class="mb-2 xt-text-2">
-                注意：侧边栏图标风格会自动调整
-              </div>
-              <div class="flex mb-2">
+          <div class="center-text" style="transform: translateY(-20px)">
+            <div class="con-center" v-show="navText && !promptModal" style="width:800px">
+              <span class="mt-5 mb-4">支持长按拖拽排序，滑动查看更多。</span>
+              <div class="   mb-2">
+                <div class="mb-2 xt-text-2">
+                  注意：侧边栏图标风格会自动调整
+                </div>
+                <div class="flex mb-2">
                 <span class="mr-4 flex justify-center items-center">
               <Icon icon="home" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
               <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
               <Icon icon="shouye1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
             </span>
-                <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
-                <Icon icon="arrowright" style="width: 20px;height: 20px;margin-top: 6px"></Icon>
-                <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
-              </div>
-
-            </div>
-            <div class="mb-2 xt-text-2">必选图标（拖拽添加）</div>
-            <div class="main-nav" id="mainList" style="width: 350px">
-              <div v-for="item in mainNavList" :key="item.name">
-                <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
-                  <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
-                  <span class="mt-2 xt-text-2">{{ item.name }}</span>
+                  <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
+                  <Icon icon="arrowright" style="width: 20px;height: 20px;margin-top: 6px"></Icon>
+                  <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
                 </div>
-                <div class="add-toggle" v-if="item.addNav"><icon icon="yixuan" style="font-size:32px;color: #52ff52"></icon></div>
+
               </div>
-            </div>
-            <div style="width: 650px;text-align: center">
-              <div class="mb-2 mt-2" style="color:var(--secondary-text);">推荐图标</div>
-              <div class="main-nav" id="suggestList" style="width:100%">
-                <div v-for="item in suggestNavList" :key="item.name">
+              <div class="mb-2 xt-text-2">必选图标（拖拽添加）</div>
+              <div class="main-nav" id="mainList" style="width: 350px">
+                <div v-for="item in mainNavList" :key="item.name">
                   <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
                     <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
                     <span class="mt-2 xt-text-2">{{ item.name }}</span>
                   </div>
-                  <div class="add-toggle" v-if="item.addNav"><icon icon="yixuan" style="font-size:32px;color: #52ff52"></icon></div>
+                  <div class="add-toggle" v-if="item.addNav">
+                    <icon icon="yixuan" style="font-size:32px;color: #52ff52"></icon>
+                  </div>
+                </div>
+              </div>
+              <div style="width: 700px;text-align: center;zoom: 0.8">
+                <div class="mb-2 mt-2" style="color:var(--secondary-text);">推荐图标</div>
+                <div class="main-nav" id="suggestList" style="width:100%">
+                  <div v-for="item in suggestNavList" :key="item.name">
+                    <div style="width: 100%;height: 100%;opacity: 0.3;"
+                         class="flex flex-col justify-center items-center">
+                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
+                      <span class="mt-2 xt-text-2">{{ item.name }}</span>
+                    </div>
+                    <div class="add-toggle" v-if="item.addNav">
+                      <icon icon="yixuan" style="font-size:32px;color: #52ff52"></icon>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="nav-toggle" v-show="navText && !promptModal">
-            <div class="left-point">
-              <span class="mb-4 xt-text-2"><Icon icon="arrowleft"></Icon>左侧</span>
-              <div>
-                <!-- <a-switch v-model:checked="leftNav" @change="navToggle(sideNavigationList,'left')"/> -->
-                <a-switch v-model:checked="leftNav" @change="navToggle('left')"/>
+            <div class="nav-toggle" v-show="navText && !promptModal">
+              <div class="left-point">
+                <span class="mb-4 xt-text-2"><Icon icon="arrowleft"></Icon>左侧</span>
+                <div>
+                  <!-- <a-switch v-model:checked="leftNav" @change="navToggle(sideNavigationList,'left')"/> -->
+                  <a-switch v-model:checked="leftNav" @change="navToggle('left')"/>
+                </div>
+              </div>
+              <div class="foot-point">
+                <span class="mb-4 xt-text-2"><Icon icon="arrowdown"></Icon>底部</span>
+                <div>
+                  <a-switch v-model:checked="footNav" @change="navToggle('foot')"/>
+                </div>
+              </div>
+              <div class="right-point">
+                <span class="mb-4 xt-text-2">右侧<Icon icon="arrowright"></Icon></span>
+                <div>
+                  <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
+                </div>
               </div>
             </div>
-            <div class="foot-point">
-              <span class="mb-4 xt-text-2"><Icon icon="arrowdown"></Icon>底部</span>
-              <div>
-                <a-switch v-model:checked="footNav" @change="navToggle('foot')"/>
-              </div>
-            </div>
-            <div class="right-point">
-              <span class="mb-4 xt-text-2">右侧<Icon icon="arrowright"></Icon></span>
-              <div>
-                <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
-              </div>
-            </div>
-          </div>
-          <div class="prompt-modal " v-show="promptModal ">
-            <div class="p-5 xt-modal flex flex-col justify-center items-center" style="border-radius:16px">
-              <div>
-                <Icon icon="tishi-xianxing" style="font-size: 16px;color: orange"></Icon>
-                <span class="ml-3">提示</span>
-              </div>
-              <span class="my-5">在导航栏中至少保留一个
+            <div class="prompt-modal " v-show="promptModal ">
+              <div class="p-5 xt-modal flex flex-col justify-center items-center" style="border-radius:16px">
+                <div>
+                  <Icon icon="tishi-xianxing" style="font-size: 16px;color: orange"></Icon>
+                  <span class="ml-3">提示</span>
+                </div>
+                <span class="my-5">在导航栏中至少保留一个
               <span v-for="item in delMainItem" :key="item.name">
                 「{{ item.name }}」
               </span>
               入口，以保持功能完整性。</span>
-              <!-- <span class="my-5">在导航栏中至少保留一个「{{delMainItem.name}}」入口，以保持功能完整性。</span> -->
-              <div class="modal-btn">
-                <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="promptModal = false">好的</div>
-                <!-- <div @click="delMainCore">移除</div> -->
-              </div>
-            </div>
-          </div>
-          <div class="del-icon" id="delIcon" v-show="!navText && !promptModal">拖到此处删除图标</div>
-        </div>
-        <div style="width:100px;" class="flex justify-end">
-          <div class="side-nav" v-show="rightNav" id="rightBox">
-            <div style="width: 73px;overflow: hidden;" class="flex flex-col  items-center w-full">
-              <div style="overflow: hidden;" id="rightNavList"
-                   class="flex flex-col items-center  flex-nowrap scroll-content" ref="rightContent">
-                <div v-for="item in rightNavigationList" :key="item.name" class="my-5 width: 56px;height: 56px;">
-                  <a-dropdown :trigger="['contextmenu']">
-                    <div v-if="item.type==='systemApp'"
-                         style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
-                      <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
-                    </div>
-                    <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
-                  </a-dropdown>
+                <!-- <span class="my-5">在导航栏中至少保留一个「{{delMainItem.name}}」入口，以保持功能完整性。</span> -->
+                <div class="modal-btn">
+                  <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="promptModal = false">好的</div>
+                  <!-- <div @click="delMainCore">移除</div> -->
                 </div>
               </div>
             </div>
-            <div>
-              <Icon icon="tianjia" style="width: 56px;height: 56px;color:var(--secondary-text);" class="pointer"
-                    @click="addEdit('right')"></Icon>
-            </div>
+            <div class="del-icon" id="delIcon" v-show="!navText && !promptModal">拖到此处删除图标</div>
           </div>
-        </div>
-      </div>
-      <div class="box-foot" v-show="footNav" id="footBox">
-        <div style="height: 73px;overflow: hidden;" class="flex flex-row  items-center pl-2 w-full">
-          <div style="overflow: hidden;" id="navList"
-               class="flex flex-row items-center  flex-nowrap scroll-content mr-2" ref="content">
-            <div v-for="item in footNavigationList" style="margin: 4px 18px" :key="item.name">
-              <a-dropdown :trigger="['contextmenu']">
-                <div
-                  style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: var(--secondary-bg);border-radius: 12px"
-                  v-if="item.type==='systemApp'">
-                  <Icon :icon="item.icon" style="width: 32px;height: 32px;color:var(--secondary-text);"></Icon>
+          <div style="width:100px;" class="flex justify-end">
+            <div class="side-nav" v-show="rightNav" id="rightBox">
+              <div style="width: 73px;overflow: hidden;" class="flex flex-col  items-center w-full">
+                <div style="overflow: hidden;" id="rightNavList"
+                     class="flex flex-col items-center  flex-nowrap scroll-content" ref="rightContent">
+                  <div v-for="item in rightNavigationList" :key="item.name" class="my-5 width: 56px;height: 56px;">
+                    <a-dropdown :trigger="['contextmenu']">
+                      <div v-if="item.type==='systemApp'"
+                           style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
+                        <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
+                      </div>
+                      <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
+                    </a-dropdown>
+                  </div>
                 </div>
-                <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
-              </a-dropdown>
+              </div>
+              <div>
+                <Icon icon="tianjia" style="width: 56px;height: 56px;color:var(--secondary-text);" class="pointer"
+                      @click="addEdit('right')"></Icon>
+              </div>
             </div>
           </div>
         </div>
-        <div>
-          <Icon icon="tianjia"
-                style="width: 56px;height: 56px;color:var(--secondary-text);position:relative;top:2px;"
-                class="pointer mr-8" @click="addEdit('foot')"></Icon>
-        </div>
-        <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);"
-             class="flex justify-center items-center pointer  pl-6 mr-6">
-          <Icon icon="appstore-fill" style="width: 48px;height: 48px;color:var(--secondary-text);"></Icon>
+        <div class="box-foot" v-show="footNav" id="footBox">
+          <div style="height: 73px;overflow: hidden;" class="flex flex-row  items-center pl-2 w-full">
+            <div style="overflow: hidden;" id="navList"
+                 class="flex flex-row items-center  flex-nowrap scroll-content mr-2" ref="content">
+              <div v-for="item in footNavigationList" style="margin: 4px 18px" :key="item.name">
+                <a-dropdown :trigger="['contextmenu']">
+                  <div
+                    style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: var(--secondary-bg);border-radius: 12px"
+                    v-if="item.type==='systemApp'">
+                    <Icon :icon="item.icon" style="width: 32px;height: 32px;color:var(--secondary-text);"></Icon>
+                  </div>
+                  <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
+                </a-dropdown>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Icon icon="tianjia"
+                  style="width: 56px;height: 56px;color:var(--secondary-text);position:relative;top:2px;"
+                  class="pointer mr-8" @click="addEdit('foot')"></Icon>
+          </div>
+          <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);"
+               class="flex justify-center items-center pointer  pl-6 mr-6">
+            <Icon icon="appstore-fill" style="width: 48px;height: 48px;color:var(--secondary-text);"></Icon>
+          </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
 
-  <transition name="fade">
-    <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
-      <div v-show="nowClassify!=='localApp'" class="h-full">
-        <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索"
-                 style="background: var(--secondary-bg)">
-          <template #prefix>
-            <Icon icon="sousuo" class="text-gray-600"></Icon>
-          </template>
-        </a-input>
-        <vue-custom-scrollbar key="scrollbar" :settings="rightScrollbarSettings"
-                              class="relative" style="height: calc(100% - 40px);padding: 5px 0">
-          <listItem v-for="(item,index) in filterList" :item="item"
-                    class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
-        </vue-custom-scrollbar>
-      </div>
-      <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500 h-full" style="color:var(--secondary-text)">
-        <div>1. 点击选择需要添加的应用快捷方式</div>
-        <div>2. 拖动应用快捷方式拖放到下方</div>
-        <div>3. 支持批量添加</div>
-        <div class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
-             @dragover.prevent="" @drop.prevent="drop">
-          
-          <div class="p-2 pointer" @click="showOpenFileDialog">
-            <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
-            添加快捷方式
-          </div>
+    <transition name="fade">
+      <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
+        <div v-show="nowClassify!=='localApp'" class="h-full">
+          <a-input v-model:value="selectContent" class="no-drag h-10 rounded-lg" placeholder="搜索"
+                   style="background: var(--secondary-bg)">
+            <template #prefix>
+              <Icon icon="sousuo" class="text-gray-600"></Icon>
+            </template>
+          </a-input>
+          <vue-custom-scrollbar key="scrollbar" :settings="rightScrollbarSettings"
+                                class="relative" style="height: calc(100% - 40px);padding: 5px 0">
+            <listItem v-for="(item,index) in filterList" :item="item"
+                      class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+          </vue-custom-scrollbar>
         </div>
-        <ScrolX :height="66">
-          <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
-            <div v-for="(item,index) in dropList" class="flex  ml-4">
-              <!-- {{ item }} -->
-              <a-badge>
-                <template #count>
-                  <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)"
-                        class="pointer"></Icon>
-                </template>
-                <a-avatar :size="40" shape="square" :src="item.icon">
-                </a-avatar>
-              </a-badge>
+        <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500 h-full"
+             style="color:var(--secondary-text)">
+          <div>1. 点击选择需要添加的应用快捷方式</div>
+          <div>2. 拖动应用快捷方式拖放到下方</div>
+          <div>3. 支持批量添加</div>
+          <div class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
+               @dragover.prevent="" @drop.prevent="drop">
+
+            <div class="p-2 pointer" @click="showOpenFileDialog">
+              <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
+              添加快捷方式
             </div>
           </div>
-        </ScrolX>
-        <div @click="clickRightListItem(dropList)"
-             class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg  "
-             style="background: var(--secondary-bg);color: var(--primary-text)">
-          确定添加
+          <ScrolX :height="66">
+            <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
+              <div v-for="(item,index) in dropList" class="flex  ml-4">
+                <!-- {{ item }} -->
+                <a-badge>
+                  <template #count>
+                    <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)"
+                          class="pointer"></Icon>
+                  </template>
+                  <a-avatar :size="40" shape="square" :src="item.icon">
+                  </a-avatar>
+                </a-badge>
+              </div>
+            </div>
+          </ScrolX>
+          <div @click="clickRightListItem(dropList)"
+               class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg  "
+               style="background: var(--secondary-bg);color: var(--primary-text)">
+            确定添加
+          </div>
         </div>
-      </div>
-    </Classification>
-  </transition>
- </div> 
+      </Classification>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -230,31 +236,37 @@ import Sortable from 'sortablejs'
 import navigationData from '../../js/data/tableData'
 import Classification from '../comp/Classification.vue'
 import { message } from 'ant-design-vue'
+
 const { appModel } = window.$models
-const suggestNavigationList= [
+const suggestNavigationList = [
   {
-    type:'systemApp',
-    icon:'wangluo',
-    name:'浏览器',
-    event:'browser',
+    type: 'systemApp',
+    icon: 'rizhi',
+    name: '办公',
+    event: 'workDesk',
+  }, {
+    type: 'systemApp',
+    icon: 'game',
+    name: '游戏',
+    event: 'gameIndex'
+  }, {
+    type: 'systemApp',
+    icon: 'wangluo',
+    name: '浏览器',
+    event: 'browser',
   },
   {
-    type:'systemApp',
-    icon:'kuaijie',
-    name:'快捷指令',
-    event:'deck',
-    fn:()=>{  vm.$router.push({ name: 'deck' })}
+    type: 'systemApp',
+    icon: 'kuaijie',
+    name: '快捷指令',
+    event: 'deck',
+    fn: () => { vm.$router.push({ name: 'deck' })}
   },
+
   {
-    type:'systemApp',
-    icon:'game',
-    name:'游戏',
-    event: "gameIndex"
-  },
-  {
-    type:'systemApp',
-    icon:'daibanshixiang',
-    name:'代办',
+    type: 'systemApp',
+    icon: 'daibanshixiang',
+    name: '代办',
     data:
       {
         fullScreen: false,
@@ -267,16 +279,16 @@ const suggestNavigationList= [
       }
   },
   {
-    type:'systemApp',
-    icon:'banner',
-    name:'壁纸',
-    event:'my',
+    type: 'systemApp',
+    icon: 'banner',
+    name: '壁纸',
+    event: 'my',
   },
   {
-    type:'systemApp',
-    icon:'yinle1',
-    name:'音乐',
-    event: "music"
+    type: 'systemApp',
+    icon: 'yinle1',
+    name: '音乐',
+    event: 'music'
   },
 ]
 export default {
@@ -318,7 +330,7 @@ export default {
       selectNav: '',
       navText: true,
       mainNavList: [],
-      suggestNavList:[],//推荐
+      suggestNavList: [],//推荐
       // sumNavList: [],
       darggingCore: false,
       delMainIndex: -1,
@@ -556,7 +568,6 @@ export default {
       let that = this
       let main = document.getElementById('mainList')
 
-
       Sortable.create(main, {
         sort: false,
         animation: 150,
@@ -564,14 +575,13 @@ export default {
         forceFallback: false,
         onStart (evt) {
           that.darggingCore = true
-          that.draggingArea('leftBox', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList,that.mainNavigationList)
-          that.draggingArea('rightBox', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList,that.mainNavigationList)
-          that.draggingArea('footBox', evt.oldIndex, that.footNavigationList, that.setFootNavigationList,that.mainNavigationList)
+          that.draggingArea('leftBox', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.mainNavigationList)
+          that.draggingArea('rightBox', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, that.mainNavigationList)
+          that.draggingArea('footBox', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.mainNavigationList)
         },
       })
 
       let suggest = document.getElementById('suggestList')
-
 
       Sortable.create(suggest, {
         sort: false,
@@ -580,12 +590,11 @@ export default {
         forceFallback: false,
         onStart (evt) {
           that.darggingCore = true
-          that.draggingArea('leftBox', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList,suggestNavigationList,false)
-          that.draggingArea('rightBox', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList,suggestNavigationList,false)
-          that.draggingArea('footBox', evt.oldIndex, that.footNavigationList, that.setFootNavigationList,suggestNavigationList,false)
+          that.draggingArea('leftBox', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, suggestNavigationList, false)
+          that.draggingArea('rightBox', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, suggestNavigationList, false)
+          that.draggingArea('footBox', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, suggestNavigationList, false)
         },
       })
-
 
     },
     /**
@@ -597,14 +606,14 @@ export default {
      * @param source 来源数据
      * @param compare 是否比对，排重
      */
-    draggingArea (id, oldIndex, NavigationList, setNavigationList,source,compare=true) {
+    draggingArea (id, oldIndex, NavigationList, setNavigationList, source, compare = true) {
       let that = this
       let slider = document.getElementById(id)
       slider.ondragover = function (ev) {
         ev.preventDefault()
       }
       slider.ondrop = () => {
-        if (that.darggingCore || compare===false) {
+        if (that.darggingCore || compare === false) {
           if (!NavigationList.find(j => j.name === source[oldIndex].name)) {
             setNavigationList(source[oldIndex])
             that.updateMainNav()
@@ -876,7 +885,7 @@ export default {
               this.updateMainNav(item[i], 'add')
               item[i].addNav = true
               this.setFootNavigationList(item[i])
-            }else{
+            } else {
               message.info('已添加', 1)
             }
           }
@@ -900,7 +909,7 @@ export default {
               this.updateMainNav(item[i], 'add')
               item[i].addNav = true
               this.setSideNavigationList(item[i])
-            }else{
+            } else {
               message.info('已添加', 1)
             }
           }
@@ -924,7 +933,7 @@ export default {
               this.updateMainNav(item[i], 'add')
               item[i].addNav = true
               this.setRightNavigationList(item[i])
-            }else{
+            } else {
               message.info('已添加', 1)
             }
           }
@@ -941,7 +950,7 @@ export default {
     },
     async showOpenFileDialog () {
       let savePath = await tsbApi.dialog.showOpenDialog({
-        title: '选择', message: '请选择文件', multiple: "true", properties: [
+        title: '选择', message: '请选择文件', multiple: 'true', properties: [
           'openFile ',
           'multiSelections'
         ]
@@ -988,15 +997,17 @@ export default {
 </style>
 <style lang="scss" scoped>
 @media screen and (max-height: 660px) {
-  .side-nav{
+  .side-nav {
     max-height: 350px;
   }
 }
+
 @media screen and (min-height: 660px) {
-  .side-nav{
+  .side-nav {
     max-height: 508px;
   }
 }
+
 .box-content {
   height: 100%;
 
@@ -1072,11 +1083,12 @@ export default {
     margin: 8px 0 16px;
     // width: 65%;
     // text-align: center;
-    color:var(--secondary-text);
+    color: var(--secondary-text);
     font-family: PingFangSC-Regular;
     font-size: 16px;
   }
 }
+
 .main-nav {
   width: 70%;
   height: 112px;

@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import ClipItem from '../../components/clipPreview/ClipItem.vue';
-import ClipTextPreview from '../../components/clipPreview/ClipTextPreview.vue';
+import ClipItem from '../../../components/clipPreview/ClipItem.vue';
+import ClipTextPreview from '../../../components/clipPreview/ClipTextPreview.vue';
 import { Empty } from 'ant-design-vue';
 import {toRaw} from "vue";
 export default {
@@ -58,7 +58,7 @@ export default {
           break;
         case 'audio':
           this.previewData = v
-          break;  
+          break;
       }
     }
   }
