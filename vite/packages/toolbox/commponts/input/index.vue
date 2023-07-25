@@ -69,6 +69,7 @@ export default {
       this.$emit("change", event);
     },
     handleKeyUp(event) {
+      console.log('键盘弹起了 :>> ', 123);
       this.$emit("keyup", event);
     },
   },

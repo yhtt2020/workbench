@@ -14,6 +14,7 @@
         @change="handleChange()"
         @blur="handleBlur(index)"
       ></a-input> -->
+
       <Tinput
         :key="index"
         class="xt-text flex-1"
@@ -78,16 +79,6 @@ export default {
         const postfixed = mexp.toPostfix(lexed); // 将词法分析得到的结果转换为后缀表达式
         const result = mexp.postfixEval(postfixed); // 使用后缀表达式求值
         this.countList[this.selectIndex] = result;
-        // const regex =
-        //   /^\(*[+-]?(?:\d{1,15}|\d{1,3}(?:,\d\d\d){1,4})(?:\.\d{1,15})?%?\)*(?:\s*[+*/^%-]\s*\(*[+-]?(?:\d{1,15}|\d{1,3}(?:,\d\d\d){1,4})(?:\.\d{1,15})?%?\)*)+$/;
-        // const match = regex.exec(formula);
-        // if (match) {
-        //   res = eval(match[0]);
-        // } else {
-        //   res = formula;
-        // }
-        // this.countList[this.selectIndex] = res;
-        // this.countList[this.selectIndex] = math.eval(formula);
         this.handleChange();
       },
       deep: true,

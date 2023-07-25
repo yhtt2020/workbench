@@ -73,16 +73,22 @@ export default {
       let time = dayjs().format("YYYY-MM-DD HH:mm:ss");
       return time;
     },
+    // 时间转时间戳
     timeKeyup() {
-      const dateObj = dayjs(this.time);
-      this.timeStamp = dateObj.valueOf();
+      let timeString = this.time;
+      // 使用 dayjs 将时间转换为时间戳，并补全时间
+      const formattedDate = dayjs(timeString).format("YYYY-MM-DD HH:mm:ss");
+      const timestamp = dayjs(formattedDate).valueOf();
+      this.timeStamp = timestamp;
     },
+    // 时间戳转时间
     timeStampKeyup() {
-      const dateObj = dayjs(this.timestamp);
+      let timestamp = parseInt(this.timeStamp);
 
-      // 补全时间信息为"00:00:00"
-      this.time = dateObj.format("YYYY-MM-DD HH:mm:ss");
-      console.log("this,time :>> ", this.time);
+      // 使用 dayjs 将时间戳转换为时间
+      const dateObj = dayjs(timestamp);
+      const formattedDate = dateObj.format("YYYY-MM-DD HH:mm:ss");
+      this.time = formattedDate;
     },
     copyToClipboard(text) {
       navigator.clipboard
