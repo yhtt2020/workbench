@@ -18,9 +18,9 @@
           </div>
         </template>
       </Tinput>
-      <div @click="copyToClipboard(timeStamp)">复制功能icon</div>
+      <div class="p-2 cursor-pointer" @click="copyToClipboard(timeStamp)"><icon icon="fuzhi" style="font-size: 28px"></icon></div>
     </div>
-    <div class="my-3">icon站位</div>
+    <div class="my-3"><icon icon="paixu" style="font-size: 28px"></icon></div>
 
     <div class="flex">
       <Tinput
@@ -38,9 +38,9 @@
           </div>
         </template>
       </Tinput>
-      <div @click="copyToClipboard(time)">复制功能icon</div>
+      <div  class="p-2 cursor-pointer" @click="copyToClipboard(time)"><icon icon="fuzhi" style="font-size: 28px"></icon></div>
     </div>
-    <div>时间转时间戳，请输入时间格式：“xxxx-xx-xx xx:xx:xx”</div>
+    <div class="mt-3">时间转时间戳，请输入时间格式：“xxxx-xx-xx xx:xx:xx”</div>
   </div>
 </template>
 
