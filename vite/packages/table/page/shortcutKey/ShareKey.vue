@@ -56,7 +56,7 @@
           <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
           <span class="mx-4 xt-text">支持长按拖拽排序</span>
         </span>
-        <Icon icon="guanbi2" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
+        <Icon icon="guanbi2" class="pointer" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
       </div>
       <!-- 快捷键列表 -->
       <!-- <div :style="closePrompt ? 'height:90%' : 'height:100%'"> -->

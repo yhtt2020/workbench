@@ -848,7 +848,6 @@ export default {
         lightApps[i].type = 'lightApp'
       }
       const desktopApps = await ipc.sendSync('getDeskApps')
-      console.log(desktopApps)
       for (let i = 0; i < desktopApps.length; i++) {
         desktopApps[i].type = 'tableApp'
       }
