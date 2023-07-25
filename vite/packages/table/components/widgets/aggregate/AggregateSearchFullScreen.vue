@@ -198,8 +198,9 @@ export default {
     async fetchSuggestions(val){  // 获取搜索建议列表 数据请求 
       if(val){  // 防止重复请求
         const words = encodeURIComponent(this.searchKeyWords)
-        const url = `${this.searchList[this.searchIconIndex].recommend_url}${words}`
+        const url = `${this.searchList[this.searchIconIndex].recommendUrl}${words}`
         const result = await axios.get(url)
+        console.log(result);
         switch (this.aggList.list[this.searchIconIndex].id){
         case 0: // 百度搜索
           this.searchSuggestionList  = result.data.g
@@ -316,7 +317,8 @@ export default {
     },
 
     openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开
-     const url = `${this.searchList[this.searchIconIndex].search_url}${words}`
+     const url = `${this.searchList[this.searchIconIndex].searchUrl}${words}`
+     console.log(url);
      switch (this.aggList.type) { 
       case 'work':
         browser.openInTable(url)  // 在工作台中打开
