@@ -76,7 +76,7 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(cardStore, ['desks','settings','deskSize','countdownDay']),
+    ...mapWritableState(cardStore, ['desks','settings','deskSize','countdownDay','currentDeskIndex']),
   },
   methods: {
     close(){
@@ -160,7 +160,13 @@ export default {
         this.selectedDesk = []
         this.deskType = this.desks.map(item => item.name)
         this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'}
-        this.onChange([0])
+        this.desks.map((item,index) => {
+          if(item.nanoid === this.currentDeskIndex.name){
+            this.desk = [index]
+            this.onChange([index])
+          }
+        })
+              
         // if(desks[0].settings && desks[0].settings.enableZoom){
         //   settings = item.settings
         // }else{
