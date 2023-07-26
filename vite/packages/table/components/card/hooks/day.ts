@@ -9,6 +9,4 @@ dayjs.extend(timezone);
 // 设置默认时区为中国时间（东八区）
 dayjs.tz.setDefault("Asia/Shanghai");
 
-const day = dayjs(); // 获取当前中国时间
-console.log(day.format('YYYY-MM-DD HH:mm:ss')); // 格式化输出中国时间
-export default day;
+export default dayjs;
