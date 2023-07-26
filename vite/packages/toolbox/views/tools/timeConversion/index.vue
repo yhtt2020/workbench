@@ -5,6 +5,7 @@
     <div class="flex">
       <Tinput
         class="xt-bg-2 xt-border rounded-xl"
+        :limit="{ number: true }"
         style="height: 48px"
         v-model:data="timeStamp"
         @keyup="timeStampKeyup()"
@@ -18,7 +19,9 @@
           </div>
         </template>
       </Tinput>
-      <div class="p-2 cursor-pointer" @click="copyToClipboard(timeStamp)"><icon icon="fuzhi" style="font-size: 28px"></icon></div>
+      <div class="p-2 cursor-pointer" @click="copyToClipboard(timeStamp)">
+        <icon icon="fuzhi" style="font-size: 28px"></icon>
+      </div>
     </div>
     <div class="my-3"><icon icon="paixu" style="font-size: 28px"></icon></div>
 
@@ -38,7 +41,9 @@
           </div>
         </template>
       </Tinput>
-      <div  class="p-2 cursor-pointer" @click="copyToClipboard(time)"><icon icon="fuzhi" style="font-size: 28px"></icon></div>
+      <div class="p-2 cursor-pointer" @click="copyToClipboard(time)">
+        <icon icon="fuzhi" style="font-size: 28px"></icon>
+      </div>
     </div>
     <div class="mt-3">时间转时间戳，请输入时间格式：“xxxx-xx-xx xx:xx:xx”</div>
   </div>
@@ -46,7 +51,7 @@
 
 <script>
 import { message } from "ant-design-vue";
-import dayjs from "./day";
+import dayjs from "../../../../table/components/card/hooks/day";
 export default {
   data() {
     return {

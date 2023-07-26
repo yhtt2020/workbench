@@ -14,18 +14,18 @@
         @change="handleChange()"
         @blur="handleBlur(index)"
       ></a-input> -->
-
-      <Tinput
+      <XTinput
         :key="index"
         class="xt-text flex-1"
         placeholder="请输入计算式，如 99+99 "
         style="height: 48px"
         :class="border"
+        :limit="{ space: true }"
         v-model:data="computeList[index]"
         @focus="handleFocus(index)"
         @change="handleChange()"
         @blur="handleBlur(index)"
-      ></Tinput>
+      ></XTinput>
       <div
         v-if="countList[index]"
         class="px-3 flex items-center success cursor-pointer xt-active res truncate"
@@ -74,11 +74,16 @@ export default {
       handler() {
         let formula = this.computeList[this.selectIndex];
         formula = this.pretreatment(formula);
-        const mexp = new Mexp();
-        const lexed = mexp.lex(formula); // 对表达式进行词法分析
-        const postfixed = mexp.toPostfix(lexed); // 将词法分析得到的结果转换为后缀表达式
-        const result = mexp.postfixEval(postfixed); // 使用后缀表达式求值
-        this.countList[this.selectIndex] = result;
+
+        try {
+          const mexp = new Mexp();
+          const lexed = mexp.lex(formula); // 对表达式进行词法分析
+          const postfixed = mexp.toPostfix(lexed); // 将词法分析得到的结果转换为后缀表达式
+          const result = mexp.postfixEval(postfixed); // 使用后缀表达式求值
+          this.countList[this.selectIndex] = result;
+        } catch (error) {
+          this.countList[this.selectIndex] = formula;
+        }
         this.handleChange();
       },
       deep: true,
@@ -95,11 +100,13 @@ export default {
       resCopy.style.display = "none";
     },
     pretreatment(str) {
-      return str.replace(/[（）]/g, (match) => {
+      str = str.replace(/[（）]/g, (match) => {
         if (match === "（") return "(";
         if (match === "）") return ")";
         return match;
       });
+
+      return str; // 返回预处理后的字符串
     },
     copyToClipboard(text) {
       navigator.clipboard

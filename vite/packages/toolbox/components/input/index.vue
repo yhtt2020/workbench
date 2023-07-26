@@ -4,28 +4,24 @@
       class="xt-text w-full no-darg h-full"
       :placeholder="placeholder"
       v-model:value="searchValue"
-      @input="handleInput()"
-      @keydown.enter.exact.prevent="handleEnter()"
-      @focus="handleFocus()"
-      @blur="handleBlur()"
-      @change="handleChange()"
-      @keyup="handleKeyUp()"
+      @input="handleInput"
+      @keydown.enter.exact.prevent="handleEnter"
+      @focus="handleFocus"
+      @blur="handleBlur"
+      @change="handleChange"
+      @keyup="handleKeyUp"
     >
       <template #addonBefore> <slot name="addonBefore"></slot></template>
       <template #addonAfter> <slot name="addonAfter"></slot> </template>
-      <template #prefix>
-        <slot name="prefix"></slot>
-      </template>
+      <template #prefix> <slot name="prefix"></slot> </template>
       <template #suffix> <slot name="suffix"></slot></template>
     </a-input>
-    <!--  style="height: 48px"
-  :style="[fontSizeStyle]" :class="border" v-model:value="computeList[index]"
-  @focus="handleFocus(index)" @change="handleChange()" @blur="handleBlur(index)" -->
   </div>
 </template>
 
 <script>
 export default {
+  name: "XtInput",
   computed: {},
   data() {
     return {
@@ -37,22 +33,28 @@ export default {
     placeholder: {
       default: "",
     },
-    type: {
-      default: "",
+    limit: {
+      default: () => {
+        return {
+          space: false,
+          number: false,
+        };
+      },
     },
   },
   methods: {
-    limitNumericInput(event) {
-      // 如果设置了 numeric 属性为 true，则对输入进行数字限制
-      const regex = /^\d*$/;
-      if (!regex.test(event.target.value)) {
-        event.preventDefault(); // 阻止默认输入行为
-        this.searchValue = event.target.value.replace(/\D/g, ""); // 过滤掉非数字字符
-      }
+    limitNumber(event) {
+      this.searchValue = event.target.value.replace(/\D/g, "");
+    },
+    limitSpace(event) {
+      this.searchValue = event.target.value.replace(/\s/g, "");
     },
     handleInput(event) {
-      if (this.type == "number") {
-        this.limitNumericInput(event);
+      if (this.limit.number) {
+        this.limitNumber(event);
+      }
+      if (this.limit.space) {
+        this.limitSpace(event);
       }
       this.$emit("input", event);
     },
@@ -69,7 +71,6 @@ export default {
       this.$emit("change", event);
     },
     handleKeyUp(event) {
-      console.log('键盘弹起了 :>> ', 123);
       this.$emit("keyup", event);
     },
   },
