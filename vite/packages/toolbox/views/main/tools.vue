@@ -31,36 +31,36 @@ export default {
         { name: "时间戳转换", img: "timeConversion", route: "timeConversion" },
         { name: "翻译", img: "translate", route: "translate" },
 
-        { name: "搜索网格", img: "searchTools", route: "searchTools" },
-        { name: "文件分享", img: "fileFhare", route: "fileFhare" },
-        {
-          name: "汇率转换",
-          img: "exchangeConversion",
-          route: "exchangeConversion",
-        },
-
-        { name: "文字识别", img: "textRecognition", route: "textRecognition" },
-
-        {
-          name: "格式转换",
-          img: "formatConversion",
-          route: "formatConversion",
-        },
-
-        { name: "快递查询", img: "expressQuery", route: "expressQuery" },
-        { name: "压缩图片", img: "compressImage", route: "compressImage" },
-        { name: "一键取色", img: "colorSelection", route: "colorSelection" },
-        {
-          name: "创建代办",
-          img: "createRepresentative",
-          route: "createRepresentative",
-        },
-        { name: "emoji搜索", img: "emojiSearch", route: "emojiSearch" },
-        {
-          name: "二维码生成",
-          img: "QRCodeGeneration",
-          route: "QRCodeGeneration",
-        },
+        // { name: "搜索网格", img: "searchTools", route: "searchTools" },
+        // { name: "文件分享", img: "fileFhare", route: "fileFhare" },
+        // {
+        //   name: "汇率转换",
+        //   img: "exchangeConversion",
+        //   route: "exchangeConversion",
+        // },
+        //
+        // { name: "文字识别", img: "textRecognition", route: "textRecognition" },
+        //
+        // {
+        //   name: "格式转换",
+        //   img: "formatConversion",
+        //   route: "formatConversion",
+        // },
+        //
+        // { name: "快递查询", img: "expressQuery", route: "expressQuery" },
+        // { name: "压缩图片", img: "compressImage", route: "compressImage" },
+        // { name: "一键取色", img: "colorSelection", route: "colorSelection" },
+        // {
+        //   name: "创建代办",
+        //   img: "createRepresentative",
+        //   route: "createRepresentative",
+        // },
+        // { name: "emoji搜索", img: "emojiSearch", route: "emojiSearch" },
+        // {
+        //   name: "二维码生成",
+        //   img: "QRCodeGeneration",
+        //   route: "QRCodeGeneration",
+        // },
       ],
     };
   },
