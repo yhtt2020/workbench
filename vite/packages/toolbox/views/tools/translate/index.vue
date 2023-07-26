@@ -20,9 +20,9 @@
 import { sUrl } from "../../../../table/consts";
 // import {service} from "../../../../"
 const translateApi = sUrl("/app/translate");
-
+// import service from "@/request";
 import { getTranslate } from "./api/api";
-
+console.log('object :>> ', service);
 export default {
   async mounted() {
     let res = await getTranslate({

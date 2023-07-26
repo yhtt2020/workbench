@@ -496,6 +496,7 @@ import ExportDesk from "../components/desk/ExportDesk.vue"
 import DeskGroup from '../components/desk/DeskGroup.vue'
 import Template from '../../user/pages/Template.vue'
 import Icon from '../components/Icon.vue'
+import {setTransparent,detTransparent } from "../components/card/hooks/themeSwitch"
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
