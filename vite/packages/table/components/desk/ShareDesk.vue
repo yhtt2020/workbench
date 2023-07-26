@@ -85,10 +85,10 @@ export default {
       cards: [],
       secretSwitch: true,
       dataType: [
-        {title: '保留数据', icon: 'yk_yuanquan_fill', name: 'data'},
-        {title: '不保留数据', icon: 'yk_yuanquan', name: 'notData'}
+        {title: '保留数据', name: 'data'},
+        {title: '不保留数据', name: 'notData'}
       ],
-      defaultType: {title: '不保留数据', icon: 'yuanquan', name: 'notData'},
+      defaultType: {title: '不保留数据', name: 'notData'},
     }
   },
   props: {
