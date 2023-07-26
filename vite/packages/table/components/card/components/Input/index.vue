@@ -29,6 +29,10 @@ export default {
     };
   },
   props: {
+    // 测试输入框状态
+    text: {
+      default: false,
+    },
     data: {},
     placeholder: {
       default: "",
@@ -36,8 +40,8 @@ export default {
     limit: {
       default: () => {
         return {
-          space: false,
-          number: false,
+          space: false, // 去除空格
+          number: false, // 只能输入数字
         };
       },
     },
@@ -50,27 +54,46 @@ export default {
       this.searchValue = event.target.value.replace(/\s/g, "");
     },
     handleInput(event) {
+      if (this.limit.space) {
+        this.limitSpace(event);
+      }
       if (this.limit.number) {
         this.limitNumber(event);
       }
-      if (this.limit.space) {
-        this.limitSpace(event);
+
+      if (this.text) {
+        console.log("handleInput :>> ");
       }
       this.$emit("input", event);
     },
     handleEnter(event) {
+      if (this.text) {
+        console.log("handleEnter :>> ");
+      }
       this.$emit("enter", event);
     },
     handleFocus(event) {
+      if (this.text) {
+        console.log("handleFocus :>> ");
+      }
       this.$emit("focus", event);
     },
     handleBlur(event) {
+      if (this.text) {
+        console.log("handleBlur :>> ");
+      }
       this.$emit("blur", event);
     },
     handleChange(event) {
+      if (this.text) {
+        console.log("handleChange :>> ");
+      }
       this.$emit("change", event);
     },
     handleKeyUp(event) {
+      if (this.text) {
+        console.log("handleKeyUp :>> ");
+      }
       this.$emit("keyup", event);
     },
   },
@@ -79,9 +102,7 @@ export default {
       this.$emit("update:data", newV);
     },
     data(newV) {
-      if (newV !== this.searchValue) {
-        this.searchValue = newV;
-      }
+      this.searchValue = newV;
     },
   },
 };

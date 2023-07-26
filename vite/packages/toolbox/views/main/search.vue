@@ -53,11 +53,13 @@ import { mapWritableState, mapActions } from "pinia";
 import { main } from "../../store/main";
 import { calculator } from "../../store/calculator";
 import { translate } from "../../store/translate";
+import { timeConversion } from "../../store/timeConversion";
 export default {
   computed: {
     ...mapWritableState(main, ["useTool"]),
     ...mapWritableState(calculator, ["computeList", "selectIndex"]),
     ...mapWritableState(translate, ["inputValue"]),
+    ...mapWritableState(timeConversion, ["time", "timeStamp"]),
   },
   data() {
     return {
@@ -66,6 +68,7 @@ export default {
   },
   methods: {
     ...mapActions(translate, ["startTranslation"]),
+    ...mapActions(timeConversion, ["timeKeyup", "timeStampKeyup"]),
     back() {
       this.$router.push("/");
       this.useTool = "";
@@ -85,6 +88,12 @@ export default {
       this.startTranslation();
       this.clear();
     },
+    // 时间戳转换
+    useTimeConversion() {
+      this.timeStamp = this.search;
+      this.timeStampKeyup();
+      this.clear();
+    },
     // 搜索回车
 
     searchEnter() {
@@ -94,6 +103,9 @@ export default {
       }
       if (name === "translate") {
         this.useTranslate();
+      }
+      if (name === "timeConversion") {
+        this.useTimeConversion();
       }
     },
   },

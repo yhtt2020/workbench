@@ -8,7 +8,7 @@
         <a-dropdown>
           <template #overlay>
             <div
-              class="xt-bg-2 xt-border xt-text flex flex-wrap rounded-xl p-2"
+              class="xt-bg-2 xt-border xt-text flex flex-wrap rounded-xl p-2 xt-shadow"
               style="width: 520px"
             >
               <div
@@ -29,7 +29,6 @@
             icon="xiangxia"
             >{{ selectLang.name }}</XtButton
           >
-          <DownOutlined />
         </a-dropdown>
       </div>
       <div>
@@ -55,7 +54,6 @@
 <script>
 import { translate } from "../../../store/translate";
 import { mapWritableState, mapActions } from "pinia";
-import { DownOutlined } from "@ant-design/icons-vue";
 import { lang } from "./lang";
 export default {
   data() {
