@@ -1,47 +1,47 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-  <div ref="iconRef" class="icon-box box-border" :style="dragStyle">
+  <div ref="iconRef" class="icon-box box-border xt-hover" :style="dragStyle">
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
-      <!-- <drag-and-follow
+      <drag-and-follow
         :isSelect="isSelect"
         :length="this.iconsRefs.length"
         @drag-end="handleDragEnd"
         @drag-start="handleDragStart"
-      > -->
-      <!-- 多图标组件 -->
-      <template
-        v-if="
-          customData.iconList !== undefined && customData.iconList.length > 1
-        "
       >
-        <div>
-          <icons
-            :groupTitle="customData.groupTitle"
-            :iconList="customData.iconList"
+        <!-- 多图标组件 -->
+        <template
+          v-if="
+            customData.iconList !== undefined && customData.iconList.length > 1
+          "
+        >
+          <div>
+            <icons
+              :groupTitle="customData.groupTitle"
+              :iconList="customData.iconList"
+              @custom-event="handleCustomEvent"
+              @disbandGroup="disbandGroup"
+              @updateGroupTitle="updateGroupTitle"
+              @deleteIcons="deleteIcons"
+              @editIcons="editIcons"
+              @dragAddIcon="dragAddIcon"
+            ></icons>
+          </div>
+        </template>
+        <!-- 单图标组件 -->
+        <template
+          v-else-if="
+            customData.iconList !== undefined && customData.iconList.length > 0
+          "
+        >
+          <icon
+            v-bind="customData.iconList[0]"
+            @rightClick="rightClick"
             @custom-event="handleCustomEvent"
-            @disbandGroup="disbandGroup"
-            @updateGroupTitle="updateGroupTitle"
-            @deleteIcons="deleteIcons"
-            @editIcons="editIcons"
-            @dragAddIcon="dragAddIcon"
-          ></icons>
-        </div>
-      </template>
-      <!-- 单图标组件 -->
-      <template
-        v-else-if="
-          customData.iconList !== undefined && customData.iconList.length > 0
-        "
-      >
-        <icon
-          v-bind="customData.iconList[0]"
-          @rightClick="rightClick"
-          @custom-event="handleCustomEvent"
-        ></icon>
-      </template>
-      <!-- </drag-and-follow> -->
+          ></icon>
+        </template>
+      </drag-and-follow>
     </droppable-area>
     <!-- 卡片核心 -->
     <Widget
@@ -127,7 +127,7 @@ export default {
 
     // 是否需要初始化
     if (this.customData.groupTitle == undefined) {
-      let setData = {}; 
+      let setData = {};
       setData.groupTitle = "分组"; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     }
@@ -454,5 +454,6 @@ export default {
 }
 .icon-box {
   // margin: 0 10px;
+  border-radius: 12px;
 }
 </style>

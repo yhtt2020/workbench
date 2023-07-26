@@ -11,7 +11,7 @@
     @dragAddIcon="dragAddIcon"
   >
   </IconsFullScreen>
-  <div class="item-list xt-hover no-drag" @click="fuullScreenClick($event)">
+  <div class="item-list no-drag" @click="fuullScreenClick($event)">
     <div class="item">
       <template v-for="i in 4">
         <img
