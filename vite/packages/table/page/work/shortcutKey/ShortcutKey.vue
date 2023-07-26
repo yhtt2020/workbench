@@ -56,13 +56,13 @@
   <!-- 快捷键详情 -->
   <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
 </template>
-  
+
 <script>
-  import NotShortcutKey from '../../components/shortcutKey/NotShortcutKey.vue';
-  import ShortcutKeyDetail from '../../components/shortcutKey/ShortcutKeyDetail.vue';
-  import Search from '../../components/Search.vue';
+  import NotShortcutKey from '../../../components/shortcutKey/NotShortcutKey.vue';
+  import ShortcutKeyDetail from '../../../components/shortcutKey/ShortcutKeyDetail.vue';
+  import Search from '../../../components/Search.vue';
   import { mapActions, mapWritableState } from "pinia";
-  import { keyStore } from '../../store/key'
+  import { keyStore } from '../../../store/key'
   export default {
     name: "ShortcutKey",
     components: {
@@ -80,7 +80,7 @@
         softwareList: [],
         //推荐方案
         // notDownloadList: [
-        //     {   
+        //     {
         //         id: 1,
         //         icon: 'http://a.apps.vip/icons/flappy.jpg',
         //         name: 'Adobe Lightroom',
@@ -91,7 +91,7 @@
         //         sumLikes: 12334,
         //         download: 1232,
         //     },
-        //     {   
+        //     {
         //         id: 2,
         //         icon: 'http://a.apps.vip/icons/flappy.jpg',
         //         name: 'Adobe Lightroom',
@@ -102,7 +102,7 @@
         //         sumLikes: 12334,
         //         download: 1232,
         //     },
-        //     {   
+        //     {
         //         id: 3,
         //         icon: 'http://a.apps.vip/icons/flappy.jpg',
         //         name: 'Adobe Lightroom',
@@ -113,7 +113,7 @@
         //         sumLikes: 12334,
         //         download: 1232,
         //     },
-        //     {   
+        //     {
         //         id: 4,
         //         icon: 'http://a.apps.vip/icons/flappy.jpg',
         //         name: 'Adobe Lightroom',
@@ -124,7 +124,7 @@
         //         sumLikes: 12334,
         //         download: 1232,
         //     },
-        //     {   
+        //     {
         //         id: 5,
         //         icon: 'http://a.apps.vip/icons/flappy.jpg',
         //         name: 'Adobe Lightroom',
@@ -135,7 +135,7 @@
         //         sumLikes: 12334,
         //         download: 1232,
         //     },
-        //     {   
+        //     {
         //         id: 6,
         //         icon: 'http://a.apps.vip/icons/flappy.jpg',
         //         name: 'Adobe Lightroom',
@@ -186,7 +186,7 @@
     },
   };
 </script>
-  
+
 <style scoped lang="scss">
     .container{
       margin: 0 auto 12px;
@@ -305,4 +305,3 @@
 </style>
 
 
-  
