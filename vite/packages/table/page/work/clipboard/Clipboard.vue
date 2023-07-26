@@ -60,18 +60,18 @@
 
 <script>
 
-import HorzontanlPanelIcon from '../../components/HorzontanlPanelIcon.vue'
-import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
-import TabSwitching from '../../components/TabSwitching.vue';
+import HorzontanlPanelIcon from '../../../components/HorzontanlPanelIcon.vue'
+import HorizontalDrawer from '../../../components/HorizontalDrawer.vue';
+import TabSwitching from '../../../components/TabSwitching.vue';
 import AllClipFile from './allClipFile.vue';
-import ClipSetDrawer from '../../components/clipPreview/ClipSetDrawer.vue';
+import ClipSetDrawer from '../../../components/clipPreview/ClipSetDrawer.vue';
 import {Empty} from 'ant-design-vue';
 import {mapWritableState,mapActions} from "pinia";
-import {clipboardStore} from "../../store/clipboard";
+import {clipboardStore} from "../../../store/clipboard";
 import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
-import { fileList, videoList, audioList } from '../../js/data/clipboardData';
+import { fileList, videoList, audioList } from '../../../js/data/clipboardData';
 
 export default{
   name: 'Clipboard',
@@ -93,7 +93,7 @@ export default{
       ],
       // 历史和收藏切换数组默认值
       defaultClipType: {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
-    
+
       // 导航栏筛选分类
       cutType: [
         {title: '全部', icon: 'appstore', typename: 'all',name:'全部'},
@@ -110,7 +110,7 @@ export default{
       simpleImage: '/public/img/test/not-data.png',
 
       //搜索
-      searchData: '', 
+      searchData: '',
 
       // 控制搜索弹窗
       drawerVisible: false,
@@ -133,7 +133,7 @@ export default{
       switch(this.defaultCutType.typename){
         case 'all': // 默认全部
           if(this.items.length !== 0){
-            return this.items;    
+            return this.items;
           }
           break;
         case 'text':   // 筛选文本
@@ -149,7 +149,7 @@ export default{
             return list
           }
           break;
-        case 'file':  // 筛选文件  
+        case 'file':  // 筛选文件
           if(this.items.length !== 0){
             return fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
           }

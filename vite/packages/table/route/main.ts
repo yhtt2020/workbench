@@ -43,7 +43,6 @@ import Message from "../page/social/Message.vue";
 import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
 import Inspector from "../page/app/Inspector.vue";
-import Clipboard from "../page/clipboard/Clipboard.vue"
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
 import DeckAdd from "../page/app/deck/DeckAdd.vue";
@@ -59,8 +58,12 @@ import Contact from '../page/chat/contact.vue'
 import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
-// @ts-ignore
-import ShortcutKey from "../page/shortcutKey/ShortcutKey.vue";
+
+/*办公助手*/
+import WorkIndex from '../page/work/WorkIndex.vue'
+import ShortcutKey from "../page/work/shortcutKey/ShortcutKey.vue";
+import Clipboard from "../page/work/clipboard/Clipboard.vue"
+import WorkDesk from '../page/work/Desk.vue'
 
 export default [
   {
@@ -185,11 +188,7 @@ export default [
             component: Contact,
           }]
       },
-      {
-        path: "/ai",
-        name: "ai",
-        component: AIAssistant,
-      },
+
       {
         path: "/music",
         name: "music",
@@ -254,6 +253,33 @@ export default [
         ],
       },
 
+      {
+        path:"/work",
+        name:'work',
+        component:WorkIndex,
+        children:[
+          {
+            path: '/desk',
+            name: 'workDesk',
+            component: WorkDesk,
+          },
+          {
+            path: "/ai",
+            name: "ai",
+            component: AIAssistant,
+          },
+          {
+            path: '/clipboard',
+            name: 'clipboard',
+            component: Clipboard,
+          },
+          {
+            path: '/shortcutKey',
+            name: 'shortcut',
+            component: ShortcutKey,
+          },
+        ]
+      },
       {
         path: "/deck",
         name: "deckIndex",
@@ -365,16 +391,8 @@ export default [
           },
         ],
       },
-      {
-        path: '/clipboard',
-        name: 'clipboard',
-        component: Clipboard,
-      },
-      {
-        path: '/shortcutKey',
-        name: 'shortcutKey',
-        component: ShortcutKey,
-      },
+
+
       {
         path: "/market",
         name: "marketIndex",

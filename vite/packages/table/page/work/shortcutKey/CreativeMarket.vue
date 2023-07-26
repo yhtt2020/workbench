@@ -2,13 +2,13 @@
   <div class="xt-bg px-6 box">
     <!-- 头部导航 -->
     <div class="flex items-center justify-between" style="height: 96px;">
-      <div @click="onBack" class="pointer flex items-center rounded-lg justify-center" 
+      <div @click="onBack" class="pointer flex items-center rounded-lg justify-center"
         style="background: var(--mask-bg);width:112px;height:48px;font-size: 16px;color: var(--primary-text);">
         <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="flex">
         <!-- 头部搜索和下拉列表 -->
-        <Search 
+        <Search
           :searchValue="inputSearchValue"
           :defaultSelect="sort"
           :sortType="sortType"
@@ -17,7 +17,7 @@
           @changeInput="changeInput"
         />
         <!-- 分享 -->
-        <div class="pointer xt-mask flex items-center rounded-lg justify-center ml-3" 
+        <div class="pointer xt-mask flex items-center rounded-lg justify-center ml-3"
         style="width:134px;height:48px;font-size: 16px;color: var(--primary-text);"
         @click="share">我来分享</div>
       </div>
@@ -35,10 +35,10 @@
 
 <script>
 import MarketList from './MarketList.vue'
-import Search from '../../components/Search.vue'
-import NavMenu from '../../components/NavMenu.vue'
+import Search from '../../../components/Search.vue'
+import NavMenu from '../../../components/NavMenu.vue'
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from '../../../store/key'
 export default {
   name: "CreativeMarket",
   components: {
@@ -62,7 +62,7 @@ export default {
       //   {
       //     cname: '推荐',
       //     children: [
-      //       {   
+      //       {
       //         id: 1,
       //         icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
       //         name: 'Adobe Lightroom',
@@ -188,7 +188,7 @@ export default {
       //           },
       //         ]
       //       },
-      //       {   
+      //       {
       //         id: 2,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -201,7 +201,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400012
       //       },
-      //       {   
+      //       {
       //         id: 3,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -214,7 +214,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 19,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -227,7 +227,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 20,
       //         icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
       //         name: 'Adobe Lightroom',
@@ -245,7 +245,7 @@ export default {
       //   {
       //     cname: '游戏',
       //     children: [
-      //       {   
+      //       {
       //         id: 4,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -258,7 +258,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 5,
       //         icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png',
       //         name: 'Adobe Lightroom',
@@ -271,7 +271,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400050
       //       },
-      //       {   
+      //       {
       //         id: 6,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -289,7 +289,7 @@ export default {
       //   {
       //     cname: '效率',
       //     children: [
-      //       {   
+      //       {
       //         id: 7,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -302,7 +302,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 8,
       //         icon: '',
       //         name: 'Adobe Lightroom',
@@ -315,7 +315,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 9,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -333,7 +333,7 @@ export default {
       //   {
       //     cname: '办公',
       //     children: [
-      //       {   
+      //       {
       //         id: 10,
       //         icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
       //         name: 'Adobe Lightroom',
@@ -346,7 +346,7 @@ export default {
       //         key: '快捷键',
       //         time: 1686462400000
       //       },
-      //       {   
+      //       {
       //         id: 11,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -359,7 +359,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400012
       //       },
-      //       {   
+      //       {
       //         id: 12,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -377,7 +377,7 @@ export default {
       //   {
       //     cname: '系统',
       //     children: [
-      //       {   
+      //       {
       //         id: 13,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -390,7 +390,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 14,
       //         icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png',
       //         name: 'Adobe Lightroom',
@@ -403,7 +403,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 15,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -421,7 +421,7 @@ export default {
       //   {
       //     cname: '娱乐',
       //     children: [
-      //       {   
+      //       {
       //         id: 16,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -434,7 +434,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 17,
       //         icon: '',
       //         name: 'Adobe Lightroom',
@@ -447,7 +447,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 18,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -465,7 +465,7 @@ export default {
       //   {
       //     cname: '其他',
       //     children: [
-      //       {   
+      //       {
       //         id: 19,
       //         icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
       //         name: 'Adobe Lightroom',
@@ -478,7 +478,7 @@ export default {
       //         key: '快捷键',
       //         time: 1686462400000
       //       },
-      //       {   
+      //       {
       //         id: 20,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -491,7 +491,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400012
       //       },
-      //       {   
+      //       {
       //         id: 21,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -509,7 +509,7 @@ export default {
       //   {
       //     cname: '我的分享',
       //     children: [
-      //       {   
+      //       {
       //         id: 22,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',
@@ -522,7 +522,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 23,
       //         icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png',
       //         name: 'Adobe Lightroom',
@@ -535,7 +535,7 @@ export default {
       //         key: '快捷键',
       //         time: 1685462400000
       //       },
-      //       {   
+      //       {
       //         id: 24,
       //         icon: 'http://a.apps.vip/icons/flappy.jpg',
       //         name: 'Adobe Lightroom',

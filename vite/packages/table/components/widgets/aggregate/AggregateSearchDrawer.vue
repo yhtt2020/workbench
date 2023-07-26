@@ -21,85 +21,46 @@
 </template>
 
 <script>
-import { mapActions,mapWritableState } from 'pinia';
-import { appStore } from '../../../store';
-import { AggregateList } from '../../../js/data/searchData'
-import { HolderOutlined } from '@ant-design/icons-vue'
 import Sortable from 'sortablejs';
-import _ from 'lodash-es'
-import cache from '../../card/hooks/cache';
-
 export default {
-  components:{
-    HolderOutlined
-  },
   props:{
     drawerList:{
       type:Object,
       default:()=>[]
     }
   },
-
-  data(){
-    return{
-      aggDarggingCore:false,
-      AggregateList
-    }
-  },
-
-  computed:{},
-
   mounted(){
-    // let aggregateDrop = document.getElementById("aggregate-drop")
-    // aggregateDrop.addEventListener('ondragover',()=>{
-    //   ev.preventDefault()
-    // })
-    // aggregateDrop.addEventListener('drop',()=>{
-    //   this.aggDarggingCore = false
-    // })
-    // this.$nextTick(()=>{
-    //   this.searchEngineList()
-    // })
-    
     const el = this.$refs.aggDropRef
     new Sortable(el,{
       group: 'sortableGroup',
       onEnd: this.onSortEnd // 拖拽结束时触发的回调函数
     })
-
   },
-
   methods:{
-    ...mapActions(appStore,['getAggList']),
-    // searchEngineList(){
-    //   let that = this
-    //   let listDrag = document.getElementById('aggregate-drop') // 获取外层容器实现拖拽
-    //   Sortable.create(listDrag,{
-    //     sort: true,  // 开启排序
-    //     animation: 150,
-    //     direction: 'vertical', 
-    //     delay: 0,
-    //     onStart:function(event){},
-    //     onUpdate:function(event){
-    //       const items = event.target.children // 获取拖拽的使用子项
-    //       const newItems = []
-    //       for (let i = 0; i < items.length; i++) { // 遍历获取每一项
-    //        const index = parseInt(items[i].getAttribute('data-index'));  // 获取到指定的data-index属性
-    //        newItems.push(that.AggregateList[index]); // 将数据更新
-    //       } 
-          
-    //     },
-    //   })
-    // }
+
     onSortEnd(evt){
-      // 更新排序后的列表数据
-      this.drawerList.splice(evt.newIndex, 0, this.drawerList.splice(evt.oldIndex, 1)[0]);
-      // console.log('更新::>>>',this.drawerList);
+      let newIndex = evt.newIndex , oldIndex = evt.oldIndex
+      let newItem = this.$refs.aggDropRef.children[newIndex]
+      let oldItem = this.$refs.aggDropRef.children[oldIndex]
+      // 先删除移动的节点
+      this.$refs.aggDropRef.removeChild(newItem)
+      // 再插入移动的节点到原有节点，还原了移动的操作
+      if (newIndex > oldIndex) {
+        this.$refs.aggDropRef.insertBefore(newItem, oldItem)
+      } else {
+        this.$refs.aggDropRef.insertBefore(newItem, oldItem.nextSibling)
+      }
+      // 将数组进行排序
+      let temp = this.drawerList[evt.oldIndex]
+      this.drawerList.splice(evt.oldIndex, 1)
+      this.drawerList.splice(evt.newIndex, 0, temp)
+      // 将排序后的列表放在customData
       this.$emit('setSortedList',this.drawerList)
-      // cache.set('aggSortList',this.drawerList)
-      // this.getAggList()
     }
+
   }
+
+
 }
 </script>
 
