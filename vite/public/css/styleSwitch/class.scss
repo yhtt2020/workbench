@@ -23,6 +23,12 @@ body {
 .xt-active-text {
   color: var(--active-text) !important;
 }
+.xt-theme-text {
+  color: var(--active-bg) !important;
+}
+.xt-theme-text-2 {
+  color: var(--active-secondary-bg) !important;
+}
 
 /**
 * 字体
