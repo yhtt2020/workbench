@@ -17,7 +17,7 @@
       </a-select>
       <span class="title">桌面数据</span>
       <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留你在小组件自定义编辑的设置或数据，比如「倒数日小组件」中的事件数据。</div>
-      <HorizonTalTab :navList="dataType" v-model:selectType="defaultType"></HorizonTalTab>
+      <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
       <span class="title mt-5">标题</span>
       <a-input v-model:value="shareName" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
       <span class="title">简介</span>
@@ -62,12 +62,12 @@ import { message } from 'ant-design-vue';
 import ShareModal from "../ShareModal.vue";
 import { cardStore } from "../../store/card";
 import {nanoid} from 'nanoid'
-import HorizonTalTab from "../HorizonTalTab.vue"
+import RadioTab from "../RadioTab.vue"
 export default {
   name: "ShareDesk",
   components: {
     ShareModal,
-    HorizonTalTab
+    RadioTab
   },
   data() {
     return {
