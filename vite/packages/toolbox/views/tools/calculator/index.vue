@@ -3,18 +3,7 @@
     class="xt-border h-full xt-bg-2 p-3 xt-text text-base overflow-hidden overflow-y-auto xt-scrollbar"
   >
     <div class="h-12 flex" v-for="(i, index) in calculators" :key="index">
-      <!-- <a-input
-        :key="index"
-        class="xt-text flex-1"
-        placeholder="请输入计算式，如 99+99 "
-        style="height: 48px"
-        :class="border"
-        v-model:value="computeList[index]"
-        @focus="handleFocus(index)"
-        @change="handleChange()"
-        @blur="handleBlur(index)"
-      ></a-input> -->
-      <XTinput
+      <XtInput
         :key="index"
         class="xt-text flex-1"
         placeholder="请输入计算式，如 99+99 "
@@ -25,7 +14,7 @@
         @focus="handleFocus(index)"
         @change="handleChange()"
         @blur="handleBlur(index)"
-      ></XTinput>
+      ></XtInput>
       <div
         v-if="countList[index]"
         class="px-3 flex items-center success cursor-pointer xt-active res truncate"

@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full h-full xt-modal xt-text flex flex-col">
+  <div class="w-full h-full xt-modal xt-text flex flex-col xt-container">
     <div class="xt-border">
       <Search></Search>
     </div>
     <div
-      class="m-3 h-full flex-grow overflow-hidden overflow-y-auto xt-scrollbar no-darg"
+      class="p-3 h-full flex-grow overflow-hidden overflow-y-auto xt-scrollbar no-darg"
     >
       <router-view></router-view>
     </div>

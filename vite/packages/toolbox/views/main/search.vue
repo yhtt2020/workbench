@@ -16,11 +16,7 @@
         w="26"
         h="26"
         size="24"
-        style="border-radius: 50%"
       ></XtIcon>
-      <!-- <div class="no-darg cursor-pointer" style="padding: 8px">
-        <icon icon="xiangzuo" style="font-size: 24px"></icon>
-      </div> -->
       <div class="xt-active-bg-2 xt-base-btn px-2 w-auto" style="height: 44px">
         <img
           :src="'/packages/toolbox/assets/images/' + useTool.img + '.png'"
@@ -32,7 +28,7 @@
       </div>
     </template>
 
-    <Tinput
+    <XtInput
       v-model:data="search"
       placeholder="试试输入、粘贴、拖放内容到此处"
       @enter="searchEnter()"
@@ -43,23 +39,12 @@
           type=""
           class="xt-text"
           icon="guanbi"
-          w="21"
-          h="21"
+          w="24"
+          h="24"
           size="24"
-          style="border-radius: 50%"
         ></XtIcon>
       </template>
-    </Tinput>
-    <!-- <a-input
-        class="xt-text flex-1 no-darg text-base"
-        placeholder="点击上传、粘贴、拖放文件到此处"
-        style="height: 48px"
-        :class="border"
-        v-model:value="search"
-        @focus="handleFocus()"
-        @change="handleChange()"
-        @blur="handleBlur()"
-      ></a-input> -->
+    </XtInput>
   </div>
 </template>
 

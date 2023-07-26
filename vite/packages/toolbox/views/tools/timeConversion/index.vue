@@ -3,7 +3,7 @@
     <div>当前时间：{{ getDate() }}</div>
     <div class="my-3">当前时间戳：{{ currentTimeStamp }}</div>
     <div class="flex">
-      <Tinput
+      <XtInput
         class="xt-bg-2 xt-border rounded-xl"
         :limit="{ number: true }"
         style="height: 48px"
@@ -18,7 +18,7 @@
             时间戳
           </div>
         </template>
-      </Tinput>
+      </XtInput>
       <div class="p-2 cursor-pointer" @click="copyToClipboard(timeStamp)">
         <icon icon="fuzhi" style="font-size: 28px"></icon>
       </div>
@@ -26,7 +26,7 @@
     <div class="my-3"><icon icon="paixu" style="font-size: 28px"></icon></div>
 
     <div class="flex">
-      <Tinput
+      <XtInput
         class="xt-bg-2 xt-border rounded-xl"
         style="height: 48px"
         v-model:data="time"
@@ -40,7 +40,7 @@
             时间
           </div>
         </template>
-      </Tinput>
+      </XtInput>
       <div class="p-2 cursor-pointer" @click="copyToClipboard(time)">
         <icon icon="fuzhi" style="font-size: 28px"></icon>
       </div>
@@ -89,7 +89,6 @@ export default {
     // 时间戳转时间
     timeStampKeyup() {
       let timestamp = parseInt(this.timeStamp);
-
       // 使用 dayjs 将时间戳转换为时间
       const dateObj = dayjs(timestamp);
       const formattedDate = dateObj.format("YYYY-MM-DD HH:mm:ss");

@@ -1,29 +1,40 @@
 <template>
   <div class="h-full flex flex-col">
-    <a-dropdown>
-      <template #overlay>
-        <a-menu @click="handleMenuClick">
-          <a-menu-item key="1">
-            <UserOutlined />
-            1st menu item
-          </a-menu-item>
-          <a-menu-item key="2">
-            <UserOutlined />
-            2nd menu item
-          </a-menu-item>
-          <a-menu-item key="3">
-            <UserOutlined />
-            3rd item
-          </a-menu-item>
-        </a-menu>
-      </template>
-      <a-button>
-        Button
-        <DownOutlined />
-      </a-button>
-    </a-dropdown>
-    <div class="mb-2">
-      <XtButton type="theme" @click="translate()">翻译</XtButton>
+    <div class="flex justify-between mb-3">
+      <div class="flex items-center w-full pr-3">
+        <XtButton class="flex-1">自动检测</XtButton>
+        <XtIcon icon="paixu" type=""></XtIcon>
+        <!-- icon没加进来 占位用 -->
+        <a-dropdown>
+          <template #overlay>
+            <div
+              class="xt-bg-2 xt-border xt-text flex flex-wrap rounded-xl p-2"
+              style="width: 520px"
+            >
+              <div
+                v-for="item in lang.slice(1)"
+                class="p-2 cursor-pointer"
+                style="width: 100px"
+                :class="{ 'xt-theme-text': selectLang.lang == item.lang }"
+                @click="selectLang = item"
+              >
+                {{ item.name }}
+              </div>
+            </div>
+          </template>
+          <XtButton
+            class="flex-1"
+            btnClass=" flex justify-between px-4"
+            iconPosition="postfix"
+            icon="xiangxia"
+            >{{ selectLang.name }}</XtButton
+          >
+          <DownOutlined />
+        </a-dropdown>
+      </div>
+      <div>
+        <XtButton type="theme" @click="translate()">翻译</XtButton>
+      </div>
     </div>
     <div class="flex flex-grow justify-between">
       <XtTextarea
@@ -44,9 +55,22 @@
 <script>
 import { translate } from "../../../store/translate";
 import { mapWritableState, mapActions } from "pinia";
+import { DownOutlined } from "@ant-design/icons-vue";
+import { lang } from "./lang";
 export default {
+  data() {
+    return {
+      lang,
+    };
+  },
+  beforeRouteLeave(to, from, next) {
+    this.inputValue = "";
+    this.resultValue = "";
+    this.selectLang = this.lang[1];
+    next();
+  },
   computed: {
-    ...mapWritableState(translate, ["inputValue", "resultValue"]),
+    ...mapWritableState(translate, ["selectLang", "inputValue", "resultValue"]),
   },
   methods: {
     ...mapActions(translate, ["startTranslation"]),
