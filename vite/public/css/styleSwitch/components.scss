@@ -43,7 +43,11 @@
     background: var(--active-secondary-bg) !important;
   }
 }
-
+.xt-hover {
+  &:hover {
+    background: var(--active) !important;
+  }
+}
 // 默认按钮
 .xt-btn {
   -webkit-app-region: no-drag;

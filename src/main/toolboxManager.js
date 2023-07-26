@@ -31,8 +31,9 @@ class ToolboxManager{
           }
         })
         const window=this.windowInstance.window
+        //window.webContents.openDevTools()//打开调试工具，注释此行，禁止直接打开调试工具
         window.on('blur',()=>{
-          this.windowInstance.close()
+          this.windowInstance.close() //注释此行禁止失焦隐藏
           this.windowInstance=null
         })
       }else{

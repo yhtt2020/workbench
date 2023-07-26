@@ -315,7 +315,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .ant-table-tbody  {
     &:hover {
       background: red !important;
