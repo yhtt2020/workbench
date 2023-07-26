@@ -1,24 +1,27 @@
 <template>
-  <div style="width: 100%; height: 60px" class="xt-bg-2 flex items-center">
+  <div style="height: 60px" class="xt-bg-2 xt-text flex items-center">
     <template v-if="useTool">
       <!-- <Icon
         icon="xiangzuo"
         style="font-size: 20px; width: 10px"
         class="no-darg xt-text"
       ></Icon>
+       -->
+
       <XtIcon
-        class="ml-4"
+        @click="back()"
+        class="mx-2"
         icon="xiangzuo"
-        w="22"
-        h="22"
-        size="10"
+        type=""
+        w="26"
+        h="26"
+        size="24"
         style="border-radius: 50%"
-      ></XtIcon> -->
-      <div @click="back()" class="no-darg cursor-pointer" style="padding: 8px;" ><icon icon="xiangzuo" style="font-size: 24px"></icon></div>
-      <div
-        class="xt-active-bg-2 xt-base-btn px-2 w-auto"
-        style="height: 44px"
-      >
+      ></XtIcon>
+      <!-- <div class="no-darg cursor-pointer" style="padding: 8px">
+        <icon icon="xiangzuo" style="font-size: 24px"></icon>
+      </div> -->
+      <div class="xt-active-bg-2 xt-base-btn px-2 w-auto" style="height: 44px">
         <img
           :src="'/packages/toolbox/assets/images/' + useTool.img + '.png'"
           style="width: 32px; height: 32px"
@@ -35,7 +38,16 @@
       @enter="searchEnter()"
     >
       <template #suffix v-if="search">
-        <div @click="clear()">删除按钮</div>
+        <XtIcon
+          @click="clear()"
+          type=""
+          class="xt-text"
+          icon="guanbi"
+          w="21"
+          h="21"
+          size="24"
+          style="border-radius: 50%"
+        ></XtIcon>
       </template>
     </Tinput>
     <!-- <a-input
@@ -52,13 +64,15 @@
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import { main } from "../../store/main";
 import { calculator } from "../../store/calculator";
+import { translate } from "../../store/translate";
 export default {
   computed: {
     ...mapWritableState(main, ["useTool"]),
     ...mapWritableState(calculator, ["computeList", "selectIndex"]),
+    ...mapWritableState(translate, ["inputValue"]),
   },
   data() {
     return {
@@ -66,6 +80,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(translate, ["startTranslation"]),
     back() {
       this.$router.push("/");
       this.useTool = "";
@@ -77,7 +92,13 @@ export default {
     useCalculator() {
       this.selectIndex = this.computeList.length - 1;
       this.computeList[this.computeList.length - 1] = this.search;
-      this.search = "";
+      this.clear();
+    },
+    // 翻译
+    useTranslate() {
+      this.inputValue = this.search;
+      this.startTranslation();
+      this.clear();
     },
     // 搜索回车
 
@@ -85,6 +106,9 @@ export default {
       let name = this.useTool.route;
       if (name === "calculator") {
         this.useCalculator();
+      }
+      if (name === "translate") {
+        this.useTranslate();
       }
     },
   },

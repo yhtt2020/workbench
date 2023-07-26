@@ -19,10 +19,10 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import { useMainStore } from "../../store/main";
+import { main } from "../../store/main";
 export default {
   computed: {
-    ...mapWritableState(useMainStore, ["useTool"]),
+    ...mapWritableState(main, ["useTool"]),
   },
   data() {
     return {
