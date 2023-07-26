@@ -1,6 +1,6 @@
 <template>
   <textarea
-    class="rounded-xl xt-bg-2 xt-scrollbar w-full p-2"
+    class="rounded-xl xt-bg-2 xt-scrollbar w-full p-2  no-darg"
     :class="border"
     style="
       resize: none;
@@ -39,6 +39,9 @@ export default {
   watch: {
     searchValue(newV) {
       this.$emit("update:data", newV);
+    },
+    data(newV) {
+      this.searchValue = newV;
     },
   },
   methods: {
