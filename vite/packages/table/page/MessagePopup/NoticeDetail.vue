@@ -40,14 +40,14 @@
         <span class="pr-2 secondary-content"  style="color: var(--primary-text);">赠送的礼物</span>
       </div>
      <div v-if="item.title !== ''" class="secondary-content mb-4" style="color: var(--primary-text);">{{ item.title }}</div>
-     <div class="secondary-content" style="color:var(--secondary-text);">{{ item.content }}</div>  
-
+     <div class="secondary-content mb-4" style="color:var(--secondary-text);">{{ item.content }}</div>  
+     <div v-if="item.time !== ''" class="secondary-content" style="color:var(--secondary-text);">{{ formatDate(item.time) }}</div>
     </div>
   </div>
 </template>
 
 <script>
-
+import { formatDate } from '../../js/common/sessionNotice.ts'
 export default {
   props:{
       noticeId:{
@@ -55,6 +55,7 @@ export default {
       }
   },
   methods:{
+    formatDate,
     handleCommand({ key }) {
       // 在这里处理菜单项的选择事件
       console.log('选择了', key);

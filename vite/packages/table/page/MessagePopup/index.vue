@@ -23,7 +23,7 @@
          <span class="pl-3">全部消息</span>
        </div>
        <div class="flex items-center">
-         <div class="w-11 pointer flex items-center justify-center h-11">
+         <div class="w-11 pointer flex items-center justify-center h-11" @click="clearAllMessage">
            <Icon icon="clear" style="font-size: 1.5em;"></Icon>
          </div>
          <div class="w-11 pointer flex items-center justify-center h-11">
@@ -41,8 +41,7 @@
 <script>
 import { mapActions,mapWritableState } from 'pinia';
 import { noticeStore } from '../../store/notice'
-import NoticeDetail from './NoticeDetail.vue';
-
+import NoticeDetail from './NoticeDetail.vue'
 
 export default {
   components:{
@@ -70,6 +69,9 @@ export default {
     switchSession(index){  // 切换会话 
      this.selectIndex = index
      this.noticeDetailList  = this.messageNotice.notice[index]
+    },
+    clearAllMessage(){  // 清空消息数据
+      console.log(this.messageNotice.notice[this.selectIndex]); 
     }
   }
 }
@@ -77,8 +79,8 @@ export default {
 
 <style lang="scss" scoped>
 .session-item{
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
 }
 
 .active-bg{
