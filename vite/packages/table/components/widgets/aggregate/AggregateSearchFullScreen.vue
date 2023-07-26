@@ -79,7 +79,12 @@
               </div>
             </li>
           </ul>
-          <div v-else class="secondary-title" style="color: var(--secondary-text);">剪贴板</div>
+          <div v-else class="secondary-title" style="color: var(--secondary-text);">
+            <span class="mb-4">剪贴板</span>
+            <div v-for="item in items[0].content.split('\r\n')" class="flex  flex-col p-3" >
+              {{ item }}
+            </div>
+          </div>
         </vue-custom-scrollbar>
       </div>
     </div>
@@ -105,6 +110,8 @@
 import axios from "axios";
 import browser from '../../../js/common/browser'
 import _ from 'lodash-es'
+import { mapActions,mapWritableState } from "pinia";
+import {clipboardStore} from '../../../store/clipboard'
 
 export default {
   props:{
@@ -149,6 +156,7 @@ export default {
 
 
   computed:{
+    ...mapWritableState(clipboardStore,['items']),
     showSearchResults(){  // 显示搜索建议列表
       if(this.searchSuggestionList !== undefined && this.searchKeyWords === ''){
         return false
@@ -182,7 +190,7 @@ export default {
         this.fetchSuggestions(true)
       }
       if(evt.key === 'ArrowUp'){  // 上切换键
-       evt.preventDefault()
+        evt.preventDefault()
         this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
         this.updateInputValue()
         this.prevItem()
