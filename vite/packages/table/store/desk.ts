@@ -226,7 +226,6 @@ export const deskStore = defineStore("desk", {
         children: []
       },
     ],
-    // deskSize: {}
   }),
   actions: {
     setDeskList(item){
@@ -236,9 +235,6 @@ export const deskStore = defineStore("desk", {
         }
       })
     },
-    // setDeskSize(item){
-    //   this.deskSize = item
-    // }
   },
   persist: {
     enabled: true,

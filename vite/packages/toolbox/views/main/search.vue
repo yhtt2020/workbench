@@ -14,9 +14,9 @@
         size="10"
         style="border-radius: 50%"
       ></XtIcon> -->
-      <div @click="back()" class="no-darg">返回按钮</div>
+      <div @click="back()" class="no-darg cursor-pointer" style="padding: 8px;" ><icon icon="xiangzuo" style="font-size: 24px"></icon></div>
       <div
-        class="xt-active-bg-2 xt-base-btn px-2 ml-4 w-auto"
+        class="xt-active-bg-2 xt-base-btn px-2 w-auto"
         style="height: 44px"
       >
         <img
