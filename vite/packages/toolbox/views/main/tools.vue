@@ -27,8 +27,8 @@ export default {
   data() {
     return {
       toolsList: [
-        { name: "时间戳转换", img: "timeConversion", route: "timeConversion" },
         { name: "计算器", img: "calculator", route: "calculator" },
+        { name: "时间戳转换", img: "timeConversion", route: "timeConversion" },
         { name: "翻译", img: "translate", route: "translate" },
 
         // { name: "搜索网格", img: "searchTools", route: "searchTools" },
