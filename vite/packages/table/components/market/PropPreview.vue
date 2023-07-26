@@ -2,7 +2,7 @@
   <div style="max-width: 100%;width: 376px" class="flex-col py-4">
     <div class="flex items-center my-3 mx-3">
       <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
-        <FrameAvatar  :avatarUrl="displayUserInfo.avatar" :frameUrl="frameImage ? frameImage : displayUserInfo.equippedItems?.frameDetail?.image" :avatar-size="60" style="transform: scale(2)"></FrameAvatar>
+        <FrameAvatar  :avatarUrl="displayUserInfo.avatar" :frameUrl="frameImage ? frameImage : displayUserInfo.equippedItems?.frameDetail?.image" :avatar-size="60"></FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
                    :title="displayUserInfo.certification[0].name">
           <a-avatar style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0;z-index: 999;"

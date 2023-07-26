@@ -365,12 +365,6 @@
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
-  <!-- 聚合搜索全屏下的页面 -->
-  <div class="fixed inset-0" style="z-index: 999;" v-if="searchFullScreen === true">
-    <!-- style=""  -->
-    <AggregateSearchFullScreen></AggregateSearchFullScreen>
-  </div>
-
   <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
     <template #extra v-if="shareCode">
       <a-space>
@@ -420,9 +414,11 @@
       <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
     </div> -->
   </a-drawer>
+
   <div style="z-index:9999;">
     <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   </div>
+
   <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
   <ExportDesk :openModal="exportModal" :desks="desks" @closeExport="closeExport"></ExportDesk>
 </template>
@@ -485,8 +481,7 @@ import AddIcon from "./app/addIcon/index.vue"
 import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
-import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue'
-import AggregateSearchFullScreen from "../components/widgets/aggregate/AggregateSearchFullScreen.vue";
+import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue';
 import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
@@ -650,7 +645,6 @@ export default {
     Tab,
     UpdateMyInfo,
     ExportDesk,
-    AggregateSearchFullScreen
   },
   computed: {
     ...mapWritableState(cardStore, [
