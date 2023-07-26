@@ -53,13 +53,13 @@
 
 <script>
 import { message } from "ant-design-vue";
-import { useCalculatorStore } from "../../../store/globalSearch";
+import { calculator } from "../../../store/calculator";
 import { mapWritableState } from "pinia";
 import Mexp from "math-expression-evaluator";
 
 export default {
   computed: {
-    ...mapWritableState(useCalculatorStore, [
+    ...mapWritableState(calculator, [
       "computeList",
       "countList",
       "calculators",

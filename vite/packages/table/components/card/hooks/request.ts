@@ -2,7 +2,7 @@ import axios from "axios";
 // import {Server} from "../../../../../../../../src/util/"
 // import {Server} from "../../../../../../../../src/util/"
 // C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\consts.ts
-import { Server } from "../../../../../../table/consts";
+import { Server } from "../../../consts";
 console.log("object :>> ", Server);
 const service = axios.create({
   baseURL: "https://wad.apps.vip/api", //请求的地址

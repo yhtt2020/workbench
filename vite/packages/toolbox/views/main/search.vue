@@ -53,12 +53,12 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import { useMainStore } from "../../store/main";
-import { useCalculatorStore } from "../../store/globalSearch";
+import { main } from "../../store/main";
+import { calculator } from "../../store/calculator";
 export default {
   computed: {
-    ...mapWritableState(useMainStore, ["useTool"]),
-    ...mapWritableState(useCalculatorStore, ["computeList", "selectIndex"]),
+    ...mapWritableState(main, ["useTool"]),
+    ...mapWritableState(calculator, ["computeList", "selectIndex"]),
   },
   data() {
     return {

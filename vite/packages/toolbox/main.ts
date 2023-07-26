@@ -21,7 +21,7 @@ import "./styles/index.scss";
 import "../../public/css/styleSwitch/index.scss";
 // 组件
 import baseComponents from "../table/components/card/components/index";
-import toolBaseComponents from "./commponts/index";
+import toolBaseComponents from "./components/index";
 
 const app = createApp(App);
 

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    
     "@ant-design/icons-vue": "^6.1.0",
     "@codemirror/lang-json": "^6.0.1",
     "@lk77/vue3-color": "^3.0.6",
@@ -39,6 +40,7 @@
     "lightgallery": "^2.7.1",
     "lodash-es": "^4.17.21",
     "marked": "^4.1.1",
+    "math-expression-evaluator": "^2.0.3",
     "muuri": "^0.9.5",
     "nanoid": "^4.0.0",
     "perfect-scrollbar": "^1.5.5",
