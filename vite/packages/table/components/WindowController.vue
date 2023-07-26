@@ -1,4 +1,5 @@
 <template>
+ <div style="overflow: hidden">
   <div @click="fixed" :class="{active:alwaysTop}" class="flex pointer   btn-top-active  items-center no-drag">
     <Icon icon="Pushpin" style="font-size: 1.2em;zoom:1.1"></Icon>
   </div>
@@ -12,6 +13,7 @@
   <div @click="close" class="flex btn-top-active  pointer items-center no-drag">
     <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
   </div>
+ </div>
 </template>
 
 <script>

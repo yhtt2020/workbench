@@ -35,8 +35,8 @@
         </div>
       </div>
     </div>
-    <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg " style=" background: var(--primary-bg) !important;">
-      <WindowController></WindowController>
+    <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg " style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
+      <WindowController ></WindowController>
     </div>
   </div>
 
