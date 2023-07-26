@@ -55,7 +55,7 @@ export default {
       this.drawerList.splice(evt.oldIndex, 1)
       this.drawerList.splice(evt.newIndex, 0, temp)
       // 将排序后的列表放在customData
-      this.$emit('setSortedList',this.drawerList)
+      // this.$emit('setSortedList',this.drawerList)
     }
 
   }

@@ -112,14 +112,6 @@ export default {
         }
       }
     },
-    confirmCCData:{
-      type:Function,
-      default:()=>{
-        return {
-
-        }
-      }
-    },
     desk:{
       type:Object
     }

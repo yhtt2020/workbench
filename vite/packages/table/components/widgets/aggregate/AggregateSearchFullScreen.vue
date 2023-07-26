@@ -20,6 +20,22 @@
             <Icon :icon="selectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
           </div>
           <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter="enterSearch"></a-input>
+          <a-dropdown :placement="bottom" trigger="click" style="left: 901px !important;">
+            <a-button>123</a-button>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a href="javascript:;">1st menu item</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">2nd menu item</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">3rd menu item</a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
         <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:360px;">
           <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
@@ -60,6 +76,7 @@
               </div>
             </li>
           </ul>
+          <div v-else class="secondary-title" style="color: var(--secondary-text);">剪贴板</div>
         </vue-custom-scrollbar>
       </div>
     </div>
@@ -155,6 +172,7 @@ export default {
       }
       if(evt.ctrlKey && evt.key === 'Tab'){  // ctrl键和tab组合
         evt.preventDefault()
+        
       }
 
     },
@@ -305,6 +323,7 @@ export default {
         break;
      }
     },
+
 
   }
 }

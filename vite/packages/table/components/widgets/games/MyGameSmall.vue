@@ -109,12 +109,6 @@ export default {
         return {}
       }
     },
-    confirmCCData: {
-      type: Function,
-      default: () => {
-        return {}
-      }
-    },
     desk:{
       type:Object
     }
