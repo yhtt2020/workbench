@@ -650,7 +650,7 @@ export const NavList = [
         name: 'remote',
         cname: '外部小组件',
         detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
-        sizes: ['自定义大小'],
+        sizes: ['社区分享','自定义大小'],
         option: [
           {
             name: 'Remote',
