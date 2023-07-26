@@ -56,7 +56,7 @@ import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
 import WindowController from './WindowController.vue'
-import MessagePopup from '../page/MessagePopup/index.vue'
+import MessagePopup from '../page/messagePopup/Index.vue'
 import {steamUserStore} from "../store/steamUser";
 import {getClientIcon, getCover, getIcon} from "../js/common/game";
 
