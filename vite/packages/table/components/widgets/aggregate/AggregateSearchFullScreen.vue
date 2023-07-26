@@ -19,19 +19,22 @@
           <div class="flex items-center justify-center" style="width: 20px;height:20px;">
             <Icon :icon="selectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
           </div>
-          <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter="enterSearch"></a-input>
-          <a-dropdown :placement="bottom" trigger="click" style="left: 901px !important;">
-            <a-button>123</a-button>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>
-                  <a href="javascript:;">1st menu item</a>
-                </a-menu-item>
-                <a-menu-item>
-                  <a href="javascript:;">2nd menu item</a>
-                </a-menu-item>
-                <a-menu-item>
-                  <a href="javascript:;">3rd menu item</a>
+          <a-input  v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter="enterSearch"></a-input>
+          <a-dropdown v-model:visible="isDropdownVisible" placement="bottomRight" trigger="click">
+            <div class="flex pointer items-center justify-center active-button p-2 rounded-lg" style="width:210px; background: var(--active-secondary-bg);"
+            >
+              <Icon icon="huichetijiao" style="color: var(--active-bg);"></Icon>
+              <span class="secondary-title pl-2" style="color: var(--active-bg);">{{ openMode.name }}</span>
+            </div>
+            <template #overlay >
+              <a-menu class="custom-dropdown-menu flex items-center flex-col justify-center">
+                <a-menu-item style="color: var(--primary-text);"  
+                 :class="{current: openIndex === index }" 
+                 v-for="(item,index) in linkType" :key="index"
+                 @click="changeOpenType(item,index)"
+                 
+                >
+                  {{ item.name }}
                 </a-menu-item>
               </a-menu>
             </template>
@@ -92,7 +95,7 @@
       </div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换选择候选项</div>
       <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Ctrl</div>
-      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
+      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">T</div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换打开方式</div>
     </div>
   </div>
@@ -101,6 +104,7 @@
 <script>
 import axios from "axios";
 import browser from '../../../js/common/browser'
+import _ from 'lodash-es'
 
 export default {
   props:{
@@ -132,6 +136,14 @@ export default {
       searchKeyWords:'', // 搜索关键字
       searchSuggestionList:[], // 搜索建议列表
       suggestIndex:-1, // 搜索建议列表下标
+      isDropdownVisible:false, // 是否显示下拉列表
+      linkType:[  // 设置中打开方式类型
+        {name:'工作台内打开',value:'work'},
+        {name:'想天浏览器',value:'thisky'},
+        {name:'系统默认浏览器',value:'system'}
+      ],
+      openMode:{}, 
+      openIndex:''
     }
   },
 
@@ -143,6 +155,11 @@ export default {
       }else{
         return true
       }
+    },
+    getOpenMode(){
+      const type = this.urlType
+      const index = _.findIndex(this.linkType,function(o){ return type === o.value })
+      return index
     }
   },
 
@@ -151,6 +168,8 @@ export default {
      this.$refs.searchRef.focus()
      // 监听键盘触发事件
      window.addEventListener('keydown',this.keyBoardTrigger)
+     this.openMode = this.linkType[this.getOpenMode]
+     this.openIndex  = this.getOpenMode
     })
   },
   methods:{
@@ -164,15 +183,17 @@ export default {
       }
       if(evt.key === 'ArrowUp'){  // 上切换键
        evt.preventDefault()
-       this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
-       this.updateInputValue()
+        this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+        this.updateInputValue()
+        this.prevItem()
       }else if(evt.key === 'ArrowDown'){  // 下切换键
         this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
         this.updateInputValue()
+        this.nextItem()
       }
-      if(evt.ctrlKey && evt.key === 'Tab'){  // ctrl键和tab组合
+      if(evt.ctrlKey && evt.key === 't'){  // ctrl键和t键组合
         evt.preventDefault()
-        
+        this.isDropdownVisible = !this.isDropdownVisible
       }
 
     },
@@ -259,7 +280,7 @@ export default {
     openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开 
      const url = `${this.list[this.selectIndex].searchUrl}${words}`
      console.log(url);
-     switch (this.urlType) { 
+     switch (this.openMode.value) { 
       case 'work':
         browser.openInTable(url)  // 在工作台中打开
         break;
@@ -324,7 +345,24 @@ export default {
      }
     },
 
+    changeOpenType(item,index){  // 手动切换
+      this.openMode = item 
+      this.openIndex = index
+      this.isDropdownVisible = false
+    },
 
+    prevItem() {
+      if (this.openIndex > 0) {
+        this.openIndex--;
+        this.openMode = this.linkType[this.openIndex]
+      }
+    },
+    nextItem() {
+      if (this.openIndex < this.linkType.length - 1) {
+        this.openIndex ++;
+        this.openMode = this.linkType[this.openIndex]
+      }
+    },
   }
 }
 </script>
@@ -404,5 +442,16 @@ export default {
   width:649px;
   height: 500px;
   background: var(--primary-bg);
+}
+
+.custom-dropdown-menu{
+  border-radius: 8px !important;
+  background-color:var(--secondary-bg) !important;
+  box-shadow: none !important;
+}
+
+.current{
+  background: var(--secondary-bg) !important;
+  color: var(--active-bg) !important;
 }
 </style>
