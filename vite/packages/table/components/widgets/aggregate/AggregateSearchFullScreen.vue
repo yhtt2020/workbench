@@ -21,18 +21,19 @@
           </div>
           <a-input v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter="enterSearch"></a-input>
         </div>
-        <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:366px;">
+        <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:360px;">
           <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
             <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
              :class="{'active-bg':suggestIndex === index}" 
              class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer"
              @click="getSuggestItem(suggestion,index)"
             >
+          
               <!-- 百度搜索 -->
               <div v-if="suggestion.q" class="flex">
                 <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(suggestion.q)"></span>
               </div>
-
+ 
               <!-- bili搜索 -->
               <div v-else-if="suggestion.value" class="flex">
                 <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.value)"></span>
@@ -131,80 +132,31 @@ export default {
   mounted(){
     this.$nextTick(()=>{
      this.$refs.searchRef.focus()
+     // 监听键盘触发事件
+     window.addEventListener('keydown',this.keyBoardTrigger)
     })
-    // 监听键盘触发事件
-    window.addEventListener('keydown',this.keyBoardTrigger)
   },
   methods:{
-    keyBoardTrigger(e){
-      if(e.key === 'Tab'){ // 触发tab键切换功能  
-        e.preventDefault();
+    // 键盘操作
+    keyBoardTrigger(evt){
+      if(evt.key === 'Tab'){ // 触发tab键切换功能  
+        evt.preventDefault();
         this.selectIndex = (this.selectIndex + 1) %  this.list.length
         this.selectIcon.icon = this.list[this.selectIndex].icon
         this.fetchSuggestions(true)
       }
-      if(e.key === 'ArrowUp'){  // 上切换键
-       e.preventDefault()
+      if(evt.key === 'ArrowUp'){  // 上切换键
+       evt.preventDefault()
        this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
        this.updateInputValue()
-      }else if(e.key === 'ArrowDown'){  // 下切换键
-       this.suggestIndex = (this.suggestIndex + 1) %  this.searchSuggestionList.length
-       this.updateInputValue()
+      }else if(evt.key === 'ArrowDown'){  // 下切换键
+        this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
+        this.updateInputValue()
       }
-    },
+      if(evt.ctrlKey && evt.key === 'Tab'){  // ctrl键和tab组合
+        evt.preventDefault()
+      }
 
-    selectAggSearch(item,index){  // 点击列表项选中  
-      this.selectIndex = index
-      this.selectIcon.icon = item.icon
-      this.$refs.searchRef.focus()
-      this.fetchSuggestions(true)
-    },
-    
-    async fetchSuggestions(val){  // 获取搜索建议列表 数据请求
-      if(val){  // 防止重复请求
-        const words = encodeURIComponent(this.searchKeyWords)
-        const url = `${this.list[this.selectIndex].recommendUrl}${words}`
-        const result = await axios.get(url)
-        switch (this.list[this.selectIndex].id){
-         case 1: // 百度搜索
-          this.searchSuggestionList  = result.data.g
-          break;
-         case 2: 
-          // 谷歌接口暂时不能使用,还没有找到api
-          // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
-         break;
-         case 3: // 必应搜索
-          if(this.searchKeyWords !== '' ){  // 处理必应搜索为空时显示自带的数据
-            this.searchSuggestionList = result.data[1]
-          }
-          break;
-         case 4: // 知乎搜索
-          this.searchSuggestionList  = result.data.suggest
-          break;
-         case 5:
-          // github搜索引擎api暂时没有找到关键字搜索推荐
-          if(this.searchKeyWords !== ''){
-            this.searchSuggestionList = result.data.items
-          }
-          break;
-         case 6: // B站搜索
-          this.searchSuggestionList  = result.data
-          break;
-         case 7:  // 微博搜索
-          this.searchSuggestionList = result.data.data.hotquery
-          break;
-         case 8:  // 优酷搜索
-          this.searchSuggestionList  = result.data.data
-          break; 
-         case 9:
-          this.searchSuggestionList = result.data.words
-          break;
-         default:
-           break;
-        }
-      }else{
-        return
-      }
     },
 
     dataSearch(){  // 监听输入框关键字输入   
@@ -214,10 +166,76 @@ export default {
       }
       this.fetchSuggestions(true)
     },
+    
+    // 获取搜索建议列表 数据请求
+    async fetchSuggestions(val){ 
+      if(val){ // 防止重复请求
+        const words = encodeURIComponent(this.searchKeyWords)
+        const url = `${this.list[this.selectIndex].recommendUrl}${words}`
+        const result = await axios.get(url)
+        this.getDataFields(result)
+      }
+      return
+    },
 
-    enterSearch(){  // 回车进行搜索
-     const enterWords = encodeURIComponent(this.searchKeyWords)
-     this.openSearchSuggest(enterWords)
+    selectAggSearch(item,index){  // 点击列表项选中  
+      this.selectIndex = index
+      this.selectIcon.icon = item.icon
+      this.$refs.searchRef.focus()
+      this.fetchSuggestions(true)
+    },
+
+    // 根据不同搜索引擎api返回的字段获取数据
+    getDataFields(res){
+      if(this.list[this.selectIndex].id === 3 &&res.data[1]){ // 必应搜索建议
+        this.searchSuggestionList = res.data[1]
+      }else if(this.list[this.selectIndex].id === 1 && res.data.g){  // 百度搜索建议
+        this.searchSuggestionList =  res.data.g
+      }else if(this.list[this.selectIndex].id === 4 && res.data.suggest){  // 知乎搜索建议
+        this.searchSuggestionList =  res.data.suggest
+      }else if(this.list[this.selectIndex].id === 5 && res.data.items){  // github搜索建议
+        this.searchSuggestionList =  res.data.items
+      }else if(this.list[this.selectIndex].id === 6 && res.data){  // bilibili搜索建议
+        this.searchSuggestionList =  res.data
+      }else if(this.list[this.selectIndex].id === 8 && res.data.data){  // 优酷搜索建议
+        this.searchSuggestionList  = res.data.data
+      }else if(this.list[this.selectIndex].id === 9 && res.data.words){  // 豆瓣搜索建议
+        this.searchSuggestionList = res.data.words
+      }else if(this.list[this.selectIndex].id === 7 && res.data.data && res.data.data.hotquery){
+        this.searchSuggestionList = res.data.data.hotquery
+      }
+    },
+
+    matchingKey(val){ // 匹配搜索关键字是否存在
+      const isMatched = val.includes(this.searchKeyWords);
+      if(isMatched && this.searchSuggestionList.length !== 1){
+       const regex = new RegExp(this.searchKeyWords,'gi');
+       return val.replace(regex, `<span style="color:var(--active-bg);">${this.searchKeyWords}</span>`);
+      }else{
+        return val
+      }
+    },
+
+    updateInputValue(){ // 搜索建议列表项选中赋值给搜索关键词
+      const id = this.list[this.selectIndex].id
+      if(id === 1 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+        this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].q
+        this.fetchSuggestions(false)
+      }else if(id === 2 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+        return 
+      }else if(id === 3 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+        this.searchKeyWords = this.searchSuggestionList[this.suggestIndex]
+        this.fetchSuggestions(false)
+      }else if(id === 4 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+        this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].query
+        this.fetchSuggestions(false)
+      }else if(id === 5 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+        this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].name
+        this.fetchSuggestions(false)
+      } else if(id === 6 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
+        this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].value
+        this.fetchSuggestions(false)
+      } 
     },
 
     openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开 
@@ -238,72 +256,9 @@ export default {
      }
     },
 
-    matchingKey(val){ // 匹配搜索关键字是否存在
-      const isMatched = val.includes(this.searchKeyWords);
-      if(isMatched && this.searchSuggestionList.length !== 1){
-       const regex = new RegExp(this.searchKeyWords,'gi');
-       return val.replace(regex, `<span style="color:var(--active-bg);">${this.searchKeyWords}</span>`);
-      }else{
-        return val
-      }
-    },
-
-    updateInputValue(){ // 搜索建议列表项选中赋值给搜索关键词 
-      const id = this.list[this.selectIndex].id
-      switch (id) {
-        case 1:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].q
-            this.fetchSuggestions(false)
-          }
-          break;
-        case 2:
-          break;
-        case 3:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex]
-            this.fetchSuggestions(false)
-          }
-         break;
-        case 4:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].query
-            this.fetchSuggestions(false)
-          }
-         break;
-        case 5:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].name
-            this.fetchSuggestions(false)
-          }
-          break;
-        case 6:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].value
-            this.fetchSuggestions(false)
-          }
-          break;
-        case 7:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].suggestion
-            this.fetchSuggestions(false)
-          }
-          break;
-        case 8:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].name
-            this.fetchSuggestions(false)
-          }
-          break;
-        case 9:
-          if(this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-            this.searchKeyWords = this.searchSuggestionList[this.suggestIndex]
-            this.fetchSuggestions(false)
-          }
-          break;
-        default:
-          break;
-      }
+    enterSearch(){  // 回车进行搜索
+     const enterWords = encodeURIComponent(this.searchKeyWords)
+     this.openSearchSuggest(enterWords)
     },
 
     getSuggestItem(item,index){ // 选择推荐关键字
