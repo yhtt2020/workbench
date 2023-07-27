@@ -2,12 +2,14 @@ import { createRouter, createWebHashHistory } from "vue-router";
 let routes = [
   {
     path: "/",
-    name: "show",
+    name: "main",
     component: () => import("../views/main/tools.vue"),
   },
 ];
 
 const components = import.meta.glob("../views/tools/*/index.vue");
+let a =  Object.entries(components)
+console.log("object :>> ", a);
 for (const path in components) {
   const name = path.match(/\/views\/tools\/(\w+)\/index\.vue/)?.[1];
   const route = {
@@ -17,6 +19,7 @@ for (const path in components) {
   };
   routes.push(route);
 }
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes,

@@ -8,7 +8,7 @@
     ref="homelSlotRef"
     :desk="desk"
   >
-    <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
+    <XtCardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
           <component
@@ -22,17 +22,19 @@
           />
         </div>
       </template>
-    </cardDrag>
+    </XtCardDrag>
   </Widget>
-  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+  <a-drawer
+    :width="500"
+    v-model:visible="settingVisible"
+    placement="right"
+    v-if="settingVisible"
+  >
     <template #title>
       <div class="text-center">设置</div>
     </template>
     <!--  -->
-    <cardSize
-      @onChange="__updateSize"
-      :data="customData.dragCardSize"
-    ></cardSize>
+    <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
 
@@ -60,10 +62,8 @@ import mixin from "./hooks/clockMixin.js";
 import { cardStore } from "../../../store/card.ts";
 import { mapActions } from "pinia";
 
-import cardDrag from "../../card/hooks/cardDrag.vue";
 import cardDragHook from "../../card/hooks/cardDragHook";
 
-import cardSize from "../../card/components/radio/index.vue";
 import cardSizeHook from "../../card/hooks/cardSizeHook";
 
 export default {
@@ -124,8 +124,6 @@ export default {
     Widget,
     ClockStyle,
     ClockFullScreen,
-    cardDrag,
-    cardSize,
   },
   created() {},
   mounted() {
