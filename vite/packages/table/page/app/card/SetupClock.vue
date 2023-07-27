@@ -205,7 +205,7 @@
         <a-row>
 
             <a-button size="large" class="rounded-full" type="primary" block @click="addSettingClock"
-              >设置</a-button
+              >确认添加</a-button
             >
         </a-row>
         </vue-custom-scrollbar>

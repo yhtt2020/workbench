@@ -76,8 +76,8 @@
           >
         </div>
         <div class="flex flex-row items-center w-full justify-center mt-4">
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2" style="color: var(--primary-text); " @click="closeDrawer">取消</div>
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-bg-2" style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
+
+          <div class="xt-active-bg rounded-lg h-10 w-full flex justify-center items-center pointer " style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
         </div>
       </div>
     <div v-else>
@@ -86,8 +86,8 @@
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer " style="background:var(--primary-bg) ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-bg-2" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2 " style="  ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-active-bg" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>
