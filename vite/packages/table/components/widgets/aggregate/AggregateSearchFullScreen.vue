@@ -15,7 +15,7 @@
         </vue-custom-scrollbar>
       </div>
       <div class="flex flex-col " >
-        <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
+        <div class="flex items-center justify-center rounded-lg h-12 pl-3 pr-1  mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
           <div class="flex items-center justify-center" style="width: 20px;height:20px;">
             <Icon :icon="selectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
           </div>
@@ -93,17 +93,17 @@
     </div>
 
     <div class="rounded-b-lg flex items-center h-12 px-3 py-3" style="background: var(--secondary-bg);">
-      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
+      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mr-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换搜索引擎</div>
       <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
         <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
       </div>
-      <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
+      <div class="h-7 w-7 flex rounded-lg items-center justify-center mr-2 search-tag">
         <Icon icon="arrowdown" style="color: rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
       </div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换选择候选项</div>
       <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Ctrl</div>
-      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">T</div>
+      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mr-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">T</div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换打开方式</div>
     </div>
   </div>
