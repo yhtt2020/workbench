@@ -1,6 +1,7 @@
 <template>
+  <back-btn></back-btn>
   <!-- 快速搜索 闹钟 设置 -->
-  <div class="title" style="color:var(--primary-text)">
+  <div class="title" style="color:var(--primary-text) ;margin-left:70px;margin-top: 27px">
     <Icon
       style="width: 5%; height: 2em; margin-right: 1%; vertical-align: middle"
       icon="shezhi1"
@@ -152,27 +153,44 @@
   </div>
   <div class="card content" v-if="cardType === 'clock'">
 
+    <div class="line-title pl-10">当前时间： {{ dateTime.hours }}:{{dateTime.minutes}}</div>
     <a-row>
       <a-col :span="10" style="border-right: 1px solid #454545; height: calc(100vh - 16em)">
         <vue-custom-scrollbar
           :settings="outerSettings"
           style="position: relative; height: calc(100vh - 16em);color: var(--primary-text);"
           class="scroll"
-        >   <a-row> <a-col >闹钟名字 </a-col></a-row>
+        >
         <a-row>
           <a-col>
-            <a-input v-model:value="eventValue" placeholder="请输入"
+            <a-input ref="input" allow-clear @click="$refs.input.select()"  v-model:value="eventValue" placeholder="闹钟名称"
           /></a-col>
         </a-row>
-        <a-row> <a-col>时间 </a-col></a-row>
-        <a-row>
 
-            <a-time-picker v-model:value="clockDate" format="HH:mm"
-                           />
+          <div class="line">小时</div>
+          <div class="line">
+            <a-radio-group button-style="solid" v-model:value="timeHour">
+              <template   v-for="i in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]">
+                <a-radio-button   :value="i" class="mb-2 text-center" style="width: 80px">{{i}}</a-radio-button>
+              </template>
+
+            </a-radio-group>
+          </div>
+          <div class="line">分钟 &nbsp;
+
+            <a-select v-model:value="timeMinute" placeholder="选择分钟" style="width:120px">
+              <a-select-option :value="index" v-for="(i,index) in new Array(60)">
+                {{index}}
+              </a-select-option>
+
+            </a-select>
+          </div>
+
+<!--            <a-time-picker v-model:value="clockDate" format="HH:mm"-->
+<!--                           />-->
 
 
 
-        </a-row>
         <a-row>
 
 
@@ -185,11 +203,10 @@
         </a-row>
 
         <a-row>
-          <a-col>
-            <a-button type="primary" @click="addSettingClock"
+
+            <a-button size="large" class="rounded-full" type="primary" block @click="addSettingClock"
               >设置</a-button
-            ></a-col
-          >
+            >
         </a-row>
         </vue-custom-scrollbar>
       </a-col>
@@ -197,6 +214,7 @@
         <a-row>
           <a-col style="color:var(--primary-text)"> 已设置的{{ title }}</a-col></a-row
         >
+        <a-empty v-if="clockEvent.length===0" description="暂无闹钟" image="/img/test/load-ail.png"></a-empty>
         <vue-custom-scrollbar
           :settings="outerSettings"
           style="position: relative; height: calc(100vh - 20em)"
@@ -204,12 +222,11 @@
         >
           <a-row class="list">
             <div
-              class="event-list"
+              class="event-list rounded-lg"
               v-for="(item, index) in clockEvent"
               style="background: var(--primary-bg);color: var(--primary-text);"
             >
-              <a-dropdown :trigger="['contextmenu']">
-                <div class="card-list">
+                <div class="card-list ">
                   <div class="event-title">
                     <span class="text-more">{{ item.eventValue }}</span>
                     <span class="event" style="color:var(--secondary-text)">{{ item.clockType }}</span>
@@ -219,13 +236,8 @@
                       item.dateValue.minutes
                     }}</span
                   >
+                  <a-button class="rounded-full" type="danger" @click="(e) => onClockMenuClick(e, index)">删除</a-button>
                 </div>
-                <template #overlay>
-                  <a-menu @click="(e) => onClockMenuClick(e, index)">
-                    <a-menu-item key="1">删除</a-menu-item>
-                  </a-menu>
-                </template></a-dropdown
-              >
             </div></a-row
           ></vue-custom-scrollbar
         >
@@ -240,8 +252,11 @@ import { cardStore } from "../../../store/card";
 import { timeStamp, transDate } from "../../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
+import BackBtn from '../../../components/comp/BackBtn.vue'
+import { getDateTime } from '../../../../../src/util/dateTime'
 export default {
   name: "SetupCard",
+  components: { BackBtn },
 
   data() {
     return {
@@ -256,11 +271,17 @@ export default {
       countdownDayType: "大",
       clockType: "不重复",
 
-      eventValue: "",
+      eventValue: "未命名",
       dateValue: null,
       clockDate: null,
       flag: true,
-      customIndex:0
+      customIndex:0,
+
+      timeHour:0,//时钟设置的小时
+      timeMinute:0,//时钟设置的分钟
+
+      dateTime:{},//当前时间
+      timer:null //当前时间更新计时器
     };
   },
 
@@ -271,6 +292,13 @@ export default {
       this.cardType = this.$route.params["name"];
       this.customIndex = this.$route.params["customIndex"];
     }
+    this.updateTime()
+    this.timer=setInterval(()=>{
+      this.updateTime()
+    },1000)
+  },
+  unmounted () {
+    clearInterval(this.timer)
   },
   computed: {
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
@@ -285,6 +313,9 @@ export default {
       "removeCountdownDay",
       "removeClock",
     ]),
+    updateTime(){
+      this.dateTime = getDateTime()
+    },
     addCard() {
       if (this.eventValue === "" || this.dateValue === null) {
         if (this.flag !== true) return;
@@ -300,31 +331,44 @@ export default {
         dateValue: timeStamp(this.dateValue.valueOf()),
         customIndex:this.customIndex
       });
-      this.$router.push({
-        name: "home",
-      });
-      message.info("添加成功！");
+      // this.$router.push({
+      //   name: "home",
+      // });
+      message.success("添加成功！");
     },
     addSettingClock() {
-      if (this.eventValue === "" || this.clockDate === null) {
+      if (this.eventValue === "") {
         if (this.flag !== true) return;
         this.flag = false;
+        message.info("闹钟名称不可为空！");
         setTimeout(() => {
-          message.info("不可为空！");
           this.flag = true;
         }, 500);
         return;
       }
+
+      let date=new Date(Date.now())
+      let timeSpan={
+        day:date.getDate(),
+        hours:this.timeHour<10?'0'+this.timeHour:this.timeHour,
+        minutes:this.timeMinute<10?'0'+this.timeMinute:this.timeMinute,
+        month:date.getMonth()+1,
+        seconds:'00',
+        year:date.getFullYear()
+      }
+      let dateSpan=timeStamp(timeSpan)
+
+
       this.addClock({
         clockType: this.clockType,
         eventValue: this.eventValue,
-        dateValue: timeStamp(this.clockDate.valueOf()),
-        clockTimeStamp:this.clockDate.valueOf()
+        dateValue: timeSpan,
+        clockTimeStamp:timeSpan
       });
-      this.$router.push({
-        name: "home",
-      });
-      message.info("添加成功！");
+      // this.$router.push({
+      //   name: "home",
+      // });
+      message.success("添加成功！");
     },
     onContextMenuClick(e, index) {
       this.removeCountdownDay(index);
@@ -380,7 +424,6 @@ export default {
   margin: 1em;
 }
 .scroll {
-  width: 65%;
   @media screen and (max-width: 1100px) {
     width: 100%;
   }
