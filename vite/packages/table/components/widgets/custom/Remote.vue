@@ -37,6 +37,7 @@
       <a-button type="primary" @click="save" block>确定</a-button>
     </div>
   </a-drawer>
+  <div v-if="showCommunity">嘿嘿嘿</div>
 </template>
 
 <script>
@@ -78,6 +79,7 @@ export default {
       height: 2,
 
       panelVisible: false,
+      showCommunity: false,
       id: Date.now().toString(),
       options: {
         className: 'card small',
@@ -87,6 +89,13 @@ export default {
         noTitle: true,
       },
       menuList: [
+        {
+          icon: "fenxiang",
+          title: '社区分享',
+          fn: () => {
+            this.showCommunity = true;
+          }
+        },
         {
           icon: "shezhi1",
           title: '设置',

@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <Community :desk="desk" id="community"></Community>
+        <Market :desk="desk" id="community"></Market>
       </div>
      
     </div>
@@ -48,11 +48,11 @@
   import { cardStore } from "../../../store/card";
   import { message } from "ant-design-vue";
   import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
-  import Community from "../../../components/card/remote/Community.vue";
+  import Market from "../../../components/card/remote/Market.vue";
   export default{
     components: {
       NewPreviewCardDetails,
-      Community
+      Market
     },
     props: {
       openRemote: {
