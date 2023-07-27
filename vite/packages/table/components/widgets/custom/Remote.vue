@@ -37,7 +37,6 @@
       <a-button type="primary" @click="save" block>确定</a-button>
     </div>
   </a-drawer>
-  <div v-if="showCommunity">嘿嘿嘿</div>
 </template>
 
 <script>
@@ -93,7 +92,7 @@ export default {
           icon: "fenxiang",
           title: '社区分享',
           fn: () => {
-            this.showCommunity = true;
+            this.$router.push({name: 'remoteCommunity'})
           }
         },
         {
@@ -116,6 +115,9 @@ export default {
     }
   },
   methods: {
+    closeModal(val){
+      this.showCommunity = val
+    },
     ensureEvenNumber(value) {
       const parsedValue = parseInt(value);
       return Math.ceil(parsedValue / 2) * 2;
