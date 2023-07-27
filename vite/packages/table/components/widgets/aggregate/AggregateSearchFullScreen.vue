@@ -31,7 +31,7 @@
                 <a-menu-item style="color: var(--primary-text);"  
                  :class="{current: openIndex === index }" 
                  v-for="(item,index) in linkType" :key="index"
-                 @click="changeOpenType(item,index)"
+                 @click="changeOpenType(item,index)" class="rounded-lg"
                  
                 >
                   {{ item.name }}
@@ -79,9 +79,12 @@
               </div>
             </li>
           </ul>
-          <div v-else class="secondary-title" style="color: var(--secondary-text);">
-            <span class="mb-4">剪贴板</span>
-            <div v-for="item in items[0].content.split('\r\n')" class="flex  flex-col p-3" >
+          <div v-else class="flex flex-col">
+            <span class="mb-2.5 secondary-title" style="color: var(--secondary-text);">剪贴板</span>
+            <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"  
+             :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
+             style="color: var(--secondary-text);"
+            >
               {{ item }}
             </div>
           </div>
@@ -112,6 +115,7 @@ import browser from '../../../js/common/browser'
 import _ from 'lodash-es'
 import { mapActions,mapWritableState } from "pinia";
 import {clipboardStore} from '../../../store/clipboard'
+const {clipboard} = require('electron')
 
 export default {
   props:{
@@ -143,6 +147,7 @@ export default {
       searchKeyWords:'', // 搜索关键字
       searchSuggestionList:[], // 搜索建议列表
       suggestIndex:-1, // 搜索建议列表下标
+      clipboardIndex:-1, // 剪贴板内容列表下标
       isDropdownVisible:false, // 是否显示下拉列表
       linkType:[  // 设置中打开方式类型
         {name:'工作台内打开',value:'work'},
@@ -168,6 +173,11 @@ export default {
       const type = this.urlType
       const index = _.findIndex(this.linkType,function(o){ return type === o.value })
       return index
+    },
+    getClipBoardData(){  // 获取剪贴板数据
+      const clipBoardText = clipboard.readText()
+      const clipBoardList = clipBoardText.split('\r\n')
+      return clipBoardList
     }
   },
 
@@ -191,17 +201,36 @@ export default {
       }
       if(evt.key === 'ArrowUp'){  // 上切换键
         evt.preventDefault()
-        this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
-        this.updateInputValue()
-        this.prevItem()
+        if(this.showSearchResults){
+          this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+          this.updateInputValue()
+        }else if(this.isDropdownVisible){
+          this.prevItem()
+        }else {
+          this.clipboardIndex = parseInt((this.clipboardIndex + 1) % this.getClipBoardData.length)
+          this.searchKeyWords = this.getClipBoardData[this.clipboardIndex]
+          this.fetchSuggestions(true)
+        }
       }else if(evt.key === 'ArrowDown'){  // 下切换键
-        this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
-        this.updateInputValue()
-        this.nextItem()
+        evt.preventDefault()
+        if(this.showSearchResults){
+          this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
+          this.updateInputValue()
+        }else if(this.isDropdownVisible){
+          this.nextItem()
+        }else{
+          this.clipboardIndex = parseInt((this.clipboardIndex + 1) % this.getClipBoardData.length)
+          this.searchKeyWords = this.getClipBoardData[this.clipboardIndex]
+          this.fetchSuggestions(true)
+        }
       }
       if(evt.ctrlKey && evt.key === 't'){  // ctrl键和t键组合
         evt.preventDefault()
         this.isDropdownVisible = !this.isDropdownVisible
+      }
+      if(evt.key === 'Enter'){ // 回车
+        evt.preventDefault()
+        this.enterSearch()
       }
 
     },
@@ -371,6 +400,12 @@ export default {
         this.openMode = this.linkType[this.openIndex]
       }
     },
+
+    selectClipboardItem(item,index){
+      this.clipboardIndex = index
+      this.searchKeyWords = item
+      this.fetchSuggestions(true)
+    }
   }
 }
 </script>
@@ -458,8 +493,8 @@ export default {
   box-shadow: none !important;
 }
 
-.current{
-  background: var(--secondary-bg) !important;
-  color: var(--active-bg) !important;
+:deep(.current){
+  background-color: var(--active-bg);
+  color: var(--active-text) !important;
 }
 </style>
