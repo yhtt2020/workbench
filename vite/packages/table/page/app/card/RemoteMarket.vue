@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <Market :desk="desk" id="community"></Market>
+        <Market :desk="desk" @closeMarket="close"></Market>
       </div>
      
     </div>
@@ -82,7 +82,7 @@
     methods: {
       ...mapActions(cardStore, ["addCard"]),
       close(){
-        this.$emit('closeMarket')
+        this.$emit('closeMarket',false)
       },
       getImg(url) {
         return "/img/addCard/" + url + ".png";

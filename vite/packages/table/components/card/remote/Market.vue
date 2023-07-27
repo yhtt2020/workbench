@@ -3,66 +3,76 @@
   <div>
     <div class="head-nav" id="nav">
       <span>来自社区用户的分享（{{ dataList.length }}）</span>
-      <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class=" no-drag select"
+      <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class="select rounded-lg  s-item flex items-center text-center" :bordered="false"
         size="large" @change="handleChange"
-        :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
+        :dropdownStyle="{ 'z-index': 99999, backgroundColor: 'var(--secondary-bg)' }">
         <a-select-option class="no-drag" v-for=" item  in  sortType " :value="item.value">{{
           item.name
         }}
         </a-select-option>
       </a-select>
     </div>
-    <!-- 外部小组件的社区列表 -->
-    <div class="box xt-bg-2" v-for="(item, index) in dataList" :key="item.name">
-      <div class="box xt-bg-2">
-        <div class="add no-drag" @click="addNewCard(item)">
-          <div class="icons">
-            <Icon icon="tianjia2" style="color: #000"></Icon>
-          </div>
-        </div>
-        <div class="left no-drag" @click="fullScreen(item)">
-          <img :src="getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
-          <span class="size-bg">{{ item.option[0].size }}</span>
-        </div>
-        <div class="right" style="">
-          <div class="title" style="color: var(--primary-text)">
-            {{ item.cname }}
-          </div>
-          <div class="text truncate" style="color: var(--secondary-text)">
-            {{ item.detail }}
-          </div>
-          <div class="data">
-              <Icon
-                icon="xiazai"
-                class="icons"
-                style="color: #508bfe; margin: 0; width: 20px"
-              ></Icon>
-              <div class="data-box">
-                {{ item.download }}
-              </div>
-              <Icon
-                icon="shijian"
-                class="icons"
-                style="color: #52c41a; margin: 0; width: 20px"
-              ></Icon>
-              <div class="data-box">{{ formatTimestamp(item.time) }}</div>
+    <div id="navList">
+      <!-- 外部小组件的社区列表 -->
+      <div class="box xt-bg-2" v-for="(item, index) in dataList" :key="item.name">
+        <div class="box xt-bg-2">
+          <div class="add no-drag" @click="addNewCard(item)">
+            <div class="icons">
+              <Icon icon="tianjia2" style="color: #000"></Icon>
             </div>
+          </div>
+          <div class="left no-drag" @click="fullScreen(item)">
+            <img :src="getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
+            <span class="size-bg">{{ item.option[0].size }}</span>
+          </div>
+          <div class="right" style="">
+            <div class="title" style="color: var(--primary-text)">
+              {{ item.cname }}
+            </div>
+            <div class="text truncate" style="color: var(--secondary-text)">
+              {{ item.detail }}
+            </div>
+            <div class="flex justify-between">
+              <div class="flex items-center truncate pr-2" style="flex:1;">
+                <span>
+                  <a-avatar shape="square" :src="item.avatar" :size="24"></a-avatar>
+                </span>
+                <span class="ml-3 truncate xt-text" style="flex:1;font-size: 16px;">{{ item.nickname }}</span>
+              </div>
+              <div class="data">
+                  <Icon
+                    icon="xiazai"
+                    class="icons"
+                    style="color: #508bfe; margin: 0; width: 20px"
+                  ></Icon>
+                  <div class="data-box">
+                    {{ item.download }}
+                  </div>
+                  <Icon
+                    icon="shijian"
+                    class="icons"
+                    style="color: #52c41a; margin: 0; width: 20px"
+                  ></Icon>
+                  <div class="data-box">{{ formatTimestamp(item.time) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 切换数据v-if="dataList.length > 10" -->
+      <div class="switch-data" >
+          <div :class="paging === 1 ? 'pag-active' : ''" class="mr-3">
+            <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+          </div>
+          <div>
+            <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+          </div>
         </div>
       </div>
     </div>
-    <!-- 切换数据v-if="dataList.length > 10" -->
-    <div class="switch-data" >
-        <div :class="paging === 1 ? 'pag-active' : ''" class="mr-3">
-          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
-        </div>
-        <div>
-          <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
-        </div>
-      </div>
-  </div>
   <NewPreviewCardDetails
     v-if="isCardDetails"
-    @addCardAchieve="addCardAchieve"
+    @addCardAchieve="add"
     @closeCardDetails="closeCardDetails"
     :cardDetails="cardDetails"
   >
@@ -82,10 +92,10 @@
     props: {
       //获取当前桌面
       desk: {
-      type: Object,
-      required: true,
-      default: () => {},
-    },
+        type: Object,
+        required: true,
+        default: () => {},
+      },
     },
     data() {
       return {
@@ -113,20 +123,27 @@
         if (item.option[1] != undefined) {
           this.fullScreen(item);
         } else {
-          this.addCardAchieve(item);
+          this.add(item);
         }
-      },
-      addCardAchieve(item, i) {
-        this.add(item, i);
       },
       fullScreen(item) {
         this.cardDetails = item;
         this.isCardDetails = true;
       },
+      //获取url
+      getUrl(str) {
+          const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+          str = str.match(reg);
+          if (str && str.length > 0) {
+              return str[0];
+          }
+          return null;
+      },
       add(item, index = 0) {
         index = index ?? this.carouselIndex;
+        let url = this.getUrl(item.detail)
         this.addCard(
-          { name: item.option[index].name, id: Date.now(), customData: {} },
+          { name: item.option[index].name, id: Date.now(), customData: {url} },
           this.desk
         );
         this.$emit("closeMarket",false);
@@ -261,7 +278,7 @@
   .right {
     box-sizing: border-box;
     padding: 10px;
-    width: 358px;
+    width: 340px;
     border-radius: 0 12px 12px 0px;
     display: flex;
     flex-direction: column;
@@ -280,7 +297,7 @@
       font-size: 16px;
       font-weight: 400;
       margin: 2px 0;
-      width: 95%;
+      width: 100%;
       height: 30px;
     }
 
@@ -323,6 +340,13 @@
       }
     }
   }
+}
+.select{
+  width:120px;
+  height:44px;
+  color: var(--primary-text);
+  font-size: 16px;
+  background: var(--secondary-bg);
 }
 .nav{
   position: fixed;

@@ -7,20 +7,26 @@
         <div>
           <HorizontalPanel :navList="navType" v-model:selectType="selectNav"></HorizontalPanel>
         </div>
-        <!-- <span class="ml-2" style="font-size: 16px;color: var(--primary-text);font-weight: 500;">外部小组件</span> -->
         <div @click="close" class="h-11 w-11 flex justify-center items-center xt-bg-2 rounded-lg pointer">
           <Icon icon="guanbi" style="color:var(--primary-text);font-size:24px"></Icon>
         </div>
       </div>
+      <dvi v-if="selectNav.name === 'share'" class="share-list">
+        <Market :desk="desk" @closeMarket="close"></Market>
+      </dvi>
     </div>
   </div>
 </template>
 
 <script>
+import Market from '../../../components/card/remote/Market.vue'
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
+import { mapActions, mapWritableState } from "pinia";
+import { cardStore } from '../../../store/card';
   export default{
     components: {
-      HorizontalPanel
+      HorizontalPanel,
+      Market
     },
     data() {
       return {
@@ -29,13 +35,26 @@ import HorizontalPanel from '../../../components/HorizontalPanel.vue'
           {title:'我的',name:'my'}
         ],
         selectNav:{title:'社区分享',name:'share'},
-        }
+        desk: {}
+      }
     },
     methods: {
       close(){
         this.$router.go(-1)
       }
     },
+    computed: {
+      ...mapWritableState(cardStore, ['desks']),
+    },
+    mounted(){
+      let deskId = this.$route.params.id
+      this.desk = this.desks.find(item => item.id === deskId)
+
+      let nav = document.getElementById('nav');
+      let list = document.getElementById('navList');
+      nav.classList.add('suspension-r-nav')
+      list.classList.add('list-r-nav')
+    }
   }
 </script>
 
@@ -56,4 +75,25 @@ import HorizontalPanel from '../../../components/HorizontalPanel.vue'
     right: 12px;
   }
 }
+.share-list{
+  height: 100%;
+  overflow: auto;
+}
+.share-list::-webkit-scrollbar{
+  display: none;
+}
+</style>
+<style lang="scss">
+  .suspension-r-nav{
+    z-index: 99999;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    padding: 16px 0;
+    background: var(--modal-bg);
+  }
+  .list-r-nav{
+    margin-top: 72px;
+  }
 </style>
