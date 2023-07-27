@@ -51,11 +51,11 @@ export default {
         this.$refs.aggDropRef.insertBefore(newItem, oldItem.nextSibling)
       }
       // 将数组进行排序
-      let temp = this.drawerList[evt.oldIndex]
-      this.drawerList.splice(evt.oldIndex, 1)
-      this.drawerList.splice(evt.newIndex, 0, temp)
-      // 将排序后的列表放在customData
-      this.$emit('setSortedList',this.drawerList)
+      let cloneTemp = [...this.drawerList]  // 将父组件传入的数据进行克隆
+      let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
+      cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
+      cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
+      this.$emit('setSortedList',cloneTemp)  // 将替换后数据进行回传
     }
 
   }
