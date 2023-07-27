@@ -49,10 +49,7 @@ export default {
       type: Object,
       default: () => {}
     },
-    confirmCCData: {
-      type: Function,
-      default: () => {}
-    }, desk: {
+    desk: {
       type: Object
     }
   },

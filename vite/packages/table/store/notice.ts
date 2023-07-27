@@ -12,7 +12,7 @@ export const noticeStore = defineStore('notice',{
           alias:'system',
           icon:'appstore',
           url:'',
-          del_id:0,
+          delId:0,
         },
         {
           id:1,
@@ -20,7 +20,7 @@ export const noticeStore = defineStore('notice',{
           alias:'ChatGpt',
           icon:'',
           url:'/icons/bg5.png',
-          del_id:0,
+          delId:0,
         },
         {
           id:2,
@@ -28,7 +28,7 @@ export const noticeStore = defineStore('notice',{
           alias:'时光机',
           icon:'',
           url:'/icons/bg3.png',
-          del_id:0,
+          delId:0,
         },
         {
           id:3,
@@ -36,7 +36,7 @@ export const noticeStore = defineStore('notice',{
           alias:'AI ChatGpt',
           icon:'',
           url:'/icons/bg4.png',
-          del_id:0,
+          delId:0,
         },
         {
           id:4,
@@ -44,7 +44,7 @@ export const noticeStore = defineStore('notice',{
           alias:'语雀',
           icon:'',
           url:'/icons/bg2.png',
-          del_id:0,
+          delId:0,
         },
         {
           id:5,
@@ -52,7 +52,7 @@ export const noticeStore = defineStore('notice',{
           alias:'小蜜蜂',
           icon:'',
           url:'/icons/bg.png',
-          del_id:0,
+          delId:0,
         }
       ],
       notice:[
@@ -87,6 +87,18 @@ export const noticeStore = defineStore('notice',{
         },
         {
           id:1,
+          noticeList:[
+            {
+              id:0,
+              title:'',
+              content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用',
+              
+            }
+          ],
+          noticeIcon:'',
+        },
+        {
+          id:2,
           noticeList:[
             {
               id:0,
