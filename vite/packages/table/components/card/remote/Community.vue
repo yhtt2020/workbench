@@ -1,38 +1,64 @@
 <template>
-  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="openRemote" >
-    <div
-         class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col"
-         style=";width: 600px;height: 80%;background: var(--modal-bg);">
-      <div class="head-nav">
-        <span class="ml-2" style="font-size: 16px;color: var(--primary-text);font-weight: 500;">外部小组件</span>
-        <div @click="close" class="h-11 w-11 flex justify-center items-center xt-bg-2 rounded-lg pointer">
-          <Icon icon="guanbi" style="color:var(--primary-text);font-size:24px"></Icon>
-        </div>
-      </div>
-      <div class="content" @scroll="scrollBox" id="scroll-box">
-        <div class="box xt-bg-2">
-          <div class="add no-drag" @click="addNewCard(custom)">
-            <div class="icons">
-              <Icon icon="tianjia2" style="color: #000"></Icon>
-            </div>
-          </div>
-          <div class="left no-drag" @click="fullScreen(custom)">
-            <img :src="getImg(custom.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
-            <span class="size-bg">{{ custom.option[0].size }}</span>
-          </div>
-          <div class="right" style="">
-            <div class="title" style="color: var(--primary-text)">
-              {{ custom.cname }}
-            </div>
-            <div class="text" style="color: var(--secondary-text)">
-              {{ custom.detail }}
-            </div>
-          </div>
-        </div>
-        <Community :desk="desk" id="community"></Community>
-      </div>
-     
+  <!-- <div style="width:100%;height:100%;overflow:auto"> -->
+  <div>
+    <div class="head-nav" id="nav">
+      <span>来自社区用户的分享（{{ dataList.length }}）</span>
+      <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class=" no-drag select"
+        size="large" @change="handleChange"
+        :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
+        <a-select-option class="no-drag" v-for=" item  in  sortType " :value="item.value">{{
+          item.name
+        }}
+        </a-select-option>
+      </a-select>
     </div>
+    <!-- 外部小组件的社区列表 -->
+    <div class="box xt-bg-2" v-for="(item, index) in dataList" :key="item.name">
+      <div class="box xt-bg-2">
+        <div class="add no-drag" @click="addNewCard(item)">
+          <div class="icons">
+            <Icon icon="tianjia2" style="color: #000"></Icon>
+          </div>
+        </div>
+        <div class="left no-drag" @click="fullScreen(item)">
+          <img :src="getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
+          <span class="size-bg">{{ item.option[0].size }}</span>
+        </div>
+        <div class="right" style="">
+          <div class="title" style="color: var(--primary-text)">
+            {{ item.cname }}
+          </div>
+          <div class="text truncate" style="color: var(--secondary-text)">
+            {{ item.detail }}
+          </div>
+          <div class="data">
+              <Icon
+                icon="xiazai"
+                class="icons"
+                style="color: #508bfe; margin: 0; width: 20px"
+              ></Icon>
+              <div class="data-box">
+                {{ item.download }}
+              </div>
+              <Icon
+                icon="shijian"
+                class="icons"
+                style="color: #52c41a; margin: 0; width: 20px"
+              ></Icon>
+              <div class="data-box">{{ formatTimestamp(item.time) }}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- 切换数据v-if="dataList.length > 10" -->
+    <div class="switch-data" >
+        <div :class="paging === 1 ? 'pag-active' : ''" class="mr-3">
+          <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
+        </div>
+        <div>
+          <Icon icon="xiangyou" style="font-size: 1.5em;"></Icon>
+        </div>
+      </div>
   </div>
   <NewPreviewCardDetails
     v-if="isCardDetails"
@@ -47,22 +73,14 @@
   import { mapActions, mapWritableState } from "pinia";
   import { cardStore } from "../../../store/card";
   import { message } from "ant-design-vue";
-  import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
-  import Community from "../../../components/card/remote/Community.vue";
+  import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
+  import { dataList } from './testData'
   export default{
     components: {
       NewPreviewCardDetails,
-      Community
     },
     props: {
-      openRemote: {
-        type: Boolean,
-        default: () => false
-      },
-      custom: {
-        type: Object,
-        default: () => {}
-      },
+      //获取当前桌面
       desk: {
       type: Object,
       required: true,
@@ -76,14 +94,18 @@
         cardDetails: {},
         remoteContent: {},
         showModal: false,
-        fixed: false
+        dataList,
+        sortVal: '最多使用',
+        sortType: [
+          { value: '最多使用', name: '最多使用' },
+          { value: '下载次数', name: '下载次数' },
+          { value: '分享时间', name: '分享时间' },
+        ],
+        paging: 1
       }
     },
     methods: {
       ...mapActions(cardStore, ["addCard"]),
-      close(){
-        this.$emit('closeMarket')
-      },
       getImg(url) {
         return "/img/addCard/" + url + ".png";
       },
@@ -113,41 +135,27 @@
       closeCardDetails() {
         this.isCardDetails = false;
       },
-      scrollBox(val){
-        let scroll = document.getElementById('scroll-box');
-        // console.log(scroll.scrollTop)
-        let nav = document.getElementById('nav');
-        // console.log('滚轮滚动了',nav.offsetTop)
-        if (scroll.scrollTop > 120) {
-          nav.classList.add('suspension-r-nav')
-        } else {
-          nav.classList.remove('suspension-r-nav')
-        }
+      formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const year = date.getFullYear().toString();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        return `${year}-${month}-${day}`;
       }
     },
-    watch: {
-      openRemote(val){
-        if(val){
-          
-        }
-      }
-    }
   }
 </script>
 
 <style lang="scss" scoped>
 .head-nav{
-  width: 100%;
-  height: 72px;
-  padding: 12px;
-  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  >div{
-    position: absolute;
-    right: 12px;
-  }
+  height: 76px;
+  padding: 16px 29px;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: var(--primary-text);
 }
 .box {
   box-shadow: rgb(0 0 0 / 30%) 0px 0px 3px 0px;
@@ -157,7 +165,8 @@
   border-radius: 12px;
   position: relative;
   border-radius: 12px;
-  margin: 16px auto 0;
+  margin: 0 auto 16px;
+
   .add {
     position: absolute;
     right: 22px;
@@ -253,9 +262,10 @@
     box-sizing: border-box;
     padding: 10px;
     width: 358px;
-
     border-radius: 0 12px 12px 0px;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .title {
       font-family: PingFangSC-Medium;
       font-size: 16px;
@@ -266,14 +276,12 @@
     }
 
     .text {
-      display: flex;
-      align-items: center;
       font-family: PingFangSC-Regular;
       font-size: 16px;
       font-weight: 400;
       margin: 2px 0;
       width: 95%;
-      height: 55px;
+      height: 30px;
     }
 
     .icon {
@@ -316,33 +324,33 @@
     }
   }
 }
-.content{
-  width: 100%;
-  height: 100%;
-  overflow: auto;
+.nav{
+  position: fixed;
+  top: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #e7e7e7;
 }
-.content::-webkit-scrollbar{
-  display: none;
-}
-
-
-.features_ul_fixed {
-  position: fixed !important;
-  top: 100px !important;
-  z-index: 99 !important;
-  width:100% !important;
-  background: red;
-  height: 100px;
-}
-</style>
-<style lang="scss">
-  .suspension-r-nav{
-    z-index: 99999;
-    position: fixed;
-    top: 50px;
-    left: 0;
-    right: 0;
-    padding: 16px 0;
-    background: var(--modal-bg);
+.switch-data {
+  display: flex;
+  justify-content: center;
+  color: var(--primary-text);
+  margin-bottom: 16px;
+  > div {
+    background: var(--secondary-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
   }
+
+  > div:hover {
+    opacity: 0.3;
+  }
+}
+.pag-active {
+  opacity: 0.5;
+}
 </style>
