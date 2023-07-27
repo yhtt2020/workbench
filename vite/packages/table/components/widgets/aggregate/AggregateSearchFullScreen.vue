@@ -3,7 +3,7 @@
     <div class="flex p-4">
       <div class="flex flex-col mr-4">
         <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
-        <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
+        <vue-custom-scrollbar :settings="settingsScroller" class="left-tab-container" style="max-height:400px;">
           <div v-for="(item,index) in list" class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
           :class="{'active-bg': selectIndex === index}" @click="selectAggSearch(item,index)"
           >
@@ -19,7 +19,7 @@
           <div class="flex items-center justify-center" style="width: 20px;height:20px;">
             <Icon :icon="selectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
           </div>
-          <a-input  v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter="enterSearch"></a-input>
+          <a-input  v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter.stop="enterSearch"></a-input>
           <a-dropdown v-model:visible="isDropdownVisible" placement="bottomRight" trigger="click">
             <div class="flex pointer items-center justify-center active-button p-2 rounded-lg" style="width:210px; background: var(--active-secondary-bg);"
             >
@@ -40,7 +40,7 @@
             </template>
           </a-dropdown>
         </div>
-        <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:360px;">
+        <vue-custom-scrollbar :settings="settingsScroller" class="suggest-container"  style="max-height:360px;">
           <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
             <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
              :class="{'active-bg':suggestIndex === index}" 
@@ -186,6 +186,7 @@ export default {
      this.$refs.searchRef.focus()
      // 监听键盘触发事件
      window.addEventListener('keydown',this.keyBoardTrigger)
+     window.addEventListener('keyup',this.removeKeyBoardTrigger)
      this.openMode = this.linkType[this.getOpenMode]
      this.openIndex  = this.getOpenMode
     })
@@ -198,41 +199,55 @@ export default {
         this.selectIndex = (this.selectIndex + 1) %  this.list.length
         this.selectIcon.icon = this.list[this.selectIndex].icon
         this.fetchSuggestions(true)
+        this.leftTabScrollToTop()
       }
       if(evt.key === 'ArrowUp'){  // 上切换键
         evt.preventDefault()
         if(this.showSearchResults){
           this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+          this.suggestScrollTop()
           this.updateInputValue()
-        }else if(this.isDropdownVisible){
-          this.prevItem()
         }else {
           this.clipboardIndex = parseInt((this.clipboardIndex + 1) % this.getClipBoardData.length)
           this.searchKeyWords = this.getClipBoardData[this.clipboardIndex]
+          this.suggestScrollTop()
           this.fetchSuggestions(true)
         }
       }else if(evt.key === 'ArrowDown'){  // 下切换键
         evt.preventDefault()
         if(this.showSearchResults){
           this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
+          this.suggestScrollBottom()
           this.updateInputValue()
-        }else if(this.isDropdownVisible){
-          this.nextItem()
         }else{
           this.clipboardIndex = parseInt((this.clipboardIndex + 1) % this.getClipBoardData.length)
           this.searchKeyWords = this.getClipBoardData[this.clipboardIndex]
+          this.suggestScrollBottom()
           this.fetchSuggestions(true)
         }
       }
-      if(evt.ctrlKey && evt.key === 't'){  // ctrl键和t键组合
+      if(evt.ctrlKey && evt.key === 't'){  // 触发ctrl键 
         evt.preventDefault()
-        this.isDropdownVisible = !this.isDropdownVisible
-      }
-      if(evt.key === 'Enter'){ // 回车
-        evt.preventDefault()
-        this.enterSearch()
+        this.isDropdownVisible = true
+        if(evt.key === 't'){  // ctrl键和t键组合
+          evt.preventDefault()
+          this.openIndex = parseInt((this.openIndex + 1) % this.linkType.length) 
+          this.openMode = this.linkType[this.openIndex]
+        }
       }
 
+      // if(evt.key === 'Enter'){
+      //   evt.preventDefault()
+      //   const keyWords = encodeURIComponent(this.searchKeyWords)
+      //   this.openSearchSuggest(keyWords)
+      // }
+    },
+
+    // 键盘抬起
+    removeKeyBoardTrigger(evt){
+      if(evt.code === 'ControlLeft'){
+        this.isDropdownVisible = false
+      }
     },
 
     dataSearch(){  // 监听输入框关键字输入   
@@ -388,24 +403,38 @@ export default {
       this.isDropdownVisible = false
     },
 
-    prevItem() {
-      if (this.openIndex > 0) {
-        this.openIndex--;
-        this.openMode = this.linkType[this.openIndex]
-      }
-    },
-    nextItem() {
-      if (this.openIndex < this.linkType.length - 1) {
-        this.openIndex ++;
-        this.openMode = this.linkType[this.openIndex]
-      }
-    },
-
     selectClipboardItem(item,index){
       this.clipboardIndex = index
       this.searchKeyWords = item
       this.fetchSuggestions(true)
-    }
+    },
+
+    leftTabScrollToTop(){  // tab触发时高度滚动  
+      const container = document.querySelector('.left-tab-container')
+      if(this.selectIndex === 0){ // 判断下标为0
+        container.scrollTop = 0
+      }else{  // tab每切换一下就滚动50
+        container.scrollTop += 50
+      }
+    },
+
+    suggestScrollTop(){  // 向上键盘触发
+      const container = document.querySelector('.suggest-container')
+      if(this.suggestIndex === 0 && this.clipboardIndex === 0){
+        container.scrollTop = 0
+      }else{
+        container.scrollTop -= 50
+      }
+    },
+
+    suggestScrollBottom(){  //  向下键盘触发
+      const container = document.querySelector('.suggest-container')
+      if(this.suggestIndex === 0 && this.clipboardIndex === 0){
+        container.scrollTop = 0
+      }else{
+        container.scrollTop += 50
+      }
+    },
   }
 }
 </script>
