@@ -9,7 +9,7 @@
     :desk="desk"
   >
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
-    <XtCardDrag ref="drag" @reSizeInit="reSizeInit">
+    <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <textarea
           spellcheck="false"
@@ -21,15 +21,10 @@
         >
         </textarea>
       </template>
-    </XtCardDrag>
+    </cardDrag>
   </Widget>
 
-  <a-drawer
-    :width="500"
-    v-model:visible="settingVisible"
-    placement="right"
-    v-if="settingVisible"
-  >
+  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
@@ -60,9 +55,13 @@
 
 <script>
 import Widget from "../../card/Widget.vue";
+
 import cardSizeHook from "../../card/hooks/cardSizeHook";
+
+import cardDrag from "../../card/hooks/cardDrag.vue";
 import cardDragHook from "../../card/hooks/cardDragHook";
 import { message } from "ant-design-vue";
+
 export default {
   mixins: [cardDragHook, cardSizeHook],
   props: {
@@ -163,6 +162,8 @@ export default {
   },
   components: {
     Widget,
+
+    cardDrag,
   },
   methods: {
     updateText() {

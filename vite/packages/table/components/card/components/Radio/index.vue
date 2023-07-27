@@ -1,20 +1,15 @@
 <template>
   <div>
-
-    <div v-if="text" class="text-base my-3">{{ text }}</div>
-    <a-radio-group
-      class=""
-      v-model:value="select"
-      :size="size"
-      :style="[marginYStyle]"
-    >
-      <a-radio
-        v-for="(item, index) in list"
-        :key="item[value]"
-        :value="item[value]"
-        :style="[fontSizeStyle, marginRightStyle]"
-        >{{ item[name] }}</a-radio
-      >
+    <a-radio-group v-model:value="select" :size="size">
+      <a-space :size="space">
+        <a-radio
+          v-for="(item, index) in list"
+          :key="item[`${value}`]"
+          :value="item[`${value}`]"
+          :style="[fontSizeStyle]"
+          >{{ item[`${name}`] }}</a-radio
+        >
+      </a-space>
     </a-radio-group>
   </div>
 </template>
@@ -32,19 +27,9 @@ export default {
     },
   },
   computed: {
-    marginYStyle() {
-      return {
-        margin: `${this.marginY}px 0`,
-      };
-    },
     fontSizeStyle() {
       return {
         fontSize: `${this.fontSize}px`,
-      };
-    },
-    marginRightStyle() {
-      return {
-        marginRight: `${this.marginR}px`,
       };
     },
   },
@@ -64,23 +49,9 @@ export default {
       type: String,
       default: "value",
     },
-    // 自定义显示的标题 填空会隐藏
-    text: {
-      type: String,
-      default: "小组件尺寸",
-    },
-    // 控制
-    marginR: {
-      type: Number,
-      default: 18,
-    },
-    marginY: {
+    space: {
       type: Number,
       default: 0,
-    },
-    fontSize: {
-      type: Number,
-      default: 16,
     },
     data: {
       type: String,

@@ -31,9 +31,7 @@
     </div>
     <div class="my-3 flex justify-center" style="width: 100%">
       <icon icon="paixu" style="font-size: 28px"></icon>
-      <!-- <XtIcon icon="paixu"></XtIcon> -->
     </div>
-
     <div class="flex">
       <XtInput
         class="xt-bg-2 xt-border rounded-xl"
@@ -47,6 +45,11 @@
             style="width: 80px; height: 48px; border-radius: 8px 0px 0px 8px"
           >
             时间
+          </div>
+        </template>
+        <template #suffix>
+          <div style="width: 125px">
+            <a-date-picker v-model:value="datePicker" />
           </div>
         </template>
       </XtInput>
@@ -73,6 +76,7 @@ export default {
     return {
       currentTimeStamp: 0,
       currentTimeStampTimer: "",
+      datePicker: "",
     };
   },
   computed: {
@@ -85,6 +89,13 @@ export default {
   beforeRouteLeave(to, from, next) {
     clearInterval(this.currentTimeStampTimer);
     next();
+  },
+  watch: {
+    datePicker(newV) {
+      let date = dayjs(newV).format("YYYY-MM-DD HH:mm:ss");
+      this.time = date;
+      this.timeKeyup();
+    },
   },
   methods: {
     ...mapActions(timeConversion, ["timeKeyup", "timeStampKeyup"]),
@@ -109,4 +120,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ant-picker) {
+  background: none;
+  border: none;
+}
+
+:deep(.ant-picker-input) {
+  font-size: 22px;
+}
+:deep(.ant-picker-focused) {
+  box-shadow: none !important;
+}
+</style>

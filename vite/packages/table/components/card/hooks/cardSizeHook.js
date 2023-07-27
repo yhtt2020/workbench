@@ -16,7 +16,6 @@ export default {
     }
 
     this.options.className = this.customData.cardSize;
-    console.log("this.customData.cardSize :>> ", this.customData.cardSize);
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),

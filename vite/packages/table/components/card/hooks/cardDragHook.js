@@ -93,7 +93,6 @@ export default {
     },
     updateSize(e) {
       this.$nextTick(() => {
-        console.log("object :>> ", this.$refs.drag);
         this.$refs.drag.dragCallBack(e);
       });
     },
