@@ -127,6 +127,11 @@
   border-radius: 3px;
 }
 
+// 阴影
+.xt-shadow {
+  box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);
+}
+
 /* 隐藏滚动条 */
 .xt-container {
   -ms-overflow-style: none; /* IE 和 Edge */

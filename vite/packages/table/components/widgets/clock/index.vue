@@ -29,10 +29,7 @@
       <div class="text-center">设置</div>
     </template>
     <!--  -->
-    <cardSize
-      @onChange="__updateSize"
-      :data="customData.dragCardSize"
-    ></cardSize>
+    <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer>
 
@@ -63,7 +60,6 @@ import { mapActions } from "pinia";
 import cardDrag from "../../card/hooks/cardDrag.vue";
 import cardDragHook from "../../card/hooks/cardDragHook";
 
-import cardSize from "../../card/components/radio/index.vue";
 import cardSizeHook from "../../card/hooks/cardSizeHook";
 
 export default {
@@ -125,7 +121,6 @@ export default {
     ClockStyle,
     ClockFullScreen,
     cardDrag,
-    cardSize,
   },
   created() {},
   mounted() {

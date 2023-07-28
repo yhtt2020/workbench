@@ -12,7 +12,8 @@ export const AggregateList = [
     id:2,
     title:'谷歌',
     icon:'google',
-    searchUrl:'https://www.google.com/search?q='
+    searchUrl:'https://www.google.com/search?q=',
+    recommendUrl:'https://www.google.com/search?q='
   },
   {
     id:3,
@@ -40,7 +41,7 @@ export const AggregateList = [
     title:'Bilibili',
     icon:'bilibili1',
     searchUrl:'https://search.bilibili.com/all?keyword=',
-    recommendUrl:'https://s.search.bilibili.com/main/suggest?term='
+    recommendUrl:'https://s.search.bilibili.com/main/suggest?func=suggest&term='
   },
   {
     id:7,
