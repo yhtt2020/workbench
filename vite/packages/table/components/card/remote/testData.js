@@ -71,3 +71,4 @@ export const dataList = [
     "nickname": 'Edith Harvey',
   }, 
 ]
+export const shareList = []
