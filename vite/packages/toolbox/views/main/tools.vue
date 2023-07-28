@@ -9,7 +9,7 @@
     >
       <img
         class="w-12 h-12 mb-2"
-        :src="'/packages/toolbox/assets/images/' + tool.img + '.png'"
+        :src="'/tools/' + tool.img + '.png'"
         alt=""
       />
       <div class="text-sm">{{ tool.name }}</div>
