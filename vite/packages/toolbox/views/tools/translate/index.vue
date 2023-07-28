@@ -2,9 +2,7 @@
   <div class="h-full flex flex-col">
     <div class="flex justify-between mb-3">
       <div class="flex items-center w-full pr-3">
-        <XtButton class="flex-1">自动检测</XtButton>
-        <XtIcon icon="paixu" type=""></XtIcon>
-        <!-- icon没加进来 占位用 -->
+        <!-- 被翻译源 -->
         <a-dropdown>
           <template #overlay>
             <div
@@ -12,11 +10,11 @@
               style="width: 520px"
             >
               <div
-                v-for="item in lang.slice(1)"
+                v-for="item in lang"
                 class="p-2 cursor-pointer"
                 style="width: 100px"
-                :class="{ 'xt-theme-text': selectLang.lang == item.lang }"
-                @click="selectLang = item"
+                :class="{ 'xt-theme-text': fromLang.lang == item.lang }"
+                @click="fromLang = item"
               >
                 {{ item.name }}
               </div>
@@ -27,7 +25,40 @@
             btnClass=" flex justify-between px-4"
             iconPosition="postfix"
             icon="xiangxia"
-            >{{ selectLang.name }}</XtButton
+            >{{ fromLang.name }}</XtButton
+          >
+        </a-dropdown>
+        <!-- 交换 -->
+        <XtIcon
+          icon="paixu"
+          type=""
+          @click="translateSwitch()"
+          style="transform: rotate(90deg);"
+        ></XtIcon>
+        <!-- 翻译 -->
+        <a-dropdown>
+          <template #overlay>
+            <div
+              class="xt-bg-2 xt-border xt-text flex flex-wrap rounded-xl p-2 xt-shadow"
+              style="width: 520px"
+            >
+              <div
+                v-for="item in lang.slice(1)"
+                class="p-2 cursor-pointer"
+                style="width: 100px"
+                :class="{ 'xt-theme-text': toLang.lang == item.lang }"
+                @click="toLang = item"
+              >
+                {{ item.name }}
+              </div>
+            </div>
+          </template>
+          <XtButton
+            class="flex-1"
+            btnClass=" flex justify-between px-4"
+            iconPosition="postfix"
+            icon="xiangxia"
+            >{{ toLang.name }}</XtButton
           >
         </a-dropdown>
       </div>
@@ -54,6 +85,7 @@
 <script>
 import { translate } from "../../../store/translate";
 import { mapWritableState, mapActions } from "pinia";
+import { message } from "ant-design-vue";
 import { lang } from "./lang";
 export default {
   data() {
@@ -68,10 +100,22 @@ export default {
     next();
   },
   computed: {
-    ...mapWritableState(translate, ["selectLang", "inputValue", "resultValue"]),
+    ...mapWritableState(translate, [
+      "fromLang",
+      "toLang",
+      "inputValue",
+      "resultValue",
+    ]),
   },
   methods: {
     ...mapActions(translate, ["startTranslation"]),
+    translateSwitch() {
+      if (this.fromLang.lang === "auto") {
+        message.warn("自动检测无法切换");
+        return;
+      }
+      [this.toLang, this.fromLang] = [this.fromLang, this.toLang];
+    },
     async translate() {
       this.startTranslation();
     },

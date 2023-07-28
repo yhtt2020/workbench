@@ -16,7 +16,6 @@ export const timeConversion = defineStore("timeConversion", {
     },
     // 时间戳转时间
     timeStampKeyup() {
-      console.log("21312312 :>> ", 21312312);
       let timestamp = parseInt(this.timeStamp);
       // 使用 dayjs 将时间戳转换为时间
       const dateObj = dayjs(timestamp);

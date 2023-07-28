@@ -5,7 +5,11 @@ export const translate = defineStore("translate", {
   state: () => ({
     inputValue: "",
     resultValue: "",
-    selectLang: {
+    fromLang: {
+      lang: "auto",
+      name: "自动检测",
+    },
+    toLang: {
       lang: "zn",
       name: "中文",
     },
@@ -13,7 +17,8 @@ export const translate = defineStore("translate", {
   actions: {
     async startTranslation() {
       let res: any = await getResult({
-        toLang: this.selectLang.lang,
+        fromLang: this.fromLang.lang,
+        toLang: this.toLang.lang,
         queryStr: this.inputValue,
       });
       let { data, code } = res;
