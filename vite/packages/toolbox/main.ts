@@ -4,7 +4,6 @@ import "ant-design-vue/dist/antd.css";
 import App from "./App.vue";
 import tools from "../../src/util/tools.js";
 
-import Icon from './components/Icon.vue'
 tools.getWindowArgs(window);
 
 import router from "./router";
@@ -22,6 +21,7 @@ import "../../public/css/styleSwitch/index.scss";
 // 组件
 import baseComponents from "../table/components/card/components/index";
 import toolBaseComponents from "./components/index";
+import Icon from "./components/Icon.vue";
 
 const app = createApp(App);
 

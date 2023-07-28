@@ -1,20 +1,25 @@
 <template>
   <div class="text-base" style="margin-bottom: 10px">背景图片</div>
-  <div style="
-      font-family: PingFangSC-Regular;
-      font-size: 16px;
-      color: var(--secondary-text);
-      font-weight: 400;
-    ">
+  <div
+    class="xt-text"
+    style="font-family: PingFangSC-Regular; font-size: 16px; font-weight: 400"
+  >
     支持直接复制粘贴图片到此处
   </div>
-  <div class="flex flex-row justify-between items-center mt-6 drag" style="margin: 12px 0">
-    <div class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base no-drag"
-      @click="importFile">
+  <div
+    class="flex flex-row justify-between items-center mt-6 drag"
+    style="margin: 12px 0"
+  >
+    <div
+      class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base no-drag xt-bg-2"
+      @click="importFile"
+    >
       选择图片
     </div>
-    <div class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base no-drag"
-      @click="openMy">
+    <div
+      class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base no-drag xt-bg-2"
+      @click="openMy"
+    >
       选自壁纸收藏
     </div>
   </div>
@@ -23,16 +28,23 @@
   <a-slider v-model:value="blurs" :max="100" :step="1" class="no-drag" />
   <div class="text-base" style="margin-bottom: 10px">调整时钟比例</div>
   <a-slider v-model:value="zoom" :max="100" :step="1" />
-  <ModalList v-if="myImgShow" v-model:visible="myImgShow" title="我的收藏" :imgList="myPapers" @sendImg="sendImg"
-    style="z-index: 99999"></ModalList>
+  <ModalList
+    v-if="myImgShow"
+    v-model:visible="myImgShow"
+    title="我的收藏"
+    :imgList="myPapers"
+    @sendImg="sendImg"
+    style="z-index: 99999"
+  ></ModalList>
   <input style="display: none" ref="fileRef" type="file" name="" id="" />
 </template>
 
 <script>
 import ModalList from "../../../comp/ModalList.vue";
 import { paperStore } from "../../../../store/paper";
+import { message } from "ant-design-vue";
 
-import { validateFile } from '../../../card/hooks/imageProcessing'
+import { validateFile } from "../../../card/hooks/imageProcessing";
 import { mapWritableState } from "pinia";
 export default {
   computed: {
@@ -46,7 +58,7 @@ export default {
       myData: { title: "", link: undefined, img: {} },
       myImgShow: false,
       blurs: 0,
-      zoom: 0
+      zoom: 0,
     };
   },
   props: {
@@ -57,19 +69,19 @@ export default {
     bgZoom: {
       type: String,
       default: 0,
-    }
+    },
   },
   mounted() {
-    this.blurs = this.blur
-    this.zoom = this.bgZoom
+    this.blurs = this.blur;
+    this.zoom = this.bgZoom;
   },
   watch: {
     blurs(newVal, oldVal) {
-      this.$emit("updateBlur", newVal)
+      this.$emit("updateBlur", newVal);
     },
     zoom(newVal, oldVal) {
-      this.$emit("updateBgZoom", newVal)
-    }
+      this.$emit("updateBgZoom", newVal);
+    },
   },
   methods: {
     openMy() {
@@ -77,20 +89,32 @@ export default {
     },
     sendImg(img) {
       this.myData.img = img;
-      this.$emit('img', img.path)
+      this.$emit("img", img.path);
     },
     async importFile() {
-      let fileRef = this.$refs.fileRef
+      let fileRef = this.$refs.fileRef;
       // 点击上传图片按钮
-      fileRef.click()
+      fileRef.click();
       // 上传图片回调
-      let that = this
+      let that = this;
       fileRef.onchange = async function () {
-        if (this.files.length === 0) return // 没有选择文件
-        const file = this.files[0] // 获取文件
-        let validate = validateFile(file, 2)
-        if (validate !== true) return message.error(validate)
-        that.$emit('img', file.path)
+        if (this.files.length === 0) return; // 没有选择文件
+        const file = this.files[0]; // 获取文件
+        let validate = validateFile(file, 10);
+        if (validate !== true) return message.error(validate);
+        that.$emit("img", file.path);
+      };
+    },
+    async showOpenFileDialog() {
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: "选择",
+        message: "请选择文件",
+        properties: ["openFile "],
+      });
+      if (savePath) {
+        console.log("object :>> ", savePath[0]);
+      } else {
+        console.log("取消选择");
       }
     },
   },
@@ -136,6 +160,5 @@ export default {
     top: -105px;
     left: 40px;
   }
-
 }
 </style>

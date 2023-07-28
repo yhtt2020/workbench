@@ -78,7 +78,7 @@ window.$=$
 const options:PluginOptions={
 
 }
-const $app=app.use(pinia).use(Antd).use(ColorPicker).use(router).use(VueViewer).use(baseComponents).use(setupCalendar,{}).use(
+const $app=app.use(pinia).use(Antd).use(baseComponents).use(ColorPicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
   VueTippy,
   // optional
   {

@@ -37,7 +37,7 @@
         </div>
         <div
           class="item-icon flex justify-center items-center pointer mr-4 no-drag"
-          @click="settingVisible = true"
+          @click="setting()"
         >
           <Icon class="icon" icon="setting"></Icon>
         </div>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <a-drawer
-      style="z-index: 99999999999; scrollbar-width: none"
+      style="z-index: 999999999; scrollbar-width: none"
       :width="500"
       v-model:visible="settingVisible"
       placement="right"
@@ -135,6 +135,22 @@ export default {
     esc(e) {
       if (e.keyCode === 27) this.exit();
     },
+    touchEvent() {
+      const that = this;
+      // console.log("操作中")
+      that.optAction = false; //让判断条件为true
+      clearTimeout(this.autoTime); //清除自动刷新页面定时器
+      if (that.settingVisible) return;
+      this.autoTime = setTimeout(function () {
+        that.optAction = true; //页面无操作后3秒，重时开启定时器
+        // console.log("无操作")
+        // that.settingVisible = false;
+      }, 3000);
+    },
+    setting() {
+      this.settingVisible = true;
+      this.optAction = false;
+    },
     exit() {
       document.removeEventListener("mousemove", this.touchEvent, {
         capture: true,
@@ -160,17 +176,6 @@ export default {
     updateBgZoom(e) {
       this.zoom = `${e + 100}%`;
       this.$emit("updateBgZoom", e);
-    },
-    touchEvent() {
-      const that = this;
-      // console.log("操作中")
-      that.optAction = false; //让判断条件为true
-      clearTimeout(this.autoTime); //清除自动刷新页面定时器
-      this.autoTime = setTimeout(function () {
-        that.optAction = true; //页面无操作后3秒，重时开启定时器
-        // console.log("无操作")
-        that.settingVisible = false;
-      }, 3000);
     },
 
     updateClockStyle(e) {
@@ -210,7 +215,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 99999;
+  z-index: 9999;
   // background-size: cover;
   background-repeat: no-repeat;
   // background-size: 100% 100%;
@@ -226,7 +231,7 @@ export default {
 }
 
 .box {
-  z-index: 99911199;
+  z-index: 99919;
   position: fixed;
   top: 0;
   left: 0;

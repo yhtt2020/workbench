@@ -1,6 +1,6 @@
 <template>
   <Title> 图标形状 </Title>
-  <Radio v-model:data="edit.imgShape" :list="shapeList" text=""></Radio>
+  <Radio v-model:data="edit.imgShape" :list="shapeList" text="" :space="20"></Radio>
 </template>
 
 <script>

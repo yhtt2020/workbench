@@ -3,7 +3,7 @@
     <div class="flex p-4">
       <div class="flex flex-col mr-4">
         <div class="secondary-title px-3 mb-2" style="color: var(--secondary-text);">搜索引擎</div>
-        <vue-custom-scrollbar :settings="settingsScroller" style="max-height:400px;">
+        <vue-custom-scrollbar :settings="settingsScroller" class="left-tab-container" style="max-height:400px;">
           <div v-for="(item,index) in list" class="flex items-center pointer rounded-lg mb-3 py-3 px-3" :key="index"
           :class="{'active-bg': selectIndex === index}" @click="selectAggSearch(item,index)"
           >
@@ -15,11 +15,11 @@
         </vue-custom-scrollbar>
       </div>
       <div class="flex flex-col " >
-        <div class="flex items-center justify-center rounded-lg h-12 p-3 mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
+        <div class="flex items-center justify-center rounded-lg h-12 pl-3 pr-1  mb-5" style="border: 1px solid var(--divider);width: 480px;background: var(--secondary-bg);">
           <div class="flex items-center justify-center" style="width: 20px;height:20px;">
             <Icon :icon="selectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
           </div>
-          <a-input  v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter="enterSearch"></a-input>
+          <a-input  v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter.stop="enterSearch"></a-input>
           <a-dropdown v-model:visible="isDropdownVisible" placement="bottomRight" trigger="click">
             <div class="flex pointer items-center justify-center active-button p-2 rounded-lg" style="width:210px; background: var(--active-secondary-bg);"
             >
@@ -31,7 +31,7 @@
                 <a-menu-item style="color: var(--primary-text);"  
                  :class="{current: openIndex === index }" 
                  v-for="(item,index) in linkType" :key="index"
-                 @click="changeOpenType(item,index)"
+                 @click="changeOpenType(item,index)" class="rounded-lg"
                  
                 >
                   {{ item.name }}
@@ -40,7 +40,7 @@
             </template>
           </a-dropdown>
         </div>
-        <vue-custom-scrollbar :settings="settingsScroller"  style="max-height:360px;">
+        <vue-custom-scrollbar :settings="settingsScroller" class="suggest-container"  style="max-height:360px;">
           <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
             <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
              :class="{'active-bg':suggestIndex === index}" 
@@ -79,9 +79,12 @@
               </div>
             </li>
           </ul>
-          <div v-else class="secondary-title" style="color: var(--secondary-text);">
-            <span class="mb-4">剪贴板</span>
-            <div v-for="item in items[0].content.split('\r\n')" class="flex  flex-col p-3" >
+          <div v-else class="flex flex-col">
+            <span class="mb-2.5 secondary-title" style="color: var(--secondary-text);">剪贴板</span>
+            <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"  
+             :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
+             style="color: var(--secondary-text);"
+            >
               {{ item }}
             </div>
           </div>
@@ -90,17 +93,17 @@
     </div>
 
     <div class="rounded-b-lg flex items-center h-12 px-3 py-3" style="background: var(--secondary-bg);">
-      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
+      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mr-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换搜索引擎</div>
       <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
         <Icon icon="arrowup" style="color:rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
       </div>
-      <div class="h-7 w-7 flex rounded-lg items-center justify-center mx-2 search-tag">
+      <div class="h-7 w-7 flex rounded-lg items-center justify-center mr-2 search-tag">
         <Icon icon="arrowdown" style="color: rgba(0, 0, 0, 0.65);font-size: 1.5em;"></Icon>
       </div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换选择候选项</div>
       <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Ctrl</div>
-      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">T</div>
+      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mr-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换打开方式</div>
     </div>
   </div>
@@ -112,6 +115,7 @@ import browser from '../../../js/common/browser'
 import _ from 'lodash-es'
 import { mapActions,mapWritableState } from "pinia";
 import {clipboardStore} from '../../../store/clipboard'
+const {clipboard} = require('electron')
 
 export default {
   props:{
@@ -143,6 +147,7 @@ export default {
       searchKeyWords:'', // 搜索关键字
       searchSuggestionList:[], // 搜索建议列表
       suggestIndex:-1, // 搜索建议列表下标
+      clipboardIndex:-1, // 剪贴板内容列表下标
       isDropdownVisible:false, // 是否显示下拉列表
       linkType:[  // 设置中打开方式类型
         {name:'工作台内打开',value:'work'},
@@ -168,6 +173,11 @@ export default {
       const type = this.urlType
       const index = _.findIndex(this.linkType,function(o){ return type === o.value })
       return index
+    },
+    getClipBoardData(){  // 获取剪贴板数据
+      const clipBoardText = clipboard.readText()
+      const clipBoardList = clipBoardText.split('\r\n')
+      return clipBoardList
     }
   },
 
@@ -176,6 +186,7 @@ export default {
      this.$refs.searchRef.focus()
      // 监听键盘触发事件
      window.addEventListener('keydown',this.keyBoardTrigger)
+     window.addEventListener('keyup',this.removeKeyBoardTrigger)
      this.openMode = this.linkType[this.getOpenMode]
      this.openIndex  = this.getOpenMode
     })
@@ -183,27 +194,52 @@ export default {
   methods:{
     // 键盘操作
     keyBoardTrigger(evt){
-      if(evt.key === 'Tab'){ // 触发tab键切换功能  
-        evt.preventDefault();
+      if(evt.ctrlKey && evt.key === 'Tab'){  // ctrl+tab组合键
+        evt.preventDefault()
+        this.isDropdownVisible = true
+        if(evt.key === 'Tab'){ // tab键 
+          evt.preventDefault()
+          this.openIndex = parseInt((this.openIndex + 1) % this.linkType.length) 
+          this.openMode = this.linkType[this.openIndex]
+        }
+      }else if(evt.key === 'Tab'){ // tab键
+        evt.preventDefault()
         this.selectIndex = (this.selectIndex + 1) %  this.list.length
         this.selectIcon.icon = this.list[this.selectIndex].icon
         this.fetchSuggestions(true)
-      }
-      if(evt.key === 'ArrowUp'){  // 上切换键
+        this.leftTabScrollToTop()
+      }else if(evt.key === 'ArrowUp'){ // 向上键
         evt.preventDefault()
-        this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
-        this.updateInputValue()
-        this.prevItem()
-      }else if(evt.key === 'ArrowDown'){  // 下切换键
-        this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
-        this.updateInputValue()
-        this.nextItem()
-      }
-      if(evt.ctrlKey && evt.key === 't'){  // ctrl键和t键组合
+        if(this.showSearchResults){
+          this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
+          this.suggestScrollTop()
+          this.updateInputValue()
+        }else {
+          this.clipboardIndex = parseInt((this.clipboardIndex + 1) % this.getClipBoardData.length)
+          this.searchKeyWords = this.getClipBoardData[this.clipboardIndex]
+          this.suggestScrollTop()
+          this.fetchSuggestions(true)
+        }
+      }else if(evt.key === 'ArrowDown'){  // 向下键
         evt.preventDefault()
-        this.isDropdownVisible = !this.isDropdownVisible
+        if(this.showSearchResults){
+          this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
+          this.suggestScrollBottom()
+          this.updateInputValue()
+        }else{
+          this.clipboardIndex = parseInt((this.clipboardIndex + 1) % this.getClipBoardData.length)
+          this.searchKeyWords = this.getClipBoardData[this.clipboardIndex]
+          this.suggestScrollBottom()
+          this.fetchSuggestions(true)
+        }
       }
+    },
 
+    // 键盘抬起
+    removeKeyBoardTrigger(evt){
+      if(evt.code === 'ControlLeft'){
+        this.isDropdownVisible = false
+      }
     },
 
     dataSearch(){  // 监听输入框关键字输入   
@@ -359,16 +395,36 @@ export default {
       this.isDropdownVisible = false
     },
 
-    prevItem() {
-      if (this.openIndex > 0) {
-        this.openIndex--;
-        this.openMode = this.linkType[this.openIndex]
+    selectClipboardItem(item,index){
+      this.clipboardIndex = index
+      this.searchKeyWords = item
+      this.fetchSuggestions(true)
+    },
+
+    leftTabScrollToTop(){  // tab触发时高度滚动  
+      const container = document.querySelector('.left-tab-container')
+      if(this.selectIndex === 0){ // 判断下标为0
+        container.scrollTop = 0
+      }else{  // tab每切换一下就滚动10
+        container.scrollTop += 10
       }
     },
-    nextItem() {
-      if (this.openIndex < this.linkType.length - 1) {
-        this.openIndex ++;
-        this.openMode = this.linkType[this.openIndex]
+
+    suggestScrollTop(){  // 向上键盘触发
+      const container = document.querySelector('.suggest-container')
+      if(this.suggestIndex === 0 && this.clipboardIndex === 0){
+        container.scrollTop = 0
+      }else{
+        container.scrollTop -= 10
+      }
+    },
+
+    suggestScrollBottom(){  //  向下键盘触发
+      const container = document.querySelector('.suggest-container')
+      if(this.suggestIndex === 0 && this.clipboardIndex === 0){
+        container.scrollTop = 0
+      }else{
+        container.scrollTop += 10
       }
     },
   }
@@ -458,8 +514,8 @@ export default {
   box-shadow: none !important;
 }
 
-.current{
-  background: var(--secondary-bg) !important;
-  color: var(--active-bg) !important;
+:deep(.current){
+  background-color: var(--active-bg);
+  color: var(--active-text) !important;
 }
 </style>

@@ -49,6 +49,7 @@
             v-for="i in item.sizes"
             :key="i"
             style="color: var(--secondary-text)"
+            :class="i === '社区分享' ? 'share' : ''"
           >
             {{ i }}
           </div>
@@ -81,6 +82,7 @@
   >
   </NewPreviewCardDetails>
   <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit>
+  <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
 </template>
 
 <script>
@@ -89,6 +91,7 @@ import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
 import Edit from "../../../components/widgets/myIcons/edit/index.vue";
+import RemoteMarket from "./RemoteMarket.vue";
 import { myIcons } from "../../../store/myIcons.ts";
 import _ from "lodash-es";
 
@@ -118,11 +121,14 @@ export default {
       isCardDetails: false,
       cardDetails: {},
       settingVisible: false,
+      openRemote: false,
+      remoteContent: {}
     };
   },
   components: {
     NewPreviewCardDetails,
     Edit,
+    RemoteMarket
   },
   watch: {
     navList: {
@@ -196,6 +202,11 @@ export default {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
+        if(item.name === 'remote'){
+          this.openRemote = true
+          this.remoteContent = item
+          return
+        }
         this.addCardAchieve(item);
       }
     },
@@ -221,6 +232,9 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
+    closeMarket(val){
+      this.openRemote = val
+    }
   },
 };
 </script>
@@ -401,5 +415,10 @@ export default {
       }
     }
   }
+}
+.share{
+  background: rgba(250,173,20,0.2) !important;
+  color: #FAAD14 !important;
+  font-weight: 500;
 }
 </style>
