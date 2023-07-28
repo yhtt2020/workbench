@@ -103,7 +103,7 @@
       </div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换选择候选项</div>
       <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mx-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Ctrl</div>
-      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mr-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">T</div>
+      <div class="px-4 py-2.5 w-12 h-7 flex items-center justify-center primary-title rounded-lg mr-2 search-tag" style="color: rgba(0, 0, 0, 0.65);">Tab</div>
       <div class="secondary-title " style="color: var(--secondary-text);">切换打开方式</div>
     </div>
   </div>
@@ -194,14 +194,21 @@ export default {
   methods:{
     // 键盘操作
     keyBoardTrigger(evt){
-      if(evt.key === 'Tab'){ // 触发tab键切换功能  
-        evt.preventDefault();
+      if(evt.ctrlKey && evt.key === 'Tab'){  // ctrl+tab组合键
+        evt.preventDefault()
+        this.isDropdownVisible = true
+        if(evt.key === 'Tab'){ // tab键 
+          evt.preventDefault()
+          this.openIndex = parseInt((this.openIndex + 1) % this.linkType.length) 
+          this.openMode = this.linkType[this.openIndex]
+        }
+      }else if(evt.key === 'Tab'){ // tab键
+        evt.preventDefault()
         this.selectIndex = (this.selectIndex + 1) %  this.list.length
         this.selectIcon.icon = this.list[this.selectIndex].icon
         this.fetchSuggestions(true)
         this.leftTabScrollToTop()
-      }
-      if(evt.key === 'ArrowUp'){  // 上切换键
+      }else if(evt.key === 'ArrowUp'){ // 向上键
         evt.preventDefault()
         if(this.showSearchResults){
           this.suggestIndex = Math.max(this.suggestIndex - 1, -1);
@@ -213,7 +220,7 @@ export default {
           this.suggestScrollTop()
           this.fetchSuggestions(true)
         }
-      }else if(evt.key === 'ArrowDown'){  // 下切换键
+      }else if(evt.key === 'ArrowDown'){  // 向下键
         evt.preventDefault()
         if(this.showSearchResults){
           this.suggestIndex = parseInt((this.suggestIndex + 1) %  Object.keys(this.searchSuggestionList).length)
@@ -226,21 +233,6 @@ export default {
           this.fetchSuggestions(true)
         }
       }
-      if(evt.ctrlKey && evt.key === 't'){  // 触发ctrl键 
-        evt.preventDefault()
-        this.isDropdownVisible = true
-        if(evt.key === 't'){  // ctrl键和t键组合
-          evt.preventDefault()
-          this.openIndex = parseInt((this.openIndex + 1) % this.linkType.length) 
-          this.openMode = this.linkType[this.openIndex]
-        }
-      }
-
-      // if(evt.key === 'Enter'){
-      //   evt.preventDefault()
-      //   const keyWords = encodeURIComponent(this.searchKeyWords)
-      //   this.openSearchSuggest(keyWords)
-      // }
     },
 
     // 键盘抬起
@@ -413,8 +405,8 @@ export default {
       const container = document.querySelector('.left-tab-container')
       if(this.selectIndex === 0){ // 判断下标为0
         container.scrollTop = 0
-      }else{  // tab每切换一下就滚动50
-        container.scrollTop += 50
+      }else{  // tab每切换一下就滚动10
+        container.scrollTop += 10
       }
     },
 
@@ -423,7 +415,7 @@ export default {
       if(this.suggestIndex === 0 && this.clipboardIndex === 0){
         container.scrollTop = 0
       }else{
-        container.scrollTop -= 50
+        container.scrollTop -= 10
       }
     },
 
@@ -432,7 +424,7 @@ export default {
       if(this.suggestIndex === 0 && this.clipboardIndex === 0){
         container.scrollTop = 0
       }else{
-        container.scrollTop += 50
+        container.scrollTop += 10
       }
     },
   }
