@@ -140,16 +140,12 @@
                       sub-title="开发中的项目"
       >
         <template #extra>
-          <a-dropdown-button type="primary" @click="run">
-            运行测试应用
-            <template #overlay>
-              <a-menu>
-                <a-menu-item  @click="reInstallAndRun" key="1">
-                  重新安装并运行
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown-button>
+          <a-button-group>
+            <a-button  type="primary" @click="run">
+              运行测试应用
+            </a-button >
+            <a-button :disabled="!devApp.debug_app_nanoid" @click="reInstallAndRun">重新安装并运行</a-button>
+          </a-button-group>
         </template>
       </a-page-header>
       <vue-custom-scrollbar :key="routeUpdateTime" :settings="settings" style="position:relative;height: calc(100vh - 105px)">
@@ -279,8 +275,10 @@ export default {
         onOk: async () => {
           try {
             let debugApp=await appModel.get({nanoid:this.devApp.debug_app_nanoid})
+            console.log(debugApp,'调试应用=')
+            message.info(this.devApp.debug_app_nanoid)
             if(!!!debugApp){
-              console.warn('调试应用不存在，忽略')
+              message.error('调试应用不存在，忽略')
             }else{
               await appModel.uninstall(this.devApp.debug_app_nanoid)
               ipc.sendSync('deleteApp',{nanoid:this.devApp.debug_app_nanoid})

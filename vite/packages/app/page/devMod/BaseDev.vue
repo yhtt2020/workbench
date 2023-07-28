@@ -2,6 +2,9 @@
 <h3>应用信息</h3>
   <p>此处的所有设置均不会影响到当前已经安装的应用，如需设置生效，可点击安装测试应用以此配置安装一个新的本地测试应用。所有模板设置均需点击保存方可生效，否则均会丢失。</p>
   <a-form :model="formState" style="padding: 20px" :label-col="{span:5}" :wrdevApper-col="{span:19}">
+    <a-form-item label="应用ID">
+      <span>{{devApp.nanoid}}</span>
+    </a-form-item>
     <a-form-item
       label="应用名"
       :rules="{ required: true, message: '应用名称，长度大于1，小于16' ,min:1,max:16 }"
