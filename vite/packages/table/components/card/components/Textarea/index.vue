@@ -1,6 +1,6 @@
 <template>
   <textarea
-    class="rounded-xl xt-bg-2 xt-scrollbar w-full p-2"
+    class="rounded-xl xt-bg-2 xt-scrollbar w-full p-2 no-darg"
     :class="border"
     style="
       resize: none;
@@ -40,6 +40,9 @@ export default {
     searchValue(newV) {
       this.$emit("update:data", newV);
     },
+    data(newV) {
+      this.searchValue = newV;
+    },
   },
   methods: {
     // 按下回车
@@ -63,4 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+textarea::placeholder {
+  color: var(--secondary-text);
+}
 </style>

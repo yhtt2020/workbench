@@ -23,8 +23,10 @@ body {
 .xt-active-text {
   color: var(--active-text) !important;
 }
-// 主题次要字体色
-.xt-active-text-2 {
+.xt-theme-text {
+  color: var(--active-bg) !important;
+}
+.xt-theme-text-2 {
   color: var(--active-secondary-bg) !important;
 }
 
@@ -72,6 +74,10 @@ body {
   backdrop-filter: blur(8px);
 }
 
+// 次要字体色作为背景色
+.xt-text-2-bg {
+  background: var(--secondary-text) !important;
+}
 /**
 * 边框
 */

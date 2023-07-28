@@ -1,6 +1,8 @@
 <template>
-  <div :class="typeClass" :style="customStyle" class="xt-active">
-    <Icon :icon="icon" :style="fontSizeStyle"></Icon>
+  <div>
+    <div :class="typeClass" :style="customStyle" class="xt-active xt-base-btn">
+      <Icon :icon="icon" :style="fontSizeStyle"></Icon>
+    </div>
   </div>
 </template>
 
