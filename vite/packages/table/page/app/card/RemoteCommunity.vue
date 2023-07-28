@@ -1,9 +1,8 @@
 <template>
-  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;">
+  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="!openShare">
     <div
          class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col"
          style=";width: 600px;height: 80%;background: var(--modal-bg);">
-      <template v-if="!openShare">
         <div class="head-nav">
           <div>
             <HorizontalPanel :navList="navType" v-model:selectType="selectNav"></HorizontalPanel>
@@ -24,11 +23,10 @@
             </div>
           </div>
         </div>
-      </template>
-      <div v-else>
-        <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk"></RemoteShare>
-      </div>
     </div>
+  </div>
+  <div v-else>
+    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk"></RemoteShare>
   </div>
 </template>
 
