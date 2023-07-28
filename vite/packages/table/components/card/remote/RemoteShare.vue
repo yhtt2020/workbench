@@ -18,25 +18,22 @@
           <div class="upload-box">
             <div class="avatar">
               <div>
-                <a-avatar class="rounded-lg xt-bg-2" shape="square" :size="100" src="" />
+                <a-avatar class="rounded-lg xt-bg-2" shape="square" :size="100" :src="img" />
               </div>
-              <span @click="delIcon"><Icon icon="close-circle-fill" style="font-size: 28px;color: #7A7A7A;"></Icon></span>
+              <span @click="delImg"><Icon icon="close-circle-fill" style="font-size: 28px;color: #7A7A7A;"></Icon></span>
             </div>
             <div class="ml-10 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;">
               <div>上传小组件预览图，不要超过2MB</div>
-              <a-upload
-                name="file"
-                :showUploadList="false"
-                :customRequest="uploadImage"
-                :beforeUpload="beforeUpload"
-                accept="image/jpeg,image/jpg,image/png"
+              <a-upload class="pointer" :style="size"
+              @change="uplaodImageChange" 
+              :before-upload="beforeUpload"
+              :show-upload-list="false"
               >
                 <div class="pointer xt-bg-2 xt-text flex items-center rounded-lg justify-center mr-3 mt-2" 
                 @click="imageSelect" style="width:120px; height:48px;">上传图片</div>
               </a-upload>
             </div>
           </div>
-        <!-- <UploadImage></UploadImage> -->
           <!-- <div class="flex my-6">
             <div v-for="(item,index) in remotes" :key="index"
             :class="activeIndex === index ? 'card-active' : ''" 
@@ -53,7 +50,7 @@
               取消
             </div>
             <div style="width: 120px;height: 44px;"
-              @click="openDrawer"
+              @click="shareNow"
               class="flex justify-center items-center bg-blue-500 rounded-lg pointer">
             立即分享
             </div>
@@ -65,19 +62,22 @@
 </template>
 
 <script>
-  import UploadImage from '../../UploadImage.vue';
+  import api from '../../../../../src/model/api';
+  import { message } from 'ant-design-vue';
+  import cache from '../hooks/cache';
+  import {setList} from './testData'
   export default{
     name: 'RemoteShare',
     components: {
-      UploadImage
     },
-    props: ['openShare','desk'],
+    props: ['openShare','desk','card'],
     data() {
       return {
         remotes: [],
         activeIndex: 0,
         name: '',
-        detail: ''
+        detail: '',
+        img: ''
       }
     },
     methods: {
@@ -89,19 +89,76 @@
       },
       toggleActive(index){
         this.activeIndex = index
+      },
+      uplaodImageChange(info){  // info 上传文件的所有信息
+        const formData = new FormData();
+        formData.append("file", info.file)
+        api.postCosUpload(formData,(err,res)=>{
+          if(!err){
+            message.error('数据上传失败')
+          }else{
+            const img = 'http://'+ res.data.data
+            if(img){
+              message.success('自定义头像上传成功')
+              this.img = img
+            }
+            // cache.set('avatar_url',img)
+          }
+        })
+      },
+      beforeUpload(file){  // 上传之前的准备工作 
+        const regex =  /^image\/(jpeg|png|jpg)$/;  // 通过正则表达式匹配是否指定的png jpg jpeg的类型文件  
+        const isFileType = !regex.test(file.type)
+        if(isFileType){ 
+          message.error('只能上传JPG和PNG格式图片');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          message.error('上传图片不能大于2MB');
+        }
+        return isFileType && isLt2M;
+      },
+      delImg(){
+        this.img = ''
+      },
+      shareNow(){
+        if(!this.img.trim())return message.info('图片不能为空')
+        if(!this.name.trim())return message.info('名称不能为空')
+        const time = new Date().valueOf()
+        let cardContent = {
+          "name": "remote",
+          "cname": this.name,
+          "detail": this.detail,
+          url: this.card.customData.url,
+          sizes: ['2x2'],
+          option: [
+            {
+              img: this.img,
+              name: 'Remote',
+              size: '2x2',
+              zoom: '11'
+            },
+          ],
+          time,
+          "download": 0,
+          "avatar": '/icons/logo128.png',
+          "nickname": 'Victor Ruiz',
+        }
+        setList(cardContent)
+        this.close()
       }
     },
     computed: {
     },
     mounted(){
-      let remoteArr = []
-      this.desk.cards.map(item => {
-        if(item.name === 'Remote'){
-          remoteArr.push(item)
-        }
-      })
-      this.remotes = remoteArr
-      console.log(this.remotes)
+      // let remoteArr = []
+      // this.desk.cards.map(item => {
+      //   if(item.name === 'Remote'){
+      //     remoteArr.push(item)
+      //   }
+      // })
+      // this.remotes = remoteArr
+      // console.log(this.remotes)
     }
   }
 </script>

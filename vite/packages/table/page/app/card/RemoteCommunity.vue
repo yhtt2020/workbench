@@ -15,18 +15,22 @@
           <Market :desk="desk" @closeMarket="close"></Market>
         </dvi>
         <div class="body-box" v-else>
-          <div class="box">
+          <div class="box" v-if="!shareList.length">
             <div class="box-block">
               <img src="/img/state/init.png" alt="">
               <span>分享我制作的外部小组件</span>
               <div class="block-btn" @click="shareNow">立即分享</div>
             </div>
           </div>
+          <div v-else>
+            你分享了列表
+          </div>
         </div>
     </div>
   </div>
   <div v-else>
-    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk"></RemoteShare>
+    <!-- <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk"></RemoteShare> -->
+    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :card="card"></RemoteShare>
   </div>
 </template>
 
@@ -53,8 +57,9 @@ import {shareList} from '../../../components/card/remote/testData'
         ],
         selectNav:{title:'社区分享',name:'share'},
         desk: {},
-        shareList,
-        openShare: false
+        openShare: false,
+        card: {},
+        shareList
       }
     },
     methods: {
@@ -73,7 +78,9 @@ import {shareList} from '../../../components/card/remote/testData'
     },
     mounted(){
       let deskId = this.$route.params.id
+      let cardId = this.$route.params.cardId
       this.desk = this.desks.find(item => item.id === deskId)
+      this.card = this.desk.cards.find(item => item.id === parseInt(cardId))
 
       let nav = document.getElementById('nav');
       let list = document.getElementById('navList');

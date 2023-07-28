@@ -142,7 +142,6 @@
       add(item, index = 0) {
         index = index ?? this.carouselIndex;
         // let url = this.getUrl(item.detail)
-        console.log(item.url)
         this.addCard(
           { name: item.option[index].name, id: Date.now(), customData: {url:item.url} },
           this.desk

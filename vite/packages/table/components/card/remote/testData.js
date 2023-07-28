@@ -80,3 +80,7 @@ export const dataList = [
   }, 
 ]
 export const shareList = []
+
+export const setList = function(val){
+  shareList.push(val)
+}
