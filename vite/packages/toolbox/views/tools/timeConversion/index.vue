@@ -4,7 +4,7 @@
     <div class="my-3">当前时间戳：{{ currentTimeStamp }}</div>
     <div class="flex">
       <XtInput
-        class="xt-bg-2 xt-border rounded-xl"
+        class="xt-bg-2 xt-border rounded-xl overflow-hidden"
         :limit="{ number: true, space: true }"
         style="height: 48px"
         v-model:data="timeStamp"
@@ -14,8 +14,8 @@
       >
         <template #addonBefore>
           <div
-            class="xt-bg-2 text-base xt-text flex justify-center items-center h-full"
-            style="width: 80px; height: 48px; border-radius: 8px 0px 0px 8px"
+            class="text-base xt-text flex justify-center items-center"
+            style="width: 80px; height: 46px; background: var(--secondary-text)"
           >
             时间戳
           </div>
@@ -28,15 +28,15 @@
     </div>
     <div class="flex">
       <XtInput
-        class="xt-bg-2 xt-border rounded-xl"
+        class="xt-bg-2 xt-border rounded-xl overflow-hidden"
         style="height: 48px"
         v-model:data="time"
         @keyup="timeKeyup()"
       >
         <template #addonBefore>
           <div
-            class="xt-bg-2 text-base xt-text flex justify-center items-center h-full"
-            style="width: 80px; height: 48px; border-radius: 8px 0px 0px 8px"
+            class="text-base xt-text flex justify-center items-center h-full"
+            style="width: 80px; height: 100%; background: var(--secondary-text)"
           >
             时间
           </div>

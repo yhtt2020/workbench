@@ -8,7 +8,7 @@
       1 {{ selectToCurrency.name }} = {{ toRate }} {{ selectFromCurrency.name }}
     </div>
 
-    <div class="flex items-center">
+    <div class="flex items-center h-12">
       <XtInput
         class="xt-border rounded-lg"
         v-model:data="fromCurrency"
@@ -52,17 +52,17 @@
                 <div class="mx-2">{{ selectFromCurrency.name }}</div>
                 <div>{{ selectFromCurrency.id }}</div>
               </div>
-              <Icon icon="xiangxia" class="m"> </Icon>
+              <XtBaseIcon icon="xiangxia" class="m"> </XtBaseIcon>
             </div>
           </a-dropdown>
         </template>
       </XtInput>
       <XtIcon :copy="fromCurrency" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
-    <div class="my-2 flex justify-center" style="width: 100%">
+    <div class="flex justify-center" style="width: 100%">
       <XtIcon icon="paixu" type="" size="28" @click="swap()"></XtIcon>
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center h-12">
       <XtInput
         class="xt-border rounded-lg"
         v-model:data="toCurrency"
@@ -104,13 +104,15 @@
                 <div class="mx-2">{{ selectToCurrency.name }}</div>
                 <div>{{ selectToCurrency.id }}</div>
               </div>
-              <Icon icon="xiangxia" class="m"> </Icon>
+              <XtBaseIcon icon="xiangxia" class="m"> </XtBaseIcon>
             </div>
           </a-dropdown>
         </template>
       </XtInput>
       <XtIcon :copy="toCurrency" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
+
+    <div class="xt-text-2 mt-2">{{ getDate() }} 数据仅供参考</div>
   </div>
 
   <!-- <div>货币id https://coinyep.com/zh/currencies</div>
@@ -118,6 +120,7 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import { currencyExchange } from "../../../store/currencyExchange";
 import { mapWritableState, mapActions } from "pinia";
 import axios from "axios";
@@ -127,6 +130,7 @@ export default {
   data() {
     return {
       currencies,
+      flag: false,
     };
   },
   async mounted() {
@@ -136,11 +140,16 @@ export default {
   },
   watch: {
     async selectFromCurrency(newV) {
+      if (this.flag) return;
+      console.log("this. :>> ", this.flag);
       await this.getCurrency(newV.id);
       this.fromCurrencyRate();
     },
     async selectToCurrency(newV) {
+      console.log("this. :>> ", this.flag);
+      if (this.flag) return;
       await this.getCurrency(newV.id);
+
       this.toCurrencyRate();
     },
   },
@@ -157,7 +166,11 @@ export default {
   },
   methods: {
     ...mapActions(currencyExchange, ["fromCurrencyRate", "toCurrencyRate"]),
+    getDate() {
+      return dayjs().format("YYYY-MM-DD");
+    },
     swap() {
+      this.flag = true;
       [this.fromCurrency, this.toCurrency] = [
         this.toCurrency,
         this.fromCurrency,
@@ -166,8 +179,10 @@ export default {
         this.selectToCurrency,
         this.selectFromCurrency,
       ];
+      setTimeout(() => {
+        this.flag = false;
+      }, 1000);
     },
-
     async getCurrency(id) {
       let currencyState = this.$cache.get("currencyState");
       if (!currencyState) {

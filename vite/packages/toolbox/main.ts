@@ -11,20 +11,22 @@ import "./styles/index.scss";
 import "../../public/css/styleSwitch/index.scss";
 // 组件
 import baseComponents from "../table/components/card/components/index";
-import toolBaseComponents from "./components/index";
-
-const { tools } = window.$models;
-
-tools.getWindowArgs(window);
-const pinia = createPinia();
-pinia.use(piniaPersist);
-const app = createApp(App);
-
-app.use(Antd).use(pinia).use(router);
-
-app.use(baseComponents).use(toolBaseComponents);
 
 import cache from "../table/components/card/hooks/cache";
+// @ts-ignore
+const { tools } = window.$models;
+tools.getWindowArgs(window);
+
+const app = createApp(App);
+
+const pinia = createPinia();
+pinia.use(piniaPersist);
+app.use(pinia);
+
+app.use(Antd).use(router);
+
+app.use(baseComponents);
+
 app.config.globalProperties.$cache = cache;
 
 app.mount("#app");
