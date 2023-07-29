@@ -1,21 +1,15 @@
-<template>
-  <div>
-    <XtButton @click="convertQRCode()">123</XtButton>
-    <div id="qrcode"></div>
-  </div>
-</template>
+<template><div>222</div></template>
 
-<script>
-export default {
-  data() {
-    return {
-      content: "",
-    };
-  },
-  methods: {
-    convertQRCode() {},
-  },
-};
+<script setup>
+import QRCode from "qrcode";
+
+QRCode.toDataURL('https://www.free-api.com/?page=6')
+  .then((url) => {
+    console.log(url);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 </script>
 
 <style lang="scss" scoped></style>
