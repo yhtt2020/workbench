@@ -6,22 +6,18 @@
       class="xt-active xt-base-btn"
       @click="copyToClipboard()"
     >
-      <MyIcon :icon="icon" :style="fontSizeStyle"></MyIcon>
+      <XtBaseIcon :icon="icon" :style="fontSizeStyle"></XtBaseIcon>
     </div>
   </div>
 </template>
 
 <script>
 import { message } from "ant-design-vue";
-import MyIcon from "./Icon.vue";
 export default {
   name: "XtIcon",
-  components: {
-    MyIcon,
-  },
+
   methods: {
     copyToClipboard() {
-      console.log("!this.copy :>> ", this.copy);
       if (!this.copy) return;
       navigator.clipboard
         .writeText(this.copy)
