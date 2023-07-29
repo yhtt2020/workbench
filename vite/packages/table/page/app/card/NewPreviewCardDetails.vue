@@ -4,7 +4,7 @@
         <div class="boxs card">
             <div class="main">
                 <div class="card-box" v-for="(item, index) in cardDetails.option">
-                    <div class="img"> <img  ref="imgRef" :src="getImg(item.name)" alt=""
+                    <div class="img"> <img  ref="imgRef" :src="item.img ? item.img : getImg(item.name)" alt=""
                             :style="[{ zoom: item.zoom * 1.8 + '%' }]">
                     </div>
                     <div class="size xt-active-bg-2 xt-text-2">{{ item.size }}</div>

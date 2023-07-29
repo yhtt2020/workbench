@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="left no-drag" @click="fullScreen(item)">
-            <img :src="getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
+            <img :src="item.option[0].img ? item.option[0].img : getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
             <span class="size-bg">{{ item.option[0].size }}</span>
           </div>
           <div class="right" style="">
@@ -131,19 +131,19 @@
         this.isCardDetails = true;
       },
       //获取url
-      getUrl(str) {
-          const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
-          str = str.match(reg);
-          if (str && str.length > 0) {
-              return str[0];
-          }
-          return null;
-      },
+      // getUrl(str) {
+      //     const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+      //     str = str.match(reg);
+      //     if (str && str.length > 0) {
+      //         return str[0];
+      //     }
+      //     return null;
+      // },
       add(item, index = 0) {
         index = index ?? this.carouselIndex;
-        let url = this.getUrl(item.detail)
+        // let url = this.getUrl(item.detail)
         this.addCard(
-          { name: item.option[index].name, id: Date.now(), customData: {url} },
+          { name: item.option[index].name, id: Date.now(), customData: {url:item.url} },
           this.desk
         );
         this.$emit("closeMarket",false);
