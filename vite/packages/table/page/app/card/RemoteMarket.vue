@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <Market :desk="desk" @closeMarket="close"></Market>
+          <Market :desk="desk" @closeMarket="close"></Market>
       </div>
      
     </div>
@@ -115,13 +115,15 @@
       },
       scrollBox(val){
         let scroll = document.getElementById('scroll-box');
-        // console.log(scroll.scrollTop)
+        // console.log(scroll.scrollHeight - scroll.scrollTop == scroll.clientHeight)
         let nav = document.getElementById('nav');
-        // console.log('滚轮滚动了',nav.offsetTop)
-        if (scroll.scrollTop > 120) {
+        let navList = document.getElementById('navList');
+        if (scroll.scrollTop > 120 ) {
           nav.classList.add('suspension-r-nav')
+          navList.classList.add('classList-contnet')
         } else {
           nav.classList.remove('suspension-r-nav')
+          navList.classList.remove('classList-contnet')
         }
       }
     },
@@ -324,16 +326,6 @@
 .content::-webkit-scrollbar{
   display: none;
 }
-
-
-.features_ul_fixed {
-  position: fixed !important;
-  top: 100px !important;
-  z-index: 99 !important;
-  width:100% !important;
-  background: red;
-  height: 100px;
-}
 </style>
 <style lang="scss">
   .suspension-r-nav{
@@ -344,5 +336,8 @@
     right: 0;
     padding: 16px 0;
     background: var(--modal-bg);
+  }
+  .classList-contnet{
+    padding-top: 76px;
   }
 </style>

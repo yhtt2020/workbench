@@ -74,6 +74,12 @@ import {shareList} from '../../../components/card/remote/testData'
       },
       closeMy(){
         this.$forceUpdate()
+      },
+      setNavFixed(){
+        let nav = document.getElementById('nav');
+        let list = document.getElementById('navList');
+        nav.classList.add('suspension-r-nav')
+        list.classList.add('list-r-nav')
       }
     },
     computed: {
@@ -85,11 +91,19 @@ import {shareList} from '../../../components/card/remote/testData'
       this.desk = this.desks.find(item => item.id === deskId)
       this.card = this.desk.cards.find(item => item.id === parseInt(cardId))
 
-      let nav = document.getElementById('nav');
-      let list = document.getElementById('navList');
-      nav.classList.add('suspension-r-nav')
-      list.classList.add('list-r-nav')
+      this.setNavFixed()
     },
+    watch: {
+      selectNav(val){
+        this.$nextTick(() => {
+          if(val.name === 'share'){
+            this.setNavFixed()
+          }else if(val.name === 'my' && shareList.length){
+            this.setNavFixed()
+          }
+        })
+      }
+    }
   }
 </script>
 
