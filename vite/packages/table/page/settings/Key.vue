@@ -109,7 +109,7 @@ export default {
     //     this.shortKeysSearch = args.keys
     //   }
     //   this.refreshKeys()
-    },
+    // },
     setKey(input){
 
     }
