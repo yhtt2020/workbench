@@ -1,5 +1,5 @@
 <template>
-  <svg class="icon" :style="style" aria-hidden="true">
+  <svg class="icon cursor-pointer" :style="style" aria-hidden="true">
     <use v-bind:xlink:href="'#icons-' + icon"></use>
   </svg>
 </template>

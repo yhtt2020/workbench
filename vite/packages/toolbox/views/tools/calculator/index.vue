@@ -1,41 +1,49 @@
 <template>
-  <div
-    class="xt-border h-full xt-bg-2 p-3 xt-text text-base overflow-hidden overflow-y-auto xt-scrollbar"
-  >
-    <div class="h-12 flex" v-for="(i, index) in calculators" :key="index">
-      <XtInput
-        :key="index"
-        class="xt-text flex-1"
-        placeholder="请输入计算式，如 99+99 "
-        style="height: 48px"
-        :class="border"
-        :limit="{ space: true }"
-        v-model:data="computeList[index]"
-        @focus="handleFocus(index)"
-        @change="handleChange()"
-        @blur="handleBlur(index)"
-      ></XtInput>
-      <div
-        v-if="countList[index]"
-        class="px-3 flex items-center success cursor-pointer xt-active res truncate"
-        style="
-          max-width: 30%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        "
-        @click="copyToClipboard(countList[index])"
-        @mouseover="showCopy()"
-        @mouseout="hideCopy()"
-      >
-        {{ countList[index] }}
+  <div class="xt-border h-full xt-bg-2 xt-text text-base flex flex-col">
+    <div class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar p-2">
+      <div class="h-12 flex" v-for="(i, index) in calculators" :key="index">
+        <XtInput
+          :key="index"
+          class="xt-text flex-1"
+          placeholder="请输入计算式，如 99+99 "
+          style="height: 48px"
+          :class="border"
+          :limit="{ space: true }"
+          v-model:data="computeList[index]"
+          @focus="handleFocus(index)"
+          @change="handleChange()"
+          @blur="handleBlur(index)"
+        ></XtInput>
+        <div
+          v-if="countList[index]"
+          class="px-3 flex items-center success cursor-pointer xt-active res truncate"
+          style="
+            max-width: 30%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          "
+          @click="copyToClipboard(countList[index])"
+          @mouseover="showCopy()"
+          @mouseout="hideCopy()"
+        >
+          {{ countList[index] }}
+        </div>
       </div>
     </div>
-    <div
-      class="absolute left-1/2 -translate-x-1/2 res-copy"
-      style="bottom: 22px"
-    >
-      点击复制
+    <div class="flex justify-between p-2">
+      <div class="overflow-hidden" style="width: 0">1</div>
+      <XtBaseIcon
+        icon="shanchu"
+        style="font-size: 20px"
+        @click="delCalculator()"
+      ></XtBaseIcon>
+      <div
+        class="absolute left-1/2 -translate-x-1/2 res-copy"
+        style="bottom: 22px"
+      >
+        点击复制
+      </div>
     </div>
   </div>
 </template>
@@ -79,6 +87,12 @@ export default {
     },
   },
   methods: {
+    delCalculator() {
+      this.computeList = [""];
+      this.countList = [""];
+      this.calculators = 1;
+      this.selectIndex = 0;
+    },
     // 复制状态显示
     showCopy() {
       const resCopy = document.querySelector(".res-copy");
