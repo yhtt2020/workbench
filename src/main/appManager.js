@@ -590,9 +590,10 @@ class AppManager {
         url: render.getUrl('app.html#' + path)
       })
       appManager.settingWindow.window.setMenu(null)
-      if (isDevelopmentMode) {
-        //appManager.settingWindow.webContents.openDevTools()
-      }
+      // if (isDevelopmentMode) {
+      //   appManager.settingWindow.window.webContents.openDevTools()
+      // }
+
       appManager.settingWindow.window.on('close', () => {
         appManager.settingWindow = null
       })
@@ -628,13 +629,16 @@ class AppManager {
    * @param callback
    * @param parent
    */
-  installAppConfirm(appJson,from,callback,parent){
-    let installWindow=new BrowserWindow({
-      width: 350,
-      height: 500,
-      acceptFirstMouse: true,
-      frame:false,
-      parent:parent,
+  async installAppConfirm (appJson, from, callback, parent) {
+    let installWindowInstance = await windowManager.create({
+      name: 'appInstall',
+      windowOption: {
+        width: 350,
+        height: 500,
+        acceptFirstMouse: true,
+        frame: false,
+        parent: parent,
+      },
       webPreferences: {
         preload: ___dirname + '/src/preload/appSettingPreload.js',
         nodeIntegration: true,
@@ -647,16 +651,16 @@ class AppManager {
         partition: null,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
-
         ]
       }
     })
+    const installWindow = installWindowInstance.window
     installWindow.setMenu(null)
-    appManager.installInfo.appJson=appJson
-    appManager.installInfo.from=from
+    appManager.installInfo.appJson = appJson
+    appManager.installInfo.from = from
 
     installWindow.webContents.loadURL(render.getUrl('app.html#/installApp'))
-    ipc.once('installAppReturn',(event,args)=>{
+    ipc.once('installAppReturn', (event, args) => {
       callback(args)
     })
   }

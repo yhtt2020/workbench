@@ -11,9 +11,9 @@
 
 <script>
 export default {
-  name: 'HorizontalTab',
+  name: 'RadioTab',
   props: {
-    // 列表内容
+    //单选导航列表
     navList: {
       type: Array,
       default: () => []
@@ -28,7 +28,7 @@ export default {
       type:String,
       default:'active-item'
     },
-    //组件的高
+    //导航的高
     height:{
       type:Number,
       default:48
@@ -63,7 +63,6 @@ export default {
   methods: {
     posType () {
       if(this.selectType){
-        console.log(this.selectType)
         if (this.selectType.name && this.navList.length > 0) {
           this.activeIndex = this.navList.findIndex(item => {
             return item.name === this.selectType.name

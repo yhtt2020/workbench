@@ -3,11 +3,14 @@
     <div>当前时间：{{ getDate() }}</div>
     <div class="my-3">当前时间戳：{{ currentTimeStamp }}</div>
     <div class="flex">
-      <Tinput
+      <XtInput
         class="xt-bg-2 xt-border rounded-xl"
+        :limit="{ number: true, space: true }"
         style="height: 48px"
         v-model:data="timeStamp"
         @keyup="timeStampKeyup()"
+        @change="timeStampKeyup()"
+        @input="timeStampKeyup()"
       >
         <template #addonBefore>
           <div
@@ -17,13 +20,20 @@
             时间戳
           </div>
         </template>
-      </Tinput>
-      <div class="p-2 cursor-pointer" @click="copyToClipboard(timeStamp)"><icon icon="fuzhi" style="font-size: 28px"></icon></div>
+      </XtInput>
+      <XtIcon
+        @click="copyToClipboard(timeStamp)"
+        :limit="{ space: true }"
+        icon="fuzhi"
+        size="28"
+        type=""
+      ></XtIcon>
     </div>
-    <div class="my-3"><icon icon="paixu" style="font-size: 28px"></icon></div>
-
+    <div class="my-3 flex justify-center" style="width: 100%">
+      <icon icon="paixu" style="font-size: 28px"></icon>
+    </div>
     <div class="flex">
-      <Tinput
+      <XtInput
         class="xt-bg-2 xt-border rounded-xl"
         style="height: 48px"
         v-model:data="time"
@@ -37,24 +47,40 @@
             时间
           </div>
         </template>
-      </Tinput>
-      <div  class="p-2 cursor-pointer" @click="copyToClipboard(time)"><icon icon="fuzhi" style="font-size: 28px"></icon></div>
+        <template #suffix>
+          <div style="width: 125px">
+            <a-date-picker v-model:value="datePicker" />
+          </div>
+        </template>
+      </XtInput>
+      <XtIcon
+        @click="copyToClipboard(time)"
+        icon="fuzhi"
+        size="28"
+        type=""
+      ></XtIcon>
     </div>
     <div class="mt-3">时间转时间戳，请输入时间格式：“xxxx-xx-xx xx:xx:xx”</div>
   </div>
 </template>
 
 <script>
+import dayjs from "../../../../table/components/card/hooks/day";
+
 import { message } from "ant-design-vue";
-import dayjs from "./day";
+import { timeConversion } from "../../../store/timeConversion";
+import { mapWritableState, mapActions } from "pinia";
+
 export default {
   data() {
     return {
       currentTimeStamp: 0,
       currentTimeStampTimer: "",
-      timeStamp: "",
-      time: "",
+      datePicker: "",
     };
+  },
+  computed: {
+    ...mapWritableState(timeConversion, ["time", "timeStamp"]),
   },
   mounted() {
     this.updateCurrentTimeStamp();
@@ -64,7 +90,15 @@ export default {
     clearInterval(this.currentTimeStampTimer);
     next();
   },
+  watch: {
+    datePicker(newV) {
+      let date = dayjs(newV).format("YYYY-MM-DD HH:mm:ss");
+      this.time = date;
+      this.timeKeyup();
+    },
+  },
   methods: {
+    ...mapActions(timeConversion, ["timeKeyup", "timeStampKeyup"]),
     updateCurrentTimeStamp() {
       const now = new Date();
       this.currentTimeStamp = now.getTime();
@@ -73,23 +107,7 @@ export default {
       let time = dayjs().format("YYYY-MM-DD HH:mm:ss");
       return time;
     },
-    // 时间转时间戳
-    timeKeyup() {
-      let timeString = this.time;
-      // 使用 dayjs 将时间转换为时间戳，并补全时间
-      const formattedDate = dayjs(timeString).format("YYYY-MM-DD HH:mm:ss");
-      const timestamp = dayjs(formattedDate).valueOf();
-      this.timeStamp = timestamp;
-    },
-    // 时间戳转时间
-    timeStampKeyup() {
-      let timestamp = parseInt(this.timeStamp);
 
-      // 使用 dayjs 将时间戳转换为时间
-      const dateObj = dayjs(timestamp);
-      const formattedDate = dateObj.format("YYYY-MM-DD HH:mm:ss");
-      this.time = formattedDate;
-    },
     copyToClipboard(text) {
       navigator.clipboard
         .writeText(text)
@@ -102,4 +120,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ant-picker) {
+  background: none;
+  border: none;
+}
+
+:deep(.ant-picker-input) {
+  font-size: 22px;
+}
+:deep(.ant-picker-focused) {
+  box-shadow: none !important;
+}
+</style>

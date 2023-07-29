@@ -193,8 +193,8 @@
           <div>3. 支持批量添加</div>
           <div class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
                @dragover.prevent="" @drop.prevent="drop">
-
-            <div class="p-2 pointer" @click="showOpenFileDialog">
+               <!-- class="add-icon" -->
+            <div class="pointer flex justify-center items-center w-40 h-12 rounded-lg add-style" @click="showOpenFileDialog">
               <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
               添加快捷方式
             </div>
@@ -215,8 +215,7 @@
             </div>
           </ScrolX>
           <div @click="clickRightListItem(dropList)"
-               class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg  "
-               style="background: var(--secondary-bg);color: var(--primary-text)">
+               class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg add-style">
             确定添加
           </div>
         </div>
@@ -1285,6 +1284,26 @@ export default {
 
     }
   }
+}
+.add-icon{
+  padding: 8px;
+  cursor:pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 8px;
+}
+.add-icon:hover{
+  // border: 1px solid var(--active-bg);
+  // color: #508BFE;
+  opacity: 0.8;
+}
+.add-style{
+  background: var(--secondary-bg);
+  color: var(--primary-text);
+}
+.add-style:hover{
+  opacity: 0.8;
 }
 
 .right-scroll-list:hover {

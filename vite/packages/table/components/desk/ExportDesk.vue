@@ -30,7 +30,7 @@
         </a-select>
         <span class="title">桌面数据：</span>
         <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留卡片的设置或数据，比如「便签」中的内容。</div>
-        <HorizonTalTab :navList="dataType" v-model:selectType="defaultType"></HorizonTalTab>
+        <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
         <div class="title mt-2">桌面显示尺寸：{{displaySize.width}} * {{displaySize.height}}</div>
 
       </div>
@@ -50,22 +50,22 @@
 </template>
 
 <script>
-import HorizonTalTab from '../HorizonTalTab.vue'
+import RadioTab from '../RadioTab.vue'
 import {cardStore} from '../../store/card'
 import { mapActions, mapWritableState } from 'pinia'
 import { message } from 'ant-design-vue'
 export default {
   name: "ExportDesk",
   components: {
-    HorizonTalTab
+    RadioTab
   },
   data() {
     return {
       dataType: [
-        {title: '保留数据', icon: 'yk_yuanquan_fill', name: 'data'},
-        {title: '不保留数据', icon: 'yk_yuanquan', name: 'notData'}
+        {title: '保留数据', name: 'data'},
+        {title: '不保留数据', name: 'notData'}
       ],
-      defaultType: {title: '不保留数据', icon: 'yuanquan', name: 'notData'},
+      defaultType: {title: '不保留数据', name: 'notData'},
       deskType: [],
       desk: [0],
       selectedDesk: []

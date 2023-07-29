@@ -9,7 +9,7 @@
     >
       <img
         class="w-12 h-12 mb-2"
-        :src="'/packages/toolbox/assets/images/' + tool.img + '.png'"
+        :src="'/tools/' + tool.img + '.png'"
         alt=""
       />
       <div class="text-sm">{{ tool.name }}</div>
@@ -30,14 +30,14 @@ export default {
         { name: "计算器", img: "calculator", route: "calculator" },
         { name: "时间戳转换", img: "timeConversion", route: "timeConversion" },
         { name: "翻译", img: "translate", route: "translate" },
-
+        {
+          name: "汇率转换",
+          img: "moneyExchange",
+          route: "moneyExchange",
+        },
         // { name: "搜索网格", img: "searchTools", route: "searchTools" },
         // { name: "文件分享", img: "fileFhare", route: "fileFhare" },
-        // {
-        //   name: "汇率转换",
-        //   img: "exchangeConversion",
-        //   route: "exchangeConversion",
-        // },
+
         //
         // { name: "文字识别", img: "textRecognition", route: "textRecognition" },
         //
