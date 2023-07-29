@@ -6,7 +6,7 @@ export const currencies = [
   { name: "英镑", id: "GBP" },
   { name: "韩元", id: "KRW" },
   { name: "港币", id: "HKD" },
-  { name: "澳大利亚元", id: "AUD" },
+  { name: "澳元", id: "AUD" },
   { name: "加拿大元", id: "CAD" },
 ];
 const allCurrencies = [

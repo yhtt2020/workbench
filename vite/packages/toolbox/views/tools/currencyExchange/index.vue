@@ -57,15 +57,10 @@
           </a-dropdown>
         </template>
       </XtInput>
-      <XtIcon
-        @click="copyToClipboard(fromCurrency)"
-        icon="fuzhi"
-        size="28"
-        type=""
-      ></XtIcon>
+      <XtIcon :copy="fromCurrency" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
-    <div class="my-3 flex justify-center" style="width: 100%">
-      <icon icon="paixu" style="font-size: 28px"></icon>
+    <div class="my-2 flex justify-center" style="width: 100%">
+      <XtIcon icon="paixu" type="" size="28" @click="swap()"></XtIcon>
     </div>
     <div class="flex items-center">
       <XtInput
@@ -114,12 +109,7 @@
           </a-dropdown>
         </template>
       </XtInput>
-      <XtIcon
-        @click="copyToClipboard(toCurrency)"
-        icon="fuzhi"
-        size="28"
-        type=""
-      ></XtIcon>
+      <XtIcon :copy="toCurrency" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
   </div>
 
@@ -129,27 +119,14 @@
 
 <script>
 import { currencyExchange } from "../../../store/currencyExchange";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import axios from "axios";
 import { currencies } from "./currencies";
-import { message } from "ant-design-vue";
 
 export default {
   data() {
     return {
       currencies,
-      selectFromCurrency: {
-        name: "人民币",
-        id: "CNY",
-      },
-      selectToCurrency: {
-        name: "美元",
-        id: "USD",
-      },
-      fromCurrency: "",
-      toCurrency: "",
-      fromCurrencyRateList: "",
-      toCurrencyRateList: "",
     };
   },
   async mounted() {
@@ -168,31 +145,27 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(currencyExchange, ["currencyRateList"]),
-
-    fromRate() {
-      return (
-        this.currencyRateList[this.selectFromCurrency.id] &&
-        this.currencyRateList[this.selectFromCurrency.id][
-          this.selectToCurrency.id
-        ]
-      );
-    },
-    toRate() {
-      return (
-        this.currencyRateList[this.selectFromCurrency.id] &&
-        this.currencyRateList[this.selectToCurrency.id][
-          this.selectFromCurrency.id
-        ]
-      );
-    },
+    ...mapWritableState(currencyExchange, [
+      "currencyRateList",
+      "fromCurrency",
+      "toCurrency",
+      "selectFromCurrency",
+      "selectToCurrency",
+      "fromRate",
+      "toRate",
+    ]),
   },
   methods: {
-    fromCurrencyRate() {
-      this.toCurrency = this.fromCurrency * this.fromRate;
-    },
-    toCurrencyRate() {
-      this.fromCurrency = this.toCurrency * this.toRate;
+    ...mapActions(currencyExchange, ["fromCurrencyRate", "toCurrencyRate"]),
+    swap() {
+      [this.fromCurrency, this.toCurrency] = [
+        this.toCurrency,
+        this.fromCurrency,
+      ];
+      [this.selectFromCurrency, this.selectToCurrency] = [
+        this.selectToCurrency,
+        this.selectFromCurrency,
+      ];
     },
 
     async getCurrency(id) {
@@ -207,14 +180,6 @@ export default {
         this.toCurrencyRateList = toRes.data.data;
         this.currencyRateList[id] = { ...toRes.data.data };
       }
-    },
-    copyToClipboard(text) {
-      navigator.clipboard
-        .writeText(text)
-        .then(() => {
-          message.success("已成功复制到剪切板");
-        })
-        .catch((err) => {});
     },
   },
 };

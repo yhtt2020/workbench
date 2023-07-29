@@ -21,12 +21,7 @@
           </div>
         </template>
       </XtInput>
-      <XtIcon
-        @click="copyToClipboard(timeStamp)"
-        icon="fuzhi"
-        size="28"
-        type=""
-      ></XtIcon>
+      <XtIcon :copy="timeStamp" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
     <div class="my-3 flex justify-center" style="width: 100%">
       <icon icon="paixu" style="font-size: 28px"></icon>
@@ -52,12 +47,7 @@
           </div>
         </template>
       </XtInput>
-      <XtIcon
-        @click="copyToClipboard(time)"
-        icon="fuzhi"
-        size="28"
-        type=""
-      ></XtIcon>
+      <XtIcon :copy="time" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
     <div class="mt-3">时间转时间戳，请输入时间格式：“xxxx-xx-xx xx:xx:xx”</div>
   </div>
@@ -66,7 +56,6 @@
 <script>
 import dayjs from "../../../../table/components/card/hooks/day";
 
-import { message } from "ant-design-vue";
 import { timeConversion } from "../../../store/timeConversion";
 import { mapWritableState, mapActions } from "pinia";
 
@@ -105,15 +94,6 @@ export default {
     getDate() {
       let time = dayjs().format("YYYY-MM-DD HH:mm:ss");
       return time;
-    },
-
-    copyToClipboard(text) {
-      navigator.clipboard
-        .writeText(text)
-        .then(() => {
-          message.success("已成功复制到剪切板");
-        })
-        .catch((err) => {});
     },
   },
 };

@@ -1,14 +1,36 @@
 <template>
   <div>
-    <div :class="typeClass" :style="customStyle" class="xt-active xt-base-btn">
-      <Icon :icon="icon" :style="fontSizeStyle"></Icon>
+    <div
+      :class="typeClass"
+      :style="customStyle"
+      class="xt-active xt-base-btn"
+      @click="copyToClipboard()"
+    >
+      <MyIcon :icon="icon" :style="fontSizeStyle"></MyIcon>
     </div>
   </div>
 </template>
 
 <script>
+import { message } from "ant-design-vue";
+import MyIcon from "./Icon.vue";
 export default {
   name: "XtIcon",
+  components: {
+    MyIcon,
+  },
+  methods: {
+    copyToClipboard() {
+      console.log("!this.copy :>> ", this.copy);
+      if (!this.copy) return;
+      navigator.clipboard
+        .writeText(this.copy)
+        .then(() => {
+          message.success("已成功复制到剪切板");
+        })
+        .catch((err) => {});
+    },
+  },
   computed: {
     // 自定义宽高
     customStyle() {
@@ -33,6 +55,10 @@ export default {
     },
   },
   props: {
+    copy: {
+      type: String,
+      default: "",
+    },
     type: {
       type: String,
       default: "default",

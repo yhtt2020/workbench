@@ -10,20 +10,22 @@ export const translate = defineStore("translate", {
       name: "自动检测",
     },
     toLang: {
-      lang: "zn",
+      lang: "zh",
       name: "中文",
     },
   }),
   actions: {
     async startTranslation() {
       let res: any = await getResult({
-        // fromLang: this.fromLang.lang,
+        fromLang: this.fromLang.lang,
         toLang: this.toLang.lang,
         queryStr: this.inputValue,
       });
       let { data, code } = res;
       if (code === 1000) {
         this.resultValue = data.trans_result[0].dst;
+      }else {
+        console.log('res :>> ', res);
       }
     },
   },
