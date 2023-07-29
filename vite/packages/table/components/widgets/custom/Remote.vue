@@ -92,7 +92,7 @@ export default {
           icon: "fenxiang",
           title: '社区分享',
           fn: () => {
-            this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id}})
+            this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id,cardId: this.customIndex}})
           }
         },
         {
