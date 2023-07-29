@@ -1,97 +1,68 @@
 <template>
-  <!-- 遮罩 -->
-  <div class="h-full w-full xt-mask fixed top-0 left-0" @click="close()"></div>
-  <!-- 添加图标 -->
-  <div
-    class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-20 p-3 xt-modal rounded-xl xt-text"
-    style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%)"
-  >
-    <div class="flex flex-col" style="max-height: 80vh;min-height: 480px">
-      <header
-        class="flex items-center justify-center h-12 w-full relative text-lg"
-      >
-        批量导入图标
+  <XtView type="popup" @close="close()" title="批量添加图标" :ifFull="false">
+    <main class="flex h-full p-1" style="min-width: 200px !important">
+      <div style="" class="h-full">
         <div
-          class="absolute rounded-xl xt-bg-2 flex items-center justify-center right-0 cursor-pointer h-12 w-12"
-          @click="close()"
+          class="overflow-y-auto xt-container"
+          style="border-right: 1px solid var(--divider)"
+          :style="leftTabHeight"
         >
-          <Icon class="icon" icon="guanbi1"></Icon>
-        </div>
-      </header>
-      <!-- 主体 -->
-      <main class="flex mt-3 h-full">
-        <!-- 左侧 -->
-        <div style="" class="h-full">
           <div
-            class="overflow-y-auto xt-container"
-            style="border-right: 1px solid var(--divider)"
-            :style="leftTabHeight"
-          >
-            <div
-              :style="{
+            :style="{
               'border-right':
                 item.component == navName ? '1px solid var(--active-bg)' : '',
             }"
-              v-for="item in navList"
+            v-for="item in navList"
+          >
+            <div
+              class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+              :key="item.name"
+              @click="navName = item.component"
+              :class="{ 'xt-bg-2': item.component == navName }"
             >
-              <div
-                class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
-                :key="item.name"
-                @click="navName = item.component"
-                :class="{ 'xt-bg-2': item.component == navName }"
-              >
-                {{ item.name }}
-              </div>
+              {{ item.name }}
             </div>
           </div>
         </div>
-        <!-- 右侧 -->
-        <div class="pl-2 w-full h-full">
-          <component
-            ref="apps"
-            :is="navName"
-            :type="type"
-            @updateData="updateData"
-          ></component>
-        </div>
-      </main>
-      <!-- 底部 -->
-      <div class="flex items-center my-3" v-if="selectAppsLenght">
-        <div style="width: 130px" class="flex justify-end">
-          已选 {{ selectAppsLenght }} ：
-        </div>
-        <div
-          class="flex overflow-x-auto xt-container"
-          v-scrollable
-          :style="selectedWidth"
-        >
-          <template v-for="(v, k) of selectApps">
-            <div v-for="item in selectApps[k]">
-              <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
-            </div>
-          </template>
-        </div>
       </div>
-      <footer class="flex items-center justify-center mt-2">
-        <Tab
-          v-if="navName == 'Links'"
-          style="width: 380px; height: 48px"
-          boxClass="my-2 p-1 xt-bg-2"
-          v-model:data="type"
-          :list="linkList"
-        ></Tab>
-        <div
-          class="xt-active-bg flex items-center justify-center rounded-xl cursor-pointer m-1 h-12 w-120 xt-active-text"
-          @click="commitIcons()"
-        >
-          确认
-        </div>
-      </footer>
+      <div class="pl-2 w-full h-full">
+        <component
+          ref="apps"
+          :is="navName"
+          :type="type"
+          @updateData="updateData"
+        ></component>
+      </div>
+    </main>
+    <div class="flex items-center my-3" v-if="selectAppsLenght">
+      <div style="width: 130px" class="flex justify-end">
+        已选 {{ selectAppsLenght }} ：
+      </div>
+      <div
+        class="flex overflow-x-auto xt-container"
+        v-scrollable
+        :style="selectedWidth"
+      >
+        <template v-for="(v, k) of selectApps">
+          <div v-for="item in selectApps[k]">
+            <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
+          </div>
+        </template>
+      </div>
     </div>
-    <!-- 头部 -->
-
-
-  </div>
+    <footer class="flex items-center justify-center mt-2">
+      <XtTab
+        v-if="navName == 'Links'"
+        style="width: 380px; height: 48px"
+        boxClass="my-2 p-1 xt-bg-2"
+        v-model:data="type"
+        :list="linkList"
+      ></XtTab>
+      <XtButton type="theme" class="ml-2" @click="commitIcons()">
+        确认
+      </XtButton>
+    </footer>
+  </XtView>
 </template>
 
 <script>
@@ -102,7 +73,6 @@ import QingApps from "./modules/QingApps.vue";
 import { cardStore } from "../../../store/card.ts";
 import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
-import Tab from "../../../components/card/components/tab/index.vue";
 import { mapActions, mapWritableState } from "pinia";
 import { useBase64AsImage } from "../../../../table/components/card/hooks/base64";
 
@@ -166,7 +136,6 @@ export default {
     MyApps,
     Desktop,
     QingApps,
-    Tab,
   },
   watch: {
     navName: {

@@ -25,7 +25,7 @@
   </div>
   <XtView
     style="z-index: 9999999999"
-    model="popup"
+    type="popup"
     :showFull="false"
     v-if="popupVisible"
     @close="close"
