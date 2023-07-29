@@ -214,7 +214,9 @@ let pool = new Pool()
 app.whenReady().then(() => {
   pool.init()
 })
-
+ipc.on('closeSelf',(event,args)=>{
+  BrowserWindow.fromWebContents(event.sender).close()
+})
 // const renderPopManager={
 //   /**
 //    * 准备窗体
@@ -402,9 +404,7 @@ global.render = {
       ipc.on('addRenderTab', (event, args) => {
         this.openRenderTab(args.url)
       })
-      ipc.on('closeSelf',(event,args)=>{
-        BrowserWindow.fromWebContents(event.sender).close()
-      })
+
     })
 
   },
