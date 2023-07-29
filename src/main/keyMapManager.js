@@ -16,7 +16,7 @@ class KeyMapManager {
       const { key, shortcut } = args
       let rs
       try {
-        console.log(this.regEvents,'当前的绑定事件')
+       // console.log(this.regEvents,'当前的绑定事件')
         const gotEvent = this.regEvents[key]
         if (!gotEvent) {
           console.warn('未设置快捷键事件：', key, shortcut)
@@ -34,12 +34,12 @@ class KeyMapManager {
         if (this.regResult[key]) {
           //如果之前注册是成功的，则取消，否则则不需要取消
           globalShortcut.unregister(oldKey)
-          console.log('解绑老案件',oldKey)
+         // console.log('解绑老案件',oldKey)
         }
         this.setKeyMap(key, shortcut)//设置新快捷键
         this.regResult[key] = true
         event.returnValue = true
-        console.log('注册快捷键成功：',key,shortcut)
+        //console.log('注册快捷键成功：',key,shortcut)
       } else {
         event.returnValue = false
       }
@@ -53,9 +53,9 @@ class KeyMapManager {
    */
   getKeyMap (name,defaultKeys) {
     const keyMap = keyMapModule.userKeyMap(settings.get('keyMap'))
-    console.log(keyMap,'全局快捷键设置')
+   // console.log(keyMap,'全局快捷键设置')
     let key=''
-    console.log(keyMap[name],'用户设置键位')
+    //console.log(keyMap[name],'用户设置键位')
     if (keyMap) {
       if (keyMap[name]) {
         key = keyMap[name]
@@ -91,7 +91,7 @@ class KeyMapManager {
       await onFailure(mappedKey)
       console.warn('注册全局快捷键失败：', key,mappedKey)
     } else {
-      console.log('注册快捷键成功：',key,mappedKey)
+     // console.log('注册快捷键成功：',key,mappedKey)
       this.regResult[key] = true
     }
   }

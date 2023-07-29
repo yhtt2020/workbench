@@ -158,7 +158,8 @@ app.whenReady().then(async () => {
   },'为您直接打开工作台。')
 
   keyMapManager.regWithNotification('superTools',async()=>{
-    openToolbox()
+    await ToolboxManager.ensure()
+    global.toolboxManager.toggle()
   }, ()=>{
   },'请在工作台快捷键设置处修改工作台快捷键。')
 
