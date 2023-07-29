@@ -17,7 +17,7 @@ export const translate = defineStore("translate", {
   actions: {
     async startTranslation() {
       let res: any = await getResult({
-        fromLang: this.fromLang.lang,
+        // fromLang: this.fromLang.lang,
         toLang: this.toLang.lang,
         queryStr: this.inputValue,
       });

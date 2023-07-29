@@ -1,13 +1,6 @@
 <template>
   <div style="height: 60px" class="xt-bg-2 xt-text flex items-center">
     <template v-if="useTool">
-      <!-- <Icon
-        icon="xiangzuo"
-        style="font-size: 20px; width: 10px"
-        class="no-darg xt-text"
-      ></Icon>
-       -->
-
       <XtIcon
         @click="back()"
         class="mx-2"
@@ -29,6 +22,7 @@
     </template>
 
     <XtInput
+      :focus="true"
       v-model:data="search"
       placeholder="试试输入、粘贴、拖放内容到此处"
       @enter="searchEnter()"
@@ -55,6 +49,7 @@ import { calculator } from "../../store/calculator";
 import { translate } from "../../store/translate";
 import { timeConversion } from "../../store/timeConversion";
 export default {
+  mounted() {},
   computed: {
     ...mapWritableState(main, ["useTool"]),
     ...mapWritableState(calculator, ["computeList", "selectIndex"]),

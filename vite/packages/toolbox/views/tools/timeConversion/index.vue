@@ -23,7 +23,6 @@
       </XtInput>
       <XtIcon
         @click="copyToClipboard(timeStamp)"
-        :limit="{ space: true }"
         icon="fuzhi"
         size="28"
         type=""
