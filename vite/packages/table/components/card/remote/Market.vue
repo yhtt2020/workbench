@@ -2,7 +2,7 @@
   <!-- <div style="width:100%;height:100%;overflow:auto"> -->
   <div>
     <div class="head-nav" id="nav">
-      <span>来自社区用户的分享（{{ dataList.length }}）</span>
+      <span>来自社区用户的分享（{{ dataList.length }}）  <strong style="color:red">！此功能正在开发中！</strong></span>
       <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class="select rounded-lg  s-item flex items-center text-center" :bordered="false"
         size="large" @change="handleChange"
         :dropdownStyle="{ 'z-index': 99999, backgroundColor: 'var(--secondary-bg)' }">
