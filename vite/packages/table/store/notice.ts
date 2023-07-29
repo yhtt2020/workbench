@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
+import { NotificationManager } from "../js/common/sessionNotice";
 
 // @ts-ignore
 export const noticeStore = defineStore('notice',{
@@ -53,6 +54,14 @@ export const noticeStore = defineStore('notice',{
           icon:'',
           url:'/icons/bg.png',
           delId:0,
+        },
+        {
+          id:6,
+          name:'system',
+          alias:'系统',
+          icon:'',
+          url:'/icons/logo128.png',
+          delId:0,
         }
       ],
       notice:[
@@ -92,7 +101,7 @@ export const noticeStore = defineStore('notice',{
               id:0,
               title:'',
               content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用',
-              
+              time:1690428344,
             }
           ],
           noticeIcon:'',
@@ -104,15 +113,29 @@ export const noticeStore = defineStore('notice',{
               id:0,
               title:'',
               content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用',
-              
+              time:1690266344,
             }
           ],
           noticeIcon:'',
         }
       ]
     },
+    noticeEnable:false  // 是否开启消息通知
   }),
   actions:{
+
+    setNotificationOnOff(value){  // 设置消息通知开关
+      this.noticeEnable = value
+    },
+
+    delAllNotification(index){  // 删除所有消息通知 
+      this.messageNotice.notice[index].noticeList = []
+      const notice = new NotificationManager()
+      notice.removeAllNotification()
+    }
+    
+
+
 
   },
   persist:{
@@ -120,7 +143,7 @@ export const noticeStore = defineStore('notice',{
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths:['messageNotice'],
+      paths:['messageNotice','noticeEnable'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
