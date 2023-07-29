@@ -23,7 +23,7 @@
             </div>
           </div>
           <div v-else>
-            你分享了列表
+            <Market :desk="desk" @closeMarket="close" listType="my" @shareNow="shareNow"></Market>
           </div>
         </div>
     </div>
@@ -87,19 +87,6 @@ import {shareList} from '../../../components/card/remote/testData'
       nav.classList.add('suspension-r-nav')
       list.classList.add('list-r-nav')
     },
-    // watch: {
-    //   selectNav: {
-    //     deep: true,
-    //     handler(val){
-    //       if(val === 'share'){
-    //         let nav = document.getElementById('nav');
-    //         let list = document.getElementById('navList');
-    //         nav.classList.add('suspension-r-nav')
-    //         list.classList.add('list-r-nav')
-    //       }
-    //     }
-    //   }
-    // }
   }
 </script>
 
@@ -151,7 +138,7 @@ import {shareList} from '../../../components/card/remote/testData'
       }
       .block-btn{
         text-align: center;
-        padding: 13px 24px;
+        padding: 10px 28px;
         border-radius: 12px;
         background: var(--active-bg);
         cursor: pointer;

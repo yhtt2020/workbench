@@ -84,3 +84,6 @@ export const shareList = []
 export const setList = function(val){
   shareList.push(val)
 }
+
+export const delList = function(val){
+}

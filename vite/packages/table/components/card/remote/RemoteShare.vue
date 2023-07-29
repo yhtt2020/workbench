@@ -45,11 +45,11 @@
           <a-input v-model:value="name" spellcheck ="false" show-count :maxlength="20" class="input" placeholder="名称" aria-placeholder="font-size: 16px;" style="width:552px;height: 48px;"/>
           <a-textarea v-model:value="detail" :bordered="false" spellcheck="false" class="input xt-text my-6" show-count :maxlength="200" placeholder="简介（选填）" aria-placeholder="font-size: 16px;" style="width:552px;height: 122px;"/>
           <div class="flex justify-center mb-6" style="width:100%;">
-            <div style="width: 120px;height: 44px;"
+            <div style="width: 120px;height: 44px;font-size: 16px;"
                 class=" mr-3 flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer" @click="close">
               取消
             </div>
-            <div style="width: 120px;height: 44px;"
+            <div style="width: 120px;height: 44px;font-size: 16px;"
               @click="shareNow"
               class="flex justify-center items-center bg-blue-500 rounded-lg pointer">
             立即分享

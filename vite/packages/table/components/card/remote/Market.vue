@@ -1,7 +1,11 @@
 <template>
   <!-- <div style="width:100%;height:100%;overflow:auto"> -->
   <div>
-    <div class="head-nav" id="nav">
+    <div class="head-nav" id="nav" v-if="listType === 'my'">
+      <span>我分享外部小组件（{{ shareList.length }}）</span>
+      <div class="block-btn" @click="shareNow">立即分享</div>
+    </div>
+    <div class="head-nav" id="nav" v-else>
       <span>来自社区用户的分享（{{ dataList.length }}）</span>
       <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class="select rounded-lg  s-item flex items-center text-center" :bordered="false"
         size="large" @change="handleChange"
@@ -14,9 +18,25 @@
     </div>
     <div id="navList">
       <!-- 外部小组件的社区列表 -->
-      <div class="box xt-bg-2" v-for="(item, index) in dataList" :key="item.name">
+      <div class="box xt-bg-2" v-for="(item, index) in list" :key="item.name">
         <div class="box xt-bg-2">
-          <div class="add no-drag" @click="addNewCard(item)">
+          <div class="add no-drag" v-if="listType === 'my'">
+            <!-- <div class="text" style="color: #fff">· · ·</div> -->
+            <a-dropdown :trigger="['click']" :z-index="999999">
+              <div class="text" style="color: #fff">· · ·</div>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item key="0">
+                    <div>添加桌面</div>
+                  </a-menu-item>
+                  <a-menu-item key="1">
+                    <div>删除</div>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </div>
+          <div class="add no-drag" @click="addNewCard(item)" v-else>
             <div class="icons">
               <Icon icon="tianjia2" style="color: #000"></Icon>
             </div>
@@ -59,8 +79,8 @@
           </div>
         </div>
       </div>
-      <!-- 切换数据v-if="dataList.length > 10" -->
-      <div class="switch-data" >
+      <!-- 切换数据 -->
+      <div class="switch-data" v-if="list.length > 3">
           <div :class="paging === 1 ? 'pag-active' : ''" class="mr-3">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
@@ -84,7 +104,7 @@
   import { cardStore } from "../../../store/card";
   import { message } from "ant-design-vue";
   import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
-  import { dataList } from './testData'
+  import { dataList,shareList } from './testData'
   export default{
     components: {
       NewPreviewCardDetails,
@@ -96,6 +116,11 @@
         required: true,
         default: () => {},
       },
+      listType: {
+        type: String,
+        required: true,
+        default: () => '',
+      },
     },
     data() {
       return {
@@ -105,13 +130,15 @@
         remoteContent: {},
         showModal: false,
         dataList,
+        shareList,
         sortVal: '最多使用',
         sortType: [
           { value: '最多使用', name: '最多使用' },
           { value: '下载次数', name: '下载次数' },
           { value: '分享时间', name: '分享时间' },
         ],
-        paging: 1
+        paging: 1,
+        list: []
       }
     },
     methods: {
@@ -158,8 +185,18 @@
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const day = date.getDate().toString().padStart(2, "0");
         return `${year}-${month}-${day}`;
+      },
+      shareNow(){
+        this.$emit('shareNow')
       }
     },
+    mounted() {
+        if(this.listType === 'my'){
+          this.list = shareList
+        }else{
+          this.list = dataList
+        }
+    }
   }
 </script>
 
@@ -376,5 +413,15 @@
 }
 .pag-active {
   opacity: 0.5;
+}
+.block-btn{
+  text-align: center;
+  padding: 10px 28px;
+  border-radius: 12px;
+  background: var(--active-bg);
+  cursor: pointer;
+}
+.dropdown{
+  background: red;
 }
 </style>
