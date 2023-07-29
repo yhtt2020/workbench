@@ -12,7 +12,7 @@
       ></XtIcon>
       <div class="xt-active-bg-2 xt-base-btn px-2 w-auto" style="height: 44px">
         <img
-          :src="'/packages/toolbox/assets/images/' + useTool.img + '.png'"
+          :src="'/tools/' + useTool.img + '.png'"
           style="width: 32px; height: 32px"
           class="mr-2"
           alt=""

@@ -19,7 +19,7 @@ import Main from "../page/Main.vue";
 import Home from "../page/Home.vue";
 import BrowserSetting from "../page/settings/Browser.vue";
 import Common from "../page/settings/Common.vue";
-import SetupCard from "../page/app/card/SetupCard.vue";
+import SetupCard from "../page/app/card/SetupClock.vue";
 import Sensor from "../page/Sensor.vue";
 import Dashboard from "../page/app/watch/Dashboard.vue";
 import CPUIndex from "../page/app/CPUIndex.vue";
@@ -58,6 +58,7 @@ import Contact from '../page/chat/contact.vue'
 import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
+import RemoteCommunity from '../page/app/card/RemoteCommunity.vue'
 
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
@@ -410,6 +411,11 @@ export default [
           }
         ]
       },
+      {
+        path: "/remoteCommunity",
+        name: "remoteCommunity",
+        component: RemoteCommunity,
+      }
     ],
   },
 ];

@@ -31,20 +31,19 @@
     <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
       <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
     </div>
-    <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
-    <a-empty :description="null" :image="simpleImage"/>
-    <a-button type="primary xt-text xt-bg-2" style="border: none;"
-              @click="onSetup">立即添加
+    <a-empty style="margin-top: 40px" :description="null" :image="simpleImage"/>
+    <a-button type="primary" class=" xt-text xt--active-bg rounded-full" style="border: none;"
+              @click="onSetup">添加闹钟
     </a-button>
   </div>
-  <div class="card  gradient gradient--14 content small" v-else
+  <div @click="onSetup" class="card cursor-pointer  gradient gradient--14 content small" v-else
        style="color:var(--primary-text);background: var(--primary-bg);">
     <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
       <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
     </div>
     <div style="text-align: center; font-size: 1.5em">下一个闹钟</div>
     <div style="font-size: 3em; margin-top: 0.5em">
-      {{ clockEvent[0].dateValue.hours }}:{{ clockEvent[0].dateValue.minutes }}
+      <icon icon="naozhong"></icon>  {{ clockEvent[0].dateValue.hours }}:{{ clockEvent[0].dateValue.minutes }}
     </div>
     <div style="font-size: 1.5em; margin-top: 0.5em" class="text-more">
       {{ clockEvent[0].eventValue }}

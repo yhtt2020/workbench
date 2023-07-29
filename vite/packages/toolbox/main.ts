@@ -2,7 +2,7 @@ import { createApp } from "vue";
 
 import "ant-design-vue/dist/antd.css";
 import App from "./App.vue";
-import tools from "../../src/util/tools.js";
+const {tools}=window.$models
 
 tools.getWindowArgs(window);
 

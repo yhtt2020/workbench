@@ -339,6 +339,20 @@ export const NavList = [
         ],
         time: '2023/5/31'
       },
+      {
+        name: 'search',
+        cname:'聚合搜索',
+        detail:'集成必应、百度、Google、B站等主流搜索。',
+        sizes: ['2x2', '4x2'],
+        option:[
+          {
+            name: 'AggregateSearch',
+            size: '2x4',
+            zoom: '20'
+          }
+        ],
+        time: '2023/5/24'
+      }
     ],
   },
   {
@@ -650,7 +664,7 @@ export const NavList = [
         name: 'remote',
         cname: '外部小组件',
         detail: '添加一个链接到外部网页的小组件，可以实现各种自定义功能',
-        sizes: ['自定义大小'],
+        sizes: ['社区分享','自定义大小'],
         option: [
           {
             name: 'Remote',
@@ -679,20 +693,6 @@ export const NavList = [
         time: '2023/6/29'
 
       },
-      {
-        name: 'search',
-        cname:'聚合搜索',
-        detail:'集成必应、百度、Google、B站等主流搜索。',
-        sizes: ['2x2', '4x2'],
-        option:[
-          {
-            name: 'AggregateSearch',
-            size: '2x4',
-            zoom: '20'
-          }
-        ],
-        time: '2023/5/24'
-      }
     ]
   },
 ]

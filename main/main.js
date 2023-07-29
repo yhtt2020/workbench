@@ -67,7 +67,6 @@ async function ready() {
   async function uploadCumulativeTime () {
     try {
       let clientId=settings.get('clientID')
-      console.log('上传进度传入clientID',clientId)
       const userInfo = await userModel.getCurrent()
       const options = {
         uid: userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0, // 用户uid
@@ -78,7 +77,7 @@ async function ready() {
       baseApi.axios('/app/open/usageStats/cumulativeTime', options, 'post').catch(e => {
         console.warn('上传在线时长失败', e)
       }).then((rs) => {
-        console.log('提交在线时长成功',rs)
+        //console.log('提交在线时长成功',rs)
       })
     } catch (e) {
       console.warn('上传在线时间意外错误', e)

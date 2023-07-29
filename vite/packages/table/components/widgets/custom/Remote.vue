@@ -78,6 +78,7 @@ export default {
       height: 2,
 
       panelVisible: false,
+      showCommunity: false,
       id: Date.now().toString(),
       options: {
         className: 'card small',
@@ -87,6 +88,13 @@ export default {
         noTitle: true,
       },
       menuList: [
+        {
+          icon: "fenxiang",
+          title: '社区分享',
+          fn: () => {
+            this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id,cardId: this.customIndex}})
+          }
+        },
         {
           icon: "shezhi1",
           title: '设置',
@@ -107,6 +115,9 @@ export default {
     }
   },
   methods: {
+    closeModal(val){
+      this.showCommunity = val
+    },
     ensureEvenNumber(value) {
       const parsedValue = parseInt(value);
       return Math.ceil(parsedValue / 2) * 2;
@@ -159,7 +170,6 @@ export default {
     // if(this.customData.url){
     //   this.setUA()
     // }
-
     this.width = this.customData.width * 2 || 2
     this.height = this.customData.height * 2 || 2
     this.url = this.customData.url || ''
