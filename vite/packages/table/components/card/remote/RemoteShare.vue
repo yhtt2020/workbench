@@ -66,6 +66,7 @@
   import { message } from 'ant-design-vue';
   import cache from '../hooks/cache';
   import {setList} from './testData'
+  import {nanoid} from 'nanoid'
   export default{
     name: 'RemoteShare',
     components: {
@@ -126,6 +127,7 @@
         if(!this.name.trim())return message.info('名称不能为空')
         const time = new Date().valueOf()
         let cardContent = {
+          nanoid: nanoid(4),
           "name": "remote",
           "cname": this.name,
           "detail": this.detail,

@@ -1,5 +1,6 @@
 export const dataList = [
   {
+    nanoid: 'edrg',
     "name": "remote",
     "cname": "俄罗斯方块小游戏",
     "detail": "一个可以在桌面直接使用的俄罗斯方块小游戏",
@@ -19,6 +20,7 @@ export const dataList = [
     "nickname": 'Victor Ruiz',
   },
   {
+    nanoid: 'qqsd',
     "name": "remote",
     "cname": "网易云",
     "detail": "https://music.163.com/",
@@ -41,6 +43,7 @@ export const dataList = [
     "nickname": 'Russell Morgan',
   }, 
   {
+    nanoid: '6hgd',
     "name": "remote",
     "cname": "动态壁纸-动漫人物",
     "detail": "地址：https://www.bilibili.com/read/cv9984775/",
@@ -60,6 +63,7 @@ export const dataList = [
     "nickname": 'Edith Harvey',
   }, 
   {
+    nanoid: 'mjyi',
     "name": "remote",
     "cname": "Ant Design Vue",
     "detail": "地址：https://www.antdv.com/components/overview-cn",
@@ -85,5 +89,8 @@ export const setList = function(val){
   shareList.push(val)
 }
 
-export const delList = function(val){
+export const delList = function(id){
+  shareList.map((item,index) => {
+    if(item.nanoid === id)shareList.splice(index,1)
+  })
 }

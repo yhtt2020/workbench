@@ -18,19 +18,21 @@
     </div>
     <div id="navList">
       <!-- 外部小组件的社区列表 -->
-      <div class="box xt-bg-2" v-for="(item, index) in list" :key="item.name">
+      <div class="box xt-bg-2" v-for="(item, index) in list" :key="item.nanoid">
         <div class="box xt-bg-2">
-          <div class="add no-drag" v-if="listType === 'my'">
+          <div v-if="listType === 'my'">
             <!-- <div class="text" style="color: #fff">· · ·</div> -->
             <a-dropdown :trigger="['click']" :z-index="999999">
-              <div class="text" style="color: #fff">· · ·</div>
+              <div class="add no-drag" >
+                <div class="text" style="color: #fff">· · ·</div>
+              </div>
               <template #overlay>
-                <a-menu>
+                <a-menu class="set-btn">
                   <a-menu-item key="0">
-                    <div>添加桌面</div>
+                    <div class="btn-style" @click="addNewCard(item)">添加桌面</div>
                   </a-menu-item>
                   <a-menu-item key="1">
-                    <div>删除</div>
+                    <div class="btn-style" @click="delCard(item.nanoid)">删除</div>
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -104,7 +106,7 @@
   import { cardStore } from "../../../store/card";
   import { message } from "ant-design-vue";
   import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
-  import { dataList,shareList } from './testData'
+  import { dataList,shareList,delList } from './testData'
   export default{
     components: {
       NewPreviewCardDetails,
@@ -188,6 +190,11 @@
       },
       shareNow(){
         this.$emit('shareNow')
+      },
+      delCard(id){
+        delList(id)
+        this.$forceUpdate()
+        this.$emit('closeMy')
       }
     },
     mounted() {
@@ -423,5 +430,23 @@
 }
 .dropdown{
   background: red;
+}
+.set-btn{
+  width:120px;
+  height:112px;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+  border-radius: 10px;
+  .btn-style{
+    width: 104px;
+    height: 44px;
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    color: var(--primary-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

@@ -14,17 +14,17 @@
         <dvi v-if="selectNav.name === 'share'" class="share-list">
           <Market :desk="desk" @closeMarket="close"></Market>
         </dvi>
-        <div class="body-box" v-else>
-          <div class="box" v-if="!shareList.length">
+        <div class="body-box" v-if="selectNav.name !== 'share' && !shareList.length">
+          <div class="box">
             <div class="box-block">
               <img src="/img/state/init.png" alt="">
               <span>分享我制作的外部小组件</span>
               <div class="block-btn" @click="shareNow">立即分享</div>
             </div>
           </div>
-          <div v-else>
-            <Market :desk="desk" @closeMarket="close" listType="my" @shareNow="shareNow"></Market>
-          </div>
+        </div>
+        <div v-if="selectNav.name !== 'share' && shareList.length" class="share-list">
+          <Market :desk="desk" @closeMarket="close" listType="my" @shareNow="shareNow" @closeMy="closeMy"></Market>
         </div>
     </div>
   </div>
@@ -71,6 +71,9 @@ import {shareList} from '../../../components/card/remote/testData'
       },
       closeShare(val){
         this.openShare = val
+      },
+      closeMy(){
+        this.$forceUpdate()
       }
     },
     computed: {
