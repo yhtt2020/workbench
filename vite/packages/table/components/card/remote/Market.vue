@@ -20,7 +20,7 @@
       <!-- 外部小组件的社区列表 -->
       <div class="box xt-bg-2" v-for="(item, index) in list" :key="item.nanoid">
         <div class="box xt-bg-2">
-          <div v-if="listType === 'my'">
+          <div v-if="setCard === 'my'">
             <!-- <div class="text" style="color: #fff">· · ·</div> -->
             <a-dropdown :trigger="['click']" :z-index="999999">
               <div class="add no-drag" >
@@ -37,6 +37,11 @@
                 </a-menu>
               </template>
             </a-dropdown>
+          </div>
+          <div class="add no-drag" @click="showPrompt(item)" v-else-if="setCard === 'tip'">
+            <div class="icons">
+              <Icon icon="tianjia2" style="color: #000"></Icon>
+            </div>
           </div>
           <div class="add no-drag" @click="addNewCard(item)" v-else>
             <div class="icons">
@@ -106,7 +111,7 @@
   import { cardStore } from "../../../store/card";
   import { message } from "ant-design-vue";
   import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
-  import { dataList,shareList,delList } from './testData'
+  import { dataList,shareList,delList } from './testData';
   export default{
     components: {
       NewPreviewCardDetails,
@@ -118,11 +123,16 @@
         required: true,
         default: () => {},
       },
+      //列表类型   默认是社区的  my是我分享的 
       listType: {
         type: String,
-        required: true,
         default: () => '',
       },
+      //卡片设置   默认直接添加  my点击下拉添加或删除  tip弹出提示框
+      setCard: {
+        type: String,
+        default: () => '',
+      }
     },
     data() {
       return {
@@ -195,6 +205,9 @@
         delList(id)
         this.$forceUpdate()
         this.$emit('closeMy')
+      },
+      showPrompt(item){
+        this.$emit('getCard',item)
       }
     },
     mounted() {

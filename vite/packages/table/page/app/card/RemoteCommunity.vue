@@ -12,7 +12,7 @@
           </div>
         </div>
         <dvi v-if="selectNav.name === 'share'" class="share-list">
-          <Market :desk="desk" @closeMarket="close"></Market>
+          <Market :desk="desk" @closeMarket="close" setCard="tip" @getCard="getCard"></Market>
         </dvi>
         <div class="body-box" v-if="selectNav.name !== 'share' && !shareList.length">
           <div class="box">
@@ -24,14 +24,28 @@
           </div>
         </div>
         <div v-if="selectNav.name !== 'share' && shareList.length" class="share-list">
-          <Market :desk="desk" @closeMarket="close" listType="my" @shareNow="shareNow" @closeMy="closeMy"></Market>
+          <Market :desk="desk" @closeMarket="close" listType="my" setCard="my" @shareNow="shareNow" @closeMy="closeMy"></Market>
         </div>
     </div>
   </div>
   <div v-else>
-    <!-- <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk"></RemoteShare> -->
     <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :card="card"></RemoteShare>
   </div>
+
+  <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
+    <div class="p-5 xt-modal flex flex-col justify-center items-center" style="border-radius:16px">
+      <div>
+        <Icon icon="tishi-xianxing" style="font-size: 21px;color: orange"></Icon>
+        <span class="ml-3" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">提示</span>
+      </div>
+      <span class="my-5" style="font-size: 16px;color: var(--secondary-text);">选择覆盖当前小组件的数据或在桌面上新建一个组件。</span>
+      <div class="modal-btn">
+        <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="promptVisible = false">取消</div>
+        <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="addNewCard(selectCard)">新建小组件</div>
+        <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="subCard(selectCard)">覆盖当前</div>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script>
@@ -42,12 +56,15 @@ import State from "../../../components/card/components/state/index.vue"
 import RemoteShare from '../../../components/card/remote/RemoteShare.vue'
 import { cardStore } from '../../../store/card';
 import {shareList} from '../../../components/card/remote/testData'
+import Modal from '../../../components/Modal.vue';
+import { message } from "ant-design-vue";
   export default{
     components: {
       HorizontalPanel,
       Market,
       State,
-      RemoteShare
+      RemoteShare,
+      Modal
     },
     data() {
       return {
@@ -58,11 +75,16 @@ import {shareList} from '../../../components/card/remote/testData'
         selectNav:{title:'社区分享',name:'share'},
         desk: {},
         openShare: false,
+        //当前卡片
         card: {},
-        shareList
+        shareList,
+        promptVisible: false,
+        //选中社区的卡片
+        selectCard: {}
       }
     },
     methods: {
+      ...mapActions(cardStore, ["addCard"]),
       close(){
         this.$router.go(-1)
       },
@@ -80,6 +102,24 @@ import {shareList} from '../../../components/card/remote/testData'
         let list = document.getElementById('navList');
         nav.classList.add('suspension-r-nav')
         list.classList.add('list-r-nav')
+      },
+      // 获取要添加的市场小卡片
+      getCard(card){
+        this.promptVisible = true
+        this.selectCard = card
+      },
+      addNewCard(card) {
+        this.addCard(
+          { name: card.option[0].name, id: Date.now(), customData: {url:card.url} },
+          this.desk
+        );
+        this.close()
+        message.success("添加成功！");
+      },
+      subCard(card){
+        this.card.customData.url = card.url
+        this.close()
+        message.success("添加成功！");
       }
     },
     computed: {
@@ -182,5 +222,23 @@ import {shareList} from '../../../components/card/remote/testData'
   }
   .list-r-nav{
     margin-top: 72px;
+  }
+  .modal-btn {
+    display: flex;
+    font-size: 16px;
+    color: var(--primary-text);
+    > div {
+      width: 120px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      margin-top: 24px;
+      background: var(--mask-bg);
+    }
+    >div:nth-child(3){
+      background: var(--active-bg) !important;
+    }
   }
 </style>

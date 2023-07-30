@@ -90,7 +90,7 @@ export default {
       menuList: [
         {
           icon: "fenxiang",
-          title: '社区分享',
+          title: '发现',
           fn: () => {
             this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id,cardId: this.customIndex}})
           }
