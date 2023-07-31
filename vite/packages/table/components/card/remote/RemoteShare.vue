@@ -5,7 +5,7 @@
       style=";width: 600px;height:80%;max-height: 556px;overflow:auto;background: var(--modal-bg);">
       <div class="flex flex-col" style="width:100%;">
         <div class="head-nav">
-          <div @click="close">
+          <div @click="close" v-show="!direct">
             <Icon icon="xiangzuo" style="color:var(--primary-text);font-size:24px"></Icon>
           </div>
           <span>分享</span>
@@ -46,7 +46,7 @@
           <a-textarea v-model:value="detail" :bordered="false" spellcheck="false" class="input xt-text my-6" show-count :maxlength="200" placeholder="简介（选填）" aria-placeholder="font-size: 16px;" style="width:552px;height: 122px;"/>
           <div class="flex justify-center mb-6" style="width:100%;">
             <div style="width: 120px;height: 44px;font-size: 16px;"
-                class=" mr-3 flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer" @click="close">
+                class=" mr-3 flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer" @click="direct ? $router.go(-1) : close">
               取消
             </div>
             <div style="width: 120px;height: 44px;font-size: 16px;"
@@ -71,7 +71,7 @@
     name: 'RemoteShare',
     components: {
     },
-    props: ['openShare','desk','cardId'],
+    props: ['openShare','desk','cardId','direct'],
     data() {
       return {
         remotes: [],
@@ -147,7 +147,13 @@
           "nickname": 'Victor Ruiz',
         }
         setList(cardContent)
-        this.close()
+        message.success('添加成功')
+        // if(this.direct){
+        //   this.$router.go(-1)
+        //   return
+        // }
+        // this.close()
+        this.$emit('closeShare',false,false)
       }
     },
     computed: {

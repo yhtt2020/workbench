@@ -94,7 +94,7 @@ export default {
       },
       menuList: [
         {
-          icon: "fenxiang",
+          icon: "shop",
           title: '发现',
           fn: () => {
             this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id,cardId: this.customIndex}})
@@ -104,7 +104,14 @@ export default {
           icon: "fenxiang",
           title: '分享',
           fn: () => {
-            this.openShare = true
+            this.$router.push({
+              name: 'remoteCommunity',
+              params: {
+                id: this.desk.id,
+                cardId: this.customIndex,
+                direct: true,
+              }
+            })
           }
         },
         {
