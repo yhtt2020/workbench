@@ -35,6 +35,8 @@ export default {
       this.dropDownIndex = index
       if(item.name === 'clear'){
         this.delAllNotification(this.select)
+      }else{
+        // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
       }
     }
   }
@@ -47,6 +49,7 @@ export default {
   background-color:var(--secondary-bg) !important;
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   width: 120px;
+  padding:8px 0;
 }
 
 :deep(.select){

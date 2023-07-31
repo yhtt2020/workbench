@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
 import { NotificationManager } from "../js/common/sessionNotice";
+import _ from 'lodash-es'
 
 // @ts-ignore
 export const noticeStore = defineStore('notice',{
@@ -131,11 +132,28 @@ export const noticeStore = defineStore('notice',{
     delAllNotification(index){  // 删除所有消息通知 
       this.messageNotice.notice[index].noticeList = []
       const notice = new NotificationManager()
-      notice.removeAllNotification()
-    }
+      notice.removeAllNotifications()
+    },
     
-
-
+    getNotificationData(index,value){  // 将发送出去的消息通知进行存储
+      console.log('检查::>>',index,value);
+      const checkIndex  = _.findIndex(this.messageNotice.notice[index].noticeList,function(o: any){
+        return o.id === value.id
+      })
+      if(checkIndex === -1){
+        this.messageNotice.notice[index].noticeList.push(value)
+      }else{
+        return
+      }
+      console.log(this.messageNotice.notice[index].noticeList);
+      
+    },
+    
+    delNotification(id: string | number,delId: any){  // 删除单个消息通知
+      const index = _.findIndex(this.messageNotice.notice[id].noticeList,function(o){ return o.id === delId })
+      this.messageNotice.notice[id].noticeList.splice(index,1)
+    },
+    
 
   },
   persist:{

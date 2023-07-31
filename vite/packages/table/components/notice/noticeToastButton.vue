@@ -10,8 +10,8 @@
     <div class="flex items-center justify-between">
       <div>{{message.time}}</div>
       <div class="flex">
-        <div class="mr-3 px-5 py-2 rounded-lg flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);">稍后再说</div>
-        <div class="px-5 py-2 rounded-lg flex items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);">立即查看</div>
+        <div class="mr-3 px-5 py-2 rounded-lg flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);" @click="talkLater">稍后再说</div>
+        <div class="px-5 py-2 rounded-lg flex items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow">立即查看</div>
       </div>
     </div>
   </div>
@@ -19,7 +19,15 @@
 
 <script>
 export default {
-  props:['message']
+  props:['message'],
+  methods:{
+    talkLater(){
+      this.$emit('closeToast')
+    },
+    viewNow(){
+      this.$emit('nowCheck')
+    }
+  }
 }
 </script>
 

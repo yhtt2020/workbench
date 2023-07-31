@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <a-divider type="vertical" style="height: 100%; background-color:var(--secondary-bg);" />
+    <a-divider type="vertical" class="mx-3" style="height: 100%; background-color:var(--divider);" />
     <div class="flex flex-col" style="width: 395px;">
       <div class="flex justify-between mb-4">
         <div class="flex items-center " v-if="selectIndex === 0" >
@@ -39,22 +39,25 @@
           </div>
         </div>
       </div>
-
-      <div class="flex justify-between mb-4" v-if="selectIndex === 0">
-        <div class="flex items-center">
-          <div class="flex items-center justify-center"  style="width: 32px;height: 32px;">
-            <img :src="messageNotice.notice[0].noticeIcon" class="w-full h-full"  alt="">
-          </div>
-          <span class="pl-2 font-400" style="color: var(--primary-text);">系统</span>
-          <div class="font-14 w-6 h-6 rounded-md ml-2 flex items-center justify-center" style="color: var(--active-bg);background: var(--active-secondary-bg);">
-            3
-          </div>
-        </div>
-        <noticeDropDown></noticeDropDown>
-      </div>
-
       <template v-if=" messageNotice.notice[selectIndex] !== undefined">
-        <NoticeDetail :detailItem="messageNotice.notice[selectIndex].noticeList"></NoticeDetail>
+        <div class="flex items-center justify-center" v-if="messageNotice.notice[selectIndex].noticeList.length === 0">
+          <a-empty :image="emptyUrl" description="暂无消息通知"></a-empty>
+        </div>
+        <div class="flex  flex-col" v-else>
+          <div class="flex justify-between mb-4" v-if="selectIndex === 0">
+            <div class="flex items-center ">
+              <div class="flex items-center justify-center"  style="width: 32px;height: 32px;">
+                <img :src="messageNotice.notice[0].noticeIcon" class="w-full h-full"  alt="">
+              </div>
+              <span class="pl-2 font-400" style="color: var(--primary-text);">系统</span>
+              <div class="font-14 w-6 h-6 rounded-md ml-2 flex items-center justify-center" style="color: var(--active-bg);background: var(--active-secondary-bg);">
+                3
+              </div>
+            </div>
+            <noticeDropDown :select="selectIndex"></noticeDropDown>
+          </div>
+          <NoticeDetail :detailItem="messageNotice.notice[selectIndex].noticeList"></NoticeDetail>
+        </div>
       </template>
     </div>
   </div>
@@ -65,8 +68,10 @@ import { mapActions,mapWritableState } from 'pinia';
 import { noticeStore } from '../../store/notice'
 import NoticeDetail from './noticeDetail.vue';
 import noticeDropDown from '../../components/noticeDropDown.vue';
+import { useToast } from 'vue-toastification'
 import { NotificationManager } from '../../js/common/sessionNotice' 
 
+const toast = useToast()
 export default {
   components:{
     NoticeDetail,
@@ -79,13 +84,14 @@ export default {
     return{
       selectIndex:'',
       isDropdownVisible:false,
+      emptyUrl:'/img/state/null.png',
     }
   },
   mounted(){
     this.selectIndex = 0
   },
   methods:{
-    ...mapActions(noticeStore,['setNotificationOnOff','delAllNotification']),
+    ...mapActions(noticeStore,['setNotificationOnOff','delAllNotification','getNotificationData']),
     switchSession(index){  // 切换会话 
      this.selectIndex = index
      this.noticeDetailList  = this.messageNotice.notice[index]
@@ -93,18 +99,11 @@ export default {
     openDropDown(){
       this.isDropdownVisible = true
     },
-    del(){
-      const enable = this.noticeEnable
-      const config = {
-        title:'社区公告',
-        body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
-        time: Date.now(),
-        icon:'/icons/logo128.png',
-      }
-      const urgency = 'critical'
-      const notice = new NotificationManager(config,enable,urgency)
-      notice.sendNotification()
+    del(){  // 清空全部消息内容
+      this.delAllNotification(this.selectIndex)
     }
+    
+  
   }
 }
 </script>
@@ -147,4 +146,9 @@ export default {
   }
 }
 
+
+:deep(.ant-empty-image){
+  width:64px;
+  height: 64px;
+}
 </style>

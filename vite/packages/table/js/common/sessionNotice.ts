@@ -1,80 +1,68 @@
-import { useToast } from "vue-toastification";
-import { notification } from "ant-design-vue";
-import NoticeToastButton from '../../components/notice/noticeToastButton.vue'
-
-/** 
- * @param enable 是否打开消息通知
- * @param config 消息通知内容配置项
- * @param urgency 消息通知级别   normal critical low
+/**
+ * @param id 生成消息通知的id
+ * @param content 消息通知内容
  * **/ 
-
-const toast = useToast()
-
-declare interface NoticeOptions{
-  urgency: string;
-  enable:boolean, 
-  config:{
-    title:string, // 标题
-    body:string, // 正文
-    icon: string, // 图片路径
-    time:number, // 获取消息发送时间
-  }
+declare interface Notification{
+  id:number,  
+  content:object
 }
 
-export class NotificationManager{
-  notifications:{}
-  enable:boolean
-  config:object
-  urgency:string
-  
-  constructor(config:NoticeOptions ,enable:boolean,urgency:string){
-    this.config = config
-    this.urgency = urgency
-    this.enable = enable
+export class NotificationManager{   //  消息通知管理类
+  notifications:Notification[] = []
+  sendNotifications(id:number,content:any){  // 发送消息通知
+    const notification: Notification = { id,content,}
+    this.notifications.push(notification)
   }
 
-  
-  // 消息通知发送
-  sendNotification(): void{
-    this.notifications = this.config
-    if(this.enable){
-      if(this.urgency === 'critical'){  // 最高级别消息通知
-        
-      }else if(this.urgency === 'normal'){  // 普通级别消息通知
-        
-      }else if(this.urgency === 'low'){  // 最低级别消息通知
-        toast.info (
-          {
-            component:NoticeToastButton,
-            props:{
-              message:this.notifications
-            },
-            listeners:{
-
-            }
-          },
-          {
-            icon:false,
-            closeOnClick:false,
-            closeButton:false,
-            pauseOnFocusLoss:false,
-            pauseOnHover:false,
-            timeout: 0,
-          }
-        )
-      }
-    }
+  removeAllNotifications(): void{  // 清空所有消息通知
+    this.notifications = []
   }
 
-  // 全部消息通知清空
-  removeAllNotification(){
-    this.notifications = {}
-  }
+}
 
-  // 删除指定消息通知
-  removeNotification(){
-    
-  }
 
-  
+
+
+
+
+//  时间戳转换成 几分钟前、刚刚、昨天、日期等等
+export function formatDate(timeVal) {
+  const now = Date.now();
+  const current: any = new Date(timeVal * 1000);
+  const diff = Math.floor((now - current) / 1000); // 转换为秒
+  if (diff < 60) {
+    return "刚刚";
+  } else if (diff < 3600) {
+    const minutes = Math.floor(diff / 60);
+    return `${minutes}分钟前`;
+  } else if (diff < 86400) {
+    const dateObj = new Date(timeVal);
+    const hours = dateObj.getHours();
+    let minutes = dateObj.getMinutes();
+    let m = minutes < 10 ? `0${minutes}` : minutes;
+    return `${hours}:${m}`;
+  } else if (diff < 172800) {
+    const dateObj = new Date(timeVal);
+    const hours = dateObj.getHours();
+    let minutes = dateObj.getMinutes();
+    let m = minutes < 10 ? `0${minutes}` : minutes;
+    return `昨天 ${hours}:${m}`;
+  } else if (diff < 259200) {
+    const dateObj = new Date(timeVal);
+    const hours = dateObj.getHours();
+    let minutes = dateObj.getMinutes();
+    let m = minutes < 10 ? `0${minutes}` : minutes;
+    return `前天 ${hours}:${m}`;
+  } else {
+    const dateObj = new Date(timeVal * 1000);
+    const year = dateObj.getFullYear();
+    let month = dateObj.getMonth() + 1;
+    let mon = month < 10 ? `0${month}` : month;
+    let day = dateObj.getDate();
+    let r = day < 10 ? `0${day}` : day;
+    const hours = dateObj.getHours();
+    let minutes = dateObj.getMinutes();
+    let min = minutes < 10 ? `0${minutes}` : minutes;
+    return `${year}-${mon}-${r} ${hours}:${min}`;
+  }
 }
