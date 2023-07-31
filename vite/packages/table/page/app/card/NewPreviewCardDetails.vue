@@ -53,7 +53,7 @@ export default {
             if(size.width > size.height){
                 return {width: '360px'}
             }else{
-                return {height: '360px'}
+                return {height: '320px'}
             }
         }
 

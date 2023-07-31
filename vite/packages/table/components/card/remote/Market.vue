@@ -231,7 +231,7 @@
           //     width: img.width,
           //     height: img.height
           //   }
-          //   console.log(res); //获取到图片的宽高
+          //   console.log(res);
           //   if(res.width > res.height){
           //     return {width: '100px'}
           //   }else{

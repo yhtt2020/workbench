@@ -29,7 +29,7 @@
     </div>
   </div>
   <div v-else>
-    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :card="card"></RemoteShare>
+    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :cardId="cardId"></RemoteShare>
   </div>
 
   <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
@@ -80,7 +80,8 @@ import { message } from "ant-design-vue";
         shareList,
         promptVisible: false,
         //选中社区的卡片
-        selectCard: {}
+        selectCard: {},
+        cardId: 0
       }
     },
     methods: {
@@ -119,7 +120,7 @@ import { message } from "ant-design-vue";
       subCard(card){
         this.card.customData.url = card.url
         this.close()
-        message.success("添加成功！");
+        message.success("修改成功！");
       }
     },
     computed: {
@@ -127,9 +128,9 @@ import { message } from "ant-design-vue";
     },
     mounted(){
       let deskId = this.$route.params.id
-      let cardId = this.$route.params.cardId
+      this.cardId = this.$route.params.cardId
       this.desk = this.desks.find(item => item.id === deskId)
-      this.card = this.desk.cards.find(item => item.id === parseInt(cardId))
+      // this.card = this.desk.cards.find(item => item.id === parseInt(cardId))
 
       this.setNavFixed()
     },

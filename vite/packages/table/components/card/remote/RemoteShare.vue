@@ -71,7 +71,7 @@
     name: 'RemoteShare',
     components: {
     },
-    props: ['openShare','desk','card'],
+    props: ['openShare','desk','cardId'],
     data() {
       return {
         remotes: [],
@@ -153,6 +153,7 @@
     computed: {
     },
     mounted(){
+      this.card = this.desk.cards.find(item => item.id === parseInt(this.cardId))
       // let remoteArr = []
       // this.desk.cards.map(item => {
       //   if(item.name === 'Remote'){
