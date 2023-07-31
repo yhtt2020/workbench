@@ -49,7 +49,8 @@
             </div>
           </div>
           <div class="left no-drag" @click="fullScreen(item)">
-            <img :src="item.option[0].img ? item.option[0].img : getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
+            <img class="imgInit" :id="'img' + index" :src="item.option[0].img" @load="setImg(item.option[0].img,index)"/>
+            <!-- <img :src="item.option[0].img ? item.option[0].img : getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/> -->
             <span class="size-bg">{{ item.option[0].size }}</span>
           </div>
           <div class="right" style="">
@@ -208,14 +209,43 @@
       },
       showPrompt(item){
         this.$emit('getCard',item)
-      }
+      },
+      setImg(src,index){
+        let imgDom = document.getElementById('img' + index)
+          var img = new Image();
+          img.src = src
+          let res ;
+          setTimeout(() => {
+            res = {
+              width: img.width,
+              height: img.height
+            }
+            if(res.width > res.height){
+              imgDom.style.width = '100px'
+            }else{
+              imgDom.style.height = '100px'
+            }
+          })
+          // return img.onload = function () {
+          //   res = {
+          //     width: img.width,
+          //     height: img.height
+          //   }
+          //   console.log(res); //获取到图片的宽高
+          //   if(res.width > res.height){
+          //     return {width: '100px'}
+          //   }else{
+          //     return {height: '100px'}
+          //   }
+          // }()
+      },
     },
     mounted() {
-        if(this.listType === 'my'){
-          this.list = shareList
-        }else{
-          this.list = dataList
-        }
+      if(this.listType === 'my'){
+        this.list = JSON.parse(JSON.stringify(shareList))
+      }else{
+        this.list = JSON.parse(JSON.stringify(dataList))
+      }
     }
   }
 </script>
@@ -461,5 +491,9 @@
     justify-content: center;
     align-items: center;
   }
+}
+.imgInit{
+  max-width: 100px;
+  max-height: 100px;
 }
 </style>
