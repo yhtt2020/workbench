@@ -67,7 +67,7 @@
     v-if="settingVisible"
   >
     <template #title>
-      <XtTitle titleClass="" type="header"
+      <XtTitle  type="header"
         >设置
         <template #right>
           <XtButton

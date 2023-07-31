@@ -13,8 +13,7 @@ const components = import.meta.glob(
 
 for (const path in components) {
   const name = path.match(/\/views\/tools\/(\w+)\/index\.vue/)?.[1];
-  console.log("name :>> ", name);
-  console.log("path :>> ", path);
+
   const route = {
     path: "/" + name,
     name: name,
