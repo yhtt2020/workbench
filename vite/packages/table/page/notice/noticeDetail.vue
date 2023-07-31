@@ -3,20 +3,20 @@
    style="width: 395px; background: var(--secondary-bg);" 
    @contextmenu.prevent="noticeMenu(item, $event)"
   >
-    <div class="flex items-center mb-5" v-if="item.from">
+    <div class="flex items-center mb-5" v-if="item.content.from">
       <span class="pr-2 font-400"  style="color: var(--primary-text);">收到了来自</span>
-      <a-avatar :size="24"   :src="item.from.avatarUrl"></a-avatar>
-      <span class="px-2 font-500"   style="color: var(--active-bg);">{{ item.from.username }}</span>
+      <a-avatar :size="24"   :src="item.content.from.avatarUrl"></a-avatar>
+      <span class="px-2 font-500"   style="color: var(--active-bg);">{{ item.content.from.username }}</span>
       <span class="pr-2 font-400"  style="color: var(--primary-text);">赠送的礼物</span>
     </div>
-    <div v-if="item.title !== ''" class="font-400 mb-4" style="color: var(--primary-text);">{{item.title}}</div>
-    <div class="font-400 mb-3" style="color: var(--secondary-text);">{{ item.content }}</div>
-    <!-- <div v-if="item.time !== ''" class="font-400" style="color:var(--secondary-text);">{{ formatDate(item.time) }}</div> -->
+    <div v-if="item.content.title !== ''" class="font-400 mb-4" style="color: var(--primary-text);">{{item.content.title}}</div>
+    <div class="font-400 mb-3" style="color: var(--secondary-text);">{{ item.content.body }}</div>
+    <div v-if="item.content.time !== ''" class="font-400" style="color:var(--secondary-text);">{{ formatDate(item.content.time) }}</div>
   </div>
 </template>
 
 <script>
-// import { formatDate } from '../../js/common/sessionNotice.ts'
+import { formatDate } from '../../js/common/sessionNotice.ts'
 export default {
   props:{
     detailItem:{
@@ -34,7 +34,7 @@ export default {
     }
   },
   methods:{
-    // formatDate,
+    formatDate,
     noticeMenu(item,evt){
     
     }
