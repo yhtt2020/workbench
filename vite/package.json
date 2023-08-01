@@ -32,6 +32,7 @@
     "highlight.js": "^11.8.0",
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.3",
+    "jsqr": "^1.4.0",
     "justifiedGallery": "^3.8.1",
     "keen-slider": "^6.8.5",
     "less": "^4.1.3",
