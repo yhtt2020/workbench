@@ -141,16 +141,14 @@ export default {
   watch: {
     async selectFromCurrency(newV) {
       if (this.flag) return;
-      console.log("this. :>> ", this.flag);
       await this.getCurrency(newV.id);
-      this.fromCurrencyRate();
+      this.toCurrencyRate();
     },
     async selectToCurrency(newV) {
-      console.log("this. :>> ", this.flag);
       if (this.flag) return;
       await this.getCurrency(newV.id);
-
-      this.toCurrencyRate();
+      
+      this.fromCurrencyRate();
     },
   },
   computed: {
