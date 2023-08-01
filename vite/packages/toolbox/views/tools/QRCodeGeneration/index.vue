@@ -5,7 +5,7 @@
         <XtTextarea v-model:data="text"></XtTextarea>
       </div>
       <div class="flex">
-        <XtButton class="mb-3 mx-3" style="width: 100%" @click="clear()"
+        <XtButton class="mb-3 mr-3" style="width: 100%" @click="clear()"
           >清除</XtButton
         >
         <XtButton
@@ -41,7 +41,6 @@
         class="w-full h-full xt-bg-2 xt-border rounded-xl flex flex-col p-3"
       >
         <div class="flex-grow flex mb-3 xt-base-btn">
-          <!-- <canvas id="qrcode-canvas"></canvas> -->
           <img :src="src" alt="" />
         </div>
 
@@ -51,9 +50,15 @@
       </div>
       <div
         v-else
-        class="w-full h-full xt-bg-2 rounded-xl p-2 xt-base-btn xt-border"
+        class="w-full h-full xt-bg-2 rounded-xl p-2 xt-base-btn xt-border flex-col"
+        @click="uploadFile()"
+        @drop="drop"
+        @dragover.prevent
+        @dragenter.prevent
+        @dragleave.prevent
       >
-        <div style="width: 50%">请在上方输入内容后点击生成，在此处预览</div>
+        <div style="width: 50%">请在左侧输入内容后点击生成，在此处预览</div>
+        <div style="width: 50%">点击或拖拽二维码到此区域可进行解析</div>
       </div>
     </div>
   </div>
@@ -61,18 +66,78 @@
 
 <script>
 import QRCode from "qrcode";
+import jsQR from "jsqr";
+import { message } from "ant-design-vue";
+import { QRCodeGeneration } from "../../../store/QRCodeGeneration";
+import { mapWritableState } from "pinia";
 
 export default {
   data() {
     return {
-      text: "",
       size: 90,
-      color: "",
-      bgColor: "",
+      color: "#000",
+      bgColor: "#fff",
       src: "",
     };
   },
+  computed: {
+    ...mapWritableState(QRCodeGeneration, ["text"]),
+  },
   methods: {
+    analysis(path) {
+      const canvasElement = document.createElement("canvas");
+      var image = new Image();
+      image.src = path;
+      const taht = this;
+      image.onload = function () {
+        canvasElement.width = image.width;
+        canvasElement.height = image.height;
+        const canvasWidth = image.width;
+        const canvasHeight = image.height;
+
+        const canvas = canvasElement.getContext("2d");
+        canvas.drawImage(image, 0, 0);
+        const imageData = canvas.getImageData(
+          0,
+          0,
+          canvasWidth,
+          canvasHeight
+        ).data;
+        const code = jsQR(imageData, canvasWidth, canvasHeight);
+        if (code) {
+          taht.text = code.data;
+        } else {
+          message.error("解析失败 请重试");
+        }
+      };
+    },
+    isImageFile(file) {
+      const allowedExtensions = [".png", ".jpg", ".jpeg", ".gif"];
+      const fileExtension = file.substring(file.lastIndexOf(".")).toLowerCase();
+      return allowedExtensions.includes(fileExtension);
+    },
+    drop(e) {
+      let files = e.dataTransfer.files;
+      if (files && this.isImageFile(files[0].path)) {
+        this.analysis(files[0].path);
+      } else {
+        message.error("请传入二维码图片！");
+      }
+    },
+    async uploadFile() {
+      let path = await tsbApi.dialog.showOpenDialog({
+        title: "选择",
+        message: "请选择文件",
+        multiple: "true",
+        properties: ["openFile ", "multiSelections"],
+      });
+      if (path && this.isImageFile(path[0])) {
+        this.analysis(path[0]);
+      } else {
+        if (path) message.error("请传入二维码图片！");
+      }
+    },
+
     async newQRCode() {
       try {
         const options = {

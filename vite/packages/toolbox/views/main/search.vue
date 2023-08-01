@@ -49,6 +49,7 @@ import { calculator } from "../../store/calculator";
 import { translate } from "../../store/translate";
 import { timeConversion } from "../../store/timeConversion";
 import { currencyExchange } from "../../store/currencyExchange";
+import { QRCodeGeneration } from "../../store/QRCodeGeneration";
 export default {
   mounted() {},
   computed: {
@@ -57,6 +58,7 @@ export default {
     ...mapWritableState(translate, ["inputValue"]),
     ...mapWritableState(timeConversion, ["time", "timeStamp"]),
     ...mapWritableState(currencyExchange, ["fromCurrency"]),
+    ...mapWritableState(QRCodeGeneration, ["text"]),
   },
   data() {
     return {
@@ -95,7 +97,12 @@ export default {
     // 汇率转换
     useCurrencyExchange() {
       this.fromCurrency = this.search;
-      this.fromCurrencyRate()
+      this.fromCurrencyRate();
+      this.clear();
+    },
+    // 二维码
+    useQRCodeGeneration() {
+      this.text = this.search;
       this.clear();
     },
     // 搜索回车
@@ -103,15 +110,14 @@ export default {
       let name = this.useTool.route;
       if (name === "calculator") {
         this.useCalculator();
-      }
-      if (name === "translate") {
+      } else if (name === "translate") {
         this.useTranslate();
-      }
-      if (name === "timeConversion") {
+      } else if (name === "timeConversion") {
         this.useTimeConversion();
-      }
-      if (name === "currencyExchange") {
+      } else if (name === "currencyExchange") {
         this.useCurrencyExchange();
+      } else if (name === "QRCodeGeneration") {
+        this.useQRCodeGeneration();
       }
     },
   },
