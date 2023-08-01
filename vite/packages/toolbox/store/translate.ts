@@ -10,7 +10,7 @@ export const translate = defineStore("translate", {
       name: "自动检测",
     },
     toLang: {
-      lang: "zn",
+      lang: "zh",
       name: "中文",
     },
   }),
@@ -24,6 +24,8 @@ export const translate = defineStore("translate", {
       let { data, code } = res;
       if (code === 1000) {
         this.resultValue = data.trans_result[0].dst;
+      }else {
+        console.log('res :>> ', res);
       }
     },
   },

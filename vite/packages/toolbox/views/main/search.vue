@@ -1,13 +1,6 @@
 <template>
   <div style="height: 60px" class="xt-bg-2 xt-text flex items-center">
     <template v-if="useTool">
-      <!-- <Icon
-        icon="xiangzuo"
-        style="font-size: 20px; width: 10px"
-        class="no-darg xt-text"
-      ></Icon>
-       -->
-
       <XtIcon
         @click="back()"
         class="mx-2"
@@ -29,6 +22,7 @@
     </template>
 
     <XtInput
+      :focus="true"
       v-model:data="search"
       placeholder="试试输入、粘贴、拖放内容到此处"
       @enter="searchEnter()"
@@ -54,12 +48,15 @@ import { main } from "../../store/main";
 import { calculator } from "../../store/calculator";
 import { translate } from "../../store/translate";
 import { timeConversion } from "../../store/timeConversion";
+import { currencyExchange } from "../../store/currencyExchange";
 export default {
+  mounted() {},
   computed: {
     ...mapWritableState(main, ["useTool"]),
     ...mapWritableState(calculator, ["computeList", "selectIndex"]),
     ...mapWritableState(translate, ["inputValue"]),
     ...mapWritableState(timeConversion, ["time", "timeStamp"]),
+    ...mapWritableState(currencyExchange, ["fromCurrency"]),
   },
   data() {
     return {
@@ -69,6 +66,7 @@ export default {
   methods: {
     ...mapActions(translate, ["startTranslation"]),
     ...mapActions(timeConversion, ["timeKeyup", "timeStampKeyup"]),
+    ...mapActions(currencyExchange, ["fromCurrencyRate"]),
     back() {
       this.$router.push("/");
       this.useTool = "";
@@ -94,8 +92,13 @@ export default {
       this.timeStampKeyup();
       this.clear();
     },
+    // 汇率转换
+    useCurrencyExchange() {
+      this.fromCurrency = this.search;
+      this.fromCurrencyRate()
+      this.clear();
+    },
     // 搜索回车
-
     searchEnter() {
       let name = this.useTool.route;
       if (name === "calculator") {
@@ -106,6 +109,9 @@ export default {
       }
       if (name === "timeConversion") {
         this.useTimeConversion();
+      }
+      if (name === "currencyExchange") {
+        this.useCurrencyExchange();
       }
     },
   },

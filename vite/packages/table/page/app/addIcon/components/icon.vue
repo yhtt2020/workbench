@@ -3,9 +3,9 @@
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
       <div>总共 {{ appsLenght }} 个应用图标</div>
-      <div class="xt-active-btn h-12 w-120" @click="selectAllApp()">
+      <XtButton type="theme" @click="selectAllApp()">
         {{ selectAll }}
-      </div>
+      </XtButton>
     </div>
     <div
       class="flex h-full flex-wrap overflow-y-auto xt-container mt-3"
