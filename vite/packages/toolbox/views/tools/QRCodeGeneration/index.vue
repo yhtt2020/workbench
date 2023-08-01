@@ -68,15 +68,20 @@
 import QRCode from "qrcode";
 import jsQR from "jsqr";
 import { message } from "ant-design-vue";
+import { QRCodeGeneration } from "../../../store/QRCodeGeneration";
+import { mapWritableState } from "pinia";
+
 export default {
   data() {
     return {
-      text: "",
       size: 90,
-      color: "",
-      bgColor: "",
+      color: "#000",
+      bgColor: "#fff",
       src: "",
     };
+  },
+  computed: {
+    ...mapWritableState(QRCodeGeneration, ["text"]),
   },
   methods: {
     analysis(path) {
@@ -129,7 +134,7 @@ export default {
       if (path && this.isImageFile(path[0])) {
         this.analysis(path[0]);
       } else {
-        message.error("请传入二维码图片！");
+        if (path) message.error("请传入二维码图片！");
       }
     },
 
