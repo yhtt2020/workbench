@@ -69,7 +69,7 @@
         @keyup="toCurrencyRate()"
       >
         <template #addonBefore>
-          <a-dropdown>
+          <a-dropdown placement="top">
             <template #overlay>
               <div
                 class="xt-bg-2 xt-border xt-text flex flex-wrap rounded-xl p-2 xt-shadow"
