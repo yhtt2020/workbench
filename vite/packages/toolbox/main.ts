@@ -13,6 +13,8 @@ import "../../public/css/styleSwitch/index.scss";
 import baseComponents from "../table/components/card/components/index";
 
 import cache from "../table/components/card/hooks/cache";
+
+
 // @ts-ignore
 const { tools } = window.$models;
 tools.getWindowArgs(window);
