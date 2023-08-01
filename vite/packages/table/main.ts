@@ -52,7 +52,7 @@ import {TUIComponents,TUICore,genTestUserSig} from './TUIKit'
 import {TUICallKit} from '@tencentcloud/call-uikit-vue'
 import {SDKAppID} from "./js/chat/chat";
 
-import { NotificationManager } from './js/common/sessionNotice'
+import { Notifications } from './js/common/sessionNotice'
 
  // Your SDKAppID
 // init TUIKit
@@ -67,8 +67,8 @@ TUIKit.use(TUICallKit);
 
 window.$TUIKit=TUIKit
 
-const notice = new NotificationManager()
-window.$Notification = notice
+const notice = new Notifications()
+window.$notice = notice
 
 dayjs.locale('zh-cn');
 

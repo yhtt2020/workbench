@@ -115,7 +115,13 @@ export const noticeStore = defineStore('notice',{
   }),
 
   actions:{
+    setNoticeOnOff(val:boolean){  // 设置消息通知是否开启  
+      this.noticeEnable = val
+    },
 
+    deleteAllNotice(index:number){  // 删除对应消息通知应用的使用消息数据  
+      this.notice.message[index].noticeList = []
+    }
   },
 
   persist:{
