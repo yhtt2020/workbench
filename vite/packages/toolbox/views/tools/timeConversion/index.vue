@@ -1,7 +1,14 @@
 <template>
   <div class="mx-auto text-base" style="width: 80%">
-    <div>当前时间：{{ getDate() }}</div>
-    <div class="my-3">当前时间戳：{{ currentTimeStamp }}</div>
+    <div class="flex items-center">
+      <div>当前时间：{{ getDate() }}</div>
+      <XtIcon :copy="getDate()" icon="fuzhi" size="22" type=""></XtIcon>
+    </div>
+    <div class="flex items-center">
+      <div class="my-3">当前时间戳：{{ currentTimeStamp }}</div>
+      <XtIcon :copy="currentTimeStamp" icon="fuzhi" size="22" type=""></XtIcon>
+    </div>
+
     <div class="flex">
       <XtInput
         class="xt-bg-2 xt-border rounded-xl overflow-hidden"
@@ -15,7 +22,11 @@
         <template #addonBefore>
           <div
             class="text-base xt-text flex justify-center items-center"
-            style="width: 80px; height: 46px; background: var(--secondary-text)"
+            style="
+              width: 80px;
+              height: 46px;
+              background: rgba(255, 255, 255, 0.4);
+            "
           >
             时间戳
           </div>
@@ -36,7 +47,11 @@
         <template #addonBefore>
           <div
             class="text-base xt-text flex justify-center items-center h-full"
-            style="width: 80px; height: 100%; background: var(--secondary-text)"
+            style="
+              width: 80px;
+              height: 100%;
+              background: rgba(255, 255, 255, 0.4);
+            "
           >
             时间
           </div>
