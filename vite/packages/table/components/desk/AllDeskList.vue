@@ -54,7 +54,7 @@ export default {
       <div>
         <a-avatar v-if="item.iconUrl" :size="50" class="mb-2" :preview="false" style="border-radius: 4px"
                   :src="item.iconUrl"></a-avatar>
-        <icon v-else :icon="item.icon" style="font-size: 40px"></icon>
+        <icon v-else :icon="item.icon || 'desktop'" style="font-size: 40px"></icon>
       </div>
       <div style="font-size: 14px" class="truncate">
         {{ item.name }}

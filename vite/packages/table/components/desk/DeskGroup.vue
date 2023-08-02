@@ -9,9 +9,9 @@
         <!--        主桌面-->
         <!--      </div>-->
         <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
-             class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
+             class="truncate pr-3 tab s-bg" v-for="(item,index) in displayDesks">
           <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
-          <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle"
+          <icon v-else :icon="item.icon || 'desktop'" style="font-size: 18px;vertical-align: middle"
                 class="mr-2"></icon>
           <span class="">{{ item.name }}</span>
           <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
@@ -19,7 +19,7 @@
         <a-tooltip title="全部桌面" placement="bottom">
           <div @click="showAll"
                class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-            <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
+            <icon class="icon" style="font-size: 22px" icon="paixu-zuoyou"></icon>
           </div>
         </a-tooltip>
 
@@ -47,6 +47,13 @@
               <Icon style="font-size: 18px" icon="fullscreen"></Icon>
             </div>
           </a-tooltip>
+          <a-tooltip title="菜单" placement="bottom">
+            <div @click="showMenu"
+                 class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+              <Icon style="font-size: 18px" icon="gengduo1"></Icon>
+            </div>
+          </a-tooltip>
+
         </div>
       </div>
     </div>
@@ -59,7 +66,7 @@
       </div>
     </div>
     <div style="flex:1;height: 0" v-if="currentDesk && currentDesk?.cards?.length>0 ">
-      <Desk :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
+      <Desk @changeEditing="editing=!editing" :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
             :settings="currentDesk.settings" :key="key">
 
         <template #settingsAllAfter>
@@ -112,12 +119,52 @@
     </div>
     <template v-else>
       <slot name="empty">
-
       </slot>
       <span v-show="false">
-       <Desk ref="currentDeskRef" :currentDesk="currentDesk" :key="key" :editing="editing"></Desk>
-    </span>
+       <Desk ref="currentDeskRef" :currentDesk="currentDesk" :key="key" :editing="editing">
+           <template #outMenu>
+          <a-row class="text-center" style="margin-top: 20px" :gutter="20">
+            <a-col>
+              <div @click="showAddDeskForm" class="btn">
+                <Icon style="font-size: 3em" icon="desktop"></Icon>
+                <div><span>添加桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
 
+              <div @click="importDesk" class="btn">
+                <Icon style="font-size: 3em" icon="daoru"></Icon>
+                <div><span>导入桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div v-if="this.currentDesk.lock" class="btn" style="opacity: 0.5">
+                <Icon style="font-size: 3em" icon="shanchu"></Icon>
+                <div><span>删除桌面</span></div>
+              </div>
+              <div v-else @click="delDesk" class="btn">
+                <Icon style="font-size: 3em" icon="shanchu"></Icon>
+                <div><span>删除桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div @click="shareDesk" class="btn">
+                <Icon style="font-size: 3em" icon="fenxiang"></Icon>
+                <div><span>分享桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div @click="exportDesk" class="btn">
+                <Icon style="font-size: 3em" icon="upload"></Icon>
+                <div><span>导出桌面</span></div>
+              </div>
+            </a-col>
+
+
+          </a-row>
+        </template>
+       </Desk>
+    </span>
     </template>
   </div>
 
@@ -391,6 +438,9 @@ export default {
 
       })
     },
+    showMenu(){
+      this.$refs.currentDeskRef.showMenu()
+    },
     showMore() {
       this.$emit('showMore')
     },
@@ -519,7 +569,6 @@ export default {
       font-weight: bold;
     }
 
-    opacity: 0.5;
     line-height: 38px;
     font-size: 15px;
     min-width: 150px;

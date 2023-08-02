@@ -79,15 +79,7 @@
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer"
             placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
-      <!--      <a-col>-->
-      <!--        <div @click="toggleEditing" class="btn">-->
-      <!--          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>-->
-      <!--          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>-->
-      <!--          <div>-->
-      <!--            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </a-col>-->
+
       <a-col>
         <div @click="newAddCard" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
@@ -98,6 +90,15 @@
         <div @click="newAddIcon" class="btn">
           <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
           <div><span>添加图标</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="toggleEditing" class="btn">
+          <Icon v-if="!this.editing" style="font-size: 3em" icon="line-dragdroptuofang"></Icon>
+          <Icon v-else style="font-size: 3em; color: red" icon="tingzhi"></Icon>
+          <div>
+            <span v-if="!this.editing">调整布局</span><span v-else style="color: red">停止调整</span>
+          </div>
         </div>
       </a-col>
       <a-col>
@@ -112,6 +113,7 @@
           <div><span>清空卡片</span></div>
         </div>
       </a-col>
+
       <a-col>
         <div v-if="!hide" @click="hideDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
@@ -150,9 +152,11 @@
     ></Tab>
 
     <template v-if="currentSettingTab==='current'">
-      <div class="my-3" style="font-size: 1.2em;font-weight: bold;" >
+      <div class="my-3" style="font-size: 1.2em;font-weight: bold;">
         独立缩放：
-        <div class="line" style="font-size: 14px;font-weight: normal">开启独立缩放后，将不再使用通用桌面设置中的缩放设置。</div>
+        <div class="line" style="font-size: 14px;font-weight: normal">
+          开启独立缩放后，将不再使用通用桌面设置中的缩放设置。
+        </div>
         <a-switch v-model:checked="settings.enableZoom" @change="update"></a-switch>
       </div>
       <template v-if="settings.enableZoom">
@@ -177,7 +181,9 @@
       <div class="line-title">卡片设置：</div>
       <template v-if="settings.enableZoom">
         <div class="mb-2" style="color:orangered">
-       <icon icon="tishi-xianxing"></icon> 当前桌面正在使用独立设置，此处设置对当前桌面不起作用。</div>
+          <icon icon="tishi-xianxing"></icon>
+          当前桌面正在使用独立设置，此处设置对当前桌面不起作用。
+        </div>
       </template>
       <div class="line">
         卡片缩放：
@@ -265,6 +271,7 @@ import HorizontalPanel from '../HorizontalPanel.vue'
 import AddIcon from '../../page/app/addIcon/index.vue'
 import Tab from '../card/components/Tab/index.vue'
 import Template from '../../../user/pages/Template.vue'
+
 export default {
   name: 'Desk',
   components: {
@@ -315,9 +322,9 @@ export default {
   },
   props:
     {
-      globalSettings:{
-        type:Object,
-        default:{}
+      globalSettings: {
+        type: Object,
+        default: {}
       },
       editing: {
         type: Boolean,
@@ -393,10 +400,10 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
-    usingSettings(){
-      if(this.settings.enableZoom){
+    usingSettings () {
+      if (this.settings.enableZoom) {
         return this.settings
-      }else{
+      } else {
         return this.globalSettings
       }
     }
@@ -440,12 +447,13 @@ export default {
       this.menuVisible = false
     },
     toggleEditing () {
-      this.editing = !this.editing
+
       if (this.editing) {
         message.info('您可以直接拖拽图标调整位置，支持跨组调整')
       } else {
         message.info('已关闭拖拽调整')
       }
+      this.$emit('changeEditing',this.editing)
       this.menuVisible = false
       this.key = Date.now()
     },
@@ -460,8 +468,6 @@ export default {
     iconHide () {
       this.iconVisible = false
     },
-
-
 
     showDesk () {
       this.hide = !this.hide
