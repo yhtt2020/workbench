@@ -1,8 +1,12 @@
 <template>
   <!-- <div style="width:100%;height:100%;overflow:auto"> -->
   <div>
-    <div class="head-nav" id="nav">
-      <span>来自社区用户的分享（{{ dataList.length }}）  <strong style="color:red">！此功能正在开发中！</strong></span>
+    <div class="head-nav" id="nav" v-if="listType === 'my'">
+      <span>我分享外部小组件（{{ shareList.length }}）</span>
+      <div class="block-btn" @click="shareNow">立即分享</div>
+    </div>
+    <div class="head-nav" id="nav" v-else>
+      <span>来自社区用户的分享（{{ dataList.length }}）<strong style="color:red">！此功能正在开发中！</strong></span>
       <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class="select rounded-lg  s-item flex items-center text-center" :bordered="false"
         size="large" @change="handleChange"
         :dropdownStyle="{ 'z-index': 99999, backgroundColor: 'var(--secondary-bg)' }">
@@ -14,15 +18,39 @@
     </div>
     <div id="navList">
       <!-- 外部小组件的社区列表 -->
-      <div class="box xt-bg-2" v-for="(item, index) in dataList" :key="item.name">
+      <div class="box xt-bg-2" v-for="(item, index) in list" :key="item.nanoid">
         <div class="box xt-bg-2">
-          <div class="add no-drag" @click="addNewCard(item)">
+          <div v-if="setCard === 'my'">
+            <!-- <div class="text" style="color: #fff">· · ·</div> -->
+            <a-dropdown :trigger="['click']" :z-index="999999">
+              <div class="add no-drag" >
+                <div class="text" style="color: #fff">· · ·</div>
+              </div>
+              <template #overlay>
+                <a-menu class="set-btn">
+                  <a-menu-item key="0">
+                    <div class="btn-style" @click="addNewCard(item)">添加桌面</div>
+                  </a-menu-item>
+                  <a-menu-item key="1">
+                    <div class="btn-style" @click="delCard(item.nanoid)">删除</div>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </div>
+          <div class="add no-drag" @click="showPrompt(item)" v-else-if="setCard === 'tip'">
+            <div class="icons">
+              <Icon icon="tianjia2" style="color: #000"></Icon>
+            </div>
+          </div>
+          <div class="add no-drag" @click="addNewCard(item)" v-else>
             <div class="icons">
               <Icon icon="tianjia2" style="color: #000"></Icon>
             </div>
           </div>
           <div class="left no-drag" @click="fullScreen(item)">
-            <img :src="item.option[0].img ? item.option[0].img : getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
+            <img class="imgInit" :id="'img' + index" :src="item.option[0].img" @load="setImg(item.option[0].img,index)"/>
+            <!-- <img :src="item.option[0].img ? item.option[0].img : getImg(item.option[0].name)" alt="" :style="{ zoom: '6%' }"/> -->
             <span class="size-bg">{{ item.option[0].size }}</span>
           </div>
           <div class="right" style="">
@@ -59,8 +87,8 @@
           </div>
         </div>
       </div>
-      <!-- 切换数据v-if="dataList.length > 10" -->
-      <div class="switch-data" >
+      <!-- 切换数据 -->
+      <div class="switch-data" v-if="list.length > 3">
           <div :class="paging === 1 ? 'pag-active' : ''" class="mr-3">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
@@ -84,7 +112,7 @@
   import { cardStore } from "../../../store/card";
   import { message } from "ant-design-vue";
   import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
-  import { dataList } from './testData'
+  import { dataList,shareList,delList } from './testData';
   export default{
     components: {
       NewPreviewCardDetails,
@@ -96,6 +124,16 @@
         required: true,
         default: () => {},
       },
+      //列表类型   默认是社区的  my是我分享的 
+      listType: {
+        type: String,
+        default: () => '',
+      },
+      //卡片设置   默认直接添加  my点击下拉添加或删除  tip弹出提示框
+      setCard: {
+        type: String,
+        default: () => '',
+      }
     },
     data() {
       return {
@@ -105,13 +143,15 @@
         remoteContent: {},
         showModal: false,
         dataList,
+        shareList,
         sortVal: '最多使用',
         sortType: [
           { value: '最多使用', name: '最多使用' },
           { value: '下载次数', name: '下载次数' },
           { value: '分享时间', name: '分享时间' },
         ],
-        paging: 1
+        paging: 1,
+        list: []
       }
     },
     methods: {
@@ -142,8 +182,17 @@
       add(item, index = 0) {
         index = index ?? this.carouselIndex;
         // let url = this.getUrl(item.detail)
+        let size = item.sizes[0].split('x')
         this.addCard(
-          { name: item.option[index].name, id: Date.now(), customData: {url:item.url} },
+          { 
+            name: item.option[index].name, 
+            id: Date.now(), 
+            customData: {
+              url:item.url,
+              width: (parseInt(size[0]) / 2),
+              height:(parseInt(size[1]) / 2)
+            } 
+          },
           this.desk
         );
         this.$emit("closeMarket",false);
@@ -158,8 +207,56 @@
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const day = date.getDate().toString().padStart(2, "0");
         return `${year}-${month}-${day}`;
-      }
+      },
+      shareNow(){
+        this.$emit('shareNow')
+      },
+      delCard(id){
+        delList(id)
+        this.list = shareList
+        this.$forceUpdate()
+        this.$emit('closeMy')
+      },
+      showPrompt(item){
+        this.$emit('getCard',item)
+      },
+      setImg(src,index){
+        let imgDom = document.getElementById('img' + index)
+          var img = new Image();
+          img.src = src
+          let res ;
+          setTimeout(() => {
+            res = {
+              width: img.width,
+              height: img.height
+            }
+            if(res.width > res.height){
+              imgDom.style.width = '100px'
+            }else{
+              imgDom.style.height = '100px'
+            }
+          })
+          // return img.onload = function () {
+          //   res = {
+          //     width: img.width,
+          //     height: img.height
+          //   }
+          //   console.log(res);
+          //   if(res.width > res.height){
+          //     return {width: '100px'}
+          //   }else{
+          //     return {height: '100px'}
+          //   }
+          // }()
+      },
     },
+    mounted() {
+      if(this.listType === 'my'){
+        this.list = JSON.parse(JSON.stringify(shareList))
+      }else{
+        this.list = JSON.parse(JSON.stringify(dataList))
+      }
+    }
   }
 </script>
 
@@ -376,5 +473,37 @@
 }
 .pag-active {
   opacity: 0.5;
+}
+.block-btn{
+  text-align: center;
+  padding: 10px 28px;
+  border-radius: 12px;
+  background: var(--active-bg);
+  cursor: pointer;
+}
+.dropdown{
+  background: red;
+}
+.set-btn{
+  width:120px;
+  height:112px;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+  border-radius: 10px;
+  .btn-style{
+    width: 104px;
+    height: 44px;
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    color: var(--primary-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.imgInit{
+  max-width: 100px;
+  max-height: 100px;
 }
 </style>
