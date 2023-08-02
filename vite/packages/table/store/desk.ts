@@ -4,12 +4,12 @@ import dbStorage from "./dbStorage";
 export const deskStore = defineStore("desk", {
   state: () => ({
     //桌面市场列表
-    deskList: [
+    apiList: [
       {
         cname: '推荐',
         children: [
           {
-            id: 1, 
+            id: 1,
             nanoid: "vrEg",
             deskImg: '/img/test/deckImg.jpg', //桌面图片
             desk: '桌面1',
@@ -59,20 +59,20 @@ export const deskStore = defineStore("desk", {
               "cardMargin": 5
             },
             cardList: [
-              { 
+              {
                 icon: 'dianzan',
                 name: "我的游戏",
               },
-              { 
+              {
                 icon: 'dianzan',
                 name: "Steam特惠",
               },
             ],
           },
           {
-            id: 2, 
+            id: 2,
             nanoid: "Q8XW",
-            deskImg: '/img/test/deckImg.jpg', 
+            deskImg: '/img/test/deckImg.jpg',
             desk: '桌面1',
             assort: '推荐',
             title: '游戏玩家必备桌面',
@@ -133,11 +133,11 @@ export const deskStore = defineStore("desk", {
             blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
             labelList: ['效率','产品经理'],
             cardList: [
-              { 
+              {
                 icon: 'dianzan',
                 name: "我的游戏",
               },
-              { 
+              {
                 icon: 'dianzan',
                 name: "Steam特惠",
               },
@@ -185,11 +185,11 @@ export const deskStore = defineStore("desk", {
               "cardMargin": 5
             },
             cardList: [
-              { 
+              {
                 icon: 'dianzan',
                 name: "我的游戏",
               },
-              { 
+              {
                 icon: 'dianzan',
                 name: "Steam特惠",
               },

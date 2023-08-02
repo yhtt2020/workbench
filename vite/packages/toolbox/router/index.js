@@ -7,11 +7,13 @@ let routes = [
   },
 ];
 
-const components = import.meta.glob("../views/tools/*/index.vue");
-let a =  Object.entries(components)
-console.log("object :>> ", a);
+const components = import.meta.glob(
+  "/packages/toolbox/views/tools/*/index.vue"
+);
+
 for (const path in components) {
   const name = path.match(/\/views\/tools\/(\w+)\/index\.vue/)?.[1];
+
   const route = {
     path: "/" + name,
     name: name,

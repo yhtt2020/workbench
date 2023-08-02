@@ -1,36 +1,34 @@
 import { createApp } from "vue";
-
 import "ant-design-vue/dist/antd.css";
 import App from "./App.vue";
-const {tools}=window.$models
-
-tools.getWindowArgs(window);
-
 import router from "./router";
 import Antd from "ant-design-vue";
-
 import { createPinia } from "pinia";
 import piniaPersist from "../table/js/ext/pinia-plugin-persist/index";
-const pinia = createPinia();
-pinia.use(piniaPersist);
-
 // 基础样式
 import "./styles/index.scss";
 // 主题样式
 import "../../public/css/styleSwitch/index.scss";
 // 组件
 import baseComponents from "../table/components/card/components/index";
-import toolBaseComponents from "./components/index";
-import Icon from "./components/Icon.vue";
+
+import cache from "../table/components/card/hooks/cache";
+
+
+// @ts-ignore
+const { tools } = window.$models;
+tools.getWindowArgs(window);
 
 const app = createApp(App);
 
-app.use(Antd).use(pinia).use(router);
+const pinia = createPinia();
+pinia.use(piniaPersist);
+app.use(pinia);
 
-app.component("Icon", Icon);
-app.use(baseComponents).use(toolBaseComponents);
+app.use(Antd).use(router);
 
-import cache from "../table/components/card/hooks/cache";
+app.use(baseComponents);
+
 app.config.globalProperties.$cache = cache;
 
 app.mount("#app");

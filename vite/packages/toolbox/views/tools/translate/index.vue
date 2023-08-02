@@ -33,7 +33,7 @@
           icon="paixu"
           type=""
           @click="translateSwitch()"
-          style="transform: rotate(90deg);"
+          style="transform: rotate(90deg)"
         ></XtIcon>
         <!-- 翻译 -->
         <a-dropdown>

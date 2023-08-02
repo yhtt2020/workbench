@@ -1,14 +1,17 @@
 <template>
-  <div>
+  <div class="w-full">
+    <XtTitle v-if="text">{{ text }}</XtTitle>
     <a-radio-group v-model:value="select" :size="size">
       <a-space :size="space">
-        <a-radio
-          v-for="(item, index) in list"
-          :key="item[`${value}`]"
-          :value="item[`${value}`]"
-          :style="[fontSizeStyle]"
-          >{{ item[`${name}`] }}</a-radio
-        >
+        <div class="flex flex-wrap">
+          <a-radio
+            v-for="(item, index) in list"
+            :key="item[`${value}`]"
+            :value="item[`${value}`]"
+            :style="[fontSizeStyle]"
+            >{{ item[`${name}`] }}</a-radio
+          >
+        </div>
       </a-space>
     </a-radio-group>
   </div>
@@ -39,6 +42,10 @@ export default {
     };
   },
   props: {
+    text: {
+      type: String,
+      default: "",
+    },
     // 自定义绑定数组显示的内容
     name: {
       type: String,

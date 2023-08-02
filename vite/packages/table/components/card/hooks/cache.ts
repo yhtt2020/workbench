@@ -1,11 +1,23 @@
 export default {
   // 添加数据到localStorage，并添加时间戳
   set: function (key, value, timeout = undefined) {
-    const item = {
-      value,
-      times: timeout !== undefined ? new Date().getTime() + timeout : undefined,
-    };
-    localStorage.setItem(key, JSON.stringify(item));
+    if (timeout && timeout === "today") {
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999);
+
+      const item = {
+        value,
+        times: endOfToday.getTime(),
+      };
+      localStorage.setItem(key, JSON.stringify(item));
+    } else {
+      const item = {
+        value,
+        times:
+          timeout !== undefined ? new Date().getTime() + timeout : undefined,
+      };
+      localStorage.setItem(key, JSON.stringify(item));
+    }
   },
   // 判断数据是否已超时
   isExpired: function (key) {

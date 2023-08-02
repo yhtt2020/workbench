@@ -1,5 +1,7 @@
 <template>
-  <div>123</div>
+  <div>
+    <input style="display: block" ref="fileRef" type="file" name="" id="" />
+  </div>
 </template>
 
 <script>
