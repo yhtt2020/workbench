@@ -59,6 +59,9 @@ import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
 import RemoteCommunity from '../page/app/card/RemoteCommunity.vue'
+//应用
+import TomatoStart from '../page/app/tomato/TomatoStart.vue'
+import Tomato from '../page/app/tomato/Tomato.vue'
 
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
@@ -72,6 +75,17 @@ export default [
     name: "main",
     component: Main,
     children: [
+      {
+        path: '/TomatoStart',
+        name: 'tomatoStart',
+        component: TomatoStart
+      },
+
+      {
+        path: '/Tomato',
+        name: 'tomato',
+        component: Tomato
+      },
       {
         path: "/team",
         name: "team",
