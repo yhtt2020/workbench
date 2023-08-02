@@ -336,7 +336,7 @@ export const cardStore = defineStore(
         this.desks.push(desk)
         return desk
       },
-      addShareDesk(data){
+      addShareDesk(data,deskList){
         setTimeout(() => {
           let cardZoom;
           if(this.deskSize.cardsHeight){
@@ -349,13 +349,14 @@ export const cardStore = defineStore(
           let desk = {
             name: data.title,
             nanoid: nanoid(4),
+            id:nanoid(4),
             cards: data.cards,
             settings: {...data.settings,enableZoom:true},
             // showSettings: true
           }
           this.aloneSettings = data.settings
-          this.desks.push(desk)
-          this.switchToDesk(this.desks.length - 1)
+          deskList.unshift(desk)
+          //this.switchToDesk(this.deskList.length - 1)
           return desk
           }, 350);
       },

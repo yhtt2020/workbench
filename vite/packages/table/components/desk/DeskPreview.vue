@@ -11,7 +11,7 @@
           <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
         </div>
       </div>
-      
+
     </div>
     <!-- 预览 -->
     <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
@@ -30,10 +30,11 @@
     <template #closeIcon>
       <Icon icon="xiangyou"></Icon>
     </template>
-     <template #extra v-if="!scheme.isMyCreate">
+    <template #extra v-if="!scheme.isMyCreate">
       <a-space>
         <div class="flex">
-          <div class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet = true">
+          <div class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center"
+               @click="openSet = true">
             <Icon icon="dianzan" style="font-size: 1.5em;"></Icon>
           </div>
           <div class="add-scheme" @click="addPlan">立即添加</div>
@@ -50,7 +51,7 @@
         <span class="flex items-center my-4">
           <div>
             <a-avatar size="24">
-                <template #icon><UserOutlined /></template>
+                <template #icon><UserOutlined/></template>
             </a-avatar>
           </div>
           <span class="ml-3" style="color: var(--secondary-text);">{{ scheme.nickName }}</span>
@@ -66,7 +67,7 @@
           </span>
         </span>
       </div>
-      <span class="drawer-title">包含以下小组件（{{scheme.cardList.length}}）</span>
+      <span class="drawer-title">包含以下小组件（{{ scheme.cardList.length }}）</span>
       <div v-for="item in scheme.cardList" :key="item" class="drawer-item">
         <Icon :icon="item.icon" class="mr-2"></Icon>
         <span>{{ item.name }}</span>
@@ -76,18 +77,18 @@
 </template>
 
 <script>
-import { message } from 'ant-design-vue';
-import { mapActions, mapWritableState } from "pinia";
-import { appStore } from '../../store';
+import { message } from 'ant-design-vue'
+import { mapActions, mapWritableState } from 'pinia'
+import { appStore } from '../../store'
 import Desk from './Desk.vue'
-import { cardStore } from "../../store/card";
-import { deskStore } from "../../store/desk";
+import { cardStore } from '../../store/card'
+
 export default {
-  name: "DeskPreview",
+  name: 'DeskPreview',
   components: {
     Desk
   },
-  data() {
+  data () {
     return {
       // 添加
       openDrawer: false,
@@ -107,7 +108,7 @@ export default {
       windowHeight: document.body.clientHeight,
       previewWidth: 0,
       previewHeight: 0,
-    } 
+    }
   },
   props: {
     // 方案
@@ -120,15 +121,18 @@ export default {
       type: Boolean,
       default: () => false
     },
+    desks: {
+      type: Array
+    }
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
 
   },
   watch: {
-    showModal(newVal){
-      if(newVal)this.fullScreen = true
-      if(this.fullScreen){
+    showModal (newVal) {
+      if (newVal) this.fullScreen = true
+      if (this.fullScreen) {
         this.cardZoom = JSON.parse(JSON.stringify(this.scheme.settings.cardZoom))
         this.zoom = this.cardZoom / 100
         this.getPreviewHeight()
@@ -142,7 +146,7 @@ export default {
         this.deskHeight = this.scheme.deskHeight
         this.cardHeight = this.scheme.cardsHeight
         var that = this
-        window.addEventListener('resize',() => {
+        window.addEventListener('resize', () => {
           that.getPreviewHeight()
         })
       }
@@ -159,14 +163,14 @@ export default {
     // }
   },
   methods: {
-    ...mapActions(cardStore,['addShareDesk','setDeskSize']),
-    addPlan(){
+    ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
+    addPlan () {
       this.close()
-      this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)))
-      message.success('添加成功');
+      this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)), this.desks)
+      message.success('添加成功')
       this.openDrawer = false
       setTimeout(() => {
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let cardsHeight = document.getElementById('cardContent')?.offsetHeight
         let deskHeight = document.documentElement.clientHeight // 高
         let deskWidth = document.documentElement.clientWidth // 宽
         let size = {
@@ -176,147 +180,161 @@ export default {
         }
         this.setDeskSize(size)
         this.cardsHeight
-      },300)
+      }, 300)
     },
-    close(){
+    close () {
       // this.cards.settings.cardZoom = this.cardZoom
-      this.$emit('closePreview',false)
+      this.$emit('closePreview', false)
       this.fullScreen = false
     },
-    getPreviewHeight(){
+    getPreviewHeight () {
       this.$nextTick(() => {
-        if(this.fullScreen){
-          this.previewHeight = document.getElementById("previewContent")?.offsetHeight
-          let cardZoom = (this.cardZoom  * this.previewHeight/ this.cardHeight).toFixed()
+        if (this.fullScreen) {
+          this.previewHeight = document.getElementById('previewContent')?.offsetHeight
+          let cardZoom = (this.cardZoom * this.previewHeight / this.cardHeight).toFixed()
           this.cards.settings.cardZoom = cardZoom
         }
       })
     }
-    
+
   },
-  mounted() {
+  mounted () {
   },
 }
 </script>
 
 <style lang="scss" scoped>
-    .prompt-modal{
-      position: absolute;
-      top:0;
-      bottom:0;
-      right:0;
-      left:0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      // justify-content: space-between;
-      padding: 12px;
-      z-index: 9999999999;
-      .head-icon{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        height: 10%;
-        .icon{
-          background: var(--secondary-bg);
-          color: var(--primary-text);
-          border-radius: 12px;
-          width: 48px;
-          height: 48px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-        }
-      }
-      .foot{
-        display: flex;
-        justify-items: center;
-        align-items: end;
-        height: 10%;
-        // position: absolute;
-        // bottom: 15px;
-        >div{
-          background: var(--mask-bg);
-          border-radius: 12px;
-          height: 48px;
-          line-height: 48px;
-          padding: 0 16px;
-          font-size: 16px;
-          color: var(--secondary-text);
-        }
-      }
-    }
-    .add-scheme{
-      background: var(--active-bg);
-      font-size: 16px;
+.prompt-modal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // justify-content: space-between;
+  padding: 12px;
+  z-index: 9999999999;
+
+  .head-icon {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 10%;
+
+    .icon {
+      background: var(--secondary-bg);
       color: var(--primary-text);
       border-radius: 12px;
-      width: 128px;
+      width: 48px;
       height: 48px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
     }
-    .drawer-center{
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      .drawer-title{
-        font-size: 16px;
-        color: var(--primary-text);
-        font-weight: 600;
-      }
-      .label{
-        background: rgba(255, 255, 255, 0.4);
-        border-radius: 4px;
-        font-size: 14px;
-        padding: 0 8px;
-        color: var(--secondary-text);
-        margin-right: 12px;
-      }
-      .drawer-text{
-        font-size: 14px;
-        color: var(--secondary-text);
-        font-weight: 400;
-        margin: 8px 0 16px;
-      }
-      .drawer-item{
-        height: 48px;
-        background: var(--secondary-bg);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        margin: 16px 0 0;
-        padding: 0 14px;
-        font-size: 16px;
-        color: var(--primary-text);
-        font-weight: 400;
-      }
+  }
+
+  .foot {
+    display: flex;
+    justify-items: center;
+    align-items: end;
+    height: 10%;
+    // position: absolute;
+    // bottom: 15px;
+    > div {
+      background: var(--mask-bg);
+      border-radius: 12px;
+      height: 48px;
+      line-height: 48px;
+      padding: 0 16px;
+      font-size: 16px;
+      color: var(--secondary-text);
     }
-    .test-style{
-    height:100%;
-    width: 100%;
-    position: relative;
- }
- .desk-style{
+  }
+}
+
+.add-scheme {
+  background: var(--active-bg);
+  font-size: 16px;
+  color: var(--primary-text);
+  border-radius: 12px;
+  width: 128px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.drawer-center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .drawer-title {
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 600;
+  }
+
+  .label {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0 8px;
+    color: var(--secondary-text);
+    margin-right: 12px;
+  }
+
+  .drawer-text {
+    font-size: 14px;
+    color: var(--secondary-text);
+    font-weight: 400;
+    margin: 8px 0 16px;
+  }
+
+  .drawer-item {
+    height: 48px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    margin: 16px 0 0;
+    padding: 0 14px;
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 400;
+  }
+}
+
+.test-style {
+  height: 100%;
+  width: 100%;
   position: relative;
- }
- .desk-style::after{
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    z-index: 9;
- }
- .preview{
-  width:95%;
+}
+
+.desk-style {
+  position: relative;
+}
+
+.desk-style::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 9;
+}
+
+.preview {
+  width: 95%;
   height: 75%;
   // height:var(--previewH);
- }
+}
+
 //  .preview2{
 //   width:95%;
 //   height: 90%;

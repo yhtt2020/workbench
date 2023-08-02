@@ -1,14 +1,14 @@
 <template>
   <!-- 快速搜索 头部 菜单切换 -->
-  <div class="flex flex-row rounded-lg p-1" :class="bgColor" :style="{ height: itemHeight }"
+  <div class="flex flex-row rounded-lg p-1 justify-items-center justify-center" :class="bgColor" :style="{ height: itemHeight }"
     style="background: var(--secondary-bg);color: var(--primary-text);">
     <!-- <div v-for="(item, index) in navList"
       class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
       @click.stop="clickNav(item, index)" :class="activeIndex === index ? 's-item' : ''"> -->
     <template v-for="(item, index) in navList">
-      
+
         <div
-          class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer "
+          class="flex-1  h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer "
           @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''" :data-index="index"
           :data-item="JSON.stringify(item)">
           <span>{{ item.title }}</span>
