@@ -16,6 +16,7 @@
       </template>
       <a-select-option v-for="(item,index) in desks" :value="item.id">{{ item.name }}</a-select-option>
     </a-select>
+    <div>共 {{sharingDesk.cards.length}} 个组件</div>
     <div>
       <div class="title mb-2">桌面效果图</div>
       <div>
@@ -108,14 +109,14 @@ export default {
       shareModal: false,
       shareName: '',
       summary: '',//简介
-      cards: [],
+
       secretSwitch: true,
       dataType: [
         { title: '保留数据', name: 'data' },
         { title: '不保留数据', name: 'notData' }
       ],
       defaultType: { title: '不保留数据', name: 'notData' },
-
+      sharingDesk: [],
       categoryId: 0,
       categories: [],
     }
@@ -143,18 +144,18 @@ export default {
         this.assort = this.assortList[0]
 
         this.deskType = this.desks.map(item => item.name)
-        this.cards = this.desks[0]
         this.secretSwitch = true
       }
     },
   },
   async mounted () {
     let cats = await this.getCategories()
-    this.update()
+
     this.categories = cats
     if (cats.length > 0) {
       this.categoryId = cats[0].id
     }
+    this.update()
     this.setSelectVal(this.deskId)
   },
   methods: {
@@ -213,29 +214,30 @@ export default {
         await this.getPreview()
       }
       let cover= await pathUpload(this.capture)
-      let cards = JSON.parse(JSON.stringify(this.cards))
-      cards.cards.forEach((item, index) => {
-        switch (item.name) {
-          case 'notes':
-            if (item.customData) {
-              item.customData.text = ''
-            }
-            break
-          case 'countdownDay':
-            item.customData.notRetain = true
-            break
-        }
+      let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
+      cloneDesk.cards.forEach((item, index) => {
+        // switch (item.name) {
+        //   case 'notes':
+        //     if (item.customData) {
+        //       item.customData.text = ''
+        //     }
+        //     break
+        //   case 'countdownDay':
+        //     item.customData.notRetain = true
+        //     break
+        // }
+        item.customData={}
       })
 
       let settings = {}
-      if (cards.settings && cards.settings.enableZoom) {
-        settings = cards.settings
+      if (cloneDesk.settings && cloneDesk.settings.enableZoom) {
+        settings = cloneDesk.settings
       } else {
         settings = this.settings
       }
 
       const template=JSON.stringify({
-        cards: this.defaultType.name === 'notData' ? cards.cards : this.cards.cards,
+        cards: this.defaultType.name === 'notData' ? cloneDesk.cards : this.cards.cards,
         settings:settings,
       })
       this.scheme = {
@@ -276,10 +278,12 @@ export default {
       this.shareModal = val
     },
     setSelectVal (id) {
-      this.desks.map((item, i) => {
-        if (item.id === id) {
-          this.cards = item
-          this.shareName = item.name
+      console.log(id,'设置id')
+      this.desks.forEach(desk => {
+        if (desk.id === id) {
+          console.log(desk)
+          this.sharingDesk = desk
+          this.shareName = desk.name
         }
       })
     }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="left">
-            <div class="no-drag nav" :style="navStyle" :class="{ 'xt-active-btn': currenIndex == index }" @click="updateNavIndex(item, index)"
+            <div class="no-drag nav" :style="navStyle" :class="{ 'xt-active-btn': currenIndex == item.id }" @click="updateNavIndex(item, index)"
                 v-for="( item, index ) in  list" :key="item.name">{{
                 item.cname
             }}
@@ -32,8 +32,7 @@ export default {
     methods: {
         // 修改导航索引
         updateNavIndex(item, index){
-            const data = {item, index}
-            this.$emit('changeNav', data)
+            this.$emit('changeNav', item)
         }
     }
 }

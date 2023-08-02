@@ -8,7 +8,7 @@
             <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
           </div> -->
           <div @click="onBack" class="pointer flex items-center rounded-lg justify-center no-drag"
-            style="background: var(--secondary-bg);width:48px;height:48px;font-size: 16px;color: var(--primary-text);">
+               style="background: var(--secondary-bg);width:48px;height:48px;font-size: 16px;color: var(--primary-text);">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
           <div class="box-title no-drag">{{ selectNav.name === 'small' ? '小卡片' : '桌面市场' }}</div>
@@ -42,15 +42,17 @@
             />
           </div>
           <!-- 分享 -->
-          <div v-if="selectNav.name === 'desktop'" class="pointer xt-mask flex items-center rounded-lg justify-center ml-3 no-drag"
-          style="width:134px;height:48px;font-size: 16px;color: var(--primary-text);"
-          @click="share">我来分享</div>
+          <div v-if="selectNav.name === 'desktop'"
+               class="pointer xt-mask flex items-center rounded-lg justify-center ml-3 no-drag"
+               style="width:134px;height:48px;font-size: 16px;color: var(--primary-text);"
+               @click="share">我来分享
+          </div>
         </div>
       </div>
       <div class="mian" v-if="selectNav.name === 'small'">
         <div class="left">
           <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': navIndex == index }"
-            @click="updateNavIndex(index)" v-for="( item, index ) in  baseNavList " :key="item.name">{{
+               @click="updateNavIndex(index)" v-for="( item, index ) in  baseNavList " :key="item.name">{{
               item.cname
             }}
           </div>
@@ -60,8 +62,8 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
-          <NewCardPreViews  @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
-            :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
+          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
+                           :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
@@ -72,11 +74,13 @@
         </div>
       </div>
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
-        <NavMenu :list="apiList" :currenIndex="navDeskIndex" @changeNav="updateDeskIndex" />
+        <NavMenu :list="categories" :currenIndex="categoryIndex" @changeNav="updateDesks"/>
         <div class="ml-5 no-drag">
-          <DeskMarket  :selected="searchValue" :navList="apiList[navDeskIndex].children" @openPreview="openPreview"></DeskMarket>
+          <DeskMarket :selected="searchValue" :items="desks"
+                      @openPreview="openPreview"></DeskMarket>
           <!-- 预览 -->
-          <DeskPreview :desks="desks" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+          <DeskPreview :desks="desks" :scheme="scheme" :showModal="showModal"
+                       @closePreview="closePreview"></DeskPreview>
         </div>
         <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>
       </div>
@@ -86,22 +90,23 @@
 
 <script>
 import NewCardPreViews from './NewCardPreViews.vue'
-import { NavList } from "./navList"
-import HorizontalPanel from '../../../components/HorizontalPanel.vue';
+import { NavList } from './navList'
+import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import _ from 'lodash-es'
-import Search from '../../../components/Search.vue';
-import NavMenu from '../../../components/NavMenu.vue';
-import { deskStore } from '../../../store/desk';
-import { cardStore } from '../../../store/card';
-import { mapActions, mapWritableState } from "pinia";
-import DeskMarket from './DeskMarket.vue';
-import ShareDesk from '../../../components/desk/ShareDesk.vue';
-import DeskPreview from '../../../components/desk/DeskPreview.vue';
+import Search from '../../../components/Search.vue'
+import NavMenu from '../../../components/NavMenu.vue'
+import { deskStore } from '../../../store/desk'
+import { cardStore } from '../../../store/card'
+import { mapActions, mapWritableState } from 'pinia'
+import DeskMarket from './DeskMarket.vue'
+import ShareDesk from '../../../components/desk/ShareDesk.vue'
+import DeskPreview from '../../../components/desk/DeskPreview.vue'
+import { marketStore } from '../../../store/market'
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
-  emits:['onClose'],
+  components: { NewCardPreViews, HorizontalPanel, Search, NavMenu, DeskMarket, ShareDesk, DeskPreview },
+  emits: ['onClose'],
   props: {
     desk: {
       type: Object,
@@ -111,11 +116,11 @@ export default {
       type: Number,
       default: () => 0
     },
-    desks:{
-      type:Array
+    desks: {
+      type: Array
     }
   },
-  data() {
+  data () {
     return {
       navIndex: 1,
       selectContent: '',
@@ -126,19 +131,45 @@ export default {
         { value: '下载次数', name: '下载次数' },
         { value: '更新时间', name: '更新时间' },
       ],
-      navType:[
-         {title:'小组件',name:'small'},
-         {title:'社区桌面分享',name:'desktop'}
+      navType: [
+        { title: '小组件', name: 'small' },
+        { title: '社区桌面分享', name: 'desktop' }
       ],
-      selectNav:{title:'小组件',name:'small'},
+      selectNav: { title: '小组件', name: 'small' },
       navDeskIndex: 0,
       openDrawer: false,
       scheme: {},
       showModal: false,
+
+      categoryIndex: 0,
+      categories: [{
+        cname: '推荐',
+        children: []
+      }], //分类列表
+      desks: [],
+      deskPagination: {}
     }
   },
 
-  mounted() {
+  async mounted () {
+
+    //获取桌面分类
+    let cats = await this.getCategories()
+    if (cats) {
+      this.categories = [
+        {
+          cname: '推荐',
+          children: []
+        },
+        ...cats.map(cat => {
+          return {
+            cname: cat.name,
+            id:cat.id
+          }
+        })
+      ]
+    }
+    console.log(cats)
     // 这里是预留给api请求到时间和下载数据添加数据使用
     let navList = _.cloneDeep(this.baseNavList)
 
@@ -177,20 +208,20 @@ export default {
       } else
         return item
     })
-    if(this.panelIndex === 1){
+    if (this.panelIndex === 1) {
       this.selectNav = this.navType[this.panelIndex]
-    }else{
+    } else {
       this.selectNav = this.navType[0]
     }
   },
   computed: {
     ...mapWritableState(deskStore, ['apiList']),
-    displayList() {
+    displayList () {
       // return this.apiList.filter
     }
   },
   watch: {
-    selectContent(newV, oldV) {
+    selectContent (newV, oldV) {
       if (newV == '' || newV == null) {
         this.navList = this.baseNavList
         this.navIndex = 1
@@ -218,49 +249,60 @@ export default {
 
   },
   methods: {
+    ...mapActions(marketStore, ['getCategories', 'getDesks']),
     // ...mapActions(deskStore,['setDeskSize']),
-    ...mapActions(cardStore,['setDeskSize']),
-    onClick() {
+    ...mapActions(cardStore, ['setDeskSize']),
+    onClick () {
     },
-    handleChange(value) {
+    handleChange (value) {
       // console.log(`selected ${value}`)
     },
-    getTimes() {
+    getTimes () {
       const currentTime = Date.now()
       const startDate = new Date('2023-01-01T00:00:00Z').getTime()
       const randomTimestamp = Math.floor(Math.random() * (currentTime - startDate)) + startDate
       return randomTimestamp
     },
-    onBack() {
+    onBack () {
       console.log('提交了关闭事件')
       this.$emit('close')
       this.$emit('onClose')
     },
-    updateNavIndex(index) {
+    updateNavIndex (index) {
       this.navIndex = index
     },
-    updateDeskIndex({index}){
-      this.navDeskIndex = index
+    async updateDesks (item) {
+
+      this.categoryIndex = item.id
+      let params={
+        page: 1,
+        size: 20,
+        categoryId: item.id
+      }
+      console.log(item,'a')
+      let rs = await this.getDesks(params)
+      this.desks = rs.list
+      this.deskPagination = rs.pagination
     },
-    changeSelect(event){
+    changeSelect (event) {
       // console.log('选择下拉',event)
       this.searchValue = event
     },
-    share(){
+    share () {
       this.openDrawer = true
     },
-    closeShare(val){
+    closeShare (val) {
       this.openDrawer = val
     },
-    openPreview({scheme,showModal}){
+    openPreview ({ scheme, showModal }) {
       this.scheme = scheme
       this.showModal = showModal
 
     },
-    closePreview(){
+    closePreview () {
       this.showModal = false
       setTimeout(() => {
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+        let cardsHeight = document.getElementById('cardContent')?.offsetHeight
         let deskHeight = document.documentElement.clientHeight // 高
         let deskWidth = document.documentElement.clientWidth // 宽
         let size = {
@@ -269,7 +311,7 @@ export default {
           cardsHeight,
         }
         this.setDeskSize(size)
-      },300)
+      }, 300)
     }
   },
 }
@@ -449,7 +491,8 @@ export default {
     }
   }
 }
-.box-title{
+
+.box-title {
   display: flex;
   align-items: center;
   margin-left: 16px;

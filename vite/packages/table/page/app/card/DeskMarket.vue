@@ -5,7 +5,7 @@
       <div v-for="item in navLists" :key="item.id" class="pointer recommend" :style="deskItemStyle" @click="previewKay(item)">
         <div class="xt-mask" style="padding: 14px;">
           <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-          <img style="width:100%;height:100%;object-fit: cover;" :src="item.deskImg" />
+          <img style="width:100%;height:100%;object-fit: cover;" :src="item.cover" />
         </div>
         <div style="padding: 0 14px 14px">
           <div class="title">{{ item.title }}</div>
@@ -62,7 +62,7 @@ export default {
   },
   props: {
     //排序列表
-    navList: {
+    items: {
       type: Array,
       default: () => [],
     },
@@ -77,10 +77,10 @@ export default {
     }
   },
   watch: {
-    navList: {
+    items: {
       immediate: true,
       handler () {
-        this.navLists = JSON.parse(JSON.stringify(this.navList))
+        this.navLists = JSON.parse(JSON.stringify(this.items))
       }
     },
     selected: {
@@ -89,7 +89,7 @@ export default {
       handler (newV, oldV) {
         if (newV == '下载次数') this.navLists = this.mySort(this.navLists, 'download')
         else if (newV == '更新时间') this.navLists = this.mySort(this.navLists, 'time')
-        else this.navLists = this.navList
+        else this.navLists = this.items
       }
     },
   },
@@ -108,7 +108,7 @@ export default {
       })
     },
     previewKay(item){
-      this.$emit('openPreview',{scheme: item,showModal: true})
+      this.$emit('openPreview',{scheme: JSON.parse(item.template),showModal: true})
       // this.scheme = item
       // this.showModal = true
     },
