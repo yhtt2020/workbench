@@ -182,8 +182,17 @@
       add(item, index = 0) {
         index = index ?? this.carouselIndex;
         // let url = this.getUrl(item.detail)
+        let size = item.sizes[0].split('x')
         this.addCard(
-          { name: item.option[index].name, id: Date.now(), customData: {url:item.url} },
+          { 
+            name: item.option[index].name, 
+            id: Date.now(), 
+            customData: {
+              url:item.url,
+              width: (parseInt(size[0]) / 2),
+              height:(parseInt(size[1]) / 2)
+            } 
+          },
           this.desk
         );
         this.$emit("closeMarket",false);
@@ -204,6 +213,7 @@
       },
       delCard(id){
         delList(id)
+        this.list = shareList
         this.$forceUpdate()
         this.$emit('closeMy')
       },

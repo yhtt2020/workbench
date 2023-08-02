@@ -25,15 +25,12 @@ export const dataList = [
     "cname": "网易云",
     "detail": "https://music.163.com/",
     "url": "https://music.163.com/",
-    "sizes": [
-      "社区分享",
-      "自定义大小"
-    ],
+    "sizes": ['4x4'],
     "option": [
       {
         img: 'https://img1.baidu.com/it/u=1705857616,1505257240&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500',
         "name": "Remote",
-        "size": "自定义大小",
+        "size": '4x4',
         "zoom": "11"
       }
     ],

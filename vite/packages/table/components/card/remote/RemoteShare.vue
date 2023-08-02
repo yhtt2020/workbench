@@ -171,7 +171,7 @@
             {
               img: this.img,
               name: 'Remote',
-              size: '2x2',
+              size: [this.cardSize],
               zoom: '11'
             },
           ],
@@ -208,7 +208,7 @@
       }
       // console.log(this.zoom)
       this.card = this.desk.cards.find(item => item.id === parseInt(this.cardId))
-      this.cardSize = this.card.customData.width*2 + '*' + this.card.customData.height*2
+      this.cardSize = this.card.customData.width*2 + 'x' + this.card.customData.height*2
 
       // this.card = cache.get('currentCard')
       // let remoteArr = []

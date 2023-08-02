@@ -114,10 +114,23 @@ import { message } from "ant-design-vue";
         this.selectCard = card
       },
       addNewCard(card) {
+        let size = card.sizes[0].split('x')
         this.addCard(
-          { name: card.option[0].name, id: Date.now(), customData: {url:card.url} },
+          { 
+            name: card.option[0].name, 
+            id: Date.now(), 
+            customData: {
+              url:card.url,
+              width: (parseInt(size[0]) / 2),
+              height:(parseInt(size[1]) / 2)
+            } 
+          },
           this.desk
         );
+        // this.addCard(
+        //   { name: card.option[0].name, id: Date.now(), customData: {url:card.url} },
+        //   this.desk
+        // );
         this.close()
         message.success("添加成功！");
       },
