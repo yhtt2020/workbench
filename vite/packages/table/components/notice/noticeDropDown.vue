@@ -15,7 +15,7 @@
 
 <script>
 import { mapActions } from 'pinia'
-import { noticeStore } from '../store/notice'
+import { noticeStore } from '../../store/notice'
 export default {
   props:{
     select:{
@@ -30,11 +30,11 @@ export default {
     }
   },
   methods:{
-    ...mapActions(noticeStore,['delAllNotification']),
+    ...mapActions(noticeStore,['deleteAllNotice']),
     selectMenuItem(item,index){
       this.dropDownIndex = index
       if(item.name === 'clear'){
-        this.delAllNotification(this.select)
+        this.deleteAllNotice(this.select)
       }else{
         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
       }

@@ -15,7 +15,8 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text " >
-      <div hidden=""  class="no-drag flex items-center pointer" @click="messageAlert">
+      <!-- hidden=""  -->
+      <div  class="no-drag flex items-center pointer" @click="messageAlert">
         <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
         </div>

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
+import _ from 'lodash-es'
 
 // @ts-ignore
 export const noticeStore = defineStore('notice',{
@@ -121,7 +122,16 @@ export const noticeStore = defineStore('notice',{
 
     deleteAllNotice(index:number){  // 删除对应消息通知应用的使用消息数据  
       this.notice.message[index].noticeList = []
+    },
+
+    addNoticesData(index:number,value:object){  // 将消息通知新增到列表中 
+      this.notice.message[index].noticeList.push(value)
+    },
+    
+    deleteNotice(index: any,delIndex: any){ // 删除单个消息通知     
+      this.notice.message[index].noticeList.splice(delIndex,1)
     }
+
   },
 
   persist:{

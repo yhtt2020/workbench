@@ -28,11 +28,13 @@
           <span class="pl-3 font-400" style="color: var(--primary-text);">{{notice.session[selectIndex].alias}}</span>
         </div>
         <div class="flex items-center">
-          <div class="w-11 pointer flex items-center justify-center h-11" @click="deleteAllNotice">
+          <div class="w-11 pointer flex items-center justify-center h-11" @click="add">
+            <Icon icon="tianjia2" style="font-size: 1.5em;"></Icon>
+          </div>
+          <div class="w-11 pointer flex items-center justify-center h-11" @click="deleteAllNotices">
             <Icon icon="clear" style="font-size: 1.5em;"></Icon>
           </div>
-          <div class="w-11 pointer flex items-center justify-center h-11">
-            <!--  @click="setNotificationOnOff(this.noticeEnable = !this.noticeEnable)" -->
+          <div class="w-11 pointer flex items-center justify-center h-11" @click="setNoticeOnOff(this.noticeEnable = !this.noticeEnable)">
             <Icon icon="notification" style="font-size: 1.5em;color: var(--secondary-text);" v-if="noticeEnable"></Icon>
             <Icon icon="notification-off" style="font-size: 1.5em;color: var(--secondary-text);" v-else></Icon>
           </div>
@@ -55,7 +57,7 @@
             </div>
             <noticeDropDown :select="selectIndex"></noticeDropDown>
           </div>
-          <NoticeDetail :detailItem="notice.message[selectIndex].noticeList"></NoticeDetail>
+          <NoticeDetail :detailItem="notice.message[selectIndex].noticeList" :detailId="selectIndex"></NoticeDetail>
         </div>
       </template>
     </div>
@@ -66,11 +68,9 @@
 import { mapActions,mapWritableState } from 'pinia';
 import { noticeStore } from '../../store/notice'
 import NoticeDetail from './noticeDetail.vue';
-import noticeDropDown from '../../components/noticeDropDown.vue';
-// import { useToast } from 'vue-toastification'
-// import { NotificationManager } from '../../js/common/sessionNotice' 
+import noticeDropDown from '../../components/notice/noticeDropDown.vue';
 
-// const toast = useToast()
+
 export default {
   components:{
     NoticeDetail,
@@ -90,19 +90,31 @@ export default {
     this.selectIndex = 0
   },
   methods:{
-    ...mapActions(noticeStore,['setNotificationOnOff','delAllNotification','getNotificationData']),
+    ...mapActions(noticeStore,['setNoticeOnOff','deleteAllNotice','addNoticesData']),
+
     switchSession(index){  // 切换会话 
      this.selectIndex = index
-    //  this.noticeDetailList  = this..notice[index]
     },
+
     openDropDown(){
       this.isDropdownVisible = true
     },
-    deleteAllNotice(){  // 清空全部消息内容
-      // this.delAllNotification(this.selectIndex)
-    }
+
+    deleteAllNotices(){  // 清空全部消息内容
+      this.deleteAllNotice(this.selectIndex)
+    },
     
-  
+    add(){ // 模拟消息通知发送测试
+      window.$notice.sendNotice({
+        title:'测试33xxxxxxxx',
+        body:'测试方法是否可用xxxxxxxxx',
+        icon:'/icons/logo128.png',
+        time:1690939067,
+        level:'critical',
+        from:null
+      })
+      this.addNoticesData(this.selectIndex,window.$notice.notifications)
+    },
   }
 }
 </script>
