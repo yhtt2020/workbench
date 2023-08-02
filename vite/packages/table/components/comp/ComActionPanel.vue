@@ -49,9 +49,11 @@
 import {IdcardFilled,GoldFilled,BellFilled,ApiFilled,LockFilled,ScheduleFilled} from '@ant-design/icons-vue'
 import browser from '../../js/common/browser'
 import UpdateMyInfo from './UpdateMyInfo.vue'
+import Emoji from './Emoji.vue'
 export default {
   name: 'ComActionPanel',
   components:{
+    Emoji,
     IdcardFilled,GoldFilled,BellFilled,ApiFilled,LockFilled,ScheduleFilled,
     UpdateMyInfo
   },
