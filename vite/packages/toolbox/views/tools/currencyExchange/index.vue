@@ -39,7 +39,7 @@
               class="h-full flex items-center xt-text justify-between px-4"
               style="
                 width: 170px;
-                background: var(--secondary-text);
+                background: rgba(255, 255, 255, 0.4);
                 border-radius: 8px 0 0 8px;
               "
             >
@@ -91,7 +91,7 @@
               class="h-full flex items-center xt-text justify-between px-4"
               style="
                 width: 170px;
-                background: var(--secondary-text);
+                background: rgba(255, 255, 255, 0.4);
                 border-radius: 8px 0 0 8px;
               "
             >
@@ -134,7 +134,6 @@ export default {
     };
   },
   async mounted() {
-    this.$cache.set("text", "hello", "today");
     this.getCurrency(this.selectFromCurrency.id);
     this.getCurrency(this.selectToCurrency.id);
   },

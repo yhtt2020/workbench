@@ -7,11 +7,7 @@
       style="width: 100px; height: 100px"
       @click="toolClick(tool)"
     >
-      <img
-        class="w-12 h-12 mb-2"
-        :src="'/tools/' + tool.img + '.png'"
-        alt=""
-      />
+      <img class="w-12 h-12 mb-2" :src="'/tools/' + tool.img + '.png'" alt="" />
       <div class="text-sm">{{ tool.name }}</div>
     </div>
   </div>
@@ -40,6 +36,7 @@ export default {
           img: "QRCodeGeneration",
           route: "QRCodeGeneration",
         },
+        { name: "一键取色", img: "colorSelection", route: "colorSelection" },
         // { name: "搜索网格", img: "searchTools", route: "searchTools" },
         // { name: "文件分享", img: "fileFhare", route: "fileFhare" },
 
