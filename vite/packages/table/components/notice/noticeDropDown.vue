@@ -35,6 +35,7 @@ export default {
       this.dropDownIndex = index
       if(item.name === 'clear'){
         this.deleteAllNotice(this.select)
+        window.$notice.removeNotice()
       }else{
         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
       }
