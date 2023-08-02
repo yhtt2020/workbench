@@ -32,7 +32,8 @@ export default {
     customStyle() {
       return {
         width: this.w + "px",
-        height: this.h + "px",
+        height: this.w + "px",
+        // height: this.h + "px",
       };
     },
     fontSizeStyle() {
@@ -66,6 +67,7 @@ export default {
       type: Number,
       default: 26,
     },
+    // 现在只保留w了 h作废 反正是正方形
     w: {
       type: Number,
       default: 48,
