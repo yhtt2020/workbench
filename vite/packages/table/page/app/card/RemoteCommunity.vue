@@ -56,6 +56,7 @@ import State from "../../../components/card/components/state/index.vue"
 import RemoteShare from '../../../components/card/remote/RemoteShare.vue'
 import { cardStore } from '../../../store/card';
 import {shareList} from '../../../components/card/remote/testData'
+import cache from '../../../components/card/hooks/cache';
 import Modal from '../../../components/Modal.vue';
 import { message } from "ant-design-vue";
   export default{
@@ -130,13 +131,17 @@ import { message } from "ant-design-vue";
       ...mapWritableState(cardStore, ['desks']),
     },
     mounted(){
-      let deskId = this.$route.params.id
-      this.cardId = this.$route.params.cardId
-      this.openShare = this.$route.params.direct
-      this.direct = this.$route.params.direct
+      let params = this.$route.params
+      let deskId = params.id
+      this.cardId = params.cardId
+      this.openShare = params.direct
+      this.direct = params.direct
+      let size = JSON.parse(params.size)
+      cache.set('cardSize',size)
       this.desk = this.desks.find(item => item.id === deskId)
       this.card = this.desk.cards.find(item => item.id === parseInt(this.cardId))
-
+      // console.log('市场', this.card)
+      // cache.set('currentCard',this.card)
       this.setNavFixed()
     },
     watch: {

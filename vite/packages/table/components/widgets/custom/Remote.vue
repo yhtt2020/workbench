@@ -3,8 +3,8 @@
   <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
   <!--  </div>-->
   <Widget :customIndex="customIndex" :size="customSize" :options="options" :menuList="menuList"
-    ref="remote" :custom-data="customData" :desk="desk">
-    <div style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center">
+    ref="remote" :custom-data="customData" :desk="desk" :showRightIcon="notTrigger ? false : true">
+    <div ref="cardSize" style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center" :class="notTrigger ? 'trigger' : '' ">
       <div v-if="!customData.url"
         style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
         <a-button size="large" @click="this.panelVisible = true" type="primary" class="xt-active-text">
@@ -37,15 +37,15 @@
       <a-button type="primary" @click="save" block>确定</a-button>
     </div>
   </a-drawer>
-  <template v-if="openShare">
-    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :cardId="cardId"></RemoteShare>
-  </template>
+  <!-- <template v-if="openShare">
+    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :cardId="customIndex"></RemoteShare>
+  </template> -->
 </template>
 
 <script>
 import Widget from '../../card/Widget.vue'
 import { message } from 'ant-design-vue'
-import RemoteShare from '../../card/remote/RemoteShare.vue';
+// import RemoteShare from '../../card/remote/RemoteShare.vue';
 function loadScript(src, id, callback) {
   const s = document.createElement("script", id);
   s.type = "text/javascript";
@@ -61,7 +61,7 @@ function loadScript(src, id, callback) {
 }
 export default {
   name: 'Remote',
-  components: { Widget,RemoteShare },
+  components: { Widget },
   props: {
     customIndex: {
       type: Number,
@@ -69,10 +69,17 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => { }
+      default: () => {
+        return {
+        }
+       }
     },
     desk:{
       type:Object
+    },
+    notTrigger: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -97,7 +104,7 @@ export default {
           icon: "shop",
           title: '发现',
           fn: () => {
-            this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id,cardId: this.customIndex}})
+            this.$router.push({name: 'remoteCommunity',params: {id: this.desk.id,cardId: this.customIndex,size: JSON.stringify(this.cardSize) }})
           }
         },
         {
@@ -110,8 +117,10 @@ export default {
                 id: this.desk.id,
                 cardId: this.customIndex,
                 direct: true,
+                size: JSON.stringify(this.cardSize)
               }
             })
+            // this.openShare = true
           }
         },
         {
@@ -186,6 +195,10 @@ export default {
         width: (this.customData.width || 1) * 280 + (this.customData.width - 1) * 10 + 'px',
         height: (this.customData.height || 2) * 205 + (this.customData.height - 1) * 10 + 'px'
       }
+    },
+    cardSize() {
+      const { width, height } = this.$refs.cardSize.getBoundingClientRect();
+      return { width, height };
     }
   },
   mounted() {
@@ -194,8 +207,11 @@ export default {
     // }
     this.width = this.customData.width * 2 || 2
     this.height = this.customData.height * 2 || 2
+    if(!this.customData.width){
+      this.customData.width = 1
+      this.customData.height = 1
+    }
     this.url = this.customData.url || ''
-
     // console.log('尝试载入')
     // const node = document.getElementById("my");
     // //我们将变量转换一下格式，就能传递给子组件
@@ -213,4 +229,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.trigger {
+  pointer-events: none;
+}
+</style>
