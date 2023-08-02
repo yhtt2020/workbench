@@ -4,11 +4,11 @@
    @contextmenu.stop="noticeMenu(index,$event)"  
   >
     
-    <div class="flex items-center justify-between mb-4" v-if="item.from !== null">
+    <div class="flex items-center justify-between mb-4" v-if="isStringEmpty(item)">
       <div class="flex items-center">
         <span class="pr-2 font-400" style="color: var(--primary-text);">收到了来自</span>
-        <a-avatar :size="24" v-if="item.from !== null"  :src="item.from.avatarUrl"></a-avatar>
-        <span class="px-2 font-500"  v-if="item.from !== null" style="color: var(--active-bg);">{{ item.from.username }}</span>
+        <a-avatar :size="24"  :src="item.from.avatarUrl"></a-avatar>
+        <span class="px-2 font-500"  style="color: var(--active-bg);">{{ item.from.username }}</span>
         <span class="pr-2 font-400" style="color: var(--primary-text);">赠送的礼物</span> 
       </div>
     </div>
@@ -19,14 +19,19 @@
       </div>
     </div>
 
-    <div class="font-400 mb-4" style="color: var(--primary-text);">{{item.title}}</div>
+    <div class="font-400 mb-4" v-if="item.title !== ''" style="color: var(--primary-text);">{{item.title}}</div>
     
     <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.body }}</div>
 
     <div  class="flex items-center justify-between" style="height: 38px;">
       <span class="font-400" style="color:var(--secondary-text);">{{ formatDate(item.time) }}</span>
       <div  class="flex">
-        <div class="py-2 px-4 active-button rounded-lg ml-3 pointer" style="background:var(--active-bg);color: var(--active-text);">立即查看</div>
+        <div class="py-2 px-4 active-button rounded-lg ml-3 pointer" 
+         style="background:var(--active-bg);color: var(--active-text);"
+         @click="goNotice"
+        >
+          立即查看
+        </div>
       </div>
     </div> 
 
@@ -100,6 +105,17 @@ export default {
       }
     },    
 
+    goNotice(){  // 查看消息通知跳转机制 
+      // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
+    },
+
+    isStringEmpty(item){
+      if(item.from !== null && item.from.avatarUrl !== ''){
+        return true
+      }else{
+        return false
+      }
+    }
   }
 
 }

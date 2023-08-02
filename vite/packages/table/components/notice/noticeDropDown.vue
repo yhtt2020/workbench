@@ -16,6 +16,8 @@
 <script>
 import { mapActions } from 'pinia'
 import { noticeStore } from '../../store/notice'
+import { Modal } from 'ant-design-vue'
+
 export default {
   props:{
     select:{
@@ -34,8 +36,15 @@ export default {
     selectMenuItem(item,index){
       this.dropDownIndex = index
       if(item.name === 'clear'){
-        this.deleteAllNotice(this.select)
-        window.$notice.removeNotice()
+        Modal.confirm({
+         content:"确定要清理所有消息",
+         okText: "删除",
+         centered: true,
+         onOk: () => {
+           this.deleteAllNotice()
+           window.$notice.removeNotice()
+         },
+        })
       }else{
         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
       }
