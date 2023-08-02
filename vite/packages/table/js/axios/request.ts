@@ -1,7 +1,7 @@
 import axios from "axios";
 import {getConfig} from "./serverApi";
 
-export async function get(url, params={}) {
+export async function get(url, params = {}) {
   const result = await axios.get(url, {
     params: params,
     ...await getConfig()
@@ -15,12 +15,21 @@ export async function get(url, params={}) {
 }
 
 
-export async function post(url, data) {
-  const result = await axios.post(url, {
-      ...data
-    },
-    await getConfig())
-  console.log('请求响应=',result)
+export async function post(url, data, options = {crud: false}) {
+  let conf = await getConfig()
+  if (options.crud) {
+    conf.headers['Content-Type'] = 'application/json'
+  }
+  let result
+  if(options.crud){
+     result = await axios.post(url, JSON.stringify(data), conf
+    )
+  }else{
+     result = await axios.post(url, {
+        ...data
+      }, conf
+    )
+  }
   if (result.data.code === 1000) {
     return result.data.data
   } else {

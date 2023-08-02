@@ -175,7 +175,7 @@
                aria-placeholder="font-size: 16px;"/>
     </div>
   </a-drawer>
-  <ShareDesk :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
+  <ShareDesk ref="shareDeskRef" :deskRef="$refs.currentDeskRef" :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
   <ExportDesk :openModal="exportModal" @closeExport="closeExport" :layoutSize="layoutSize"
               :desks="deskList"></ExportDesk>
 
@@ -354,6 +354,7 @@ export default {
       this.showModal = showModal
     },
     shareDesk() {
+      this.$refs.shareDeskRef.update()
       this.shareDeskVisible = true
       this.$refs.currentDeskRef.hideMenu()
     },

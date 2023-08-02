@@ -91,6 +91,10 @@ const windowApi = {
    */
   async getZoomFactor(){
     return await sendSync('getZoomFactor')
+  },
+
+  async getCapture(){
+    return await sendSync('getCapture')
   }
 }
 

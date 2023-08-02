@@ -33,6 +33,7 @@ const result = (res,callback)=>{
   if(res.data.code == 1000){
     callback(true,res)
   }else{
+    console.error(res)
     callback(false)
   }
 }
@@ -45,7 +46,7 @@ const api = {
     )
     result(res,callback)
   },
- 
+
   async postCosUpload(data,callback){  // 工作台图片上传请求方法
     let res = await axios.post(sUrl(url.cosUpload),
       data,
