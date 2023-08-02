@@ -4,7 +4,7 @@ export const dataList = [
     "name": "remote",
     "cname": "俄罗斯方块小游戏",
     "detail": "一个可以在桌面直接使用的俄罗斯方块小游戏",
-    url: 'https://www.doyo.cn/zhuanti/elsfkyx/',
+    url: 'https://chvin.github.io/react-tetris/',
     sizes: ['2x2'],
     option: [
       {

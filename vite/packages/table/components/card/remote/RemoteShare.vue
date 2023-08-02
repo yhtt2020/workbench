@@ -26,7 +26,7 @@
                   <div>
                     <a-avatar class="rounded-lg xt-bg-2" shape="square" :size="100" :src="img" />
                   </div>
-                  <span @click="delImg"><Icon icon="close-circle-fill" style="font-size: 28px;color: #7A7A7A;"></Icon></span>
+                  <span v-if="img" @click="delImg"><Icon icon="close-circle-fill" style="font-size: 28px;color: #7A7A7A;"></Icon></span>
                 </div>
                 <a-upload class="pointer" :style="size"
                 @change="uplaodImageChange" 
@@ -61,7 +61,7 @@
             </div>
             <div class="box-item">
               <span>隐藏边框</span>
-              <span>是</span>
+              <span>{{ card.customData?.hideFrame ? '是' : '否' }}</span>
             </div>
             <div class="box-item">
               <span>连接地址</span>
@@ -347,8 +347,5 @@
 }
 .share-modal::-webkit-scrollbar{
   display: none;
-}
-::v-deep .card{
-  padding: 0;
 }
 </style>
