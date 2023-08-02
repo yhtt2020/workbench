@@ -1,11 +1,11 @@
 <template>
   <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot">
-    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDays.length <= 0">
-    <a-empty :description="null" :image="simpleImage" />
-    <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
+    <div class="content mt-4" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDays.length <= 0" >
+      <a-empty :description="null" image="/img/test/load-ail.png"/>
+    <a-button type="primary" class=" xt-text xt--active-bg rounded-full" @click="()=>{settingVisible=true;goAddEvent()}">立即添加</a-button>
     </div>
     <div class="content  mt-1 " style="height: calc(100% - 20px);overflow: hidden;" v-else>
-    <div style="padding-top: 0.2em">
+    <div class="cursor-pointer " @click="settingVisible=true" style="padding-top: 0.2em">
 
 
     <div
@@ -49,8 +49,8 @@
               class="event-list px-4 mb-3 s-item xt-bg-2 xt-text"
               v-for="(item,index) in countdownDays"
             >
-              <a-dropdown :trigger="['contextmenu']" class="w-full">
-                <div class="flex flex-row justify-between items-center">
+
+                <div class="flex flex-row justify-between items-center w-full">
               <div class="flex flex-row items-center">
                 <div class="round-dot mr-4"></div>
                 <div class="event-title">
@@ -67,30 +67,27 @@
         <span v-else>已过</span> {{
                   differenceDay(item)
                 }} 天</span
-              ></div>
-              <template #overlay>
-                <a-menu @click="(e) => onContextMenuClick(e, index)">
-                  <a-menu-item key="1">删除</a-menu-item>
-                </a-menu>
-              </template>
-            </a-dropdown>
+              >
+
+                <a-button class="rounded-full"  @click="(e) => onContextMenuClick(e, index)" type="danger">删除</a-button>
+                </div>
             </div>
            </vue-custom-scrollbar
           >
         </div>
         <div class="flex flex-row items-center w-full justify-center mt-4">
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2" style="color: var(--primary-text); " @click="closeDrawer">取消</div>
-          <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-bg-2" style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
+
+          <div class="xt-active-bg rounded-lg h-10 w-full flex justify-center items-center pointer " style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
         </div>
       </div>
     <div v-else>
-      <div>事件22名称</div>
-      <a-input class="rounded-lg  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
+      <div>事件名称</div>
+      <a-input class="rounded-lg  h-10 mt-4 " allow-clear v-model:value="eventValue" placeholder="请输入"/>
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer " style="background:var(--primary-bg) ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-bg-2" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2 " style="  ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
+        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-active-bg" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>
@@ -297,5 +294,7 @@ export default {
     color: #6a6a6a;
   }
 }
-
+:deep(.ant-empty-image){
+  height: 60px;
+}
 </style>

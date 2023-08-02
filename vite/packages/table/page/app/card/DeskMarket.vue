@@ -108,7 +108,7 @@ export default {
       })
     },
     previewKay(item){
-      this.$emit('openPerview',{scheme: item,showModal: true})
+      this.$emit('openPreview',{scheme: item,showModal: true})
       // this.scheme = item
       // this.showModal = true
     },

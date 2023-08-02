@@ -75,8 +75,8 @@ export default {
             }
           })
         }else{
-          this.$router.push({path:'/dev/'})
           this.setDevApp(devApp)//devApp是不和任何对象挂钩的，只有在保存的时候才会把对应的设置覆盖进去
+          this.$router.push({path:'/dev/'})
         }
       }else{
         this.debugMod=false

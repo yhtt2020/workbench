@@ -203,12 +203,7 @@ app.whenReady().then(() => {
   tray.on('right-click', () => {
     let tableRunning=global.tableWin && !global.tableWin.window.isDestroyed()
     let tpl=[
-      {
-        label: '打开浏览器',
-        click: () => {
-         openBrowser()
-        }
-      },
+
       {
         label: '打开工作台',
         click: () => {
@@ -222,15 +217,17 @@ app.whenReady().then(() => {
         }
       },
       {
-        type: 'separator'
-      },
-      {
-        label: '还原工作台位置',
+        label: '重置工作台窗口位置(找回)',
         click: () => {
           if (global.tableWin && !global.tableWin.window.isDestroyed()) {
-            global.tableWin.window.center()
-            global.tableWin.window.show()
-            global.tableWin.window.focus()
+            global.tableWin.close()
+            setTimeout(()=>{
+              settings.set('tableWinSetting',undefined)
+              global.tableManager.init().then(()=>{
+                global.tableWin.window.show()
+              })
+            },500)
+
           } else {
             settings.set('tableWinSetting',undefined)
             global.tableManager.init().then(()=>{
@@ -240,9 +237,12 @@ app.whenReady().then(() => {
         }
       },
       {
-        label: '切换账号空间',
+        type: 'separator'
+      },
+      {
+        label: '打开浏览器',
         click: () => {
-          showUserWindow()
+          openBrowser()
         }
       },
       {
@@ -259,6 +259,17 @@ app.whenReady().then(() => {
           }
         }
       },
+      {
+        type: 'separator'
+      },
+
+      {
+        label: '切换账号空间',
+        click: () => {
+          showUserWindow()
+        }
+      },
+
       {
         type: 'separator'
       },

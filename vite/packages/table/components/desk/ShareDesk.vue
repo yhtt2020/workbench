@@ -7,8 +7,8 @@
     </template>
     <div>
       <span class="title">桌面</span>
-      <a-select v-model:value="desk" @change="setSelectVal" style="height:48px; border:none;" 
-      :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center" 
+      <a-select v-model:value="desk" @change="setSelectVal" style="height:48px; border:none;"
+      :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center"
       :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
         <template #suffixIcon>
           <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
@@ -23,8 +23,8 @@
       <span class="title">简介</span>
       <a-textarea v-model:value="blurb" spellcheck="false" class="input xt-text"  placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 100px;"/>
       <span class="title">分类</span>
-      <a-select v-model:value="assort" style="height:48px;border:none;" :bordered="false" size="large" 
-      class="input rounded-lg  text-xs flex items-center" 
+      <a-select v-model:value="assort" style="height:48px;border:none;" :bordered="false" size="large"
+      class="input rounded-lg  text-xs flex items-center"
       :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
         <template #suffixIcon>
           <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
@@ -99,17 +99,17 @@ export default {
   },
   computed: {
     // ...mapWritableState(deskStore,['deskList','deskSize']),
-    ...mapWritableState(deskStore,['deskList']),
+    ...mapWritableState(deskStore,['apiList']),
     ...mapWritableState(cardStore, ['desks','settings','deskSize','countdownDay']),
   },
   watch: {
     openDrawer(newV){
       this.showDrawer = newV
       if(this.showDrawer){
-        this.assortList = this.deskList.map(item => item.cname)
+        this.assortList = this.apiList.map(item => item.cname)
         this.assortList.unshift('请选择')
         this.assort = this.assortList[0]
-        
+
         this.deskType = this.desks.map(item => item.name)
         this.desk = this.deskType[0]
         this.cards = this.desks[0]
@@ -157,7 +157,7 @@ export default {
             break;
         }
       })
-      
+
       const time = new Date().valueOf()
       let settings = {}
       if(cards.settings && cards.settings.enableZoom){
@@ -165,9 +165,9 @@ export default {
       }else{
         settings = this.settings
       }
-      
+
       this.scheme = {
-        id: nanoid(), 
+        id: nanoid(),
         deskImg: '/img/test/deckImg.jpg',
         desk: this.desk,
         assort: this.assortList[this.assort],

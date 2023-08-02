@@ -1,6 +1,8 @@
 <template>
   <div class="w-full h-full no-darg">
     <a-input
+      ref="inputRef"
+      spellcheck="false"
       class="xt-text w-full no-darg h-full"
       :placeholder="placeholder"
       v-model:value="searchValue"
@@ -33,6 +35,9 @@ export default {
     text: {
       default: false,
     },
+    focus: {
+      default: false,
+    },
     data: {},
     placeholder: {
       default: "",
@@ -45,6 +50,13 @@ export default {
         };
       },
     },
+  },
+  mounted() {
+    if (this.focus) {
+      this.$nextTick(() => {
+        this.$refs.inputRef.focus();
+      });
+    }
   },
   methods: {
     limitNumber(event) {
@@ -131,4 +143,6 @@ export default {
 :deep(.ant-input-group) {
   height: 100%;
 }
+
+
 </style>

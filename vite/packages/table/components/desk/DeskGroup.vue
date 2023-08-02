@@ -11,7 +11,8 @@
         <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
              class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
           <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
-          <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle" class="mr-2"></icon>
+          <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle"
+                class="mr-2"></icon>
           <span class="">{{ item.name }}</span>
           <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
         </div>
@@ -62,7 +63,7 @@
             :settings="currentDesk.settings" :key="key">
 
         <template #settingsAllAfter>
-          <slot name="settingsAll" ></slot>
+          <slot name="settingsAll"></slot>
         </template>
 
         <template #outMenu>
@@ -91,6 +92,12 @@
               </div>
             </a-col>
             <a-col>
+              <div @click="shareDesk" class="btn">
+                <Icon style="font-size: 3em" icon="fenxiang"></Icon>
+                <div><span>分享桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
               <div @click="exportDesk" class="btn">
                 <Icon style="font-size: 3em" icon="upload"></Icon>
                 <div><span>导出桌面</span></div>
@@ -108,7 +115,7 @@
 
       </slot>
       <span v-show="false">
-       <Desk ref="currentDeskRef" :currentDesk="currentDesk"  :key="key" :editing="editing"></Desk>
+       <Desk ref="currentDeskRef" :currentDesk="currentDesk" :key="key" :editing="editing"></Desk>
     </span>
 
     </template>
@@ -120,56 +127,72 @@
                  @valueChanged="(event)=>{setCurrentDeskId(event.id);this.allDeskListVisible=false}"
     ></AllDeskList>
   </a-drawer>
-  <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
-    <template #extra v-if="shareCode">
-      <a-space>
-        <div class="btn-item xt-active-bg" style="width:120px;margin:0;">立即添加</div>
-      </a-space>
-    </template>
-    <div v-if="!shareCode">
+  <a-drawer v-if="addDeskVisible" v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
+    <HorizontalPanel :nav-list="currentAddMethod" v-model:select-type="currentAddTab">
+
+    </HorizontalPanel>
+    <div v-if="currentAddTab.name==='market'">
+      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>
+      <div class="p-2 pt-0">
+        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"
+                 aria-placeholder="font-size: 16px;"/>
+        <div class="btn-item xt-active-bg w-full" style=" margin:0;">使用分享码添加</div>
+        <div class="flex justify-between">
+              <span class="flex items-center">
+                <span class="desk-title mr-2">热门桌面</span>
+                <Icon style="font-size: 20px;" icon="daohang_remen-xuanzhong"></Icon>
+              </span>
+          <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
+        </div>
+      </div>
+      <div>
+        <DeskMarket :desks="deskList" :navList="hotDesk" :closeParent="true" @openPreview="openPreview"
+                    deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
+      </div>
+    </div>
+    <div v-else>
       <span class="desk-title">标题</span>
-      <a-input v-model:value="deskTitle" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+      <a-input v-model:value="deskTitle" spellcheck="false" class="input" placeholder="请输入"
+               aria-placeholder="font-size: 16px;"/>
       <span class="desk-title">初始布局</span>
       <div class="mt-6">
         <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
       </div>
-      <div @click="doAddDesk" class="btn-item">立即添加</div>
+      <div @click="doAddDesk" class="btn-item xt-active-bg">立即添加</div>
       <div>
         <div @click="importDesk" class="btn-item">导入桌面</div>
       </div>
-      <!--      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>-->
-      <!--      <div class="flex justify-between">-->
-      <!--        <span class="flex items-center">-->
-      <!--          <span class="desk-title mr-2">热门桌面</span>-->
-      <!--          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>-->
-      <!--        </span>-->
-      <!--        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>-->
-      <!--      </div>-->
-      <!--      <div>-->
-      <!--        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>-->
-      <!--      </div>-->
+    </div>
+    <template #extra v-if="shareCode">
+
+    </template>
+    <div v-if="!shareCode">
+
     </div>
     <div v-else>
       <span class="desk-title">分享码</span>
-      <a-input v-model:value="deskCode" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
+      <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="请输入"
+               aria-placeholder="font-size: 16px;"/>
     </div>
-    <!-- <div class="line">
-      <a-input v-model:value="newDesk.name" placeholder="桌面名称"></a-input>
-    </div>
-    <div class="line">选择初始布局：</div>
-    <div class="line">
-      <a-radio-group v-model:value="newDesk.template" defaultValue="daily">
-        <a-radio value="daily">日常桌面</a-radio>
-        <a-radio value="game">游戏桌面</a-radio>
-        <a-radio value="work">办公桌面</a-radio>
-        <a-radio value="empty">空白桌面</a-radio>
-      </a-radio-group>
-    </div>
-    <div class="mt-5">
-      <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
-    </div> -->
   </a-drawer>
-  <ExportDesk :openModal="exportModal" @closeExport="closeExport" :layoutSize="layoutSize" :desks="deskList"></ExportDesk>
+  <ShareDesk :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
+  <ExportDesk :openModal="exportModal" @closeExport="closeExport" :layoutSize="layoutSize"
+              :desks="deskList"></ExportDesk>
+
+  <div style="z-index:9999;">
+    <DeskPreview :desks="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+  </div>
+  <div class="" style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 999;
+      " v-if="deskMarketVisible">
+    <NewAddCard v-if="deskMarketVisible" :desks="deskList" @onClose="hideMarket" :desk="currentDesk"
+                :panelIndex="panelIndex"></NewAddCard>
+  </div>
 </template>
 
 
@@ -186,16 +209,26 @@ import {nanoid} from "nanoid";
 import Template from "../../../user/pages/Template.vue";
 
 import {deskTemplates} from '../../js/data/deskTemplates'
+import DeskMarket from "../../page/app/card/DeskMarket.vue";
+import {deskStore} from "../../store/desk";
+import ShareDesk from "./ShareDesk.vue";
+import NewAddCard from "../../page/app/card/NewAddCard.vue";
+import DeskPreview from "./DeskPreview.vue";
+import XtTab from "../card/components/Tab/index.vue";
+
 export default {
   name: "DeskGroup",
-  components: {Template, ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk},
+  components: {
+    XtTab,
+    DeskPreview,
+    NewAddCard,
+    ShareDesk, DeskMarket, Template, ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk
+  },
   emits: ['update:currentDeskId', 'showMore'],
   props: {
-    settings:{
-      type:Object,
-      default:{
-
-      }
+    settings: {
+      type: Object,
+      default: {}
     },
     deskList: {
       type: Array,
@@ -224,19 +257,21 @@ export default {
   },
   data() {
     return {
-      key:Date.now(),
+      currentAddTab:{name:'market'},
+      key: Date.now(),
       moreDesksVisible: false,//显示更多桌面
       allDeskListVisible: false,
       editing: false,//编辑桌面
 
-      addDeskVisible:false,
+      addDeskVisible: false,
+      shareDeskVisible: false,
       deskType: [
-        {title:'日常桌面',name:'daily'},
-        {title:'游戏桌面',name:'game'},
-        {title:'办公桌面',name:'work'},
-        {title:'空白桌面',name:'empty'},
+        {title: '日常桌面', name: 'daily'},
+        {title: '游戏桌面', name: 'game'},
+        {title: '办公桌面', name: 'work'},
+        {title: '空白桌面', name: 'empty'},
       ],
-      selectDesk: {title:'日常桌面',name:'daily'},
+      selectDesk: {title: '日常桌面', name: 'daily'},
       deskTitle: '',
       hotDesk: [],
       scheme: {},
@@ -244,7 +279,10 @@ export default {
       deskCode: '',
       shareCode: false,
       exportModal: false,
-      layoutSize:{width:0,height:0}
+      layoutSize: {width: 0, height: 0},
+      deskMarketVisible: false,//桌面市场
+      panelIndex: 0,
+      currentAddMethod:[{title:'从市场添加',name:'market'},{title:'自行添加',name:'custom'}]
     }
   },
   mounted() {
@@ -252,19 +290,41 @@ export default {
       this.currentDesk = this.deskList[0]
     }
     console.log(this.deskList)
-    this.deskList.forEach(desk=>{
-      if(!desk.id){
-        desk.id=desk.nanoid
+    this.deskList.forEach(desk => {
+      if (!desk.id) {
+        desk.id = desk.nanoid
       }
     })
+
+    this.hotDesk.push(this.apiList[0].children[0])
   },
   computed: {
+    ...mapWritableState(deskStore, ['apiList']),
     ...mapWritableState(appStore, ['fullScreen']),
+
+    // getHomeSize(){
+    //   this.$nextTick(() => {
+    //     let height = document.getElementById("cardContent")?.offsetHeight;
+    //     let width= document.getElementById("cardContent")?.offsetWidth;
+    //     const windowHeight = document.documentElement.clientHeight // 高
+    //     let windowWidth = document.documentElement.clientWidth // 宽
+    //     let size = {
+    //       width,
+    //       height,
+    //       windowHeight,
+    //       windowWidth,
+    //     }
+    //     // console.log(cardsHeight)
+    //     console.log(size,'输出')
+    //     this.setDeskSize(size)
+    //   })
+    // },
     currentDesk() {
       return this.deskList.find(desk => {
         return desk.id === this.currentDeskId
       })
     },
+
     displayDesks() {
       return [...this.deskList.filter(desk => {
         return desk.pin
@@ -282,17 +342,41 @@ export default {
     }
   },
   methods: {
+    closePreview() {
+      this.showModal = false
+      //this.getHomeSize()
+    },
+    hideMarket() {
+      this.deskMarketVisible = false
+    },
+    openPreview({scheme, showModal}) {
+      this.scheme = scheme
+      this.showModal = showModal
+    },
+    shareDesk() {
+      this.shareDeskVisible = true
+      this.$refs.currentDeskRef.hideMenu()
+    },
+    closeShare() {
+      this.shareDeskVisible = false
+    },
     startEdit() {
-      this.key=Date.now()
+      this.key = Date.now()
       this.editing = true
       this.$refs.currentDeskRef.update()
     },
     stopEdit() {
-      this.key=Date.now()
+      this.key = Date.now()
       this.editing = false
     },
     addCard() {
       this.$refs.currentDeskRef.newAddCard()
+    },
+    moreDesk() {
+      this.panelIndex = 1
+      this.addDeskVisible = false
+      this.deskMarketVisible = true;
+      console.log('点击了更多桌面分享')
     },
     setFullScreen(flag = true) {
       this.$refs.currentDeskRef.stashLayout()
@@ -318,7 +402,7 @@ export default {
     async importDesk() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: '选择导入的代码',
-        filters: [{ name: 'desk存档', extensions: ['desk'] }],
+        filters: [{name: 'desk存档', extensions: ['desk']}],
       })
       if (!openPath) {
         return
@@ -329,16 +413,16 @@ export default {
         needImportDesk = JSON.parse(importJsonTxt)
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         needImportDesk.forEach(g => {
-          console.log(g,'导出的数据')
+          console.log(g, '导出的数据')
           //修正一下老版本导出的数据
-          if(g.cardsHeight){
-            g.deskHeight=g.cardsHeight
+          if (g.cardsHeight) {
+            g.deskHeight = g.cardsHeight
           }
-          if(g.settings.cardZoom){
-            g.settings.zoom=g.settings.cardZoom
+          if (g.settings.cardZoom) {
+            g.settings.zoom = g.settings.cardZoom
           }
-          let cardZoom = (g.settings.zoom * cardsHeight/g.deskHeight).toFixed()
-          g.icon='desktop'
+          let cardZoom = (g.settings.zoom * cardsHeight / g.deskHeight).toFixed()
+          g.icon = 'desktop'
           g.settings.zoom = parseInt(cardZoom)
           g.id = window.$models.nanoid.nanoid(8)
           this.deskList.unshift(g)
@@ -368,22 +452,22 @@ export default {
           centered: true,
           content: "删除当前桌面？此操作不可还原。",
           onOk: () => {
-            this.deskList.splice(this.deskList.findIndex(desk=>{
-              return desk===this.currentDesk
-            }),1)
-            this.$emit('changeDesk',{id:this.deskList[0].id})
+            this.deskList.splice(this.deskList.findIndex(desk => {
+              return desk === this.currentDesk
+            }), 1)
+            this.$emit('changeDesk', {id: this.deskList[0].id})
             this.key = Date.now();
           },
           okText: "删除桌面",
         });
       }
     },
-    exportDesk(){
+    exportDesk() {
       this.$refs.currentDeskRef.hideMenu()
-      this.layoutSize=this.$refs.currentDeskRef.getLayoutSize()
+      this.layoutSize = this.$refs.currentDeskRef.getLayoutSize()
       this.exportModal = true
     },
-    closeExport(val){
+    closeExport(val) {
       this.exportModal = val
     },
     doAddDesk() {
@@ -398,11 +482,11 @@ export default {
       let desk = {
         name: this.deskTitle,
         id: nanoid(4),
-        icon:'desktop',
-        cards:  this.cleanMuuriData(deskTemplates[this.selectDesk.name])
+        icon: 'desktop',
+        cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name])
       }
       this.deskList.unshift(desk)
-      this.$emit('changeDesk',{id:desk.id})
+      this.$emit('changeDesk', {id: desk.id})
       this.deskTitle = ''
       this.key = Date.now();
       this.addDeskVisible = false;
@@ -474,7 +558,7 @@ export default {
 }
 
 
-.btn-item{
+.btn-item {
   height: 48px;
   background: var(--secondary-bg);
   display: flex;
@@ -486,19 +570,21 @@ export default {
   color: var(--primary-text);
   cursor: pointer;
 }
-.desk-title{
+
+.desk-title {
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
 }
-.input{
+
+.input {
   width: 452px;
   height: 48px;
   background: var(--secondary-bg);
   border-radius: 12px;
   color: var(--primary-text);
   font-size: 16px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin: 21px 0 24px;
 }
 </style>

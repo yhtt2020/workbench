@@ -18,12 +18,12 @@
       :style="[itemStyle]"
       @click="valueData = item[`${value}`]"
     >
-      <Icon
+      <XtBaseIcon
         v-if="item[`${icon}`]"
         class="icon"
         style="font-size: 22"
         :icon="item[`${icon}`]"
-      ></Icon>
+      ></XtBaseIcon>
       <div v-if="showName" :class="[item[`${icon}`] ? 'ml-1' : '']">
         {{ item[`${name}`] }}
       </div>

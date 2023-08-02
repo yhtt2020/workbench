@@ -186,6 +186,7 @@
                       class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
           </vue-custom-scrollbar>
         </div>
+        <!-- 拖拽文件快速定位 -->
         <div v-show="nowClassify==='localApp'" class="flex flex-col items-start text-zinc-500 h-full"
              style="color:var(--secondary-text)">
           <div>1. 点击选择需要添加的应用快捷方式</div>

@@ -37,7 +37,7 @@ export default {
         this.shortKeys = this.getKeys(e)
         this.listening = false
 
-        this.$emit('changeKeys', { keys: this.shortKeys })
+        this.$emit('changeKeys', {key:this.name, shortcut: this.shortKeys })
         e.preventDefault()
       }
       e.stopPropagation()

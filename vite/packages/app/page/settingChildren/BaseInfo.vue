@@ -1,6 +1,9 @@
 <template>
 <h3>应用信息</h3>
   <a-form :model="userSetting" style="padding: 20px" :label-col="{span:5}" :wrapper-col="{span:19}">
+    <a-form-item label="应用ID">
+      <span>{{app.nanoid}}</span>
+    </a-form-item>
     <a-form-item
       label="应用名"
       :rules="{ required: true, message: '应用名称，长度大于1，小于16' ,min:1,max:16 }"

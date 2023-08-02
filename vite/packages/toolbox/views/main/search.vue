@@ -1,13 +1,6 @@
 <template>
   <div style="height: 60px" class="xt-bg-2 xt-text flex items-center">
     <template v-if="useTool">
-      <!-- <Icon
-        icon="xiangzuo"
-        style="font-size: 20px; width: 10px"
-        class="no-darg xt-text"
-      ></Icon>
-       -->
-
       <XtIcon
         @click="back()"
         class="mx-2"
@@ -19,7 +12,7 @@
       ></XtIcon>
       <div class="xt-active-bg-2 xt-base-btn px-2 w-auto" style="height: 44px">
         <img
-          :src="'/packages/toolbox/assets/images/' + useTool.img + '.png'"
+          :src="'/tools/' + useTool.img + '.png'"
           style="width: 32px; height: 32px"
           class="mr-2"
           alt=""
@@ -29,6 +22,7 @@
     </template>
 
     <XtInput
+      :focus="true"
       v-model:data="search"
       placeholder="试试输入、粘贴、拖放内容到此处"
       @enter="searchEnter()"
@@ -54,12 +48,17 @@ import { main } from "../../store/main";
 import { calculator } from "../../store/calculator";
 import { translate } from "../../store/translate";
 import { timeConversion } from "../../store/timeConversion";
+import { currencyExchange } from "../../store/currencyExchange";
+import { QRCodeGeneration } from "../../store/QRCodeGeneration";
 export default {
+  mounted() {},
   computed: {
     ...mapWritableState(main, ["useTool"]),
     ...mapWritableState(calculator, ["computeList", "selectIndex"]),
     ...mapWritableState(translate, ["inputValue"]),
     ...mapWritableState(timeConversion, ["time", "timeStamp"]),
+    ...mapWritableState(currencyExchange, ["fromCurrency"]),
+    ...mapWritableState(QRCodeGeneration, ["text"]),
   },
   data() {
     return {
@@ -69,6 +68,7 @@ export default {
   methods: {
     ...mapActions(translate, ["startTranslation"]),
     ...mapActions(timeConversion, ["timeKeyup", "timeStampKeyup"]),
+    ...mapActions(currencyExchange, ["fromCurrencyRate"]),
     back() {
       this.$router.push("/");
       this.useTool = "";
@@ -94,18 +94,30 @@ export default {
       this.timeStampKeyup();
       this.clear();
     },
+    // 汇率转换
+    useCurrencyExchange() {
+      this.fromCurrency = this.search;
+      this.fromCurrencyRate();
+      this.clear();
+    },
+    // 二维码
+    useQRCodeGeneration() {
+      this.text = this.search;
+      this.clear();
+    },
     // 搜索回车
-
     searchEnter() {
       let name = this.useTool.route;
       if (name === "calculator") {
         this.useCalculator();
-      }
-      if (name === "translate") {
+      } else if (name === "translate") {
         this.useTranslate();
-      }
-      if (name === "timeConversion") {
+      } else if (name === "timeConversion") {
         this.useTimeConversion();
+      } else if (name === "currencyExchange") {
+        this.useCurrencyExchange();
+      } else if (name === "QRCodeGeneration") {
+        this.useQRCodeGeneration();
       }
     },
   },

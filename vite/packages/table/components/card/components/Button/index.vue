@@ -1,23 +1,23 @@
 <template>
   <div class="xt-active" :style="[customStyle]" :class="[typeClass]">
     <template v-if="iconPosition == 'prefix'">
-      <Icon
+      <XtBaseIcon
         v-if="icon"
         :icon="icon"
         :class="[icon ? 'mr-2' : '']"
         :style="iconSize"
-      ></Icon>
+      ></XtBaseIcon>
     </template>
     <div :style="textSize">
       <slot>{{ text }}</slot>
     </div>
     <template v-if="iconPosition == 'postfix'">
-      <Icon
+      <XtBaseIcon
         v-if="icon"
         :icon="icon"
         :class="[icon ? 'ml-2' : '']"
         :style="iconSize"
-      ></Icon>
+      ></XtBaseIcon>
     </template>
   </div>
 </template>

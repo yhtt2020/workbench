@@ -92,8 +92,8 @@ export default {
       this.downloadVisible = true
 
     },
+    // 下载头像实现
     async doDownload() {
-
       let filters = {name: '图片', extensions: ['png']}
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',

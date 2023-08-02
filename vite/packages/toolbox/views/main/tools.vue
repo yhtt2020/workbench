@@ -9,7 +9,7 @@
     >
       <img
         class="w-12 h-12 mb-2"
-        :src="'/packages/toolbox/assets/images/' + tool.img + '.png'"
+        :src="'/tools/' + tool.img + '.png'"
         alt=""
       />
       <div class="text-sm">{{ tool.name }}</div>
@@ -32,8 +32,13 @@ export default {
         { name: "翻译", img: "translate", route: "translate" },
         {
           name: "汇率转换",
-          img: "moneyExchange",
-          route: "moneyExchange",
+          img: "currencyExchange",
+          route: "currencyExchange",
+        },
+        {
+          name: "二维码生成",
+          img: "QRCodeGeneration",
+          route: "QRCodeGeneration",
         },
         // { name: "搜索网格", img: "searchTools", route: "searchTools" },
         // { name: "文件分享", img: "fileFhare", route: "fileFhare" },
@@ -56,11 +61,6 @@ export default {
         //   route: "createRepresentative",
         // },
         // { name: "emoji搜索", img: "emojiSearch", route: "emojiSearch" },
-        // {
-        //   name: "二维码生成",
-        //   img: "QRCodeGeneration",
-        //   route: "QRCodeGeneration",
-        // },
       ],
     };
   },

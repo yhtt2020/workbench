@@ -7,7 +7,7 @@
           <!-- <div class="btn no-drag xt-bg-2" @click="onBack" style="color:var(--primary-text);  ">
             <Icon icon="xiangzuo" style="height: 24px; width: 24px"></Icon>
           </div> -->
-          <div @click="onBack" class="pointer flex items-center rounded-lg justify-center no-drag" 
+          <div @click="onBack" class="pointer flex items-center rounded-lg justify-center no-drag"
             style="background: var(--secondary-bg);width:48px;height:48px;font-size: 16px;color: var(--primary-text);">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
@@ -32,7 +32,7 @@
           </div>
           <!-- 头部搜索和下拉列表 -->
           <div class="no-drag">
-            <Search 
+            <Search
               :searchValue="selectContent"
               :defaultSelect="searchValue"
               :sortType="searchOptions"
@@ -42,7 +42,7 @@
             />
           </div>
           <!-- 分享 -->
-          <div v-if="selectNav.name === 'desktop'" class="pointer xt-mask flex items-center rounded-lg justify-center ml-3 no-drag" 
+          <div v-if="selectNav.name === 'desktop'" class="pointer xt-mask flex items-center rounded-lg justify-center ml-3 no-drag"
           style="width:134px;height:48px;font-size: 16px;color: var(--primary-text);"
           @click="share">我来分享</div>
         </div>
@@ -72,11 +72,11 @@
         </div>
       </div>
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
-        <NavMenu :list="deskList" :currenIndex="navDeskIndex" @changeNav="updateDeskIndex" />
+        <NavMenu :list="apiList" :currenIndex="navDeskIndex" @changeNav="updateDeskIndex" />
         <div class="ml-5 no-drag">
-          <DeskMarket :selected="searchValue" :navList="deskList[navDeskIndex].children" @openPerview="openPerview"></DeskMarket>
+          <DeskMarket  :selected="searchValue" :navList="apiList[navDeskIndex].children" @openPreview="openPreview"></DeskMarket>
           <!-- 预览 -->
-          <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+          <DeskPreview :desks="desks" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
         </div>
         <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>
       </div>
@@ -101,6 +101,7 @@ import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
   name: 'AddCard',
   components: { NewCardPreViews,HorizontalPanel,Search,NavMenu,DeskMarket,ShareDesk,DeskPreview },
+  emits:['onClose'],
   props: {
     desk: {
       type: Object,
@@ -110,11 +111,13 @@ export default {
       type: Number,
       default: () => 0
     },
+    desks:{
+      type:Array
+    }
   },
   data() {
     return {
       navIndex: 1,
-      apiList: [],
       selectContent: '',
       searchValue: '默认排序',
       baseNavList: NavList,
@@ -181,7 +184,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(deskStore, ['deskList']),
+    ...mapWritableState(deskStore, ['apiList']),
     displayList() {
       // return this.apiList.filter
     }
@@ -229,7 +232,9 @@ export default {
       return randomTimestamp
     },
     onBack() {
+      console.log('提交了关闭事件')
       this.$emit('close')
+      this.$emit('onClose')
     },
     updateNavIndex(index) {
       this.navIndex = index
@@ -247,7 +252,7 @@ export default {
     closeShare(val){
       this.openDrawer = val
     },
-    openPerview({scheme,showModal}){
+    openPreview({scheme,showModal}){
       this.scheme = scheme
       this.showModal = showModal
 
