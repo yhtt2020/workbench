@@ -12,26 +12,40 @@
           </div>
         </div>
         <dvi v-if="selectNav.name === 'share'" class="share-list">
-          <Market :desk="desk" @closeMarket="close"></Market>
+          <Market :desk="desk" @closeMarket="close" setCard="tip" @getCard="getCard"></Market>
         </dvi>
-        <div class="body-box" v-else>
-          <div class="box" v-if="!shareList.length">
+        <div class="body-box" v-if="selectNav.name !== 'share' && !shareList.length">
+          <div class="box">
             <div class="box-block">
               <img src="/img/state/init.png" alt="">
               <span>分享我制作的外部小组件</span>
               <div class="block-btn" @click="shareNow">立即分享</div>
             </div>
           </div>
-          <div v-else>
-            你分享了列表
-          </div>
+        </div>
+        <div v-if="selectNav.name !== 'share' && shareList.length" class="share-list">
+          <Market :desk="desk" @closeMarket="close" listType="my" setCard="my" @shareNow="shareNow" @closeMy="closeMy"></Market>
         </div>
     </div>
   </div>
   <div v-else>
-    <!-- <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk"></RemoteShare> -->
-    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :card="card"></RemoteShare>
+    <RemoteShare :openShare="openShare" @closeShare="closeShare" :desk="desk" :cardId="cardId" :direct="direct"></RemoteShare>
   </div>
+
+  <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
+    <div class="p-5 xt-modal flex flex-col justify-center items-center" style="border-radius:16px">
+      <div>
+        <Icon icon="tishi-xianxing" style="font-size: 21px;color: orange"></Icon>
+        <span class="ml-3" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">提示</span>
+      </div>
+      <span class="my-5" style="font-size: 16px;color: var(--secondary-text);">选择覆盖当前小组件的数据或在桌面上新建一个组件。</span>
+      <div class="modal-btn">
+        <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="promptVisible = false">取消</div>
+        <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="addNewCard(selectCard)">新建小组件</div>
+        <div class="mr-3 rounded-lg xt-bg-2 cursor-pointer" @click="subCard(selectCard)">覆盖当前</div>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script>
@@ -42,12 +56,16 @@ import State from "../../../components/card/components/state/index.vue"
 import RemoteShare from '../../../components/card/remote/RemoteShare.vue'
 import { cardStore } from '../../../store/card';
 import {shareList} from '../../../components/card/remote/testData'
+import cache from '../../../components/card/hooks/cache';
+import Modal from '../../../components/Modal.vue';
+import { message } from "ant-design-vue";
   export default{
     components: {
       HorizontalPanel,
       Market,
       State,
-      RemoteShare
+      RemoteShare,
+      Modal
     },
     data() {
       return {
@@ -58,48 +76,98 @@ import {shareList} from '../../../components/card/remote/testData'
         selectNav:{title:'社区分享',name:'share'},
         desk: {},
         openShare: false,
+        //当前卡片
         card: {},
-        shareList
+        shareList,
+        promptVisible: false,
+        //选中社区的卡片
+        selectCard: {},
+        cardId: 0,
+        direct: false
       }
     },
     methods: {
+      ...mapActions(cardStore, ["addCard"]),
       close(){
         this.$router.go(-1)
       },
       shareNow(){
         this.openShare = true
       },
-      closeShare(val){
+      closeShare(val,direct){
         this.openShare = val
+        this.selectNav = {title:'我的',name:'my'}
+        this.direct = direct
+      },
+      closeMy(){
+        this.$forceUpdate()
+      },
+      setNavFixed(){
+        let nav = document.getElementById('nav');
+        let list = document.getElementById('navList');
+        nav.classList.add('suspension-r-nav')
+        list.classList.add('list-r-nav')
+      },
+      // 获取要添加的市场小卡片
+      getCard(card){
+        this.promptVisible = true
+        this.selectCard = card
+      },
+      addNewCard(card) {
+        let size = card.sizes[0].split('x')
+        this.addCard(
+          { 
+            name: card.option[0].name, 
+            id: Date.now(), 
+            customData: {
+              url:card.url,
+              width: (parseInt(size[0]) / 2),
+              height:(parseInt(size[1]) / 2)
+            } 
+          },
+          this.desk
+        );
+        // this.addCard(
+        //   { name: card.option[0].name, id: Date.now(), customData: {url:card.url} },
+        //   this.desk
+        // );
+        this.close()
+        message.success("添加成功！");
+      },
+      subCard(card){
+        this.card.customData.url = card.url
+        this.close()
+        message.success("修改成功！");
       }
     },
     computed: {
       ...mapWritableState(cardStore, ['desks']),
     },
     mounted(){
-      let deskId = this.$route.params.id
-      let cardId = this.$route.params.cardId
+      let params = this.$route.params
+      let deskId = params.id
+      this.cardId = params.cardId
+      this.openShare = params.direct
+      this.direct = params.direct
+      let size = JSON.parse(params.size)
+      cache.set('cardSize',size)
       this.desk = this.desks.find(item => item.id === deskId)
-      this.card = this.desk.cards.find(item => item.id === parseInt(cardId))
-
-      let nav = document.getElementById('nav');
-      let list = document.getElementById('navList');
-      nav.classList.add('suspension-r-nav')
-      list.classList.add('list-r-nav')
+      this.card = this.desk.cards.find(item => item.id === parseInt(this.cardId))
+      // console.log('市场', this.card)
+      // cache.set('currentCard',this.card)
+      this.setNavFixed()
     },
-    // watch: {
-    //   selectNav: {
-    //     deep: true,
-    //     handler(val){
-    //       if(val === 'share'){
-    //         let nav = document.getElementById('nav');
-    //         let list = document.getElementById('navList');
-    //         nav.classList.add('suspension-r-nav')
-    //         list.classList.add('list-r-nav')
-    //       }
-    //     }
-    //   }
-    // }
+    watch: {
+      selectNav(val){
+        this.$nextTick(() => {
+          if(val.name === 'share'){
+            this.setNavFixed()
+          }else if(val.name === 'my' && shareList.length){
+            this.setNavFixed()
+          }
+        })
+      }
+    }
   }
 </script>
 
@@ -151,7 +219,7 @@ import {shareList} from '../../../components/card/remote/testData'
       }
       .block-btn{
         text-align: center;
-        padding: 13px 24px;
+        padding: 10px 28px;
         border-radius: 12px;
         background: var(--active-bg);
         cursor: pointer;
@@ -165,6 +233,24 @@ import {shareList} from '../../../components/card/remote/testData'
 .share-list::-webkit-scrollbar{
   display: none;
 }
+.modal-btn {
+    display: flex;
+    font-size: 16px;
+    color: var(--primary-text);
+    > div {
+      width: 120px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      margin-top: 24px;
+      background: var(--mask-bg);
+    }
+    >div:nth-child(3){
+      background: var(--active-bg) !important;
+    }
+  }
 </style>
 <style lang="scss">
   .suspension-r-nav{
