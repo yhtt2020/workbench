@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const calculator = defineStore("calculator", {
   state: () => ({
-    computeList: [],
-    countList: [],
+    computeList: [""],
+    countList: [""],
     calculators: 1,
     selectIndex: 0,
   }),

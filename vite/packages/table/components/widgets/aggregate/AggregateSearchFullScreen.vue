@@ -405,26 +405,24 @@ export default {
       const container = document.querySelector('.left-tab-container')
       if(this.selectIndex === 0){ // 判断下标为0
         container.scrollTop = 0
-      }else{  // tab每切换一下就滚动10
-        container.scrollTop += 10
+      }else if(this.selectIndex === 6){
+        container.scrollTop = container.clientHeight
       }
     },
 
     suggestScrollTop(){  // 向上键盘触发
       const container = document.querySelector('.suggest-container')
-      if(this.suggestIndex === 0 && this.clipboardIndex === 0){
+      if(this.suggestIndex === 0 && this.clipboardIndex === -1 || this.suggestIndex === 2){
         container.scrollTop = 0
-      }else{
-        container.scrollTop -= 10
       }
     },
 
     suggestScrollBottom(){  //  向下键盘触发
       const container = document.querySelector('.suggest-container')
-      if(this.suggestIndex === 0 && this.clipboardIndex === 0){
+      if(this.suggestIndex === 0 && this.clipboardIndex === -1){
         container.scrollTop = 0
-      }else{
-        container.scrollTop += 10
+      }else if(this.suggestIndex === 7){
+        container.scrollTop = container.clientHeight
       }
     },
   }
