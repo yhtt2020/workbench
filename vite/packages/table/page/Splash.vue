@@ -213,7 +213,8 @@ export default {
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       chatStore().login()
-      this.$router.replace({ name: 'home' })
+      //this.$router.replace({ name: 'wizard' })
+       this.$router.replace({ name: 'home' })
     },
     bindUserInfoResponse () {
       ipc.removeAllListeners('userInfo')
@@ -337,6 +338,7 @@ export default {
           this.launching = false
           return
         } else {
+
           this.enter()
         }
       }).catch((err) => {
