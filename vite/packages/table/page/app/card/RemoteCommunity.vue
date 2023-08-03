@@ -233,21 +233,7 @@ import { message } from "ant-design-vue";
 .share-list::-webkit-scrollbar{
   display: none;
 }
-</style>
-<style lang="scss">
-  .suspension-r-nav{
-    z-index: 99999;
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    padding: 16px 0;
-    background: var(--modal-bg);
-  }
-  .list-r-nav{
-    margin-top: 72px;
-  }
-  .modal-btn {
+.modal-btn {
     display: flex;
     font-size: 16px;
     color: var(--primary-text);
@@ -264,5 +250,19 @@ import { message } from "ant-design-vue";
     >div:nth-child(3){
       background: var(--active-bg) !important;
     }
+  }
+</style>
+<style lang="scss">
+  .suspension-r-nav{
+    z-index: 99999;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    padding: 16px 0;
+    background: var(--modal-bg);
+  }
+  .list-r-nav{
+    margin-top: 72px;
   }
 </style>

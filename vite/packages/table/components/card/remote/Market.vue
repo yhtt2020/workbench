@@ -27,12 +27,12 @@
                 <div class="text" style="color: #fff">· · ·</div>
               </div>
               <template #overlay>
-                <a-menu class="set-btn">
-                  <a-menu-item key="0">
+                <a-menu class="set-btn" :selected-keys="selectedKeys">
+                  <a-menu-item key="0" class="h-11 mx-3 " style="width:104px;border-radius: 10px;">
                     <div class="btn-style" @click="addNewCard(item)">添加桌面</div>
                   </a-menu-item>
-                  <a-menu-item key="1">
-                    <div class="btn-style" @click="delCard(item.nanoid)">删除</div>
+                  <a-menu-item key="1" class="h-11 mx-3" style="width:104px;border-radius: 10px;">
+                    <div class="btn-style" @click="openDelFrame(item.nanoid)">删除</div>
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -98,6 +98,20 @@
         </div>
       </div>
     </div>
+    <!-- 删除 -->
+    <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
+      <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:480px;height:207px;border-radius:16px">
+        <div>
+          <Icon icon="tishi-xianxing" style="font-size: 21px;color: orange"></Icon>
+          <span class="ml-3" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">是否确定删除</span>
+        </div>
+        <span class="mt-6 mb-8" style="font-size: 16px;color: var(--secondary-text);">删除后会同步下架分享在创意市场的小组件方案</span>
+        <div class="modal-btn">
+          <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="promptVisible = false">取消</div>
+          <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="delCard(cardId)">确定</div>
+        </div>
+      </div>
+    </Modal>
   <NewPreviewCardDetails
     v-if="isCardDetails"
     @addCardAchieve="add"
@@ -113,9 +127,11 @@
   import { message } from "ant-design-vue";
   import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
   import { dataList,shareList,delList } from './testData';
+  import Modal from '../../Modal.vue'
   export default{
     components: {
       NewPreviewCardDetails,
+      Modal
     },
     props: {
       //获取当前桌面
@@ -151,7 +167,9 @@
           { value: '分享时间', name: '分享时间' },
         ],
         paging: 1,
-        list: []
+        list: [],
+        promptVisible: false,
+        cardId: ''
       }
     },
     methods: {
@@ -210,6 +228,10 @@
       },
       shareNow(){
         this.$emit('shareNow')
+      },
+      openDelFrame(id){
+        this.cardId = id
+        this.promptVisible = true
       },
       delCard(id){
         delList(id)
@@ -491,8 +513,14 @@
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   border-radius: 10px;
+  position: relative;
+  top: 5px;
+  left: -68px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .btn-style{
-    width: 104px;
     height: 44px;
     font-family: PingFangSC-Regular;
     font-size: 16px;
@@ -505,5 +533,22 @@
 .imgInit{
   max-width: 100px;
   max-height: 100px;
+}
+.modal-btn {
+  display: flex;
+  font-size: 16px;
+  color: var(--primary-text);
+  > div {
+    width: 120px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    background: var(--mask-bg);
+  }
+  >div:nth-child(2){
+    background: var(--active-bg) !important;
+  }
 }
 </style>
