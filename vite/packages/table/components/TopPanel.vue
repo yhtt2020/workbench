@@ -41,7 +41,7 @@
   </div>
 
 
-  <a-drawer :width="500" :closable="false" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px'}">
+  <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px',overflow:'hidden !important',}">
     <MessagePopup></MessagePopup>
   </a-drawer>
 
@@ -57,7 +57,7 @@ import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
 import WindowController from './WindowController.vue'
-import MessagePopup from '../page/messagePopup/Index.vue'
+import MessagePopup from '../page/notice/noticeIndex.vue';
 import {steamUserStore} from "../store/steamUser";
 import {getClientIcon, getCover, getIcon} from "../js/common/game";
 
