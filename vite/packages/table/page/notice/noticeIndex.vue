@@ -186,6 +186,8 @@ export default {
         window.$notice.sendNotice(n)
         this.addNotifications(this.selectIndex,window.$notice.notifications)
         // console.log('测试::>>',);
+      }else{
+        this.addNotifications(this.selectIndex,window.$notice.notifications)
       }
     }
 

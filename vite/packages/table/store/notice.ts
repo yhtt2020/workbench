@@ -368,9 +368,7 @@ export const noticeStore = defineStore('notice',{
     },
     
     deleteNotice(index: any,delId: any){  // 删除单个消息通知
-      // console.log(this.notice.message[index]);
-      
-
+      this.notice.message[index].noticeList.splice(delId,1)
     },
 
     addNotifications(index: any,value: any){

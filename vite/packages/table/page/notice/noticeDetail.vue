@@ -99,6 +99,7 @@ export default {
 
     handleMenuItemClick(item){  
       if(item.name === 'remove'){  // 右键下拉菜单删除  
+        console.log(this.delId);
         this.deleteNotice(this.detailId,this.delId)
       }else{
         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
@@ -109,12 +110,12 @@ export default {
       // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
     },
 
-    isStringEmpty(item){
-      if(item.from !== null && item.from.avatarUrl !== ''){
-        return true
-      }else{
-        return false
-      }
+    isStringEmpty(item){  // 判断用户来源
+      // if(item.from !== null && item.from.avatarUrl !== ''){
+      //   return true
+      // }else{
+      //   return false
+      // }
     }
   }
 

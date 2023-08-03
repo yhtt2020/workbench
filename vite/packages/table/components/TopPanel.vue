@@ -15,8 +15,7 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text " >
-      <!-- hidden=""  -->
-      <div  class="no-drag flex items-center pointer" @click="messageAlert">
+      <div hidden="" class="no-drag flex items-center pointer" @click="messageAlert">
         <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
         </div>
@@ -42,7 +41,7 @@
   </div>
 
 
-  <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px'}">
+  <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px',overflow:'hidden !important',}">
     <MessagePopup></MessagePopup>
   </a-drawer>
 
