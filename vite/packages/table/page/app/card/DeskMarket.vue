@@ -2,38 +2,33 @@
   <!-- 方案列表 -->
   <div class="flex flex-row" style="height: 100%">
     <div class="item-content">
-      <div v-for="item in navLists" :key="item.id" class="pointer recommend" :style="deskItemStyle" @click="previewKay(item)">
+      <div v-for="item in navLists" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
         <div class="xt-mask" style="padding: 14px;">
           <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-          <img style="width:100%;height:100%;object-fit: cover;" :src="item.cover" />
+          <img class="rounded-lg" style="width:100%;height:100%;object-fit: cover;" :src="item.cover" />
         </div>
         <div style="padding: 0 14px 14px">
-          <div class="title">{{ item.title }}</div>
-          <div class="flex">
-            <div class="label" v-for="x in item.labelList" :key="x">{{ x }}</div>
-          </div>
+          <div class="title"><strong class="mr-2">{{ item.alias ||item.title }}</strong>   <span class="label" v-for="x in item.tags?.split(',')" :key="x">{{ x }}</span></div>
           <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
             <span class="flex items-center">
               <div @click="showCard(item.id)">
-                <a-avatar shape="square" :src="item.avatar" :size="32"></a-avatar>
+                <a-avatar :src="item.userInfo?.avatar" :size="32"></a-avatar>
               </div>
-              <span class="ml-3" style="color: var(--secondary-text);">{{ item.nickName }}</span>
+              <span class="ml-3" style="color: var(--secondary-text);">{{ item.userInfo?.nickname }}</span>
             </span>
             <span style="color: var(--secondary-text);">
               <span>
                 <Icon icon="dianzan" class="mr-2"></Icon>
-                <span>{{ item.sumLikes }}</span>
+                <span>{{ item.support }}</span>
               </span>
               <span class="ml-3">
                 <Icon icon="xiazai" class="mr-2"></Icon>
-                <span>{{ item.download }}</span>
+                <span>{{ item.count }}</span>
               </span>
             </span>
           </div>
         </div>
       </div>
-      <div class="recommend" style="opacity: 0;height: 1px;"></div>
-      <div class="recommend" style="opacity: 0;height: 1px;"></div>
     </div>
   </div>
   <!-- 预览 -->

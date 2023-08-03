@@ -193,8 +193,8 @@
         </div>
       </div>
       <div>
-        <DeskMarket :desks="deskList" :navList="hotDesk" :closeParent="true" @openPreview="openPreview"
-                    deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
+        <DeskMarket :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
+                    deskItemStyle="width:452px; height:auto"></DeskMarket>
       </div>
     </div>
     <div v-else>
@@ -246,7 +246,7 @@
 <script lang="ts">
 import Desk from "./Desk.vue";
 import {appStore} from "../../store";
-import {mapWritableState, mapWritableState} from "pinia";
+import {mapActions, mapWritableState, mapWritableState} from "pinia";
 import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
 import {message, Modal} from "ant-design-vue";
@@ -262,6 +262,7 @@ import ShareDesk from "./ShareDesk.vue";
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
 import XtTab from "../card/components/Tab/index.vue";
+import {marketStore} from "../../store/market";
 
 export default {
   name: "DeskGroup",
@@ -329,10 +330,12 @@ export default {
       layoutSize: {width: 0, height: 0},
       deskMarketVisible: false,//桌面市场
       panelIndex: 0,
-      currentAddMethod:[{title:'从市场添加',name:'market'},{title:'自行添加',name:'custom'}]
+      currentAddMethod:[{title:'从市场添加',name:'market'},{title:'自行添加',name:'custom'}],
+
+      recommendList:[]//推荐桌面
     }
   },
-  mounted() {
+  async mounted() {
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0]
     }
@@ -344,6 +347,9 @@ export default {
     })
 
     this.hotDesk.push(this.apiList[0].children[0])
+
+    this.recommendList=await  this.getRecommend({goodType:'desk'})
+    console.log(this.recommendList,'reclist')
   },
   computed: {
     ...mapWritableState(deskStore, ['apiList']),
@@ -389,6 +395,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(marketStore,['getRecommend']),
     closePreview() {
       this.showModal = false
       //this.getHomeSize()

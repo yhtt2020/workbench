@@ -122,7 +122,7 @@ export default {
   },
   data () {
     return {
-      navIndex: 1,
+      navIndex:0,
       selectContent: '',
       searchValue: '默认排序',
       baseNavList: NavList,
@@ -144,7 +144,7 @@ export default {
       categoryIndex: 0,
       categories: [{
         cname: '推荐',
-        children: []
+        id: 0
       }], //分类列表
       desks: [],
       deskPagination: {}
@@ -153,22 +153,7 @@ export default {
 
   async mounted () {
 
-    //获取桌面分类
-    let cats = await this.getCategories()
-    if (cats) {
-      this.categories = [
-        {
-          cname: '推荐',
-          children: []
-        },
-        ...cats.map(cat => {
-          return {
-            cname: cat.name,
-            id:cat.id
-          }
-        })
-      ]
-    }
+
     console.log(cats)
     // 这里是预留给api请求到时间和下载数据添加数据使用
     let navList = _.cloneDeep(this.baseNavList)
@@ -221,10 +206,17 @@ export default {
     }
   },
   watch: {
+    selectNav(newV){
+      if(newV.name==='desktop'){
+        this.getDeskData()
+        this.navIndex=0
+        this.updateDesks(this.categories[0])
+      }
+    },
     selectContent (newV, oldV) {
       if (newV == '' || newV == null) {
         this.navList = this.baseNavList
-        this.navIndex = 1
+        this.navIndex =0
         return
       }
       let data = []
@@ -249,9 +241,27 @@ export default {
 
   },
   methods: {
-    ...mapActions(marketStore, ['getCategories', 'getDesks']),
+    ...mapActions(marketStore, ['getCategories', 'getDesks','getRecommend']),
     // ...mapActions(deskStore,['setDeskSize']),
     ...mapActions(cardStore, ['setDeskSize']),
+    async getDeskData () {
+      //获取桌面分类
+      let cats = await this.getCategories()
+      if (cats) {
+        this.categories = [
+          {
+            cname: '推荐',
+            id: 0
+          },
+          ...cats.map(cat => {
+            return {
+              cname: cat.name,
+              id: cat.id
+            }
+          })
+        ]
+      }
+    },
     onClick () {
     },
     handleChange (value) {
@@ -274,6 +284,10 @@ export default {
     async updateDesks (item) {
 
       this.categoryIndex = item.id
+      if(this.categoryIndex===0){
+        this.desks= await this.getRecommend({goodType:'desk'})
+        return
+      }
       let params={
         page: 1,
         size: 20,
