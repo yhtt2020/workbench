@@ -1,0 +1,17 @@
+@media screen and (min-width:600px){
+   .left-sidebar{
+     flex: 0 0 100px !important;
+     width: 210px !important;;
+     min-width: 200px !important;
+     .nav-items{
+       li{
+         font-size:14px !important;
+       }
+
+     }
+   }
+  .main-content{
+    width: 300px !important;
+    min-width: 300px;
+  }
+}

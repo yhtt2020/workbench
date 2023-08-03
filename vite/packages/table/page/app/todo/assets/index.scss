@@ -1,0 +1,19 @@
+@import "wild";
+@import "min";
+@import 'dark';
+
+
+.main-content {
+
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-right: 10px
+}
+
+.hover-action {
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}

@@ -257,16 +257,18 @@ export default {
       type: 'systemApp',
       icon: 'daibanshixiang',
       name: '待办',
-      data:
-        {
-          fullScreen: false,
-          theme: 'transparent',
-          name: 'todo',
-          url: 'https://a.apps.vip/todo',
-          background: true,
-          node: true,
-          security: true
-        }
+      event: 'todo',
+      fn: () => { vm.$router.push({ name: 'todo' })}
+      // data:
+      //   {
+      //     fullScreen: false,
+      //     theme: 'transparent',
+      //     name: 'todo',
+      //     url: 'https://a.apps.vip/todo',
+      //     background: true,
+      //     node: true,
+      //     security: true
+      //   }
     },
     {
       type: 'systemApp',

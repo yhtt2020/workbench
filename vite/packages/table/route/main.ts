@@ -59,6 +59,7 @@ import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
 import RemoteCommunity from '../page/app/card/RemoteCommunity.vue'
+import Todo from '../page/app/todo/App.vue'
 
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
@@ -415,6 +416,11 @@ export default [
         path: "/remoteCommunity",
         name: "remoteCommunity",
         component: RemoteCommunity,
+      },
+      {
+        path: "/todo",
+        name: "todo",
+        component: Todo,
       }
     ],
   },
