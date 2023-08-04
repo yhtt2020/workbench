@@ -3,18 +3,19 @@
   <div class="flex flex-row w-full" style="height: 100%">
     <div class="item-content">
       <div class="text-center w-full" v-if="navLists.length==0">
-        <a-empty  image="/img/test/load-ail.png" description="暂无分享"></a-empty>
+        <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
       <div v-else v-for="item in navLists" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle"
            @click="previewKay(item)">
-        <div class="xt-mask" style="padding: 14px;">
+        <div class=" cover-wrapper" style="">
           <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-          <img class="rounded-lg" style="width:100%;height:100%;object-fit: cover;" :src="item.cover"/>
+          <img class="cover-preview" :src="item.cover"/>
         </div>
         <div style="padding: 0 14px 14px">
-          <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong> <span class="label"
-                                                                                                v-for="x in item.tags?.split(',')"
-                                                                                                :key="x">{{ x }}</span>
+          <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong>
+            <span class="label" v-if="item.tags"
+                  v-for="x in item.tags?.split(',')"
+                  :key="x">{{ x }}</span>
           </div>
           <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
             <span class="flex items-center">
@@ -141,7 +142,6 @@ export default {
   background: var(--secondary-bg);
   border-radius: 12px;
   width: 356px;
-  height: 340px;
   margin: 0 8px 16px;
   overflow: hidden;
 
@@ -228,5 +228,22 @@ export default {
   flex-direction: column;
   align-items: center;
   padding-top: 30%;
+}
+
+.cover-preview {
+  border-radius: 5px;
+  object-fit: contain;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  top: 50%;
+  max-width: calc(100%);
+  max-height: calc(100%);
+  position: absolute;
+}
+
+.cover-wrapper {
+  height: 200px;
+  margin: 10px;
+  position: relative;
 }
 </style>

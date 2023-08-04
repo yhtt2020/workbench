@@ -179,22 +179,23 @@
 
     </HorizontalPanel>
     <div v-if="currentAddTab.name==='market'">
-      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>
-      <div class="p-2 pt-0">
-        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"
-                 aria-placeholder="font-size: 16px;"/>
-        <div class="btn-item xt-active-bg w-full" style=" margin:0;">使用分享码添加</div>
-        <div class="flex justify-between">
+<!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
+<!--      <div class="p-2 pt-0">-->
+<!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->
+<!--                 aria-placeholder="font-size: 16px;"/>-->
+<!--        <div class="btn-item xt-active-bg w-full" style=" margin:0;">使用分享码添加</div>-->
+
+<!--      </div>-->
+      <div class="flex justify-between">
               <span class="flex items-center">
                 <span class="desk-title mr-2">热门桌面</span>
                 <Icon style="font-size: 20px;" icon="daohang_remen-xuanzhong"></Icon>
               </span>
-          <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
-        </div>
+        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
       </div>
       <div>
         <DeskMarket :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
-                    deskItemStyle="width:452px; height:auto"></DeskMarket>
+                    deskItemStyle="width:435px; height:auto"></DeskMarket>
       </div>
     </div>
     <div v-else>
@@ -222,12 +223,12 @@
                aria-placeholder="font-size: 16px;"/>
     </div>
   </a-drawer>
-  <ShareDesk ref="shareDeskRef" :deskRef="$refs.currentDeskRef" :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
+  <ShareDesk :deskList="deskList" ref="shareDeskRef" :deskRef="$refs.currentDeskRef" :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
   <ExportDesk :openModal="exportModal" @closeExport="closeExport" :layoutSize="layoutSize"
               :desks="deskList"></ExportDesk>
 
   <div style="z-index:9999;">
-    <DeskPreview @afterAdded="afterAdded" :desks="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+    <DeskPreview @afterAdded="afterAdded" :deskList="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   </div>
   <div class="" style="
         position: fixed;

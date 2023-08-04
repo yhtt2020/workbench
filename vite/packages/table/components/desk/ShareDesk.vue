@@ -14,7 +14,7 @@
       <template #suffixIcon>
         <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
       </template>
-      <a-select-option v-for="(item,index) in desks" :value="item.id">{{ item.name }}</a-select-option>
+      <a-select-option v-for="(item,index) in deskList" :value="item.id">{{ item.name }}</a-select-option>
     </a-select>
     <div class="xt-bg-2 rounded-lg  px-3 py-2 mb-2 text-center">共 {{sharingDesk.cards.length}} 个组件  {{sharingDesk.layoutSize?.width}} * {{sharingDesk.layoutSize?.height}}</div>
     <div>
@@ -119,10 +119,14 @@ export default {
       sharingDesk: [],
       categoryId: 0,
       categories: [],
-      layoutSize:{width:0,height:0}//当前桌面的尺寸
+      layoutSize:{width:0,height:0},//当前桌面的尺寸
+      shareFullLayoutSize:{width:0,height:0},
     }
   },
   props: {
+    deskList:{
+      type:Array
+    },
     openDrawer: {
       type: Boolean,
       default: () => false
@@ -134,7 +138,7 @@ export default {
   computed: {
     // ...mapWritableState(deskStore,['deskList','deskSize']),
     ...mapWritableState(deskStore, ['apiList']),
-    ...mapWritableState(cardStore, ['desks', 'settings', 'deskSize', 'countdownDay']),
+    ...mapWritableState(cardStore, [ 'settings', 'deskSize', 'countdownDay']),
   },
   watch: {
     openDrawer (newV) {
@@ -144,7 +148,7 @@ export default {
         this.assortList.unshift('请选择')
         this.assort = this.assortList[0]
 
-        this.deskType = this.desks.map(item => item.name)
+        this.deskType = this.deskList.map(item => item.name)
         this.secretSwitch = true
       }
     },
@@ -177,6 +181,9 @@ export default {
             parent.setFullScreen(true)
             setTimeout(async () => {
               let capture = await tsbApi.window.getCapture()
+              this.shareFullLayoutSize=parent.$refs.currentDeskRef.getLayoutSize()
+              this.shareFullCardZoom=parent.$refs.currentDeskRef.getAdjustZoom()
+              console.log('获得全屏状态下的尺寸',this.shareFullLayoutSize,this.shareFullCardZoom)
               this.capture = capture
               setTimeout(() => {
                 parent.setFullScreen(false)
@@ -211,9 +218,7 @@ export default {
       if (this.shareName.length >= 16) return message.error('新桌面名称长度不可超过16')
       if (!this.categoryId) return message.info('请选择分类')
       //上传图片
-      if (!this.capture) {
-        await this.getPreview()
-      }
+      await this.getPreview()
       let cover= await pathUpload(this.capture)
       let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
       cloneDesk.cards.forEach((item, index) => {
@@ -231,12 +236,16 @@ export default {
       })
 
       let settings = {}
-      if (cloneDesk.settings && cloneDesk.settings.enableZoom) {
+      if (cloneDesk.settings?.enableZoom) {
         settings = cloneDesk.settings
       } else {
         settings = this.settings
       }
 
+
+      settings.cardZoom=Number(settings.cardZoom)*Number(this.shareFullCardZoom)
+      settings.cardMargin=Number(settings.cardMargin)*Number(this.shareFullCardZoom)
+      console.log('需要分享的settings',settings)
       const template=JSON.stringify({
         cards: this.defaultType.name === 'notData' ? cloneDesk.cards :this.sharingDesk.cards,
         settings:settings,
@@ -250,7 +259,7 @@ export default {
         tags:this.tagList.length===0?'':this.tagList.join(','),
         sort:1,
         direction:'h',
-        layoutSize:JSON.stringify(this.sharingDesk.layoutSize),
+        layoutSize:JSON.stringify(this.shareFullLayoutSize),
         template:template,
       }
       let desk=await  this.addDesk(this.scheme)
@@ -275,7 +284,7 @@ export default {
       this.shareModal = val
     },
     setSelectVal (id) {
-      this.desks.forEach(desk => {
+      this.deskList.forEach(desk => {
         if (desk.id === id) {
           console.log(desk)
           this.sharingDesk = desk

@@ -79,7 +79,7 @@
           <DeskMarket :selected="searchValue" :items="desks"
                       @openPreview="openPreview"></DeskMarket>
           <!-- 预览 -->
-          <DeskPreview @afterAdded="onBack" :desks="deskList" :scheme="scheme" :showModal="showModal"
+          <DeskPreview @afterAdded="onBack" :deskList="deskList" :scheme="scheme" :showModal="showModal"
                        @closePreview="closePreview"></DeskPreview>
         </div>
         <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>

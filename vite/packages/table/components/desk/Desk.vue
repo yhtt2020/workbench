@@ -39,7 +39,7 @@
            :class="notTrigger ? 'trigger' : '' "
       >
         <vuuri v-if="currentDesk.cards && !hide" :get-item-margin="() => {
-            return usingSettings.cardMargin + 'px';
+            return usingSettings.cardMargin * this.adjustZoom  + 'px';
           }
           " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
 
@@ -453,6 +453,8 @@ export default {
     this.resizeHandler=()=>{
       this.currentDesk.layoutSize=this.getLayoutSize()
     }
+    this.getLayoutSize()
+
     window.addEventListener('resize',this.resizeHandler)
   },
   unmounted () {
@@ -561,10 +563,24 @@ export default {
      * @returns {{width: number, height: number}}
      */
     getLayoutSize () {
-      return {
+      this.currentDesk.layoutSize= {
         width: this.$refs.deskContainer.clientWidth,
         height: this.$refs.deskContainer.clientHeight
       }
+      if(this.currentDesk?.settings?.preparing){
+        const settings=this.currentDesk.settings
+        const oldLayoutSize=this.settings.layoutSize
+        settings.cardZoom= (settings.cardZoom *this.currentDesk.layoutSize.height/oldLayoutSize.height).toFixed()
+        //todo竖屏界面不一样
+        console.log('需要初始化，',settings.cardZoom,this.currentDesk.layoutSize.height,oldLayoutSize.height)
+        settings.preparing=false
+        delete settings.layoutSize
+      }
+
+      return this.currentDesk.layoutSize
+    },
+    getAdjustZoom(){
+      return this.adjustZoom
     }
   }
 }

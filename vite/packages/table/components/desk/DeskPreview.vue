@@ -45,8 +45,8 @@
     <div class="drawer-center">
       <span class="drawer-title">{{ scheme.alias }}</span>
       <span class="drawer-text">{{ scheme.summary }}</span>
-      <div class="flex">
-        <div class="label" v-for="x in tagList" :key="x">{{ x }}</div>
+      <div class="flex" v-if="tagList.length>0">
+        <div class="label" v-for="tag in tagList">{{ tag }}</div>
       </div>
       <div class="flex justify-between items-center">
         <span class="flex items-center my-4">
@@ -122,14 +122,15 @@ export default {
       type: Boolean,
       default: () => false
     },
-    desks: {
+    deskList: {
       type: Array
     }
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
     tagList () {
-      if (this.tags) {
+      console.log(this.scheme,'当前的scheme')
+      if (this.scheme.tags) {
         return this.scheme.tags.split(',')
       } else {
         return []
@@ -147,17 +148,22 @@ export default {
       if (newVal) this.fullScreen = true
       if (this.fullScreen) {
         this.cardZoom = this.template.settings.cardZoom
+        this.cardMargin=this.template.settings.cardMargin
         this.zoom = this.cardZoom / 100
         this.getPreviewHeight()
         this.displayScheme = {
           ...this.scheme,
-          settings: this.template.settings,
-          cards: this.template.cards,
+          settings: {
+            ...this.template.settings
+          },
+          cards:[
+            ... this.template.cards
+          ],
         }
         console.log(this.displayScheme)
         this.deskWidth = this.layoutSize.width
         this.deskHeight = this.layoutSize.height
-        this.cardHeight = document.getElementById('cardContent')?.offsetHeight
+        this.cardHeight = this.layoutSize.height
         var that = this
         window.addEventListener('resize', () => {
           that.getPreviewHeight()
@@ -183,7 +189,7 @@ export default {
         title:this.displayScheme.alias,
         cards:this.template.cards,
         settings:this.template.settings
-      }, this.desks)
+      },this.layoutSize, this.deskList)
       message.success('添加成功')
       this.$emit('afterAdded')
       this.openDrawer = false
@@ -211,8 +217,10 @@ export default {
           //计算得出修正后的缩放率
           this.previewHeight = document.getElementById('previewContent')?.offsetHeight
           let cardZoom = (this.cardZoom * this.previewHeight / this.cardHeight).toFixed()
-          console.log(this.cardZoom, this.previewHeight, this.cardHeight)
+          let cardMargin=(this.cardMargin * this.previewHeight / this.cardHeight).toFixed()
+          console.log(cardZoom,this.cardZoom, this.previewHeight, this.cardHeight)
           this.displayScheme.settings.cardZoom = cardZoom
+          this.displayScheme.settings.cardMargin=cardMargin
           this.displayScheme.settings.enableZoom=true
         }
       })
