@@ -1,6 +1,11 @@
 <template>
-  <span class="upload-btn icon icon-image">
-      <input title="图片" v-if="!isMute" type="file" data-type="image" accept="image/*" @change="sendUploadMessage" />
+  <div class="image" id="image" style="padding-left: 18px;">
+    <a-tooltip title="图片" class="pointer" @click="openImageInput">
+      <Icon icon="image" style="width: 24px ;height: 24px;color: var(--secondary-text) !important;"></Icon>
+    </a-tooltip>
+  </div>
+  <span class="upload-btn icon icon-image" hidden="">
+      <input title="图片" ref="imageRef" v-if="!isMute" type="file" data-type="image" accept="image/*" @change="sendUploadMessage" />
       <slot />
   </span>
 </template>
@@ -23,6 +28,11 @@ const Image = defineComponent({
       type: Boolean,
       default: () => false,
     },
+  },
+  methods:{
+    openImageInput(){
+      this.$refs.imageRef.click()
+    }
   },
   setup(props:any, ctx:any) {
     const data = reactive({

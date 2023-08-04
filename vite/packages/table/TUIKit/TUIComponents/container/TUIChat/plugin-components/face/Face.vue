@@ -1,10 +1,12 @@
 <template>
-  <div class="face" id="face">
+  <div class="face" id="face" style="padding-left:5px;">
+     <!-- 重新将UI结构样式进行修改调整 -->
     <a-tooltip title="表情"  @click="toggleShow">
-      <icon icon="smile" style="margin-left: 10px"></icon>
+      <icon icon="smile" style="width: 24px;height: 24px;color: var(--secondary-text) !important;"></icon>
     </a-tooltip>
 
-<!--    <i class="icon icon-face" title="表情" ></i>-->
+    <!--    <i class="icon icon-face" title="表情" ></i>-->
+
     <main class="face-main" :class="[isH5 && 'face-H5-main']" v-show="show" ref="dialog">
       <ul class="face-list" v-for="(item, index) in list" :key="index" v-show="currentIndex === index">
         <li
@@ -153,3 +155,6 @@ export default Face;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style scoped>
+ 
+</style>

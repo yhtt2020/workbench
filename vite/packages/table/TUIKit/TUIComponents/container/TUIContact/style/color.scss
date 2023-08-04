@@ -1,11 +1,10 @@
 .TUI-contact {
-  background: #FFFFFF;
   font-weight: 400;
   &-left {
-    border-right: 1px solid #F4F5F9;
+    border-right: 1px solid var(--divider);
     &-header {
       background: #FFFFFF;
-      border-bottom: 1px solid #F4F5F9;;
+      border-bottom: 1px solid var(--divider);
     }
   }
   &-column {

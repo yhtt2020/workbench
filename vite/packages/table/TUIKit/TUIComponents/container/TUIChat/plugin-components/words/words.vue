@@ -1,21 +1,27 @@
 <template>
-  <div class="words" :class="[isH5 ? 'words-H5' : '']">
-      <i class="icon icon-words" title="快速回复" @click="toggleShow"></i>
-      <main class="words-main" :class="[isH5 ? 'words-H5-main' : '']" v-show="show&&!isMute">
-        <div class="words-main-content" ref="dialog">
-          <header>
-            <aside>
-              <h1>{{$t('Words.常用语-快捷回复工具')}}</h1>
-            </aside>
-            <span v-if="isH5" class="close" @click="toggleShow">关闭</span>
-          </header>
-          <ul class="words-list">
-            <li class="words-list-item" v-for="(item, index) in list" :key="index"  @click="select(item)">
-              <label>{{item.value}}</label>
-            </li>
-          </ul>
-        </div>
-      </main>
+  <div class="words" :class="[isH5 ? 'words-H5' : '']" style="padding: 0 18px !important;outline: none !important;">
+    <!-- 重新将UI结构进行更改 -->
+    <a-tooltip title="快速回复" @click="toggleShow" style="outline: none !important;">
+      <Icon icon="message" style="height: 24px; color: var(--secondary-text) !important; width: 24px;margin: 0 !important;"></Icon>
+    </a-tooltip>
+    
+    <!-- <i class="icon icon-message" title="快速回复" @click="toggleShow"></i> -->
+    
+    <main class="words-main" :class="[isH5 ? 'words-H5-main' : '']" v-show="show&&!isMute">
+      <div class="words-main-content" ref="dialog">
+        <header>
+          <aside>
+            <h1>{{$t('Words.常用语-快捷回复工具')}}</h1>
+          </aside>
+          <span v-if="isH5" class="close" @click="toggleShow">关闭</span>
+        </header>
+        <ul class="words-list">
+          <li class="words-list-item" v-for="(item, index) in list" :key="index"  @click="select(item)">
+            <label>{{item.value}}</label>
+          </li>
+        </ul>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -120,3 +126,8 @@ const Words = defineComponent({
 export default Words;
 </script>
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style scoped>
+:deep(.words-main){
+  top: -220px !important;
+}
+</style>
