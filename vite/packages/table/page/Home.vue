@@ -581,11 +581,6 @@ export default {
       };
     }
     this.fixData();
-    window.addEventListener('resize',() => {
-        this.scrollbar = Date.now();
-
-        this.getHomeSize()
-    })
     // window.onresize = () => {
     //   this.scrollbar = Date.now();
 

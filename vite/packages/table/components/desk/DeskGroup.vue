@@ -198,7 +198,7 @@
       </div>
     </div>
     <div v-else>
-      <span class="desk-title">标题</span>
+      <div class="desk-title mt-4">标题</div>
       <a-input v-model:value="deskTitle" spellcheck="false" class="input" placeholder="请输入"
                aria-placeholder="font-size: 16px;"/>
       <span class="desk-title">初始布局</span>
@@ -227,7 +227,7 @@
               :desks="deskList"></ExportDesk>
 
   <div style="z-index:9999;">
-    <DeskPreview :desks="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+    <DeskPreview @afterAdded="afterAdded" :desks="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   </div>
   <div class="" style="
         position: fixed;
@@ -237,7 +237,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="deskMarketVisible">
-    <NewAddCard v-if="deskMarketVisible" :desks="deskList" @onClose="hideMarket" :desk="currentDesk"
+    <NewAddCard v-if="deskMarketVisible" :deskList="deskList" @onClose="hideMarket" :desk="currentDesk"
                 :panelIndex="panelIndex"></NewAddCard>
   </div>
 </template>
@@ -339,7 +339,6 @@ export default {
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0]
     }
-    console.log(this.deskList)
     this.deskList.forEach(desk => {
       if (!desk.id) {
         desk.id = desk.nanoid
@@ -347,9 +346,7 @@ export default {
     })
 
     this.hotDesk.push(this.apiList[0].children[0])
-
     this.recommendList=await  this.getRecommend({goodType:'desk'})
-    console.log(this.recommendList,'reclist')
   },
   computed: {
     ...mapWritableState(deskStore, ['apiList']),
@@ -373,9 +370,10 @@ export default {
     //   })
     // },
     currentDesk() {
-      return this.deskList.find(desk => {
+      let currentDesk= this.deskList.find(desk => {
         return desk.id === this.currentDeskId
       })
+      return currentDesk
     },
 
     displayDesks() {
@@ -402,6 +400,9 @@ export default {
     },
     hideMarket() {
       this.deskMarketVisible = false
+    },
+    afterAdded(){
+      this.hideMarket()
     },
     openPreview({scheme, showModal}) {
       this.scheme = scheme

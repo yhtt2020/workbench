@@ -16,16 +16,16 @@
       </template>
       <a-select-option v-for="(item,index) in desks" :value="item.id">{{ item.name }}</a-select-option>
     </a-select>
-    <div>共 {{sharingDesk.cards.length}} 个组件</div>
+    <div class="xt-bg-2 rounded-lg  px-3 py-2 mb-2 text-center">共 {{sharingDesk.cards.length}} 个组件  {{sharingDesk.layoutSize?.width}} * {{sharingDesk.layoutSize?.height}}</div>
     <div>
-      <div class="title mb-2">桌面效果图</div>
-      <div>
-        <a-button style="border:none" class="mb-2 xt-active-bg rounded-full " @click="getPreview">
-          {{ capture ? '重新获得效果图' : '自动获取效果图' }}
+      <div class="title mb-2">桌面效果图
+        <div class="float-right">
+          <a-button style="border:none" class="mb-2 xt-active-bg rounded-full " @click="getPreview">
+            {{ capture ? '重新获得效果图' : '自动获取效果图' }}
+          </a-button>
 
-        </a-button>
-        请点击按钮获取桌面效果图
-      </div>
+        </div></div>
+      <div class="mb-2 pl-3"> 请点击按钮获取桌面效果图</div>
       <a-image :preview="false" class="mb-2 rounded-lg" v-if="capture" :src="'file://'+capture"></a-image>
 
       <span class="title">桌面数据</span>
@@ -64,8 +64,8 @@
                  style="width:340px;margin:0" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
         <div class="add-label" @click="addLabel">添加</div>
       </div>
-      <div v-if="labelList.length" class="flex">
-        <div v-for="(item,index) in labelList" :key="index" class="label-item">
+      <div v-if="tagList.length" class="flex">
+        <div v-for="(item,index) in tagList" :key="index" class="label-item">
           <span class="mr-2">{{ item }}</span>
           <Icon icon="guanbi1" class="h-4 w-4" @click="delLabel(index)"></Icon>
         </div>
@@ -104,7 +104,7 @@ export default {
       assort: '',
       assortList: [],
       labelVal: '',
-      labelList: [],
+      tagList: [],//标签列表
       scheme: {},
       shareModal: false,
       shareName: '',
@@ -119,6 +119,7 @@ export default {
       sharingDesk: [],
       categoryId: 0,
       categories: [],
+      layoutSize:{width:0,height:0}//当前桌面的尺寸
     }
   },
   props: {
@@ -195,15 +196,15 @@ export default {
       this.setInitialData()
     },
     addLabel () {
-      if (this.labelList.length >= 4) return message.info('最多添加四个')
-      if (this.labelList.includes(this.labelVal.trim())) return message.info('不可添加重复标签')
+      if (this.tagList.length >= 4) return message.info('最多添加四个')
+      if (this.tagList.includes(this.labelVal.trim())) return message.info('不可添加重复标签')
       if (this.labelVal.trim()) {
-        this.labelList.push(this.labelVal.trim())
+        this.tagList.push(this.labelVal.trim())
         this.labelVal = ''
       }
     },
     delLabel (index) {
-      this.labelList.splice(index, 1)
+      this.tagList.splice(index, 1)
     },
     async addPlan () {
       if (this.shareName.trim() === '') return message.info('请输入新桌面名称')
@@ -237,7 +238,7 @@ export default {
       }
 
       const template=JSON.stringify({
-        cards: this.defaultType.name === 'notData' ? cloneDesk.cards : this.cards.cards,
+        cards: this.defaultType.name === 'notData' ? cloneDesk.cards :this.sharingDesk.cards,
         settings:settings,
       })
       this.scheme = {
@@ -246,15 +247,11 @@ export default {
         title: this.shareName,
         introduceText:'',
         summary: this.summary,
-        tags:this.labelList.length===0?'':this.labelList.join(','),
+        tags:this.tagList.length===0?'':this.tagList.join(','),
         sort:1,
         direction:'h',
-        layoutSize:JSON.stringify({
-          width:0,
-          height:0
-        }),
+        layoutSize:JSON.stringify(this.sharingDesk.layoutSize),
         template:template,
-
       }
       let desk=await  this.addDesk(this.scheme)
       this.posting=false
@@ -270,7 +267,7 @@ export default {
     setInitialData () {
       this.desk = this.deskType[0]
       this.blurb = ''
-      this.labelList = []
+      this.tagList = []
       this.secretSwitch = true
       this.defaultType = { title: '不保留数据', icon: 'yuanquan', name: 'notData' }
     },
@@ -278,12 +275,13 @@ export default {
       this.shareModal = val
     },
     setSelectVal (id) {
-      console.log(id,'设置id')
       this.desks.forEach(desk => {
         if (desk.id === id) {
           console.log(desk)
           this.sharingDesk = desk
           this.shareName = desk.name
+          const parent = this.$parent
+          parent.setCurrentDeskId(desk.id)
         }
       })
     }

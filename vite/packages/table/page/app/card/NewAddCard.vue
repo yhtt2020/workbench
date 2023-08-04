@@ -75,11 +75,11 @@
       </div>
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
         <NavMenu :list="categories" :currenIndex="categoryIndex" @changeNav="updateDesks"/>
-        <div class="ml-5 no-drag">
+        <div class="ml-5 no-drag w-full">
           <DeskMarket :selected="searchValue" :items="desks"
                       @openPreview="openPreview"></DeskMarket>
           <!-- 预览 -->
-          <DeskPreview :desks="desks" :scheme="scheme" :showModal="showModal"
+          <DeskPreview @afterAdded="onBack" :desks="deskList" :scheme="scheme" :showModal="showModal"
                        @closePreview="closePreview"></DeskPreview>
         </div>
         <ShareDesk :openDrawer="openDrawer" @closeShare="closeShare"></ShareDesk>
@@ -116,8 +116,8 @@ export default {
       type: Number,
       default: () => 0
     },
-    desks: {
-      type: Array
+    deskList:{
+      type:Array
     }
   },
   data () {
@@ -152,9 +152,6 @@ export default {
   },
 
   async mounted () {
-
-
-    console.log(cats)
     // 这里是预留给api请求到时间和下载数据添加数据使用
     let navList = _.cloneDeep(this.baseNavList)
 
@@ -278,6 +275,9 @@ export default {
       this.$emit('close')
       this.$emit('onClose')
     },
+    afterAdded(){
+      this.onBack()
+    },
     updateNavIndex (index) {
       this.navIndex = index
     },
@@ -293,7 +293,6 @@ export default {
         size: 20,
         categoryId: item.id
       }
-      console.log(item,'a')
       let rs = await this.getDesks(params)
       this.desks = rs.list
       this.deskPagination = rs.pagination

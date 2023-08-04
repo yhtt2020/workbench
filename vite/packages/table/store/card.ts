@@ -355,6 +355,8 @@ export const cardStore = defineStore(
             // showSettings: true
           }
           this.aloneSettings = data.settings
+          console.log(desk,'需要添加的desk')
+          console.log(deskList,'父列表')
           deskList.unshift(desk)
           //this.switchToDesk(this.deskList.length - 1)
           return desk

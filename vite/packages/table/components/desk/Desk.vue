@@ -152,6 +152,14 @@
     ></Tab>
 
     <template v-if="currentSettingTab==='current'">
+      <div class="line-title">基础设置</div>
+      <div class="line mt-2">
+        桌面名称：
+      </div>
+      <div>
+        <a-input v-model:value="currentDesk.name"></a-input>
+      </div>
+
       <div class="my-3" style="font-size: 1.2em;font-weight: bold;">
         独立缩放：
         <div class="line" style="font-size: 14px;font-weight: normal">
@@ -393,10 +401,16 @@ export default {
       notTrigger: {
         type: Boolean,
         default: () => false
-      }
+      },
+
+
     }
   ,
-  mounted () {
+
+  watch:{
+    currentDesk(newVal){
+      newVal.layoutSize=this.getLayoutSize()
+    }
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
@@ -431,9 +445,18 @@ export default {
         { name: '通用桌面设置', value: 'all' },
         { name: '当前桌面设置', value: 'current' }
       ],
-      currentSettingTab: 'all'
-
+      currentSettingTab: 'all',
+      resizeHandler:null
     }
+  },
+  mounted () {
+    this.resizeHandler=()=>{
+      this.currentDesk.layoutSize=this.getLayoutSize()
+    }
+    window.addEventListener('resize',this.resizeHandler)
+  },
+  unmounted () {
+    window.removeEventListener('resize',this.resizeHandler)
   },
   methods: {
 
@@ -533,6 +556,10 @@ export default {
       this.update()
 
     },
+    /**
+     * 获取当前布局的宽高
+     * @returns {{width: number, height: number}}
+     */
     getLayoutSize () {
       return {
         width: this.$refs.deskContainer.clientWidth,

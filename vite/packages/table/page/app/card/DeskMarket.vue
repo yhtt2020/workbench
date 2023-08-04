@@ -1,14 +1,21 @@
 <template>
   <!-- 方案列表 -->
-  <div class="flex flex-row" style="height: 100%">
+  <div class="flex flex-row w-full" style="height: 100%">
     <div class="item-content">
-      <div v-for="item in navLists" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
+      <div class="text-center w-full" v-if="navLists.length==0">
+        <a-empty  image="/img/test/load-ail.png" description="暂无分享"></a-empty>
+      </div>
+      <div v-else v-for="item in navLists" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle"
+           @click="previewKay(item)">
         <div class="xt-mask" style="padding: 14px;">
           <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-          <img class="rounded-lg" style="width:100%;height:100%;object-fit: cover;" :src="item.cover" />
+          <img class="rounded-lg" style="width:100%;height:100%;object-fit: cover;" :src="item.cover"/>
         </div>
         <div style="padding: 0 14px 14px">
-          <div class="title"><strong class="mr-2">{{ item.alias ||item.title }}</strong>   <span class="label" v-for="x in item.tags?.split(',')" :key="x">{{ x }}</span></div>
+          <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong> <span class="label"
+                                                                                                v-for="x in item.tags?.split(',')"
+                                                                                                :key="x">{{ x }}</span>
+          </div>
           <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
             <span class="flex items-center">
               <div @click="showCard(item.id)">
@@ -36,15 +43,15 @@
 </template>
 
 <script>
-import { appStore } from '../../../store';
-import { mapActions, mapWritableState } from "pinia";
+import { appStore } from '../../../store'
+import { mapActions, mapWritableState } from 'pinia'
 // import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
-  name: "DeskMarket",
+  name: 'DeskMarket',
   components: {
     // DeskPreview
   },
-  data() {
+  data () {
     return {
       navLists: [],
       // 方案
@@ -89,8 +96,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(appStore,['showUserCard']),
-    showCard(id){
+    ...mapActions(appStore, ['showUserCard']),
+    showCard (id) {
       this.showUserCard(id)
     },
     mySort (data, property, asc) {
@@ -102,12 +109,14 @@ export default {
         else return b - a
       })
     },
-    previewKay(item){
-      this.$emit('openPreview',{scheme: JSON.parse(item.template),showModal: true})
+    previewKay (item) {
+      this.$emit('openPreview', {
+        scheme: item, showModal: true
+      })
       // this.scheme = item
       // this.showModal = true
     },
-    closePreview(){
+    closePreview () {
       // this.showModal = false
     }
   }
@@ -115,98 +124,109 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .item-content{
+.item-content {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow: auto;
+  justify-content: center;
+}
+
+.item-content::-webkit-scrollbar {
+  display: none;
+}
+
+.recommend {
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  width: 356px;
+  height: 340px;
+  margin: 0 8px 16px;
+  overflow: hidden;
+
+  .title {
+    font-family: PingFangSC-Medium;
+    font-size: 18px;
+    color: var(--primary-text);
+    margin: 10px 0;
+    font-weight: 500;
+  }
+
+  .label {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0 8px;
+    color: var(--secondary-text);
+    margin-right: 12px;
+  }
+}
+
+.prompt-modal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  z-index: 99;
+
+  .head-icon {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    overflow: auto;
-    justify-content: center;
-  }
-  .item-content::-webkit-scrollbar{
-    display: none;
-  }
-  .recommend{
-    background: var(--secondary-bg);
-    border-radius: 12px;
-    width: 356px;
-    height: 340px;
-    margin: 0 8px 16px;
-    overflow: hidden;
-    .title{
-      font-family: PingFangSC-Medium;
-      font-size: 18px;
-      color: var(--primary-text);
-      margin: 10px 0;
-      font-weight: 500;
-    }
-    .label{
-      background: rgba(255, 255, 255, 0.4);
-      border-radius: 4px;
-      font-size: 14px;
-      padding: 0 8px;
-      color: var(--secondary-text);
-      margin-right: 12px;
-    }
-  }
-  .prompt-modal{
-      position: absolute;
-      top:0;
-      bottom:0;
-      right:0;
-      left:0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-      z-index: 99;
-      .head-icon{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        height: 10%;
-        .icon{
-          background: #2A2A2A;
-          border-radius: 12px;
-          width: 48px;
-          height: 48px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-        }
-      }
-      .foot{
-        display: flex;
-        justify-items: center;
-        align-items: end;
-        height: 10%;
-        >div{
-          background: rgba(0,0,0,0.30);
-          border-radius: 12px;
-          height: 48px;
-          line-height: 48px;
-          padding: 0 25px;
-          font-size: 16px;
-          color: var(--secondary-text);
-        }
-      }
-    }
-    .add-scheme{
+    justify-content: space-between;
+    height: 10%;
+
+    .icon {
       background: #2A2A2A;
       border-radius: 12px;
-      width: 80px;
+      width: 48px;
       height: 48px;
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
     }
-    .drawer-center{
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 30%;
+  }
+
+  .foot {
+    display: flex;
+    justify-items: center;
+    align-items: end;
+    height: 10%;
+
+    > div {
+      background: rgba(0, 0, 0, 0.30);
+      border-radius: 12px;
+      height: 48px;
+      line-height: 48px;
+      padding: 0 25px;
+      font-size: 16px;
+      color: var(--secondary-text);
     }
+  }
+}
+
+.add-scheme {
+  background: #2A2A2A;
+  border-radius: 12px;
+  width: 80px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.drawer-center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30%;
+}
 </style>
