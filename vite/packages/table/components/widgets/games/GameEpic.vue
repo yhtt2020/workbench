@@ -1,6 +1,6 @@
 <template>
   <Widget :options="options" :customIndex="customIndex" :desk="desk">
-    <HorizontalPanel :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
+    <HorizontalPanel style="min-width: 100%" :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
     <template v-if="epicType.name === 'week'">
       <div class="w-full" v-if="detailShow === false">
         <div class="flex items-center  justify-center my-10" v-if="weekEpic.length === 0">
