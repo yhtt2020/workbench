@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!activeTask.createTime" style="padding: 10px; height: calc(100vh)">
+  <div v-if="!activeTask.createTime" style="padding: 10px;background:none; height: calc(100vh)">
     <span
       class="title-action hover-action"
       @click="toggleMenu"
@@ -28,6 +28,7 @@
       flex-direction: column;
       word-break: break-all;
       white-space: break-spaces;
+      background: none;
     "
     class="right-content"
   >

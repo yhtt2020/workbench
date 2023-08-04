@@ -32,51 +32,45 @@ export default {
 </script>
 
 <template>
-  <ul class="nav-items">
+  <div class="nav-items">
     <a-dropdown :trigger="['contextmenu']" v-for="list in data">
-      <li
+      <div class="item"
         :title="list.title"
         :class="{ active: list === activeList }"
         @click="setActiveList(list)"
       >
         <div class="nav-wrapper">
-          <div style="display: flex">
-            <div style="min-width: 20px">
-              <ordered-list-outlined />
-            </div>
+          <div class="flex items-center">
+            <Icon icon="detail" style="color:var(--secondary-text);font-size:20px"></Icon>
             <div
               style="
                 flex: auto;
                 text-wrap: normal;
                 word-break: break-all;
                 width: 0;
+                margin-left:10px;
               "
             >
               <div
                 :class="{ completed: list.completed }"
-                style="
-                  word-break: break-all;
-                  text-overflow: ellipsis;
-                  overflow: hidden;
-                  white-space: nowrap;
-                "
+                class="flex justify-between"
               >
-                <span>{{ list.title }} </span>
-                <span style="float: right">{{
+                <span class="truncate" style="">{{ list.title }} </span>
+                <span>{{
                   list.count > 0 ? list.count : ""
                 }}</span>
               </div>
             </div>
           </div>
         </div>
-      </li>
+      </div>
       <template #overlay>
         <a-menu>
           <a-menu-item @click="removeList(list.nanoid)">删除</a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
-  </ul>
+  </div>
 </template>
 <style scoped lang="scss">
 .nav-items {

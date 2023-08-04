@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ITaskInfo, ITaskInfo as TaskInfo} from "../interfaces";
 import {nanoid} from "nanoid";
 import {configStore,listStore} from "../store";
+import dbStorage from '../../../../store/dbStorage'
 // @ts-ignore
 import _ from 'lodash-es'
 import {sortType} from "../consts";
@@ -78,6 +79,18 @@ export const taskStore = defineStore('task', {
             }
             this.tasks.splice(this.tasks.findIndex(task => task.nanoid === nanoid), 1)
         }
+    },
+    persist: {
+        enabled: true,
+        strategies: [
+          {
+            // 自定义存储的 key，默认是 store.$id
+            // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+            storage: dbStorage,
+            paths: ['tasks','currentTasks','activeTask','taskFilter']
+            // state 中的字段名，按组打包储存`
+          },
+        ],
     }
 
 })

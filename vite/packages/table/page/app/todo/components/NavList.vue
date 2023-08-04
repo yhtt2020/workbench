@@ -1,39 +1,41 @@
 <template>
-  <ul class="nav-items">
-    <li
+  <div class="nav-items">
+    <div class="item"
       @click="setTab('personal')"
       :class="{ active: this.isActive('personal') }"
     >
-      <div class="nav-wrapper font-color">
-        <user-outlined style="font-size: 16px" />
-        个人
-        <span style="float: right">{{
+      <div class="nav-wrapper font-color flex items-center justify-between">
+        <div>
+          <Icon icon="user" style="color:var(--secondary-text);font-size:20px"></Icon>
+          <span class="ml-2.5">个人</span>
+        </div>
+        <span>{{
           this.tasks.filter((task) => !task.completed).length
         }}</span>
       </div>
-    </li>
-    <li
+    </div>
+    <div class="item"
       @click="this.setTab('today')"
       :class="{ active: this.isActive('today') }"
     >
-      <div class="nav-wrapper font-color">
-        <alert-outlined style="font-size: 16px" />
-        今天
+      <div class="nav-wrapper font-color flex items-center">
+        <Icon icon="shoucang" style="color:var(--secondary-text);font-size:20px"></Icon>
+        <span class="ml-2.5">今天</span>
       </div>
-    </li>
-    <li @click="this.setTab('week')" :class="{ active: this.isActive('week') }">
-      <div class="nav-wrapper font-color">
-        <calendar-outlined style="font-size: 16px" />
-        7天
+    </div>
+    <div class="item" @click="this.setTab('week')" :class="{ active: this.isActive('week') }">
+      <div class="nav-wrapper font-color flex items-center">
+        <Icon icon="carryout" style="color:var(--secondary-text);font-size:20px"></Icon>
+        <span class="ml-2.5">7天</span>
       </div>
-    </li>
+    </div>
     <!--    <li @click="()=>{this.setTab('group');}" :class="{'active':this.isActive('group')}">-->
     <!--      <div class="nav-wrapper">-->
     <!--        <team-outlined style="font-size:16px"/>-->
     <!--        团队-->
     <!--      </div>-->
     <!--    </li>-->
-  </ul>
+    </div>
 </template>
 
 <script lang="ts">
@@ -139,6 +141,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.nav-items{
+  border-bottom: 1px solid var(--divider);
+}
 .font-color {
 }
 </style>

@@ -115,51 +115,54 @@ export default {
 
 <template>
   <a-config-provider :locale="zhCN" :getPopupContainer="getPopupContainer">
-    <a-layout theme="light" style="height: 100vh">
-      <!--      <a-layout-header theme="light">header</a-layout-header>-->
-      <a-layout-sider
-        v-show="config.menuState === MenuState.UN_FOLD"
-        class="sidebar left-sidebar"
-        theme="light"
-      >
-        <NavList />
-        <a-divider style="margin-top: -10px; margin-bottom: 5px" />
-        <a-modal
-          v-model:visible="addNewListVisible"
-          title="创建清单"
-          :width="300"
-          centered
-          @ok="addNewList()"
-        >
-          <a-input
-            @pressEnter="addNewList()"
-            placeholder="清单名称"
-            v-model:value="newList.title"
-          />
-        </a-modal>
-        <div class="small-title">
-          清单
-          <span
-            @click="showAddList()"
-            style="float: right; padding-right: 10px"
+    <div class="todo-box">
+      <a-layout theme="light" style="height:100%;background:none">
+        <a-layout-sider
+          v-show="config.menuState === MenuState.UN_FOLD"
+          style="background:none;border-right: 1px solid var(--divider)"
+          theme="light"
+        > 
+          <div class="flex items-center mx-3 pointer px-3" style="height:48px;">
+            <Icon icon="xiangzuo" style="color:var(--secondary-text);font-size:20px"></Icon>
+            <span class="xt-text-2 ml-3" style="font-size: 14px;">返回</span>
+          </div>
+          <NavList />
+          <a-modal
+            v-model:visible="addNewListVisible"
+            title="创建清单"
+            :width="300"
+            centered
+            @ok="addNewList()"
           >
-            <plus-outlined
-          /></span>
-        </div>
-        <div>
-          <a-empty v-if="displayLists.length === 0" :image="simpleImage" />
-          <VueCustomScrollbars
-            :settings="settings"
-            style="position: relative; height: calc(100vh - 137px)"
-          >
-            <ListList :data="displayLists"></ListList>
-          </VueCustomScrollbars>
-        </div>
-      </a-layout-sider>
+            <a-input
+              @pressEnter="addNewList()"
+              placeholder="清单名称"
+              v-model:value="newList.title"
+            />
+          </a-modal>
+          <div class="small-title">
+            清单
+            <span
+              @click="showAddList()"
+              style="float: right;"
+            >
+              <plus-outlined
+            /></span>
+          </div>
+          <div>
+            <a-empty v-if="displayLists.length === 0" :image="simpleImage" />
+            <VueCustomScrollbars
+              :settings="settings"
+              style="position: relative; height: calc(100vh - 137px)"
+            >
+              <ListList :data="displayLists"></ListList>
+            </VueCustomScrollbars>
+          </div>
+        </a-layout-sider>
 
-      <div class="main-content" v-show="config.menuState === MenuState.UN_FOLD">
-        <div class="middle-title">
-          <span v-if="Object.keys(this.activeList).length === 0">
+        <div class="main-content" style="background:none" v-show="config.menuState === MenuState.UN_FOLD">
+          <div class="middle-title">
+            <span v-if="Object.keys(this.activeList).length === 0">
             全部待办
           </span>
           <span v-else>
@@ -167,7 +170,7 @@ export default {
           </span>
           <a-dropdown :trigger="['click']"
             ><span
-              class="hover-action"
+              class="hover-none"
               style="
                 float: right;
                 font-size: 18px;
@@ -201,7 +204,6 @@ export default {
               "
             >
               <span
-                class="hover-action"
                 style="
                   display: inline-block;
                   margin-right: 5px;
@@ -256,14 +258,14 @@ export default {
       </div>
       <div
         theme="light"
-        style="position: relative; flex: auto !important; width: 0"
+        style="position: relative;background:none; flex: auto !important; width: 0"
         class="right-content"
       >
         <ActiveTaskDetail @addList="showAddList"></ActiveTaskDetail>
       </div>
       <div></div>
-      <!--      <a-layout-footer>footer</a-layout-footer>-->
     </a-layout>
+    </div>
   </a-config-provider>
 </template>
 <style>
@@ -274,22 +276,21 @@ body {
 </style>
 <style lang="scss">
 .nav-items {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 5px;
-
-  li {
+  margin: 0 12px;
+  color: var(--primary-text);
+  .item {
+    margin: 0;
     .nav-wrapper {
-      padding: 5px 10px;
-      margin-left: 5px;
-      margin-right: 5px;
-      margin-bottom: 2px;
-      border-radius: 3px;
+      height: 48px;
+      padding: 0 12px;
+      border-radius: 10px;
+      line-height: 48px;
     }
 
     &.active,
     &:hover {
       .nav-wrapper {
+        background: var(--active-secondary-bg) !important;
       }
     }
 
@@ -317,13 +318,27 @@ body {
 }
 </style>
 <style scoped lang="scss">
-.small-title {
-  font-size: 12px;
-  padding-left: 10px;
-  padding-top: 10px;
-}
+// .small-title {
+//   font-size: 12px;
+//   padding-left: 10px;
+//   padding-top: 10px;
+// }
+  .small-title {
+    height: 48px;
+    padding: 0 24px;
+    border-radius: 10px;
+    line-height: 48px;
+    color: var(--secondary-text);
+  }
 
 .middle-title {
   font-size: 13px;
+}
+.todo-box{
+  height: 100%;
+  width: 100%;
+  background: var(--primary-bg);
+  border-radius: 12px;
+  // overflow: auto;
 }
 </style>
