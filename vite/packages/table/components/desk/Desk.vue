@@ -568,16 +568,44 @@ export default {
         height: this.$refs.deskContainer.clientHeight
       }
       if(this.currentDesk?.settings?.preparing){
-        const settings=this.currentDesk.settings
-        const oldLayoutSize=this.settings.layoutSize
-        settings.cardZoom= (settings.cardZoom *this.currentDesk.layoutSize.height/oldLayoutSize.height).toFixed()
-        //todo竖屏界面不一样
-        console.log('需要初始化，',settings.cardZoom,this.currentDesk.layoutSize.height,oldLayoutSize.height)
-        settings.preparing=false
+        message.loading({ content: '此桌面为首次使用，正在为您适配您的桌面…', key:'preparing' });
+        this.setFullScreen(true,()=>{
+          setTimeout(()=>{
+            this.$nextTick(()=>{
+              const fullLayoutSize= {
+                width: this.$refs.deskContainer.clientWidth,
+                height: this.$refs.deskContainer.clientHeight
+              }
+              const settings=this.currentDesk.settings
+              const oldLayoutSize=this.settings.layoutSize
+              settings.cardZoom= (settings.cardZoom *fullLayoutSize.height/oldLayoutSize.height/this.adjustZoom).toFixed()
+              settings.cardMargin=(settings.cardMargin *fullLayoutSize.height/oldLayoutSize.height/this.adjustZoom).toFixed()
+              //todo竖屏界面不一样
+              console.log('需要初始化，',settings.cardZoom,this.currentDesk.layoutSize.height,oldLayoutSize.height)
+              message.success({ content: '此桌面为首次使用，已为您适配您的当前窗口。', key:'preparing' });
+              settings.preparing=false
+              this.setFullScreen(false)
+            })
+          },1000)
+        })
+
         delete settings.layoutSize
       }
 
       return this.currentDesk.layoutSize
+    },
+    setFullScreen(flag,cb){
+      this.stashLayout()
+      this.fullScreen = flag
+      this.$nextTick(() => {
+        if (flag === false) {
+          this.restoreLayout(1)
+        } else {
+          this.restoreLayout()
+        }
+        if(cb) cb()
+
+      })
     },
     getAdjustZoom(){
       return this.adjustZoom

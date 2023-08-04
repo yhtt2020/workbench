@@ -221,18 +221,14 @@ export default {
       await this.getPreview()
       let cover= await pathUpload(this.capture)
       let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
+      if(this.defaultType.name==='noData'){
+        //如果选择不保留数据，则进行清理
+        cloneDesk.cards.forEach((item, index) => {
+          item.customData={}
+        })
+      }
       cloneDesk.cards.forEach((item, index) => {
-        // switch (item.name) {
-        //   case 'notes':
-        //     if (item.customData) {
-        //       item.customData.text = ''
-        //     }
-        //     break
-        //   case 'countdownDay':
-        //     item.customData.notRetain = true
-        //     break
-        // }
-        item.customData={}
+        delete item._$muuri_id
       })
 
       let settings = {}
@@ -247,7 +243,7 @@ export default {
       settings.cardMargin=Number(settings.cardMargin)*Number(this.shareFullCardZoom)
       console.log('需要分享的settings',settings)
       const template=JSON.stringify({
-        cards: this.defaultType.name === 'notData' ? cloneDesk.cards :this.sharingDesk.cards,
+        cards: cloneDesk.cards,
         settings:settings,
       })
       this.scheme = {

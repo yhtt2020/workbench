@@ -1,7 +1,7 @@
 <template>
   <!-- 方案列表 -->
-  <div class="flex flex-row w-full" style="height: 100%">
-    <div class="item-content">
+  <div class="flex flex-row w-full item-wrapper" style="height: 100%" >
+    <div class="item-content" :style="wrapperStyle">
       <div class="text-center w-full" v-if="navLists.length==0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
@@ -64,6 +64,13 @@ export default {
     }
   },
   props: {
+    wrapperStyle: {
+      type: Object,
+      default: {
+        height: '100%'
+      }
+
+    },
     //排序列表
     items: {
       type: Array,

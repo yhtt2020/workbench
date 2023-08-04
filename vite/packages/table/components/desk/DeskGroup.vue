@@ -119,6 +119,33 @@
     </div>
     <template v-else>
       <slot name="empty">
+        <div class="s-bg rounded-3xl p-4" style="width: 80%;height:auto;margin: auto">
+          <div class="text-center">
+            <icon icon="desktop" class="xt-text "  style="font-size: 64px;vertical-align: text-top"></icon>
+            <div class="line-title xt-text" style="font-size: 24px;margin-bottom: 10px">   欢迎使用完全DIY的卡片桌面</div>
+
+<!--            <p style="font-size: 16px">-->
+<!--              <strong class="xt-text"><icon icon="smile" style="font-size: 1.2em"></icon> 您可以通过桌面设置调节卡片到合适的大小</strong>-->
+<!--            </p>-->
+            <div>
+
+              <a-button style="color: var(--active-text);" @click="moreDesk" class="mr-10 xt-active-bg rounded-full border-none animate-pulse" key="console"
+                        type="primary"><icon class="mr-1" icon="shop" style="font-size: 18px"></icon>&nbsp;查看桌面市场
+              </a-button>
+              <a-button   @click="newAddCard" class="mr-10  rounded-full xt-bg-2 border-none" key="console"
+                         ><icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
+              </a-button>
+              <a-button class="xt-bg-2 rounded-full border-none"  key="buy" @click="learn"><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button>
+            </div>
+
+          </div>
+          <div class=" text-center mt-2 xt-text" style="font-size: 18px;"><icon icon="arrowdown" class="animate-bounce" style="font-size:1.2em;vertical-align: text-bottom"></icon> 为您推荐（左右滑动）</div>
+          <vue-custom-scrollbar :scrollbarSettings="scrollbarSettings" class="mt-3" style="width:100%;height: 315px;">
+            <DeskMarket :wrapperStyle="{height: '100%',flexWrap:'nowrap',overflow:'visible'}" :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
+                        deskItemStyle="width:435px; height:300px"></DeskMarket>
+          </vue-custom-scrollbar>
+
+        </div>
       </slot>
       <span v-show="false">
        <Desk ref="currentDeskRef" :currentDesk="currentDesk" :key="key" :editing="editing">
@@ -195,7 +222,7 @@
       </div>
       <div>
         <DeskMarket :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
-                    deskItemStyle="width:435px; height:auto"></DeskMarket>
+                    deskItemStyle="width:435px; height:auto;"></DeskMarket>
       </div>
     </div>
     <div v-else>
@@ -264,10 +291,16 @@ import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
 import XtTab from "../card/components/Tab/index.vue";
 import {marketStore} from "../../store/market";
+import Icon from "../Icon.vue";
+import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
+import Emoji from "../comp/Emoji.vue";
 
 export default {
   name: "DeskGroup",
   components: {
+    Emoji,
+    VueCustomScrollbar,
+    Icon,
     XtTab,
     DeskPreview,
     NewAddCard,
@@ -306,6 +339,14 @@ export default {
   },
   data() {
     return {
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true,
+        currentItemId: -1,
+      },
       currentAddTab:{name:'market'},
       key: Date.now(),
       moreDesksVisible: false,//显示更多桌面
@@ -395,6 +436,12 @@ export default {
   },
   methods: {
     ...mapActions(marketStore,['getRecommend']),
+    newAddCard(){
+      this.$refs.currentDeskRef.newAddCard()
+    },
+    learn(){
+      this.$refs.currentDeskRef.learn()
+    },
     closePreview() {
       this.showModal = false
       //this.getHomeSize()
