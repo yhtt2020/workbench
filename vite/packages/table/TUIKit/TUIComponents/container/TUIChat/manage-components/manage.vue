@@ -1,210 +1,33 @@
 <template>
-  <div>
-    <i class="icon icon-chat-setting" @click="toggleShow"></i>
-    <div class="manage" :class="[isH5 ? 'manage-h5' : '']" v-if="show" ref="dialog">
-      <header class="manage-header">
-        <i class="icon icon-back" v-if="isH5 && !currentTab" @click="toggleShow"></i>
-        <aside class="manage-header-left">
-          <i class="icon icon-back" v-if="currentTab" @click="setTab('')"></i>
-          <main>
-            <h1>{{ $t(`TUIChat.manage.${TabName}`) }}</h1>
-          </main>
-        </aside>
-        <span>
-          <i v-if="!isH5" class="icon icon-close" @click="toggleShow"></i>
-        </span>
-      </header>
-      <main class="main" v-if="!currentTab">
-        <ManageName
-          class="space-top"
-          :isAuth="isAuth"
-          :isH5="isH5"
-          :data="conversation.groupProfile"
-          @update="updateProfile"
-        />
-        <div class="userInfo space-top">
-          <header class="userInfo-header" @click="setTab('member')">
-            <label>{{ $t(`TUIChat.manage.群成员`) }}</label>
-            <p>
-              <span>{{ conversation.groupProfile.memberCount }}{{ $t(`TUIChat.manage.人`) }}</span>
-              <i class="icon icon-right"></i>
-            </p>
-          </header>
-          <ol>
-            <dl v-for="(item, index) in userInfo?.list?.slice(0, showUserNum)" :key="index">
-              <dt @click="handleMemberProfileShow(item)">
-                <img
-                  class="avatar"
-                  :src="item?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                  onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                />
-              </dt>
-              <dd>{{ item?.nick || item?.userID }}</dd>
-            </dl>
-            <dl v-if="isShowAddMember">
-              <dt class="avatar" @click="toggleMask('add')">+</dt>
-            </dl>
-            <dl v-if="conversation.groupProfile.selfInfo.role === 'Owner'">
-              <dt class="avatar" @click="toggleMask('remove')">-</dt>
-            </dl>
-          </ol>
-        </div>
-        <ul class="content space-top" @click="editLableName = ''">
-          <li @click.stop="setTab('notification')">
-            <aside>
-              <label>{{ $t(`TUIChat.manage.群公告`) }}</label>
-              <article>{{ conversation.groupProfile.notification }}</article>
-            </aside>
-            <i class="icon icon-right end"></i>
-          </li>
-          <li v-if="isAdmin && isSetMuteTime" @click.stop="setTab('admin')">
-            <label>{{ $t(`TUIChat.manage.群管理`) }}</label>
-            <i class="icon icon-right"></i>
-          </li>
-          <li>
-            <label>{{ $t(`TUIChat.manage.群ID`) }}</label>
-            <div class="groupID">
-              <span>{{ conversation.groupProfile.groupID }}</span>
-              <i class="icon icon-msg-copy" @click="handleGroupIDCopy" :title="$t('TUIChat.复制')"></i>
-            </div>
-          </li>
-          <li>
-            <label>{{ $t(`TUIChat.manage.群头像`) }}</label>
-            <img
-              class="avatar"
-              :src="
-                conversation?.groupProfile?.avatar || 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'
-              "
-              onerror="this.src='https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'"
-            />
-          </li>
-          <li>
-            <label>{{ $t(`TUIChat.manage.群类型`) }}</label>
-            <span>{{ $t(`TUIChat.manage.${typeName[conversation.groupProfile.type]}`) }}</span>
-          </li>
-          <li>
-            <label>{{ $t(`TUIChat.manage.加群方式`) }}</label>
-            <span>{{ $t(`TUIChat.manage.${typeName[conversation.groupProfile.joinOption]}`) }}</span>
-          </li>
-        </ul>
-        <ul class="footer space-top">
-          <li
-            v-if="conversation.groupProfile.selfInfo.role === 'Owner' && userInfo?.list.length > 1"
-            @click.stop="toggleMask('changeOwner')"
-          >
-            {{ $t(`TUIChat.manage.转让群组`) }}
-          </li>
-          <li v-if="!!isDismissGroupAuth" @click.stop="dismiss(conversation.groupProfile)">
-            {{ $t(`TUIChat.manage.解散群聊`) }}
-          </li>
-          <li v-else @click.stop="quit(conversation.groupProfile)">
-            {{ $t(`TUIChat.manage.退出群组`) }}
-          </li>
-        </ul>
-      </main>
-      <ManageMember
-        v-else-if="currentTab === 'member'"
-        :self="conversation.groupProfile.selfInfo"
-        :list="userInfo.list"
-        :total="~~conversation.groupProfile.memberCount"
-        :isShowDel="conversation.groupProfile.selfInfo.role === 'Owner'"
-        @more="getMember('more')"
-        @del="submit"
-        @handleMemberProfileShow="handleMemberProfileShow"
-      />
-      <MemeberProfile
-        v-else-if="currentTab === 'profile'"
-        :userInfo="currentMember"
-      />
-      <ManageNotification
-        v-else-if="currentTab === 'notification'"
-        :isAuth="isAuth"
-        :data="conversation.groupProfile"
-        @update="updateProfile"
-      />
-      <main class="admin" v-else-if="currentTab === 'admin'">
-        <div class="admin-list" v-if="isAdmin">
-          <label>{{ $t(`TUIChat.manage.群管理员`) }}</label>
-          <ol>
-            <dl v-for="(item, index) in member.admin" :key="index">
-              <dt>
-                <img
-                  class="avatar"
-                  :src="item?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                  onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                />
-              </dt>
-              <dd>{{ item?.nick || item?.userID }}</dd>
-            </dl>
-            <dl>
-              <dt class="avatar" @click="toggleMask('addAdmin')">+</dt>
-            </dl>
-            <dl>
-              <dt class="avatar" v-if="member.admin.length > 0" @click="toggleMask('removeAdmin')">-</dt>
-            </dl>
-          </ol>
-        </div>
-        <div class="admin-content space-top" v-if="isSetMuteTime">
-          <aside>
-            <label>{{ $t(`TUIChat.manage.全员禁言`) }}</label>
-            <p>
-              {{ $t(`TUIChat.manage.全员禁言开启后，只允许群主和管理员发言。`) }}
-            </p>
-          </aside>
-          <Slider :open="conversation.groupProfile.muteAllMembers" @change="setAllMuteTime" />
-        </div>
-        <div class="admin-list last" v-if="isSetMuteTime">
-          <label>{{ $t(`TUIChat.manage.单独禁言人员`) }}</label>
-          <ol>
-            <dl v-for="(item, index) in member.muteMember" :key="index">
-              <dt>
-                <img
-                  class="avatar"
-                  :src="item?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                  onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                />
-              </dt>
-              <dd>{{ item?.nick || item?.userID }}</dd>
-            </dl>
-            <dl>
-              <dt class="avatar" @click="toggleMask('addMute')">+</dt>
-            </dl>
-            <dl>
-              <dt class="avatar" v-if="member.muteMember.length > 0" @click="toggleMask('removeMute')">-</dt>
-            </dl>
-          </ol>
-        </div>
-      </main>
-      <Mask :show="mask" @update:show="(e) => (mask = e)">
-        <Transfer
-          :title="$t(`TUIChat.manage.${transferTitle}`)"
-          :list="transferList"
-          :isSearch="isSearch"
-          :isRadio="isRadio"
-          :selectedList="selectedList"
-          @submit="submit"
-          @cancel="cancel"
-          @search="handleSearchMember"
-          :isH5="isH5"
-        />
-      </Mask>
-      <Dialog
-        :title="$t(`TUIChat.manage.删除成员`)"
-        :show="delDialogShow"
-        :isH5="isH5"
-        :center="true"
-        :isHeaderShow="!isH5"
-        @submit="handleManage(userList, 'remove')"
-        @update:show="(e) => (delDialogShow = e)"
-      >
-        <p v-if="userList.length === 1" class="delDialog-title">
-          {{ $t(`TUIChat.manage.确定从群聊中删除该成员？`) }}
-        </p>
-        <p v-if="userList.length > 1" class="delDialog-title">
-          {{ $t(`TUIChat.manage.确定从群聊中删除所选成员？`) }}
-        </p>
-      </Dialog>
+  <div class="flex flex-col">
+    <!-- <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 12px 16px !important;margin-bottom: 16px !important;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+        <span class="font-14" style="color: var(--primary-text);">群信息</span>
+        <Icon icon="xiangyou"></Icon>
+      </div>
+      <div class="flex items-center">
+        <a-avatar shape="square" :size="32" :src="conversation.groupProfile.avatar"></a-avatar>
+        <span class="pl-3"> {{ conversation.groupProfile.name }}</span>
+      </div>
     </div>
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+        <span class="font-14" style="color: var(--primary-text);">群公告</span>
+        <Icon icon="xiangyou"></Icon>
+      </div>
+      <div>
+        {{ conversation.groupProfile.notification.length === 0 ? '暂无群公告' : conversation.groupProfile.notification }}
+      </div>
+    </div>
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+        <span class="font-14" style="color: var(--primary-text);">群成员</span>
+        <Icon icon="xiangyou"></Icon>
+      </div>
+      <div>
+         
+      </div>
+    </div> -->
   </div>
 </template>
 
@@ -224,17 +47,8 @@ import Vuex from 'vuex';
 import { handleErrorPrompts } from '../../utils';
 import useClipboard from 'vue-clipboard3';
 
+
 const manage = defineComponent({
-  components: {
-    Mask,
-    Transfer,
-    Slider,
-    ManageName,
-    ManageNotification,
-    ManageMember,
-    MemeberProfile,
-    Dialog,
-  },
   props: {
     userInfo: {
       type: Object,
@@ -256,10 +70,42 @@ const manage = defineComponent({
       default: () => false,
     },
   },
-  setup(props: any, ctx: any) {
+
+  components: {
+    Mask,
+    Transfer,
+    Slider,
+    ManageName,
+    ManageNotification,
+    ManageMember,
+    MemeberProfile,
+    Dialog,
+  },
+  
+  setup(props: any, ctx: any){
     const types: any = manage.TUIServer.TUICore.TIM.TYPES;
     const { GroupServer } = manage;
     const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
+
+    const TabName = computed(() => {
+      let name = '';
+      switch (data.currentTab) {
+        case 'notification':
+          name = '群公告';
+          break;
+        case 'member':
+          name = '群成员';
+          break;
+        case 'profile':
+          name = '群成员';
+          break;
+        default:
+          name = '群管理';
+          break;
+      }
+      return name;
+    });
+
     const data: any = reactive({
       conversation: {},
       userInfo: {
@@ -306,25 +152,6 @@ const manage = defineComponent({
     });
 
     const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && (Vuex as any)?.useStore()) || {};
-
-    const TabName = computed(() => {
-      let name = '';
-      switch (data.currentTab) {
-        case 'notification':
-          name = '群公告';
-          break;
-        case 'member':
-          name = '群成员';
-          break;
-        case 'profile':
-          name = '群成员';
-          break;
-        default:
-          name = '群管理';
-          break;
-      }
-      return name;
-    });
 
     watch(
       () => data.userInfo.list,
@@ -478,6 +305,7 @@ const manage = defineComponent({
       (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
     };
 
+    
     const handleAdmin = async (user: any) => {
       const { conversation } = data;
       let role = '';
@@ -741,41 +569,30 @@ const manage = defineComponent({
       setTab('profile');
     };
 
-    return {
-      ...toRefs(data),
-      isDismissGroupAuth,
-      isShowAddMember,
-      isSetMuteTime,
-      isAdmin,
-      isAuth,
-      addMember,
-      deleteMember,
-      changeOwner,
-      quit,
-      dismiss,
-      handleAdmin,
-      setMemberMuteTime,
-      kickedOut,
-      edit,
-      updateProfile,
-      setTab,
-      TabName,
-      getMember,
-      handleSearchMember,
-      submit,
-      cancel,
-      toggleMask,
-      toggleShow,
-      setAllMuteTime,
-      handleManage,
-      showUserNum,
-      dialog,
-      handleGroupIDCopy,
-      handleMemberProfileShow,
-    };
-  },
-});
+    return{
+      ...toRefs(data),isDismissGroupAuth,  isShowAddMember, isSetMuteTime,
+      isAdmin,  isAuth,  addMember,deleteMember, changeOwner,   quit, dismiss,
+      handleAdmin,setMemberMuteTime,kickedOut, edit,updateProfile,
+      setTab, TabName,getMember,handleSearchMember,submit,cancel, toggleMask,
+      toggleShow, setAllMuteTime,handleManage,showUserNum,dialog,
+      handleGroupIDCopy, handleMemberProfileShow,
+    }
+  }
+  
+  
+})
+
 export default manage;
 </script>
 
+
+<style lang="scss" scoped>
+.font-14{
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+</style>
 <style lang="scss" scoped src="./style/index.scss"></style>
+

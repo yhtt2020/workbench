@@ -3,7 +3,20 @@
     <header class="TUIChat-header">
       <i class="icon icon-back" @click="back" v-if="env.isH5"></i>
       <TypingHeader :needTyping="needTyping" :conversation="conversation" :messageList="messageList" ref="typingRef" />
-      <aside class="setting">
+      <div class="flex items-center pointer" v-if="conversation.groupProfile" @click=" groupVisible = true">
+         <Icon icon="gengduo1" style="color: var(--secondary-text);"></Icon>
+      </div>
+
+      <a-drawer placement="right" width="500" title="群管理" v-model:visible="groupVisible">
+        <Manage  :conversation="conversation" :userInfo="userInfo" :isH5="env.isH5" />
+      </a-drawer>
+
+      <!--  title="Basic Drawer"
+    :placement="placement"
+    :closable="false"
+    :open="open"
+    @close="onClose" -->
+      <!-- <aside class="setting">
         <Manage v-if="conversation.groupProfile" :conversation="conversation" :userInfo="userInfo" :isH5="env.isH5" />
         <Replies
           :message="currentMessage"
@@ -14,15 +27,9 @@
           @closeDialog="closeDialog"
           ref="repliesDialog"
         />
-      </aside>
+      </aside> -->
     </header>
     <div class="TUIChat-main">
-      <div class="TUIChat-safe-tips">
-        <span>
-          {{ $t('TUIChat.安全提示') }}
-        </span>
-        <a @click="openLink(Link.complaint)">{{ $t('TUIChat.点此投诉') }}</a>
-      </div>
       <ul class="TUI-message-list" @click="dialogID = ''" ref="messageEle" id="messageEle">
         <p class="message-more" @click="getHistoryMessageList" v-if="!isCompleted">
           {{ $t('TUIChat.查看更多') }}
@@ -89,9 +96,9 @@
     </div>
     <div class="TUIChat-footer" :class="[isMute && 'disabled', env.isH5 && 'TUIChat-H5-footer']">
       <div class="func" id="func">
-        <main class="func-main">
+        <main class="func-main px-2.5 py-3 flex items-center">
           <component
-            v-for="(item, index) in pluginComponentList"
+            v-for="(item, index) in hasPluginComponentList"
             :key="index"
             :isMute="isMute"
             :is="item"
@@ -135,6 +142,9 @@
     <MessageSystem :data="messages" :types="types" @application="handleApplication" />
   </div>
   <slot v-else-if="slotDefault" />
+
+
+
 </template>
 
 <script lang="ts">
@@ -198,6 +208,26 @@ const TUIChat: any = defineComponent({
       default: true,
     },
   },
+
+  computed:{
+    hasPluginComponentList(){   // 这里进行修改的地方,根据设计稿将不同的图标以及交互进行提取
+      const requiredElements = ["Image", "Face", "File", "Words", "Call"]
+      return this.pluginComponentList.filter((item: string) => requiredElements.includes(item));
+    },
+  },
+
+  data(){
+    return{
+      groupVisible:false,
+    }
+  },
+
+  methods:{
+    openGroupManage(){
+     
+    }
+  },
+
   setup(props) {
     const { TUIServer } = TUIChat;
     const GroupServer = TUIServer?.TUICore?.TUIServer?.TUIGroup;
@@ -879,3 +909,12 @@ export default TUIChat;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style scoped>
+:deep(.TUIChat-header h1){
+  color:var(--primary-text) !important;
+}
+
+:deep(.TUIChat-footer){
+  border-top: 1px solid var(--divider) !important;
+}
+</style>

@@ -1,3 +1,9 @@
+<!-- 联系人页面 -->
+<template>
+  <TUIContact></TUIContact>
+</template>
+
+
 <script lang="ts">
 import {defineComponent} from 'vue'
 import TUIContact from "../../TUIKit/TUIComponents/container/TUIContact/index.vue";
@@ -13,10 +19,6 @@ export default defineComponent({
   }
 })
 </script>
-
-<template>
-  <TUIContact></TUIContact>
-</template>
 
 <style scoped lang="scss">
 

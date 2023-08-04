@@ -1,19 +1,38 @@
 <template>
-  <div class="TUI-search" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
-    <header @click="toggleOptionalShow">
-      <i class="plus"></i>
-      <h1 v-if="env.isH5">{{ $t('TUISearch.发起会话') }}</h1>
-      <ul v-show="optionalShow">
-        <li>
-          <i class="icon icon-c2c" v-if="env.isH5"></i>
-          <h1 @click="showOpen('isC2C')">{{ $t('TUISearch.发起单聊') }}</h1>
-        </li>
-        <li>
-          <i class="icon icon-group"></i>
-          <h1 @click="showOpen('isGroup')">{{ $t('TUISearch.发起群聊') }}</h1>
-        </li>
-      </ul>
-    </header>
+  <div class="TUI-search" style="padding: 0 16px !important;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
+    
+    <a-dropdown @click="toggleOptionalShow" placement="topLeft" class="ml-4" :trigger="['click']">
+      <div class="w-11 h-11 rounded-lg pointer flex items-center justify-center" style="background: var(--secondary-bg);">
+        <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
+      </div>
+      <template #overlay>
+        <div class="flex items-center rounded-lg " style="background: var(--modal-bg);padding: 16px !important;">
+          <div class="flex flex-col pointer" @click="showOpen('isGroup')">
+            <div class="flex items-center justify-center">
+              <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
+            </div>
+            <div class="font-12" style="color: var(--secondary-text);">发起群聊</div>
+          </div>
+
+          <div class="flex flex-col pointer" style="padding: 0 20px !important;">
+            <div class="flex items-center justify-center">
+              <Icon icon="team" style="color: var(--secondary-text);"></Icon>
+            </div>
+            <div class="font-12" style="color: var(--secondary-text);">加入群聊</div>
+          </div>
+    
+          <div class="flex flex-col pointer">
+            <div class="flex items-center justify-center">
+              <Icon icon="tianjiachengyuan" style="color: var(--secondary-text);"></Icon>
+            </div>
+            <div class="font-12" style="color: var(--secondary-text);">添加好友</div>
+          </div>
+        </div>
+
+      </template>
+    </a-dropdown>
+
+
     <Dialog
       :show="open"
       :isH5="env.isH5"
@@ -240,3 +259,10 @@ export default TUISearch;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style scoped>
+.font-12{
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  font-weight: 400;
+}
+</style>

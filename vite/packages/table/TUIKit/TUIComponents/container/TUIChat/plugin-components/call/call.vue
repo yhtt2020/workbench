@@ -1,12 +1,19 @@
 <template>
-  <div class="call" id="call" v-if="handleShowCallIcon(conversation, isH5)">
-    <div class="call-icon" @click="toggleShowSelectDialog">
+  <div class="call pl-2" id="call" v-if="handleShowCallIcon(conversation, isH5)" >
+     <!-- 重新将UI结构以及样式进行修改 -->
+    <a-tooltip title="通话" @click="toggleShowSelectDialog">
+      <Icon icon="phonecall" style="height: 24px;width: 24px;color: var(--secondary-text) !important;"></Icon>
+      <Icon icon="downarrow" style="height: 15px;width: 15px;color: var(--secondary-text) !important;"></Icon>
+    </a-tooltip>
+
+    <!-- <div class="call-icon" >
       <i class="icon icon-call" title="通话"></i>
       <i class="icon icon-down-arrow" title="通话"></i>
-    </div>
+    </div> -->
+   
     <div class="call-main" :class="[isH5 && 'call-main-h5']" v-show="showSelectDialog">
       <div class="call-main-content" ref="dialog">
-        <div class="call-main-voice" @click="onClickCall(1)">
+        <div class="call-main-voice" @click="onClickCall(1)" style="color: ;">
           <i class="icon icon-call-voice" v-if="isH5"></i>
           {{ $t('TUIChat.语音通话') }}
         </div>
@@ -19,6 +26,7 @@
         </footer>
       </div>
     </div>
+    
     <Dialog
       :show="showGroupUserDialog"
       :isH5="isH5"
@@ -38,6 +46,7 @@
         @cancel="cancle"
       />
     </Dialog>
+
     <Dialog
       :show="showUnsupportDialog"
       :isH5="isH5"
@@ -303,3 +312,10 @@ export default Call;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style scoped>
+.call-main{
+  background: var(--primary-bg) !important;
+  top: 28px !important;
+  left: calc(-50% + 12px) !important;
+}
+</style>
