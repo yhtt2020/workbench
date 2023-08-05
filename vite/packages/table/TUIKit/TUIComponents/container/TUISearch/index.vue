@@ -1,13 +1,13 @@
 <template>
   <div class="TUI-search" style="padding: 0 16px !important;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
     <a-dropdown @click="toggleOptionalShow" placement="topLeft" class="ml-4" :trigger="['click']">
-      <div class="w-11 h-11 rounded-lg pointer flex items-center justify-center" style="background: var(--secondary-bg);">
+      <div class="w-11 active-button h-11 rounded-lg pointer flex items-center justify-center" style="background: var(--secondary-bg);">
         <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
       </div>
       <template #overlay>
         <div class="flex items-center rounded-lg " style="background: var(--modal-bg);padding: 16px !important;">
-          <div v-for="(item,index) in addList" style="margin-right: 20px;" class="flex add-item flex-col items-center justify-center pointer" @click="showOpen(item.type,index)">
-            <div :class="{'active-bg':addIndex === index}" class="flex items-center rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);">
+          <div v-for="(item,index) in addList" style="margin-right: 20px;" class="flex add-item  flex-col items-center justify-center pointer" @click="showOpen(item.type,index)">
+            <div :class="{'active-bg':addIndex === index}" class="flex items-center  rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);">
               <Icon :icon="item.icon" style="color: var(--secondary-text);"></Icon>
             </div>
             <div class="font-12" style="color: var(--secondary-text);">{{ item.title }}</div>
@@ -19,7 +19,7 @@
 
   <teleport to='body'>
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
-      <Transfer :isSearch="needSearch" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" />
+      <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" />
       <!-- v-if="step === 1" -->
       <!-- <CreateGroup v-if="addIndex === 0" @submit="create" @cancel="toggleOpen" :isH5="env.isH5" /> -->
     </Modal>
@@ -240,9 +240,14 @@ const TUISearch = defineComponent({
       }
     }
 
+    const close = () => { // 关闭弹窗回调函数
+      data.open = false
+    }
+
+
     return {
       ...toRefs(data), toggleOpen, handleSearch, submit, create,
-      showOpen,toggleOptionalShow,dialog,addList,addIndex,
+      showOpen,toggleOptionalShow,dialog,addList,addIndex,close
     }
   },
 })
@@ -267,6 +272,16 @@ export default TUISearch
   background: var(--active-secondary-bg) !important;
   &>svg{
     color: var(--active-text) !important;
+  }
+}
+
+.active-button{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
   }
 }
 </style>
