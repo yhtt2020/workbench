@@ -65,7 +65,7 @@ export const taskStore = defineStore('task', {
                 nanoid: nanoid(6),
                 createTime: Date.now(),
                 description: '',
-                descriptionType: 'text'
+                descriptionType: {title: '纯文字',name: 'text'}
             }))
             this.tasks.push(newTask)
         },

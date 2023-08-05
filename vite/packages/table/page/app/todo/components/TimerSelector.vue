@@ -1,8 +1,9 @@
 <template>
-  <calendar-outlined
+  <!-- <calendar-outlined
     @click="selectTime"
     :style="{ color: this.modelValue ? '#1890ff' : '#BBBBBB' }"
-  />
+  /> -->
+  <Icon class="pointer" @click="selectTime" :style="{ color: this.modelValue ? '#1890ff' : 'var(--disable-text)' }" icon="calendar-check" style="font-size:20px"></Icon>
   <a-modal
     @ok="seTime"
     @cancel="clearDeadTime"

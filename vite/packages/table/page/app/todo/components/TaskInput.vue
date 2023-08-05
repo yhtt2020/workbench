@@ -1,6 +1,6 @@
 <template>
   <a-input
-    class="add-task-input"
+    class="input"
     :size="runtime.windowWidth >= 600 ? 'normal' : 'small'"
     v-model:value="newTask.title"
     @pressEnter="addNewTask"
@@ -81,5 +81,17 @@ export default {
   input {
     font-size: 13px;
   }
+}
+</style>
+<style lang="scss" scoped>
+.input{
+  width:296px;
+  height: 48px;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  color: var(--primary-text);
+  font-size: 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  margin: 8px 0;
 }
 </style>

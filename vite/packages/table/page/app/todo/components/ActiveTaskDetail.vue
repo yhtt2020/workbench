@@ -1,17 +1,14 @@
 <template>
-  <div v-if="!activeTask.createTime" style="padding: 10px;background:none; height: calc(100vh)">
+  <div v-if="!activeTask.createTime" style="height: 100%;">
     <span
-      class="title-action hover-action"
+      class="title-action hover-action flex items-center xt-text pt-3 ml-3"
       @click="toggleMenu"
-      style="cursor: pointer"
+      style="cursor: pointer;"
     >
-      <span
-        ><menu-fold-outlined
-          v-if="config.menuState === MenuState.UN_FOLD" /><menu-unfold-outlined
-          v-else
-      /></span>
-      <span v-if="config.menuState === MenuState.UN_FOLD">&nbsp;折叠</span
-      ><span v-else>&nbsp;展开</span>
+      <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(--secondary-text);font-size:20px"></Icon>
+      <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
+      <span class="ml-2" v-if="config.menuState === MenuState.UN_FOLD">折叠</span
+      ><span class="ml-2" v-else>展开</span>
     </span>
     <a-empty
       style="margin-top: calc(100vh / 2 - 90px)"
@@ -22,8 +19,7 @@
   <div
     v-else
     style="
-      height: calc(100vh);
-      padding: 10px;
+      height: 100%;
       display: flex;
       flex-direction: column;
       word-break: break-all;
@@ -32,115 +28,111 @@
     "
     class="right-content"
   >
-    <div style="position: relative; flex: 1">
+    <div style="height: 100%;" class="flex flex-col">
       <div class="top-bar">
-        <span class="title-action" style="cursor: pointer"
-          ><span @click="toggleMenu"
-            ><menu-fold-outlined
-              v-if="
-                config.menuState === MenuState.UN_FOLD
-              " /><menu-unfold-outlined v-else /></span
-        ></span>
-        &nbsp;
-        <a-checkbox v-model:checked="activeTask.completed"></a-checkbox>
-
-        &nbsp;
-        <span @click="selectTime">
-          <template v-if="activeTask.deadTime"
-            >{{ time }} <TimerSelector v-model="activeTask.deadTime"
-          /></template>
-          <template v-else>
-            设置时间 <TimerSelector v-model="activeTask.deadTime" /> </template
-        ></span>
+        <span class="flex">
+          <span class="title-action" style="cursor: pointer"
+            ><span @click="toggleMenu">
+              <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(--secondary-text);font-size:20px"></Icon>
+              <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
+              </span
+          ></span>
+          <span class="mx-4">
+            <a-checkbox v-model:checked="activeTask.completed"></a-checkbox>
+          </span>
+          <span class="xt-text flex" @click="selectTime">
+            <span class="flex items-center" v-if="activeTask.deadTime">
+              <span class="mr-2">  {{ time }}</span>
+              <TimerSelector v-model="activeTask.deadTime"
+            /></span>
+            <span class="flex items-center" v-else>
+              <span class="mr-2">设置时间</span>
+              <TimerSelector v-model="activeTask.deadTime" /> 
+            </span>
+          </span>
+        </span>
         <span class="extra-actions">
-          <span @click="toggleTop" v-if="activeTask.isTop" class="action"
-            ><to-top-outlined style="transform: rotate(180deg)" />
-            取消置顶</span
-          >
-          <span @click="toggleTop" v-else class="action"
-            ><to-top-outlined /> 置顶</span
-          >
-          &nbsp;
-          <span class="action"><more-outlined /></span>
+          <span class="btn-content" @click="toggleTop" v-if="activeTask.isTop">
+            <to-top-outlined style="transform: rotate(180deg)" />
+            <span>取消置顶</span>
+          </span>
+          <span class="btn-content" v-else @click="toggleTop">
+            <to-top-outlined /> 置顶
+          </span>
+          <span class="btn-content">
+            <Icon icon="gengduo1" style="color:var(--secondary-text);font-size:20px"></Icon>
+          </span>
         </span>
       </div>
-
-      <a-divider style="margin-top: 10px; margin-bottom: 10px"></a-divider>
-
-      <div style="position: relative">
-        <a-row type="flex">
-          <a-col> </a-col>
-          <a-col>
-            <a-input
-              style="font-weight: bold; font-size: 14px"
-              size="small"
+      <div class="detail-box">
+        <div class="flex justify-between">
+          <a-row>
+            <a-col class="flex items-center">
+              <a-input
+                style="font-weight: 500;font-size: 16px;color:var(--primary-text)"
+                size="small"
+                :bordered="false"
+                v-model:value="activeTask.title"
+              ></a-input>
+            </a-col>
+          </a-row>
+          <div class="convert-editor btn-style">
+            <!--             :hidden="!showFormatConvert"-->
+            <a-button
+              type="primary"
+              shape="circle"
               :bordered="false"
-              v-model:value="activeTask.title"
-            ></a-input>
-          </a-col>
-        </a-row>
-        <div
-          style="position: absolute; right: 0px; top: 0px"
-          class="convert-editor"
-        >
-          <!--             :hidden="!showFormatConvert"-->
-
-          <a-button
-            type="primary"
-            shape="circle"
-            :bordered="false"
-            v-if="!editing"
-            @click="editing = !editing"
-            size="small"
-            ><form-outlined
-          /></a-button>
-          <a-button
-            type="primary"
-            v-if="editing"
-            @click="editing = !editing"
-            size="small"
-            ><vertical-left-outlined /> 退出</a-button
-          >
-          &nbsp;
-
-          <template v-if="editing">
-            <a-radio-group
-              buttonStyle="outline"
-              size="small"
-              v-model:value="activeTask.descriptionType"
-            >
-              <a-radio-button
-                style="background: none"
-                title="纯文字模式"
-                value="text"
-              >
-                <align-left-outlined />
-              </a-radio-button>
-              <a-radio-button
-                style="background: none"
-                title="图文编辑器"
-                value="rich"
-              >
-                <pic-left-outlined></pic-left-outlined>
-              </a-radio-button>
-              <!--            <a-radio-button style="background: none" title="Markdown编辑器" value="markdown"><span class="icon-markdown">MD</span></a-radio-button>-->
-            </a-radio-group>
-          </template>
+              v-if="!editing"
+              @click="editing = !editing"
+              ><form-outlined/>
+            </a-button>
+            <div class="flex items-center">
+              <span class="btn-content" style="background:var(--active-bg)"  v-if="editing"
+                @click="editing = !editing">
+                <vertical-left-outlined /> 退出
+              </span>
+              <template v-if="editing">
+                <div style="width:150px">
+                  <HorizontalPanel :navList="navList" v-model:selectType="selectType" :height="44" ></HorizontalPanel>
+                </div>
+                <!-- <a-radio-group
+                  buttonStyle="outline"
+                  v-model:value="activeTask.descriptionType"
+                >
+                  <a-radio-button
+                    style="background: none"
+                    title="纯文字模式"
+                    value="text"
+                  >
+                    <align-left-outlined />
+                  </a-radio-button>
+                  <a-radio-button
+                    style="background: none"
+                    title="图文编辑器"
+                    value="rich"
+                  >
+                    <pic-left-outlined></pic-left-outlined>
+                  </a-radio-button>
+                             <a-radio-button style="background: none" title="Markdown编辑器" value="markdown"><span class="icon-markdown">MD</span></a-radio-button>
+                </a-radio-group> -->
+              </template>
+            </div>
+          </div>
         </div>
         <VueCustomScrollbars
           :settings="settings"
-          style="position: relative; height: calc(100vh - 120px)"
+          style="position: relative; height: 95%;"
         >
           <div
-            style="padding: 5px; word-break: break-all"
+            style="padding: 5px; word-break: break-all;color:var(--primary-text)"
             v-html="activeTask.description || '点击【编辑图标】写描述'"
             v-if="!editing"
           ></div>
-          <div v-else style="position: relative; padding: 10px">
-            <template v-if="activeTask.descriptionType === 'text'">
+          <div v-else style="position: relative; padding: 10px;height: 100%;">
+            <template v-if="activeTask.descriptionType.name === 'text'">
               <a-textarea
                 style="
-                  height: calc(100vh - 129px);
+                  height: 100%;
                   min-height: 50px;
                   background: #2a2a2a;
                 "
@@ -153,7 +145,7 @@
               >
               </a-textarea>
             </template>
-            <div v-if="activeTask.descriptionType === 'rich'">
+            <div v-if="activeTask.descriptionType.name === 'rich'">
               <Toolbar
                 style="border-bottom: 1px solid #ccc"
                 :editor="editorRef"
@@ -227,6 +219,7 @@ import { taskStore } from "../stores/task";
 import { configStore, listStore } from "../store";
 import { MenuState } from "../consts";
 import VueCustomScrollbars from "./VueScrollbar.vue";
+import HorizontalPanel from "../../../../components/HorizontalPanel.vue";
 import {
   AlertOutlined,
   AlignLeftOutlined,
@@ -262,12 +255,32 @@ export default {
       editing: false,
       MenuState,
       showFormatConvert: false,
+      navList: [
+        {title: '纯文字',name: 'text'},
+        {title: '图文',name: 'rich'}
+      ],
+      selectType: {title: '纯文字',name: 'text'},
     };
   },
 
   mounted() {
     // 编辑器实例，必须用 shallowRef
     // 内容 HTML
+  },
+  watch: {
+    selectType: {
+      deep: true,
+      handler(val){
+        console.log(val)
+        this.activeTask.descriptionType = val
+      }
+    },
+    'activeTask.descriptionType': {
+      deep: true,
+      handler(val){
+        this.selectType = val
+      }
+    }
   },
   created() {},
   components: {
@@ -292,6 +305,7 @@ export default {
     ExportOutlined,
     FormOutlined,
     VerticalLeftOutlined,
+    HorizontalPanel
   },
   beforeUnmount() {},
   computed: {
@@ -463,17 +477,48 @@ export default {
 }
 
 .extra-actions {
-  float: right;
+  display: flex;
+  align-items: center;
 }
 
 .top-bar {
-  padding-bottom: 10px;
+  height: 52px;
+  line-height: 52px;
+  padding-left: 12px;
+  border-bottom: 1px solid var(--divider);
+  display: flex;
+  justify-content: space-between;
 }
 
 .action {
   cursor: pointer;
 }
 .bottom-item {
+}
+.btn-content{
+  background: var(--mask-bg);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  padding: 0 10px;
+  border-radius: 8px;
+  margin-right: 12px;
+  min-width: 40px;
+  color: var(--primary-text);
+}
+.btn-content:hover{
+  opacity:0.8;
+}
+.detail-box{
+  margin: 0;
+  padding: 16px;
+  flex:1;
+  overflow: hidden;
+  .btn-style{
+    // background:red;
+  }
 }
 </style>
 <style></style>

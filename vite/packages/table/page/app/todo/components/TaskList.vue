@@ -62,11 +62,11 @@ export default {
   >
     <a-empty description=""></a-empty>
   </div>
-  <ul class="task-list">
+  <div class="task-list">
     <a-dropdown :trigger="['contextmenu']" v-for="task in data">
-      <li :class="{ active: task === activeTask }" @click="setActiveTask(task)">
-        <div style="display: flex">
-          <div style="min-width: 25px">
+      <div class="task-item" :class="{ active: task === activeTask }" @click="setActiveTask(task)">
+        <div class="h-12 flex items-center px-3">
+          <div style="min-width: 32px">
             <a-checkbox v-model:checked="task.completed"></a-checkbox>
           </div>
           <div
@@ -86,7 +86,7 @@ export default {
                 white-space: nowrap;
               "
             >
-              <span style="margin-bottom: 0; line-height: 28px"
+              <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);" 
                 ><to-top-outlined v-if="task.isTop" /> {{ task.title }}</span
               >
             </div>
@@ -105,14 +105,14 @@ export default {
             >
           </div>
         </div>
-      </li>
+      </div>
       <template #overlay>
-        <a-menu>
+        <a-menu theme="dark" class="menu-btn">
           <a-menu-item @click="removeTask(task.nanoid)">删除</a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
-  </ul>
+  </div>
 </template>
 <style>
 .ant-typography del {
@@ -123,25 +123,34 @@ export default {
 .dead-time {
   float: right;
   font-size: 12px;
+  color: var(--primary-text);
 }
 
 .task-list {
-  list-style: none;
-  padding-left: 0;
-
-  li {
+  .task-item {
     &:hover,
     &.active {
-      border-radius: 4px;
+      background:var(--active-secondary-bg);
+      border-radius: 10px;
     }
-
-    line-height: 28px;
-
-    padding: 3px 10px;
     .completed {
       text-decoration: line-through;
       color: #ccc;
     }
   }
+}
+.menu-btn{
+  width: 120px;
+  height:60px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+}
+.menu-btn:hover{
+  opacity: 0.8;
 }
 </style>

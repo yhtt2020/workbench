@@ -119,10 +119,10 @@ export default {
       <a-layout theme="light" style="height:100%;background:none">
         <a-layout-sider
           v-show="config.menuState === MenuState.UN_FOLD"
-          style="background:none;border-right: 1px solid var(--divider)"
+          style="background:none;border-right: 1px solid var(--divider);padding:12px"
           theme="light"
         > 
-          <div class="flex items-center mx-3 pointer px-3" style="height:48px;">
+          <div v-if="false" class="flex items-center pointer ml-3 mb-3.5">
             <Icon icon="xiangzuo" style="color:var(--secondary-text);font-size:20px"></Icon>
             <span class="xt-text-2 ml-3" style="font-size: 14px;">返回</span>
           </div>
@@ -146,8 +146,8 @@ export default {
               @click="showAddList()"
               style="float: right;"
             >
-              <plus-outlined
-            /></span>
+            <Icon icon="tianjia2" class="pointer" style="color:var(--secondary-text);font-size:20px"></Icon>
+            </span>
           </div>
           <div>
             <a-empty v-if="displayLists.length === 0" :image="simpleImage" />
@@ -160,25 +160,28 @@ export default {
           </div>
         </a-layout-sider>
 
-        <div class="main-content" style="background:none" v-show="config.menuState === MenuState.UN_FOLD">
+        <div class="box-content" style="background:none" v-show="config.menuState === MenuState.UN_FOLD">
           <div class="middle-title">
             <span v-if="Object.keys(this.activeList).length === 0">
-            全部待办
-          </span>
-          <span v-else>
-            {{ activeList.title }}
-          </span>
-          <a-dropdown :trigger="['click']"
-            ><span
+              全部待办
+            </span>
+            <span v-else>
+              {{ activeList.title }}
+            </span>
+          <a-dropdown :trigger="['click']">
+            <span
               class="hover-none"
               style="
                 float: right;
-                font-size: 18px;
                 cursor: pointer;
-                color: #dfdfdf;
+                color:var(--secondary-text);
+                position: relative;
+                top: 3px;
               "
-              ><ellipsis-outlined
-            /></span>
+              >
+              <Icon icon="gengduo1" style="color:var(--secondary-text);font-size:20px"></Icon>
+            </span>
+            
             <template #overlay>
               <a-menu>
                 <a-menu-item
@@ -211,13 +214,8 @@ export default {
                   margin-top: -5px;
                 "
               >
-                <swap-left-outlined
-                  style="
-                    transform: rotate(270deg);
-                    font-size: 12px;
-                    margin-right: -3px;
-                  " /><clock-circle-outlined style="font-size: 12px"
-              /></span>
+                <Icon icon="filter" style="color:var(--secondary-text);font-size:20px"></Icon>
+              </span>
             </span>
             <template #overlay>
               <a-menu>
@@ -246,7 +244,7 @@ export default {
             </template>
           </a-dropdown>
         </div>
-        <div style="margin-top: 5px; margin-bottom: 5px">
+        <div>
           <TaskInput class="select-input"></TaskInput>
         </div>
         <VueCustomScrollbars
@@ -256,11 +254,7 @@ export default {
           <TaskList :data="displayList"></TaskList>
         </VueCustomScrollbars>
       </div>
-      <div
-        theme="light"
-        style="position: relative;background:none; flex: auto !important; width: 0"
-        class="right-content"
-      >
+      <div style="background:none;width:100%;height: 100%">
         <ActiveTaskDetail @addList="showAddList"></ActiveTaskDetail>
       </div>
       <div></div>
@@ -276,11 +270,10 @@ body {
 </style>
 <style lang="scss">
 .nav-items {
-  margin: 0 12px;
   color: var(--primary-text);
   .item {
-    margin: 0;
     .nav-wrapper {
+      cursor: pointer;
       height: 48px;
       padding: 0 12px;
       border-radius: 10px;
@@ -325,14 +318,18 @@ body {
 // }
   .small-title {
     height: 48px;
-    padding: 0 24px;
+    padding: 0 12px;
     border-radius: 10px;
     line-height: 48px;
     color: var(--secondary-text);
   }
-
+.box-content{
+  padding: 12px;
+  width: 320px;
+  border-right: 1px solid var(--divider);
+}
 .middle-title {
-  font-size: 13px;
+  color: var(--primary-text);
 }
 .todo-box{
   height: 100%;
