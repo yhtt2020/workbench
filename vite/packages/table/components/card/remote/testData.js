@@ -1,15 +1,16 @@
 export const dataList = [
   {
+    nanoid: 'edrg',
     "name": "remote",
     "cname": "俄罗斯方块小游戏",
     "detail": "一个可以在桌面直接使用的俄罗斯方块小游戏",
-    url: 'https://www.doyo.cn/zhuanti/elsfkyx/',
-    sizes: ['2x2'],
+    url: 'https://chvin.github.io/react-tetris/',
+    sizes: ['2x4'],
     option: [
       {
-        img: 'https://simg.doyo.cn/imgfile/bgame/202212/07094520g5iy.jpg',
+        img: 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/zyRq-433l-GB4b-N-x8',
         name: 'Remote',
-        size: '2x2',
+        size: '2x4',
         zoom: '11'
       },
     ],
@@ -19,19 +20,17 @@ export const dataList = [
     "nickname": 'Victor Ruiz',
   },
   {
+    nanoid: 'qqsd',
     "name": "remote",
-    "cname": "网易云",
-    "detail": "https://music.163.com/",
-    "url": "https://music.163.com/",
-    "sizes": [
-      "社区分享",
-      "自定义大小"
-    ],
+    "cname": "键盘减压小游戏",
+    "detail": "地址：http://magickeyboard.io/",
+    "url": "http://magickeyboard.io/",
+    "sizes": ['4x4'],
     "option": [
       {
-        img: 'https://img1.baidu.com/it/u=1705857616,1505257240&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500',
+        img: 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/_uA--L0N8-0KYe-ZCKm',
         "name": "Remote",
-        "size": "自定义大小",
+        "size": '4x4',
         "zoom": "11"
       }
     ],
@@ -41,14 +40,15 @@ export const dataList = [
     "nickname": 'Russell Morgan',
   }, 
   {
+    nanoid: '6hgd',
     "name": "remote",
-    "cname": "动态壁纸-动漫人物",
-    "detail": "地址：https://www.bilibili.com/read/cv9984775/",
-    "url": "地址：https://www.bilibili.com/read/cv9984775/",
+    "cname": "鼠标水纹小游戏",
+    "detail": "地址：https://sciecode.com/soothe/",
+    "url": "https://sciecode.com/soothe/",
     "sizes": ['2x4'],
     "option": [
       {
-        img: '//i0.hdslb.com/bfs/article/ab4648be10143e5a6c5c37766f3c392d1c44e2c1.jpg@1256w_708h_!web-article-pic.avif',
+        img: 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/-TmB-Ds3P-3qR6-Tqu5',
         name: 'Remote',
         size: '2x4',
         zoom: '11'
@@ -60,6 +60,7 @@ export const dataList = [
     "nickname": 'Edith Harvey',
   }, 
   {
+    nanoid: 'mjyi',
     "name": "remote",
     "cname": "Ant Design Vue",
     "detail": "地址：https://www.antdv.com/components/overview-cn",
@@ -83,4 +84,10 @@ export const shareList = []
 
 export const setList = function(val){
   shareList.push(val)
+}
+
+export const delList = function(id){
+  shareList.map((item,index) => {
+    if(item.nanoid === id)shareList.splice(index,1)
+  })
 }

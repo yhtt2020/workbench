@@ -1,4 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+
+import { defineAsyncComponent } from "vue";
+
 let routes = [
   {
     path: "/",
@@ -10,17 +13,15 @@ let routes = [
 const components = import.meta.glob(
   "/packages/toolbox/views/tools/*/index.vue"
 );
-
-for (const path in components) {
-  const name = path.match(/\/views\/tools\/(\w+)\/index\.vue/)?.[1];
-
+Object.entries(components).forEach((item) => {
+  const name = item[0].match(/\/tools\/(\w+)\/index\.vue/)?.[1];
   const route = {
     path: "/" + name,
     name: name,
-    component: () => import(path),
+    component: defineAsyncComponent(item[1]),
   };
   routes.push(route);
-}
+});
 
 const router = createRouter({
   history: createWebHashHistory(),

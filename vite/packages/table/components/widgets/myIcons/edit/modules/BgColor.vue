@@ -5,15 +5,13 @@
       <a-switch v-model:checked="edit.isBackground"></a-switch>
     </template>
   </Title>
-  <Color v-if="edit.isBackground" v-model:color="edit.backgroundColor"></Color>
+  <XtColor v-if="edit.isBackground" v-model:color="edit.backgroundColor"></XtColor>
 </template>
 
 <script>
-import Color from "../../../../card/components/color/index.vue";
 import editMixins from "../hooks/mixins";
 export default {
   mixins: [editMixins],
-  components: { Color },
 };
 </script>
 
