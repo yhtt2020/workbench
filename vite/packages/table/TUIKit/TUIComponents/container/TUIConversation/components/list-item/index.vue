@@ -1,4 +1,5 @@
 <template>
+  <!-- 会话列表 -->
   <li
     ref="content"
     class="TUI-conversation-content"
@@ -9,6 +10,7 @@
     ]"
     :id="conversation.conversationID"
   >
+    <div class="badge" v-if="conversation.isPinned"></div>
     <div
       class="TUI-conversation-item"
       @click.prevent.stop="handleListItem(conversation)"
@@ -84,6 +86,7 @@
     </div>
   </li>
 </template>
+
 <script lang="ts">
 import { onClickOutside, useElementBounding } from '@vueuse/core';
 import { defineComponent, nextTick, reactive, ref, toRefs, watch, watchEffect } from 'vue';
@@ -211,4 +214,29 @@ const ListItem: any = defineComponent({
 });
 export default ListItem;
 </script>
+
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style lang="scss" scoped>
+.TUI-conversation .pinned{
+  background: none !important;
+}
+
+.badge::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid var(--active-bg);
+}
+/*
+
+
+   {
+    
+  }
+**/
+</style>
+
