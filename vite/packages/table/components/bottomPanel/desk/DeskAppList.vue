@@ -30,13 +30,17 @@
 import { ref, getCurrentInstance, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
+import { navStore } from "../../../store/nav";
+import _ from "lodash-es";
 
 import DeskAppRight from "./DeskAppRight.vue";
 import DeskAppSearch from "./DeskAppSearch.vue";
 
 const card = cardStore();
+const nav = navStore();
 
 const { desks } = storeToRefs(card);
+const { copyFootNav,sideNavigationList,rightNavigationList } = storeToRefs(nav);
 
 const deskAppVisible = ref(false);
 const deskItemList = ref({
@@ -46,6 +50,24 @@ const deskItemList = ref({
   type:'desk',
 });
 
+const { proxy } = getCurrentInstance();
+
+// 获取文件加和非文件夹数据
+const getFolder = (folderVisible) =>{
+  if(folderVisible){
+    const footList = copyFootNav.value.filter((item) => item.type === "folder");
+    const sideList = sideNavigationList.value.filter((item) => item.type === "folder");
+    const rightList = rightNavigationList.value.filter((item) => item.type === "folder");
+    return [...footList, ...sideList, ...rightList];
+  }
+  else {
+    const footList = copyFootNav.value.filter((item) => item.type !== "folder");
+    const sideList = sideNavigationList.value.filter((item) => item.type !== "folder");
+    const rightList = rightNavigationList.value.filter((item) => item.type !== "folder");
+    return [...footList, ...sideList, ...rightList];
+  }
+};
+
 // 点击切换事件
 const deskSelect = (type) => {
   deskItemList.value.type = type;
@@ -54,10 +76,23 @@ const deskSelect = (type) => {
       deskItemList.value.desk = desks.value;
       break;
     case "nav":
-      console.log("导航");
+      deskItemList.value.nav = getFolder(false);
       break;
     case "folder":
-      console.log("文件夹");
+      const folderList = getFolder(true);
+      const getDeskFolder = []
+      for(const item of desks.value){
+        for(const children of item.cards){
+          if(children.name === "folder"){
+            const index = _.findIndex(getDeskFolder,function(item){ return String(item.id) === String(children.id)});
+            if(index === -1){
+              getDeskFolder.push(children);
+            }
+          }
+        }
+      }
+
+      console.log("文件夹",folderList,getDeskFolder);
       break;
   }
 };
@@ -73,14 +108,14 @@ const deskList = ref([
   },
   {
     newIcon: "fluent:tablet-16-regular",
-    name: "导航栏",
+    name: "导航",
     callBack: () => {
       deskSelect("nav");
     },
   },
   {
     newIcon: "fluent:app-folder-16-regular",
-    name: "文件夹",
+    name: "分组",
     callBack: () => {
       deskSelect("folder");
     },

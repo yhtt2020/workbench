@@ -44,6 +44,9 @@ export const communityNavStore = defineStore("communityNav", {
       },
       index: null,
     },
+    currentDesk:{
+      id: null,
+    },
   }),
 
   actions: {
@@ -79,6 +82,7 @@ export const communityNavStore = defineStore("communityNav", {
           "settingType",
           "switchColor",
           "currentCommunity",
+          "currentDesk",
         ],
         storage: localStorage,
       },
