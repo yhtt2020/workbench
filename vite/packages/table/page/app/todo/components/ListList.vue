@@ -77,7 +77,6 @@ export default {
 <style scoped lang="scss">
 .nav-items {
   font-size: 12px;
-
   .nav-wrapper {
     padding-bottom: 2px;
     padding-top: 2px;
@@ -92,7 +91,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--secondary-bg);
+  background: var(--secondary-bg) !important;
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   font-size: 16px;

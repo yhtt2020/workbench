@@ -11,7 +11,7 @@
       ><span class="ml-2" v-else>展开</span>
     </span>
     <a-empty
-      style="margin-top: calc(100vh / 2 - 90px)"
+      style="margin-top: calc(100vh / 2 - 130px)"
       description="点击代办查看详情"
     >
     </a-empty>
@@ -122,7 +122,7 @@
         </div>
         <VueCustomScrollbars
           :settings="settings"
-          style="position: relative; height: 95%;"
+          style="position: relative;height: 95%;"
         >
           <div
             style="padding: 5px; word-break: break-all;color:var(--primary-text)"

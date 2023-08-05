@@ -81,7 +81,8 @@ export default {
       addNewListVisible: false,
       newList: {},
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
-      promptVisible: false
+      promptVisible: false,
+      backBtn: false
     };
   },
   async mounted() {
@@ -121,13 +122,13 @@ export default {
 <template>
   <a-config-provider :locale="zhCN" :getPopupContainer="getPopupContainer">
     <div class="todo-box">
-      <a-layout theme="light" style="height:100%;background:none">
+      <a-layout theme="light" style="height:100%;background:none;">
         <a-layout-sider
           v-show="config.menuState === MenuState.UN_FOLD"
-          style="background:none;border-right: 1px solid var(--divider);padding:12px"
+          style="height:100%;background:none;border-right: 1px solid var(--divider);padding:12px;"
           theme="light"
         > 
-          <div v-if="false" class="flex items-center pointer ml-3 mb-3.5">
+          <div v-if="backBtn" class="flex items-center pointer ml-3 mb-3.5">
             <Icon icon="xiangzuo" style="color:var(--secondary-text);font-size:20px"></Icon>
             <span class="xt-text-2 ml-3" style="font-size: 14px;">返回</span>
           </div>
@@ -139,11 +140,11 @@ export default {
             centered
             @ok="addNewList()"
           >
-            <a-input
-              @pressEnter="addNewList()"
-              placeholder="清单名称"
-              v-model:value="newList.title"
-            />
+          <a-input
+            @pressEnter="addNewList()"
+            placeholder="清单名称"
+            v-model:value="newList.title"
+          />
           </a-modal>
           <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
             <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:400px;height:207px;border-radius:16px">
@@ -178,11 +179,11 @@ export default {
             <Icon icon="tianjia2" class="pointer" style="color:var(--secondary-text);font-size:20px"></Icon>
             </span>
           </div>
-          <div>
+          <div :style="backBtn ? 'height:calc(100% - 232px)' :  'height:calc(100% - 194px)'">
             <a-empty v-if="displayLists.length === 0" :image="simpleImage" />
             <VueCustomScrollbars
               :settings="settings"
-              style="position: relative; height: calc(100vh - 137px)"
+              style="height:100%;"
             >
               <ListList :data="displayLists"></ListList>
             </VueCustomScrollbars>
@@ -278,7 +279,7 @@ export default {
         </div>
         <VueCustomScrollbars
           :settings="settings"
-          style="position: relative; height: calc(100vh - 67px)"
+          style="position: relative; height: calc(100% - 96px);"
         >
           <TaskList :data="displayList"></TaskList>
         </VueCustomScrollbars>
@@ -365,7 +366,7 @@ body {
   width: 100%;
   background: var(--primary-bg);
   border-radius: 12px;
-  // overflow: auto;
+  overflow: hidden;
 }
 .head-nav{
   width: 100%;

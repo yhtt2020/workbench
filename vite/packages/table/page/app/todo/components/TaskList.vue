@@ -58,7 +58,7 @@ export default {
 <template>
   <div
     v-if="data.length === 0"
-    style="margin-left: -20px; margin-top: calc((100vh - 69px) / 2 - 50px)"
+    style="margin-left: -20px; margin-top: calc((100vh - 96px) / 2 - 100px)"
   >
     <a-empty description=""></a-empty>
   </div>
@@ -149,7 +149,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--secondary-bg);
+  background: var(--secondary-bg) !important;
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
 }
