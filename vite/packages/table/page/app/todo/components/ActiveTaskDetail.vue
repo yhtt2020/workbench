@@ -25,10 +25,11 @@
       word-break: break-all;
       white-space: break-spaces;
       background: none;
+      position: relative;
     "
     class="right-content"
   >
-    <div style="height: 100%;" class="flex flex-col">
+    <div style="height: 100%;margin-bottom: 68px;" class="flex flex-col">
       <div class="top-bar">
         <span class="flex">
           <span class="title-action" style="cursor: pointer"
@@ -128,13 +129,14 @@
             v-html="activeTask.description || '点击【编辑图标】写描述'"
             v-if="!editing"
           ></div>
-          <div v-else style="position: relative; padding: 10px;height: 100%;">
+          <div v-else style="position: relative; padding: 10px 0;height: 100%;">
             <template v-if="activeTask.descriptionType.name === 'text'">
               <a-textarea
                 style="
                   height: 100%;
                   min-height: 50px;
                   background: #2a2a2a;
+                  border-radius: 6px;
                 "
                 @focus="this.showFormatConvert = true"
                 @blur="this.showFormatConvert = false"
@@ -145,7 +147,7 @@
               >
               </a-textarea>
             </template>
-            <div v-if="activeTask.descriptionType.name === 'rich'">
+            <div style="height: 100%;" v-if="activeTask.descriptionType.name === 'rich'">
               <Toolbar
                 style="border-bottom: 1px solid #ccc"
                 :editor="editorRef"
@@ -153,7 +155,7 @@
                 :mode="mode"
               />
               <Editor
-                style="height: calc(100vh - 40px); overflow-y: hidden"
+                style="height: 100%; overflow-y: hidden"
                 v-model="valueHtml"
                 :defaultConfig="editorConfig"
                 :mode="mode"
@@ -167,22 +169,19 @@
         </VueCustomScrollbars>
       </div>
     </div>
-    <div style="flex: 0 0 auto">
-      所属清单：
+    <div class="select-foot">
+      <span class="mr-2">所属清单</span>
       <a-select
+        :bordered="false"
+        class="select rounded-lg  text-xs"
+        size="large"
         mode="multiple"
         placeholder="选择清单"
-        size="small"
         :fieldNames="{ label: 'title', value: 'nanoid' }"
         v-model:value="activeTask.listNanoid"
+        :dropdownStyle="{ 'z-index': 99,backgroundColor: 'var(--secondary-bg)' }"
         :maxTagTextLength="5"
         :allowClear="true"
-        style="
-          min-width: 100px;
-          max-width: calc(100% - 85px);
-          white-space: nowrap;
-          background-color: #555555;
-        "
         :options="this.lists"
       >
         <template #dropdownRender="{ menuNode: menu }">
@@ -518,6 +517,24 @@ export default {
   overflow: hidden;
   .btn-style{
     // background:red;
+  }
+}
+.select-foot{
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  color: var(--primary-text);
+  .select{
+    white-space: nowrap;
+    background: var(--mask-bg);
+    border-radius: 12px;
+    color: var(--primary-text);
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    margin: 12px 0 12px;
+    min-width:200px;
   }
 }
 </style>
