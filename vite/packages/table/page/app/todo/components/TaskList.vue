@@ -107,9 +107,12 @@ export default {
         </div>
       </div>
       <template #overlay>
-        <a-menu theme="dark" class="menu-btn">
-          <a-menu-item @click="removeTask(task.nanoid)">删除</a-menu-item>
-        </a-menu>
+        <span class="pointer" @click="removeTask(task.nanoid)">
+          <a-menu theme="dark" class="del-btn">
+            <a-menu-item class="xt-text">删除</a-menu-item>
+          </a-menu>
+        </span>
+        
       </template>
     </a-dropdown>
   </div>
@@ -139,7 +142,7 @@ export default {
     }
   }
 }
-.menu-btn{
+.del-btn{
   width: 120px;
   height:60px;
   border-radius: 12px;
@@ -150,7 +153,7 @@ export default {
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
 }
-.menu-btn:hover{
+.del-btn:hover{
   opacity: 0.8;
 }
 </style>

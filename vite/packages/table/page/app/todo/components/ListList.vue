@@ -65,9 +65,11 @@ export default {
         </div>
       </div>
       <template #overlay>
-        <a-menu>
-          <a-menu-item @click="removeList(list.nanoid)">删除</a-menu-item>
-        </a-menu>
+        <span class="pointer" @click="removeList(list.nanoid)">
+          <a-menu theme="dark" class="del-btn">
+            <a-menu-item class="xt-text">删除</a-menu-item>
+          </a-menu>
+        </span>
       </template>
     </a-dropdown>
   </div>
@@ -82,5 +84,20 @@ export default {
     padding-left: 3px;
     padding-right: 3px;
   }
+}
+.del-btn{
+  width: 120px;
+  height:60px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+  font-size: 16px;
+}
+.del-btn:hover{
+  opacity: 0.8;
 }
 </style>

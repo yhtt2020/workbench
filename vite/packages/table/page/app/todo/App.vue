@@ -31,6 +31,7 @@ import TaskInput from "./components/TaskInput.vue";
 import ListList from "./components/ListList.vue";
 import VueCustomScrollbars from "./components/VueScrollbar.vue";
 import NavList from "./components/NavList.vue";
+import Modal from "../../../components/Modal.vue";
 
 export default {
   computed: {
@@ -64,6 +65,7 @@ export default {
     SortAscendingOutlined,
     OrderedListOutlined,
     SwapLeftOutlined,
+    Modal
   },
   data() {
     return {
@@ -79,6 +81,7 @@ export default {
       addNewListVisible: false,
       newList: {},
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      promptVisible: false
     };
   },
   async mounted() {
@@ -94,7 +97,8 @@ export default {
     }),
     ...mapActions(configStore, ["showCompleted", "hideCompleted", "setSort"]),
     showAddList() {
-      this.addNewListVisible = true;
+      // this.addNewListVisible = true;
+      this.promptVisible = true
     },
     getPopupContainer(el, dialogContext) {
       if (dialogContext) {
@@ -106,7 +110,8 @@ export default {
 
     addNewList() {
       this.addList(this.newList);
-      this.addNewListVisible = false;
+      // this.addNewListVisible = false;
+      this.promptVisible =false
       this.newList.title = "";
     },
   },
@@ -140,6 +145,30 @@ export default {
               v-model:value="newList.title"
             />
           </a-modal>
+          <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
+            <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:400px;height:207px;border-radius:16px">
+              <div class="head-nav">
+                <span>创建清单</span>
+                <div>
+                  <Icon @click="promptVisible = false" icon="guanbi" style="color:var(--primary-text);font-size:24px"></Icon>
+                </div>
+              </div>
+             <div class="mt-6 mb-8">
+              <!-- <a-input
+                size="large"
+                @pressEnter="addNewList()"
+                placeholder="清单名称"
+                v-model:value="newList.title"
+                style="width:227px;color: var(--primary-text);"
+              /> -->
+              <a-input v-model:value="newList.title" spellcheck ="false" class="input" placeholder="清单名称" aria-placeholder="font-size: 16px;" style="height: 48px;"/>
+             </div>
+              <div class="modal-btn">
+                <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="promptVisible = false">取消</div>
+                <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="addNewList()">确定</div>
+              </div>
+            </div>
+          </Modal>
           <div class="small-title">
             清单
             <span
@@ -337,5 +366,55 @@ body {
   background: var(--primary-bg);
   border-radius: 12px;
   // overflow: auto;
+}
+.head-nav{
+  width: 100%;
+  height: 72px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: var(--primary-text);
+  font-weight: 500;
+  font-family: PingFangSC-Medium;
+  div{
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+  }
+}
+.modal-btn {
+  display: flex;
+  font-size: 16px;
+  color: var(--primary-text);
+  > div {
+    width: 120px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    background: var(--mask-bg);
+  }
+  >div:nth-child(2){
+    background: var(--active-bg) !important;
+  }
+}
+.input{
+  width:227px;
+  height: 48px;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  color: var(--primary-text);
+  font-size: 16px;
+  border: 1px solid rgba(255,255,255,0.2);
 }
 </style>
