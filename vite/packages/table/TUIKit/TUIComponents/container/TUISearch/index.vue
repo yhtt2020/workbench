@@ -1,65 +1,40 @@
 <template>
   <div class="TUI-search" style="padding: 0 16px !important;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
-    
     <a-dropdown @click="toggleOptionalShow" placement="topLeft" class="ml-4" :trigger="['click']">
       <div class="w-11 h-11 rounded-lg pointer flex items-center justify-center" style="background: var(--secondary-bg);">
         <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
       </div>
       <template #overlay>
         <div class="flex items-center rounded-lg " style="background: var(--modal-bg);padding: 16px !important;">
-          <div class="flex flex-col pointer" @click="showOpen('isGroup')">
-            <div class="flex items-center justify-center">
-              <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
+          <div v-for="(item,index) in addList" style="margin-right: 20px;" class="flex add-item flex-col items-center justify-center pointer" @click="showOpen(item.type,index)">
+            <div :class="{'active-bg':addIndex === index}" class="flex items-center rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);">
+              <Icon :icon="item.icon" style="color: var(--secondary-text);"></Icon>
             </div>
-            <div class="font-12" style="color: var(--secondary-text);">发起群聊</div>
-          </div>
-
-          <div class="flex flex-col pointer" style="padding: 0 20px !important;">
-            <div class="flex items-center justify-center">
-              <Icon icon="team" style="color: var(--secondary-text);"></Icon>
-            </div>
-            <div class="font-12" style="color: var(--secondary-text);">加入群聊</div>
-          </div>
-    
-          <div class="flex flex-col pointer">
-            <div class="flex items-center justify-center">
-              <Icon icon="tianjiachengyuan" style="color: var(--secondary-text);"></Icon>
-            </div>
-            <div class="font-12" style="color: var(--secondary-text);">添加好友</div>
+            <div class="font-12" style="color: var(--secondary-text);">{{ item.title }}</div>
           </div>
         </div>
-
       </template>
     </a-dropdown>
-
-
-    <Dialog
-      :show="open"
-      :isH5="env.isH5"
-      :isHeaderShow="false"
-      :isFooterShow="false"
-      :background="false"
-      @update:show="(e) => (open = e)"
-    >
-      <Transfer
-        :isSearch="needSearch"
-        :title="showTitle"
-        :list="searchUserList"
-        :isH5="env.isH5"
-        :isRadio="createConversationType === 'isC2C'"
-        @search="handleSearch"
-        @submit="submit"
-        @cancel="toggleOpen"
-        v-if="step === 1"
-      />
-      <CreateGroup v-else @submit="create" @cancel="toggleOpen" :isH5="env.isH5" />
-    </Dialog>
   </div>
+
+  <teleport to='body'>
+    <Modal v-if="open" v-model:visible="open" :blurFlag="true">
+      <Transfer :isSearch="needSearch" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" />
+      <!-- v-if="step === 1" -->
+      <!-- <CreateGroup v-if="addIndex === 0" @submit="create" @cancel="toggleOpen" :isH5="env.isH5" /> -->
+    </Modal>
+  </teleport>
+
+  <!-- <Dialog :show="open" :isH5="env.isH5" :isHeaderShow="false" :isFooterShow="false" :background="false" @update:show="(e) => (open = e)">
+    <Transfer :isSearch="needSearch" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="step === 1"/>
+    <CreateGroup v-else @submit="create" @cancel="toggleOpen" :isH5="env.isH5" />
+  </Dialog> -->
 </template>
-<script lang="ts">
+<script>
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import CreateGroup from './components/createGroup';
-import Dialog from '../../components/dialog/index.vue';
+// import Dialog from '../../components/dialog/index.vue';
+import Modal from '../../../../components/Modal.vue';
 import Transfer from '../../components/transfer/index.vue';
 import { useStore } from 'vuex';
 import constant from '../constant';
@@ -70,12 +45,14 @@ const TUISearch = defineComponent({
 
   components: {
     Transfer,
-    Dialog,
+    // Dialog,
+    Modal,
     CreateGroup,
   },
 
+
   setup(props) {
-    const TUIServer: any = TUISearch?.TUIServer;
+    const TUIServer = TUISearch?.TUIServer;
     const { t } = TUIServer.TUICore.config.i18n.useI18n();
     const data = reactive({
       open: false,
@@ -110,9 +87,19 @@ const TUISearch = defineComponent({
     const GroupServer = TUIServer?.TUICore?.TUIServer?.TUIGroup;
     CreateGroup.TUIServer = TUIServer;
 
-    const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {};
+    const addList = reactive(  // 左侧底部更多操作按钮
+      [
+        {title:'发起群聊',icon:'message',type:'isGroup'},
+        {title:'加入群聊',icon:'team',type:'addGroup'},
+        {title:'添加好友',icon:'tianjiachengyuan',type:'addFriend'}
+      ]
+    )
 
-    const dialog: any = ref();
+    const addIndex = ref(0)
+
+    const VuexStore = (( window )?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {};
+
+    const dialog = ref();
 
     onClickOutside(dialog, () => {
       if (data.env.isH5) {
@@ -121,8 +108,7 @@ const TUISearch = defineComponent({
       }
     });
 
-    // 初始化群组属性
-    // Initialize group parameters
+    // 初始化群组属性  Initialize group parameters
     const initGroupOptions = () => {
       data.group = {
         groupID: '',
@@ -138,7 +124,7 @@ const TUISearch = defineComponent({
           },
         ],
       };
-    };
+    }
 
     const toggleOpen = () => {
       data.open = !data.open;
@@ -147,9 +133,9 @@ const TUISearch = defineComponent({
         data.step = 1;
         initGroupOptions();
       }
-    };
+    }
 
-    const submit = (userList: any) => {
+    const submit = (userList) => {
       if (data.createConversationType === constant.typeC2C) {
         const { userID } = userList[0];
         handleCurrentConversation(userID, 'C2C');
@@ -160,14 +146,14 @@ const TUISearch = defineComponent({
           handleErrorPrompts(message, data.env);
         }
         initGroupOptions();
-        data.group.memberList = userList.map((item: any) => ({ userID: item.userID }));
+        data.group.memberList = userList.map((item) => ({ userID: item.userID }));
         data.step = 2;
       }
       data.searchUserList = [...data.allUserList];
-    };
+    }
 
     // creating group
-    const create = async (params: any) => {
+    const create = async (params) => {
       if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC) {
         data.group.joinOption = TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION;
       }
@@ -180,7 +166,7 @@ const TUISearch = defineComponent({
         const imResponse = await GroupServer.createGroup(options);
         const message = t('TUISearch.创建成功');
         handleSuccessPrompts(message, data.env);
-        (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 3);
+        (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 3);
         toggleOpen();
         if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM) {
           GroupServer.joinGroup({
@@ -190,79 +176,97 @@ const TUISearch = defineComponent({
           });
         }
         handleCurrentConversation(imResponse.data.group.groupID, 'GROUP');
-      } catch (imError: any) {
+      } catch (imError) {
         handleErrorPrompts(imError, data.env);
       }
-    };
+    }
 
-    const handleCurrentConversation = (id: string, type: string) => {
+    const handleCurrentConversation = (id, type) => {
       const name = `${type}${id}`;
-      TUIServer.getConversationProfile(name).then((imResponse: any) => {
+      TUIServer.getConversationProfile(name).then((imResponse) => {
         // 通知 TUIConversation 模块切换当前会话
         // Notify TUIConversation to toggle the current conversation
         TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
       });
-    };
+    }
 
-    const showOpen = (type: string) => {
-      data.open = true;
-      data.searchUserList = [...data.allUserList];
-      switch (type) {
-        case 'isC2C':
-          data.createConversationType = constant.typeC2C;
-          data.showTitle = t('TUISearch.发起单聊');
-          return data.showTitle;
+    const showOpen = (type,index) => {
+      addIndex.value = index
+      switch(type){
         case 'isGroup':
+          data.open = true;
           data.createConversationType = constant.typeGroup;
           data.showTitle = t('TUISearch.发起群聊');
           return data.showTitle;
+        case 'addGroup':
+          console.log('打开加入群聊弹窗');
+          return;
       }
-    };
+      // data.open = true;
+      // data.searchUserList = [...data.allUserList];
+      // switch (type) {
+      //   case 'isC2C':
+      //     data.createConversationType = constant.typeC2C;
+      //     data.showTitle = t('TUISearch.发起单聊');
+      //     return data.showTitle;
+      //   case 'isGroup':
+          // data.createConversationType = constant.typeGroup;
+          // data.showTitle = t('TUISearch.发起群聊');
+          // return data.showTitle;
+      // }
+    }
 
     const toggleOptionalShow = () => {
       if (data.env.isH5) {
         data.optionalShow = !data.optionalShow;
       }
-    };
+    }
 
-    const handleSearch = async (val: any) => {
+    const handleSearch = async (val) => {
       try {
-        const imResponse: any = await TUIServer.getUserProfile([val]);
+        const imResponse = await TUIServer.getUserProfile([val]);
         if (!imResponse.data.length) {
           handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
           data.searchUserList = [...data.allUserList];
           return;
         }
         data.searchUserList = imResponse.data;
-        const searchAllResult = data.allUserList.filter((item: any) => item.userID === imResponse.data[0].userID);
+        const searchAllResult = data.allUserList.filter((item) => item.userID === imResponse.data[0].userID);
         data.allUserList = searchAllResult.length ? data.allUserList : [...data.allUserList, ...data.searchUserList];
       } catch (error) {
         handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
         data.searchUserList = [...data.allUserList];
         return;
       }
-    };
+    }
 
     return {
-      ...toRefs(data),
-      toggleOpen,
-      handleSearch,
-      submit,
-      create,
-      showOpen,
-      toggleOptionalShow,
-      dialog,
-    };
+      ...toRefs(data), toggleOpen, handleSearch, submit, create,
+      showOpen,toggleOptionalShow,dialog,addList,addIndex,
+    }
   },
-});
-export default TUISearch;
+})
+export default TUISearch
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
-<style scoped>
+<style lang="scss" scoped>
 .font-12{
   font-family: PingFangSC-Regular;
   font-size: 12px;
   font-weight: 400;
+}
+
+.add-item{
+  &:last-of-type{
+   margin-right: 0 !important;
+  }
+}
+
+:deep(.active-bg){
+  background: var(--active-secondary-bg) !important;
+  &>svg{
+    color: var(--active-text) !important;
+  }
 }
 </style>

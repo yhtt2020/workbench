@@ -1,5 +1,16 @@
 <template>
-  <div class="transfer" :class="[isH5 ? 'transfer-h5' : '']">
+  <div  class="flex flex-col transfer"  :class="[isH5 ? 'transfer-h5' : '']" style="width: 650px;height: 534px; padding: 12px 16px !important;">
+    <div class="flex w-full " style="color: var(--secondary-text);">
+      <div style="width: 95%;color: var(--primary-bg);" class="flex items-center justify-center font-16">选择联系人</div>
+      <div class="flex items-center justify-center">
+        <Icon icon="guanbi"></Icon>
+      </div>
+    </div>
+    <div style="color: var(--secondary-text);">456</div>
+    <div style="color: var(--secondary-text);">789</div>
+  </div>
+
+  <!-- <div class="transfer" :class="[isH5 ? 'transfer-h5' : '']">
     <header class="transfer-h5-header" v-if="isH5">
       <i class="icon icon-back" @click="cancel"></i>
       <span class="title">{{ title }}</span>
@@ -77,7 +88,7 @@
         </footer>
       </div>
     </main>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts">
@@ -204,3 +215,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped src="./style/transfer.scss"></style>
+<style lang="scss" scoped>
+.font-16{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  font-weight: 500;
+}
+</style>

@@ -94,11 +94,11 @@
       </div>
     </div>
 </template>
-<script lang="ts">
+<script >
 import { computed, defineComponent, reactive, toRefs } from 'vue';
 import Link from '../../../../../utils/link';
 
-const group:any = defineComponent({
+const group = defineComponent({
   name: 'group',
   props: {
     isH5: {
@@ -106,7 +106,7 @@ const group:any = defineComponent({
       default: () => false,
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props, ctx) {
     const data = reactive({
       profile: {
         groupID: '',
@@ -161,24 +161,24 @@ const group:any = defineComponent({
     data.profile.avatar = data.type[0].icon;
 
     const groupTypeDetail = computed(()=> {
-      return data.type.filter((item:any)=> {
+      return data.type.filter((item)=> {
         return item.type === data.profile.type;
       })[0];
     });
 
-    const selected = (item:any) => {
+    const selected = (item) => {
       if (data.profile.type !== item.type) {
         data.profile.type = item.type;
         data.profile.avatar = item.icon;
       }
     };
 
-    const submit = (profile: any) => {
+    const submit = (profile) => {
       if (data.isEdit) {
-        (data.profile as any)[data.editConfig.key] = data.editConfig.value;
+        (data.profile )[data.editConfig.key] = data.editConfig.value;
         return data.isEdit = !data.isEdit;
       }
-      const options:any = {
+      const options = {
         name: profile.name,
         type: profile.type,
         groupID: profile.groupID,
@@ -194,10 +194,10 @@ const group:any = defineComponent({
       ctx.emit('cancel');
     };
 
-    const edit = (label:string) => {
+    const edit = (label) => {
       data.isEdit = !data.isEdit;
       data.editConfig.key = label;
-      data.editConfig.value = (data.profile as any)[label];
+      data.editConfig.value = (data.profile)[label];
       switch (label) {
         case 'name':
           data.editConfig.title = '设置群名称';
@@ -216,7 +216,7 @@ const group:any = defineComponent({
       }
     };
 
-    const selectedEdit = (item:any) => {
+    const selectedEdit = (item) => {
       if (data.editConfig.value !== item.type) {
         data.editConfig.value = item.type;
       }
