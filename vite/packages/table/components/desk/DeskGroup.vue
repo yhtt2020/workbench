@@ -481,7 +481,6 @@ export default {
       this.panelIndex = 1
       this.addDeskVisible = false
       this.deskMarketVisible = true;
-      console.log('点击了更多桌面分享')
     },
     setFullScreen(flag = true) {
       this.$refs.currentDeskRef.stashLayout()
@@ -521,7 +520,6 @@ export default {
         needImportDesk = JSON.parse(importJsonTxt)
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         needImportDesk.forEach(g => {
-          console.log(g, '导出的数据')
           //修正一下老版本导出的数据
           if (g.cardsHeight) {
             g.deskHeight = g.cardsHeight

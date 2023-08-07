@@ -145,13 +145,11 @@ export default {
             }
           })
         } else {
-          console.log('检测到订单待支付')
         }
       }
     },
    generateQrcode(payment){
       if(!this.order.nanoid){
-        console.log('订单还未获取到')
         return
       }
       if (payment === 'wechat') {

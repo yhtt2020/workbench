@@ -26,7 +26,7 @@
             {{ capture ? '重新获得效果图' : '自动获取效果图' }}
           </a-button>
 
-        </div></div> 
+        </div></div>
       <a-image :preview="false" class="mb-2 rounded-lg" v-if="capture" :src="'file://'+capture"></a-image>
 
       <span class="title">桌面数据</span>
@@ -184,7 +184,6 @@ export default {
               let capture = await tsbApi.window.getCapture()
               this.shareFullLayoutSize=parent.$refs.currentDeskRef.getLayoutSize()
               this.shareFullCardZoom=parent.$refs.currentDeskRef.getAdjustZoom()
-              console.log('获得全屏状态下的尺寸',this.shareFullLayoutSize,this.shareFullCardZoom)
               this.capture = capture
               setTimeout(() => {
                 parent.setFullScreen(false)
@@ -245,7 +244,6 @@ export default {
 
       settings.cardZoom=Number(settings.cardZoom)*Number(this.shareFullCardZoom)
       settings.cardMargin=Number(settings.cardMargin)*Number(this.shareFullCardZoom)
-      console.log('需要分享的settings',settings)
       const template=JSON.stringify({
         cards: cloneDesk.cards,
         settings:settings,
@@ -286,7 +284,6 @@ export default {
     setSelectVal (id) {
       this.deskList.forEach(desk => {
         if (desk.id === id) {
-          console.log(desk)
           this.sharingDesk = desk
           this.shareName = desk.name
           const parent = this.$parent

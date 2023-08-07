@@ -139,7 +139,6 @@ export default {
           }
         })
       }else{
-        console.log('触发go-1')
         this.$router.go(-1)
       }
 

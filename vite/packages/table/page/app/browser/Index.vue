@@ -248,7 +248,6 @@ export default {
     this.$nextTick(async () => {
       if(params.id){
         //如果是直接切换到某个tab
-        console.log(params.id)
         this.switchToTab(params.id)
         return
       }
@@ -291,7 +290,6 @@ export default {
 
     },
     async addTab () {
-      console.log('event', event)
       await this.invokeAddTab({ url: this.urlInput })
     },
     async addNewTab(){
@@ -327,9 +325,7 @@ export default {
       const {tab}=args
       this.currentTab =tab
       this.urlInput = this.currentTab.url
-      console.log('当前tab', this.currentTab)
       this.runningTabs.push(JSON.parse(JSON.stringify(this.currentTab)))
-      console.log('this.currenttab=', this.currentTab)
     },
     /**
      * 切换缩放

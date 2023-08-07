@@ -61,7 +61,6 @@ const onInput = (e) => {
 // 搜索
 const onSearch = () => {
   if (props.isSearch && search.value.trim()) {
-    console.log("1 :>> ", 121);
     initHeight.value = false;
     isScrollbar.value = false;
     emits("onSearch", search.value);

@@ -71,7 +71,6 @@ export const taskStore = defineStore('task', {
         },
         setActiveTask(task: TaskInfo) {
             this.activeTask = task
-            console.log(task)
         },
         removeTask(nanoid: string) {
             if (this.activeTask.nanoid === nanoid) {

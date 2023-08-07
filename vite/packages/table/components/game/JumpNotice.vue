@@ -54,10 +54,8 @@ export default defineComponent({
     },
     getDesk(){
       let found= this.deskList.find(desk=>{
-        console.log(desk,this.game.appid)
         return desk.id===this.game.appid
       })
-      console.log(found,'zhaodaod=')
       return found && found?.cards.length > 0;
     }
     // show(){

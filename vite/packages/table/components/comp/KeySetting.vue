@@ -41,7 +41,6 @@ export default {
     },
 
     setKeyMap(event) {
-      console.log('发送消息出去', event.key, event.shortcut)
       let rs = ipc.sendSync('setKeyMap', {key: event.key, shortcut: event.shortcut})
       if (rs) {
         this.refreshKeys()

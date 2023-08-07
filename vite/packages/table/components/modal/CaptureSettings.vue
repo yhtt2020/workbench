@@ -22,7 +22,6 @@ export default {
   },
   mounted() {
     getDefaultVolume().then((defaultVolume) => {
-      console.log(defaultVolume, 'defaultVolume')
       this.systemSound = {
         volume: defaultVolume.volume.toFixed(0),
         muted: defaultVolume.muted

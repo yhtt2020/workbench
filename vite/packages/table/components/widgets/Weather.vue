@@ -127,7 +127,6 @@ export default {
           const found = this.cities.find(el=>{
              return el.id === this.customData.id
           })
-          console.log(found);
           if(found) {
             return found
           }

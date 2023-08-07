@@ -75,14 +75,12 @@ export default {
     ...mapActions(screenStore, ['reset', 'tips', 'currentTip', 'resetTips']),
     getTip() {
       this.currentTip = ''
-      console.log(Object.keys(this.tips), 'this.tips')
       Object.keys(this.tips).forEach(key => {
         if (this.tips[key].status) {
           this.currentTip = key
           return false
         }
       })
-      console.log(this.currentTip)
     },
     closeTip(tag) {
       this.tips[tag].status = false

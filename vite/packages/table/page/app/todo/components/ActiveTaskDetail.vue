@@ -48,7 +48,7 @@
             /></span>
             <span class="flex items-center" v-else>
               <span class="mr-2">设置时间</span>
-              <TimerSelector v-model="activeTask.deadTime" /> 
+              <TimerSelector v-model="activeTask.deadTime" />
             </span>
           </span>
         </span>
@@ -270,7 +270,6 @@ export default {
     selectType: {
       deep: true,
       handler(val){
-        console.log(val)
         this.activeTask.descriptionType = val
       }
     },

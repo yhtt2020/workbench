@@ -247,7 +247,6 @@ export default {
       'getComment', 'getInteract']),
     ...mapActions(appStore, ['showUserCard']),
     navChanged() {
-      console.log(this.categoryType)
       switch (this.categoryType.name) {
         case 'attention':
           this.getNewFollower().then()
@@ -285,7 +284,6 @@ export default {
       return 'https://s.apps.vip/post/' + id
     },
     openSystem(item) {
-      console.log('点击系统消息', item)
       let url = ''
       if (item.route === 'thread') {
         url = 'https://s.apps.vip/post/' + item.link_id
@@ -304,7 +302,6 @@ export default {
 
     },
     showCard(item) {
-      console.log(item, 'item=')
       if (item.from_uid) {
         this.selectedUid = Number(item.from_uid)
         this.selectedUserInfo = {
@@ -348,7 +345,7 @@ export default {
 }
 
 ::v-deep .ant-empty-description {
-  // display: none !important;                                                                                                              
+  // display: none !important;
 }
 
 .interact-hover {

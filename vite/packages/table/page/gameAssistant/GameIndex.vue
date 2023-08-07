@@ -159,7 +159,6 @@ export default {
           return desk.id === game.appid
         })
 
-        console.log(found, '找到的')
         if (found) {
           if (found.cards.length > 0) {
             return false

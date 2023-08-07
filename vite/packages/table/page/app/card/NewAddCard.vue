@@ -271,7 +271,6 @@ export default {
       return randomTimestamp
     },
     onBack () {
-      console.log('提交了关闭事件')
       this.$emit('close')
       this.$emit('onClose')
     },

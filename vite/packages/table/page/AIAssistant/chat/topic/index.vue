@@ -46,8 +46,6 @@ export default {
   },
   methods: {
     initList() {
-      console.log("触发更新 :>> ");
-      console.log('object :>> ',     this.topicList);
       this.topList = [];
       this.todayList = [];
       this.previousList = [];

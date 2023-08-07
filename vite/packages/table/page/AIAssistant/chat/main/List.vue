@@ -46,7 +46,6 @@ export default {
       return copySuccessful;
     },
     copy(str) {
-      console.log("str :>> ", str);
       if (this.copyToClipboard(str)) {
         console.log("已成功复制到剪贴板");
       } else {

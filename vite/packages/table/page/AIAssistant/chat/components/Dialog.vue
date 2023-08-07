@@ -46,7 +46,6 @@ export default {
   watch: {
     iconValue: {
       handler(newV) {
-        console.log("newV :>> ", newV);
         this.$emit("update:icon", newV);
       },
       immediate: true,
