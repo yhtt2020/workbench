@@ -62,7 +62,8 @@ import RemoteCommunity from '../page/app/card/RemoteCommunity.vue'
 //应用
 import TomatoStart from '../page/app/tomato/TomatoStart.vue'
 import Tomato from '../page/app/tomato/Tomato.vue'
-
+/*待办*/
+import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
 import ShortcutKey from "../page/work/shortcutKey/ShortcutKey.vue";
@@ -429,6 +430,11 @@ export default [
         path: "/remoteCommunity",
         name: "remoteCommunity",
         component: RemoteCommunity,
+      },
+      {
+        path: "/todo",
+        name: "todo",
+        component: Todo,
       }
     ],
   },
