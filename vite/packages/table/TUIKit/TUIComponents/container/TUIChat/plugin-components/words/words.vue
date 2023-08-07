@@ -11,7 +11,7 @@
       <div class="words-main-content" ref="dialog">
         <header>
           <aside>
-            <h1>{{$t('Words.常用语-快捷回复工具')}}</h1>
+            <h1 style="color: var(--primary-text) !important;">{{$t('Words.常用语-快捷回复工具')}}</h1>
           </aside>
           <span v-if="isH5" class="close" @click="toggleShow">关闭</span>
         </header>
@@ -126,8 +126,32 @@ const Words = defineComponent({
 export default Words;
 </script>
 <style lang="scss" scoped src="./style/index.scss"></style>
-<style scoped>
+<style lang="scss" scoped>
 :deep(.words-main){
   top: -220px !important;
+  overflow-y: scroll !important;
+  background: var(--secondary-bg) !important;
+  &::-webkit-scrollbar{
+    width: 4px !important;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #888 !important;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555 !important;
+  }
+}
+:deep(.words-list-item){
+  color: var(--secondary-text) !important;
+  &:hover{
+    color: var(--active-bg) !important;
+  }
 }
 </style>

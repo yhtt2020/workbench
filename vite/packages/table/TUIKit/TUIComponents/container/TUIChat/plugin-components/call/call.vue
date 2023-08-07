@@ -13,12 +13,12 @@
    
     <div class="call-main" :class="[isH5 && 'call-main-h5']" v-show="showSelectDialog">
       <div class="call-main-content" ref="dialog">
-        <div class="call-main-voice" @click="onClickCall(1)" style="color: ;">
+        <div class="call-main-voice call-main-font" @click="onClickCall(1)">
           <i class="icon icon-call-voice" v-if="isH5"></i>
           {{ $t('TUIChat.语音通话') }}
         </div>
-        <div class="call-main-video" @click="onClickCall(2)">
-          <i class="icon icon-call-video" v-if="isH5"></i>
+        <div class="call-main-video call-main-font" @click="onClickCall(2)">
+          <i class="icon icon-call-video " v-if="isH5"></i>
           {{ $t('TUIChat.视频通话') }}
         </div>
         <footer>
@@ -312,10 +312,44 @@ export default Call;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
-<style scoped>
+<style lang="scss" scoped>
 .call-main{
-  background: var(--primary-bg) !important;
+  background: var(--secondary-bg) !important;
   top: 28px !important;
-  left: calc(-50% + 12px) !important;
+  left: calc(-50% + -6px) !important;
+  padding: 8px !important;
+  width: 120px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--divider) !important;
+  box-shadow: 0px 0px 20px 0px var(--divider) !important;
+  &::before{
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: calc(50% - 8px);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--secondary-bg) !important;
+  }
+  &::after{
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: calc(50% - 8px);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--secondary-bg) !important;
+  }
 }
+.call-main-font{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: var(--primary-text);
+  font-weight: 400;
+  border-radius: 8px !important;
+  &:hover{
+    background: var(--active-secondary-bg) !important;
+  }
+}
+
 </style>

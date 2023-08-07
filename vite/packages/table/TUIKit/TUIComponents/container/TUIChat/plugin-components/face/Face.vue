@@ -20,8 +20,9 @@
         </li>
       </ul>
       <ul class="face-tab">
-        <li class="face-tab-item" @click="selectFace(0)">
-          <i class="icon icon-face"></i>
+        <li class="face-tab-item" style="background: var();" @click="selectFace(0)">
+          <Icon icon="smile" style="margin-top: 12px !important; width: 30px !important;height: 30px !important;"></Icon>
+          <!-- <i class="icon icon-face"></i> -->
         </li>
         <li class="face-tab-item" v-for="(item, index) in bigEmojiList" :key="index" @click="selectFace(index + 1)">
           <img :src="faceUrl + item.list[0] + '@2x.png'" />
@@ -155,6 +156,30 @@ export default Face;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
-<style scoped>
- 
+<style lang="scss" scoped>
+:deep(.face-list){
+  background: var(--secondary-bg) !important;
+  &::-webkit-scrollbar{
+    width: 4px !important;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #888 !important;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555 !important;
+  }
+}
+
+:deep(.face-main){
+  background: var(--secondary-bg) !important;
+  padding-right: 0 !important;
+}
+
 </style>
