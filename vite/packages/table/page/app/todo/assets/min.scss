@@ -1,0 +1,11 @@
+@media screen and (max-width: 600px) {
+  .left-sidebar {
+    flex: 0 0 100px !important;
+    width: 100px !important;
+    min-width: 100px !important;
+  }
+  .main-content{
+    width: 210px !important;
+    min-width: 210px;
+  }
+}

@@ -1,70 +1,74 @@
 <template>
-  <div class="back-btn" @click="goBack">
-    <Icon icon="xiangzuo"  style="font-size: 2em"></Icon>
+  <div class="back-btn" @click="goBack" >
+    <Icon icon="xiangzuo"  style="font-size: 2em;"></Icon>
   </div>
-  <a-row style="margin-left:5em ">
-    <a-col :span="8">
-      <a-progress style="margin-top: 8em;" type="circle" :percent="rate" strokeColor="#666" :strokeWidth="15"
-                  :width="250">
-        <template #format="percent">
-          <span style="font-size: 1em">{{ status }}</span>
-        </template>
-      </a-progress>
-    </a-col>
-    <a-col style="font-size: 3em;text-align: center;padding-top: 1em" :soan="16">
-      <div>番茄钟</div>
-      <div style="font-size: 2.8em;font-weight: bold">
-        {{ displayNum(hours) }}:{{ displayNum(minutes) }}:{{ displayNum(seconds) }}
-      </div>
-      <div style="">
+  <div class="s-bg rounded-lg xt-text" style="height: 100%">
 
-        <Icon v-for="i in tomato" style="margin-right:10px;vertical-align: middle;font-size: 1.5em" icon="fanqie"></Icon>
-        <Icon v-for="i in target-tomato" style="margin-right:10px;vertical-align: middle;opacity: 0.3;font-size: 1em"
-              icon="fanqie"></Icon>
-      </div>
-      <div style="margin-top: 1em">
-        <a-row :gutter="30" v-if="running" >
-          <a-col  @click="pause" :span="12">
-            <div class="btn sm" v-if="timer">
-              <Icon style="font-size: 2em;vertical-align: middle" icon="zanting"></Icon>
-              <span style="font-size: 0.7em">
+    <a-row style="margin-left:5em ">
+      <a-col :span="8">
+        <a-progress style="margin-top: 8em;" type="circle" :percent="rate" strokeColor="#666" :strokeWidth="15"
+                    :width="250">
+          <template #format="percent">
+            <span style="font-size: 1em">{{ status }}</span>
+          </template>
+        </a-progress>
+      </a-col>
+      <a-col style="font-size: 3em;text-align: center;padding-top: 1em" :soan="16">
+        <div>番茄钟</div>
+        <div style="font-size: 2.8em;font-weight: bold">
+          {{ displayNum(hours) }}:{{ displayNum(minutes) }}:{{ displayNum(seconds) }}
+        </div>
+        <div style="">
+
+          <Icon v-for="i in tomato" style="margin-right:10px;vertical-align: middle;font-size: 1.5em" icon="fanqie"></Icon>
+          <Icon v-for="i in target-tomato" style="margin-right:10px;vertical-align: middle;opacity: 0.3;font-size: 1em"
+                icon="fanqie"></Icon>
+        </div>
+        <div style="margin-top: 1em">
+          <a-row :gutter="30" v-if="running" >
+            <a-col  @click="pause" :span="12">
+              <div class="btn sm" v-if="timer">
+                <Icon style="font-size: 2em;vertical-align: middle" icon="zanting"></Icon>
+                <span style="font-size: 0.7em">
                 暂停
               </span>
-            </div>
-            <div class="btn sm" v-else>
-              <Icon style="font-size: 2em;vertical-align: middle" icon="bofang"></Icon>
-              <span style="font-size: 0.7em">
+              </div>
+              <div class="btn sm" v-else>
+                <Icon style="font-size: 2em;vertical-align: middle" icon="bofang"></Icon>
+                <span style="font-size: 0.7em">
                 <span>
                   继续
                 </span>
               </span>
-            </div>
-          </a-col>
-          <a-col  @click="stop" :span="12"  >
-            <div class="btn sm">
-              <Icon style="font-size: 2em;vertical-align: middle" icon="tingzhi"></Icon>
-              <span style="font-size: 0.7em">放弃
+              </div>
+            </a-col>
+            <a-col  @click="stop" :span="12"  >
+              <div class="btn sm">
+                <Icon style="font-size: 2em;vertical-align: middle" icon="tingzhi"></Icon>
+                <span style="font-size: 0.7em">放弃
               </span>
-            </div>
+              </div>
 
-          </a-col>
-        </a-row>
-        <a-row @click="start" v-else>
-          <a-col  :span="24">
-            <div class="btn sm">
-              <Icon style="font-size: 2em;vertical-align: middle" icon="bofang"></Icon>
-              <span style="font-size: 0.7em">
+            </a-col>
+          </a-row>
+          <a-row @click="start" v-else>
+            <a-col  :span="24">
+              <div class="btn sm">
+                <Icon style="font-size: 2em;vertical-align: middle" icon="bofang"></Icon>
+                <span style="font-size: 0.7em">
               <span>
                   开始
                 </span>
               </span>
-            </div>
+              </div>
 
-          </a-col>
-        </a-row>
-      </div>
-    </a-col>
-  </a-row>
+            </a-col>
+          </a-row>
+        </div>
+      </a-col>
+    </a-row>
+
+  </div>
 
 </template>
 

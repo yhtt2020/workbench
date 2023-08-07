@@ -29,9 +29,9 @@ export default {
     colorData(newV) {
       this.$emit("update:data", newV);
     },
-    // data(newV) {
-    //   this.colorData = newV;
-    // },
+    data(newV) {
+      this.colorData = newV;
+    },
   },
   methods: {
     colorClick() {
@@ -43,16 +43,13 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.zs-color-picker-btn) {
-  width: 56px;
-  height: 56px;
-  border: 0;
+  border: none !important;
   background-image: none;
 }
-:deep(.zs-color-picker-btn .zs-color-picker-btn-color) {
-  border: 0px !important;
-  border-radius: 12px !important;
-}
 
+:deep(.zs-color-picker-btn .zs-color-picker-btn-color) {
+  border: none !important;
+}
 :deep(.zs-color-picker-panel__visible) {
   z-index: 99999 !important;
 }

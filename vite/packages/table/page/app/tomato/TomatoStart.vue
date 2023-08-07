@@ -1,12 +1,12 @@
 <template>
-  <div class="main" style="text-align: center;padding-top: 3em">
-    <BackBtn></BackBtn>
+  <div class="main s-bg" style="text-align: center;padding-top: 3em;display: flex;flex-direction: column;height: 100%;justify-content: center">
+    <BackBtn style="margin-left: 6em"></BackBtn>
 
-    <div>
+    <div style="margin-top: -4em" >
       <Icon style="width:8em;height:8em;margin-right:10px;vertical-align: middle" icon="fanqie"></Icon>
-    <p style="font-size: 2.5em;padding-top: 1em">每天获得番茄，保持专注</p>
-      <div style="margin-top: 8em">
-        <div class="btn" @click="start" style="font-size: 3em;padding: 0.4em 1.5em">开始新番茄</div>
+    <p style="font-size: 2.5em;padding-top: 1em" class="xt-text">每天获得番茄，保持专注</p>
+      <div style="margin-top: 2em">
+        <div class="btn rounded-full xt-active-bg xt-active-text" @click="start" style="font-size: 3em;padding: 0.4em 1.5em">开始新番茄</div>
       </div>
     </div>
   </div>
@@ -21,7 +21,9 @@ export default {
   },
   methods:{
     start(){
-      this.$router.replace('/tomato')
+      this.$router.replace({
+        name:'tomato'
+      })
     }
   }
 }

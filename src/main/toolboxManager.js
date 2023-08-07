@@ -32,11 +32,23 @@ class ToolboxManager {
         }
       })
       const window = this.windowInstance.window
-      // window.webContents.openDevTools()//打开调试工具，注释此行，禁止直接打开调试工具
-      // window.on('blur',()=>{
-      //   this.windowInstance.close() //注释此行禁止失焦隐藏
-      //   this.windowInstance=null
-      // })
+      //window.webContents.openDevTools()//打开调试工具，注释此行，禁止直接打开调试工具
+
+      window.webContents.on('before-input-event', (event, input) => {
+        //增加f12调试工具，且支持打开f12的时候自动屏蔽失去焦点隐藏
+        if (input.key.toLowerCase() === 'f12') {
+          window.webContents.openDevTools({
+            mode: 'detach'
+          })
+          event.preventDefault()
+        }
+      })
+      window.on('blur',()=>{
+        if(!window.webContents.isDevToolsOpened()){
+          this.windowInstance.close() //注释此行禁止失焦隐藏
+          this.windowInstance=null
+        }
+      })
       window.on('closed', () => {
         this.windowInstance = null
       })

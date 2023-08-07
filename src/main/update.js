@@ -118,7 +118,7 @@ class Updater {
       updaterWindow.setMenu(null)
 
       updaterWindow.webContents.loadURL('file://' + __dirname + '/../../pages/update/index.html')
-      updaterWindow.webContents.openDevTools()
+      //updaterWindow.webContents.openDevTools()
       updaterWindow.on('ready-to-show', () => {
         updaterWindow.webContents.send('getInfo', { updateInfo: updateInfo, currentVersion: app.getVersion() })
         updaterWindow.show()

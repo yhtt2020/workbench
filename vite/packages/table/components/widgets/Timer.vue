@@ -54,7 +54,11 @@ export default {
   },
   methods: {
     start() {
-      this.$router.push("/tomatoStart");
+      this.$router.push(
+        {
+          name:'tomatoStart'
+        }
+      );
     },
   },
 };

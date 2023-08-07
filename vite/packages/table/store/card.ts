@@ -336,16 +336,18 @@ export const cardStore = defineStore(
         this.desks.push(desk)
         return desk
       },
-      addShareDesk(data,deskList){
+      addShareDesk(data,layoutSize,deskList){
         setTimeout(() => {
-          let cardZoom;
-          if(this.deskSize.cardsHeight){
-            cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
-          }else{
-            cardZoom = (data.settings.cardZoom * this.lastHeight/data.cardsHeight).toFixed()
-          }
+          // let cardZoom;
+          // if(this.deskSize.cardsHeight){
+          //   cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
+          // }else{
+          //   cardZoom = (data.settings.cardZoom * this.lastHeight/data.cardsHeight).toFixed()
+          // }
           // let cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
-          data.settings.cardZoom = parseInt(cardZoom)
+          // data.settings.cardZoom =
+          data.settings.preparing=true//设置为未初始化，等到第一次进去的时候再初始化
+          data.settings.layoutSize=layoutSize
           let desk = {
             name: data.title,
             nanoid: nanoid(4),
@@ -355,6 +357,8 @@ export const cardStore = defineStore(
             // showSettings: true
           }
           this.aloneSettings = data.settings
+          console.log(desk,'需要添加的desk')
+          console.log(deskList,'父列表')
           deskList.unshift(desk)
           //this.switchToDesk(this.deskList.length - 1)
           return desk

@@ -56,7 +56,11 @@ import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
 import RemoteCommunity from '../page/app/card/RemoteCommunity.vue'
-
+//应用
+import TomatoStart from '../page/app/tomato/TomatoStart.vue'
+import Tomato from '../page/app/tomato/Tomato.vue'
+/*待办*/
+import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
 import ShortcutKey from "../page/work/shortcutKey/ShortcutKey.vue";
@@ -76,6 +80,17 @@ export default [
     name: "main",
     component: Main,
     children: [
+      {
+        path: '/TomatoStart',
+        name: 'tomatoStart',
+        component: TomatoStart
+      },
+
+      {
+        path: '/Tomato',
+        name: 'tomato',
+        component: Tomato
+      },
       {
         path: "/team",
         name: "team",
@@ -426,6 +441,11 @@ export default [
         path: "/remoteCommunity",
         name: "remoteCommunity",
         component: RemoteCommunity,
+      },
+      {
+        path: "/todo",
+        name: "todo",
+        component: Todo,
       }
     ],
   },

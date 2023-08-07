@@ -9,9 +9,9 @@
         <!--        主桌面-->
         <!--      </div>-->
         <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
-             class="truncate pr-3 tab tab-bg" v-for="(item,index) in displayDesks">
+             class="truncate pr-3 tab s-bg" v-for="(item,index) in displayDesks">
           <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
-          <icon v-else-if="item.icon" :icon="item.icon" style="font-size: 18px;vertical-align: middle"
+          <icon v-else :icon="item.icon || 'desktop'" style="font-size: 18px;vertical-align: middle"
                 class="mr-2"></icon>
           <span class="">{{ item.name }}</span>
           <div v-if="currentDeskId===item.id" style="border-bottom: 3px solid var(--active-bg)"></div>
@@ -19,7 +19,7 @@
         <a-tooltip title="全部桌面" placement="bottom">
           <div @click="showAll"
                class="  btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
-            <icon class="icon" style="font-size: 22px" icon="gengduo1"></icon>
+            <icon class="icon" style="font-size: 22px" icon="paixu-zuoyou"></icon>
           </div>
         </a-tooltip>
 
@@ -47,6 +47,13 @@
               <Icon style="font-size: 18px" icon="fullscreen"></Icon>
             </div>
           </a-tooltip>
+          <a-tooltip title="菜单" placement="bottom">
+            <div @click="showMenu"
+                 class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3">
+              <Icon style="font-size: 18px" icon="gengduo1"></Icon>
+            </div>
+          </a-tooltip>
+
         </div>
       </div>
     </div>
@@ -59,7 +66,7 @@
       </div>
     </div>
     <div style="flex:1;height: 0" v-if="currentDesk && currentDesk?.cards?.length>0 ">
-      <Desk :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
+      <Desk @changeEditing="editing=!editing" :global-settings="settings" :editing="editing" ref="currentDeskRef" :currentDesk="currentDesk"
             :settings="currentDesk.settings" :key="key">
 
         <template #settingsAllAfter>
@@ -112,12 +119,79 @@
     </div>
     <template v-else>
       <slot name="empty">
+        <div class="s-bg rounded-3xl p-4" style="width: 80%;height:auto;margin: auto">
+          <div class="text-center">
+            <icon icon="desktop" class="xt-text "  style="font-size: 64px;vertical-align: text-top"></icon>
+            <div class="line-title xt-text" style="font-size: 24px;margin-bottom: 10px">   欢迎使用完全DIY的卡片桌面</div>
 
+<!--            <p style="font-size: 16px">-->
+<!--              <strong class="xt-text"><icon icon="smile" style="font-size: 1.2em"></icon> 您可以通过桌面设置调节卡片到合适的大小</strong>-->
+<!--            </p>-->
+            <div>
+
+              <a-button style="color: var(--active-text);" @click="moreDesk" class="mr-10 xt-active-bg rounded-full border-none animate-pulse" key="console"
+                        type="primary"><icon class="mr-1" icon="shop" style="font-size: 18px"></icon>&nbsp;查看桌面市场
+              </a-button>
+              <a-button   @click="newAddCard" class="mr-10  rounded-full xt-bg-2 border-none" key="console"
+                         ><icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
+              </a-button>
+              <a-button class="xt-bg-2 rounded-full border-none"  key="buy" @click="learn"><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button>
+            </div>
+
+          </div>
+          <div class=" text-center mt-2 xt-text" style="font-size: 18px;"><icon icon="arrowdown" class="animate-bounce" style="font-size:1.2em;vertical-align: text-bottom"></icon> 为您推荐（左右滑动）</div>
+          <vue-custom-scrollbar :scrollbarSettings="scrollbarSettings" class="mt-3" style="width:100%;height: 315px;">
+            <DeskMarket :wrapperStyle="{height: '100%',flexWrap:'nowrap',overflow:'visible'}" :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
+                        deskItemStyle="width:435px; height:300px"></DeskMarket>
+          </vue-custom-scrollbar>
+
+        </div>
       </slot>
       <span v-show="false">
-       <Desk ref="currentDeskRef" :currentDesk="currentDesk" :key="key" :editing="editing"></Desk>
-    </span>
+       <Desk ref="currentDeskRef" :currentDesk="currentDesk" :key="key" :editing="editing">
+           <template #outMenu>
+          <a-row class="text-center" style="margin-top: 20px" :gutter="20">
+            <a-col>
+              <div @click="showAddDeskForm" class="btn">
+                <Icon style="font-size: 3em" icon="desktop"></Icon>
+                <div><span>添加桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
 
+              <div @click="importDesk" class="btn">
+                <Icon style="font-size: 3em" icon="daoru"></Icon>
+                <div><span>导入桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div v-if="this.currentDesk.lock" class="btn" style="opacity: 0.5">
+                <Icon style="font-size: 3em" icon="shanchu"></Icon>
+                <div><span>删除桌面</span></div>
+              </div>
+              <div v-else @click="delDesk" class="btn">
+                <Icon style="font-size: 3em" icon="shanchu"></Icon>
+                <div><span>删除桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div @click="shareDesk" class="btn">
+                <Icon style="font-size: 3em" icon="fenxiang"></Icon>
+                <div><span>分享桌面</span></div>
+              </div>
+            </a-col>
+            <a-col>
+              <div @click="exportDesk" class="btn">
+                <Icon style="font-size: 3em" icon="upload"></Icon>
+                <div><span>导出桌面</span></div>
+              </div>
+            </a-col>
+
+
+          </a-row>
+        </template>
+       </Desk>
+    </span>
     </template>
   </div>
 
@@ -132,26 +206,27 @@
 
     </HorizontalPanel>
     <div v-if="currentAddTab.name==='market'">
-      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>
-      <div class="p-2 pt-0">
-        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"
-                 aria-placeholder="font-size: 16px;"/>
-        <div class="btn-item xt-active-bg w-full" style=" margin:0;">使用分享码添加</div>
-        <div class="flex justify-between">
+<!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
+<!--      <div class="p-2 pt-0">-->
+<!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->
+<!--                 aria-placeholder="font-size: 16px;"/>-->
+<!--        <div class="btn-item xt-active-bg w-full" style=" margin:0;">使用分享码添加</div>-->
+
+<!--      </div>-->
+      <div class="flex justify-between">
               <span class="flex items-center">
                 <span class="desk-title mr-2">热门桌面</span>
                 <Icon style="font-size: 20px;" icon="daohang_remen-xuanzhong"></Icon>
               </span>
-          <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
-        </div>
+        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
       </div>
       <div>
-        <DeskMarket :desks="deskList" :navList="hotDesk" :closeParent="true" @openPreview="openPreview"
-                    deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
+        <DeskMarket :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
+                    deskItemStyle="width:435px; height:auto;"></DeskMarket>
       </div>
     </div>
     <div v-else>
-      <span class="desk-title">标题</span>
+      <div class="desk-title mt-4">标题</div>
       <a-input v-model:value="deskTitle" spellcheck="false" class="input" placeholder="请输入"
                aria-placeholder="font-size: 16px;"/>
       <span class="desk-title">初始布局</span>
@@ -175,12 +250,12 @@
                aria-placeholder="font-size: 16px;"/>
     </div>
   </a-drawer>
-  <ShareDesk :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
+  <ShareDesk :deskList="deskList" ref="shareDeskRef" :deskRef="$refs.currentDeskRef" :openDrawer="shareDeskVisible" @closeShare="closeShare"></ShareDesk>
   <ExportDesk :openModal="exportModal" @closeExport="closeExport" :layoutSize="layoutSize"
               :desks="deskList"></ExportDesk>
 
   <div style="z-index:9999;">
-    <DeskPreview :desks="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
+    <DeskPreview @afterAdded="afterAdded" :deskList="deskList" :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
   </div>
   <div class="" style="
         position: fixed;
@@ -190,7 +265,7 @@
         bottom: 0;
         z-index: 999;
       " v-if="deskMarketVisible">
-    <NewAddCard v-if="deskMarketVisible" :desks="deskList" @onClose="hideMarket" :desk="currentDesk"
+    <NewAddCard v-if="deskMarketVisible" :deskList="deskList" @onClose="hideMarket" :desk="currentDesk"
                 :panelIndex="panelIndex"></NewAddCard>
   </div>
 </template>
@@ -199,7 +274,7 @@
 <script lang="ts">
 import Desk from "./Desk.vue";
 import {appStore} from "../../store";
-import {mapWritableState, mapWritableState} from "pinia";
+import {mapActions, mapWritableState, mapWritableState} from "pinia";
 import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
 import {message, Modal} from "ant-design-vue";
@@ -215,10 +290,17 @@ import ShareDesk from "./ShareDesk.vue";
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
 import XtTab from "../card/components/Tab/index.vue";
+import {marketStore} from "../../store/market";
+import Icon from "../Icon.vue";
+import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
+import Emoji from "../comp/Emoji.vue";
 
 export default {
   name: "DeskGroup",
   components: {
+    Emoji,
+    VueCustomScrollbar,
+    Icon,
     XtTab,
     DeskPreview,
     NewAddCard,
@@ -257,6 +339,14 @@ export default {
   },
   data() {
     return {
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true,
+        currentItemId: -1,
+      },
       currentAddTab:{name:'market'},
       key: Date.now(),
       moreDesksVisible: false,//显示更多桌面
@@ -282,14 +372,15 @@ export default {
       layoutSize: {width: 0, height: 0},
       deskMarketVisible: false,//桌面市场
       panelIndex: 0,
-      currentAddMethod:[{title:'从市场添加',name:'market'},{title:'自行添加',name:'custom'}]
+      currentAddMethod:[{title:'从市场添加',name:'market'},{title:'自行添加',name:'custom'}],
+
+      recommendList:[]//推荐桌面
     }
   },
-  mounted() {
+  async mounted() {
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0]
     }
-    console.log(this.deskList)
     this.deskList.forEach(desk => {
       if (!desk.id) {
         desk.id = desk.nanoid
@@ -297,6 +388,7 @@ export default {
     })
 
     this.hotDesk.push(this.apiList[0].children[0])
+    this.recommendList=await  this.getRecommend({goodType:'desk'})
   },
   computed: {
     ...mapWritableState(deskStore, ['apiList']),
@@ -320,9 +412,10 @@ export default {
     //   })
     // },
     currentDesk() {
-      return this.deskList.find(desk => {
+      let currentDesk= this.deskList.find(desk => {
         return desk.id === this.currentDeskId
       })
+      return currentDesk
     },
 
     displayDesks() {
@@ -342,6 +435,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions(marketStore,['getRecommend']),
+    newAddCard(){
+      this.$refs.currentDeskRef.newAddCard()
+    },
+    learn(){
+      this.$refs.currentDeskRef.learn()
+    },
     closePreview() {
       this.showModal = false
       //this.getHomeSize()
@@ -349,11 +449,15 @@ export default {
     hideMarket() {
       this.deskMarketVisible = false
     },
+    afterAdded(){
+      this.hideMarket()
+    },
     openPreview({scheme, showModal}) {
       this.scheme = scheme
       this.showModal = showModal
     },
     shareDesk() {
+      this.$refs.shareDeskRef.update()
       this.shareDeskVisible = true
       this.$refs.currentDeskRef.hideMenu()
     },
@@ -389,6 +493,9 @@ export default {
         }
 
       })
+    },
+    showMenu(){
+      this.$refs.currentDeskRef.showMenu()
     },
     showMore() {
       this.$emit('showMore')
@@ -518,7 +625,6 @@ export default {
       font-weight: bold;
     }
 
-    opacity: 0.5;
     line-height: 38px;
     font-size: 15px;
     min-width: 150px;

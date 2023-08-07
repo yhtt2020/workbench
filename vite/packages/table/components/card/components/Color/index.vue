@@ -65,4 +65,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.zs-color-picker-btn) {
+  width: 56px;
+  height: 56px;
+}
+:deep(.zs-color-picker-btn-color) {
+  border-radius: 12px;
+}
+</style>

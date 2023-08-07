@@ -189,13 +189,33 @@ export const base64File = (str: string) => {
 export const fileUpload = async (file: any) => {
   let url: any = null;
   const formData = new FormData();
+  console.log(file,'文件是')
   formData.append("file", file);
   await api.postCosUpload(formData, (err, res) => {
     if (!err) {
+      console.error(err)
       url = false;
     } else {
-      url = "http://" + res.data.data;
+      url = "https://" + res.data.data;
     }
   });
   return url;
 };
+/**
+ * 使用本地路径上传文件
+ * @param path
+ */
+export const pathUpload=async (path:string)=>{
+  const promise=new Promise((resolve)=>{
+      fetch('file://'+path)
+        .then(response => response.blob())
+        .then(blob => {
+          const file = new File([blob], 'cover.png');
+          resolve(file)
+          // do something with the file object
+        });
+    }
+  )
+  let file= await promise
+  return fileUpload(file)
+}

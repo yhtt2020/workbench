@@ -125,60 +125,34 @@
           <a-input-number v-model:value="appSettings.down.count"></a-input-number>
         </div>
       </template>
-      <template #empty>
-        <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
-             v-if="currentDesk.cards.length === 0">
-          <div style="width: 100%;height: 100%">
-            <a-result class="s-bg xt-bg rounded-lg m-auto" style="margin: auto;width: 580px" status="success" title="使用卡片桌面"
-                      sub-title="您可以长按空白处、右键添加卡片。">
-              <template #extra>
-                <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"
-                          type="primary"><icon class="mr-1" icon="tianjia2"></icon>&nbsp;添加第一张卡片
-                </a-button>
-                <a-button class="xt-bg-2"  key="buy" @click="learn"><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button>
-                <a-button class="xt-bg-2" key="buy" @click="delDesk"><icon class="mr-1" icon="shanchu"></icon>&nbsp;删除桌面</a-button>
-              </template>
+<!--      <template #empty>-->
+<!--        <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto">-->
+<!--          <div style="width: 100%;height: 100%">-->
+<!--            <a-result class="s-bg xt-bg rounded-lg m-auto" style="margin: auto;width: 580px" status="success" title="使用卡片桌面"-->
+<!--                      sub-title="您可以长按空白处、右键添加卡片。">-->
+<!--              <template #extra>-->
+<!--                <a-button style="color: var(&#45;&#45;active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"-->
+<!--                          type="primary"><icon class="mr-1" icon="tianjia2"></icon>&nbsp;添加第一张卡片-->
+<!--                </a-button>-->
+<!--                <a-button class="xt-bg-2"  key="buy" @click="learn"><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button>-->
+<!--                <a-button class="xt-bg-2" key="buy" @click="delDesk"><icon class="mr-1" icon="shanchu"></icon>&nbsp;删除桌面</a-button>-->
+<!--              </template>-->
 
-              <div class="desc xt-text">
-                <p style="font-size: 16px">
-                  <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
-                </p>
-                <p>
-                  从社区获得分享代码（此功能暂未上线，请耐心等待）
-                  <a>从社区导入 &gt;</a>
-                </p>
-              </div>
-            </a-result>
-          </div>
-        </div>
-      </template>
+<!--              <div class="desc xt-text">-->
+<!--                <p style="font-size: 16px">-->
+<!--                  <strong>您可以通过桌面设置调节卡片到合适的大小</strong>-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                  从社区获得分享代码（此功能暂未上线，请耐心等待）-->
+<!--                  <a>从社区导入 &gt;</a>-->
+<!--                </p>-->
+<!--              </div>-->
+<!--            </a-result>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </template>-->
     </desk-group>
   </div>
-
-<!--  <transition name="fade">-->
-<!--    <div class="home-blur" style="-->
-<!--        position: fixed;-->
-<!--        top: 0;-->
-<!--        right: 0;-->
-<!--        left: 0;-->
-<!--        bottom: 0;-->
-<!--        z-index: 999;-->
-<!--      " v-if="custom">-->
-<!--      <AddCard @onBack="setCustom" :desk="currentDesk"></AddCard>-->
-<!--    </div>-->
-<!--  </transition>-->
-<!--  <transition name="fade">-->
-<!--    <div class="" style="-->
-<!--        position: fixed;-->
-<!--        top: 0;-->
-<!--        right: 0;-->
-<!--        left: 0;-->
-<!--        bottom: 0;-->
-<!--        z-index: 999;-->
-<!--      " v-if="visibleAdd">-->
-<!--      <NewAddCard @setCustoms="setCustoms" @close="hideAddCard" :desk="currentDesk" :panelIndex="panelIndex"></NewAddCard>-->
-<!--    </div>-->
-<!--  </transition>-->
 
    <transition name="fade">
      <div class="" style="
@@ -192,166 +166,6 @@
        <AddIcon @setCustoms="setCustoms" @close="iconHide"  :desk="currentDesk"></AddIcon>
      </div>
    </transition>
-<!--  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="340" class="drawer"-->
-<!--    placement="bottom" :visible="menuVisible" @close="onClose">-->
-<!--    <a-row style="margin-top: 1em" :gutter="[20, 20]">-->
-<!--      <a-col>-->
-<!--        <div @click="newAddCard" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="tianjia1"></Icon>-->
-<!--          <div><span>添加卡片</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-<!--       <a-col>-->
-<!--         <div @click="newAddIcon" class="btn">-->
-<!--           <Icon style="font-size: 3em" icon="tianjia1"></Icon>-->
-<!--           <div><span>添加图标</span></div>-->
-<!--         </div>-->
-<!--       </a-col>-->
-<!--&lt;!&ndash;      <a-col>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div @click="toggleEditing" class="btn">&ndash;&gt;-->
-<!--&lt;!&ndash;          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>&ndash;&gt;-->
-<!--&lt;!&ndash;          <Icon v-else style="font-size: 3em; color: orange" icon="tingzhi"></Icon>&ndash;&gt;-->
-<!--&lt;!&ndash;          <div>&ndash;&gt;-->
-<!--&lt;!&ndash;            <span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span>&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;      </a-col>&ndash;&gt;-->
-
-<!--      <a-col>-->
-<!--        <div @click="showSetting" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="shezhi1"></Icon>-->
-<!--          <div><span>设置</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-<!--      <a-col>-->
-<!--        <div @click="clear" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="shanchu"></Icon>-->
-<!--          <div><span>清空卡片</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-<!--      <a-col>-->
-<!--        <div @click="exportDesk" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="export"></Icon>-->
-<!--          <div><span>导出桌面</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-
-<!--    </a-row>-->
-<!--    <a-row style="margin-top: 2em" :gutter="[20, 20]">-->
-<!--      <a-col>-->
-<!--        <div @click="showAddDeskForm" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="desktop"></Icon>-->
-<!--          <div><span>添加桌面</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-<!--      <a-col>-->
-<!--        <div @click="delDesk" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="shanchu"></Icon>-->
-<!--          <div><span>删除桌面</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-<!--      <a-col>-->
-<!--        <div @click="hideDesk" class="btn">-->
-<!--          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>-->
-<!--          <div><span>隐藏桌面</span></div>-->
-<!--        </div>-->
-<!--      </a-col>-->
-<!--&lt;!&ndash;      <a-col>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div @click="shareDesk" class="btn">&ndash;&gt;-->
-<!--&lt;!&ndash;          <Icon style="font-size: 3em" icon="fenxiang"></Icon>&ndash;&gt;-->
-<!--&lt;!&ndash;          <div><span>分享桌面</span></div>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;      </a-col>&ndash;&gt;-->
-<!--    </a-row>-->
-<!--  </a-drawer>-->
-<!--  <a-drawer v-model:visible="settingVisible" @close="cardDesk = 'all'" placement="right">-->
-<!--    <Tab-->
-<!--      v-if="settingVisible"-->
-<!--      style="height: 48px"-->
-<!--      boxClass="p-1 xt-bg-2"-->
-<!--      v-model:data="cardDesk"-->
-<!--      v-model:list="cardDeskList"-->
-<!--    ></Tab>-->
-<!--    <div v-if="cardDesk === 'current'">-->
-<!--      <div class="my-3"  style="font-size: 1.2em;font-weight: bold;" @click="setTransparent()">-->
-<!--        卡片设置(关则使用通用设置)：<a-switch @change="switchChange" v-model:checked="cardSwitch"></a-switch>-->
-<!--      </div>-->
-<!--      <template v-if="cardSwitch">-->
-<!--        &lt;!&ndash; <div class="flex items-center mb-3">-->
-<!--          <div class="mr-3" style="font-size: 1.2em;font-weight: bold;">卡片设置：</div>-->
-<!--        </div> &ndash;&gt;-->
-<!--        <div class="line">-->
-<!--          卡片缩放：-->
-<!--          <a-slider :min="20" @afterChange="updateLayout" :max="500" v-model:value="currentDesk.settings.cardZoom"></a-slider>-->
-<!--        </div>-->
-<!--        <div class="line">-->
-<!--          卡片空隙：(调大空隙可能变成瀑布流布局)-->
-<!--          <a-slider :min="5"  @afterChange="updateLayout" :max="30" v-model:value="currentDesk.settings.cardMargin"></a-slider>-->
-<!--        </div>-->
-<!--        <div class="line">-->
-<!--          距离顶部：-->
-<!--          <a-slider :min="0" :max="200" v-model:value="currentDesk.settings.marginTop"></a-slider>-->
-<!--        </div>-->
-<!--      </template>-->
-<!--    </div>-->
-<!--    <template v-else>-->
-<!--      <div class="flex items-center my-3">-->
-<!--        <div class="mr-3" style="font-size: 1.2em;font-weight: bold;">卡片设置：</div>-->
-<!--      </div>-->
-<!--      <div class="line">-->
-<!--        卡片缩放：-->
-<!--        <a-slider :min="20"  @afterChange="updateLayout" :max="500" v-model:value="settings.cardZoom"></a-slider>-->
-<!--      </div>-->
-<!--      <div class="line">-->
-<!--        卡片空隙：(调大空隙可能变成瀑布流布局)-->
-<!--        <a-slider :min="5"  @afterChange="updateLayout" :max="30" v-model:value="settings.cardMargin"></a-slider>-->
-<!--      </div>-->
-<!--      <div class="line">-->
-<!--        距离顶部：-->
-<!--        <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>-->
-<!--      </div>-->
-<!--      <div class="line-title ">背景设置：</div>-->
-<!--      <div class="line" @click="setTransparent()">-->
-<!--        透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>-->
-<!--      </div>-->
-<!--      <div class="line" v-if="!appSettings.transparent">-->
-<!--        <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>-->
-<!--        <a-button @click="clearWallpaper">清除背景</a-button>-->
-<!--      </div>-->
-<!--      <div v-if="!appSettings.transparent" class="line">-->
-<!--        <div class="line">-->
-<!--          背景模糊度：-->
-<!--          <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />-->
-<!--        </div>-->
-<!--        &lt;!&ndash;      <div class="line">&ndash;&gt;-->
-<!--        &lt;!&ndash;        遮罩浓度：&ndash;&gt;-->
-<!--        &lt;!&ndash;        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>&ndash;&gt;-->
-<!--        &lt;!&ndash;      </div>&ndash;&gt;-->
-<!--      </div>-->
-
-<!--      <div class="line-title">RGB<br />（此类功能性能消耗较高，请酌情开启）</div>-->
-<!--      <div class="line">-->
-<!--        边框跑马灯：-->
-<!--        <a-switch v-model:checked="appSettings.houserun"></a-switch>-->
-<!--      </div>-->
-<!--      <div class="line">-->
-<!--        飘落特效：-->
-<!--        <a-switch v-model:checked="appSettings.down.enable"></a-switch>-->
-<!--      </div>-->
-<!--      <div class="line" v-if="appSettings.down.enable">-->
-<!--        飘落物：-->
-<!--        <a-radio-group v-model:value="appSettings.down.type">-->
-<!--          <a-radio value="rain">雨</a-radio>-->
-<!--          <a-radio value="snow">雪</a-radio>-->
-<!--          <a-radio value="leaf">叶</a-radio>-->
-<!--        </a-radio-group>-->
-<!--      </div>-->
-<!--      <div class="line" v-if="appSettings.down.enable">-->
-<!--        飘落物数量：-->
-<!--        <a-input-number v-model:value="appSettings.down.count"></a-input-number>-->
-<!--      </div>-->
-<!--    </template>-->
-<!--  </a-drawer>-->
   <!-- <div class="home-blur fixed inset-0 p-12" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
@@ -365,62 +179,6 @@
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 
-  <a-drawer v-model:visible="addDeskVisible" width="500" title="添加桌面" @close="shareCode = false">
-    <template #extra v-if="shareCode">
-      <a-space>
-        <div class="btn-item xt-active-bg" style="width:120px;margin:0;">立即添加</div>
-      </a-space>
-    </template>
-    <div v-if="!shareCode">
-      <span class="desk-title">标题</span>
-      <a-input v-model:value="deskTitle" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
-      <span class="desk-title">初始布局</span>
-      <div class="mt-6">
-        <HorizontalPanel :navList="deskType" v-model:selectType="selectDesk"></HorizontalPanel>
-      </div>
-      <div @click="doAddDesk" class="btn-item">立即添加</div>
-      <div>
-        <div @click="importDesk" class="btn-item">导入桌面</div>
-      </div>
-      <div @click="shareCode = true" class="btn-item">使用分享码添加</div>
-      <div class="flex justify-between">
-        <span class="flex items-center">
-          <span class="desk-title mr-2">热门桌面</span>
-          <Icon style="font-size: 20px;"  icon="daohang_remen-xuanzhong"></Icon>
-        </span>
-        <div class="btn-item" @click="moreDesk" style="width:160px;">更多桌面分享</div>
-      </div>
-      <div>
-        <DeskMarket :navList="hotDesk" :closeParent="true" @openPerview="openPerview"  deskItemStyle="width:452px;height:392px;margin:0;"></DeskMarket>
-      </div>
-    </div>
-    <div v-else>
-      <span class="desk-title">分享码</span>
-      <a-input v-model:value="deskCode" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;"/>
-    </div>
-    <!-- <div class="line">
-      <a-input v-model:value="newDesk.name" placeholder="桌面名称"></a-input>
-    </div>
-    <div class="line">选择初始布局：</div>
-    <div class="line">
-      <a-radio-group v-model:value="newDesk.template" defaultValue="daily">
-        <a-radio value="daily">日常桌面</a-radio>
-        <a-radio value="game">游戏桌面</a-radio>
-        <a-radio value="work">办公桌面</a-radio>
-        <a-radio value="empty">空白桌面</a-radio>
-      </a-radio-group>
-    </div>
-    <div class="mt-5">
-      <a-button type="primary" @click="doAddDesk" block>确认添加</a-button>
-    </div> -->
-  </a-drawer>
-
-  <div style="z-index:9999;">
-    <DeskPreview  :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview>
-  </div>
-
-  <ShareDesk :openDrawer="openDesk" @closeShare="closeShare"></ShareDesk>
-  <ExportDesk :openModal="exportModal" :desks="desks" @closeExport="closeExport"></ExportDesk>
 </template>
 
 <script>
@@ -823,11 +581,6 @@ export default {
       };
     }
     this.fixData();
-    window.addEventListener('resize',() => {
-        this.scrollbar = Date.now();
-
-        this.getHomeSize()
-    })
     // window.onresize = () => {
     //   this.scrollbar = Date.now();
 

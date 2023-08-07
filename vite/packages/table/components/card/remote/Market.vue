@@ -27,11 +27,11 @@
                 <div class="text" style="color: #fff">· · ·</div>
               </div>
               <template #overlay>
-                <a-menu class="set-btn" :selected-keys="selectedKeys">
-                  <a-menu-item key="0" class="h-11 mx-3 " style="width:104px;border-radius: 10px;">
+                <a-menu class="set-btn" theme="dark" :selected-keys="selectedKeys">
+                  <a-menu-item key="0" theme="dark" class="h-11 mx-3">
                     <div class="btn-style" @click="addNewCard(item)">添加桌面</div>
                   </a-menu-item>
-                  <a-menu-item key="1" class="h-11 mx-3" style="width:104px;border-radius: 10px;">
+                  <a-menu-item key="1" theme="dark" class="h-11 mx-3">
                     <div class="btn-style" @click="openDelFrame(item.nanoid)">删除</div>
                   </a-menu-item>
                 </a-menu>
@@ -522,12 +522,17 @@
   align-items: center;
   .btn-style{
     height: 44px;
+    width:104px;
+    border-radius: 10px;
     font-family: PingFangSC-Regular;
     font-size: 16px;
     color: var(--primary-text);
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .btn-style:hover{
+    background: var(--active-secondary-bg);
   }
 }
 .imgInit{

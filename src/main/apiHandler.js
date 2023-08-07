@@ -3,6 +3,7 @@ const Watch=require('./apiHander/watch')
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
 const { ipcMain: ipc } = require('electron')
+const captureHelper = require('./captureHelper')
 
 const apiList = {
 
@@ -335,6 +336,17 @@ class ApiHandler {
         event.returnValue = false
       } else {
         event.returnValue = windowManager.attachStatus
+      }
+    })
+
+    ApiHandler.onWindow('getCapture',async (event, args, instance) => {
+      if (instance.type === 'window') {
+        let captureImg = await captureHelper.capture(event.sender)
+        if (captureImg) {
+          event.returnValue = captureImg
+        } else {
+          event.returnValue = null
+        }
       }
     })
 
