@@ -1,45 +1,25 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
+import _ from 'lodash-es'
 
 // @ts-ignore
 export const noticeStore = defineStore('notice',{
   state:() =>({
-    messageNotice:{
+    notice:{
       session:[
         {
-          id:0,
-          name:'系统',
-          alias:'system',
-          icon:'appstore',
-          url:'',
-          delId:0,
+          name:'系统',alias:'system',icon:'appstore',url:'',
         },
         {
-          id:1,
-          name:'ChatGpt',
-          alias:'ChatGpt',
-          icon:'',
-          url:'/icons/bg5.png',
-          delId:0,
+          name:'ChatGpt',alias:'ChatGpt',icon:'', url:'/icons/bg5.png',
         },
         {
-          id:2,
-          name:'Time machine',
-          alias:'时光机',
-          icon:'',
-          url:'/icons/bg3.png',
-          delId:0,
+          name:'Time machine',alias:'时光机',icon:'',url:'/icons/bg3.png',
         },
         {
-          id:3,
-          name:'AI ChatGpt',
-          alias:'AI ChatGpt',
-          icon:'',
-          url:'/icons/bg4.png',
-          delId:0,
+          name:'AI ChatGpt',alias:'AI ChatGpt',icon:'', url:'/icons/bg4.png',
         },
         {
-          id:4,
           name:'yuque',
           alias:'语雀',
           icon:'',
@@ -47,80 +27,362 @@ export const noticeStore = defineStore('notice',{
           delId:0,
         },
         {
-          id:5,
           name:'Apis',
           alias:'小蜜蜂',
           icon:'',
           url:'/icons/bg.png',
           delId:0,
+        },
+        {
+          name:'thisky',
+          alias:'想天工作台',
+          icon:'',
+          url:'/icons/logo128.png',
+          delId:0,
         }
       ],
-      notice:[
+      message:[
         {
-          id:0,
           noticeList:[
             {
-              id:1,
-              title:'',
-              from:{
-                username:'Victor Ruiz',
-                avatarUrl:'https://up.apps.vip/avatar/006.png',
-              },
-              content:'礼物：小恶魔头像框挂件',
-              time: Date.now(),
-             
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
             },
             {
-              id:2,
-              title:'社区公告',
-              content:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
-              time:Date.now(),
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
             },
             {
-              id:3,
-              title:'消息标题，支持显示特殊内容比如用户头像',
-              content:'这是消息正文部分，根据业务需要显示具体内容',
-              time:Date.now(),
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
             }
           ],
-          noticeIcon:'/icons/logo128.png'
         },
         {
-          id:1,
           noticeList:[
             {
-              id:0,
-              title:'',
-              content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用',
-              
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
             }
-          ],
-          noticeIcon:'',
+          ]
         },
         {
-          id:2,
           noticeList:[
             {
-              id:0,
-              title:'',
-              content:'永久免费用于学习和测试,无任何套路,底下输入框输入就能直接用',
-              
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+           
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
             }
-          ],
-          noticeIcon:'',
-        }
-      ]
+          ]
+        },
+        {
+          noticeList:[
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            }
+          ]
+        },
+        {
+          noticeList:[
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+           
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            }
+          ]
+        },
+        {
+          noticeList:[
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            }
+          ]
+        },
+        {
+          noticeList:[
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            },
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            
+            {
+              title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
+              time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'low',
+            },
+            {
+              title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
+              time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:null,
+              level:'normal',
+            },
+            {
+              title:'',body:'礼物：小恶魔头像框挂件',
+              time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
+              from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
+              level:'normal',
+            }
+          ]
+        },
+      ],
+      noticeIcon:'/icons/logo128.png'
     },
+    noticeEnable:false,
+    moreEnable:false,
   }),
+
   actions:{
+    setNoticeOnOff(val:boolean){  // 设置消息通知是否开启  
+      this.noticeEnable = val
+    },
+
+    deleteAllNotice(){  // 删除对应消息通知应用的使用消息数据  
+      for(let i=0;i<this.notice.session.length;i++){
+        this.notice.message[i].noticeList = []
+      }
+    },
+    
+    setMoreNotice(value:boolean){  // 判断更多消息是否打开显示 
+      this.moreEnable = value
+    },
+    
+    deleteNotice(index: any,delId: any){  // 删除单个消息通知
+      this.notice.message[index].noticeList.splice(delId,1)
+    },
+
+    addNotifications(index: any,value: any){
+      this.notice.message[index].noticeList.push(value)
+    },
 
   },
+
   persist:{
     enabled: true,
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths:['messageNotice'],
+      paths:['notice','noticeEnable'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

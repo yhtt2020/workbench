@@ -1,18 +1,15 @@
 import { defineStore } from "pinia";
 // @ts-ignore
-export const calculator = defineStore("calculator", {
+export const colorSelection = defineStore("colorSelection", {
   state: () => ({
-    computeList: [""],
-    countList: [""],
-    calculators: 1,
-    selectIndex: 0,
+    colorList: ["#ffffff"],
   }),
   actions: {},
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: ["computeList", "countList", "calculators"],
+        paths: ["colorList"],
         storage: localStorage,
       },
     ],

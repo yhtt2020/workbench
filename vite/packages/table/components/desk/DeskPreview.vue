@@ -16,11 +16,12 @@
     <!-- 预览 -->
     <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
     <div class="flex justify-center items-center preview" id="previewContent">
-      <Desk :currentDesk="cards" :settings="cards.settings" :notTrigger="true"></Desk>
+      <Desk :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
     <div class="foot">
       <div class="flex items-center">
-        桌面尺寸 {{ scheme.deskWidth + 'x' + scheme.deskHeight }}
+        <strong class="mr-2">{{ scheme.alias }}</strong> 共{{ template.cards.length }}个组件，尺寸
+        {{ layoutSize.width + '*' + layoutSize.height }}
         <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
       </div>
     </div>
@@ -30,7 +31,7 @@
     <template #closeIcon>
       <Icon icon="xiangyou"></Icon>
     </template>
-    <template #extra v-if="!scheme.isMyCreate">
+    <template #extra v-if="!displayScheme.uid===userInfo.uid">
       <a-space>
         <div class="flex">
           <div class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center"
@@ -42,33 +43,32 @@
       </a-space>
     </template>
     <div class="drawer-center">
-      <span class="drawer-title">{{ scheme.title }}</span>
-      <span class="drawer-text">{{ scheme.blurb }}</span>
-      <div class="flex">
-        <div class="label" v-for="x in scheme.labelList" :key="x">{{ x }}</div>
+      <span class="drawer-title">{{ scheme.alias }}</span>
+      <span class="drawer-text">{{ scheme.summary }}</span>
+      <div class="flex" v-if="tagList.length>0">
+        <div class="label" v-for="tag in tagList">{{ tag }}</div>
       </div>
       <div class="flex justify-between items-center">
         <span class="flex items-center my-4">
           <div>
-            <a-avatar size="24">
-                <template #icon><UserOutlined/></template>
+            <a-avatar size="24" :src="displayScheme.userInfo?.avatar">
             </a-avatar>
           </div>
-          <span class="ml-3" style="color: var(--secondary-text);">{{ scheme.nickName }}</span>
+          <span class="ml-3" style="color: var(--secondary-text);">{{ scheme.userInfo?.nickname }}</span>
         </span>
         <span style="color: var(--secondary-text);">
           <span>
             <Icon icon="dianzan" class="mr-2"></Icon>
-            <span>{{ scheme.sumLikes }}</span>
+            <span>{{ scheme.support }}</span>
           </span>
           <span class="ml-3">
             <Icon icon="xiazai" class="mr-2"></Icon>
-            <span>{{ scheme.download }}</span>
+            <span>{{ scheme.count }}</span>
           </span>
         </span>
       </div>
-      <span class="drawer-title">包含以下小组件（{{ scheme.cardList.length }}）</span>
-      <div v-for="item in scheme.cardList" :key="item" class="drawer-item">
+      <span class="drawer-title">包含以下小组件（{{ template.cards.length }}）</span>
+      <div v-for="item in template.cards" :key="item" class="drawer-item">
         <Icon :icon="item.icon" class="mr-2"></Icon>
         <span>{{ item.name }}</span>
       </div>
@@ -82,6 +82,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 import Desk from './Desk.vue'
 import { cardStore } from '../../store/card'
+import {nanoid} from 'nanoid'
 
 export default {
   name: 'DeskPreview',
@@ -93,7 +94,7 @@ export default {
       // 添加
       openDrawer: false,
       previewH: '100%',
-      cards: {
+      displayScheme: {
         title: '',
         nanoid: '',
         cards: [],
@@ -121,30 +122,48 @@ export default {
       type: Boolean,
       default: () => false
     },
-    desks: {
+    deskList: {
       type: Array
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen']),
-
+    ...mapWritableState(appStore, ['fullScreen','userInfo']),
+    tagList () {
+      console.log(this.scheme,'当前的scheme')
+      if (this.scheme.tags) {
+        return this.scheme.tags.split(',')
+      } else {
+        return []
+      }
+    },
+    layoutSize () {
+      return JSON.parse(this.scheme.layoutSize)
+    },
+    template () {
+      return JSON.parse(this.scheme.template)
+    }
   },
   watch: {
     showModal (newVal) {
       if (newVal) this.fullScreen = true
       if (this.fullScreen) {
-        this.cardZoom = JSON.parse(JSON.stringify(this.scheme.settings.cardZoom))
+        this.cardZoom = this.template.settings.cardZoom
+        this.cardMargin=this.template.settings.cardMargin
         this.zoom = this.cardZoom / 100
         this.getPreviewHeight()
-        this.cards = {
-          title: this.scheme.title,
-          nanoid: this.scheme.nanoid,
-          cards: this.scheme.cards,
-          settings: JSON.parse(JSON.stringify(this.scheme.settings))
+        this.displayScheme = {
+          ...this.scheme,
+          settings: {
+            ...this.template.settings
+          },
+          cards:[
+            ... this.template.cards
+          ],
         }
-        this.deskWidth = this.scheme.deskWidth
-        this.deskHeight = this.scheme.deskHeight
-        this.cardHeight = this.scheme.cardsHeight
+        console.log(this.displayScheme)
+        this.deskWidth = this.layoutSize.width
+        this.deskHeight = this.layoutSize.height
+        this.cardHeight = this.layoutSize.height
         var that = this
         window.addEventListener('resize', () => {
           that.getPreviewHeight()
@@ -166,21 +185,26 @@ export default {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
     addPlan () {
       this.close()
-      this.addShareDesk(JSON.parse(JSON.stringify(this.scheme)), this.desks)
+      this.addShareDesk({
+        title:this.displayScheme.alias,
+        cards:this.template.cards,
+        settings:this.template.settings
+      },this.layoutSize, this.deskList)
       message.success('添加成功')
+      this.$emit('afterAdded')
       this.openDrawer = false
-      setTimeout(() => {
-        let cardsHeight = document.getElementById('cardContent')?.offsetHeight
-        let deskHeight = document.documentElement.clientHeight // 高
-        let deskWidth = document.documentElement.clientWidth // 宽
-        let size = {
-          deskWidth,
-          deskHeight,
-          cardsHeight,
-        }
-        this.setDeskSize(size)
-        this.cardsHeight
-      }, 300)
+      // setTimeout(() => {
+      //   let cardsHeight = document.getElementById('cardContent')?.offsetHeight
+      //   let deskHeight = document.documentElement.clientHeight // 高
+      //   let deskWidth = document.documentElement.clientWidth // 宽
+      //   let size = {
+      //     deskWidth,
+      //     deskHeight,
+      //     cardsHeight,
+      //   }
+      //   this.setDeskSize(size)
+      //   this.cardsHeight = cardsHeight
+      // }, 300)
     },
     close () {
       // this.cards.settings.cardZoom = this.cardZoom
@@ -190,9 +214,14 @@ export default {
     getPreviewHeight () {
       this.$nextTick(() => {
         if (this.fullScreen) {
+          //计算得出修正后的缩放率
           this.previewHeight = document.getElementById('previewContent')?.offsetHeight
           let cardZoom = (this.cardZoom * this.previewHeight / this.cardHeight).toFixed()
-          this.cards.settings.cardZoom = cardZoom
+          let cardMargin=(this.cardMargin * this.previewHeight / this.cardHeight).toFixed()
+          console.log(cardZoom,this.cardZoom, this.previewHeight, this.cardHeight)
+          this.displayScheme.settings.cardZoom = cardZoom
+          this.displayScheme.settings.cardMargin=cardMargin
+          this.displayScheme.settings.enableZoom=true
         }
       })
     }

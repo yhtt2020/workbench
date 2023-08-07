@@ -1,7 +1,9 @@
 <template>
   <div class="text-base my-3" v-if="title">{{ title }}颜色</div>
   <div>自定义</div>
-  <XtBaseColor v-model:data="colorData"></XtBaseColor>
+  <div style="margin: 9.5px">
+    <XtBaseColor v-model:data="colorData"></XtBaseColor>
+  </div>
 
   <div>系统预设</div>
   <div class="flex flex-wrap">
@@ -63,4 +65,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.zs-color-picker-btn) {
+  width: 56px;
+  height: 56px;
+}
+:deep(.zs-color-picker-btn-color) {
+  border-radius: 12px;
+}
+</style>

@@ -127,16 +127,7 @@
         <div class="mb-3 mt-3" style="background: #f15460;padding: 1em;border-radius: 8px 4px;color: white"><AutoRun/></div>
         <div>快捷键：</div>
         <div style="text-align: center">
-          <div style="text-align: center;margin-top: 1em">
-            呼出/隐藏工作台
-          </div>
-          <key-input placeholder="呼出/隐藏工作台快捷键" title="工作台" name="table" :value="shortKeysTable"
-                     @changeKeys="setTableKeys"></key-input>
-          <div style="text-align: center;margin-top: 1em">
-            呼出/隐藏全局搜索
-          </div>
-          <key-input placeholder="呼出/隐藏全局搜索快捷键" title="全局搜索" name="search" :value="shortKeysSearch"
-                     @changeKeys="setSearchKeys"></key-input>
+          <KeySetting></KeySetting>
           <div style="margin-top: 1em">后续可在工作台 设置 中修改</div>
         </div>
         <div class="panel" style="line-height: 1" v-if="!canTouch">
@@ -185,10 +176,12 @@ import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
 import ZoomUI from '../components/comp/ZoomUI.vue'
 import AutoRun from '../components/comp/AutoRun.vue'
 import browser from '../js/common/browser'
+import KeySetting from '../components/comp/KeySetting.vue'
 const { settings } = window.$models
 export default {
   name: 'Wizard',
   components: {
+    KeySetting,
     AutoRun,
     ZoomUI,
     KeyInput,

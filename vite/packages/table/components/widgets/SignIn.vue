@@ -20,7 +20,7 @@
           {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '今日新人') : '签到' }}
         </div>
       </div>
-      <HorizontalPanel :navList="signInTitle" v-model:selectType="signInType" :height="44"
+      <HorizontalPanel style="min-width: 100%" :navList="signInTitle" v-model:selectType="signInType" :height="44"
                        class="mt-3 mb-2"></HorizontalPanel>
       <div v-if="signInType.name === 'today'" class="flex flex-col overflow content-box pt-1 ">
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->

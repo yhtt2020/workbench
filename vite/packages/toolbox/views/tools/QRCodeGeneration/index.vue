@@ -4,13 +4,12 @@
       <div class="flex-grow flex mb-3">
         <XtTextarea v-model:data="text"></XtTextarea>
       </div>
-      <div class="flex">
-        <XtButton class="mb-3 mr-3" style="width: 100%" @click="clear()"
+      <div class="flex mb-2">
+        <XtButton class=" mr-3" style="width: 100%" @click="clear()"
           >清除</XtButton
         >
         <XtButton
           type="theme"
-          class="mb-3"
           style="width: 100%"
           @click="newQRCode()"
           >生成</XtButton
@@ -18,15 +17,15 @@
       </div>
       <div class="flex">
         <div class="flex flex-col mr-3 justify-center items-center">
-          <XtTitle style="margin: 0">二维码颜色</XtTitle>
+          <div class="mb-2">二维码颜色</div>
           <XtBaseColor v-model:data="color"></XtBaseColor>
         </div>
         <div class="flex flex-col items-center">
-          <XtTitle style="margin: 0">背景色</XtTitle>
+          <div class="mb-2">背景色</div>
           <XtBaseColor v-model:data="bgColor"></XtBaseColor>
         </div>
       </div>
-      <div class="mb-1">大小 (px)</div>
+      <div class="my-1">大小 (px)</div>
       <a-slider
         id="test"
         v-model:value="size"
@@ -199,10 +198,11 @@ export default {
 <style lang="scss" scoped>
 :deep(.zs-color-picker-panel__visible) {
   position: absolute;
-  top: -280% !important;
+  top: -220px !important;
+  right: -215px !important;
 }
 :deep(.zs-color-picker-panel) {
   position: absolute;
-  top: -280% !important;
+  top: -220px !important;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full no-darg">
+  <div class="w-full h-full no-darg" :class="typeCalss">
     <a-input
       ref="inputRef"
       spellcheck="false"
@@ -24,13 +24,22 @@
 <script>
 export default {
   name: "XtInput",
-  computed: {},
+  computed: {
+    typeCalss() {
+      if (this.type) {
+        return "xt-bg-2  rounded-xl";
+      }
+    },
+  },
   data() {
     return {
       searchValue: this.data,
     };
   },
   props: {
+    type: {
+      default: "default",
+    },
     // 测试输入框状态
     text: {
       default: false,
@@ -143,6 +152,4 @@ export default {
 :deep(.ant-input-group) {
   height: 100%;
 }
-
-
 </style>

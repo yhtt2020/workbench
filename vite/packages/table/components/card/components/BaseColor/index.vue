@@ -1,6 +1,6 @@
 <template>
   <XtTitle v-if="text">{{ text }}</XtTitle>
-  <colorPicker v-model:hex="colorData" />
+  <colorPicker v-model:hex="colorData" @click="colorClick()" />
 </template>
 
 <script>
@@ -29,23 +29,28 @@ export default {
     colorData(newV) {
       this.$emit("update:data", newV);
     },
-    // data(newV) {
-    //   this.colorData = newV;
-    // },
+    data(newV) {
+      this.colorData = newV;
+    },
+  },
+  methods: {
+    colorClick() {
+      this.$emit("click");
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 :deep(.zs-color-picker-btn) {
-  width: 56px !important;
-  height: 56px !important;
-  margin: 9.5px;
-  border: 0;
+  border: none !important;
   background-image: none;
 }
+
 :deep(.zs-color-picker-btn .zs-color-picker-btn-color) {
-  border: 0px !important;
-  border-radius: 12px !important;
+  border: none !important;
+}
+:deep(.zs-color-picker-panel__visible) {
+  z-index: 99999 !important;
 }
 </style>
