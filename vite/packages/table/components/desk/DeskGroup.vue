@@ -141,7 +141,7 @@
           </div>
           <div class=" text-center mt-2 xt-text" style="font-size: 18px;"><icon icon="arrowdown" class="animate-bounce" style="font-size:1.2em;vertical-align: text-bottom"></icon> 为您推荐（左右滑动）</div>
           <vue-custom-scrollbar :scrollbarSettings="scrollbarSettings" class="mt-3" style="width:100%;height: 315px;">
-            <DeskMarket :wrapperStyle="{height: '100%',flexWrap:'nowrap',overflow:'visible'}" :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
+            <DeskMarket :wrapperStyle="{height: '100%',flexWrap:'nowrap',overflow:'visible',width:'auto'}" :desks="deskList" :items="recommendList" :closeParent="true" @openPreview="openPreview"
                         deskItemStyle="width:435px; height:300px"></DeskMarket>
           </vue-custom-scrollbar>
 
@@ -458,6 +458,7 @@ export default {
     },
     shareDesk() {
       this.$refs.shareDeskRef.update()
+      this.$refs.shareDeskRef.setSelectVal(this.currentDeskId)
       this.shareDeskVisible = true
       this.$refs.currentDeskRef.hideMenu()
     },

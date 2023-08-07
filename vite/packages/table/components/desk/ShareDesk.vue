@@ -8,15 +8,17 @@
       </a-space>
     </template>
     <div class="title">选择分享桌面</div>
-    <a-select v-model:value="deskId" @change="setSelectVal" style="height:48px; border:none;"
-              :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center"
+    <a-select v-model:value="deskId" @change="setSelectVal" style="height:48px; border:none;margin-bottom: 10px"
+              :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center "
               :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
       <template #suffixIcon>
         <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
       </template>
       <a-select-option v-for="(item,index) in deskList" :value="item.id">{{ item.name }}</a-select-option>
     </a-select>
-    <div class="xt-bg-2 rounded-lg  px-3 py-2 mb-2 text-center">共 {{sharingDesk.cards.length}} 个组件  {{sharingDesk.layoutSize?.width}} * {{sharingDesk.layoutSize?.height}}</div>
+    <div class="text-center">
+    <div class="xt-bg-2 rounded-lg  px-3 py-2 mb-4 text-center w-auto " style="display: inline-block">共 {{sharingDesk.cards.length}} 个组件  {{sharingDesk.layoutSize?.width}} * {{sharingDesk.layoutSize?.height}}</div>
+    </div>
     <div>
       <div class="title mb-2">桌面效果图
         <div class="float-right">
@@ -24,8 +26,7 @@
             {{ capture ? '重新获得效果图' : '自动获取效果图' }}
           </a-button>
 
-        </div></div>
-      <div class="mb-2 pl-3"> 请点击按钮获取桌面效果图</div>
+        </div></div> 
       <a-image :preview="false" class="mb-2 rounded-lg" v-if="capture" :src="'file://'+capture"></a-image>
 
       <span class="title">桌面数据</span>
@@ -217,6 +218,9 @@ export default {
       if (this.shareName.trim() === '') return message.info('请输入新桌面名称')
       if (this.shareName.length >= 16) return message.error('新桌面名称长度不可超过16')
       if (!this.categoryId) return message.info('请选择分类')
+      if(!this.sharingDesk.cards.length){
+        return message.info('不可分享空白桌面。')
+      }
       //上传图片
       await this.getPreview()
       let cover= await pathUpload(this.capture)

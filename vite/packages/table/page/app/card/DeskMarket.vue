@@ -2,10 +2,10 @@
   <!-- 方案列表 -->
   <div class="flex flex-row w-full item-wrapper" style="height: 100%" >
     <div class="item-content" :style="wrapperStyle">
-      <div class="text-center w-full" v-if="navLists.length==0">
+      <div class="text-center w-full" v-if="displayItems.length==0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
-      <div v-else v-for="item in navLists" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle"
+      <div v-else v-for="item in displayItems" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle"
            @click="previewKay(item)">
         <div class=" cover-wrapper" style="">
           <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
@@ -54,7 +54,7 @@ export default {
   },
   data () {
     return {
-      navLists: [],
+      displayItems: [],
       // 方案
       // scheme: {},
       // 预览
@@ -90,16 +90,23 @@ export default {
     items: {
       immediate: true,
       handler () {
-        this.navLists = JSON.parse(JSON.stringify(this.items))
+        this.displayItems = JSON.parse(JSON.stringify(this.items))
+        this.displayItems=this.displayItems.map(item=>{
+          let  itemNew={
+            ...item,
+            ...item.data
+          }
+          return itemNew
+        })
       }
     },
     selected: {
       immediate: true,
       deep: true,
       handler (newV, oldV) {
-        if (newV == '下载次数') this.navLists = this.mySort(this.navLists, 'download')
-        else if (newV == '更新时间') this.navLists = this.mySort(this.navLists, 'time')
-        else this.navLists = this.items
+        if (newV == '下载次数') this.displayItems = this.mySort(this.displayItems, 'download')
+        else if (newV == '更新时间') this.displayItems = this.mySort(this.displayItems, 'time')
+        else this.displayItems = this.items
       }
     },
   },
