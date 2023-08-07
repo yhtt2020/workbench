@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center justify-center h-full" v-if="data.length === 0">
+  <div class="flex items-center justify-center h-full" v-if="!data.length">
     <a-empty description=""></a-empty>
   </div>
-  <div v-for="task in data">
+  <div v-for="(task,index) in data" :key="index">
     <div class="task-item">
       <div style="min-width: 32px">
         <a-checkbox v-model:checked="task.completed"></a-checkbox>

@@ -9,7 +9,7 @@
     <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click="showDrawer"
       style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ todoType[todoIndex].title }}
     </div>
-    <div class="content-box" v-if="todoIndex === 0">
+    <div class="content-box">
       <Tasklist :data="displayList"></Tasklist>
     </div>
   </Widget>
@@ -17,7 +17,7 @@
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span   v-for="(item,index) in todoType" :key="index"  
       @click="getTodoType(item,index)" 
-      :class="rankIndex === index ? 'active-index':''" 
+      :class="todoIndex === index ? 'active-index':''" 
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
@@ -69,24 +69,28 @@ export default {
     ...mapWritableState(listStore, ["activeList"]),
   },
   mounted() {
-    console.log(this.taskFilter)
-    console.log(this.activeList)
     if (this.customData?.id) {
       this.todoIndex = this.customData.id
     }
   },
   methods: {
+    showDrawer(){
+      this.openSettings = true
+      this.$refs.todoSlot.visible = false
+    },
     getTodoType(item,index){
+      // console.log(item)
+      // console.log(index)
       this.customData.id = index
       this.todoIndex = this.customData.id
       this.openSettings = false
 
       this.activeList = {};
       switch (index) {
-        case 1:
+        case 0:
           this.taskFilter = null;
           break;
-        case 2:
+        case 1:
           this.taskFilter = (task) => {
             if (!task.deadTime) return false;
             else {
@@ -94,7 +98,7 @@ export default {
             }
           };
           break;
-        case 3:
+        case 2:
           this.taskFilter = (task) => {
             if (!task.deadTime) return false;
             else {
@@ -114,5 +118,8 @@ export default {
   height: calc(100% - 35px);
   margin-top: 10px;
   overflow: hidden;
+}
+.active-index{
+  background: var(--active-bg) !important;
 }
 </style>
