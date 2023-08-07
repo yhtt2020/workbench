@@ -97,6 +97,10 @@ export default {
       "displayList",
     ]),
   },
+  mounted() {
+    console.log(this.taskFilter)
+    console.log(this.activeList)
+  },
   methods: {
     setTab(name) {
       this.activeList = {};
@@ -109,7 +113,7 @@ export default {
           this.taskFilter = (task) => {
             if (!task.deadTime) return false;
             else {
-              console.log(task.deadTime, Date.now());
+              // console.log(task.deadTime, Date.now());
 
               return task.deadTime - Date.now() / 1000 <= 86400;
             }
