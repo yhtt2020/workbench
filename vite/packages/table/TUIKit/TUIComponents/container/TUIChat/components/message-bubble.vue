@@ -105,6 +105,11 @@ import MessageEmojiReact from './message-emoji-react.vue';
 import TIM from '../../../../TUICore/tim/index';
 import Modal from '../../../../../components/Modal.vue';
 
+import {post} from "../../../../../js/axios/request";
+import {sUrl} from '../../../../../consts'
+
+const userCardUrl = sUrl('/app/com/userCard')
+
 const messageBubble = defineComponent({
   props: {
     data: {
@@ -136,11 +141,14 @@ const messageBubble = defineComponent({
       default: false,
     },
   },
+
   emits: ['jumpID', 'resendMessage', 'showReadReceiptDialog', 'showRepliesDialog', 'dropDownOpen'],
+ 
   components: {
     MessageReference,
     MessageEmojiReact,Modal
   },
+
   setup(props: any, ctx: any) {
     const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
     const { TUIServer } = TUIChat;
@@ -393,10 +401,16 @@ const messageBubble = defineComponent({
       }
     };
 
-    const clickPersonalInfo = (message:Message) => {  // 点击消息列表头像显示用户信息  
+    const getUserInfo = async (uid:number) =>{
+      return post(userCardUrl,{uid: uid})
+    }
+
+    const clickPersonalInfo = async(message:Message) => {  // 点击消息列表头像显示用户信息  
       data.show = true
       // console.log('测试::>>',props.messageList);
-      console.log('测试::>>',TUIServer);
+      // console.log('测试::>>',TUIServer);
+      const res = await getUserInfo(message.from)
+      console.log(res);
       
     }
 

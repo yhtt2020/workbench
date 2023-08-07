@@ -213,7 +213,7 @@ export default ListItem;
 <style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scoped>
 .TUI-conversation .pinned{
-  background: none !important;
+  background: var(--active-secondary-bg) !important;
 }
 
 .badge::after{
