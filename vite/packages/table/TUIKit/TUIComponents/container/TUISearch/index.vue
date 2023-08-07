@@ -7,7 +7,7 @@
       <template #overlay>
         <div class="flex items-center rounded-lg " style="background: var(--modal-bg);padding: 16px !important;">
           <div v-for="(item,index) in addList" style="margin-right: 20px;" class="flex add-item  flex-col items-center justify-center pointer" @click="showOpen(item.type,index)">
-            <div :class="{'active-bg':addIndex === index}" class="flex items-center  rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);">
+            <div  class="flex items-center add-hover rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);">
               <Icon :icon="item.icon" style="color: var(--secondary-text);"></Icon>
             </div>
             <div class="font-12" style="color: var(--secondary-text);">{{ item.title }}</div>
@@ -19,11 +19,18 @@
 
   <teleport to='body'>
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
-      <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" />
-      <!-- v-if="step === 1" -->
-      <!-- <CreateGroup v-if="addIndex === 0" @submit="create" @cancel="toggleOpen" :isH5="env.isH5" /> -->
+      <CreateGroup v-if="addIndex === 1" @submit="create" @cancel="toggleOpen" :isH5="env.isH5" />
+      <AddFriend v-if="addIndex === 0"></AddFriend>
+      <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
     </Modal>
   </teleport>
+
+  <!-- 
+    <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" /> -->
+    <!-- v-if="step === 1" 
+
+    :class="{'active-bg':addIndex === index}"
+  -->
 
   <!-- <Dialog :show="open" :isH5="env.isH5" :isHeaderShow="false" :isFooterShow="false" :background="false" @update:show="(e) => (open = e)">
     <Transfer :isSearch="needSearch" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="step === 1"/>
@@ -33,21 +40,27 @@
 <script>
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import CreateGroup from './components/createGroup';
-// import Dialog from '../../components/dialog/index.vue';
 import Modal from '../../../../components/Modal.vue';
 import Transfer from '../../components/transfer/index.vue';
+import AddFriend from '../../components/transfer/addFriend.vue';
+
+// import Dialog from '../../components/dialog/index.vue';
+
 import { useStore } from 'vuex';
 import constant from '../constant';
 import { onClickOutside } from '@vueuse/core';
 import { handleErrorPrompts, handleSuccessPrompts } from '../utils';
+
+
 const TUISearch = defineComponent({
   name: 'TUISearch',
 
   components: {
-    Transfer,
+    Transfer,Modal,
+    CreateGroup,AddFriend
+  
     // Dialog,
-    Modal,
-    CreateGroup,
+  
   },
 
 
@@ -91,7 +104,7 @@ const TUISearch = defineComponent({
       [
         {title:'发起群聊',icon:'message',type:'isGroup'},
         {title:'加入群聊',icon:'team',type:'addGroup'},
-        {title:'添加好友',icon:'tianjiachengyuan',type:'addFriend'}
+        {title:'添加好友',icon:'tianjiachengyuan',type:'isC2C'}
       ]
     )
 
@@ -192,16 +205,23 @@ const TUISearch = defineComponent({
 
     const showOpen = (type,index) => {
       addIndex.value = index
-      switch(type){
-        case 'isGroup':
-          data.open = true;
-          data.createConversationType = constant.typeGroup;
-          data.showTitle = t('TUISearch.发起群聊');
-          return data.showTitle;
-        case 'addGroup':
-          console.log('打开加入群聊弹窗');
-          return;
-      }
+      setTimeout(()=>{
+        data.open = true;
+        switch(type){
+          case 'isGroup':
+            // data.createConversationType = constant.typeGroup;
+            // data.showTitle = t('TUISearch.发起群聊');
+            // return data.showTitle;
+          case 'addGroup':
+            // console.log('打开加入群聊弹窗');
+            // return;
+          case 'isC2C':
+            data.createConversationType = constant.typeC2C;
+            data.showTitle = t('TUISearch.发起单聊');
+            return data.showTitle;
+        }
+      },150)
+     
       // data.open = true;
       // data.searchUserList = [...data.allUserList];
       // switch (type) {
@@ -268,12 +288,18 @@ export default TUISearch
   }
 }
 
+:deep(.add-hover:hover){
+  background: var(--active-secondary-bg) !important;
+}
+
+/**
 :deep(.active-bg){
   background: var(--active-secondary-bg) !important;
   &>svg{
     color: var(--active-text) !important;
   }
 }
+**/
 
 .active-button{
   &:active{

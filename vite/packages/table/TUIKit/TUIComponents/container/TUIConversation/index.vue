@@ -1,5 +1,5 @@
 <template>
-  <div class="TUI-conversation" style="height: calc(100% - 58px) !important;">
+  <div class="TUI-conversation">
     <div class="network" v-if="isNetwork">
       <i class="icon icon-error">!</i>
       <p>️{{ $t('TUIConversation.网络异常，请您检查网络设置') }}</p>

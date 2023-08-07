@@ -1,5 +1,10 @@
 <template>
-    <div class="group" :class="[isH5 ? 'group-h5' : '']">
+  <div style="color: var(--secondary-text);">
+    加入群聊
+  </div>
+
+  
+  <!-- <div class="group" :class="[isH5 ? 'group-h5' : '']">
       <div  class="group-box">
         <header>
           <h1 v-if="!isEdit">{{$t('TUISearch.发起群聊')}}</h1>
@@ -92,7 +97,7 @@
           <button class="btn-submit" @click="submit(profile)" :disabled="profile.name === '' && !isEdit">{{$t('TUISearch.创建')}}</button>
         </footer>
       </div>
-    </div>
+    </div> -->
 </template>
 <script >
 import { computed, defineComponent, reactive, toRefs } from 'vue';

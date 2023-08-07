@@ -1,82 +1,26 @@
 <template>
-  <div  class="flex flex-col transfer"  :class="[isH5 ? 'transfer-h5' : '']" style="width: 650px;height: 534px; padding: 12px 16px !important;">
-    <div class="flex w-full mb-4" style="color: var(--secondary-text);">
-      <div style="width: 95%;color: var(--primary-text);" class="flex items-center justify-center font-16">选择联系人</div>
-      <div class="flex items-center pointer rounded-lg active-button w-12 h-12 justify-center" @click="closeGroup" style="background: var(--secondary-bg)">
-        <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
-      </div>
-    </div>
-    <div class="flex justify-between">
-      <div class="flex flex-col">
-        <a-input class="rounded-lg h-11 mb-6"   @keyup.enter="handleInput"  enterkeyhint="search" placeholder="搜索" style="width: 293px;">
-          <template #suffix>
-            <SearchOutlined style="color:var(--secondary-text);font-size: 1.25em;" />
-          </template>
-        </a-input>
-        <div class="flex">
-
-        </div>
-        <div class="flex flex-col">
-          <span class="font-14 " style="color: var(--secondary-text);">最近聊天</span>
-          <ul class="list mt-4">
-            <li class="list-item" @click="selectedAll" v-if="optional.length > 1 && !isRadio">
-              <i class="icon"  :class="[selectedList.length === optional.length ? 'icon-selected' : 'icon-unselected']"></i>
-              <span class="all">{{ $t('component.全选') }}</span>
-            </li>
-          </ul>
-          <!-- <ul class="list mb-4">
-            <li class="list-item" @click="selectedAll" v-if="optional.length > 1 && !isRadio">
-              <i
-                class="icon"
-                :class="[selectedList.length === optional.length ? 'icon-selected' : 'icon-unselected']"
-              ></i>
-              <span class="all">{{ $t('component.全选') }}</span>
-            </li>
-            <li class="list-item" v-for="(item, index) in list" :key="index" @click="selected(item)">
-              <i
-                class="icon"
-                :class="[
-                  item?.isDisabled && 'disabled',
-                  selectedList.indexOf(item) > -1 ? 'icon-selected' : 'icon-unselected',
-                ]"
-              ></i>
-              <template v-if="!isCustomItem">
-                <img
-                  class="avatar"
-                  :src="item?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                  onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                />
-                <span class="name">{{ item?.nick || item?.userID }}</span>
-                <span v-if="item?.isDisabled">（{{ $t('component.已在群聊中') }}）</span>
-              </template>
-              <template v-else>
-                <slot name="left" :data="item" />
-              </template>
-            </li>
-          </ul> -->
-          
-          <!-- <div class="flex "> 
-             
-          </div> -->
-          <!-- <div class="list-item" v-for="(item, index) in list" :key="index" @click="selected(item)">
-            <span style="color: var(--primary-text);">{{ item }}</span>
-          </div> -->
-        </div>
-      </div>
-      <a-divider type="vertical" style="height:442px; background-color:var(--divider);" />
-      <div class="flex flex-col" style="width: 293px;" >
-        <!-- v-if="selectedList.length > 0 && !isH5" -->
-        <p  class="font-400" style="color: var(--secondary-text);margin-bottom: 16px !important;">
-          {{ $t('component.已选中') }}{{ selectedList.length }}{{ $t('component.人') }}
-        </p>
-        <div class="flex flex-col">
-           <div class="list-item space-between" v-for="(item, index) in selectedList" :key="index">
-            <!-- <span v-if="!isH5" class="font-16" style="color: var(--primary-text);">{{ item?.nick || item?.?userID }}</span> -->
-           </div>
-        </div>
-      </div>
+ <div class="flex flex-col" style="width: 400px !important;height: 400px !important;padding: 12px !important;">
+  <div class="top-close flex items-center">
+    <div class="font-16 flex items-center justify-center" style="width:95%;color: var(--primary-text);">添加好友</div>
+    <div class="rounded-lg pointer active-button h-12 w-12 flex items-center justify-center" style="background: var(--secondary-bg);" @click="closeAddFriend">
+      <Icon icon="guanbi" style="color: var(--secondary-text);width: 24px !important; height: 24px !important;"></Icon>
     </div>
   </div>
+
+  <div class="flex flex-col" style="margin-top: 16px !important;">
+    <a-input class="rounded-lg h-11 mb-6"   @keyup.enter="handleInput"  enterkeyhint="search" placeholder="搜索" >
+      <template #suffix>
+        <SearchOutlined style="color:var(--secondary-text);font-size: 1.25em;" />
+      </template>
+    </a-input>
+  </div>
+    
+     
+ </div>
+
+
+
+
 
   <!-- <div class="transfer" :class="[isH5 ? 'transfer-h5' : '']">
     <header class="transfer-h5-header" v-if="isH5">
@@ -157,6 +101,7 @@
       </div>
     </main>
   </div> -->
+
 </template>
 
 <script>
@@ -205,91 +150,109 @@ export default defineComponent({
 
   components:{ SearchOutlined },
 
-  methods:{
-    closeGroup(){
-      this.$emit('close')
+  setup(props, ctx){
+    
+    const closeAddFriend = () =>{  // 关闭添加好友弹窗  
+      ctx.emit('close')
     }
-  },
+    
+    return{
+      closeAddFriend,
+    }
+  }
 
-  setup(props, ctx) {
-    const data = reactive({
-      type: '',
-      list: [],
-      selectedList: [],
-      isSearch: true,
-      isCustomItem: false,
-      title: '',
-    });
 
-    watchEffect(() => {
-      if (props.isCustomItem) {
-        for (let index = 0; index < props.list.length; index++) {
-          if (props.list[index].conversationID.indexOf('@TIM#SYSTEM') > -1) {
-            // eslint-disable-next-line vue/no-mutating-props
-            props.list.splice(index, 1);
-          }
-          data.list = props.list;
-        }
-      } else {
-        data.list = props.list;
-      }
-      data.selectedList = props.selectedList;
-      data.isSearch = props.isSearch;
-      data.isCustomItem = props.isCustomItem;
-      data.title = props.title;
-      data.type = props.type;
-    });
 
-    // 可选项
-    const optional = computed(() => data.list.filter((item) => !item.isDisabled));
 
-    const handleInput = (e) => {
-      ctx.emit('search', e.target.value);
-    };
 
-    const selected = (item) => {
-      if (item.isDisabled) {
-        return;
-      }
-      let list = data.selectedList;
-      const index = list.indexOf(item);
-      if (index > -1) {
-        return data.selectedList.splice(index, 1);
-      }
-      if (props.isRadio) {
-        list = [];
-      }
-      list.push(item);
-      data.selectedList = list;
-    };
 
-    const selectedAll = () => {
-      if (data.selectedList.length === optional.value.length) {
-        data.selectedList = [];
-      } else {
-        data.selectedList = [...optional.value];
-      }
-    };
 
-    const submit = () => {
-      ctx.emit('submit', data.selectedList);
-    };
 
-    const cancel = () => {
-      ctx.emit('cancel');
-    };
+  // methods:{
+  //   closeGroup(){
+  //     this.$emit('close')
+  //   }
+  // },
 
-    return {
-      ...toRefs(data),
-      optional,
-      handleInput,
-      selected,
-      selectedAll,
-      submit,
-      cancel,
-    };
-  },
-});
+  // setup(props, ctx) {
+  //   const data = reactive({
+  //     type: '',
+  //     list: [],
+  //     selectedList: [],
+  //     isSearch: true,
+  //     isCustomItem: false,
+  //     title: '',
+  //   });
+
+  //   watchEffect(() => {
+  //     if (props.isCustomItem) {
+  //       for (let index = 0; index < props.list.length; index++) {
+  //         if (props.list[index].conversationID.indexOf('@TIM#SYSTEM') > -1) {
+  //           // eslint-disable-next-line vue/no-mutating-props
+  //           props.list.splice(index, 1);
+  //         }
+  //         data.list = props.list;
+  //       }
+  //     } else {
+  //       data.list = props.list;
+  //     }
+  //     data.selectedList = props.selectedList;
+  //     data.isSearch = props.isSearch;
+  //     data.isCustomItem = props.isCustomItem;
+  //     data.title = props.title;
+  //     data.type = props.type;
+  //   });
+
+  //   // 可选项
+  //   const optional = computed(() => data.list.filter((item) => !item.isDisabled));
+
+  //   const handleInput = (e) => {
+  //     ctx.emit('search', e.target.value);
+  //   };
+
+  //   const selected = (item) => {
+  //     if (item.isDisabled) {
+  //       return;
+  //     }
+  //     let list = data.selectedList;
+  //     const index = list.indexOf(item);
+  //     if (index > -1) {
+  //       return data.selectedList.splice(index, 1);
+  //     }
+  //     if (props.isRadio) {
+  //       list = [];
+  //     }
+  //     list.push(item);
+  //     data.selectedList = list;
+  //   };
+
+  //   const selectedAll = () => {
+  //     if (data.selectedList.length === optional.value.length) {
+  //       data.selectedList = [];
+  //     } else {
+  //       data.selectedList = [...optional.value];
+  //     }
+  //   };
+
+  //   const submit = () => {
+  //     ctx.emit('submit', data.selectedList);
+  //   };
+
+  //   const cancel = () => {
+  //     ctx.emit('cancel');
+  //   };
+
+  //   return {
+  //     ...toRefs(data),
+  //     optional,
+  //     handleInput,
+  //     selected,
+  //     selectedAll,
+  //     submit,
+  //     cancel,
+  //   };
+  // }
+})
 </script>
 
 <style lang="scss" scoped src="./style/transfer.scss"></style>

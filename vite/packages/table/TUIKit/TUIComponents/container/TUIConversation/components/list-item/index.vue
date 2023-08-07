@@ -230,7 +230,7 @@ export default ListItem;
 .TUI-conversation .dialog-item{
   padding: 8px !important;
   border: 1px solid var(--divider) !important;
-  background: var(--divider) !important;
+  background: var(--secondary-bg) !important;
   width: 120px !important;
   left: 100px !important;
 }
@@ -241,12 +241,10 @@ export default ListItem;
   font-size: 16px !important;
   color:var(--primary-text) !important;
   font-weight: 400 !important;
-  margin-bottom: 8px !important;
   padding: 22px 0 !important;
   &:hover{
     //  opacity: 0.8 !important;
     background: var(--active-secondary-bg) !important;
-    color: var(--active-text) !important;
   }
   &:active{
     filter: brightness(0.8) !important;

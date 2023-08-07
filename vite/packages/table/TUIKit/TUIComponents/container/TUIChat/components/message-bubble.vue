@@ -1,10 +1,19 @@
 <template>
   <div class="message-bubble" :class="[message.flow === 'in' ? '' : 'reverse']" ref="htmlRefHook">
-    <img
+    <div class="avatar rounded-full pointer" @click="clickPersonalInfo(message)">
+      <img class="w-full h-full object-cover rounded-full"
+      :src="message?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
+      onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
+     />
+    </div>
+    
+    <!-- <img
       class="avatar"
       :src="message?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
       onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-    />
+    /> -->
+
+
     <main class="message-area">
       <label class="name" v-if="message.flow === 'in' && message.conversationType === 'GROUP'">
         {{ message.nameCard || message.nick || message.from }}
@@ -45,6 +54,7 @@
       <span>{{ readReceiptCont(message) }}</span>
     </label>
   </div>
+
   <div
     class="message-reference-area"
     :class="[message.flow === 'in' ? '' : 'message-reference-area-reverse']"
@@ -61,6 +71,7 @@
       type="reference"
     />
   </div>
+
   <label
     class="message-replies"
     :class="[message.flow === 'in' ? '' : 'message-replies-reverse']"
@@ -70,6 +81,13 @@
     <i class="icon icon-msg-replies"></i>
     <span>{{ replies?.length + $t('TUIChat.条回复') }}</span>
   </label>
+
+  <Teleport to="body">
+    <Modal v-if="show" v-model:visible="show" :blurFlag="true">
+      <div style="color: #000;">123</div>
+    </Modal>
+  </Teleport>
+
 </template>
 
 <script lang="ts">
@@ -85,6 +103,7 @@ import { Message } from '../interface';
 import { TUIEnv } from '../../../../TUIPlugin';
 import MessageEmojiReact from './message-emoji-react.vue';
 import TIM from '../../../../TUICore/tim/index';
+import Modal from '../../../../../components/Modal.vue';
 
 const messageBubble = defineComponent({
   props: {
@@ -120,7 +139,7 @@ const messageBubble = defineComponent({
   emits: ['jumpID', 'resendMessage', 'showReadReceiptDialog', 'showRepliesDialog', 'dropDownOpen'],
   components: {
     MessageReference,
-    MessageEmojiReact,
+    MessageEmojiReact,Modal
   },
   setup(props: any, ctx: any) {
     const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
@@ -140,6 +159,7 @@ const messageBubble = defineComponent({
       face: [],
       url: '',
       needEmojiReact: false,
+      memberInfo:{},
     });
 
     watchEffect(() => {
@@ -373,8 +393,15 @@ const messageBubble = defineComponent({
       }
     };
 
+    const clickPersonalInfo = (message:Message) => {  // 点击消息列表头像显示用户信息  
+      data.show = true
+      // console.log('测试::>>',props.messageList);
+      console.log('测试::>>',TUIServer);
+      
+    }
+
     return {
-      ...toRefs(data),
+      ...toRefs(data), clickPersonalInfo,
       toggleDialog,
       htmlRefHook,
       jumpToAim,
