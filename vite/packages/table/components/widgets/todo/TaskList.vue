@@ -1,63 +1,44 @@
 <template>
-  <div
-    v-if="data.length === 0"
-    style="margin-left: -20px; margin-top: calc((100vh - 96px) / 2 - 100px)"
-  >
+  <div class="flex items-center justify-center h-full" v-if="data.length === 0">
     <a-empty description=""></a-empty>
   </div>
-  <div class="task-list">
-    <a-dropdown :trigger="['contextmenu']" v-for="task in data">
-      <div class="task-item" :class="{ active: task === activeTask }" @click="setActiveTask(task)">
-        <div class="h-12 flex items-center px-3">
-          <div style="min-width: 32px">
-            <a-checkbox v-model:checked="task.completed"></a-checkbox>
-          </div>
-          <div
-            style="
-              flex: auto;
-              text-wrap: normal;
-              word-break: break-all;
-              width: 0;
-            "
-          >
-            <div
-              :class="{ completed: task.completed }"
-              style="
-                word-break: break-all;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-              "
-            >
-              <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);" 
-                ><to-top-outlined v-if="task.isTop" /> {{ task.title }}</span
-              >
-            </div>
-          </div>
-          <div>
-            <span
-              style="
-                margin-left: 5px;
-                white-space: nowrap;
-                word-break-wrap: none;
-                display: inline-block;
-              "
-              class="dead-time"
-              v-if="task.deadTime"
-              >{{ getDistance(task.deadTime) }}</span
-            >
-          </div>
-        </div>
+  <div v-for="task in data">
+    <div class="task-item">
+      <div style="min-width: 32px">
+        <a-checkbox v-model:checked="task.completed"></a-checkbox>
       </div>
-      <template #overlay>
-        <span class="pointer" @click="removeTask(task.nanoid)">
-          <a-menu theme="dark" class="del-btn">
-            <a-menu-item class="xt-text">删除</a-menu-item>
-          </a-menu>
-        </span>
-        
-      </template>
-    </a-dropdown>
+      <div
+        style="
+          flex: auto;
+          text-wrap: normal;
+          word-break: break-all;
+          width: 0;
+        "
+      >
+        <div
+          :class="{ completed: task.completed }"
+          class="title truncate"
+        >
+          <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);" 
+            ><to-top-outlined v-if="task.isTop" /> {{ task.title }}</span
+          >
+        </div>
+        <div class="detail truncate"> {{ task.description }}</div>
+      </div>
+      <div>
+        <span
+          style="
+            margin-left: 5px;
+            white-space: nowrap;
+            word-break-wrap: none;
+            display: inline-block;
+          "
+          class="dead-time"
+          v-if="task.deadTime"
+          >{{ getDistance(task.deadTime) }}</span
+        >
+      </div>
+    </div>
   </div>
 </template>
 
@@ -84,6 +65,9 @@ export default {
   },
   computed: {
     ...mapState(taskStore, ["activeTask"]),
+  },
+  mounted() {
+    console.log(this.data)
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask", "removeTask"]),
@@ -118,37 +102,26 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.dead-time {
-  float: right;
-  font-size: 12px;
-  color: var(--primary-text);
-}
-
-.task-list {
-  .task-item {
-    &:hover,
-    &.active {
-      background:var(--active-secondary-bg);
-      border-radius: 10px;
-    }
-    .completed {
-      text-decoration: line-through;
-      color: #ccc;
-    }
+  .task-item{
+    height: 64px;
+    background: var(--mask-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    margin-bottom: 9px;
   }
-}
-.del-btn{
-  width: 120px;
-  height:60px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--secondary-bg) !important;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
-}
-.del-btn:hover{
-  opacity: 0.8;
-}
+    
+  .completed {
+    text-decoration: line-through;
+    color: #ccc;
+  }
+  .title{
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 500;
+  }
+  .detail{
+    color: var(--secondary-text);
+  }
 </style>

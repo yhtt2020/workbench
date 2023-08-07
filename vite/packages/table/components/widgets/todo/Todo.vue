@@ -6,12 +6,10 @@
   :desk="desk" 
   ref="todoSlot" 
   :menuList="toggleTodoList">
-    <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showDrawer"
+    <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click="showDrawer"
       style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ todoType[todoIndex].title }}
     </div>
-    <!-- 总在线时长榜 -->
     <div class="content-box" v-if="todoIndex === 0">
-      <!-- 列表 -->
       <Tasklist :data="displayList"></Tasklist>
     </div>
   </Widget>
@@ -92,8 +90,6 @@ export default {
           this.taskFilter = (task) => {
             if (!task.deadTime) return false;
             else {
-              // console.log(task.deadTime, Date.now());
-
               return task.deadTime - Date.now() / 1000 <= 86400;
             }
           };
@@ -114,37 +110,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-.ranking {
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  background: var(--mask-bg);
-  border-radius: 4px;
-  font-size: 16px;
-  color: var(--primary-text);
-  font-weight: 600;
-}
-
 .content-box {
   height: calc(100% - 35px);
   margin-top: 10px;
   overflow: hidden;
-}
-
-.set-type:nth-of-type(1) > span {
-  background: #FE2C46;
-}
-
-.set-type:nth-of-type(2) > span {
-  background: #FF6600;
-}
-
-.set-type:nth-of-type(3) > span {
-  background: #FAAA10;
-}
-
-.active-index{
-  background: var(--active-bg) !important;
 }
 </style>

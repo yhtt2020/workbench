@@ -97,10 +97,6 @@ export default {
       "displayList",
     ]),
   },
-  mounted() {
-    console.log(this.taskFilter)
-    console.log(this.activeList)
-  },
   methods: {
     setTab(name) {
       this.activeList = {};

@@ -125,7 +125,7 @@
           style="position: relative;height: 95%;"
         >
           <div
-            style="padding: 5px; word-break: break-all;color:var(--primary-text)"
+            style="height: 100%;padding: 5px; word-break: break-all;color:var(--primary-text)"
             v-html="activeTask.description || '点击【编辑图标】写描述'"
             v-if="!editing"
           ></div>
@@ -270,7 +270,6 @@ export default {
     selectType: {
       deep: true,
       handler(val){
-        console.log(val)
         this.activeTask.descriptionType = val
       }
     },
