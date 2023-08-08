@@ -1,6 +1,4 @@
 <script lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import "./assets/index.scss";
 import { sortType } from "./consts";
 import {
@@ -155,13 +153,6 @@ export default {
                 </div>
               </div>
              <div class="mt-6 mb-8">
-              <!-- <a-input
-                size="large"
-                @pressEnter="addNewList()"
-                placeholder="清单名称"
-                v-model:value="newList.title"
-                style="width:227px;color: var(--primary-text);"
-              /> -->
               <a-input v-model:value="newList.title" spellcheck ="false" class="input" placeholder="清单名称" aria-placeholder="font-size: 16px;" style="height: 48px;"/>
              </div>
               <div class="modal-btn">
@@ -292,14 +283,9 @@ export default {
     </div>
   </a-config-provider>
 </template>
-<style>
-body {
-  user-select: none;
-  overflow: hidden;
-}
-</style>
-<style lang="scss">
+<!-- <style lang="scss">
 .nav-items {
+  // background: red;
   color: var(--primary-text);
   .item {
     .nav-wrapper {
@@ -339,7 +325,7 @@ body {
     flex: 1;
   }
 }
-</style>
+</style> -->
 <style scoped lang="scss">
 // .small-title {
 //   font-size: 12px;

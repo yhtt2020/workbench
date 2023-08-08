@@ -26,7 +26,6 @@ export const databaseStore = defineStore('database', {
         async saveToDataSource() {
             if (configStore().dataSourceType === DataSourceTypes.LOCAL_STORAGE) {
                 localStorage.setItem('database', JSON.stringify(this.database))
-                console.info('saved to localstorage')
             }
         },
         async init() {

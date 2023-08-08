@@ -140,9 +140,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.nav-items{
+.nav-items {
+  color: var(--primary-text);
   border-bottom: 1px solid var(--divider);
-}
-.font-color {
+  .item {
+    font-size: 13px;
+    .nav-wrapper {
+      cursor: pointer;
+      height: 48px;
+      padding: 0 12px;
+      border-radius: 10px;
+      line-height: 48px;
+    }
+    &.active,
+    &:hover {
+      .nav-wrapper {
+        background: var(--active-secondary-bg) !important;
+      }
+    }
+  }
 }
 </style>

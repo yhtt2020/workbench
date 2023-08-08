@@ -249,6 +249,7 @@ import ExportDesk from "../components/desk/ExportDesk.vue"
 import DeskGroup from '../components/desk/DeskGroup.vue'
 import Template from '../../user/pages/Template.vue'
 import Icon from '../components/Icon.vue'
+import Todo from '../components/widgets/todo/Todo.vue'
 import {setTransparent,detTransparent } from "../components/card/hooks/themeSwitch"
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -403,6 +404,7 @@ export default {
     Tab,
     UpdateMyInfo,
     ExportDesk,
+    Todo
   },
   computed: {
     ...mapWritableState(cardStore, [

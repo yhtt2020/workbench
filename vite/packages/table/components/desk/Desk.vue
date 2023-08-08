@@ -279,6 +279,8 @@ import HorizontalPanel from '../HorizontalPanel.vue'
 import AddIcon from '../../page/app/addIcon/index.vue'
 import Tab from '../card/components/Tab/index.vue'
 import Template from '../../../user/pages/Template.vue'
+import SmallRank from '../widgets/SmallRank.vue'
+import Todo from '../widgets/todo/Todo.vue'
 
 export default {
   name: 'Desk',
@@ -326,7 +328,9 @@ export default {
     AggregateSearch,
     AggregateSearchFullScreen,
     myIcons,
-    AddIcon
+    AddIcon,
+    SmallRank,
+    Todo,
   },
   props:
     {

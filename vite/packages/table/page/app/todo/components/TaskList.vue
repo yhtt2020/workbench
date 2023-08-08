@@ -66,7 +66,7 @@ export default {
     <a-dropdown :trigger="['contextmenu']" v-for="task in data">
       <div class="task-item" :class="{ active: task === activeTask }" @click="setActiveTask(task)">
         <div class="h-12 flex items-center px-3">
-          <div style="min-width: 32px">
+          <div class="todo-style" style="min-width: 32px">
             <a-checkbox v-model:checked="task.completed"></a-checkbox>
           </div>
           <div
@@ -117,11 +117,6 @@ export default {
     </a-dropdown>
   </div>
 </template>
-<style>
-.ant-typography del {
-  color: #ccc;
-}
-</style>
 <style scoped lang="scss">
 .dead-time {
   float: right;
