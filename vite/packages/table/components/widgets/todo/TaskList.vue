@@ -66,9 +66,6 @@ export default {
   computed: {
     ...mapState(taskStore, ["activeTask"]),
   },
-  mounted() {
-    console.log(this.data)
-  },
   methods: {
     ...mapActions(taskStore, ["setActiveTask", "removeTask"]),
     getDistance(deadTime) {

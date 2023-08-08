@@ -7,17 +7,25 @@
   ref="todoSlot" 
   :menuList="toggleTodoList">
     <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click="showDrawer"
-      style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ todoType[todoIndex].title }}
+      style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ customData.currentTodo.title }}
     </div>
     <div class="content-box">
-      <Tasklist :data="displayList"></Tasklist>
+      <Tasklist :data="taskList"></Tasklist>
     </div>
   </Widget>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
+      <span class="drawer-title" style="margin-top:0;">类型</span>
       <span   v-for="(item,index) in todoType" :key="index"  
+      @click="getTodoType(item)" 
+      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
+      class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
+         {{ item.title }}
+      </span>
+      <span class="drawer-title">清单</span>
+      <span   v-for="(item,index) in listType" :key="index"  
       @click="getTodoType(item,index)" 
-      :class="todoIndex === index ? 'active-index':''" 
+      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
@@ -25,17 +33,16 @@
   </a-drawer>
 </template>
 
-<script>
+<script lang="ts">
 import Widget from '../../card/Widget.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import Tasklist from './TaskList.vue'
-import { listStore } from '../../../page/app/todo/stores/list'
-import { taskStore } from '../../../page/app/todo/stores/task'
+import { databaseStore, listStore, taskStore } from "../../../page/app/todo/store";
 export default {
   name: 'Todo',
   components: {
     Widget,
-    Tasklist
+    Tasklist,
   },
   props: {
     customIndex: {
@@ -48,7 +55,7 @@ export default {
     },
     desk:{
       type:Object
-    }
+    },
   },
   data () {
     return {
@@ -57,21 +64,38 @@ export default {
       openSettings: false,
       toggleTodoList:[ { icon: 'shezhi1', title: '设置', fn: () => {this.openSettings = true;this.$refs.todoSlot.visible = false } } ],
       todoType: [
-        {title:'个人',name:'total'},
-        {title:'今天',name:'net'},
-        {title:'七天',name:'team'}
+        {title:'个人',nanoid: 'T00111'},
+        {title:'今天',nanoid: 'T00222'},
+        {title:'七天',nanoid: 'T00333'}
       ],
-      todoIndex: 0
+      // 清单
+      listType: [],
+      todoIndex: 0,
+      selectTodo: {title:'个人',nanoid: 'T00111'},
+      taskList: []
     }
   },
   computed: {
-    ...mapWritableState(taskStore, ["taskFilter","displayList"]),
-    ...mapWritableState(listStore, ["activeList"]),
+    ...mapWritableState(taskStore, ["taskFilter","displayList",'tasks']),
+    ...mapWritableState(listStore, ["activeList","lists"]),
   },
-  mounted() {
-    if (this.customData?.id) {
-      this.todoIndex = this.customData.id
+  async mounted() {
+    //初始化数据
+    await databaseStore().init();
+    databaseStore().$subscribe(() => {
+      databaseStore().save();
+    });
+    // if (this.customData?.id) {
+    //   this.todoIndex = this.customData.id
+    // }
+    if (this.customData?.currentTodo) {
+      this.selectTodo = this.customData.currentTodo
     }
+    this.listType = this.lists?.map((item,index) => {
+      return Object.assign({},{'title':item.title,'nanoid':item.nanoid})
+    })
+    if(!this.listType.length) this.selectTodo = {title:'个人',nanoid: 'T00111'}
+    this.getTodoType(this.selectTodo)
   },
   methods: {
     showDrawer(){
@@ -79,33 +103,24 @@ export default {
       this.$refs.todoSlot.visible = false
     },
     getTodoType(item,index){
-      // console.log(item)
-      // console.log(index)
-      this.customData.id = index
-      this.todoIndex = this.customData.id
+      this.customData.currentTodo = item
+      this.selectTodo = item
+      // this.customData.id = index
+      // this.todoIndex = this.customData.id
       this.openSettings = false
-
-      this.activeList = {};
-      switch (index) {
-        case 0:
-          this.taskFilter = null;
+      switch (item.nanoid) {
+        case 'T00111':
+          this.taskList = this.tasks
           break;
-        case 1:
-          this.taskFilter = (task) => {
-            if (!task.deadTime) return false;
-            else {
-              return task.deadTime - Date.now() / 1000 <= 86400;
-            }
-          };
+        case 'T00222':
+          this.taskList = []
           break;
-        case 2:
-          this.taskFilter = (task) => {
-            if (!task.deadTime) return false;
-            else {
-              return task.deadTime - Date.now() / 1000 <= 604800;
-            }
-          };
+        case 'T00333':
+          this.taskList = []
           break;
+        default:
+          this.taskList = this.tasks.filter(t => t.listNanoid[0] === item.nanoid)
+          break; 
       }
     },
     
@@ -121,5 +136,13 @@ export default {
 }
 .active-index{
   background: var(--active-bg) !important;
+}
+.drawer-title{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: var(--primary-text);
+  letter-spacing: 0;
+  font-weight: 500;
+  margin: 12px 0  24px;
 }
 </style>

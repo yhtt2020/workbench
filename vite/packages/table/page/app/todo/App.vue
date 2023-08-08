@@ -155,13 +155,6 @@ export default {
                 </div>
               </div>
              <div class="mt-6 mb-8">
-              <!-- <a-input
-                size="large"
-                @pressEnter="addNewList()"
-                placeholder="清单名称"
-                v-model:value="newList.title"
-                style="width:227px;color: var(--primary-text);"
-              /> -->
               <a-input v-model:value="newList.title" spellcheck ="false" class="input" placeholder="清单名称" aria-placeholder="font-size: 16px;" style="height: 48px;"/>
              </div>
               <div class="modal-btn">
@@ -292,12 +285,6 @@ export default {
     </div>
   </a-config-provider>
 </template>
-<style>
-body {
-  user-select: none;
-  overflow: hidden;
-}
-</style>
 <style lang="scss">
 .nav-items {
   color: var(--primary-text);
