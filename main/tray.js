@@ -200,18 +200,25 @@ app.whenReady().then(() => {
 
 
   })
+
+
   tray.on('right-click', () => {
     let tableRunning=global.tableWin && !global.tableWin.window.isDestroyed()
+    const keyM=global.keyMapManager
+    const tool=keyM.getKeyMap('superTools',true)
+    const table=keyM.getKeyMap('table',true)
     let tpl=[
 
       {
-        label: '打开工作台',
+        label: '打开工作台 '+'      '+table,
+        Accelerator:table,
         click: () => {
          openWorktable()
         }
       },
       {
-        label: '打开工具箱',
+        label: '打开工具箱 '+'      '+tool,
+        Accelerator:tool,
         click: () => {
           openToolbox()
         }
