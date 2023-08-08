@@ -13,15 +13,9 @@
 </script>
 <div id="appVue">
   <template>
-    <a-result>
-      <!--      <template #extra>-->
-      <!--        <a-button key="console" type="primary">-->
-      <!--          下载更新-->
-      <!--        </a-button>-->
-      <!--      -->
-      <!--       -->
-      <!--      </template>-->
-      <span slot="title"> {{ tip }} </span>
+    <div class="all">
+
+      <div class="title"> {{ tip }}</div>
       <div class="desc">
         <p>您当前的版本号：{{ currentVersion }}</p>
         <div v-if="!info.version" style="color: red; margin-bottom: 10px">
@@ -31,7 +25,7 @@
           <p>
             最新发行版本号：<strong>{{ info.version }}</strong>
             <a
-              @click="send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rvo0kt'})"
+              @click="send('addTab',{url:'https://s.apps.vip/forum?id=100304'})"
             >了解更多 &gt;</a
             >
           </p>
@@ -39,27 +33,37 @@
             发布日期： <strong>{{ renderTime(info.releaseDate) }}</strong>
           </p>
         </div>
-        <div style="margin-bottom: -10px;margin-top: 5px">
-          更新内容：
-          <div style="overflow-y: auto;height: 120px">
-            <div v-for="li in currentLog ">
-              {{ li }}
-            </div>
+
+      </div>
+      <div style=" margin-top: 10px;flex: 1;height:0;overflow: hidden">
+        <div style="margin-bottom: 10px"> 更新内容：</div>
+        <div style="overflow-y: auto;height: 320px">
+          <div v-for="li in currentLog ">
+            {{ li }}
           </div>
         </div>
       </div>
-      <template #extra>
+      <div style="margin-top: 10px;">
         <div v-if="canUpdate">
-          <a-button @click="startInstall" type="primary">
-            重新打开并更新
-          </a-button>
-          <a-button @click="cancel"> 下次启动更新</a-button>
+          <a-row :gutter="10">
+            <a-col :span="12">
+              <a-button block @click="startInstall" type="primary">
+                重新打开并更新
+              </a-button>
+            </a-col>
+            <a-col :span="12">
+              <a-button block @click="cancel"> 下次启动更新</a-button>
+            </a-col>
+          </a-row>
+
+
         </div>
         <div v-else>
-          <a-button @click="cancel"> 关闭</a-button>
+          <a-button block @click="cancel"> 关闭</a-button>
         </div>
-      </template>
-    </a-result>
+      </div>
+
+    </div>
   </template>
 </div>
 <script>
@@ -107,9 +111,9 @@
     },
     mounted () {
       axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
-        try{
+        try {
           this.updateLog = data.data
-        }catch (e) {
+        } catch (e) {
 
         }
 
@@ -121,7 +125,7 @@
         if (this.updateLog) {
           if (this.info.version === '0.0.0') return []
           let all = this.updateLog.filter(li => {
-            if (cpr_version(li.name, this.info.version) === li.name && li.name!==this.info.version) {
+            if (cpr_version(li.name, this.info.version) === li.name && li.name !== this.info.version) {
               return true
             }
           })
@@ -129,10 +133,10 @@
 
           all.forEach(li => {
             if (li.list) {
-             li.list.forEach(item => {
-               if(li.name){
-                 logs.push(item +'['+li.name+']')
-               }
+              li.list.forEach(item => {
+                if (li.name) {
+                  logs.push('【' + li.name + '】'+item  )
+                }
               })
             }
           })
@@ -174,6 +178,7 @@
     // version: "0.8.6"
     appVue.info = args.updateInfo
     appVue.currentVersion = args.currentVersion
+    //args.updateInfo.version='7.0.0'
     if (appVue.info.version) {
       appVue.canUpdate =
         cpr_version(args.updateInfo.version, args.currentVersion) ===
@@ -190,6 +195,21 @@
 <style>
   .desc p {
     margin-bottom: 5px;
+  }
+
+  .all .title {
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .all {
+    padding: 20px;
+  }
+
+  .all {
+    display: flex;
+    flex-direction: column;
   }
 </style>
 </body>
