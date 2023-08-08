@@ -122,6 +122,7 @@ export default {
       categories: [],
       layoutSize:{width:0,height:0},//当前桌面的尺寸
       shareFullLayoutSize:{width:0,height:0},
+      capturing:false//正在抓图
     }
   },
   props: {
@@ -172,11 +173,11 @@ export default {
       this.deskId = this.$parent.currentDeskId
     },
     getPreview () {
+      this.capturing=true
       return new Promise(resolve => {
         this.close()
         setTimeout(async () => {
           const parent = this.$parent
-          console.log(parent)
           parent.setCurrentDeskId(this.deskId)
           setTimeout(() => {
             parent.setFullScreen(true)
@@ -189,10 +190,11 @@ export default {
                 parent.setFullScreen(false)
                 setTimeout(() => {
                   parent.shareDesk()
+                  this.capturing=false
                   resolve()
                 }, 500)
               }, 300)
-            }, 500)
+            }, 1000)//切换到全屏
           }, 200)
           //拍摄截图
         }, 500)
@@ -224,7 +226,7 @@ export default {
       await this.getPreview()
       let cover= await pathUpload(this.capture)
       let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
-      if(this.defaultType.name==='noData'){
+      if(this.defaultType.name==='notData'){
         //如果选择不保留数据，则进行清理
         cloneDesk.cards.forEach((item, index) => {
           item.customData={}
@@ -272,6 +274,9 @@ export default {
 
     },
     setInitialData () {
+      if(this.capturing){
+        return
+      }
       this.desk = this.deskType[0]
       this.blurb = ''
       this.tagList = []
