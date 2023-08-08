@@ -38,7 +38,7 @@
               <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
               </span
           ></span>
-          <span class="mx-4">
+          <span class="mx-4 todo-style">
             <a-checkbox v-model:checked="activeTask.completed"></a-checkbox>
           </span>
           <span class="xt-text flex" @click="selectTime">

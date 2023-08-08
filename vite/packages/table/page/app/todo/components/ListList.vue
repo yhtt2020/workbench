@@ -76,12 +76,24 @@ export default {
 </template>
 <style scoped lang="scss">
 .nav-items {
+  // background: red;
   font-size: 12px;
-  .nav-wrapper {
-    padding-bottom: 2px;
-    padding-top: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+  color: var(--primary-text);
+  .item {
+    .nav-wrapper {
+      cursor: pointer;
+      height: 48px;
+      padding: 0 12px;
+      border-radius: 10px;
+      line-height: 48px;
+    }
+    &.active,
+    &:hover {
+      .nav-wrapper {
+        background: var(--active-secondary-bg) !important;
+      }
+    }
+    font-size: 13px;
   }
 }
 .del-btn{

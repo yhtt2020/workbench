@@ -1,6 +1,4 @@
 <script lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import "./assets/index.scss";
 import { sortType } from "./consts";
 import {
@@ -285,8 +283,9 @@ export default {
     </div>
   </a-config-provider>
 </template>
-<style lang="scss">
+<!-- <style lang="scss">
 .nav-items {
+  // background: red;
   color: var(--primary-text);
   .item {
     .nav-wrapper {
@@ -326,7 +325,7 @@ export default {
     flex: 1;
   }
 }
-</style>
+</style> -->
 <style scoped lang="scss">
 // .small-title {
 //   font-size: 12px;

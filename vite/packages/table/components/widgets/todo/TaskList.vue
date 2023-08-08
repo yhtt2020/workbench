@@ -4,7 +4,7 @@
   </div>
   <div v-for="(task,index) in data" :key="task.nanoid">
     <div class="task-item">
-      <div style="min-width: 32px">
+      <div class="todo-style" style="min-width: 32px">
         <!-- <a-checkbox v-model:checked="task.completed"></a-checkbox> -->
         <a-checkbox @change="changeState($event,task)"></a-checkbox>
       </div>
