@@ -5,26 +5,32 @@
   :customData="customData"
   :desk="desk" 
   ref="todoSlot" 
-  :menuList="toggleTodoList">
-    <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click="showDrawer"
-      style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ customData.currentTodo.title }}
-    </div>
-    <div class="content-box">
-      <Tasklist :data="taskList"></Tasklist>
+  :menuList="toggleTodoList"
+  >
+    <div style="height:100%;">
+      <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:12px;">
+        <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon>
+      </div>
+      <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click.stop="showDrawer"
+        style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ selectTodo.title }}
+      </div>
+      <div class="content-box">
+        <Tasklist :data="notFinish"></Tasklist>
+      </div>
     </div>
   </Widget>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span class="drawer-title" style="margin-top:0;">类型</span>
       <span   v-for="(item,index) in todoType" :key="index"  
-      @click="getTodoType(item)" 
+      @click.stop="getTodoType(item)" 
       :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
       <span class="drawer-title">清单</span>
       <span   v-for="(item,index) in listType" :key="index"  
-      @click="getTodoType(item,index)" 
+      @click.stop="getTodoType(item,index)" 
       :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
@@ -59,7 +65,8 @@ export default {
   },
   data () {
     return {
-      options: {className: 'card small',title: '',icon: 'check-square',type: 'todo'},
+      // options: {className: 'card small',title: '',icon: 'check-square',type: 'todo'},
+      options: {className: 'card small',title: '',type: 'todo'},
       sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'}],
       openSettings: false,
       toggleTodoList:[ { icon: 'shezhi1', title: '设置', fn: () => {this.openSettings = true;this.$refs.todoSlot.visible = false } } ],
@@ -78,6 +85,9 @@ export default {
   computed: {
     ...mapWritableState(taskStore, ["taskFilter","displayList",'tasks']),
     ...mapWritableState(listStore, ["activeList","lists"]),
+    notFinish(){
+      return this.taskList.filter(item => !item.completed)
+    }
   },
   async mounted() {
     //初始化数据
@@ -96,6 +106,7 @@ export default {
     })
     if(!this.listType.length) this.selectTodo = {title:'个人',nanoid: 'T00111'}
     this.getTodoType(this.selectTodo)
+
   },
   methods: {
     showDrawer(){
@@ -123,7 +134,9 @@ export default {
           break; 
       }
     },
-    
+    todoPage(){
+      this.$router.push({name: 'todo'})
+    }
   }
 }
 </script>

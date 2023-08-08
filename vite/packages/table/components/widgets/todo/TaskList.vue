@@ -2,10 +2,11 @@
   <div class="flex items-center justify-center h-full" v-if="!data.length">
     <a-empty description=""></a-empty>
   </div>
-  <div v-for="(task,index) in data" :key="index">
+  <div v-for="(task,index) in data" :key="task.nanoid">
     <div class="task-item">
       <div style="min-width: 32px">
-        <a-checkbox v-model:checked="task.completed"></a-checkbox>
+        <!-- <a-checkbox v-model:checked="task.completed"></a-checkbox> -->
+        <a-checkbox @change="changeState($event,task)"></a-checkbox>
       </div>
       <div
         style="
@@ -61,10 +62,14 @@ export default {
       ellipsis: {
         rows: 1,
       },
+      dragStartTimer: null
     };
   },
   computed: {
     ...mapState(taskStore, ["activeTask"]),
+    notFinish(){
+      return JSON.parse(JSON.stringify(this.data))
+    }
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask", "removeTask"]),
@@ -94,6 +99,20 @@ export default {
       }
       return displayText;
     },
+    changeState(event,task){
+      this.data.forEach(item => {
+        if(item.nanoid === task.nanoid){
+          this.dragStartTimer = setTimeout(() => {
+            item.completed = event.target.checked
+          },2000)
+        }else{
+          item.completed = false
+        }
+      })
+    },
+  },
+  beforeDestroy() {
+    clearTimeout(this.dragStartTimer);
   },
 }
 </script>
