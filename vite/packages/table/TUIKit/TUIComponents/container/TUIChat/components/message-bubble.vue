@@ -84,7 +84,7 @@
 
   <Teleport to="body">
     <Modal v-if="show" v-model:visible="show" :blurFlag="true">
-      <div style="color: #000;">123</div>
+      <MemberInfo :info="memberInfo" @submit="show = false"></MemberInfo>
     </Modal>
   </Teleport>
 
@@ -104,11 +104,18 @@ import { TUIEnv } from '../../../../TUIPlugin';
 import MessageEmojiReact from './message-emoji-react.vue';
 import TIM from '../../../../TUICore/tim/index';
 import Modal from '../../../../../components/Modal.vue';
+import MemberInfo from './memberInfo.vue';
 
 import {post} from "../../../../../js/axios/request";
 import {sUrl} from '../../../../../consts'
+import {Server} from '../../../../../consts'
+import {getConfig} from "../../../../../js/axios/serverApi";
+import axios from 'axios';
 
 const userCardUrl = sUrl('/app/com/userCard')
+const getUserGradeUrl = Server.baseUrl + '/app/getUserGrade'
+const getUserMedalUrl = Server.baseUrl + '/app/medal/getUserMedal'
+
 
 const messageBubble = defineComponent({
   props: {
@@ -145,7 +152,7 @@ const messageBubble = defineComponent({
   emits: ['jumpID', 'resendMessage', 'showReadReceiptDialog', 'showRepliesDialog', 'dropDownOpen'],
  
   components: {
-    MessageReference,
+    MessageReference,MemberInfo,
     MessageEmojiReact,Modal
   },
 
@@ -407,10 +414,28 @@ const messageBubble = defineComponent({
 
     const clickPersonalInfo = async(message:Message) => {  // 点击消息列表头像显示用户信息  
       data.show = true
-      // console.log('测试::>>',props.messageList);
-      // console.log('测试::>>',TUIServer);
-      const res = await getUserInfo(message.from)
-      console.log(res);
+      const res = await getUserInfo(message.from) // 获取用户基本信息
+      let conf = await getConfig()
+      conf.params = {uid: message.from}
+      let result = await axios.get(getUserGradeUrl, conf)  // 获取全球排名
+      let medalRes = await axios.get(getUserMedalUrl, conf) // 获取勋章
+     
+      const tuiUserInfo = {
+        avatar:res.data.user.avatar, 
+        nickname:res.data.user.nickname,
+        uid:res.data.user.uid
+      }
+      
+      
+      data.memberInfo = {
+        userinfo:tuiUserInfo,
+        eq:res.data.equippedItems,
+        grade:result.data.data,
+        medal:medalRes.data,
+        add:message,
+      }
+    
+      console.log('是否为自己',message);
       
     }
 
@@ -435,6 +460,8 @@ const messageBubble = defineComponent({
 });
 export default messageBubble;
 </script>
+
+
 <style lang="scss" scoped>
 @import url('../../../styles/common.scss');
 @import url('../../../styles/icon.scss');
