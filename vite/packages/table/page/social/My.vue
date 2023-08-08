@@ -26,7 +26,7 @@
   </vueCustomScrollbar>
 
   <div v-if="secondaryVisible === false">
-    <UpdateMyInfo ref="myInfoRef"></UpdateMyInfo>
+    <UpdateMyInfo @infoUpdated="infoUpdated" ref="myInfoRef"></UpdateMyInfo>
   </div>
 </template>
 
