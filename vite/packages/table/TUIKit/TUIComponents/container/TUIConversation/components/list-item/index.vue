@@ -1,4 +1,5 @@
 <template>
+  <!-- 会话列表 -->
   <li
     ref="content"
     class="TUI-conversation-content"
@@ -9,6 +10,7 @@
     ]"
     :id="conversation.conversationID"
   >
+    <div class="badge" v-if="conversation.isPinned"></div>
     <div
       class="TUI-conversation-item"
       @click.prevent.stop="handleListItem(conversation)"
@@ -48,42 +50,38 @@
             <p>{{ handleConversation?.showMessage(conversation) }}</p>
           </div>
         </div>
-        <div class="content-footer">
+        <div class="content-footer flex items-end">
           <span class="time">{{ handleConversation?.time(conversation.lastMessage.lastTime) }}</span>
-          <img
-            v-if="conversation.messageRemindType === 'AcceptNotNotify'"
-            class="mute-icon"
-            src="../../../../assets/icon/mute.svg"
-          />
-          <i></i>
+          <Icon icon="notification-off" v-if="conversation.messageRemindType === 'AcceptNotNotify'"></Icon>
         </div>
       </div>
     </div>
-    <div class="dialog dialog-item" v-if="toggle" ref="dialog">
-      <p class="conversation-options" @click.stop="handleItem('delete')">{{ $t('TUIConversation.删除会话') }}</p>
-      <p class="conversation-options" v-if="!conversation.isPinned" @click.stop="handleItem('ispinned')">
-        {{ $t('TUIConversation.置顶会话') }}
-      </p>
-      <p class="conversation-options" v-if="conversation.isPinned" @click.stop="handleItem('dispinned')">
-        {{ $t('TUIConversation.取消置顶') }}
-      </p>
-      <p
-        class="conversation-options"
-        v-if="conversation.messageRemindType === '' || conversation.messageRemindType === 'AcceptAndNotify'"
-        @click.stop="handleItem('mute')"
+    <div class="dialog dialog-item flex flex-col" v-if="toggle" ref="dialog">
+      <div class="rounded-lg conversation-options flex items-center justify-center" @click.stop="handleItem('delete')" >
+        <span>{{ $t('TUIConversation.删除会话') }}</span>
+      </div>
+
+      <div class="rounded-lg conversation-options flex items-center justify-center"  
+       v-if="!conversation.isPinned" @click.stop="handleItem('ispinned')"
       >
-        {{ $t('TUIConversation.消息免打扰') }}
-      </p>
-      <p
-        class="conversation-options"
-        v-if="conversation.messageRemindType === 'AcceptNotNotify'"
-        @click.stop="handleItem('notMute')"
-      >
+        <span>{{ $t('TUIConversation.置顶会话') }}</span>
+      </div>
+  
+      <div class="rounded-lg conversation-options flex items-center justify-center" v-if="conversation.isPinned" @click.stop="handleItem('dispinned')">
+         <span>{{ $t('TUIConversation.取消置顶') }}</span>
+      </div>
+
+      <div class="rounded-lg conversation-options flex items-center justify-center"  v-if="conversation.messageRemindType === '' || conversation.messageRemindType === 'AcceptAndNotify'" @click.stop="handleItem('mute')" >
+        <span>{{ $t('TUIConversation.消息免打扰') }}</span>
+      </div>
+       
+      <div class="flex items-center justify-center rounded-lg conversation-options"  v-if="conversation.messageRemindType === 'AcceptNotNotify'" @click.stop="handleItem('notMute')" >
         {{ $t('TUIConversation.取消免打扰') }}
-      </p>
+      </div>
     </div>
   </li>
 </template>
+
 <script lang="ts">
 import { onClickOutside, useElementBounding } from '@vueuse/core';
 import { defineComponent, nextTick, reactive, ref, toRefs, watch, watchEffect } from 'vue';
@@ -211,4 +209,46 @@ const ListItem: any = defineComponent({
 });
 export default ListItem;
 </script>
+
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style lang="scss" scoped>
+.TUI-conversation .pinned{
+  background: none !important;
+}
+
+.badge::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid var(--active-bg);
+}
+
+.TUI-conversation .dialog-item{
+  padding: 8px !important;
+  border: 1px solid var(--divider) !important;
+  background: var(--secondary-bg) !important;
+  width: 120px !important;
+  left: 100px !important;
+}
+
+.conversation-options{
+  font-family: PingFangSC-Regular;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  color:var(--primary-text) !important;
+  font-weight: 400 !important;
+  padding: 22px 0 !important;
+  &:hover{
+    //  opacity: 0.8 !important;
+    background: var(--active-secondary-bg) !important;
+  }
+  &:active{
+    filter: brightness(0.8) !important;
+  }
+}
+</style>
+

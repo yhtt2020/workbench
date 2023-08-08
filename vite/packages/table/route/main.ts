@@ -52,9 +52,6 @@ import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
 import Rank from '../page/social/Rank.vue';
 import BillingRecord from '../page/social/BillingRecord.vue';
-import Chat from '../page/chat/chat.vue'
-import ChatIndex from '../page/chat/index.vue'
-import Contact from '../page/chat/contact.vue'
 import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
@@ -69,6 +66,13 @@ import WorkIndex from '../page/work/WorkIndex.vue'
 import ShortcutKey from "../page/work/shortcutKey/ShortcutKey.vue";
 import Clipboard from "../page/work/clipboard/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
+
+/**聊天团队模式开始**/
+import ChatDesk from '../page/chat/chatDesk.vue'
+import Contact from '../page/chat/contact.vue'
+import Chat from '../page/chat/chat.vue'
+import ChatIndex from '../page/chat/index.vue'
+/**聊天团队模式结束**/ 
 
 export default [
   {
@@ -194,6 +198,11 @@ export default [
         name: 'chatIndex',
         children: [
           {
+            path:'',
+            name:'chatDesk',
+            component:ChatDesk
+          },
+          {
             path: '',
             name: 'chat',
             component: Chat,
@@ -202,7 +211,9 @@ export default [
             path: '/contact',
             name: 'contact',
             component: Contact,
-          }]
+          },
+          
+        ]
       },
 
       {

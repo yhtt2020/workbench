@@ -1,11 +1,14 @@
 <template>
-  <a-tooltip title="文件"  @click="document.getElementById('#fileIcon').click()" >
-    <icon icon="file"></icon>
-  </a-tooltip>
+  <div class="file"  id="file" style="padding-left: 18px;">
+     <!-- 重新将UI样式以及进行修改 -->
+    <a-tooltip title="文件" class="pointer" @click="openFile">
+      <icon icon="file" style="width: 24px;height: 24px;color: var(--secondary-text) !important;"></icon>
+    </a-tooltip>
+  </div>
+
+  
   <span  id="fileIcon" class="upload-btn icon icon-files" hidden="">
-
-
-      <input   title="文件" v-if="!isMute" type="file" data-type="file" accept="*" @change="sendUploadMessage" />
+      <input   title="文件" ref="fileRef" v-if="!isMute" type="file" data-type="file" accept="*" @change="sendUploadMessage" />
       <slot />
   </span>
 </template>
@@ -29,6 +32,13 @@ const File = defineComponent({
       default: () => false,
     },
   },
+
+  methods:{
+    openFile(){
+      this.$refs.fileRef.click()
+    }
+  },
+
   setup(props:any, ctx:any) {
     const data = reactive({
       isMute: false,
@@ -55,7 +65,8 @@ const File = defineComponent({
       sendUploadMessage,
     };
   },
-});
+ 
+})
 export default File;
 </script>
 

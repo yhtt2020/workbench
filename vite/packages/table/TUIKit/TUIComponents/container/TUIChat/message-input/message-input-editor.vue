@@ -450,6 +450,7 @@ defineExpose({
   p {
     * {
       vertical-align: bottom;
+      color: var(--secondary-text) !important;
     }
   }
   -webkit-user-select: text;
@@ -493,7 +494,7 @@ defineExpose({
 
   // placeholder style
   p.is-editor-empty:first-child::before {
-    color: #adb5bd;
+    color:var(--secondary-text);
     content: attr(data-placeholder);
     float: left;
     height: 0;

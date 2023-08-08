@@ -48,7 +48,7 @@ const sendMessage = () => {
     text-align: center;
     line-height: 20px;
     font-weight: 400;
-    background: #006eff;
+    background: var(--active-bg);
     color: #ffffff;
     letter-spacing: 0;
     cursor: pointer;

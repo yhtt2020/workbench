@@ -1,5 +1,28 @@
 <template>
-  <div class="transfer" :class="[isH5 ? 'transfer-h5' : '']">
+ <div class="flex flex-col" style="width: 400px !important;height: 400px !important;padding: 12px !important;">
+  <div class="top-close flex items-center">
+    <div class="font-16 flex items-center justify-center" style="width:95%;color: var(--primary-text);">添加好友</div>
+    <div class="rounded-lg pointer active-button h-12 w-12 flex items-center justify-center" style="background: var(--secondary-bg);" @click="closeAddFriend">
+      <Icon icon="guanbi" style="color: var(--secondary-text);width: 24px !important; height: 24px !important;"></Icon>
+    </div>
+  </div>
+
+  <div class="flex flex-col" style="margin-top: 16px !important;">
+    <a-input class="rounded-lg h-11 mb-6"   @keyup.enter="handleInput"  enterkeyhint="search" placeholder="搜索" >
+      <template #suffix>
+        <SearchOutlined style="color:var(--secondary-text);font-size: 1.25em;" />
+      </template>
+    </a-input>
+  </div>
+    
+     
+ </div>
+
+
+
+
+
+  <!-- <div class="transfer" :class="[isH5 ? 'transfer-h5' : '']">
     <header class="transfer-h5-header" v-if="isH5">
       <i class="icon icon-back" @click="cancel"></i>
       <span class="title">{{ title }}</span>
@@ -77,11 +100,13 @@
         </footer>
       </div>
     </main>
-  </div>
+  </div> -->
+
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, reactive, watchEffect, toRefs, computed } from 'vue';
+import { SearchOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
   props: {
@@ -122,85 +147,146 @@ export default defineComponent({
       default: () => true,
     },
   },
-  setup(props: any, ctx: any) {
-    const data = reactive({
-      type: '',
-      list: [],
-      selectedList: [],
-      isSearch: true,
-      isCustomItem: false,
-      title: '',
-    });
 
-    watchEffect(() => {
-      if (props.isCustomItem) {
-        for (let index = 0; index < props.list.length; index++) {
-          if (props.list[index].conversationID.indexOf('@TIM#SYSTEM') > -1) {
-            // eslint-disable-next-line vue/no-mutating-props
-            props.list.splice(index, 1);
-          }
-          data.list = props.list;
-        }
-      } else {
-        data.list = props.list;
-      }
-      data.selectedList = props.selectedList;
-      data.isSearch = props.isSearch;
-      data.isCustomItem = props.isCustomItem;
-      data.title = props.title;
-      data.type = props.type;
-    });
+  components:{ SearchOutlined },
 
-    // 可选项
-    const optional = computed(() => data.list.filter((item: any) => !item.isDisabled));
+  setup(props, ctx){
+    
+    const closeAddFriend = () =>{  // 关闭添加好友弹窗  
+      ctx.emit('close')
+    }
+    
+    return{
+      closeAddFriend,
+    }
+  }
 
-    const handleInput = (e: any) => {
-      ctx.emit('search', e.target.value);
-    };
 
-    const selected = (item: any) => {
-      if (item.isDisabled) {
-        return;
-      }
-      let list: any = data.selectedList;
-      const index: number = list.indexOf(item);
-      if (index > -1) {
-        return data.selectedList.splice(index, 1);
-      }
-      if (props.isRadio) {
-        list = [];
-      }
-      list.push(item);
-      data.selectedList = list;
-    };
 
-    const selectedAll = () => {
-      if (data.selectedList.length === optional.value.length) {
-        data.selectedList = [];
-      } else {
-        data.selectedList = [...optional.value];
-      }
-    };
 
-    const submit = () => {
-      ctx.emit('submit', data.selectedList);
-    };
 
-    const cancel = () => {
-      ctx.emit('cancel');
-    };
 
-    return {
-      ...toRefs(data),
-      optional,
-      handleInput,
-      selected,
-      selectedAll,
-      submit,
-      cancel,
-    };
-  },
-});
+
+
+  // methods:{
+  //   closeGroup(){
+  //     this.$emit('close')
+  //   }
+  // },
+
+  // setup(props, ctx) {
+  //   const data = reactive({
+  //     type: '',
+  //     list: [],
+  //     selectedList: [],
+  //     isSearch: true,
+  //     isCustomItem: false,
+  //     title: '',
+  //   });
+
+  //   watchEffect(() => {
+  //     if (props.isCustomItem) {
+  //       for (let index = 0; index < props.list.length; index++) {
+  //         if (props.list[index].conversationID.indexOf('@TIM#SYSTEM') > -1) {
+  //           // eslint-disable-next-line vue/no-mutating-props
+  //           props.list.splice(index, 1);
+  //         }
+  //         data.list = props.list;
+  //       }
+  //     } else {
+  //       data.list = props.list;
+  //     }
+  //     data.selectedList = props.selectedList;
+  //     data.isSearch = props.isSearch;
+  //     data.isCustomItem = props.isCustomItem;
+  //     data.title = props.title;
+  //     data.type = props.type;
+  //   });
+
+  //   // 可选项
+  //   const optional = computed(() => data.list.filter((item) => !item.isDisabled));
+
+  //   const handleInput = (e) => {
+  //     ctx.emit('search', e.target.value);
+  //   };
+
+  //   const selected = (item) => {
+  //     if (item.isDisabled) {
+  //       return;
+  //     }
+  //     let list = data.selectedList;
+  //     const index = list.indexOf(item);
+  //     if (index > -1) {
+  //       return data.selectedList.splice(index, 1);
+  //     }
+  //     if (props.isRadio) {
+  //       list = [];
+  //     }
+  //     list.push(item);
+  //     data.selectedList = list;
+  //   };
+
+  //   const selectedAll = () => {
+  //     if (data.selectedList.length === optional.value.length) {
+  //       data.selectedList = [];
+  //     } else {
+  //       data.selectedList = [...optional.value];
+  //     }
+  //   };
+
+  //   const submit = () => {
+  //     ctx.emit('submit', data.selectedList);
+  //   };
+
+  //   const cancel = () => {
+  //     ctx.emit('cancel');
+  //   };
+
+  //   return {
+  //     ...toRefs(data),
+  //     optional,
+  //     handleInput,
+  //     selected,
+  //     selectedAll,
+  //     submit,
+  //     cancel,
+  //   };
+  // }
+})
 </script>
 
 <style lang="scss" scoped src="./style/transfer.scss"></style>
+<style lang="scss" scoped>
+.font-16{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.active-button{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
+}
+
+.font-400{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+:deep(.ant-input-affix-wrapper){
+  border: 1px solid var(--divider) !important;
+  background: var(--secondary-bg) !important;
+}
+
+.font-14{
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  font-weight: 400;
+}
+</style>
