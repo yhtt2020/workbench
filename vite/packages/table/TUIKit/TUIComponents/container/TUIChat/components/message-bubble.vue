@@ -434,8 +434,6 @@ const messageBubble = defineComponent({
         medal:medalRes.data,
         add:message,
       }
-    
-      console.log('是否为自己',message);
       
     }
 
