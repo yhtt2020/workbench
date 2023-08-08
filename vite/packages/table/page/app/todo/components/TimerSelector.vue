@@ -91,6 +91,8 @@ import dayjs from "dayjs";
 import objectSupport from "dayjs/plugin/objectSupport";
 import { CalendarOutlined } from "@ant-design/icons-vue";
 import Modal from "../../../../components/Modal.vue";
+import { appStore } from "../../../../store";
+import { mapActions, mapWritableState } from "pinia";
 dayjs.locale("zh-cn");
 dayjs.extend(objectSupport);
 export default {
@@ -121,10 +123,14 @@ export default {
       promptVisible: false
     };
   },
+  computed: {
+    ...mapWritableState(appStore, ['fullScreen']),
+  },
   methods: {
     selectTime() {
       // this.dateTimePickerVisible = true;
       this.promptVisible = true
+      this.fullScreen = true
     },
     setTimeDayEnd(force = false) {
       if (force || this.newTime === null) {
@@ -170,6 +176,7 @@ export default {
       }
       let time = newTime.unix();
       // this.dateTimePickerVisible = false;
+      this.fullScreen = false
       this.promptVisible = false
       this.$emit("update:modelValue", time);
     },
@@ -195,6 +202,7 @@ export default {
       }
     },
     close(){
+      this.fullScreen = false
       this.promptVisible = false
     },
     clearTime(){

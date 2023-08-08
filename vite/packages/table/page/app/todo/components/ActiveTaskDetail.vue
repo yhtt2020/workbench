@@ -38,7 +38,7 @@
               <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
               </span
           ></span>
-          <span class="mx-4">
+          <span class="mx-4 todo-style">
             <a-checkbox v-model:checked="activeTask.completed"></a-checkbox>
           </span>
           <span class="xt-text flex" @click="selectTime">
@@ -125,7 +125,7 @@
           style="position: relative;height: 95%;"
         >
           <div
-            style="padding: 5px; word-break: break-all;color:var(--primary-text)"
+            style="height: 100%;padding: 5px; word-break: break-all;color:var(--primary-text)"
             v-html="activeTask.description || '点击【编辑图标】写描述'"
             v-if="!editing"
           ></div>

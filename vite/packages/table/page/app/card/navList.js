@@ -352,6 +352,20 @@ export const NavList = [
           }
         ],
         time: '2023/5/24'
+      },
+      {
+        name: 'todo',
+        cname:'待办（开发中）',
+        detail:'同步你的待办助手数据，展示在工作台桌面',
+        sizes: ['2x2', '2x4'],
+        option:[
+          {
+            name: 'Todo',
+            size: '2x2',
+            zoom: '11'
+          }
+        ],
+        time: '2023/5/24'
       }
     ],
   },

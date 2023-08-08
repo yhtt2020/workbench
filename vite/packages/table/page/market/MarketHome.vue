@@ -187,6 +187,7 @@ export default {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
+        max-width: 1200px;
         height: 80%;
         overflow: auto;
         .con-item{
@@ -197,7 +198,8 @@ export default {
           margin: 0 12px 24px;
           .item-back{
             position: absolute;
-            z-index: 1;
+            width: 320px;
+            height: 200px;
           }
           .item-content{
             position: absolute;
