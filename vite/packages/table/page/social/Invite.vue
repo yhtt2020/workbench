@@ -245,7 +245,6 @@ export default {
       }else{
         message.error('激活失败，请更换有效邀请码。')
       }
-      console.log(rs,'激活结果')
     },
     showCard (uid, userInfo) {
       this.showUserCard(uid, userInfo)

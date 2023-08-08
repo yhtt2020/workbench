@@ -165,7 +165,6 @@ export default {
         if (Object.keys(window.loadedStore).some(key => {
           let check = !window.loadedStore[key]
           if (window.loadedStore[key] === false)
-            console.log(key, '=', window.loadedStore[key])
           return check
         })) {
           //未全部搞定
@@ -299,7 +298,6 @@ export default {
 
     async afterLaunch () {
       this.bindCaptureIPC()
-      console.log('afterLaunch')
 
       this.bindClientEvents()
 

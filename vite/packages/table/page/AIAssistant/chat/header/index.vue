@@ -118,10 +118,6 @@ export default {
       let editRef = this.$refs.editRef;
       this.topicList[this.selectTopicIndex] = _.cloneDeep(editRef.value);
       this.settingVisible = false;
-      console.log(
-        "    this.topicList[this.selectTopicIndex]  :>> ",
-        this.topicList[this.selectTopicIndex]
-      );
     },
   },
 };

@@ -11,7 +11,7 @@ export const configStore = defineStore('config', {
         return {
             dataSourceType: DataSourceTypes.LOCAL_STORAGE, //cloud
             config: {
-                menuState: MenuState.FOLD,
+                menuState: MenuState.UN_FOLD,
                 showComplete:false,
                 sort:<ISort>sortType.TIME,
             },
@@ -29,7 +29,6 @@ export const configStore = defineStore('config', {
                 this.config.menuState = MenuState.FOLD
             }
             this.config.menuState = this.config.menuState === MenuState.FOLD ? MenuState.UN_FOLD : MenuState.FOLD
-            console.log(this.config.menuState)
         },
         showCompleted(){
             this.config.showComplete=true
@@ -38,7 +37,6 @@ export const configStore = defineStore('config', {
             this.config.showComplete=false
         },
         setSort(list:IListInfo, sort:ISort){
-            console.log(list,sort)
             if(!list){
                 this.config.sort=sort
             }

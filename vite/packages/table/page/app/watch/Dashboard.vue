@@ -497,7 +497,6 @@ export default {
   },
   mounted () {
     let nanoid = this.$route.params['nanoid']
-    console.log(nanoid)
     this.nanoid = nanoid
     this.loadTaskInfo(nanoid, () => {
       this.getData()
@@ -588,7 +587,6 @@ export default {
       this.onlineData = data
       this.chartData = chartData
       //this.chartKey=Date.now()
-      console.log(chartData, '获得interval数据')
     },
     loadTaskInfo (nanoid, cb) {
       tableApi.watch.getTask({ nanoid: nanoid }).then(task => {
@@ -610,7 +608,6 @@ export default {
         data.rate.reply = this.getRate(data.totalReply, data.view)
 
         this.stage = this.guessStage(task.data.view)
-        console.log(task)
         if (cb) cb(task)
       })
     },
@@ -652,7 +649,6 @@ export default {
             let ctx = canvas.getContext('2d')
             var img = new Image()
             img.onload = function () {
-              console.log(img, 'draw')
               ctx.drawImage(this, 0, 0, 60, 60)
             }
             img.src = '/icons/logo128.png'

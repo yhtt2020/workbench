@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
 import {timerStore} from "./timer";
+import {marketStore} from "./market";
 
 // @ts-ignore
 export const cardStore = defineStore(
@@ -346,6 +347,8 @@ export const cardStore = defineStore(
           // }
           // let cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
           // data.settings.cardZoom =
+          console.log(data,'商品id')
+          marketStore().incCount(data.dataNanoid)
           data.settings.preparing=true//设置为未初始化，等到第一次进去的时候再初始化
           data.settings.layoutSize=layoutSize
           let desk = {
@@ -353,6 +356,7 @@ export const cardStore = defineStore(
             nanoid: nanoid(4),
             id:nanoid(4),
             cards: data.cards,
+            marketId:data.dataNanoid,
             settings: {...data.settings,enableZoom:true},
             // showSettings: true
           }

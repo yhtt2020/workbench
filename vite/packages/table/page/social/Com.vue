@@ -264,10 +264,8 @@ export default {
       browser.openInInner(url)
     },
     async loadTeamBarrage() {
-      console.log(this.my, 'wode小组')
       await this.updateMy()
       if (this.myTeamNo) {
-        console.log(this.myTeamNo, '')
         tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
           if (rs.status) {
             rs.data.forEach(item => {
@@ -311,13 +309,11 @@ export default {
           pageUrl = this.myTeamNo
         }
 
-        console.log(channelType, pageUrl)
         let data = {
           channel_type: channelType,
           content: this.postContent,
           page_url: String(pageUrl),
         }
-        console.log('添加 的daa', data)
         let rs = await tsbApi.barrage.add(data)
         if (rs.status) {
           this.postContent = ''

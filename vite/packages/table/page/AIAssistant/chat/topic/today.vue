@@ -16,7 +16,6 @@ export default {
   components: { Topic },
   methods: {
     onTop() {
-      console.log("123 :>> ", 123321);
     },
   },
 };

@@ -152,7 +152,6 @@ export default {
       if (savePath) {
         action.data[input.name] = savePath[0]
       } else {
-        console.log('取消选择')
       }
     }
   }

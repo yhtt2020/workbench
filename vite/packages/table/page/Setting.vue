@@ -409,7 +409,6 @@ export default {
           centered: true,
         });
       }
-      console.log(rs, "验证结果");
     },
     async createCodes() {
       this.create().then((rs) => {

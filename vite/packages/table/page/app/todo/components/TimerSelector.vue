@@ -174,7 +174,6 @@ export default {
       this.$emit("update:modelValue", time);
     },
     clearDeadTime(e) {
-      console.log(e);
       if (e.target.nodeName.toLowerCase() === "span") {
         this.newDate = null;
         this.newTime = null;

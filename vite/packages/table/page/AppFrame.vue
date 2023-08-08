@@ -229,7 +229,6 @@ export default {
         bounds: position,
         app: this.app,
       };
-      console.log("发送消息");
       ipc.send("syncTableAppBounds", JSON.parse(JSON.stringify(args)));
     },
     handleLeave() {

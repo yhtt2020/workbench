@@ -111,7 +111,6 @@ export default {
     ...mapActions(appStore, ['getUserCard']),
     async updateUserInfo () {
       let response = await this.getUserCard(this.uid)
-      console.log(response, '用户信息')
       if (response.code === 200) {
 
         const data = response.data

@@ -112,9 +112,7 @@ export default {
         properties: ["openFile "],
       });
       if (savePath) {
-        console.log("object :>> ", savePath[0]);
       } else {
-        console.log("取消选择");
       }
     },
   },

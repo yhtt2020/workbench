@@ -7,7 +7,9 @@ const api = {
   getCategories: sUrl('/app/category/list'),
   addDesk: sUrl('/app/good/desk/add'),
   getDesks: sUrl('/app/good/desk/page'),
-  getRecommend:sUrl('/app/good/getGoodRecommend')
+  getRecommend:sUrl('/app/good/getGoodRecommend'),
+  incSupport:sUrl('/app/good/incSupport'),
+  incCount:sUrl('/app/good/incCount')
 }
 
 
@@ -52,5 +54,20 @@ export const marketStore = defineStore('marketStore', {
       }
     },
 
+    /**
+     * 增加商品统计数
+     * @param dataNanoid
+     */
+    async incCount(dataNanoid){
+      return await post(api.incCount,{dataNanoid:dataNanoid})
+    },
+
+    /**
+     * 增加点赞数
+     * @param dataNanoid
+     */
+    async incSupport(dataNanoid){
+      return await post(api.incSupport,{dataNanoid:dataNanoid})
+    }
   }
 })

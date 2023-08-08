@@ -1,39 +1,39 @@
 <template>
-  <div v-for="(item,index) in detailItem" class="flex flex-col mb-3 p-4 rounded-lg" 
-   style="width: 395px; background: var(--secondary-bg);position: relative;" 
-   @contextmenu.stop="noticeMenu(index,$event)"  
+  <div v-for="(item,index) in detailItem" class="flex flex-col mb-3 p-4 rounded-lg"
+   style="width: 395px; background: var(--secondary-bg);position: relative;"
+   @contextmenu.stop="noticeMenu(index,$event)"
   >
-    
+
     <div class="flex items-center justify-between mb-4" v-if="isStringEmpty(item)">
       <div class="flex items-center">
         <span class="pr-2 font-400" style="color: var(--primary-text);">收到了来自</span>
         <a-avatar :size="24"  :src="item.from.avatarUrl"></a-avatar>
         <span class="px-2 font-500"  style="color: var(--active-bg);">{{ item.from.username }}</span>
-        <span class="pr-2 font-400" style="color: var(--primary-text);">赠送的礼物</span> 
+        <span class="pr-2 font-400" style="color: var(--primary-text);">赠送的礼物</span>
       </div>
     </div>
 
     <div class="delete-button">
       <div class="pointer active-button flex p-1 items-center justify-center" @click="removeNotification(index)">
-        <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon> 
+        <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
       </div>
     </div>
 
     <div class="font-400 mb-4" v-if="item.title !== ''" style="color: var(--primary-text);">{{item.title}}</div>
-    
+
     <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.body }}</div>
 
     <div  class="flex items-center justify-between" style="height: 38px;">
       <span class="font-400" style="color:var(--secondary-text);">{{ formatDate(item.time) }}</span>
       <div  class="flex">
-        <div class="py-2 px-4 active-button rounded-lg ml-3 pointer" 
+        <div class="py-2 px-4 active-button rounded-lg ml-3 pointer"
          style="background:var(--active-bg);color: var(--active-text);"
          @click="goNotice"
         >
           立即查看
         </div>
       </div>
-    </div> 
+    </div>
 
   </div>
 
@@ -71,7 +71,7 @@ export default {
   methods:{
     ...mapActions(noticeStore,['deleteNotice']),
     formatDate,
-    removeNotification(index){ // 删除指定消息通知  
+    removeNotification(index){ // 删除指定消息通知
       this.deleteNotice(this.detailId,index)
     },
 
@@ -97,16 +97,15 @@ export default {
       document.removeEventListener('click', this.handleOutsideClick);
     },
 
-    handleMenuItemClick(item){  
-      if(item.name === 'remove'){  // 右键下拉菜单删除  
-        console.log(this.delId);
+    handleMenuItemClick(item){
+      if(item.name === 'remove'){  // 右键下拉菜单删除
         this.deleteNotice(this.detailId,this.delId)
       }else{
         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
       }
-    },    
+    },
 
-    goNotice(){  // 查看消息通知跳转机制 
+    goNotice(){  // 查看消息通知跳转机制
       // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
     },
 
