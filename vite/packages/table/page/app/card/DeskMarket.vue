@@ -76,11 +76,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    //下拉框选中的类型
-    selected: {
-      type: String,
-      default: () => ''
-    },
+
     deskItemStyle: {
       type: String,
       default: () => ''
@@ -90,25 +86,18 @@ export default {
     items: {
       immediate: true,
       handler () {
-        this.displayItems = JSON.parse(JSON.stringify(this.items))
-        this.displayItems=this.displayItems.map(item=>{
+        let items= JSON.parse(JSON.stringify(this.items))
+        this.displayItems=items.map(item=>{
           let  itemNew={
             ...item,
             ...item.data
           }
           return itemNew
         })
+        console.log(this.displayItems)
       }
     },
-    selected: {
-      immediate: true,
-      deep: true,
-      handler (newV, oldV) {
-        if (newV == '下载次数') this.displayItems = this.mySort(this.displayItems, 'download')
-        else if (newV == '更新时间') this.displayItems = this.mySort(this.displayItems, 'time')
-        else this.displayItems = this.items
-      }
-    },
+
   },
   methods: {
     ...mapActions(appStore, ['showUserCard']),
@@ -125,6 +114,7 @@ export default {
       })
     },
     previewKay (item) {
+      console.log(item)
       this.$emit('openPreview', {
         scheme: item, showModal: true
       })

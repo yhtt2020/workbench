@@ -42,7 +42,7 @@
       </a-col>
     </a-row>
   </div>
-  <UpdateMyInfo ref="myInfoRef"></UpdateMyInfo>
+  <UpdateMyInfo @infoUpdated="infoUpdated" ref="myInfoRef"></UpdateMyInfo>
 </template>
 
 <script>
@@ -67,6 +67,9 @@ export default {
     go(url){
       browser.openInInner(url)
     },
+    infoUpdated(){
+      this.$emit('infoUpdated')
+    }
   }
 }
 </script>

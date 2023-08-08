@@ -12,26 +12,26 @@
         </div>
         <div class="flex-grow flex w-full justify-between px-5">
           <div class="w-1/2 flex flex-col">
-            <span class="update-title mb-6">昵称</span>
-            <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-6" style="border: 1px solid var(--divider);background: var(--secondary-bg);">
+            <span class="update-title mb-3">昵称</span>
+            <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-3" style="border: 1px solid var(--divider);background: var(--secondary-bg);">
               <a-input v-model:value="randomNickname" placeholder="请输入" :bordered="false" style="padding: 0;width:90%;"></a-input>
               <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
                 <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
               </div>
             </div>
-            <span class="update-title mb-6">头像</span>
+            <span class="update-title mb-3">头像</span>
             <div class="flex w-full mx-1.5 flex-wrap justify-between" style="position: relative;">
-              <UploadImage class="avatar-box rounded-lg"></UploadImage>  
+              <UploadImage :key="key" class="avatar-box rounded-lg"></UploadImage>
               <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3" :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)">
                <a-avatar :size="48" :src="getAvatarUrl(item.id)"></a-avatar>
               </div>
             </div>
           </div>
-          <a-divider type="vertical" class="mx-6"  style="height:404px;"/>
+          <a-divider type="vertical" class="mx-6"  style="height:380px;"/>
           <div class="w-1/2 flex flex-col">
-            <span class="update-title mb-5">个性签名</span>
+            <span class="update-title mb-3">个性签名</span>
             <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;background: var(--secondary-bg);border: 1px solid var(--divider);"/>
-            <span class="update-title mb-6">性别</span>
+            <span class="update-title mt-3 mb-3">性别</span>
             <HorizontalPanel :navList="sexType" v-model:selectType="gender"></HorizontalPanel>
             <div class="my-16 flex mx-auto">
               <span class="com-title" style="color: var(--secondary-text);">更多个人信息编辑、账号设置等，请前往</span>
@@ -69,6 +69,7 @@ export default {
     Modal,UploadImage,
     HorizontalPanel
   },
+  emits:['infoUpdated'],
   props:{
     updateVisible:{
       type:Boolean,
@@ -77,6 +78,7 @@ export default {
   },
   data(){
     return{
+      key:Date.now(),
       updateInfoVisible:this.updateVisible,
       settingsScroller: {
         useBothWheelAxes: true,
@@ -112,10 +114,12 @@ export default {
     }
   },
   methods:{
-    ...mapActions(appStore,['editPresetAvatar','setInfoVisible','setSecondaryVisible']),
+    ...mapActions(appStore,['editPresetAvatar','setInfoVisible','setSecondaryVisible','getUserInfo']),
     ...mapActions(frameStore,['updateMyinfo']),
     openMyInfo(){
+      this.key=Date.now()
       this.updateInfoVisible = true
+
     },
     // 随机筛选
     roll (animate=true) {
@@ -133,7 +137,7 @@ export default {
       }
 
     },
-    rollName(){  // 掷骰子随机昵称 
+    rollName(){  // 掷骰子随机昵称
       let groups = screenname.split(',')
       let j = Math.ceil((Math.random() * groups.length)) - 1
       if (this.j === j) {
@@ -153,18 +157,29 @@ export default {
       this.frameData.avatar_url = this.getAvatarUrl(item.id)
     },
     // 点击保存
-    comSave(){
+    async comSave () {
       const saveUpdateMyInfo = {
-        nickname:this.randomNickname,
-        sex:this.gender.sex,
-        signature:this.areaValue,
-        avatar:this.frameData.avatar_url
+        nickname: this.randomNickname,
+        sex: this.gender.sex,
+        signature: this.areaValue,
+        avatar: this.frameData.avatar_url
       }
-      this.updateMyinfo(saveUpdateMyInfo)
-      message.success('信息修改成功')
-      this.updateInfoVisible = false
-      this.setInfoVisible(false)
-      this.setSecondaryVisible(true)
+      let rs = await this.updateMyinfo(saveUpdateMyInfo)
+      console.log(rs)
+      if (rs.code===200) {
+        this.$emit('infoUpdated',{})
+        message.success('信息修改成功')
+
+        this.updateInfoVisible = false
+        this.setInfoVisible(false)
+        this.setSecondaryVisible(true)
+        setTimeout(() => {
+          this.getUserInfo()
+        }, 10)
+      } else {
+        message.error('修改失败')
+      }
+
     },
     go(url){
       browser.openInInner(url)
@@ -201,7 +216,7 @@ export default {
 .com-title{
   font-family: PingFangSC-Medium;
   font-size: 16px;
-  font-weight: 400; 
+  font-weight: 400;
 }
 
 .com-button{
@@ -270,7 +285,7 @@ export default {
 
 @media screen and (min-height:600px) {
   :deep(.ps-container){
-    height: 578px !important;
+    height: 545px !important;
   }
 }
 </style>

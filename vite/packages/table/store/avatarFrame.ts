@@ -36,10 +36,7 @@ export const frameStore = defineStore('frameStore',{
       }
     },
     async updateMyinfo(data){  // 修改我的信息
-      const updateMyInfoResult = await axios.post(editInfoUrl,data,await getConfig())
-      if(updateMyInfoResult.data.data.msg === 'ok' ){
-        // message.success('修改成功')
-      }
+      return  await post(editInfoUrl,data)
     },
     saveAvatarUrl(){ // 将返回的图片路径进行缓存
       this.frameData.avatar_url =  cache.get('avatar_url')
