@@ -318,21 +318,31 @@ export default {
 }
 
 .item-nav:hover {
-  background: var(--active-secondary-bg);
+  background: var(--active-bg);
+  .icon-color {
+    :deep(.icon) {
+      fill: rgba(255,255,255,0.9) !important;
+    }
+  }
 }
 
 .icon-color:hover {
   color: rgba(255, 255, 255, 0.8) !important;
 }
-
+//.dark-model .active-back{
+//  background: var(--active-secondary-bg) !important;
+//}
 .active-back {
   // border: 1px solid red;
-  background: var(--active-secondary-bg) !important;
-  // color: var(--primary-text) !important;
 
+  // color: var(--primary-text) !important;
+  background: var(--active-bg);
   :deep(.icon) {
-    fill: var(--active-bg) !important;
+    fill: rgba(255,255,255,0.9) !important;
   }
+  //:deep(.icon) {
+  //  fill: var(white) !important;
+  //}
 }
 
 .active-color {
