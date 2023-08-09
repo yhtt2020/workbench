@@ -281,6 +281,7 @@ import Tab from '../card/components/Tab/index.vue'
 import Template from '../../../user/pages/Template.vue'
 import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
+import EatToday from '../widgets/EatToday.vue'
 
 export default {
   name: 'Desk',
@@ -331,6 +332,7 @@ export default {
     AddIcon,
     SmallRank,
     Todo,
+    EatToday
   },
   props:
     {

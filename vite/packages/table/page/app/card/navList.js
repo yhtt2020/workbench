@@ -366,6 +366,20 @@ export const NavList = [
           }
         ],
         time: '2023/5/24'
+      },
+      {
+        name: 'eatToday',
+        cname:'今天吃什么小组件（开发中）',
+        detail:'选择困难症患者，想不好今天该吃啥？试试这个小组件帮你决定。',
+        sizes: ['2x4'],
+        option:[
+          {
+            name: 'eatToday',
+            size: '2x4',
+            zoom: '11'
+          }
+        ],
+        time: '2023/5/24'
       }
     ],
   },
