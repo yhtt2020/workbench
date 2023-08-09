@@ -397,29 +397,15 @@ export default {
       timeout: 5 * 1000, // 5 秒
 
       async customUpload(file, insertFn) {
-        // JS 语法
-        // file 即选中的文件
-        // 自己实现上传，并得到图片 url alt href
-        // 最后插入图片
         let url;
         var formData = new FormData();
         formData.append("file", file);
         url=  await fileUpload(file)
-        console.log(url,'url')
         if (!url) {
           message.error("图片上传失败");
         } else {
           insertFn(url);
         }
-
-        // api.getCosUpload(formData).then((data) => {
-        //   if (data.data.code === 1000) {
-        //     url = 'http://' + data.data.data
-        //     insertFn(url)
-        //   } else {
-        //     message.error('图片上传失败')
-        //   }
-        // })
       },
     };
     return {
