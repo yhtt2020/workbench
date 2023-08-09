@@ -94,7 +94,7 @@
               </span>
               <template v-if="editing">
                 <div style="width:150px">
-                  <HorizontalPanel :navList="navList" v-model:selectType="selectType" :height="44" ></HorizontalPanel>
+                  <HorizontalPanel style="min-width: 150px"  :navList="navList" v-model:selectType="selectType" :height="44" ></HorizontalPanel>
                 </div>
                 <!-- <a-radio-group
                   buttonStyle="outline"
@@ -125,7 +125,7 @@
           style="position: relative;height: 95%;"
         >
           <div
-            style="height: 100%;padding: 5px; word-break: break-all;color:var(--primary-text)"
+            style="height: 100%;padding: 5px; word-break: break-all;color:var(--primary-text);user-select: text"
             v-html="activeTask.description || '点击【编辑图标】写描述'"
             v-if="!editing"
           ></div>
@@ -211,7 +211,7 @@
 
 <script lang="ts">
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
-import api from "../model/api";
+import { fileUpload, pathUpload } from '../../../../components/card/hooks/imageProcessing'
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { mapActions, mapWritableState } from "pinia";
 import { taskStore } from "../stores/task";
@@ -404,15 +404,14 @@ export default {
         let url;
         var formData = new FormData();
         formData.append("file", file);
+        url=  await fileUpload(file)
+        console.log(url,'url')
+        if (!url) {
+          message.error("图片上传失败");
+        } else {
+          insertFn(url);
+        }
 
-        await api.getCosUpload(formData, (err, data) => {
-          if (!err) {
-            message.error("图片上传失败");
-          } else {
-            url = "http://" + data.data.data;
-            insertFn(url);
-          }
-        });
         // api.getCosUpload(formData).then((data) => {
         //   if (data.data.code === 1000) {
         //     url = 'http://' + data.data.data
@@ -421,39 +420,6 @@ export default {
         //     message.error('图片上传失败')
         //   }
         // })
-      },
-    };
-    editorConfig.MENU_CONF["uploadImage"] = {
-      maxFileSize: 10 * 1024 * 1024,
-
-      // 最多可上传几个文件，默认为 10
-      maxNumberOfFiles: 10,
-
-      metaWithUrl: false,
-
-      // 跨域是否传递 cookie ，默认为 false
-      withCredentials: true,
-
-      // 超时时间，默认为 10 秒
-      timeout: 5 * 1000, // 5 秒
-
-      async customUpload(file, insertFn) {
-        // JS 语法
-        // file 即选中的文件
-        // 自己实现上传，并得到图片 url alt href
-        // 最后插入图片
-        let url;
-        var formData = new FormData();
-        formData.append("file", file);
-
-        await api.getCosUpload(formData, (err, data) => {
-          if (!err) {
-            message.error("图片上传失败");
-          } else {
-            url = "http://" + data.data.data;
-            insertFn(url);
-          }
-        });
       },
     };
     return {
