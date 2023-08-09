@@ -1,37 +1,145 @@
 <template>
-  <div class="flex flex-col">
-    <!-- <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 12px 16px !important;margin-bottom: 16px !important;">
+  <div class="flex flex-col " style="height: 100%;">
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 12px 16px !important;margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;">
         <span class="font-14" style="color: var(--primary-text);">群信息</span>
         <Icon icon="xiangyou"></Icon>
       </div>
       <div class="flex items-center">
-        <a-avatar shape="square" :size="32" :src="conversation.groupProfile.avatar"></a-avatar>
-        <span class="pl-3"> {{ conversation.groupProfile.name }}</span>
+        <a-avatar shape="square" :size="32" :src="list.avatar"></a-avatar>
+        <span class="pl-3"> {{ list.name }}</span>
       </div>
     </div>
+
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;">
         <span class="font-14" style="color: var(--primary-text);">群公告</span>
         <Icon icon="xiangyou"></Icon>
       </div>
       <div>
-        {{ conversation.groupProfile.notification.length === 0 ? '暂无群公告' : conversation.groupProfile.notification }}
+        {{ list.notification.length === 0 ? '暂无群公告' : list.notification }}
       </div>
     </div>
+
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;">
         <span class="font-14" style="color: var(--primary-text);">群成员</span>
+        <div class="flex items-center">
+          <span class="font-14" style="color: var(--primary-text);">{{memberList.length}}人</span>
+          <Icon icon="xiangyou"></Icon>
+        </div>
+      </div>
+      <div class="flex">
+        <div v-for="item in memberList" class="flex flex-col" style="margin-right:16px;">
+          <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
+          <div class="font-12">{{ item.nick }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+        <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>
-      <div>
-         
+
+      <div class="flex items-center justify-between" style="padding: 14px 0;">
+        <span class="font-14" style="color: var(--primary-text);">群ID</span>
+        <div class="flex">
+          <span>{{ list.groupID }}</span>
+          <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
+        </div>
       </div>
-    </div> -->
+
+      <div class="flex items-center justify-between" style="padding: 14px 0;">
+        <span class="font-14" style="color: var(--primary-text);">群类型</span>
+        <span class="font-14" style="color: var(--secondary-text);">
+          {{ $t(`TUIChat.manage.${typeName[conversation.groupProfile.type]}`) }}
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between" style="padding: 14px 0;">
+        <span class="font-14" style="color: var(--primary-text);">加群方式</span>
+        <span class="font-14" style="color: var(--secondary-text);">
+          {{  $t(`TUIChat.manage.${typeName[conversation.groupProfile.joinOption]}`)  }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-between">
+      <div class="flex  rounded-lg pointer  active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);">转让群聊</div>
+      <div class="flex  rounded-lg pointer active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);">解散群聊</div>
+    </div>
+
   </div>
 </template>
 
-<script lang="ts">
+<script>
+import { defineComponent, watchEffect, reactive, toRefs, computed, watch, ref, onMounted } from 'vue';
+import useClipboard from 'vue-clipboard3';
+
+const manage = defineComponent({
+  props:{
+    conversation: {
+      type: Object,
+      default: () => ({}),
+    }
+  },
+
+  setup(props,ctx){
+    const types = manage.TUIServer.TUICore.TIM.TYPES;
+    const { GroupServer } = manage;
+    const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
+    
+    const data = reactive({
+      list:GroupServer.store.groupList[0], // 获取群组信息
+      memberList:[],   // 获取成员数据列表
+      typeName: {
+        [types.GRP_WORK]: '好友工作群',
+        [types.GRP_PUBLIC]: '陌生人社交群',
+        [types.GRP_MEETING]: '临时会议群',
+        [types.GRP_AVCHATROOM]: '直播群',
+        [types.JOIN_OPTIONS_FREE_ACCESS]: '自由加入',
+        [types.JOIN_OPTIONS_NEED_PERMISSION]: '需要验证',
+        [types.JOIN_OPTIONS_DISABLE_APPLY]: '禁止加群',
+      },
+    })
+   
+    const options = {
+      groupID:data.list.groupID, 
+      count: 15, 
+      offset: 0
+    }
+
+    const getMember = async () =>{  // 获取群组成员列表
+      const res = await GroupServer.getGroupMemberList(options)
+      data.memberList = res.data.memberList
+    }
+   
+  
+    const handleGroupIDCopy = async () => {  // 复制群组id
+      const { toClipboard } = useClipboard();
+      await toClipboard(data?.list.groupID);
+    }
+
+
+    onMounted(getMember)
+
+    return{
+      ...toRefs(data),getMember,handleGroupIDCopy,
+
+    }
+  }
+
+
+})
+
+export default manage;
+</script>
+
+
+
+<!-- <script lang="ts">
 import { defineComponent, watchEffect, reactive, toRefs, computed, watch, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import Mask from '../../../components/mask/mask.vue';
@@ -583,9 +691,10 @@ const manage = defineComponent({
 })
 
 export default manage;
-</script>
+</script> -->
 
 
+<style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scoped>
 .font-14{
   font-family: PingFangSC-Regular;
@@ -593,6 +702,21 @@ export default manage;
   font-weight: 400;
 }
 
+.font-12{
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+
+.active-button{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
+}
 </style>
-<style lang="scss" scoped src="./style/index.scss"></style>
 

@@ -19,18 +19,13 @@
 
   <teleport to='body'>
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
-      <CreateGroup v-if="addIndex === 1" @submit="create" @cancel="toggleOpen" :isH5="env.isH5" />
-      <AddFriend v-if="addIndex === 0"></AddFriend>
+      <CreateGroup v-if="addIndex === 1" @submit="create" @close="close" @cancel="toggleOpen" :isH5="env.isH5" />
+      <AddFriend v-if="addIndex === 0" @close="close"></AddFriend>
       <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
     </Modal>
   </teleport>
 
-  <!-- 
-    <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" /> -->
-    <!-- v-if="step === 1" 
 
-    :class="{'active-bg':addIndex === index}"
-  -->
 
   <!-- <Dialog :show="open" :isH5="env.isH5" :isHeaderShow="false" :isFooterShow="false" :background="false" @update:show="(e) => (open = e)">
     <Transfer :isSearch="needSearch" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="step === 1"/>
@@ -140,12 +135,14 @@ const TUISearch = defineComponent({
     }
 
     const toggleOpen = () => {
-      data.open = !data.open;
-      if (!data.open) {
-        data.searchUserID = '';
-        data.step = 1;
-        initGroupOptions();
-      }
+      data.open = false
+
+      // data.open = !data.open;
+      // if (!data.open) {
+      //   data.searchUserID = '';
+      //   data.step = 1;
+      //   initGroupOptions();
+      // }
     }
 
     const submit = (userList) => {
@@ -220,7 +217,7 @@ const TUISearch = defineComponent({
             data.showTitle = t('TUISearch.发起单聊');
             return data.showTitle;
         }
-      },150)
+      },100)
      
       // data.open = true;
       // data.searchUserList = [...data.allUserList];
@@ -263,7 +260,7 @@ const TUISearch = defineComponent({
     const close = () => { // 关闭弹窗回调函数
       data.open = false
     }
-
+  
 
     return {
       ...toRefs(data), toggleOpen, handleSearch, submit, create,

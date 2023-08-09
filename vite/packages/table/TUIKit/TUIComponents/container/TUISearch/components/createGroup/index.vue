@@ -1,6 +1,46 @@
 <template>
-  <div style="color: var(--secondary-text);">
-    加入群聊
+  <div class="flex flex-col" style="padding:12px;width: 400px;height: 400px;">
+    <div class="flex items-center justify-between">
+      <div class="font-16 flex items-center justify-center" style="color:var(--primary-text);width: 95%;">加入群聊</div>
+      <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center"
+        style="background: var(--secondary-bg);" @click="closeJoinGroup"
+      >
+        <Icon icon="guanbi" style="color: var(--primary-text);width: 24px;height: 24px;"></Icon>
+      </div>
+    </div>
+
+    <div style="margin: 24px 0;" >
+      <a-input placeholder="输入群ID搜索" v-model:value="searchId" class="h-12" style="border-radius: 12px;"
+        @keyup.enter="searchGroup" 
+      >
+        <template #suffix>
+          <SearchOutlined />
+        </template>
+      </a-input>
+    </div>
+
+    <div class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 50px;"  v-if="searchResult.length === 0">
+      <a-empty :image="simpleImage"/>
+    </div>
+
+    <template v-else>
+      <div class="flex justify-between items-center" v-for="item in searchResult" style="margin-bottom: 8px;">
+        <div class="flex">
+          <a-avatar shape="square" :size="48" :src="item.avatar"></a-avatar>
+          <div class="flex flex-col" style="margin-left:16px;">
+            <span style="color: var(--primary-text);">{{ item.name }}</span>
+            <span style="color: var(--primary-text);">{{ item.maxMemberCount === '' ? 1 : item.maxMemberCount }}人</span>
+          </div>
+        </div>
+        <div class="flex items-center rounded-lg pointer  justify-center active-button" 
+         style="padding: 9px 18px; color: var(--active-text);background: var(--active-bg);"
+         @click="joinGroup(item)"
+        >
+         加入
+        </div>
+      </div>
+    </template>
+
   </div>
 
   
@@ -98,12 +138,15 @@
         </footer>
       </div>
     </div> -->
+
 </template>
 <script >
 import { computed, defineComponent, reactive, toRefs } from 'vue';
-import Link from '../../../../../utils/link';
+// import Link from '../../../../../utils/link';
+import { SearchOutlined } from '@ant-design/icons-vue'
+import _ from 'lodash-es'
 
-const group = defineComponent({
+const TUISearch = defineComponent({
   name: 'group',
   props: {
     isH5: {
@@ -111,135 +154,221 @@ const group = defineComponent({
       default: () => false,
     },
   },
-  setup(props, ctx) {
-    const data = reactive({
-      profile: {
-        groupID: '',
-        name: '',
-        type: '',
-        avatar: '',
-        introduction: '',
-        notification: '',
-        joinOption: '',
-      },
-      editConfig: {
-        title: '',
-        value: '',
-        key: '',
-        type: '',
-        placeholder: '',
-      },
-      isEdit: false,
-      type: [
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/Public.svg',
-          label: '陌生人社交群（Public）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC,
-          detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。详见',
-          src: '产品文档',
-        },
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/Meeting.svg',
-          label: '临时会议群（Meeting）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_MEETING,
-          detail: '创建后可以随意进出，且支持查看入群前消息；适合用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。详见',
-          src: '产品文档',
-        },
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/Work.svg',
-          label: '好友工作群（Work）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_WORK,
-          detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主神奇。详见',
-          src: '产品文档',
-        },
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/AVChatroom.svg',
-          label: '直播群（AVChatroom）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM,
-          detail: '创建后可以随意进出，没有群成员数量上限，但不支持历史消息存储；适合与直播产品结合，用于弹幕聊天场景。详见',
-          src: '产品文档',
-        },
-      ],
-    });
-
-    data.profile.type = data.type[0].type;
-    data.profile.avatar = data.type[0].icon;
-
-    const groupTypeDetail = computed(()=> {
-      return data.type.filter((item)=> {
-        return item.type === data.profile.type;
-      })[0];
-    });
-
-    const selected = (item) => {
-      if (data.profile.type !== item.type) {
-        data.profile.type = item.type;
-        data.profile.avatar = item.icon;
-      }
-    };
-
-    const submit = (profile) => {
-      if (data.isEdit) {
-        (data.profile )[data.editConfig.key] = data.editConfig.value;
-        return data.isEdit = !data.isEdit;
-      }
-      const options = {
-        name: profile.name,
-        type: profile.type,
-        groupID: profile.groupID,
-        avatar: profile.avatar,
-      };
-      ctx.emit('submit',  options);
-    };
-
-    const cancel = () => {
-      if (data.isEdit) {
-        return data.isEdit = !data.isEdit;
-      }
-      ctx.emit('cancel');
-    };
-
-    const edit = (label) => {
-      data.isEdit = !data.isEdit;
-      data.editConfig.key = label;
-      data.editConfig.value = (data.profile)[label];
-      switch (label) {
-        case 'name':
-          data.editConfig.title = '设置群名称';
-          data.editConfig.placeholder = '请输入群名称';
-          data.editConfig.type = 'input';
-          break;
-        case 'groupID':
-          data.editConfig.title = '设置群ID';
-          data.editConfig.placeholder = '请输入群ID';
-          data.editConfig.type = 'input';
-          break;
-        case 'type':
-          data.editConfig.title = '选择群类型';
-          data.editConfig.type = 'select';
-          break;
-      }
-    };
-
-    const selectedEdit = (item) => {
-      if (data.editConfig.value !== item.type) {
-        data.editConfig.value = item.type;
-      }
-    };
-
-    return {
-      ...toRefs(data),
-      selected,
-      submit,
-      cancel,
-      Link,
-      edit,
-      selectedEdit,
-      groupTypeDetail,
-    };
+  
+  components:{
+    SearchOutlined,
   },
+ 
+  setup(props,ctx){
+
+    const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
+    const { t } = TUIServer.TUICore.config.i18n.useI18n();
+    
+    const data = reactive({
+      searchId:'',
+      currentGroup: null,
+      env: TUIServer.TUICore.TUIEnv,
+      searchResult:[],
+      simpleImage:'/img/state/null.png',
+    })
+    
+    const closeJoinGroup = () =>{  // 关闭加入群聊弹窗  
+      ctx.emit('close')
+    }
+
+    const searchGroup =  async () =>{  // 根据群组id进行群组搜索 
+      const res =  await TUIServer.searchGroupByID(data.searchId);
+      data.searchResult.push(res.data.group)
+      
+    }
+
+    const joinGroup = async(group) =>{ // 加入群组方法
+      const options = {
+        groupID: group.groupID,
+        applyMessage: group.applyMessage || t('TUIContact.加群'),
+        type: group?.type,
+      }
+      await TUIServer.joinGroup(options);
+      data.currentGroup = { apply:true }
+      ctx.emit('close')
+    }
+
+
+    return{
+      closeJoinGroup,...toRefs(data),searchGroup,joinGroup,
+    }
+
+  }
+
+
+
+
+  // setup(props, ctx) {
+  //   const data = reactive({
+  //     profile: {
+  //       groupID: '',
+  //       name: '',
+  //       type: '',
+  //       avatar: '',
+  //       introduction: '',
+  //       notification: '',
+  //       joinOption: '',
+  //     },
+  //     editConfig: {
+  //       title: '',
+  //       value: '',
+  //       key: '',
+  //       type: '',
+  //       placeholder: '',
+  //     },
+  //     isEdit: false,
+  //     type: [
+  //       {
+  //         icon: 'https://web.sdk.qcloud.com/im/assets/images/Public.svg',
+  //         label: '陌生人社交群（Public）',
+  //         type: group.TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC,
+  //         detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。详见',
+  //         src: '产品文档',
+  //       },
+  //       {
+  //         icon: 'https://web.sdk.qcloud.com/im/assets/images/Meeting.svg',
+  //         label: '临时会议群（Meeting）',
+  //         type: group.TUIServer.TUICore.TIM.TYPES.GRP_MEETING,
+  //         detail: '创建后可以随意进出，且支持查看入群前消息；适合用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。详见',
+  //         src: '产品文档',
+  //       },
+  //       {
+  //         icon: 'https://web.sdk.qcloud.com/im/assets/images/Work.svg',
+  //         label: '好友工作群（Work）',
+  //         type: group.TUIServer.TUICore.TIM.TYPES.GRP_WORK,
+  //         detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主神奇。详见',
+  //         src: '产品文档',
+  //       },
+  //       {
+  //         icon: 'https://web.sdk.qcloud.com/im/assets/images/AVChatroom.svg',
+  //         label: '直播群（AVChatroom）',
+  //         type: group.TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM,
+  //         detail: '创建后可以随意进出，没有群成员数量上限，但不支持历史消息存储；适合与直播产品结合，用于弹幕聊天场景。详见',
+  //         src: '产品文档',
+  //       },
+  //     ],
+  //   });
+
+  //   data.profile.type = data.type[0].type;
+  //   data.profile.avatar = data.type[0].icon;
+
+  //   const groupTypeDetail = computed(()=> {
+  //     return data.type.filter((item)=> {
+  //       return item.type === data.profile.type;
+  //     })[0];
+  //   });
+
+  //   const selected = (item) => {
+  //     if (data.profile.type !== item.type) {
+  //       data.profile.type = item.type;
+  //       data.profile.avatar = item.icon;
+  //     }
+  //   };
+
+  //   const submit = (profile) => {
+  //     if (data.isEdit) {
+  //       (data.profile )[data.editConfig.key] = data.editConfig.value;
+  //       return data.isEdit = !data.isEdit;
+  //     }
+  //     const options = {
+  //       name: profile.name,
+  //       type: profile.type,
+  //       groupID: profile.groupID,
+  //       avatar: profile.avatar,
+  //     };
+  //     ctx.emit('submit',  options);
+  //   };
+
+  //   const cancel = () => {
+  //     if (data.isEdit) {
+  //       return data.isEdit = !data.isEdit;
+  //     }
+  //     ctx.emit('cancel');
+  //   };
+
+  //   const edit = (label) => {
+  //     data.isEdit = !data.isEdit;
+  //     data.editConfig.key = label;
+  //     data.editConfig.value = (data.profile)[label];
+  //     switch (label) {
+  //       case 'name':
+  //         data.editConfig.title = '设置群名称';
+  //         data.editConfig.placeholder = '请输入群名称';
+  //         data.editConfig.type = 'input';
+  //         break;
+  //       case 'groupID':
+  //         data.editConfig.title = '设置群ID';
+  //         data.editConfig.placeholder = '请输入群ID';
+  //         data.editConfig.type = 'input';
+  //         break;
+  //       case 'type':
+  //         data.editConfig.title = '选择群类型';
+  //         data.editConfig.type = 'select';
+  //         break;
+  //     }
+  //   };
+
+  //   const selectedEdit = (item) => {
+  //     if (data.editConfig.value !== item.type) {
+  //       data.editConfig.value = item.type;
+  //     }
+  //   };
+
+  //   return {
+  //     ...toRefs(data),
+  //     selected,
+  //     submit,
+  //     cancel,
+  //     Link,
+  //     edit,
+  //     selectedEdit,
+  //     groupTypeDetail,
+  //   };
+  // },
 });
-export default group;
+
+export default TUISearch;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+
+<style lang="scss" scoped>
+.font-16{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  font-weight: 500
+}
+
+.active-button{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
+}
+
+:deep(.ant-input){
+  color: var(--secondary-text) !important;
+  font-size: 1.15em;
+  &::placeholder{
+    color: var(--secondary-text) !important;
+  }
+}
+:deep(.ant-input-suffix){
+  color: var(--secondary-text) !important;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+:deep(.ant-empty-image){
+  width:80px;
+  height:80px;
+}
+</style>

@@ -47,3 +47,7 @@ input:focus, input:active, textarea:focus, textarea:active {
 img{
     pointer-events:none;
 }
+
+ul li:hover{
+  background-color: transparent !important;
+}

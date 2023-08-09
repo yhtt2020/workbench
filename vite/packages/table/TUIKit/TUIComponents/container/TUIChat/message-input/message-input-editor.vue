@@ -450,8 +450,9 @@ defineExpose({
   p {
     * {
       vertical-align: bottom;
-      color: var(--secondary-text) !important;
+      color: var(--primary-text) !important;
     }
+    color: var(--primary-text) !important;
   }
   -webkit-user-select: text;
   user-select: text;
