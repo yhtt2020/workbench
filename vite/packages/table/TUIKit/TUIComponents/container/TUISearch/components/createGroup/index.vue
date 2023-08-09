@@ -19,12 +19,12 @@
       </a-input>
     </div>
 
-    <div class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 68px;"  v-if="searchResult.length === 0">
-      <a-empty :image="simpleImage" />
+    <div class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 50px;"  v-if="searchResult.length === 0">
+      <a-empty :image="simpleImage"/>
     </div>
 
     <template v-else>
-      <div class="flex justify-between items-center" v-for="item in searchResult">
+      <div class="flex justify-between items-center" v-for="item in searchResult" style="margin-bottom: 8px;">
         <div class="flex">
           <a-avatar shape="square" :size="48" :src="item.avatar"></a-avatar>
           <div class="flex flex-col" style="margin-left:16px;">
@@ -161,7 +161,7 @@ const TUISearch = defineComponent({
  
   setup(props,ctx){
 
-    const TUIServer = TUISearch?.TUIServer;
+    const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
     const { t } = TUIServer.TUICore.config.i18n.useI18n();
     
     const data = reactive({
@@ -173,26 +173,24 @@ const TUISearch = defineComponent({
     })
     
     const closeJoinGroup = () =>{  // 关闭加入群聊弹窗  
-      ctx.emit('cancel')
+      ctx.emit('close')
     }
 
     const searchGroup =  async () =>{  // 根据群组id进行群组搜索 
-      const searchList = TUIServer.TUICore.store.store.TUIGroup.groupList
-      if(data.searchId !== ''){
-        const index = _.find(searchList,function(o){ 
-          return o.groupID === data.searchId
-        })
-        data.searchResult.push(index)
-      }else{
-        data.searchResult = []
-      }
+      const res =  await TUIServer.searchGroupByID(data.searchId);
+      data.searchResult.push(res.data.group)
+      
     }
 
-    const joinGroup = (item) =>{ // 加入群组方法
-      // console.log(item.groupID,TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION);
-      // ctx.emit('cancel')
-      // JOIN_OPTIONS_NEED_PERMISSION
-
+    const joinGroup = async(group) =>{ // 加入群组方法
+      const options = {
+        groupID: group.groupID,
+        applyMessage: group.applyMessage || t('TUIContact.加群'),
+        type: group?.type,
+      }
+      await TUIServer.joinGroup(options);
+      data.currentGroup = { apply:true }
+      ctx.emit('close')
     }
 
 
@@ -367,5 +365,10 @@ export default TUISearch;
   color: var(--secondary-text) !important;
   font-size: 1.5em;
   cursor: pointer;
+}
+
+:deep(.ant-empty-image){
+  width:80px;
+  height:80px;
 }
 </style>
