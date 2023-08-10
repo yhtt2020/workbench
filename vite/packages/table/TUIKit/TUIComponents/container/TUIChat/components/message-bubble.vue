@@ -106,15 +106,13 @@ import TIM from '../../../../TUICore/tim/index';
 import Modal from '../../../../../components/Modal.vue';
 import MemberInfo from './memberInfo.vue';
 
-import {post} from "../../../../../js/axios/request";
+import {post,get} from "../../../../../js/axios/request";
 import {sUrl} from '../../../../../consts'
-import {Server} from '../../../../../consts'
-import {getConfig} from "../../../../../js/axios/serverApi";
-import axios from 'axios';
 
-const userCardUrl = sUrl('/app/com/userCard')
-const getUserGradeUrl = Server.baseUrl + '/app/getUserGrade'
-const getUserMedalUrl = Server.baseUrl + '/app/medal/getUserMedal'
+
+const userCardUrl = sUrl('/app/com/userCard')  // 用户卡片信息
+const getUserGradeUrl = sUrl('/app/getUserGrade')   // 用户等级信息
+const getUserMedalUrl = sUrl('/app/medal/getUserMedal')  // 用户排名信息
 
 
 const messageBubble = defineComponent({
@@ -408,30 +406,23 @@ const messageBubble = defineComponent({
       }
     };
 
-    const getUserInfo = async (uid:number) =>{
-      return post(userCardUrl,{uid: uid})
-    }
-
     const clickPersonalInfo = async(message:Message) => {  // 点击消息列表头像显示用户信息  
       data.show = true
-      const res = await getUserInfo(message.from) // 获取用户基本信息
-      let conf = await getConfig()
-      conf.params = {uid: message.from}
-      let result = await axios.get(getUserGradeUrl, conf)  // 获取全球排名
-      let medalRes = await axios.get(getUserMedalUrl, conf) // 获取勋章
-     
-      const tuiUserInfo = {
-        avatar:res.data.user.avatar, 
-        nickname:res.data.user.nickname,
-        uid:res.data.user.uid
-      }
       
+      const uid = message.from 
+      const userResult = await post(userCardUrl,{uid:uid}) // 用户基本信息
+      const gradeRes = await get(getUserGradeUrl,{uid:uid}) // 用户等级信息
+      const medalRes = await get(getUserMedalUrl,{uid:uid}) // 用户排名信息
       
       data.memberInfo = {
-        userinfo:tuiUserInfo,
-        eq:res.data.equippedItems,
-        grade:result.data.data,
-        medal:medalRes.data,
+        userinfo:{
+        avatar:userResult.data.user.avatar, 
+        nickname:userResult.data.user.nickname,
+        uid:userResult.data.user.uid
+      },
+        eq:userResult.data.equippedItems,
+        grade:gradeRes,
+        medal:medalRes,
         add:message,
       }
       
@@ -453,9 +444,9 @@ const messageBubble = defineComponent({
       handleImageOrVideoBubbleStyle,
       isEmojiReactionInMessage,
       TIM,
-    };
+    }
   },
-});
+})
 export default messageBubble;
 </script>
 

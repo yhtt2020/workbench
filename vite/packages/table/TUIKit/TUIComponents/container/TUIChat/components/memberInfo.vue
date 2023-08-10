@@ -23,7 +23,7 @@
 
   <div class="flex rounded-lg px-4  mb-4" style="height:64px;background: var(--secondary-bg);">
    <OnlineMedal v-if="info.grade?.rank" :rank="info.grade?.rank"></OnlineMedal>
-   <Medal :medal="medal" v-for="medal in info.medal?.data"></Medal>
+   <Medal :medal="medal" v-for="medal in info.medal"></Medal>
   </div>
   
   <div class="flex" style="color: var(--secondary-text);" v-if="info.add?.flow === 'in'">
