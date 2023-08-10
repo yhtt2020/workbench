@@ -8,7 +8,7 @@
   >
   <div class="truncate" style="position: absolute;left: 45px;font-size: 16px;top:13px;color:var(--primary-text);width: 190px;">{{ title }}
   </div>
-  <Turntable></Turntable>
+  <Turntable :eatList="eatList"></Turntable>
   </Widget>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
@@ -16,7 +16,7 @@
       <a-input v-model:value="title" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 48px;"/>
       <span class="drawer-title" style="margin-top:24px;">选项</span>
       <span class="drawer-tip">每行填写一个选项</span>
-      <a-textarea v-model:value="eatList" :bordered="false" spellcheck="false" class="input xt-text my-4" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 423px;"/>
+      <a-textarea v-model:value="eatText" :bordered="false" spellcheck="false" class="input xt-text my-4" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 423px;"/>
       
     </div>
   </a-drawer>
@@ -60,9 +60,10 @@ export default {
       todoIndex: 0,
       selectTodo: {title:'个人',nanoid: 'T00111'},
       taskList: [],
-        title: '今天吃什么',
-        eatList: ''
-    }
+      title: '今天吃什么',
+      eatText: '',
+      eatList: ['糯米饭','拉面','面包','苹果','牛排','烤鸭','炒饭','火锅'],
+}
   },
   computed: {
     
