@@ -28,7 +28,7 @@
 
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs,onMounted } from 'vue';
 import { TUIEnv } from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
 import { handleErrorPrompts } from '../../TUIKit/TUIComponents/container/utils';
@@ -54,6 +54,10 @@ export default defineComponent({
       showCallMini: false,
     });
     const TUIServer = (window as any)?.TUIKitTUICore?.TUIServer;
+    
+    const TIM = TUIServer.TUICallKit.TUICore.TIM
+    const tim = TUIServer.TUICallKit.tim
+    
     const handleCurrentConversation = (value: string) => {
       data.currentModel = value ? 'message' : 'conversation';
     };
@@ -80,6 +84,27 @@ export default defineComponent({
       TUIServer?.TUIChat?.handleMessageSentByMeToView(message);
       return;
     };
+
+
+    const listenGroupMessage = () =>{  // 监听群组消息
+      tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event: { data: any[]; }) => {
+        event.data.forEach((message) => {
+          console.log(message)
+          const option = {
+            title:'群组消息',
+            body:`${message.payload.text}`,
+            icon:`${message.avatar}`,
+            level:'low',
+            time: Date.now()
+          }
+          window.$notice.sendNotice(option)
+        })
+      })
+    }
+
+    onMounted(listenGroupMessage)
+
+
     return {
       ...toRefs(data),
       handleCurrentConversation,
@@ -87,6 +112,7 @@ export default defineComponent({
       afterCalling,
       onMinimized,
       onMessageSentByMe,
+      listenGroupMessage,
     };
   },
 });
