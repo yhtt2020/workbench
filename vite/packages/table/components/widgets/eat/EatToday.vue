@@ -6,35 +6,31 @@
   ref="eatSlot" 
   :menuList="menuList"
   >
-    <div>今天吃什么</div>
+  <div class="truncate" style="position: absolute;left: 45px;font-size: 16px;top:13px;color:var(--primary-text);width: 190px;">{{ title }}
+  </div>
+  <Turntable></Turntable>
   </Widget>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
-    <!-- <div class="flex flex-col" style="color:var(--primary-text)">
-      <span class="drawer-title" style="margin-top:0;">类型</span>
-      <span   v-for="(item,index) in todoType" :key="index"  
-      @click.stop="getTodoType(item)" 
-      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
-      class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
-         {{ item.title }}
-      </span>
-      <span class="drawer-title">清单</span>
-      <span   v-for="(item,index) in listType" :key="index"  
-      @click.stop="getTodoType(item,index)" 
-      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
-      class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
-         {{ item.title }}
-      </span>
-    </div> -->
+    <div class="flex flex-col" style="color:var(--primary-text)">
+      <span class="drawer-title" style="margin-bottom:24px;">名称</span>
+      <a-input v-model:value="title" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 48px;"/>
+      <span class="drawer-title" style="margin-top:24px;">选项</span>
+      <span class="drawer-tip">每行填写一个选项</span>
+      <a-textarea v-model:value="eatList" :bordered="false" spellcheck="false" class="input xt-text my-4" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 423px;"/>
+      
+    </div>
   </a-drawer>
 </template>
 
 <script lang="ts">
-import Widget from '../card/Widget.vue'
+import Widget from '../../card/Widget.vue'
+import Turntable from './Turntable.vue'
 import { mapActions, mapWritableState } from 'pinia'
 export default {
   name: 'Todo',
   components: {
     Widget,
+    Turntable,
   },
   props: {
     customIndex: {
@@ -63,7 +59,9 @@ export default {
       listType: [],
       todoIndex: 0,
       selectTodo: {title:'个人',nanoid: 'T00111'},
-      taskList: []
+      taskList: [],
+        title: '今天吃什么',
+        eatList: ''
     }
   },
   computed: {
@@ -80,20 +78,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.content-box {
-  height: calc(100% - 35px);
-  margin-top: 10px;
-  overflow: hidden;
-}
-.active-index{
-  background: var(--active-bg) !important;
-}
 .drawer-title{
   font-family: PingFangSC-Medium;
   font-size: 16px;
   color: var(--primary-text);
-  letter-spacing: 0;
   font-weight: 500;
-  margin: 12px 0  24px;
 }
+.drawer-tip{
+    font-size: 16px;
+    color: var(--secondary-text);
+    margin: 8px 0 19px;
+}
+.input{
+  height: 48px;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  color: var(--primary-text);
+  font-size: 16px;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
 </style>
