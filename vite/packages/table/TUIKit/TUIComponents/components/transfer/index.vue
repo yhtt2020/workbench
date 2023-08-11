@@ -232,7 +232,7 @@ export default defineComponent({
       }
 
       await tim.addFriend(option)
-
+      ctx.emit('close')
     }
 
     // const isFriend = computed(async ()=>{

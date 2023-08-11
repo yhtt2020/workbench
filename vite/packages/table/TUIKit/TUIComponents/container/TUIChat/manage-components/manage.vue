@@ -1,44 +1,57 @@
 <template>
-  <div class="flex flex-col " style="height: 100%;">
+  <div class="flex flex-col justify-between" style="height: 92%;">
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 12px 16px !important;margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterUpdateGroupName">
         <span class="font-14" style="color: var(--primary-text);">群信息</span>
         <Icon icon="xiangyou"></Icon>
       </div>
       <div class="flex items-center">
-        <a-avatar shape="square" :size="32" :src="list.avatar"></a-avatar>
-        <span class="pl-3"> {{ list.name }}</span>
+        <a-avatar shape="square" :size="32" :src="conversation?.groupProfile?.avatar"></a-avatar>
+        <span class="pl-3"> {{  conversation?.groupProfile?.name }}</span>
       </div>
     </div>
 
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterGroupNotice">
         <span class="font-14" style="color: var(--primary-text);">群公告</span>
         <Icon icon="xiangyou"></Icon>
       </div>
       <div>
-        {{ list.notification.length === 0 ? '暂无群公告' : list.notification }}
+        {{  conversation?.groupProfile?.notification.length === 0 ? '暂无群公告' :  conversation?.groupProfile?.notification }}
       </div>
     </div>
 
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterGroupMemeber">
         <span class="font-14" style="color: var(--primary-text);">群成员</span>
         <div class="flex items-center">
           <span class="font-14" style="color: var(--primary-text);">{{memberList.length}}人</span>
           <Icon icon="xiangyou"></Icon>
         </div>
       </div>
-      <div class="flex">
-        <div v-for="item in memberList" class="flex flex-col" style="margin-right:16px;">
+      <div class="flex items-center">
+        <div v-for="item in memberList" class="flex flex-col items-center justify-center" style="margin-right:16px;">
           <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
           <div class="font-12">{{ item.nick }}</div>
+        </div>
+
+        <div class="flex items-center justify-center active-button rounded-lg" 
+         style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
+         v-if="conversation?.groupProfile?.joinOption === 'DisableApply'"
+        >
+          <Icon icon="tianjia2" style="color: var(--active-bg);"></Icon>
+        </div>
+
+        <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);">
+          <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
         </div>
       </div>
     </div>
 
+
+    
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>
@@ -46,7 +59,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群ID</span>
         <div class="flex">
-          <span>{{ list.groupID }}</span>
+          <span>{{ conversation?.groupProfile?.groupID }}</span>
           <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
         </div>
       </div>
@@ -67,11 +80,16 @@
     </div>
 
     <div class="flex justify-between">
-      <div class="flex  rounded-lg pointer  active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);">转让群聊</div>
-      <div class="flex  rounded-lg pointer active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);">解散群聊</div>
+      <div class="flex  rounded-lg pointer  active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);">
+        转让群聊
+      </div>
+      <div class="flex  rounded-lg pointer active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);">
+        解散群聊
+      </div>
     </div>
 
   </div>
+
 </template>
 
 <script>
@@ -92,7 +110,6 @@ const manage = defineComponent({
     const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
     
     const data = reactive({
-      list:GroupServer.store.groupList[0], // 获取群组信息
       memberList:[],   // 获取成员数据列表
       typeName: {
         [types.GRP_WORK]: '好友工作群',
@@ -106,8 +123,8 @@ const manage = defineComponent({
     })
    
     const options = {
-      groupID:data.list.groupID, 
-      count: 15, 
+      groupID:props.conversation?.groupProfile?.groupID,  // 群组id
+      count: 15,  // 
       offset: 0
     }
 
@@ -117,17 +134,42 @@ const manage = defineComponent({
     }
    
   
-    const handleGroupIDCopy = async () => {  // 复制群组id
+    const handleGroupIDCopy = async () => {  // 复制群组id 
       const { toClipboard } = useClipboard();
       await toClipboard(data?.list.groupID);
     }
 
+    const enterGroupManage = () =>{  // 进入群管理详情界面  
+      ctx.emit('updateName',{title:'群管理',id:4,})
+    }
+
+    const enterUpdateGroupName = () =>{  // 进入群管理名称编辑界面
+      ctx.emit('updateName',
+      {
+        title:'群信息',id:1,
+        info:{
+          avatar:props.conversation?.groupProfile?.avatar,
+          groupName:props.conversation?.groupProfile?.name,
+          groupID:props.conversation?.groupProfile?.groupID
+        },
+      }
+      )
+    }
+
+    const enterGroupMemeber = () =>{  // 进入群成员管理界面
+      ctx.emit('updateName',{title:'群成员',id:3})
+    }
+
+    const enterGroupNotice = () =>{  // 进入群公告界面 
+      ctx.emit('updateName',{title:'群公告',id:2})
+    }
 
     onMounted(getMember)
 
     return{
       ...toRefs(data),getMember,handleGroupIDCopy,
-
+      enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
+      enterGroupNotice
     }
   }
 
