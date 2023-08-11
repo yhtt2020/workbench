@@ -3,10 +3,10 @@
     <div class="box">
   		<div class="prize-list" ref="prizeWrap" :style="bgColor">
   			<div class="prize-item" v-for="(item, index) in eatList" :style="prizeStyle(index)">
-  				<p>{{ item }}</p>
+  				<p :style="eatList.length > 2 ? 'transform:rotate(-90deg);': 'font-size: 18px;'">{{ item }}</p>
   			</div>
   		</div>
-      <div class="box-btn" style="z-index:9;" @click="start">GO</div>
+      <div class="box-btn" style="z-index:9;" @click.stop="start">GO</div>
     </div>
 	</div>
 </template>
@@ -20,25 +20,23 @@ export default {
     const state = reactive({
       isRunning: false, // 是否正在转动
       baseRunAngle: 360 * 5, // 总共转动角度 至少5圈
-      prizeId: 0, // 中奖id
+      prizeId: 0, // 选中id
     })
     const prizeWrap = ref(null)
 
 
-    // 平均每个菜品角度
     const rotateAngle = computed(() => {
       const _degree = 360 / eatList?.length
       return _degree
     })
 
-    // 要执行总角度数
     const totalRunAngle = computed(() => {
       return state.baseRunAngle + 360 - state.prizeId * rotateAngle.value - rotateAngle.value / 2
     })
 
-    // 计算绘制转盘背景
     const bgColor = computed(() => {
       const _len = eatList?.length
+      // const colorList = ['#F7D8A7', '#F2B1A2','#A9A9A9','#F2E8CF']
       const colorList = ['#5352b3', '#363589']
       let colorVal = ''
       for (let i = 0; i < _len; i++) {
@@ -48,13 +46,12 @@ export default {
         background: conic-gradient(${colorVal.slice(0, -1)});
       `
     })
-    // 每个菜品的布局
     const prizeStyle = computed(() => {
       const _degree = rotateAngle.value
       return (i) => {
         return `
-          width: ${2 * 130 * Math.sin(_degree / 2 * Math.PI / 180)}px;
-          height: 130px;
+          width: ${2 * 120 * Math.sin(_degree / 2 * Math.PI / 180)}px;
+          height: 120px;
           transform: rotate(${_degree * i + _degree / 2}deg);
           transform-origin: 50% 100%;
         `
@@ -69,7 +66,6 @@ export default {
       prizeWrap.value?.removeEventListener('transitionend', stopRun)
     })
 
-    // 获取随机数
     const getRandomNum = () => {
       const num = Math.floor(Math.random() * eatList?.length)
       return num    		
@@ -87,14 +83,11 @@ export default {
     }
 
     const startRun = () => {
-      // console.log(state.isRunning, totalRunAngle.value)
-      // 设置动效
       prizeWrap.value.style = `
         ${bgColor.value}
         transform: rotate(${totalRunAngle.value}deg);
         transition: all 4s ease;
       `
-      // 监听transition动效停止事件
       prizeWrap.value.addEventListener('transitionend', stopRun)
     }
 
@@ -139,24 +132,17 @@ export default {
 			position: absolute;
       left: 0;
       right: 0;
-      top: -10px;
+      top: 0;
       margin: auto;
-      color: var(--primary-text);
       font-size: 14px;
 		}
-		.prize-item img {
-			width: 30%;
-			height: 20%;
-      margin: 40px auto 10px;
-      display: block;
-		}
 		.prize-item p {
+      // color: var(--primary-text);
 			color: #fff;
 			text-align: center;
 			line-height: 20px;
-      margin: 35px 0;
+      margin: 35px -26px;
       letter-spacing: 2px;
-      transform:rotate(-90deg);
 		}
     .box-btn {
       width: 50px;
