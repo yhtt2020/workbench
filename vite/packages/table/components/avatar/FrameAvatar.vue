@@ -15,7 +15,7 @@
 
       <transition name="fade">
 
-        <a-avatar :src="avatarUrl" :style="{'zoom':zoom}" :size="avatarSize" class="avatar-position"></a-avatar>
+        <a-avatar :src="avatarUrl" :style="{'zoom':zoom}" :size="avatarSize+8" class="avatar-position"></a-avatar>
 
       </transition>
 

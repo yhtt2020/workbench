@@ -13,6 +13,9 @@
 
               </RayMedal>
               <img v-else :src="item.cover" class="w-full h-full object-fill" alt="">
+              <div style="margin-top: -8px" v-if="getFramePrice(item)?.originPrice" class="xt-text-2 text-center ">
+                <a-badge :numberStyle="{backgroundColor: '#52c41a',borderColor:'transparent'}" :count="getFramePrice(item)?.discountReason"></a-badge>
+              </div>
             </div>
             <div class="flex flex-col justify-center ml-4">
               <div class="mt-2">
@@ -23,6 +26,7 @@
                 {{ textTag(item.frame.rarity) }}
               </span>
               </div >
+
               <div class="xt-text-2 mt-1">
                 {{item.summary}}
               </div>
@@ -46,7 +50,7 @@
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
               赞助 ￥ {{ getFramePrice(item).price }}
-              <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
+              <template  v-if="+getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
                 <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
             </a-button>
             <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
@@ -221,6 +225,8 @@ export default {
       const money = _.find(item.prices, function (o) { return o.type === 'money' })
       if (money !== undefined) {
         return money
+      }else{
+        return {}
       }
     },
     getDiscount(price){
@@ -321,6 +327,7 @@ export default {
 
 :deep(.ant-btn span) {
   display: flex !important;
+  display: inline-block !important;
   align-items: center !important;
   justify-content: center !important;
 }

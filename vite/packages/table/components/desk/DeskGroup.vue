@@ -9,7 +9,7 @@
         <!--        主桌面-->
         <!--      </div>-->
         <div :class="{'tab-active':currentDeskId===item.id}" @click="setCurrentDeskId(item.id)" style="width: 140px;"
-             class="truncate pr-3 tab s-bg" v-for="(item,index) in displayDesks">
+             class="truncate pr-3 tab s-bg xt-text" v-for="(item,index) in displayDesks">
           <a-avatar v-if="item.iconUrl" shape="square" class="mr-2 icon " :size="22" :src="item.iconUrl"></a-avatar>
           <icon v-else :icon="item.icon || 'desktop'" style="font-size: 18px;vertical-align: middle"
                 class="mr-2"></icon>

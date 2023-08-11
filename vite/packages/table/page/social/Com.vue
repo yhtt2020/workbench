@@ -1,14 +1,14 @@
 <template>
   <div class="ml-3" style="width: 98%;height: 100%">
     <div style="width: 200px">
-      <HorizontalPanel :navList="comList" v-model:selectType="currentTab" :height="44" class="mt-3"></HorizontalPanel>
+      <HorizontalPanel  :navList="comList" v-model:selectType="currentTab" :height="44" class="mt-3"></HorizontalPanel>
     </div>
     <vueCustomScrollbar v-if="currentTab.name === 'com'" :settings="scrollbarSettings"
       style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
       <div class="card mr-3"
         style="height: 92%;overflow: hidden ;width: 300px;min-width:300px;vertical-align: top;display: flex;flex-direction: column;background: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
         <div class="line-title" style="">
-          <HorizontalPanel v-if="Number(this.myTeamNo) > 0" :navList="channelList" v-model:select-type="currentChannel">
+          <HorizontalPanel style="min-width: 100%" v-if="Number(this.myTeamNo) > 0" :navList="channelList" v-model:select-type="currentChannel">
           </HorizontalPanel>
           <div v-if="currentChannel.name === 'all'">
             <span class="ml-2 mt-2" style="font-size: 14px">全网弹幕频道</span>

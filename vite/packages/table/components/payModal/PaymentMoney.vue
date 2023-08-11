@@ -19,7 +19,7 @@
     <template v-if="payWeixin.type === 'wechat' && !error">
       <div class="flex my-8 px-1">
         <div class="flex rounded-lg items-center justify-center" style="width:200px;height:200px;">
-          <a-avatar shape="square" :src="qrCode.wechat" class="w-full h-full object-cover" alt=""></a-avatar>
+          <a-avatar shape="square" style="width: 100%;height: 100%" :src="qrCode.wechat" class="  object-cover" alt=""></a-avatar>
         </div>
         <div class="flex flex-col ml-8 justify-center">
           <span v-if="needPayAvatar.price.originPrice" class="mb-2  " style="font-size: 18px">原价： <span class="  line-through">￥{{ needPayAvatar.price.originPrice }}</span></span>
