@@ -1,18 +1,52 @@
 <template>
  <div class="flex flex-col" style="width: 400px !important;height: 400px !important;padding: 12px !important;">
   <div class="top-close flex items-center">
-    <div class="font-16 flex items-center justify-center" style="width:95%;color: var(--primary-text);">添加好友</div>
+    <div class="font-16 flex items-center justify-center" style="color: var(--primary-text);">添加好友</div>
     <div class="rounded-lg pointer active-button h-12 w-12 flex items-center justify-center" style="background: var(--secondary-bg);" @click="closeAddFriend">
       <Icon icon="guanbi" style="color: var(--secondary-text);width: 24px !important; height: 24px !important;"></Icon>
     </div>
   </div>
 
   <div class="flex flex-col" style="margin-top: 16px !important;">
-    <a-input class="rounded-lg h-11 mb-6"   @keyup.enter="handleInput"  enterkeyhint="search" placeholder="搜索" >
+    <a-input class=" h-11 mb-6" v-model:value="friendValue" style="border-radius: 12px;"  @keyup.enter="handleInput($event)"  enterkeyhint="search" placeholder="输入用户ID搜索" >
       <template #suffix>
         <SearchOutlined style="color:var(--secondary-text);font-size: 1.25em;" />
       </template>
     </a-input>
+
+    <div class="flex flex-col" style="color: var(--primary-text);" v-if="addFriendLists.length !== 0">
+      <div class="font-14" style="color: var(--primary-text);">搜索结果</div>
+      <div class="flex flex-col">
+       <div v-for="item in addFriendLists" class="flex items-center justify-between" style="padding: 12px;">
+         <div class="flex items-center">
+          <a-avatar  :size="32" :src="item.avatar"></a-avatar>
+          <div style="margin-left: 16px;">{{ item.nick }}</div>
+         </div>
+         <!-- <div v-if="isFriend" class=" flex items-center justify-center rounded-lg"
+          style="background: var(--secondary-bg);color:var(--secondary-text);padding: 10px;"
+         >
+           已添加
+         </div>
+         v-else -->
+         <div  class="active-button flex items-center justify-center pointer rounded-lg" 
+          style="background: var(--active-bg);color:var(--active-text);padding: 10px;"
+          @click="addFriendButton(item)"
+         >
+            加好友
+         </div>
+       </div>
+      </div>
+
+    </div>
+     
+    
+
+    <div v-else class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 50px;">
+      <a-empty :image="simpleImage" />
+    </div>
+
+    
+
   </div>
     
      
@@ -105,59 +139,117 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watchEffect, toRefs, computed } from 'vue';
+import { defineComponent, reactive, watchEffect, toRefs, computed,ref } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue'
+import { appStore } from '../../../../store'
 
 export default defineComponent({
-  props: {
-    list: {
-      type: Array,
-      default: () => [],
-    },
-    selectedList: {
-      type: Array,
-      default: () => [],
-    },
-    isSearch: {
-      type: Boolean,
-      default: () => true,
-    },
-    isRadio: {
-      type: Boolean,
-      default: () => false,
-    },
-    isCustomItem: {
-      type: Boolean,
-      default: () => false,
-    },
-    title: {
-      type: String,
-      default: () => '',
-    },
-    type: {
-      type: String,
-      default: () => '',
-    },
-    isH5: {
-      type: Boolean,
-      default: () => false,
-    },
-    resultShow: {
-      type: Boolean,
-      default: () => true,
-    },
-  },
+  props:[
+    'server','list','selectedList',
+    'isSearch','resultShow','isH5',
+    'isRadio','isCustomItem','title',
+    'type',
+  ],
+
+  // props: {
+  //   list: {
+  //     type: Array,
+  //     default: () => [],
+  //   },
+  //   selectedList: {
+  //     type: Array,
+  //     default: () => [],
+  //   },
+  //   isSearch: {
+  //     type: Boolean,
+  //     default: () => true,
+  //   },
+  //   isRadio: {
+  //     type: Boolean,
+  //     default: () => false,
+  //   },
+  //   isCustomItem: {
+  //     type: Boolean,
+  //     default: () => false,
+  //   },
+  //   title: {
+  //     type: String,
+  //     default: () => '',
+  //   },
+  //   type: {
+  //     type: String,
+  //     default: () => '',
+  //   },
+  //   isH5: {
+  //     type: Boolean,
+  //     default: () => false,
+  //   },
+  //   resultShow: {
+  //     type: Boolean,
+  //     default: () => true,
+  //   },
+  // },
 
   components:{ SearchOutlined },
 
   setup(props, ctx){
-    
+    const friendValue = ref('')
+   
+    const data = reactive({
+      addFriendLists:[],
+      simpleImage:'/img/state/null.png', // 空状态图片
+    })
+
+    const infoStore = appStore()  // 获取state用户信息
+    const isSelfUid = infoStore.$state.userInfo.uid  // 是否为自己的uid
+
+    const tim = props.server.TUICore.tim  // 小tim
+    const TIM = props.server.TUICore.TIM  // 大tim
+
     const closeAddFriend = () =>{  // 关闭添加好友弹窗  
       ctx.emit('close')
     }
     
+    const handleInput = async () => {   // 好友搜索
+
+      if(parseInt(friendValue.value) === isSelfUid){
+        return
+      }else{
+        const val = friendValue.value
+        const imResponse = await  props.server.getUserProfile([val])
+        data.addFriendLists = imResponse.data
+      }
+
+    }
+
+    const addFriendButton = async (item) =>{  // 点击添加好友按钮
+
+      const option = {
+        to:item.userID,
+        type:TIM.TYPES.SNS_ADD_TYPE_BOTH,
+        source: 'AddSource_Type_Web',
+        remark:item.nick
+      }
+
+      await tim.addFriend(option)
+
+    }
+
+    // const isFriend = computed(async ()=>{
+    //   const option = {
+    //     userIDList: [`${friendValue.value !== undefined ? friendValue.value : ''}`],
+    //     type: TIM.TYPES.SNS_CHECK_TYPE_BOTH,
+    //   }
+    //   const res = await tim.checkFriend(option)
+    //   return res.data.successUserIDList[0]?.relation === 'CheckResult_Type_BothWay'
+    // })
+
+    
+
     return{
-      closeAddFriend,
+      friendValue,...toRefs(data),
+      // isFriend,
+      handleInput,closeAddFriend,addFriendButton,
     }
   }
 
@@ -282,11 +374,34 @@ export default defineComponent({
 :deep(.ant-input-affix-wrapper){
   border: 1px solid var(--divider) !important;
   background: var(--secondary-bg) !important;
+  cursor: pointer;
 }
 
 .font-14{
   font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
+}
+
+:deep(.ant-input){
+  color: var(--secondary-text) !important;
+  font-size: 1.15em;
+  &::placeholder{
+    color: var(--secondary-text) !important;
+  }
+}
+
+.top-close{
+  width: 100%;
+  height: 48px;
+  padding: 12px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  >div:nth-of-type(2){
+    position: absolute;
+    right: 12px;
+  }
 }
 </style>
