@@ -282,6 +282,7 @@ import Template from '../../../user/pages/Template.vue'
 import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
 import EatToday from '../widgets/eat/EatToday.vue'
+import HotSearch from '../widgets/HotSearch.vue'
 
 export default {
   name: 'Desk',
@@ -332,7 +333,8 @@ export default {
     AddIcon,
     SmallRank,
     Todo,
-    EatToday
+    EatToday,
+    HotSearch
   },
   props:
     {

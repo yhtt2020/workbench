@@ -635,6 +635,20 @@ export const NavList = [
         ],
         time: '2023/5/31'
       },
+      {
+        name: 'HotSearch',
+        cname: '微博热搜',
+        detail: '最近都发生了啥？看看微博上最新热门博文',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'HotSearch',
+            size: '2x4',
+            zoom: '11'
+          }
+        ],
+        time: '2023/5/31'
+      },
     ],
   },
   {
