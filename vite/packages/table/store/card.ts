@@ -331,6 +331,7 @@ export const cardStore = defineStore(
         }
         let desk = {
           name: name,
+          id:nanoid(4),
           nanoid: nanoid(4),
           cards: cards
         }

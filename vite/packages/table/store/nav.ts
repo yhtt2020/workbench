@@ -236,7 +236,7 @@ export const navStore = defineStore("nav", {
     mainNavigationList: [
       {
         type:'systemApp',
-        icon:'home',
+        icon:'shouye',
         name:'主页',
         event:'home',
       },
@@ -249,7 +249,7 @@ export const navStore = defineStore("nav", {
       },
       {
         type:'systemApp',
-        icon:'yingyongzhongxin',
+        icon:'wanggeshitu',
         name:'应用管理',
         event:'apps',
       },
@@ -336,11 +336,11 @@ export const navStore = defineStore("nav", {
     },
     setSideNavigationList(item) {
       let itemNav = {...item}
-      if(itemNav.name === '主页'){
-        itemNav.icon = 'shouye1'
-      }else if(itemNav.name === '快捷指令'){
-        itemNav.icon = 'kuaijie1'
-      }
+      // if(itemNav.name === '主页'){
+      //   itemNav.icon = 'shouye1'
+      // }else if(itemNav.name === '快捷指令'){
+      //   itemNav.icon = 'kuaijie1'
+      // }
       this.sideNavigationList.push(itemNav)
     },
     removeRightNavigationList(index) {
@@ -353,11 +353,11 @@ export const navStore = defineStore("nav", {
     },
     setRightNavigationList(item) {
       let itemNav = {...item}
-      if(itemNav.name === '主页'){
-        itemNav.icon = 'shouye1'
-      }else if(itemNav.name === '快捷指令'){
-        itemNav.icon = 'kuaijie1'
-      }
+      // if(itemNav.name === '主页'){
+      //   itemNav.icon = 'shouye'
+      // }else if(itemNav.name === '快捷指令'){
+      //   itemNav.icon = 'kuaijie1'
+      // }
       this.rightNavigationList.push(itemNav)
     },
     setNavigationToggle(type,val){

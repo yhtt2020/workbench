@@ -82,7 +82,7 @@
 <!--    </vue-custom-scrollbar>-->
 <!--  </div>-->
   <div style="height: 100%">
-    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks" v-model:current-desk-id="this.currentDeskId">
+    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks" v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll >
         <div class="line-title ">背景设置：</div>
         <div class="line" @click="setTransparent()">
@@ -442,7 +442,7 @@ export default {
     },
     currentDesk() {
       let find = this.desks.find((desk) => {
-        return desk.nanoid === this.currentDeskIndex.name;
+        return desk.id === this.currentDeskId;
       });
       if (find) {
         find.cards.forEach((e) => {

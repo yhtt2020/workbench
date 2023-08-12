@@ -152,7 +152,7 @@ export default {
   systemAppList: [
     {
       type: 'systemApp',
-      icon: 'home',
+      icon: 'shouye',
       name: '主页',
       event: 'home',
     },
@@ -255,7 +255,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'daibanshixiang',
+      icon: 'xuanzhong',
       name: '待办',
       event: 'todo',
       fn: () => { vm.$router.push({ name: 'todo' })}

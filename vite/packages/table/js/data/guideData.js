@@ -96,16 +96,7 @@ export const workPanel = {
     {
       type: 'systemApp', icon: 'daibanshixiang',
       name: '待办',
-      data:
-        {
-          fullScreen: false,
-          theme: 'transparent',
-          name: 'todo',
-          url: 'https://a.apps.vip/todo',
-          background: true,
-          node: true,
-          security: true
-        }
+      event:'todo'
     },
 
   ],
@@ -169,34 +160,10 @@ export const mergePanel = {
     {
       type: 'systemApp', icon: 'daibanshixiang',
       name: '待办',
-      data:
-        {
-          fullScreen: false,
-          theme: 'transparent',
-          name: 'todo',
-          url: 'https://a.apps.vip/todo',
-          background: true,
-          node: true,
-          security: true
-        }
+      event :'todo'
     },
   ],
   bottom: [
-    {
-      icon: 'http://a.apps.vip/icons/flappy.jpg',
-      type: 'coolApp',
-      name: 'Mlappy Bird',
-      summary: '和小伙伴们一起飞。',
-      needInstall: false,
-      data: {
-        theme: '#030c13',
-        name: 'mlappyBird',
-        url: 'http://bird.apps.vip/?',
-        background: false,
-        type: 'game',
-        scale: 160
-      }
-    },
     {
       icon: 'https://a.apps.vip/icons/kook.png',
       name: 'Kook',

@@ -106,9 +106,9 @@
       {{ step === 2 ? 'GO':'下一步' }}
     </a-button>
    </div>
-   <!-- 
+   <!--
     新用户须知后期需要的话再考虑使用,现在暂时不使用
-    <GradeNotice v-else></GradeNotice> 
+    <GradeNotice v-else></GradeNotice>
   -->
   </div>
   <transition name="fade">
@@ -140,7 +140,7 @@ import {defaultAvatar} from '../../../js/common/teamAvatar'
 // import GradeNotice from './GradeNotice.vue'
 import {
   guideData,workTheme,teamData,modeData,
-  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg 
+  deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg
 } from '../../../js/data/guideData'
 import cache from '../../../components/card/hooks/cache';
 import {setThemeSwitch} from '../../../components/card/hooks/themeSwitch/index';
@@ -168,6 +168,7 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['styles','simple','stylesIndex','userInfo']),
+    ...mapWritableState(cardStore,['currentDeskId','currentDeskIndex']),
     //是否禁用下一步
     isNext(){
       return this.statusIndex === 2 || this.selectItem.length > 0
@@ -178,7 +179,7 @@ export default {
   },
   methods:{
     ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoVisible','setSecondaryVisible']),
-    ...mapActions(cardStore,['addDesk']),
+    ...mapActions(cardStore,['addDesk','switchToDesk']),
     ...mapActions(navStore,['updateLeftNavData','updateBottomNavData']),
     // 点击返回按钮的回调事件
     backSplash(){
@@ -256,12 +257,12 @@ export default {
         // console.log('单选::>>> 不极简',this.selectItem[0]);
         // console.log('单选::>>> 极简',this.statusIndex === 2);
         // if(this.selectItem.length !==0 && this.selectItem.length > 1){  // 判断是不是多选
-          
+
         // }else{
-        //   // 单选情况下 分为极简和不极简, 
+        //   // 单选情况下 分为极简和不极简,
         //   if(this.selectItem[0]){
         //     this.addSwitchDesk({id:this.selectItem[0]})
-        //   }else{  
+        //   }else{
         //     this.addSwitchDesk(this.guideData[this.statusIndex])
         //   }
         // }
@@ -294,6 +295,9 @@ export default {
           }
           break;
       }
+
+     this.switchToDesk(0)
+
       if(this.selectItem.length === 2){
         this.updateLeftNavData(mergePanel.left)
         this.updateBottomNavData(mergePanel.bottom)

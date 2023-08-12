@@ -2,17 +2,17 @@
   <div v-if="!activeTask.createTime" style="height: 100%;">
     <span
       class="title-action hover-action flex items-center xt-text pt-3 ml-3"
-      @click="toggleMenu"
+
       style="cursor: pointer;"
-    >
-      <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(--secondary-text);font-size:20px"></Icon>
-      <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
-      <span class="ml-2" v-if="config.menuState === MenuState.UN_FOLD">折叠</span
-      ><span class="ml-2" v-else>展开</span>
+    ><!--      @click="toggleMenu"-->
+<!--      <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--      <Icon v-else icon="indent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--      <span class="ml-2" v-if="config.menuState === MenuState.UN_FOLD">折叠</span-->
+<!--      ><span class="ml-2" v-else>展开</span>-->
     </span>
     <a-empty
       style="margin-top: calc(100vh / 2 - 130px)"
-      description="点击代办查看详情"
+      description="点击待办查看详情"
     >
     </a-empty>
   </div>
@@ -32,12 +32,12 @@
     <div style="height: 100%;margin-bottom: 68px;" class="flex flex-col">
       <div class="top-bar">
         <span class="flex">
-          <span class="title-action" style="cursor: pointer"
-            ><span @click="toggleMenu">
-              <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(--secondary-text);font-size:20px"></Icon>
-              <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
-              </span
-          ></span>
+<!--          <span class="title-action" style="cursor: pointer"-->
+<!--            ><span @click="toggleMenu">-->
+<!--              <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--              <Icon v-else icon="indent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--              </span-->
+<!--          ></span>-->
           <span class="mx-4 todo-style">
             <a-checkbox v-model:checked="activeTask.completed"></a-checkbox>
           </span>

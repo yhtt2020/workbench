@@ -340,11 +340,12 @@ export default {
   display: none !important;
 }
 
-:deep(.ant-btn span) {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
+  :deep(.ant-btn span) {
+    display: flex !important;
+    display: inline-block !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 
 .active-button {
   &:active {

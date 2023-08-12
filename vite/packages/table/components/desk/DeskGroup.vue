@@ -121,7 +121,6 @@
       <slot name="empty">
         <div class="s-bg rounded-3xl p-4" style="width: 80%;height:auto;margin: auto">
           <div class="text-center">
-            <icon icon="desktop" class="xt-text "  style="font-size: 64px;vertical-align: text-top"></icon>
             <div class="line-title xt-text" style="font-size: 24px;margin-bottom: 10px">   欢迎使用完全DIY的卡片桌面</div>
 
 <!--            <p style="font-size: 16px">-->

@@ -6,6 +6,7 @@ import {ref} from "vue";
 window.addEventListener('resize',()=>{
     configStore().runtime.windowWidth=document.body.clientWidth
 })
+// @ts-ignore
 export const configStore = defineStore('config', {
     state: () => {
         return {
@@ -26,7 +27,7 @@ export const configStore = defineStore('config', {
     actions: {
         toggleMenu() {
             if (typeof this.config.menuState === 'undefined') {
-                this.config.menuState = MenuState.FOLD
+                this.config.menuState = MenuState.UN_FOLD
             }
             this.config.menuState = this.config.menuState === MenuState.FOLD ? MenuState.UN_FOLD : MenuState.FOLD
         },
