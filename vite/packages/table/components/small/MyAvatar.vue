@@ -38,7 +38,7 @@ export default {
   methods: {
     setMinute() {
       setInterval(() => {
-        this.$refs.minute.classList.add('move')
+        this.$refs.minute?.classList.add('move')
         this.lvInfo.remainMinute--
         if (this.lvInfo.remainMinute <= 0) {
           this.lvInfo.remainHour--
@@ -53,7 +53,7 @@ export default {
           this.lvInfo.remainMinute = 59
         }
         this.timer = setTimeout(() => {
-          this.$refs.minute.classList.remove('move')
+          this.$refs.minute?.classList.remove('move')
         }, 1000)
       }, 60000)
     },
