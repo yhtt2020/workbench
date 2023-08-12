@@ -8,13 +8,13 @@
   </div>
 
   <div class="flex flex-col" style="margin-top: 16px !important;">
-    <a-input class=" h-11 mb-6" v-model:value="friendValue" style="border-radius: 12px;"  @keyup.enter="handleInput($event)"  enterkeyhint="search" placeholder="输入用户ID搜索" >
+    <a-input class=" h-11 mb-6" v-model:value="friendValue" style="border-radius: 12px;"  @input="handleInput($event)"  enterkeyhint="search" placeholder="输入用户ID搜索" >
       <template #suffix>
         <SearchOutlined style="color:var(--secondary-text);font-size: 1.25em;" />
       </template>
     </a-input>
 
-    <div class="flex flex-col" style="color: var(--primary-text);" v-if="addFriendLists.length !== 0">
+    <div class="flex flex-col" style="color: var(--primary-text);" v-if="addFriendLists.length !== 0 && friendValue !== ''">
       <div class="font-14" style="color: var(--primary-text);">搜索结果</div>
       <div class="flex flex-col">
        <div v-for="item in addFriendLists" class="flex items-center justify-between" style="padding: 12px;">
@@ -22,17 +22,15 @@
           <a-avatar  :size="32" :src="item.avatar"></a-avatar>
           <div style="margin-left: 16px;">{{ item.nick }}</div>
          </div>
-         <!-- <div v-if="isFriend" class=" flex items-center justify-center rounded-lg"
-          style="background: var(--secondary-bg);color:var(--secondary-text);padding: 10px;"
-         >
-           已添加
+
+         <div v-if="isFriend" class=" flex items-center justify-center rounded-lg" style="background: var(--secondary-bg);color:var(--secondary-text);padding: 10px;">
+          已添加
          </div>
-         v-else -->
-         <div  class="active-button flex items-center justify-center pointer rounded-lg" 
-          style="background: var(--active-bg);color:var(--active-text);padding: 10px;"
-          @click="addFriendButton(item)"
+
+         <div v-else class="active-button flex items-center justify-center pointer rounded-lg" 
+          style="background: var(--active-bg);color:var(--active-text);padding: 10px;" @click="addFriendButton(item)"
          >
-            加好友
+           加好友
          </div>
        </div>
       </div>
@@ -139,9 +137,10 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watchEffect, toRefs, computed,ref } from 'vue';
+import { defineComponent, reactive, watchEffect, toRefs, computed,ref, onMounted } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../store'
+import _ from 'lodash-es'
 
 export default defineComponent({
   props:[
@@ -198,6 +197,7 @@ export default defineComponent({
     const data = reactive({
       addFriendLists:[],
       simpleImage:'/img/state/null.png', // 空状态图片
+      friendLists:[], // 获取好友列表进行比较
     })
 
     const infoStore = appStore()  // 获取state用户信息
@@ -235,21 +235,30 @@ export default defineComponent({
       ctx.emit('close')
     }
 
-    // const isFriend = computed(async ()=>{
-    //   const option = {
-    //     userIDList: [`${friendValue.value !== undefined ? friendValue.value : ''}`],
-    //     type: TIM.TYPES.SNS_CHECK_TYPE_BOTH,
-    //   }
-    //   const res = await tim.checkFriend(option)
-    //   return res.data.successUserIDList[0]?.relation === 'CheckResult_Type_BothWay'
-    // })
+
+
+    const isFriend = computed(()=>{
+      const index = _.find(data.friendLists,function(o){ return o.userID === friendValue.value })
+      if(index){
+        return true
+      }else{
+        return false
+      }
+    })
+
+    const loadFriend = async () => {   // 加载获取好友列表
+      const res = await tim.getFriendList()
+      data.friendLists = res.data
+    }
+
+    onMounted(loadFriend)
 
     
 
     return{
-      friendValue,...toRefs(data),
-      // isFriend,
-      handleInput,closeAddFriend,addFriendButton,
+      friendValue,...toRefs(data),isFriend,      
+      
+      handleInput,closeAddFriend,addFriendButton,loadFriend,
     }
   }
 
