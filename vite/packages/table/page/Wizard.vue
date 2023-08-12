@@ -125,10 +125,8 @@
       </div>
       <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
         <div class="mb-3 mt-3" style="background: #f15460;padding: 1em;border-radius: 8px 4px;color: white"><AutoRun/></div>
-        <div>快捷键：</div>
         <div style="text-align: center">
           <KeySetting></KeySetting>
-          <div style="margin-top: 1em">后续可在工作台 设置 中修改</div>
         </div>
         <div class="panel" style="line-height: 1" v-if="!canTouch">
           <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>

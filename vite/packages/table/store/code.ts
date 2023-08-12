@@ -12,6 +12,7 @@ const createUrl = server + '/app/createCodes'
 const exchangeUrl = server + '/app/exchangeCode'
 const listUrl = server + '/app/listCodes'
 import {getConfig} from "../js/axios/serverApi";
+import {post} from "../js/axios/request";
 // @ts-ignore
 export const codeStore = defineStore('code', {
   state: () => ({
@@ -21,9 +22,9 @@ export const codeStore = defineStore('code', {
   }),
   actions: {
 
-    async active(code, serialHash,uid) {
-      let data={key: code, serialHash: serialHash,uid:uid}
-      return axios.post(activeUrl, data)
+    async active(code) {
+      let data={key: code}
+      return await  post(activeUrl, data)
     },
 
     async create() {

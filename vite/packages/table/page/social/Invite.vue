@@ -100,11 +100,11 @@
           如果您是受邀参与公测，可在下方输入您的专属邀请码。
           <br>
           验证通过后将获得 <img style="width: 24px" src="https://a.apps.vip/icons/test_sm.png"> 受邀用户勋章。
-          <div>
-            <a-input class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg)"
+          <div class="mt-2">
+            <a-input  class="mt-2 mb-2 w-1/2" placeholder="请输入邀请码" style="background: var(--secondary-bg);width: 250px"
                      v-model:value="code"></a-input>
           </div>
-          <div>
+          <div class="mt-2">
             <a-button @click="activeCode" type="primary">激活</a-button>
           </div>
         </template>
@@ -239,11 +239,12 @@ export default {
         return
       }
       let rs=await this.active(this.code, undefined,this.userInfo.uid)
-      if(rs.code===1000){
+      if(rs.status){
         message.success('激活成功。')
         this.verified=true
       }else{
-        message.error('激活失败，请更换有效邀请码。')
+        console.log(rs)
+        message.error('激活失败。'+rs.info)
       }
     },
     showCard (uid, userInfo) {
