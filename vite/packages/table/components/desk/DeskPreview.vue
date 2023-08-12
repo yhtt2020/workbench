@@ -6,7 +6,6 @@
         <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon>
       </div>
       <div class="flex">
-        <div class="add-scheme mr-3" @click="addPlan">立即添加</div>
         <div class="icon" @click="openDrawer = true">
           <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
         </div>
@@ -18,11 +17,15 @@
     <div class="flex justify-center items-center preview" id="previewContent">
       <Desk :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
-    <div class="foot">
-      <div class="flex items-center">
+    <div class="foot flex ">
+      <div class="flex items-center mr-2">
         <strong class="mr-2">{{ scheme.alias }}</strong> 共{{ template.cards.length }}个组件，尺寸
         {{ layoutSize.width + '*' + layoutSize.height }}
         <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
+      </div>
+      <div class="flex" style="padding: 0">
+        <div class="market-button mr-2 active" @click="addPlan"><icon icon="xiazai1"></icon> 立即添加</div>
+        <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div>
       </div>
     </div>
   </div>
@@ -38,12 +41,12 @@
                @click="openSet = true">
             <Icon icon="dianzan" style="font-size: 1.5em;"></Icon>
           </div>
-          <div class="add-scheme" @click="addPlan">立即添加</div>
+          <div class="add-scheme" @click="addPlan"><icon icon="xiazai1"></icon>立即添加</div>
         </div>
       </a-space>
     </template>
-    <div class="drawer-center">
-      <span class="drawer-title">{{ scheme.alias }}</span>
+    <div class="drawer-center no-drag">
+      <span class="drawer-title">{{ scheme.alias }} <span class="xt-text-2 " style="user-select: text">{{scheme.nanoid}}</span></span>
       <span class="drawer-text">{{ scheme.summary }}</span>
       <div class="flex" v-if="tagList.length>0">
         <div class="label" v-for="tag in tagList">{{ tag }}</div>
@@ -83,6 +86,7 @@ import { appStore } from '../../store'
 import Desk from './Desk.vue'
 import { cardStore } from '../../store/card'
 import {nanoid} from 'nanoid'
+import { marketStore } from '../../store/market'
 
 export default {
   name: 'DeskPreview',
@@ -181,9 +185,22 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
+    ...mapActions(marketStore,['incSupport']),
+    async doIncSupport(){
+      const rs=await this.incSupport(this.displayScheme.dataNanoid)
+      if(rs && rs.msg.includes('取消')){
+        this.displayScheme.support=rs.supportCount
+        message.success('已取消点赞')
+      }else{
+        console.log(rs)
+        this.displayScheme.support=rs.supportCount
+        message.success('感谢您的支持，您的支持是对作者最大的鼓励。')
+      }
+    },
     addPlan () {
       this.close()
       this.addShareDesk({
+        ...this.displayScheme,
         title:this.displayScheme.alias,
         cards:this.template.cards,
         settings:this.template.settings
@@ -230,6 +247,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .prompt-modal {
   position: absolute;
   top: 0;
@@ -360,7 +378,24 @@ export default {
   height: 75%;
   // height:var(--previewH);
 }
+.market-button {
+  border-radius: 8px;
+  width: 100px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--active-text);
+  padding: 10px;
+  cursor: pointer;
+  &.active,&:hover{
+    background: var(--active-bg);
 
+  }
+  &:hover{
+    opacity: 0.9;
+  }
+}
 //  .preview2{
 //   width:95%;
 //   height: 90%;
