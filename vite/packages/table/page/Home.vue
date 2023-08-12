@@ -250,6 +250,8 @@ import DeskGroup from '../components/desk/DeskGroup.vue'
 import Template from '../../user/pages/Template.vue'
 import Icon from '../components/Icon.vue'
 import Todo from '../components/widgets/todo/Todo.vue'
+import EatToday from '../components/widgets/eat/EatToday.vue'
+import HotSearch from '../components/widgets/HotSearch.vue'
 import {setTransparent,detTransparent } from "../components/card/hooks/themeSwitch"
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -404,7 +406,9 @@ export default {
     Tab,
     UpdateMyInfo,
     ExportDesk,
-    Todo
+    Todo,
+    EatToday,
+    HotSearch
   },
   computed: {
     ...mapWritableState(cardStore, [
