@@ -124,7 +124,7 @@ const manage = defineComponent({
    
     const options = {
       groupID:props.conversation?.groupProfile?.groupID,  // 群组id
-      count: 15,  // 
+      count: 500,  // 
       offset: 0
     }
 
