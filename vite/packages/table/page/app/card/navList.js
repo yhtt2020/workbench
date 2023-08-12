@@ -355,7 +355,7 @@ export const NavList = [
       },
       {
         name: 'todo',
-        cname:'待办（开发中）',
+        cname:'待办',
         detail:'同步你的待办助手数据，展示在工作台桌面',
         sizes: ['2x2', '2x4'],
         option:[
@@ -369,7 +369,7 @@ export const NavList = [
       },
       {
         name: 'eatToday',
-        cname:'今天吃什么小组件（开发中）',
+        cname:'今天吃什么小组件',
         detail:'选择困难症患者，想不好今天该吃啥？试试这个小组件帮你决定。',
         sizes: ['2x4'],
         option:[
