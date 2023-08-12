@@ -11,8 +11,7 @@
       <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:12px;">
         <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon>
       </div>
-      <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click.stop="showDrawer"
-        style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ selectTodo.title }}
+      <div class="head-title" @click.stop="showDrawer">{{ selectTodo.title }}
       </div>
       <div class="content-box">
         <Tasklist :data="notFinish"></Tasklist>
@@ -157,5 +156,17 @@ export default {
   letter-spacing: 0;
   font-weight: 500;
   margin: 12px 0  24px;
+}
+.head-title{
+  position: absolute;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  left: 45px;
+  top:12px;
+  background: rgba(255,255,255, 0.1);
+  color:var(--primary-text);
 }
 </style>
