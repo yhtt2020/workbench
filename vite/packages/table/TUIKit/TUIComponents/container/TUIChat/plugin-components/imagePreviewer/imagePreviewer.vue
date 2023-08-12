@@ -1,5 +1,7 @@
 <template>
-  <div class="image-previewer" :class="[isH5 && 'image-previewer-h5']">
+  <div class="image-previewer pointer" :class="[isH5 && 'image-previewer-h5']"
+    style="color: var(--primary-text);width: 100% !important;height: 100% !important;"
+  >
     <div class="image-wrapper" ref="image">
       <ul
         class="image-list"
@@ -46,12 +48,14 @@ import TUIEnv from '../../../../../TUIPlugin/TUIEnv';
 import { defineProps, ref, defineEmits, watchEffect, onMounted, onUnmounted } from 'vue';
 import { Message } from '../../interface';
 import { isNumber } from '@vueuse/core';
+
 interface touchesPosition {
   pageX1?: number;
   pageY1?: number;
   pageX2?: number;
   pageY2?: number;
 }
+
 const props = defineProps({
   imageList: {
     type: Array,

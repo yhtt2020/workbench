@@ -20,8 +20,8 @@
   <teleport to='body'>
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
       <CreateGroup v-if="addIndex === 1" @submit="create" @close="close" @cancel="toggleOpen" :isH5="env.isH5" />
-      <AddFriend v-if="addIndex === 0" @close="close"></AddFriend>
-      <Transfer :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
+      <AddFriend v-if="addIndex === 0" @close="close" :server="TUIServer"></AddFriend>
+      <Transfer :server="TUIServer" :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
     </Modal>
   </teleport>
 
@@ -88,6 +88,7 @@ const TUISearch = defineComponent({
       env: TUIServer.TUICore.TUIEnv,
       optionalShow: !TUIServer.TUICore.TUIEnv.isH5,
       needSearch: !TUIServer.TUICore.isOfficial,
+      TUIServer:TUISearch?.TUIServer
     });
 
     TUIServer.bind(data);
