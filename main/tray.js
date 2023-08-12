@@ -15,13 +15,13 @@ function sendIPCToTrayWindow (action, data) {
 }
 
 async function getUserInfo () {
-  try{
+  try {
     await baseApi.init()
-  }catch (e) {
+  } catch (e) {
     console.error(e)
   }
-  let rs=await  baseApi.axios('/app/getUserInfo', { fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar' }, 'get')
-  console.log('请求用户信息',rs)
+  let rs = await baseApi.axios('/app/getUserInfo', { fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar' }, 'get')
+  console.log('请求用户信息', rs)
   return rs
 }
 
@@ -44,8 +44,8 @@ async function getMemory () {
 
 async function createTrayWin () {
   const windowInstance = await windowManager.create({
-    name: 'tray',
-    windowOption:
+      name: 'tray',
+      windowOption:
         {
           frame: false,
           width: 400,
@@ -64,21 +64,21 @@ async function createTrayWin () {
           alwaysOnTop: false// 调整窗口层级
 
         },
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      sandbox: false,
-      webSecurity: false,
-      preload: (__dirname + '/src/preload/trayPreload.js'),
-      additionalArguments: [
-        '--user-data-path=' + app.getPath('userData'),
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        ...((isDevelopmentMode ? ['--development-mode'] : []))
-      ]
-    }
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        sandbox: false,
+        webSecurity: false,
+        preload: (__dirname + '/src/preload/trayPreload.js'),
+        additionalArguments: [
+          '--user-data-path=' + app.getPath('userData'),
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : []))
+        ]
+      }
 
-  }
+    }
   )
   trayWindow = windowInstance.window
   trayWindow.webContents.loadURL(getUrl('tray.html'))
@@ -102,31 +102,33 @@ function getUrl (url) {
   }
   return protocolUrl
 }
-function openWorktable(){
+
+function openWorktable () {
   if (global.tableWin && !global.tableWin.window.isDestroyed()) {
     global.tableWin.window.show()
     global.tableWin.window.focus()
   } else {
-    global.tableManager.init().then(()=>{
+    global.tableManager.init().then(() => {
       global.tableWin.window.show()
     })
   }
 }
 
-function openToolbox(){
-    ToolboxManager.ensure()
-    global.toolboxManager.open()
+function openToolbox () {
+  ToolboxManager.ensure()
+  global.toolboxManager.open()
 }
-function openBrowser(){
+
+function openBrowser () {
   if (!mainWindow) {
     createWindow()
   } else {
     mainWindow.show()
   }
 }
+
 let tray = null
 app.whenReady().then(() => {
-
 
   ipc.on('getMemory', (event, args) => {
     var obj = Object.keys(viewMap)
@@ -183,42 +185,38 @@ app.whenReady().then(() => {
       }
     }, 300)
 
-
   })
-
-
 
   tray.on('double-click', (event) => {
     timeCount = 1
     //兼容新的设置项目
-    let open= settings.get('trayOpen')
-    if( open==='browser'){
+    let open = settings.get('trayOpen')
+    if (open === 'browser') {
       openBrowser()
-    }else{
+    } else {
       openWorktable()
     }
 
-
   })
 
-
   tray.on('right-click', () => {
-    let tableRunning=global.tableWin && !global.tableWin.window.isDestroyed()
-    const keyM=global.keyMapManager
-    const tool=keyM.getKeyMap('superTools',true)
-    const table=keyM.getKeyMap('table',true)
-    let tpl=[
+    let tableRunning = global.tableWin && !global.tableWin.window.isDestroyed()
+    const keyM = global.keyMapManager
+    const tool = keyM.getKeyMap('superTools', true)
+    const table = keyM.getKeyMap('table', true)
+    const globalSearch = keyM.getKeyMap('globalSearch', true)
+    let tpl = [
 
       {
-        label: '打开工作台 '+'      '+table,
-        Accelerator:table,
+        label: '打开工作台 ' + '         ' + table,
+        Accelerator: table,
         click: () => {
-         openWorktable()
+          openWorktable()
         }
       },
       {
-        label: '打开工具箱 '+'      '+tool,
-        Accelerator:tool,
+        label: '打开工具箱 ' + '         ' + tool,
+        Accelerator: tool,
         click: () => {
           openToolbox()
         }
@@ -228,16 +226,16 @@ app.whenReady().then(() => {
         click: () => {
           if (global.tableWin && !global.tableWin.window.isDestroyed()) {
             global.tableWin.close()
-            setTimeout(()=>{
-              settings.set('tableWinSetting',undefined)
-              global.tableManager.init().then(()=>{
+            setTimeout(() => {
+              settings.set('tableWinSetting', undefined)
+              global.tableManager.init().then(() => {
                 global.tableWin.window.show()
               })
-            },500)
+            }, 500)
 
           } else {
-            settings.set('tableWinSetting',undefined)
-            global.tableManager.init().then(()=>{
+            settings.set('tableWinSetting', undefined)
+            global.tableManager.init().then(() => {
               global.tableWin.window.show()
             })
           }
@@ -253,11 +251,11 @@ app.whenReady().then(() => {
         }
       },
       {
-        label: '全局搜索',
+        label: '浏览器全局搜索' + '    ' + globalSearch,
         click: () => {
           globalSearchMod.init()
           // statsh 点击打开全局搜索
-          if (globalSearch && globalSearch.isFocused()) {
+          if (global.globalSearch && global.globalSearch.isFocused()) {
             statsh.do({
               action: 'increase',
               key: 'globalSearchBaseClickOpen',
@@ -282,22 +280,56 @@ app.whenReady().then(() => {
       },
 
     ]
-    if(tableRunning){
-      tpl.push({
-        label:'退出工作台',
-        click(){
+
+
+    tpl.push(
+      {
+        label: '社区和反馈',
+        click () {
+          require('electron').shell.openPath(userDataPath)
+        },
+        submenu: [{
+          label: '打开官网',
+          click () {
+            require('electron').shell.openExternal('https://www.apps.vip')
+          }
+        },
+          {
+            label: '产品社区',
+            click () {
+              require('electron').shell.openExternal('https://s.apps.vip')
+            }
+          },
+          {
+            label: '提交bug和建议',
+            click () {
+              require('electron').shell.openExternal('https://s.apps.vip/forum?id=100304')
+            }
+          }]
+      }
+      ,
+      {
+        label: '打开用户数据目录',
+        click () {
+          require('electron').shell.showItemInFolder(userDataPath)
+        }
+      }
+      ,
+      {
+        label: '全部退出',
+        click () {
+          global.trayExit = true
+          app.exit()
+        }
+      })
+    if (tableRunning) {
+      tpl.splice(tpl.length-1,0,{
+        label: '退出工作台',
+        click () {
           global.tableManager.close()
         }
       })
     }
-
-    tpl.push({
-      label: '全部退出',
-      click () {
-        global.trayExit = true
-        app.exit()
-      }
-    })
     const contextMenu = Menu.buildFromTemplate(tpl)
     tray.popUpContextMenu(contextMenu)
   })

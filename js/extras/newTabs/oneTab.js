@@ -5,7 +5,7 @@ const oneTab = {
     'ts://newtab',
     'https://limestart.cn/',
     'https://inftab.com/',
-    'https://go.itab.link/sw.js'
+    'https://go.itab.link/?t=2'
   ],
 
   selectOnetab() {

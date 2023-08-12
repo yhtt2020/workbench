@@ -12,7 +12,7 @@ body{
   overflow: hidden;
 }
 .s-bg{
-  background: var(--suspensiondBackGround,rgba(26,26,26,.65));
+  background: var(--primary-bg);
   backdrop-filter:blur(var(--suspensiondBackGroundBlur,50px));
   box-shadow: var(--suspensiondBackGroundBoxShadow,0px 0px 10px 0px rgba(0,0,0,0.5))
 }//suspension-background

@@ -355,13 +355,27 @@ export const NavList = [
       },
       {
         name: 'todo',
-        cname:'待办（开发中）',
+        cname:'待办',
         detail:'同步你的待办助手数据，展示在工作台桌面',
         sizes: ['2x2', '2x4'],
         option:[
           {
             name: 'Todo',
             size: '2x2',
+            zoom: '11'
+          }
+        ],
+        time: '2023/5/24'
+      },
+      {
+        name: 'eatToday',
+        cname:'今天吃什么小组件',
+        detail:'选择困难症患者，想不好今天该吃啥？试试这个小组件帮你决定。',
+        sizes: ['2x4'],
+        option:[
+          {
+            name: 'eatToday',
+            size: '2x4',
             zoom: '11'
           }
         ],
@@ -618,6 +632,20 @@ export const NavList = [
             size: '2x4',
             zoom: '11'
           },
+        ],
+        time: '2023/5/31'
+      },
+      {
+        name: 'HotSearch',
+        cname: '微博热搜',
+        detail: '最近都发生了啥？看看微博上最新热门博文',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'HotSearch',
+            size: '2x4',
+            zoom: '11'
+          }
         ],
         time: '2023/5/31'
       },

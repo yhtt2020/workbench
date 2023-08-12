@@ -144,7 +144,7 @@ export default {
         <a-row style="text-align: left" :gutter="10">
           <a-col :span="12"  :style="{paddingLeft:simple?'20px':'5px'}">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
-            <FrameAvatar :frame="userInfo.equippedItems?.frameDetail" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.equippedItems?.frameDetail?.image"></FrameAvatar>
+            <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.frame"></FrameAvatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->

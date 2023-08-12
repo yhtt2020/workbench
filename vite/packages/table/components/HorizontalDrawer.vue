@@ -83,9 +83,7 @@ export default {
 }
 </style>
 <style>
-.ant-drawer-header{
-  border-bottom: none !important;
-}
+
 .s-list{
   background: var(--secondary-bg);
 }

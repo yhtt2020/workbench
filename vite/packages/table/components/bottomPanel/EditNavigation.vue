@@ -32,26 +32,26 @@
           </div>
           <div class="center-text" style="transform: translateY(-20px)">
             <div class="con-center" v-show="navText && !promptModal" style="width:800px">
-              <span class="mt-5 mb-4">支持长按拖拽排序，滑动查看更多。</span>
-              <div class="   mb-2">
+              <span class="mt-5 mb-4">本界面不支持触摸，请使用滚轮滚动，支持鼠标拖拽！</span>
+<!--              <div class="   mb-2">
                 <div class="mb-2 xt-text-2">
                   注意：侧边栏图标风格会自动调整
                 </div>
                 <div class="flex mb-2">
                 <span class="mr-4 flex justify-center items-center">
-              <Icon icon="home" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
+              <Icon icon="home" style="width: 30px;height: 30px;color:var(&#45;&#45;secondary-text);"></Icon>
               <Icon icon="arrowright" style="width: 20px;height: 20px;"></Icon>
-              <Icon icon="shouye1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
+              <Icon icon="shouye1" style="width: 30px;height: 30px;color:var(&#45;&#45;secondary-text);"></Icon>
             </span>
-                  <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
+                  <Icon icon="thunderbolt" style="width: 30px;height: 30px;color:var(&#45;&#45;secondary-text);"></Icon>
                   <Icon icon="arrowright" style="width: 20px;height: 20px;margin-top: 6px"></Icon>
-                  <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:var(--secondary-text);"></Icon>
+                  <Icon icon="kuaijie1" style="width: 30px;height: 30px;color:var(&#45;&#45;secondary-text);"></Icon>
                 </div>
 
-              </div>
-              <div class="mb-2 xt-text-2">必选图标（拖拽添加）</div>
-              <div class="main-nav" id="mainList" style="width: 350px">
-                <div v-for="item in mainNavList" :key="item.name">
+              </div>-->
+              <div class="mb-2 xt-text-2">必选功能（拖拽添加）</div>
+              <div class="main-nav" id="mainList" style="width: 320px;zoom:0.8">
+                <div v-for="item in mainNavList" :key="item.name" style="margin:5px">
                   <div style="width: 100%;height: 100%;opacity: 0.3;" class="flex flex-col justify-center items-center">
                     <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
                     <span class="mt-2 xt-text-2">{{ item.name }}</span>
@@ -61,10 +61,10 @@
                   </div>
                 </div>
               </div>
-              <div style="width: 700px;text-align: center;zoom: 0.8">
-                <div class="mb-2 mt-2" style="color:var(--secondary-text);">推荐图标</div>
-                <div class="main-nav" id="suggestList" style="width:100%">
-                  <div v-for="item in suggestNavList" :key="item.name">
+              <div style="width: 650px;text-align: center;zoom: 0.8;display: flex;flex-direction: column;align-items:center;justify-content: center;justify-items: center;">
+                <div class="mb-2 mt-2" style="color:var(--secondary-text);">推荐功能（拖拽添加）</div>
+                <div class="main-nav" id="suggestList" style="width:430px;white-space: pre-wrap;flex-wrap: wrap;">
+                  <div v-for="item in suggestNavList" :key="item.name" style="margin:5px">
                     <div style="width: 100%;height: 100%;opacity: 0.3;"
                          class="flex flex-col justify-center items-center">
                       <Icon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></Icon>
@@ -80,20 +80,20 @@
 
             <div class="nav-toggle" v-show="navText && !promptModal">
               <div class="left-point">
-                <span class="mb-4 xt-text-2"><Icon icon="arrowleft"></Icon>左侧</span>
+                <span class="mb-1 xt-text-2"><Icon icon="arrowleft"></Icon>左侧</span>
                 <div>
                   <!-- <a-switch v-model:checked="leftNav" @change="navToggle(sideNavigationList,'left')"/> -->
                   <a-switch v-model:checked="leftNav" @change="navToggle('left')"/>
                 </div>
               </div>
               <div class="foot-point">
-                <span class="mb-4 xt-text-2"><Icon icon="arrowdown"></Icon>底部</span>
+                <span class="mb-1 xt-text-2"><Icon icon="arrowdown"></Icon>底部</span>
                 <div>
                   <a-switch v-model:checked="footNav" @change="navToggle('foot')"/>
                 </div>
               </div>
               <div class="right-point">
-                <span class="mb-4 xt-text-2">右侧<Icon icon="arrowright"></Icon></span>
+                <span class="mb-1 xt-text-2">右侧<Icon icon="arrowright"></Icon></span>
                 <div>
                   <a-switch v-model:checked="rightNav" @change="navToggle('right')"/>
                 </div>
@@ -239,21 +239,28 @@ import { message } from 'ant-design-vue'
 
 const { appModel } = window.$models
 const suggestNavigationList = [
+
+  {
+    type: 'systemApp',
+    icon: 'xiaoxi',
+    name: '组织(开发中)',
+    event:'chat',
+   fn:()=>{
+     vm.$router.push({ name: 'chat' })
+   }
+  },
   {
     type: 'systemApp',
     icon: 'rizhi',
     name: '办公(开发中)',
     event: 'workDesk',
-  }, {
+  },
+  {
     type: 'systemApp',
-    icon: 'game',
-    name: '游戏',
-    event: 'gameIndex'
-  }, {
-    type: 'systemApp',
-    icon: 'wangluo',
-    name: '浏览器',
-    event: 'browser',
+    icon: 'xuanzhong',
+    name: '待办(新)',
+    event:'todo',
+    fn: () => { vm.$router.push({ name: 'todo' })}
   },
   {
     type: 'systemApp',
@@ -265,24 +272,14 @@ const suggestNavigationList = [
 
   {
     type: 'systemApp',
-    icon: 'daibanshixiang',
-    name: '代办',
-    data:
-      {
-        fullScreen: false,
-        theme: 'transparent',
-        name: 'todo',
-        url: 'https://a.apps.vip/todo',
-        background: true,
-        node: true,
-        security: true
-      }
-  },
-  {
+    icon: 'wangluo',
+    name: '浏览器',
+    event: 'browser',
+  }, {
     type: 'systemApp',
-    icon: 'banner',
-    name: '壁纸',
-    event: 'my',
+    icon: 'game',
+    name: '游戏',
+    event: 'gameIndex'
   },
   {
     type: 'systemApp',
@@ -290,6 +287,14 @@ const suggestNavigationList = [
     name: '音乐',
     event: 'music'
   },
+
+  {
+    type: 'systemApp',
+    icon: 'banner',
+    name: '壁纸',
+    event: 'my',
+  },
+
 ]
 export default {
   name: 'EditNavigation',
@@ -1090,14 +1095,12 @@ export default {
 }
 
 .main-nav {
-  width: 70%;
-  height: 112px;
-  padding: 12px;
+  padding: 10px;
   background: var(--modal-bg);
   border-radius: 16px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
   > div {
     width: 88px;
@@ -1132,7 +1135,7 @@ export default {
   > div {
     display: flex;
     flex-direction: column;
-    padding: 24px 44px;
+    padding:12px 12px;
     text-align: center;
     background: var(--modal-bg);
     border-radius: 12px;

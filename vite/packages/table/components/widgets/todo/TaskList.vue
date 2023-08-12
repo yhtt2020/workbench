@@ -1,7 +1,8 @@
 <template>
   <div class="flex items-center justify-center h-full" v-if="!data.length">
-    <a-empty description=""></a-empty>
+    <a-empty description="点击进入待办应用" image="/emoji/sleep.png"></a-empty>
   </div>
+  <vue-custom-scrollbar :settings="scrollbarSettings" style="height: 100%">
   <div v-for="(task,index) in data" :key="task.nanoid">
     <div class="task-item">
       <div class="todo-style" style="min-width: 32px">
@@ -14,13 +15,14 @@
           text-wrap: normal;
           word-break: break-all;
           width: 0;
+          user-select: text;
         "
       >
         <div
           :class="{ completed: task.completed }"
           class="title truncate"
         >
-          <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);" 
+          <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);"
             ><to-top-outlined v-if="task.isTop" /> {{ task.title }}</span
           >
         </div>
@@ -41,6 +43,7 @@
       </div>
     </div>
   </div>
+  </vue-custom-scrollbar>
 </template>
 
 <script lang="ts">
@@ -49,16 +52,27 @@ import dayjs from "dayjs";
 import { mapActions, mapState } from "pinia";
 import { taskStore } from "../../../page/app/todo/stores/task";
 import { ToTopOutlined } from "@ant-design/icons-vue";
+import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
+import Emoji from "../../comp/Emoji.vue";
 export default {
   name: "TaskList",
   props: {
     data: [] as ITaskInfo[],
   },
   components: {
+    Emoji,
+    VueCustomScrollbar,
     ToTopOutlined,
   },
   data() {
     return {
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
       ellipsis: {
         rows: 1,
       },
@@ -127,7 +141,7 @@ export default {
     padding: 0 12px;
     margin-bottom: 9px;
   }
-    
+
   .completed {
     text-decoration: line-through;
     color: #ccc;

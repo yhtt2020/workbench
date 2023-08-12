@@ -1,13 +1,12 @@
 @import url("../../../styles/common.scss");
 @import url("../../../styles/icon.scss");
 .TUI-contact {
-  background: #FFFFFF;
   font-weight: 400; }
   .TUI-contact-left {
-    border-right: 1px solid #F4F5F9; }
+    border-right: 1px solid var(--divider); }
     .TUI-contact-left-header {
       background: #FFFFFF;
-      border-bottom: 1px solid #F4F5F9; }
+      border-bottom: 1px solid var(--divider); }
   .TUI-contact-column-item .num {
     background: #FF584C;
     font-weight: 400;

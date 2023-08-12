@@ -122,10 +122,9 @@ export default {
     <div class="todo-box">
       <a-layout theme="light" style="height:100%;background:none;">
         <a-layout-sider
-          v-show="config.menuState === MenuState.UN_FOLD"
           style="height:100%;background:none;border-right: 1px solid var(--divider);padding:12px;"
           theme="light"
-        > 
+        >
           <div v-if="backBtn" class="flex items-center pointer ml-3 mb-3.5">
             <Icon icon="xiangzuo" style="color:var(--secondary-text);font-size:20px"></Icon>
             <span class="xt-text-2 ml-3" style="font-size: 14px;">返回</span>
@@ -181,7 +180,7 @@ export default {
           </div>
         </a-layout-sider>
 
-        <div class="box-content" style="background:none" v-show="config.menuState === MenuState.UN_FOLD">
+        <div class="box-content" style="background:none">
           <div class="middle-title">
             <span v-if="Object.keys(this.activeList).length === 0">
               全部待办
@@ -202,7 +201,7 @@ export default {
               >
               <Icon icon="gengduo1" style="color:var(--secondary-text);font-size:20px"></Icon>
             </span>
-            
+
             <template #overlay>
               <a-menu>
                 <a-menu-item

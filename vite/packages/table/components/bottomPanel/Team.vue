@@ -2,7 +2,7 @@
   <div class="team-module">
     <div @click="toggleTeam" class="common-panel s-bg pointer "
     style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);">
-    <a-avatar src="/img/bottomPanel/bottom_bar.png" :size="56"></a-avatar>
+    <emoji style="width: 52px;height:52px" icon="glassface"></emoji>
     </div>
     <div class="team-box" v-if="openTeam">
       <div v-for="t in teamList" :key="t.title" class="team-item" @click="jump(t.type,t)">
@@ -20,14 +20,16 @@ import TeamTip from '../TeamTip.vue'
 import { mapWritableState, mapActions } from 'pinia'
 import { teamStore } from '../../store/team'
 import MyProp from '../team/MyProp.vue'
+import Emoji from '../comp/Emoji.vue'
 export default {
   name: "Team",
   components: {
+    Emoji,
     TeamTip,
     MyProp
   },
   props: {
-    
+
   },
   data() {
     return {
@@ -83,7 +85,7 @@ export default {
         case 'route':
           this.$router.push(val.route)
           break;
-        case 'team':  
+        case 'team':
           await this.updateMy(0)
           if (this.team.status === false) {
             this.teamKey = Date.now()

@@ -781,7 +781,7 @@ export default defineComponent({
                 <div class="setting-option" style="display: flex;align-items: center">
                   <input type="radio" name="tabChoosed" id="itab-input" />
                   <label for="itab-input">iTab（热门新秀）</label>
-                  <div class="url-icon" @click="openUrl('https://go.itab.link/sw.js')"> <link-outlined /></div>
+                  <div class="url-icon" @click="openUrl('https://go.itab.link/?t=2')"> <link-outlined /></div>
                 </div>
                 <div class="setting-option">
                   <input type="radio" name="tabChoosed" id="tab-custom-input" />

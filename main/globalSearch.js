@@ -1,4 +1,4 @@
-let globalSearch = null
+global.globalSearch = null
 
 const globalSearchMod = {
   init: function () {

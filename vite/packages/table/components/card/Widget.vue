@@ -14,7 +14,7 @@
           <Icon :icon="options.icon" class="title-icon"></Icon>
           <div class="w-2/3">{{ options.title }}</div>
         </div>
-        <div class="right-title" v-if="showRightIcon" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+        <div class="right-title z-10"  v-if="showRightIcon" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
           <Icon icon="gengduo1" class="title-icon pointer"></Icon>
         </div>
       </div>

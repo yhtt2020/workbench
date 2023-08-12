@@ -1,6 +1,6 @@
 <template>
   <Widget :customData="customData" :customIndex="customIndex" :options="options" :desk="desk">
-    <HorizontalPanel :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
+    <HorizontalPanel style="min-width: 100%" :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
     <a-tooltip title="更多管理" placement="top">
       <div class=" px-2 rounded-full" @click="goStatus" style="position: absolute;top: 16px;right:40px;cursor: pointer;font-size: 12px"><icon icon="tiaoduguanli"></icon> </div>
     </a-tooltip>

@@ -2,17 +2,17 @@
   <div v-if="!activeTask.createTime" style="height: 100%;">
     <span
       class="title-action hover-action flex items-center xt-text pt-3 ml-3"
-      @click="toggleMenu"
+
       style="cursor: pointer;"
-    >
-      <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(--secondary-text);font-size:20px"></Icon>
-      <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
-      <span class="ml-2" v-if="config.menuState === MenuState.UN_FOLD">折叠</span
-      ><span class="ml-2" v-else>展开</span>
+    ><!--      @click="toggleMenu"-->
+<!--      <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--      <Icon v-else icon="indent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--      <span class="ml-2" v-if="config.menuState === MenuState.UN_FOLD">折叠</span-->
+<!--      ><span class="ml-2" v-else>展开</span>-->
     </span>
     <a-empty
       style="margin-top: calc(100vh / 2 - 130px)"
-      description="点击代办查看详情"
+      description="点击待办查看详情"
     >
     </a-empty>
   </div>
@@ -32,12 +32,12 @@
     <div style="height: 100%;margin-bottom: 68px;" class="flex flex-col">
       <div class="top-bar">
         <span class="flex">
-          <span class="title-action" style="cursor: pointer"
-            ><span @click="toggleMenu">
-              <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(--secondary-text);font-size:20px"></Icon>
-              <Icon v-else icon="indent" style="color:var(--secondary-text);font-size:20px"></Icon>
-              </span
-          ></span>
+<!--          <span class="title-action" style="cursor: pointer"-->
+<!--            ><span @click="toggleMenu">-->
+<!--              <Icon v-if="config.menuState === MenuState.UN_FOLD" icon="outdent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--              <Icon v-else icon="indent" style="color:var(&#45;&#45;secondary-text);font-size:20px"></Icon>-->
+<!--              </span-->
+<!--          ></span>-->
           <span class="mx-4 todo-style">
             <a-checkbox v-model:checked="activeTask.completed"></a-checkbox>
           </span>
@@ -94,7 +94,7 @@
               </span>
               <template v-if="editing">
                 <div style="width:150px">
-                  <HorizontalPanel :navList="navList" v-model:selectType="selectType" :height="44" ></HorizontalPanel>
+                  <HorizontalPanel style="min-width: 150px"  :navList="navList" v-model:selectType="selectType" :height="44" ></HorizontalPanel>
                 </div>
                 <!-- <a-radio-group
                   buttonStyle="outline"
@@ -125,7 +125,7 @@
           style="position: relative;height: 95%;"
         >
           <div
-            style="height: 100%;padding: 5px; word-break: break-all;color:var(--primary-text)"
+            style="height: 100%;padding: 5px; word-break: break-all;color:var(--primary-text);user-select: text"
             v-html="activeTask.description || '点击【编辑图标】写描述'"
             v-if="!editing"
           ></div>
@@ -211,7 +211,7 @@
 
 <script lang="ts">
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
-import api from "../model/api";
+import { fileUpload, pathUpload } from '../../../../components/card/hooks/imageProcessing'
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { mapActions, mapWritableState } from "pinia";
 import { taskStore } from "../stores/task";
@@ -397,63 +397,15 @@ export default {
       timeout: 5 * 1000, // 5 秒
 
       async customUpload(file, insertFn) {
-        // JS 语法
-        // file 即选中的文件
-        // 自己实现上传，并得到图片 url alt href
-        // 最后插入图片
         let url;
         var formData = new FormData();
         formData.append("file", file);
-
-        await api.getCosUpload(formData, (err, data) => {
-          if (!err) {
-            message.error("图片上传失败");
-          } else {
-            url = "http://" + data.data.data;
-            insertFn(url);
-          }
-        });
-        // api.getCosUpload(formData).then((data) => {
-        //   if (data.data.code === 1000) {
-        //     url = 'http://' + data.data.data
-        //     insertFn(url)
-        //   } else {
-        //     message.error('图片上传失败')
-        //   }
-        // })
-      },
-    };
-    editorConfig.MENU_CONF["uploadImage"] = {
-      maxFileSize: 10 * 1024 * 1024,
-
-      // 最多可上传几个文件，默认为 10
-      maxNumberOfFiles: 10,
-
-      metaWithUrl: false,
-
-      // 跨域是否传递 cookie ，默认为 false
-      withCredentials: true,
-
-      // 超时时间，默认为 10 秒
-      timeout: 5 * 1000, // 5 秒
-
-      async customUpload(file, insertFn) {
-        // JS 语法
-        // file 即选中的文件
-        // 自己实现上传，并得到图片 url alt href
-        // 最后插入图片
-        let url;
-        var formData = new FormData();
-        formData.append("file", file);
-
-        await api.getCosUpload(formData, (err, data) => {
-          if (!err) {
-            message.error("图片上传失败");
-          } else {
-            url = "http://" + data.data.data;
-            insertFn(url);
-          }
-        });
+        url=  await fileUpload(file)
+        if (!url) {
+          message.error("图片上传失败");
+        } else {
+          insertFn(url);
+        }
       },
     };
     return {

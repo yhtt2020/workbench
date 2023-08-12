@@ -1,37 +1,40 @@
 <template>
-  <Widget 
-  :options="options" 
+  <Widget
+  :options="options"
   :sizeList="sizeList"
   :customData="customData"
-  :desk="desk" 
-  ref="todoSlot" 
+  :desk="desk"
+  ref="todoSlot"
   :menuList="toggleTodoList"
   >
-    <div style="height:100%;">
-      <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:12px;">
+    <div @click="todoPage" class="pointer" style="position:absolute;left: 0;top: 0;bottom: 0;right: 0;z-index: 0">
+
+    </div>
+    <div  style="height:100%;">
+      <div @click="todoPage" class="pointer"    style="position: absolute;left: 12px;top:12px;">
         <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon>
       </div>
       <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click.stop="showDrawer"
         style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ selectTodo.title }}
       </div>
-      <div class="content-box">
-        <Tasklist :data="notFinish"></Tasklist>
+      <div  @click.stop style="cursor: auto;height:calc( 100% - 30px)" class="mt-2"  >
+        <Tasklist  class="content-box " :data="notFinish" ></Tasklist>
       </div>
     </div>
   </Widget>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span class="drawer-title" style="margin-top:0;">类型</span>
-      <span   v-for="(item,index) in todoType" :key="index"  
-      @click.stop="getTodoType(item)" 
-      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
+      <span   v-for="(item,index) in todoType" :key="index"
+      @click.stop="getTodoType(item)"
+      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''"
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
       <span class="drawer-title">清单</span>
-      <span   v-for="(item,index) in listType" :key="index"  
-      @click.stop="getTodoType(item,index)" 
-      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''" 
+      <span   v-for="(item,index) in listType" :key="index"
+      @click.stop="getTodoType(item,index)"
+      :class="selectTodo.nanoid === item.nanoid ? 'active-index':''"
       class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
          {{ item.title }}
       </span>
@@ -65,6 +68,7 @@ export default {
   },
   data () {
     return {
+
       // options: {className: 'card small',title: '',icon: 'check-square',type: 'todo'},
       options: {className: 'card small',title: '',type: 'todo'},
       sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'}],
@@ -131,7 +135,7 @@ export default {
           break;
         default:
           this.taskList = this.tasks.filter(t => t.listNanoid[0] === item.nanoid)
-          break; 
+          break;
       }
     },
     todoPage(){

@@ -275,7 +275,7 @@ export default {
     },
     async getDeskData () {
       //获取桌面分类
-      let cats = await this.getCategories()
+      let cats = await this.getCategories('desk')
       if (cats) {
         this.categories = [
           {
