@@ -48,20 +48,33 @@ class KeyMapManager {
   /**
    * 获得一个键位
    * @param name
-   * @param defaultKeys 提供默认的key，可选，如果不提供，则从类的defaultKeys里取
+   * @param human 友好显示，字母大写，空格替换文字
    * @returns {*}
    */
-  getKeyMap (name,defaultKeys) {
+  getKeyMap (name,human=false) {
     const keyMap = keyMapModule.userKeyMap(settings.get('keyMap'))
    // console.log(keyMap,'全局快捷键设置')
-    let key=''
+    let key=keyMapModule.defaultKeyMap[name]
     //console.log(keyMap[name],'用户设置键位')
     if (keyMap) {
       if (keyMap[name]) {
         key = keyMap[name]
       }
     }
+    if(human){
+      return this.humanKey(key)
+    }
     return key
+  }
+
+  humanKey(key){
+    const keys=key.split('+')
+    return keys.map(key=>{
+      const capitalized =
+        key.charAt(0).toUpperCase()
+        + key.slice(1)
+      return capitalized.replace('Space','空格')
+    }).join('+')
   }
 
   /**

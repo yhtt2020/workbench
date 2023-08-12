@@ -96,7 +96,6 @@ export default {
   },
   methods: {
     change(tab) {
-      console.log(tab)
       this.$router.push(tab.menu.route)
     },
     setMenu(menu) {

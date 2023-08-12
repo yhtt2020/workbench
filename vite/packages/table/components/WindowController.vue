@@ -47,10 +47,8 @@ export default {
     // 窗口放大
     async maximize () {
       if (await tsbApi.window.isMaximized()) {
-        console.log('取消最大化')
         tsbApi.window.unMaximize()
       } else {
-        console.log('最大化')
         tsbApi.window.maximize()
       }
     },

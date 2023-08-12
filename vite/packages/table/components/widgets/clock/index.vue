@@ -280,7 +280,6 @@ export default {
         "周六",
       ];
       const dayOfWeek = daysOfWeek[currentDate.getDay()];
-      console.log("object :>> ", currentDate);
       this.options.title = month + "月" + day + "日 " + dayOfWeek;
     },
   },

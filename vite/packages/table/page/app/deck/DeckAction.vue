@@ -112,7 +112,6 @@ export default {
       this.resetActionBuilder=Date.now()
     },
     change(tab) {
-      console.log(tab)
     },
     back() {
       this.$emit('click')

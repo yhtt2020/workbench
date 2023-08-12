@@ -83,37 +83,31 @@ export default {
       }
 
       if (this.text) {
-        console.log("handleInput :>> ");
       }
       this.$emit("input", event);
     },
     handleEnter(event) {
       if (this.text) {
-        console.log("handleEnter :>> ");
       }
       this.$emit("enter", event);
     },
     handleFocus(event) {
       if (this.text) {
-        console.log("handleFocus :>> ");
       }
       this.$emit("focus", event);
     },
     handleBlur(event) {
       if (this.text) {
-        console.log("handleBlur :>> ");
       }
       this.$emit("blur", event);
     },
     handleChange(event) {
       if (this.text) {
-        console.log("handleChange :>> ");
       }
       this.$emit("change", event);
     },
     handleKeyUp(event) {
       if (this.text) {
-        console.log("handleKeyUp :>> ");
       }
       this.$emit("keyup", event);
     },

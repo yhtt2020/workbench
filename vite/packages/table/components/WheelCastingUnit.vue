@@ -87,7 +87,6 @@ export default {
   },
 
   mounted () {
-    console.log('载入时loading', this.loading)
     if (this.loading === false) {
       this.loaded = true
       this.initComponent()
@@ -96,7 +95,6 @@ export default {
   watch: {
     'loading': {
       handler (newVal) {
-        console.log('检测到变化')
         if (newVal === false) {
           this.initComponent()
         }
@@ -118,7 +116,6 @@ export default {
   },
   methods: {
     initComponent () {
-      console.log('变化为false')
       this.slider = new KeenSlider(this.$refs.slider)
       this.thumbnail = new KeenSlider(
         this.$refs.thumbnail,

@@ -63,11 +63,9 @@ export default {
   },
   mounted() {
     $('.image-wrapper').on('touchmove', (e) => {
-      console.log(e, '华东')
       e.stopPropagation()
     })
     $('.image-item').on('touchend', (e) => {
-      console.log(e, '结束')
     })
     justifiedGallery()
     $('#container').justifiedGallery({

@@ -145,7 +145,7 @@ export default{
         case 'image':  // 筛选图片
           if(this.items.length !== 0){
             const list = _.filter(this.items,function(o) { return  o.type === 'image' })
-            console.log(list);
+
             return list
           }
           break;
@@ -175,7 +175,6 @@ export default{
     },
     // 切换导航栏
     getClipItem(v) {
-      console.log(v);
       this.defaultCutType = v
     },
     // 打开搜索入口

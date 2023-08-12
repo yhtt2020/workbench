@@ -33,14 +33,16 @@
           <!-- 头部搜索和下拉列表 -->
           <div class="no-drag">
             <Search
-              :searchValue="selectContent"
-              :defaultSelect="searchValue"
+              v-model:keywords="search.keywords"
+              v-model:order="search.order"
+              placeholder="关键词"
               :sortType="searchOptions"
               :isFiltrate="true"
-              @changeSelect="changeSelect"
-              @changeInput="changeInput"
+              @search="doSearch"
             />
           </div>
+
+
           <!-- 分享 -->
           <div v-if="selectNav.name === 'desktop'"
                class="pointer xt-mask flex items-center rounded-lg justify-center ml-3 no-drag"
@@ -49,6 +51,7 @@
           </div>
         </div>
       </div>
+      <div class="text-center no-drag mb-2" v-if="isSearching">搜索结果：{{ keyword }} <icon @click="cancelSearch" class="pointer" style="color: red" icon="close-circle-fill"></icon></div>
       <div class="mian" v-if="selectNav.name === 'small'">
         <div class="left">
           <div class="no-drag nav" style="color:var(--primary-text)" :class="{ 'xt-active-btn': navIndex == index }"
@@ -74,7 +77,7 @@
         </div>
       </div>
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
-        <NavMenu :list="categories" :currenIndex="categoryIndex" @changeNav="updateDesks"/>
+        <NavMenu :list="categories" :currenIndex="categoryIndex" @changeNav="changeCategory"/>
         <div class="ml-5 no-drag w-full">
           <DeskMarket :selected="searchValue" :items="desks"
                       @openPreview="openPreview"></DeskMarket>
@@ -116,20 +119,22 @@ export default {
       type: Number,
       default: () => 0
     },
-    deskList:{
-      type:Array
+    deskList: {
+      type: Array
     }
   },
   data () {
     return {
-      navIndex:0,
+      navIndex: 0,
       selectContent: '',
       searchValue: '默认排序',
       baseNavList: NavList,
       searchOptions: [
-        { value: '默认排序', name: '默认排序' },
-        { value: '下载次数', name: '下载次数' },
-        { value: '更新时间', name: '更新时间' },
+        { value: 'default', name: '默认排序' },
+        { value: 'count', name: '销量/下载量' },
+        { value: 'support', name: '点赞数' },
+        { value: 'updateTime', name: '更新时间' },
+        { value: 'createTime', name: '发布时间' },
       ],
       navType: [
         { title: '小组件', name: 'small' },
@@ -147,7 +152,14 @@ export default {
         id: 0
       }], //分类列表
       desks: [],
-      deskPagination: {}
+      deskPagination: {},
+      //搜索表单值
+      search: {
+        keywords: '',
+        order: 'default'
+      },
+      keyword:'',//真正搜索词
+      searching:false,
     }
   },
 
@@ -200,20 +212,24 @@ export default {
     ...mapWritableState(deskStore, ['apiList']),
     displayList () {
       // return this.apiList.filter
+    },
+    isSearching(){
+      return this.searching
     }
   },
   watch: {
-    selectNav(newV){
-      if(newV.name==='desktop'){
+
+    selectNav (newV) {
+      if (newV.name === 'desktop') {
         this.getDeskData()
-        this.navIndex=0
-        this.updateDesks(this.categories[0])
+        this.navIndex = 0
+        this.updateDesks('0')
       }
     },
     selectContent (newV, oldV) {
       if (newV == '' || newV == null) {
         this.navList = this.baseNavList
-        this.navIndex =0
+        this.navIndex = 0
         return
       }
       let data = []
@@ -234,13 +250,29 @@ export default {
         this.navIndex = 0
         this.navList = data
       }
-    }
-
+    },
   },
   methods: {
-    ...mapActions(marketStore, ['getCategories', 'getDesks','getRecommend']),
+    ...mapActions(marketStore, ['getCategories', 'getDesks', 'getRecommend']),
     // ...mapActions(deskStore,['setDeskSize']),
     ...mapActions(cardStore, ['setDeskSize']),
+    doSearch(){
+      if(this.search.keywords===''){
+        this.cancelSearch()
+        return
+      }
+      this.categories[0].cname='全部'
+      this.searching=true
+      this.keyword=this.search.keywords
+      this.updateDesks(this.categoryIndex, this.keyword, this.search.order)
+    },
+    cancelSearch(){
+      this.categories[0].cname='推荐'
+      this.searching=false
+      this.search.keywords=''
+      this.keyword=''
+      this.updateDesks()
+    },
     async getDeskData () {
       //获取桌面分类
       let cats = await this.getCategories()
@@ -271,29 +303,55 @@ export default {
       return randomTimestamp
     },
     onBack () {
-      console.log('提交了关闭事件')
       this.$emit('close')
       this.$emit('onClose')
     },
-    afterAdded(){
+    afterAdded () {
       this.onBack()
     },
     updateNavIndex (index) {
       this.navIndex = index
     },
-    async updateDesks (item) {
-
-      this.categoryIndex = item.id
-      if(this.categoryIndex===0){
-        this.desks= await this.getRecommend({goodType:'desk'})
+    changeCategory(category){
+      this.updateDesks(category.id)
+    },
+    /**
+     * 更新桌面列表
+     * @param categoryIndex 当前分类
+     * @param keywords
+     * @param order
+     * @returns {Promise<void>}
+     */
+    async updateDesks (categoryIndex=this.categoryIndex) {
+      this.categoryIndex=categoryIndex
+      const keyWord=this.keyword
+      const order=this.search.order==='default'?undefined:this.search.order
+      if (this.categoryIndex == 0) {
+        if(!this.isSearching) {
+          this.desks = await this.getRecommend({ goodType: 'desk' ,order:order})
+        }else{
+          let params = {
+            page: 1,
+            size: 20,
+            keyWord: keyWord,
+            order: order
+          }
+          let rs = await this.getDesks(params)
+          this.desks = rs.list
+          this.deskPagination = rs.pagination
+        }
         return
       }
-      let params={
+      let params = {
         page: 1,
         size: 20,
-        categoryId: item.id
+        categoryId: categoryIndex,
+        keyWord: keyWord,
+        order: order
       }
+      console.log('需要搜索',params)
       let rs = await this.getDesks(params)
+      console.log(rs,'搜索结果')
       this.desks = rs.list
       this.deskPagination = rs.pagination
     },

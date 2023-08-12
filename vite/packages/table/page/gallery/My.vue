@@ -201,7 +201,6 @@ export default defineComponent({
             this.getFileCreatedTime(path.join(`${staticDir}/${el}`)).then(createTime => {
               this.paperTime = this.changeTime(createTime)
             }).catch(err => {
-              console.log(err)
             })
             let image = {
               title: false,
@@ -260,7 +259,6 @@ export default defineComponent({
         if (!this.currentPaper.path) {
           this.currentPaper.path = this.currentPaper.src
         }
-        console.log(this.currentPaper, 'this.currentPaper')
 
         this.setBackgroundImage(this.currentPaper)
       }
@@ -284,7 +282,6 @@ export default defineComponent({
           })
         }
       })
-      console.log(imageArr)
       window.Spotlight.show(imageArr, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,

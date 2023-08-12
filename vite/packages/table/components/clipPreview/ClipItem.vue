@@ -27,13 +27,13 @@
 
       <!-- 文本底部切换 -->
       <div class="flex s-item h-item py-1 px-1 h-12 rounded-b-lg items-center justify-between">
-        <div v-for="(item) in showArray" :class="defaultTextType.name === item.name ? 's-active':''" class="flex items-center justify-center py-2.5 px-4  pointer rounded-lg w-1/2" 
-           @click.stop="selectItem(item)"  @tabClick="openCode" 
+        <div v-for="(item) in showArray" :class="defaultTextType.name === item.name ? 's-active':''" class="flex items-center justify-center py-2.5 px-4  pointer rounded-lg w-1/2"
+           @click.stop="selectItem(item)"  @tabClick="openCode"
           >
             <Icon :icon="item.icon" style="font-size: 1.45em;"></Icon>
             <span class="ml-2 mr-2">{{ item.title }}</span>
             <Icon icon="xiangyou" class="pointer"  v-if="item.title !== '纯文本' && item.title !=='代码块'" style="font-size: 1.25em;"></Icon>
-        </div> 
+        </div>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
             <div v-for="item in textKey" @click="keyOperation(item)" class="flex pointer justify-between s-item button-active  btn-list px-4 rounded-lg py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
-            </div> 
+            </div>
           </vue-custom-scrollbar>
         </div>
       </div>
@@ -84,11 +84,11 @@
         </div>
       </div>
     </div>
-  </template>   
+  </template>
   <!-- 文本列表 -->
 
-  
-   
+
+
   <!-- 图片列表 -->
   <template v-if="clip.type === 'image'">
     <!-- 列表主界面 -->
@@ -135,18 +135,18 @@
             <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer button-active justify-between s-item px-4 rounded-lg btn-list py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
-            </div> 
+            </div>
           </vue-custom-scrollbar>
         </div>
 
       </div>
     </div>
-    
+
   </template>
   <!-- 图片列表 -->
 
 
-  
+
   <!-- 文件列表 -->
   <template v-if="clip.type === 'file'">
     <!-- 列表主界面 -->
@@ -157,7 +157,7 @@
          <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
-        <div class="flex justify-between"> 
+        <div class="flex justify-between">
          <span class="time-bg">{{ clip.timeText }}</span>
          <span class="time-bg">{{clip.capacity}}</span>
         </div>
@@ -193,7 +193,7 @@
             <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer justify-between btn-list button-active px-4 rounded-lg py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
-            </div> 
+            </div>
           </vue-custom-scrollbar>
         </div>
       </div>
@@ -213,13 +213,13 @@
          <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
          <span class="ml-2">{{getType(clip.type).title}}</span>
         </div>
-        <div class="flex justify-between"> 
+        <div class="flex justify-between">
          <span class="time-bg">{{ clip.timeText }}</span>
          <span class="time-bg">{{clip.capacity}}</span>
         </div>
       </div>
       <!-- 视频标题结束 -->
-      
+
       <!-- 视频内容开始 -->
       <div  class="flex px-5 py-20 items-center pointer flex-col justify-center" @click="textButton">
         <ClipVideo :videoUrl="clip.videoUrl"></ClipVideo>
@@ -245,7 +245,7 @@
             <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer justify-between button-active btn-list px-4 rounded-lg py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
-            </div> 
+            </div>
           </vue-custom-scrollbar>
         </div>
 
@@ -266,7 +266,7 @@
           <Icon :icon="getType(clip.type).icon" style="font-size: 1.45em;"></Icon>
           <span class="ml-2">{{getType(clip.type).title}}</span>
          </div>
-         <div class="flex justify-between"> 
+         <div class="flex justify-between">
           <span class="time-bg">{{ clip.timeText }}</span>
           <span class="time-bg">{{clip.capacity}}</span>
          </div>
@@ -277,7 +277,7 @@
         <ClipAudio :fileUrl="clip.audioUrl" class="flex items-center justify-center"   style="width:302px;height:148px;"></ClipAudio>
       </div>
     </div>
-    
+
     <!-- 快捷键操作界面 -->
     <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
       <div class="flex  flex-col px-4 py-3 rounded-lg">
@@ -296,7 +296,7 @@
             <div v-for="item in imageKey" @click="keyOperation(item)" class="flex pointer btn-list button-active justify-between s-item px-4 rounded-lg py-3 mb-2">
               <span>{{item.title}}</span>
               <span>{{item.intr}}</span>
-            </div> 
+            </div>
           </vue-custom-scrollbar>
         </div>
 
@@ -324,7 +324,7 @@ import ClipAudio from './ClipAudio.vue';
 import { codeLanguage } from '../../js/data/clipTheme';
 
 export default {
-  components: { 
+  components: {
     HorzontanlPanelIcon,
     ClipCodemirror,
     textCodeMirror,
@@ -387,7 +387,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      
+
       // 代码块语言包切换
       codeLanguage,
 
@@ -433,9 +433,7 @@ export default {
       this.type=this.getType(this.clip.type)
       this.capacity=this.clip.content.length+'个字符'
       if(this.clip.type === 'image'){
-        console.log('是图片，要转换')
         this.img = toRaw(this.clip.content).toDataURL()
-        console.log(this.img,'图片地址')
       }
     },
     getType(type) {
@@ -464,7 +462,7 @@ export default {
           return {
             title:'音频',
             icon:'erji1'
-          }  
+          }
       }
 
     },
@@ -544,7 +542,7 @@ export default {
       this.defaultTextType.title = item.title
       this.codeLanguageShow = false
     },
-    
+
     // 打开设置
     openClipSet(){
       this.$refs.setDrawer.clipOpenShow()

@@ -271,7 +271,6 @@ export default {
     },
     closeCheckTimer(){
       this.$refs.paymentPanel.closeTimer()
-      console.log('关闭支付状态监测')
     },
     // 点击价格购买逻辑
     buyNow (item) {
@@ -291,7 +290,6 @@ export default {
             this.payVisible = true // 打开支付弹窗
             this.order = rs.data.order
             this.$refs.paymentPanel.startTimer()
-            console.log('开始')
             return
           }
         }

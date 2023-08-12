@@ -3,7 +3,7 @@
                       style="padding: 15px;white-space: nowrap;height: 100%">
 
     <div class="card half mr-3" style="width:330px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
-      <userCard :uid="userInfo.uid" :userInfo="userInfo">
+      <userCard :key="key" :uid="userInfo.uid" :userInfo="userInfo">
       </userCard>
       <span @click="toggleFrameStore()" style="position: absolute;right: 20px;top: 40px;" class="px-3 py-1 xt-active-bg rounded-full  pointer"><icon icon="gift" style="font-size: 18px"></icon> 头像框</span>
     </div>
@@ -16,7 +16,7 @@
         <ComPanel></ComPanel>
       </div>
       <div class="card half" style="width: 400px;padding: 1em;display: inline-block;background: var(--primary-bg);color: var(--primary-text);">
-        <ComActionPanel></ComActionPanel>
+        <ComActionPanel @infoUpdated="infoUpdated"></ComActionPanel>
       </div>
     </div>
     <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background: var(--primary-bg);color: var(--primary-text);">
@@ -26,7 +26,7 @@
   </vueCustomScrollbar>
 
   <div v-if="secondaryVisible === false">
-    <UpdateMyInfo ref="myInfoRef"></UpdateMyInfo>
+    <UpdateMyInfo @infoUpdated="infoUpdated" ref="myInfoRef"></UpdateMyInfo>
   </div>
 </template>
 
@@ -60,6 +60,7 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      key:Date.now()
     }
   },
   mounted(){
@@ -76,10 +77,25 @@ export default {
       }
     })
   },
+  watch:{
+    'updateInfoVisible':{
+      handler(newVal){
+        if(newVal===false){
+          console.log('更新用户卡片')
+          setTimeout(()=>{
+            this.key=Date.now()
+          },2000)
+        }
+      }
+    }
+  },
   methods:{
     ...mapActions(appStore,['setSecondaryVisible']),
     toggleFrameStore(){
       window.toggleFrameStore()
+    },
+    infoUpdated(){
+      this.key=Date.now()
     }
   },
 }

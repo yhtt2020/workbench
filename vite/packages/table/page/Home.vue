@@ -647,8 +647,13 @@ export default {
     }
   },
   methods: {
+    /**
+     * 更新布局，会自动判断布局存在与否
+     */
     updateLayout(){
-      this.$refs.grid.update()
+      if( this.$refs.grid){
+        this.$refs.grid.update()
+      }
     },
     learn(){
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
@@ -681,7 +686,7 @@ export default {
       // }
     },
     customEvent() {
-      this.$refs.grid.update();
+      this.updateLayout()
     },
     touch(event) {
       // if (this.editing) {
@@ -944,7 +949,7 @@ export default {
   watch: {
     currentDeskIndex: {
       handler() {
-        this.$refs.grid.update();
+        this.updateLayout()
       },
     },
 
@@ -966,7 +971,7 @@ export default {
       handler(newValue) {
         this.key = Date.now();
         // //$('.muuri-item').css('margin',newValue+'px')
-        this.$refs.grid.update();
+        this.updateLayout()
       },
     },
     currentDesk: {

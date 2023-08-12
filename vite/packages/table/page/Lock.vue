@@ -120,7 +120,6 @@ export default {
     ...mapWritableState(cardStore, ['clockEvent', 'appDate',]),
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
     videoPath () {
-      console.log(this.playing[0]['src-mp4'], 'playingeee')
       return this.playing[0]['src-mp4']
     }
   },

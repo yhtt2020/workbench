@@ -33,7 +33,6 @@ export default {
       this.searchList = [];
       this.topicList.forEach((item) => {
         if (item.name.includes(this.serachTopic)) {
-          console.log("目标字符串包含搜索字符串");
           this.searchList.push(item);
         }
       });

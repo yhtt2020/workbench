@@ -216,7 +216,6 @@ export default {
         content: "设置字体颜色成功",
         key: "color",
       });
-      console.log("设置了", color);
       this.updateCustomData(
         this.customIndex,
         {

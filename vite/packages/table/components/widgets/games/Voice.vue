@@ -126,7 +126,6 @@ export default {
     ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
     selectOutputVoice(){
       this.outputShow = true
-      console.log('开始监听')
     },
     selectInputVoice(){
       this.inputShow = true

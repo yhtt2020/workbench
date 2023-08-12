@@ -166,7 +166,6 @@ export const base64File = (str: string) => {
   const blob = new Blob(byteArrays, { type: contentType });
   // 获取临时路径
   const temporaryUrl = URL.createObjectURL(blob);
-  console.log('blob :>> ', blob);
   return temporaryUrl;
   // 分离文件类型和数据部分
   // let parts = str.split(";base64,");
@@ -189,7 +188,6 @@ export const base64File = (str: string) => {
 export const fileUpload = async (file: any) => {
   let url: any = null;
   const formData = new FormData();
-  console.log(file,'文件是')
   formData.append("file", file);
   await api.postCosUpload(formData, (err, res) => {
     if (!err) {

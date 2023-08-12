@@ -181,7 +181,6 @@ export default {
   },
   methods: {
     log(info) {
-      console.log(info)
     },
     async getSpeakerList() {
       listOutputs().then((devices) => {
@@ -191,10 +190,9 @@ export default {
           list.push(device)
         })
         this.audioList = list
-        console.log(list)
       })
         .catch(function (err) {
-          console.log(err.name + ': ' + err.message)
+          console.error(err.name + ': ' + err.message)
         })
     },
     async getVals() {
@@ -207,7 +205,6 @@ export default {
       this.gua()
     },
     async setBright() {
-      console.log(this.bright)
       await brightness.set((Number(this.bright) / 100))
       console.log((Number(this.bright) / 100).toFixed(1))
     },

@@ -8,15 +8,17 @@
       </a-space>
     </template>
     <div class="title">选择分享桌面</div>
-    <a-select v-model:value="deskId" @change="setSelectVal" style="height:48px; border:none;"
-              :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center"
+    <a-select v-model:value="deskId" @change="setSelectVal" style="height:48px; border:none;margin-bottom: 10px"
+              :bordered="false" size="large" class="input rounded-lg  text-xs flex items-center "
               :dropdownStyle="{ 'z-index': 9999, backgroundColor: 'var(--secondary-bg)' }">
       <template #suffixIcon>
         <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
       </template>
       <a-select-option v-for="(item,index) in deskList" :value="item.id">{{ item.name }}</a-select-option>
     </a-select>
-    <div class="xt-bg-2 rounded-lg  px-3 py-2 mb-2 text-center">共 {{sharingDesk.cards.length}} 个组件  {{sharingDesk.layoutSize?.width}} * {{sharingDesk.layoutSize?.height}}</div>
+    <div class="text-center">
+    <div class="xt-bg-2 rounded-lg  px-3 py-2 mb-4 text-center w-auto " style="display: inline-block">共 {{sharingDesk.cards.length}} 个组件  {{sharingDesk.layoutSize?.width}} * {{sharingDesk.layoutSize?.height}}</div>
+    </div>
     <div>
       <div class="title mb-2">桌面效果图
         <div class="float-right">
@@ -25,7 +27,6 @@
           </a-button>
 
         </div></div>
-      <div class="mb-2 pl-3"> 请点击按钮获取桌面效果图</div>
       <a-image :preview="false" class="mb-2 rounded-lg" v-if="capture" :src="'file://'+capture"></a-image>
 
       <span class="title">桌面数据</span>
@@ -121,6 +122,7 @@ export default {
       categories: [],
       layoutSize:{width:0,height:0},//当前桌面的尺寸
       shareFullLayoutSize:{width:0,height:0},
+      capturing:false//正在抓图
     }
   },
   props: {
@@ -171,11 +173,11 @@ export default {
       this.deskId = this.$parent.currentDeskId
     },
     getPreview () {
+      this.capturing=true
       return new Promise(resolve => {
         this.close()
         setTimeout(async () => {
           const parent = this.$parent
-          console.log(parent)
           parent.setCurrentDeskId(this.deskId)
           setTimeout(() => {
             parent.setFullScreen(true)
@@ -183,16 +185,16 @@ export default {
               let capture = await tsbApi.window.getCapture()
               this.shareFullLayoutSize=parent.$refs.currentDeskRef.getLayoutSize()
               this.shareFullCardZoom=parent.$refs.currentDeskRef.getAdjustZoom()
-              console.log('获得全屏状态下的尺寸',this.shareFullLayoutSize,this.shareFullCardZoom)
               this.capture = capture
               setTimeout(() => {
                 parent.setFullScreen(false)
                 setTimeout(() => {
                   parent.shareDesk()
+                  this.capturing=false
                   resolve()
                 }, 500)
               }, 300)
-            }, 500)
+            }, 1000)//切换到全屏
           }, 200)
           //拍摄截图
         }, 500)
@@ -217,11 +219,14 @@ export default {
       if (this.shareName.trim() === '') return message.info('请输入新桌面名称')
       if (this.shareName.length >= 16) return message.error('新桌面名称长度不可超过16')
       if (!this.categoryId) return message.info('请选择分类')
+      if(!this.sharingDesk.cards.length){
+        return message.info('不可分享空白桌面。')
+      }
       //上传图片
       await this.getPreview()
       let cover= await pathUpload(this.capture)
       let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
-      if(this.defaultType.name==='noData'){
+      if(this.defaultType.name==='notData'){
         //如果选择不保留数据，则进行清理
         cloneDesk.cards.forEach((item, index) => {
           item.customData={}
@@ -241,7 +246,6 @@ export default {
 
       settings.cardZoom=Number(settings.cardZoom)*Number(this.shareFullCardZoom)
       settings.cardMargin=Number(settings.cardMargin)*Number(this.shareFullCardZoom)
-      console.log('需要分享的settings',settings)
       const template=JSON.stringify({
         cards: cloneDesk.cards,
         settings:settings,
@@ -270,6 +274,9 @@ export default {
 
     },
     setInitialData () {
+      if(this.capturing){
+        return
+      }
       this.desk = this.deskType[0]
       this.blurb = ''
       this.tagList = []
@@ -282,7 +289,6 @@ export default {
     setSelectVal (id) {
       this.deskList.forEach(desk => {
         if (desk.id === id) {
-          console.log(desk)
           this.sharingDesk = desk
           this.shareName = desk.name
           const parent = this.$parent

@@ -88,10 +88,8 @@ export default {
 
       let data=[]
       this.randomNums.forEach(num=>{
-        console.log(num)
         data.push(this.list[num])
       })
-      console.log(data)
       return data
     }
   },
@@ -120,7 +118,6 @@ export default {
     },
     async joinTeam (team) {
       let rs = await this.joinByNo(team.no)
-      console.log(team.no)
       if (rs.code === 1000) {
         let result = rs.data
         if (result.status) {

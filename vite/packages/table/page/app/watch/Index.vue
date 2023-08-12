@@ -541,7 +541,6 @@ export default {
       tableApi.watch.stopTask(task)
     },
     goDashboard(nanoid){
-      console.log('go',nanoid)
       this.$router.push({
         name:'dashboard',
         params:{
@@ -602,7 +601,6 @@ export default {
     async updateTaskLatestData (task) {
       let lastInfo = await tableApi.watch.getLatestData(task)
       if (lastInfo) {
-        console.log('抓到了task的数据，准备更新', task, lastInfo)
         this.updateTask(task.nanoid, lastInfo)
       }
     },

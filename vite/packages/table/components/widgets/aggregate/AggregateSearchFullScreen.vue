@@ -28,11 +28,11 @@
             </div>
             <template #overlay >
               <a-menu class="custom-dropdown-menu flex items-center flex-col justify-center">
-                <a-menu-item style="color: var(--primary-text);"  
-                 :class="{current: openIndex === index }" 
+                <a-menu-item style="color: var(--primary-text);"
+                 :class="{current: openIndex === index }"
                  v-for="(item,index) in linkType" :key="index"
                  @click="changeOpenType(item,index)" class="rounded-lg"
-                 
+
                 >
                   {{ item.name }}
                 </a-menu-item>
@@ -42,17 +42,17 @@
         </div>
         <vue-custom-scrollbar :settings="settingsScroller" class="suggest-container"  style="max-height:360px;">
           <ul v-if="showSearchResults" style="padding: 0; margin: 0;">
-            <li v-for="(suggestion,index) in searchSuggestionList" :key="index"  
-             :class="{'active-bg':suggestIndex === index}" 
+            <li v-for="(suggestion,index) in searchSuggestionList" :key="index"
+             :class="{'active-bg':suggestIndex === index}"
              class="py-2.5 px-3 secondary-title rounded-lg active-button search-hover pointer"
              @click="getSuggestItem(suggestion,index)"
             >
-          
+
               <!-- 百度搜索 -->
               <div v-if="suggestion.q" class="flex">
                 <span class="ping-title" style="color:var(--secondary-text);" v-html="matchingKey(suggestion.q)"></span>
               </div>
- 
+
               <!-- bili搜索 -->
               <div v-else-if="suggestion.value" class="flex">
                 <span class="ping-title" style="color: var(--secondary-text);" v-html="matchingKey(suggestion.value)"></span>
@@ -81,7 +81,7 @@
           </ul>
           <div v-else class="flex flex-col">
             <span class="mb-2.5 secondary-title" style="color: var(--secondary-text);">剪贴板</span>
-            <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"  
+            <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"
              :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
              style="color: var(--secondary-text);"
             >
@@ -133,7 +133,7 @@ export default {
   },
   data(){
     return{
-      settingsScroller: {  // 滚动条配置 
+      settingsScroller: {  // 滚动条配置
        useBothWheelAxes: true,
        swipeEasing: true,
        suppressScrollY: false,
@@ -154,7 +154,7 @@ export default {
         {name:'想天浏览器',value:'thisky'},
         {name:'系统默认浏览器',value:'system'}
       ],
-      openMode:{}, 
+      openMode:{},
       openIndex:''
     }
   },
@@ -197,9 +197,9 @@ export default {
       if(evt.ctrlKey && evt.key === 'Tab'){  // ctrl+tab组合键
         evt.preventDefault()
         this.isDropdownVisible = true
-        if(evt.key === 'Tab'){ // tab键 
+        if(evt.key === 'Tab'){ // tab键
           evt.preventDefault()
-          this.openIndex = parseInt((this.openIndex + 1) % this.linkType.length) 
+          this.openIndex = parseInt((this.openIndex + 1) % this.linkType.length)
           this.openMode = this.linkType[this.openIndex]
         }
       }else if(evt.key === 'Tab'){ // tab键
@@ -242,16 +242,16 @@ export default {
       }
     },
 
-    dataSearch(){  // 监听输入框关键字输入   
+    dataSearch(){  // 监听输入框关键字输入
       if(this.searchKeyWords === ''){
         this.searchSuggestionList = [];
         return;
       }
       this.fetchSuggestions(true)
     },
-    
+
     // 获取搜索建议列表 数据请求
-    async fetchSuggestions(val){ 
+    async fetchSuggestions(val){
       if(val){ // 防止重复请求
         const words = encodeURIComponent(this.searchKeyWords)
         const url = `${this.list[this.selectIndex].recommendUrl}${words}`
@@ -261,7 +261,7 @@ export default {
       return
     },
 
-    selectAggSearch(item,index){  // 点击列表项选中  
+    selectAggSearch(item,index){  // 点击列表项选中
       this.selectIndex = index
       this.selectIcon.icon = item.icon
       this.$refs.searchRef.focus()
@@ -305,7 +305,7 @@ export default {
         this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].q
         this.fetchSuggestions(false)
       }else if(id === 2 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
-        return 
+        return
       }else if(id === 3 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
         this.searchKeyWords = this.searchSuggestionList[this.suggestIndex]
         this.fetchSuggestions(false)
@@ -318,13 +318,12 @@ export default {
       } else if(id === 6 && this.searchKeyWords !== '' &&  this.suggestIndex !== -1){
         this.searchKeyWords = this.searchSuggestionList[this.suggestIndex].value
         this.fetchSuggestions(false)
-      } 
+      }
     },
 
-    openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开 
+    openSearchSuggest(words){  // 回车或者点击其他后根据不同打开方式类型进行打开
      const url = `${this.list[this.selectIndex].searchUrl}${words}`
-     console.log(url);
-     switch (this.openMode.value) { 
+     switch (this.openMode.value) {
       case 'work':
         browser.openInTable(url)  // 在工作台中打开
         break;
@@ -351,7 +350,7 @@ export default {
         const baiduWords = encodeURIComponent(item.q)
         this.openSearchSuggest(baiduWords)
         break;
-      case 2: 
+      case 2:
         // 谷歌接口暂时不能使用,还没有找到api
         // 谷歌搜索引擎api暂时没有找到关键字搜索推荐
         break;
@@ -379,7 +378,7 @@ export default {
       case 8:  // 优酷搜索
         const youkuWords = encodeURIComponent(item.name)
         this.openSearchSuggest(youkuWords)
-        break; 
+        break;
       case 9:  // 豆瓣搜索
         const doubanWords = encodeURIComponent(item)
         this.openSearchSuggest(doubanWords)
@@ -390,7 +389,7 @@ export default {
     },
 
     changeOpenType(item,index){  // 手动切换
-      this.openMode = item 
+      this.openMode = item
       this.openIndex = index
       this.isDropdownVisible = false
     },
@@ -401,7 +400,7 @@ export default {
       this.fetchSuggestions(true)
     },
 
-    leftTabScrollToTop(){  // tab触发时高度滚动  
+    leftTabScrollToTop(){  // tab触发时高度滚动
       const container = document.querySelector('.left-tab-container')
       if(this.selectIndex === 0){ // 判断下标为0
         container.scrollTop = 0

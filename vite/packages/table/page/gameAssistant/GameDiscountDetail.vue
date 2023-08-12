@@ -124,7 +124,6 @@ export default {
     mounted(){
       this.loading=true
       this.getDiscountDetail(this.id,this.defaultDetailRegion.id).then(()=>{
-        console.log('加载完了')
         this.loading =false
       })
     },

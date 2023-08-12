@@ -19,9 +19,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.data, '表内数据')
 
-    console.log(this.xData, this.yData, '格式化数据结果')
     this.initChart()
   },
   watch: {
@@ -64,7 +62,6 @@ export default {
       })
       _.reverse(this.xData)
       _.reverse(this.yData)
-      console.log(this.yData)
     },
     initChart () {
       var myChart = echarts.init(document.getElementById('ec'), 'dark')

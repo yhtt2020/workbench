@@ -129,7 +129,6 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
     tagList () {
-      console.log(this.scheme,'当前的scheme')
       if (this.scheme.tags) {
         return this.scheme.tags.split(',')
       } else {
@@ -160,7 +159,6 @@ export default {
             ... this.template.cards
           ],
         }
-        console.log(this.displayScheme)
         this.deskWidth = this.layoutSize.width
         this.deskHeight = this.layoutSize.height
         this.cardHeight = this.layoutSize.height
@@ -218,7 +216,6 @@ export default {
           this.previewHeight = document.getElementById('previewContent')?.offsetHeight
           let cardZoom = (this.cardZoom * this.previewHeight / this.cardHeight).toFixed()
           let cardMargin=(this.cardMargin * this.previewHeight / this.cardHeight).toFixed()
-          console.log(cardZoom,this.cardZoom, this.previewHeight, this.cardHeight)
           this.displayScheme.settings.cardZoom = cardZoom
           this.displayScheme.settings.cardMargin=cardMargin
           this.displayScheme.settings.enableZoom=true

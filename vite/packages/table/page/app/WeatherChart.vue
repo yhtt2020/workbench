@@ -22,7 +22,6 @@ export default {
   mounted() {
     this.fxDate = this.daily.map((item) => this.getMonthAndDay(item.fxDate));
     this.tempMin = this.daily.map((item) => item.tempMin);
-    console.log(this.tempMin);
     this.tempMax = this.daily.map((item) => item.tempMax);
     this.wertherEcharts();
   },

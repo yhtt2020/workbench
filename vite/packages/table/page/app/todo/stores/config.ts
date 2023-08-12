@@ -11,7 +11,7 @@ export const configStore = defineStore('config', {
         return {
             dataSourceType: DataSourceTypes.LOCAL_STORAGE, //cloud
             config: {
-                menuState: MenuState.FOLD,
+                menuState: MenuState.UN_FOLD,
                 showComplete:false,
                 sort:<ISort>sortType.TIME,
             },
