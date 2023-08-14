@@ -385,12 +385,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--active-text);
+ color:var(--primary-text);
   padding: 10px;
   cursor: pointer;
   &.active,&:hover{
     background: var(--active-bg);
-
+    color: var(--active-text);
   }
   &:hover{
     opacity: 0.9;
