@@ -1,6 +1,6 @@
 <template>
  <div class="flex flex-col rounded-lg" style="background: var(--secondary-bg);">
-   <div v-for="item in memberList" class="flex justify-between" style="padding: 16px;color: var(--primary-text);margin-bottom: ;">
+   <div v-for="item in memberInfo.memberList" class="flex justify-between" style="padding: 16px;color: var(--primary-text);margin-bottom: ;">
     <div class="flex items-center ">
      <a-avatar :src="item.avatar" :size="32"></a-avatar>
      <span style="margin-left: 12px;">{{item.nick}}</span>
@@ -23,22 +23,9 @@ export default defineComponent({
  setup(props,ctx){
   const server = props.server.TUICore
   const types = server.TIM.TYPES;
-  const data = reactive({
-   memberList:[],
-
-  })
+  
   
   const store = appStore()
-
-  const getMemberList = async () =>{  // 初始化获取群组成员数据
-   const option = {
-    groupID:props.memberInfo.groupProfile.groupID,
-    count: 500, offset: 0
-   }
-   const res = await server.tim.getGroupMemberList(option)
-   data.memberList = res.data.memberList
-
-  }
 
   const handleRoleName = (item) => {  // 区分群组角色
    const { t } = server.config.i18n.useI18n();
@@ -61,10 +48,10 @@ export default defineComponent({
    return name;
   }
 
-  onMounted(getMemberList)
   return{
-   ...toRefs(data),store,
-   getMemberList,handleRoleName,
+
+   store,
+   handleRoleName,
   }
  }
 })
