@@ -1,5 +1,5 @@
 <template>
-  <div class="call pl-2" id="call" v-if="handleShowCallIcon(conversation, isH5)" >
+  <div class="call pl-2" hidden="" id="call" v-if="handleShowCallIcon(conversation, isH5)" >
      <!-- 重新将UI结构以及样式进行修改 -->
     <a-tooltip title="通话" @click="toggleShowSelectDialog">
       <Icon icon="phonecall" style="height: 24px;width: 24px;color: var(--secondary-text) !important;"></Icon>
