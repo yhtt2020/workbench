@@ -3,32 +3,13 @@
     <header class="TUIChat-header">
       <i class="icon icon-back" @click="back" v-if="env.isH5"></i>
       <TypingHeader :needTyping="needTyping" :conversation="conversation" :messageList="messageList" ref="typingRef" />
-      <div class="flex items-center pointer" v-if="conversation.groupProfile" @click=" groupVisible = true">
+      
+      <div class="flex items-center pointer" v-if="conversation.groupProfile" @click="openGroup">
          <Icon icon="gengduo1" style="color: var(--secondary-text);"></Icon>
       </div>
-
-      <a-drawer placement="right" width="500" title="群管理" v-model:visible="groupVisible">
-        <Manage  :conversation="conversation" :userInfo="userInfo" :isH5="env.isH5" />
-      </a-drawer>
-
-      <!--  title="Basic Drawer"
-    :placement="placement"
-    :closable="false"
-    :open="open"
-    @close="onClose" -->
-      <!-- <aside class="setting">
-        <Manage v-if="conversation.groupProfile" :conversation="conversation" :userInfo="userInfo" :isH5="env.isH5" />
-        <Replies
-          :message="currentMessage"
-          :conversation="conversation"
-          :show="repliesDialogStatus"
-          :isH5="env.isH5"
-          :messageList="messageList"
-          @closeDialog="closeDialog"
-          ref="repliesDialog"
-        />
-      </aside> -->
     </header>
+
+
     <div class="TUIChat-main">
       <ul class="TUI-message-list" @click="dialogID = ''" ref="messageEle" id="messageEle">
         <p class="message-more" @click="getHistoryMessageList" v-if="!isCompleted">
@@ -94,6 +75,7 @@
         @close="showImagePreview = false"
       />
     </div>
+
     <div class="TUIChat-footer" :class="[isMute && 'disabled', env.isH5 && 'TUIChat-H5-footer']">
       <div class="func" id="func">
         <main class="func-main px-2.5 py-3 flex items-center">
@@ -124,6 +106,7 @@
         @onTyping="handleTyping"
       ></MessageInput>
     </div>
+
     <div v-show="showResend" class="mask" @click="showResend = false">
       <div class="mask-main">
         <header>{{ $t('TUIChat.确认重发该消息？') }}</header>
@@ -135,15 +118,53 @@
       </div>
     </div>
   </div>
+
   <div class="TUIChat" v-else-if="conversationType === 'system'">
     <header class="TUIChat-header">
       <h1>{{ conversationName }}</h1>
     </header>
     <MessageSystem :data="messages" :types="types" @application="handleApplication" />
   </div>
+
   <slot v-else-if="slotDefault" />
 
+  <a-drawer placement="right" width="500" :closable="false" v-model:visible="groupVisible">
+    <div class="flex items-center" style="margin-bottom:16px;">
+      <div class="flex items-center active-button pointer justify-center rounded-lg" style="width: 48px;height: 48px;background: var(--secondary-bg);" @click="groupVisible = false">
+        <Icon icon="guanbi" style="color: var(--primary-text);height: 24px;width: 24px;"></Icon>
+      </div>
+      <div class="flex items-center justify-center font-16" style="color: var(--primary-text);margin-left: 12px;">群管理</div>
+    </div>
+    <Manage v-if="conversation.groupProfile"  :conversation="conversation"  @updateName="getManege" />
+  </a-drawer>
 
+  <a-drawer placement="right" width="500" :closable="false" v-model:visible="updateVisible">
+    <div class="flex items-center" style="margin-bottom:16px;">
+      <div class="flex items-center active-button pointer justify-center rounded-lg" style="width: 48px;height: 48px;background: var(--secondary-bg);" @click="updateVisible = false">
+        <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px;"></Icon>
+      </div>
+      <div class="flex items-center font-16 justify-center" style="color: var(--primary-text);margin-left: 12px;">{{ title }}</div>
+    </div>
+
+    <template v-if="index === 1">
+      <UpdateGroupName :groupInfo="conversation" @close="updateVisible = false" :server="GroupServer"></UpdateGroupName>
+    </template>
+
+    <template v-if="index === 2">
+      <UpdateGroupNotice :notice="conversation" @close="updateVisible = false" :server="GroupServer"></UpdateGroupNotice>
+    </template>
+    
+    <template v-if="index === 3">
+      <UpdateMemeber :memberInfo="conversation" :server="GroupServer"></UpdateMemeber>
+    </template>
+    
+    <template v-if="index === 4">
+      <UpdateGroupManage :groupInfo="conversation"></UpdateGroupManage>
+    </template>
+  </a-drawer>
+
+
+  
 
 </template>
 
@@ -184,15 +205,16 @@ import { Message } from './interface';
 import { Conversation } from '../TUIConversation/interface';
 
 import MessageInput from './message-input';
+import UpdateGroupName from '../TUIChat/updateMange/updateGroupName.vue'
+import UpdateMemeber from '../TUIChat/updateMange/updateGroupMember.vue'
+import UpdateGroupManage from './updateMange/updateGroupManage.vue'
+import UpdateGroupNotice from './updateMange/updateGroupNotice.vue';
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
   components: {
-    MessageSystem,
-    MessageTimestamp,
-    Manage,
-    MessageInput,
-    MessageItem,
+    MessageSystem,MessageTimestamp,Manage,MessageInput,
+    MessageItem,UpdateGroupName,UpdateMemeber,UpdateGroupManage,UpdateGroupNotice,
   },
   props: {
     isMsgNeedReadReceipt: {
@@ -218,14 +240,21 @@ const TUIChat: any = defineComponent({
 
   data(){
     return{
-      groupVisible:false,
+      updateVisible:false, // 群组名称编辑控制
+      title:'',  // 不同群组模块的标题
+      index:'',   // 不同群组模块的标记
+      
     }
   },
 
   methods:{
-    openGroupManage(){
-     
-    }
+    getManege(val:any){
+      this.title = val.title
+      this.index = val.id
+      this.info = val.info
+      this.updateVisible = true
+    },
+  
   },
 
   setup(props) {
@@ -235,8 +264,10 @@ const TUIChat: any = defineComponent({
     const VuexStore = (TUIServer.TUICore.isOfficial && useStore && useStore()) || {};
     const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
     const data = reactive({
+      GroupServer:GroupServer,
       messageList: [] as Message[],
       conversation: {} as Conversation,
+      groupVisible:false,   // 群组管理信息控制
       text: '',
       atText: '',
       types: TUIServer.TUICore.TIM.TYPES,
@@ -856,6 +887,10 @@ const TUIChat: any = defineComponent({
       (data?.typingRef as any)?.onTyping(inputContentEmpty, inputBlur);
     };
 
+    const openGroup = () =>{  // 打开右侧抽屉
+      data.groupVisible = true
+    }
+
     return {
       ...toRefs(data),
       conversationType,
@@ -886,7 +921,7 @@ const TUIChat: any = defineComponent({
       back,
       slotDefault,
       toggleshowGroupMemberList,
-      resendMessage,
+      resendMessage,openGroup,
       submit,
       Link,
       openLink,
@@ -909,12 +944,28 @@ export default TUIChat;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
-<style scoped>
+<style lang="scss" scoped>
 :deep(.TUIChat-header h1){
   color:var(--primary-text) !important;
 }
 
 :deep(.TUIChat-footer){
   border-top: 1px solid var(--divider) !important;
+}
+
+.active-button{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
+}
+
+.font-16{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
 }
 </style>

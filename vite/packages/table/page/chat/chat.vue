@@ -87,19 +87,19 @@ export default defineComponent({
 
 
     const listenGroupMessage = () =>{  // 监听群组消息
-      tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event: { data: any[]; }) => {
-        event.data.forEach((message) => {
-          console.log(message)
-          const option = {
-            title:'群组消息',
-            body:`${message.payload.text}`,
-            icon:`${message.avatar}`,
-            level:'low',
-            time: Date.now()
-          }
-          window.$notice.sendNotice(option)
-        })
-      })
+      // tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event: { data: any[]; }) => {
+      //   event.data.forEach((message) => {
+      //     console.log(message)
+      //     const option = {
+      //       title:'群组消息',
+      //       body:`${message.payload.text}`,
+      //       icon:`${message.avatar}`,
+      //       level:'low',
+      //       time: Date.now()
+      //     }
+      //     window.$notice.sendNotice(option)
+      //   })
+      // })
     }
 
     onMounted(listenGroupMessage)

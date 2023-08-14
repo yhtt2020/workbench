@@ -13,7 +13,7 @@
     <!-- 中间内容 左侧 右侧 -->
     <div class="flex  justify-between">
       <div class="left-group">
-        <div class="font-14" style="color: var(--secondary-text);padding-left: 16px;margin-bottom: 16px;">最近聊天</div>
+        <div class="font-16" style="color: var(--secondary-text);padding-left: 16px;margin-bottom: 16px;">我的好友</div>
         
         <div class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 50px;" v-if="friendList.length === 0">
           <a-empty :image="simpleImage" />
@@ -35,7 +35,7 @@
         <div style="color: var(--primary-text);margin-bottom: 16px;">已选({{selectList.length}}人)</div>
         
         <vue-custom-scrollbar :settings="settingsScroller" style="height:80%; margin-bottom: 16px;">
-          <div v-for="item in selectList" class="flex  justify-between" style="margin-bottom: 8px;padding: 12px;color: var(--primary-text);"  @click="selectUser(item)">
+          <div v-for="item in selectList" class="flex  justify-between" style="margin-bottom: 8px;padding: 12px;color: var(--primary-text);">
             <div class="flex">
               <a-avatar :size="32" :src="item.profile.avatar"></a-avatar>
               <div class="font-16" style="color: var(--primary-text);margin-left: 16px;">
@@ -188,18 +188,8 @@ export default defineComponent({
     }
 
     const clearSelect = (item) => { // 清除选中用户
-      // const index = _.findIndex(data.selectList,function(o){ return o.userID === item.userID})
-      // const list = data.selectList
-      // const newArr = list.splice(index,1)
-      // console.log(newArr);
-      // const list = list.splice(index,1)
-      // data.selectList = list
-      // console.log(data.selectList[index]);
-      // if(index > -1){
-      //   // console.log(index);
-      //  return data.selectList.splice(index,1)
-      // // console.log(data.selectList);
-      // }
+      const index = _.findIndex(data.selectList,function(o){ return o.userID === item.userID})
+      data.selectList.splice(index,1)
     }
 
 

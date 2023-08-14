@@ -15,8 +15,6 @@
 <script>
 // import { mapActions,mapWritableState } from 'pinia'
 import { defineComponent,toRefs,ref,reactive,computed} from 'vue'
-import { noticeStore } from '../../../../../store/notice'
-import { appStore } from '../../../../../store'
 
 const groupName =  defineComponent({
  props:['groupInfo','server'],
@@ -25,9 +23,6 @@ const groupName =  defineComponent({
   const server = props.server.TUICore.TUIServer.TUIGroup
   const groupRef = ref(props.groupInfo?.groupProfile.name);
 
-  const store = noticeStore()
-  const nowUser = appStore()
-
   const saveGroupName = async () =>{  // 保存群组名称修改后的数据
 
     const option = {
@@ -35,21 +30,7 @@ const groupName =  defineComponent({
       name:groupRef.value
     }
     
-    const res = await server.updateGroupProfile(option)
-    if(store.$state.noticeEnable && res.code === 0){
-      const notice = {
-        title:'群聊消息通知',
-        body:`${nowUser.$state.userInfo.nickname}修改群名为${props.groupInfo?.groupProfile?.name}`,
-        time: Date.now(),
-        from:{
-          username:`${props.groupInfo?.groupProfile?.name}`,
-          avatarUrl:`${props.groupInfo?.groupProfile?.avatar}`
-        },
-        icon:`${props.groupInfo?.groupProfile?.avatar}`,
-        level:'low'
-      }
-      window.$notice.sendNotice(notice)
-    }
+    await server.updateGroupProfile(option)
      
     ctx.emit('close')
     
