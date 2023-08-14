@@ -60,7 +60,7 @@ export default {
         wheelPropagation: true
       },
       options: {className: 'card',title: '微博热搜',icon: 'weibo1',type: 'hotSearch'},
-      sizeList:[{title:'1x2',height:2,width:1,name:'1x2'},{title:'2x2',height:2,width:2,name:'2x2'}],
+      sizeList:[{title:'2x4',height:2,width:1,name:'1x2'},{title:'4x4',height:2,width:2,name:'2x2'}],
       hotList: []
     }
   },
