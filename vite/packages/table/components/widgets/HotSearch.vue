@@ -7,7 +7,7 @@
   >
   <div class="flex flex-col overflow mt-1 hot-box" style="height: 95%;">
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
-      <div  v-for="item in hotList" :key="item.id"
+      <div  v-for="item in hotList" :key="item.id" @click="jump"
         class="w-full flex items-center rounded-lg justify-between pointer set-type" 
         style="margin: 8px 0 8px;">
         <span class="sort">{{ item.id }}</span>
@@ -31,6 +31,7 @@
 import Widget from '../card/Widget.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { hotStore } from '../../store/hot'
+import browser from '../../js/common/browser'
 export default {
   name: 'HotSearch',
   components: {
@@ -72,7 +73,10 @@ export default {
     
   },
   methods: {
-    ...mapActions(hotStore,['getData'])
+    ...mapActions(hotStore,['getData']),
+    jump(){
+      browser.openInUserSelect('https://tophub.today/n/KqndgxeLl9')
+    }
   }
 }
 </script>
