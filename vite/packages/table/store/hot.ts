@@ -16,7 +16,7 @@ export const hotStore = defineStore("hot", {
         const discountList = this.data
         if (discountList.hotList?.length) {
             if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
-              console.log('命中缓存了')
+              // console.log('命中缓存了')
               return
             }
         }
@@ -42,13 +42,11 @@ export const hotStore = defineStore("hot", {
                 expiresDate: date,
                 hotList
             }
-            console.log('requestObj',requestObj)
             this.updateData(requestObj)
         
         },
     //  通过时间更新数据
     updateData( value) {
-        // console.log('更新数据=', value)
         this.data = value
     },
    

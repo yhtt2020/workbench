@@ -137,6 +137,20 @@ export default {
           case 'countdownDay':
             item.customData.notRetain = true
             break;
+          case 'AggregateSearch':
+            item.customData.sortType = 'work'
+            delete item.customData.sortList
+            break; 
+          case 'myIcons':
+            item.customData.iconList[0].backgroundColor = ''
+            item.customData.iconList[0].backgroundIndex = 0
+            item.customData.iconList[0].imgShape = 'square'
+            item.customData.iconList[0].imgState = 'cover'
+            item.customData.iconList[0].isBackground = false
+            item.customData.iconList[0].isRadius = true
+            item.customData.iconList[0].radius = 5
+            item.customData.iconList[0].size = 'mini'
+            break; 
         }
       })
     },
@@ -176,6 +190,8 @@ export default {
     getShareJson() {
       return JSON.stringify(this.selectedDesk)
     },
+  },
+  mounted(){
   },
   watch: {
     openModal(val){
