@@ -69,7 +69,7 @@ export default {
   },
   async mounted() {
     await this.getData()
-    this.hotList = this.data.hotList
+    this.hotList = this.data
     
   },
   methods: {

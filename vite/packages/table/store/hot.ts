@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
-import {compareTime, cacheRequest} from '../js/axios/api'
+import {compareTime,cacheRequest, quickRequest} from '../js/axios/api'
 import cheerio from 'cheerio';
 // @ts-ignore
 export const hotStore = defineStore("hot", {
@@ -10,20 +10,20 @@ export const hotStore = defineStore("hot", {
   actions: {
     async getData() {
 
-        if (typeof this.data !== 'object') {
-            this.data = {}
-        }
-        const discountList = this.data
-        if (discountList.hotList?.length) {
-            if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
-              // console.log('命中缓存了')
-              return
-            }
-        }
+        // if (typeof this.data !== 'object') {
+        //     this.data = {}
+        // }
+        // const discountList = this.data
+        // if (discountList.hotList?.length) {
+        //     if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
+        //       // console.log('命中缓存了')
+        //       return
+        //     }
+        // }
 
-        let res = await cacheRequest(`https://tophub.today/n/KqndgxeLl9`,{},{
+        let res = await quickRequest(`https://tophub.today/n/KqndgxeLl9`,{},{
             localCache:true,
-            localTtl:60*60*12
+            localTtl:60*10
         })
             let hotList = []
             const html = res.data
@@ -35,18 +35,18 @@ export const hotStore = defineStore("hot", {
                 let heat = dom(el).children().eq(2).text()
                 hotList.push({id,title,heat})
             })
-            const date = new Date()
-            const requestObj = {
-                expiresDate: date,
-                hotList
-            }
-            this.updateData(requestObj)
-        
+            this.data = hotList
+            // const date = new Date()
+            // const requestObj = {
+            //     expiresDate: date,
+            //     hotList
+            // }
+            // this.updateData(requestObj)
         },
     //  通过时间更新数据
-    updateData( value) {
-        this.data = value
-    },
+    // updateData( value) {
+    //     this.data = value
+    // },
    
   },
   persist: {
