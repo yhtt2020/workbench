@@ -28,15 +28,13 @@ export const hotStore = defineStore("hot", {
             let hotList = []
             const html = res.data
             const dom = cheerio.load(html)
-            dom('tbody').children().each((i, el) => {
+            dom('.Zd-p-Sc .cc-dc:first-child tbody').children().each((i, el) => {
                 let id = dom(el).children().eq(0).text()
                 id = id?.split('.')[0]
                 let title = dom(el).children().children().eq(0).text()
                 let heat = dom(el).children().eq(2).text()
                 hotList.push({id,title,heat})
             })
-            hotList = hotList.slice(0,52)
-           
             const date = new Date()
             const requestObj = {
                 expiresDate: date,
