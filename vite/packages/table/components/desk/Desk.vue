@@ -143,13 +143,13 @@
     <slot name="outMenu"></slot>
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
-    <Tab class="mb-2"
+    <XtTab class="mb-2"
          v-if="settingVisible"
          style="height: 48px"
          boxClass="p-1 xt-bg-2"
          v-model:data="currentSettingTab"
          v-model:list="settingsTab"
-    ></Tab>
+    ></XtTab>
 
     <template v-if="currentSettingTab==='current'">
       <div class="line-title">基础设置</div>
@@ -277,7 +277,7 @@ import { appStore } from '../../store'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
 import AddIcon from '../../page/app/addIcon/index.vue'
-import Tab from '../card/components/Tab/index.vue'
+
 import Template from '../../../user/pages/Template.vue'
 import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
@@ -288,7 +288,6 @@ export default {
   name: 'Desk',
   components: {
     Template,
-    Tab,
     HorizontalPanel,
     VueCustomScrollbar,
     Vuuri,

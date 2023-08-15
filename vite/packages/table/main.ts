@@ -23,8 +23,11 @@ import 'viewerjs/dist/viewer.css'
 /*消息提示组件*/
 import Toast,{PluginOptions} from 'vue-toastification'
 import "vue-toastification/dist/index.css";
-// 注册公共基础组件
-import baseComponents from "./components/card/components/index"
+// 注册基础组件
+import  baseComponents from "./components/card/libs/index"
+// 注册业务组件
+import components from "./components/card/components/index"
+
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript'
@@ -82,7 +85,7 @@ window.$=$
 const options:PluginOptions={
 
 }
-const $app=app.use(pinia).use(Antd).use(baseComponents).use(ColorPicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
+const $app=app.use(pinia).use(Antd).use(baseComponents).use(components).use(ColorPicker).use(router).use(VueViewer).use(setupCalendar,{}).use(
   VueTippy,
   // optional
   {

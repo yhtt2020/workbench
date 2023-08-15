@@ -1,18 +1,14 @@
 <template>
-  <Title> 图标状态 </Title>
-  <Radio v-model:data="edit.imgState" :list="imgStateList" text=""></Radio>
+  <XtTitle> 图标状态 </XtTitle>
+  <XtRadio v-model:data="edit.imgState" :list="imgStateList" text=""></XtRadio>
 </template>
 
 <script>
-import Radio from "../../../../card/components/radio/index.vue";
 import { imgStateList } from "../hooks/config";
 
 import editMixins from "../hooks/mixins";
 export default {
   mixins: [editMixins],
-  components: {
-    Radio,
-  },
   data() {
     return {
       imgStateList,

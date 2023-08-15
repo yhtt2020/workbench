@@ -9,11 +9,12 @@ import piniaPersist from "../table/js/ext/pinia-plugin-persist/index";
 import "./styles/index.scss";
 // 主题样式
 import "../../public/css/styleSwitch/index.scss";
-// 组件
-import baseComponents from "../table/components/card/components/index";
+// 注册基础组件
+import baseComponents from "../table//components/card/libs/index";
+// 注册业务组件
+import components from "../table//components/card/components/index";
 
 import cache from "../table/components/card/hooks/cache";
-
 
 // @ts-ignore
 const { tools } = window.$models;
@@ -27,7 +28,7 @@ app.use(pinia);
 
 app.use(Antd).use(router);
 
-app.use(baseComponents);
+app.use(baseComponents).use(components);
 
 app.config.globalProperties.$cache = cache;
 
