@@ -41,13 +41,13 @@
 
       <div style="height: 119px;">
         
-       </div>
+      </div>
 
     </div>
   </div>
 
   <Modal v-if="isMemeberShow" v-model:visible="isMemeberShow" :blurFlag="true">
-    <UserSelect :list="groupManageInfo.list" :type="type" :groupID="groupManageInfo.groupID" :server="server" @close="close"></UserSelect>
+    <UserSelect :list=" type === 'addAdmin' ? addList : userList " :type="type" :groupID="groupManageInfo.groupID" :server="server" @close="close"></UserSelect>
   </Modal> 
 </template>
 
@@ -71,6 +71,8 @@ export default defineComponent({
   const data = reactive({
     isMemeberShow:false,  // 显示邀请选中用户成为管理弹窗
     type:'', // 接收是删除类型还是添加类型
+    addList: [],
+    userList:[]
   })
 
 
@@ -79,10 +81,12 @@ export default defineComponent({
       case 'addAdmin':
         data.isMemeberShow = true
         data.type = type
+        data.addList = props.groupManageInfo.list
         break;
       case 'delAdmin':
         data.isMemeberShow = true
         data.type = type
+        data.userList = isAdminList
         break;
       default:
         break;

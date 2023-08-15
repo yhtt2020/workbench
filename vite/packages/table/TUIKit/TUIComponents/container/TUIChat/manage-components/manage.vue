@@ -35,15 +35,17 @@
           <div class="font-12">{{ item.nick }}</div>
         </div>
 
-        <div class="flex items-center justify-center active-button rounded-lg" 
-         style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
-         v-if="conversation?.groupProfile?.joinOption === 'DisableApply'"
-        >
-          <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
-        </div>
-
-        <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember">
-          <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
+        <div class="flex" v-if="conversation?.selfInfo?.role === 'Owner'">
+            <!-- {{ conversation.type }} -->
+          <!-- <div class="flex items-center justify-center active-button rounded-lg" 
+          style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
+         >
+           <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
+         </div>
+ 
+         <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember">
+           <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
+         </div> -->
         </div>
       </div>
     </div>
@@ -87,7 +89,10 @@
          >
           转让群聊
         </div>
-        <div  class="flex  rounded-lg pointer active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);">
+        <div  class="flex  rounded-lg pointer active-button items-center justify-center" 
+         style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
+         @click="dismiss"
+        >
           解散群聊
         </div>
       </div>
@@ -236,6 +241,13 @@ const manage = defineComponent({
       
     }
 
+    const dismiss = async () =>{  // 解散群聊
+      await GroupServer.dismissGroup(props.conversation.groupID);
+      manage.TUIServer.store.conversation = {};
+      (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
+      ctx.emit('close')
+    }
+
     const changeOwner = (type) =>{  // 转让群聊
       data.isChangeOwner = true
       data.type = type
@@ -260,6 +272,7 @@ const manage = defineComponent({
       ...toRefs(data),handleGroupIDCopy,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
+      dismiss,
     }
   }
 
