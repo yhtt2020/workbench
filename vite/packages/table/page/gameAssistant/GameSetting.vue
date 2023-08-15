@@ -44,7 +44,70 @@
         <a-select-option v-for="item in region" :value="item.id">{{ item.name }}</a-select-option>
       </a-select>
     </div>
+    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
+      <Icon style="height: 36px;width: 36px" icon="lianjie"></Icon>
+      <div class="flex flex-col ml-4 w-2/3">
+        <span class="set-title">启用代理</span>
+        <span style="color: var(--secondary-text);">设置您的代理，提升登录成功率（推荐）</span>
+      </div>
+
+      <div class=" ml-6 w-28 h-12 rounded-lg flex justify-center items-center pointer"  >
+        <a-select v-model:value="settings.proxy.type">
+          <a-select-option value="none">不使用代理</a-select-option>
+<!--          <a-select-option value="web">网页代理</a-select-option>-->
+          <a-select-option value="http">http代理</a-select-option>
+          <a-select-option value="socks5">socks5代理</a-select-option>
+        </a-select>
+      </div>
+      <div class="set-bg ml-2 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="showProxySettings">
+        设置
+      </div>
+    </div>
+
   </div>
+  <Modal v-model:visible="proxyVisibility" v-show="proxyVisibility" animationName="bounce-in" :maskNoClose="false"
+         :blurFlag="true" @click.stop>
+    <div class="p-10" style="width:400px">
+      <div class="line-title">代理设置（修改直接生效）</div>
+      <div class="line">
+        <a-row>
+        <a-col :span="6" class="text-left">
+          类型：
+        </a-col>
+          <a-col class="text-right" :span="18"><a-select v-model:value="settings.proxy.type">
+            <a-select-option value="none">不使用代理代理</a-select-option>
+<!--            <a-select-option value="web">网页代理</a-select-option>-->
+            <a-select-option value="http">http代理</a-select-option>
+            <a-select-option value="socks5">socks5代理</a-select-option>
+          </a-select></a-col></a-row>
+      </div>
+      <div class="line   "><a-row>
+        <a-col :span="5" class="text-left">
+        地址：
+        </a-col>
+        <a-col :span="19">
+          <a-input class="w-full" v-model:value="settings.proxy.address"></a-input>
+        </a-col>
+      </a-row></div>
+      <div class="line"><a-row>
+        <a-col :span="5"  class="text-left">
+          端口：
+        </a-col><a-col :span="19"> <a-input  class="w-full"  v-model:value="settings.proxy.port"></a-input></a-col></a-row>
+      </div>
+      <div class="line"><a-row>
+        <a-col :span="5"  class="text-left">
+          用户名：
+        </a-col><a-col :span="19"><a-input v-model:value="settings.proxy.userName"></a-input></a-col>
+      </a-row></div>
+      <div class="line"><a-row>
+        <a-col :span="5"  class="text-left">
+          密码：
+        </a-col><a-col :span="19"><a-input-password v-model:value="settings.proxy.password"></a-input-password></a-col>
+      </a-row></div>
+
+    </div>
+
+  </Modal>
   <Modal v-model:visible="modalVisibility" v-show="modalVisibility" animationName="bounce-in" :maskNoClose="true"
          :blurFlag="true" @click.stop>
     <div class="flex flex-col p-6 xt-text" @click.stop>
@@ -54,7 +117,7 @@
       <div class="mt-3 mb-0 pl-2">
         <ExclamationCircleFilled/>
         普通登录支持邮箱验证和手机app授权。<br>
-        网络不好多试几次！ steam302用户请看-><a style="color:var(--secondary-text);" target="_blank"
+        网络不好建议设置代理！ steam302用户请看-><a style="color:var(--secondary-text);" target="_blank"
                                                href="https://www.yuque.com/tswork/mqon1y/kvinb8xbzw2eaa2e">技术说明</a>
       </div>
       <div class=" mt-3">
@@ -120,7 +183,7 @@ import { cardStore } from '../../store/card'
 import { steamUserStore } from '../../store/steamUser'
 import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
-const { steamSession, path, https } = $models
+const { steamSession, path, https,steamUser } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 
 export default {
@@ -141,6 +204,7 @@ export default {
       mailBoxAuthCode: '',
       authCode: '',
       modalVisibility: false,
+      proxyVisibility:false,
       area: '国区',
       region: [
         {
@@ -197,9 +261,43 @@ export default {
   mounted () {
 
   },
+  watch:{
+    'settings.proxy':{
+      handler(newVal){
+        console.log('修改了设置')
+        const user=window.client
+        const {type,address,port,userName,password}=newVal
+        //user.setOption('httpProxy',null)
+        //user.setOption('socksProxy',null)
+        //user.setOption('webCompatibilityMode',false)
+
+        switch  (type){
+          case 'none':
+            break
+          case 'http':
+            // if(userName || password){
+            //   user.setOption('httpProxy',`http://${userName}:${password}@${address}:${port}`)
+            // }else{
+            //   user.setOption('httpProxy',`http://${address}:${port}`)
+            // }
+           // user.httpProxy=`http://${address}:${port}`
+            break;
+          case 'socks5':
+           // user.setOption('socksProxy',`socks5://${userName}:${password}@${address}:${port}`)
+            break;
+          case 'web':
+           // user.setOption('webCompatibilityMode',true)
+        }
+        console.log(user,'steamuser=')
+        console.log('修改了设置',`http://${userName}:${password}@${address}:${port}`,`socks5://${userName}:${password}@${address}:${port}`)
+      },
+      deep:true,
+      immediate:true
+    }
+  },
   computed: {
     ...mapState(steamUserStore, ['steamLoginData', 'userData']),
-    ...mapWritableState(steamUserStore, ['recentGameList', 'desks'])
+    ...mapWritableState(steamUserStore, ['recentGameList', 'desks','settings'])
   },
   methods: {
     ...mapActions(steamUserStore, ['setSteamLoginData', 'setUserData']),
@@ -256,8 +354,31 @@ export default {
         })
       }
     },
+    getProxyOptions(){
+      const {type,address,port,userName,password}=this.settings.proxy
+      switch  (type) {
+        case 'none':
+          return {}
+          break
+        case 'http':
+          // if(userName || password){
+          //   user.setOption('httpProxy',`http://${userName}:${password}@${address}:${port}`)
+          // }else{
+          //   user.setOption('httpProxy',`http://${address}:${port}`)
+          // }
+          // user.httpProxy=`http://${address}:${port}`
+          return {
+            httpProxy: `http://${userName}:${password}@${address}:${port}`
+          }
+        case 'socks5':
+          return { 'socksProxy': `socks5://${userName}:${password}@${address}:${port}` }
+      }
+
+    },
     showBind(){
-      let session = new LoginSession(EAuthTokenPlatformType.SteamClient)
+      const options=this.getProxyOptions()
+      console.log(options,'参数')
+      let session = new LoginSession(EAuthTokenPlatformType.SteamClient,options)
       session.on('authenticated', async () => {
         await this.loginSuccessCallback(session)
       })
@@ -268,6 +389,9 @@ export default {
       this.modalVisibility = false;
       this.mailBoxShow=false
       this.loginLoading=false
+    },
+    showProxySettings(){
+      this.proxyVisibility=true
     },
     clickBind () {
       if (this.steamLoginData.refreshToken === '') {
