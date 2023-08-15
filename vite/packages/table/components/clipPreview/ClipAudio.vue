@@ -1,5 +1,5 @@
 <template>
-  <!-- 剪贴板音频组件 -->
+  <!-- 剪切板音频组件 -->
   <div>
     <audio @timeupdate="updateProgress" controls ref="audioRef" style="display: none">
       <source :src="fileUrl" type="audio/mpeg" />
@@ -14,7 +14,7 @@
       </div>
 
       <div class="audio-time" style="min-height: 10px">
-        <span class="audio-length-current" id="audioCurTime">{{ audioStart }}</span>  / 
+        <span class="audio-length-current" id="audioCurTime">{{ audioStart }}</span>  /
         <span class="audio-length-total">{{ duration }}</span>
       </div>
 

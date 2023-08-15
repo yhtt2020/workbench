@@ -28,8 +28,9 @@
     <!-- 搜索按钮和设置按钮结束 -->
   </div>
 
-  <!-- 剪贴板列表展示区域开始 -->
-  <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mx-4 my-2 py-4">
+  <!-- 剪切板列表展示区域开始 -->
+  <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+                        class="mx-4 my-2 py-4 h-full "  >
     <div v-if="defaultClipType.name === 'collect'">
       <div class="flex items-center justify-center">
         <a-empty :image="simpleImage"/>
@@ -37,7 +38,7 @@
     </div>
     <AllClipFile :clipList="clipContent" v-else></AllClipFile>
   </vue-custom-scrollbar>
-  <!-- 剪贴板列表展示区域结束 -->
+  <!-- 剪切板列表展示区域结束 -->
 
   <!-- 导航切换在宽度不够的情况下显示 -->
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
@@ -88,11 +89,11 @@ export default{
     return{
       // 历史和收藏切换数组
       clipType: [
-        {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
+        {title: '剪切板历史', icon: 'time-circle', name: 'history'},
         {title: '收藏', icon: 'star', name: 'collect'}
       ],
       // 历史和收藏切换数组默认值
-      defaultClipType: {title: '剪贴板历史', icon: 'time-circle', name: 'history'},
+      defaultClipType: {title: '剪切板历史', icon: 'time-circle', name: 'history'},
 
       // 导航栏筛选分类
       cutType: [
@@ -128,7 +129,7 @@ export default{
 
   computed:{
     ...mapWritableState(clipboardStore, ['clipboardObserver','items']),
-    // 根据剪贴板列表不同状态进行数据显示
+    // 根据剪切板列表不同状态进行数据显示
     clipContent(){
       switch(this.defaultCutType.typename){
         case 'all': // 默认全部

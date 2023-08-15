@@ -66,6 +66,7 @@ TUIKit.use(TUICallKit);
 
 window.$TUIKit=TUIKit
 
+window.$TUIKit.tim.setLogLevel(4);
 const notice = new Notifications()
 window.$notice = notice
 
