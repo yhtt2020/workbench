@@ -1,10 +1,13 @@
 <template>
-  <!-- 单图标已经承载很多内容了 需要安排时间抽离 -->
-  <div class="cursor-pointer rounded-xl xt-hover" :data-index="index">
+  <div
+    class="cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around"
+    :data-index="index"
+    @click.stop="iconClick($event)"
+    :style="[iconSize]"
+  >
     <div
-      class="xt-text no-drag flex items-center justify-center rounded-xl"
-      :style="[iconSize, backgroundState]"
-      @click="iconClick($event)"
+      class="xt-text no-drag flex items-center justify-center rounded-xl w-full"
+      :style="[bgSize, backgroundState]"
       :data-index="index"
     >
       <!-- src="../../../../../../temporaryIcon/my_image.png" -->
@@ -35,11 +38,13 @@ export default {
   mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
+    state: { type: Boolean, default: false },
     index: { type: Number },
   },
   computed: {
     // 动态切换圆角状态
     radiusState() {
+      if (this.state) return;
       if (this.isRadius)
         return {
           borderRadius: this.radius + "%",
@@ -48,6 +53,7 @@ export default {
     },
     // 动态切换背景状态
     backgroundState() {
+      if (this.state) return;
       if (this.isBackground) return { background: this.backgroundColor };
       else return { background: "none" };
     },
@@ -55,10 +61,20 @@ export default {
       return this.getSizeValues(this.size).iconSize;
     },
     textSize() {
-      return this.getSizeValues(this.size).textSize;
+      let textSize = this.getSizeValues(this.size).textSize;
+      if (this.size == "icons1" || this.size == "icons2") {
+        textSize["font-size"] = "12px";
+        textSize["margin-top"] = "4px";
+      } else {
+        textSize["font-size"] = "14px";
+      }
+      return textSize;
     },
     imgSize() {
       return this.getSizeValues(this.size).imgSize;
+    },
+    bgSize() {
+      return this.getSizeValues(this.size).bgSize;
     },
     imgStateStyle() {
       return {
@@ -151,24 +167,34 @@ export default {
 
       let { w, h } = sizeValues[size];
 
-      let imgW = sizeValues[size][this.imgShape].imgW;
-      let imgH = sizeValues[size][this.imgShape].imgH;
-      h = this.isTitle ? h - 20 : h;
+      let imgW = sizeValues[size][this.imgShape].w;
+      let imgH = sizeValues[size][this.imgShape].h;
+
       if (this.imgShape !== "square") {
         imgH = this.isTitle ? imgH : imgH + 20;
       }
+      let bgH =
+        this.size == "icons1" || this.size == "icons2"
+          ? imgH
+          : this.isTitle
+          ? h - 20
+          : h;
       return {
+        bgSize: {
+          width: `${w}px`,
+          height: `${bgH}px`,
+        },
         iconSize: {
           width: `${w}px`,
           height: `${h}px`,
         },
         textSize: {
           width: `${w - 20}px`,
+          "font-size": "1px",
         },
         imgSize: {
           width: `${imgW}px`,
           height: `${imgH}px`,
-          border: "0px solid red",
         },
       };
     },
@@ -223,19 +249,21 @@ export default {
         this.$emit("custom-event");
         return;
       }
+      console.log(
+        'this.open !== undefined && this.open.value !== "" :>> ',
+        this.open !== undefined && this.open.value !== ""
+      );
       if (this.open !== undefined && this.open.value !== "") {
         // 链接
-        this.$emit("onIconClick");
+        console.log("lianjie :>> ");
         this.newOpenApp();
       } else if (this.link !== "") {
         // 其他应用
-        this.$emit("onIconClick");
         this.openApp(this.linkValue);
       } else message.error("你还未设置链接/快捷方式");
     },
     // 复制来到 旧版打开app
     openApp() {
-      this.$emit("onIconClick");
       if (typeof this.linkValue === "object" && this.linkValue.type) {
         switch (this.linkValue.type) {
           case "systemApp":

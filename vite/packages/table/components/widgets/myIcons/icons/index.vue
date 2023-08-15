@@ -18,6 +18,7 @@
     :zoom="zoom"
     :groupTitle="groupTitle"
     :iconList="iconList"
+    @updateGroupTitle="updateGroupTitle"
     @iconsRightClick="iconsRightClick"
     @fullScreenClick="fullScreenClick"
     @editIcons="editIcons"
@@ -76,7 +77,6 @@ export default {
       this.$emit("update:width", newV);
     },
     h(newV) {
-      console.log('INDEX newV H :>> ', newV);
       this.$emit("update:height", newV);
     },
   },

@@ -22,8 +22,6 @@
           "
         >
           <div>
-            {{ customData.size.w }}
-            {{ customData.size.h }}
             <icons
               v-model:width="customData.size.w"
               v-model:height="customData.size.h"
@@ -70,7 +68,7 @@
   <!-- 内容编辑 -->
   <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit>
-  <!-- 多图标设置 -->
+  <!-- 多图标组件设置 -->
   <XtDrawer v-model:data="iconsSetVisible" placement="right">
     <div class="xt-bg-2 p-4 rounded-xl">
       <div class="flex justify-between mb-2">
@@ -157,8 +155,8 @@ export default {
     if (this.customData.size == undefined) {
       state = true;
       setData.size = {
-        w: "100%",
-        h: "100%",
+        w: "280px",
+        h: "204px",
       };
     }
 
@@ -168,19 +166,8 @@ export default {
   },
   mounted() {
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
-    console.log("this.customData :>> ", this.customData);
+    // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
-
-    // 绑定右键事件
-    // this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
-    //   capture: true,
-    // });
-  },
-  beforeDestroy() {
-    // 取消右键事件
-    // this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, {
-    //   capture: true,
-    // });
   },
   provide() {
     return {
@@ -391,7 +378,7 @@ export default {
           this.addIcon(this.customData.iconList[i]);
         }, 10);
       }
-      this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
+      // this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
       message.success("解除分组成功");
     },
     // 点击移动图标组件
@@ -463,10 +450,7 @@ export default {
       this.customData.groupTitle = title;
     },
     // 右键菜单绑定
-    handleMenu(e) {
-      console.log("22222 :>> ", 22222);
-      // e.preventDefault();
-      // e.stopPropagation();
+    handleMenu() {
       this.menuVisible = true;
     },
     // 保存图标
@@ -483,9 +467,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.ant-drawer-body) {
-  border: 22px solid red;
-}
 .icon-box {
   // margin: 0 10px;
   border-radius: 12px;
