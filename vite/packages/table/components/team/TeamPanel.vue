@@ -1,101 +1,111 @@
 <template>
   <div :class="{'fix':showDetail}" class="flex s-bg rounded-lg" :style="{height:showDetail?'100%':'auto'}"
        style="overflow: hidden;background: var(--modal-bg);color: var(--primary-text)">
-      <div v-if="showDetail"
-           style="width:445px;height: 100%;position: relative;display: flex;flex-direction: column;">
-        <a-row style="height: 100%">
-          <a-col :span="4">
-            <ul class="nav-list">
-              <li  @click="closeDetail" class="flex pointer items-center justify-center mb-3">
-                <div class="rounded-lg"  style="background: var(--secondary-bg);">
-                  <Icon icon="doubleright" style="font-size: 0.9233em;"></Icon>
-                </div>
-              </li>
-              <li @click="currentTab='barrage'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='barrage'}">
-                <div><icon icon="xiaoxi"  style="font-size: 0.9233em;"></icon></div>
-              </li>
-              <li @click="currentTab='devote'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='devote'}">
-                <div><icon icon="thunderbolt"  style="font-size: 0.9233em;"></icon></div>
-              </li>
-              <li @click="currentTab='info'" class="flex items-center justify-center" :class="{'nav-active':currentTab==='info'}">
-                <div><icon icon="tishi-xianxing"  style="font-size: 0.9233em;"></icon></div>
-              </li>
-              <li @click="currentTab = 'store'" class="flex items-center justify-center" :class="{'nav-active':currentTab === 'store'}">
-                <div><Icon icon="gift"  style="font-size: 0.9233em;"></Icon></div>
-              </li>
+    <div v-if="showDetail"
+         style="width:445px;height: 100%;position: relative;display: flex;flex-direction: column;">
+      <a-row style="height: 100%">
+        <a-col :span="4">
+          <ul class="nav-list">
+            <li @click="closeDetail" class="flex pointer items-center justify-center mb-3">
+              <div class="rounded-lg" style="background: var(--secondary-bg);">
+                <Icon icon="doubleright" style="font-size: 0.9233em;"></Icon>
+              </div>
+            </li>
+            <li @click="currentTab='barrage'" class="flex items-center justify-center"
+                :class="{'nav-active':currentTab==='barrage'}">
+              <div>
+                <icon icon="xiaoxi" style="font-size: 0.9233em;"></icon>
+              </div>
+            </li>
+            <li @click="currentTab='devote'" class="flex items-center justify-center"
+                :class="{'nav-active':currentTab==='devote'}">
+              <div>
+                <icon icon="thunderbolt" style="font-size: 0.9233em;"></icon>
+              </div>
+            </li>
+            <li @click="currentTab='info'" class="flex items-center justify-center"
+                :class="{'nav-active':currentTab==='info'}">
+              <div>
+                <icon icon="tishi-xianxing" style="font-size: 0.9233em;"></icon>
+              </div>
+            </li>
+            <li @click="currentTab = 'store'" class="flex items-center justify-center"
+                :class="{'nav-active':currentTab === 'store'}">
+              <div>
+                <Icon icon="gift" style="font-size: 0.9233em;"></Icon>
+              </div>
+            </li>
 
-            </ul>
+          </ul>
+        </a-col>
+        <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
+          <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
+
+            <a-col style="padding: 0 !important;">
+              <div style="width:90px;height:90px;position: relative;" class="ml-5 pt-2">
+                <!-- <img :src="avatar_url" class="w-full h-full object-cover" alt=""> -->
+                <a-avatar class="mt-3 ml-3 avatar-top" :size="50" shape="square" :src="team.avatar"></a-avatar>
+              </div>
+              <!--  -->
+            </a-col>
+            <a-col>
+              <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
+              <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
+            </a-col>
+          </a-row>
+          <div v-if="showDetail && currentTab==='info'">
+            <TeamDetail @closeTeam="closeTeam" @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings"
+                        :online="online" :effect="effect" :team="team"
+                        :teamLeader="teamLeader"></TeamDetail>
+          </div>
+          <div style="flex: 1;height:0" v-if="showDetail && currentTab==='barrage' ">
+            <BarragePanel :defaultChannel="'team'"></BarragePanel>
+          </div>
+          <div v-if="showDetail && currentTab==='devote'"
+               style="height: 100%;position: relative;width: 100%">
+            <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
+          </div>
+          <div v-if="showDetail && currentTab==='store'" style="height: 100%">
+            <FrameStoreWidget :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></FrameStoreWidget>
+          </div>
+        </a-col>
+      </a-row>
+    </div>
+    <div v-if="userDetail" class="xt-bg"
+         style="width:300px;height: 500px;position: relative">
+      <div  @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
+           style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
+        <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
+      </div>
+      <vue-custom-scrollbar :settings="outerSettings"
+                            style="position:relative;height:calc(100% - 60px);  ">
+        <div class="mb-10">
+
+          <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo"
+                      :joinedTime="showUserMemberInfo.joinedTime"></UserDetail>
+        </div>
+      </vue-custom-scrollbar>
+
+      <div class="px-2" style="position: absolute;bottom: 0; left:0;right:0">
+        <a-row class="m-5 mb-2" :gutter="10">
+          <a-col :span="12" v-if="this.showUserInfo.uid!==userInfo.uid">
+            <AddFriendButton :key="this.showUserInfo.uid" :uid="this.showUserInfo.uid"></AddFriendButton>
           </a-col>
-          <a-col :span="20" style="height: 100%;display: flex;flex-direction: column">
-            <a-row class="" @click="" v-if="showDetail && currentTab !=='store'" :gutter="20">
 
-              <a-col style="padding: 0 !important;">
-                <div style="width:90px;height:90px;position: relative;" class="ml-5 pt-2">
-                  <!-- <img :src="avatar_url" class="w-full h-full object-cover" alt=""> -->
-                  <a-avatar class="mt-3 ml-3 avatar-top" :size="50" shape="square" :src="team.avatar"></a-avatar>
-                </div>
-                <!--  -->
-              </a-col>
-              <a-col >
-                <div class="mt-3 mb-1 font-bold truncate">{{ team.name }}</div>
-                <div class="rounded-md px-2 bg-mask inline-block font-bold"># {{ team.no }}</div>
-              </a-col>
-            </a-row>
-            <div v-if="showDetail && currentTab==='info'">
-              <TeamDetail @closeTeam="closeTeam" @closeDetail="closeDetail" @onReceiveTeamEarnings="receiveTeamEarnings" :online="online" :effect="effect" :team="team"
-                          :teamLeader="teamLeader"></TeamDetail>
-            </div>
-            <div style="flex: 1;height:0" v-if="showDetail && currentTab==='barrage' ">
-              <BarragePanel :defaultChannel="'team'"></BarragePanel>
-            </div>
-            <div v-if="showDetail && currentTab==='devote'"
-                 style="height: 100%;position: relative;width: 100%">
-              <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
-            </div>
-            <div v-if="showDetail && currentTab==='store'" style="height: 100%">
-              <FrameStoreWidget :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></FrameStoreWidget>
+          <a-col :span="12">
+            <div class="rounded-lg bg-mask px-6 py-3 pointer "
+                 v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
+                 @click="kick(this.showUserInfo.uid)">
+              <icon icon="shanchu" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
+              移出小队
             </div>
           </a-col>
         </a-row>
       </div>
-      <div v-if="userDetail"
-           style="width:300px;height: 500px;background: rgba(0,0,0,0.09);position: relative">
-        <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
-             style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
-          <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
-        </div>
-        <vue-custom-scrollbar :settings="outerSettings"
-                              style="position:relative;height:calc(100% - 60px);  ">
-          <div class="mb-10">
-
-            <UserDetail :memberInfo="showUserMemberInfo" :key="userInfoKey" :userInfo="showUserInfo" :joinedTime="showUserMemberInfo.joinedTime"></UserDetail>
-          </div>
-        </vue-custom-scrollbar>
-
-        <div style="position: absolute;bottom: 0;left: 15px">
-          <a-row class="m-5 mb-2" :gutter="10">
-            <a-col v-if="this.showUserInfo.uid!==userInfo.uid">
-              <div class="rounded-lg bg-mask px-6 py-3 pointer " @click="exit">
-                <icon icon="tianjia2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-                加为好友
-              </div>
-            </a-col>
-            <a-col>
-              <a-col>
-                <div class="rounded-lg bg-mask px-6 py-3 pointer "
-                     v-if="Number(teamLeader.userInfo.uid)===Number(userInfo.uid) && Number(this.showUserInfo.uid)!==Number(userInfo.uid)"
-                     @click="kick(this.showUserInfo.uid)">
-                  <icon icon="shanchu" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-                  移出小队
-                </div>
-              </a-col>
-            </a-col>
-          </a-row>
-        </div>
-      </div>
-      <!-- 快速搜索 小队右边栏 -->
+    </div>
+    <!-- 快速搜索 小队右边栏 -->
     <div class="common-panel  flex" style="flex-direction: column;padding-bottom: 0;"
-     :style="showDetail === false ? { width:'80px' } : { width:'100px' }"
+         :style="showDetail === false ? { width:'80px' } : { width:'100px' }"
     >
       <div v-if="!showDetail" @click="showBarragePanel"
            class="p-2 pt-2 p-3 truncate font-large text-center pointer"
@@ -113,17 +123,22 @@
              :class="{'active':this.showUserInfo===teamLeader.userInfo}" class="text-center mb-3 mt-2 pointer pt-2"
              v-if="teamLeader.userInfo">
 
-          <UserAvatar  :frame="teamLeader.userInfo.equippedItems?.frameDetail"   :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online" :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
+          <UserAvatar :frame="teamLeader.userInfo.equippedItems?.frameDetail"
+                      :frameUrl="teamLeader.userInfo.equippedItems?.frameDetail?.image" :online="teamLeader.online"
+                      :tag="teamLeader.userInfo.uid===userInfo.uid?'我':'队长'"
                       :avatar="teamLeader.userInfo.avatar" :showDetail="showDetail"></UserAvatar>
 
-          <div v-if="showDetail" class="pt-1 truncate mt-3" style="font-size: 0.9em" :title="teamLeader.userInfo.nickname">
+          <div v-if="showDetail" class="pt-1 truncate mt-3" style="font-size: 0.9em"
+               :title="teamLeader.userInfo.nickname">
             {{ teamLeader.userInfo.nickname }}
           </div>
         </div>
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
-          <UserAvatar :frame="user.userInfo.equippedItems?.frameDetail" :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online" :avatar="user.userInfo.avatar"
+          <UserAvatar  :frame="user.userInfo.equippedItems?.frameDetail"
+                      :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online"
+                      :avatar="user.userInfo.avatar"
                       :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
           <div v-if="showDetail" class="pt-1 truncate" style="font-size: 0.9em" :title=" user.userInfo.nickname">{{
               user.userInfo.nickname
@@ -132,7 +147,7 @@
         </div>
         <div class="text-center pb-2" title="邀请"
              v-if="team.leader===userInfo.uid && team.member_count < team.member_limit">
-          <a-avatar :size="50"  style="color:var(--primary-text) !important">
+          <a-avatar :size="50" style="color:var(--primary-text) !important">
             <PlusOutlined/>
           </a-avatar>
         </div>
@@ -158,11 +173,12 @@ import FrameStoreWidget from './FrameStoreWidget.vue'
 import TeamBarrage from '../comp/TeamBarrage.vue'
 import BarrageSender from '../comp/BarrageSender.vue'
 import BarragePanel from '../comp/BarragePanel.vue'
-
+import AddFriendButton from '../sns/addFriendButton.vue'
 
 export default {
   name: 'TeamPanel',
   components: {
+    AddFriendButton,
     BarragePanel,
     BarrageSender,
     TeamBarrage,
@@ -197,7 +213,7 @@ export default {
   data () {
     return {
       online: 0,
-      currentTab:'barrage',
+      currentTab: 'barrage',
       outerSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -210,8 +226,8 @@ export default {
       showBarrage: true,
       teamDetail: false,
       showUid: 0,
-      rarity:4, // 稀有度
-      avatar_url:'/img/mg.png',
+      rarity: 4, // 稀有度
+      avatar_url: '/img/mg.png',
       showUserInfo: {},
       showUserMemberInfo: {},//成员信息
       timer: null,//用于定期刷新队伍信息
@@ -238,21 +254,21 @@ export default {
     ...mapActions(teamStore, ['updateTeamShip', 'quitByNo', 'updateMy', 'closeTeam', 'updateTeam']),
 
     showBarragePanel () {
-      this.userDetail=false
+      this.userDetail = false
       this.showDetail = true
     },
     showUserDetail (userInfo, memberInfo) {
       this.showUserMemberInfo = memberInfo
-      if(this.showUserMemberInfo.uid===this.teamLeader.uid){
-        this.showUserMemberInfo.joinedTime=this.team.createTime
-      }else{
-        this.showUserMemberInfo.joinedTime=memberInfo.updateTime
+      if (this.showUserMemberInfo.uid === this.teamLeader.uid) {
+        this.showUserMemberInfo.joinedTime = this.team.createTime
+      } else {
+        this.showUserMemberInfo.joinedTime = memberInfo.updateTime
       }
       this.showUid = userInfo.uid
       this.showUserInfo = userInfo
       // this.userInfoKey = Date.now()
       this.showDetail = false
-      this.userDetail=true
+      this.userDetail = true
     },
     closeDetail () {
       this.userDetail = false
@@ -262,7 +278,7 @@ export default {
       this.earningsShow = false
     },
     showTeamDetail () {
-      this.showBarrage=false
+      this.showBarrage = false
       this.userDetail = false
       this.updateTeam(this.team.no).then()
       this.teamDetail = true
@@ -328,6 +344,7 @@ export default {
 :deep(.ant-avatar) {
   border-radius: 50%;
 }
+
 .active {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
@@ -371,11 +388,13 @@ export default {
   position: relative;
   top: -5px;
 }
-.nav-list{
+
+.nav-list {
   height: 100%;
   border-right: 1px solid var(--divider);
   padding-left: 0;
-  li{
+
+  li {
     list-style: none;
     font-size: 26px;
     padding-top: 10px;
@@ -386,18 +405,21 @@ export default {
     text-align: center;
     **/
     cursor: pointer;
-    &>div{
-      padding:4px 8px 4px 8px;
+
+    & > div {
+      padding: 4px 8px 4px 8px;
       width: 42px;
       height: 42px;
     }
-    svg{
+
+    svg {
       margin-top: -13px;
       vertical-align: middle;
       display: inline-block;
     }
-    &:hover,&.nav-active{
-      &>div{
+
+    &:hover, &.nav-active {
+      & > div {
         background: var(--active-bg);
         border-radius: 10px;
         color: var(--active-text);
@@ -406,15 +428,15 @@ export default {
   }
 }
 
-:deep(.nav-item){
+:deep(.nav-item) {
   width: 50% !important;
 }
 
-:deep(.ps__rail-y){
+:deep(.ps__rail-y) {
   display: none !important;
 }
 
-.avatar-top{
+.avatar-top {
   position: absolute;
   top: 13px;
   left: 10px;
