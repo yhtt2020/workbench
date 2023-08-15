@@ -35,17 +35,14 @@
           <div class="font-12">{{ item.nick }}</div>
         </div>
 
-        <div class="flex" v-if="conversation?.selfInfo?.role === 'Owner' ||  conversation?.selfInfo?.role === 'Admin'">
-          <!-- {{ conversation.type === 'Public' || conversation.type === ''}} -->
-          <!-- <div class="flex items-center justify-center active-button rounded-lg" 
-          style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
-         >
+        <div class="flex" v-if="conversation?.selfInfo?.role !== 'Member'">
+          <div v-if="conversation.type === 'Work'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addGroupMember('addMember')">
            <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
-         </div>
- 
-         <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember">
-           <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
-         </div> -->
+          </div>
+        
+          <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
+            <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +58,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群ID</span>
         <div class="flex">
-          <span class="font-14" style="color: var(--secondary-text);">{{ conversation.groupID }}</span>
+          <span  class="font-14" style="color: var(--primary-text);">{{ conversation.groupID }}</span>
           <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
         </div>
       </div>
@@ -110,13 +107,13 @@
        
     </template>
 
-    
-
   </div>
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
-    <UserSelect :type="type" :list="memberList" :groupID="conversation.groupID" :server="groupServer" @close="isChangeOwner = false"></UserSelect>
+    
+    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID" :server="groupServer" @closeUser="close"></UserSelect>
  </ChangeModal>
+ 
 
 </template>
 
@@ -158,7 +155,8 @@ const manage = defineComponent({
       },
       isChangeOwner:false,
       type:'',  // 转让群聊点击按钮类型
-      groupServer:GroupServer
+      groupServer:GroupServer,
+      friendList:[], // 获取好友数据
     })
 
     const handleGroupIDCopy = async () => {  // 复制群组id 
@@ -220,7 +218,7 @@ const manage = defineComponent({
     }
 
 
-    const exitGroupChat = () =>{  // 退出群聊
+    const exitGroupChat = () =>{  // 退出群聊 
       Modal.confirm({
         content: '确定退出该群聊吗',
         okText: '确认',
@@ -238,11 +236,16 @@ const manage = defineComponent({
     }
 
  
-    const deleteMember = () => {  // 删除群组成员
-      
+    const deleteMember = (type) => {  // 删除群组成员 
+      if(props.memberList.length > 1){
+        data.isChangeOwner = true
+        data.type = type
+      }else{
+        data.isChangeOwner =  false
+      }
     }
 
-    const dismiss = async () =>{  // 解散群聊
+    const dismiss = async () =>{  // 解散群聊 
       await GroupServer.dismissGroup(props.conversation.groupID);
       manage.TUIServer.store.conversation = {};
       (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
@@ -250,30 +253,42 @@ const manage = defineComponent({
     }
 
     const changeOwner = (type) =>{  // 转让群聊
-      data.isChangeOwner = true
-      data.type = type
+      if(props.memberList.length > 1){
+        data.isChangeOwner = true
+        data.type = type
+      }else{
+        data.isChangeOwner =  false
+      }
+      
     }
 
-    
+    const close = () =>{
+      data.isChangeOwner = false
+      ctx.emit('close')
+    }
 
+    const addGroupMember = (type) =>{  // 添加群聊成员
+      data.isChangeOwner = true
+      data.type = type
 
+    }
 
+    const getFriendLists = async () =>{
+      const res = await GroupServer.TUICore.tim.getFriendList()
+      const list = []
+      for(let i=0;i<res.data.length;i++){
+        list.push(res.data[i].profile)
+      }
+      data.friendList = list
+    }
 
-    // const changeOwner = async (userID) => {  // 转让群聊
-      // const options = {
-      //   groupID: data.conversation.groupProfile.groupID,
-      //   newOwnerID: userID,
-      // };
-    //   // const imResponse = await GroupServer.changeGroupOwner(options);
-    //   // data.conversation.groupProfile = {};
-    //   // data.conversation.groupProfile = imResponse.data.group;
-    // }
+    onMounted(getFriendLists)
 
     return{
-      ...toRefs(data),handleGroupIDCopy,
+      ...toRefs(data),handleGroupIDCopy,close,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
-      dismiss,
+      dismiss,addGroupMember,getFriendLists,
     }
   }
 

@@ -135,6 +135,22 @@ export default defineComponent({
        await tim.setGroupMemberMuteTime(mOption);
        ctx.emit('close')
       break;
+     case 'removeMember':
+      const removeMemberOption = {
+        groupID:props.groupID,
+        userIDList:[`${data.adminList[0].userID}`],
+      }
+      await tim.deleteGroupMember(removeMemberOption)
+      ctx.emit('closeUser')
+      break;
+     case 'addMember':
+      const addMemberOption = {
+        groupID:props.groupID,
+        userIDList:[`${data.adminList[0].userID}`],
+      }
+      await tim.addGroupMember(addMemberOption)
+      ctx.emit('closeUser')
+      break;
      default:
       break;
     }
