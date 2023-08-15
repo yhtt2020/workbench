@@ -174,7 +174,8 @@ const manage = defineComponent({
        info:{
         groupID:props.conversation.groupID,
         role:props.conversation.selfInfo.role,
-        list:props.memberList
+        list:props.memberList,
+        conversation:props.conversation
        }
       })
     }

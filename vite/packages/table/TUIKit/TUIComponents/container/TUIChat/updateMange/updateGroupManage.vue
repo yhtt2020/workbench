@@ -32,7 +32,9 @@
          <span class="font-14" style="color: var(--primary-text);">全员禁言</span>
          <span class="font-14" style="color: var(--secondary-text);">全员禁言开启后，只允许群主和管理员发言</span>
         </div>
-        <a-switch></a-switch>
+
+        <a-switch v-model:checked="groupManageInfo.conversation.muteAllMembers" @change="updateMute($event)"></a-switch>
+
       </div>
 
       
@@ -71,8 +73,11 @@ export default defineComponent({
   const data = reactive({
     isMemeberShow:false,  // 显示邀请选中用户成为管理弹窗
     type:'', // 接收是删除类型还是添加类型
-    addList: [],
-    userList:[]
+    addList: [],  // 添加管理员数据
+    userList:[],   // 清除管理员数据
+    clearGag:[], // 清除禁言人员
+    addGag:[], // 添加禁言人员
+    enableGag:false, // 控制禁言开关
   })
 
 
@@ -107,12 +112,21 @@ export default defineComponent({
    }
    return list
   })
- 
+
+
+  const updateMute = async (evt) =>{  // 设置全体禁言
+    const options = {
+      groupID: props.groupManageInfo.groupID,
+      muteAllMembers: evt,
+    }
+    await tim.updateGroupProfile(options)
+    ctx.emit('close')
+  }
 
   return{
     isAdminList,
     addAdmin,...toRefs(data),
-    close
+    close,updateMute
   }
  },
 })
