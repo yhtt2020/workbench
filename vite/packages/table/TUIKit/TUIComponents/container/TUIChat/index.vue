@@ -135,7 +135,7 @@
       </div>
       <div class="flex items-center justify-center font-16" style="color: var(--primary-text);margin-left: 12px;">群管理</div>
     </div>
-    <Manage v-if="conversation.groupProfile"  :conversation="conversation"  @updateName="getManege" />
+    <Manage v-if="conversation.groupProfile" @close="groupVisible = false"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
   </a-drawer>
 
   <a-drawer placement="right" width="500" :closable="false" v-model:visible="updateVisible">
@@ -147,19 +147,19 @@
     </div>
 
     <template v-if="index === 1">
-      <UpdateGroupName :groupInfo="conversation" @close="updateVisible = false" :server="GroupServer"></UpdateGroupName>
+      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer"></UpdateGroupName>
     </template>
 
     <template v-if="index === 2">
-      <UpdateGroupNotice :notice="conversation" @close="updateVisible = false" :server="GroupServer"></UpdateGroupNotice>
+      <UpdateGroupNotice :notice="info" @close="updateVisible = false" :server="GroupServer"></UpdateGroupNotice>
     </template>
     
     <template v-if="index === 3">
-      <UpdateMemeber :memberInfo="conversation" :server="GroupServer"></UpdateMemeber>
+      <UpdateMemeber :memberInfo="info" @close="updateVisible = false" :server="GroupServer"></UpdateMemeber>
     </template>
     
     <template v-if="index === 4">
-      <UpdateGroupManage :groupInfo="conversation"></UpdateGroupManage>
+      <UpdateGroupManage :groupManageInfo="info" :server="GroupServer" @close="updateVisible = false"></UpdateGroupManage>
     </template>
   </a-drawer>
 
@@ -324,6 +324,8 @@ const TUIChat: any = defineComponent({
       isNeedEmojiReact: false,
       dropDownRef: null,
       typingRef: null,
+      newManagerList:{}, // 接收群组管理信息
+      memberList:[], // 获取群组成员数据
     });
 
     const slotDefault = !!useSlots().default;
@@ -887,8 +889,22 @@ const TUIChat: any = defineComponent({
       (data?.typingRef as any)?.onTyping(inputContentEmpty, inputBlur);
     };
 
-    const openGroup = () =>{  // 打开右侧抽屉
+    const openGroup = async () =>{  // 打开右侧抽屉
       data.groupVisible = true
+        
+      const option = {  
+        groupID:data.conversation.groupProfile?.groupID
+      }
+      const options ={
+        groupID:data.conversation.groupProfile?.groupID,  // 群组id
+        count: 500,  // 
+        offset: 0
+      }
+      const res = await TUIServer.TUICore?.tim.getGroupProfile(option)  // 获取群组详细资料
+      data.newManagerList = res.data.group
+      
+      const result = await GroupServer.getGroupMemberList(options)
+      data.memberList = result.data.memberList
     }
 
     return {

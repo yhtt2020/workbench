@@ -6,8 +6,8 @@
         <Icon icon="xiangyou"></Icon>
       </div>
       <div class="flex items-center">
-        <a-avatar shape="square" :size="32" :src="conversation?.groupProfile?.avatar"></a-avatar>
-        <span class="pl-3"> {{  conversation?.groupProfile?.name }}</span>
+        <a-avatar shape="square" :size="32" :src="conversation.avatar"></a-avatar>
+        <span class="pl-3"> {{  conversation.name }}</span>
       </div>
     </div>
 
@@ -17,7 +17,7 @@
         <Icon icon="xiangyou"></Icon>
       </div>
       <div>
-        {{  conversation?.groupProfile?.notification.length === 0 ? '暂无群公告' :  conversation?.groupProfile?.notification }}
+        {{  conversation.notification === '' ? '暂无群公告' :  conversation.notification }}
       </div>
     </div>
 
@@ -35,23 +35,25 @@
           <div class="font-12">{{ item.nick }}</div>
         </div>
 
-        <div class="flex items-center justify-center active-button rounded-lg" 
-         style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
-         v-if="conversation?.groupProfile?.joinOption === 'DisableApply'"
-        >
-          <Icon icon="tianjia2" style="color: var(--active-bg);"></Icon>
-        </div>
-
-        <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);">
-          <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
+        <div class="flex" v-if="conversation?.selfInfo?.role === 'Owner'">
+            <!-- {{ conversation.type }} -->
+          <!-- <div class="flex items-center justify-center active-button rounded-lg" 
+          style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
+         >
+           <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
+         </div>
+ 
+         <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember">
+           <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
+         </div> -->
         </div>
       </div>
     </div>
 
 
     
-    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important; margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterGroupManage">
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>
@@ -59,7 +61,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群ID</span>
         <div class="flex">
-          <span>{{ conversation?.groupProfile?.groupID }}</span>
+          <span>{{ conversation.groupID }}</span>
           <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
         </div>
       </div>
@@ -67,42 +69,77 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群类型</span>
         <span class="font-14" style="color: var(--secondary-text);">
-          {{ $t(`TUIChat.manage.${typeName[conversation.groupProfile.type]}`) }}
+          {{ $t(`TUIChat.manage.${typeName[conversation.type]}`) }}
         </span>
       </div>
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
         <span class="font-14" style="color: var(--secondary-text);">
-          {{  $t(`TUIChat.manage.${typeName[conversation.groupProfile.joinOption]}`)  }}
+          {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
         </span>
       </div>
     </div>
+     
+    <template v-if="conversation?.selfInfo?.role === 'Owner'">
+      <div class="flex items-center justify-between">
+         <div class="flex  rounded-lg pointer  active-button items-center justify-center" 
+          style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);"
+          @click="changeOwner('change')"
+         >
+          转让群聊
+        </div>
+        <div  class="flex  rounded-lg pointer active-button items-center justify-center" 
+         style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
+         @click="dismiss"
+        >
+          解散群聊
+        </div>
+      </div>
+    </template>
 
-    <div class="flex justify-between">
-      <div class="flex  rounded-lg pointer  active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);">
-        转让群聊
+    <template v-else>
+      <div class="flex items-center justify-center">    
+        <div class="flex  rounded-lg pointer active-button items-center justify-center" 
+          style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
+          @click="exitGroupChat"
+        >
+          退出群聊
+        </div>
       </div>
-      <div class="flex  rounded-lg pointer active-button items-center justify-center" style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);">
-        解散群聊
-      </div>
-    </div>
+       
+    </template>
+
+    
 
   </div>
+
+ <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
+    <UserSelect :type="type" :list="memberList" :groupID="conversation.groupID" :server="groupServer" @close="isChangeOwner = false"></UserSelect>
+ </ChangeModal>
 
 </template>
 
 <script>
 import { defineComponent, watchEffect, reactive, toRefs, computed, watch, ref, onMounted } from 'vue';
 import useClipboard from 'vue-clipboard3';
+import { message,Modal } from 'ant-design-vue'
+import ChangeModal from '../../../../../components/Modal.vue';
+import UserSelect from '../../../components/userselect/index.vue'
 
 const manage = defineComponent({
   props:{
     conversation: {
       type: Object,
       default: () => ({}),
+    },
+    memberList:{
+      type: Array,
+      default: () => ([]),
     }
   },
+
+  components:{ ChangeModal,UserSelect },
 
   setup(props,ctx){
     const types = manage.TUIServer.TUICore.TIM.TYPES;
@@ -110,7 +147,6 @@ const manage = defineComponent({
     const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
     
     const data = reactive({
-      memberList:[],   // 获取成员数据列表
       typeName: {
         [types.GRP_WORK]: '好友工作群',
         [types.GRP_PUBLIC]: '陌生人社交群',
@@ -120,56 +156,124 @@ const manage = defineComponent({
         [types.JOIN_OPTIONS_NEED_PERMISSION]: '需要验证',
         [types.JOIN_OPTIONS_DISABLE_APPLY]: '禁止加群',
       },
+      isChangeOwner:false,
+      type:'',  // 转让群聊点击按钮类型
+      groupServer:GroupServer
     })
-   
-    const options = {
-      groupID:props.conversation?.groupProfile?.groupID,  // 群组id
-      count: 500,  // 
-      offset: 0
-    }
 
-    const getMember = async () =>{  // 获取群组成员列表
-      const res = await GroupServer.getGroupMemberList(options)
-      data.memberList = res.data.memberList
-    }
-   
-  
     const handleGroupIDCopy = async () => {  // 复制群组id 
       const { toClipboard } = useClipboard();
-      await toClipboard(data?.list.groupID);
+      const res = await toClipboard(props.conversation.groupID);
+      if(res.text !== ""){
+        message.success('群聊ID成功复制');
+      }
     }
 
     const enterGroupManage = () =>{  // 进入群管理详情界面  
-      ctx.emit('updateName',{title:'群管理',id:4,})
+      ctx.emit('updateName',{title:'群管理',id:4,
+       info:{
+        groupID:props.conversation.groupID,
+        role:props.conversation.selfInfo.role,
+        list:props.memberList,
+        conversation:props.conversation
+       }
+      })
     }
 
     const enterUpdateGroupName = () =>{  // 进入群管理名称编辑界面
+      
       ctx.emit('updateName',
-      {
-        title:'群信息',id:1,
-        info:{
-          avatar:props.conversation?.groupProfile?.avatar,
-          groupName:props.conversation?.groupProfile?.name,
-          groupID:props.conversation?.groupProfile?.groupID
-        },
-      }
+        {
+         title:'群信息',id:1,
+         info:{
+          avatar:props.conversation.avatar,
+          groupName:props.conversation.name,
+          groupID:props.conversation.groupID,
+          role:props.conversation.selfInfo.role
+         },
+        }
       )
+
     }
 
     const enterGroupMemeber = () =>{  // 进入群成员管理界面
-      ctx.emit('updateName',{title:'群成员',id:3})
+      ctx.emit('updateName',{title:'群成员',id:3,info:{
+        groupID:props.conversation.groupID,
+        role:props.conversation.selfInfo.role,
+        memberList:props.memberList
+      }})
     }
 
     const enterGroupNotice = () =>{  // 进入群公告界面 
-      ctx.emit('updateName',{title:'群公告',id:2})
+      
+      ctx.emit('updateName',
+       {
+        title:'群公告',id:2,
+        info:{
+          groupID:props.conversation.groupID,
+          notification:props.conversation.notification,
+          role:props.conversation.selfInfo.role
+        }
+       }
+      )
+
     }
 
-    onMounted(getMember)
+
+    const exitGroupChat = () =>{  // 退出群聊
+      Modal.confirm({
+        content: '确定退出该群聊吗',
+        okText: '确认',
+        cancelText: '取消',
+        onOk (){
+          quit()
+          ctx.emit('close')
+        }
+      })
+    }
+
+    const quit = async () =>{
+      await GroupServer.TUICore.tim.quitGroup(`${props.conversation.groupID}`)
+      manage.TUIServer.store.conversation = {};
+    }
+
+ 
+    const deleteMember = () => {  // 删除群组成员
+      
+    }
+
+    const dismiss = async () =>{  // 解散群聊
+      await GroupServer.dismissGroup(props.conversation.groupID);
+      manage.TUIServer.store.conversation = {};
+      (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
+      ctx.emit('close')
+    }
+
+    const changeOwner = (type) =>{  // 转让群聊
+      data.isChangeOwner = true
+      data.type = type
+    }
+
+    
+
+
+
+
+    // const changeOwner = async (userID) => {  // 转让群聊
+      // const options = {
+      //   groupID: data.conversation.groupProfile.groupID,
+      //   newOwnerID: userID,
+      // };
+    //   // const imResponse = await GroupServer.changeGroupOwner(options);
+    //   // data.conversation.groupProfile = {};
+    //   // data.conversation.groupProfile = imResponse.data.group;
+    // }
 
     return{
-      ...toRefs(data),getMember,handleGroupIDCopy,
+      ...toRefs(data),handleGroupIDCopy,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
-      enterGroupNotice
+      enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
+      dismiss,
     }
   }
 
