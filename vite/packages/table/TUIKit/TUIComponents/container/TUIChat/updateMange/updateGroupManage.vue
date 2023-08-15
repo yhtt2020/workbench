@@ -61,7 +61,7 @@
   </div>
 
   <Modal v-if="isMemeberShow" v-model:visible="isMemeberShow" :blurFlag="true">
-    <UserSelect :list="type === 'addAdmin' ? addList : type === 'delAdmin' ?  userList  : type === 'addmute' ?  addList : clearMute  "
+    <UserSelect :list="type === 'addAdmin' ? addList : type === 'delAdmin' ?  userList  : type === 'addMuteUser' ?  addList : clearMute  "
     :type="type" :groupID="groupManageInfo.groupID" 
     :server="server" @close="close"  @closeUser="isMemeberShow = false"
     >
