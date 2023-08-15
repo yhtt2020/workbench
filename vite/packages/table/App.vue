@@ -53,7 +53,7 @@
   <Modal style="z-index:999" v-model:visible="userCardVisible" v-if="userCardVisible" animationName="b-t"
          :blurFlag="true">
     <slot>
-      <UserCard :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
+      <UserCard :key="userCardUid" :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
     </slot>
   </Modal>
   <Modal v-model:visible="frameStoreVisible" v-if="frameStoreVisible" animationName="b-t"

@@ -22,6 +22,26 @@
         </div>
 
       </div>
+      <div>
+        <a-dropdown overlayClassName="xt-text " overlayStyle="background:var(--primary-bg-solid)">
+          <div class="xt-text p-3 cursor-pointer">
+            <icon icon="gengduo2"></icon>
+          </div>
+
+          <template #overlay>
+            <a-menu style="background: none"  @click="handleMenuClick">
+              <a-menu-item class="xt-text" v-show="inBlackList!=='unload'" v-if="inBlackList==='not'" @click="addToBlacklist" key="1">
+                <icon style="font-size: 16px" class="mr-1" icon="chengyuan"></icon>
+                拉黑
+              </a-menu-item>
+              <a-menu-item class="xt-text" v-show="inBlackList!=='unload'" v-if="inBlackList==='yes'" @click="removeFromBlacklist">
+                <icon style="font-size: 16px" class="mr-1" icon="chengyuan"></icon>
+                取消拉黑
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </div>
     </div>
     <div class="flex flex-col mb-4">
       <div class="bg-mask rounded-lg py-3 px-2 m-3 mx-5 mt-2 mb-2 "
@@ -45,37 +65,34 @@
       </div>
     </div>
     <div class="px-5" v-if="uid!==myUserInfo.uid" v-show="relationship!=='unload'">
-      <a-row :gutter="12" v-if="relationship!=='unknown'" >
+      <a-row :gutter="12" v-if="relationship!=='unknown'">
         <a-col :span="12">
-          <XtButton @click="addFriend" v-if="relationship==='not'" type="theme" style="width: 100%" class="rounded-full w-full">
+          <XtButton @click="addFriend" v-if="relationship==='not'"  style="width: 100%"
+                    class="rounded-full w-full">
             <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
             加为好友
           </XtButton>
-          <XtButton @click="deleteFriend" v-else-if="relationship==='yes'" type="theme" style="width: 100%" class="rounded-full w-full">
+          <XtButton @click="deleteFriend" v-else-if="relationship==='yes'" style="width: 100%"
+                    class="rounded-full w-full">
             <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
             解除好友
           </XtButton>
         </a-col>
-        <a-col v-show="inBlackList!=='unload'" :span="12">
-          <XtButton v-if="inBlackList==='not'" style="width: 100%" @click="addToBlacklist" type="default">
-            <icon style="font-size: 16px" class="mr-1" icon="chengyuan"></icon>
-            拉黑
-          </XtButton>
-          <XtButton v-if="inBlackList==='yes'" style="width: 100%" @click="removeFromBlacklist" type="default">
-            <icon style="font-size: 16px" class="mr-1" icon="chengyuan"></icon>
-            取消拉黑
-          </XtButton>
+
+        <a-col  :span="12">
+          <XtButton @click="sendMessage" :type="relationship==='yes'?'theme':'default'" style="width:100%">发消息</XtButton>
         </a-col>
       </a-row>
       <div class="text-center" v-else>
-       <icon icon="tishi-xianxing"></icon> 对方未登录过组织，无法使用好友功能
+        <icon icon="tishi-xianxing"></icon>
+        对方未登录过组织，无法使用好友功能
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'pinia'
+import { mapActions, mapState, mapWritableState } from 'pinia'
 import { teamStore } from '../../store/team'
 import Medal from '../team/Medal.vue'
 import OnlineMedal from '../team/OnlineMedal.vue'
@@ -98,8 +115,8 @@ export default {
       medals: [],
       key: Date.now(),
       userCardUserInfo: {},
-      relationship:'unload',
-      inBlackList:'unload',
+      relationship: 'unload',
+      inBlackList: 'unload',
     }
   },
   watch: {
@@ -116,8 +133,9 @@ export default {
   },
   computed: {
     ...mapState(appStore, {
-      'myUserInfo': 'userInfo'
+      'myUserInfo': 'userInfo',
     }),
+    ...mapWritableState(appStore,['userCardVisible']),
     displayUserInfo () {
       if (this.userCardUserInfo) {
         return {
@@ -163,92 +181,107 @@ export default {
       this.checkFriendship()
       this.checkBlacklist()
     },
-    addToBlacklist(){
-      let promise = window.$chat.addToBlacklist({userIDList: [String(this.uid)]}); // 请注意：即使只添加一个用户账号到黑名单，也需要用数组类型，例如：userIDList: ['user1']
-      promise.then((imResponse)=> {
-        if(imResponse.data.includes(String(this.uid))){
-          this.inBlackList='yes'
-          this.relationship='not'
+    addToBlacklist () {
+      let promise = window.$chat.addToBlacklist({ userIDList: [String(this.uid)] }) // 请注意：即使只添加一个用户账号到黑名单，也需要用数组类型，例如：userIDList: ['user1']
+      promise.then((imResponse) => {
+        if (imResponse.data.includes(String(this.uid))) {
+          this.inBlackList = 'yes'
+          this.relationship = 'not'
           message.success('拉黑成功。')
         }
-      }).catch(function(imError) {
-        message.error('拉黑意外失败。',imError)
-      });
+      }).catch(function (imError) {
+        message.error('拉黑意外失败。', imError)
+      })
     },
-    removeFromBlacklist(){
-      let promise = $chat.removeFromBlacklist({userIDList: [String(this.uid)]}); // 请注意：即使只从黑名单中移除一个用户账号，也需要用数组类型，例如：userIDList: ['user1']
-      promise.then((imResponse)=> {
+    removeFromBlacklist () {
+      let promise = $chat.removeFromBlacklist({ userIDList: [String(this.uid)] }) // 请注意：即使只从黑名单中移除一个用户账号，也需要用数组类型，例如：userIDList: ['user1']
+      promise.then((imResponse) => {
         message.success('取消拉黑成功。')
-        this.inBlackList='not'
-      }).catch(function(imError) {
+        this.inBlackList = 'not'
+      }).catch(function (imError) {
         message.error('取消拉黑失败。')
-      });
+      })
     },
-    addFriend(){
-      if(this.inBlackList==='yes'){
+    addFriend () {
+      if (this.inBlackList === 'yes') {
         message.error('必须先解除黑名单才可加为好友。')
         return
       }
-      let promise= window.$chat.addFriend({
-        to:String(this.uid),
-        source:'AddSource_Type_UserCard',
-        remark:'通过好友列表添加',
-        wording:'加为好友',
+      let promise = window.$chat.addFriend({
+        to: String(this.uid),
+        source: 'AddSource_Type_UserCard',
+        remark: '通过好友列表添加',
+        wording: '加为好友',
         type: TencentCloudChat.TYPES.SNS_ADD_TYPE_BOTH
       })
-      promise.then((imResponse)=>{
-        const {code}=imResponse.data
+      promise.then((imResponse) => {
+        const { code } = imResponse.data
         if (code === 30539) {
           message.info('申请加为好友成功，等待对方通过。')
         } else if (code === 0) {
           message.success('添加好友成功。')
-          this.relationship='yes'
+          this.relationship = 'yes'
         }
-      }).catch((imError)=>{
+      }).catch((imError) => {
         message.error('添加好友失败。')
       })
     },
-    deleteFriend(){
-      let promise= window.$chat.deleteFriend({
+    deleteFriend () {
+      let promise = window.$chat.deleteFriend({
         userIDList: [String(this.uid)],
         type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH
       })
-      promise.then((imResponse)=> {
-        const { successUserIDList, failureUserIDList } = imResponse.data;
+      promise.then((imResponse) => {
+        const { successUserIDList, failureUserIDList } = imResponse.data
         // 删除成功的 userIDList
         successUserIDList.forEach((item) => {
-          const { userID } = item;
-          if(userID===String(this.uid)){
+          const { userID } = item
+          if (userID === String(this.uid)) {
             message.success('删除好友成功。')
-            this.relationship='not'
+            this.relationship = 'not'
           }
-        });
+        })
         // 删除失败的 userIDList
         failureUserIDList.forEach((item) => {
-          const { userID, code, message } = item;
-          if(userID===String(this.uid)){
+          const { userID, code, message } = item
+          if (userID === String(this.uid)) {
             message.error('删除好友失败。')
           }
-        });
+        })
         // 如果好友列表有变化，则 SDK 会触发 TencentCloudChat.EVENT.FRIEND_LIST_UPDATED 事件
-      }).catch(function(imError) {
-        message.error('删除好友意外失败。',imError)
-      });
+      }).catch(function (imError) {
+        message.error('删除好友意外失败。', imError)
+      })
     },
-    async checkBlacklist(){
-      let promise = $chat.getBlacklist();
-      promise.then((imResponse)=> {
-        if(imResponse.data.includes(String(this.uid))){
-          this.inBlackList='yes'
-        }else{
-          this.inBlackList='not'
+    async checkBlacklist () {
+      let promise = $chat.getBlacklist()
+      promise.then((imResponse) => {
+        if (imResponse.data.includes(String(this.uid))) {
+          this.inBlackList = 'yes'
+        } else {
+          this.inBlackList = 'not'
         }
-      }).catch((imError)=> {
-        this.inBlackList='not'
-        console.warn('getBlacklist error:', imError); // 获取黑名单列表失败的相关信息
-      });
+      }).catch((imError) => {
+        this.inBlackList = 'not'
+        console.warn('getBlacklist error:', imError) // 获取黑名单列表失败的相关信息
+      })
     },
-    async checkFriendship(){
+    sendMessage(){
+      if(this.inBlackList==='yes' || this.relationship!=='yes'){
+        message.error('非好友无法发起对话，请先加对方为好友。')
+      }else{
+        this.userCardVisible=false
+        this.$router.push({
+          name:'chat',
+          params:{
+            action:'sendMessage',
+            uid:String(this.uid)
+          }
+
+        })
+      }
+    },
+    async checkFriendship () {
       if (this.uid !== this.myUserInfo.uid) {
         //不是本人，则需要验证好友关系
         console.log('需要检查')
@@ -262,16 +295,16 @@ export default {
           let item = successUserIDList[0]
           const { userID, code, relation } = item
           if (userID === '@TLS#NOT_FOUND') {
-            this.relationship= 'unknown'
-          }else{
+            this.relationship = 'unknown'
+          } else {
             if (relation === TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION) {
-              this.relationship= 'not'
+              this.relationship = 'not'
             } else {
-              this.relationship= 'yes'
+              this.relationship = 'yes'
             }
           }
         } catch (e) {
-          return this.relationship='unknown'
+          return this.relationship = 'unknown'
         }
       }
     },
