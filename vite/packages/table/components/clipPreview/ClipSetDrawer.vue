@@ -3,12 +3,12 @@
   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
     <div class="flex items-center justify-between mb-6">
       <div class="flex flex-col">
-        <span class="mb-2 primary-title">剪贴板</span>
-        <span class="secondary-title">关闭后将停止读取剪贴板内容</span>
+        <span class="mb-2 primary-title">剪切板</span>
+        <span class="secondary-title">关闭后将停止读取剪切板内容</span>
       </div>
       <a-switch v-model:checked="enable"/>
     </div>
-    <span class="primary-title">打开剪贴板应用快捷键</span>
+    <span class="primary-title">打开剪切板应用快捷键</span>
     <div class="flex items-center my-6">
       <div class="button-bg px-3 py-2.5 rounded-lg mr-3" style="width: 50%; border: 1px solid var(--divider);">
         <span>{{ instruct }}</span>
@@ -23,7 +23,7 @@
     <span class="primary-title">历史记录容量</span>
     <HorizontalPanel class="mt-6"  :navList="historyCapacity" v-model:selectType="defaultCapacity" ></HorizontalPanel>
     <div class="w-full flex items-center button-active pointer justify-center rounded-lg py-3 button-bg my-6">
-      <span>清除剪贴板记录</span>
+      <span>清除剪切板记录</span>
     </div>
     <div class="flex my-6 justify-between">
       <div class="flex flex-col">
@@ -66,11 +66,11 @@
   </a-drawer>
 
   <!-- 主题色模块 -->
-  <HorizontalDrawer :rightSelect="themeType" ref="themeRef" 
+  <HorizontalDrawer :rightSelect="themeType" ref="themeRef"
    v-model:selectRegion="clipTheme"  @getArea="getTheme"
   >
   </HorizontalDrawer>
-  
+
   <!-- 语言包选择 -->
   <HorizontalDrawer :rightSelect="codeLanguage" v-model:selectRegion="clipMode" ref="languageRef" @getArea="getLanguage"></HorizontalDrawer>
 </template>
@@ -168,8 +168,8 @@ export default {
       handler(newVal, oldVal){
         // console.log('剪切板开关',newVal)
         if (newVal) {
-          this.prepare()
-          this.start()
+          // this.prepare()
+          // this.start()
         }else{
           if (this.clipboardObserver) {
             if (this.isRunning()) {
@@ -202,7 +202,7 @@ export default {
   color: var(--secondary-text);
   font-weight: 500;
 }
-.primary-title{ // 主要标题 
+.primary-title{ // 主要标题
   font-family: PingFangSC-Medium;
   font-size: 16px;
   color: var(--primary-text);

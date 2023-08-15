@@ -1,14 +1,18 @@
 .ant-drawer-mask {
   z-index: 9999999;
 }
-.ant-message{
-  z-index: 09999999999999999999!important;
-}
-.ant-drawer-content-wrapper,.ant-drawer-right  {
+.ant-drawer-content-wrapper,
+.ant-drawer-right {
   z-index: 999999999;
-
 }
+.ant-modal-title,
+.ant-modal-body {
+  color: var(--primary-text);
+}
+
 .ant-drawer-header,
+.ant-modal-header,
+.ant-modal-footer,
 .ant-drawer-wrapper-body {
   background: var(--modal-bg);
   color: var(--primary-text);
@@ -43,12 +47,13 @@
 .ant-modal-body {
   background: var(--modal-bg);
 }
-.ant-btn-primary,.ant-btn-primary:hover, .ant-btn-primary:focus{
+.ant-btn-primary,
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
   border-color: transparent !important;
   background: var(--active-bg);
-
 }
-.ant-btn-primary:hover{
+.ant-btn-primary:hover {
   opacity: 0.8;
 }
 

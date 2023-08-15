@@ -52,7 +52,6 @@
 import Market from '../../../components/card/remote/Market.vue'
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import { mapActions, mapWritableState } from "pinia";
-import State from "../../../components/card/components/state/index.vue"
 import RemoteShare from '../../../components/card/remote/RemoteShare.vue'
 import { cardStore } from '../../../store/card';
 import {shareList} from '../../../components/card/remote/testData'
@@ -63,7 +62,6 @@ import { message } from "ant-design-vue";
     components: {
       HorizontalPanel,
       Market,
-      State,
       RemoteShare,
       Modal
     },
@@ -116,14 +114,14 @@ import { message } from "ant-design-vue";
       addNewCard(card) {
         let size = card.sizes[0].split('x')
         this.addCard(
-          { 
-            name: card.option[0].name, 
-            id: Date.now(), 
+          {
+            name: card.option[0].name,
+            id: Date.now(),
             customData: {
               url:card.url,
               width: (parseInt(size[0]) / 2),
               height:(parseInt(size[1]) / 2)
-            } 
+            }
           },
           this.desk
         );

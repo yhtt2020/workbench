@@ -435,7 +435,7 @@ export default {
         },
         {
           icon: '/img/game.png',
-          name: '剪贴板（正在开发中）',
+          name: '剪切板（正在开发中）',
           summary: '',
           needInstall: false,
           data: {
@@ -606,7 +606,7 @@ export default {
   &:hover{
     color:var(--primary-text);
     background: var(--active-secondary-bg);
-  
+
   }
 }
 

@@ -46,11 +46,13 @@
             <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
               <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
           </a-button>
-          <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
+          <div disabled v-else class="mr-3 avatar-font flex items-center justify-center  m-3" style="height:44px;width: 100%;border: 1px solid var(--divider);color: var(--primary-text);">
+            已有 
+          </div>
+          <!-- <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
             已有 <span class=" ml-2">￥ {{ getFramePrice(item).price }}</span> <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
-          </template>
-
-          </a-button>
+            </template>
+          </a-button> -->
           <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
                     @click="scorePay(item)" v-if="getFrameScore(item)" style="color: var(--active-text);height: 44px;"
 

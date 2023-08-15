@@ -1,10 +1,10 @@
 <template>
-  <Title>
+  <XtTitle>
     图标背景
     <template #right>
       <a-switch v-model:checked="edit.isBackground"></a-switch>
     </template>
-  </Title>
+  </XtTitle>
   <XtColor v-if="edit.isBackground" v-model:color="edit.backgroundColor"></XtColor>
 </template>
 

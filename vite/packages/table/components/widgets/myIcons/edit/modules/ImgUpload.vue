@@ -1,5 +1,5 @@
 <template>
-  <Title> 图标 </Title>
+  <XtTitle> 图标 </XtTitle>
   <div class="relative items-center">
     <a-upload
       name="avatar"

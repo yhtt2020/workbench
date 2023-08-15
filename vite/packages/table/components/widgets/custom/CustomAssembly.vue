@@ -91,7 +91,7 @@
       style="height: calc(100% - 10px)"
     >
       <!-- <div class="text-base ">小组件尺寸</div> -->
-    <Radio :list="sizeList" v-model:data="mySize.className" value="className" ></Radio>
+    <XtRadio :list="sizeList" v-model:data="mySize.className" value="className" ></XtRadio>
 
     <!-- this.mySize.className; -->
     <!-- // 旧版本逻辑 -->
@@ -292,8 +292,6 @@
 
 
 <script>
-import Radio from '../../card/components/radio/index.vue';
-
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
 import Classification from "../../comp/Classification.vue";
@@ -316,7 +314,6 @@ export default {
     Classification,
     listItem,
     ModalList,
-    Radio
   },
   props: {
     customIndex: {

@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import Radio from "../../../../components/card/components/radio/index.vue";
 import { getSelect } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
 import cache from "../../../../components/card/hooks/cache";
@@ -37,7 +36,6 @@ import { scrollable } from "../hooks/scrollable";
 export default {
   inject: ["height"],
   mixins: [syncSelected],
-  components: { Radio },
   props: {
     type: {},
   },

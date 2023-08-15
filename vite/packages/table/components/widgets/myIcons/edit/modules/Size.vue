@@ -1,18 +1,14 @@
 <template>
-  <Title> 图标大小 </Title>
-  <Radio v-model:data="edit.size" :list="sizeList" text=""></Radio>
+  <XtTitle> 图标大小 </XtTitle>
+  <XtRadio v-model:data="edit.size" :list="sizeList" text=""></XtRadio>
 </template>
 
 <script>
-import Radio from "../../../../card/components/radio/index.vue";
 import { sizeList } from "../hooks/config";
 
 import editMixins from "../hooks/mixins";
 export default {
   mixins: [editMixins],
-  components: {
-    Radio,
-  },
   data() {
     return { sizeList };
   },

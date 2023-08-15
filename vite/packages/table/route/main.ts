@@ -72,7 +72,7 @@ import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
-/**聊天团队模式结束**/ 
+/**聊天团队模式结束**/
 
 export default [
   {
@@ -212,7 +212,7 @@ export default [
             name: 'contact',
             component: Contact,
           },
-          
+
         ]
       },
 

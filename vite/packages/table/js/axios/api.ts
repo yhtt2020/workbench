@@ -110,6 +110,9 @@ export const cacheRequest = async (url, params,cacheOptions={}) => {
   return await  serverCache.get(url,{cache:true,ttl:60*60*12,...cacheOptions},{params})
 
 };
+export const quickRequest = async (url, params,cacheOptions={}) => {
+  return await  serverCache.get(url,{cache:true,ttl:60*10,...cacheOptions},{params})
+};
 
 // 判断时间是否大于12h
 export function compareTime(date) {

@@ -1,5 +1,5 @@
 <template>
-  <Title> 链接/快捷方式 </Title>
+  <XtTitle> 链接/快捷方式 </XtTitle>
   <div class="flex justify-between" v-if="edit.link == ''">
     <div
       class="xt-btn xt-text xt-hover h-12"
@@ -41,8 +41,8 @@
         </div>
       </template>
     </a-input>
-    <Title> 浏览器打开方式 </Title>
-    <Radio :list="linkList" v-model:data="edit.open.type" text=""></Radio>
+    <XtTitle> 浏览器打开方式 </XtTitle>
+    <XtRadio :list="linkList" v-model:data="edit.open.type" text=""></XtRadio>
   </template>
   <!-- 快捷和应用 -->
   <template v-else>
@@ -80,7 +80,6 @@
 
 <script>
 import FastNav from "../components/FastNav.vue";
-import Radio from "../../../../card/components/radio/index.vue";
 import { linkList } from "../hooks/config";
 import { getHostAddress } from "../hooks/getHostAddress";
 import editMixins from "../hooks/mixins";
@@ -91,7 +90,6 @@ export default {
   mixins: [editMixins],
   components: {
     FastNav,
-    Radio,
   },
   data() {
     return {

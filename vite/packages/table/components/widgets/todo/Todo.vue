@@ -14,8 +14,7 @@
       <div @click="todoPage" class="pointer"    style="position: absolute;left: 12px;top:12px;">
         <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon>
       </div>
-      <div class="xt-bg-2 rounded-lg px-3 py-1 pointer" @click.stop="showDrawer"
-        style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ selectTodo.title }}
+      <div class="head-title" @click.stop="showDrawer">{{ selectTodo.title }}
       </div>
       <div  @click.stop style="cursor: auto;height:calc( 100% - 30px)" class="mt-2"  >
         <Tasklist  class="content-box " :data="notFinish" ></Tasklist>
@@ -71,7 +70,7 @@ export default {
 
       // options: {className: 'card small',title: '',icon: 'check-square',type: 'todo'},
       options: {className: 'card small',title: '',type: 'todo'},
-      sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'}],
+      sizeList:[{title:'2x2',height:1,width:1,name:'1x1'},{title:'2x4',height:2,width:1,name:'1x2'}],
       openSettings: false,
       toggleTodoList:[ { icon: 'shezhi1', title: '设置', fn: () => {this.openSettings = true;this.$refs.todoSlot.visible = false } } ],
       todoType: [
@@ -161,5 +160,17 @@ export default {
   letter-spacing: 0;
   font-weight: 500;
   margin: 12px 0  24px;
+}
+.head-title{
+  position: absolute;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  left: 45px;
+  top:12px;
+  background: rgba(255,255,255, 0.1);
+  color:var(--primary-text);
 }
 </style>
