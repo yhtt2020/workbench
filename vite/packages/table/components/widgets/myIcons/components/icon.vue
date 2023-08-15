@@ -1,15 +1,15 @@
 <template>
+  <!-- 单图标已经承载很多内容了 需要安排时间抽离 -->
   <div class="cursor-pointer rounded-xl xt-hover" :data-index="index">
     <div
       class="xt-text no-drag flex items-center justify-center rounded-xl"
       :style="[iconSize, backgroundState]"
-      style="border: 0px solid red !important"
       @click="iconClick($event)"
       :data-index="index"
     >
       <!-- src="../../../../../../temporaryIcon/my_image.png" -->
       <img
-        v-if="src.length > 0"
+        v-if="src && src.length > 0"
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
@@ -150,6 +150,7 @@ export default {
       };
 
       let { w, h } = sizeValues[size];
+
       let imgW = sizeValues[size][this.imgShape].imgW;
       let imgH = sizeValues[size][this.imgShape].imgH;
       h = this.isTitle ? h - 20 : h;

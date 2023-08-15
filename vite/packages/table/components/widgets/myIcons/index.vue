@@ -1,7 +1,12 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-  <div ref="iconRef" class="icon-box box-border xt-hover" :style="dragStyle">
+  <div
+    ref="iconRef"
+    class="icon-box box-border"
+    :style="dragStyle"
+    @contextmenu.stop="handleMenu()"
+  >
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
       <drag-and-follow
@@ -17,15 +22,21 @@
           "
         >
           <div>
+            {{ customData.size.w }}
+            {{ customData.size.h }}
             <icons
+              v-model:width="customData.size.w"
+              v-model:height="customData.size.h"
               :groupTitle="customData.groupTitle"
               :iconList="customData.iconList"
+              :zoom="customData.zoom"
               @custom-event="handleCustomEvent"
               @disbandGroup="disbandGroup"
               @updateGroupTitle="updateGroupTitle"
               @deleteIcons="deleteIcons"
               @editIcons="editIcons"
               @dragAddIcon="dragAddIcon"
+              @iconsRightClick="handleMenu()"
             ></icons>
           </div>
         </template>
@@ -59,17 +70,22 @@
   <!-- 内容编辑 -->
   <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit>
+  <!-- 多图标设置 -->
+  <XtDrawer v-model:data="iconsSetVisible" placement="right">
+    <div class="xt-bg-2 p-4 rounded-xl">
+      <div class="flex justify-between mb-2">
+        <div>放大模式</div>
+        <a-switch v-model:checked="customData.zoom.state" />
+      </div>
+      <div class="xt-text-2 text-sm">
+        该模式下可以自由拖动文件夹大小，直接点击打开文件夹内的应用或连接。
+      </div>
+    </div>
+  </XtDrawer>
   <!-- 底部导航 -->
-  <a-drawer
-    v-if="menuVisible"
-    :width="500"
-    :height="198"
-    placement="bottom"
-    v-model:visible="menuVisible"
-    style="z-index: 99999999"
-  >
+  <XtDrawer v-model:data="menuVisible">
     <BottomEdit :menuList="menuList"></BottomEdit>
-  </a-drawer>
+  </XtDrawer>
 </template>
 <script>
 // components
@@ -112,36 +128,59 @@ export default {
   },
   data() {
     return {
+      checked: false,
       iconObj: "",
       menuVisible: false,
       index: 0, // 图标数组的下标
       dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
       isSelect: false,
       settingVisible: false, // 编辑状态
+      iconsSetVisible: false,
       options: { hide: true }, // 卡片核心配置
     };
   },
-  mounted() {
-    // console.log("this.customData :>> ", this.customData.iconList[0].src);
-    // console.log("window.globalArgs :>> ", window.globalArgs);
-
+  beforeMount() {
     // 是否需要初始化
+    let state = false;
+    let setData = {};
     if (this.customData.groupTitle == undefined) {
-      let setData = {};
+      state = true;
       setData.groupTitle = "分组"; // 初始化分组名称
-      this.updateCustomData(this.customIndex, setData, this.desk);
+    }
+    if (this.customData.zoom == undefined) {
+      state = true;
+      setData.zoom = {
+        state: false,
+        value: "",
+      };
+    }
+    if (this.customData.size == undefined) {
+      state = true;
+      setData.size = {
+        w: "100%",
+        h: "100%",
+      };
     }
 
+    if (state) {
+      this.updateCustomData(this.customIndex, setData, this.desk);
+    }
+  },
+  mounted() {
+    // console.log("this.customData :>> ", this.customData.iconList[0].src);
+    console.log("this.customData :>> ", this.customData);
+    // console.log("window.globalArgs :>> ", window.globalArgs);
+
     // 绑定右键事件
-    this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
-      capture: true,
-    });
+    // this.$refs.iconRef.addEventListener("contextmenu", this.handleMenu, {
+    //   capture: true,
+    // });
   },
   beforeDestroy() {
     // 取消右键事件
-    this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, {
-      capture: true,
-    });
+    // this.$refs.iconRef.removeEventListener("contextmenu", this.handleMenu, {
+    //   capture: true,
+    // });
   },
   provide() {
     return {
@@ -171,19 +210,6 @@ export default {
         };
       } else return {};
     },
-    // 动态计算卡片大小
-    reSize() {
-      return {
-        width:
-          (this.customData.width || 1) * this.WIDTH +
-          (this.customData.width - 1) * 10 +
-          "px",
-        height:
-          (this.customData.height || 2) * this.HEIGHT +
-          (this.customData.height - 1) * 10 +
-          "px",
-      };
-    },
     // 右键菜单
     menuList() {
       let menus = [
@@ -198,7 +224,11 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.openEdit();
+            if (this.customData.iconList.length > 1) {
+              this.openIconsSet();
+            } else {
+              this.openEdit();
+            }
           },
         },
         {
@@ -238,13 +268,13 @@ export default {
           },
         });
 
-        // 查找"设置"菜单项的索引
-        const settingIndex = menus.findIndex((menu) => menu.title === "设置");
+        // // 查找"设置"菜单项的索引
+        // const settingIndex = menus.findIndex((menu) => menu.title === "设置");
 
-        // 删除"设置"菜单项
-        if (settingIndex !== -1) {
-          menus.splice(settingIndex, 1);
-        }
+        // // 删除"设置"菜单项
+        // if (settingIndex !== -1) {
+        //   menus.splice(settingIndex, 1);
+        // }
       }
       return menus;
     },
@@ -259,6 +289,10 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    openIconsSet() {
+      this.iconsSetVisible = true;
+      this.menuVisible = false;
+    },
     openEdit() {
       let icon = this.customData.iconList[this.index];
       this.edit = {};
@@ -266,7 +300,6 @@ export default {
         this.edit[k] = icon[k] || this.iconOption[k];
       });
       this.menuVisible = false;
-      // this.index = 0;
       this.settingVisible = true;
     },
     // 开启框选
@@ -431,8 +464,9 @@ export default {
     },
     // 右键菜单绑定
     handleMenu(e) {
-      e.preventDefault();
-      e.stopPropagation();
+      console.log("22222 :>> ", 22222);
+      // e.preventDefault();
+      // e.stopPropagation();
       this.menuVisible = true;
     },
     // 保存图标
