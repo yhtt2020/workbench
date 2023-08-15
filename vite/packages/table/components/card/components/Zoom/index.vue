@@ -114,22 +114,18 @@ export default {
 }
 </style>
 <template>
-  <div
-    class="relative no-drag"
-    ref="boxRef"
-    :style="{ width: w, height: h }"
-    style="border: 1px solid red"
-  >
+  <div class="relative no-drag" ref="boxRef" :style="{ width: w, height: h }">
     <slot></slot>
     <svg
       @mousedown.stop
       t="1684744355055"
       ref="dragRef"
-      class="icon drag-boxs absolute bottom-0 right-0 no-drag"
+      class="icon drag-boxs absolute no-drag"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="10063"
+      style="bottom: 4px; right: 4px"
     >
       <path
         d="M469.333333 256a85.333333 85.333333 0 1 1-85.333333-85.333333 85.333333 85.333333 0 0 1 85.333333 85.333333z m-85.333333 170.666667a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m256-341.333334a85.333333 85.333333 0 1 0-85.333333-85.333333 85.333333 85.333333 0 0 0 85.333333 85.333333z m0 85.333334a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z"
@@ -153,7 +149,6 @@ export default {
     },
     h(newV) {
       this.$emit("update:height", newV);
-      console.log('newV :>> ', newV);
     },
   },
   props: {
@@ -170,9 +165,8 @@ export default {
       let height = Math.round(str[1] / 205);
       // this.w = width * 280 + (width - 1) * 10 - 30 + "px";
       // this.h = height * 205 + (height - 1) * 10 - 60 + "px";
-
       this.w = width * 280 + (width - 1) * 10 + "px";
-      this.h = height * 205 + (height - 1) * 10 + "px";
+      this.h = height * 204 + (height - 1) * 10 + "px";
     },
     drag() {
       let that = this;
@@ -195,11 +189,11 @@ export default {
             let y = e.clientY;
             width = x - oldX + w;
             height = h - oldY + y;
-            if (width > 250) that.w = `${width}px`;
-            if (height > 140) that.h = `${height}px`;
+            if (width > 260) that.w = `${width}px`;
+            if (height > 204) that.h = `${height}px`;
+            width = width > 260 ? width : 260;
+            height = height > 204 ? height : 204;
             name = `${width},${height}`;
-            height = height > 140 ? height : 140;
-            width = width > 250 ? width : 250;
             // 与外界同步窗口
             // that.$emit("reSizeInit", `${width},${height}`);
           };
