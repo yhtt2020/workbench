@@ -35,8 +35,8 @@
           <div class="font-12">{{ item.nick }}</div>
         </div>
 
-        <div class="flex" v-if="conversation?.selfInfo?.role === 'Owner'">
-            <!-- {{ conversation.type }} -->
+        <div class="flex" v-if="conversation?.selfInfo?.role === 'Owner' ||  conversation?.selfInfo?.role === 'Admin'">
+          <!-- {{ conversation.type === 'Public' || conversation.type === ''}} -->
           <!-- <div class="flex items-center justify-center active-button rounded-lg" 
           style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;"
          >
@@ -61,7 +61,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群ID</span>
         <div class="flex">
-          <span>{{ conversation.groupID }}</span>
+          <span class="font-14" style="color: var(--secondary-text);">{{ conversation.groupID }}</span>
           <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
         </div>
       </div>

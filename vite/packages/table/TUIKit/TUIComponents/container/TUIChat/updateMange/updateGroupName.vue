@@ -6,8 +6,8 @@
     </div>
   </div>
   
-  <a-input v-model:value="groupRef" :disabled="groupInfo.role !== 'Owner' && groupInfo.role !== 'Admin'" style="color: var(--primary-text);border-radius: 12px !important;"></a-input>
-  <a-button type="primary" v-if="groupInfo.role === 'Owner' && groupInfo.role === 'Admin'" @click="saveGroupName" style="width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</a-button> 
+  <a-input v-model:value="groupRef" :disabled="groupInfo.role !== 'Owner' || groupInfo.role !== 'Admin'" style="color: var(--primary-text);border-radius: 12px !important;"></a-input>
+  <a-button type="primary" v-if="groupInfo.role === 'Owner' || groupInfo.role === 'Admin'" @click="saveGroupName" style="width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</a-button> 
 
  </div>
 </template>
