@@ -11,7 +11,22 @@
     @dragAddIcon="dragAddIcon"
   >
   </IconsFullScreen>
-  <div class="item-list no-drag" @click="fuullScreenClick($event)">
+  <Custom
+    v-if="zoom.state"
+    v-model:width="w"
+    v-model:height="h"
+    :zoom="zoom"
+    :groupTitle="groupTitle"
+    :iconList="iconList"
+    @updateGroupTitle="updateGroupTitle"
+    @iconsRightClick="iconsRightClick"
+    @fullScreenClick="fullScreenClick"
+    @editIcons="editIcons"
+    @deleteIcons="deleteIcons"
+    @updateWidth="updateWidth"
+    @updateHeight="updateHeight"
+  ></Custom>
+  <div v-else class="item-list no-drag" @click="fullScreenClick($event)">
     <div class="item">
       <template v-for="i in 4">
         <img
@@ -46,6 +61,14 @@ export default {
     return {
       isIconsFullScreen: false, // 全屏开关
     };
+  },
+  watch: {
+    w(newV) {
+      this.$emit("update:width", newV);
+    },
+    h(newV) {
+      this.$emit("update:height", newV);
+    },
   },
   methods: {
     fuullScreenClick(event) {

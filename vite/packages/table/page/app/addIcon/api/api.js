@@ -1,7 +1,12 @@
 import service from "./request";
 const homeRecommend = "/app/good/getGoodRecommend"; //首页推荐接口
 const select = "/app/good/app/selectApp";
-const { appModel } = window.$models;
+import isXT from "../../../../components/card/hooks/mode";
+let appModel;
+if (isXT) {
+  const { appModel: model } = window.$models;
+  appModel = model;
+}
 
 // 首页推荐
 export const getRecommend = () => {

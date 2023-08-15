@@ -1,15 +1,17 @@
 <template>
-  <div class="cursor-pointer rounded-xl xt-hover" :data-index="index">
+  <div
+    class="cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around"
+    :data-index="index"
+    @click.stop="iconClick($event)"
+    :style="[iconSize]"
+  >
     <div
-      class="xt-text no-drag flex items-center justify-center rounded-xl"
-      :style="[iconSize, backgroundState]"
-      style="border: 0px solid red !important"
-      @click="iconClick($event)"
+      class="xt-text no-drag flex items-center justify-center rounded-xl w-full"
+      :style="[bgSize, backgroundState]"
       :data-index="index"
     >
-      <!-- src="../../../../../../temporaryIcon/my_image.png" -->
       <img
-        v-if="src.length > 0"
+        v-if="src && src.length > 0"
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
@@ -25,21 +27,30 @@
       {{ titleValue }}
     </div>
   </div>
+
+  <XtGuided v-if="visible" @close="visible = false"></XtGuided>
 </template>
 
 <script>
 import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
-
+import { sizeValues } from "./iconConfig";
 export default {
   mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
+    state: { type: Boolean, default: false },
     index: { type: Number },
+  },
+  data() {
+    return {
+      visible: false,
+    };
   },
   computed: {
     // 动态切换圆角状态
     radiusState() {
+      if (this.state) return;
       if (this.isRadius)
         return {
           borderRadius: this.radius + "%",
@@ -48,6 +59,7 @@ export default {
     },
     // 动态切换背景状态
     backgroundState() {
+      if (this.state) return;
       if (this.isBackground) return { background: this.backgroundColor };
       else return { background: "none" };
     },
@@ -55,10 +67,20 @@ export default {
       return this.getSizeValues(this.size).iconSize;
     },
     textSize() {
-      return this.getSizeValues(this.size).textSize;
+      let textSize = this.getSizeValues(this.size).textSize;
+      if (this.size == "icons1" || this.size == "icons2") {
+        textSize["font-size"] = "12px";
+        textSize["margin-top"] = "4px";
+      } else {
+        textSize["font-size"] = "14px";
+      }
+      return textSize;
     },
     imgSize() {
       return this.getSizeValues(this.size).imgSize;
+    },
+    bgSize() {
+      return this.getSizeValues(this.size).bgSize;
     },
     imgStateStyle() {
       return {
@@ -74,100 +96,37 @@ export default {
       if (this.isReSize) {
         size = "mini";
       }
-      const sizeValues = {
-        mini: {
-          w: 134,
-          h: 96,
-          square: {
-            imgW: 66,
-            imgH: 66,
-          },
-          rectangle: {
-            imgW: 124,
-            imgH: 66,
-          },
-        },
-        mini1: {
-          w: 280,
-          h: 96,
-          square: {
-            imgW: 66,
-            imgH: 66,
-          },
-          rectangle: {
-            imgW: 270,
-            imgH: 66,
-          },
-        },
-        small: {
-          w: 280,
-          h: 205,
-          square: {
-            imgW: 175,
-            imgH: 175,
-          },
-          rectangle: {
-            imgW: 270,
-            imgH: 175,
-          },
-        },
-        default: {
-          w: 280,
-          h: 420,
-          square: {
-            imgW: 270,
-            imgH: 270,
-          },
-          rectangle: {
-            imgW: 270,
-            imgH: 390,
-          },
-        },
-        long: {
-          w: 570,
-          h: 205,
-          square: {
-            imgW: 175,
-            imgH: 175,
-          },
-          rectangle: {
-            imgW: 560,
-            imgH: 175,
-          },
-        },
-        big: {
-          w: 570,
-          h: 420,
-          square: {
-            imgW: 390,
-            imgH: 390,
-          },
-          rectangle: {
-            imgW: 560,
-            imgH: 390,
-          },
-        },
-      };
 
       let { w, h } = sizeValues[size];
-      let imgW = sizeValues[size][this.imgShape].imgW;
-      let imgH = sizeValues[size][this.imgShape].imgH;
-      h = this.isTitle ? h - 20 : h;
+
+      let imgW = sizeValues[size][this.imgShape].w;
+      let imgH = sizeValues[size][this.imgShape].h;
+
       if (this.imgShape !== "square") {
         imgH = this.isTitle ? imgH : imgH + 20;
       }
+      let bgH =
+        this.size == "icons1" || this.size == "icons2"
+          ? imgH
+          : this.isTitle
+          ? h - 20
+          : h;
       return {
+        bgSize: {
+          width: `${w}px`,
+          height: `${bgH}px`,
+        },
         iconSize: {
           width: `${w}px`,
           height: `${h}px`,
         },
         textSize: {
           width: `${w - 20}px`,
+          "font-size": "1px",
         },
         imgSize: {
           width: `${imgW}px`,
           height: `${imgH}px`,
-          border: "0px solid red",
         },
       };
     },
@@ -216,25 +175,41 @@ export default {
       }
       return;
     },
+    closeModal() {
+      window.open("https://www.apps.vip/download/");
+      this.visible = false;
+    },
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
         this.$emit("custom-event");
         return;
       }
+      // 先检测是不是web端
+      if (!this.$isXT) {
+        let arr = ["default", "internal", "thinksky"];
+        if (this.link == "link" && arr.includes(this.open.type)) {
+          window.open(this.open.value);
+        } else {
+          this.visible = true;
+        }
+        return;
+      }
+      console.log(
+        'this.open !== undefined && this.open.value !== "" :>> ',
+        this.open !== undefined && this.open.value !== ""
+      );
       if (this.open !== undefined && this.open.value !== "") {
         // 链接
-        this.$emit("onIconClick");
+        console.log("lianjie :>> ");
         this.newOpenApp();
       } else if (this.link !== "") {
         // 其他应用
-        this.$emit("onIconClick");
         this.openApp(this.linkValue);
       } else message.error("你还未设置链接/快捷方式");
     },
     // 复制来到 旧版打开app
     openApp() {
-      this.$emit("onIconClick");
       if (typeof this.linkValue === "object" && this.linkValue.type) {
         switch (this.linkValue.type) {
           case "systemApp":

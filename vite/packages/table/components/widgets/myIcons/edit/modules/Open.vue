@@ -1,5 +1,5 @@
 <template>
-  <Title> 链接/快捷方式 </Title>
+  <XtTitle> 链接/快捷方式 </XtTitle>
   <div class="flex justify-between" v-if="edit.link == ''">
     <div
       class="xt-btn xt-text xt-hover h-12"

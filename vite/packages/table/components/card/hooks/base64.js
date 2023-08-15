@@ -1,4 +1,13 @@
-const { fs } = window.$models;
+import isXT from "./mode";
+
+let fs, joinRes;
+if (isXT) {
+  const { fs: fsRes } = window.$models;
+  const { join } = require("path");
+  fs = fsRes;
+  joinRes = join;
+}
+
 import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";
@@ -43,15 +52,15 @@ const saveBase64AsImage = async (filePath, base64) => {
 // 用户路径拼接
 const getFileDir = () => {
   let fileDir = window.globalArgs["user-data-path"];
-  fileDir = join(fileDir, "temporaryIcon");
+  fileDir = joinRes(fileDir, "temporaryIcon");
 
   return fileDir;
 };
 export const useBase64AsImage = async (base64) => {
   let fileDir = await getFileDir();
   let name = Date.now() + ".png";
-  const fileSavePath = join(fileDir, name);
-  let fileUsePath = join("file://", fileDir, name);
+  const fileSavePath = joinRes(fileDir, name);
+  let fileUsePath = joinRes("file://", fileDir, name);
   // 匹配
   let sha256Hash = SHA256(base64).toString();
   const store = myIcons();
