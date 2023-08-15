@@ -253,8 +253,6 @@ const TUIChat: any = defineComponent({
       this.index = val.id
       this.info = val.info
       this.updateVisible = true
-      console.log(val);
-      
     },
   
   },
