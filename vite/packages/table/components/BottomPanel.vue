@@ -6,14 +6,6 @@
          style="display: inline-block;vertical-align: top;margin-top: 0;background: var(--primary-bg);color: var(--primary-text);">
       <MyAvatar :chat="true" :level="true"></MyAvatar>
     </div>
-    <!--    <div class="common-panel" style="display: inline-block">-->
-    <!--      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>-->
-    <!--      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
-    <!--      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>-->
-    <!--      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>-->
-    <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
-    <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
-    <!--    </div>-->
     <!-- 快速搜索 底部栏区域 -->
     <div v-show="navigationToggle[2]" class=" flex flex-row  items-center pl-4  s-bg"
          style="display: flex;flex-direction: column;justify-content: center;justify-items: center;align-content: center;align-items: center; border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px;background: var(--primary-bg);color: var(--primary-text);">
@@ -49,7 +41,8 @@ align-items: start;
         </div>
 
         <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-          <div @click="appChange" v-if="isMain" style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;height: 58px"
+          <div @click="appChange" v-if="isMain"
+               style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;height: 58px"
                class="flex justify-center items-center  h-2/3 pointer ">
             <template v-if="!showScreen">
               <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
@@ -69,88 +62,10 @@ align-items: start;
           </div>
         </a-tooltip>
       </div>
-
-
     </div>
     <template v-if="!simple && isMain">
-      <!-- <a-badge-ribbon v-if="!team.status" text="新功能" style="right:2px;top:-8px;opacity: 0.8;">
-        <div @click="toggleTeam" class="common-panel s-bg pointer xt-bg xt-text"
-             style="margin-left: 0;padding:0.4em !important;min-width: 6em;margin-top: 0; ">
-          <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
-
-          </a-avatar>
-          <div class="mb-0 mt-0"> 小队
-            <div v-if="true" style="display: inline-block;position: relative">
-            </div>
-          </div>
-        </div>
-      </a-badge-ribbon>
-      <div v-else @click="toggleTeam" class="common-panel s-bg pointer "
-           style="margin-left: 0;padding:0.6em !important;min-width: 6em;margin-top: 0;color:var(--primary-text);background: var(--primary-bg);">
-        <a-avatar src="/faces/smiling_face_with_smiling_eyes_3d.png">
-
-        </a-avatar>
-        <div class="mb-0 mt-0"> 小队
-          <div v-if="true" style="display: inline-block;position: relative;">
-          </div>
-        </div>
-      </div> -->
       <Team></Team>
     </template>
-
-    <!--    <div style="display: inline-block">-->
-    <!--      <a-row :gutter="10">-->
-    <!--        <a-col :span="2">-->
-    <!--          <a-row class="common-panel" style="width:5em">-->
-    <!--            <PanelButton icon="#icon-shezhi" title="设置"></PanelButton>-->
-    <!--          </a-row>-->
-    <!--        </a-col>-->
-    <!--        <a-col  :span="4" class="common-panel">-->
-    <!--          <a-row>-->
-    <!--            <a-col :span="12">-->
-    <!--              <PanelButton icon="#icon-suoding" title="锁屏"></PanelButton>-->
-    <!--            </a-col>-->
-    <!--            <a-col  :span="12">-->
-    <!--              <PanelButton icon="#icon-yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
-    <!--            </a-col>-->
-    <!--          </a-row>-->
-    <!--        </a-col>-->
-    <!--        <a-col  :span="4" class="common-panel">-->
-    <!--          <a-row >-->
-    <!--            <a-col  :span="12">-->
-    <!--              <PanelButton icon="#icon-suoding" title="动态"></PanelButton>-->
-    <!--            </a-col>-->
-    <!--            <a-col  :span="12">-->
-    <!--              <PanelButton icon="#icon-yidongwenjianjia" title="邮件"></PanelButton>-->
-    <!--            </a-col>-->
-    <!--          </a-row>-->
-    <!--        </a-col>-->
-    <!--        <a-col  :span="3">-->
-    <!--          <a-row class="common-panel">-->
-    <!--            &lt;!&ndash;          <span class="status-text">专注中</span>&ndash;&gt;-->
-    <!--            <PanelButton icon="#icon-tiaoduguanli" title="调整"></PanelButton>-->
-    <!--          </a-row>-->
-    <!--        </a-col>-->
-
-
-    <!--        &lt;!&ndash;      <a-col  :span="2">&ndash;&gt;-->
-    <!--        &lt;!&ndash;        <a-row class="common-panel" style="width:4em" >&ndash;&gt;-->
-    <!--        &lt;!&ndash;          <a-col><PanelButton icon="#icon-xiaoxi" title="消息"></PanelButton></a-col>&ndash;&gt;-->
-    <!--        &lt;!&ndash;&lt;!&ndash;          <a-col> <PanelButton icon="#icon-tishi-xianxing" title="通知"></PanelButton></a-col>&ndash;&gt;&ndash;&gt;-->
-    <!--        &lt;!&ndash;        </a-row>&ndash;&gt;-->
-    <!--        &lt;!&ndash;      </a-col>&ndash;&gt;-->
-    <!--        <a-col  :span="4">-->
-    <!--          <a-row class="common-panel" style="width:10em" >-->
-    <!--            <a-col>-->
-    <!--              <PanelButton :onClick="setFullScreen" icon="#icon-daochu" title="全屏"></PanelButton>-->
-    <!--            </a-col>-->
-    <!--            <a-col>-->
-    <!--              <PanelButton icon="#icon-tuichu" title="电源"></PanelButton>-->
-    <!--            </a-col>-->
-    <!--          </a-row>-->
-    <!--        </a-col>-->
-    <!--      </a-row>-->
-    <!--    </div>-->
 
   </div>
   <div id="trans" v-show="visibleTrans"
@@ -357,7 +272,7 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore, ['screens']),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(navStore, ['footNavigationList', 'builtInFeatures', 'navigationToggle','sideNavigationList','rightNavigationList','mainNavigationList']),
+    ...mapWritableState(navStore, ['footNavigationList', 'builtInFeatures', 'navigationToggle', 'sideNavigationList', 'rightNavigationList', 'mainNavigationList']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
@@ -390,13 +305,13 @@ export default {
       immediate: true,
       deep: true
     },
-    delZone(val){
+    delZone (val) {
       this.delNav = val
     },
-    navigationToggle:{
+    navigationToggle: {
       immediate: true,
       deep: true,
-      handler(val){
+      handler (val) {
         this.leftNav = val[0]
         this.rightNav = val[1]
       }
@@ -405,7 +320,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList','removeFootNavigationList']),
+    ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList']),
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -557,12 +472,12 @@ export default {
     rowDrop () {
       let that = this
       let drop = document.getElementById('bottomContent')
-      Sortable.create(drop,{
+      Sortable.create(drop, {
         sort: true,
         animation: 150,
         onStart: function (event) {
           let delIcon = document.getElementById('delIcon2')
-          that.$emit('getDelIcon',true)
+          that.$emit('getDelIcon', true)
           this.delNav = true
           if (this.delNav) {
             delIcon.ondragover = function (ev) {
@@ -584,7 +499,7 @@ export default {
               sumList = that.sideNavigationList
             } else if (!that.leftNav && that.rightNav) {
               sumList = that.rightNavigationList
-            } else{
+            } else {
               message.info(`导航栏中至少保留一个「${oneNav.name}」`)
               // console.log('不可删除')
               return
@@ -592,7 +507,7 @@ export default {
             that.delNavigation(sumList, oneNav, event.oldIndex, that.removeFootNavigationList)
           }
         },
-        onUpdate:function(event){
+        onUpdate: function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
@@ -609,7 +524,7 @@ export default {
           that.sortFootNavigationList(event)
         },
         onEnd: function (event) {
-          that.$emit('getDelIcon',false)
+          that.$emit('getDelIcon', false)
 
         }
       })

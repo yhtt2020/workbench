@@ -363,3 +363,10 @@ export { MessageInputAtSuggestion, MessageInputAtComponent };
   }
 }
 </style>
+
+<style scoped>
+.message-input-at{
+  top: 395px !important;
+  left: 293px !important;
+}
+</style>

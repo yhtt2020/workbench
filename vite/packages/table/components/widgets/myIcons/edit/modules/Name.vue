@@ -1,10 +1,10 @@
 <template>
-  <Title>
+  <XtTitle>
     图标名称
     <template #right>
       <a-switch v-model:checked="edit.isTitle"></a-switch>
     </template>
-  </Title>
+  </XtTitle>
   <template v-if="edit.isTitle">
     <a-input
       v-model:value="edit.titleValue"

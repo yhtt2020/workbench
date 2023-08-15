@@ -288,7 +288,6 @@ import {deskStore} from "../../store/desk";
 import ShareDesk from "./ShareDesk.vue";
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
-import XtTab from "../card/components/Tab/index.vue";
 import {marketStore} from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
@@ -300,7 +299,6 @@ export default {
     Emoji,
     VueCustomScrollbar,
     Icon,
-    XtTab,
     DeskPreview,
     NewAddCard,
     ShareDesk, DeskMarket, Template, ExportDesk, HorizontalPanel, AllDeskList, GameListDrawer, Desk

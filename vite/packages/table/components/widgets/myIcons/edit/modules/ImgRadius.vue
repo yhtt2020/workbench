@@ -1,10 +1,10 @@
 <template>
-  <Title>
+  <XtTitle>
     图标圆角
     <template #right>
       <a-switch v-model:checked="edit.isRadius"></a-switch>
     </template>
-  </Title>
+  </XtTitle>
   <a-slider
     v-if="edit.isRadius"
     v-model:value="edit.radius"

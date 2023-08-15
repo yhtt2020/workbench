@@ -1,13 +1,15 @@
 import {defineStore} from "pinia";
 import {ClipboardObserver} from '../js/common/clipboardObserver'
+import dbStorage from "./dbStorage";
 
+// @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     enable: false,
     previewShow:false,    // 控制预览显示
     clipSetShow:true, // 是否打开代码高亮
     showLineNumber:true, // 是否显示行号
-    clipSize:4, 
+    clipSize:4,
     clipMode:'javascript',  // 存储代码块语言包 默认js
     clipTheme:'dracula',      // 存储代码块的主题颜色 默认monokai
     items: [],
@@ -18,6 +20,7 @@ export const clipboardStore = defineStore("clipboardStore", {
   }),
   actions: {
     prepare() {
+      console.log('准备')
       this.clipboardObserver = new ClipboardObserver({
         duration: this.settings.duration,
         textChange: this.textChange,
@@ -39,7 +42,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: text,
         time: Date.now()
       }
-      this.items.push(item)
+      this.items.unshift(item)
       console.log('监测到新[文本]剪切板内容', text)
     },
     imageChange(image: any, beforeImage: any) {
@@ -48,7 +51,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: image,
         time: Date.now()
       }
-      this.items.push(item)
+      //this.items.unshift(item)
       console.log('监测到[图片]新剪切板内容', image)
     },
     changeClipMode(code:string){
@@ -75,5 +78,14 @@ export const clipboardStore = defineStore("clipboardStore", {
       // console.log('修改主题色',val);
       this.clipTheme = val
     }
+  },
+  persist: {
+    enabled: true,
+    strategies: [{
+      // 自定义存储的 key，默认是 store.$id
+      // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+      storage: dbStorage,
+      // state 中的字段名，按组打包储存
+    }]
   }
 })

@@ -1,13 +1,4 @@
-import isXT from "./mode";
-
-let fs, joinRes;
-if (isXT) {
-  const { fs: fsRes } = window.$models;
-  const { join } = require("path");
-  fs = fsRes;
-  joinRes = join;
-}
-
+const { fs } = window.$models;
 import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";

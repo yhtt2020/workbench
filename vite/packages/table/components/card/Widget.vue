@@ -39,6 +39,7 @@
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
+      <slot name="menuExtra"></slot>
       <div class="option h-24 w-24 ml-4" @click="doRemoveCard">
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
@@ -259,6 +260,9 @@ export default {
     onClose() {
       this.menuVisible = false;
     },
+    hideMenu(){
+      this.menuVisible=false
+    }
   },
 };
 </script>

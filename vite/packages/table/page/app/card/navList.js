@@ -362,7 +362,7 @@ export const NavList = [
           {
             name: 'Todo',
             size: '2x2',
-            zoom: '11'
+            zoom: '35'
           }
         ],
         time: '2023/5/24'
@@ -376,7 +376,7 @@ export const NavList = [
           {
             name: 'eatToday',
             size: '2x4',
-            zoom: '11'
+            zoom: '35'
           }
         ],
         time: '2023/5/24'
@@ -644,7 +644,7 @@ export const NavList = [
           {
             name: 'HotSearch',
             size: '2x4',
-            zoom: '11'
+            zoom: '36'
           }
         ],
         time: '2023/5/31'
@@ -729,7 +729,7 @@ export const NavList = [
           {
             name: 'smallRank',
             size: '2x2',
-            zoom: '11'
+            zoom: '31'
           },
         ],
         time: '2023/6/29'

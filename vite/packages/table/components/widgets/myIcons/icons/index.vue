@@ -44,8 +44,11 @@
 
 <script>
 import IconsFullScreen from "./fullScreen.vue";
+import Custom from "./Custom.vue";
 export default {
   props: {
+    width: {},
+    height: {},
     iconList: {
       type: Object,
       default: () => {},
@@ -53,13 +56,20 @@ export default {
     groupTitle: {
       type: String,
     },
+    zoom: {
+      type: Object,
+    },
   },
   components: {
+    Custom,
     IconsFullScreen,
   },
   data() {
     return {
       isIconsFullScreen: false, // 全屏开关
+      menus: [{ label: "删除", callBack: this.delColor }],
+      w: this.width,
+      h: this.height,
     };
   },
   watch: {
@@ -71,13 +81,17 @@ export default {
     },
   },
   methods: {
-    fuullScreenClick(event) {
+    iconsRightClick() {
+      this.$emit("iconsRightClick");
+    },
+    fullScreenClick(event) {
       if (event.ctrlKey && event.button === 0) {
         this.$emit("custom-event");
         return;
       }
       this.isIconsFullScreen = true;
     },
+
     dragAddIcon(icon) {
       this.$emit("dragAddIcon", icon);
     },
@@ -89,6 +103,7 @@ export default {
     disbandGroup() {
       this.$emit("disbandGroup");
     },
+
     // 更新多图标组件标题
     updateGroupTitle(title) {
       this.$emit("updateGroupTitle", title);

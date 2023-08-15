@@ -2,7 +2,7 @@
   <!-- 文本列表 -->
   <template v-if="clip.type === 'text'">
     <!-- 列表主界面 -->
-    <div style="width: 338px;height:420px;" v-if="controlsShow === false && codeLanguageShow === false" class="flex flex-col rounded-lg justify-between" @contextmenu="textButton">
+    <div  style="width: 338px;height:420px;flex-shrink: 0; " v-if="controlsShow === false && codeLanguageShow === false" class="flex flex-col rounded-lg justify-between " @contextmenu="textButton">
       <!-- 文本卡片顶部标题开始 -->
       <div class="flex s-item h-item flex-col h-16 rounded-t-lg w-full px-4 py-2">
         <div class="flex items-center mb-1">
@@ -398,12 +398,17 @@ export default {
   computed:{
     ...mapWritableState(clipboardStore,['previewShow','clipSetShow']),
     showArray(){
-      if(this.clipSetShow){
-        const newTextArr = this.textType.slice()  // 将文本底部tab数组复制一份
-        return newTextArr.reverse()  // 将复制的文本底部tab数组进行反转
-      }else{
-        return this.textType  // 返回文本底部tab没有改变的数组
+      if(!this.clip.showType){
+        if(this.clipSetShow){
+          const newTextArr = this.textType.slice()  // 将文本底部tab数组复制一份
+          this.clip.showType= newTextArr.reverse()  // 将复制的文本底部tab数组进行反转
+        }else{
+          this.clip.showType= this.textType  // 返回文本底部tab没有改变的数组
+        }
+        this.defaultTextType= this.clip.showType[0]
       }
+
+      return this.clip.showType
     }
   },
 
@@ -495,7 +500,7 @@ export default {
       // 打开预览快捷键功能
       if(e.keyCode === 32){
         if(this.controlsShow){
-          this.$emit('previewItem',this.clip)  // 模板搭建测试,后期需要根据剪贴板的id来触发预览
+          this.$emit('previewItem',this.clip)  // 模板搭建测试,后期需要根据剪切板的id来触发预览
           this.isOpenPreview(true)
           this.controlsShow = false
         }

@@ -116,7 +116,10 @@ export default {
     previewKay (item) {
       console.log(item)
       this.$emit('openPreview', {
-        scheme: item, showModal: true
+        scheme: {
+          ...item,
+          dataNanoid:item.nanoid
+        }, showModal: true
       })
       // this.scheme = item
       // this.showModal = true

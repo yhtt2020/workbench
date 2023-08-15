@@ -80,7 +80,7 @@
             </li>
           </ul>
           <div v-else class="flex flex-col">
-            <span class="mb-2.5 secondary-title" style="color: var(--secondary-text);">剪贴板</span>
+            <span class="mb-2.5 secondary-title" style="color: var(--secondary-text);">剪切板</span>
             <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"
              :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
              style="color: var(--secondary-text);"
@@ -147,7 +147,7 @@ export default {
       searchKeyWords:'', // 搜索关键字
       searchSuggestionList:[], // 搜索建议列表
       suggestIndex:-1, // 搜索建议列表下标
-      clipboardIndex:-1, // 剪贴板内容列表下标
+      clipboardIndex:-1, // 剪切板内容列表下标
       isDropdownVisible:false, // 是否显示下拉列表
       linkType:[  // 设置中打开方式类型
         {name:'工作台内打开',value:'work'},
@@ -174,7 +174,7 @@ export default {
       const index = _.findIndex(this.linkType,function(o){ return type === o.value })
       return index
     },
-    getClipBoardData(){  // 获取剪贴板数据
+    getClipBoardData(){  // 获取剪切板数据
       const clipBoardText = clipboard.readText()
       const clipBoardList = clipBoardText.split('\r\n')
       return clipBoardList

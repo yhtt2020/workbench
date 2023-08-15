@@ -244,7 +244,6 @@ import ShareDesk from '../components/desk/ShareDesk.vue';
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
 import DeskPreview from '../components/desk/DeskPreview.vue';
-import Tab from "../components/card/components/tab/index.vue"
 import ExportDesk from "../components/desk/ExportDesk.vue"
 import DeskGroup from '../components/desk/DeskGroup.vue'
 import Template from '../../user/pages/Template.vue'
@@ -403,7 +402,6 @@ export default {
     ShareDesk,
     DeskMarket,
     DeskPreview,
-    Tab,
     UpdateMyInfo,
     ExportDesk,
     Todo,

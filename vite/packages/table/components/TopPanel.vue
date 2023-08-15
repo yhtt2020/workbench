@@ -1,33 +1,47 @@
 <template>
   <div v-if="isMain" class="top-panel drag w-full flex items-center justify-between" style="width: calc(100%);">
-    <div class="flex items-center  flex-row" >
-      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"  v-if="runningGame.appid">
-        <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar> {{runningGame.chineseName}}
+
+    <div @contextmenu.stop="toggleAppStats" class="flex items-center no-drag flex-row">
+      <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
+        <div  class="no-drag mr-2 cursor-pointer" @click="enterClipboard" >
+          <icon style="font-size: 24px;vertical-align: text-top" icon="xiangmu"></icon>
+        </div>
+      </a-tooltip>
+
+      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
+           v-if="runningGame.appid">
+        <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar>
+        {{ runningGame.chineseName }}
       </div>
-      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);" @click="enterMusic"  v-else-if="status.music.playing && status.music.title && status.music">
+      <a-tooltip title="音乐播放中，点击进入应用，右键查看全部" v-else-if="status.music.playing && status.music.title && status.music">
+      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);"
+           @click="enterMusic">
         <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
         {{ status.music.title }} {{ status.music.singer }}
       </div>
+      </a-tooltip>
     </div>
-    <div class="flex max-search"  hidden="">
-      <div hidden="" @click="openGlobalSearch" class="input-box no-drag pointer inline-block" style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
+    <div class="flex max-search" hidden="">
+      <div hidden="" @click="openGlobalSearch" class="input-box no-drag pointer inline-block"
+           style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="flex flex-1 items-end justify-end align-items-end xt-text " >
+    <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
       <div hidden="" class="no-drag flex items-center pointer" @click="messageAlert">
         <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
         </div>
         <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
-        <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "  />
+        <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
       </div>
-      <div class="mr-2" style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
-        <div class="no-drag truncate" v-if="!loading" >
+      <div class="mr-2"
+           style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
+        <div class="no-drag truncate" v-if="!loading">
           <span hidden style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
             <!-- {{ lockTimeoutDisplay }}后锁屏 -->
           </span>
-          {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{dateTime.minutes}}
+          {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }}
           {{ dateTime.week }}
           <span v-if="hasWeather && city.now">
             <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
@@ -35,14 +49,53 @@
         </div>
       </div>
     </div>
-    <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg " style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
-      <WindowController ></WindowController>
+    <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg "
+         style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
+      <WindowController></WindowController>
     </div>
   </div>
 
 
-  <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer" :bodyStyle="{padding:'12px',overflow:'hidden !important',}">
+  <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer"
+            :bodyStyle="{padding:'12px',overflow:'hidden !important',}">
     <MessagePopup></MessagePopup>
+  </a-drawer>
+  <a-drawer v-model:visible="appStats" placement="left">
+    <div class="app-stats">
+      <div @click="enterClipboard" class="app cursor-pointer" v-if="enable">
+        <a-row>
+          <a-col :span="5">
+            <icon style="font-size: 48px;vertical-align: text-top" icon="xiangmu"></icon>
+          </a-col>
+          <a-col>
+            <div class="app-title font-bold">
+              剪切板
+            </div>
+            <div class="app-des xt-text-2">
+              剪切板监听中…
+            </div>
+          </a-col>
+        </a-row>
+
+      </div>
+      <div @click="enterMusic" class="app" v-if="status.music.playing && status.music.title && status.music">
+        <a-row>
+          <a-col :span="5">
+            <a-avatar style="margin-right: 0.5em" :size="48" :src="status.music.cover"></a-avatar>
+          </a-col>
+          <a-col>
+            <div class="app-title font-bold">
+              网易云音乐
+            </div>
+            <div class="app-des xt-text-2">
+              {{ status.music.title }} {{ status.music.singer }}
+            </div>
+          </a-col>
+        </a-row>
+
+
+      </div>
+    </div>
   </a-drawer>
 
 </template>
@@ -57,13 +110,14 @@ import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
 import WindowController from './WindowController.vue'
-import MessagePopup from '../page/notice/noticeIndex.vue';
-import {steamUserStore} from "../store/steamUser";
-import {getClientIcon, getCover, getIcon} from "../js/common/game";
+import MessagePopup from '../page/notice/noticeIndex.vue'
+import { steamUserStore } from '../store/steamUser'
+import { getClientIcon, getCover, getIcon } from '../js/common/game'
+import { clipboardStore } from '../store/clipboard'
 
 export default {
   name: 'TopPanel',
-  components:{
+  components: {
     WindowController,
     MessagePopup
   },
@@ -74,15 +128,17 @@ export default {
       timer: null,
       lockTimer: null,
       showLockTip: false,
-      messageDrawer:false,
+      messageDrawer: false,
+      appStats: false,
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['status','showWindowController']),
+    ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
-    ...mapWritableState(timerStore,['lockTimeout']),
-    ...mapWritableState(steamUserStore,['runningGame']),
+    ...mapWritableState(timerStore, ['lockTimeout']),
+    ...mapWritableState(steamUserStore, ['runningGame']),
+    ...mapState(clipboardStore, ['enable']),
     isMain,
     lockTimeoutDisplay () {
       // if(this.lockTimeout>=60){
@@ -157,6 +213,14 @@ export default {
         this.showLockTip = false
       }
     },
+    toggleAppStats () {
+      this.appStats = !this.appStats
+    },
+    enterClipboard () {
+      this.$router.push({
+        name: 'clipboard'
+      })
+    },
     setLockTimer () {
       if (this.settings.enable) {
         //只有启用了锁屏才会触发这个效果
@@ -187,15 +251,15 @@ export default {
         name: 'music',
       })
     },
-    enterGameDesk(appid){
+    enterGameDesk (appid) {
       this.$router.push({
         name: 'gameIndex',
-        params:{
-          appid:appid
+        params: {
+          appid: appid
         }
       })
     },
-    messageAlert(){
+    messageAlert () {
       this.messageDrawer = true
     }
 
@@ -214,33 +278,50 @@ export default {
   border-radius: 100px;
   border: 1px solid #c4c4c4;
 }
-.btn-container{
+
+.btn-container {
 }
 
-.new-message{
-  position:fixed;
-  top:11px;
-  left:71.5%;
+.new-message {
+  position: fixed;
+  top: 11px;
+  left: 71.5%;
 }
 
-.primary-title{
+.primary-title {
   font-family: PingFangSC-Medium;
   font-size: 14px;
   font-weight: 500;
 }
 
-.max-search{
+.max-search {
   width: 320px;
 }
 
-@media screen and(max-width:840px) {
-  .max-search{
+@media screen and(max-width: 840px) {
+  .max-search {
     width: 60px !important;
   }
 }
-@media screen and(min-width:1050px) {
-  .max-search{
+
+@media screen and(min-width: 1050px) {
+  .max-search {
     width: 320px !important;
+  }
+}
+
+.app-stats {
+  .app {
+    background: var(--secondary-bg);
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
   }
 }
 </style>

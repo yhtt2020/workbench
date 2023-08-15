@@ -66,7 +66,7 @@ export const themeType = [
   {title:'zenburn',name:'zenburn',id:'zenburn'},
 ]
 
-// 将剪贴板代码块语言包的配置移动到这里,方便后期需要添加的语言包就在这里改动即可
+// 将剪切板代码块语言包的配置移动到这里,方便后期需要添加的语言包就在这里改动即可
 export const codeLanguage = [
   {title:'Python',name:'Python',abbr:'python',id:'python'},
   {title:'JavaScript',name:'JavaScript',abbr:'javascript',id:'javascript'},

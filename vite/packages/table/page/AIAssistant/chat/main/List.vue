@@ -47,9 +47,9 @@ export default {
     },
     copy(str) {
       if (this.copyToClipboard(str)) {
-        console.log("已成功复制到剪贴板");
+        console.log("已成功复制到剪切板");
       } else {
-        console.error("复制到剪贴板失败");
+        console.error("复制到剪切板失败");
       }
     },
   },
