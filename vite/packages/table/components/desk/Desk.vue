@@ -592,11 +592,12 @@ export default {
               message.success({ content: '此桌面为首次使用，已为您适配您的当前窗口。', key:'preparing' });
               settings.preparing=false
               this.setFullScreen(false)
+              delete settings.layoutSize
             })
           },1000)
         })
 
-        delete settings.layoutSize
+
       }
 
       return this.currentDesk.layoutSize
