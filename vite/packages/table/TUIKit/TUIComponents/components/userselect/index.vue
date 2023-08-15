@@ -49,6 +49,7 @@ export default defineComponent({
  props:['list','type','server','groupID'],
 
  setup(props,ctx){
+
   const TIM = props.server.TUICore.TIM
   const tim = props.server.TUICore.tim
 
@@ -113,8 +114,25 @@ export default defineComponent({
         groupID:props.groupID,
         newOwnerID:data.adminList[0].userID,
        }
-       const imResponse = await tim.changeGroupOwner(options)
-       console.log(imResponse);
+       await tim.changeGroupOwner(options)
+       ctx.emit('close')
+      break;
+     case 'addmute':  // 新增禁言用户
+       const muteOption = {
+        groupID:props.groupID,
+        muteTime:60 * 60 * 24 * 30,
+        userID:data.adminList[0].userID
+       }
+       await tim.setGroupMemberMuteTime(muteOption);
+       ctx.emit('close')
+      break;
+     case 'delmute':  // 取消禁言用户
+       const mOption = {
+        groupID:props.groupID,
+        muteTime:0,
+        userID:data.adminList[0].userID
+       }
+       await tim.setGroupMemberMuteTime(mOption);
        ctx.emit('close')
       break;
      default:
