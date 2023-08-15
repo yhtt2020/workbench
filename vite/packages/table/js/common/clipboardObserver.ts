@@ -9,19 +9,20 @@ declare interface Options{
 export class ClipboardObserver {
   timer
   beforeText: string
-  beforeImage: any
+  beforeImage: NativeImage
   duration = 500
   textChange: (text: string, beforeText: string) => void
   imageChange: (image: any, beforeImage: any) => void
 
   constructor(options: Options) {
-    const {duration, textChange, imageChange} = options
+    const {duration, textChange=true, imageChange=false} = options
     this.duration = duration
     this.textChange = textChange
     this.imageChange = imageChange
   }
 
   start(): void {
+    console.log('开始')
     this.setClipboardDefaultValue()
     this.setTimer()
   }
@@ -40,7 +41,17 @@ export class ClipboardObserver {
       this.beforeText = clipboard.readText()
     }
     if (this.imageChange) {
-      this.beforeImage = clipboard.readImage()
+      console.log('即将读取图片')
+     // clipboard.readImage()
+      console.log(clipboard.availableFormats(),'可用类型')
+
+      try{
+         this.beforeImage = clipboard.readImage()
+      }catch (e) {
+        console.log('图片读取失败',e)
+      }
+
+
     }
   }
 
@@ -58,13 +69,13 @@ export class ClipboardObserver {
       }
 
       if (this.imageChange) {
-        const image = clipboard.readImage()
-        if (this.isDiffImage(this.beforeImage, image)) {
-          this.imageChange(image, this.beforeImage)
-          this.beforeImage = image
-        }
+        console.log('图片更改')
+        // const image = clipboard.readImage()
+        // if (this.isDiffImage(this.beforeImage, image)) {
+        //   this.imageChange(image, this.beforeImage)
+        //   this.beforeImage = image
+        // }
       }
-
     }, this.duration)
   }
 
@@ -85,16 +96,22 @@ export class ClipboardObserver {
    * @returns
    */
   isDiffImage(beforeImage: any, afterImage: any): boolean {
+    console.log('判断图片')
     if(!beforeImage){
       return false
     }
-    let hasAfterImage= afterImage && !afterImage.isEmpty()
-    if(!hasAfterImage){
-      return false
+    try{
+      // let hasAfterImage= afterImage && !afterImage.isEmpty()
+      // if(!hasAfterImage){
+      //   return false
+      // }
+      // let beforeURL=toRaw(beforeImage).toDataURL()
+      // let afterURL= afterImage.toDataURL()
+      // let diff=beforeURL !==afterURL
+      // return diff
+    }catch (e) {
+      console.error('取图失败',e)
     }
-    let beforeURL=toRaw(beforeImage).toDataURL()
-    let afterURL= afterImage.toDataURL()
-    let diff=beforeURL !==afterURL
-    return diff
+
   }
 }
