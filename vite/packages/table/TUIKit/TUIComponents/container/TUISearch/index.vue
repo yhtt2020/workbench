@@ -1,5 +1,5 @@
 <template>
-  <div class="TUI-search" style="padding: 0 16px !important;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
+  <div class="TUI-search" style="padding: 0 16px !important;margin-top: 7px;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
     <a-dropdown @click="toggleOptionalShow" placement="topLeft" class="ml-4" :trigger="['click']">
       <div class="w-11 active-button h-11 rounded-lg pointer flex items-center justify-center" style="background: var(--secondary-bg);">
         <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
