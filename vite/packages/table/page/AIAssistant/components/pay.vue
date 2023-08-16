@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Tab from "../../../components/card/components/tab/index.vue";
+import Tab from "../../../components/card/libs/tab/index.vue";
 export default {
   components: {
     Tab,
