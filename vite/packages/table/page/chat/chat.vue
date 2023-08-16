@@ -2,12 +2,12 @@
 <template>
   <div class="home-TUIKit-main">
     <div :class="env?.isH5 ? 'conversation-h5' : 'conversation'" v-show="!env?.isH5 || currentModel === 'conversation'">
-      <TUIConversation :displayOnlineStatus="true" @current="handleCurrentConversation"/>
+      <TUIConversation  @current="handleCurrentConversation"/>
       <TUISearch class="search"/>
     </div>
 
     <div class="chat" v-show="!env?.isH5 || currentModel === 'message'">
-      <TUIChat :isMsgNeedReadReceipt="true" :isNeedEmojiReact="true">
+      <TUIChat :isNeedEmojiReact="true">
         <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用想天工作台</h1>
       </TUIChat>
     </div>
@@ -28,7 +28,7 @@
 
 
 <script lang="ts">
-import {defineComponent, reactive, toRefs, onMounted} from 'vue';
+import {defineComponent, reactive, toRefs, onMounted,ref} from 'vue';
 import {TUIEnv} from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
 import {handleErrorPrompts} from '../../TUIKit/TUIComponents/container/utils';
@@ -104,28 +104,28 @@ export default defineComponent({
       // })
     }
 
-    const handlerParams=()=>{
-      if(route.params.action==='sendMessage'){
-        const {uid} =route.params
+    const handlerParams=(to=route)=>{
+      if(to.params.action==='sendMessage'){
+        const {uid} =to.params
         const type= 'C2C'
         const name = `${type}${uid}`;
         window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
           // 通知 TUIConversation 添加当前会话
           // Notify TUIConversation to toggle the current conversation
           window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+
         });
       }
     }
 
     onMounted(() => {
       listenGroupMessage()
-      console.log(route)
       handlerParams()
     })
 
 
     onBeforeRouteUpdate((to,from)=>{
-      handlerParams()
+      handlerParams(to)
     })
 
 
