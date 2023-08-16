@@ -1,14 +1,14 @@
 <template>
  <div class="flex flex-col" style="width: 100%;">
   <div class="flex items-center justify-between" style="margin-bottom: 14px;">
-   <span class="font-16" style="color: var(--primary);">组织群聊 ({{ list.length }}个) </span>
+   <span class="font-16" style="color: var(--primary-text);">组织群聊 ({{ list.length }}个) </span>
    
    <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);">
     <Icon icon="tianjia2" style="width: 20px;height: 20px;"></Icon>
    </div>
   </div>
 
-  <vue-custom-scrollbar :settings="settingsScroller" style="height:90%;">
+  <vue-custom-scrollbar :settings="settingsScroller" style="height:65%;">
    <div v-for="item in list" class="flex items-center pointer" style="padding: 14px 15px;" @click="clickGroupList(item)">
     <a-avatar shape="square" :size="32" :src="item.avatar"></a-avatar>
     <div class="flex flex-col" style="margin-left: 16px;">
@@ -26,11 +26,10 @@
 import { defineComponent,ref,toRefs,computed,watch, reactive, onMounted } from 'vue'
 
 export default defineComponent({
-
+  props:['list'],
   setup(){
 
    const data = reactive({
-     list:[], // 接收群聊列表
      settingsScroller: {  // 滚动条配置 
       useBothWheelAxes: true,
       swipeEasing: true,
@@ -40,20 +39,14 @@ export default defineComponent({
      },
 
    })
-   
-   const loadGroupList = async () => {  // 点击进入加载群聊列表
-    const res = await window.$chat.getGroupList()
-    data.list = res.data.groupList
-   }
+  
 
    const clickGroupList = (item) =>{  // 点击群聊列表
     console.log(item);
    }
 
-   onMounted(loadGroupList)
-
    return{
-     ...toRefs(data),loadGroupList,clickGroupList,
+     ...toRefs(data),clickGroupList,
    }
   }
 
@@ -81,5 +74,18 @@ export default defineComponent({
  &:hover{
   opacity: 0.8;
  }
+}
+
+
+@media screen and (max-height:700px) {
+  :deep(.ps-container){
+    height: 50% !important;
+  }
+}
+
+@media screen and (min-height:1000px){
+  :deep(.ps-container){
+    height: 70% !important;
+  }
 }
 </style>
