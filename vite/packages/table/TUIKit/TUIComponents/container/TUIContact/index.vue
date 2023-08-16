@@ -11,7 +11,17 @@
 
     <main class="TUI-contact-main" style="padding: 0 15px;">
       <!--  v-show="!!currentGroup?.groupID || !!currentFriend?.userID || columnName === 'system'" -->
-      <router-view></router-view>
+      <template v-if="sideIndex === 'notice'">
+        <Inform></Inform>
+      </template>
+
+      <template v-if="sideIndex === 'group'">
+        <Group></Group>
+      </template>
+
+      <template v-if="sideIndex === 'friend'">
+        <Friend></Friend>
+      </template>
     </main>
   </div>
 
@@ -246,9 +256,9 @@
           </header>
 
           <footer class="TUI-contact-main-info-footer">
-<!--            <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">-->
-<!--              {{ $t('TUIContact.发送消息') }}-->
-<!--            </button>-->
+           <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">
+             {{ $t('TUIContact.发送消息') }}
+           </button>
             <SendMessageButton :uid="currentFriend.userID"></SendMessageButton>
           </footer>
         </div>
@@ -268,16 +278,19 @@
     </div>
   </transition> -->
 </template>
-<script lang="ts">
-import { computed, defineComponent, reactive, toRefs, watch } from 'vue';
-import MessageSystem from './components/message-system.vue';
-import { handleErrorPrompts, isArrayEqual } from '../utils';
-import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
+<script>
+import { computed, defineComponent, reactive, toRefs, watch,onMounted, } from 'vue';
+import Inform from './addressbook/inform.vue';
+import Group from './addressbook/group.vue'
+import Friend from './addressbook/friend.vue';
+
 const TUIContact = defineComponent({
   name: 'TUIContact',
-  components: {
-    MessageSystem,SendMessageButton
+
+  components:{
+    Inform,Group,Friend,
   },
+
 
   setup(props,ctx){
     const TUIServer = TUIContact.TUIServer
@@ -285,41 +298,19 @@ const TUIContact = defineComponent({
     const data = reactive({
       env: TUIServer.TUICore.TUIEnv,
       sideList:[
-        {
-          title:'通知',icon:'notification',
-          color:'var(--active-bg)',index:'notice',
-          router:{
-            name:'inform'
-          },
-        },
-        {
-          title:'群聊',icon:'message',color:'var(--success)',index:'group',
-          router:{
-            name:'group'
-          }
-        },
+        { title:'通知',icon:'notification',color:'var(--active-bg)',index:'notice'},
+        { title:'群聊',icon:'message',color:'var(--success)',index:'group'},
+        { title:'好友',icon:'smile',color:'var(--warning)',index:'friend' },
       ],
       sideIndex:'notice', // 接收通讯录侧边列表项下标
     })
 
     const clickSideList = (item) =>{  // 点击通讯录侧边列表
       data.sideIndex = item.index
-      router.push(item.router)
     }
-
-    
-    // console.log(window.$chat);
-    
-    const loadPage = () =>{ // 默认加载路由
-      if(data.sideIndex === 'notice'){
-        router.push(data.sideList[0].router)
-      }
-    }
-
-    onMounted(loadPage)
 
     return{
-      ...toRefs(data),clickSideList,loadPage,
+      ...toRefs(data),clickSideList,
     }
   }
 
@@ -329,6 +320,12 @@ export default TUIContact;
 
 
 
+// import MessageSystem from './components/message-system.vue';
+// import { handleErrorPrompts, isArrayEqual } from '../utils';
+// import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
+//    components: {
+  // MessageSystem,SendMessageButton
+  // },
 // import MessageSystem from './components/message-system.vue';
 // import { handleErrorPrompts, isArrayEqual } from '../utils';
 
