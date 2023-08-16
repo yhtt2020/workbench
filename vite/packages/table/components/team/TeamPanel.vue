@@ -73,7 +73,7 @@
     </div>
     <div v-if="userDetail" class="xt-bg"
          style="width:300px;height: 500px;position: relative">
-      <div  @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
+      <div @click="closeDetail" class="p-2 rounded-md inline-block m-2 pointer bg-mask"
            style="position:absolute;right:0;width: 2.8em;text-align: center;z-index: 99">
         <Icon icon="guanbi" style="font-size: 1.2em"></Icon>
       </div>
@@ -89,7 +89,9 @@
       <div class="px-2" style="position: absolute;bottom: 0; left:0;right:0">
         <a-row class="m-5 mb-2" :gutter="10">
           <a-col :span="12" v-if="this.showUserInfo.uid!==userInfo.uid">
-            <AddFriendButton :key="this.showUserInfo.uid" :uid="this.showUserInfo.uid"></AddFriendButton>
+            <AddFriendButton v-show="relationship==='not'" @relationshipChanged="updateRelationship" :key="this.showUserInfo.uid"
+                             :uid="this.showUserInfo.uid"></AddFriendButton>
+            <SendMessageButton :uid="this.showUserInfo.uid" :enable="true"   v-show="relationship==='yes'"></SendMessageButton>
           </a-col>
 
           <a-col :span="12">
@@ -136,7 +138,7 @@
         <div @click="showUserDetail(user.userInfo,user)" class="text-center  mb-3 pointer  pt-2"
              :class="{'active':this.showUserInfo===user.userInfo}" v-for="user in teamMembers">
 
-          <UserAvatar  :frame="user.userInfo.equippedItems?.frameDetail"
+          <UserAvatar :frame="user.userInfo.equippedItems?.frameDetail"
                       :frameUrl="user.userInfo.equippedItems?.frameDetail?.image" :online="user.online"
                       :avatar="user.userInfo.avatar"
                       :tag="user.userInfo.uid===userInfo.uid?'我':''" :showDetail="showDetail"></UserAvatar>
@@ -173,11 +175,13 @@ import FrameStoreWidget from './FrameStoreWidget.vue'
 import TeamBarrage from '../comp/TeamBarrage.vue'
 import BarrageSender from '../comp/BarrageSender.vue'
 import BarragePanel from '../comp/BarragePanel.vue'
-import AddFriendButton from '../sns/addFriendButton.vue'
+import AddFriendButton from '../sns/AddFriendButton.vue'
+import SendMessageButton from '../sns/SendMessageButton.vue'
 
 export default {
   name: 'TeamPanel',
   components: {
+    SendMessageButton,
     AddFriendButton,
     BarragePanel,
     BarrageSender,
@@ -192,6 +196,9 @@ export default {
     FrameStoreWidget
   },
   computed: {
+    teamLeader () {
+      return teamLeader
+    },
     ...mapWritableState(teamStore, ['team', 'teamVisible', 'teamLeader', 'teamMembers']),
     ...mapState(appStore, ['userInfo']),
     effect () {
@@ -233,6 +240,7 @@ export default {
       timer: null,//用于定期刷新队伍信息
       userInfoKey: Date.now(),
       earningsShow: false,
+      relationship: 'unload'
     }
   },
   mounted () {
@@ -252,7 +260,10 @@ export default {
 
   methods: {
     ...mapActions(teamStore, ['updateTeamShip', 'quitByNo', 'updateMy', 'closeTeam', 'updateTeam']),
-
+    updateRelationship (e) {
+      this.relationship=e.relationship
+      console.log(e,'更新关系')
+    },
     showBarragePanel () {
       this.userDetail = false
       this.showDetail = true

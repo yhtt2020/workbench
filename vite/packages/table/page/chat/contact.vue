@@ -1,6 +1,6 @@
 <!-- 联系人页面 -->
 <template>
-  <TUIContact></TUIContact>
+  <TUIContact :display-online-status="false"></TUIContact>
 </template>
 
 
