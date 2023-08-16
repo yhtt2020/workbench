@@ -34,7 +34,8 @@ import Drag from '../../TUIKit/TUIComponents/components/drag';
 import {handleErrorPrompts} from '../../TUIKit/TUIComponents/container/utils';
 import TUIContact from "../../TUIKit/TUIComponents/container/TUIContact/index.vue";
 import SecondPanel from "../../components/SecondPanel.vue";
-import {useRoute} from 'vue-router'
+import {onBeforeRouteUpdate, useRoute} from 'vue-router'
+import {message} from "ant-design-vue";
 
 
 export default defineComponent({
@@ -103,9 +104,7 @@ export default defineComponent({
       // })
     }
 
-    onMounted(() => {
-      listenGroupMessage()
-      console.log(route)
+    const handlerParams=()=>{
       if(route.params.action==='sendMessage'){
         const {uid} =route.params
         const type= 'C2C'
@@ -116,6 +115,17 @@ export default defineComponent({
           window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
         });
       }
+    }
+
+    onMounted(() => {
+      listenGroupMessage()
+      console.log(route)
+      handlerParams()
+    })
+
+
+    onBeforeRouteUpdate((to,from)=>{
+      handlerParams()
     })
 
 
