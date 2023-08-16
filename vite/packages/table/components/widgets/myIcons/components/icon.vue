@@ -6,7 +6,7 @@
     :style="[iconSize]"
   >
     <div
-      class="xt-text no-drag flex items-center justify-center rounded-xl w-full"
+      class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
       :style="[bgSize, backgroundState]"
       :data-index="index"
     >
@@ -16,7 +16,7 @@
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index"
+        :data-index="index" style="max-width: 100%;max-height: 100%"
       />
     </div>
     <div
