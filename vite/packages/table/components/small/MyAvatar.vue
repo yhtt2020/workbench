@@ -107,20 +107,7 @@ export default {
       this.$router.push({name:'socialMy'})
     },
     enterIM() {
-      this.$router.push({
-        name: 'app',
-        params: {
-          fullScreen: false,
-          theme: 'transparent',
-          name: 'chat',
-          package: 'com.thisky.chat',
-          url: 'http://im.xiangtian.ren',
-          preload: '../preload/chatPreload',
-          background: true,
-          node: true,
-          security: true
-        }
-      })
+      this.$router.push({name:'chat'})
     },
   }
 }
@@ -191,11 +178,11 @@ export default {
           <div class="pointer ml-3" @click.stop="enterIM">
             <a-row :gutter="10">
               <a-col :span="6" class="pt-2">
-                <a-avatar src="https://up.apps.vip/logo/group.png?t=2"></a-avatar>
+                <icon style="font-size: 18px" icon="xiaoxi"></icon>
               </a-col>
               <a-col :span="18" class="pt-1">
                 <div class="text font-bold">
-                  轻聊
+                  组织
                 </div>
                 <div>举杯，同是科技咖</div>
               </a-col>

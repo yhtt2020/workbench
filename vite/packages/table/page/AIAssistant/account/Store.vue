@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Tab from "../../../components/card/components/tab/index.vue";
+import Tab from "../../../components/card/libs/tab/index.vue";
 import Buy from "../components/buy.vue";
 import { cycleList, countList } from "./price.ts";
 export default {
