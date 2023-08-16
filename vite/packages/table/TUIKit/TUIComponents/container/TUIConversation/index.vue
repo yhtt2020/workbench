@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
+import { defineComponent, reactive, toRefs, computed, watch,defineExpose } from 'vue';
 import TUIConversationList from './components/list';
 import { caculateTimeago, isArrayEqual } from '../utils';
 import { handleAvatar, handleName, handleShowLastMessage, handleAt } from '../TUIChat/utils/utils';
@@ -62,10 +62,21 @@ const TUIConversation = defineComponent({
 
     TUIConversationList.TUIServer = TUIServer;
 
+    watch(()=>data.conversationData.list,
+      (newVal)=>{
+        //加上会话对置顶的排序，放置置顶的低于新会话
+        data.conversationData.list=data.conversationData.list.sort((a,b)=>{
+          let aIndex=a.isPinned?1:0
+          let bIndex=b.isPinned?1:0
+          return bIndex-aIndex
+        })
+      });
+
     watch(
       () => data.currentConversationID,
       (newVal: any) => {
         ctx.emit('current', newVal);
+        console.log(data.conversationData.list,'当前会话列表')
       },
       {
         deep: true,
@@ -93,6 +104,14 @@ const TUIConversation = defineComponent({
       }
     );
 
+    const updateList=()=>{
+      TUIServer.TUICore.TUIServer.TUIConversationList.handleConversationListUpdate(data)
+    }
+
+    defineExpose({
+      updateList
+    })
+
     const isNetwork = computed(() => {
       const disconnected = data.netWork === TUIServer.TUICore.TIM.TYPES.NET_STATE_DISCONNECTED;
       const connecting = data.netWork === TUIServer.TUICore.TIM.TYPES.NET_STATE_CONNECTING;
@@ -106,6 +125,7 @@ const TUIConversation = defineComponent({
     return {
       ...toRefs(data),
       handleCurrentConversation,
+      updateList,
       isNetwork,
     };
   },
