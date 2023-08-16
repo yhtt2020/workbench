@@ -72,6 +72,10 @@ import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
+import Friend from '../TUIKit/TUIComponents/container/TUIContact/addressbook/friend.vue'
+import Group from '../TUIKit/TUIComponents/container/TUIContact/addressbook/group.vue'
+import Inform from '../TUIKit/TUIComponents/container/TUIContact/addressbook/inform.vue'
+import Organization from '../TUIKit/TUIComponents/container/TUIContact/addressbook/organization.vue'
 /**聊天团队模式结束**/
 
 export default [
@@ -211,6 +215,28 @@ export default [
             path: '/contact',
             name: 'contact',
             component: Contact,
+            children:[
+              {
+                path:'/friend',
+                name:'friend',
+                component:Friend
+              },
+              {
+                path:'/group',
+                name:'group',
+                component:Group
+              },
+              {
+                path:'/inform',
+                name:'inform',
+                component:Inform
+              },
+              {
+                path:'/organize',
+                name:'organize',
+                component:Organization
+              }
+            ]
           },
 
         ]

@@ -1,5 +1,22 @@
 <template>
-  <transition @before-leave="init">
+  <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
+    <aside class="TUI-contact-left">
+      <div v-for="item in sideList" :class="{'active-bg':sideIndex === item.index}" class="flex pointer items-center"  style="padding: 16px;" @click="clickSideList(item)">
+        <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
+          <Icon :icon="item.icon" style="color: var(--active-text);"></Icon>
+        </div>
+        <div class="font-16" style="color: var(--primary-text);margin: 12px;">{{ item.title }}</div>
+      </div>
+    </aside>
+
+    <main class="TUI-contact-main" style="padding: 0 15px;">
+      <!--  v-show="!!currentGroup?.groupID || !!currentFriend?.userID || columnName === 'system'" -->
+      <router-view></router-view>
+    </main>
+  </div>
+
+
+  <!-- <transition @before-leave="init">
     <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
       <aside class="TUI-contact-left">
         <header class="TUI-contact-left-header">
@@ -248,196 +265,266 @@
         <slot v-else />
       </main>
     </div>
-  </transition>
+  </transition> -->
 </template>
-<script lang="ts">
-import { computed, defineComponent, reactive, toRefs, watch } from 'vue';
-import MessageSystem from './components/message-system.vue';
-import { handleErrorPrompts, isArrayEqual } from '../utils';
+<script>
+import { computed, defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
+import { router } from '../../../../router'
 
 const TUIContact = defineComponent({
   name: 'TUIContact',
-  components: {
-    MessageSystem,
+
+  props:{
+
   },
-  props: {
-    displayOnlineStatus: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props: any, ctx: any) {
-    const TUIServer: any = TUIContact.TUIServer;
-    const { t } = TUIServer.TUICore.config.i18n.useI18n();
+
+  setup(props,ctx){
+    const TUIServer = TUIContact.TUIServer
+
     const data = reactive({
-      groupList: [],
-      searchGroup: {},
-      searchID: '',
-      currentGroup: null,
-      systemConversation: {
-        unreadCount: 0,
-      },
-      systemMessageList: [],
-      columnName: '',
-      types: TUIServer.TUICore.TIM.TYPES,
-      isSearch: false,
       env: TUIServer.TUICore.TUIEnv,
-      friendList: [],
-      userIDList: [],
-      currentFriend: {},
-      displayOnlineStatus: false,
-      onlineStatus: false,
-      userStatusList: new Map(),
-    });
+      sideList:[
+        {
+          title:'通知',icon:'notification',
+          color:'var(--active-bg)',index:'notice',
+          router:{
+            name:'inform'
+          },
+        },
+        {
+          title:'群聊',icon:'message',color:'var(--success)',index:'group',
+          router:{
+            name:'group'
+          }
+        },
+      ],
+      sideIndex:'notice', // 接收通讯录侧边列表项下标
+    })
 
-    TUIServer.bind(data);
+    const clickSideList = (item) =>{  // 点击通讯录侧边列表
+      data.sideIndex = item.index
+      router.push(item.router)
+    }
 
-    watch(
-      () => props.displayOnlineStatus,
-      async (newVal: any, oldVal: any) => {
-        if (newVal === oldVal) return;
-        data.displayOnlineStatus = newVal;
-        TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
-      },
-      {
-        immediate: true,
+    
+    // console.log(window.$chat);
+    
+    const loadPage = () =>{ // 默认加载路由
+      if(data.sideIndex === 'notice'){
+        router.push(data.sideList[0].router)
       }
-    );
+    }
 
-    watch(
-      () => data.userIDList,
-      (newVal: Array<string>, oldVal: Array<string>) => {
-        if (isArrayEqual(newVal, oldVal)) return;
-        TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
-      }
-    );
+    onMounted(loadPage)
 
-    const isNeedPermission = computed(() => {
-      const isHaveSeif = (data.currentGroup as any).selfInfo.userID;
-      const isPermission =
-        (data.currentGroup as any).joinOption === TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION;
-      return !isHaveSeif && isPermission;
-    });
+    return{
+      ...toRefs(data),clickSideList,loadPage,
+    }
+  }
 
-    const handleListItem = async (item: any) => {
-      switch (data.columnName) {
-        case 'group':
-          data.currentGroup = item;
-          break;
-        case 'friend':
-          data.currentFriend = item;
-          break;
-      }
-      if (data.isSearch) {
-        data.currentGroup = item;
-      }
-    };
+})
 
-    const handleSearchGroup = async (e: any) => {
-      data.currentGroup = null;
-      if (data.searchID.trim()) {
-        try {
-          await TUIServer.searchGroupByID(data.searchID.trim());
-        } catch (error) {
-          const message = t('TUIContact.该群组不存在');
-          handleErrorPrompts(message, data.env);
-        }
-      }
-    };
-
-    const join = async (group: any) => {
-      const options: any = {
-        groupID: group.groupID,
-        applyMessage: group.applyMessage || t('TUIContact.加群'),
-        type: group?.type,
-      };
-      await TUIServer.joinGroup(options);
-      (data.currentGroup as any).apply = true;
-    };
-
-    const quit = async (group: any) => {
-      await TUIServer.quitGroup(group.groupID);
-      data.currentGroup = null;
-    };
-
-    const enter = async (ID: any, type: string) => {
-      const name = `${type}${ID}`;
-      TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-        back();
-      });
-    };
-
-    const dismiss = (group: any) => {
-      TUIServer.dismissGroup(group.groupID);
-      data.currentGroup = null;
-    };
-
-    const select = async (name: string) => {
-      if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
-        await TUIServer.getSystemMessageList();
-        await TUIServer.setMessageRead();
-      }
-      (data.currentGroup as any) = {};
-      if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
-        (data.currentGroup as any) = data.groupList[0];
-      } else {
-        (data.currentGroup as any) = {};
-      }
-      data.searchID = '';
-      data.columnName = data.columnName === name ? '' : name;
-    };
-
-    const toggleSearch = () => {
-      data.isSearch = !data.isSearch;
-      data.columnName = '';
-      data.searchID = '';
-      data.searchGroup = {};
-      (data.currentGroup as any) = {};
-    };
-
-    const init = () => {
-      data.isSearch = false;
-      data.columnName = '';
-      data.searchID = '';
-      data.searchGroup = {};
-      (data.currentGroup as any) = {};
-    };
-
-    const handleGroupApplication = (params: any) => {
-      TUIServer.handleGroupApplication(params);
-    };
-    const back = () => {
-      (data.currentGroup as any) = {};
-      (data.currentFriend as any) = {};
-      data.columnName = '';
-    };
-
-    const getUserStatusList = (userList: Array<string>) => {
-      TUIServer.TUICore.getUserStatusList(userList);
-    };
-
-    return {
-      ...toRefs(data),
-      handleListItem,
-      handleSearchGroup,
-      join,
-      quit,
-      dismiss,
-      isNeedPermission,
-      select,
-      handleGroupApplication,
-      toggleSearch,
-      init,
-      back,
-      enter,
-      getUserStatusList,
-    };
-  },
-});
 export default TUIContact;
+
+
+
+// import MessageSystem from './components/message-system.vue';
+// import { handleErrorPrompts, isArrayEqual } from '../utils';
+
+// const TUIContact = defineComponent({
+//   name: 'TUIContact',
+//   components: {
+//     MessageSystem,
+//   },
+//   props: {
+//     displayOnlineStatus: {
+//       type: Boolean,
+//       default: false,
+//     },
+//   },
+//   setup(props: any, ctx: any) {
+//     const TUIServer: any = TUIContact.TUIServer;
+//     const { t } = TUIServer.TUICore.config.i18n.useI18n();
+//     const data = reactive({
+//       groupList: [],
+//       searchGroup: {},
+//       searchID: '',
+//       currentGroup: null,
+//       systemConversation: {
+//         unreadCount: 0,
+//       },
+//       systemMessageList: [],
+//       columnName: '',
+//       types: TUIServer.TUICore.TIM.TYPES,
+//       isSearch: false,
+//       env: TUIServer.TUICore.TUIEnv,
+//       friendList: [],
+//       userIDList: [],
+//       currentFriend: {},
+//       displayOnlineStatus: false,
+//       onlineStatus: false,
+//       userStatusList: new Map(),
+//     });
+
+//     TUIServer.bind(data);
+
+//     watch(
+//       () => props.displayOnlineStatus,
+//       async (newVal: any, oldVal: any) => {
+//         if (newVal === oldVal) return;
+//         data.displayOnlineStatus = newVal;
+//         TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
+//       },
+//       {
+//         immediate: true,
+//       }
+//     );
+
+//     watch(
+//       () => data.userIDList,
+//       (newVal: Array<string>, oldVal: Array<string>) => {
+//         if (isArrayEqual(newVal, oldVal)) return;
+//         TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
+//       }
+//     );
+
+//     const isNeedPermission = computed(() => {
+//       const isHaveSeif = (data.currentGroup as any).selfInfo.userID;
+//       const isPermission =
+//         (data.currentGroup as any).joinOption === TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION;
+//       return !isHaveSeif && isPermission;
+//     });
+
+//     const handleListItem = async (item: any) => {
+//       switch (data.columnName) {
+//         case 'group':
+//           data.currentGroup = item;
+//           break;
+//         case 'friend':
+//           data.currentFriend = item;
+//           break;
+//       }
+//       if (data.isSearch) {
+//         data.currentGroup = item;
+//       }
+//     };
+
+//     const handleSearchGroup = async (e: any) => {
+//       data.currentGroup = null;
+//       if (data.searchID.trim()) {
+//         try {
+//           await TUIServer.searchGroupByID(data.searchID.trim());
+//         } catch (error) {
+//           const message = t('TUIContact.该群组不存在');
+//           handleErrorPrompts(message, data.env);
+//         }
+//       }
+//     };
+
+//     const join = async (group: any) => {
+//       const options: any = {
+//         groupID: group.groupID,
+//         applyMessage: group.applyMessage || t('TUIContact.加群'),
+//         type: group?.type,
+//       };
+//       await TUIServer.joinGroup(options);
+//       (data.currentGroup as any).apply = true;
+//     };
+
+//     const quit = async (group: any) => {
+//       await TUIServer.quitGroup(group.groupID);
+//       data.currentGroup = null;
+//     };
+
+//     const enter = async (ID: any, type: string) => {
+//       const name = `${type}${ID}`;
+//       TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
+//         // 通知 TUIConversation 添加当前会话
+//         // Notify TUIConversation to toggle the current conversation
+//         TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+//         back();
+//       });
+//     };
+
+//     const dismiss = (group: any) => {
+//       TUIServer.dismissGroup(group.groupID);
+//       data.currentGroup = null;
+//     };
+
+//     const select = async (name: string) => {
+//       if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+//         await TUIServer.getSystemMessageList();
+//         await TUIServer.setMessageRead();
+//       }
+//       (data.currentGroup as any) = {};
+//       if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+//         (data.currentGroup as any) = data.groupList[0];
+//       } else {
+//         (data.currentGroup as any) = {};
+//       }
+//       data.searchID = '';
+//       data.columnName = data.columnName === name ? '' : name;
+//     };
+
+//     const toggleSearch = () => {
+//       data.isSearch = !data.isSearch;
+//       data.columnName = '';
+//       data.searchID = '';
+//       data.searchGroup = {};
+//       (data.currentGroup as any) = {};
+//     };
+
+    // const init = () => {
+    //   data.isSearch = false;
+    //   data.columnName = '';
+    //   data.searchID = '';
+    //   data.searchGroup = {};
+    //   (data.currentGroup as any) = {};
+    // };
+
+//     const handleGroupApplication = (params: any) => {
+//       TUIServer.handleGroupApplication(params);
+//     };
+//     const back = () => {
+//       (data.currentGroup as any) = {};
+//       (data.currentFriend as any) = {};
+//       data.columnName = '';
+//     };
+
+//     const getUserStatusList = (userList: Array<string>) => {
+//       TUIServer.TUICore.getUserStatusList(userList);
+//     };
+
+//     return {
+//       ...toRefs(data),
+//       handleListItem,
+//       handleSearchGroup,
+//       join,
+//       quit,
+//       dismiss,
+//       isNeedPermission,
+//       select,
+//       handleGroupApplication,
+//       toggleSearch,
+//       init,
+//       back,
+//       enter,
+//       getUserStatusList,
+//     };
+//   },
+// });
+// export default TUIContact;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style lang="scss" scoped>
+.font-16{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+:deep(.active-bg){
+  background: var(--active-secondary-bg);
+}
+</style>
