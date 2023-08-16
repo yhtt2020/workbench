@@ -117,7 +117,7 @@ export default defineComponent({
        await tim.changeGroupOwner(options)
        ctx.emit('close')
       break;
-     case 'addmute':  // 新增禁言用户
+     case 'addMuteUser':  // 新增禁言用户
        const muteOption = {
         groupID:props.groupID,
         muteTime:60 * 60 * 24 * 30,
@@ -126,7 +126,7 @@ export default defineComponent({
        await tim.setGroupMemberMuteTime(muteOption);
        ctx.emit('close')
       break;
-     case 'delmute':  // 取消禁言用户
+     case 'removeMuteUser':  // 取消禁言用户
        const mOption = {
         groupID:props.groupID,
         muteTime:0,
@@ -135,6 +135,22 @@ export default defineComponent({
        await tim.setGroupMemberMuteTime(mOption);
        ctx.emit('close')
       break;
+     case 'removeMember':
+      const removeMemberOption = {
+        groupID:props.groupID,
+        userIDList:[`${data.adminList[0].userID}`],
+      }
+      await tim.deleteGroupMember(removeMemberOption)
+      ctx.emit('closeUser')
+      break;
+     case 'addMember':
+      const addMemberOption = {
+        groupID:props.groupID,
+        userIDList:[`${data.adminList[0].userID}`],
+      }
+      await tim.addGroupMember(addMemberOption)
+      ctx.emit('closeUser')
+      break;
      default:
       break;
     }
@@ -142,7 +158,7 @@ export default defineComponent({
 
 
   const cancel = () =>{  // 取消弹窗
-    ctx.emit('close')
+    ctx.emit('closeUser')
   }
 
   return{

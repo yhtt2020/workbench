@@ -47,11 +47,11 @@
         </div>
 
         <div class="flex" v-if="groupManageInfo.role === 'Owner' || groupManageInfo.role === 'Admin'">
-          <div class="flex pointer items-center justify-center active-button rounded-lg"   style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addMute('addmute')">
+          <div class="flex pointer items-center justify-center active-button rounded-lg"   style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addMute('addMuteUser')">
            <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
  
-          <div class="flex pointer items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="addMute('delmute')">
+          <div class="flex pointer items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="addMute('removeMuteUser')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>
         </div>
@@ -61,9 +61,9 @@
   </div>
 
   <Modal v-if="isMemeberShow" v-model:visible="isMemeberShow" :blurFlag="true">
-    <UserSelect :list="type === 'addAdmin' ? addList : type === 'delAdmin' ?  userList  : type === 'addmute' ?  addList : clearMute  "
+    <UserSelect :list="type === 'addAdmin' ? addList : type === 'delAdmin' ?  userList  : type === 'addMuteUser' ?  addList : clearMute  "
     :type="type" :groupID="groupManageInfo.groupID" 
-    :server="server" @close="close"
+    :server="server" @close="close"  @closeUser="isMemeberShow = false"
     >
     </UserSelect>
   </Modal> 
@@ -103,9 +103,15 @@ export default defineComponent({
         data.addList = props.groupManageInfo.list
         break;
       case 'delAdmin':
-        data.isMemeberShow = true
-        data.type = type
-        data.userList = isAdminList
+        
+        if(isAdminList.value.length !== 0){
+          data.isMemeberShow = true
+          data.type = type
+          data.userList = isAdminList
+        }else{
+          data.isMemeberShow = false
+        }
+        
         break;
       default:
         break;
@@ -113,14 +119,18 @@ export default defineComponent({
   }
 
   const addMute = (type) =>{  // 新增禁言用户
-    if(type === 'addmute'){
+    if(type === 'addMuteUser'){
       data.isMemeberShow = true
       data.type = type
       data.addList = props.groupManageInfo.list
     }else{
-      data.isMemeberShow = true
-      data.type = type
-      data.clearMute = muteList
+      if(muteList.value.length !== 0){
+        data.isMemeberShow = true
+        data.type = type
+        data.clearMute = muteList
+      }else{
+        data.isMemeberShow = false
+      }
     }
   }
 
