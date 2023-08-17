@@ -1,6 +1,7 @@
 <template>
-  <div  style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
-       class="drag" >
+  <div
+    style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
+    class="drag">
     <div v-if="launching" style="margin: auto;">
       <div class="animate-bounce mb-5 ">
         <a-avatar :size="60"
@@ -14,38 +15,41 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
           </path>
         </svg>
-       欢迎回来，又是元气满满的一天！
+        欢迎回来，又是元气满满的一天！
       </div>
     </div>
     <div v-else style="background: #333;width: 100vw;height:auto" class=" ">
-    <div class="no-drag s-bg rounded-lg p-10" style="width: 600px;margin: auto">
+      <div class="no-drag s-bg rounded-lg p-10" style="width: 600px;margin: auto">
 
-      <h3 style="text-align: center;font-size: 1.5em"> <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar> 想天工作台</h3>
-      <div class="text-center text-md mb-10 ml-40">—— 划时代的副屏效率神器 </div>
-      <p v-if="!userInfo">
-        <div class="mb-5 xt-text" style="font-size: 16px">
-          由于本产品功能需要借助网络，目前暂未提供离线模式。<br>
-          <strong>请登录后使用。</strong><br>
+        <h3 style="text-align: center;font-size: 1.5em">
+          <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar>
+          想天工作台
+        </h3>
+        <div class="text-center text-md mb-10 ml-40">—— 划时代的副屏效率神器</div>
+        <p v-if="!userInfo">
+          <div class="mb-5 xt-text" style="font-size: 16px">
+            由于本产品功能需要借助网络，目前暂未提供离线模式。<br>
+            <strong>请登录后使用。</strong><br>
 
-        </div>
-        <div class="mb-10 xt-text-2" >如遇网络问题，请检查系统代理或耐心等待。</div>
-        <a-button size="large" block type="primary" @click="login">登录/注册账号</a-button>
-      </p>
-      <div class="text-center" v-else>
-        <div class="mb-3 mt-3  inline-block">
-          <div>
-            <a-avatar :size="68" :src="userInfo.avatar"></a-avatar>
           </div>
-          <div class="text-lg mt-4">
-            你好，{{ userInfo.nickname }}
+          <div class="mb-10 xt-text-2">如遇网络问题，请检查系统代理或耐心等待。</div>
+          <a-button size="large" block type="primary" @click="login">登录/注册账号</a-button>
+        </p>
+        <div class="text-center" v-else>
+          <div class="mb-3 mt-3  inline-block">
+            <div>
+              <a-avatar :size="68" :src="userInfo.avatar"></a-avatar>
+            </div>
+            <div class="text-lg mt-4">
+              你好，{{ userInfo.nickname }}
+            </div>
           </div>
         </div>
-      </div>
-      <div class="flex">
-        <a-button block v-if="userInfo" type="primary" size="large" class="m-3"  @click="goDirect">开始使用</a-button>
+        <div class="flex">
+          <a-button block v-if="userInfo" type="primary" size="large" class="m-3" @click="goDirect">开始使用</a-button>
+        </div>
       </div>
     </div>
-  </div>
   </div>
 
 </template>
@@ -66,7 +70,7 @@ import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
 import { navStore } from '../store/nav'
-import {clipboardStore} from "../store/clipboard";
+import { clipboardStore } from '../store/clipboard'
 import { browserStore } from '../store/browser'
 import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
@@ -122,7 +126,7 @@ export default {
         if (Object.keys(window.loadedStore).some(key => {
           let check = !window.loadedStore[key]
           if (window.loadedStore[key] === false)
-          return check
+            return check
         })) {
           //未全部搞定
           return
@@ -162,16 +166,16 @@ export default {
         })
       }, 5000)
     },
-    goDirect(){
+    goDirect () {
       this.$router.replace({ name: 'wizard' })
-      localStorage.setItem('wizarded',1)
+      localStorage.setItem('wizarded', 1)
     },
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       chatStore().login()
-      if(localStorage.getItem('wizarded')){
+      if (localStorage.getItem('wizarded')) {
         this.$router.replace({ name: 'home' })
-      }else{
+      } else {
 
       }
     },
@@ -199,7 +203,9 @@ export default {
         //this.lvInfo = lvInfo
         window.loadedStore['userInfo'] = true
         this.setUser(userInfo)
-        this.enter()
+        if (this.$route.name === 'splash') {
+          this.enter()
+        }
       })
     },
     initStore (store, name) {
@@ -217,7 +223,7 @@ export default {
 
       this.bindClientEvents()
 
-      if(clipboardStore().enable){
+      if (clipboardStore().enable) {
         clipboardStore().prepare()
         clipboardStore().start()
       }
@@ -241,10 +247,10 @@ export default {
         // }
       }
       this.launching = false
-      if(!this.userInfo){
+      if (!this.userInfo) {
         //如果个人信息不存在，则直接返回
         return
-      }else{
+      } else {
         this.enter()
       }
 

@@ -229,9 +229,10 @@
           </header>
 
           <footer class="TUI-contact-main-info-footer">
-            <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">
-              {{ $t('TUIContact.发送消息') }}
-            </button>
+<!--            <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">-->
+<!--              {{ $t('TUIContact.发送消息') }}-->
+<!--            </button>-->
+            <SendMessageButton :uid="currentFriend.userID"></SendMessageButton>
           </footer>
         </div>
         <div class="TUI-contact-system" v-else-if="columnName === 'system'">
@@ -254,11 +255,11 @@
 import { computed, defineComponent, reactive, toRefs, watch } from 'vue';
 import MessageSystem from './components/message-system.vue';
 import { handleErrorPrompts, isArrayEqual } from '../utils';
-
+import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
 const TUIContact = defineComponent({
   name: 'TUIContact',
   components: {
-    MessageSystem,
+    MessageSystem,SendMessageButton
   },
   props: {
     displayOnlineStatus: {

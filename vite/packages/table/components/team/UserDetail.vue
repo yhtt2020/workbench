@@ -2,7 +2,7 @@
   <div style="padding-top: 20px;padding-left: 20px">
     <a-row :gutter="20">
       <a-col :span="6" >
-        <FrameAvatar :avatar-size="50" :frame-url="userInfo.equippedItems?.frameDetail.image" class="mt-3 ml-3" :size="50" :avatar-url="userInfo.avatar"></FrameAvatar>
+        <FrameAvatar   @click="showCard" :avatar-size="50" :frame-url="userInfo.equippedItems?.frameDetail.image" class="mt-3 ml-3 cursor-pointer" :size="50" :avatar-url="userInfo.avatar"></FrameAvatar>
       </a-col>
       <a-col :span="18">
         <div class=" mb-1 2 font-bold truncate"> {{ userInfo.nickname }}
@@ -48,6 +48,7 @@ import OnlineGradeDisplay from './OnlineGradeDisplay.vue'
 import OnlineMedal from './OnlineMedal.vue'
 import Medal from './Medal.vue'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
+import { appStore } from '../../store'
 export default {
   name: 'UserDetail',
   components: { FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
@@ -71,7 +72,8 @@ export default {
         this.updateUserInfo().then(()=>{
           this.key=Date.now()
         })
-      }
+      },
+      deep:true
     }
   },
   async mounted () {
@@ -79,6 +81,7 @@ export default {
   },
   methods:{
     ...mapActions(teamStore,['getMemberGrade','getUserMedal']),
+    ...mapActions(appStore,['showUserCard']),
     async updateUserInfo () {
       this.getUserMedal(this.userInfo.uid).then(result => {
         if (result) {
@@ -98,6 +101,9 @@ export default {
       this.online_m = (this.memberInfo.online_minutes % 60).toLocaleString('us')
       this.daily_h = (this.daily_minutes / 60).toFixed(0)
       this.daily_m = (this.daily_minutes % 60).toFixed(0)
+    },
+    showCard(){
+      this.showUserCard(this.userInfo.uid,this.userInfo)
     }
   },
 

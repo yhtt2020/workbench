@@ -328,7 +328,7 @@ body{
   }
 }
 .bg-mask{
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--secondary-bg) !important;
 }
 .drawer-item-bg{
   background: rgba(42, 42, 42, 1);//右侧抽屉按钮和输入框统一颜色

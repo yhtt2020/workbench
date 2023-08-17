@@ -98,7 +98,7 @@ export default {
   mounted() {
 
     this.grade = this.userInfo.onlineGradeExtra
-    this.clickStep(this.abilityGrade)
+      this.clickStep(this.abilityGrade)
   },
   methods: {
     openGradeTip() {
