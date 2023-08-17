@@ -35,12 +35,9 @@ export default defineComponent({
           route:{ name: 'chat'}
         },
         {
-          title: '团队',index: 'contact',icon:'team',
+          title: '通讯录',index: 'contact',icon:'team',
           route:{ name: 'contact' }
         },
-        {
-          title:''
-        }
       ]
     }
   },
