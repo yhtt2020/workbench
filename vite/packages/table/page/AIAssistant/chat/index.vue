@@ -30,10 +30,10 @@ export default {
     Main,
   },
   async mounted() {
-    let res = await test();
-    console.log("res :>> ", res);
-    let data = await gpt3([{ role: "user", content: "Hello!" }]);
-    console.log('data :>> ', data);
+    // let res = await test();
+    // console.log("res :>> ", res);
+    // let data = await gpt3([{ role: "user", content: "Hello!" }]);
+    // console.log('data :>> ', data);
   },
 };
 </script>

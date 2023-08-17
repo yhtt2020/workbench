@@ -77,7 +77,8 @@
 <script>
 import Icon from "../components/icon.vue";
 import Set from "./Set.vue";
-import XtZoom from "../../../card/components/Zoom/index.vue";
+// import XtZoom from "../../../card/components/Zoom/index.vue";
+import XtZoom from "../../../../ui/components/Zoom/index.vue";
 import { sizeValues } from "../components/iconConfig";
 import { message } from "ant-design-vue";
 export default {

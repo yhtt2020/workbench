@@ -16,6 +16,7 @@ import { marked } from "marked";
 import { getMd } from "../api/test.js";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
+import { gpt3 } from "../../service/api/ai";
 export default {
   computed: {
     ...mapWritableState(aiStore, ["selectTopicIndex", "topicList", "chatObj"]),
@@ -72,13 +73,21 @@ export default {
       this.markdown = res;
     },
     async onSearch(serach) {
+      console.log('serach :>> ', serach);
       let user = {
         content: marked.parse(serach),
-        type: "user",
+        role: "user",
         time: Date.now(),
       };
 
       this.chatList.push(user);
+      let res = await gpt3([
+        {
+          role: "user",
+          content: serach,
+        },
+      ]);
+
       this.isSearch = false;
       this.markdown =
         "早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1";
