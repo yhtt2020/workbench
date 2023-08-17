@@ -17,7 +17,7 @@
 <script>
 import Topic from "./topic/index.vue";
 import Main from "./main/index.vue";
-import { test, gpt3 } from "../service/api/ai";
+//import { test, gpt3 } from "../service/api/ai";
 
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../store/ai";
@@ -30,10 +30,10 @@ export default {
     Main,
   },
   async mounted() {
-    let res = await test();
+    //let res = await test();
     console.log("res :>> ", res);
-    let data = await gpt3([{ role: "user", content: "Hello!" }]);
-    console.log('data :>> ', data);
+   // let data = await gpt3([{ role: "user", content: "Hello!" }]);
+   // console.log('data :>> ', data);
   },
 };
 </script>
