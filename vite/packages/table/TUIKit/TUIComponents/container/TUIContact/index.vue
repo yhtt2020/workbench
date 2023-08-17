@@ -285,7 +285,7 @@ const TUIContact = defineComponent({
   },
   setup(props: any, ctx: any) {
     const TUIServer: any = TUIContact.TUIServer;
-    // const { t } = TUIServer.TUICore.config.i18n.useI18n();
+    const { t } = TUIServer.TUICore.config.i18n.useI18n();
     const data = reactive({
       groupList: [],
       searchGroup: {},
