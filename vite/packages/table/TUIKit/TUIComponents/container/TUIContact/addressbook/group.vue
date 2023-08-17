@@ -1,24 +1,24 @@
 <template>
- <div class="flex flex-col" style="width: 100%;">
-  <div class="flex items-center justify-between" style="margin-bottom: 14px;">
-   <span class="font-16" style="color: var(--primary-text);">组织群聊 ({{ list.length }}个) </span>
-   
-   <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);">
-    <Icon icon="tianjia2" style="width: 20px;height: 20px;color: var(--primary-text);"></Icon>
-   </div>
-  </div>
-
-  <vue-custom-scrollbar :settings="settingsScroller" style="height:65%;">
-   <div v-for="item in list" class="flex items-center rounded-lg list-hover pointer" style="padding: 14px 15px;" @click="clickGroupList(item)">
-    <a-avatar shape="square" :size="32" :src="item.avatar"></a-avatar>
-    <div class="flex flex-col" style="margin-left: 16px;">
-     <span class="font-16" style="color:var(--primary-text);">{{ item.name }}</span>
-     <span class="font-14" style="color:var(--secondary-text);">200人</span>
+  <div class="h-full w-full flex flex-col">
+    <div class="flex items-center justify-between" style="margin-bottom: 14px;">
+      <span class="font-16" style="color: var(--primary-text);">群聊 ({{ list.length }}个) </span>
+      
+      <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);">
+       <Icon icon="tianjia2" style="width: 20px;height: 20px;color: var(--primary-text);"></Icon>
+      </div>
     </div>
-   </div>
-  </vue-custom-scrollbar>
-
- </div>
+    <div style="color: var(--primary-text);height:100%;">
+      <vue-custom-scrollbar :settings="settingsScroller">
+        <div v-for="item in list" class="flex items-center rounded-lg list-hover pointer" style="padding: 14px 15px;" @click="clickGroupList(item)">
+         <a-avatar shape="square" :size="32" :src="item.avatar"></a-avatar>
+         <div class="flex flex-col" style="margin-left: 16px;">
+          <span class="font-16" style="color:var(--primary-text);">{{ item.name }}</span>
+          <span class="font-14" style="color:var(--secondary-text);">200人</span>
+         </div>
+        </div>
+      </vue-custom-scrollbar>
+    </div>
+  </div>
 
  <a-drawer v-model:visible="groupShow" width="500" placement="right" :footer="null">
     <GroupDetail :group="groupItem" :memeber="memeber" @closeDrawer="groupShow = false"></GroupDetail>
@@ -105,15 +105,34 @@ export default defineComponent({
   }
 }
 
-@media screen and (max-height:700px) {
+@media screen and(max-height:600px) {
   :deep(.ps-container){
-    height: 50% !important;
+    height:85% !important;
   }
 }
 
-@media screen and (min-height:1000px){
+@media screen and(min-height:601px) and (max-height:700px) {
   :deep(.ps-container){
-    height: 70% !important;
+    height:90% !important;
   }
 }
+
+@media screen and(min-height:701px) and (max-height:800px) {
+  :deep(.ps-container){
+    height:90% !important;
+  }
+}
+
+@media screen and(min-height:801px) and (max-height:900px) {
+  :deep(.ps-container){
+    height:90% !important;
+  }
+}
+
+@media screen and(min-height:901px) {
+  :deep(.ps-container){
+    height:92% !important;
+  }
+}
+
 </style>

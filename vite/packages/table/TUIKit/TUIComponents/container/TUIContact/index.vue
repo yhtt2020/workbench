@@ -10,10 +10,10 @@
           {{ item.title }} ({{ groupList.length }}个)
          </div>
          <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
-          {{ item.title }} ({{ friendList.length }}个)
+          {{ item.title }} ({{ friendLists.length }}个)
          </div>
          <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
-          {{ item.title }}
+          {{ item.title }} ({{ systemMessageList ? systemMessageList.length : 0 }}个)
          </div>
         </div>
 
@@ -158,7 +158,7 @@
         </div>
 
         <div v-else-if="sideIndex === 'friend' " class="TUI-contact-main-info">
-          <Friend :list="friendList"></Friend>
+          <Friend :list="friendLists"></Friend>
         </div>
         
         <!-- <header class="TUI-contact-main-h5-title" v-if="env.isH5">
@@ -269,6 +269,7 @@ import { handleErrorPrompts, isArrayEqual } from '../utils';
 import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
 import Group from './addressbook/group.vue'
 import Friend from './addressbook/friend.vue';
+import { appStore } from '../../../../store';
 
 const TUIContact = defineComponent({
   name: 'TUIContact',
@@ -313,6 +314,8 @@ const TUIContact = defineComponent({
     });
 
     TUIServer.bind(data);
+
+    const store = appStore()
 
     watch(
       () => props.displayOnlineStatus,
@@ -387,7 +390,8 @@ const TUIContact = defineComponent({
       }else if(name === 'group'){
         (data.currentGroup as any) = data.groupList[0];
       }else if(name === 'friend'){
-        (data.currentGroup as any) = data.friendList[0]
+        const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+        (data.currentGroup as any) = index
       }
 
       // if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
@@ -425,12 +429,18 @@ const TUIContact = defineComponent({
       TUIServer.TUICore.getUserStatusList(userList);
     };
 
+
+    const friendLists = computed(() =>{
+      const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+      return index
+    })
+
     return {
       ...toRefs(data),
       handleListItem,
       handleSearchGroup,
       join,
-      isNeedPermission,
+      isNeedPermission,friendLists,
       select,
       handleGroupApplication,
       toggleSearch,
@@ -455,7 +465,7 @@ export default TUIContact;
 }
 
 :deep(.TUI-contact-main-info){
-  padding:0 16px 16px 16px !important;
+  padding:0  16px !important;
 }
 
 </style>
