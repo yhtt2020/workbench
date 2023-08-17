@@ -72,7 +72,7 @@
 // 弹出层body结束
 
 .ant-switch-checked {
-  background: var(--active-bg);
+  background: var(--active-bg) !important;
 }
 .ant-table-content {
   .ant-table-thead > tr > th {
