@@ -10,13 +10,12 @@
       :style="[bgSize, backgroundState]"
       :data-index="index"
     >
-      <!-- src="../../../../../../temporaryIcon/my_image.png" -->
       <img
         v-if="src && src.length > 0"
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index" style="max-width: 100%;max-height: 100%"
+        :data-index="index"
       />
     </div>
     <div
@@ -28,18 +27,25 @@
       {{ titleValue }}
     </div>
   </div>
+
+  <XtGuided v-if="visible" @close="visible = false"></XtGuided>
 </template>
 
 <script>
 import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
-
+import { sizeValues } from "./iconConfig";
 export default {
   mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
     state: { type: Boolean, default: false },
     index: { type: Number },
+  },
+  data() {
+    return {
+      visible: false,
+    };
   },
   computed: {
     // 动态切换圆角状态
@@ -90,80 +96,6 @@ export default {
       if (this.isReSize) {
         size = "mini";
       }
-      const sizeValues = {
-        mini: {
-          w: 134,
-          h: 96,
-          square: {
-            imgW: 66,
-            imgH: 66,
-          },
-          rectangle: {
-            imgW: 124,
-            imgH: 66,
-          },
-        },
-        mini1: {
-          w: 280,
-          h: 96,
-          square: {
-            imgW: 66,
-            imgH: 66,
-          },
-          rectangle: {
-            imgW: 270,
-            imgH: 66,
-          },
-        },
-        small: {
-          w: 280,
-          h: 205,
-          square: {
-            imgW: 175,
-            imgH: 175,
-          },
-          rectangle: {
-            imgW: 270,
-            imgH: 175,
-          },
-        },
-        default: {
-          w: 280,
-          h: 420,
-          square: {
-            imgW: 270,
-            imgH: 270,
-          },
-          rectangle: {
-            imgW: 270,
-            imgH: 390,
-          },
-        },
-        long: {
-          w: 570,
-          h: 205,
-          square: {
-            imgW: 175,
-            imgH: 175,
-          },
-          rectangle: {
-            imgW: 560,
-            imgH: 175,
-          },
-        },
-        big: {
-          w: 570,
-          h: 420,
-          square: {
-            imgW: 390,
-            imgH: 390,
-          },
-          rectangle: {
-            imgW: 560,
-            imgH: 390,
-          },
-        },
-      };
 
       let { w, h } = sizeValues[size];
 
@@ -243,10 +175,24 @@ export default {
       }
       return;
     },
+    closeModal() {
+      window.open("https://www.apps.vip/download/");
+      this.visible = false;
+    },
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
         this.$emit("custom-event");
+        return;
+      }
+      // 先检测是不是web端
+      if (!this.$isXT) {
+        let arr = ["default", "internal", "thinksky"];
+        if (this.link == "link" && arr.includes(this.open.type)) {
+          window.open(this.open.value);
+        } else {
+          this.visible = true;
+        }
         return;
       }
       console.log(

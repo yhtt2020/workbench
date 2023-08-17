@@ -1,6 +1,4 @@
 const { fs } = window.$models;
-
-
 import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";

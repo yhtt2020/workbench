@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col" style="padding: 12px; width: 650px; height: 530px;" v-if="isNextShow === false">
     <!-- 顶部关闭 -->
-    <div class="top-close" style="margin: 16px 0;">
+    <div class="top-close" style="margin-bottom: 16px;">
       <div class="font-16 flex items-center justify-center" style="color:var(--primary-text);width: 95%;">选择联系人</div>
       <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center"
         style="background: var(--secondary-bg);" @click="closeContact"
