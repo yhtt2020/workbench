@@ -15,7 +15,7 @@
         :src="src"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index" style="max-width: 100%;max-height: 100%"
+        :data-index="index"
       />
     </div>
     <div
