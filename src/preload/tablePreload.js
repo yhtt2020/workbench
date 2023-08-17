@@ -30,9 +30,14 @@ window.$models = {
   rpc:require('../rpc/rpc'),
   electron:require('electron'),
   osUtils:require('node-os-utils'),
+  win32:require('hmc-win32')
   // hid:require('node-hid')
 }
 window.$models.appModel.initDb()
+// const win32=require('hmc-win32')
+// setInterval(()=>{
+//   console.log(win32.getPointWindowName())
+// },1000)
 
 window.$models.storageModel.initDb()
 window.$apis = {

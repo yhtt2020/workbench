@@ -38,9 +38,6 @@ export default defineComponent({
           title: '团队',index: 'contact',icon:'team',
           route:{ name: 'contact' }
         },
-        {
-          title:''
-        }
       ]
     }
   },
