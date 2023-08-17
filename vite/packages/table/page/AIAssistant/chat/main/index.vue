@@ -7,6 +7,7 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
+  <xt-view ifFull="false"></xt-view>
 </template>
 <script>
 import Text from "./Text.vue";
@@ -73,7 +74,7 @@ export default {
       this.markdown = res;
     },
     async onSearch(serach) {
-      console.log('serach :>> ', serach);
+      console.log("serach :>> ", serach);
       let user = {
         content: marked.parse(serach),
         role: "user",
@@ -81,16 +82,18 @@ export default {
       };
 
       this.chatList.push(user);
-      let res = await gpt3([
+      let { choices } = await gpt3([
         {
           role: "user",
           content: serach,
         },
       ]);
 
+      console.log('object :>> ', choices);
       this.isSearch = false;
-      this.markdown =
-        "早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1";
+      this.markdown = choices[0].content;
+      console.log("object :>> ", choices[0].content);
+      return;
       // await this.getMdData();
 
       let gpt = {
