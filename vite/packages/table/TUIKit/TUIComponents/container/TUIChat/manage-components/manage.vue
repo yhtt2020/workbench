@@ -111,7 +111,7 @@
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
     
-    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID" :server="groupServer" @closeUser="close"></UserSelect>
+    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID"  @closeUser="close"></UserSelect>
  </ChangeModal>
  
 

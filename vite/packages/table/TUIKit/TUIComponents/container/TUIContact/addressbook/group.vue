@@ -4,12 +4,12 @@
    <span class="font-16" style="color: var(--primary-text);">组织群聊 ({{ list.length }}个) </span>
    
    <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);">
-    <Icon icon="tianjia2" style="width: 20px;height: 20px;"></Icon>
+    <Icon icon="tianjia2" style="width: 20px;height: 20px;color: var(--primary-text);"></Icon>
    </div>
   </div>
 
   <vue-custom-scrollbar :settings="settingsScroller" style="height:65%;">
-   <div v-for="item in list" class="flex items-center pointer" style="padding: 14px 15px;" @click="clickGroupList(item)">
+   <div v-for="item in list" class="flex items-center rounded-lg list-hover pointer" style="padding: 14px 15px;" @click="clickGroupList(item)">
     <a-avatar shape="square" :size="32" :src="item.avatar"></a-avatar>
     <div class="flex flex-col" style="margin-left: 16px;">
      <span class="font-16" style="color:var(--primary-text);">{{ item.name }}</span>
@@ -20,29 +20,46 @@
 
  </div>
 
+ <a-drawer v-model:visible="groupShow" width="500" placement="right" :footer="null">
+    <GroupDetail :group="groupItem" :memeber="memeber" @closeDrawer="groupShow = false"></GroupDetail>
+ </a-drawer>
+
 </template>
 
 <script>
 import { defineComponent,ref,toRefs,computed,watch, reactive, onMounted } from 'vue'
+import GroupDetail from '../components/group-detail.vue'
+
 
 export default defineComponent({
   props:['list'],
+
+  components:{
+    GroupDetail
+  },
+
   setup(){
 
    const data = reactive({
-     settingsScroller: {  // 滚动条配置 
+    settingsScroller: {  // 滚动条配置 
       useBothWheelAxes: true,
       swipeEasing: true,
       suppressScrollY: false,
       suppressScrollX: true,
       wheelPropagation: true
-     },
-
+    },
+    groupShow:false, // 右侧抽屉
+    groupItem:{}, // 接收点击中的群聊列表项
+    memeber:[]
    })
   
 
-   const clickGroupList = (item) =>{  // 点击群聊列表
-    console.log(item);
+   const clickGroupList = async (item) =>{  // 点击群聊列表
+    data.groupShow = true
+    const res  = await window.$chat.getGroupProfile({groupID:item.groupID})
+    data.groupItem = res.data.group
+    const result = await window.$chat.getGroupMemberList({ groupID:item.groupID, count: 15, offset: 0 })
+    data.memeber = result.data.memberList
    }
 
    return{
@@ -76,6 +93,17 @@ export default defineComponent({
  }
 }
 
+.list-hover{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+    background: var(--active-secondary-bg);
+  }
+  &:hover{
+    opacity: 0.8;
+    background: var(--active-secondary-bg);
+  }
+}
 
 @media screen and (max-height:700px) {
   :deep(.ps-container){

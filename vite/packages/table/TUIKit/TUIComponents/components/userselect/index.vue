@@ -46,12 +46,12 @@ import { defineComponent,ref,reactive,toRefs, computed } from 'vue'
 import _ from 'lodash-es'
 
 export default defineComponent({
- props:['list','type','server','groupID'],
+ props:['list','type','groupID'],
 
  setup(props,ctx){
 
-  const TIM = props.server.TUICore.TIM
-  const tim = props.server.TUICore.tim
+  const TIM = window.$TUIKit.TIM
+  const tim = window.$TUIKit.tim
 
   const data = reactive({
    settingsScroller: {  // 滚动条配置 

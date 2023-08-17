@@ -1,18 +1,18 @@
 <template>
-  <transition @before-leave="init">
+  <transition>
     <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
       <aside class="TUI-contact-left">
         <div v-for="item in sideList" :class="{'active-bg':sideIndex === item.index}" class="flex pointer items-center"  style="padding: 16px;" @click="select(item.index)">
          <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
           <Icon :icon="item.icon" style="color: var(--active-text);"></Icon>
          </div>
-         <div class="font-16" style="color: var(--primary-text);margin: 12px;" v-if="item.index === 'group' ">
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
           {{ item.title }} ({{ groupList.length }}个)
          </div>
-         <div class="font-16" style="color: var(--primary-text);margin: 12px;" v-if="item.index === 'friend' ">
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
           {{ item.title }} ({{ friendList.length }}个)
          </div>
-         <div class="font-16" style="color: var(--primary-text);margin: 12px;" v-if="item.index === 'system' ">
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
           {{ item.title }}
          </div>
         </div>
@@ -153,7 +153,7 @@
           />
         </div>
 
-        <div v-else-if="!!currentGroup?.groupID && sideIndex === 'group' " class="TUI-contact-main-info">
+        <div v-else-if="sideIndex === 'group' " class="TUI-contact-main-info">
           <Group :list="groupList"></Group>
         </div>
 
@@ -284,7 +284,7 @@ const TUIContact = defineComponent({
   },
   setup(props: any, ctx: any) {
     const TUIServer: any = TUIContact.TUIServer;
-    const { t } = TUIServer.TUICore.config.i18n.useI18n();
+    // const { t } = TUIServer.TUICore.config.i18n.useI18n();
     const data = reactive({
       groupList: [],
       searchGroup: {},
@@ -377,52 +377,35 @@ const TUIContact = defineComponent({
       (data.currentGroup as any).apply = true;
     };
 
-    const quit = async (group: any) => {
-      await TUIServer.quitGroup(group.groupID);
-      data.currentGroup = null;
-    };
 
-    const enter = async (ID: any, type: string) => {
-      const name = `${type}${ID}`;
-      TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-        back();
-      });
-    };
-
-    const dismiss = (group: any) => {
-      TUIServer.dismissGroup(group.groupID);
-      data.currentGroup = null;
-    };
 
     const select = async (name: string) => {
       data.sideIndex = name
-      if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+      if(name === 'system'){
         await TUIServer.getSystemMessageList();
         await TUIServer.setMessageRead();
-      }
-      // (data.currentGroup as any) = {};
-      if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+      }else if(name === 'group'){
         (data.currentGroup as any) = data.groupList[0];
-      } else {
-        (data.currentGroup as any) = data.friendList[0];
+      }else if(name === 'friend'){
+        (data.currentGroup as any) = data.friendList[0]
       }
-      data.searchID = '';
-      data.columnName = data.columnName === name ? '' : name;
+
+      // if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+        // await TUIServer.getSystemMessageList();
+        // await TUIServer.setMessageRead();
+      // }
+      // // (data.currentGroup as any) = {};
+      // if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+      //   (data.currentGroup as any) = data.groupList[0];
+      // } else {
+      //   (data.currentGroup as any) = data.friendList[0];
+      // }
+      // data.searchID = '';
+      // data.columnName = data.columnName === name ? '' : name;
     };
 
     const toggleSearch = () => {
       data.isSearch = !data.isSearch;
-      data.columnName = '';
-      data.searchID = '';
-      data.searchGroup = {};
-      (data.currentGroup as any) = {};
-    };
-
-    const init = () => {
-      data.isSearch = false;
       data.columnName = '';
       data.searchID = '';
       data.searchGroup = {};
@@ -447,15 +430,11 @@ const TUIContact = defineComponent({
       handleListItem,
       handleSearchGroup,
       join,
-      quit,
-      dismiss,
       isNeedPermission,
       select,
       handleGroupApplication,
       toggleSearch,
-      init,
       back,
-      enter,
       getUserStatusList,
     };
   },
