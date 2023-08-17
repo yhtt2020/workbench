@@ -464,6 +464,11 @@ export default {
     },
   },
   async mounted() {
+
+    window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(event) =>{  // 全局监听团队聊天消息
+      window.$notice.receiveNotification(event)
+    })
+
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',

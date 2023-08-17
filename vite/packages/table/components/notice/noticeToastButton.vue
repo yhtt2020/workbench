@@ -8,29 +8,47 @@
     </div>
     <div class="flex items-center justify-center px-4 mb-2">{{ message.body }}</div>
     <div class="flex items-center justify-between">
-      <div>{{formatDate(message.time)}}</div>
+      <div>{{formatTime(parseInt(message.time))}}</div>
       <div class="flex">
-        <div class="mr-3 px-5 py-2 rounded-lg flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);" @click="talkLater">稍后再说</div>
-        <div class="px-5 py-2 rounded-lg flex items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow">立即查看</div>
+        <div class="mr-3 px-5 py-2 rounded-lg flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);">稍后再说</div>
+        <!--  @click="talkLater" -->
+        <div class="px-5 py-2 rounded-lg flex items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" >立即查看</div>
+        <!-- @click="viewNow" -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { formatDate } from '../../js/common/sessionNotice'
-export default {
+import { defineComponent,ref,toRefs,computed, } from 'vue'
+import { formatTime } from '../../js/common/date.ts'
+
+
+export default defineComponent({
   props:['message'],
-  methods:{
-    formatDate,
-    talkLater(){
-      this.$emit('closeToast')
-    },
-    viewNow(){
-      this.$emit('nowCheck')
+
+  setup(){
+   
+    
+    return{
+      formatTime,
+      
     }
   }
-}
+})
+
+// export default {
+//   props:['message'],
+//   methods:{
+//     formatDate,
+//     talkLater(){
+//       this.$emit('closeToast')
+//     },
+//     viewNow(){
+//       this.$emit('nowCheck')
+//     }
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

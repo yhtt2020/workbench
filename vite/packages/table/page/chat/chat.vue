@@ -47,16 +47,17 @@ export default defineComponent({
   },
 
   setup() {
+
     const data = reactive({
       env: TUIEnv(),
       currentModel: 'conversation',
       showCall: false,
       showCallMini: false,
+
     });
+
     const route = useRoute()
-
     const TUIServer = (window as any)?.TUIKitTUICore?.TUIServer;
-
     const TIM = TUIServer.TUICallKit.TUICore.TIM
     const tim = TUIServer.TUICallKit.tim
 
@@ -87,23 +88,6 @@ export default defineComponent({
       return;
     };
 
-
-    const listenGroupMessage = () => {  // 监听群组消息
-      // tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event: { data: any[]; }) => {
-      //   event.data.forEach((message) => {
-      //     console.log(message)
-      //     const option = {
-      //       title:'群组消息',
-      //       body:`${message.payload.text}`,
-      //       icon:`${message.avatar}`,
-      //       level:'low',
-      //       time: Date.now()
-      //     }
-      //     window.$notice.sendNotice(option)
-      //   })
-      // })
-    }
-
     const handlerParams=(to=route)=>{
       if(to.params.action==='sendMessage'){
         const {uid} =to.params
@@ -119,7 +103,6 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      listenGroupMessage()
       handlerParams()
     })
 
@@ -136,7 +119,6 @@ export default defineComponent({
       afterCalling,
       onMinimized,
       onMessageSentByMe,
-      listenGroupMessage,
     };
   },
 });

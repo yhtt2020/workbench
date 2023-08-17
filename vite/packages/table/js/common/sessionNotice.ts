@@ -1,116 +1,66 @@
 import { useToast } from 'vue-toastification'
-import NoticeToastButton from '../../components/notice/noticeToastButton.vue';
+import NoticeToastButton from '../../components/notice/noticeToastButton.vue'
 
 const toast = useToast()
 export class Notifications{
-  notifications:{}
   /**
-   * @param options 消息通知可选参数配置示例如下: 
-   * { 
-   *   title:'标题', body:'内容', time:'时间戳', icon:'图标', subtitle:'副标题',
-   *   from:'消息通知来源为object默认值可以为null',imageUrl:'图片路径', 
-   *   level:'消息通知级别 参数为:low和critical'
-   * }
-   * **/ 
-  sendNotice(options:object): void{
-    this.notifications = options
-    const { level } = options
-    if(level === 'low'){
-      toast.info(
-        {
-          component:NoticeToastButton,
-          props:{
-            message: options
-          },
-          listeners:{
+   * @param notices 接收消息通知内容
+   * **/
 
-          }
-        },
-        {
-          icon:false,
-          closeOnClick:false,
-          closeButton:false,
-          pauseOnFocusLoss:false,
-          pauseOnHover:false,
-          timeout: 0,  
-        }
-      )
-    }else{
-      toast.info(
-        {
-          component:NoticeToastButton,
-          props:{
-            message: options
-          },
-          listeners:{
+  private notices:Notification[] = []
+  private groupAvatar:String = ''
+  
+  private callback?: (notification: Notification) => void;
 
-          }
-        },
-        {
-          icon:false,
-          closeOnClick:false,
-          closeButton:false,
-          pauseOnFocusLoss:false,
-          pauseOnHover:false,
-          timeout:3000,  
-        }
-      )
+  constructor() {}
+
+  // 接收消息通知方法 
+  public async receiveNotification(notification: Notification) {
+    console.log('接收消息通知::>>>',notification.data[0]);
+    
+    // 判断是否为群聊,如果是群聊,根据群聊id获取群聊头像
+    if(notification.data[0].conversationType === 'GROUP'){
+      const res = await window.$chat.getGroupProfile({ groupID:notification.data[0].to })
+      this.groupAvatar = res.data.group.avatar
     }
+    
+
+    if(notification.data[0].payload.hasOwnProperty('text')){
+      const msg = {  // 定义临时变量将数据进行存储
+        title:notification.data[0].conversationType === 'C2C' ? '好友消息':'群聊消息',
+        icon:notification.data[0].conversationType === 'C2C' ?  notification.data[0].avatar : this.groupAvatar,
+        body:notification.data[0].payload.text,
+        time:notification.data[0].time,
+      }
+
+      toast.info(  // 显示通知弹窗
+        {
+          component:NoticeToastButton,props:{message:msg},
+          listeners:{
+           
+          }
+        },
+        {icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, pauseOnHover:true,timeout: 5000,}
+      )
+
+      this.notices.push(msg);
+      if (this.callback) {
+        this.callback(msg);
+      }
+    }else{
+      console.log('系统通知',notification.data[0]);
+    }
+    
+    
+    // const { type } = notification
+    // if(type === 'low'){
+     
+    // }else{
+
+    // }
+    
   }
 
-  removeNotice(){
-    this.notifications = {}
-  }
-
-}
-
-
-
-
-
-
-//  时间戳转换成 几分钟前、刚刚、昨天、日期等等
-export function formatDate(timeVal:any) {
-  const now = Date.now();
-  const current: any = new Date(timeVal * 1000);
-  const diff = Math.floor((now - current) / 1000); // 转换为秒
-  if ( diff < 60 ) {
-    return "刚刚";
-  } 
-
-  else if ( diff < 3600 ) {
-    const minutes = Math.floor(diff / 60);
-    return `${minutes}分钟前`
-  }
-
-  else if (diff < 86400) {
-    const dateObj = new Date(timeVal);
-    const hours = dateObj.getHours();
-    let minutes = dateObj.getMinutes();
-    let m = minutes < 10 ? `0${minutes}` : minutes;
-    return `昨天 ${hours}:${m}` 
-  }
-
-  else if (diff < 259200) {
-    const dateObj = new Date(timeVal);
-    const hours = dateObj.getHours();
-    let minutes = dateObj.getMinutes();
-    let m = minutes < 10 ? `0${minutes}` : minutes;
-    return `前天 ${hours}:${m}`;
-  }
-
-  else{
-    const dateObj = new Date(timeVal * 1000);
-    const year = dateObj.getFullYear();
-    let month = dateObj.getMonth() + 1;
-    let mon = month < 10 ? `0${month}` : month;
-    let day = dateObj.getDate();
-    let r = day < 10 ? `0${day}` : day;
-    const hours = dateObj.getHours();
-    let minutes = dateObj.getMinutes();
-    let min = minutes < 10 ? `0${minutes}` : minutes;
-    return `${year}-${mon}-${r} ${hours}:${min}`;
-  }
 
 
 }

@@ -1,19 +1,19 @@
 <template>
-  <transition @before-leave="init">
+  <transition>
     <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
       <aside class="TUI-contact-left">
         <div v-for="item in sideList" :class="{'active-bg':sideIndex === item.index}" class="flex pointer items-center"  style="padding: 16px;" @click="select(item.index)">
          <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
           <Icon :icon="item.icon" style="color: var(--active-text);"></Icon>
          </div>
-         <div class="font-16" style="color: var(--primary-text);margin: 12px;" v-if="item.index === 'group' ">
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
           {{ item.title }} ({{ groupList.length }}个)
          </div>
-         <div class="font-16" style="color: var(--primary-text);margin: 12px;" v-if="item.index === 'friend' ">
-          {{ item.title }} ({{ friendList.length }}个)
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
+          {{ item.title }} ({{ friendLists.length }}个)
          </div>
-         <div class="font-16" style="color: var(--primary-text);margin: 12px;" v-if="item.index === 'system' ">
-          {{ item.title }}
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
+          {{ item.title }} ({{ systemMessageList ? systemMessageList.length : 0 }}个)
          </div>
         </div>
 
@@ -153,12 +153,12 @@
           />
         </div>
 
-        <div v-else-if="!!currentGroup?.groupID && sideIndex === 'group' " class="TUI-contact-main-info">
+        <div v-else-if="sideIndex === 'group' " class="TUI-contact-main-info">
           <Group :list="groupList"></Group>
         </div>
 
         <div v-else-if="sideIndex === 'friend' " class="TUI-contact-main-info">
-          <Friend :list="friendList"></Friend>
+          <Friend :list="friendLists"></Friend>
         </div>
         
         <!-- <header class="TUI-contact-main-h5-title" v-if="env.isH5">
@@ -269,6 +269,7 @@ import { handleErrorPrompts, isArrayEqual } from '../utils';
 import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
 import Group from './addressbook/group.vue'
 import Friend from './addressbook/friend.vue';
+import { appStore } from '../../../../store';
 
 const TUIContact = defineComponent({
   name: 'TUIContact',
@@ -313,6 +314,8 @@ const TUIContact = defineComponent({
     });
 
     TUIServer.bind(data);
+
+    const store = appStore()
 
     watch(
       () => props.displayOnlineStatus,
@@ -377,52 +380,36 @@ const TUIContact = defineComponent({
       (data.currentGroup as any).apply = true;
     };
 
-    const quit = async (group: any) => {
-      await TUIServer.quitGroup(group.groupID);
-      data.currentGroup = null;
-    };
 
-    const enter = async (ID: any, type: string) => {
-      const name = `${type}${ID}`;
-      TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-        back();
-      });
-    };
-
-    const dismiss = (group: any) => {
-      TUIServer.dismissGroup(group.groupID);
-      data.currentGroup = null;
-    };
 
     const select = async (name: string) => {
       data.sideIndex = name
-      if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+      if(name === 'system'){
         await TUIServer.getSystemMessageList();
         await TUIServer.setMessageRead();
-      }
-      // (data.currentGroup as any) = {};
-      if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+      }else if(name === 'group'){
         (data.currentGroup as any) = data.groupList[0];
-      } else {
-        (data.currentGroup as any) = data.friendList[0];
+      }else if(name === 'friend'){
+        const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+        (data.currentGroup as any) = index
       }
-      data.searchID = '';
-      data.columnName = data.columnName === name ? '' : name;
+
+      // if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+        // await TUIServer.getSystemMessageList();
+        // await TUIServer.setMessageRead();
+      // }
+      // // (data.currentGroup as any) = {};
+      // if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+      //   (data.currentGroup as any) = data.groupList[0];
+      // } else {
+      //   (data.currentGroup as any) = data.friendList[0];
+      // }
+      // data.searchID = '';
+      // data.columnName = data.columnName === name ? '' : name;
     };
 
     const toggleSearch = () => {
       data.isSearch = !data.isSearch;
-      data.columnName = '';
-      data.searchID = '';
-      data.searchGroup = {};
-      (data.currentGroup as any) = {};
-    };
-
-    const init = () => {
-      data.isSearch = false;
       data.columnName = '';
       data.searchID = '';
       data.searchGroup = {};
@@ -442,20 +429,22 @@ const TUIContact = defineComponent({
       TUIServer.TUICore.getUserStatusList(userList);
     };
 
+
+    const friendLists = computed(() =>{
+      const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+      return index
+    })
+
     return {
       ...toRefs(data),
       handleListItem,
       handleSearchGroup,
       join,
-      quit,
-      dismiss,
-      isNeedPermission,
+      isNeedPermission,friendLists,
       select,
       handleGroupApplication,
       toggleSearch,
-      init,
       back,
-      enter,
       getUserStatusList,
     };
   },
@@ -476,7 +465,7 @@ export default TUIContact;
 }
 
 :deep(.TUI-contact-main-info){
-  padding:0 16px 16px 16px !important;
+  padding:0  16px !important;
 }
 
 </style>
