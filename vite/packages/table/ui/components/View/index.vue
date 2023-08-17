@@ -4,12 +4,14 @@
     class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"
     style="z-index: 999"
     @click.stop.self="close()"
-    v-if="currentType == 'popup'"
+    v-if="currentType == 'popup' && visible"
   ></div>
+
   <div
     class="xt-text flex"
     :class="[typeStyle, currentType == 'popup' ? '' : 'h-full']"
     style="z-index: 9999; box-sizing: border-box"
+    v-if="visible"
   >
     <!-- 左侧区域开始 -->
     <div>
@@ -27,7 +29,7 @@
         </div>
         <div class="flex-1">
           <!-- 头部插槽 -->
-          <slot name="header"> </slot>
+          <slot name="header"></slot>
         </div>
         <XtIcon
           class="no-darg"
@@ -38,7 +40,7 @@
         >
         </XtIcon>
         <XtIcon
-          v-if="ifFull"
+          v-if="showFull"
           :icon="isFull ? 'quxiaoquanping_huaban' : 'quanping_huaban'"
           :class="setSpacing('ml')"
           @click="fullScreenClick()"
@@ -63,10 +65,13 @@
 export default {
   name: "XtFullScreen",
   props: {
+    visible: {
+      default: true,
+    },
     title: {
       default: "",
     },
-    ifFull: {
+    showFull: {
       default: true,
     },
     spacing: {
@@ -85,12 +90,23 @@ export default {
         return true;
       },
     },
+    full: {
+      default: false,
+    },
   },
   data() {
     return {
-      isFull: false,
+      isFull: this.full,
       currentType: this.type,
     };
+  },
+  watch: {
+    isFull(newV) {
+      this.$emit("update:full", newV);
+    },
+    full(newV) {
+      this.isFull = newV;
+    },
   },
   computed: {
     typeStyle() {
@@ -122,6 +138,7 @@ export default {
       }
     },
     close() {
+      this.$emit("update:visible", false);
       this.$emit("close");
     },
     setSpacing(name) {

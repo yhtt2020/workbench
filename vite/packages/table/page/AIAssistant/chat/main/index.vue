@@ -7,9 +7,10 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
-  <xt-view ifFull="false"></xt-view>
+  <test></test>
 </template>
 <script>
+import test from "./test.vue"
 import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
@@ -26,6 +27,12 @@ export default {
       let selectChat = this.chatObj[chat.chatId];
       return selectChat;
     },
+  },
+  data() {
+    return {
+      full: false,
+      visible: true,
+    };
   },
   watch: {
     selectTopicIndex(newV) {
@@ -59,7 +66,7 @@ export default {
   components: {
     Text,
     List,
-    View,
+    View,test
   },
   data() {
     return {
@@ -89,7 +96,7 @@ export default {
         },
       ]);
 
-      console.log('object :>> ', choices);
+      console.log("object :>> ", choices);
       this.isSearch = false;
       this.markdown = choices[0].content;
       console.log("object :>> ", choices[0].content);

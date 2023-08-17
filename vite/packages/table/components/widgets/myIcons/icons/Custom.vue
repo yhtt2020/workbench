@@ -62,7 +62,7 @@
   <Teleport to="body">
     <XtView
       type="popup"
-      v-if="titleVisible"
+      v-model:visible="titleVisible"
       @close="titleVisible = false"
       title="修改分组名"
       :showFull="false"

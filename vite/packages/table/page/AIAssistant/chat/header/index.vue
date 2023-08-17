@@ -41,11 +41,10 @@
   </div>
   <!-- 新建模板 -->
   <XtView
-    v-if="createChatVisible"
-    model="popup"
+    v-model:visible="createChatVisible"
+    type="popup"
     title="新建模板"
     :showFull="false"
-    @close="createChatVisible = false"
   >
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
   </XtView>
@@ -53,6 +52,7 @@
   <XtView
     model="popup"
     v-if="buyVisible"
+    
     title="购买"
     :showFull="false"
     @close="buyVisible = false"
