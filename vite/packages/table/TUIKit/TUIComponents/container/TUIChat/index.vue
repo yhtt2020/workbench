@@ -128,13 +128,14 @@
 
   <slot v-else-if="slotDefault" />
 
-  <a-drawer placement="right" width="500" :closable="false" v-model:visible="groupVisible">
-    <div class="flex items-center" style="margin-bottom:16px;">
+  <a-drawer placement="right" width="500" title="群管理" v-model:visible="groupVisible" :bodyStyle="{padding:'24px 24px 40px 24px'}">
+    <!-- :closable="false" -->
+    <!-- <div class="flex items-center" style="margin-bottom:16px;">
       <div class="flex items-center active-button pointer justify-center rounded-lg" style="width: 48px;height: 48px;background: var(--secondary-bg);" @click="groupVisible = false">
         <Icon icon="guanbi" style="color: var(--primary-text);height: 24px;width: 24px;"></Icon>
       </div>
       <div class="flex items-center justify-center font-16" style="color: var(--primary-text);margin-left: 12px;">群管理</div>
-    </div>
+    </div> -->
     <Manage v-if="conversation.groupProfile" @close="groupVisible = false"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
   </a-drawer>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between" style="height: 92%;">
+  <div class="flex flex-col" style="height: 92%;">
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 12px 16px !important;margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterUpdateGroupName">
         <span class="font-14" style="color: var(--primary-text);">群信息</span>
@@ -49,7 +49,7 @@
 
 
     
-    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;">
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
@@ -79,7 +79,7 @@
     </div>
      
     <template v-if="conversation?.selfInfo?.role === 'Owner'">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between" style="padding-bottom: 10px;">
          <div class="flex  rounded-lg pointer  active-button items-center justify-center" 
           style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);"
           @click="changeOwner('change')"
@@ -96,7 +96,7 @@
     </template>
 
     <template v-else>
-      <div class="flex items-center justify-center">    
+      <div class="flex items-center justify-center" style="padding-bottom: 10px;">    
         <div class="flex  rounded-lg pointer active-button items-center justify-center" 
           style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
           @click="exitGroupChat"
