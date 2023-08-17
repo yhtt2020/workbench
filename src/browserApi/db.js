@@ -1,7 +1,13 @@
 const PouchDB = require('pouchdb')
+const path=require('path')
+const fs=require('fs-extra')
+const dbDir=path.join(window.globalArgs['user-data-dir'],'pdb')
+let pdb
+fs.ensureDir(dbDir).then((rs)=>{
+  const name = window.globalArgs['name']
+  pdb = new PouchDB(path.join(dbDir,'db.' + name))
+})
 
-const name = window.globalArgs['name']
-const pdb = new PouchDB('db.' + name)
 const db = {
   instance: pdb,
   put (doc) {
