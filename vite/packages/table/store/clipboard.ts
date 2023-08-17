@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
+import {nanoid} from "nanoid";
 //todo 此处要兼容web版
 const {win32} = window.$models
 let clipboardChanged = null
@@ -8,24 +9,31 @@ win32.watchClipboard(() => {
     clipboardChanged()
   }
 })
+
+
 const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
-    enable: false,
-    previewShow: false,    // 控制预览显示
-    clipSetShow: true, // 是否打开代码高亮
-    showLineNumber: true, // 是否显示行号
-    clipSize: 4,
-    clipMode: 'javascript',  // 存储代码块语言包 默认js
-    clipTheme: 'dracula',      // 存储代码块的主题颜色 默认monokai
     items: [],
-    clipboardObserver: {},
     settings: {
-      duration: 500//ms
+      enable: false,
+      duration: 500,//ms
+      previewShow: false,    // 控制预览显示
+      clipSetShow: true, // 是否打开代码高亮
+      showLineNumber: true, // 是否显示行号
+      clipSize: 4,
+      clipMode: 'javascript',  // 存储代码块语言包 默认js
+      clipTheme: 'dracula',      // 存储代码块的主题颜色 默认monokai
     },
   }),
   actions: {
+    async loadFromDb() {
+      const rs= await tsbApi.db.allDocs('item')
+      this.items=rs.rows.map(row=>{
+        return row?.doc
+      })
+    },
     prepare() {
       clipboardChanged = this.changed
     },
@@ -45,6 +53,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         //是图片
         console.log('剪切板图片变化')
         this.imageChange(clipboard.readImage())
+
         return
       }
 
@@ -68,21 +77,28 @@ export const clipboardStore = defineStore("clipboardStore", {
 
     },
     start() {
-       clipboardChanged=this.changed
+      clipboardChanged = this.changed
     },
     stop() {
-      clipboardChanged=null
+      clipboardChanged = null
     },
     isRunning() {
       return this.clipboardObserver.isRunning()
     },
-    textChange(text: string, beforeText: string) {
+    async textChange(text: string, beforeText: string) {
       let item = {
         type: 'text',
         content: text,
         time: Date.now()
       }
       this.items.unshift(item)
+      await tsbApi.db.put({
+        _id: "item:" + nanoid(8),
+        content: text,
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        type: 'text'
+      })
       console.log('监测到新[文本]剪切板内容', text)
     },
     imageChange(image: any) {
@@ -126,6 +142,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
+      paths: ['settings',]
       // state 中的字段名，按组打包储存
     }]
   }

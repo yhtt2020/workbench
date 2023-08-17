@@ -6,7 +6,7 @@
         <span class="mb-2 primary-title">剪切板</span>
         <span class="secondary-title">关闭后将停止读取剪切板内容</span>
       </div>
-      <a-switch v-model:checked="enable"/>
+      <a-switch  v-model:checked="settings.enable"/>
     </div>
     <span class="primary-title">打开剪切板应用快捷键</span>
     <div class="flex items-center my-6">
@@ -30,7 +30,7 @@
         <span class="primary-title">代码高亮自动识别</span>
         <span class="secondary-title">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch v-model:checked="clipSetShow"/>
+      <a-switch v-model:checked="settings.clipSetShow"/>
     </div>
     <div class="flex items-center pointer justify-center bt-bg button-active button-bg primary-title rounded-lg p-3" @click="openCodeHighlight">
       <span>代码高亮设置</span>
@@ -38,13 +38,13 @@
   </a-drawer>
 
   <!-- 代码高亮设置 -->
-  <a-drawer placement="right" width="500" title="代码高亮设置" v-model:visible="clipSetVisible" @close="onClose">
+  <a-drawer placement="right" width="500" title="代码高亮设置" v-model:visible="settings.clipSetVisible" @close="onClose">
     <div class="flex justify-between mb-6">
       <div class="flex flex-col">
         <span class="primary-title">代码高亮自动识别</span>
         <span class="secondary-title">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch  v-model:checked="clipSetShow"/>
+      <a-switch  v-model:checked="settings.clipSetShow"/>
     </div>
     <div class="mb-6 primary-title">默认语言</div>
     <div @click="openLanguageDrawer" class="mb-6 bt-bg py-3 button-active button-bg flex items-center rounded-lg pointer justify-center">
@@ -52,27 +52,27 @@
     </div>
     <div class="mb-6 primary-title">编辑器主题</div>
     <div @click="openThemeDrawer" class="mb-6 py-3 flex items-center bt-bg button-active  button-bg rounded-lg pointer justify-center">
-      <span>{{clipTheme}}</span>
+      <span>{{settings.clipTheme}}</span>
     </div>
     <div class="flex justify-between mb-6">
       <div class="flex flex-col">
         <span class="primary-title">显示行号</span>
         <span class="secondary-title">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch v-model:checked="showLineNumber" />
+      <a-switch v-model:checked="settings.showLineNumber" />
     </div>
     <div class="mb-6 primary-title">缩进单位</div>
-    <a-input placeholder="4" class="h-12 "  v-model:value="clipSize" @pressEnter="updateIndentUnit($event)"/>
+    <a-input placeholder="4" class="h-12 "  v-model:value="settings.clipSize" @pressEnter="updateIndentUnit($event)"/>
   </a-drawer>
 
   <!-- 主题色模块 -->
   <HorizontalDrawer :rightSelect="themeType" ref="themeRef"
-   v-model:selectRegion="clipTheme"  @getArea="getTheme"
+   v-model:selectRegion="settings.clipTheme"  @getArea="getTheme"
   >
   </HorizontalDrawer>
 
   <!-- 语言包选择 -->
-  <HorizontalDrawer :rightSelect="codeLanguage" v-model:selectRegion="clipMode" ref="languageRef" @getArea="getLanguage"></HorizontalDrawer>
+  <HorizontalDrawer :rightSelect="codeLanguage" v-model:selectRegion="settings.clipMode" ref="languageRef" @getArea="getLanguage"></HorizontalDrawer>
 </template>
 
 <script>
@@ -110,8 +110,7 @@ export default {
   },
   computed:{
     ...mapWritableState(clipboardStore,[
-      'enable','clipSetShow','clipMode',
-      'showLineNumber','clipTheme','clipSize','clipboardObserver'
+      'settings'
     ]),
     selectLanguage(){
       const index = this.codeLanguage.find(el=>{
@@ -164,7 +163,7 @@ export default {
     }
   },
   watch:{
-    'enable':{
+    'settings.enable':{
       handler(newVal, oldVal){
         // console.log('剪切板开关',newVal)
         if (newVal) {
@@ -180,13 +179,13 @@ export default {
       }
     },
     // 是否默认代码高亮
-    'clipSetShow':{
+    'settings.clipSetShow':{
       handler(newVal,oldVal){
         this.isSetCodeHighlight(newVal)
       }
     },
     // 是否显示行号
-    'showLineNumber':{
+    'settings.showLineNumber':{
       handler(newVal,oldVal){
         this.isClipLineNumber(newVal)
       }
