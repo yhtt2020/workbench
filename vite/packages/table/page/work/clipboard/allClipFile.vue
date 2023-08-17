@@ -9,11 +9,8 @@
     </div>
     <div   v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg"
          >
-      <ClipItem :clip="item" @previewItem="getItem"></ClipItem>
-
+      <ClipItem :key="item.updateTime" :clip="item" @previewItem="getItem"></ClipItem>
     </div>
-
-
   </div>
   <ClipTextPreview :previewContent="previewData"></ClipTextPreview>
 </template>

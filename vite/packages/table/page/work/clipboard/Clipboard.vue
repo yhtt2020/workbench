@@ -2,7 +2,7 @@
   <div class="flex items-center clip-container justify-between mx-4 my-4">
     <div class="flex">
       <!-- tab切换开始 -->
-        <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
+      <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
       <!-- tab切换结束 -->
 
       <!-- 导航栏筛选开始 -->
@@ -18,7 +18,8 @@
 
     <!-- 搜索按钮和设置按钮开始 -->
     <div class="flex">
-      <div @click="clipSearch" class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+      <div @click="clipSearch"
+           class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
         <Icon icon="sousuo" style="font-size: 1.5em;"></Icon>
       </div>
       <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet">
@@ -30,13 +31,13 @@
 
   <!-- 剪切板列表展示区域开始 -->
   <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                        class="mx-4 my-2 py-4 h-full "  >
+                        class="mx-4 my-2 py-4 h-full ">
     <div v-if="defaultClipType.name === 'collect'">
       <div class="flex items-center justify-center">
         <a-empty :image="simpleImage"/>
       </div>
     </div>
-    <AllClipFile :clipList="clipContent" v-else></AllClipFile>
+    <AllClipFile :clipList="clipContents" v-else></AllClipFile>
   </vue-custom-scrollbar>
   <!-- 剪切板列表展示区域结束 -->
 
@@ -44,15 +45,17 @@
   <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
 
   <!-- 搜索右侧抽屉开始 -->
-   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
+  <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
     <div class="flex mb-3">
-      <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData" style="background: var(--secondary-bg);"></a-input>
-      <div class="h-10 w-24 ml-3 s-item pointer flex button-active items-center justify-center rounded-lg" @click="clickSearch" style="background: var(--secondary-bg);">
+      <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData"
+               style="background: var(--secondary-bg);"></a-input>
+      <div class="h-10 w-24 ml-3 s-item pointer flex button-active items-center justify-center rounded-lg"
+           @click="clickSearch" style="background: var(--secondary-bg);">
         搜索
       </div>
     </div>
     <span class="search-text">支持输入文本关键词、文件名称搜索</span>
-   </a-drawer>
+  </a-drawer>
   <!-- 搜索右侧抽屉结束 -->
 
   <!-- 设置弹窗 -->
@@ -62,19 +65,19 @@
 <script>
 
 import HorzontanlPanelIcon from '../../../components/HorzontanlPanelIcon.vue'
-import HorizontalDrawer from '../../../components/HorizontalDrawer.vue';
-import TabSwitching from '../../../components/TabSwitching.vue';
-import AllClipFile from './allClipFile.vue';
-import ClipSetDrawer from '../../../components/clipPreview/ClipSetDrawer.vue';
-import {Empty} from 'ant-design-vue';
-import {mapWritableState,mapActions} from "pinia";
-import {clipboardStore} from "../../../store/clipboard";
+import HorizontalDrawer from '../../../components/HorizontalDrawer.vue'
+import TabSwitching from '../../../components/TabSwitching.vue'
+import AllClipFile from './allClipFile.vue'
+import ClipSetDrawer from '../../../components/clipPreview/ClipSetDrawer.vue'
+import { Empty } from 'ant-design-vue'
+import { mapWritableState, mapActions } from 'pinia'
+import { clipboardStore } from '../../../store/clipboard'
 import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
-import { fileList, videoList, audioList } from '../../../js/data/clipboardData';
+import { fileList, videoList, audioList } from '../../../js/data/clipboardData'
 
-export default{
+export default {
   name: 'Clipboard',
 
   components: {
@@ -85,27 +88,31 @@ export default{
     ClipSetDrawer
   },
 
-  data(){
-    return{
+  async mounted () {
+    await this.loadFromDb()
+    console.log(this.items, ' items ________________________')
+  },
+  data () {
+    return {
       // 历史和收藏切换数组
       clipType: [
-        {title: '剪切板历史', icon: 'time-circle', name: 'history'},
-        {title: '收藏', icon: 'star', name: 'collect'}
+        { title: '剪切板历史', icon: 'time-circle', name: 'history' },
+        { title: '收藏', icon: 'star', name: 'collect' }
       ],
       // 历史和收藏切换数组默认值
-      defaultClipType: {title: '剪切板历史', icon: 'time-circle', name: 'history'},
+      defaultClipType: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
 
       // 导航栏筛选分类
       cutType: [
-        {title: '全部', icon: 'appstore', typename: 'all',name:'全部'},
-        {title: '文本', icon: 'text-align-left', typename: 'text',name:'文本'},
-        {title: '图片', icon: 'image', typename: 'image',name:'图片'},
-        {title: '文件', icon: 'file', typename: 'file',name:'文件'},
-        {title: '视频', icon: 'video', typename: 'video',name:'视频'},
-        {title: '音频', icon: 'erji1', typename: 'audio',name:'音频'}
+        { title: '全部', icon: 'appstore', typename: 'all', name: '全部' },
+        { title: '文本', icon: 'text-align-left', typename: 'text', name: '文本' },
+        { title: '图片', icon: 'image', typename: 'image', name: '图片' },
+        { title: '文件', icon: 'file', typename: 'file', name: '文件' },
+        { title: '视频', icon: 'video', typename: 'video', name: '视频' },
+        { title: '音频', icon: 'erji1', typename: 'audio', name: '音频' }
       ],
       // 导航栏筛选分类默认值
-      defaultCutType: {title: '全部', icon: 'appstore', name: '全部',typename:'all'},
+      defaultCutType: { title: '全部', icon: 'appstore', name: '全部', typename: 'all' },
 
       // 空状态
       simpleImage: '/public/img/test/not-data.png',
@@ -127,75 +134,82 @@ export default{
     }
   },
 
-  computed:{
-    ...mapWritableState(clipboardStore, ['clipboardObserver','items']),
+  computed: {
+    ...mapWritableState(clipboardStore, ['clipboardObserver', 'items', 'loadFromDb']),
     // 根据剪切板列表不同状态进行数据显示
-    clipContent(){
-      switch(this.defaultCutType.typename){
+    clipContents () {
+      if (this.items.length === 0)
+      {
+        return []
+      }
+      switch (this.defaultCutType.typename) {
         case 'all': // 默认全部
-          if(this.items.length !== 0){
-            return this.items;
+          if (this.items.length !== 0) {
+            return this.items
           }
-          break;
+          break
         case 'text':   // 筛选文本
-          if(this.items.length !== 0){
-            const list = _.filter(this.items, function(o) { return  o.type === 'text' });
+          if (this.items.length !== 0) {
+            const list = _.filter(this.items, function (o) { return o.type === 'text' })
             return list
           }
-          break;
+          break
         case 'image':  // 筛选图片
-          if(this.items.length !== 0){
-            const list = _.filter(this.items,function(o) { return  o.type === 'image' })
+          if (this.items.length !== 0) {
+            const list = _.filter(this.items, function (o) { return o.type === 'image' })
 
             return list
           }
-          break;
+          break
         case 'file':  // 筛选文件
-          if(this.items.length !== 0){
+          if (this.items.length !== 0) {
             return fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
           }
-          break;
+          break
         case 'video': // 筛选视频
-          if(this.items.length !== 0) {
+          if (this.items.length !== 0) {
             return videoList  // 方便页面搭建暂时使用videoList这个列表,后期视情况而定
           }
           break
         case 'audio': // 筛选音频
-          if(this.items.length !== 0){
-           return audioList
+          if (this.items.length !== 0) {
+            return audioList
           }
-          break;
+          break
       }
+
+      return []
+
     }
   },
 
-  methods:{
+  methods: {
     // 打开导航栏切换
-    openClipType() {
+    openClipType () {
       this.$refs.clipRef.openDrawer()
     },
     // 切换导航栏
-    getClipItem(v) {
+    getClipItem (v) {
       this.defaultCutType = v
     },
     // 打开搜索入口
-    clipSearch() {
+    clipSearch () {
       this.drawerVisible = true
     },
     // 打开设置入口
-    openSet(){
+    openSet () {
       this.$refs.clipDrawer.clipOpenShow()
     },
     // 搜索按钮事件
-    clickSearch(){
+    clickSearch () {
 
     }
   },
 
-  watch:{
+  watch: {
     // 监听导航栏筛选切换
     'defaultCutType': {
-      handler() {
+      handler () {
         this.defaultCutType = this.defaultCutType
       },
       immediate: true,
@@ -216,19 +230,20 @@ export default{
   }
 }
 
-.search-text{
+.search-text {
   font-family: PingFangSC-Regular;
   font-size: 14px;
   color: var(--primary-text);
   font-weight: 400;
 }
+
 .s-bg {
   box-shadow: none !important;
   background: var(--primary-bg);
   color: var(--primary-text);
 }
 
-:deep(.ant-input){
+:deep(.ant-input) {
   border-radius: 12px !important;
   border: 1px solid var(--divider);
 }

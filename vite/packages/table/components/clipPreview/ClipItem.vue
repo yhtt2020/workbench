@@ -396,7 +396,7 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(clipboardStore,['previewShow','clipSetShow']),
+    ...mapWritableState(clipboardStore,['previewShow','clipSetShow','settings']),
     showArray(){
       if(!this.clip.showType){
         if(this.clipSetShow){
@@ -415,6 +415,7 @@ export default {
   watch:{
     'clip':{
       handler(){
+        console.log(this.clip)
         this.refresh()
       }
     },

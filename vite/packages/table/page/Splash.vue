@@ -223,7 +223,7 @@ export default {
 
       this.bindClientEvents()
 
-      if (clipboardStore().enable) {
+      if (clipboardStore().settings.enable) {
         clipboardStore().prepare()
         clipboardStore().start()
       }

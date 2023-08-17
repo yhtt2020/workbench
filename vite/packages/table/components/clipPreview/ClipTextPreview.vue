@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="previewShow" class="preview-container">
+    <div v-if="settings.previewShow" class="preview-container">
       <div class="flex justify-between p-3 w-full h-full">
         <!-- 文本预览模块 -->
         <template v-if="previewContent.type === 'text'">
@@ -23,7 +23,7 @@
             <!-- 底部tab切换 -->
             <div class="flex items-center justify-center">
               <HorizontalPanel :navList="textType" v-model:selectType="defaultText"></HorizontalPanel>
-              <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center" 
+              <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center"
                 style="background: var(--secondary-bg);" @click="openCodeLanguage" v-if="defaultText.name === 'code'"
               >
                 <span class="mr-5 type-right">
@@ -75,7 +75,7 @@
             <div class="flex h-full flex-col justify-center items-center">
                <div class="clip-image rounded-lg">
                 <img :src="previewContent.img" alt="" class="w-full rounded-lg h-full object-cover">
-               </div> 
+               </div>
             </div>
           </div>
 
@@ -110,7 +110,7 @@
                     <span>{{item.title}}</span>
                     <span>{{ item.key }}</span>
                  </div>
-                </div> 
+                </div>
               </div>
             </vue-custom-scrollbar>
           </div>
@@ -131,7 +131,7 @@
             <div class="flex h-full flex-col justify-between">
               <div class="flex items-center h-full justify-center p-10">
                 <Icon :icon="previewContent.picIcon" style="font-size: 20em;"></Icon>
-              </div> 
+              </div>
             </div>
           </div>
           <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
@@ -164,7 +164,7 @@
                     <span>{{item.title}}</span>
                     <span>{{ item.key }}</span>
                   </div>
-                </div> 
+                </div>
               </div>
             </vue-custom-scrollbar>
           </div>
@@ -227,7 +227,7 @@
                   <div v-for="item  in fileClipKey" class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
                     <span>{{item.title}}</span>
                     <span>{{ item.key }}</span>
-                  </div> 
+                  </div>
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -244,7 +244,7 @@
                 <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
               </div>
             </div>
-      
+
             <!-- 内容预览 -->
             <div class="flex h-full flex-col items-center justify-center">
               <ClipAudio :fileUrl="previewContent.audioUrl" class="w-1/2"></ClipAudio>
@@ -292,7 +292,7 @@
                   <div v-for="item  in fileClipKey" class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
                     <span class="type-right">{{item.title}}</span>
                     <span class="type-text">{{ item.key }}</span>
-                  </div> 
+                  </div>
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -374,10 +374,10 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(clipboardStore,['previewShow','clipMode']),
+    ...mapWritableState(clipboardStore,['settings','previewShow','clipMode']),
     language(){
       const index = this.codeLanguage.find(el=>{
-        return el.abbr === this.clipMode
+        return el.abbr === this.settings.clipMode
       })
       return index
     }
@@ -467,7 +467,7 @@ export default {
   }
   :deep(.CodeMirror){
     width:500px !important;
-    height: 480px !important; 
+    height: 480px !important;
   }
 }
 
