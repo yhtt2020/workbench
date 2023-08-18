@@ -1,10 +1,14 @@
 <template>
-  <div class="xt-active" :style="[customStyle]" :class="[typeClass]">
+  <div
+    class="xt-active flex items-center justify-center"
+    :style="[customStyle]"
+    :class="[typeClass]"
+  >
     <template v-if="iconPosition == 'prefix'">
       <XtBaseIcon
         v-if="icon"
         :icon="icon"
-        :class="[icon ? 'mr-2' : '']"
+        :class="[icon ? 'mr-1' : '']"
         :style="iconSize"
       ></XtBaseIcon>
     </template>
@@ -15,7 +19,7 @@
       <XtBaseIcon
         v-if="icon"
         :icon="icon"
-        :class="[icon ? 'ml-2' : '']"
+        :class="[icon ? 'ml-1' : '']"
         :style="iconSize"
       ></XtBaseIcon>
     </template>
@@ -47,7 +51,7 @@ export default {
       type: Number,
       default: 120,
     },
-    y: {
+    h: {
       type: Number,
       default: 48,
     },
@@ -57,7 +61,7 @@ export default {
     customStyle() {
       return {
         width: this.w + "px",
-        height: this.y + "px",
+        height: this.h + "px",
       };
     },
     textSize() {

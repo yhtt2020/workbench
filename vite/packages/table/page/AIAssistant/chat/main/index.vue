@@ -7,7 +7,7 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
-  <test></test>
+  <!-- <test></test> -->
 </template>
 <script>
 import test from "./test.vue";
@@ -15,10 +15,9 @@ import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
 import { marked } from "marked";
-import { getMd } from "../api/test.js";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
-import { gpt3 } from "../../service/api/ai";
+import { getGpt3 } from "./api";
 export default {
   computed: {
     ...mapWritableState(aiStore, ["selectTopicIndex", "topicList", "chatObj"]),
@@ -27,12 +26,6 @@ export default {
       let selectChat = this.chatObj[chat.chatId];
       return selectChat;
     },
-  },
-  data() {
-    return {
-      full: false,
-      visible: true,
-    };
   },
   watch: {
     async selectTopicIndex(newV) {
@@ -51,16 +44,12 @@ export default {
 
       return;
       let chat = this.topicList[newV];
-      console.log("chat :>> ", chat);
       if (this.topicList[newV].chatId == null) {
-        console.log("123 :>> ", 123);
         chat = {}; // 设置 chat 为空对象或其他默认值
         chat.chatId = Date.now(); // 设置 chat.chatId 为当前时间戳或其他默认值
         this.chatObj[chat.chatId] = []; // 初始化 chatId 对应的数组
       }
       this.chatList = this.chatObj[chat.chatId];
-      console.log("chatObj :>> ", this.chatObj);
-      console.log("chatId :>> ", chat.chatId);
     },
   },
   components: {
@@ -82,68 +71,37 @@ export default {
       this.markdown = res;
     },
     async onSearch(serach) {
-      console.log("serach :>> ", serach);
       let user = {
         content: marked.parse(serach),
         role: "user",
         time: Date.now(),
+        id: Date.now(),
       };
-
       this.chatList.push(user);
-      // let { choices } = await gpt3([
-      //   {
-      //     role: "user",
-      //     content: serach,
-      //   },
-      // ]);
-
-      // console.log("object :>> ", choices);
-      // this.isSearch = false;
-      // this.markdown = choices[0].content;
-      // console.log("object :>> ", choices[0].content);
-
-      const response = await fetch(
-        "https://api.closeai-proxy.xyz/v1/chat/completions",
+      // 获取聊天机器人的回复
+      for await (const result of getGpt3([
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer sk-pHFEys8cIfIKq40iu4NFaEmRlyVwTON7mn8fhRs931Z7MpYi`,
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            stream: true,
-            messages: [
-              {
-                role: "user",
-                content: serach,
-              },
-            ],
-          }),
+          role: "user",
+          content: serach,
+        },
+      ])) {
+        // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
+
+        const index = this.chatList.findIndex((item) => item.id === result.id);
+
+        if (index !== -1) {
+          this.chatList[this.chatList.length - 1].content += result.content;
+        } else {
+          let assistant = {
+            content: result.content,
+            role: result.role,
+            time: Date.now(),
+            id: result.id,
+          };
+          this.chatList.push(assistant);
         }
-      );
-      console.log("response111 :>> ", response);
+      }
       return;
-      // await this.getMdData();
-
-      let gpt = {
-        content: "",
-        type: "gpt",
-        time: Date.now(),
-      };
-
-      this.chatList.push(gpt);
-
-      let index = 0;
-      let timeId = setInterval(() => {
-        if (index >= this.markdown.length) {
-          clearInterval(timeId);
-          this.isSearch = true;
-          return;
-        }
-        this.chatList[this.chatList.length - 1].content +=
-          this.markdown[index++]; // 获取数组最后的对象并逐步添加数据到其 content 属性
-      }, 0);
     },
   },
 };
