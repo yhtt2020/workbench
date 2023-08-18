@@ -4,6 +4,7 @@
       ref="inputRef"
       spellcheck="false"
       class="xt-text w-full no-darg h-full"
+      :class="typeCalss"
       :placeholder="placeholder"
       v-model:value="searchValue"
       @input="handleInput"

@@ -10,7 +10,7 @@
   <test></test>
 </template>
 <script>
-import test from "./test.vue"
+import test from "./test.vue";
 import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
@@ -35,7 +35,7 @@ export default {
     };
   },
   watch: {
-    selectTopicIndex(newV) {
+    async selectTopicIndex(newV) {
       if (newV === -1) return;
       let item = this.topicList.find((item) => {
         if (item.id == newV) {
@@ -48,7 +48,7 @@ export default {
       }
       this.chatList = this.chatObj[item.chatId];
       console.log("object :>> ", this.chatObj[item.chatId]);
-      // console.log("item :>> ", item);
+
       return;
       let chat = this.topicList[newV];
       console.log("chat :>> ", chat);
@@ -66,7 +66,8 @@ export default {
   components: {
     Text,
     List,
-    View,test
+    View,
+    test,
   },
   data() {
     return {
@@ -89,17 +90,39 @@ export default {
       };
 
       this.chatList.push(user);
-      let { choices } = await gpt3([
-        {
-          role: "user",
-          content: serach,
-        },
-      ]);
+      // let { choices } = await gpt3([
+      //   {
+      //     role: "user",
+      //     content: serach,
+      //   },
+      // ]);
 
-      console.log("object :>> ", choices);
-      this.isSearch = false;
-      this.markdown = choices[0].content;
-      console.log("object :>> ", choices[0].content);
+      // console.log("object :>> ", choices);
+      // this.isSearch = false;
+      // this.markdown = choices[0].content;
+      // console.log("object :>> ", choices[0].content);
+
+      const response = await fetch(
+        "https://api.closeai-proxy.xyz/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer sk-pHFEys8cIfIKq40iu4NFaEmRlyVwTON7mn8fhRs931Z7MpYi`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            stream: true,
+            messages: [
+              {
+                role: "user",
+                content: serach,
+              },
+            ],
+          }),
+        }
+      );
+      console.log("response111 :>> ", response);
       return;
       // await this.getMdData();
 
