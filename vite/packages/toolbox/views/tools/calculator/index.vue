@@ -9,7 +9,7 @@
           style="height: 48px"
           :class="border"
           :limit="{ space: true }"
-          v-model:data="computeList[index]"
+          v-model="computeList[index]"
           @focus="handleFocus(index)"
           @change="handleChange()"
           @blur="handleBlur(index)"

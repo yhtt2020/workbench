@@ -23,7 +23,7 @@
 
     <XtInput
       :focus="true"
-      v-model:data="search"
+      v-model="search"
       placeholder="试试输入、粘贴、拖放内容到此处"
       @enter="searchEnter()"
     >

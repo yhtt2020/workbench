@@ -2,7 +2,7 @@
   <XtTitle titleClass="mt-0 mb-5">名称</XtTitle>
   <XtInput
     style="width: 100%; height: 48px"
-    v-model:data="namehValue"
+    v-model="namehValue"
     placeholder="请输入名称"
   >
   </XtInput>

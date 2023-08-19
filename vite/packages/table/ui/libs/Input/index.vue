@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      searchValue: this.data,
+      searchValue: this.modelValue,
     };
   },
   props: {
@@ -48,7 +48,7 @@ export default {
     focus: {
       default: false,
     },
-    data: {},
+    modelValue: {},
     placeholder: {
       default: "",
     },
@@ -115,9 +115,9 @@ export default {
   },
   watch: {
     searchValue(newV) {
-      this.$emit("update:data", newV);
+      this.$emit("update:modelValue", newV);
     },
-    data(newV) {
+    modelValue(newV) {
       this.searchValue = newV;
     },
   },

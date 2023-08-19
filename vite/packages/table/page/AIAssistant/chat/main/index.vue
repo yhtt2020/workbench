@@ -86,7 +86,6 @@ export default {
         },
       ])) {
         // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
-
         const index = this.chatList.findIndex((item) => item.id === result.id);
 
         if (index !== -1) {

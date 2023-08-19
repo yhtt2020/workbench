@@ -68,7 +68,7 @@
       :showFull="false"
     >
       <div class="h-12" style="width: 400px">
-        <XtInput v-model:data="title" @blur="titleBlur()"></XtInput>
+        <XtInput v-model="title" @blur="titleBlur()"></XtInput>
       </div>
     </XtView>
   </Teleport>
