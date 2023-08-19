@@ -15,7 +15,7 @@
 <script>
 export default {
   props: {
-    data: {
+    modelValue: {
       default: false,
     },
     placement: {
@@ -24,17 +24,17 @@ export default {
   },
   data() {
     return {
-      visible: this.data,
+      visible: this.modelValue,
     };
   },
   methods: {
     close() {
       this.visible = false;
-      this.$emit("update:data", false);
+      this.$emit("update:modelValue", false);
     },
   },
   watch: {
-    data(newV) {
+    modelValue(newV) {
       this.visible = newV;
     },
   },

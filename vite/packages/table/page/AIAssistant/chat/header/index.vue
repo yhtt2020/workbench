@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center">
     <div class="flex items-center">
       <!-- 搜索 和 创建 -->
-      <a-input
+      <!-- <a-input
         style="width: 156px; height: 48px"
         class="xt-border rounded-xl xt-bg-2 pl-4"
         v-model:value="searchValue"
@@ -16,7 +16,7 @@
             @click="searchTopic()"
           ></Icon>
         </template>
-      </a-input>
+      </a-input> -->
 
       <XtIcon
         icon="tianjia2"
@@ -36,7 +36,8 @@
         class="mx-2"
         @click="buyVisible = true"
       ></XtButton>
-      <XtIcon icon="shezhi1" @click="settingVisible = true"></XtIcon>
+      {{ settingVisible }}
+      <XtIcon icon="shezhi1" @click="settingVisible = !settingVisible"></XtIcon>
     </div>
   </div>
   <!-- 新建模板 -->
@@ -50,24 +51,19 @@
   </XtView>
   <!-- 充值 -->
   <XtView
-    model="popup"
-    v-if="buyVisible"
-    
+    type="popup"
+    v-model:visible="buyVisible"
     title="购买"
     :showFull="false"
-    @close="buyVisible = false"
   >
     <Store style="width: 440px"></Store>
   </XtView>
   <!-- 编辑 -->
-  <a-drawer
-    :width="497"
-    v-model:visible="settingVisible"
-    placement="right"
-    v-if="settingVisible"
-  >
-    <template #title>
-      <XtTitle  type="header"
+  <XtDrawer placement="right" v-model="settingVisible">
+    123
+
+    <!-- <template #title>
+      <XtTitle type="header"
         >设置
         <template #right>
           <XtButton
@@ -80,8 +76,8 @@
         </template>
       </XtTitle>
     </template>
-    <Edit :data="topicList[selectTopicIndex]" ref="editRef"></Edit>
-  </a-drawer>
+    <Edit :data="topicList[selectTopicIndex]" ref="editRef"></Edit> -->
+  </XtDrawer>
 </template>
 
 <script>

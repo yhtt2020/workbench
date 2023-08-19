@@ -52,7 +52,7 @@
       </div>
     </div>
   </XtZoom>
-  <XtDrawer v-model:data="visible">
+  <XtDrawer v-model="visible">
     <Set
       @editIcons="editIcons(index)"
       @deleteIcons="deleteIcons(index)"

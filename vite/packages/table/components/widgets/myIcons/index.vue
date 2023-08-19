@@ -69,7 +69,7 @@
   <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit>
   <!-- 多图标组件设置 -->
-  <XtDrawer v-model:data="iconsSetVisible" placement="right">
+  <XtDrawer v-model="iconsSetVisible" placement="right">
     <div class="xt-bg-2 p-4 rounded-xl">
       <div class="flex justify-between mb-2">
         <div>放大模式</div>
@@ -81,7 +81,7 @@
     </div>
   </XtDrawer>
   <!-- 底部导航 -->
-  <XtDrawer v-model:data="menuVisible">
+  <XtDrawer v-model="menuVisible">
     <BottomEdit :menuList="menuList"></BottomEdit>
   </XtDrawer>
 </template>
