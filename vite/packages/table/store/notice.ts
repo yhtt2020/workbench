@@ -6,106 +6,66 @@ import _ from 'lodash-es'
 export const noticeStore = defineStore('notice',{
   state:() =>({
     notice:{
-      
+      sessionApp:[  // 左侧应用图标
+        {
+          id:'all',
+          icon:'appstore',
+          image:'',
+          alias:'all',
+          title:'全部消息通知'
+        },
+        {
+          id:'IM',
+          icon:'',
+          image:'/icons/IM.png',
+          alias:'teamChat',
+          title:'团队聊天'
+        }
+      ], 
+      messageContent:[  ], // 右侧消息通知内容 
     },
-    noticeEnable:false, // 开启消息通知弹窗
 
-    // notice:{
-    //   session:[
-    //     {
-    //       name:'系统',alias:'system',icon:'appstore',url:'',
-    //     },
-    //   ],
-    //   message:[
-    //     {
-    //       noticeList:[
-    //         {
-    //           title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
-    //           time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:null,
-    //           level:'low',
-    //         },
-    //         {
-    //           title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
-    //           time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:null,
-    //           level:'normal',
-    //         },
-    //         {
-    //           title:'',body:'礼物：小恶魔头像框挂件',
-    //           time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
-    //           level:'normal',
-    //         },
-    //         {
-    //           title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
-    //           time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:null,
-    //           level:'low',
-    //         },
-    //         {
-    //           title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
-    //           time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:null,
-    //           level:'normal',
-    //         },
-    //         {
-    //           title:'',body:'礼物：小恶魔头像框挂件',
-    //           time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
-    //           level:'normal',
-    //         },
-    //         {
-    //           title:'社区公告',body:'尊敬的用户，由于系统升级，社区App将于明天进行维护，届时您可能暂时无法使用部分功能。给您带来的不便，敬请谅解。',
-    //           time:1690879556,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:null,
-    //           level:'low',
-    //         },
-    //         {
-    //           title:'消息标题，支持显示特殊内容比如用户头像',body:'这是消息正文部分，根据业务需要显示具体内容',
-    //           time:1690879558,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:null,
-    //           level:'normal',
-    //         },
-    //         {
-    //           title:'',body:'礼物：小恶魔头像框挂件',
-    //           time:1690879560,subtitle:'',icon:'/icons/logo128.png',imageUrl:'/icons/logo128.png',
-    //           from:{ username:'Victor Ruiz',avatarUrl:'https://up.apps.vip/avatar/006.png',},
-    //           level:'normal',
-    //         }
-    //       ],
-    //     },
-    //   ],
-    //   noticeIcon:'/icons/logo128.png'
-    // },
-    // noticeEnable:false,
-    // moreEnable:false,
+    noticeSettings:{   
+      enable:true,  // 开启消息通知
+      enablePlay:true, // 开启消息提示语开关
+      messagePlay:false, // 消息接收提示语播放
+      noticePlay:false, // 通知接收提示语播放 
+      show:false, // 工作台页面顶部消息图标显示
+    },
+
   }),
 
   actions:{
+    showNoticeEntry(){  // 显示消息通知入口
+      this.noticeSettings.show = true
+    },
+
+    hideNoticeEntry(){  // 隐藏消息通知入口
+      this.noticeSettings.show = false
+    },
+    
+    setNoticeOnOff(val:boolean){  // 设置消息通知是否开启  
+      this.noticeSettings.enable = val
+    },
+
+    setMessagePrompt(val:boolean){  // 设置消息通知提示语开关
+      this.noticeSettings.enable = val
+    },
+
+    setMessagePlay(){ // 设置消息提示语
+      this.noticeSettings.messagePlay = true
+    },
+
+    setNoticePlay(){  // 设置通知提示语
+      this.noticeSettings.noticePlay = true
+    },
 
     
-    // setNoticeOnOff(val:boolean){  // 设置消息通知是否开启  
-    //   this.noticeEnable = val
-    // },
 
-    // deleteAllNotice(){  // 删除对应消息通知应用的使用消息数据  
-    //   for(let i=0;i<this.notice.session.length;i++){
-    //     this.notice.message[i].noticeList = []
-    //   }
-    // },
     
-    // setMoreNotice(value:boolean){  // 判断更多消息是否打开显示 
-    //   this.moreEnable = value
-    // },
-    
-    // deleteNotice(index: any,delId: any){  // 删除单个消息通知
-    //   this.notice.message[index].noticeList.splice(delId,1)
-    // },
 
-    // addNotifications(index: any,value: any){
-    //   this.notice.message[index].noticeList.push(value)
-    // },
+
+
 
   },
 
@@ -114,7 +74,7 @@ export const noticeStore = defineStore('notice',{
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths:['notice','noticeEnable'],
+      paths:['noticeEnable'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

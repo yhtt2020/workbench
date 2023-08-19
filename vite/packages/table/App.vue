@@ -64,6 +64,10 @@
     </div>
     </slot>
   </Modal>
+
+  <audio ref="message" src="/sound/message.mp3"></audio>
+  <audio ref="notice" src="/sound/notice.mp3"></audio>
+
 </template>
 
 <script lang="ts">
@@ -76,6 +80,7 @@ import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {steamUserStore} from "./store/steamUser";
 import {screenStore} from './store/screen'
+import { noticeStore } from './store/notice'
 import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
@@ -170,6 +175,7 @@ export default {
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
+    ...mapWritableState(noticeStore,['noticeSettings']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
@@ -232,7 +238,8 @@ export default {
       this.visible = false;
       this.removeClock(0);
       this.$refs.clock.pause();
-    }
+    },
+ 
   },
   watch: {
     'settings.transparent': {
@@ -332,6 +339,42 @@ export default {
     "steamLoginData.refreshToken": {
       handler() {
         this.onRefreshToken()
+      },
+      immediate: true,
+    },
+    "noticeSettings.messagePlay":{
+      handler(newVal){
+       if(newVal){ 
+ 
+        this.$nextTick(()=>{
+          this.$refs.message.play()
+        })
+
+       }else{
+
+        this.$nextTick(()=>{
+          this.$refs.message.pause()
+        })
+
+       }
+      },
+      immediate: true,
+    },
+    "noticeSettings.noticePlay":{
+      handler(newVal){
+        if(newVal){
+
+          this.$nextTick(()=>{
+            this.$refs.notice.play()
+          })
+
+        }else{
+
+          this.$nextTick(()=>{
+            this.$refs.notice.pause()
+          })
+
+        }
       },
       immediate: true,
     }
