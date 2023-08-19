@@ -42,7 +42,7 @@
   </div>
   <!-- 新建模板 -->
   <XtView
-    v-model:visible="createChatVisible"
+    v-model="createChatVisible"
     type="popup"
     title="新建模板"
     :showFull="false"
@@ -52,7 +52,7 @@
   <!-- 充值 -->
   <XtView
     type="popup"
-    v-model:visible="buyVisible"
+    v-model="buyVisible"
     title="购买"
     :showFull="false"
   >

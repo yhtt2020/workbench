@@ -4,14 +4,14 @@
     class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"
     style="z-index: 999"
     @click.stop.self="close()"
-    v-if="currentType == 'popup' && visible"
+    v-if="currentType == 'popup' && modelValue"
   ></div>
 
   <div
     class="xt-text flex"
     :class="[typeStyle, currentType == 'popup' ? '' : 'h-full']"
     style="z-index: 9999; box-sizing: border-box"
-    v-if="visible"
+    v-if="modelValue"
   >
     <!-- 左侧区域开始 -->
     <div>
@@ -66,6 +66,9 @@ export default {
   name: "XtFullScreen",
   props: {
     visible: {
+      default: true,
+    },
+    modelValue: {
       default: true,
     },
     title: {
@@ -138,7 +141,7 @@ export default {
       }
     },
     close() {
-      this.$emit("update:visible", false);
+      this.$emit("update:modelValue", false);
       this.$emit("close");
     },
     setSpacing(name) {

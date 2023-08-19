@@ -15,7 +15,7 @@
       <div>右键菜单触发的区域</div>
     </xt-menu>
     <xt-title>弹窗</xt-title>
-    <xt-view type="popup" title="标题" v-model:visible="viewVisible">
+    <xt-view type="popup" title="标题" v-model="viewVisible">
       <div style="width: 400px; height: 400px">默认内容</div>
     </xt-view>
     <xt-button @click="viewVisible = !viewVisible">viewVisible</xt-button>

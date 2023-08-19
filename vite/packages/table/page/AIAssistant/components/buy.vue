@@ -26,7 +26,7 @@
   <XtView
     style="z-index: 9999999999"
     type="popup"
-    v-model:visible="popupVisible"
+    v-model="popupVisible"
     :showFull="false"
     title="收银台"
   >
