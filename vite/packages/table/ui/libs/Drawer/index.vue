@@ -8,6 +8,9 @@
     v-model:visible="visible"
     @close="close()"
   >
+    <template #title>
+      <slot name="title"></slot>
+    </template>
     <slot></slot>
   </a-drawer>
 </template>

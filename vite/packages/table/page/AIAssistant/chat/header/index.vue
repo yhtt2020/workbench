@@ -50,19 +50,12 @@
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
   </XtView>
   <!-- 充值 -->
-  <XtView
-    type="popup"
-    v-model="buyVisible"
-    title="购买"
-    :showFull="false"
-  >
+  <XtView type="popup" v-model="buyVisible" title="购买" :showFull="false">
     <Store style="width: 440px"></Store>
   </XtView>
   <!-- 编辑 -->
   <XtDrawer placement="right" v-model="settingVisible">
-    123
-
-    <!-- <template #title>
+    <template #title>
       <XtTitle type="header"
         >设置
         <template #right>
@@ -76,7 +69,7 @@
         </template>
       </XtTitle>
     </template>
-    <Edit :data="topicList[selectTopicIndex]" ref="editRef"></Edit> -->
+    <Edit :data="topicList[selectTopicIndex]" ref="editRef"></Edit>
   </XtDrawer>
 </template>
 

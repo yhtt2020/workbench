@@ -26,7 +26,11 @@ export default {
   data() {
     return {
       viewVisible: false,
-      menus: [{ label: "更新", callBack: this.callBack, icon: "shezhi1" }],
+      menus: [
+        { label: "更新", callBack: this.callBack, icon: "shezhi1" },
+        { label: "更新", callBack: this.callBack, icon: "shezhi1" },
+        { label: "更新", callBack: this.callBack, icon: "shezhi1" },
+      ],
     };
   },
 };
