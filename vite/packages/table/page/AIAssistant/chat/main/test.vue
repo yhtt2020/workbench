@@ -10,6 +10,10 @@
     <xt-icon icon="shezhi1"></xt-icon>
     <xt-title>颜色</xt-title>
     <xt-color></xt-color>
+    <xt-title>右键菜单</xt-title>
+    <xt-menu :menus="menus">
+      <div>右键菜单触发的区域</div>
+    </xt-menu>
     <xt-title>弹窗</xt-title>
     <xt-view type="popup" title="标题" v-model:visible="viewVisible">
       <div style="width: 400px; height: 400px">默认内容</div>
@@ -22,6 +26,7 @@ export default {
   data() {
     return {
       viewVisible: false,
+      menus: [{ label: "更新", callBack: this.callBack, icon: "shezhi1" }],
     };
   },
 };

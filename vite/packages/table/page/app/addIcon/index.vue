@@ -1,5 +1,5 @@
 <template>
-  <XtView type="popup" @close="close()" title="批量添加图标" :ifFull="false">
+  <XtView type="popup" @close="close()" title="批量添加图标" :showFull="false">
     <main class="flex h-full p-1" style="min-width: 200px !important">
       <div style="" class="h-full">
         <div

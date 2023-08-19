@@ -7,7 +7,7 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
-  <!-- <test></test> -->
+  <test></test>
 </template>
 <script>
 import test from "./test.vue";

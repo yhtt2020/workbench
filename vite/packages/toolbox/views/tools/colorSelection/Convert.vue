@@ -141,7 +141,7 @@ export default {
       HSL: "",
       HEX: "",
       HSV: "",
-      menus: [{ label: "删除", callBack: this.delColor }],
+      menus: [{ label: "删除", callBack: this.delColor}],
     };
   },
   computed: {

@@ -22,6 +22,7 @@
               :key="menu.label"
               @click="handleClick(menu)"
             >
+              <xt-base-icon v-if="menu.icon" :icon="menu.icon"></xt-base-icon>
               {{ menu.label }}
             </div>
           </div>
