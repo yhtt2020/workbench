@@ -62,6 +62,7 @@ export default defineComponent({
   },
 
   setup(){
+
     const data = reactive({
       appList:[], // 左侧应用列表图标
       selectStatus:0, // 应用列表选中状态
@@ -75,24 +76,31 @@ export default defineComponent({
     data.appList = store.$state.notice.sessionApp
     data.promptStatus = store.$state.noticeSettings.enablePlay
 
-    const clickLeftApp = (item,index) =>{  // 点击选中
+    const clickLeftApp = (item,index) =>{  // 点击选中 
       data.selectStatus = index,
       data.appType = item.id
       data.appItem = item
       data.changeSet = false
     }
 
-    const changeSetting = () =>{
+    const changeSetting = () =>{  // 点击左侧底部设置按钮触发显示消息通知语音提示设置页面    
       data.changeSet = !data.changeSet
     }
 
-    const changeEnable = (val) =>{
+    const changeEnable = (val) =>{ // 消息通知语音提示开关事件 
       store.setMessagePrompt(val)
     }
+    
+    const loadHistoryNotice = async() =>{  // 获取历史消息通知
+      await store.loadNoticeDB()
+    }
+
+     
+    onMounted(loadHistoryNotice)
 
     return{
       ...toRefs(data),clickLeftApp,changeSetting,
-      changeEnable,
+      changeEnable,loadHistoryNotice,
     }
   }
 })

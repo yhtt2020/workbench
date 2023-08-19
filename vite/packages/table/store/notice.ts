@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
 import _ from 'lodash-es'
+import {nanoid} from "nanoid";
 
 // @ts-ignore
 export const noticeStore = defineStore('notice',{
@@ -22,7 +23,7 @@ export const noticeStore = defineStore('notice',{
           title:'团队聊天'
         }
       ], 
-      messageContent:[  ], // 右侧消息通知内容 
+      messageContent:[], // 右侧消息通知内容 
     },
 
     noticeSettings:{   
@@ -60,8 +61,23 @@ export const noticeStore = defineStore('notice',{
       this.noticeSettings.noticePlay = true
     },
 
-    
+    async putIMChatData(val:object,type:string) {  // 将消息数据进行db数据库存储
+      console.log(val,type);
+      
+      // await tsbApi.db.put({
+      //   _id:'notice:',
+      //   type:`${type}`,
+      //   content:`${val}`
+      // })
+    },
 
+    async loadNoticeDB(){
+      // const result = await tsbApi.db.allDocs('notice')
+      // console.log('获取数据',result); 
+    }
+
+    
+    
     
 
 

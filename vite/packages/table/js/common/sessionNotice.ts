@@ -1,8 +1,10 @@
 import { useToast } from 'vue-toastification'
 import NoticeToastButton from '../../components/notice/noticeToastButton.vue'
+import SystemNoticeToast from '../../components/notice/systemNoticeToast.vue'
 
 import { router } from '../../router'
 import { noticeStore } from '../../store/notice'
+import { appStore } from '../../store'
 
 const toast = useToast()
 export class Notifications{
@@ -25,45 +27,39 @@ export class Notifications{
     console.log(msg.payload.operationType);
 
     switch(msg.payload.operationType){
+      case 1:
+        if(msg.payload.handleMessage === "加群" && msg.payload.hasOwnProperty('handleMessage')){
+          return `${userName}申请加入群组:${groupName}`;
+        }else{
+          return `${userName}接受${msg.nick}加入${groupName}群组`; 
+        }
+      case 2:
+        return `成功加入群组：${groupName}`;
+      case 3:
+        return `申请加入群组:${groupName}被拒绝`;
+      case 4:
+        return `你被管理员${userName}踢出群组：${groupName}`;
       case 5:
         return `群：${groupName}被${userName} 解散`;
       case 6:
         return `${userName} 创建群：${groupName}`;
+      case 8:
+        return `你退出群组：${groupName}`;
+      case 9:
+        return `你被${userName} 设置为群：${groupName} 的管理员`;
+      case 10:
+        return `你被${userName} 撤销群：${groupName} 的管理员身份`;
+      case 12:
+        return `${userName} 邀请你加群：${groupName}`;
+      case 13:
+        return `${userName} 同意加群：${groupName}`;
+      case 14:
+        return `${userName} 拒接加群：${groupName}`;
+      case 255:
+        return `自定义群系统通知: ${msg.payload.userDefinedField}`;
       default:
         break;
     }
-    
-    // switch (msg.payload.operationType){
-    //   case 1:
-    //     return `${userName}申请加入群组:${groupName}`;
-    //   case 2:
-    //     return `成功加入群组：${groupName}`;
-    //   case 3:
-    //     return `申请加入群组:${groupName}被拒绝`;
-    //   case 4:
-    //     return `你被管理员${userName}踢出群组：${groupName}`;
-    //   case 5:
-    //     return `群：${groupName}被${userName} 解散`;
-      // case 6:
-      //   return `${userName} 创建群：${groupName}`;
-    //   case 7:
-    //     return `${userName} 邀请你加群：${groupName}`;
-    //   case 8:
-    //     return `你退出群组：${groupName}`;
-    //   case 9:
-    //     return `你被${userName} 设置为群：${groupName} 的管理员`;
-    //   case 10:
-    //     return `你被${userName} 撤销群：${groupName} 的管理员身份`;
-    //   case 12:
-    //     return `${userName} 邀请你加群：${groupName}`;
-    //   case 13:
-    //     return `${userName} 同意加群：${groupName}`;
-    //   case 14:
-    //     return `${userName} 拒接加群：${groupName}`;
-    //   case 255:
-    //     return `自定义群系统通知: ${msg.payload.userDefinedField}`;
-    // }
-
   }
 
   private async getUserProfile(msg) {  // 根据用户名称
@@ -81,7 +77,7 @@ export class Notifications{
   }
 
 
-  // 接收消息通知方法 
+  // 接收IM消息通知方法 
   public async receiveNotification(notification: Notification) {
     noticeStore().showNoticeEntry()
     
@@ -109,7 +105,8 @@ export class Notifications{
         time:notification.data[0].time,
       }
 
-      toast.info(  // 显示通知弹窗
+      if(noticeStore().$state.noticeSettings.enable){ // 判断是否开启消息弹窗
+        toast.info(  // 显示通知弹窗
         {
           component:NoticeToastButton,props:{message:msg},
           listeners:{
@@ -123,8 +120,7 @@ export class Notifications{
                 window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
               })
               noticeStore().hideNoticeEntry()  
-              
-
+              noticeStore().putIMChatData(msg,'message')
             }
           }
         },
@@ -132,7 +128,10 @@ export class Notifications{
           icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
           pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast'
         }
-      )
+        )
+      }else{
+        noticeStore().putIMChatData(msg,'message')
+      }
 
       this.notices.push(msg);
       if (this.callback) {
@@ -158,42 +157,46 @@ export class Notifications{
         icon:'/icons/IM.png',
         time:notification.data[0].time
       }
-
-
-
-      // toast.info(  // 显示通知弹窗
-      //  {
-      //   component:NoticeToastButton,props:{message:notice},
-      //   listeners:{
-      //     'nowCheck':function(){  // 立即查看
-      //          router.push({name:'chat'})
-      //         const name = `${notification.data[0].conversationType}${notification.data[0].to}`;
-      //         window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse:any) => {
-      //           // 通知 TUIConversation 添加当前会话
-      //           // Notify TUIConversation to toggle the current conversation
-      //           window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-      //         })
-      //     }
-      //   }
-      //  },
-      //  {
-      //   icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
-      //   pauseOnHover:true,timeout: 0,toastClassName:'notice-toast'
-      //  }
-      // )
       
-      // this.notices.push(notice);
-      // if (this.callback) {
-      //   this.callback(notice);
-      // }
+
+      if(noticeStore().$state.noticeSettings.enable){ // 判断是否开启消息弹窗
+        toast.info(  // 显示通知弹窗
+         {
+         component:SystemNoticeToast,props:{content:notice},
+         listeners:{
+           'nowCheck':function(){  // 立即查看
+              router.push({name:'chat'})
+              const name = `${notification.data[0].conversationID}`;
+              window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse:any) => {
+                // 通知 TUIConversation 添加当前会话
+                // Notify TUIConversation to toggle the current conversation
+                window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+              })
+              noticeStore().hideNoticeEntry()  
+              noticeStore().putIMChatData(notice,'Notice')
+           }
+         }
+         },
+         {
+          icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
+          pauseOnHover:true,timeout: 0,toastClassName:'notice-toast'
+         }
+       )
+      }else{
+        noticeStore().putIMChatData(notice,'Notice')
+      }
+     
+      
+      this.notices.push(notice);
+      if (this.callback) {
+        this.callback(notice);
+      }
     }
 
-
-
-  
-    
   }
+  
 
+  // 接收其他消息通知后续再起一个方法
 
 
  
