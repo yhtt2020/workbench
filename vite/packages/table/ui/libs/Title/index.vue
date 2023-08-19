@@ -23,15 +23,22 @@ export default {
   computed: {
     typeClass() {
       let typeList = {
-        default: "xt-text my-4 text-base ",
+        default: "xt-text text-base ",
         header: "xt-text text-lg ",
-        text: "xt-text-2 text-sm my-2 ",
+        text: "xt-text-2 text-sm",
       };
-      return typeList[this.type];
+      return typeList[this.type] + ` ${this.m + "-" + this.spacing}`;
     },
   },
   props: {
     title: {},
+    m: {
+      default: "my",
+    },
+    spacing: {
+      type: String,
+      default: 3,
+    },
     titleClass: {
       default: "",
     },

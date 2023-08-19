@@ -13,13 +13,6 @@ import Tab from "./components/Tab.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../store/ai";
 
-import { gpt3 } from "./service/api/ai";
-
-const getGpt = async () => {
-  let res = await gpt3();
-  console.log("res :>> ", res);
-};
-getGpt();
 export default {
   computed: {
     ...mapWritableState(aiStore, ["isFull"]),

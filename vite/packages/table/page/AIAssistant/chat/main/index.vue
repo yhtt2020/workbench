@@ -7,20 +7,26 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
-  <test></test>
+  <!-- <test></test> -->
 </template>
 <script>
 import test from "./test.vue";
 import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
-import { marked } from "marked";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
-import { getGpt3 } from "./api";
+import { gpt } from "../../service/api/ai";
+import { message } from "ant-design-vue";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["selectTopicIndex", "topicList", "chatObj"]),
+    ...mapWritableState(aiStore, [
+      "selectTopicIndex",
+      "topicList",
+      "chatObj",
+      "url",
+      "key",
+    ]),
     selectChat() {
       let chat = this.topicList[this.selectTopicIndex];
       let selectChat = this.chatObj[chat.chatId];
@@ -66,20 +72,29 @@ export default {
     };
   },
   methods: {
+    // https://api.closeai-proxy.xyz
+    check() {
+      if (!this.key || !this.url) {
+        message.error("请先配置好信息");
+        return true;
+      }
+      return false;
+    },
     async getMdData() {
       let res = await getMd();
       this.markdown = res;
     },
     async onSearch(serach) {
+      if (this.check()) return;
       let user = {
-        content: marked.parse(serach),
+        content: serach,
         role: "user",
         time: Date.now(),
         id: Date.now(),
       };
       this.chatList.push(user);
       // 获取聊天机器人的回复
-      for await (const result of getGpt3([
+      for await (const result of gpt([
         {
           role: "user",
           content: serach,

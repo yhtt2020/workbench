@@ -36,7 +36,6 @@
         class="mx-2"
         @click="buyVisible = true"
       ></XtButton>
-      {{ settingVisible }}
       <XtIcon icon="shezhi1" @click="settingVisible = !settingVisible"></XtIcon>
     </div>
   </div>

@@ -1,18 +1,21 @@
 <template>
-  <a-drawer
-    v-if="visible"
-    :width="500"
-    :height="200"
-    :placement="placement"
-    style="z-index: 99999999"
-    v-model:visible="visible"
-    @close="close()"
-  >
-    <template #title>
-      <slot name="title"></slot>
-    </template>
-    <slot></slot>
-  </a-drawer>
+  <div class="box">
+    <a-drawer
+      v-if="visible"
+      :width="500"
+      :height="200"
+      :placement="placement"
+      style="z-index: 99999999"
+      v-model:visible="visible"
+      @close="close()"
+      :bodyStyle="{padding: '12px'}"
+    >
+      <template #title>
+        <slot name="title"></slot>
+      </template>
+      <slot></slot>
+    </a-drawer>
+  </div>
 </template>
 
 <script>
@@ -44,4 +47,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

@@ -1,4 +1,5 @@
 <template>
+  {{ selectTab }}
   <XtTab
     :style="widthStyle"
     class="mr-2"

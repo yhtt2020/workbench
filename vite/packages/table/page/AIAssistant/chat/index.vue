@@ -2,7 +2,6 @@
   <div class="flex h-full w-full rounded-xl flex-col">
     <div class="flex h-full">
       <div class="h-full flex flex-col">
-        <XtIcon @click="go" icon="xiangzuo"></XtIcon>
         <Topic
           class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar"
         ></Topic>

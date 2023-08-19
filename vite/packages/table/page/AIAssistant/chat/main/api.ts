@@ -1,13 +1,16 @@
+import { aiStore } from "../../../../store/ai";
+const ai: any = aiStore();
 // gpt.js
-const CHATGPT_API_URL = "https://api.closeai-proxy.xyz/v1/chat/completions";
-const OPENAI_API_KEY = "sk-S7CZainBDqk8IJJR2H21882YjJMbcOQreOjeVHjIBfkoDx80";
+// const CHATGPT_API_URL = "https://api.closeai-proxy.xyz/v1/chat/completions";
+// const OPENAI_API_KEY = "sk-S7CZainBDqk8IJJR2H21882YjJMbcOQreOjeVHjIBfkoDx80";
+
 // TODO 适用直接调chatgpt接口
 export async function* getGpt3(messages) {
-  const response = await fetch(CHATGPT_API_URL, {
+  const response = await fetch(ai.url + '/v1/chat/completions', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
+      Authorization: `Bearer ${ai.key}`,
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
