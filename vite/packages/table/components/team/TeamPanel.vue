@@ -62,7 +62,7 @@
             <BarragePanel :defaultChannel="'team'"></BarragePanel>
           </div>
           <div v-if="showDetail && currentTab==='devote'"
-               style="height: 100%;position: relative;width: 100%">
+               style="height: 100%;position: relative;width: 100%;flex:1;height:0">
             <TeamDevote :teamLeader="teamLeader" :teamMembers="teamMembers" :team="team"></TeamDevote>
           </div>
           <div v-if="showDetail && currentTab==='store'" style="height: 100%">

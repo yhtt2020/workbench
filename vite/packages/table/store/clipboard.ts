@@ -29,7 +29,7 @@ export const clipboardStore = defineStore("clipboardStore", {
   }),
   actions: {
     async loadFromDb() {
-      const rs= await tsbApi.db.allDocs('item')
+      const rs= await tsbApi.db.allDocs('clipboard:item')
       this.items=rs.rows.map(row=>{
         return row?.doc
       })
@@ -93,7 +93,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
       this.items.unshift(item)
       await tsbApi.db.put({
-        _id: "item:" + nanoid(8),
+        _id: "clipboard:item:" + nanoid(8),
         content: text,
         createTime: Date.now(),
         updateTime: Date.now(),
