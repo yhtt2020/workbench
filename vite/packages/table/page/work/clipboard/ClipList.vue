@@ -7,9 +7,8 @@
         <a-empty :image="simpleImage"/>
       </div>
     </div>
-    <div   v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg"
-         >
-      <ClipItem :key="item.updateTime" :clip="item" @previewItem="getItem"></ClipItem>
+    <div   v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg">
+      <ClipItem :key="item.updateTime" :clipItem="item" @previewItem="getItem"></ClipItem>
     </div>
   </div>
   <ClipTextPreview :previewContent="previewData"></ClipTextPreview>
