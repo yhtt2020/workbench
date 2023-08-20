@@ -28,8 +28,8 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
-      <div   class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
-        <div v-if="noticeSettings.show" class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
+      <div  v-if="noticeSettings.show"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
+        <div class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
           <div class="new-message-tag"></div>
         </div>
