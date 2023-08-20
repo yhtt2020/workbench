@@ -1,5 +1,5 @@
 <template>
-  <div v-for="(item,index) in detailItem" class="flex flex-col mb-3 p-4 rounded-lg"
+  <!-- <div v-for="(item,index) in detailItem" class="flex flex-col mb-3 p-4 rounded-lg"
    style="width: 395px; background: var(--secondary-bg);position: relative;"
    @contextmenu.stop="noticeMenu(index,$event)"
   >
@@ -39,86 +39,86 @@
 
   <a-menu style="width: 120px;" :style="{position: 'fixed',top:`${contextMenuPosition.y}px`,left:`${contextMenuPosition.x}px`,zIndex: '999'}" class="dropdown-menu rounded-lg flex flex-col items-center justify-center" v-if="showMenu">
     <a-menu-item style="color:var(--secondary-text);" v-for="(item,index) in rightMenuControls" @click="handleMenuItemClick(item)">{{ item.title }}</a-menu-item>
-  </a-menu>
+  </a-menu> -->
 
 </template>
 
 <script>
-import { mapActions } from 'pinia'
-import { noticeStore } from '../../store/notice'
-import { formatDate } from '../../js/common/sessionNotice'
+// import { mapActions } from 'pinia'
+// import { noticeStore } from '../../store/notice'
+// import { formatDate } from '../../js/common/sessionNotice'
 
-export default {
-  props:{
-    detailItem:{  // 列表数据
-      type:Object,
-      default:()=>[]
-    },
-    detailId:{  // 左侧选中状态
-      type:Number,
-    }
-  },
+// export default {
+//   props:{
+//     detailItem:{  // 列表数据
+//       type:Object,
+//       default:()=>[]
+//     },
+//     detailId:{  // 左侧选中状态
+//       type:Number,
+//     }
+//   },
 
-  data(){
-    return{
-      showMenu:false, // 是否显示
-      contextMenuPosition: { x: 0, y: 0 }, // 右键菜单的位置
-      rightMenuControls:[{title:'打开应用',name:'Open'},{title:'删除通知',name:'remove'}],
-      delId:'',  // 接收单个消息通知删除下标
-    }
-  },
+//   data(){
+//     return{
+//       showMenu:false, // 是否显示
+//       contextMenuPosition: { x: 0, y: 0 }, // 右键菜单的位置
+//       rightMenuControls:[{title:'打开应用',name:'Open'},{title:'删除通知',name:'remove'}],
+//       delId:'',  // 接收单个消息通知删除下标
+//     }
+//   },
 
-  methods:{
-    ...mapActions(noticeStore,['deleteNotice']),
-    formatDate,
-    removeNotification(index){ // 删除指定消息通知
-      this.deleteNotice(this.detailId,index)
-    },
+//   methods:{
+//     ...mapActions(noticeStore,['deleteNotice']),
+//     formatDate,
+//     removeNotification(index){ // 删除指定消息通知
+//       this.deleteNotice(this.detailId,index)
+//     },
 
-    noticeMenu(index,evt){  // 鼠标右键显示下拉菜单
-      evt.preventDefault();
-      this.delId = index
+//     noticeMenu(index,evt){  // 鼠标右键显示下拉菜单
+//       evt.preventDefault();
+//       this.delId = index
 
-      // 获取鼠标点击位置
-      const x = evt.clientX;
-      const y = evt.clientY;
+//       // 获取鼠标点击位置
+//       const x = evt.clientX;
+//       const y = evt.clientY;
 
-      // 设置右键菜单的位置和可见状态
-      this.contextMenuPosition = { x, y };
-      this.showMenu = true
-      // 点击其他地方时隐藏右键菜单
-      document.addEventListener('click', this.handleOutsideClick);
-    },
+//       // 设置右键菜单的位置和可见状态
+//       this.contextMenuPosition = { x, y };
+//       this.showMenu = true
+//       // 点击其他地方时隐藏右键菜单
+//       document.addEventListener('click', this.handleOutsideClick);
+//     },
 
-    handleOutsideClick() {
-      // 隐藏右键菜单
-      this.showMenu = false;
-      // 移除监听器
-      document.removeEventListener('click', this.handleOutsideClick);
-    },
+//     handleOutsideClick() {
+//       // 隐藏右键菜单
+//       this.showMenu = false;
+//       // 移除监听器
+//       document.removeEventListener('click', this.handleOutsideClick);
+//     },
 
-    handleMenuItemClick(item){
-      if(item.name === 'remove'){  // 右键下拉菜单删除
-        this.deleteNotice(this.detailId,this.delId)
-      }else{
-        // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
-      }
-    },
+//     handleMenuItemClick(item){
+//       if(item.name === 'remove'){  // 右键下拉菜单删除
+//         this.deleteNotice(this.detailId,this.delId)
+//       }else{
+//         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
+//       }
+//     },
 
-    goNotice(){  // 查看消息通知跳转机制
-      // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
-    },
+//     goNotice(){  // 查看消息通知跳转机制
+//       // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
+//     },
 
-    isStringEmpty(item){  // 判断用户来源
-      // if(item.from !== null && item.from.avatarUrl !== ''){
-      //   return true
-      // }else{
-      //   return false
-      // }
-    }
-  }
+//     isStringEmpty(item){  // 判断用户来源
+//       // if(item.from !== null && item.from.avatarUrl !== ''){
+//       //   return true
+//       // }else{
+//       //   return false
+//       // }
+//     }
+//   }
 
-}
+// }
 </script>
 
 <style lang="scss" scoped>

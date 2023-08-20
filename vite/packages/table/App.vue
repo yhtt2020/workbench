@@ -64,6 +64,9 @@
     </div>
     </slot>
   </Modal>
+
+ 
+
 </template>
 
 <script lang="ts">
@@ -76,6 +79,7 @@ import {codeStore} from "./store/code";
 import {appsStore} from "./store/apps";
 import {steamUserStore} from "./store/steamUser";
 import {screenStore} from './store/screen'
+
 import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
@@ -232,7 +236,8 @@ export default {
       this.visible = false;
       this.removeClock(0);
       this.$refs.clock.pause();
-    }
+    },
+ 
   },
   watch: {
     'settings.transparent': {
@@ -334,7 +339,7 @@ export default {
         this.onRefreshToken()
       },
       immediate: true,
-    }
+    },
   },
 };
 </script>
