@@ -50,7 +50,7 @@ export default defineComponent({
       this.$router.push(args.menu.route)
       this.tab = args.index
     },
-  }
+  },
 })
 </script>
 
