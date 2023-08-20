@@ -108,7 +108,7 @@ export class Notifications{
       if(noticeStore().$state.noticeSettings.enable){ // 判断是否开启消息弹窗
         toast.info(  // 显示通知弹窗
         {
-          component:NoticeToastButton,props:{message:msg},
+          component:NoticeToastButton,props:{message:msg,messageType:'message'},
           listeners:{
             'nowCheck':function(){  // 立即查看 跳转指定会话
               router.push({name:'chat'})
@@ -162,7 +162,7 @@ export class Notifications{
       if(noticeStore().$state.noticeSettings.enable){ // 判断是否开启消息弹窗
         toast.info(  // 显示通知弹窗
          {
-         component:SystemNoticeToast,props:{content:notice},
+         component:SystemNoticeToast,props:{content:notice,noticeType:'notice'},
          listeners:{
            'nowCheck':function(){  // 立即查看
               router.push({name:'chat'})

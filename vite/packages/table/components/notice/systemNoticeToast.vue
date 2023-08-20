@@ -18,14 +18,43 @@
    </div>
 
  </div>
+
+ <audio ref="notice" src="/sound/notice.mp3"></audio>
 </template>
 
 <script>
 import { defineComponent,ref,toRefs,computed, } from 'vue'
+import { mapWritableState} from 'pinia'
 import { formatTime } from '../../util'
+import { noticeStore } from '../../store/notice'
 
 export default defineComponent({
- props:['content'],
+ props:['content','noticeType'],
+
+ computed:{
+  ...mapWritableState(noticeStore,['noticeSettings'])
+ },
+
+ watch:{
+  'noticeType':{
+    handler(newVal){
+      // console.log('测试：：',newVal === 'notice',this.noticeSettings.noticePlay);
+      console.log(this.noticeType === 'notice' && this.noticeSettings.noticePlay);
+      if(this.noticeType === 'notice' && this.noticeSettings.noticePlay){
+        this.$nextTick(()=>{
+          this.$refs.notice.play()
+        })
+      }else{
+        this.$nextTick(()=>{
+          this.$refs.notice.pause()
+        })
+      }
+
+    },
+    immediate:true,
+    deep:true,
+  }
+ },
 
  setup(props,ctx){
    

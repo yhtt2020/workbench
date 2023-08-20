@@ -18,17 +18,43 @@
     </div>
 
   </div>
+  <audio ref="message" src="/sound/message.mp3"></audio>
 </template>
 
 <script>
 import { defineComponent,ref,toRefs,computed, } from 'vue'
+import { mapWritableState} from 'pinia'
 import { formatTime } from '../../util'
+import { noticeStore } from '../../store/notice'
 
 export default defineComponent({
-  props:['message'],
+  props:['message','messageType'],
+
+  computed:{
+    ...mapWritableState(noticeStore,['noticeSettings'])
+  },
+
+  watch:{
+    'messageType':{
+      handler(newVal){
+        if(newVal === 'message' && this.noticeSettings.messagePlay){
+          this.$nextTick(()=>{
+           this.$refs.message.play()
+          })
+        }else{
+          this.$nextTick(()=>{
+           this.$refs.message.pause()
+          })
+        }
+        
+      },
+      immediate:true,
+      deep:true,
+    }
+
+  },
 
   setup(props,ctx){
-    
     const talkLater = () =>{  // 点击稍后再说按钮
       ctx.emit('closeToast')
     }
@@ -37,6 +63,8 @@ export default defineComponent({
       ctx.emit('closeToast')
       ctx.emit('nowCheck')
     }
+
+
 
     return{
       formatTime,
