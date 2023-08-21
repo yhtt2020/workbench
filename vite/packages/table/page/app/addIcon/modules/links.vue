@@ -5,8 +5,8 @@
         <div
           v-for="(item, index) in webBtn"
           @click="handleChange(index)"
-          class="w-120 h-12 justify-center items-center cursor-pointer flex rounded-xl mr-2"
-          style="flex: 0 0 auto"
+          class="h-12 justify-center items-center cursor-pointer flex rounded-xl mr-2"
+          style="flex: 0 0 auto ;width: 120px;"
           :class="{
             'xt-bg-2': index === selectIndex,
           }"

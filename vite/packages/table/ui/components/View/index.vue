@@ -49,8 +49,9 @@
       </div>
       <!-- 头部区域结束 -->
       <!-- 主体区域开始 -->
+      <!-- flex-grow overflow-hidden overflow-y-auto -->
       <div
-        class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar"
+        class=" xt-scrollbar"
         :class="setSpacing('mt')"
       >
         <!-- 主体插槽 -->

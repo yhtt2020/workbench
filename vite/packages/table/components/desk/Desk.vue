@@ -147,8 +147,8 @@
          v-if="settingVisible"
          style="height: 48px"
          boxClass="p-1 xt-bg-2"
-         v-model:data="currentSettingTab"
-         v-model:list="settingsTab"
+         v-model="currentSettingTab"
+         :list="settingsTab"
     ></XtTab>
 
     <template v-if="currentSettingTab==='current'">
