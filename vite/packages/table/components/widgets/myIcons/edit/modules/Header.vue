@@ -2,8 +2,8 @@
   <XtTab
     style="height: 52px"
     boxClass="p-1 xt-bg-2"
-    v-model:data="selectTab"
-    v-model:list="tabList"
+    v-model="selectTab"
+    :list="tabList"
     name="title"
   ></XtTab>
 </template>

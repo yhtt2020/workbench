@@ -49,7 +49,7 @@
       <div class="secondary-title mt-2 mb-6" style="color: var(--secondary-text);">长按拖拽排序，最多支持在卡片上的展示5个搜索引擎</div>
       <AggregateSearchDrawer @setSortedList="setSortedList" :drawerList="aggList"></AggregateSearchDrawer>
       <div class="mb-6 primary-title " style="color: var(--primary-text);">链接打开方式</div>
-      <XtTab   style="height: 52px" boxClass="p-1 xt-bg-2" v-model:list="linkType"  v-model:data="customData.sortType">
+      <XtTab   style="height: 52px" boxClass="p-1 xt-bg-2" :list="linkType"  v-model="customData.sortType">
       </XtTab>
     </vue-custom-scrollbar>
   </a-drawer>

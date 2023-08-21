@@ -15,7 +15,8 @@
             v-for="item in navList"
           >
             <div
-              class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+              class="flex justify-center items-center rounded-xl cursor-pointer h-12 mr-2"
+              style="width: 120px"
               :key="item.name"
               @click="navName = item.component"
               :class="{ 'xt-bg-2': item.component == navName }"
@@ -55,7 +56,7 @@
         v-if="navName == 'Links'"
         style="width: 380px; height: 48px"
         boxClass="my-2 p-1 xt-bg-2"
-        v-model:data="type"
+        v-model="type"
         :list="linkList"
       ></XtTab>
       <XtButton type="theme" class="ml-2" @click="commitIcons()">

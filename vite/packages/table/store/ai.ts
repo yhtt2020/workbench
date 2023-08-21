@@ -15,7 +15,7 @@ export const aiStore = defineStore("aiStore", {
     // 记录当前请求过的数据
     chatObj: {},
     // topic组件数据----------------------------
-    selectTopicIndex: 1,
+    selectTopicIndex: -1,
     // 初始值 提供用于全局状态维护
     defaultData: {
       chatId: "",
@@ -28,8 +28,11 @@ export const aiStore = defineStore("aiStore", {
       name: "",
       top: false,
     },
-    topicList: [],
+    // 旧版是对象
+    // topicList: [],
+    topicList: {},
     serachTopic: "",
+    // 下面三个可能不用了 看情况删除
     topList: [],
     todayList: [],
     previousList: [],

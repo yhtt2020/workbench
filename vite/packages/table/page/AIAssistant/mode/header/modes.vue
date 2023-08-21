@@ -5,7 +5,7 @@
         style="width: 320px; height: 48px"
         boxClass="p-1 xt-bg-2"
         :list="modelList"
-        v-model:data="mode"
+        v-model="mode"
       ></XtTab>
       <XtInput
         class="ml-4"

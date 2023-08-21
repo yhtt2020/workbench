@@ -10,8 +10,8 @@
       </div>
     </div>
     <div class="flex">
-      <div class="xt-active-btn h-12 w-120 mr-2">使用模板</div>
-      <div class="xt-btn h-12 w-120 mr-2">更新模板</div>
+      <div class="xt-active-btn h-12 mr-2" style="width: 120px">使用模板</div>
+      <div class="xt-btn h-12 mr-2" style="width: 120px">更新模板</div>
       <XtIcon icon="bianji"></XtIcon>
     </div>
   </div>

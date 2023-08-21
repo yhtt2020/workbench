@@ -4,7 +4,7 @@
       <XtTab
         style="height: 48px"
         :style="{ width: tabWidth }"
-        v-model:data="selectTab"
+        v-model="selectTab"
         :list="tabList"
         boxClass="p-1 xt-bg-2"
       ></XtTab>
