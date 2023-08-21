@@ -1,11 +1,9 @@
 <script lang="ts">
-import XtButton from "../card/libs/Button/index.vue";
 import {mapState} from "pinia";
 import {appStore} from "../../store";
 
 export default {
   name: "SendMessageButton",
-  components: {XtButton},
   props: [
     'uid',
     'enable'

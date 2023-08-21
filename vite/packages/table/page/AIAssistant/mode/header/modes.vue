@@ -10,7 +10,7 @@
       <XtInput
         class="ml-4"
         style="width: 288px; height: 48px"
-        v-model:data="searchValue"
+        v-model="searchValue"
       >
         <Icon
           icon="sousuo"

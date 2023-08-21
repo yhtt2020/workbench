@@ -1,6 +1,15 @@
 <template>
+  <!-- 早期组件已经很烂了 得重构 -->
   <div
-    class="controller-state"
+    class="w-full flex items-center justify-center flex-col" style="height: 95%;"
+    v-if="web"
+  >
+    <div class="mb-2">前往工具台体验完整功能</div>
+    <XtButton @click="webClick()">下载</XtButton>
+  </div>
+  <div
+    v-else
+    class="controller-state w-full"
     :class="bg"
     :style="[
       {
@@ -16,7 +25,7 @@
       alt=""
     />
     <div>{{ text[`${state}`] }}</div>
-    <template v-if="state !== 'null'">
+    <template v-if="state !== 'null' && btn !== ''">
       <!-- 按钮控制有两种：1、插槽 2、回调 -->
       <slot :row="{}">
         <div class="click no-drag" @click="onClick()">
@@ -72,15 +81,22 @@ export default {
         };
       },
     },
-    // 背景
+    // 背景 原先默认值 xt-bg 现在下方到class直接添加
     bg: {
       type: String,
-      default: "xt-bg",
+      default: "",
+    },
+    web: {
+      default: false,
     },
   },
+  mounted() {},
   methods: {
     onClick() {
       this.$emit("onClick");
+    },
+    webClick() {
+      window.open("https://www.apps.vip/download/");
     },
   },
 };
@@ -97,10 +113,10 @@ export default {
   border-radius: 10px;
 }
 img {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 .click {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 13px 26px;
   background: var(--primary-bg);
   border-radius: 8px;

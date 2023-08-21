@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from "nanoid";
+import {getDateTime} from '../util'
 //todo 此处要兼容web版
 const {win32} = window.$models
 let clipboardChanged = null
@@ -20,7 +21,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       enable: false,
       duration: 500,//ms
       previewShow: false,    // 控制预览显示
-      clipSetShow: true, // 是否打开代码高亮
+      codeHighlight: true, // 是否打开代码高亮
       showLineNumber: true, // 是否显示行号
       clipSize: 4,
       clipMode: 'javascript',  // 存储代码块语言包 默认js
@@ -31,7 +32,8 @@ export const clipboardStore = defineStore("clipboardStore", {
     async loadFromDb() {
       const rs= await tsbApi.db.allDocs('clipboard:item')
       this.items=rs.rows.map(row=>{
-        return row?.doc
+        const doc=row?.doc
+        return doc
       })
     },
     prepare() {
@@ -86,10 +88,13 @@ export const clipboardStore = defineStore("clipboardStore", {
       return this.clipboardObserver.isRunning()
     },
     async textChange(text: string, beforeText: string) {
+      const now=Date.now()
+      const time=getDateTime(now)
       let item = {
         type: 'text',
         content: text,
-        time: Date.now()
+        time:now ,
+       timeText:`${time.hours}:${time.minutes}:${time.seconds}`+'&nbsp;&nbsp;&nbsp;'+`${time.month}月${time.day}日`
       }
       this.items.unshift(item)
       await tsbApi.db.put({

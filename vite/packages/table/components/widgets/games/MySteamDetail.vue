@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import {getDateTime} from '../.././../util'
+import {getDateTime} from '../../../util'
 import { mapWritableState,mapActions } from 'pinia';
 import {cardStore} from "../../../store/card";
 import {steamUserStore} from "../../../store/steamUser";

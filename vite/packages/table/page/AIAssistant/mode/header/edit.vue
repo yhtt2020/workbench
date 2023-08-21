@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <XtInput
-      v-model:data="search"
+      v-model="search"
       style="width: 400px; height: 48px"
       class="my-4"
       placeholder="请输入名称"

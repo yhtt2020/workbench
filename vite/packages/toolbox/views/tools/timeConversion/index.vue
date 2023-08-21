@@ -14,7 +14,7 @@
         class="xt-bg-2 xt-border rounded-xl overflow-hidden"
         :limit="{ number: true, space: true }"
         style="height: 48px"
-        v-model:data="timeStamp"
+        v-model="timeStamp"
         @keyup="timeStampKeyup()"
         @change="timeStampKeyup()"
         @input="timeStampKeyup()"
@@ -41,7 +41,7 @@
       <XtInput
         class="xt-bg-2 xt-border rounded-xl overflow-hidden"
         style="height: 48px"
-        v-model:data="time"
+        v-model="time"
         @keyup="timeKeyup()"
       >
         <template #addonBefore>

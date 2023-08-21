@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <div style="width: 572px; border: 1px solid">
       <div
         class="flex rounded-xl xt-bg justify-center items-center xt-text mb-3 h-[80px]"
@@ -16,14 +16,17 @@
       </div>
       <Store tabWidth="320px"></Store>
     </div>
-  </div>
+  </div> -->
+  <Set></Set>
 </template>
 
 <script>
 import Store from "./Store.vue";
+import Set from "./set.vue";
 export default {
   components: {
     Store,
+    Set,
   },
 };
 </script>

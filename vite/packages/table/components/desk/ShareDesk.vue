@@ -156,7 +156,7 @@ export default {
     },
   },
   async mounted () {
-    let cats = await this.getCategories()
+    let cats = await this.getCategories('desk')
 
     this.categories = cats
     if (cats.length > 0) {

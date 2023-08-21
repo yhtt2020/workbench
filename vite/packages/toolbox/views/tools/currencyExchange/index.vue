@@ -11,7 +11,7 @@
     <div class="flex items-center h-12">
       <XtInput
         class="xt-border rounded-lg"
-        v-model:data="fromCurrency"
+        v-model="fromCurrency"
         @keyup="fromCurrencyRate()"
       >
         <template #addonBefore>
@@ -65,7 +65,7 @@
     <div class="flex items-center h-12">
       <XtInput
         class="xt-border rounded-lg"
-        v-model:data="toCurrency"
+        v-model="toCurrency"
         @keyup="toCurrencyRate()"
       >
         <template #addonBefore>

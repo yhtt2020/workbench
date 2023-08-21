@@ -7,18 +7,26 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
+  <!-- <test></test> -->
 </template>
 <script>
+import test from "./test.vue";
 import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
-import { marked } from "marked";
-import { getMd } from "../api/test.js";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
+import { gpt } from "../../service/api/ai";
+import { message } from "ant-design-vue";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["selectTopicIndex", "topicList", "chatObj"]),
+    ...mapWritableState(aiStore, [
+      "selectTopicIndex",
+      "topicList",
+      "chatObj",
+      "url",
+      "key",
+    ]),
     selectChat() {
       let chat = this.topicList[this.selectTopicIndex];
       let selectChat = this.chatObj[chat.chatId];
@@ -26,7 +34,7 @@ export default {
     },
   },
   watch: {
-    selectTopicIndex(newV) {
+    async selectTopicIndex(newV) {
       if (newV === -1) return;
       let item = this.topicList.find((item) => {
         if (item.id == newV) {
@@ -39,25 +47,22 @@ export default {
       }
       this.chatList = this.chatObj[item.chatId];
       console.log("object :>> ", this.chatObj[item.chatId]);
-      // console.log("item :>> ", item);
+
       return;
       let chat = this.topicList[newV];
-      console.log("chat :>> ", chat);
       if (this.topicList[newV].chatId == null) {
-        console.log("123 :>> ", 123);
         chat = {}; // 设置 chat 为空对象或其他默认值
         chat.chatId = Date.now(); // 设置 chat.chatId 为当前时间戳或其他默认值
         this.chatObj[chat.chatId] = []; // 初始化 chatId 对应的数组
       }
       this.chatList = this.chatObj[chat.chatId];
-      console.log("chatObj :>> ", this.chatObj);
-      console.log("chatId :>> ", chat.chatId);
     },
   },
   components: {
     Text,
     List,
     View,
+    test,
   },
   data() {
     return {
@@ -67,41 +72,50 @@ export default {
     };
   },
   methods: {
+    // https://api.closeai-proxy.xyz
+    check() {
+      if (!this.key || !this.url) {
+        message.error("请先配置好信息");
+        return true;
+      }
+      return false;
+    },
     async getMdData() {
       let res = await getMd();
       this.markdown = res;
     },
     async onSearch(serach) {
+      if (this.check()) return;
       let user = {
-        content: marked.parse(serach),
-        type: "user",
+        content: serach,
+        role: "user",
         time: Date.now(),
+        id: Date.now(),
       };
-
       this.chatList.push(user);
-      this.isSearch = false;
-      this.markdown =
-        "早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1早上好1";
-      // await this.getMdData();
+      // 获取聊天机器人的回复
+      for await (const result of gpt([
+        {
+          role: "user",
+          content: serach,
+        },
+      ])) {
+        // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
+        const index = this.chatList.findIndex((item) => item.id === result.id);
 
-      let gpt = {
-        content: "",
-        type: "gpt",
-        time: Date.now(),
-      };
-
-      this.chatList.push(gpt);
-
-      let index = 0;
-      let timeId = setInterval(() => {
-        if (index >= this.markdown.length) {
-          clearInterval(timeId);
-          this.isSearch = true;
-          return;
+        if (index !== -1) {
+          this.chatList[this.chatList.length - 1].content += result.content;
+        } else {
+          let assistant = {
+            content: result.content,
+            role: result.role,
+            time: Date.now(),
+            id: result.id,
+          };
+          this.chatList.push(assistant);
         }
-        this.chatList[this.chatList.length - 1].content +=
-          this.markdown[index++]; // 获取数组最后的对象并逐步添加数据到其 content 属性
-      }, 0);
+      }
+      return;
     },
   },
 };

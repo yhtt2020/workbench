@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {myStore} from '../util.js'
+import {myStore} from '../util'
 import dbStorage from "./dbStorage";
 // @ts-ignore
 export const appsStore = defineStore('apps', {

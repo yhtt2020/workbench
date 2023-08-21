@@ -30,7 +30,7 @@
         <span class="primary-title">代码高亮自动识别</span>
         <span class="secondary-title">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch v-model:checked="settings.clipSetShow"/>
+      <a-switch v-model:checked="settings.codeHighlight"/>
     </div>
     <div class="flex items-center pointer justify-center bt-bg button-active button-bg primary-title rounded-lg p-3" @click="openCodeHighlight">
       <span>代码高亮设置</span>

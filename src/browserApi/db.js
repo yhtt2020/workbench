@@ -3,10 +3,7 @@ const path=require('path')
 const fs=require('fs-extra')
 const dbDir=path.join(window.globalArgs['user-data-dir'],'pdb')
 let pdb
-fs.ensureDir(dbDir).then((rs)=>{
-  const name = window.globalArgs['name']
-  pdb = new PouchDB(path.join(dbDir,'db.' + name))
-})
+
 
 const db = {
   instance: pdb,
@@ -31,8 +28,7 @@ const db = {
       return pdb.allDocs({
         include_docs:true,
         start_key:key,
-
-
+        end_key:key+'\ufff0'
       })
     }else{
       return pdb.allDocs({
@@ -44,5 +40,11 @@ const db = {
     return pdb.allDocs(options)
   }
 }
+fs.ensureDir(dbDir).then((rs)=>{
+  const name = window.globalArgs['name']
+  pdb = new PouchDB(path.join(dbDir,'db.' + name))
+  db.instance=pdb
+})
+
 
 module.exports = db
