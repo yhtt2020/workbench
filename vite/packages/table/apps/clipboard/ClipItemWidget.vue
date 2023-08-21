@@ -26,7 +26,8 @@ export default {
       menuList: [
         {
           title: '复制', shortKeys: 'Ctrl + C', id: 'cc', fn: (item) => {
-
+            require('electron').clipboard.writeText(item.content)
+            message.success('复制成功。')
           }
         },
         {
@@ -41,7 +42,8 @@ export default {
         },
         {
           title: '添加到收藏', shortKeys: 'Ctrl + S', id: 'cs', fn: (item) => {
-
+            this.addToCollection(item)
+            message.success('添加收藏成功。')
           }
         },
         {
@@ -96,7 +98,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(clipboardStore, ['remove']),
+    ...mapActions(clipboardStore, ['remove','addToCollection']),
     backClip() {
       this.tab = 'item'
     },

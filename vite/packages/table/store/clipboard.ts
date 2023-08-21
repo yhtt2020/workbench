@@ -16,7 +16,8 @@ const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
-    items: [],
+    items: [],//剪切板的收集箱内容
+    collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     settings: {
       enable: false,
       duration: 500,//ms
@@ -30,9 +31,9 @@ export const clipboardStore = defineStore("clipboardStore", {
   }),
   actions: {
     async loadFromDb() {
-      const rs= await tsbApi.db.allDocs('clipboard:item')
-      this.items=rs.rows.map(row=>{
-        const doc=row?.doc
+      const rs = await tsbApi.db.allDocs('clipboard:item')
+      this.items = rs.rows.map(row => {
+        const doc = row?.doc
         return doc
       })
     },
@@ -91,16 +92,26 @@ export const clipboardStore = defineStore("clipboardStore", {
      * 删除剪切板项目
      * @param item
      */
-    async remove(item){
+    async remove(item) {
       await tsbApi.db.remove(item)
-      let itemIndex=this.items.findIndex(li=>{
-        if(li._id===item._id){
+      let itemIndex = this.items.findIndex(li => {
+        if (li._id === item._id) {
           return true
         }
       })
-      if(itemIndex>-1){
-        this.items.splice(itemIndex,1)
+      if (itemIndex > -1) {
+        this.items.splice(itemIndex, 1)
       }
+    },
+    async addToCollection(item) {
+      await tsbApi.db.put({
+        _id: 'clipboard:collection:' + nanoid(6),
+        originData: item,
+        createTime: Date.now(),
+        updateTime: Date.now()
+      })
+      this.collections.unshift(item)
+
     },
     /**
      * 清空剪切板
@@ -111,7 +122,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         console.log(item, '当前要删除', item.id, item.doc._rev)
         await tsbApi.db.remove(item.doc)
       }
-      this.items=[]
+      this.items = []
       return true
     },
     /**
@@ -120,8 +131,8 @@ export const clipboardStore = defineStore("clipboardStore", {
      * @param beforeText
      */
     async textChange(text: string, beforeText: string) {
-      const now=Date.now()
-      const time=getDateTime(new Date(now))
+      const now = Date.now()
+      const time = getDateTime(new Date(now))
       let item = {
         type: 'text',
         content: text,
