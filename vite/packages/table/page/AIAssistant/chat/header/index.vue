@@ -24,13 +24,14 @@
     <div class="flex">
       <XtButton
         w="128"
-        size="mini"
+        v-if="0"
         icon="tishi-xianxing"
         text="订阅已过期"
         type="warn"
         class="mx-2"
         @click="buyVisible = true"
       ></XtButton>
+
       <XtIcon icon="shezhi1" @click="openEdit()"> </XtIcon>
     </div>
   </div>
@@ -64,6 +65,7 @@ import { defineAsyncComponent } from "vue";
 import _ from "lodash-es";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
+import { message } from "ant-design-vue";
 export default {
   computed: {
     ...mapWritableState(aiStore, [
@@ -91,6 +93,8 @@ export default {
     openEdit() {
       if (this.topicList[this.selectTopicIndex] !== undefined) {
         this.settingVisible = true;
+      } else {
+        message.error("你还未选择");
       }
     },
     searchTopic() {

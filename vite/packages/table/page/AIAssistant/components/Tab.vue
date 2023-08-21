@@ -6,12 +6,6 @@
     placement="right"
     itemClass="h-16 w-16"
   ></xt-tab>
-
-  <xt-tab
-    style="width: 260px; height: 120px"
-    :list="tabList"
-    v-model="selectTab"
-  ></xt-tab>
 </template>
 
 <script>
