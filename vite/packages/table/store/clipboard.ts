@@ -87,14 +87,23 @@ export const clipboardStore = defineStore("clipboardStore", {
     isRunning() {
       return this.clipboardObserver.isRunning()
     },
+    async clean() {
+      let items = await tsbApi.db.allDocs('clipboard:item:')
+      for (const item of items.rows) {
+        console.log(item, '当前要删除', item.id, item.doc._rev)
+        await tsbApi.db.remove(item.doc)
+      }
+      this.items=[]
+      return true
+    },
     async textChange(text: string, beforeText: string) {
       const now=Date.now()
-      const time=getDateTime(now)
+      const time=getDateTime(new Date(now))
       let item = {
         type: 'text',
         content: text,
-        time:now ,
-       timeText:`${time.hours}:${time.minutes}:${time.seconds}`+'&nbsp;&nbsp;&nbsp;'+`${time.month}月${time.day}日`
+        createTime: Date.now(),
+        updateTime: Date.now(),
       }
       this.items.unshift(item)
       await tsbApi.db.put({

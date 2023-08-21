@@ -22,7 +22,7 @@
     </div>
     <span class="primary-title">历史记录容量</span>
     <HorizontalPanel class="mt-6"  :navList="historyCapacity" v-model:selectType="defaultCapacity" ></HorizontalPanel>
-    <div class="w-full flex items-center button-active pointer justify-center rounded-lg py-3 button-bg my-6">
+    <div @click="cleanData" class="w-full flex items-center button-active pointer justify-center rounded-lg py-3 button-bg my-6">
       <span>清除剪切板记录</span>
     </div>
     <div class="flex my-6 justify-between">
@@ -82,6 +82,7 @@ import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorizontalDrawer from '../HorizontalDrawer.vue';
 import { themeType  } from '../../js/data/clipTheme'
 import { codeLanguage } from '../../js/data/clipTheme';
+import { message, Modal } from 'ant-design-vue'
 export default {
   components:{
     HorizontalPanel,
@@ -124,12 +125,26 @@ export default {
     [
       'start','stop','isRunning','prepare',
       'isClipLineNumber','isSetCodeHighlight',
-      'updateClipSize','updateTheme','changeClipMode'
+      'updateClipSize','updateTheme','changeClipMode',
+      'clean'
     ]
     ),
     // 通过该方法可以打开弹窗
     clipOpenShow(){
       this.setShow = true
+    },
+    //清理数据
+    async cleanData(){
+      Modal.confirm({
+        content:'确认清空全部记录？此操作不会删除收藏内的内容。',
+        centered:true,
+        okText:'删除',
+        onOk:async ()=>{
+          let rs=await this.clean()
+          message.success('记录删除成功')
+        }
+      })
+
     },
     // 打开代码高亮
     openCodeHighlight(){
