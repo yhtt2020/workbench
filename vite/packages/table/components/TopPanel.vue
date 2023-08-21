@@ -28,13 +28,14 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
-      <div  v-if="noticeSettings.show"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
+      <div  v-if="noticeSettings.show && hasChat"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
           <div class="new-message-tag"></div>
         </div>
         <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
         <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
+
       </div>
 
       <div class="mr-2"
@@ -189,6 +190,10 @@ export default {
     hasWeather () {
       return this.cities.length > 0
     },
+
+    hasChat(){
+      return this.$route.path !== '/chat'
+    }
   },
   async mounted () {
     window.onblur = () => {
