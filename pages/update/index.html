@@ -38,7 +38,7 @@
       <div style=" margin-top: 10px;flex: 1;height:0;overflow: hidden">
         <div style="margin-bottom: 10px"> 更新内容：</div>
         <div style="overflow-y: auto;height: 320px">
-          <div v-for="li in currentLog ">
+          <div v-for="li in currentLog">
             {{ li }}
           </div>
         </div>
@@ -86,6 +86,12 @@
     return res
   }
 
+  /**
+   * 返回版本号大的那个
+   * @param a
+   * @param b
+   * @returns {*}
+   */
   function cpr_version (a, b) {
     var _a = toNum(a),
       _b = toNum(b)
@@ -114,20 +120,18 @@
         try {
           this.updateLog = data.data
         } catch (e) {
-
+          console.error('报错了',e)
         }
 
       })
 
     },
     computed: {
-      currentLog () {
+      currentLog() {
         if (this.updateLog) {
           if (this.info.version === '0.0.0') return []
           let all = this.updateLog.filter(li => {
-            if (cpr_version(li.name, this.info.version) === li.name && li.name !== this.info.version) {
-              return true
-            }
+            return cpr_version(li.name, this.currentVersion) === li.name && li.name !== this.currentVersion;
           })
           let logs = []
 
