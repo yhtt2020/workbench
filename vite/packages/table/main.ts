@@ -24,9 +24,11 @@ import 'viewerjs/dist/viewer.css'
 import Toast,{PluginOptions} from 'vue-toastification'
 import "vue-toastification/dist/index.css";
 // 注册基础组件
-import  baseComponents from "./components/card/libs/index"
+// import  baseComponents from "./components/card/libs/index"
+import  baseComponents from "./ui/libs/index"
 // 注册业务组件
-import components from "./components/card/components/index"
+// import components from "./components/card/components/index"
+import components from "./ui/components/index"
 
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'

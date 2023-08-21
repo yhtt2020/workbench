@@ -10,9 +10,9 @@ import "./styles/index.scss";
 // 主题样式
 import "../../public/css/styleSwitch/index.scss";
 // 注册基础组件
-import baseComponents from "../table//components/card/libs/index";
+import baseComponents from "../table/ui/libs/index";
 // 注册业务组件
-import components from "../table//components/card/components/index";
+import components from "../table/ui/components/index";
 
 import cache from "../table/components/card/hooks/cache";
 

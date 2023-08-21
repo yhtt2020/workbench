@@ -52,7 +52,7 @@
       </div>
     </div>
   </XtZoom>
-  <XtDrawer v-model:data="visible">
+  <XtDrawer v-model="visible">
     <Set
       @editIcons="editIcons(index)"
       @deleteIcons="deleteIcons(index)"
@@ -62,13 +62,13 @@
   <Teleport to="body">
     <XtView
       type="popup"
-      v-if="titleVisible"
+      v-model="titleVisible"
       @close="titleVisible = false"
       title="修改分组名"
       :showFull="false"
     >
       <div class="h-12" style="width: 400px">
-        <XtInput v-model:data="title" @blur="titleBlur()"></XtInput>
+        <XtInput v-model="title" @blur="titleBlur()"></XtInput>
       </div>
     </XtView>
   </Teleport>
@@ -77,7 +77,8 @@
 <script>
 import Icon from "../components/icon.vue";
 import Set from "./Set.vue";
-import XtZoom from "../../../card/components/Zoom/index.vue";
+// import XtZoom from "../../../card/components/Zoom/index.vue";
+import XtZoom from "../../../../ui/components/Zoom/index.vue";
 import { sizeValues } from "../components/iconConfig";
 import { message } from "ant-design-vue";
 export default {

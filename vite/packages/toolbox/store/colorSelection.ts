@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-// @ts-ignore
+// @ts-ignore 
 export const colorSelection = defineStore("colorSelection", {
   state: () => ({
     colorList: ["#ffffff"],

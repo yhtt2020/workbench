@@ -7,21 +7,19 @@
       <div class="text-base xt-text my-1">月卡</div>
       <div class="xt-text-2 text-sm my-1">Ai助手订阅</div>
     </div>
-    <Tab
+    <xt-tab
       class="h-12"
       boxClass="p-1 xt-bg-2"
       v-model:data="selectTab"
       :list="tabList"
-    ></Tab>
+    ></xt-tab>
     <div>api预留 {{ data.price }}</div>
   </div>
 </template>
 
 <script>
-import Tab from "../../../components/card/libs/tab/index.vue";
 export default {
   components: {
-    Tab,
   },
   props: {
     data: {},

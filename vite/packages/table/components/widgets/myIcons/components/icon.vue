@@ -186,19 +186,16 @@ export default {
         return;
       }
       // 先检测是不是web端
-      if (!this.$isXT) {
-        let arr = ["default", "internal", "thinksky"];
-        if (this.link == "link" && arr.includes(this.open.type)) {
-          window.open(this.open.value);
-        } else {
-          this.visible = true;
-        }
-        return;
-      }
-      console.log(
-        'this.open !== undefined && this.open.value !== "" :>> ',
-        this.open !== undefined && this.open.value !== ""
-      );
+      // if (!this.$isXT) {
+      //   let arr = ["default", "internal", "thinksky"];
+      //   if (this.link == "link" && arr.includes(this.open.type)) {
+      //     window.open(this.open.value);
+      //   } else {
+      //     this.visible = true;
+      //   }
+      //   return;
+      // }
+   
       if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");

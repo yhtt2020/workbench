@@ -40,7 +40,7 @@
       </div>
       1
     </droppable-area>
-    <XtDrawer v-model:data="visible">
+    <XtDrawer v-model="visible">
       <Set
         :index="index"
         @editIcons="editIcons"

@@ -31,17 +31,10 @@
   <div>
     <div class="flex my-2 h-12" style="">
       <!-- rgb -->
-      <XtInput class="xt-bg-2 flex-1 relative" v-model:data="RGB">
+      <XtInput class="xt-bg-2 flex-1 relative" v-model="RGB">
         <template #addonBefore>
           <div
-            class="h-full flex items-center xt-text justify-between px-4 relative"
-            style="
-              width: 50px;
-
-              background: var(--disable-text);
-              opacity: 0.2;
-              border-radius: 8px 0 0 8px;
-            "
+            class="h-full flex items-center xt-text justify-between px-4 relative left-box"
           ></div>
           <div
             class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
@@ -53,16 +46,10 @@
       </XtInput>
       <XtIcon :copy="RGB" icon="fuzhi" size="28" type=""></XtIcon>
       <!-- hex -->
-      <XtInput class="xt-bg-2 flex-1" v-model:data="HEX">
+      <XtInput class="xt-bg-2 flex-1" v-model="HEX">
         <template #addonBefore>
           <div
-            class="h-full flex items-center xt-text justify-between px-4 relative"
-            style="
-              width: 50px;
-              background: var(--disable-text);
-              opacity: 0.2;
-              border-radius: 8px 0 0 8px;
-            "
+            class="h-full flex items-center xt-text justify-between px-4 relative left-box"
           ></div>
           <div
             class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
@@ -76,16 +63,10 @@
     </div>
     <div class="flex my-2 h-12">
       <!-- HSV/HSB -->
-      <XtInput class="xt-bg-2 flex-1" v-model:data="HSV">
+      <XtInput class="xt-bg-2 flex-1" v-model="HSV">
         <template #addonBefore>
           <div
-            class="h-full flex items-center xt-text justify-between px-4 relative"
-            style="
-              width: 50px;
-              background: var(--disable-text);
-              opacity: 0.2;
-              border-radius: 8px 0 0 8px;
-            "
+            class="h-full flex items-center xt-text justify-between px-4 relative left-box"
           ></div>
           <div
             class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
@@ -97,16 +78,10 @@
       </XtInput>
       <XtIcon :copy="HSV" icon="fuzhi" size="28" type=""></XtIcon>
       <!-- HSL -->
-      <XtInput class="xt-bg-2 flex-1" v-model:data="HSL">
+      <XtInput class="xt-bg-2 flex-1" v-model="HSL">
         <template #addonBefore>
           <div
-            class="h-full flex items-center xt-text justify-between px-4 relative"
-            style="
-              width: 50px;
-              background: var(--disable-text);
-              opacity: 0.2;
-              border-radius: 8px 0 0 8px;
-            "
+            class="h-full flex items-center xt-text justify-between px-4 relative left-box"
           ></div>
           <div
             class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
@@ -223,6 +198,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.left-box {
+  width: 50px;
+  background: var(--disable-text);
+  opacity: 0.2;
+  border-radius: 8px 0 0 8px;
+}
+
 :deep(.zs-color-picker-panel__visible) {
   position: absolute;
   top: -30px !important;

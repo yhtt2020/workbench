@@ -1,15 +1,14 @@
 <template>
-  <div class="markdown-body" v-html="htmlContent"></div>
+  <!-- <div class="markdown-body" v-html="htmlContent"></div> -->
+  <MdPreview :showCodeRowNumber="true" :modelValue="htmlContent" theme="dark" />
 </template>
 
 <script setup>
 import { computed } from "vue";
-// @import url(github-markdown-css/github-markdown-dark.css);
-import "github-markdown-css/github-markdown-light.css";
+import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
+// import url(github-markdown-css/github-markdown-dark.css);
 import { marked } from "marked";
-
-import hljs from "highlight.js";
-import "highlight.js/styles/github.css";
 
 import DOMPurify from "dompurify";
 
@@ -26,25 +25,6 @@ const props = defineProps({
   },
 });
 
-/**
- * 配置代码高亮
- */
-marked.setOptions({
-  highlight: (code, lang) => {
-    try {
-      if (lang && hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang }).value;
-      } else {
-        return hljs.highlightAuto(code).value;
-      }
-    } catch (error) {
-      console.warn("error :>> ", error);
-    }
-  },
-  gfmtrue: true,
-  breaks: true,
-});
-
 // 最终要显示的 html 文本
 const htmlContent = computed(() => {
   // 转换为 html 文本
@@ -55,8 +35,20 @@ const htmlContent = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.markdown-body {
+#md-editor-v3 {
   background: none;
   user-select: text;
+  .md-editor-preview-wrapper {
+    padding: 12px !important;
+  }
+}
+
+:deep(.md-editor-preview-wrapper) {
+  padding: 12px !important;
+}
+
+:deep(.default-theme p) {
+  margin: 0;
+  padding: 0;
 }
 </style>
