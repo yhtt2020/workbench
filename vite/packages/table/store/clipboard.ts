@@ -87,6 +87,24 @@ export const clipboardStore = defineStore("clipboardStore", {
     isRunning() {
       return this.clipboardObserver.isRunning()
     },
+    /**
+     * 删除剪切板项目
+     * @param item
+     */
+    async remove(item){
+      await tsbApi.db.remove(item)
+      let itemIndex=this.items.findIndex(li=>{
+        if(li._id===item._id){
+          return true
+        }
+      })
+      if(itemIndex>-1){
+        this.items.splice(itemIndex,1)
+      }
+    },
+    /**
+     * 清空剪切板
+     */
     async clean() {
       let items = await tsbApi.db.allDocs('clipboard:item:')
       for (const item of items.rows) {
@@ -96,6 +114,11 @@ export const clipboardStore = defineStore("clipboardStore", {
       this.items=[]
       return true
     },
+    /**
+     * 当文字改变的时候的回调
+     * @param text
+     * @param beforeText
+     */
     async textChange(text: string, beforeText: string) {
       const now=Date.now()
       const time=getDateTime(new Date(now))
