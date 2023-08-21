@@ -254,6 +254,25 @@ export const NavList = [
     ],
   },
   {
+    cname:'资讯',
+    children:[
+      {
+        name:'news',
+        cname:'新闻头条',
+        detail:'头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息',
+        sizes:['4x4','4x6'],
+        option:[
+          {
+            name:'news',
+            size:'4x4',
+            zoom:'25'
+          }
+        ],
+        time:'2023/8/18'
+      }
+    ]
+  },
+  {
     cname: '效率',
     children: [
       {

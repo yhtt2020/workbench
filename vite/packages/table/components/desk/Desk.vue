@@ -5,7 +5,7 @@
     <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
          v-if="currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
-        <a-result class="s-bg rounded-lg m-auto" style="margin: auto" status="success" title="使用卡片桌面"
+        <a-result class="m-auto rounded-lg s-bg" style="margin: auto" status="success" title="使用卡片桌面"
                   sub-title="您可以长按空白处、右键添加卡片。">
           <template #extra>
             <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"
@@ -153,7 +153,7 @@
 
     <template v-if="currentSettingTab==='current'">
       <div class="line-title">基础设置</div>
-      <div class="line mt-2">
+      <div class="mt-2 line">
         桌面名称：
       </div>
       <div>
@@ -277,7 +277,7 @@ import { appStore } from '../../store'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import HorizontalPanel from '../HorizontalPanel.vue'
 import AddIcon from '../../page/app/addIcon/index.vue'
-
+import News from '../widgets/news/NewsCard.vue'
 import Template from '../../../user/pages/Template.vue'
 import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
@@ -287,6 +287,7 @@ import HotSearch from '../widgets/HotSearch.vue'
 export default {
   name: 'Desk',
   components: {
+    News,
     Template,
     HorizontalPanel,
     VueCustomScrollbar,
