@@ -137,12 +137,30 @@ if (process.platform === 'win32') {
 if (isDevelopmentMode) {
 	app.setPath('userData', app.getPath('userData') + '-development')
 }
+//获取参数并进行判断
+
 electronLog.transports.file.file=app.getPath('userData')+'/myLog.log'
 
 electronLog.transports.file.level = "debug"
 electronLog.transports.console.level='debug'
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
+
+const originDataPath=app.getPath('userData') //记录下原始路径，后面会判断是不是原始路径，如果是原始路径，则直接退出。
+// 获取命令行参数
+const args = process.argv.slice(2);
+
+// 检查是否存在 user-data-dir 参数
+const userDataDirIndex = args.findIndex(arg => arg.startsWith('--user-data-dir='));
+if (userDataDirIndex !== -1) {
+  // 提取 user-data-dir 参数的值
+  const userDataDir = args[userDataDirIndex].split('=')[1];
+
+  // 设置应用的数据目录为 user-data-dir
+  app.setPath('userData', userDataDir);
+}
+
+
 global.userDataPath = app.getPath('userData')
 //必须先加载到userData目录才可以加载settings
 
@@ -159,8 +177,12 @@ var isToolbar = true
 const isFirstInstance = app.requestSingleInstanceLock()
 
 if (!isFirstInstance) {
-	app.quit()
-	return
+  if(global.userDataPath===originDataPath)
+  {
+    //如果是原始路径，也就是没有通过参数启动，则直接退出
+    app.quit()
+    return
+  }
 }
 
 global.saveWindowBounds = function() {
