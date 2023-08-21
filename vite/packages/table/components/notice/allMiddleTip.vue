@@ -1,5 +1,5 @@
 <template>
- <div class="flex justify-between ml-1" style="color: var(--primary-text);">
+ <div class="flex justify-between ml-1 mb-3" style="color: var(--primary-text);">
   <div class="flex items-center ">
    <div class="flex items-center justify-center"  style="width: 32px;height: 32px;">
      <img src="/icons/logo128.png" class="w-full h-full"  alt="">

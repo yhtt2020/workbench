@@ -1,5 +1,26 @@
 <template>
-  
+  <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
+    <div v-for="(item,index) in list" class="flex flex-col mb-3 p-4 rounded-lg"
+    style="width: 395px; background: var(--secondary-bg);position: relative;"
+    >
+      <div class="flex justify-between mb-4">
+        <div class="flex items-center">
+          <a-avatar :size="24"  :src="item.doc.content.icon"></a-avatar>
+          <span class="pl-3">{{item.doc.content.title}}</span>
+        </div>
+        <div class="flex items-center pointer active-button" >
+          <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
+        </div>
+       
+      </div>
+
+      <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.doc.content.body }}</div>
+      
+      <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time)*1000) }}</span>
+    </div>
+  </vue-custom-scrollbar>
+
+   <!-- @contextmenu.stop="noticeMenu(index,$event)" -->
  <!-- <div v-for="(item,index) in detailItem" class="flex flex-col mb-3 p-4 rounded-lg"
   style="width: 395px; background: var(--secondary-bg);position: relative;"
   @contextmenu.stop="noticeMenu(index,$event)"
@@ -45,11 +66,28 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-
+import { defineComponent,reactive,ref,toRefs } from 'vue'
+import { formatTime } from '../../util'
 export default defineComponent({
  props:['list'],
 
+
+ setup(props,ctx){
+   const data = reactive({
+    settingsScroller: {
+      useBothWheelAxes: true,
+      swipeEasing: true,
+      suppressScrollY: false,
+      suppressScrollX: true,
+      wheelPropagation: true
+    },
+
+   })
+
+   return{
+    ...toRefs(data),formatTime,
+   }
+ }
 
 })
 // import { mapActions } from 'pinia'

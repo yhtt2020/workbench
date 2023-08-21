@@ -16,10 +16,6 @@
    <div class="w-11 pointer flex items-center justify-center h-11" @click="clear">
     <Icon icon="clear" style="font-size: 1.5em;"></Icon>
    </div>
-   <div class="w-11 pointer flex items-center justify-center h-11" @click="setNoticeOnOff(noticeSettings.enable = !noticeSettings.enable)">
-    <Icon icon="notification" style="font-size: 1.5em;color: var(--secondary-text);" v-if="noticeSettings.enable"></Icon>
-    <Icon icon="notification-off" style="font-size: 1.5em;color: var(--secondary-text);" v-else></Icon>
-   </div>
   </div>
 
  </div>
@@ -38,7 +34,7 @@ export default {
  },
 
  methods:{
-  ...mapActions(noticeStore,['setNoticeOnOff','removeIMChatData']),
+  ...mapActions(noticeStore,['removeIMChatData']),
   clear(){  // 清空历史消息通知记录   
    this.removeIMChatData()
   },

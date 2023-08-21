@@ -6,7 +6,6 @@ import SystemNoticeToast from '../../components/notice/systemNoticeToast.vue'
 
 
 const toast = useToast()
-const isChat = router.options.history.state.current !== '/chat'
 
 export class Notifications {
   /**
@@ -172,7 +171,7 @@ export class Notifications {
 
     
     // 判断IM聊天是否切换聊天页面,
-    if(isChat && noticeStore().$state.noticeSettings.enable){
+    if(router.options.history.state.current !== '/chat' && noticeStore().$state.noticeSettings.enable){
 
       // 判断消息是否为文本
       const isText = notification.data[0].payload.hasOwnProperty('text')
