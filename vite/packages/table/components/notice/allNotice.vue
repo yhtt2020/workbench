@@ -8,7 +8,7 @@
           <a-avatar :size="24"  :src="item.doc.content.icon"></a-avatar>
           <span class="pl-3">{{item.doc.content.title}}</span>
         </div>
-        <div class="flex items-center pointer active-button" >
+        <div class="flex items-center pointer active-button" @click="delNotice(item)">
           <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
         </div>
        
@@ -68,11 +68,14 @@
 <script>
 import { defineComponent,reactive,ref,toRefs } from 'vue'
 import { formatTime } from '../../util'
+import { noticeStore } from '../../store/notice'
 export default defineComponent({
  props:['list'],
 
 
  setup(props,ctx){
+   const store = noticeStore()
+
    const data = reactive({
     settingsScroller: {
       useBothWheelAxes: true,
@@ -84,8 +87,13 @@ export default defineComponent({
 
    })
 
+   const delNotice = (item) =>{
+    store.removeIMChatData(item)
+    store.loadNoticeDB()
+   }
+
    return{
-    ...toRefs(data),formatTime,
+    ...toRefs(data),formatTime,delNotice,
    }
  }
 
