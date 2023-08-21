@@ -18,11 +18,6 @@
         </template>
       </a-input> -->
 
-      <XtIcon
-        icon="tianjia2"
-        class="mx-2"
-        @click="createChatVisible = true"
-      ></XtIcon>
       <div class="text-base">AI助手</div>
     </div>
 
@@ -36,18 +31,10 @@
         class="mx-2"
         @click="buyVisible = true"
       ></XtButton>
-      <XtIcon icon="shezhi1" @click="settingVisible = !settingVisible"></XtIcon>
+      <XtIcon icon="shezhi1" @click="openEdit()"> </XtIcon>
     </div>
   </div>
-  <!-- 新建模板 -->
-  <XtView
-    v-model="createChatVisible"
-    type="popup"
-    title="新建模板"
-    :showFull="false"
-  >
-    <CreateTopic @close="createChatVisible = false"></CreateTopic>
-  </XtView>
+
   <!-- 充值 -->
   <XtView type="popup" v-model="buyVisible" title="购买" :showFull="false">
     <Store style="width: 440px"></Store>
@@ -84,11 +71,13 @@ export default {
       "selectTopicIndex",
       "topicList",
     ]),
+    getSelectTopic() {
+      return this.topicList.find((item) => item.id === this.selectTopicIndex);
+    },
   },
   components: {
     Store: defineAsyncComponent(() => import("../../account/Store.vue")),
     Edit: defineAsyncComponent(() => import("./edit.vue")),
-    CreateTopic: defineAsyncComponent(() => import("./createTopic.vue")),
   },
   data() {
     return {
@@ -99,11 +88,17 @@ export default {
     };
   },
   methods: {
+    openEdit() {
+      if (this.topicList[this.selectTopicIndex] !== undefined) {
+        this.settingVisible = true;
+      }
+    },
     searchTopic() {
       this.serachTopic = this.searchValue;
     },
     saveEdit() {
       let editRef = this.$refs.editRef;
+
       this.topicList[this.selectTopicIndex] = _.cloneDeep(editRef.value);
       this.settingVisible = false;
     },

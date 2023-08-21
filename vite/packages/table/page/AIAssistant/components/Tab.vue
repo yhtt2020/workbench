@@ -1,14 +1,17 @@
 <template>
-  {{ selectTab }}
-  <XtTab
-    :style="widthStyle"
-    class="mr-2"
-    mode="col"
-    v-model:data="selectTab"
+  <xt-tab
     :list="tabList"
-    :showName="showName"
-    itemClass="mb-2 h-14"
-  ></XtTab>
+    v-model="selectTab"
+    mode="col"
+    placement="right"
+    itemClass="h-16 w-16"
+  ></xt-tab>
+
+  <xt-tab
+    style="width: 260px; height: 120px"
+    :list="tabList"
+    v-model="selectTab"
+  ></xt-tab>
 </template>
 
 <script>
@@ -36,17 +39,17 @@ export default {
     return {
       tabList: [
         {
-          name: "对话聊天",
+          tip: "对话聊天",
           icon: "message",
           value: "Chat",
         },
+        // {
+        //   name: "推荐模板",
+        //   icon: "wanggeshitu",
+        //   value: "Mode",
+        // },
         {
-          name: "推荐模板",
-          icon: "wanggeshitu",
-          value: "Mode",
-        },
-        {
-          name: "我的账号",
+          tip: "我的账号",
           icon: "setting",
           value: "Account",
         },

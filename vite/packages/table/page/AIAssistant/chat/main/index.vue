@@ -35,6 +35,7 @@ export default {
   },
   watch: {
     async selectTopicIndex(newV) {
+      return;
       if (newV === -1) return;
       let item = this.topicList.find((item) => {
         if (item.id == newV) {

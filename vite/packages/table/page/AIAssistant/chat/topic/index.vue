@@ -14,7 +14,7 @@ import Today from "./today.vue";
 import Search from "./Search.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
-import { getTopic } from "../api/test";
+// import { getTopic } from "../api/test";
 import _ from "lodash-es";
 export default {
   computed: {
@@ -32,9 +32,9 @@ export default {
     Search,
   },
   async mounted() {
-    let res = await getTopic();
-    this.topicList = res;
-    this.initList();
+    // let res = await getTopic();
+    // this.topicList = res;
+    // this.initList();
   },
   watch: {
     topicList: {
