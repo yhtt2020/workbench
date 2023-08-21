@@ -38,9 +38,9 @@ export default {
  },
 
  methods:{
-  ...mapActions(noticeStore,['setNoticeOnOff']),
+  ...mapActions(noticeStore,['setNoticeOnOff','removeIMChatData']),
   clear(){  // 清空历史消息通知记录   
-
+   this.removeIMChatData()
   },
 
 

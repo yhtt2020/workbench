@@ -23,30 +23,36 @@
 
 <script>
 import { defineComponent,ref,toRefs,computed, } from 'vue'
-import { mapWritableState} from 'pinia'
+import { mapWritableState,mapActions} from 'pinia'
 import { formatTime } from '../../util'
 import { noticeStore } from '../../store/notice'
 
 export default defineComponent({
-  props:['message','messageType'],
+  props:['message','messageType','isPlay'],
 
   computed:{
     ...mapWritableState(noticeStore,['noticeSettings'])
   },
 
+  methods:{
+    ...mapActions(noticeStore,['setMessagePlay'])
+  },
+
   watch:{
     'messageType':{
       handler(newVal){
-        if(newVal === 'message' && this.noticeSettings.messagePlay){
-          this.$nextTick(()=>{
-           this.$refs.message.play()
-          })
-        }else{
-          this.$nextTick(()=>{
-           this.$refs.message.pause()
-          })
-        }
-        
+        if(this.isPlay && newVal === 'message'){
+          this.setMessagePlay()
+          if(this.noticeSettings.messagePlay){
+            this.$nextTick(()=>{
+             this.$refs.message.play()
+            })
+          }else{
+            this.$nextTick(()=>{
+             this.$refs.message.pause()
+            })
+          }
+        }        
       },
       immediate:true,
       deep:true,
