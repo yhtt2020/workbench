@@ -100,13 +100,12 @@ import OnlineGradeDisplay from '../team/OnlineGradeDisplay.vue'
 import { appStore } from '../../store'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
 import FrameStoreWidget from '../team/FrameStoreWidget.vue'
-import XtButton from '../card/libs/Button/index.vue'
 import TencentCloudChat from 'tim-js-sdk'
 import { message } from 'ant-design-vue'
 
 export default {
   name: 'UserCard',
-  components: { XtButton, FrameStoreWidget, FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
+  components: {  FrameStoreWidget, FrameAvatar, Medal, OnlineMedal, OnlineGradeDisplay },
   props: ['uid', 'visible', 'userInfo'],
   emits: ['visibleChanged'],
   data () {

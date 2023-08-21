@@ -182,6 +182,7 @@
 </template>
 
 <script>
+import  { onMounted } from 'vue'
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";
@@ -252,6 +253,9 @@ import Todo from '../components/widgets/todo/Todo.vue'
 import EatToday from '../components/widgets/eat/EatToday.vue'
 import HotSearch from '../components/widgets/HotSearch.vue'
 import {setTransparent,detTransparent } from "../components/card/hooks/themeSwitch"
+
+
+
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
@@ -464,10 +468,6 @@ export default {
     },
   },
   async mounted() {
-
-    window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(event) =>{  // 全局监听团队聊天消息
-      window.$notice.receiveNotification(event)
-    })
 
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
@@ -1055,6 +1055,7 @@ export default {
     this.lastHeight = cardsHeight
     // console.log("销毁组件",cardsHeight);
   },
+
 };
 </script>
 

@@ -24,9 +24,11 @@ import 'viewerjs/dist/viewer.css'
 import Toast,{PluginOptions} from 'vue-toastification'
 import "vue-toastification/dist/index.css";
 // 注册基础组件
-import  baseComponents from "./components/card/libs/index"
+// import  baseComponents from "./components/card/libs/index"
+import  baseComponents from "./ui/libs/index"
 // 注册业务组件
-import components from "./components/card/components/index"
+// import components from "./components/card/components/index"
+import components from "./ui/components/index"
 
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'
@@ -47,6 +49,7 @@ import dayjs from 'dayjs';
 
 import "../../public/css/styleSwitch/index.scss"
 import "../../public/css/styleSwitch/codemirror.scss"
+import "../../public/css/styleSwitch/toast.scss"
 import {router}from './router'
 
 
@@ -73,6 +76,13 @@ window.$chat=TUIKit.tim
 window.$TUIKit.tim.setLogLevel(4);
 const notice = new Notifications()
 window.$notice = notice
+
+
+window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(event) =>{  // 全局监听团队聊天消息
+  window.$notice.receiveNotification(event)
+})
+
+
 
 dayjs.locale('zh-cn');
 
@@ -104,6 +114,8 @@ app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
+
+
 window.$app=$app
 export {
   router

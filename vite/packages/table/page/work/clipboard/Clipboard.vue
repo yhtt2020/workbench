@@ -37,7 +37,7 @@
         <a-empty :image="simpleImage"/>
       </div>
     </div>
-    <AllClipFile :clipList="clipContents" v-else></AllClipFile>
+    <ClipList :clipList="clipContents" v-else></ClipList>
   </vue-custom-scrollbar>
   <!-- 剪切板列表展示区域结束 -->
 
@@ -67,7 +67,7 @@
 import HorzontanlPanelIcon from '../../../components/HorzontanlPanelIcon.vue'
 import HorizontalDrawer from '../../../components/HorizontalDrawer.vue'
 import TabSwitching from '../../../components/TabSwitching.vue'
-import AllClipFile from './allClipFile.vue'
+import ClipList from './ClipList.vue'
 import ClipSetDrawer from '../../../components/clipPreview/ClipSetDrawer.vue'
 import { Empty } from 'ant-design-vue'
 import { mapWritableState, mapActions } from 'pinia'
@@ -76,15 +76,17 @@ import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
 import { fileList, videoList, audioList } from '../../../js/data/clipboardData'
+import ClipItem from '../../../components/clipPreview/ClipItem.vue'
 
 export default {
   name: 'Clipboard',
 
   components: {
+    ClipItem,
     HorzontanlPanelIcon,
     TabSwitching,
     HorizontalDrawer,
-    AllClipFile,
+    ClipList,
     ClipSetDrawer
   },
 
@@ -138,47 +140,33 @@ export default {
     ...mapWritableState(clipboardStore, ['clipboardObserver', 'items', 'loadFromDb']),
     // 根据剪切板列表不同状态进行数据显示
     clipContents () {
-      if (this.items.length === 0)
-      {
+      let list = []
+      if (this.items.length === 0) {
         return []
       }
       switch (this.defaultCutType.typename) {
         case 'all': // 默认全部
-          if (this.items.length !== 0) {
-            return this.items
-          }
+          list = this.items
           break
         case 'text':   // 筛选文本
-          if (this.items.length !== 0) {
-            const list = _.filter(this.items, function (o) { return o.type === 'text' })
-            return list
-          }
+          list = _.filter(this.items, function (o) { return o.type === 'text' })
           break
         case 'image':  // 筛选图片
-          if (this.items.length !== 0) {
-            const list = _.filter(this.items, function (o) { return o.type === 'image' })
-
-            return list
-          }
+          list = _.filter(this.items, function (o) { return o.type === 'image' })
           break
         case 'file':  // 筛选文件
-          if (this.items.length !== 0) {
-            return fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
-          }
+          list = fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
           break
         case 'video': // 筛选视频
-          if (this.items.length !== 0) {
-            return videoList  // 方便页面搭建暂时使用videoList这个列表,后期视情况而定
-          }
+          list = videoList// 方便页面搭建暂时使用videoList这个列表,后期视情况而定
           break
         case 'audio': // 筛选音频
-          if (this.items.length !== 0) {
-            return audioList
-          }
+          list = audioList
           break
       }
 
-      return []
+      console.log(list, '列表内容')
+      return list
 
     }
   },

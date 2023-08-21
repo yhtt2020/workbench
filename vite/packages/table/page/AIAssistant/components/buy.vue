@@ -26,9 +26,8 @@
   <XtView
     style="z-index: 9999999999"
     type="popup"
+    v-model="popupVisible"
     :showFull="false"
-    v-if="popupVisible"
-    @close="close"
     title="收银台"
   >
     <pay :data="data"></pay>
@@ -36,11 +35,9 @@
 </template>
 
 <script>
-import Popup from "./Popup.vue";
 import pay from "./pay.vue";
 export default {
   components: {
-    Popup,
     pay,
   },
   props: {

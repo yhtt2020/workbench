@@ -1,28 +1,44 @@
 <template>
-  <div class="p-1">
+  <div class="pl-2">
     <template v-for="item in chatList" :key="item.id">
-      <div v-if="item.type === 'user'" class="flex justify-end">
-        <div
-          class="inline-block bg-red-200 p-2 text-base mb-2 overflow-wrap break-word xt-bg-2 rounded-xl"
-          style="max-width: 80%"
-          v-html="item.content"
-        ></div>
-        <div @click="copy(item.content)">复制</div>
+      <div class="flex justify-end mb-3" v-if="item.role === 'user'">
+        <div class="flex flex-col">
+          <div class="block text-base xt-bg-2 rounded-xl ml-10">
+            <GPT :content="item.content"></GPT>
+          </div>
+          <div class="flex justify-end items-center cursor-pointer my-1">
+            <xt-button
+              type=""
+              icon="shezhi1"
+              h="16"
+              w="60"
+              size="mini"
+              @click="copy(item.content)"
+              class="xt-text-2"
+              >复制
+            </xt-button>
+          </div>
+        </div>
       </div>
       <div v-else>
-        <div
-          class="inline-block bg-red-200 p-2 text-base mb-2 xt-bg-2 rounded-xl"
-          style="max-width: 80%"
-        >
+        <div class="inline-block text-base mb-2 xt-bg-2 rounded-xl mr-10">
           <GPT :content="item.content"></GPT>
         </div>
-        <div @click="copy(item.content)">复制</div>
+        <xt-button
+          type=""
+          icon="shezhi1"
+          h="16"
+          w="60"
+          size="mini"
+          @click="copy(item.content)"
+          class="xt-text-2"
+          >复制
+        </xt-button>
       </div>
     </template>
   </div>
 </template>
 <script>
-
 import GPT from "./GPT.vue";
 export default {
   components: {

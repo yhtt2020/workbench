@@ -1,6 +1,6 @@
 <template>
   <!-- 代码块不高亮 纯文本 -->
-  <div ref="myClip"></div>
+  <div ref="myClip" class="w-full"></div>
 </template>
 
 <script>
@@ -18,7 +18,6 @@ export default {
       value:this.editorContent,
       smartIndent:true,
       tabSize:6,
-      smartIndent:true,
       indentWithTabs:true,
       direction: "ltr",
       lineWrapping: true,

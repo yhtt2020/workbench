@@ -88,7 +88,7 @@ import HorizontalPanel from "../HorizontalPanel.vue";
 import UserAvatar from "../small/UserAvatar.vue";
 import {teamStore} from "../../store/team";
 import {message} from "ant-design-vue";
-import XtButton from '../card/libs/Button/index.vue'
+import XtButton from '../../ui/libs/Button/index.vue'
 
 export default {
   name: "TeamDevote",

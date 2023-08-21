@@ -1,4 +1,4 @@
-import {netWorkDownUp} from '../../util.js'
+import {netWorkDownUp} from '../../util'
 export function setSupervisoryData(res){
   const {down,up} = netWorkDownUp(res) //上传和下载
   let {SGPU1UTI,TGPU1DIO,SMEMUTI,SCPUUTI,TCPUPKG,SRTSSFPS,SGPU1USEDDEMEM,TGPU1HOT,TGPUDIO,TCPUDIO} = res || {}

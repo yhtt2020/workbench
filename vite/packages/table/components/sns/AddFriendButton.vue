@@ -1,5 +1,4 @@
 <script lang="ts">
-import XtButton from "../card/libs/Button/index.vue";
 import {message} from "ant-design-vue";
 import TencentCloudChat from "tim-js-sdk";
 import {mapState} from "pinia";
@@ -8,7 +7,6 @@ import * as sns from '../../js/common/sns'
 
 export default {
   name: "AddFriendButton",
-  components: {XtButton},
   props: [
     'uid'
   ],
