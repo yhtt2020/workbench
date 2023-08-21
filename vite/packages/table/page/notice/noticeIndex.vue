@@ -15,13 +15,23 @@
         </div>
       </div>
       <div class="notice-setting w-full pointer">
-        <div class=" flex items-center justify-center h-14 w-14" @click="changeSetting">
-          <Icon icon="setting" style="height:24px;width:24px;"></Icon>
-        </div>
+        <a-tooltip placement="top"  title="设置">
+          <div class=" flex items-center justify-center h-12" @click="changeSetting">
+            <Icon icon="setting" style="height:24px;width:24px;"></Icon>
+          </div>
+        </a-tooltip>
       </div> 
+      <div class="notice-enable w-full pointer">
+        <a-tooltip placement="top"  title="开关">
+          <div class="flex items-center justify-center h-12" @click="setNoticeOnOff(noticeSettings.enable = !noticeSettings.enable)">
+            <Icon icon="notification" style="font-size:2em;color: var(--secondary-text);" v-if="noticeSettings.enable"></Icon>
+            <Icon icon="notification-off" style="font-size:2em;color: var(--secondary-text);" v-else></Icon>
+          </div> 
+        </a-tooltip>
+      </div>
     </div>
 
-    <a-divider type="vertical" class="mx-3" style="height: 100%; background-color:var(--divider);"></a-divider>
+    <a-divider type="vertical" class="mx-3" style="height: 100%;"></a-divider>
 
     <div class="flex flex-col" style="width: 395px;">
       <template v-if="changeSet">
@@ -39,7 +49,8 @@
 
       <template v-else>
         <NoticeRightTop :appType="appType" :appItem="appItem"></NoticeRightTop>
-        
+        <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip>
+        <AllNotice v-if="appType === 'all'" :list="appContentList"></AllNotice>
 
       </template>
 
@@ -51,14 +62,34 @@
 </template>
 
 <script>
-import { defineComponent,onMounted,ref,toRefs,reactive } from 'vue'
+import { defineComponent,ref,toRefs,reactive,computed } from 'vue'
+import { mapActions,mapWritableState } from 'pinia'
 import { noticeStore } from '../../store/notice'
 import _ from 'lodash-es'
 import NoticeRightTop from '../../components/notice/noticeRightTop.vue'
+import AllNotice from '../../components/notice/allNotice.vue'
+import AllMiddleTip from '../../components/notice/allMiddleTip.vue'
 
 export default defineComponent({
   components:{
-    NoticeRightTop
+    NoticeRightTop,
+    AllNotice,
+    AllMiddleTip
+  },
+
+  computed:{
+     ...mapWritableState(noticeStore,['noticeSettings'])
+  },
+
+  mounted(){
+   this.loadHistoryNotice()
+  },
+
+  methods:{
+    ...mapActions(noticeStore,['loadNoticeDB','setNoticeOnOff']),
+    async loadHistoryNotice(){
+      await this.loadNoticeDB()
+    }
   },
 
   setup(){
@@ -76,6 +107,10 @@ export default defineComponent({
     data.appList = store.$state.notice.sessionApp
     data.promptStatus = store.$state.noticeSettings.enablePlay
 
+    const appContentList = computed(()=>{   // 通过计算属性获取消息通知历史数据
+      return store.$state.notice.messageContent
+    })
+
     const clickLeftApp = (item,index) =>{  // 点击选中 
       data.selectStatus = index,
       data.appType = item.id
@@ -90,110 +125,16 @@ export default defineComponent({
     const changeEnable = (val) =>{ // 消息通知语音提示开关事件 
       store.setMessagePrompt(val)
     }
-    
-    const loadHistoryNotice = async() =>{  // 获取历史消息通知
-      await store.loadNoticeDB()
-    }
-
-     
-    onMounted(loadHistoryNotice)
+  
 
     return{
+      appContentList,
       ...toRefs(data),clickLeftApp,changeSetting,
-      changeEnable,loadHistoryNotice,
+      changeEnable,
     }
   }
 })
 
-// import NoticeDetail from './noticeDetail.vue';
-// import NoticeDropDown from '../../components/notice/noticeDropDown.vue';
-// import { Modal } from 'ant-design-vue'
-// 
-
-// export default {
-//   components:{
-//     NoticeDetail,
-//     NoticeDropDown
-//   },
-
-//   computed:{
-//     ...mapWritableState(noticeStore,['notice','noticeEnable','moreEnable']),
-//     show(){  // 查找列表是否为空
-//       for(let i=0;i<this.notice.session.length;i++){ 
-//         if(this.notice.message[i].noticeList.length === 0){
-//          return true
-//         }else{
-//           return false
-//         }
-//       }
-//     }
-//   },
-
-//   data(){
-//     return{
-//       settingsScroller: { // 滚动条配置
-//         useBothWheelAxes: true,
-//         swipeEasing: true,
-//         suppressScrollY: false,
-//         suppressScrollX: true,
-//         wheelPropagation: true
-//       },
-//       selectIndex:'', // 左侧选中状态
-//       emptyUrl:'/img/state/null.png', // 空状态
-//     }
-//   },
-
-//   mounted(){
-//     this.selectIndex = 0
-//   },
-
-//   methods:{
-//     ...mapActions(noticeStore,['setNoticeOnOff','deleteAllNotice','setMoreNotice','addNotifications']),
-//     switchSession(index){  // 切换会话 
-//      this.selectIndex = index
-//     },
-
-//     del(){  // 一次性清空操作  
-//       Modal.confirm({
-//         content:"确定要清理所有消息",
-//         okText: "删除",
-//         centered: true,
-//         onOk: () => {
-//           this.deleteAllNotice()
-//         },
-//       })
-//     },
-
-//     showMoreNotice(){  // 点击显示更多  
-//       this.setMoreNotice(true)
-//     },
-
-//     add(){  // 模拟消息发送通知触发按钮 后需要删除
-//       const n = {
-//         title:'测试123',
-//         body:'测试消息正文部分，根据业务需要显示具体内容',
-//         time:Date.now(),
-//         from:{
-//           username:'',
-//           avatarUrl:''
-//         },
-//         icon:'/icons/logo128.png',
-//         imageUrl:'',
-//         subtitle:'',
-//         level:'low'
-//       }
-//       if(this.noticeEnable){
-//         window.$notice.sendNotice(n)
-//         this.addNotifications(this.selectIndex,window.$notice.notifications)
-//         // console.log('测试::>>',);
-//       }else{
-//         this.addNotifications(this.selectIndex,window.$notice.notifications)
-//       }
-//     }
-
-    
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>
@@ -273,4 +214,13 @@ export default defineComponent({
   font-weight: 500;
 }
 
+.notice-enable{
+  position: absolute;
+  bottom:60px;
+  left: 0;
+}
+
+:deep(.ant-divider-vertical){
+  border-left:1px solid var(--divider) !important;
+}
 </style>

@@ -37,6 +37,11 @@ export const noticeStore = defineStore('notice',{
   }),
 
   actions:{
+    async loadNoticeDB(){  // 获取所有聊天数据
+      const result = await tsbApi.db.allDocs('notice')
+      this.notice.messageContent = result.rows
+    },
+
     showNoticeEntry(){  // 显示消息通知入口
       this.noticeSettings.show = true
     },
@@ -61,20 +66,22 @@ export const noticeStore = defineStore('notice',{
       this.noticeSettings.noticePlay = true
     },
 
-    async putIMChatData(val:object,type:string) {  // 将消息数据进行db数据库存储
-      console.log(val,type);
-      
-      // await tsbApi.db.put({
-      //   _id:'notice:',
-      //   type:`${type}`,
-      //   content:`${val}`
-      // })
-    },
+    async putIMChatData(val:object,type:string) {  // 将聊天消息数据进行db数据库存储
 
-    async loadNoticeDB(){
-      // const result = await tsbApi.db.allDocs('notice')
-      // console.log('获取数据',result); 
+      await tsbApi.db.put({
+        _id:'notice:' + nanoid(10),
+        type:`${type}`,
+        appType:'IM',
+        content:val,
+      })
+
+    },
+    
+
+    async removeIMChatData(item:any){  // 聊天消息数据从db数据库中清空
+      await tsbApi.db.remove(item.doc)
     }
+    
 
     
     

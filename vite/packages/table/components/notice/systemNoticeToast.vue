@@ -24,32 +24,34 @@
 
 <script>
 import { defineComponent,ref,toRefs,computed, } from 'vue'
-import { mapWritableState} from 'pinia'
+import { mapWritableState,mapActions} from 'pinia'
 import { formatTime } from '../../util'
 import { noticeStore } from '../../store/notice'
 
 export default defineComponent({
- props:['content','noticeType'],
+ props:['content','noticeType','isPlay'],
 
  computed:{
   ...mapWritableState(noticeStore,['noticeSettings'])
  },
-
+  methods:{
+    ...mapActions(noticeStore,['setNoticePlay']),
+  },
  watch:{
   'noticeType':{
     handler(newVal){
-      // console.log('测试：：',newVal === 'notice',this.noticeSettings.noticePlay);
-      console.log(this.noticeType === 'notice' && this.noticeSettings.noticePlay);
-      if(this.noticeType === 'notice' && this.noticeSettings.noticePlay){
-        this.$nextTick(()=>{
+      if(this.noticeType === 'notice' && this.isPlay){
+        this.setNoticePlay()
+        if(this.noticeSettings.noticePlay){
+          this.$nextTick(()=>{
           this.$refs.notice.play()
-        })
-      }else{
-        this.$nextTick(()=>{
+          })
+        }else{
+         this.$nextTick(()=>{
           this.$refs.notice.pause()
-        })
+         })
+        }
       }
-
     },
     immediate:true,
     deep:true,
