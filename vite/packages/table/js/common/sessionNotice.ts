@@ -22,44 +22,56 @@ export class Notifications{
   // 根据不同系统通知显示不同内容
   private async classNotice(msg:any){
     const groupName = msg.payload.groupProfile.name || msg.payload.groupProfile.groupID;
-
     const userName  = await this.getUserProfile(msg)
-    console.log(msg.payload.operationType);
-
+    let info:any; // 接收不同系统通知消息
     switch(msg.payload.operationType){
       case 1:
         if(msg.payload.handleMessage === "加群" && msg.payload.hasOwnProperty('handleMessage')){
-          return `${userName}申请加入群组:${groupName}`;
+          info = `${userName}申请加入群组:${groupName}`
         }else{
-          return `${userName}接受${msg.nick}加入${groupName}群组`; 
+          info = `${userName}接受${msg.nick}加入${groupName}群组`
         }
+        break;
       case 2:
-        return `成功加入群组：${groupName}`;
+        info = `成功加入群组：${groupName}`
+        break;
       case 3:
-        return `申请加入群组:${groupName}被拒绝`;
+        info = `申请加入群组:${groupName}被拒绝`;
+        return info
       case 4:
-        return `你被管理员${userName}踢出群组：${groupName}`;
+        info = `你被管理员${userName}踢出群组：${groupName}`
+        break;
       case 5:
-        return `群：${groupName}被${userName} 解散`;
+        info = `群：${groupName}被${userName} 解散`
+        break;
       case 6:
-        return `${userName} 创建群：${groupName}`;
+        info = `${userName} 创建群：${groupName}`
+        break;
       case 8:
-        return `你退出群组：${groupName}`;
+        info = `你退出群组：${groupName}`
+        break;
       case 9:
-        return `你被${userName} 设置为群：${groupName} 的管理员`;
+        info = `你被${userName} 设置为群：${groupName} 的管理员`
+        break;
       case 10:
-        return `你被${userName} 撤销群：${groupName} 的管理员身份`;
+        info =  `你被${userName} 撤销群：${groupName} 的管理员身份`;
+        break;
       case 12:
-        return `${userName} 邀请你加群：${groupName}`;
+        info `${userName} 邀请你加群：${groupName}`;
+        break;
       case 13:
-        return `${userName} 同意加群：${groupName}`;
+        info =  `${userName} 同意加群：${groupName}`
+        break;
       case 14:
-        return `${userName} 拒接加群：${groupName}`;
+        info =  `${userName} 拒接加群：${groupName}`
+        break;
       case 255:
-        return `自定义群系统通知: ${msg.payload.userDefinedField}`;
+        info =  `自定义群系统通知: ${msg.payload.userDefinedField}`
+        break;
       default:
         break;
     }
+    return info
   }
 
   private async getUserProfile(msg) {  // 根据用户名称
@@ -82,6 +94,7 @@ export class Notifications{
     noticeStore().showNoticeEntry()
 
     if(router.options.history.state.current !== '/chat'){ // 判断是否在聊天页面
+
 
       // 判断是否为群聊,如果是群聊,根据群聊id获取群聊头像
       if(notification.data[0].conversationType === 'GROUP'){
@@ -147,7 +160,6 @@ export class Notifications{
           return;
         }
        
-  
         const body = await this.classNotice(notification.data[0])
         
         const notice = {
@@ -157,7 +169,6 @@ export class Notifications{
           time:notification.data[0].time
         }
         
-  
         if(noticeStore().$state.noticeSettings.enable){ // 判断是否开启消息弹窗
           toast.info(  // 显示通知弹窗
            {
@@ -185,15 +196,21 @@ export class Notifications{
           noticeStore().putIMChatData(notice,'Notice')
         }
        
-        
         this.notices.push(notice);
         if (this.callback) {
           this.callback(notice);
         }
       }
-      
+
+
     }else{
-      return;
+      const data = notification.data[0]
+      console.log('获取数据',data);
+      
+      // const message = {
+        
+      // }
+      // return;
     }
   
    

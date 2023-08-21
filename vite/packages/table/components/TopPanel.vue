@@ -38,6 +38,10 @@
 
       </div>
 
+      <div v-else class="no-drag  flex items-center pointer justify-center pr-3" @click="messageAlert" style="color: var(--primary-text);">
+        <Icon icon="notification" style="font-size:1.5em;"></Icon>
+      </div>
+
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="no-drag truncate" v-if="!loading">

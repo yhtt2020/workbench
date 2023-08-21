@@ -39,7 +39,8 @@
 
       <template v-else>
         <NoticeRightTop :appType="appType" :appItem="appItem"></NoticeRightTop>
-        
+        <AllNotice v-if="appType === 'all'" :list="appContentList"></AllNotice>
+        <!-- {{ appContentList }} -->
 
       </template>
 
@@ -55,10 +56,12 @@ import { defineComponent,onMounted,ref,toRefs,reactive } from 'vue'
 import { noticeStore } from '../../store/notice'
 import _ from 'lodash-es'
 import NoticeRightTop from '../../components/notice/noticeRightTop.vue'
+import AllNotice from '../../components/notice/allNotice.vue'
 
 export default defineComponent({
   components:{
-    NoticeRightTop
+    NoticeRightTop,
+    AllNotice,
   },
 
   setup(){
@@ -70,11 +73,13 @@ export default defineComponent({
       appItem:{}, // 右侧图标
       changeSet:false, // 切换设置
       promptStatus:'',  // 提示语开关
+      appContentList:[], // 右侧历史消息数据列表
     })
     
     const store = noticeStore()
     data.appList = store.$state.notice.sessionApp
     data.promptStatus = store.$state.noticeSettings.enablePlay
+    data.appContentList = store.$state.notice.messageContent
 
     const clickLeftApp = (item,index) =>{  // 点击选中 
       data.selectStatus = index,
