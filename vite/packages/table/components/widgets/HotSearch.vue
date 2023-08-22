@@ -1,14 +1,14 @@
 <template>
-  <Widget 
-  :options="options" 
+  <Widget
+  :options="options"
   :sizeList="sizeList"
   :customData="customData"
-  :desk="desk" 
+  :desk="desk"
   >
   <div class="flex flex-col overflow mt-1 hot-box" style="height: 95%;">
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
-      <div  v-for="item in hotList" :key="item.id" @click="jump"
-        class="w-full flex items-center rounded-lg justify-between pointer set-type" 
+      <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"
+        class="w-full flex items-center rounded-lg justify-between pointer set-type"
         style="margin: 8px 0 8px;">
         <span class="sort">{{ item.id }}</span>
         <div class="flex-1 flex ml-3 items-center">
@@ -18,11 +18,11 @@
           </div>
         </div>
         <div v-if="customData.width === 2" style="color:var(--secondary-text);font-size: 16px;">
-          {{ item.heat }} 
+          {{ item.heat }}
         </div>
       </div>
     </vue-custom-scrollbar>
-    
+
 </div>
   </Widget>
 </template>
@@ -70,12 +70,12 @@ export default {
   async mounted() {
     await this.getData()
     this.hotList = this.data
-    
+
   },
   methods: {
     ...mapActions(hotStore,['getData']),
-    jump(){
-      browser.openInUserSelect('https://tophub.today/n/KqndgxeLl9')
+    jump(words){
+      browser.openInUserSelect('https://s.weibo.com/weibo?q='+words)
     }
   }
 }
