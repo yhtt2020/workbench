@@ -18,7 +18,7 @@
           </div>
         </div>
         <div v-if="customData.width === 2" style="color:var(--secondary-text);font-size: 16px;">
-          {{ item.heat }}
+          {{ fix(item.heat) }}
         </div>
       </div>
     </vue-custom-scrollbar>
@@ -76,6 +76,14 @@ export default {
     ...mapActions(hotStore,['getData']),
     jump(words){
       browser.openInUserSelect('https://s.weibo.com/weibo?q='+words)
+    },
+    fix(heat){
+      const display=heat.split(' ')
+      if(display.length===1){
+        return heat
+      }
+      display[1]=(Number(display[1])/10000).toFixed(1)+'万'
+      return display[0]+' '+display[1]
     }
   }
 }
