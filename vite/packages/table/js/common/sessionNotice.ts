@@ -20,57 +20,58 @@ export class Notifications {
 
   // 根据不同系统通知获取不同通知内容
   private async classNotice(msg: any) {
-      const groupName = msg.data[0].payload.groupProfile?.name || msg.data[0].payload.groupProfile?.groupID;
-      const userName = await this.getUserProfile(msg);
-      let info: any; // 接收不同系统通知消息
-      switch (msg.data[0].payload.operationType) {
-       case 1:
-        if ( msg.payload.handleMessage === "加群" && msg.payload.hasOwnProperty("handleMessage")) {
+    const data = msg.data[0].payload
+    const groupName = data.groupProfile?.name || data.groupProfile?.groupID;
+    const userName = await this.getUserProfile(msg);
+    let info: any; // 接收不同系统通知消息
+    switch (data.operationType) {
+      case 1:
+        if ( data.handleMessage === "加群" && data.hasOwnProperty("handleMessage")) {
           info = `${userName}申请加入群组:${groupName}`;
         } else {
           info = `${userName}接受${msg.nick}加入${groupName}群组`;
         }
         break;
-       case 2:
+      case 2:
         info = `成功加入群组：${groupName}`;
         break;
-       case 3:
+      case 3:
         info = `申请加入群组:${groupName}被拒绝`;
         return info;
-       case 4:
+      case 4:
         info = `你被管理员${userName}踢出群组：${groupName}`;
         break;
-       case 5:
+      case 5:
         info = `群：${groupName}被${userName} 解散`;
         break;
-       case 6:
+      case 6:
         info = `${userName} 创建群：${groupName}`;
         break;
-       case 8:
+      case 8:
         info = `你退出群组：${groupName}`;
         break;
-       case 9:
+      case 9:
         info = `你被${userName} 设置为群：${groupName} 的管理员`;
         break;
-       case 10:
+      case 10:
         info = `你被${userName} 撤销群：${groupName} 的管理员身份`;
         break;
-       case 12:
+      case 12:
         info`${userName} 邀请你加群：${groupName}`;
         break;
-       case 13:
+      case 13:
         info = `${userName} 同意加群：${groupName}`;
         break;
-       case 14:
+      case 14:
         info = `${userName} 拒接加群：${groupName}`;
         break;
-       case 255:
-        info = `自定义群系统通知: ${msg.payload.userDefinedField}`;
+      case 255:
+        info = `自定义群系统通知: ${data.userDefinedField}`;
         break;
-       default:
+      default:
         break;
-      }
-      return info;
+    }
+    return info;
   }
 
 

@@ -15,14 +15,14 @@
         </div>
       </div>
       <div class="notice-setting w-full pointer">
-        <a-tooltip placement="top"  title="设置">
+        <a-tooltip placement="right" overlay-class="tooltip-no-border"  title="设置">
           <div class=" flex items-center justify-center h-12" @click="changeSetting">
-            <Icon icon="setting" style="height:24px;width:24px;"></Icon>
+            <Icon icon="setting" style="font-size:2em;color: var(--secondary-text);"></Icon>
           </div>
-        </a-tooltip>
+        </a-tooltip> 
       </div> 
       <div class="notice-enable w-full pointer">
-        <a-tooltip placement="top"  title="开关">
+        <a-tooltip placement="right" overlay-class="tooltip-no-border" title="开关">
           <div class="flex items-center justify-center h-12" @click="setNoticeOnOff(noticeSettings.enable = !noticeSettings.enable)">
             <Icon icon="notification" style="font-size:2em;color: var(--secondary-text);" v-if="noticeSettings.enable"></Icon>
             <Icon icon="notification-off" style="font-size:2em;color: var(--secondary-text);" v-else></Icon>
@@ -31,9 +31,9 @@
       </div>
     </div>
 
-    <a-divider type="vertical" class="mx-3" style="height: 100%;"></a-divider>
+    <a-divider type="vertical" style="height: 100%;"></a-divider>
 
-    <div class="flex flex-col" style="width: 395px;">
+    <div class="flex flex-col ml-1" style="width: 395px;">
       <template v-if="changeSet">
         <div class="flex flex-col pl-2">
           <span class="font-16 mb-3" style="color:var(--primary-text);">设置</span>
@@ -50,7 +50,7 @@
       <template v-else>
         <NoticeRightTop :appType="appType" :appItem="appItem"></NoticeRightTop>
         <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip>
-        <AllNotice v-if="appType === 'all'" :list="appContentList"></AllNotice>
+        <AllNotice v-if="appType === 'all'"  :list="appContentList"></AllNotice>
 
       </template>
 
@@ -78,7 +78,7 @@ export default defineComponent({
   },
 
   computed:{
-     ...mapWritableState(noticeStore,['noticeSettings'])
+    ...mapWritableState(noticeStore,['noticeSettings'])
   },
 
   mounted(){
@@ -222,5 +222,9 @@ export default defineComponent({
 
 :deep(.ant-divider-vertical){
   border-left:1px solid var(--divider) !important;
+}
+
+.tooltip-no-border .ant-tooltip-inner {
+  border: none !important;
 }
 </style>
