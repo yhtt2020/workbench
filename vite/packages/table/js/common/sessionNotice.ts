@@ -207,8 +207,8 @@ export class Notifications {
         this.systemNotice(notice,notification.data[0].conversationID)
       }
     }else{
-      noticeStore().putIMChatData(msg,'message')
-      noticeStore().putIMChatData(notice,'notice')
+      // noticeStore().putIMChatData(msg,'message')
+      // noticeStore().putIMChatData(notice,'notice')
     }
   }
 }
