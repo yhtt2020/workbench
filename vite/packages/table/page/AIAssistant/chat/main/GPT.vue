@@ -1,16 +1,18 @@
 <template>
   <!-- <div class="markdown-body" v-html="htmlContent"></div> -->
-  <MdPreview :showCodeRowNumber="true" :modelValue="htmlContent" theme="dark" />
+  <MdPreview
+    :showCodeRowNumber="true"
+    :modelValue="content"
+    :theme="theme"
+    :previewTheme="previewTheme"
+    :codeTheme="codeTheme"
+  />
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-// import url(github-markdown-css/github-markdown-dark.css);
-import { marked } from "marked";
 
-import DOMPurify from "dompurify";
 
 const props = defineProps({
   // Markdown 文本数据
@@ -24,14 +26,10 @@ const props = defineProps({
     default: false,
   },
 });
+const theme = "dark";
+const previewTheme = "default";
+const codeTheme = "github";
 
-// 最终要显示的 html 文本
-const htmlContent = computed(() => {
-  // 转换为 html 文本
-  const html = marked.parse(props.content);
-  // 清理和过滤 HTML
-  return DOMPurify.sanitize(html);
-});
 </script>
 
 <style lang="scss" scoped>
