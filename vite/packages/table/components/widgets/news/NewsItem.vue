@@ -34,7 +34,7 @@
     author:string
   }>()
   </script>
-  <style lang='less' scoped>
+  <style lang='scss' scoped>
   .CardItem{
     width: 266px;
     height: 93px;
@@ -50,13 +50,17 @@
       margin-left: 0.5%;
       .title{
         width: 100%;
-        height: 40px;
+        height: auto;
         // padding-top: 12px;
+        margin-top: 1.4%;
+        // white-space: normal;
+        // overflow-wrap: break-word;
         span{
           font-family: PingFangSC-Regular;
           font-size: 14px;
           color: rgba(255,255,255,0.85);
           font-weight: 400;
+          white-space: normal;
         }
         
       }
@@ -65,8 +69,10 @@
         height: 17px;
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
-        margin-bottom: 10px;
+        // margin-top: 20px;
+        // margin-bottom: 10px;
+        margin-top: 9.2%;
+        margin-bottom: 1.4%;
         .date{
           span{
             font-family: PingFangSC-Regular;
