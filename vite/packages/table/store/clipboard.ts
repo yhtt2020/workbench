@@ -16,7 +16,8 @@ const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
-    items: [],
+    items: [],//剪切板的收集箱内容
+    collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     settings: {
       enable: false,
       duration: 500,//ms
@@ -30,9 +31,9 @@ export const clipboardStore = defineStore("clipboardStore", {
   }),
   actions: {
     async loadFromDb() {
-      const rs= await tsbApi.db.allDocs('clipboard:item')
-      this.items=rs.rows.map(row=>{
-        const doc=row?.doc
+      const rs = await tsbApi.db.allDocs('clipboard:item')
+      this.items = rs.rows.map(row => {
+        const doc = row?.doc
         return doc
       })
     },
@@ -87,14 +88,56 @@ export const clipboardStore = defineStore("clipboardStore", {
     isRunning() {
       return this.clipboardObserver.isRunning()
     },
+    /**
+     * 删除剪切板项目
+     * @param item
+     */
+    async remove(item) {
+      await tsbApi.db.remove(item)
+      let itemIndex = this.items.findIndex(li => {
+        if (li._id === item._id) {
+          return true
+        }
+      })
+      if (itemIndex > -1) {
+        this.items.splice(itemIndex, 1)
+      }
+    },
+    async addToCollection(item) {
+      await tsbApi.db.put({
+        _id: 'clipboard:collection:' + nanoid(6),
+        originData: item,
+        createTime: Date.now(),
+        updateTime: Date.now()
+      })
+      this.collections.unshift(item)
+
+    },
+    /**
+     * 清空剪切板
+     */
+    async clean() {
+      let items = await tsbApi.db.allDocs('clipboard:item:')
+      for (const item of items.rows) {
+        console.log(item, '当前要删除', item.id, item.doc._rev)
+        await tsbApi.db.remove(item.doc)
+      }
+      this.items = []
+      return true
+    },
+    /**
+     * 当文字改变的时候的回调
+     * @param text
+     * @param beforeText
+     */
     async textChange(text: string, beforeText: string) {
-      const now=Date.now()
-      const time=getDateTime(now)
+      const now = Date.now()
+      const time = getDateTime(new Date(now))
       let item = {
         type: 'text',
         content: text,
-        time:now ,
-       timeText:`${time.hours}:${time.minutes}:${time.seconds}`+'&nbsp;&nbsp;&nbsp;'+`${time.month}月${time.day}日`
+        createTime: Date.now(),
+        updateTime: Date.now(),
       }
       this.items.unshift(item)
       await tsbApi.db.put({

@@ -1,17 +1,20 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
 import ClipCodemirror from "../../components/clipPreview/ClipCodemirror.vue";
 import textCodeMirror from "../../components/clipPreview/textCodeMirror.vue";
-import { getDateTime } from '../../util'
-export default defineComponent({
+import {getDateTime} from '../../util'
+import {clipboardStore} from "../../store/clipboard";
+import {mapActions} from "pinia";
+import {message} from "ant-design-vue";
+
+export default {
   name: "ClipItemWidget",
-  props: ['clipItem','menuList'],
-  emits:['tabChanged'],
+  props: ['clipItem', 'menuList'],
+  emits: ['tabChanged'],
   components: {textCodeMirror, ClipCodemirror},
-  data(){
+  data() {
     return {
       // 控制操作界面的显示
-      tab:'item',//item menu
+      tab: 'item',//item menu
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -20,6 +23,36 @@ export default defineComponent({
         wheelPropagation: true
       },
 
+      menuList: [
+        {
+          title: '复制', shortKeys: 'Ctrl + C', id: 'cc', fn: (item) => {
+            require('electron').clipboard.writeText(item.content)
+            message.success('复制成功。')
+          }
+        },
+        {
+          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
+
+          }
+        },
+        {
+          title: '预览', shortKeys: 'Space', id: 's', fn: (item) => {
+
+          }
+        },
+        {
+          title: '添加到收藏', shortKeys: 'Ctrl + S', id: 'cs', fn: (item) => {
+            this.addToCollection(item)
+            message.success('添加收藏成功。')
+          }
+        },
+        {
+          title: '删除', shortKeys: 'Delete', id: 'd', fn: (item) => {
+            this.remove(item)
+            message.success("删除成功。")
+          }
+        }
+      ]
     }
   },
   computed: {
@@ -27,14 +60,14 @@ export default defineComponent({
       const time = getDateTime(new Date(this.clipItem.createTime))
       return `${time.hours}:${time.minutes}:${time.seconds}` + '&nbsp;&nbsp;&nbsp;' + `${time.month}月${time.day}日`
     },
-    capacity(){
-      switch (this.clipItem.type){
+    capacity() {
+      switch (this.clipItem.type) {
         case 'text':
           return this.clipItem.content.length + '个字符'
       }
     },
-    itemType(){
-      const type=this.clipItem.type
+    itemType() {
+      const type = this.clipItem.type
       switch (type) {
         case 'text':
           return {
@@ -65,20 +98,21 @@ export default defineComponent({
     }
   },
   methods: {
-    backClip () {
-      this.tab='item'
+    ...mapActions(clipboardStore, ['remove','addToCollection']),
+    backClip() {
+      this.tab = 'item'
     },
-    showMenu(){
-      this.tab='menu'
+    showMenu() {
+      this.tab = 'menu'
     },
-    switchTab(tab){
-      this.tab=tab
-      if(tab!=='other'){
-        this.$emit('tabChanged',{tab:tab})
+    switchTab(tab) {
+      this.tab = tab
+      if (tab !== 'other') {
+        this.$emit('tabChanged', {tab: tab})
       }
     }
   }
-})
+}
 </script>
 
 <template>
@@ -90,10 +124,10 @@ export default defineComponent({
         <Icon :icon="itemType.icon" style="font-size: 1.45em;"></Icon>
         <span class="ml-2">{{ itemType.title }}</span>
       </div>
-      <div  class="pl-2 flex justify-between content-text xt-text-2">
+      <div class="pl-2 flex justify-between content-text xt-text-2">
         <span class="time-bg" v-html="timeText"></span>
         <span class="time-bg">
-        <slot name="capacity">{{capacity }}</slot>
+        <slot name="capacity">{{ capacity }}</slot>
         </span>
       </div>
     </div>
@@ -122,10 +156,10 @@ export default defineComponent({
       <div class="flex flex-col">
         <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
           <template v-if="tab==='menu'">
-            <div v-for="item in menuList" @click="item.fn"
+            <div v-for="item in menuList" @click="item.fn(clipItem)"
                  class="flex pointer justify-between s-item button-active  btn-list px-4 rounded-lg py-3 mb-2">
               <span>{{ item.title }}</span>
-              <span>{{ item.intr }}</span>
+              <span>{{ item.shortKeys }}</span>
             </div>
 
           </template>

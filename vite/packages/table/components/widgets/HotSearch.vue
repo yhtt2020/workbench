@@ -1,14 +1,16 @@
 <template>
-  <Widget 
-  :options="options" 
+  <Widget
+  :options="options"
   :sizeList="sizeList"
   :customData="customData"
-  :desk="desk" 
+  :desk="desk"
   >
   <div class="flex flex-col overflow mt-1 hot-box" style="height: 95%;">
+    <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
-      <div  v-for="item in hotList" :key="item.id" @click="jump"
-        class="w-full flex items-center rounded-lg justify-between pointer set-type" 
+
+      <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"
+        class="w-full flex items-center rounded-lg justify-between pointer set-type"
         style="margin: 8px 0 8px;">
         <span class="sort">{{ item.id }}</span>
         <div class="flex-1 flex ml-3 items-center">
@@ -18,11 +20,11 @@
           </div>
         </div>
         <div v-if="customData.width === 2" style="color:var(--secondary-text);font-size: 16px;">
-          {{ item.heat }} 
+          {{ fix(item.heat) }}
         </div>
       </div>
     </vue-custom-scrollbar>
-    
+
 </div>
   </Widget>
 </template>
@@ -32,6 +34,7 @@ import Widget from '../card/Widget.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { hotStore } from '../../store/hot'
 import browser from '../../js/common/browser'
+import { message } from 'ant-design-vue'
 export default {
   name: 'HotSearch',
   components: {
@@ -70,12 +73,28 @@ export default {
   async mounted() {
     await this.getData()
     this.hotList = this.data
-    
+
   },
   methods: {
-    ...mapActions(hotStore,['getData']),
-    jump(){
-      browser.openInUserSelect('https://tophub.today/n/KqndgxeLl9')
+    ...mapActions(hotStore,['getData','refresh']),
+    jump(words){
+      browser.openInUserSelect('https://s.weibo.com/weibo?q='+words)
+    },
+    refreshNow(){
+      this.$refs.refreshButton.classList.add('animate-spin')
+      setTimeout(()=>{
+        this.$refs.refreshButton.classList.remove('animate-spin')
+        message.success({content: '刷新榜单成功',key:'refreshWeibo' })
+      },500)
+      this.refresh()
+    },
+    fix(heat){
+      const display=heat.split(' ')
+      if(display.length===1){
+        return heat
+      }
+      display[1]=(Number(display[1])/10000).toFixed(1)+'万'
+      return display[0]+' '+display[1]
     }
   }
 }
