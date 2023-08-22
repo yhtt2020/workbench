@@ -12,7 +12,7 @@
    <span class="pl-3 font-400" style="color: var(--primary-text);">{{appItem.title}}</span>
   </div>
 
-  <div class="flex items-center">
+  <div class="flex items-center" hidden="">
    <div class="w-8 pointer flex items-center justify-center h-8" @click="clear">
     <Icon icon="clear" style="font-size: 2em;color: var(--secondary-text);"></Icon>
    </div>

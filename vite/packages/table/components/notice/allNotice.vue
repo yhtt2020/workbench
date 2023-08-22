@@ -88,7 +88,7 @@ export default defineComponent({
       store.removeIMChatData(data.removeDoc)
       store.loadNoticeDB()
     }else{
-      
+
     }
   }
   
@@ -108,6 +108,8 @@ export default defineComponent({
  }
 
 })
+
+
 // import { mapActions } from 'pinia'
 // import { noticeStore } from '../../store/notice'
 // import { formatDate } from '../../js/common/sessionNotice'
@@ -192,7 +194,7 @@ export default defineComponent({
 
 
 .dropdown-menu {
- background-color: var(--primary-bg);
+ background-color: var(--secondary-bg);
  border: 1px solid var(--divider);
  padding: 5px;
  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);

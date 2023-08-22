@@ -63,11 +63,12 @@ export default defineComponent({
   setup(props,ctx){
     const talkLater = () =>{  // 点击稍后再说按钮
       ctx.emit('closeToast')
+      ctx.emit('nowCheck')
     }
 
     const viewNow = () =>{  // 点击立即查看
       ctx.emit('closeToast')
-      ctx.emit('nowCheck')
+      ctx.emit('examine')
     }
 
 

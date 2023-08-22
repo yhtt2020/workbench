@@ -110,14 +110,16 @@ export class Notifications {
         component:NoticeToastButton,props:{message:msg,messageType:'message',isPlay:noticeStore().$state.noticeSettings.enablePlay},
         listeners:{
           'nowCheck':function(){
+            noticeStore().hideNoticeEntry()  
+            noticeStore().putIMChatData(msg,'message')
+          },
+          'examine': function(){
             router.push({name:'chat'})
             window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
               // Notify TUIConversation to toggle the current conversation
               window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
             })
-            noticeStore().hideNoticeEntry()  
-            noticeStore().putIMChatData(msg,'message')
           }
         }
       },
@@ -139,14 +141,16 @@ export class Notifications {
         component:SystemNoticeToast,props:{content:notice,noticeType:'notice',isPlay:noticeStore().$state.noticeSettings.noticePlay},
         listeners:{
           'nowCheck':function(){
+            noticeStore().hideNoticeEntry()  
+            noticeStore().putIMChatData(notice,'Notice')
+          },
+          'systemExamine':function(){
             router.push({name:'chat'})
             window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
               // Notify TUIConversation to toggle the current conversation
               window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
             })
-            noticeStore().hideNoticeEntry()  
-            noticeStore().putIMChatData(notice,'Notice')
           }
         }
       },

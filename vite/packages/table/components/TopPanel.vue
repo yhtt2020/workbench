@@ -66,7 +66,7 @@
 
   <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer"
             :bodyStyle="{padding:'12px',overflow:'hidden !important',}" @closeMessage="messageDrawer = false">
-    <MessagePopup></MessagePopup>
+    <MessagePopup ref="loadMessage"></MessagePopup>
   </a-drawer>
   <a-drawer v-model:visible="appStats" placement="left">
     <div class="app-stats">
@@ -277,6 +277,9 @@ export default {
     },
     messageAlert () {
       this.messageDrawer = true
+      this.$nextTick(()=>{
+        this.$refs.loadMessage.loadHistoryNotice()
+      })
       this.hideNoticeEntry()
     }
 
