@@ -8,10 +8,10 @@
             <LeftOutlined />
           </span>
         </div>
-        <div class="center" style="width: 440px;height: 40px;border-radius: 8%;">
+        <div class="center">
 
-          <div :class="['item', { action: currentIndex == id}]" v-for="(title, id) in titleList"
-            @click="setCurrentIndex(id)">
+          <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in titleList"
+            @click="setCurrentIndex(index)">
             <span>{{ title.title }}</span>
           </div>
         </div>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="content">
-        <NewsItem />
+        <NewsItem  />
         <NewsItem />
         <NewsItem />
         <NewsItem />
@@ -46,9 +46,44 @@
         </div>
       </template> -->
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-      <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
-      <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序</div>
-      <AggregateSearchDrawer @setSortedList="setSortedList" :drawerList="aggList"></AggregateSearchDrawer>
+        <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
+        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序</div>
+        <!-- <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer> -->
+        <DndProvider :backend="HTML5Backend">
+          <div class="content-item">
+            <div class="item" v-for="title in titleList" style="
+                    /* margin: 2.2% 0; */
+                    display: flex;
+                    width: 452px;
+                    height: 48px;
+                    position: relative;
+                    justify-content: center;
+                    margin-top: 2.2%;
+                    background: #2A2A2A;
+                    border-radius: 12px;">
+
+              <div class="iconText" style="width: 20px ; 
+                    height: 20px;
+                    position: absolute; 
+                    left: 1.5%;  
+                    margin:3.2% 0 ;">
+                <HolderOutlined style="color: #ffffff;" />
+              </div>
+
+              <div class="text" style="font-family: PingFangSC-Regular;
+                            font-size: 16px;
+                            color: rgba(255,255,255,0.85);
+                            text-align: center;
+                            font-weight: 400;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            ">
+                {{ title }}
+              </div>
+            </div>
+          </div>
+        </DndProvider>
       </vue-custom-scrollbar>
 
     </a-drawer>
@@ -59,9 +94,11 @@
 import Widget from '../../card/Widget.vue';
 import NewsItem from './NewsItem.vue';
 import { mapState } from 'pinia'
-import { newsStore } from '../../../store/news.ts'
-import AggregateSearchFullScreen from "../aggregate/aggregatesearchfullscreen.vue";
-import AggregateSearchDrawer from "../aggregate/AggregateSearchDrawer.vue";
+import { newsStore ,mapActions} from '../../../store/news.ts'
+import NewsCardDrawer from "./NewsCardDrawer.vue";
+import { useDrag, useDrop, useDragLayer } from 'vue3-dnd'
+import { DndProvider } from 'vue3-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 // import _ from 'lodash'
 import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
 export default {
@@ -82,8 +119,6 @@ export default {
   components: {
     Widget,
     NewsItem,
-    AggregateSearchFullScreen,
-    AggregateSearchDrawer,
     LeftOutlined,
     RightOutlined,
     HolderOutlined,
@@ -107,9 +142,9 @@ export default {
         },
       ],
       options: {
-        className: 'card',
+        className: 'card double',
         title: '新闻资讯',
-        icon: 'FileSearchOutlined',
+        icon: 'chakan',
         type: 'news'
       },
       menuList: [
@@ -124,46 +159,65 @@ export default {
       titleList: [
         {
           title: '头条',
-          id: 0,
+          tag: 'top'
         },
         {
           title: '国内',
-          id: 1,
+          tag: 'guonei'
         },
         {
           title: '国际',
-          id: 2,
+          tag: 'guoji'
         },
         {
           title: '娱乐',
-          id: 3,
+          tag: 'yule'
         },
         {
           title: '军事',
-          id: 4,
+          tag: 'junshi'
         },
         {
           title: '体育',
-          id: 5,
+          type: 'tiyu'
         },
         {
           title: '科技',
-          id: 6,
+          tag: 'keji'
         },
-    ]
+        {
+          title: '财经',
+          tag: 'caijing'
+        },
+        {
+          title: '汽车',
+          tag: 'qiche'
+        },
+        {
+          title: '游戏',
+          tag: 'youxi'
+        },
+        {
+          title: '健康',
+          tag: 'jiankang'
+        }
+      ]
     }
   },
   methods: {
     decrease() {
       this.currentIndex = (this.currentIndex - 1 + this.titleList.length) % this.titleList.length
+      this.getNewsMsg(this.titleList[this.currentIndex].tag)
     },
     increase() {
       this.currentIndex = (this.currentIndex + 1) % this.titleList.length
+      this.getNewsMsg(this.titleList[this.currentIndex].tag)
     },
     setCurrentIndex(index) {
       this.currentIndex = index
     },
-    setSortedList(arrList) { // 获取拖拽排序后数据
+    setSortedList(arrList) {
+      // 获取拖拽排序后数据
       this.customData.sortList = arrList
     },
   },
@@ -175,8 +229,13 @@ export default {
         return this.titleList
       }
     },
+    ...mapState(newsStore, [
+      'NewsMsgList'
+    ]),
+    ...mapActions(newsStore,['getNewsMsg'])
   }
 }
+// console.log("categoryList", this.categoryList.length);
 </script>
 <style lang='scss' scoped>
 .topBar {
@@ -198,11 +257,16 @@ export default {
   }
 
   .center {
+    width: 440px;
+    height: 40px;
+    border-radius: 8%;
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.30);
     display: flex;
     box-sizing: border-box;
+    // overflow: auto;
+    overflow-x:auto ;
 
     .action {
       background: #508BFE;
