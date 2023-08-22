@@ -6,7 +6,9 @@
   :desk="desk"
   >
   <div class="flex flex-col overflow mt-1 hot-box" style="height: 95%;">
+    <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
+
       <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"
         class="w-full flex items-center rounded-lg justify-between pointer set-type"
         style="margin: 8px 0 8px;">
@@ -32,6 +34,7 @@ import Widget from '../card/Widget.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { hotStore } from '../../store/hot'
 import browser from '../../js/common/browser'
+import { message } from 'ant-design-vue'
 export default {
   name: 'HotSearch',
   components: {
@@ -73,9 +76,17 @@ export default {
 
   },
   methods: {
-    ...mapActions(hotStore,['getData']),
+    ...mapActions(hotStore,['getData','refresh']),
     jump(words){
       browser.openInUserSelect('https://s.weibo.com/weibo?q='+words)
+    },
+    refreshNow(){
+      this.$refs.refreshButton.classList.add('animate-spin')
+      setTimeout(()=>{
+        this.$refs.refreshButton.classList.remove('animate-spin')
+        message.success({content: '刷新榜单成功',key:'refreshWeibo' })
+      },500)
+      this.refresh()
     },
     fix(heat){
       const display=heat.split(' ')
