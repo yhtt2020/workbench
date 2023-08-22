@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="markdown-body" v-html="htmlContent"></div> -->
   <MdPreview
     :showCodeRowNumber="true"
     :modelValue="content"

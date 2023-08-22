@@ -3,7 +3,9 @@
     <XtView v-model:full="isFull" :spacing="3" class="">
       <template #left>
         <div class="flex h-full">
+          <xt-left-menu></xt-left-menu>
           <Tab></Tab>
+          <div class="xt-br pr-3 mr-3"></div>
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
       </template>
