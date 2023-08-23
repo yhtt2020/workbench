@@ -1,8 +1,8 @@
 <template>
-  <xt-left-menu v-model="select" :list="menuList" end="2"></xt-left-menu>
-  <xt-drawer title="12" v-model="setVisible" placement="right">
-    <Edit></Edit>
-  </xt-drawer>
+  <xt-left-menu  :list="menuList" end="2"></xt-left-menu>
+
+  <!-- 新建对话 -->
+
   <XtView
     v-model="createChatVisible"
     type="popup"
@@ -11,25 +11,10 @@
   >
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
   </XtView>
-  <!-- <div class="flex justify-between flex-col items-center">
-    <xt-tab
-      :list="tabList"
-      v-model="selectTab"
-      mode="col"
-      placement="right"
-      itemClass="h-16 w-16"
-    ></xt-tab>
-    <div>
-      <xt-icon
-        w="40"
-        icon="tianjia2"
-        size="20"
-        @click="createChatVisible = true"
-      ></xt-icon>
-      <xt-icon icon="setting" @click="setVisible = true"></xt-icon>
-     
-    </div>
-  </div> -->
+  <!-- 系统设置 -->
+  <xt-drawer title="12" v-model="setVisible" placement="right">
+    <Edit></Edit>
+  </xt-drawer>
 </template>
 
 <script>

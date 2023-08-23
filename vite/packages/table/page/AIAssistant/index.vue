@@ -3,7 +3,9 @@
     <XtView v-model:full="isFull" :spacing="3" class="">
       <template #left>
         <div class="flex h-full">
-          <Tab></Tab>
+
+          <LeftTab></LeftTab>
+     
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
       </template>
@@ -17,7 +19,7 @@
 import HeaderView from "./core/HeaderView.vue";
 import MainView from "./core/MainView.vue";
 import ChatLeft from "./chat/left/index.vue";
-import Tab from "./components/Tab.vue";
+import LeftTab from "./leftTab/index.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../store/ai";
 
@@ -25,7 +27,7 @@ export default {
   computed: {
     ...mapWritableState(aiStore, ["isFull", "selectTab"]),
   },
-  components: { Tab, HeaderView, MainView, ChatLeft },
+  components: { LeftTab, HeaderView, MainView, ChatLeft },
 };
 </script>
 

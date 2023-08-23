@@ -1,0 +1,42 @@
+<template>
+  <a-select
+    style="z-index: 99999999; position: relative"
+    v-model:value="data"
+    class="no-drag w-full"
+    size="large"
+    @change="handleChange"
+    :dropdownStyle="{
+      'z-index': 999999999999,
+      backgroundColor: 'var(--secondary-bg)',
+    }"
+  >
+    <a-select-option class="no-drag" v-for="item in list" :value="item.value"
+      >{{ item.name }}
+    </a-select-option>
+  </a-select>
+</template>
+
+<script setup>
+import { ref, reactive } from "vue";
+const props = defineProps({
+  modelValue: {
+    default: "默认排序",
+  },
+  list: {
+    default: () => {
+      return [
+        { value: "默认排序", name: "默认排序" },
+        { value: "下载次数", name: "下载次数" },
+        { value: "更新时间", name: "更新时间" },
+      ];
+    },
+  },
+});
+const data = reactive(props.list[0].value);
+const emits = defineEmits(["update:modelValue"]);
+const handleChange = (value) => {
+  emits("update:modelValue", value);
+};
+</script>
+
+<style lang="scss" scoped></style>

@@ -35,6 +35,7 @@ export default {
       obj.time = Date.now();
       obj.name = this.name;
       obj.icon = { ...this.icon };
+      console.log('obj :>> ', obj);
       this.topicList[obj.id] = obj;
       this.close();
     },

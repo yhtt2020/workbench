@@ -4,7 +4,6 @@ import { aiStore } from "../../../../store/ai";
 // 获取gpt
 export async function* gpt(messages) {
   const ai: any = aiStore();
-  console.log("ai.key :>> ", ai.key);
   const response = await fetch(ai.url + "/v1/chat/completions", {
     method: "POST",
     headers: {

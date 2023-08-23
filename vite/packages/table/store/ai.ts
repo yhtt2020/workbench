@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const aiStore = defineStore("aiStore", {
   state: () => ({
+    temperature: 1,
+    count: 4,
     key: "",
     url: "",
     isFull: false, // 组件全屏状态
@@ -10,7 +12,6 @@ export const aiStore = defineStore("aiStore", {
     // 模板组件数据------------------------------
     mode: "Default",
     isMode: true, // 模板使用中
-    isssssssssssssMode: 12, // 模板使用中
     // chat组件数据-----------------------------
     // 记录当前请求过的数据
     chatObj: {},
@@ -18,7 +19,7 @@ export const aiStore = defineStore("aiStore", {
     selectTopicIndex: -1,
     // 初始值 提供用于全局状态维护
     defaultData: {
-      chatId: "",
+      chat: [],
       icon: {
         name: "",
         id: "",
@@ -42,7 +43,7 @@ export const aiStore = defineStore("aiStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["url", "key"],
+        paths: ["url", "key", "temperature", "count", "topicList"],
         storage: localStorage,
       },
     ],
