@@ -185,6 +185,7 @@ export default {
    this.pageLoad()
   },
   async unmounted(){
+    this.items.splice(5,this.items.length-5) //退出的时候清理items，提升载入时间
   },
   methods: {
     ...mapActions(clipboardStore,['nextPage']),
