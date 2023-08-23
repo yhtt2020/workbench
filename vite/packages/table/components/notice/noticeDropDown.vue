@@ -1,7 +1,7 @@
 <template>
- <a-dropdown trigger="click">
-    <div class="w-6 h-6 p-1 flex items-center active-button pointer rounded-md justify-center" style="background: var(--secondary-bg);">
-      <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
+ <a-dropdown trigger="click" >
+    <div class="w-8 h-8 p-1 flex items-center active-button pointer rounded-md justify-center" style="background: var(--secondary-bg);">
+      <Icon icon="gengduo1" style="font-size: 2em;color: var(--secondary-text);"></Icon>
     </div>
     <template #overlay>
       <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
@@ -26,7 +26,8 @@ export default {
   },
   data(){
     return{
-      dropList:[{title:'打开应用',name:'open'},{title:'全部清理',name:'clear'}],
+      dropList:[{title:'打开应用',name:'open'}],
+      // ,{title:'全部清理',name:'clear'}
       dropDownIndex:0,
 
     }
