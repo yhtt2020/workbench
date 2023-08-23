@@ -2,25 +2,26 @@
     <div class="mb-6">
       <transition name="fade">
         <div class="flex flex-col" id="aggregate-drop" ref="aggDropRef">
-          <div v-for="item in drawerList" class="flex items-center p-3 mb-4 cursor-move agg-set rounded-xl" :data-index="item.id">
+          <div v-for="(item,index) in drawerList" class="flex items-center p-3 mb-4 cursor-move agg-set rounded-xl" :data-index="index">
             <div class="flex items-center cursor-move search-engine" style="width: 40%;">
                <HolderOutlined style="font-size: 20px;"></HolderOutlined>
             </div>
-            <div class="flex items-center">
-              <!-- <div class="flex items-center justify-center mr-2">
+            <div class="flex items-center justify-center">
+              <div class="flex items-center justify-center mr-2">
                 <Icon :icon="item.icon" style="font-size: 1.75em;" :style="item.icon === 'bing' ? {color:'rgba(82,196,26, 1)'} : {}">
                 </Icon>
-              </div> -->
+              </div>
               <span>{{ item.title }}</span>
             </div>
           </div>
-        </div>
+        </div>   
       </transition>
     </div>
   
   </template>
   
   <script>
+  import { HolderOutlined } from '@ant-design/icons-vue'
   import Sortable from 'sortablejs';
   export default {
     props:{
@@ -28,6 +29,9 @@
         type:Object,
         default:()=>[]
       }
+    },
+    components:{
+      HolderOutlined
     },
     mounted(){
       const el = this.$refs.aggDropRef

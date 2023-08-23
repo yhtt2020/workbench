@@ -2,15 +2,16 @@
   <div>
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
       ref="cardSlot" :customData="customData">
+      <!-- {{ showList.length }} -->
+      <!-- {{ aggList }} -->
       <div class="topBar">
         <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
           <span>
             <LeftOutlined />
           </span>
         </div>
-        <div class="center">
-
-          <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in titleList"
+        <div class="center" ref="centerItem">
+          <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
             @click="setCurrentIndex(index)">
             <span>{{ title.title }}</span>
           </div>
@@ -22,7 +23,7 @@
         </div>
       </div>
       <div class="content">
-        <NewsItem  />
+        <NewsItem />
         <NewsItem />
         <NewsItem />
         <NewsItem />
@@ -31,26 +32,14 @@
       </div>
     </Widget>
 
-    <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right" style="
-        background: #212121 100%; 
+    <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right" style="background: #212121 100%; 
         ">
-      <!-- <template #title>
-        <div class="text-left" style="
-                font-family: PingFangSC-Medium;
-                font-size: 16px;
-                color: rgba(255,255,255,0.85);
-                font-weight: 500;
-                margin-left: 5.9%;
-                ">
-          设置
-        </div>
-      </template> -->
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
         <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序</div>
-        <!-- <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer> -->
-        <DndProvider :backend="HTML5Backend">
-          <div class="content-item">
+        <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer>
+        <!-- <DndProvider :backend="HTML5Backend"> -->
+        <!-- <div class="content-item">
             <div class="item" v-for="title in titleList" style="
                     /* margin: 2.2% 0; */
                     display: flex;
@@ -82,8 +71,8 @@
                 {{ title }}
               </div>
             </div>
-          </div>
-        </DndProvider>
+          </div> -->
+        <!-- </DndProvider> -->
       </vue-custom-scrollbar>
 
     </a-drawer>
@@ -94,12 +83,8 @@
 import Widget from '../../card/Widget.vue';
 import NewsItem from './NewsItem.vue';
 import { mapState } from 'pinia'
-import { newsStore ,mapActions} from '../../../store/news.ts'
+import { newsStore } from '../../../store/news.ts'
 import NewsCardDrawer from "./NewsCardDrawer.vue";
-import { useDrag, useDrop, useDragLayer } from 'vue3-dnd'
-import { DndProvider } from 'vue3-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-// import _ from 'lodash'
 import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
 export default {
   name: "News",
@@ -119,6 +104,7 @@ export default {
   components: {
     Widget,
     NewsItem,
+    NewsCardDrawer,
     LeftOutlined,
     RightOutlined,
     HolderOutlined,
@@ -159,67 +145,94 @@ export default {
       titleList: [
         {
           title: '头条',
-          tag: 'top'
+          tag: 'top',
+          // id:0
         },
         {
           title: '国内',
-          tag: 'guonei'
+          tag: 'guonei',
+          // id:1
         },
         {
           title: '国际',
-          tag: 'guoji'
+          tag: 'guoji',
+          // id:2
         },
         {
           title: '娱乐',
-          tag: 'yule'
+          tag: 'yule',
+          // id:3
         },
         {
           title: '军事',
-          tag: 'junshi'
+          tag: 'junshi',
+          // id:4
         },
         {
           title: '体育',
-          type: 'tiyu'
+          type: 'tiyu',
+          // id:5
         },
         {
           title: '科技',
-          tag: 'keji'
+          tag: 'keji',
+          // id:6
         },
         {
           title: '财经',
-          tag: 'caijing'
+          tag: 'caijing',
+          // id:7
         },
         {
           title: '汽车',
-          tag: 'qiche'
+          tag: 'qiche',
+          // id:8
         },
         {
           title: '游戏',
-          tag: 'youxi'
+          tag: 'youxi',
+          // id:9
         },
         {
           title: '健康',
-          tag: 'jiankang'
+          tag: 'jiankang',
+          // id:10
         }
       ]
     }
   },
   methods: {
     decrease() {
-      this.currentIndex = (this.currentIndex - 1 + this.titleList.length) % this.titleList.length
-      this.getNewsMsg(this.titleList[this.currentIndex].tag)
+      this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
+      // this.getNewsMsg(this.titleList[this.currentIndex].tag)
+      // this.observerItem(this.currentIndex)
+      this.getNewsMsg(this.aggList[this.currentIndex].tag)
     },
     increase() {
-      this.currentIndex = (this.currentIndex + 1) % this.titleList.length
-      this.getNewsMsg(this.titleList[this.currentIndex].tag)
+      this.currentIndex = (this.currentIndex + 1) % this.showList.length
+      // this.getNewsMsg(this.titleList[this.currentIndex].tag)
+      // this.observerItem(this.currentIndex)
+      this.getNewsMsg(this.aggList[this.currentIndex].tag)
     },
     setCurrentIndex(index) {
       this.currentIndex = index
+      this.getNewsMsg(this.aggList[this.currentIndex].tag)
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
       this.customData.sortList = arrList
     },
+    // observerItem(index) {
+    //     this.$nextTick(()=>{
+    //       const element=this.$refs.centerItem
+    //       element.scrillIntoView({
+    //       behavior: 'smooth',
+    //       block: 'start',
+    //       inline: 'center'
+    //     })
+    //   })
+
+    // }
   },
   computed: {
     aggList() {
@@ -230,10 +243,13 @@ export default {
       }
     },
     ...mapState(newsStore, [
-      'NewsMsgList'
+      'NewsMsgList', 'getNewsMsg'
     ]),
-    ...mapActions(newsStore,['getNewsMsg'])
-  }
+    // ...mapActions(newsStore,['getNewsMsg'])
+    showList() {
+      return JSON.parse(JSON.stringify(this.aggList.slice(0, 7)))
+    }
+  },
 }
 // console.log("categoryList", this.categoryList.length);
 </script>
@@ -241,6 +257,7 @@ export default {
 .topBar {
   display: flex;
   justify-content: space-between;
+  margin-top: 2.4%;
 
   .left,
   .right {
@@ -265,24 +282,43 @@ export default {
     background: rgba(0, 0, 0, 0.30);
     display: flex;
     box-sizing: border-box;
-    // overflow: auto;
-    overflow-x:auto ;
+    overflow-x: auto;
+    white-space: nowrap;
+    // scrollbar-width: thin; /* 或者设置为 none */
+    // scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1); /* 根据需要设置颜色 */
+
+    &::-webkit-scrollbar {
+      width: 0;
+      // background-color: transparent;
+      // opacity: 0;
+      display: none;
+    }
 
     .action {
+      // width: 61px;
+      // height: 40px;
       background: #508BFE;
       cursor: pointer;
       border-radius: 8px;
       flex: 1;
       align-self: stretch;
-
+      flex-shrink: 0;
+      align-self: center;
+      // padding: 0 0.6em;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-left: none;
     }
 
     .item {
       width: 61px;
       height: 33px;
+      margin: 0.6% 0;
       text-align: center;
       line-height: 33px;
       border-radius: 8px;
+      flex-shrink: 0;
+
 
       span {
         font-family: PingFangSC-Regular;
