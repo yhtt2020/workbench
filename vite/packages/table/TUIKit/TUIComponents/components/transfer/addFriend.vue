@@ -105,7 +105,7 @@
 
 <script>
 import { defineComponent,ref,reactive,toRefs, onMounted, computed } from 'vue'
-
+import { appStore } from '../../../../store'
 import _ from 'lodash-es'
 
 export default defineComponent({
@@ -113,7 +113,8 @@ export default defineComponent({
 
   setup(props,ctx){
     const TUIServer = props.server.TUICore
-    
+    const store = appStore()
+
     const data = reactive({
       friendList:[],  // 好友列表
       selectList:[], // 右侧选中列表
@@ -159,7 +160,13 @@ export default defineComponent({
 
     const getFriendList = async () =>{  // 获取好友列表数据
       const res  = await TUIServer.tim.getFriendList()
-      data.friendList = res.data
+      const list = [];
+      for(let i =0; i<res.data.length;i++){
+        if(parseInt(res.data[i].userID) !== store.$state.userInfo.uid){
+          list.push(res.data[i])
+        }
+      }
+      data.friendList = list
     }
 
     const selectUser = (item) => {  // 选中用户
