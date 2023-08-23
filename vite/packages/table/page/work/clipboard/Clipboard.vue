@@ -191,13 +191,16 @@ export default {
 
     async doLoadNextPage () {
 
-      let rs = await this.nextPage(this.dbKey)
-      if (!rs) {
-        message.info({
-          content:'已经到底了',
-          key:'loadInfo'
-        })
+      if(this.hasNextPage){
+        let rs = await this.nextPage(this.dbKey)
+        if (!rs) {
+          message.info({
+            content:'已经到底了',
+            key:'loadInfo'
+          })
+        }
       }
+
       console.log('到底防抖')
     },
 

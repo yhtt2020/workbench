@@ -53,7 +53,7 @@ export const clipboardStore = defineStore("clipboardStore", {
           }
         })
         this.totalRows=rs.total_rows
-        return true
+        return this.hasNextPage
       } else {
         return false
       }
@@ -191,7 +191,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       const now = Date.now()
       const time = getDateTime(new Date(now))
       this.index++
-      let item = {
+      let item:any = {
         _id: "clipboard:item:" + now,
         type: 'text',
         content: text,
@@ -200,16 +200,14 @@ export const clipboardStore = defineStore("clipboardStore", {
         updateTime: now,
       }
       this.totalRows++
-      this.items.unshift(item)
-      await tsbApi.db.put({
-        _id: "clipboard:item:" + now,
-        content: text,
-        index:this.index,
-        createTime: now,
-        updateTime: now,
-        type: 'text'
-      })
-      console.log('监测到新[文本]剪切板内容', text)
+      let rs=await tsbApi.db.put(item)
+      if(rs.ok){
+        item._rev=rs.rev
+        this.items.unshift(item)
+        console.log('监测到新[文本]剪切板内容', text)
+      }
+
+
     },
     imageChange(image: any) {
       let item = {
