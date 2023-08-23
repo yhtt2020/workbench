@@ -37,7 +37,8 @@ export default {
         },
         {
           title: '预览', shortKeys: 'Space', id: 's', fn: (item) => {
-
+            console.log('预览内容',item)
+            this.previewItem(item)
           }
         },
         {
@@ -110,6 +111,9 @@ export default {
       if (tab !== 'other') {
         this.$emit('tabChanged', {tab: tab})
       }
+    },
+    previewItem(item){
+      this.$emit('previewItem',item)
     }
   }
 }

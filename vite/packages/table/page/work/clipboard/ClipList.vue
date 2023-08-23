@@ -19,6 +19,8 @@ import ClipItem from '../../../components/clipPreview/ClipItem.vue';
 import ClipTextPreview from '../../../components/clipPreview/ClipTextPreview.vue';
 import { Empty } from 'ant-design-vue';
 import {toRaw} from "vue";
+import { mapWritableState } from 'pinia'
+import { clipboardStore } from '../../../store/clipboard'
 export default {
   components:{
     ClipItem,
@@ -36,32 +38,37 @@ export default {
       previewData:null
     }
   },
+  computed:{
+    ...mapWritableState(clipboardStore,['previewShow'])
+  },
   methods:{
     // 获取item
-    getItem(v){
+    getItem(item){
+      console.log('预览',item)
       // this.previewData = v
-      switch(v.type){
+      switch(item.type){
         case 'text':
-          this.previewData = v
+          this.previewData = item
           break;
         case 'image':
-          const img = toRaw(v.content).toDataURL()
+          const img = toRaw(item.content).toDataURL()
           this.previewData = {
             img,
-            timeText:v.timeText,
-            type:v.type
+            timeText:item.timeText,
+            type:item.type
           }
           break;
         case 'video':
-          this.previewData = v
+          this.previewData = item
           break;
         case 'file':
-          this.previewData = v
+          this.previewData = item
           break;
         case 'audio':
-          this.previewData = v
+          this.previewData = item
           break;
       }
+      this.previewShow=true
     }
   }
 }

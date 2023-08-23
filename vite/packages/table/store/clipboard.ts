@@ -22,10 +22,10 @@ export const clipboardStore = defineStore("clipboardStore", {
     hasNextPage: false,
     totalRows:0,
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
+    previewShow:false,//预览
     settings: {
       enable: false,
       duration: 500,//ms
-      previewShow: false,    // 控制预览显示
       codeHighlight: true, // 是否打开代码高亮
       showLineNumber: true, // 是否显示行号
       clipSize: 4,

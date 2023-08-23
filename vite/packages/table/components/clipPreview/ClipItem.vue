@@ -1,7 +1,7 @@
 <template>
   <!-- 文本列表 -->
   <template v-if="clipItem.type === 'text'">
-    <TextItem :clip-item="clipItem"></TextItem>
+    <TextItem @previewItem="previewItem" :clip-item="clipItem"></TextItem>
 <!--    &lt;!&ndash; 列表主界面 &ndash;&gt;-->
 <!--    <div style="width: 338px;height:420px;flex-shrink: 0; " v-if="controlsShow === false && codeLanguageShow === false"-->
 <!--         class="flex flex-col rounded-lg justify-between " @contextmenu="textButton">-->
@@ -552,7 +552,10 @@ export default {
           break
       }
     },
-
+    previewItem(item){
+      console.log('猫盘',item)
+      this.$emit('previewItem',item)
+    },
     // 打开代码块语言包切换界面
     openCode () {
       this.codeLanguageShow = true
