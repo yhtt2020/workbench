@@ -6,7 +6,7 @@
         <span class="mb-2 primary-title">剪切板</span>
         <span class="secondary-title">关闭后将停止读取剪切板内容</span>
       </div>
-      <a-switch  v-model:checked="settings.enable"/>
+      <a-switch v-model:checked="settings.enable"/>
     </div>
     <span class="primary-title">打开剪切板应用快捷键</span>
     <div class="flex items-center my-6">
@@ -21,8 +21,11 @@
       </div>
     </div>
     <span class="primary-title">历史记录容量</span>
-    <HorizontalPanel class="mt-6"  :navList="historyCapacity" v-model:selectType="defaultCapacity" ></HorizontalPanel>
-    <div @click="cleanData" class="w-full flex items-center button-active pointer justify-center rounded-lg py-3 button-bg my-6">
+    <HorizontalPanel class="mt-6" :navList="historyCapacity" v-model:selectType="defaultCapacity"></HorizontalPanel>
+    <span class="primary-title">每次载入页数</span>
+    <HorizontalPanel class="mt-6" :navList="pageSizes" v-model:selectType="pageSizeTab"></HorizontalPanel>
+    <div @click="cleanData"
+         class="w-full flex items-center button-active pointer justify-center rounded-lg py-3 button-bg my-6">
       <span>清除剪切板记录</span>
     </div>
     <div class="flex my-6 justify-between">
@@ -32,7 +35,8 @@
       </div>
       <a-switch v-model:checked="settings.codeHighlight"/>
     </div>
-    <div class="flex items-center pointer justify-center bt-bg button-active button-bg primary-title rounded-lg p-3" @click="openCodeHighlight">
+    <div class="flex items-center pointer justify-center bt-bg button-active button-bg primary-title rounded-lg p-3"
+         @click="openCodeHighlight">
       <span>代码高亮设置</span>
     </div>
   </a-drawer>
@@ -44,147 +48,169 @@
         <span class="primary-title">代码高亮自动识别</span>
         <span class="secondary-title">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch  v-model:checked="settings.codeHighlight"/>
+      <a-switch v-model:checked="settings.codeHighlight"/>
     </div>
     <div class="mb-6 primary-title">默认语言</div>
-    <div @click="openLanguageDrawer" class="mb-6 bt-bg py-3 button-active button-bg flex items-center rounded-lg pointer justify-center">
+    <div @click="openLanguageDrawer"
+         class="mb-6 bt-bg py-3 button-active button-bg flex items-center rounded-lg pointer justify-center">
       <span>{{ selectLanguage.name }}</span>
     </div>
     <div class="mb-6 primary-title">编辑器主题</div>
-    <div @click="openThemeDrawer" class="mb-6 py-3 flex items-center bt-bg button-active  button-bg rounded-lg pointer justify-center">
-      <span>{{settings.clipTheme}}</span>
+    <div @click="openThemeDrawer"
+         class="mb-6 py-3 flex items-center bt-bg button-active  button-bg rounded-lg pointer justify-center">
+      <span>{{ settings.clipTheme }}</span>
     </div>
     <div class="flex justify-between mb-6">
       <div class="flex flex-col">
         <span class="primary-title">显示行号</span>
         <span class="secondary-title">开启后文本类内容自动关联代码高亮</span>
       </div>
-      <a-switch v-model:checked="settings.showLineNumber" />
+      <a-switch v-model:checked="settings.showLineNumber"/>
     </div>
     <div class="mb-6 primary-title">缩进单位</div>
-    <a-input placeholder="4" class="h-12 "  v-model:value="settings.clipSize" @pressEnter="updateIndentUnit($event)"/>
+    <a-input placeholder="4" class="h-12 " v-model:value="settings.clipSize" @pressEnter="updateIndentUnit($event)"/>
   </a-drawer>
 
   <!-- 主题色模块 -->
   <HorizontalDrawer :rightSelect="themeType" ref="themeRef"
-   v-model:selectRegion="settings.clipTheme"  @getArea="getTheme"
+                    v-model:selectRegion="settings.clipTheme" @getArea="getTheme"
   >
   </HorizontalDrawer>
 
   <!-- 语言包选择 -->
-  <HorizontalDrawer :rightSelect="codeLanguage" v-model:selectRegion="settings.clipMode" ref="languageRef" @getArea="getLanguage"></HorizontalDrawer>
+  <HorizontalDrawer :rightSelect="codeLanguage" v-model:selectRegion="settings.clipMode" ref="languageRef"
+                    @getArea="getLanguage"></HorizontalDrawer>
 </template>
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
 import { clipboardStore } from '../../store/clipboard'
-import HorizontalPanel from '../../components/HorizontalPanel.vue';
-import HorizontalDrawer from '../HorizontalDrawer.vue';
-import { themeType  } from '../../js/data/clipTheme'
-import { codeLanguage } from '../../js/data/clipTheme';
+import HorizontalPanel from '../../components/HorizontalPanel.vue'
+import HorizontalDrawer from '../HorizontalDrawer.vue'
+import { themeType } from '../../js/data/clipTheme'
+import { codeLanguage } from '../../js/data/clipTheme'
 import { message, Modal } from 'ant-design-vue'
+
 export default {
-  components:{
+  components: {
     HorizontalPanel,
     HorizontalDrawer
   },
-  data(){
-    return{
+  data () {
+    return {
       // 控制抽屉打开
-      setShow:false,
+      setShow: false,
       themeType,   // 代码块主题选择
       codeLanguage, // 代码块语言包选择
       // 控制代码高亮设置弹窗
-      clipSetVisible:false,
+      clipSetVisible: false,
       // 默认的快捷键
       instruct: 'CTRL + ALT + V',
-        // 历史记录时间
-        historyCapacity: [
-        {title: '1天', name: 'day'},
-        {title: '1周', name: 'week'},
-        {title: '1月', name: 'month'},
-        {title: '不限制', name: 'unlimited'}
+      // 历史记录时间
+      historyCapacity: [
+        { title: '1天', name: 'day' },
+        { title: '1周', name: 'week' },
+        { title: '1月', name: 'month' },
+        { title: '不限制', name: 'unlimited' }
+      ],
+      pageSizes: [
+        { title: '10', name: '10' },
+        {
+          title: '15', name: '15'
+        },
+        {
+          title: '20', name: '20'
+        },
+        {
+          title: '30', name: '30'
+        }
       ],
       // 默认历史记录时间
-      defaultCapacity: {title: '1天', name: 'day'},
+      defaultCapacity: { title: '1天', name: 'day' },
+      pageSizeTab:{}
     }
   },
-  computed:{
-    ...mapWritableState(clipboardStore,[
+  computed: {
+    ...mapWritableState(clipboardStore, [
       'settings'
     ]),
-    selectLanguage(){
-      const index = this.codeLanguage.find(el=>{
+    selectLanguage () {
+      const index = this.codeLanguage.find(el => {
         return el.abbr === this.settings.clipMode
       })
       return index
     }
   },
-  methods:{
+  mounted () {
+    this.pageSizeTab=this.pageSizes.find(s=>{
+      return String(s.name)===String(this.settings.pageSize)
+    })
+  },
+  methods: {
     ...mapActions(clipboardStore,
-    [
-      'start','stop','isRunning','prepare',
-      'isClipLineNumber','isSetCodeHighlight',
-      'updateClipSize','updateTheme','changeClipMode',
-      'clean'
-    ]
+      [
+        'start', 'stop', 'isRunning', 'prepare',
+        'isClipLineNumber', 'isSetCodeHighlight',
+        'updateClipSize', 'updateTheme', 'changeClipMode',
+        'clean'
+      ]
     ),
     // 通过该方法可以打开弹窗
-    clipOpenShow(){
+    clipOpenShow () {
       this.setShow = true
     },
     //清理数据
-    async cleanData(){
+    async cleanData () {
       Modal.confirm({
-        content:'确认清空全部记录？此操作不会删除收藏内的内容。',
-        centered:true,
-        okText:'删除',
-        onOk:async ()=>{
-          let rs=await this.clean()
+        content: '确认清空全部记录？此操作不会删除收藏内的内容。',
+        centered: true,
+        okText: '删除',
+        onOk: async () => {
+          let rs = await this.clean()
           message.success('记录删除成功')
         }
       })
 
     },
     // 打开代码高亮
-    openCodeHighlight(){
+    openCodeHighlight () {
       this.clipSetVisible = true
     },
     // 关闭全部
-    onClose(){
+    onClose () {
       this.clipSetVisible = false
     },
     // 修改缩进单位配置
-    updateIndentUnit(e){
+    updateIndentUnit (e) {
       this.updateClipSize(e.target.value)
     },
     // 选择主题
-    openThemeDrawer(){
+    openThemeDrawer () {
       this.$refs.themeRef.openDrawer()
     },
     // 选择代码语言
-    openLanguageDrawer(){
+    openLanguageDrawer () {
       this.$refs.languageRef.openDrawer()
     },
     // 修改主题
-    getTheme(item){
+    getTheme (item) {
       // console.log('修改主题',item);
       this.updateTheme(item.name)
     },
     // 修改语言包
-    getLanguage(item){
+    getLanguage (item) {
       // console.log('修改语言',item);
       this.changeClipMode(item.abbr)
     }
   },
-  watch:{
-    'settings.enable':{
-      handler(newVal, oldVal){
+  watch: {
+    'settings.enable': {
+      handler (newVal, oldVal) {
         // console.log('剪切板开关',newVal)
         if (newVal) {
           // this.prepare()
           // this.start()
-        }else{
+        } else {
           if (this.clipboardObserver) {
             if (this.isRunning()) {
               this.stop()
@@ -194,15 +220,20 @@ export default {
       }
     },
     // 是否默认代码高亮
-    'settings.clipSetShow':{
-      handler(newVal,oldVal){
+    'settings.clipSetShow': {
+      handler (newVal, oldVal) {
         this.isSetCodeHighlight(newVal)
       }
     },
     // 是否显示行号
-    'settings.showLineNumber':{
-      handler(newVal,oldVal){
+    'settings.showLineNumber': {
+      handler (newVal, oldVal) {
         this.isClipLineNumber(newVal)
+      }
+    },
+    'pageSizeTab':{
+      handler(newVal){
+        this.settings.pageSize=Number(newVal.name)
       }
     }
   }
@@ -210,33 +241,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.secondary-title{  // 次要标题
+.secondary-title { // 次要标题
   font-family: PingFangSC-Medium;
   font-size: 14px;
   color: var(--secondary-text);
   font-weight: 500;
 }
-.primary-title{ // 主要标题
+
+.primary-title { // 主要标题
   font-family: PingFangSC-Medium;
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
 }
 
-.button-bg{
+.button-bg {
   background: var(--secondary-bg);
 }
 
-.button-active{
-  &:active{
+.button-active {
+  &:active {
     filter: brightness(0.8);
     background: rgba(42, 42, 42, 0.25);
   }
-  &:hover{
+
+  &:hover {
     background: rgba(42, 42, 42, 0.25);
   }
 }
-.ant-input{
+
+.ant-input {
   border-radius: 12px !important;
   border: 1px solid var(--divider);
 }

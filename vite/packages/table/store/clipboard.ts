@@ -31,7 +31,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       clipSize: 4,
       clipMode: 'javascript',  // 存储代码块语言包 默认js
       clipTheme: 'dracula',      // 存储代码块的主题颜色 默认monokai
-      pageSize: 20,
+      pageSize: 10,
     },
   }),
   actions: {
