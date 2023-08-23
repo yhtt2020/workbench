@@ -5,6 +5,7 @@ import {getDateTime} from '../../util'
 import {clipboardStore} from "../../store/clipboard";
 import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
+import browser from "../../js/common/browser";
 
 export default {
   name: "ClipItemWidget",
@@ -31,7 +32,23 @@ export default {
           }
         },
         {
-          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
+          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) =>{
+            const str = item.content
+// 提取file协议和http协议的URL
+
+            const regex =/((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
+
+            const urls = str.match(regex);
+            if(!urls){
+              message.error('不存在链接')
+            }else{
+              browser.openInUserSelect(urls[0])
+              message.success('打开链接成功。')
+            }
+            console.log(urls,'匹配到的url')
+
+
+// 打印提取到的URL
 
           }
         },
