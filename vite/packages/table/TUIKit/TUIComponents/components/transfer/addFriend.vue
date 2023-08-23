@@ -80,7 +80,7 @@
     <div class="flex flex-col items-center justify-center" style="height:415px;color: var(--primary-text);">
       <a-avatar shape="square" :size="64" :src="groupTypeData.icon"></a-avatar>
 
-      <a-input v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
+      <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
       <a-select style="width: 320px; border-radius: 12px; color: var(--secondary-text);"
        :bordered="false" :dropdownStyle="{boxShadow:'none !important',borderRadius:'12px',color:'var(--secondary-text)'}"
