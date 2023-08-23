@@ -55,7 +55,7 @@ export const noticeStore = defineStore('notice',{
     },
 
     setMessagePrompt(val:boolean){  // 设置消息通知提示语开关
-      this.noticeSettings.enable = val
+      this.noticeSettings.enablePlay = val
     },
 
     setMessagePlay(){ // 设置消息提示语

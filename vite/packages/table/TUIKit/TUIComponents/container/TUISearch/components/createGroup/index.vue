@@ -14,7 +14,7 @@
         @keyup.enter="searchGroup" 
       >
         <template #suffix>
-          <SearchOutlined />
+          <SearchOutlined @click="searchGroup"/>
         </template>
       </a-input>
     </div>

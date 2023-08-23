@@ -1,7 +1,7 @@
 <template>
- <div class="w-full h-11 flex justify-between mb-4 ml-2" style="color: var(--primary-text);">
+ <div class="w-full h-11 flex justify-between mb-4" style="color: var(--primary-text);">
   <div v-if="appType === 'all'" class="flex items-center">
-   <Icon icon="xiaoxi1" style="font-size: 1.4em;"></Icon>
+   <Icon icon="xiaoxi1" style="font-size: 1.5em;color: var(--primary-text);"></Icon>
    <span class="pl-3 font-500" style="color: var(--primary-text);">全部消息</span>
   </div>
 
@@ -12,9 +12,9 @@
    <span class="pl-3 font-400" style="color: var(--primary-text);">{{appItem.title}}</span>
   </div>
 
-  <div class="flex items-center">
-   <div class="w-11 pointer flex items-center justify-center h-11" @click="clear">
-    <Icon icon="clear" style="font-size: 1.5em;"></Icon>
+  <div class="flex items-center" hidden="">
+   <div class="w-8 pointer flex items-center justify-center h-8" @click="clear">
+    <Icon icon="clear" style="font-size: 2em;color: var(--secondary-text);"></Icon>
    </div>
   </div>
 

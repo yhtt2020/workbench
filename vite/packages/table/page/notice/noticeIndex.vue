@@ -1,6 +1,5 @@
 <template>
   <div class="flex h-full">
-
     <div class="flex flex-col items-center mr-1" style="position: relative;">
       <div class="left-list flex flex-col">
         <div v-for="(item,index) in appList" class="flex pointer items-center rounded-lg flex-col mb-2 justify-center" 
@@ -15,14 +14,14 @@
         </div>
       </div>
       <div class="notice-setting w-full pointer">
-        <a-tooltip placement="top"  title="设置">
+        <a-tooltip placement="right" overlay-class="tooltip-no-border"  title="设置">
           <div class=" flex items-center justify-center h-12" @click="changeSetting">
-            <Icon icon="setting" style="height:24px;width:24px;"></Icon>
+            <Icon icon="setting" style="font-size:2em;color: var(--secondary-text);"></Icon>
           </div>
-        </a-tooltip>
+        </a-tooltip> 
       </div> 
       <div class="notice-enable w-full pointer">
-        <a-tooltip placement="top"  title="开关">
+        <a-tooltip placement="right" overlay-class="tooltip-no-border" title="开关">
           <div class="flex items-center justify-center h-12" @click="setNoticeOnOff(noticeSettings.enable = !noticeSettings.enable)">
             <Icon icon="notification" style="font-size:2em;color: var(--secondary-text);" v-if="noticeSettings.enable"></Icon>
             <Icon icon="notification-off" style="font-size:2em;color: var(--secondary-text);" v-else></Icon>
@@ -31,9 +30,9 @@
       </div>
     </div>
 
-    <a-divider type="vertical" class="mx-3" style="height: 100%;"></a-divider>
+    <a-divider type="vertical" style="height: 100%;"></a-divider>
 
-    <div class="flex flex-col" style="width: 395px;">
+    <div class="flex flex-col ml-1" style="width: 395px;">
       <template v-if="changeSet">
         <div class="flex flex-col pl-2">
           <span class="font-16 mb-3" style="color:var(--primary-text);">设置</span>
@@ -50,8 +49,8 @@
       <template v-else>
         <NoticeRightTop :appType="appType" :appItem="appItem"></NoticeRightTop>
         <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip>
-        <AllNotice v-if="appType === 'all'" :list="appContentList"></AllNotice>
-
+        <AllNotice v-if="appType === 'all'"  :list="appContentList"></AllNotice>
+        <NoticeDetail v-else :list="otherList"></NoticeDetail>
       </template>
 
       
@@ -62,28 +61,30 @@
 </template>
 
 <script>
-import { defineComponent,ref,toRefs,reactive,computed } from 'vue'
+import { defineComponent,ref,toRefs,reactive,computed,watch } from 'vue'
 import { mapActions,mapWritableState } from 'pinia'
 import { noticeStore } from '../../store/notice'
 import _ from 'lodash-es'
 import NoticeRightTop from '../../components/notice/noticeRightTop.vue'
 import AllNotice from '../../components/notice/allNotice.vue'
 import AllMiddleTip from '../../components/notice/allMiddleTip.vue'
+import NoticeDetail from './noticeDetail.vue' 
 
 export default defineComponent({
   components:{
     NoticeRightTop,
     AllNotice,
-    AllMiddleTip
+    AllMiddleTip,
+    NoticeDetail
   },
 
   computed:{
-     ...mapWritableState(noticeStore,['noticeSettings'])
+    ...mapWritableState(noticeStore,['noticeSettings'])
   },
 
-  mounted(){
-   this.loadHistoryNotice()
-  },
+  // mounted(){
+  //  this.loadHistoryNotice()
+  // },
 
   methods:{
     ...mapActions(noticeStore,['loadNoticeDB','setNoticeOnOff']),
@@ -100,12 +101,12 @@ export default defineComponent({
       appType:'all', // 应用类型,默认全部
       appItem:{}, // 右侧图标
       changeSet:false, // 切换设置
-      promptStatus:'',  // 提示语开关
+      promptStatus: noticeStore().$state.noticeSettings.enablePlay,  // 提示语开关
+      otherList:[], // 应用分类列表
     })
     
     const store = noticeStore()
     data.appList = store.$state.notice.sessionApp
-    data.promptStatus = store.$state.noticeSettings.enablePlay
 
     const appContentList = computed(()=>{   // 通过计算属性获取消息通知历史数据
       return store.$state.notice.messageContent
@@ -125,6 +126,16 @@ export default defineComponent({
     const changeEnable = (val) =>{ // 消息通知语音提示开关事件 
       store.setMessagePrompt(val)
     }
+
+    watch(()=>data.appType,(newVal)=>{  // 根据不同应用列表类型进行数据分类
+      if(newVal !== 'all'){
+        const index =  _.forEach(appContentList.value,function(o){ return o?.doc.appType === newVal })
+        data.otherList = index
+      }else{
+        return;
+      }
+    })
+
   
 
     return{
@@ -222,5 +233,9 @@ export default defineComponent({
 
 :deep(.ant-divider-vertical){
   border-left:1px solid var(--divider) !important;
+}
+
+.tooltip-no-border .ant-tooltip-inner {
+  border: none !important;
 }
 </style>
