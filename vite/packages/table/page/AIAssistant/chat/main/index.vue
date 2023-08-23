@@ -1,16 +1,14 @@
 <template>
-  <View :data="chatList">
+  <View :data="currentList">
     <template #chat>
-      <List :chatList="chatList"></List>
+      <List :chatList="currentList"></List>
     </template>
     <template #text>
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
-  <!-- <test></test> -->
 </template>
 <script>
-import test from "./test.vue";
 import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
@@ -27,43 +25,16 @@ export default {
       "url",
       "key",
     ]),
-    selectChat() {
-      let chat = this.topicList[this.selectTopicIndex];
-      let selectChat = this.chatObj[chat.chatId];
-      return selectChat;
-    },
-  },
-  watch: {
-    async selectTopicIndex(newV) {
-      return;
-      if (newV === -1) return;
-      let item = this.topicList.find((item) => {
-        if (item.id == newV) {
-          return item;
-        }
-      });
-      if (!item.chatId) {
-        item.chatId = Date.now();
-        this.chatObj[item.chatId] = [];
-      }
-      this.chatList = this.chatObj[item.chatId];
-      console.log("object :>> ", this.chatObj[item.chatId]);
+    currentList() {
+      if (this.selectTopicIndex == -1) return [];
 
-      return;
-      let chat = this.topicList[newV];
-      if (this.topicList[newV].chatId == null) {
-        chat = {}; // 设置 chat 为空对象或其他默认值
-        chat.chatId = Date.now(); // 设置 chat.chatId 为当前时间戳或其他默认值
-        this.chatObj[chat.chatId] = []; // 初始化 chatId 对应的数组
-      }
-      this.chatList = this.chatObj[chat.chatId];
+      return this.topicList[this.selectTopicIndex].chat;
     },
   },
   components: {
-    Text,
     List,
     View,
-    test,
+    Text,
   },
   data() {
     return {
@@ -73,7 +44,6 @@ export default {
     };
   },
   methods: {
-    // https://api.closeai-proxy.xyz
     check() {
       if (!this.key || !this.url) {
         message.error("请先配置好信息");
@@ -86,26 +56,61 @@ export default {
       this.markdown = res;
     },
     async onSearch(serach) {
+      console.log("serach :>> ", serach);
       if (this.check()) return;
+      if (this.selectTopicIndex == -1) {
+        let obj = {
+          chat: [],
+          icon: {
+            name: "message",
+            id: 0,
+          },
+          id: Date.now(),
+          time: Date.now(),
+          name: "新的对话",
+          top: false,
+        };
+        this.topicList[obj.id] = obj;
+        this.selectTopicIndex = obj.id;
+      }
       let user = {
         content: serach,
         role: "user",
         time: Date.now(),
         id: Date.now(),
       };
-      this.chatList.push(user);
+      this.topicList[this.selectTopicIndex].chat.push(user);
+
+      let arr = [];
+
+      this.topicList[this.selectTopicIndex].chat.slice(-2).forEach((item) => {
+        arr.push({
+          role: item.role,
+          content: item.content,
+        });
+      });
+      console.log("arr :>> ", arr);
+      // [
+      //   {
+      //     role: "user",
+      //     content: serach,
+      //   },
+      // ]yb
+
       // 获取聊天机器人的回复
-      for await (const result of gpt([
-        {
-          role: "user",
-          content: serach,
-        },
-      ])) {
+      for await (const result of gpt(arr)) {
         // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
-        const index = this.chatList.findIndex((item) => item.id === result.id);
+        const index = this.topicList[this.selectTopicIndex].chat.findIndex(
+          (item) => item.id === result.id
+        );
 
         if (index !== -1) {
-          this.chatList[this.chatList.length - 1].content += result.content;
+         
+          this.topicList[this.selectTopicIndex].chat[
+            this.topicList[this.selectTopicIndex].chat.length - 1
+          ].content += result.content;
+
+          // this.chatList[this.chatList.length - 1].content += result.content;
         } else {
           let assistant = {
             content: result.content,
@@ -113,7 +118,7 @@ export default {
             time: Date.now(),
             id: result.id,
           };
-          this.chatList.push(assistant);
+          this.topicList[this.selectTopicIndex].chat.push(assistant);
         }
       }
       return;

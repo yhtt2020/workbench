@@ -87,6 +87,9 @@ export default {
     switchTab(tab) {
       this.$refs.widget.switchTab('item')
     },
+    previewItem(item){
+      this.$emit('previewItem',item)
+    }
 
   }
 }
@@ -95,7 +98,7 @@ export default {
 </script>
 
 <template>
-  <ClipItemWidget ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
+  <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
     <template #body>
       <!-- 纯文本情况下 -->
       <div class="flex  flex-1 text-md" v-if="textDisplayType.name === 'text'">

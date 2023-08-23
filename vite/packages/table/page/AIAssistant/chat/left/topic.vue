@@ -1,9 +1,9 @@
 <template>
   <div
-    class="group cursor-pointer flex items-center text-base relative h-12 rounded-xl pl-2 mb-2 mr-2"
+    class="group cursor-pointer flex items-center text-base relative h-12 rounded-xl pl-2 mb-2 mr-3"
     style="width: 212px"
     :class="{ 'xt-bg-2': selectTopicIndex === data.id }"
-    @click="addIndex(data.id)"
+    @click="handleIndex(data.id)"
   >
     <Icon :icon="data.icon.name"></Icon>
     <div class="ml-2">{{ data.name }}</div>
@@ -42,18 +42,15 @@ export default {
     },
     handleDel() {
       let id = this.data.id;
-      this.topicList = this.topicList.filter((item) => {
-        if (item.id === id) {
-          if (this.selectTopicIndex === id) {
-            this.selectTopicIndex = -1;
-          }
-          return false;
-        } else {
-          return true;
+      for (let key in this.topicList) {
+        if (key == id) {
+          delete this.topicList[id];
+          this.selectTopicIndex = -1;
         }
-      });
+      }
+      console.log("    this.selectTopicIndex  :>> ", this.selectTopicIndex);
     },
-    addIndex(id) {
+    handleIndex(id) {
       this.selectTopicIndex = id;
     },
   },

@@ -44,7 +44,9 @@
         <MessageEmojiReact :message="message" type="content" v-if="needEmojiReact && isEmojiReactionInMessage(message)" />
       </div>
     </main>
+
     <label class="message-label fail" v-if="message.status === 'fail'" @click="resendMessage(message)">!</label>
+    
     <label
       class="message-label"
       :class="readReceiptStyle(message)"
@@ -641,6 +643,7 @@ export default messageBubble;
     word-wrap: break-word;
     word-break: break-all;
     width: fit-content;
+    user-select: text !important;
     &-in {
       background: #fbfbfb;
       border-radius: 0px 10px 10px 10px;

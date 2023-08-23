@@ -43,15 +43,15 @@ const saveBase64AsImage = async (filePath, base64) => {
 // 用户路径拼接
 const getFileDir = () => {
   let fileDir = window.globalArgs["user-data-path"];
-  fileDir = joinRes(fileDir, "temporaryIcon");
+  fileDir = join(fileDir, "temporaryIcon");
 
   return fileDir;
 };
 export const useBase64AsImage = async (base64) => {
   let fileDir = await getFileDir();
   let name = Date.now() + ".png";
-  const fileSavePath = joinRes(fileDir, name);
-  let fileUsePath = joinRes("file://", fileDir, name);
+  const fileSavePath = join(fileDir, name);
+  let fileUsePath = join("file://", fileDir, name);
   // 匹配
   let sha256Hash = SHA256(base64).toString();
   const store = myIcons();

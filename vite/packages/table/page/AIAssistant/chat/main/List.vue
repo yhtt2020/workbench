@@ -9,7 +9,7 @@
           <div class="flex justify-end items-center cursor-pointer my-1">
             <xt-button
               type=""
-              icon="shezhi1"
+              icon="fuzhi"
               h="16"
               w="60"
               size="mini"
@@ -26,7 +26,7 @@
         </div>
         <xt-button
           type=""
-          icon="shezhi1"
+          icon="fuzhi"
           h="16"
           w="60"
           size="mini"

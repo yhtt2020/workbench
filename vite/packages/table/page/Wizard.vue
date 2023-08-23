@@ -107,7 +107,7 @@
 
 
         <div class="screen-section" style="height: 17em;margin-top: 2em" v-if="screenSettingTab==='choose'">选择您要显示工作台的屏幕，直接点击屏幕即可。
-          <a-button style="margin-bottom: 2em" v-if="canTouch" @click="canTouch=!canTouch" type="primary">
+          <a-button style="margin-bottom: 2em" v-if="canTouch" type="primary">
             <Icon icon="touping"/>
             矫正屏幕
           </a-button>
@@ -141,8 +141,8 @@
 
       <div style="position: fixed;bottom: 1em;left: calc(50% - 8em)">
         <div v-if="screenSettingTab==='none'">
-          <a-button v-if="step!==0" @click="prevStep" style="" :disabled="!canTouch" size="large">上一步</a-button>
-          <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em" :disabled="!canTouch" size="large"
+          <a-button v-if="step!==0" @click="prevStep" style=""  size="large">上一步</a-button>
+          <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em"  size="large"
                     type="primary">下一步
           </a-button>
           <a-button v-else @click="finish" style="margin-left: 6em" size="large" type="primary">完成
@@ -343,7 +343,6 @@ export default {
       let cp = require('child_process')
       cp.exec('MultiDigiMon.exe -touch', async (err) => {
         await tsbApi.window.setAlwaysOnTop(true)
-        this.canTouch = true
       })
     },
     async adjustPen () {
@@ -351,7 +350,6 @@ export default {
       let cp = require('child_process')
       cp.exec('MultiDigiMon.exe -pen', async (err) => {
         await tsbApi.window.setAlwaysOnTop(true)
-        this.canTouch = true
       })
     },
     prevStep () {

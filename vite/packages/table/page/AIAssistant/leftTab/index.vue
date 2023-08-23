@@ -1,0 +1,82 @@
+<template>
+  <xt-left-menu  :list="menuList" end="2"></xt-left-menu>
+
+  <!-- 新建对话 -->
+
+  <XtView
+    v-model="createChatVisible"
+    type="popup"
+    title="新建模板"
+    :showFull="false"
+  >
+    <CreateTopic @close="createChatVisible = false"></CreateTopic>
+  </XtView>
+  <!-- 系统设置 -->
+  <xt-drawer title="12" v-model="setVisible" placement="right">
+    <Edit></Edit>
+  </xt-drawer>
+</template>
+
+<script>
+import CreateTopic from "../chat/left/createTopic.vue";
+import { mapWritableState } from "pinia";
+import { aiStore } from "../../../store/ai";
+import Edit from "./edit.vue";
+export default {
+  components: {
+    CreateTopic,
+    Edit,
+  },
+  computed: {
+    ...mapWritableState(aiStore, [
+      "selectTab",
+      "isFull",
+      "temperature",
+      "count",
+    ]),
+    showName() {
+      return this.isFull ? false : true;
+    },
+    widthStyle() {
+      if (this.isFull) {
+        return {
+          width: "60px",
+        };
+      } else {
+        return {
+          width: "150px",
+        };
+      }
+    },
+  },
+  data() {
+    return {
+      select: "Chat",
+      menuList: [
+        {
+          icon: "message",
+          callBack: () => {
+            this.selectTab = "Chat";
+          },
+        },
+        {
+          icon: "tianjia2",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        {
+          icon: "setting",
+          callBack: () => {
+            this.setVisible = true;
+          },
+        },
+      ],
+      setVisible: false,
+      createChatVisible: false,
+    };
+  },
+};
+</script>
+
+<style lang="scss" scoped></style>

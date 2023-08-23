@@ -5,6 +5,7 @@ import {getDateTime} from '../../util'
 import {clipboardStore} from "../../store/clipboard";
 import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
+import browser from "../../js/common/browser";
 
 export default {
   name: "ClipItemWidget",
@@ -31,13 +32,30 @@ export default {
           }
         },
         {
-          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
+          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) =>{
+            const str = item.content
+// 提取file协议和http协议的URL
+
+            const regex =/((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
+
+            const urls = str.match(regex);
+            if(!urls){
+              message.error('不存在链接')
+            }else{
+              browser.openInUserSelect(urls[0])
+              message.success('打开链接成功。')
+            }
+            console.log(urls,'匹配到的url')
+
+
+// 打印提取到的URL
 
           }
         },
         {
           title: '预览', shortKeys: 'Space', id: 's', fn: (item) => {
-
+            console.log('预览内容',item)
+            this.previewItem(item)
           }
         },
         {
@@ -110,6 +128,9 @@ export default {
       if (tab !== 'other') {
         this.$emit('tabChanged', {tab: tab})
       }
+    },
+    previewItem(item){
+      this.$emit('previewItem',item)
     }
   }
 }
@@ -123,6 +144,7 @@ export default {
       <div class="flex items-center mb-1">
         <Icon :icon="itemType.icon" style="font-size: 1.45em;"></Icon>
         <span class="ml-2">{{ itemType.title }}</span>
+        <span class="xt-text-2 ml-2"># {{clipItem.index}}</span>
       </div>
       <div class="pl-2 flex justify-between content-text xt-text-2">
         <span class="time-bg" v-html="timeText"></span>

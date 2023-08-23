@@ -5,10 +5,13 @@
   >
     <div class="flex-col">
       <div>OpenAI</div>
-      <div class="xt-text-2">完成配置后即可查看可用余量。</div>
+      <div v-if="state">余额 {{ money }}</div>
+      <div v-else class="xt-text-2">完成配置后即可查看可用余量。</div>
     </div>
     <div>
-      <xt-button w="71" h="48" @click="setVisible = true">设置</xt-button>
+      <xt-button w="71" h="48" @click="setVisible = true" type="link"
+        >设置</xt-button
+      >
     </div>
   </div>
   <xt-drawer v-model="setVisible" placement="right">
@@ -27,7 +30,6 @@
       <xt-input style="height: 48px" v-model="currentKey"></xt-input>
     </div>
   </xt-drawer>
-  <div v-if="state">余额 {{ money }}</div>
 </template>
 
 <script>
