@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from "nanoid";
 import {getDateTime} from '../util'
+
 //todo 此处要兼容web版
 const {win32} = window.$models
 let clipboardChanged = null
@@ -17,6 +18,9 @@ const clipboard = require('electron').clipboard
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     items: [],//剪切板的收集箱内容
+    index:0,
+    hasNextPage: false,
+    totalRows:0,
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     settings: {
       enable: false,
@@ -27,15 +31,67 @@ export const clipboardStore = defineStore("clipboardStore", {
       clipSize: 4,
       clipMode: 'javascript',  // 存储代码块语言包 默认js
       clipTheme: 'dracula',      // 存储代码块的主题颜色 默认monokai
+      pageSize: 20,
     },
   }),
   actions: {
-    async loadFromDb() {
-      const rs = await tsbApi.db.allDocs('clipboard:item')
+    async nextPage(dbKey) {
+      if (this.hasNextPage) {
+        const rs = await tsbApi.db.allDocsQuery({
+          start_key: this.items[this.items.length - 1]._id+'\ufff0',
+          end_key: dbKey,
+          skip:1,
+          descending: true,
+          limit: this.settings.pageSize,
+          include_docs:true,
+        })
+        this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
+        rs.rows.forEach(row => {
+          const doc = row?.doc
+          if(doc){
+            this.items.push(doc)
+          }
+        })
+        this.totalRows=rs.total_rows
+        return true
+      } else {
+        return false
+      }
+    },
+    async loadFromDb(key) {
+      const rs = await tsbApi.db.allDocsQuery({
+        start_key: key + '\ufff0',
+        end_key: key,
+        // skip: (page - 1) * pageSize,
+        // limit:pageSize,
+        include_docs: true,
+        descending: true,
+        limit: this.settings.pageSize
+      })
+      this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
       this.items = rs.rows.map(row => {
         const doc = row?.doc
         return doc
       })
+
+  console.log(rs,'查到结果')
+      this.totalRows=rs.total_rows
+      // console.log('分页后的rs',rs)
+      // for await (const results of rs.pages()){
+      //   console.log(results)
+      // }
+
+      // this.items = rs.rows.map(row => {
+      //   const doc = row?.doc
+      //   return doc
+      // })
+      //
+      //
+      // let resCount=await tsbApi.db.allDocs(key)
+      // let totalRows=resCount.total_rows
+      //
+      // console.log('总行数',resCount)
+      // return totalRows
     },
     prepare() {
       clipboardChanged = this.changed
@@ -105,7 +161,7 @@ export const clipboardStore = defineStore("clipboardStore", {
     },
     async addToCollection(item) {
       await tsbApi.db.put({
-        _id: 'clipboard:collection:' + nanoid(6),
+        _id: 'clipboard:collection:' + Date.now(),
         originData: item,
         createTime: Date.now(),
         updateTime: Date.now()
@@ -123,6 +179,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         await tsbApi.db.remove(item.doc)
       }
       this.items = []
+      this.totalRows=0
       return true
     },
     /**
@@ -133,18 +190,23 @@ export const clipboardStore = defineStore("clipboardStore", {
     async textChange(text: string, beforeText: string) {
       const now = Date.now()
       const time = getDateTime(new Date(now))
+      this.index++
       let item = {
+        _id: "clipboard:item:" + now,
         type: 'text',
         content: text,
-        createTime: Date.now(),
-        updateTime: Date.now(),
+        createTime: now,
+        index:this.index,
+        updateTime: now,
       }
+      this.totalRows++
       this.items.unshift(item)
       await tsbApi.db.put({
-        _id: "clipboard:item:" + nanoid(8),
+        _id: "clipboard:item:" + now,
         content: text,
-        createTime: Date.now(),
-        updateTime: Date.now(),
+        index:this.index,
+        createTime: now,
+        updateTime: now,
         type: 'text'
       })
       console.log('监测到新[文本]剪切板内容', text)
@@ -190,7 +252,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['settings',]
+      paths: ['settings', 'items','totalRows','index']
       // state 中的字段名，按组打包储存
     }]
   }

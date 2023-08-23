@@ -123,6 +123,7 @@ export default {
       <div class="flex items-center mb-1">
         <Icon :icon="itemType.icon" style="font-size: 1.45em;"></Icon>
         <span class="ml-2">{{ itemType.title }}</span>
+        <span class="xt-text-2 ml-2"># {{clipItem.index}}</span>
       </div>
       <div class="pl-2 flex justify-between content-text xt-text-2">
         <span class="time-bg" v-html="timeText"></span>

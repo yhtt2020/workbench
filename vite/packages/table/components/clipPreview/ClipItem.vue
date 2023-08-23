@@ -508,6 +508,7 @@ export default {
       // 打开预览快捷键功能
       if (e.keyCode === 32) {
         if (this.controlsShow) {
+          console.log('按下key',e.keyCode)
           this.$emit('previewItem', this.clipItem)  // 模板搭建测试,后期需要根据剪切板的id来触发预览
           this.isOpenPreview(true)
           this.controlsShow = false

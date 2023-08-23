@@ -2,7 +2,7 @@
   <div class="flex items-center clip-container justify-between mx-4 my-4">
     <div class="flex">
       <!-- tab切换开始 -->
-      <HorzontanlPanelIcon :navList="clipType" v-model:selectType="defaultClipType" class="mr-3"></HorzontanlPanelIcon>
+      <HorzontanlPanelIcon :navList="clipType" v-model:selectType="tab" class="mr-3"></HorzontanlPanelIcon>
       <!-- tab切换结束 -->
 
       <!-- 导航栏筛选开始 -->
@@ -30,15 +30,20 @@
   </div>
 
   <!-- 剪切板列表展示区域开始 -->
-  <vue-custom-scrollbar @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+  <vue-custom-scrollbar @ps-x-reach-end="loadEvent" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         class="mx-4 my-2 py-4 h-full ">
-    <div v-if="defaultClipType.name === 'collect'">
+    <div v-if="tab.name === 'collect'">
       <div class="flex items-center justify-center">
         <a-empty :image="simpleImage"/>
       </div>
     </div>
     <ClipList :clipList="clipContents" v-else></ClipList>
+
+
   </vue-custom-scrollbar>
+  <div class="text-center">
+   {{hasNextPage}} {{dbKey}}  已载入{{clipContents.length}}  总共 {{totalRows}} 条记录
+  </div>
   <!-- 剪切板列表展示区域结束 -->
 
   <!-- 导航切换在宽度不够的情况下显示 -->
@@ -69,7 +74,7 @@ import HorizontalDrawer from '../../../components/HorizontalDrawer.vue'
 import TabSwitching from '../../../components/TabSwitching.vue'
 import ClipList from './ClipList.vue'
 import ClipSetDrawer from '../../../components/clipPreview/ClipSetDrawer.vue'
-import { Empty } from 'ant-design-vue'
+import { Empty, message } from 'ant-design-vue'
 import { mapWritableState, mapActions } from 'pinia'
 import { clipboardStore } from '../../../store/clipboard'
 import _ from 'lodash-es'
@@ -90,19 +95,19 @@ export default {
     ClipSetDrawer
   },
 
-  async mounted () {
-    await this.loadFromDb()
-    console.log(this.items, ' items ________________________')
-  },
   data () {
     return {
+      dbKey:'',//数据库的key
+      page: 1,
+      pageSize: 20,
+      count: 20,
       // 历史和收藏切换数组
       clipType: [
         { title: '剪切板历史', icon: 'time-circle', name: 'history' },
         { title: '收藏', icon: 'star', name: 'collect' }
       ],
       // 历史和收藏切换数组默认值
-      defaultClipType: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
+      tab: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
 
       // 导航栏筛选分类
       cutType: [
@@ -133,11 +138,13 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
+      loadEvent:null,//底部加载更多
+
     }
   },
 
   computed: {
-    ...mapWritableState(clipboardStore, ['clipboardObserver', 'items', 'loadFromDb']),
+    ...mapWritableState(clipboardStore, ['clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage']),
     // 根据剪切板列表不同状态进行数据显示
     clipContents () {
       let list = []
@@ -170,8 +177,41 @@ export default {
 
     }
   },
-
+  async mounted () {
+    this.loadEvent=_.debounce(this.doLoadNextPage,1000,{
+      leading:true
+    })
+    this.dbKey='clipboard:item:'
+   this.pageLoad()
+  },
+  async unmounted(){
+  },
   methods: {
+    ...mapActions(clipboardStore,['nextPage']),
+
+    async doLoadNextPage () {
+
+      let rs = await this.nextPage(this.dbKey)
+      if (!rs) {
+        message.info({
+          content:'已经到底了',
+          key:'loadInfo'
+        })
+      }
+      console.log('到底防抖')
+    },
+
+    pageLoad () {
+      this.loadFromDb(this.dbKey,this.page, this.pageSize).then(count => {
+        this.count = count
+      })
+    },
+
+    pageLoadCollection(){
+      this.loadFromDb(this.dbKey,this.page,this.pageSize).then(count=>{
+        this.count=count
+      })
+    },
     // 打开导航栏切换
     openClipType () {
       this.$refs.clipRef.openDrawer()
@@ -195,6 +235,18 @@ export default {
   },
 
   watch: {
+    tab: {
+      handler (newTab) {
+        if (newTab.name === 'history') {
+          this.dbKey='clipboard:item:'
+          this.pageLoad()
+        } else if (newTab.name === 'collect') {
+          this.dbKey='clipboard:collection:'
+          this.pageLoadCollection()
+        }
+        console.log('切换tab')
+      }
+    },
     // 监听导航栏筛选切换
     'defaultCutType': {
       handler () {
