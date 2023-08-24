@@ -5,6 +5,12 @@ import dbStorage from "./dbStorage";
 export const workStore = defineStore('work', {
   state: () => ({
     deskList: [],//桌面
+    currentDeskId:'00001',
+    settings: {
+      cardZoom: 100,
+      marginTop: 0,
+      cardMargin: 5//卡片间隙
+    },
   }),
   actions: {},
   persist: {
