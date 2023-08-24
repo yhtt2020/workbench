@@ -436,7 +436,6 @@ export default {
   watch: {
     'clipItem': {
       handler () {
-        console.log(this.clipItem)
         this.refresh()
       }
     },

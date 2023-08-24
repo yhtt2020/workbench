@@ -174,7 +174,7 @@ export default {
 
       <a-col  class="chat" v-if="settings.enableChat && !simple && chat" :span="14"
              style="text-align: left;padding-top: 0.5em;line-height: 1.75">
-        <div style="font-size: 13px;" v-if="messages.length === 0">
+        <div style="font-size: 13px;" >
           <div class="pointer ml-3" @click.stop="enterIM">
             <a-row :gutter="10">
               <a-col :span="6" class="pt-2">
@@ -190,7 +190,7 @@ export default {
 
           </div>
         </div>
-        <div class="pointer" @click.stop="enterIM">
+        <div hidden class="pointer" @click.stop="enterIM">
           <div v-for=" message  in  messages " class="text-more">{{ message.title }}：{{ message.body }}</div>
         </div>
       </a-col>

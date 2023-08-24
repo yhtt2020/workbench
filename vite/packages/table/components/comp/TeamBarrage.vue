@@ -62,6 +62,7 @@ export default {
 
 .barrage-content {
   color: white;
+  user-select: text;
   white-space: pre-wrap;
   word-break: break-all;
 }
