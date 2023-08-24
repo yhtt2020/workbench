@@ -2,14 +2,14 @@
   <div class="CardItem">
     <div class="left">
       <div class="title">
-        <span>{{ title }}</span>
+        <span>{{ NewsMsgList.title }}</span>
       </div>
       <div class="bottom">
         <div class="date">
-          <span>{{ time }}  {{ date }}</span>
+          <span>{{NewsMsgList.date }}</span>
         </div>
         <div class="name">
-          <span>{{ author }}</span>
+          <span>{{ NewsMsgList.author_name }}</span>
         </div>
       </div>
   
@@ -23,28 +23,26 @@
   
   <script setup lang='ts'>
   import {ref,reactive} from 'vue'
-  const title=ref('大运会那些精彩的瞬间')
-  const time=ref('03-04')
-  const date=ref('11:00')
-  const author=ref('北京日报')
-  defineProps<{
-    title:string,
-    time:number|string,
-    date:string|number,
-    author:string
-  }>()
+  // const title=ref('大运会那些精彩的瞬间')
+  // const time=ref('03-04')
+  // const date=ref('11:00')
+  // const author=ref('北京日报')
+  defineProps({
+    NewsMsgList:{
+      type:Array,
+    }
+    
+  })
   </script>
   <style lang='scss' scoped>
   .CardItem{
     width: 266px;
     height: 93px;
-    // background: rgba(0,0,0,0.30);
-    // margin-right: 1%;
-    margin-bottom: 1.7%;
-    // opacity: 0;
+    margin-bottom: 1.9%;
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
+    
     .left{
       width: 152px;
       margin-left: 0.5%;

@@ -23,12 +23,10 @@
         </div>
       </div>
       <div class="content">
-        <NewsItem />
-        <NewsItem />
-        <NewsItem />
-        <NewsItem />
-        <NewsItem />
-        <NewsItem />
+        <div v-for="index in copyNum">
+          <NewsItem :NewsMsgList="NewsMsgList" />
+        </div>
+          
       </div>
     </Widget>
 
@@ -206,17 +204,17 @@ export default {
       this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
       // this.getNewsMsg(this.titleList[this.currentIndex].tag)
       // this.observerItem(this.currentIndex)
-      this.getNewsMsg(this.aggList[this.currentIndex].tag)
+      this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
     },
     increase() {
       this.currentIndex = (this.currentIndex + 1) % this.showList.length
       // this.getNewsMsg(this.titleList[this.currentIndex].tag)
       // this.observerItem(this.currentIndex)
-      this.getNewsMsg(this.aggList[this.currentIndex].tag)
+      this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
     },
     setCurrentIndex(index) {
       this.currentIndex = index
-      this.getNewsMsg(this.aggList[this.currentIndex].tag)
+      this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -248,8 +246,21 @@ export default {
     // ...mapActions(newsStore,['getNewsMsg'])
     showList() {
       return JSON.parse(JSON.stringify(this.aggList.slice(0, 7)))
+    },
+    showSize() {
+      if (this.customData && this.customData.width && this.customData.height) {
+        return { width: this.customData.width, height: this.customData.height }
+      }
+      return this.sizeList[0]
+    },
+    copyNum(){
+      return this.showSize.height==2?6:8
     }
   },
+  mounted() {
+    this.getNewsMsg(this.showList[this.currentIndex].tag,this.copyNum)
+    console.log(1111);
+  }
 }
 // console.log("categoryList", this.categoryList.length);
 </script>
@@ -334,7 +345,7 @@ export default {
 }
 
 .content {
-  margin-top: 1.7%;
+  margin-top: 1.2%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
