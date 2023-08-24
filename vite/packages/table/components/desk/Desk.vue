@@ -481,9 +481,9 @@ export default {
     toggleEditing () {
 
       if (this.editing) {
-        message.info('您可以直接拖拽图标调整位置，支持跨组调整')
-      } else {
         message.info('已关闭拖拽调整')
+      } else {
+         message.info('您可以直接拖拽图标调整位置')
       }
       this.$emit('changeEditing',this.editing)
       this.menuVisible = false
