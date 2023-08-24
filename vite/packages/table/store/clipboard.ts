@@ -248,6 +248,10 @@ export const clipboardStore = defineStore("clipboardStore", {
           await this.imageChange(filepath)
           return
         }
+        if(['wav','aiff','pcm','flac','alac','mp3','ogg','aac','wma'].indexOf(fileExt)>-1){
+          await this.audioChange(filepath)
+          return
+        }
       }
       const now = Date.now()
       this.index++
@@ -268,6 +272,16 @@ export const clipboardStore = defineStore("clipboardStore", {
         item._rev = rs.rev
         this.items.unshift(item)
       }
+    },
+    async audioChange(audio){
+      const stat = fs.statSync(audio)
+      await this.addItem({
+        type: 'audio',
+        filepath: audio,
+        content: '',
+        ext: require('path').extname(audio),
+        size: stat.size,
+      })
     },
     async imageChange(image: any) {
       let filepath=''

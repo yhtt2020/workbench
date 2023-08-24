@@ -82,10 +82,10 @@ export default {
       switch (this.clipItem.type) {
         case 'text':
           return this.clipItem.content.length + '个字符'
-        case 'image':
-          return formatFileSize(this.clipItem.size)
         case 'file':
           return this.clipItem.files.length +'个文件'
+        case 'image':
+        case 'audio':
         case 'video':
           return formatFileSize(this.clipItem.size)
       }

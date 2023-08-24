@@ -278,53 +278,54 @@
 
   <!-- 音频列表 -->
   <template v-if="clipItem.type === 'audio'">
+    <AudioItem  @previewItem="previewItem" :clip-item="clipItem"></AudioItem>
     <!-- 列表主界面 -->
-    <div style="width: 338px;height:420px;" class="flex flex-col" v-if="controlsShow === false">
-      <!-- 标题内容 -->
-      <div class="flex h-item flex-col rounded-t-lg w-full px-4 py-2">
-        <div class="flex items-center mb-1">
-          <Icon :icon="getType(clipItem.type).icon" style="font-size: 1.45em;"></Icon>
-          <span class="ml-2">{{ getType(clipItem.type).title }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="time-bg">{{ timeText }}</span>
-          <span class="time-bg">{{ clipItem.capacity }}</span>
-        </div>
-      </div>
+<!--    <div style="width: 338px;height:420px;" class="flex flex-col" v-if="controlsShow === false">-->
+<!--      &lt;!&ndash; 标题内容 &ndash;&gt;-->
+<!--      <div class="flex h-item flex-col rounded-t-lg w-full px-4 py-2">-->
+<!--        <div class="flex items-center mb-1">-->
+<!--          <Icon :icon="getType(clipItem.type).icon" style="font-size: 1.45em;"></Icon>-->
+<!--          <span class="ml-2">{{ getType(clipItem.type).title }}</span>-->
+<!--        </div>-->
+<!--        <div class="flex justify-between">-->
+<!--          <span class="time-bg">{{ timeText }}</span>-->
+<!--          <span class="time-bg">{{ clipItem.capacity }}</span>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <!-- 内容 -->
-      <div class="flex px-5 py-20 " @contextmenu="textButton">
-        <ClipAudio :fileUrl="clipItem.audioUrl" class="flex items-center justify-center"
-                   style="width:302px;height:148px;"></ClipAudio>
-      </div>
-    </div>
+<!--      &lt;!&ndash; 内容 &ndash;&gt;-->
+<!--      <div class="flex px-5 py-20 " @contextmenu="textButton">-->
+<!--        <ClipAudio :fileUrl="clipItem.audioUrl" class="flex items-center justify-center"-->
+<!--                   style="width:302px;height:148px;"></ClipAudio>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <!-- 快捷键操作界面 -->
-    <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">
-      <div class="flex  flex-col px-4 py-3 rounded-lg">
-        <div class="flex  mb-3">
-          <div class="w-12 bt-default button-active h-12 rounded-lg pointer flex items-center justify-center"
-               @click="backClip">
-            <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>
-          </div>
-          <div class="flex  items-center  justify-center mx-24">
-            <span>操作</span>
-          </div>
-        </div>
+<!--    &lt;!&ndash; 快捷键操作界面 &ndash;&gt;-->
+<!--    <div v-else-if="controlsShow === true" style="width: 338px;height:100%;">-->
+<!--      <div class="flex  flex-col px-4 py-3 rounded-lg">-->
+<!--        <div class="flex  mb-3">-->
+<!--          <div class="w-12 bt-default button-active h-12 rounded-lg pointer flex items-center justify-center"-->
+<!--               @click="backClip">-->
+<!--            <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>-->
+<!--          </div>-->
+<!--          <div class="flex  items-center  justify-center mx-24">-->
+<!--            <span>操作</span>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <!-- 快捷键按钮 -->
-        <div class="flex flex-col">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
-            <div v-for="item in imageKey" @click="keyOperation(item)"
-                 class="flex pointer btn-list button-active justify-between s-item px-4 rounded-lg py-3 mb-2">
-              <span>{{ item.title }}</span>
-              <span>{{ item.intr }}</span>
-            </div>
-          </vue-custom-scrollbar>
-        </div>
+<!--        &lt;!&ndash; 快捷键按钮 &ndash;&gt;-->
+<!--        <div class="flex flex-col">-->
+<!--          <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">-->
+<!--            <div v-for="item in imageKey" @click="keyOperation(item)"-->
+<!--                 class="flex pointer btn-list button-active justify-between s-item px-4 rounded-lg py-3 mb-2">-->
+<!--              <span>{{ item.title }}</span>-->
+<!--              <span>{{ item.intr }}</span>-->
+<!--            </div>-->
+<!--          </vue-custom-scrollbar>-->
+<!--        </div>-->
 
-      </div>
-    </div>
+<!--      </div>-->
+<!--    </div>-->
   </template>
   <!-- 音频列表 -->
 
@@ -350,8 +351,10 @@ import TextItem from '../../apps/clipboard/items/TextItem.vue'
 import ImageItem from '../../apps/clipboard/items/ImageItem.vue'
 import FileItem from '../../apps/clipboard/items/FileItem.vue'
 import VideoItem from '../../apps/clipboard/items/VideoItem.vue'
+import AudioItem from '../../apps/clipboard/items/AudioItem.vue'
 export default {
   components: {
+    AudioItem,
     VideoItem,
     FileItem,
     ImageItem,
