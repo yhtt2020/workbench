@@ -244,6 +244,10 @@ export const clipboardStore = defineStore("clipboardStore", {
           await this.videoChange(filepath)
           return
         }
+        if(['png','bmp','jpg','jpeg'].indexOf(fileExt)>-1){
+          await this.imageChange(filepath)
+          return
+        }
       }
       const now = Date.now()
       this.index++
@@ -266,35 +270,34 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     async imageChange(image: any) {
-      //转存图片
-      let dataPath = window.globalArgs['user-data-dir']
-      const dir = require('path').join(dataPath, 'clipboard')
-      fs.ensureDirSync(dir)
+      let filepath=''
       const now = Date.now()
-      const path = require('path').join(dir, 'image_' + now + '.png')
+      if(typeof image==='string'){
+        //是文件，而非图片
+        filepath=image
+      }else{
+        //是图片，而非文件
+        //转存图片
+        let dataPath = window.globalArgs['user-data-dir']
+        const dir = require('path').join(dataPath, 'clipboard')
+        fs.ensureDirSync(dir)
+        const path = require('path').join(dir, 'image_' + now + '.png')
+        filepath=path
+        fs.writeFileSync(filepath, image.toPNG())
+      }
+
       try {
-        fs.writeFileSync(path, image.toPNG())
-        const stat = fs.statSync(path)
-        let item: any = {
-          _id: "clipboard:item:" + now,
+        const stat = fs.statSync(filepath)
+        await this.addItem({
           type: 'image',
           content: '',
           size: stat.size,
           ext: '.png',
           filename: 'image_' + now + '.png',
-          path: path,
-          createTime: now,
-          index: this.index,
-          updateTime: now,
-        }
-        this.totalRows++
-        let rs = await tsbApi.db.put(item)
-        if (rs.ok) {
-          item._rev = rs.rev
-          this.items.unshift(item)
-        }
+          path: filepath,
+        })
       } catch (e) {
-        console.error('图片写入失败')
+        console.error('图片写入失败',e)
       }
     },
     changeClipMode(code: string) {
