@@ -38,8 +38,6 @@
       </div>
     </div>
     <ClipList :clipList="clipContents" v-else></ClipList>
-
-
   </vue-custom-scrollbar>
   <div class="text-center">
    {{hasNextPage}} {{dbKey}}  已载入{{clipContents.length}}  总共 {{totalRows}} 条记录

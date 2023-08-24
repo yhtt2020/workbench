@@ -84,6 +84,10 @@ export default {
           return this.clipItem.content.length + '个字符'
         case 'image':
           return formatFileSize(this.clipItem.size)
+        case 'file':
+          return this.clipItem.files.length +'个文件'
+        case 'video':
+          return formatFileSize(this.clipItem.size)
       }
     },
     itemType() {
@@ -188,7 +192,6 @@ export default {
               <span>{{ item.title }}</span>
               <span>{{ item.shortKeys }}</span>
             </div>
-
           </template>
           <!-- 代码语言切换界面 -->
 
@@ -208,5 +211,6 @@ export default {
   flex:1;height: 0;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
+  flex-direction: column;
 }
 </style>

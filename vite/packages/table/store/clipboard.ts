@@ -12,18 +12,18 @@ win32.watchClipboard(() => {
   }
 })
 
-const {fs}=window.$models
+const {fs} = window.$models
 
 const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     items: [],//剪切板的收集箱内容
-    index:0,
+    index: 0,
     hasNextPage: false,
-    totalRows:0,
+    totalRows: 0,
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
-    previewShow:false,//预览
+    previewShow: false,//预览
     settings: {
       enable: false,
       duration: 500,//ms
@@ -39,21 +39,21 @@ export const clipboardStore = defineStore("clipboardStore", {
     async nextPage(dbKey) {
       if (this.hasNextPage) {
         const rs = await tsbApi.db.allDocsQuery({
-          start_key: this.items[this.items.length - 1]._id+'\ufff0',
+          start_key: this.items[this.items.length - 1]._id + '\ufff0',
           end_key: dbKey,
-          skip:1,
+          skip: 1,
           descending: true,
           limit: this.settings.pageSize,
-          include_docs:true,
+          include_docs: true,
         })
         this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
         rs.rows.forEach(row => {
           const doc = row?.doc
-          if(doc){
+          if (doc) {
             this.items.push(doc)
           }
         })
-        this.totalRows=rs.total_rows
+        this.totalRows = rs.total_rows
         return this.hasNextPage
       } else {
         return false
@@ -75,8 +75,8 @@ export const clipboardStore = defineStore("clipboardStore", {
         return doc
       })
 
-  console.log(rs,'查到结果')
-      this.totalRows=rs.total_rows
+      console.log(rs, '查到结果')
+      this.totalRows = rs.total_rows
       // console.log('分页后的rs',rs)
       // for await (const results of rs.pages()){
       //   console.log(results)
@@ -111,26 +111,21 @@ export const clipboardStore = defineStore("clipboardStore", {
         return content.includes('image')
       })) {
         //是图片
-        console.log('剪切板图片变化')
         this.imageChange(clipboard.readImage())
-
         return
       }
 
       if (availableFormats.some((content) => {
-
         return content.includes('text/uri-list')
       })) {
-        console.log('剪切板uri变化')
+        this.uriChange(win32.getClipboardFilePaths())
         //是文件
         return
       }
       if (availableFormats.some((content) => {
-
         return content.includes('text/plain')
       })) {
         //纯文字
-        console.log('剪切板文本变化')
         this.textChange(clipboard.readText())
       }
 
@@ -176,11 +171,10 @@ export const clipboardStore = defineStore("clipboardStore", {
     async clean() {
       let items = await tsbApi.db.allDocs('clipboard:item:')
       for (const item of items.rows) {
-        console.log(item, '当前要删除', item.id, item.doc._rev)
         await tsbApi.db.remove(item.doc)
       }
       this.items = []
-      this.totalRows=0
+      this.totalRows = 0
       return true
     },
     /**
@@ -192,35 +186,96 @@ export const clipboardStore = defineStore("clipboardStore", {
       const now = Date.now()
       const time = getDateTime(new Date(now))
       this.index++
-      let item:any = {
+      let item: any = {
         _id: "clipboard:item:" + now,
         type: 'text',
         content: text,
         createTime: now,
-        index:this.index,
+        index: this.index,
         updateTime: now,
       }
       this.totalRows++
-      let rs=await tsbApi.db.put(item)
-      if(rs.ok){
-        item._rev=rs.rev
+      let rs = await tsbApi.db.put(item)
+      if (rs.ok) {
+        item._rev = rs.rev
         this.items.unshift(item)
-        console.log('监测到新[文本]剪切板内容', text)
       }
 
 
     },
+    async videoChange(uri) {
+      const stat = fs.statSync(uri)
+      await this.addItem({
+        type: 'video',
+        filepath: uri,
+        content: '',
+        ext: require('path').extname(uri),
+        size: stat.size,
+      })
+    },
+    /**
+     * 插入一个剪切板内容
+     * @param itemInfo
+     */
+    async addItem(itemInfo) {
+      const now = Date.now()
+      this.index++
+      const _id = "clipboard:item:" + now
+      let item: any = {
+        _id,
+        updateTime: now,
+        createTime: now,
+        index: this.index,
+        ...itemInfo
+      }
+      let rs = await tsbApi.db.put(item)
+      if (rs.ok) {
+        this.totalRows++
+        item._rev = rs.rev
+        this.items.unshift(item)
+      }
+    },
+    async uriChange(uri) {
+      if (uri.length === 1) {
+        //是单个视频
+        let filepath = uri[0]
+        let fileExt = require('path').extname(filepath).substring(1)
+        if (['mp4', 'mpg', 'rmvb'].indexOf(fileExt) > -1) {
+          await this.videoChange(filepath)
+          return
+        }
+      }
+      const now = Date.now()
+      this.index++
+      const _id = "clipboard:item:" + now
+      let item: any = {
+        _id,
+        type: 'file',
+        content: '',
+        count: uri.length,
+        files: uri,
+        index: this.index,
+        updateTime: now,
+        createTime: now
+      }
+      this.totalRows++
+      let rs = await tsbApi.db.put(item)
+      if (rs.ok) {
+        item._rev = rs.rev
+        this.items.unshift(item)
+      }
+    },
     async imageChange(image: any) {
       //转存图片
       let dataPath = window.globalArgs['user-data-dir']
-      const dir =require('path').join(dataPath, 'clipboard')
+      const dir = require('path').join(dataPath, 'clipboard')
       fs.ensureDirSync(dir)
       const now = Date.now()
       const path = require('path').join(dir, 'image_' + now + '.png')
       try {
         fs.writeFileSync(path, image.toPNG())
         const stat = fs.statSync(path)
-        let item:any = {
+        let item: any = {
           _id: "clipboard:item:" + now,
           type: 'image',
           content: '',
@@ -232,18 +287,15 @@ export const clipboardStore = defineStore("clipboardStore", {
           index: this.index,
           updateTime: now,
         }
-        console.log('item=-', item)
         this.totalRows++
         let rs = await tsbApi.db.put(item)
-        if(rs.ok) {
+        if (rs.ok) {
           item._rev = rs.rev
           this.items.unshift(item)
         }
       } catch (e) {
         console.error('图片写入失败')
       }
-      //this.items.unshift(item)
-      console.log('监测到[图片]新剪切板内容', image)
     },
     changeClipMode(code: string) {
       this.clipMode = code
@@ -262,7 +314,6 @@ export const clipboardStore = defineStore("clipboardStore", {
       // console.log('设置代码高亮',val);
     },
     updateClipSize(val: number) {
-      console.log('修改代码缩进', val);
       this.clipSize = val
     },
     updateTheme(val: string) {
@@ -276,7 +327,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['settings', 'items','totalRows','index']
+      paths: ['settings', 'items', 'totalRows', 'index']
       // state 中的字段名，按组打包储存
     }]
   }
