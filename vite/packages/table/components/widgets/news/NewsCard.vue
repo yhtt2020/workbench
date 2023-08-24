@@ -1,9 +1,11 @@
 <template>
   <div>
+    
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
       ref="cardSlot" :customData="customData">
-      <!-- {{ showList.length }} -->
-      <!-- {{ aggList }} -->
+      <!-- {{aggList[this.currentIndex].tag }} -->
+      <!-- {{ NewsMsgList }} -->
+      <!-- {{ aggList.length }} -->
       <div class="topBar">
         <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
           <span>
@@ -23,9 +25,8 @@
         </div>
       </div>
       <div class="content">
-        <div v-for="index in copyNum">
-          <NewsItem :NewsMsgList="NewsMsgList" />
-        </div>
+          <NewsItem v-for="(item,index) in NewsMsgList" :key="index" :NewsMsgList="item" />
+        
           
       </div>
     </Widget>
@@ -80,7 +81,7 @@
 <script>
 import Widget from '../../card/Widget.vue';
 import NewsItem from './NewsItem.vue';
-import { mapState } from 'pinia'
+import { mapState ,mapActions} from 'pinia'
 import { newsStore } from '../../../store/news.ts'
 import NewsCardDrawer from "./NewsCardDrawer.vue";
 import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
@@ -202,35 +203,23 @@ export default {
   methods: {
     decrease() {
       this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
-      // this.getNewsMsg(this.titleList[this.currentIndex].tag)
-      // this.observerItem(this.currentIndex)
-      this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+      // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+      console.log(this.NewsMsgList[0])
+      console.log(11111)
     },
     increase() {
       this.currentIndex = (this.currentIndex + 1) % this.showList.length
-      // this.getNewsMsg(this.titleList[this.currentIndex].tag)
-      // this.observerItem(this.currentIndex)
-      this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+      // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
     },
     setCurrentIndex(index) {
       this.currentIndex = index
-      this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+      // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
       this.customData.sortList = arrList
     },
-    // observerItem(index) {
-    //     this.$nextTick(()=>{
-    //       const element=this.$refs.centerItem
-    //       element.scrillIntoView({
-    //       behavior: 'smooth',
-    //       block: 'start',
-    //       inline: 'center'
-    //     })
-    //   })
-
-    // }
+    ...mapActions(newsStore, ['getNewsMsg']),
   },
   computed: {
     aggList() {
@@ -240,9 +229,7 @@ export default {
         return this.titleList
       }
     },
-    ...mapState(newsStore, [
-      'NewsMsgList', 'getNewsMsg'
-    ]),
+    ...mapState(newsStore, ['NewsMsgList']),
     // ...mapActions(newsStore,['getNewsMsg'])
     showList() {
       return JSON.parse(JSON.stringify(this.aggList.slice(0, 7)))
@@ -257,10 +244,10 @@ export default {
       return this.showSize.height==2?6:8
     }
   },
-  mounted() {
-    this.getNewsMsg(this.showList[this.currentIndex].tag,this.copyNum)
-    console.log(1111);
-  }
+  // mounted() {
+  //   this.getNewsMsg(this.showList[this.currentIndex].tag,this.copyNum)
+  //   console.log(1111);
+  // }
 }
 // console.log("categoryList", this.categoryList.length);
 </script>
@@ -268,7 +255,7 @@ export default {
 .topBar {
   display: flex;
   justify-content: space-between;
-  margin-top: 2.4%;
+  margin-top: 1.8%;
 
   .left,
   .right {
@@ -345,7 +332,7 @@ export default {
 }
 
 .content {
-  margin-top: 1.2%;
+  margin-top: 1.8%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

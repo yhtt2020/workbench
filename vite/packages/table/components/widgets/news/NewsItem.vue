@@ -1,38 +1,60 @@
 <template>
-  <div class="CardItem">
+  <!-- {{ NewsMsgList.NewsMsgList.title }} -->
+  <!-- {{ timer[1] }} -->
+  <!-- {{ [hour,min] }} -->
+  <div class="CardItem" >
+    
     <div class="left">
-      <div class="title">
-        <span>{{ NewsMsgList.title }}</span>
+      <div class="title" @click="goNews">
+        {{ NewsMsgList.NewsMsgList.title }}
       </div>
       <div class="bottom">
         <div class="date">
-          <span>{{NewsMsgList.date }}</span>
+          <span>{{timer[0]}} {{ timer[1] }}</span>
         </div>
         <div class="name">
-          <span>{{ NewsMsgList.author_name }}</span>
+          <span>{{ NewsMsgList.NewsMsgList.author_name }}</span>
         </div>
       </div>
   
     </div>
-    <div class="right" >
-      
+    <div class="right" :style="{backgroundImage:img?`url(${img})`:''}">
+      <!-- <img :src="img" alt="" class="image"> -->
     </div>
   
   </div>
   </template>
   
   <script setup lang='ts'>
-  import {ref,reactive} from 'vue'
-  // const title=ref('大运会那些精彩的瞬间')
-  // const time=ref('03-04')
-  // const date=ref('11:00')
-  // const author=ref('北京日报')
-  defineProps({
+  import {ref,reactive,computed} from 'vue'
+  import {useRouter} from 'vue-router'
+  const router=useRouter()
+  const NewsMsgList = defineProps({
     NewsMsgList:{
       type:Array,
     }
     
   })
+  const goNews=()=>{
+    router.push(NewsMsgList.NewsMsgList.url)
+  }
+  const timer=computed(()=>{
+    let [updateDate,updateTime]=NewsMsgList.NewsMsgList.date.split(' ')
+    let [item,...arr]=updateDate.split('-')
+    let [hour,min,_]=updateTime.split(':')
+    const Utime=[hour,min].join(':')
+    const uDate=arr.join("-")
+    return [uDate,Utime]
+  })
+
+  const img=computed(()=>{
+    if(NewsMsgList.NewsMsgList.thumbnail_pic_s){
+      return NewsMsgList.NewsMsgList.thumbnail_pic_s
+    }else{
+      return ''
+    }
+  })
+  
   </script>
   <style lang='scss' scoped>
   .CardItem{
@@ -45,21 +67,23 @@
     
     .left{
       width: 152px;
-      margin-left: 0.5%;
+      // margin-left: 0.5%;
       .title{
         width: 100%;
         height: auto;
         // padding-top: 12px;
-        margin-top: 1.4%;
-        // white-space: normal;
+        margin-top: 2.4%;
+        white-space: pre-wrap;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
         // overflow-wrap: break-word;
-        span{
-          font-family: PingFangSC-Regular;
-          font-size: 14px;
-          color: rgba(255,255,255,0.85);
-          font-weight: 400;
-          white-space: normal;
-        }
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: rgba(255,255,255,0.85);
+        font-weight: 400;
+        
         
       }
       .bottom{
@@ -67,8 +91,6 @@
         height: 17px;
         display: flex;
         justify-content: space-between;
-        // margin-top: 20px;
-        // margin-bottom: 10px;
         margin-top: 9.2%;
         margin-bottom: 1.4%;
         .date{
@@ -97,6 +119,7 @@
       height: 77px;
       margin: 8px 0px;
       margin-right:0.8% ;
+      background-size: cover;
     }
   }
   </style>
