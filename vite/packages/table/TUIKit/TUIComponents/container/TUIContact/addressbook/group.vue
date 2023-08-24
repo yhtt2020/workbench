@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between" style="margin-bottom: 14px;">
       <span class="font-16" style="color: var(--primary-text);">群聊 ({{ list.length }}个) </span>
       
-      <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);">
+      <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);" @click="clickSearch">
        <Icon icon="tianjia2" style="width: 20px;height: 20px;color: var(--primary-text);"></Icon>
       </div>
     </div>
@@ -25,7 +25,9 @@
  </a-drawer>
 
  <teleport to='body'>
-    <!-- <Modal v-model:visible=""></Modal> -->
+    <Modal v-model:visible="groupVisible" v-if="groupVisible" :blurFlag="true">
+      <AddFriend @close="groupVisible = false"></AddFriend>
+    </Modal>
  </teleport>
 
 </template>
@@ -57,9 +59,9 @@ export default defineComponent({
     },
     groupShow:false, // 右侧抽屉
     groupItem:{}, // 接收点击中的群聊列表项
-    memeber:[]
-   })
-  
+    memeber:[],
+    groupVisible:false,
+   })  
 
    const clickGroupList = async (item) =>{  // 点击群聊列表
     data.groupShow = true
@@ -69,8 +71,12 @@ export default defineComponent({
     data.memeber = result.data.memberList
    }
 
+   const clickSearch = () =>{
+    data.groupVisible = true
+   }
+
    return{
-     ...toRefs(data),clickGroupList,
+     ...toRefs(data),clickGroupList,clickSearch,
    }
   }
 

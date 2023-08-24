@@ -136,7 +136,7 @@
       </div>
       <div class="flex items-center justify-center font-16" style="color: var(--primary-text);margin-left: 12px;">群管理</div>
     </div> -->
-    <Manage v-if="conversation.groupProfile" @close="groupVisible = false"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
+    <Manage v-if="conversation.groupProfile" @close="groupVisible = false" :manageData="conversation"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
   </a-drawer>
 
   <a-drawer placement="right" width="500" :closable="false" v-model:visible="updateVisible">
@@ -148,11 +148,11 @@
     </div>
 
     <template v-if="index === 1">
-      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer"></UpdateGroupName>
+      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupName>
     </template>
 
     <template v-if="index === 2">
-      <UpdateGroupNotice :notice="info" @close="updateVisible = false" :server="GroupServer"></UpdateGroupNotice>
+      <UpdateGroupNotice :notice="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
     </template>
     
     <template v-if="index === 3">
@@ -913,6 +913,7 @@ const TUIChat: any = defineComponent({
       const result = await GroupServer.getGroupMemberList(options)
       data.memberList = result.data.memberList
     }
+
 
     return {
       ...toRefs(data),
