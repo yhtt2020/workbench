@@ -24,18 +24,25 @@
     <GroupDetail :group="groupItem" :memeber="memeber" @closeDrawer="groupShow = false"></GroupDetail>
  </a-drawer>
 
+ <teleport to='body'>
+    <!-- <Modal v-model:visible=""></Modal> -->
+ </teleport>
+
 </template>
 
 <script>
 import { defineComponent,ref,toRefs,computed,watch, reactive, onMounted } from 'vue'
+import AddFriend from '../../../components/transfer/addFriend.vue'
 import GroupDetail from '../components/group-detail.vue'
-
+import Modal from '../../../../../components/Modal.vue'
 
 export default defineComponent({
   props:['list'],
 
   components:{
-    GroupDetail
+    GroupDetail,
+    AddFriend,
+    Modal
   },
 
   setup(){
