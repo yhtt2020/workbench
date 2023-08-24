@@ -335,23 +335,23 @@
 </template>
 
 <script>
-import HorzontanlPanelIcon from '../HorzontanlPanelIcon.vue'
-import ClipSetDrawer from './ClipSetDrawer.vue'
+import HorzontanlPanelIcon from '../../../components/HorzontanlPanelIcon.vue'
+import ClipSetDrawer from './clipPreview/ClipSetDrawer.vue'
 import { toRaw } from 'vue'
-import ClipCodemirror from './ClipCodemirror.vue'
+import ClipCodemirror from './clipPreview/ClipCodemirror.vue'
 import { mapActions, mapWritableState } from 'pinia'
-import { clipboardStore } from '../../store/clipboard'
-import textCodeMirror from './textCodeMirror.vue'
-import ClipVideo from './ClipVideo.vue'
-import ClipAudio from './ClipAudio.vue'
-import { codeLanguage } from '../../js/data/clipTheme'
-import ClipItemWidget from '../../apps/clipboard/ClipItemWidget.vue'
-import {getDateTime} from '../../util'
-import TextItem from '../../apps/clipboard/items/TextItem.vue'
-import ImageItem from '../../apps/clipboard/items/ImageItem.vue'
-import FileItem from '../../apps/clipboard/items/FileItem.vue'
-import VideoItem from '../../apps/clipboard/items/VideoItem.vue'
-import AudioItem from '../../apps/clipboard/items/AudioItem.vue'
+import { clipboardStore } from '../../../store/clipboard'
+import textCodeMirror from './clipPreview/textCodeMirror.vue'
+import ClipVideo from './parser/ClipVideo.vue'
+import ClipAudio from './parser/ClipAudio.vue'
+import { codeLanguage } from '../../../js/data/clipTheme'
+import ClipItemWidget from './ClipItemWidget.vue'
+import {getDateTime} from '../../../util'
+import TextItem from './items/TextItem.vue'
+import ImageItem from './items/ImageItem.vue'
+import FileItem from './items/FileItem.vue'
+import VideoItem from './items/VideoItem.vue'
+import AudioItem from './items/AudioItem.vue'
 export default {
   components: {
     AudioItem,

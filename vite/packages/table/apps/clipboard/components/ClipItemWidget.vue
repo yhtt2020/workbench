@@ -1,11 +1,11 @@
 <script lang="ts">
-import ClipCodemirror from "../../components/clipPreview/ClipCodemirror.vue";
-import textCodeMirror from "../../components/clipPreview/textCodeMirror.vue";
-import {formatFileSize, getDateTime} from '../../util'
-import {clipboardStore} from "../../store/clipboard";
+import ClipCodemirror from "./clipPreview/ClipCodemirror.vue";
+import textCodeMirror from "./clipPreview/textCodeMirror.vue";
+import {formatFileSize, getDateTime} from '../../../util'
+import {clipboardStore} from "../../../store/clipboard";
 import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
-import browser from "../../js/common/browser";
+import browser from "../../../js/common/browser";
 
 export default {
   name: "ClipItemWidget",

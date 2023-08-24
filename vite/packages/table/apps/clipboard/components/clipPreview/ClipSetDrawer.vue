@@ -84,11 +84,11 @@
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { clipboardStore } from '../../store/clipboard'
-import HorizontalPanel from '../../components/HorizontalPanel.vue'
-import HorizontalDrawer from '../HorizontalDrawer.vue'
-import { themeType } from '../../js/data/clipTheme'
-import { codeLanguage } from '../../js/data/clipTheme'
+import { clipboardStore } from '../../../../store/clipboard'
+import HorizontalPanel from '../../../../components/HorizontalPanel.vue'
+import HorizontalDrawer from '../../../../components/HorizontalDrawer.vue'
+import { themeType } from '../../../../js/data/clipTheme'
+import { codeLanguage } from '../../../../js/data/clipTheme'
 import { message, Modal } from 'ant-design-vue'
 
 export default {

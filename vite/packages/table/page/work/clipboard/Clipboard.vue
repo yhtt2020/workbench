@@ -71,7 +71,7 @@ import HorzontanlPanelIcon from '../../../components/HorzontanlPanelIcon.vue'
 import HorizontalDrawer from '../../../components/HorizontalDrawer.vue'
 import TabSwitching from '../../../components/TabSwitching.vue'
 import ClipList from './ClipList.vue'
-import ClipSetDrawer from '../../../components/clipPreview/ClipSetDrawer.vue'
+import ClipSetDrawer from '../../../apps/clipboard/components/clipPreview/ClipSetDrawer.vue'
 import { Empty, message } from 'ant-design-vue'
 import { mapWritableState, mapActions } from 'pinia'
 import { clipboardStore } from '../../../store/clipboard'
@@ -79,7 +79,7 @@ import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
 import { fileList, videoList, audioList } from '../../../js/data/clipboardData'
-import ClipItem from '../../../components/clipPreview/ClipItem.vue'
+import ClipItem from '../../../apps/clipboard/components/ClipItem.vue'
 
 export default {
   name: 'Clipboard',

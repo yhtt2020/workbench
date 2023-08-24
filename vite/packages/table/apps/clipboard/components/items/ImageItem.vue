@@ -1,17 +1,15 @@
 <script lang="ts">
 import ClipItemWidget from "../ClipItemWidget.vue";
-import ClipCodemirror from "../../../components/clipPreview/ClipCodemirror.vue";
-import textCodeMirror from "../../../components/clipPreview/textCodeMirror.vue";
-import {codeLanguage} from '../../../js/data/clipTheme.js'
+import ClipCodemirror from "../clipPreview/ClipCodemirror.vue";
+import textCodeMirror from "../clipPreview/textCodeMirror.vue";
+import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
-import {clipboardStore} from "../../../store/clipboard";
-import ClipVideo from "../../../components/clipPreview/ClipVideo.vue";
-import ClipAudio from "../../../components/clipPreview/ClipAudio.vue";
+import {clipboardStore} from "../../../../store/clipboard";
 
 
 export default {
   props: ['clipItem'],
-  components: {ClipAudio, ClipVideo, textCodeMirror, ClipCodemirror, ClipItemWidget},
+  components: {textCodeMirror, ClipCodemirror, ClipItemWidget},
   computed: {
     ...mapWritableState(clipboardStore, ['settings']),
     textDisplayTypes() {
@@ -98,8 +96,7 @@ export default {
   <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
     <template #body>
       <!-- 纯文本情况下 -->
-      <ClipAudio :fileUrl="clipItem.filepath" class="flex items-center justify-center"
-                 style="width:302px;height:148px;"></ClipAudio>
+      <a-image style="max-height: 100%" :src="clipItem.path" alt="" class=" w-full h-full  object-cover"></a-image>
     </template>
     <template #footer>
 

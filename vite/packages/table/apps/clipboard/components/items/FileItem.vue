@@ -1,33 +1,23 @@
 <script lang="ts">
 import ClipItemWidget from "../ClipItemWidget.vue";
-import ClipCodemirror from "../../../components/clipPreview/ClipCodemirror.vue";
-import textCodeMirror from "../../../components/clipPreview/textCodeMirror.vue";
-import {codeLanguage} from '../../../js/data/clipTheme.js'
+import ClipCodemirror from "../clipPreview/ClipCodemirror.vue";
+import textCodeMirror from "../clipPreview/textCodeMirror.vue";
+import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
-import {clipboardStore} from "../../../store/clipboard";
-
-
+import {clipboardStore} from "../../../../store/clipboard";
+import {FileOutlined} from '@ant-design/icons-vue'
+import VueCustomScrollbar from "../../../../../../src/components/vue-scrollbar.vue";
 export default {
   props: ['clipItem'],
-  components: {textCodeMirror, ClipCodemirror, ClipItemWidget},
+  components: {VueCustomScrollbar, textCodeMirror, ClipCodemirror, ClipItemWidget,FileOutlined},
   computed: {
     ...mapWritableState(clipboardStore, ['settings']),
-    textDisplayTypes() {
-      if (this.settings.codeHighlight) {
-        const newTextArr = textTypes.slice()  // 将文本底部tab数组复制一份
-        this.textType = newTextArr.reverse()  // 将复制的文本底部tab数组进行反转
-      } else {
-        this.textType = textTypes.slice()
-      }
-      this.textDisplayType = this.textType[0]
-      return this.textType
-    },
   },
-  watch :{
-    'settings.codeHighlight':{
-      handler(){
+  watch: {
+    'settings.codeHighlight': {
+      handler() {
         this.textType.reverse()
-        this.textDisplayTypes=this.textType[0]
+        this.textDisplayTypes = this.textType[0]
       }
     }
   },
@@ -48,6 +38,7 @@ export default {
       menuList: [],
       // 文本底部切换
       textType: [],
+
 
     }
   },
@@ -82,8 +73,8 @@ export default {
     switchTab(tab) {
       this.$refs.widget.switchTab('item')
     },
-    previewItem(item){
-      this.$emit('previewItem',item)
+    previewItem(item) {
+      this.$emit('previewItem', item)
     }
 
   }
@@ -93,15 +84,24 @@ export default {
 </script>
 
 <template>
-  <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
+  <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList"
+                  :clipItem="clipItem">
     <template #body>
-      <!-- 纯文本情况下 -->
-      <a-image style="max-height: 100%" :src="clipItem.path" alt="" class=" w-full h-full  object-cover"></a-image>
-    </template>
-    <template #footer>
+      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;width: 100%" >
+        <a-row  class=" m-1 line" v-for="file in clipItem.files">
+          <a-col class="text-left pt-1" :span="2">
+            <file-outlined style="font-size: 18px" />
+          </a-col>
+          <a-col :span="21">
+            {{file}}
+          </a-col>
+
+        </a-row>
+      </vue-custom-scrollbar>
+<!--      {{clipItem.files}}-->
 
     </template>
-    <template #otherTabs>
+    <template #footer>
 
     </template>
   </ClipItemWidget>
@@ -140,5 +140,7 @@ export default {
 .btn-list {
   background: var(--primary-bg);
 }
-
+.line{
+  border-bottom: 1px dashed var(--secondary-text);
+}
 </style>

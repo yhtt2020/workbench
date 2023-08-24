@@ -320,15 +320,15 @@
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { clipboardStore } from '../../store/clipboard'
-import { codeLanguage } from '../../js/data/clipTheme'
+import { clipboardStore } from '../../../../store/clipboard'
+import { codeLanguage } from '../../../../js/data/clipTheme'
 import ClipCodemirror from './ClipCodemirror.vue'
-import HorizontalPanel from '../HorizontalPanel.vue'
+import HorizontalPanel from '../../../../components/HorizontalPanel.vue'
 import textCodeMirror from './textCodeMirror.vue'
-import HorizontalDrawer from '../HorizontalDrawer.vue'
-import ClipVideo from './ClipVideo.vue'
-import ClipAudio from './ClipAudio.vue'
-import { getDateTime } from '../../util'
+import HorizontalDrawer from '../../../../components/HorizontalDrawer.vue'
+import ClipVideo from '../parser/ClipVideo.vue'
+import ClipAudio from '../parser/ClipAudio.vue'
+import { getDateTime } from '../../../../util'
 import { message } from 'ant-design-vue'
 
 export default {
