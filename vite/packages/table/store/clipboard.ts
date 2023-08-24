@@ -12,6 +12,7 @@ win32.watchClipboard(() => {
   }
 })
 
+const {fs}=window.$models
 
 const clipboard = require('electron').clipboard
 // @ts-ignore
@@ -209,12 +210,37 @@ export const clipboardStore = defineStore("clipboardStore", {
 
 
     },
-    imageChange(image: any) {
-      let item = {
-        type: 'image',
-        content: image,
-        time: Date.now(),
-
+    async imageChange(image: any) {
+      //转存图片
+      let dataPath = window.globalArgs['user-data-dir']
+      const dir =require('path').join(dataPath, 'clipboard')
+      fs.ensureDirSync(dir)
+      const now = Date.now()
+      const path = require('path').join(dir, 'image_' + now + '.png')
+      try {
+        fs.writeFileSync(path, image.toPNG())
+        const stat = fs.statSync(path)
+        let item:any = {
+          _id: "clipboard:item:" + now,
+          type: 'image',
+          content: '',
+          size: stat.size,
+          ext: '.png',
+          filename: 'image_' + now + '.png',
+          path: path,
+          createTime: now,
+          index: this.index,
+          updateTime: now,
+        }
+        console.log('item=-', item)
+        this.totalRows++
+        let rs = await tsbApi.db.put(item)
+        if(rs.ok) {
+          item._rev = rs.rev
+          this.items.unshift(item)
+        }
+      } catch (e) {
+        console.error('图片写入失败')
       }
       //this.items.unshift(item)
       console.log('监测到[图片]新剪切板内容', image)
