@@ -268,17 +268,8 @@ const manage = defineComponent({
 
     const changeOwner = (type) =>{  // 转让群聊
       if(props.memberList.length > 1){
-        Modal.confirm({
-         content:'是否确认操作',
-         okText:'确认',
-         cancelText:'取消',
-         onOk () {
-          setTimeout(()=>{
-            data.isChangeOwner = true
-            data.type = type
-          },200)
-         }
-        })
+        data.isChangeOwner = true
+        data.type = type
       }else{
         data.isChangeOwner =  false
       }

@@ -17,8 +17,21 @@
       v-TUILongPress.self="toggleDialog"
       @click.prevent.right="toggleDialog"
     >
-      <aside class="left">
-        <img class="avatar" :src="handleConversation?.avator(conversation)" />
+     <aside class="left">
+      <a-avatar v-if="conversation.type === 'C2C'" :size="32" :src="handleConversation?.avator(conversation)"></a-avatar>
+      <a-avatar v-else shape="square" :size="32" :src="handleConversation?.avator(conversation)"></a-avatar>
+      <div class="online-status" 
+       :class="userStatusList?.get(conversation?.userProfile?.userID)?.statusType === 1 ? 'online-status-online' : 'online-status-offline'"
+       v-if="showUserOnlineStatus()"
+      >
+      </div>
+      <span class="num" v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'">
+        {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }}
+      </span>
+      <span class="num-notify" v-if="conversation.unreadCount > 0 && conversation.messageRemindType === 'AcceptNotNotify'">
+      </span>
+     </aside>
+     <!-- <aside class="left">
         <div
           class="online-status"
           :class="
@@ -31,11 +44,10 @@
         <span class="num" v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'">
           {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }}
         </span>
-        <span
-          class="num-notify"
-          v-if="conversation.unreadCount > 0 && conversation.messageRemindType === 'AcceptNotNotify'"
+        <span class="num-notify" v-if="conversation.unreadCount > 0 && conversation.messageRemindType === 'AcceptNotNotify'"
         ></span>
-      </aside>
+      </aside> -->
+
       <div class="content">
         <div class="content-header">
           <label>
@@ -56,6 +68,7 @@
         </div>
       </div>
     </div>
+
     <div class="dialog dialog-item flex flex-col" v-if="toggle" ref="dialog">
       <div class="rounded-lg conversation-options flex items-center justify-center" @click.stop="handleItem('delete')" >
         <span>{{ $t('TUIConversation.删除会话') }}</span>
@@ -87,40 +100,13 @@ import { onClickOutside, useElementBounding } from '@vueuse/core';
 import { defineComponent, nextTick, reactive, ref, toRefs, watch, watchEffect } from 'vue';
 import { Conversation } from '../../interface';
 const ListItem: any = defineComponent({
-  props: {
-    conversation: {
-      type: Object,
-      default: () => ({}),
-    },
-    handleConversation: {
-      type: Object,
-      default: () => ({}),
-    },
-    currentID: {
-      type: String,
-      default: () => '',
-    },
-    toggleID: {
-      type: String,
-      default: () => '',
-    },
-    isH5: {
-      type: Boolean,
-      default: () => false,
-    },
-    displayOnlineStatus: {
-      type: Boolean,
-      default: () => false,
-    },
-    userStatusList: {
-      type: Map,
-      default: () => new Map(),
-    },
-    types: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
+  props: [
+    'conversation','handleConversation','currentID',
+    'toggleID','isH5','displayOnlineStatus','userStatusList',
+    'types'
+  ],
+
+
   setup(props: any, ctx: any) {
     const data = reactive({
       conversation: {} as Conversation,
