@@ -6,28 +6,29 @@
       <!-- {{aggList[this.currentIndex].tag }} -->
       <!-- {{ NewsMsgList }} -->
       <!-- {{ aggList.length }} -->
+      <template #left-title style="width: 24px; height: 24px">
+        <a-icon :icon="FileSearchOutlined"></a-icon>
+      </template>
       <div class="topBar">
-        <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
+        <!-- <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
           <span>
             <LeftOutlined />
           </span>
-        </div>
-        <div class="center" ref="centerItem">
+        </div> -->
+        <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
             @click="setCurrentIndex(index)">
             <span>{{ title.title }}</span>
           </div>
         </div>
-        <div class="right" style="width: 40px; height: 40px; border-radius: 8%;" @click="increase">
+        <!-- <div class="right" style="width: 40px; height: 40px; border-radius: 8%;" @click="increase">
           <span>
             <RightOutlined />
           </span>
-        </div>
+        </div> -->
       </div>
       <div class="content">
           <NewsItem v-for="(item,index) in NewsMsgList" :key="index" :NewsMsgList="item" />
-        
-          
       </div>
     </Widget>
 
@@ -35,7 +36,7 @@
         ">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
-        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序</div>
+        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择七个</div>
         <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer>
         <!-- <DndProvider :backend="HTML5Backend"> -->
         <!-- <div class="content-item">
@@ -129,7 +130,7 @@ export default {
       options: {
         className: 'card double',
         title: '新闻资讯',
-        icon: 'chakan',
+        icon: '',
         type: 'news'
       },
       menuList: [
@@ -201,16 +202,16 @@ export default {
     }
   },
   methods: {
-    decrease() {
-      this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
-      // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
-      console.log(this.NewsMsgList[0])
-      console.log(11111)
-    },
-    increase() {
-      this.currentIndex = (this.currentIndex + 1) % this.showList.length
-      // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
-    },
+    // decrease() {
+    //   this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
+    //   // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+    //   console.log(this.NewsMsgList[0])
+    //   console.log(11111)
+    // },
+    // increase() {
+    //   this.currentIndex = (this.currentIndex + 1) % this.showList.length
+    //   // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+    // },
     setCurrentIndex(index) {
       this.currentIndex = index
       // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
@@ -272,7 +273,7 @@ export default {
   }
 
   .center {
-    width: 440px;
+    width: 100%;
     height: 40px;
     border-radius: 8%;
     align-items: center;
@@ -293,8 +294,8 @@ export default {
     }
 
     .action {
-      // width: 61px;
-      // height: 40px;
+      width: 100%;
+      height: 100%;
       background: #508BFE;
       cursor: pointer;
       border-radius: 8px;
@@ -302,14 +303,13 @@ export default {
       align-self: stretch;
       flex-shrink: 0;
       align-self: center;
-      // padding: 0 0.6em;
       padding-top: 0;
       padding-bottom: 0;
       border-left: none;
     }
 
     .item {
-      width: 61px;
+      width: 77px;
       height: 33px;
       margin: 0.6% 0;
       text-align: center;

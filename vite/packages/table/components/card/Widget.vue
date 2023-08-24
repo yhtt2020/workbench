@@ -9,12 +9,13 @@
 
     <!--标题栏start-->
     <slot name="cardTitle">
-      <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex justify-between items-center">
+      <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex items-center justify-between">
         <div class="left-title" v-if="options.noTitle !== true">
+          <slot name="left-title"></slot>
           <Icon :icon="options.icon" class="title-icon"></Icon>
           <div class="w-2/3">{{ options.title }}</div>
         </div>
-        <div class="right-title z-10"  v-if="showRightIcon" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+        <div class="z-10 right-title"  v-if="showRightIcon" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
           <Icon icon="gengduo1" class="title-icon pointer"></Icon>
         </div>
       </div>
@@ -27,24 +28,24 @@
   <!-- 右上角抽屉菜单start -->
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" height="auto" class="drawer"
             :closable="true" placement="bottom" v-model:visible="menuVisible" @close="onClose">
-    <div class="ml-4 mb-3 flex flex-row items-center" v-if="sizeList && sizeList.length > 0">
+    <div class="flex flex-row items-center mb-3 ml-4" v-if="sizeList && sizeList.length > 0">
       <div class="mr-4">小组件尺寸</div>
       <HorizontalPanel :navList="sizeList" v-model:selectType="sizeType" bgColor="drawer-item-select-bg">
       </HorizontalPanel>
     </div>
-    <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="ml-4 mr-4 my-8"
+    <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="my-8 ml-4 mr-4"
         v-if="sizeList && sizeList.length > 0"/>
     <div class="flex flex-row">
-      <div class="option h-24 w-24 ml-4" @click="()=>{this.menuVisible=false;item.fn()}" v-for="item in menuList">
+      <div class="w-24 h-24 ml-4 option" @click="()=>{this.menuVisible=false;item.fn()}" v-for="item in menuList">
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
       <slot name="menuExtra"></slot>
-      <div class="option h-24 w-24 ml-4" @click="doRemoveCard">
+      <div class="w-24 h-24 ml-4 option" @click="doRemoveCard">
         <Icon class="icon" icon="guanbi2"></Icon>
         删除
       </div>
-      <!--      <div class="option h-24 w-24 ml-4" @click="onCopy"-->
+      <!--      <div class="w-24 h-24 ml-4 option" @click="onCopy"-->
       <!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
       <!--        <Icon class="icon" icon="fuzhi"></Icon>-->
       <!--        复制数据-->

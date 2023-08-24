@@ -5,7 +5,7 @@
   <div class="CardItem" >
     
     <div class="left">
-      <div class="title" @click="goNews">
+      <div class="title" @click="goNews" :style="{width:showImg==false?'260px':''}">
         {{ NewsMsgList.NewsMsgList.title }}
       </div>
       <div class="bottom">
@@ -18,7 +18,7 @@
       </div>
   
     </div>
-    <div class="right" :style="{backgroundImage:img?`url(${img})`:''}">
+    <div class="right" :style="{backgroundImage:img?`url(${img})`:''}" v-if="showImg">
       <!-- <img :src="img" alt="" class="image"> -->
     </div>
   
@@ -29,6 +29,7 @@
   import {ref,reactive,computed} from 'vue'
   import {useRouter} from 'vue-router'
   const router=useRouter()
+  let showImg=ref(true)
   const NewsMsgList = defineProps({
     NewsMsgList:{
       type:Array,
@@ -51,7 +52,7 @@
     if(NewsMsgList.NewsMsgList.thumbnail_pic_s){
       return NewsMsgList.NewsMsgList.thumbnail_pic_s
     }else{
-      return ''
+      return showImg.value=false
     }
   })
   
@@ -77,15 +78,18 @@
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
         overflow: hidden;
         // overflow-wrap: break-word;
         font-family: PingFangSC-Regular;
         font-size: 14px;
         color: rgba(255,255,255,0.85);
         font-weight: 400;
+        text-align: left;
         
         
       }
+      
       .bottom{
         width: 100%;
         height: 17px;
