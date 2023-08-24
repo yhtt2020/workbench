@@ -31,9 +31,9 @@ const groupName =  defineComponent({
     }
     
     await server.tim.updateGroupProfile(option)
-     
+  
     ctx.emit('close')
-    
+    ctx.emit('updateGroupInfo')
   }
 
   return{

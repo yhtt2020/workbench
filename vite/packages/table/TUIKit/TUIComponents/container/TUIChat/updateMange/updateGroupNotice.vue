@@ -33,7 +33,7 @@ export default defineComponent({
 
     await server.updateGroupProfile(option)
     ctx.emit('close')
-    
+    ctx.emit('updateGroupInfo')
   }
 
   const handleInput = (evt: any) =>{  // 监听文本输入框数据变化

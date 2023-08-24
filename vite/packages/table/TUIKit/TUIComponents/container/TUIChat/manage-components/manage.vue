@@ -30,17 +30,19 @@
         </div>
       </div>
       <div class="flex items-center">
-        <div v-for="item in memberList" class="flex flex-col items-center justify-center" style="margin-right:16px;">
+        <div v-for="item in memberList.slice(0,6) " class="flex flex-col items-center justify-center" style="margin-right:16px;">
+          <!-- conversation?.selfInfo?.role !== 'Member' ?: memberList.slice(0,8) -->
           <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
-          <div class="font-12">{{ item.nick }}</div>
+          <div class="font-12 truncate" style="max-width:48px;color: var(-primary-text);">{{ item.nick }}</div>
         </div>
 
-        <div class="flex" v-if="conversation?.selfInfo?.role !== 'Member'">
-          <div v-if="conversation.type === 'Work'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addGroupMember('addMember')">
+        <div class="flex" >
+          <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addGroupMember('addMember')">
            <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
         
-          <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
+          <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>
         </div>
@@ -132,23 +134,14 @@ import ChangeModal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
 
 const manage = defineComponent({
-  props:{
-    conversation: {
-      type: Object,
-      default: () => ({}),
-    },
-    memberList:{
-      type: Array,
-      default: () => ([]),
-    }
-  },
+  props:['manageData','conversation','memberList'],
 
   components:{ ChangeModal,UserSelect },
 
   setup(props,ctx){
-    const types = manage.TUIServer.TUICore.TIM.TYPES;
+    const types = window.$TUIKit.TIM.TYPES
     const { GroupServer } = manage;
-    const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
+    const { t } = window.$TUIKit.config.i18n.useI18n();
     
     const data = reactive({
       typeName: {
@@ -253,10 +246,24 @@ const manage = defineComponent({
     }
 
     const dismiss = async () =>{  // 解散群聊 
-      await GroupServer.dismissGroup(props.conversation.groupID);
-      manage.TUIServer.store.conversation = {};
-      (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
-      ctx.emit('close')
+      Modal.confirm({
+        content:'是否确认操作',
+        okText:'确认',
+        cancelText:'取消',
+        onOk () {
+          dismissGroup()
+          ctx.emit('close')
+        }
+      })
+      
+    }
+
+    const dismissGroup = async () =>{
+      const res =  await window.$chat.dismissGroup(props.conversation.groupID)
+      const result =  await window.$chat.deleteConversation(props.manageData.conversationID)
+      if(res.code === 0 && result.code === 0){
+        message.success(`${props.conversation.name}已被解散`)
+      }
     }
 
     const changeOwner = (type) =>{  // 转让群聊
@@ -303,7 +310,7 @@ const manage = defineComponent({
       ...toRefs(data),handleGroupIDCopy,close,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
-      dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,
+      dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,dismissGroup,
     }
   }
 
