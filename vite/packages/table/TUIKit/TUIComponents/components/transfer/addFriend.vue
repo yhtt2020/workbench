@@ -109,10 +109,10 @@ import { appStore } from '../../../../store'
 import _ from 'lodash-es'
 
 export default defineComponent({
-  props:['server'],
 
   setup(props,ctx){
-    const TUIServer = props.server.TUICore
+    const server = window.$TUIKit
+   
     const store = appStore()
 
     const data = reactive({
@@ -122,7 +122,7 @@ export default defineComponent({
       simpleImage:'/img/state/null.png', // 空状态图片
       groupName:'', // 接收群名称
 
-      public:{ type: TUIServer.TIM.TYPES.GRP_PUBLIC }, // 获取默认的群组类型
+      public:{ type: server.TIM.TYPES.GRP_PUBLIC }, // 获取默认的群组类型
       settingsScroller: {  // 滚动条配置 
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -135,7 +135,7 @@ export default defineComponent({
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Public.svg',
           label: '陌生人社交群（Public）',
           text:'陌生人社交群',
-          type: TUIServer.TIM.TYPES.GRP_PUBLIC,
+          type: server.TIM.TYPES.GRP_PUBLIC,
           detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。',
           src: '产品文档',
         },
@@ -143,7 +143,7 @@ export default defineComponent({
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Meeting.svg',
           label: '临时会议群（Meeting）',
           text:'临时会议群',
-          type: TUIServer.TIM.TYPES.GRP_MEETING,
+          type: server.TIM.TYPES.GRP_MEETING,
           detail: '创建后可以随意进出，且支持查看入群前消息；适合用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。',
           src: '产品文档',
         },
@@ -151,7 +151,7 @@ export default defineComponent({
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Work.svg',
           label: '好友工作群（Work）',
           text:'好友工作群',
-          type: TUIServer.TIM.TYPES.GRP_WORK,
+          type: server.TIM.TYPES.GRP_WORK,
           detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主审批。',
           src: '产品文档',
         }
@@ -159,7 +159,7 @@ export default defineComponent({
     })
 
     const getFriendList = async () =>{  // 获取好友列表数据
-      const res  = await TUIServer.tim.getFriendList()
+      const res  = await server.tim.getFriendList()
       const list = [];
       for(let i =0; i<res.data.length;i++){
         if(parseInt(res.data[i].userID) !== store.$state.userInfo.uid){
@@ -182,7 +182,6 @@ export default defineComponent({
     const enterNextStep = () =>{  // 进入下一步
       if(data.selectList.length !== 0 ){
         data.isNextShow = true
-
       }
     }
 
@@ -220,7 +219,7 @@ export default defineComponent({
       }
 
       
-      await TUIServer.tim.createGroup(option)
+      await server.tim.createGroup(option)
       ctx.emit('close')
     }
 

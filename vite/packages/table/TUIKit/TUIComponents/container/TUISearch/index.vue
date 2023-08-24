@@ -20,7 +20,7 @@
   <teleport to='body'>
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
       <CreateGroup v-if="addIndex === 1" @submit="create" @close="close" @cancel="toggleOpen" :isH5="env.isH5" />
-      <AddFriend v-if="addIndex === 0" @close="close" :server="TUIServer"></AddFriend>
+      <AddFriend v-if="addIndex === 0" @close="close"></AddFriend>
       <Transfer :server="TUIServer" :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
     </Modal>
   </teleport>
