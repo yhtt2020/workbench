@@ -132,23 +132,14 @@ import ChangeModal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
 
 const manage = defineComponent({
-  props:{
-    conversation: {
-      type: Object,
-      default: () => ({}),
-    },
-    memberList:{
-      type: Array,
-      default: () => ([]),
-    }
-  },
+  props:['manageData','conversation','memberList'],
 
   components:{ ChangeModal,UserSelect },
 
   setup(props,ctx){
-    const types = manage.TUIServer.TUICore.TIM.TYPES;
+    const types = window.$TUIKit.TIM.TYPES
     const { GroupServer } = manage;
-    const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
+    const { t } = window.$TUIKit.config.i18n.useI18n();
     
     const data = reactive({
       typeName: {
@@ -253,16 +244,39 @@ const manage = defineComponent({
     }
 
     const dismiss = async () =>{  // 解散群聊 
-      await GroupServer.dismissGroup(props.conversation.groupID);
-      manage.TUIServer.store.conversation = {};
-      (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
-      ctx.emit('close')
+      Modal.confirm({
+        content:'是否确认操作',
+        okText:'确认',
+        cancelText:'取消',
+        onOk () {
+          dismissGroup()
+          ctx.emit('close')
+        }
+      })
+      
+    }
+
+    const dismissGroup = async () =>{
+      const res =  await window.$chat.dismissGroup(props.conversation.groupID)
+      const result =  await window.$chat.deleteConversation(props.manageData.conversationID)
+      if(res.code === 0 && result.code === 0){
+        message.success(`${props.conversation.name}已被解散`)
+      }
     }
 
     const changeOwner = (type) =>{  // 转让群聊
       if(props.memberList.length > 1){
-        data.isChangeOwner = true
-        data.type = type
+        Modal.confirm({
+         content:'是否确认操作',
+         okText:'确认',
+         cancelText:'取消',
+         onOk () {
+          setTimeout(()=>{
+            data.isChangeOwner = true
+            data.type = type
+          },200)
+         }
+        })
       }else{
         data.isChangeOwner =  false
       }
@@ -303,7 +317,7 @@ const manage = defineComponent({
       ...toRefs(data),handleGroupIDCopy,close,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
-      dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,
+      dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,dismissGroup,
     }
   }
 

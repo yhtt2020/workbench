@@ -105,6 +105,7 @@
 
 <script>
 import { defineComponent,ref,reactive,toRefs, onMounted, computed } from 'vue'
+import { message } from 'ant-design-vue';
 import { appStore } from '../../../../store'
 import _ from 'lodash-es'
 
@@ -217,9 +218,10 @@ export default defineComponent({
         name:data.groupName,
         avatar:groupTypeData.value.icon,
       }
-
-      
-      await server.tim.createGroup(option)
+      const res =  await server.tim.createGroup(option)
+      if(res.code === 0){
+        message.success(`${res.data.group.name}创建成功`)
+      }
       ctx.emit('close')
     }
 
