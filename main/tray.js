@@ -21,7 +21,6 @@ async function getUserInfo () {
     console.error(e)
   }
   let rs = await baseApi.axios('/app/getUserInfo', { fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar' }, 'get')
-  console.log('请求用户信息', rs)
   return rs
 }
 
