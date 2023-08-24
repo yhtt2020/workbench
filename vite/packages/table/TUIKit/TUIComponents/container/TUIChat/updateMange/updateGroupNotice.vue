@@ -1,7 +1,7 @@
 <template>
  <div class="flex flex-col">
   <div class="textarea-container">
-   <a-textarea v-model:value="noticeValue" placeholder="暂无群公告" :disabled="notice.role !== 'Owner' && notice.role !== 'Admin'" :rows="8" :maxlength="maxLength" @input="handleInput" style="color: var(--primary-text);border-radius: 12px;"></a-textarea>
+   <a-textarea v-model:value="noticeValue" :spellcheck="false" placeholder="暂无群公告" :disabled="notice.role !== 'Owner' && notice.role !== 'Admin'" :rows="8" :maxlength="maxLength" @input="handleInput" style="color: var(--primary-text);border-radius: 12px;"></a-textarea>
    <span class="char-count">{{ currentLength }} / {{ maxLength }}</span>
   </div>
   <a-button type="primary" v-if="notice.role !== 'Member' " @click="saveGroupNotice" style="width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</a-button> 

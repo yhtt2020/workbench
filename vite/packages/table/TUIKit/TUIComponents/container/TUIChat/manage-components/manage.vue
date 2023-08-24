@@ -58,7 +58,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群ID</span>
         <div class="flex">
-          <span  class="font-14" style="color: var(--primary-text);">{{ conversation.groupID }}</span>
+          <span  class="font-14" style="color: var(--secondary-text);">{{ conversation.groupID }}</span>
           <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
         </div>
       </div>
@@ -72,9 +72,16 @@
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
-        <span class="font-14" style="color: var(--secondary-text);">
-          {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
-        </span>
+        <div class="flex">
+          <span class="font-14" style="color: var(--secondary-text);">
+            {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+          </span>
+          <template v-if="conversation.type !== 'AVChatRoom' && conversation.type !== 'ChatRoom'">
+            <div v-if="conversation?.selfInfo?.role === 'Owner'" class="flex items-center" style="margin-left: 12px;" @click="updateGroupJoinWay">
+              <Icon icon="xiangyou"></Icon>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
      
@@ -282,13 +289,21 @@ const manage = defineComponent({
       data.friendList = list
     }
 
+    const updateGroupJoinWay = () =>{  // 修改加群方式
+      ctx.emit('updateName',{title:'修改加群方式',id:5,info:{
+        groupID:props.conversation.groupID,
+        conversation:props.conversation,
+        title:`${data.typeName[props.conversation.joinOption]}`
+      }})
+    }
+
     onMounted(getFriendLists)
 
     return{
       ...toRefs(data),handleGroupIDCopy,close,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
-      dismiss,addGroupMember,getFriendLists,
+      dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,
     }
   }
 

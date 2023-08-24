@@ -10,7 +10,7 @@
     </div>
 
     <div style="margin: 24px 0;" >
-      <a-input placeholder="输入群ID搜索" v-model:value="searchId" class="h-12" style="border-radius: 12px;"
+      <a-input placeholder="输入群ID搜索" :spellcheck="false" v-model:value="searchId" class="h-12" style="border-radius: 12px;"
         @keyup.enter="searchGroup" 
       >
         <template #suffix>
