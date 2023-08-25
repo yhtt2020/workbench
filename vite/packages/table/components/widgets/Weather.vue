@@ -1,6 +1,6 @@
 <template>
   <Widget :options="options" ref="weatherSlot" :customIndex="customIndex" :customData="customData" :desk="desk">
-    <div v-if="defaultCity" class="bg-mask rounded-xl px-3 py-1  pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
+    <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
     </div>
     <div @click="enterWeather">
