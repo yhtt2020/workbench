@@ -34,7 +34,7 @@ export default {
   async mounted() {
     // let res = await getTopic();
     // this.topicList = res;
-    // this.initList();
+    this.initList();
   },
   watch: {
     topicList: {
@@ -49,6 +49,23 @@ export default {
       this.topList = [];
       this.todayList = [];
       this.previousList = [];
+      for (let key in this.topicList) {
+        // if (key == this.selectTopicIndex) {
+        //   delete this.topicList[this.selectTopicIndex];
+        //   this.selectTopicIndex = -1;
+        // }
+        console.log("this. :>> ", this.topicList[key]);
+        let item = this.topicList[key];
+        if (item.top) {
+          this.topList.push(item);
+        } else if (this.isToday(item.time)) {
+          this.todayList.push(item);
+        } else {
+          this.previousList.push(item);
+        }
+      }
+      return;
+
       this.topicList.forEach((item) => {
         if (item.top) {
           this.topList.push(item);

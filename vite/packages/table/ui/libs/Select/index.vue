@@ -2,7 +2,7 @@
   <a-select
     style="z-index: 99999999; position: relative"
     v-model:value="data"
-    class="no-drag w-full "
+    class="no-drag w-full rounded-xl"
     size="large"
     @change="handleChange"
     :dropdownStyle="{
@@ -44,9 +44,7 @@ watch(
   () => props.modelValue,
   (newV) => {
     // data = newV;
-    console.log("newV :>> ", newV);
     data = newV;
-    console.log("data :>> ", data);
   }
 );
 </script>

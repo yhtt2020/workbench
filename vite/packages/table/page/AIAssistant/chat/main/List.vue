@@ -40,7 +40,6 @@
 </template>
 <script>
 import GPT from "./GPT.vue";
-import { message } from "ant-design-vue";
 export default {
   components: {
     GPT,

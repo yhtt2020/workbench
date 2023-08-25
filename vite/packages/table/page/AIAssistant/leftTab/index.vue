@@ -1,8 +1,6 @@
 <template>
   <xt-left-menu :list="menuList" last="1"  end="2"></xt-left-menu>
-
   <!-- 新建对话 -->
-
   <XtView
     v-model="createChatVisible"
     type="popup"

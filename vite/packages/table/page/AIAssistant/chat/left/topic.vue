@@ -36,11 +36,13 @@ export default {
     handleTop() {
       this.$emit("top");
       let id = this.data.id;
-      this.topicList.filter((item) => {
+      for (let key in this.topicList) {
+        let item = this.topicList[key];
+
         if (item.id == id) {
           item.top = !item.top;
         }
-      });
+      }
     },
     handleDel() {
       this.delTopic();
