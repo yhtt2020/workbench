@@ -207,8 +207,6 @@ export function handleTipMessageShowContext(message: any) {
 }
 
 function handleTipGrpUpdated(message: any) {
-  console.log('进入了吗',message);
-  
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   const { payload } = message;
   const { newGroupProfile } = payload;

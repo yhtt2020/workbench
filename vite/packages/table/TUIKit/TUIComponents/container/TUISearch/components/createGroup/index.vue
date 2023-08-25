@@ -24,21 +24,23 @@
     </div>
 
     <template v-else>
-      <div class="flex justify-between items-center" v-for="item in searchResult" style="margin-bottom: 8px;">
-        <div class="flex">
-          <a-avatar shape="square" :size="48" :src="item.avatar"></a-avatar>
-          <div class="flex flex-col" style="margin-left:16px;">
-            <span style="color: var(--primary-text);">{{ item.name }}</span>
-            <span style="color: var(--primary-text);">{{ item.maxMemberCount === '' ? 1 : item.maxMemberCount }}人</span>
+      <vue-custom-scrollbar :settings="settingsScroller" style="height:100%; margin-bottom: 16px;">
+        <div class="flex justify-between items-center" v-for="item in searchResult" style="margin-bottom: 8px;">
+          <div class="flex">
+            <a-avatar shape="square" :size="48" :src="item.avatar"></a-avatar>
+            <div class="flex flex-col" style="margin-left:16px;">
+              <span style="color: var(--primary-text);">{{ item.name }}</span>
+              <span style="color: var(--primary-text);">{{ item.maxMemberCount === '' ? 1 : item.maxMemberCount }}人</span>
+            </div>
+          </div>
+          <div class="flex items-center rounded-lg pointer  justify-center active-button" 
+           style="padding: 9px 18px; color: var(--active-text);background: var(--active-bg);"
+           @click="joinGroup(item)"
+          >
+           加入
           </div>
         </div>
-        <div class="flex items-center rounded-lg pointer  justify-center active-button" 
-         style="padding: 9px 18px; color: var(--active-text);background: var(--active-bg);"
-         @click="joinGroup(item)"
-        >
-         加入
-        </div>
-      </div>
+      </vue-custom-scrollbar>
     </template>
 
   </div>
@@ -141,7 +143,7 @@
 
 </template>
 <script >
-import { computed, defineComponent, reactive, toRefs } from 'vue';
+import { computed, defineComponent, reactive, toRefs,watch } from 'vue';
 // import Link from '../../../../../utils/link';
 import { SearchOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
@@ -170,6 +172,13 @@ const TUISearch = defineComponent({
       env: TUIServer.TUICore.TUIEnv,
       searchResult:[],
       simpleImage:'/img/state/null.png',
+      settingsScroller: {  // 滚动条配置 
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
     })
     
     const closeJoinGroup = () =>{  // 关闭加入群聊弹窗  
@@ -178,7 +187,11 @@ const TUISearch = defineComponent({
 
     const searchGroup =  async () =>{  // 根据群组id进行群组搜索 
       const res =  await TUIServer.searchGroupByID(data.searchId);
-      data.searchResult.push(res.data.group)
+      if(data.searchResult.some(item => item.groupID === res.data.group.groupID)){
+        return
+      }else{
+        data.searchResult.push(res.data.group)
+      }
       
     }
 
@@ -193,7 +206,12 @@ const TUISearch = defineComponent({
       ctx.emit('close')
     }
 
-
+    watch(()=>data.searchId,(newVal)=>{
+      if(newVal === ''){
+        data.searchResult = []
+      }
+    })
+   
     return{
       closeJoinGroup,...toRefs(data),searchGroup,joinGroup,
     }
