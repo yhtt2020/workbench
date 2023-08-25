@@ -13,7 +13,7 @@
               h="16"
               w="60"
               size="mini"
-              @click="copy(item.content)"
+              :copy="item.content"
               class="xt-text-2"
               >复制
             </xt-button>
@@ -21,7 +21,7 @@
         </div>
       </div>
       <div v-else>
-        <div class="inline-block text-base  xt-bg-2 rounded-xl mr-10">
+        <div class="inline-block text-base xt-bg-2 rounded-xl mr-10">
           <GPT :content="item.content"></GPT>
         </div>
         <xt-button
@@ -30,7 +30,7 @@
           h="16"
           w="60"
           size="mini"
-          @click="copy(item.content)"
+          :copy="item.content"
           class="xt-text-2 my-1"
           >复制
         </xt-button>
@@ -45,38 +45,13 @@ export default {
   components: {
     GPT,
   },
-  methods: {
-    copyToClipboard(text) {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
 
-      // 将 textarea 元素添加到 DOM 树中，以便可以执行复制操作
-      document.body.appendChild(textarea);
-
-      // 选择文本并执行复制操作
-      textarea.select();
-      const copySuccessful = document.execCommand("copy");
-
-      // 清理创建的 textarea 元素
-      document.body.removeChild(textarea);
-      return copySuccessful;
-    },
-    copy(str) {
-      if (this.copyToClipboard(str)) {
-        message.success("已成功复制到剪切板");
-      } else {
-        message.error("复制到剪切板失败");
-      }
-    },
-  },
   props: {
     chatList: {
       type: Array,
     },
   },
-  watch:{
-
-  }
+  watch: {},
 };
 </script>
 

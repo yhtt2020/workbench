@@ -3,6 +3,7 @@
     class="xt-active xt-base-btn"
     :style="[customStyle]"
     :class="[typeClass]"
+    @click="copyToClipboard()"
   >
     <template v-if="iconPosition == 'prefix'">
       <XtBaseIcon
@@ -27,15 +28,11 @@
 </template>
 
 <script>
-import { message } from "ant-design-vue";
-
+import { copyMixins } from "../../common/copyMixins";
 export default {
   name: "XtButton",
+  mixins: [copyMixins],
   props: {
-    copy: {
-      type: String,
-      default: "",
-    },
     // 有prefix  postfix
     iconPosition: {
       default: "prefix",
@@ -108,17 +105,6 @@ export default {
         success: "xt-success-btn",
       };
       return typeLIst[this.type];
-    },
-  },
-  methods: {
-    copyToClipboard() {
-      if (!this.copy) return;
-      navigator.clipboard
-        .writeText(this.copy)
-        .then(() => {
-          message.success("已成功复制到剪切板");
-        })
-        .catch((err) => {});
     },
   },
 };
