@@ -2,7 +2,7 @@
   <a-select
     style="z-index: 99999999; position: relative"
     v-model:value="data"
-    class="no-drag w-full"
+    class="no-drag w-full rounded-xl"
     size="large"
     @change="handleChange"
     :dropdownStyle="{
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 const props = defineProps({
   modelValue: {
     default: "默认排序",
@@ -32,11 +32,21 @@ const props = defineProps({
     },
   },
 });
-const data = reactive(props.list[0].value);
+
+let data = reactive(props.modelValue);
 const emits = defineEmits(["update:modelValue"]);
+
 const handleChange = (value) => {
   emits("update:modelValue", value);
 };
+
+watch(
+  () => props.modelValue,
+  (newV) => {
+    // data = newV;
+    data = newV;
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>

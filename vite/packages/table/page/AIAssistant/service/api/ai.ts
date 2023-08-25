@@ -1,3 +1,4 @@
+import axios from "axios";
 import request from "..";
 import { aiStore } from "../../../../store/ai";
 
@@ -10,21 +11,33 @@ export async function* gpt(messages) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${ai.key}`,
     },
+
     body: JSON.stringify({
-      model: "gpt-3.5-turbo",
+      model: ai.gpt,
       stream: true,
       messages,
+      temperature: parseFloat(ai.temperature),
     }),
   });
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
 
   const reader = response!.body!.getReader();
   let decoder = new TextDecoder();
+
+  if (!response.ok) {
+    const { done, value } = await reader.read();
+    console.log("done :>> ", done);
+    console.log("value :>> ", decoder.decode(value));
+    yield {
+      value: JSON.parse(decoder.decode(value)),
+    };
+    return;
+    // throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
   let resultData = "";
 
   while (true) {
+    console.log("1111 :>> ", 1111);
     const { done, value } = await reader.read();
     if (done) break;
     resultData += decoder.decode(value);
@@ -34,6 +47,7 @@ export async function* gpt(messages) {
       resultData = resultData.slice(messageIndex + 1);
       if (message.startsWith("data: ")) {
         const jsonMessage = JSON.parse(message.substring(5));
+        console.log("jsonMessage :>> ", jsonMessage);
         if (resultData.includes("[DONE]")) {
           break;
         }
@@ -50,9 +64,22 @@ export async function* gpt(messages) {
 
 // 获取余额
 export const balance = () => {
-  return request.get<any>({
-    url: "/dashboard/billing/credit_grants",
+  // return request.get<any>({
+  //   url: "/dashboard/billing/credit_grants",
+  // });
+  console.log("111 :>> ", 111);
+  const ai: any = aiStore();
+  const service = axios.create({
+    // baseURL: "https://wad.apps.vip/api", //请求的地址
+    baseURL: "https://api.openai-proxy.live", //请求的地址
+    timeout: 5000, //访问超时的时间
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${ai.key}`,
+    },
   });
+
+  return service.get("/dashboard/billing/credit_grants");
 };
 
 export function test(data?: any) {

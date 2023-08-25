@@ -1,7 +1,7 @@
 <template>
   <div class="h-full w-full flex flex-col">
     <div
-      class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar"
+      class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar mt-3"
       ref="contentRef"
       @scroll="handleScroll"
     >
@@ -32,11 +32,11 @@ const props = defineProps({
 watch(
   () => props.data,
   () => {
-    nextTick(() => {
-      if (shouldScrollToBottom.value) {
-        toBottom();
-      }
-    });
+    // nextTick(() => {
+    //   if (shouldScrollToBottom.value) {
+    //     toBottom();
+    //   }
+    // });
   },
   { deep: true }
 );

@@ -14,7 +14,6 @@ export default {
     Chat: defineAsyncComponent(() => import("../chat/index.vue")),
     // Model: defineAsyncComponent(() => import("../model/index.vue")),
     Mode: defineAsyncComponent(() => import("../mode/index.vue")),
-    Account: defineAsyncComponent(() => import("../account/index.vue")),
   },
 };
 </script>

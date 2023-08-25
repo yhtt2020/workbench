@@ -1,8 +1,9 @@
 <template>
   <div
-    class="xt-active flex items-center justify-center"
+    class="xt-active xt-base-btn"
     :style="[customStyle]"
     :class="[typeClass]"
+    @click="copyToClipboard()"
   >
     <template v-if="iconPosition == 'prefix'">
       <XtBaseIcon
@@ -27,8 +28,10 @@
 </template>
 
 <script>
+import { copyMixins } from "../../common/copyMixins";
 export default {
   name: "XtButton",
+  mixins: [copyMixins],
   props: {
     // 有prefix  postfix
     iconPosition: {

@@ -1,8 +1,6 @@
 <template>
-  <xt-left-menu  :list="menuList" end="2"></xt-left-menu>
-
+  <xt-left-menu :list="menuList" last="1"  end="2"></xt-left-menu>
   <!-- 新建对话 -->
-
   <XtView
     v-model="createChatVisible"
     type="popup"
@@ -13,6 +11,9 @@
   </XtView>
   <!-- 系统设置 -->
   <xt-drawer title="12" v-model="setVisible" placement="right">
+    <template #title>
+      <div>设置</div>
+    </template>
     <Edit></Edit>
   </xt-drawer>
 </template>

@@ -12,21 +12,10 @@
 </template>
 
 <script>
-import { message } from "ant-design-vue";
+import { copyMixins } from "../../common/copyMixins";
 export default {
   name: "XtIcon",
-
-  methods: {
-    copyToClipboard() {
-      if (!this.copy) return;
-      navigator.clipboard
-        .writeText(this.copy)
-        .then(() => {
-          message.success("已成功复制到剪切板");
-        })
-        .catch((err) => {});
-    },
-  },
+  mixins: [copyMixins],
   computed: {
     // 自定义宽高
     customStyle() {
@@ -52,10 +41,6 @@ export default {
     },
   },
   props: {
-    copy: {
-      type: String,
-      default: "",
-    },
     type: {
       type: String,
       default: "default",

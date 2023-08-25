@@ -24,10 +24,10 @@ export default {
       "chatObj",
       "url",
       "key",
+      "count",
     ]),
     currentList() {
       if (this.selectTopicIndex == -1) return [];
-
       return this.topicList[this.selectTopicIndex].chat;
     },
   },
@@ -41,6 +41,7 @@ export default {
       markdown: "",
       chatList: [],
       isSearch: true,
+      flag: false,
     };
   },
   methods: {
@@ -56,7 +57,6 @@ export default {
       this.markdown = res;
     },
     async onSearch(serach) {
-      console.log("serach :>> ", serach);
       if (this.check()) return;
       if (this.selectTopicIndex == -1) {
         let obj = {
@@ -83,29 +83,31 @@ export default {
 
       let arr = [];
 
-      this.topicList[this.selectTopicIndex].chat.slice(-2).forEach((item) => {
-        arr.push({
-          role: item.role,
-          content: item.content,
+      this.topicList[this.selectTopicIndex].chat
+        .slice(-1 * this.count)
+        .forEach((item) => {
+          arr.push({
+            role: item.role,
+            content: item.content,
+          });
         });
-      });
       console.log("arr :>> ", arr);
-      // [
-      //   {
-      //     role: "user",
-      //     content: serach,
-      //   },
-      // ]yb
 
       // 获取聊天机器人的回复
       for await (const result of gpt(arr)) {
+        if (result.value) {
+          message.error(result.value.error.message);
+          return;
+        }
+        if (this.flag) {
+          break; // 终止循环
+        }
         // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
         const index = this.topicList[this.selectTopicIndex].chat.findIndex(
           (item) => item.id === result.id
         );
 
         if (index !== -1) {
-         
           this.topicList[this.selectTopicIndex].chat[
             this.topicList[this.selectTopicIndex].chat.length - 1
           ].content += result.content;

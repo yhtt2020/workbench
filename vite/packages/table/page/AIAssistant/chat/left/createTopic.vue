@@ -14,7 +14,11 @@ import { mapWritableState } from "pinia";
 import { aiStore } from "../../../../store/ai";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["defaultData", "topicList"]),
+    ...mapWritableState(aiStore, [
+      "defaultData",
+      "topicList",
+      "selectTopicIndex",
+    ]),
   },
   components: {
     Dialog,
@@ -35,7 +39,7 @@ export default {
       obj.time = Date.now();
       obj.name = this.name;
       obj.icon = { ...this.icon };
-      console.log('obj :>> ', obj);
+      this.selectTopicIndex = obj.id;
       this.topicList[obj.id] = obj;
       this.close();
     },
