@@ -911,7 +911,21 @@ const TUIChat: any = defineComponent({
       data.newManagerList = res.data.group
       
       const result = await GroupServer.getGroupMemberList(options)
-      data.memberList = result.data.memberList
+      // 将群组成员进行排序,将群主和管理员放在最前面
+      const list = result.data.memberList.sort((a: any,b: any)=>{ 
+        if (a.role === 'Owner' && b.role !== 'Owner') {
+         return -1; // a 排在 b 前面
+        } else if (b.role === 'Owner' && a.role !== 'Owner') {
+         return 1; // b 排在 a 前面
+        } else if (a.role === 'Admin' && b.role !== 'Admin') {
+         return -1; // a 排在 b 前面
+        } else if (b.role === 'Admin' && a.role !== 'Admin') {
+         return 1; // b 排在 a 前面
+        } else {
+         return 0; // 保持原有顺序
+        }
+      })
+      data.memberList = list
     }
 
 
