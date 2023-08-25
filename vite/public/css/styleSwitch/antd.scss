@@ -42,7 +42,7 @@
 }
 
 .ant-message {
-  z-index: 9999999999999999999999;
+  z-index: 9999999999999999999999 !important;
 }
 .ant-modal-body {
   background: var(--modal-bg);

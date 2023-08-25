@@ -21,7 +21,7 @@
         </div>
       </div>
       <div v-else>
-        <div class="inline-block text-base mb-2 xt-bg-2 rounded-xl mr-10">
+        <div class="inline-block text-base  xt-bg-2 rounded-xl mr-10">
           <GPT :content="item.content"></GPT>
         </div>
         <xt-button
@@ -31,7 +31,7 @@
           w="60"
           size="mini"
           @click="copy(item.content)"
-          class="xt-text-2"
+          class="xt-text-2 my-1"
           >复制
         </xt-button>
       </div>
@@ -40,6 +40,7 @@
 </template>
 <script>
 import GPT from "./GPT.vue";
+import { message } from "ant-design-vue";
 export default {
   components: {
     GPT,
@@ -58,14 +59,13 @@ export default {
 
       // 清理创建的 textarea 元素
       document.body.removeChild(textarea);
-
       return copySuccessful;
     },
     copy(str) {
       if (this.copyToClipboard(str)) {
-        console.log("已成功复制到剪切板");
+        message.success("已成功复制到剪切板");
       } else {
-        console.error("复制到剪切板失败");
+        message.error("复制到剪切板失败");
       }
     },
   },
@@ -74,6 +74,9 @@ export default {
       type: Array,
     },
   },
+  watch:{
+
+  }
 };
 </script>
 

@@ -15,7 +15,6 @@
 import { message } from "ant-design-vue";
 export default {
   name: "XtIcon",
-
   methods: {
     copyToClipboard() {
       if (!this.copy) return;

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center mr-3">
     <div class="flex items-center">
       <!-- 搜索 和 创建 -->
       <!-- <a-input
@@ -18,7 +18,7 @@
         </template>
       </a-input> -->
 
-      <div class="text-base">AI助手</div>
+      <div class="text-base">{{ selectTitle }}</div>
     </div>
 
     <div class="flex">
@@ -56,14 +56,14 @@
         </template>
       </XtTitle>
     </template>
-    <Edit :data="topicList[selectTopicIndex]" ref="editRef"></Edit>
+    <Edit :data="topicList[selectTopicIndex]" ref="editRef" @del="del"></Edit>
   </XtDrawer>
 </template>
 
 <script>
 import { defineAsyncComponent } from "vue";
 import _ from "lodash-es";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
 import { message } from "ant-design-vue";
 export default {
@@ -72,13 +72,13 @@ export default {
       "serachTopic",
       "selectTopicIndex",
       "topicList",
+      "selectTitle",
     ]),
     getSelectTopic() {
       return this.topicList.find((item) => item.id === this.selectTopicIndex);
     },
   },
   components: {
-    Store: defineAsyncComponent(() => import("../../account/Store.vue")),
     Edit: defineAsyncComponent(() => import("./edit.vue")),
   },
   data() {
@@ -90,6 +90,12 @@ export default {
     };
   },
   methods: {
+    ...mapActions(aiStore, ["delTopic"]),
+    del() {
+      this.settingVisible = false;
+      this.delTopic();
+      message.success("删除成功");
+    },
     openEdit() {
       if (this.topicList[this.selectTopicIndex] !== undefined) {
         this.settingVisible = true;
@@ -102,7 +108,6 @@ export default {
     },
     saveEdit() {
       let editRef = this.$refs.editRef;
-
       this.topicList[this.selectTopicIndex] = _.cloneDeep(editRef.value);
       this.settingVisible = false;
     },

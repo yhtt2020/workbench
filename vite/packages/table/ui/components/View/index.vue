@@ -9,7 +9,7 @@
 
   <div
     class="xt-text flex"
-    :class="[typeStyle, currentType == 'popup' ? '' : 'h-full']"
+    :class="[typeStyle, boxClass, currentType == 'popup' ? '' : 'h-full']"
     style="z-index: 9999; box-sizing: border-box"
     v-if="modelValue"
   >
@@ -50,10 +50,7 @@
       <!-- 头部区域结束 -->
       <!-- 主体区域开始 -->
       <!-- flex-grow overflow-hidden overflow-y-auto -->
-      <div
-        class=" xt-scrollbar"
-        :class="setSpacing('mt')"
-      >
+      <div class="xt-scrollbar" :class="setSpacing('mt')">
         <!-- 主体插槽 -->
         <slot></slot>
       </div>
@@ -66,6 +63,7 @@
 export default {
   name: "XtFullScreen",
   props: {
+    boxClass: {},
     visible: {
       default: true,
     },

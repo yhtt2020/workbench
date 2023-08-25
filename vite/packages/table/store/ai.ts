@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const aiStore = defineStore("aiStore", {
   state: () => ({
+    gpt: "gpt-3.5-turbo",
     temperature: 1,
     count: 4,
     key: "",
@@ -38,7 +39,24 @@ export const aiStore = defineStore("aiStore", {
     todayList: [],
     previousList: [],
   }),
-  actions: {},
+  getters: {
+    selectTitle() {
+      if (this.selectTopicIndex == -1) {
+        return "未选择对话";
+      }
+      return this.topicList[this.selectTopicIndex].name;
+    },
+  },
+  actions: {
+    delTopic(id) {
+      for (let key in this.topicList) {
+        if (key == this.selectTopicIndex) {
+          delete this.topicList[this.selectTopicIndex];
+          this.selectTopicIndex = -1;
+        }
+      }
+    },
+  },
   persist: {
     enabled: true,
     strategies: [

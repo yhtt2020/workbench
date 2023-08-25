@@ -24,13 +24,15 @@
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
+
 export default {
   computed: {
     ...mapWritableState(aiStore, ["topicList", "selectTopicIndex"]),
   },
   methods: {
+    ...mapActions(aiStore, ["delTopic"]),
     handleTop() {
       this.$emit("top");
       let id = this.data.id;
@@ -41,14 +43,7 @@ export default {
       });
     },
     handleDel() {
-      let id = this.data.id;
-      for (let key in this.topicList) {
-        if (key == id) {
-          delete this.topicList[id];
-          this.selectTopicIndex = -1;
-        }
-      }
-      console.log("    this.selectTopicIndex  :>> ", this.selectTopicIndex);
+      this.delTopic();
     },
     handleIndex(id) {
       this.selectTopicIndex = id;
