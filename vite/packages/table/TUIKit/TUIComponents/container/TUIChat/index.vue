@@ -152,7 +152,7 @@
     </template>
 
     <template v-if="index === 2">
-      <UpdateGroupNotice :notice="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
+      <UpdateGroupNotice :noticeInfo="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
     </template>
     
     <template v-if="index === 3">
@@ -250,7 +250,7 @@ const TUIChat: any = defineComponent({
       updateVisible:false, // 群组名称编辑控制
       title:'',  // 不同群组模块的标题
       index:'',   // 不同群组模块的标记
-      
+      info:'', // 不同群组模块的公告
     }
   },
 
@@ -911,7 +911,21 @@ const TUIChat: any = defineComponent({
       data.newManagerList = res.data.group
       
       const result = await GroupServer.getGroupMemberList(options)
-      data.memberList = result.data.memberList
+      // 将群组成员进行排序,将群主和管理员放在最前面
+      const list = result.data.memberList.sort((a: any,b: any)=>{ 
+        if (a.role === 'Owner' && b.role !== 'Owner') {
+         return -1; // a 排在 b 前面
+        } else if (b.role === 'Owner' && a.role !== 'Owner') {
+         return 1; // b 排在 a 前面
+        } else if (a.role === 'Admin' && b.role !== 'Admin') {
+         return -1; // a 排在 b 前面
+        } else if (b.role === 'Admin' && a.role !== 'Admin') {
+         return 1; // b 排在 a 前面
+        } else {
+         return 0; // 保持原有顺序
+        }
+      })
+      data.memberList = list
     }
 
 

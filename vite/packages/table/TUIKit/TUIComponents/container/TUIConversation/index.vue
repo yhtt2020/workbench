@@ -76,7 +76,6 @@ const TUIConversation = defineComponent({
       () => data.currentConversationID,
       (newVal: any) => {
         ctx.emit('current', newVal);
-        console.log(data.conversationData.list,'当前会话列表')
       },
       {
         deep: true,

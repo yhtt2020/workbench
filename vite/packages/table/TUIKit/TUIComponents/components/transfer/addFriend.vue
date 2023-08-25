@@ -82,6 +82,8 @@
 
       <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
+      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
+
       <a-select style="width: 320px; border-radius: 12px; color: var(--secondary-text);"
        :bordered="false" :dropdownStyle="{boxShadow:'none !important',borderRadius:'12px',color:'var(--secondary-text)'}"
        :showArrow="true" v-model:value="public.type"  @change="getGroupType($event)"
@@ -122,7 +124,7 @@ export default defineComponent({
       isNextShow:false, // 是否进入下一步
       simpleImage:'/img/state/null.png', // 空状态图片
       groupName:'', // 接收群名称
-
+      groupID:'', // 接收群ID
       public:{ type: server.TIM.TYPES.GRP_PUBLIC }, // 获取默认的群组类型
       settingsScroller: {  // 滚动条配置 
         useBothWheelAxes: true,
@@ -214,6 +216,7 @@ export default defineComponent({
     const submit = async () => {  // 点击创建群聊
       const option = {
         type:data.public.type,
+        groupID:data.groupID,
         memberList:data.selectList,
         name:data.groupName,
         avatar:groupTypeData.value.icon,
