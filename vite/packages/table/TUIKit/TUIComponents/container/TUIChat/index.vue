@@ -152,7 +152,7 @@
     </template>
 
     <template v-if="index === 2">
-      <UpdateGroupNotice :notice="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
+      <UpdateGroupNotice :noticeInfo="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
     </template>
     
     <template v-if="index === 3">
@@ -250,7 +250,7 @@ const TUIChat: any = defineComponent({
       updateVisible:false, // 群组名称编辑控制
       title:'',  // 不同群组模块的标题
       index:'',   // 不同群组模块的标记
-      
+      info:'', // 不同群组模块的公告
     }
   },
 

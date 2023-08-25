@@ -203,15 +203,16 @@ const manage = defineComponent({
     }
 
     const enterGroupNotice = () =>{  // 进入群公告界面 
-      
+      const info = {
+        groupID:props.conversation.groupID,
+        notification:props.conversation.notification !== '' ? props.conversation.notification : '',
+        role:props.conversation.selfInfo.role
+      }
+
       ctx.emit('updateName',
        {
         title:'群公告',id:2,
-        info:{
-          groupID:props.conversation.groupID,
-          notification:props.conversation.notification,
-          role:props.conversation.selfInfo.role
-        }
+        info:info
        }
       )
 
