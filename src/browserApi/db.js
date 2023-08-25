@@ -2,6 +2,8 @@ const PouchDB = require('pouchdb')
 const path=require('path')
 const fs=require('fs-extra')
 const dbDir=path.join(window.globalArgs['user-data-dir'],'pdb')
+PouchDB.plugin(require('pouchdb-paginators'))
+PouchDB.plugin(require('pouchdb-find'))
 let pdb
 
 
@@ -18,6 +20,9 @@ const db = {
   },
   bulkDocs (docs) {
     return pdb.bulkDocs(docs)
+  },
+  find(options){
+    return pdb.find(options)
   },
   allDocs (key) {
     if(!key){
@@ -38,7 +43,7 @@ const db = {
   },
   allDocsQuery(options){
     return pdb.allDocs(options)
-  }
+  },
 }
 fs.ensureDir(dbDir).then((rs)=>{
   const name = window.globalArgs['name']
