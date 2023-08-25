@@ -1,15 +1,20 @@
 <template>
   <div>
-    
+
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
       ref="cardSlot" :customData="customData">
       <!-- {{aggList[this.currentIndex].tag }} -->
-      <!-- {{ NewsMsgList }} -->
+      <!-- {{ newsItemList.length }} -->
+      <!-- {{ MsgList }} -->
       <!-- {{ aggList.length }} -->
-      <template #left-title style="width: 24px; height: 24px">
-        <a-icon :icon="FileSearchOutlined"></a-icon>
+      <template #left-title>
+        <div class="icon"
+          style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
+          <FileSearchOutlined style="font-size: 20px;" />
+        </div>
+
       </template>
-      <div class="topBar">
+      <div class="top-bar">
         <!-- <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
           <span>
             <LeftOutlined />
@@ -17,8 +22,8 @@
         </div> -->
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
-            @click="setCurrentIndex(index)">
-            <span>{{ title.title }}</span>
+            @click="setCurrentIndex(index)" >
+            <span >{{ title.title }}</span>
           </div>
         </div>
         <!-- <div class="right" style="width: 40px; height: 40px; border-radius: 8%;" @click="increase">
@@ -27,52 +32,23 @@
           </span>
         </div> -->
       </div>
-      <div class="content">
-          <NewsItem v-for="(item,index) in NewsMsgList" :key="index" :NewsMsgList="item" />
+      <div v-if="pageToggle">
+        <div v-if="isLoading">
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+        </div>
+        <div class="content" v-else>
+          <NewsItem v-for="(item, index) in newsItemList" :key="index" :newsMsgList="item" />
+        </div>
+
       </div>
+      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
     </Widget>
 
-    <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right" style="background: #212121 100%; 
-        ">
+    <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
         <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择七个</div>
         <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer>
-        <!-- <DndProvider :backend="HTML5Backend"> -->
-        <!-- <div class="content-item">
-            <div class="item" v-for="title in titleList" style="
-                    /* margin: 2.2% 0; */
-                    display: flex;
-                    width: 452px;
-                    height: 48px;
-                    position: relative;
-                    justify-content: center;
-                    margin-top: 2.2%;
-                    background: #2A2A2A;
-                    border-radius: 12px;">
-
-              <div class="iconText" style="width: 20px ; 
-                    height: 20px;
-                    position: absolute; 
-                    left: 1.5%;  
-                    margin:3.2% 0 ;">
-                <HolderOutlined style="color: #ffffff;" />
-              </div>
-
-              <div class="text" style="font-family: PingFangSC-Regular;
-                            font-size: 16px;
-                            color: rgba(255,255,255,0.85);
-                            text-align: center;
-                            font-weight: 400;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            ">
-                {{ title }}
-              </div>
-            </div>
-          </div> -->
-        <!-- </DndProvider> -->
       </vue-custom-scrollbar>
 
     </a-drawer>
@@ -82,7 +58,8 @@
 <script>
 import Widget from '../../card/Widget.vue';
 import NewsItem from './NewsItem.vue';
-import { mapState ,mapActions} from 'pinia'
+import { mapWritableState, mapActions } from 'pinia'
+import DataStatu from "../DataStatu.vue"
 import { newsStore } from '../../../store/news.ts'
 import NewsCardDrawer from "./NewsCardDrawer.vue";
 import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
@@ -105,6 +82,7 @@ export default {
     Widget,
     NewsItem,
     NewsCardDrawer,
+    DataStatu,
     LeftOutlined,
     RightOutlined,
     HolderOutlined,
@@ -198,14 +176,23 @@ export default {
           tag: 'jiankang',
           // id:10
         }
-      ]
+      ],
+      isLoading: false,
+      pageToggle: true,
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
     }
   },
   methods: {
     // decrease() {
     //   this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
     //   // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
-    //   console.log(this.NewsMsgList[0])
+    //   console.log(this.newsMsgList[0])
     //   console.log(11111)
     // },
     // increase() {
@@ -214,15 +201,23 @@ export default {
     // },
     setCurrentIndex(index) {
       this.currentIndex = index
-      // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
+      this.getNewsData()
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
       this.customData.sortList = arrList
     },
     ...mapActions(newsStore, ['getNewsMsg']),
+    getNewsData() {
+      let tag = this.showList[this.currentIndex].tag
+      // let num = this.copyNum
+      // console.log(this.getNewsMsg);
+      this.getNewsMsg(tag)
+      // console.log('getNewsData',res);
+    }
   },
   computed: {
+    
     aggList() {
       if (this.customData && this.customData.sortList) {
         return this.customData.sortList
@@ -230,30 +225,36 @@ export default {
         return this.titleList
       }
     },
-    ...mapState(newsStore, ['NewsMsgList']),
-    // ...mapActions(newsStore,['getNewsMsg'])
+    ...mapWritableState(newsStore, ['newsMsgList']),
     showList() {
       return JSON.parse(JSON.stringify(this.aggList.slice(0, 7)))
     },
+    // 判断尺寸大小
     showSize() {
       if (this.customData && this.customData.width && this.customData.height) {
         return { width: this.customData.width, height: this.customData.height }
       }
       return this.sizeList[0]
     },
-    copyNum(){
-      return this.showSize.height==2?6:8
+    // 判断不同高度返回不同个数
+    copyNum() {
+      return this.showSize.height == 2 ? 6 : 8
+    },
+    newsItemList() {
+      return this.newsMsgList.slice(0, this.copyNum)
     }
   },
-  // mounted() {
-  //   this.getNewsMsg(this.showList[this.currentIndex].tag,this.copyNum)
-  //   console.log(1111);
-  // }
+  async mounted() {
+    this.isLoading = true
+    await this.getNewsData()
+    setTimeout(() => {
+      this.isLoading = false
+    })
+  }
 }
-// console.log("categoryList", this.categoryList.length);
 </script>
 <style lang='scss' scoped>
-.topBar {
+.top-bar {
   display: flex;
   justify-content: space-between;
   margin-top: 1.8%;
@@ -275,7 +276,7 @@ export default {
   .center {
     width: 100%;
     height: 40px;
-    border-radius: 8%;
+    border-radius: 8px;
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.30);
