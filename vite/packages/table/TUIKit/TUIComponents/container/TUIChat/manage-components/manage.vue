@@ -38,7 +38,7 @@
 
         <div class="flex" >
           <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
-          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addGroupMember('addMember')">
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('addMember')">
            <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
         
@@ -119,11 +119,10 @@
   </div>
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
-    
     <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID"  @closeUser="close"></UserSelect>
  </ChangeModal>
  
-
+ <AddMemeber></AddMemeber>
 </template>
 
 <script>
@@ -132,6 +131,7 @@ import useClipboard from 'vue-clipboard3';
 import { message,Modal } from 'ant-design-vue'
 import ChangeModal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
+import AddMemeber from '../../../components/userselect/addMemeber.vue'
 
 const manage = defineComponent({
   props:['manageData','conversation','memberList'],

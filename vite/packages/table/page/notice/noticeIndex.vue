@@ -48,7 +48,7 @@
 
       <template v-else>
         <NoticeRightTop :appType="appType" :appItem="appItem"></NoticeRightTop>
-        <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip>
+        <!-- <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip> -->
         <AllNotice v-if="appType === 'all'"  :list="appContentList"></AllNotice>
         <NoticeDetail v-else :list="otherList"></NoticeDetail>
       </template>
