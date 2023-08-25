@@ -1,7 +1,7 @@
 <script lang="ts">
 import ClipCodemirror from "../../components/clipPreview/ClipCodemirror.vue";
 import textCodeMirror from "../../components/clipPreview/textCodeMirror.vue";
-import {getDateTime} from '../../util'
+import {formatFileSize, getDateTime} from '../../util'
 import {clipboardStore} from "../../store/clipboard";
 import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
@@ -32,20 +32,20 @@ export default {
           }
         },
         {
-          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) =>{
+          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
             const str = item.content
 // 提取file协议和http协议的URL
 
-            const regex =/((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
+            const regex = /((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
 
             const urls = str.match(regex);
-            if(!urls){
+            if (!urls) {
               message.error('不存在链接')
-            }else{
+            } else {
               browser.openInUserSelect(urls[0])
               message.success('打开链接成功。')
             }
-            console.log(urls,'匹配到的url')
+            console.log(urls, '匹配到的url')
 
 
 // 打印提取到的URL
@@ -54,7 +54,7 @@ export default {
         },
         {
           title: '预览', shortKeys: 'Space', id: 's', fn: (item) => {
-            console.log('预览内容',item)
+            console.log('预览内容', item)
             this.previewItem(item)
           }
         },
@@ -82,6 +82,12 @@ export default {
       switch (this.clipItem.type) {
         case 'text':
           return this.clipItem.content.length + '个字符'
+        case 'image':
+          return formatFileSize(this.clipItem.size)
+        case 'file':
+          return this.clipItem.files.length +'个文件'
+        case 'video':
+          return formatFileSize(this.clipItem.size)
       }
     },
     itemType() {
@@ -116,7 +122,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(clipboardStore, ['remove','addToCollection']),
+    ...mapActions(clipboardStore, ['remove', 'addToCollection']),
     backClip() {
       this.tab = 'item'
     },
@@ -129,8 +135,8 @@ export default {
         this.$emit('tabChanged', {tab: tab})
       }
     },
-    previewItem(item){
-      this.$emit('previewItem',item)
+    previewItem(item) {
+      this.$emit('previewItem', item)
     }
   }
 }
@@ -144,7 +150,7 @@ export default {
       <div class="flex items-center mb-1">
         <Icon :icon="itemType.icon" style="font-size: 1.45em;"></Icon>
         <span class="ml-2">{{ itemType.title }}</span>
-        <span class="xt-text-2 ml-2"># {{clipItem.index}}</span>
+        <span class="xt-text-2 ml-2"># {{ clipItem.index }}</span>
       </div>
       <div class="pl-2 flex justify-between content-text xt-text-2">
         <span class="time-bg" v-html="timeText"></span>
@@ -154,8 +160,11 @@ export default {
       </div>
     </div>
     <!-- 文本卡片顶部标题结束 -->
-    <slot name="body">
-    </slot>
+    <div class="flex-center"   >
+      <slot name="body">
+      </slot>
+    </div>
+
     <!-- 文本底部切换 -->
     <div class="flex s-item h-item py-1 px-1 h-12 rounded-b-lg items-center justify-between">
       <slot name="footer">
@@ -183,7 +192,6 @@ export default {
               <span>{{ item.title }}</span>
               <span>{{ item.shortKeys }}</span>
             </div>
-
           </template>
           <!-- 代码语言切换界面 -->
 
@@ -198,5 +206,11 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
+.flex-center{
+  display: flex;
+  flex:1;height: 0;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  flex-direction: column;
+}
 </style>

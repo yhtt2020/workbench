@@ -12,6 +12,17 @@ export function fixHttp (str, ssl = true) {
     }
   }
 }
+export function formatFileSize(size) {
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let index = 0;
+
+  while (size >= 1024 && index < units.length-1) {
+    size /= 1024;
+    index++;
+  }
+
+  return size.toFixed(2) + " " + units[index];
+}
 
 export function formatSeconds (value) {
   //  秒
@@ -236,8 +247,8 @@ export function  initCanvas(refName,list,size,width,color,activeColor) {
 }
 
 
-export function formatTime(dateTimeStamp){  
-  
+export function formatTime(dateTimeStamp){
+
   const minute = 1000 * 60;
   const hour = minute * 60;
   const day = hour * 24;
@@ -256,7 +267,7 @@ export function formatTime(dateTimeStamp){
   const weekC = diffValue / week;
 
   if (weekC >= 1 && weekC <= 4) {
-    
+
     result = ` ${parseInt(`${weekC}`, 10)}周前`;
 
   }else if (dayC >= 1 && dayC <= 6){
@@ -264,11 +275,11 @@ export function formatTime(dateTimeStamp){
     result = ` ${parseInt(`${dayC}`, 10)}天前`;
 
   }else if (hourC >= 1 && hourC <= 23){
-    
+
     result = ` ${parseInt(`${hourC}`, 10)}小时前`;
 
   }else if (minC >= 1 && minC <= 59){
-    
+
     result = ` ${parseInt(`${minC}`, 10)}分钟前`;
 
   }else if (diffValue >= 0 && diffValue <= minute){
