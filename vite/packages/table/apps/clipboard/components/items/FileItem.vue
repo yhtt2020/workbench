@@ -75,6 +75,9 @@ export default {
     },
     previewItem(item) {
       this.$emit('previewItem', item)
+    },
+    getFilename(path){
+      return require('path').basename(path)
     }
 
   }
@@ -89,11 +92,17 @@ export default {
     <template #body>
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;width: 100%" >
         <a-row  class=" m-1 line" v-for="file in clipItem.files">
-          <a-col class="text-left pt-1" :span="2">
-            <file-outlined style="font-size: 18px" />
+          <a-col class="text-left pt-1" :span="3">
+            <file-outlined style="font-size: 24px" />
           </a-col>
           <a-col :span="21">
-            {{file}}
+            <div class="font-bold font-14">
+              {{getFilename(file)}}
+            </div>
+            <div :title="file" class="xt-text-2 font-12 truncate">
+              {{file}}
+            </div>
+
           </a-col>
 
         </a-row>
@@ -141,6 +150,5 @@ export default {
   background: var(--primary-bg);
 }
 .line{
-  border-bottom: 1px dashed var(--secondary-text);
 }
 </style>

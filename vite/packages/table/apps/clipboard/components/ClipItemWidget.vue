@@ -83,7 +83,7 @@ export default {
         case 'text':
           return this.clipItem.content.length + '个字符'
         case 'file':
-          return this.clipItem.files.length +'个文件'
+          return this.clipItem.files?.length +'个文件'
         case 'image':
         case 'audio':
         case 'video':

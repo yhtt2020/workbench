@@ -17,7 +17,10 @@ const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
+    loading:false,//控制加载动画
     items: [],//剪切板的收集箱内容
+    filterType:'all',
+    findMap:{},//查询方法
     index: 0,
     hasNextPage: false,
     totalRows: 0,
@@ -36,7 +39,44 @@ export const clipboardStore = defineStore("clipboardStore", {
   }),
   actions: {
     async nextPage(dbKey) {
+      if(this.items.length===0){
+        //防止首次加载分页
+        return
+      }
       if (this.hasNextPage) {
+        if(this.filterType!=='all'){
+          await tsbApi.db.createIndex({
+            index:{
+              fields:['type','createTime']
+            }
+          })
+          this.loading=true
+          let rsFiltered=await tsbApi.db.find({
+            selector:{
+              type:this.filterType,
+              createTime:{
+                $lt:this.items[this.items.length-1].createTime
+              },
+              _id:{
+                $regex:/^clipboard:item:/
+              }
+            },
+            limit:this.settings.pageSize,
+            sort:[
+              {
+                '_id':'desc'
+              }
+            ]
+          })
+
+          this.items= this.items.concat(rsFiltered.docs)
+          this.loading=false
+          console.log(this.settings.pageSize,rsFiltered.docs.length)
+          this.hasNextPage = this.settings.pageSize === rsFiltered.docs.length
+          console.log('find结果',rsFiltered)
+          return
+        }
+
         const rs = await tsbApi.db.allDocsQuery({
           start_key: this.items[this.items.length - 1]._id + '\ufff0',
           end_key: dbKey,
@@ -59,6 +99,36 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     async loadFromDb(key) {
+      this.loading=true
+      if(this.filterType!=='all'){
+        await tsbApi.db.createIndex({
+          index:{
+            fields:['type','createTime']
+          }
+        })
+        let rsFiltered=await tsbApi.db.find({
+          selector:{
+            type:this.filterType,
+            _id:{
+              $regex:/^clipboard:item:/
+            }
+          },
+          limit:this.settings.pageSize,
+          sort:[
+            {
+              '_id':'desc'
+            }
+          ]
+        })
+        this.items=rsFiltered.docs
+        this.loading=false
+        this.hasNextPage = this.settings.pageSize === rsFiltered.docs.length
+
+        console.log('find结果',rsFiltered)
+        return
+      }
+
+
       const rs = await tsbApi.db.allDocsQuery({
         start_key: key + '\ufff0',
         end_key: key,
@@ -73,8 +143,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         const doc = row?.doc
         return doc
       })
-
-      console.log(rs, '查到结果')
+      this.loading=false
       this.totalRows = rs.total_rows
       // console.log('分页后的rs',rs)
       // for await (const results of rs.pages()){

@@ -6,11 +6,11 @@
       <!-- tab切换结束 -->
 
       <!-- 导航栏筛选开始 -->
-      <TabSwitching :navList="cutType" v-model:activeType="defaultCutType"></TabSwitching>
+      <TabSwitching :navList="filterList" v-model:activeType="currentFilter"></TabSwitching>
       <div class="all-button" style="display: none;">
         <div class="flex items-center s-bg button-active p-3 pointer rounded-md mr-3" @click="openClipType">
-          <Icon :icon="defaultCutType.icon" style="font-size:1.5em;"></Icon>
-          <span class="ml-1">{{ defaultCutType.title }}</span>
+          <Icon :icon="currentFilter.icon" style="font-size:1.5em;"></Icon>
+          <span class="ml-1">{{ currentFilter.title }}</span>
         </div>
       </div>
       <!-- 导航栏筛选结束 -->
@@ -40,12 +40,12 @@
     <ClipList :clipList="clipContents" v-else></ClipList>
   </vue-custom-scrollbar>
   <div class="text-center">
-   {{hasNextPage}} {{dbKey}}  已载入{{clipContents.length}}  总共 {{totalRows}} 条记录
+    {{clipContents.length}} 条记录
   </div>
   <!-- 剪切板列表展示区域结束 -->
 
   <!-- 导航切换在宽度不够的情况下显示 -->
-  <HorizontalDrawer ref="clipRef" :rightSelect="cutType" @getArea="getClipItem"></HorizontalDrawer>
+  <HorizontalDrawer ref="clipRef" :rightSelect="filterList" @getArea="getClipItem"></HorizontalDrawer>
 
   <!-- 搜索右侧抽屉开始 -->
   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
@@ -108,7 +108,7 @@ export default {
       tab: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
 
       // 导航栏筛选分类
-      cutType: [
+      filterList: [
         { title: '全部', icon: 'appstore', typename: 'all', name: '全部' },
         { title: '文本', icon: 'text-align-left', typename: 'text', name: '文本' },
         { title: '图片', icon: 'image', typename: 'image', name: '图片' },
@@ -117,7 +117,7 @@ export default {
         { title: '音频', icon: 'erji1', typename: 'audio', name: '音频' }
       ],
       // 导航栏筛选分类默认值
-      defaultCutType: { title: '全部', icon: 'appstore', name: '全部', typename: 'all' },
+      currentFilter: { title: '全部', icon: 'appstore', name: '全部', typename: 'all' },
 
       // 空状态
       simpleImage: '/public/img/test/not-data.png',
@@ -142,34 +142,34 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(clipboardStore, ['clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage']),
+    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType']),
     // 根据剪切板列表不同状态进行数据显示
     clipContents () {
       let list = []
       if (this.items.length === 0) {
         return []
       }
-      switch (this.defaultCutType.typename) {
-        case 'all': // 默认全部
-          list = this.items
-          break
-        case 'text':   // 筛选文本
-          list = _.filter(this.items, function (o) { return o.type === 'text' })
-          break
-        case 'image':  // 筛选图片
-          list = _.filter(this.items, function (o) { return o.type === 'image' })
-          break
-        case 'file':  // 筛选文件
-          list = fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
-          break
-        case 'video': // 筛选视频
-          list = videoList// 方便页面搭建暂时使用videoList这个列表,后期视情况而定
-          break
-        case 'audio': // 筛选音频
-          list = audioList
-          break
-      }
-
+      // switch (this.currentFilter.typename) {
+      //   case 'all': // 默认全部
+      //     list = this.items
+      //     break
+      //   case 'text':   // 筛选文本
+      //     list = _.filter(this.items, function (o) { return o.type === 'text' })
+      //     break
+      //   case 'image':  // 筛选图片
+      //     list = _.filter(this.items, function (o) { return o.type === 'image' })
+      //     break
+      //   case 'file':  // 筛选文件
+      //     list = fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
+      //     break
+      //   case 'video': // 筛选视频
+      //     list = videoList// 方便页面搭建暂时使用videoList这个列表,后期视情况而定
+      //     break
+      //   case 'audio': // 筛选音频
+      //     list = audioList
+      //     break
+      // }
+      list = this.items
       console.log(list, '列表内容')
       return list
 
@@ -220,7 +220,7 @@ export default {
     },
     // 切换导航栏
     getClipItem (v) {
-      this.defaultCutType = v
+      this.currentFilter = v
     },
     // 打开搜索入口
     clipSearch () {
@@ -250,9 +250,13 @@ export default {
       }
     },
     // 监听导航栏筛选切换
-    'defaultCutType': {
+    'currentFilter': {
       handler () {
-        this.defaultCutType = this.defaultCutType
+        this.filterType = this.currentFilter.typename
+        this.items=[]
+
+        this.pageLoad()
+
       },
       immediate: true,
     },
