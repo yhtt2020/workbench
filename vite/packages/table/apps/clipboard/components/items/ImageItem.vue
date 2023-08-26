@@ -5,11 +5,12 @@ import textCodeMirror from "../clipPreview/textCodeMirror.vue";
 import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
 import {clipboardStore} from "../../store";
+import XtButton from "../../../../ui/libs/Button/index.vue";
 
 
 export default {
   props: ['clipItem'],
-  components: {textCodeMirror, ClipCodemirror, ClipItemWidget},
+  components: {XtButton, textCodeMirror, ClipCodemirror, ClipItemWidget},
   computed: {
     ...mapWritableState(clipboardStore, ['settings']),
     textDisplayTypes() {
@@ -59,6 +60,16 @@ export default {
         this.tab = ''
       }
     },
+    handleImage(){
+      const args={
+        type:'image',
+        args:{
+          'filePath':this.clipItem.path
+        }
+      }
+      ipc.send('handleFileAssign',args)
+      console.log('发送handle',args)
+    },
     // 文本底部tab切换
     selectItem(item) {
       if (this.textDisplayType.name === 'code' && item.name === 'code') {
@@ -99,7 +110,13 @@ export default {
       <a-image :height="'100%'" :src="clipItem.path" alt="" class=" w-full   object-cover"></a-image>
     </template>
     <template #footer>
-
+      <div class="p-1">
+        <div>
+          <a-tooltip title="图片编辑器">
+            <xt-button size="mini" :w="40" :h="32" @click="handleImage">  <a-avatar  src="https://a.apps.vip/imageEditor/icon.svg"></a-avatar></xt-button>
+          </a-tooltip>
+        </div>
+      </div>
     </template>
     <template #otherTabs>
 
