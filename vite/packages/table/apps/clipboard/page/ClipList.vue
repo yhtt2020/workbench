@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import ClipItem from '../../../apps/clipboard/components/ClipItem.vue';
-import ClipTextPreview from '../../../apps/clipboard/components/clipPreview/ClipTextPreview.vue';
+import ClipItem from '../components/ClipItem.vue';
+import ClipTextPreview from '../components/clipPreview/ClipTextPreview.vue';
 import { Empty } from 'ant-design-vue';
 import {toRaw} from "vue";
 import { mapWritableState } from 'pinia'
-import { clipboardStore } from '../../../store/clipboard'
+import { clipboardStore } from '../store'
 export default {
   components:{
     ClipItem,

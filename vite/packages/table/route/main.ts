@@ -64,7 +64,7 @@ import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
 import ShortcutKey from "../page/work/shortcutKey/ShortcutKey.vue";
-import Clipboard from "../page/work/clipboard/Clipboard.vue"
+import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
 
 /**聊天团队模式开始**/
