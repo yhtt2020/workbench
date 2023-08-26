@@ -42,7 +42,7 @@
   }
   .disabled {
     &::before {
-      background: #FBFBFB;
+      background: var(--primary-bg);
     }
   }
 }
