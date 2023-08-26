@@ -6,11 +6,11 @@ import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
 import {clipboardStore} from "../../store";
 import XtButton from "../../../../ui/libs/Button/index.vue";
-
+import {EditOutlined} from '@ant-design/icons-vue'
 
 export default {
   props: ['clipItem'],
-  components: {XtButton, textCodeMirror, ClipCodemirror, ClipItemWidget},
+  components: {XtButton, textCodeMirror, ClipCodemirror, ClipItemWidget,EditOutlined},
   computed: {
     ...mapWritableState(clipboardStore, ['settings']),
     textDisplayTypes() {
@@ -60,6 +60,12 @@ export default {
         this.tab = ''
       }
     },
+    editImage(){
+      this.$emit('previewItem',{
+        item:this.clipItem,
+        action:'editImage'
+      })
+    },
     handleImage(){
       const args={
         type:'image',
@@ -94,7 +100,7 @@ export default {
       this.$refs.widget.switchTab('item')
     },
     previewItem(item){
-      this.$emit('previewItem',item)
+      this.$emit('previewItem', {item})
     }
 
   }
@@ -111,8 +117,11 @@ export default {
     </template>
     <template #footer>
       <div class="p-1">
-        <div>
-          <a-tooltip title="图片编辑器">
+        <div class="flex " style="gap:8px" >
+          <a-tooltip title="直接编辑">
+            <xt-button type="theme" size="mini" :w="40" :h="32" @click="editImage"> <EditOutlined></EditOutlined></xt-button>
+          </a-tooltip>
+          <a-tooltip title="图片编辑器轻应用">
             <xt-button size="mini" :w="40" :h="32" @click="handleImage">  <a-avatar  src="https://a.apps.vip/imageEditor/icon.svg"></a-avatar></xt-button>
           </a-tooltip>
         </div>

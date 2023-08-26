@@ -74,9 +74,18 @@
             </div>
 
             <!-- 内容预览区域 -->
-            <div class="flex h-full flex-col justify-center items-center">
-              <div class="clip-image rounded-lg">
-                <img :src="previewContent.img" alt="" class="w-full rounded-lg h-full object-cover">
+            <div class="flex h-full w-full flex-col justify-center items-center" style="flex:1;height: 0">
+              <div class="clip-image rounded-lg  h-full mr-2 " style="position: relative;overflow: hidden;width: calc(100% - 20px)">
+                <template v-if="editImage">
+                  <ImageEditor @abort="editImage=false" :filepath="previewContent.path"></ImageEditor>
+                </template>
+                <div v-else>
+                  <img :src="previewContent.path" alt="" class="w-full rounded-lg h-full object-cover">
+
+                </div>
+              </div>
+              <div v-if="!editImage" class="m-2 text-center" style="position:absolute;bottom:10px">
+                <xt-button type="theme" @click="doEditImage"><EditOutlined /> 编辑</xt-button>
               </div>
             </div>
           </div>
@@ -108,7 +117,7 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey"
+                  <div  @click="item.fn()"  v-for="item  in fileClipKey"
                        class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item"
                        style="background: var(--secondary-bg);">
                     <span>{{ item.title }}</span>
@@ -230,7 +239,7 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey"
+                  <div @click="item.fn()" v-for="item  in fileClipKey"
                        class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item"
                        style="background: var(--secondary-bg);">
                     <span>{{ item.title }}</span>
@@ -329,16 +338,21 @@ import HorizontalDrawer from '../../../../components/HorizontalDrawer.vue'
 import ClipVideo from '../parser/ClipVideo.vue'
 import ClipAudio from '../parser/ClipAudio.vue'
 import { getDateTime } from '../../../../util'
-import { message } from 'ant-design-vue'
-
+import { message, Modal } from 'ant-design-vue'
+import ImageEditor from './ImageEditor.vue'
+import XtButton from '../../../../ui/libs/Button/index.vue'
+import {EditOutlined} from '@ant-design/icons-vue'
 export default {
   components: {
+    XtButton,
+    ImageEditor,
     ClipCodemirror,
     HorizontalPanel,
     textCodeMirror,
     HorizontalDrawer,
     ClipVideo,
-    ClipAudio
+    ClipAudio,
+    EditOutlined
   },
   props: {
     previewContent: {
@@ -349,6 +363,7 @@ export default {
 
   data () {
     return {
+      editImage:false,
       // 预览代码块类型切换
       textType: [
         { title: '纯文本', name: 'plainText' },
@@ -385,6 +400,10 @@ export default {
       fileClipKey: [
         { title: '复制', key: 'Ctrl + C', id: 'cs' },
         { title: '打开', key: 'Ctrl + O', id: 'co' },
+        { title: '编辑', key: 'Ctrl + e', id: 'ed' ,
+          fn:(item)=>{
+            this.doEditImage()
+          }},
         { title: '复制路径', key: 'Ctrl + Alt + C', id: 'cas' },
         { title: '在资源管理器中打开', key: 'Ctrl + Enter', id: 'ce' },
         { title: '添加收藏', key: 'Ctrl + S', id: 'cs' },
@@ -422,7 +441,19 @@ export default {
 
     // 关闭预览全屏窗口
     closePreview () {
-      this.isOpenPreview(false)
+      if(this.editImage){
+        Modal.confirm({
+          content:'退出预览会丢弃未保存的编辑内容，是否确定？',
+          centered:true,
+          onOk:()=>{
+            this.editImage=false
+            this.isOpenPreview(false)
+          }
+        })
+      }else{
+        this.isOpenPreview(false)
+      }
+
     },
     // 打开语言包选项配置
     openCodeLanguage () {
@@ -432,6 +463,9 @@ export default {
       this.changeClipMode(v.abbr)
       // this.$refs.myClipCodeMirror.$forceUpdate()
     },
+    doEditImage(){
+      this.editImage=true
+    }
   },
 
   watch: {
@@ -485,7 +519,7 @@ export default {
 }
 
 .clip-image {
-  max-width: 800px;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

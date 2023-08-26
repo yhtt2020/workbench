@@ -17,7 +17,7 @@
     </div>
 
   </div>
-  <ClipTextPreview :previewContent="previewData"></ClipTextPreview>
+  <ClipTextPreview ref="previewerRef" :previewContent="previewData"></ClipTextPreview>
 </template>
 
 <script>
@@ -49,19 +49,17 @@ export default {
   },
   methods:{
     // 获取item
-    getItem(item){
-      console.log('预览',item)
+    getItem(args){
       // this.previewData = v
+      const item=args.item
       switch(item.type){
         case 'text':
           this.previewData = item
           break;
         case 'image':
-          const img = toRaw(item.content).toDataURL()
-          this.previewData = {
-            img,
-            timeText:item.timeText,
-            type:item.type
+          this.previewData = item
+          if(args.action==='editImage'){
+            this.$refs.previewerRef.doEditImage()
           }
           break;
         case 'video':
