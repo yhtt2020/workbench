@@ -99,8 +99,8 @@ export default {
     switchTab(tab) {
       this.$refs.widget.switchTab('item')
     },
-    previewItem(item){
-      this.$emit('previewItem', {item})
+    previewItem(){
+      this.$emit('previewItem', {item:this.clipItem})
     }
 
   }
@@ -113,11 +113,11 @@ export default {
   <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
     <template #body>
       <!-- 纯文本情况下 -->
-      <a-image :height="'100%'" :src="clipItem.path" alt="" class=" w-full   object-cover"></a-image>
+      <img  @click="previewItem"   :src="clipItem.path" alt="" class=" w-full h-full pointer  object-cover">
     </template>
     <template #footer>
-      <div class="p-1">
-        <div class="flex " style="gap:8px" >
+      <div class="p-1 w-full">
+        <div class="flex items-center justify-center" style="gap:20px" >
           <a-tooltip title="直接编辑">
             <xt-button type="theme" size="mini" :w="40" :h="32" @click="editImage"> <EditOutlined></EditOutlined></xt-button>
           </a-tooltip>

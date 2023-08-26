@@ -136,7 +136,7 @@ export default {
       }
     },
     previewItem(item) {
-      this.$emit('previewItem', item)
+      this.$emit('previewItem', {item})
     }
   }
 }
