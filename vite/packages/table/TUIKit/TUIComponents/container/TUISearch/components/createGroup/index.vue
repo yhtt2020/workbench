@@ -147,6 +147,7 @@ import { computed, defineComponent, reactive, toRefs,watch } from 'vue';
 // import Link from '../../../../../utils/link';
 import { SearchOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
+import { message } from 'ant-design-vue';
 
 const TUISearch = defineComponent({
   name: 'group',
@@ -201,8 +202,11 @@ const TUISearch = defineComponent({
         applyMessage: group.applyMessage || t('TUIContact.加群'),
         type: group?.type,
       }
-      await TUIServer.joinGroup(options);
-      data.currentGroup = { apply:true }
+      const res = await TUIServer.joinGroup(options);
+      if(res.data.status === 'WaitAdminApproval'){
+        message.success('入群申请已发出,等待群主和管理员审核')
+        data.currentGroup = { apply:true }
+      }
       ctx.emit('close')
     }
 

@@ -71,7 +71,7 @@
 <script >
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import useClipboard from 'vue-clipboard3';
-import { message } from 'ant-design-vue'
+import { message,Modal as antdModal } from 'ant-design-vue'
 import { router } from '../../../../../router'
 import Modal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
@@ -122,8 +122,23 @@ export default defineComponent({
   }
 
   const dismiss = async (group) => {  // 解散群聊
-   await window.$chat.dismissGroup(group.groupID);
-   ctx.emit('closeDrawer')
+    antdModal.confirm({
+      content:'是否确认操作',
+        okText:'确认',
+        cancelText:'取消',
+        onOk () {
+          dismissGroup(group)
+          ctx.emit('closeDrawer')
+        }
+    })
+  }
+
+  const dismissGroup = async (group) =>{
+    const res =  await window.$chat.dismissGroup(group.groupID)
+    const result =  await window.$chat.deleteConversation(`GROUP${group.groupID}`)
+    if(res.code === 0 && result.code === 0){
+      message.success(`${group.name}已被解散`)
+    }
   }
 
   const changeGroup  = async (type) =>{  // 转让群聊
@@ -137,13 +152,28 @@ export default defineComponent({
   }
 
   const quit = async (group) => {
+    antdModal.confirm({
+      content:'是否确认操作',
+        okText:'确认',
+        cancelText:'取消',
+        onOk () {
+          quitGroup(group)
+          ctx.emit('closeDrawer')
+        }
+    })
+  }
+
+  const quitGroup = async (group) =>{
     await window.$chat.quitGroup(group);
-    ctx.emit('closeDrawer')
+    const result =  await window.$chat.deleteConversation(`GROUP${group}`)
+    if(res.code === 0 && result.code === 0){
+      message.success(`${props.group.name}已退出`)
+    }
   }
 
   return {
    ...toRefs(data),handleGroupIDCopy,enter,dismiss,changeGroup,close,
-   quit,
+   quit,dismissGroup,quitGroup,
   }
  }
 })
