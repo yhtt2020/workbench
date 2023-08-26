@@ -12,13 +12,11 @@ export const newsStore = defineStore("news", {
     newsMsgList: [],
   }),
   actions: {
+    
     async getNewsMsg(tag, num) {
       if(localCache.get(tag)){
-        this.newsMsgList=localCache.get(tag)
-        console.log('local',this.newsMsgList);
-        // return
-        }
-        // console.log(localCache.get(tag))
+        this.newsMsgList = localCache.get(tag)
+      }
       let response = await get(juheGet, {
         apiName: 'toutiao.index',
         params: {
@@ -33,11 +31,8 @@ export const newsStore = defineStore("news", {
       })
 
       // console.log(response, '接口返回')
-      // console.log('1',localCache.get(tag))
       if(response.status){
         this.newsMsgList = response.data
-        // console.log(this.newsMsgList);
-        // 建立本地缓存
         localCache.set(tag,this.newsMsgList,300)
       }
       else{
@@ -56,4 +51,3 @@ export const newsStore = defineStore("news", {
     ]
   }
 });
-

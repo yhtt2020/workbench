@@ -1,7 +1,4 @@
 <template>
-  <!-- {{ NewsMsgList.NewsMsgList.title }} -->
-  <!-- {{ timer[1] }} -->
-  <!-- {{ [hour,min] }} -->
   <div class="card-item">
 
     <div class="left" :style="{ width: showImg == false ? '260px' : '' }" >

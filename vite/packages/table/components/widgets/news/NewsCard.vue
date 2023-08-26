@@ -3,10 +3,6 @@
 
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
       ref="cardSlot" :customData="customData">
-      <!-- {{aggList[this.currentIndex].tag }} -->
-      <!-- {{ newsItemList.length }} -->
-      <!-- {{ MsgList }} -->
-      <!-- {{ aggList.length }} -->
       <template #left-title>
         <div class="icon"
           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
@@ -307,6 +303,7 @@ export default {
       padding-top: 0;
       padding-bottom: 0;
       border-left: none;
+      outline: none;
     }
 
     .item {
