@@ -5,7 +5,7 @@
 
 <script>
 import { mapWritableState,mapActions } from 'pinia'
-import { clipboardStore } from '../../../../store/clipboard';
+import { clipboardStore } from '../../store';
 import CodeMirror from 'codemirror'
 
 export default {

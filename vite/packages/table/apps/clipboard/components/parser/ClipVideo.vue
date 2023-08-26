@@ -27,8 +27,9 @@ export default {
           url: url,
           fitVideoSize: 'fixWidth',
           width:'302',
-          height:'240',
+          height:'300',
           loop: true,
+          // fluid: true,
           videoInit: true,
           controlsList: ['nofullscreen'],
         })

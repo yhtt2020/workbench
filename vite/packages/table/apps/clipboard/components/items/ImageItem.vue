@@ -4,7 +4,7 @@ import ClipCodemirror from "../clipPreview/ClipCodemirror.vue";
 import textCodeMirror from "../clipPreview/textCodeMirror.vue";
 import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
-import {clipboardStore} from "../../../../store/clipboard";
+import {clipboardStore} from "../../store";
 
 
 export default {
@@ -96,7 +96,7 @@ export default {
   <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
     <template #body>
       <!-- 纯文本情况下 -->
-      <a-image style="max-height: 100%" :src="clipItem.path" alt="" class=" w-full h-full  object-cover"></a-image>
+      <a-image :height="'100%'" :src="clipItem.path" alt="" class=" w-full   object-cover"></a-image>
     </template>
     <template #footer>
 

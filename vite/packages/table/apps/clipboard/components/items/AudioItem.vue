@@ -4,7 +4,7 @@ import ClipCodemirror from "../clipPreview/ClipCodemirror.vue";
 import textCodeMirror from "../clipPreview/textCodeMirror.vue";
 import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
-import {clipboardStore} from "../../../../store/clipboard";
+import {clipboardStore} from "../../store";
 import ClipVideo from "../parser/ClipVideo.vue";
 import ClipAudio from "../parser/ClipAudio.vue";
 

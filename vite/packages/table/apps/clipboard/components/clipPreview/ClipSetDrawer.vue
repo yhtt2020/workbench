@@ -84,7 +84,7 @@
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { clipboardStore } from '../../../../store/clipboard'
+import { clipboardStore } from '../../store'
 import HorizontalPanel from '../../../../components/HorizontalPanel.vue'
 import HorizontalDrawer from '../../../../components/HorizontalDrawer.vue'
 import { themeType } from '../../../../js/data/clipTheme'
