@@ -26,7 +26,7 @@
 
 <script>
 import ClipItem from '../components/ClipItem.vue'
-import ClipTextPreview from '../components/clipPreview/ClipTextPreview.vue'
+import ClipTextPreview from '../components/clipPreview/Previewer.vue'
 import { Empty } from 'ant-design-vue'
 import { toRaw } from 'vue'
 import { mapWritableState } from 'pinia'

@@ -80,8 +80,7 @@
                   <ImageEditor @abort="editImage=false" :filepath="previewContent.path"></ImageEditor>
                 </template>
                 <div v-else>
-                  <img :src="previewContent.path" alt="" class="w-full rounded-lg h-full object-cover">
-
+                  <a-image :src="previewContent.path" alt="" class="w-full rounded-lg h-full object-cover"></a-image>
                 </div>
               </div>
               <div v-if="!editImage" class="m-2 text-center" style="position:absolute;bottom:10px">
@@ -101,18 +100,17 @@
                   </div>
                   <div class="flex justify-between mb-6">
                     <span class="type-text">格式</span>
-                    <span class="type-right" v-if="previewContent.type === 'image'">png</span>
+                    <span class="type-right" v-if="previewContent.type === 'image'">{{ ext }}</span>
                   </div>
                   <div class="flex justify-between mb-6">
                     <span class="type-text">时间</span>
-                    <span class="type-right" v-if="previewContent.type === 'image'">
-                      {{ previewContent.timeText }}
+                    <span class="type-right" v-html="timeText" v-if="previewContent.type === 'image'">
                     </span>
                   </div>
                   <div class="flex justify-between flex-col mb-6">
                     <span class="type-text">路径</span>
                     <span class="type-right" v-if="previewContent.type === 'image'">
-                      C:\PROGRAM FILES (X86)\CLIP
+                      {{ previewContent.path }}
                     </span>
                   </div>
                 </div>
@@ -430,6 +428,9 @@ export default {
         return el.abbr === this.settings.clipMode
       })
       return index
+    },
+    ext(){
+      return require('path').extname(this.previewContent.path)
     }
   },
 

@@ -4,7 +4,7 @@ import "tui-image-editor/dist/tui-image-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 
 import ImageEditor from "tui-image-editor";
-import {Modal} from "ant-design-vue";
+import {message, Modal} from "ant-design-vue";
 const locale_zh = {
   ZoomIn: "放大",
   ZoomOut: "缩小",
@@ -233,6 +233,21 @@ const customTheme = {
   "colorpicker.title.color": "#fff",
 
 };
+function decodeBase64Image(dataString)
+{
+  var matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+  var response = {};
+
+  if (matches.length !== 3)
+  {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], 'base64');
+
+  return response;
+}
 
 export default defineComponent({
   name: "ImageEditor",
@@ -282,21 +297,62 @@ export default defineComponent({
       })
     },
     // 保存图片，并上传
-    save() {
-      const base64String = this.instance.toDataURL(); // base64 文件
-      const data = window.atob(base64String.split(",")[1]);
-      const ia = new Uint8Array(data.length);
+    getBase64Data(){
+      const base64String = this.instance.toDataURL() // base64 文件
+      const data = window.atob(base64String.split(',')[1])
+      const ia = new Uint8Array(data.length)
       for (let i = 0; i < data.length; i++) {
-        ia[i] = data.charCodeAt(i);
+        ia[i] = data.charCodeAt(i)
       }
-      const blob = new Blob([ia], { type: "image/png" }); // blob 文件
-      const form = new FormData();
-      form.append("image", blob);
-      // upload file
+      return base64String
     },
-    saveAs(){
+    copyToClip(){
+      const image=require('electron').nativeImage.createFromDataURL(this.getBase64Data())
+      require('electron').clipboard.writeImage(image)
+      message.success('复制到剪切板成功。')
+    },
 
+    save () {
+      Modal.confirm({
+        title: '确认',
+        content: '是否覆盖原图片文件？此操作无法恢复。建议另存为新的文件。',
+        okText: '确认覆盖',
+        centered:true,
+        cancelText: '取消',
+        onOk: () => {
+          let imageBuffer=decodeBase64Image(this.getBase64Data())
+          require('fs').writeFile(this.filepath,imageBuffer.data,(err)=>{
+            if(err){
+              console.warn(err)
+              message.error('保存失败。意外错误。')
+            }else{
+              message.success('保存成功。')
+            }
+          })
+        }
+      })
+    },
+    async saveAs() {
+      let oldFilename = this.filepath.replace('\\', '/')
+      let dir = this.filepath.substr(0, oldFilename.lastIndexOf('/'))
+      let newFilename = dir + '/' + this.filepath.substring(this.filepath.lastIndexOf('/'), this.filepath.lastIndexOf('.')) + '_副本' + this.filepath.substr(this.filepath.lastIndexOf('.'))
+      let path = await tsbApi.dialog.showSaveDialog({
+        title: '另存为',
+        defaultPath: newFilename,
+      })
+      if (path) {
+        let imageBuffer = decodeBase64Image(this.getBase64Data())
+        require('fs').writeFile(path, imageBuffer.data, (err) => {
+          if (err) {
+            console.warn(err)
+            message.error('保存失败。意外错误。')
+          } else {
+            message.success('保存成功。')
+          }
+        })
+      }
     }
+
   }
 
 })
@@ -307,6 +363,7 @@ export default defineComponent({
     <div style="float:right;width: 200px;display: flex">
       <div style="position:absolute;right: 40px;bottom: 17px;z-index: 9">
         <a-button shape="round" @click="abort" style="margin-right: 10px">放弃</a-button>
+        <a-button shape="round" @click="copyToClip" style="margin-right: 10px">复制到剪切板</a-button>
         <a-button shape="round" @click="save" style="margin-right: 10px">保存</a-button>
         <a-button shape="round" @click="saveAs()" type="primary" style="">另存为</a-button>
       </div>
