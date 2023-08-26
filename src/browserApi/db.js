@@ -24,6 +24,9 @@ const db = {
   find(options){
     return pdb.find(options)
   },
+  createIndex(options){
+    return pdb.createIndex(options)
+  },
   allDocs (key) {
     if(!key){
       return pdb.allDocs()
