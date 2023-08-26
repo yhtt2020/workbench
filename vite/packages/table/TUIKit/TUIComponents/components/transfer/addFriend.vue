@@ -77,13 +77,24 @@
       </div>
     </div>
 
-    <div class="flex flex-col items-center justify-center" style="height:415px;color: var(--primary-text);">
-      <a-avatar shape="square" :size="64" :src="groupTypeData.icon"></a-avatar>
+    <div class="flex flex-col items-center justify-center" style="height:415px;color: var(--primary-text);position:relative;">
+      <div class="flex items-center justify-center pointer" @click="updateGroupAvatar" style="position: relative;">
+        <a-avatar shape="square" :size="64" :src="groupTypeData.icon"></a-avatar>
+        <div class="flex items-center rounded-full p-3 justify-center"
+         style="width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;background: var(--active-bg);border: 2px solid var(--primary-text);"
+        >
+         <CameraOutlined style="font-size:1em;"/>
+        </div>
+        <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
+      </div>
+      <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
 
       <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
-      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
-
+      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;" :style="validateChinese !== true ? {marginBottom:'16px'}: {marginBottom:'8px'}"/>
+      
+      <div class="font-12" v-if="validateChinese" :style="validateChinese === true ? {marginBottom:'16px'}: {marginBottom:'0'}" style="color:var(--error);">群ID不能为中文名称,重新输入群ID</div>
+      
       <a-select style="width: 320px; border-radius: 12px; color: var(--secondary-text);"
        :bordered="false" :dropdownStyle="{boxShadow:'none !important',borderRadius:'12px',color:'var(--secondary-text)'}"
        :showArrow="true" v-model:value="public.type"  @change="getGroupType($event)"
@@ -108,10 +119,14 @@
 <script>
 import { defineComponent,ref,reactive,toRefs, onMounted, computed } from 'vue'
 import { message } from 'ant-design-vue';
+import { CameraOutlined  } from '@ant-design/icons-vue';
 import { appStore } from '../../../../store'
 import _ from 'lodash-es'
-
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 export default defineComponent({
+  components:{
+    CameraOutlined
+  },
 
   setup(props,ctx){
     const server = window.$TUIKit
@@ -213,28 +228,59 @@ export default defineComponent({
      ctx.emit('close')
     }
 
+    // 通过计算属性判断群ID是否为中文
+    const validateChinese = computed(()=>{
+      const chineseReg = /^[\u4e00-\u9fa5]+$/;
+      return chineseReg.test(data.groupID)
+    })
+  
+
     const submit = async () => {  // 点击创建群聊
-      const option = {
+      if(validateChinese.value){
+        return
+      }else{
+       const option = {
         type:data.public.type,
         groupID:data.groupID,
         memberList:data.selectList,
         name:data.groupName,
         avatar:groupTypeData.value.icon,
-      }
-      const res =  await server.tim.createGroup(option)
-      if(res.code === 0){
+       }
+
+       const res =  await server.tim.createGroup(option)
+       if(res.code === 0){
         message.success(`${res.data.group.name}创建成功`)
-      }
-      ctx.emit('close')
+        const name = `GROUP${data.groupID}`
+        server.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+          // 通知 TUIConversation 添加当前会话
+          // Notify TUIConversation to toggle the current conversation
+          server.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+        })
+       }
+       ctx.emit('close')
+
+      } 
     }
+
+    // 点击群聊头像更换
+    const updateGroupAvatar = async () =>{  
+      document.querySelector('#groupFileID').click()
+    }
+
+    // 获取上文件的回调函数
+    const getFileInfo = async(evt) =>{
+     const files = evt.target.files[0]
+     const res  = await fileUpload(files)
+     groupTypeData.value.icon = res
+    }
+
 
     onMounted(getFriendList)
 
     return{
-      ...toRefs(data),groupTypeData,
-
-      getFriendList,selectUser,enterNextStep,closeContact,
-      clearSelect,goBack,getGroupType,submit,
+      groupTypeData,validateChinese,
+      ...toRefs(data), getFriendList,selectUser,enterNextStep,closeContact,
+      clearSelect,goBack,getGroupType,submit,getFileInfo,updateGroupAvatar,
     }
   }
 })
@@ -296,5 +342,11 @@ export default defineComponent({
 
 :deep(.ant-select-arrow){
   color: var(--primary-text) !important;
+}
+
+.font-12{
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  font-weight: 400;
 }
 </style>
