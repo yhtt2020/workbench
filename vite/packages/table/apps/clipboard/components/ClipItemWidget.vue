@@ -2,7 +2,7 @@
 import ClipCodemirror from "./clipPreview/ClipCodemirror.vue";
 import textCodeMirror from "./clipPreview/textCodeMirror.vue";
 import {formatFileSize, getDateTime} from '../../../util'
-import {clipboardStore} from "../../../store/clipboard";
+import {clipboardStore} from "../store";
 import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
 import browser from "../../../js/common/browser";

@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
-import dbStorage from "./dbStorage";
-import {nanoid} from "nanoid";
-import {getDateTime} from '../util'
+import dbStorage from "../../store/dbStorage";
+import {getDateTime} from '../../util'
 
 //todo 此处要兼容web版
 const {win32} = window.$models

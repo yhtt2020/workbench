@@ -121,7 +121,7 @@ import WindowController from './WindowController.vue'
 import MessagePopup from '../page/notice/noticeIndex.vue'
 import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
-import { clipboardStore } from '../store/clipboard'
+import { clipboardStore } from '../apps/clipboard/store'
 import { noticeStore } from '../store/notice'
 
 export default {
@@ -356,7 +356,7 @@ export default {
 
 
 .notification {
-  
+
   animation: blink 1s infinite;
 
   @keyframes blink {

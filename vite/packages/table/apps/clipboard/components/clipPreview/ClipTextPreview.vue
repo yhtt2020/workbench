@@ -320,7 +320,7 @@
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { clipboardStore } from '../../../../store/clipboard'
+import { clipboardStore } from '../../store'
 import { codeLanguage } from '../../../../js/data/clipTheme'
 import ClipCodemirror from './ClipCodemirror.vue'
 import HorizontalPanel from '../../../../components/HorizontalPanel.vue'

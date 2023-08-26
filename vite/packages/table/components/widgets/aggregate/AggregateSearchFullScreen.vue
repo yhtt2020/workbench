@@ -114,7 +114,7 @@ import axios from "axios";
 import browser from '../../../js/common/browser'
 import _ from 'lodash-es'
 import { mapActions,mapWritableState } from "pinia";
-import {clipboardStore} from '../../../store/clipboard'
+import {clipboardStore} from '../../../apps/clipboard/store'
 const {clipboard} = require('electron')
 
 export default {
