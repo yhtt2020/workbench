@@ -1,7 +1,8 @@
 <template>
   <!-- 动态头部 -->
   <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 70px">
-    <xt-icon
+    <Item @itemClick="iconClick" :list="list.slice(0, last)"></Item>
+    <!-- <xt-icon
       class="mb-3"
       v-for="item in list.slice(0, last)"
       v-bind="config"
@@ -10,13 +11,16 @@
       :class="{
         box: item.icon == currentIndex,
       }"
-    ></xt-icon>
+    ></xt-icon> -->
 
     <!-- 动态适中 -->
     <div
-      class="xt-scrollbar   xt-container  h-full xt-bt py-3 xt-bm flex flex-col items-center"
+      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center"
     >
-      <xt-icon
+      <!-- <Item @itemClick="iconClick" :list="list.slice(last, -1 * end)"></Item> -->
+
+      <Item :list="list.slice(last, -1 * end)"></Item>
+      <!-- <xt-icon
         v-for="item in list.slice(last, -1 * end)"
         v-bind="config"
         class="mb-3"
@@ -25,23 +29,24 @@
         :class="{
           box: item.icon == currentIndex,
         }"
-      ></xt-icon>
+      ></xt-icon> -->
     </div>
     <!-- 底部循环 -->
-    <xt-icon
-    class="mt-3"
+    <Item :list="list.slice(-1 * end)"></Item>
+    <!-- <xt-icon
+      class="mt-3"
       v-for="item in list.slice(-1 * end)"
       v-bind="config"
       :icon="item.icon"
       @click="iconClick(item, true)"
     >
-    </xt-icon>
+    </xt-icon> -->
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
+import Item from "./Item.vue";
 const props = defineProps({
   config: {
     default: () => {
@@ -63,6 +68,8 @@ const props = defineProps({
       return [
         {
           icon: "message",
+          img: "/vite/public/icons/bg.png",
+          // C:\Users\16110\Desktop\demo1 (2)\browser\vite\public\icons\bg4.png
         },
         {
           icon: "star",
