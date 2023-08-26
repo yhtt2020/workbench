@@ -4,7 +4,6 @@
       <template #left>
         <div class="flex h-full">
           <LeftTab></LeftTab>
-
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
       </template>

@@ -25,19 +25,15 @@ export async function* gpt(messages) {
 
   if (!response.ok) {
     const { done, value } = await reader.read();
-    console.log("done :>> ", done);
-    console.log("value :>> ", decoder.decode(value));
     yield {
       value: JSON.parse(decoder.decode(value)),
     };
-    return;
-    // throw new Error(`HTTP error! status: ${response.status}`);
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  let resultData = "";
 
+  let resultData = "";
   while (true) {
-    console.log("1111 :>> ", 1111);
     const { done, value } = await reader.read();
     if (done) break;
     resultData += decoder.decode(value);
@@ -47,7 +43,6 @@ export async function* gpt(messages) {
       resultData = resultData.slice(messageIndex + 1);
       if (message.startsWith("data: ")) {
         const jsonMessage = JSON.parse(message.substring(5));
-        console.log("jsonMessage :>> ", jsonMessage);
         if (resultData.includes("[DONE]")) {
           break;
         }

@@ -2,11 +2,14 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const aiStore = defineStore("aiStore", {
   state: () => ({
-    gpt: "gpt-3.5-turbo",
-    temperature: 1,
-    count: 4,
-    key: "",
-    url: "",
+    /**
+     * 主菜单配置
+     */
+    gpt: "gpt-3.5-turbo", // 选中的模型
+    temperature: 1, // 联想度
+    count: 4, // 上下文长度
+    key: "", // 密钥
+    url: "", // 地址
     isFull: false, // 组件全屏状态
     selectTab: "Chat", // 左侧tab选中情况
     fullState: {}, // 记录组件展示状态
@@ -20,24 +23,25 @@ export const aiStore = defineStore("aiStore", {
     selectTopicIndex: -1,
     // 初始值 提供用于全局状态维护
     defaultData: {
-      chat: [],
       icon: {
-        name: "",
-        id: "",
+        name: "message",
+        id: 0,
       },
       id: "",
       time: "",
-      name: "",
+      name: "新的对话",
       top: false,
     },
-    // 旧版是对象
-    // topicList: [],
-    topicList: {},
-    serachTopic: "",
-    // 下面三个可能不用了 看情况删除
+    /**
+     * 主题数据和聊天数据
+     */
+    topicList: {}, // 话题数据
+    chatList: {}, // 聊天数据
+    // 状态数据
     topList: [],
     todayList: [],
     previousList: [],
+    serachTopic: "",
   }),
   getters: {
     selectTitle() {
@@ -48,7 +52,16 @@ export const aiStore = defineStore("aiStore", {
     },
   },
   actions: {
-    delTopic(id) {
+    addTopic() {
+      // 解构一份初始状态
+      let obj = { ...this.defaultData };
+      obj.id = Date.now();
+      obj.time = Date.now();
+      this.selectTopicIndex = obj.id;
+      this.topicList[obj.id] = obj;
+      this.chatList[obj.id] = [];
+    },
+    delTopic() {
       for (let key in this.topicList) {
         if (key == this.selectTopicIndex) {
           delete this.topicList[this.selectTopicIndex];
@@ -61,7 +74,7 @@ export const aiStore = defineStore("aiStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["url", "key", "temperature", "count", "topicList"],
+        paths: ["url", "key", "temperature", "count", "topicList", "chatList"],
         storage: localStorage,
       },
     ],
