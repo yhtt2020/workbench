@@ -69,7 +69,7 @@ const groupName =  defineComponent({
     }
   }
 
-  // 获取上文件的回调函数
+  // 获取上传文件的回调函数
   const getFileInfo = async(evt) =>{
     const files = evt.target.files[0]
     const res  = await fileUpload(files)

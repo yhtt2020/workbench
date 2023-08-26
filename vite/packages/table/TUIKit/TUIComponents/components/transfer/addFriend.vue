@@ -77,8 +77,17 @@
       </div>
     </div>
 
-    <div class="flex flex-col items-center justify-center" style="height:415px;color: var(--primary-text);">
-      <a-avatar shape="square" :size="64" :src="groupTypeData.icon"></a-avatar>
+    <div class="flex flex-col items-center justify-center" style="height:415px;color: var(--primary-text);position:relative;">
+      <div class="flex items-center justify-center pointer" @click="updateGroupAvatar" style="position: relative;">
+        <a-avatar shape="square" :size="64" :src="groupTypeData.icon"></a-avatar>
+        <div class="flex items-center rounded-full p-3 justify-center"
+         style="width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;background: var(--active-bg);border: 2px solid var(--primary-text);"
+        >
+         <CameraOutlined style="font-size:1em;"/>
+        </div>
+        <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
+      </div>
+      <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
 
       <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
@@ -110,10 +119,14 @@
 <script>
 import { defineComponent,ref,reactive,toRefs, onMounted, computed } from 'vue'
 import { message } from 'ant-design-vue';
+import { CameraOutlined  } from '@ant-design/icons-vue';
 import { appStore } from '../../../../store'
 import _ from 'lodash-es'
-
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 export default defineComponent({
+  components:{
+    CameraOutlined
+  },
 
   setup(props,ctx){
     const server = window.$TUIKit
@@ -249,12 +262,25 @@ export default defineComponent({
       } 
     }
 
+    // 点击群聊头像更换
+    const updateGroupAvatar = async () =>{  
+      document.querySelector('#groupFileID').click()
+    }
+
+    // 获取上文件的回调函数
+    const getFileInfo = async(evt) =>{
+     const files = evt.target.files[0]
+     const res  = await fileUpload(files)
+     groupTypeData.value.icon = res
+    }
+
+
     onMounted(getFriendList)
 
     return{
       groupTypeData,validateChinese,
       ...toRefs(data), getFriendList,selectUser,enterNextStep,closeContact,
-      clearSelect,goBack,getGroupType,submit,
+      clearSelect,goBack,getGroupType,submit,getFileInfo,updateGroupAvatar,
     }
   }
 })
