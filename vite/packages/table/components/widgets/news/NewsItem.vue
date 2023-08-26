@@ -2,15 +2,15 @@
   <div class="card-item">
 
     <div class="left" :style="{ width: showImg == false ? '260px' : '' }" >
-      <div class="title" @click="goNews" style="background: var(--mask-bg);color: var(--primary-text);" >
+      <div class="title" @click="goNews" style="color: var(--primary-text);" >
         {{ newsMsgList.newsMsgList.title }}
       </div>
       <div class="bottom" >
         <div class="date"  >
-          <span style="background: var(--mask-bg);color: var(--primary-text);">{{ timer[0] }} {{ timer[1] }}</span>
+          <span style="color: var(--primary-text);">{{ timer[0] }} {{ timer[1] }}</span>
         </div>
         <div class="name">
-          <span style="background: var(--mask-bg);color: var(--primary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>
+          <span style="color: var(--primary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>
         </div>
       </div>
 
