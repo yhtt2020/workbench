@@ -82,8 +82,10 @@
 
       <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
-      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
-
+      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;" :style="validateChinese !== true ? {marginBottom:'16px'}: {marginBottom:'8px'}"/>
+      
+      <div class="font-12" v-if="validateChinese" :style="validateChinese === true ? {marginBottom:'16px'}: {marginBottom:'0'}" style="color:var(--error);">群ID不能为中文名称,重新输入群ID</div>
+      
       <a-select style="width: 320px; border-radius: 12px; color: var(--secondary-text);"
        :bordered="false" :dropdownStyle="{boxShadow:'none !important',borderRadius:'12px',color:'var(--secondary-text)'}"
        :showArrow="true" v-model:value="public.type"  @change="getGroupType($event)"
@@ -213,27 +215,45 @@ export default defineComponent({
      ctx.emit('close')
     }
 
+    // 通过计算属性判断群ID是否为中文
+    const validateChinese = computed(()=>{
+      const chineseReg = /^[\u4e00-\u9fa5]+$/;
+      return chineseReg.test(data.groupID)
+    })
+  
+
     const submit = async () => {  // 点击创建群聊
-      const option = {
+      if(validateChinese.value){
+        return
+      }else{
+       const option = {
         type:data.public.type,
         groupID:data.groupID,
         memberList:data.selectList,
         name:data.groupName,
         avatar:groupTypeData.value.icon,
-      }
-      const res =  await server.tim.createGroup(option)
-      if(res.code === 0){
+       }
+
+       const res =  await server.tim.createGroup(option)
+       if(res.code === 0){
         message.success(`${res.data.group.name}创建成功`)
-      }
-      ctx.emit('close')
+        const name = `GROUP${data.groupID}`
+        server.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+          // 通知 TUIConversation 添加当前会话
+          // Notify TUIConversation to toggle the current conversation
+          server.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+        })
+       }
+       ctx.emit('close')
+
+      } 
     }
 
     onMounted(getFriendList)
 
     return{
-      ...toRefs(data),groupTypeData,
-
-      getFriendList,selectUser,enterNextStep,closeContact,
+      groupTypeData,validateChinese,
+      ...toRefs(data), getFriendList,selectUser,enterNextStep,closeContact,
       clearSelect,goBack,getGroupType,submit,
     }
   }
@@ -296,5 +316,11 @@ export default defineComponent({
 
 :deep(.ant-select-arrow){
   color: var(--primary-text) !important;
+}
+
+.font-12{
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  font-weight: 400;
 }
 </style>
