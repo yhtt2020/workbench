@@ -1,36 +1,86 @@
 <template>
-  <div class="flex flex-col" style="width: 348px;">
-    <div class="flex items-center mb-2">
-      <div class="flex w-8 h-8 rounded-full mr-4">
-       <img :src="message.icon" class="w-full rounded-full h-full object-cover" alt="">
-      </div>
-      <div>{{ message.title }}</div>
+  <div class="flex" style="width: 380px;">
+    <div class="flex items-center justify-center" style="width: 32px;height: 32px;">
+      <img :src="message.icon" class="w-full rounded-full h-full object-cover" alt="">
     </div>
-    <div class="flex items-center justify-center px-4 mb-2">{{ message.body }}</div>
-    <div class="flex items-center justify-between">
-      <div>{{formatDate(message.time)}}</div>
-      <div class="flex">
-        <div class="mr-3 px-5 py-2 rounded-lg flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);" @click="talkLater">稍后再说</div>
-        <div class="px-5 py-2 rounded-lg flex items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow">立即查看</div>
+
+    <div class="flex flex-col" style="width: 90%;margin-left: 16px;">
+      <div class="font-16" style="color: var(--primary-text);margin-bottom: 18px;">{{ message.title }}</div>
+      <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">{{message.body}}</div>
+      <div class="flex items-center justify-between">
+        <div class="font-16" style="color:var(--secondary-text);">{{formatTime(parseInt(message.time) * 1000)}}</div>
+
+        <div class="flex ">
+          <div class="mr-3 px-5 py-2 rounded-lg pointer flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);"  @click="talkLater">稍后再说</div>
+          <div class="px-5 py-2 rounded-lg flex pointer items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow" >立即查看</div>
+        </div>
       </div>
     </div>
+
   </div>
+  <audio ref="message" src="/sound/message.mp3"></audio>
 </template>
 
 <script>
-import { formatDate } from '../../js/common/sessionNotice'
-export default {
-  props:['message'],
+import { defineComponent,ref,toRefs,computed, } from 'vue'
+import { mapWritableState,mapActions} from 'pinia'
+import { formatTime } from '../../util'
+import { noticeStore } from '../../store/notice'
+
+export default defineComponent({
+  props:['message','messageType','isPlay'],
+
+  computed:{
+    ...mapWritableState(noticeStore,['noticeSettings'])
+  },
+
   methods:{
-    formatDate,
-    talkLater(){
-      this.$emit('closeToast')
-    },
-    viewNow(){
-      this.$emit('nowCheck')
+    ...mapActions(noticeStore,['setMessagePlay'])
+  },
+
+  watch:{
+    'messageType':{
+      handler(newVal){
+        if(this.isPlay && newVal === 'message'){
+          this.setMessagePlay()
+          if(this.noticeSettings.messagePlay){
+            this.$nextTick(()=>{
+             this.$refs.message.play()
+            })
+          }else{
+            this.$nextTick(()=>{
+             this.$refs.message.pause()
+            })
+          }
+        }        
+      },
+      immediate:true,
+      deep:true,
+    }
+
+  },
+
+  setup(props,ctx){
+    const talkLater = () =>{  // 点击稍后再说按钮
+      ctx.emit('closeToast')
+      ctx.emit('nowCheck')
+    }
+
+    const viewNow = () =>{  // 点击立即查看
+      ctx.emit('closeToast')
+      ctx.emit('examine')
+    }
+
+
+
+    return{
+      formatTime,
+      talkLater,
+      viewNow
     }
   }
-}
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -42,5 +92,12 @@ export default {
   &:hover{
     opacity: 0.8;
   }
+}
+
+
+.font-16{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
 }
 </style>

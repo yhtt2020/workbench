@@ -1,5 +1,5 @@
 <template>
-  <div class="TUI-search" style="padding: 0 16px !important;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
+  <div class="TUI-search" style="padding: 0 16px !important;margin-top: 13px;" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
     <a-dropdown @click="toggleOptionalShow" placement="topLeft" class="ml-4" :trigger="['click']">
       <div class="w-11 active-button h-11 rounded-lg pointer flex items-center justify-center" style="background: var(--secondary-bg);">
         <Icon icon="tianjia2" style="color: var(--secondary-text);"></Icon>
@@ -20,7 +20,7 @@
   <teleport to='body'>
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
       <CreateGroup v-if="addIndex === 1" @submit="create" @close="close" @cancel="toggleOpen" :isH5="env.isH5" />
-      <AddFriend v-if="addIndex === 0" @close="close" :server="TUIServer"></AddFriend>
+      <AddFriend v-if="addIndex === 0" @close="close"></AddFriend>
       <Transfer :server="TUIServer" :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
     </Modal>
   </teleport>

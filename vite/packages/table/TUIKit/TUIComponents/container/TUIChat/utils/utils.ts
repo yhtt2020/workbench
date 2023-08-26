@@ -188,9 +188,9 @@ export function handleTipMessageShowContext(message: any) {
       case TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
         for (const member of message.payload.memberList) {
           if (member.muteTime > 0) {
-            options.text = `${t('message.tip.群成员')}：${member.userID}${t('message.tip.被禁言')}`;
+            options.text = `${t('message.tip.群成员')}：${member.nick}${t('message.tip.被禁言')}`;
           } else {
-            options.text = `${t('message.tip.群成员')}：${member.userID}${t('message.tip.被取消禁言')}`;
+            options.text = `${t('message.tip.群成员')}：${member.nick}${t('message.tip.被取消禁言')}`;
           }
         }
         break;
@@ -210,26 +210,26 @@ function handleTipGrpUpdated(message: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   const { payload } = message;
   const { newGroupProfile } = payload;
-  const { operatorID } = payload;
+  // const { operatorID } = payload;
   let text = "";
   if ("muteAllMembers" in newGroupProfile) {
     if (newGroupProfile["muteAllMembers"]) {
-      text = `${t("message.tip.管理员")} ${operatorID} ${t(
+      text = `${t("message.tip.管理员")} ${message.nick} ${t(
         "message.tip.开启全员禁言"
       )}`;
       } else {
-      text = `${t("message.tip.管理员")} ${operatorID} ${t(
+      text = `${t("message.tip.管理员")} ${message.nick} ${t(
         "message.tip.取消全员禁言"
       )}`;
       }
   } else if ("ownerID" in newGroupProfile) {
-    text = `${newGroupProfile["ownerID"]} ${t("message.tip.成为新的群主")}`;
+    text = `${message.nick} ${t("message.tip.成为新的群主")}`;
   } else if ("groupName" in newGroupProfile) {
-    text = `${operatorID} ${t("message.tip.修改群名为")} ${
+    text = `${message.nick} ${t("message.tip.修改群名为")} ${
       newGroupProfile["groupName"]
     }`;
   } else if ("notification" in newGroupProfile) {
-    text = `${operatorID} ${t("message.tip.发布新公告")}`;
+    text = `${message.nick} ${t("message.tip.发布新公告")}`;
   }
   return text;
 }

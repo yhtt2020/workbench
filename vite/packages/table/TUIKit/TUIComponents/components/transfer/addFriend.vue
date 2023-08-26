@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col" style="padding: 12px; width: 650px; height: 530px;" v-if="isNextShow === false">
     <!-- 顶部关闭 -->
-    <div class="top-close" style="margin: 16px 0;">
+    <div class="top-close" style="margin-bottom: 16px;">
       <div class="font-16 flex items-center justify-center" style="color:var(--primary-text);width: 95%;">选择联系人</div>
       <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center"
         style="background: var(--secondary-bg);" @click="closeContact"
@@ -80,7 +80,9 @@
     <div class="flex flex-col items-center justify-center" style="height:415px;color: var(--primary-text);">
       <a-avatar shape="square" :size="64" :src="groupTypeData.icon"></a-avatar>
 
-      <a-input v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
+      <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
+
+      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
       <a-select style="width: 320px; border-radius: 12px; color: var(--secondary-text);"
        :bordered="false" :dropdownStyle="{boxShadow:'none !important',borderRadius:'12px',color:'var(--secondary-text)'}"
@@ -105,23 +107,25 @@
 
 <script>
 import { defineComponent,ref,reactive,toRefs, onMounted, computed } from 'vue'
-
+import { message } from 'ant-design-vue';
+import { appStore } from '../../../../store'
 import _ from 'lodash-es'
 
 export default defineComponent({
-  props:['server'],
 
   setup(props,ctx){
-    const TUIServer = props.server.TUICore
-    
+    const server = window.$TUIKit
+   
+    const store = appStore()
+
     const data = reactive({
       friendList:[],  // 好友列表
       selectList:[], // 右侧选中列表
       isNextShow:false, // 是否进入下一步
       simpleImage:'/img/state/null.png', // 空状态图片
       groupName:'', // 接收群名称
-
-      public:{ type: TUIServer.TIM.TYPES.GRP_PUBLIC }, // 获取默认的群组类型
+      groupID:'', // 接收群ID
+      public:{ type: server.TIM.TYPES.GRP_PUBLIC }, // 获取默认的群组类型
       settingsScroller: {  // 滚动条配置 
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -134,7 +138,7 @@ export default defineComponent({
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Public.svg',
           label: '陌生人社交群（Public）',
           text:'陌生人社交群',
-          type: TUIServer.TIM.TYPES.GRP_PUBLIC,
+          type: server.TIM.TYPES.GRP_PUBLIC,
           detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。',
           src: '产品文档',
         },
@@ -142,7 +146,7 @@ export default defineComponent({
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Meeting.svg',
           label: '临时会议群（Meeting）',
           text:'临时会议群',
-          type: TUIServer.TIM.TYPES.GRP_MEETING,
+          type: server.TIM.TYPES.GRP_MEETING,
           detail: '创建后可以随意进出，且支持查看入群前消息；适合用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。',
           src: '产品文档',
         },
@@ -150,16 +154,22 @@ export default defineComponent({
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Work.svg',
           label: '好友工作群（Work）',
           text:'好友工作群',
-          type: TUIServer.TIM.TYPES.GRP_WORK,
-          detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主神奇。',
+          type: server.TIM.TYPES.GRP_WORK,
+          detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主审批。',
           src: '产品文档',
         }
       ],
     })
 
     const getFriendList = async () =>{  // 获取好友列表数据
-      const res  = await TUIServer.tim.getFriendList()
-      data.friendList = res.data
+      const res  = await server.tim.getFriendList()
+      const list = [];
+      for(let i =0; i<res.data.length;i++){
+        if(parseInt(res.data[i].userID) !== store.$state.userInfo.uid){
+          list.push(res.data[i])
+        }
+      }
+      data.friendList = list
     }
 
     const selectUser = (item) => {  // 选中用户
@@ -175,7 +185,6 @@ export default defineComponent({
     const enterNextStep = () =>{  // 进入下一步
       if(data.selectList.length !== 0 ){
         data.isNextShow = true
-
       }
     }
 
@@ -207,13 +216,15 @@ export default defineComponent({
     const submit = async () => {  // 点击创建群聊
       const option = {
         type:data.public.type,
+        groupID:data.groupID,
         memberList:data.selectList,
         name:data.groupName,
         avatar:groupTypeData.value.icon,
       }
-
-      
-      await TUIServer.tim.createGroup(option)
+      const res =  await server.tim.createGroup(option)
+      if(res.code === 0){
+        message.success(`${res.data.group.name}创建成功`)
+      }
       ctx.emit('close')
     }
 

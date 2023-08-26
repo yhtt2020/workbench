@@ -1,29 +1,23 @@
 <template>
-  <transition @before-leave="init">
+  <transition>
     <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
       <aside class="TUI-contact-left">
-        <header class="TUI-contact-left-header">
-          <div class="search">
-            <div class="search-box" @click="toggleSearch" v-if="!isSearch">
-              <i class="plus"></i>
-              <h1>{{ $t('TUIContact.添加群聊') }}</h1>
-            </div>
-            <div class="search-box" v-else>
-              <div class="input-box">
-                <input
-                  type="text"
-                  v-model="searchID"
-                  :placeholder="$t('TUIContact.输入群ID，按回车搜索')"
-                  @keyup.enter="handleSearchGroup"
-                  enterkeyhint="search"
-                />
-                <i class="icon icon-cancel" v-if="!!searchID" @click="searchID = ''"></i>
-              </div>
-              <span class="search-cancel" @click="toggleSearch">{{ $t('取消') }}</span>
-            </div>
-          </div>
-        </header>
-        <ul class="TUI-contact-column" v-if="!isSearch">
+        <div v-for="item in sideList" :class="{'active-bg':sideIndex === item.index}" class="flex pointer items-center"  style="padding: 16px;" @click="select(item.index)">
+         <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
+          <Icon :icon="item.icon" style="color: var(--active-text);"></Icon>
+         </div>
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
+          {{ item.title }} ({{ groupList.length }}个)
+         </div>
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
+          {{ item.title }} ({{ friendLists.length }}个)
+         </div>
+         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
+          {{ item.title }} ({{ systemMessageList ? systemMessageList.length : 0 }}个)
+         </div>
+        </div>
+
+        <!-- <ul class="TUI-contact-column" v-if="!isSearch">
           <li class="TUI-contact-column-item">
             <header @click="select('system')">
               <i class="icon icon-right" :class="[columnName === 'system' && 'icon-down']"></i>
@@ -143,17 +137,39 @@
               <span class="type">{{ searchGroup?.type }}</span>
             </main>
           </li>
-        </ul>
+        </ul> -->
       </aside>
-      <main
-        class="TUI-contact-main"
-        v-show="!!currentGroup?.groupID || !!currentFriend?.userID || columnName === 'system'"
-      >
-        <header class="TUI-contact-main-h5-title" v-if="env.isH5">
+      <main class="TUI-contact-main">
+
+        <div class="TUI-contact-system" v-if="sideIndex === 'system'">
+          <header class="TUI-contact-system-header" v-if="!env.isH5">
+            <div class="font-16" style="color:var(--primary-text);">{{ $t('TUIContact.群聊通知') }}</div>
+          </header>
+          <MessageSystem
+            :isH5="env.isH5"
+            :data="systemMessageList"
+            :types="types"
+            @application="handleGroupApplication"
+          />
+        </div>
+
+        <div v-else-if="sideIndex === 'group' " class="TUI-contact-main-info">
+          <Group :list="groupList"></Group>
+        </div>
+
+        <div v-else-if="sideIndex === 'friend' " class="TUI-contact-main-info">
+          <Friend :list="friendLists"></Friend>
+        </div>
+        
+        <!-- <header class="TUI-contact-main-h5-title" v-if="env.isH5">
           <i class="icon icon-back" @click="back"></i>
           <h1>{{ currentGroup?.name || $t('TUIContact.系统通知') }}</h1>
-        </header>
-        <div v-if="!!currentGroup?.groupID" class="TUI-contact-main-info">
+        </header> -->
+
+<!-- 
+        <div v-if="!!currentGroup?.groupID && columnName === 'group' " class="TUI-contact-main-info">
+          <Group :list="groupList"></Group>
+          
           <header class="TUI-contact-main-info-header">
             <ul class="list">
               <h1>{{ currentGroup?.name }}</h1>
@@ -205,8 +221,11 @@
               {{ $t('TUIContact.进入群聊') }}
             </button>
           </footer>
-        </div>
-        <div v-else-if="currentFriend?.userID && columnName === 'friend'" class="TUI-contact-main-info">
+        </div> -->
+
+
+        <!-- <div v-else-if="currentFriend?.userID && columnName === 'friend'" class="TUI-contact-main-info">
+          
           <header class="TUI-contact-main-info-header">
             <ul class="list">
               <h1>{{ currentFriend?.profile?.nick || currentFriend?.userID }}</h1>
@@ -229,24 +248,16 @@
           </header>
 
           <footer class="TUI-contact-main-info-footer">
-<!--            <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">-->
-<!--              {{ $t('TUIContact.发送消息') }}-->
-<!--            </button>-->
+           <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">
+             {{ $t('TUIContact.发送消息') }}
+           </button>
             <SendMessageButton :uid="currentFriend.userID"></SendMessageButton>
           </footer>
-        </div>
-        <div class="TUI-contact-system" v-else-if="columnName === 'system'">
-          <header class="TUI-contact-system-header" v-if="!env.isH5">
-            <h1>{{ $t('TUIContact.系统通知') }}</h1>
-          </header>
-          <MessageSystem
-            :isH5="env.isH5"
-            :data="systemMessageList"
-            :types="types"
-            @application="handleGroupApplication"
-          />
-        </div>
-        <slot v-else />
+        </div> -->
+
+
+       
+
       </main>
     </div>
   </transition>
@@ -256,10 +267,15 @@ import { computed, defineComponent, reactive, toRefs, watch } from 'vue';
 import MessageSystem from './components/message-system.vue';
 import { handleErrorPrompts, isArrayEqual } from '../utils';
 import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
+import Group from './addressbook/group.vue'
+import Friend from './addressbook/friend.vue';
+import { appStore } from '../../../../store';
+
 const TUIContact = defineComponent({
   name: 'TUIContact',
   components: {
-    MessageSystem,SendMessageButton
+    MessageSystem,SendMessageButton,
+    Group,Friend
   },
   props: {
     displayOnlineStatus: {
@@ -289,9 +305,17 @@ const TUIContact = defineComponent({
       displayOnlineStatus: false,
       onlineStatus: false,
       userStatusList: new Map(),
+      sideList:[
+        { title:'通知',icon:'notification',color:'var(--active-bg)',index:'system'},
+        { title:'群聊',icon:'message',color:'var(--success)',index:'group'},
+        { title:'好友',icon:'smile',color:'var(--warning)',index:'friend' },
+      ],
+      sideIndex:'system', // 接收通讯录侧边列表项下标
     });
 
     TUIServer.bind(data);
+
+    const store = appStore()
 
     watch(
       () => props.displayOnlineStatus,
@@ -356,51 +380,36 @@ const TUIContact = defineComponent({
       (data.currentGroup as any).apply = true;
     };
 
-    const quit = async (group: any) => {
-      await TUIServer.quitGroup(group.groupID);
-      data.currentGroup = null;
-    };
 
-    const enter = async (ID: any, type: string) => {
-      const name = `${type}${ID}`;
-      TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-        back();
-      });
-    };
-
-    const dismiss = (group: any) => {
-      TUIServer.dismissGroup(group.groupID);
-      data.currentGroup = null;
-    };
 
     const select = async (name: string) => {
-      if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+      data.sideIndex = name
+      if(name === 'system'){
         await TUIServer.getSystemMessageList();
         await TUIServer.setMessageRead();
-      }
-      (data.currentGroup as any) = {};
-      if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+      }else if(name === 'group'){
         (data.currentGroup as any) = data.groupList[0];
-      } else {
-        (data.currentGroup as any) = {};
+      }else if(name === 'friend'){
+        const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+        (data.currentGroup as any) = index
       }
-      data.searchID = '';
-      data.columnName = data.columnName === name ? '' : name;
+
+      // if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
+        // await TUIServer.getSystemMessageList();
+        // await TUIServer.setMessageRead();
+      // }
+      // // (data.currentGroup as any) = {};
+      // if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
+      //   (data.currentGroup as any) = data.groupList[0];
+      // } else {
+      //   (data.currentGroup as any) = data.friendList[0];
+      // }
+      // data.searchID = '';
+      // data.columnName = data.columnName === name ? '' : name;
     };
 
     const toggleSearch = () => {
       data.isSearch = !data.isSearch;
-      data.columnName = '';
-      data.searchID = '';
-      data.searchGroup = {};
-      (data.currentGroup as any) = {};
-    };
-
-    const init = () => {
-      data.isSearch = false;
       data.columnName = '';
       data.searchID = '';
       data.searchGroup = {};
@@ -420,20 +429,22 @@ const TUIContact = defineComponent({
       TUIServer.TUICore.getUserStatusList(userList);
     };
 
+
+    const friendLists = computed(() =>{
+      const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+      return index
+    })
+
     return {
       ...toRefs(data),
       handleListItem,
       handleSearchGroup,
       join,
-      quit,
-      dismiss,
-      isNeedPermission,
+      isNeedPermission,friendLists,
       select,
       handleGroupApplication,
       toggleSearch,
-      init,
       back,
-      enter,
       getUserStatusList,
     };
   },
@@ -442,3 +453,19 @@ export default TUIContact;
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style lang="scss" scoped>
+.font-16{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+:deep(.active-bg){
+  background: var(--active-secondary-bg);
+}
+
+:deep(.TUI-contact-main-info){
+  padding:0  16px !important;
+}
+
+</style>

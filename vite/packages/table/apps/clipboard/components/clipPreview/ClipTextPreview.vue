@@ -17,14 +17,15 @@
                 <textCodeMirror :editorContent="previewContent.content" class="w-full"></textCodeMirror>
               </template>
               <template v-else>
-                <ClipCodemirror ref="myClipCodeMirror" class="w-full" :editorContent="previewContent.content"></ClipCodemirror>
+                <ClipCodemirror ref="myClipCodeMirror" class="w-full"
+                                :editorContent="previewContent.content"></ClipCodemirror>
               </template>
             </div>
             <!-- 底部tab切换 -->
             <div class="flex items-center justify-center">
               <HorizontalPanel :navList="textType" v-model:selectType="defaultText"></HorizontalPanel>
-              <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center" 
-                style="background: var(--secondary-bg);" @click="openCodeLanguage" v-if="defaultText.name === 'code'"
+              <div class="flex ml-3 py-3 px-4 pointer items-center rounded-lg justify-center"
+                   style="background: var(--secondary-bg);" @click="openCodeLanguage" v-if="defaultText.name === 'code'"
               >
                 <span class="mr-5 type-right">
                   {{ language.title }}
@@ -43,18 +44,19 @@
               </div>
               <div class="flex justify-between mb-6">
                 <span class="type-text">时间</span>
-                <span class="type-right">{{ previewContent.timeText}}</span>
+                <span class="type-right" v-html="timeText"></span>
               </div>
               <div class="flex justify-between mb-6">
                 <span class="type-text">大小</span>
-                <span class="type-right">{{ previewContent.content.length}}个字符</span>
+                <span class="type-right">{{ previewContent.content.length }}个字符</span>
               </div>
             </div>
             <div class="flex  flex-col justify-between">
-               <div v-for="item  in textClipKey" class="flex py-3 px-4 mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
-                  <span>{{item.title}}</span>
-                  <span>{{ item.key }}</span>
-               </div>
+              <div @click="()=>{item.fn(previewContent)}"  v-for="item  in textClipKey" class="flex py-3 px-4 mt-3 rounded-lg justify-between s-item"
+                   style="background: var(--secondary-bg);">
+                <span>{{ item.title }}</span>
+                <span>{{ item.key }}</span>
+              </div>
             </div>
           </div>
         </template>
@@ -73,9 +75,9 @@
 
             <!-- 内容预览区域 -->
             <div class="flex h-full flex-col justify-center items-center">
-               <div class="clip-image rounded-lg">
+              <div class="clip-image rounded-lg">
                 <img :src="previewContent.img" alt="" class="w-full rounded-lg h-full object-cover">
-               </div> 
+              </div>
             </div>
           </div>
 
@@ -106,11 +108,13 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
-                    <span>{{item.title}}</span>
+                  <div v-for="item  in fileClipKey"
+                       class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item"
+                       style="background: var(--secondary-bg);">
+                    <span>{{ item.title }}</span>
                     <span>{{ item.key }}</span>
-                 </div>
-                </div> 
+                  </div>
+                </div>
               </div>
             </vue-custom-scrollbar>
           </div>
@@ -131,7 +135,7 @@
             <div class="flex h-full flex-col justify-between">
               <div class="flex items-center h-full justify-center p-10">
                 <Icon :icon="previewContent.picIcon" style="font-size: 20em;"></Icon>
-              </div> 
+              </div>
             </div>
           </div>
           <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
@@ -160,11 +164,13 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
-                    <span>{{item.title}}</span>
+                  <div v-for="item  in fileClipKey"
+                       class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item"
+                       style="background: var(--secondary-bg);">
+                    <span>{{ item.title }}</span>
                     <span>{{ item.key }}</span>
                   </div>
-                </div> 
+                </div>
               </div>
             </vue-custom-scrollbar>
           </div>
@@ -224,10 +230,12 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
-                    <span>{{item.title}}</span>
+                  <div v-for="item  in fileClipKey"
+                       class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item"
+                       style="background: var(--secondary-bg);">
+                    <span>{{ item.title }}</span>
                     <span>{{ item.key }}</span>
-                  </div> 
+                  </div>
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -244,7 +252,7 @@
                 <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
               </div>
             </div>
-      
+
             <!-- 内容预览 -->
             <div class="flex h-full flex-col items-center justify-center">
               <ClipAudio :fileUrl="previewContent.audioUrl" class="w-1/2"></ClipAudio>
@@ -288,11 +296,12 @@
                     </div>
                   </div>
                 </div>
-                <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey" class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item" style="background: var(--secondary-bg);">
-                    <span class="type-right">{{item.title}}</span>
+                <div class="flex n-drag flex-col justify-between">
+                  <div @click="()=>{item.fn(previewContent)}" v-for="item  in fileClipKey"
+                       class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item">
+                    <span class="type-right">{{ item.title }}</span>
                     <span class="type-text">{{ item.key }}</span>
-                  </div> 
+                  </div>
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -305,22 +314,25 @@
   </transition>
 
   <!-- 语言包切换弹窗设置 -->
-  <HorizontalDrawer ref="previewRef" :drawerTitle="defaultTitle" :rightSelect="codeLanguage" v-model:selectRegion="language.id" @getArea="getArea"></HorizontalDrawer>
+  <HorizontalDrawer ref="previewRef" :drawerTitle="defaultTitle" :rightSelect="codeLanguage"
+                    v-model:selectRegion="language.id" @getArea="getArea"></HorizontalDrawer>
 </template>
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { clipboardStore } from '../../store/clipboard';
-import { codeLanguage } from '../../js/data/clipTheme';
-import ClipCodemirror from './ClipCodemirror.vue';
-import HorizontalPanel from '../HorizontalPanel.vue';
-import textCodeMirror from './textCodeMirror.vue';
-import HorizontalDrawer from '../HorizontalDrawer.vue';
-import ClipVideo from './ClipVideo.vue';
-import ClipAudio from './ClipAudio.vue';
+import { clipboardStore } from '../../store'
+import { codeLanguage } from '../../../../js/data/clipTheme'
+import ClipCodemirror from './ClipCodemirror.vue'
+import HorizontalPanel from '../../../../components/HorizontalPanel.vue'
+import textCodeMirror from './textCodeMirror.vue'
+import HorizontalDrawer from '../../../../components/HorizontalDrawer.vue'
+import ClipVideo from '../parser/ClipVideo.vue'
+import ClipAudio from '../parser/ClipAudio.vue'
+import { getDateTime } from '../../../../util'
+import { message } from 'ant-design-vue'
 
 export default {
-  components:{
+  components: {
     ClipCodemirror,
     HorizontalPanel,
     textCodeMirror,
@@ -328,40 +340,55 @@ export default {
     ClipVideo,
     ClipAudio
   },
-  props:{
-    previewContent:{
-      type:Object,
-      default:()=>{}
+  props: {
+    previewContent: {
+      type: Object,
+      default: () => {}
     }
   },
 
-  data(){
-    return{
+  data () {
+    return {
       // 预览代码块类型切换
-      textType:[
-        {title:'纯文本',name:'plainText'},
-        {title:'代码块',name:'code'}
+      textType: [
+        { title: '纯文本', name: 'plainText' },
+        { title: '代码块', name: 'code' }
       ],
       // 默认的预览代码块类型
-      defaultText: {title:'纯文本',name:'plainText'},
+      defaultText: { title: '纯文本', name: 'plainText' },
       // 代码块语言包选项
       codeLanguage,
-      defaultTitle:'语言',
+      defaultTitle: '语言',
       // 文本预览快捷键操作
-      textClipKey:[
-        {title:'复制',key:'Ctrl + C',id:'cs'},
-        {title:'打开链接',key:'Ctrl + O',id:'co'},
-        {title:'添加收藏',key:'Ctrl + S',id:'cs'},
-        {title:'删除',key:'Delete',id:'d'}
+      textClipKey: [
+        {
+          title: '复制', key: 'Ctrl + C', id: 'cs', fn: (item) => {
+            require('electron').clipboard.writeText(item.content)
+            message.success('复制成功。')
+          }
+        },
+        { title: '打开链接', key: 'Ctrl + O', id: 'co' },
+        {
+          title: '添加收藏', key: 'Ctrl + S', id: 'cs', fn: (item) => {
+            this.addToCollection(item)
+            message.success('添加收藏成功。')
+          }
+        },
+        {
+          title: '删除', key: 'Delete', id: 'd', fn: (item) => {
+            this.remove(item)
+            message.success('删除成功。')
+          }
+        }
       ],
       // 其他文件预览快捷键
-      fileClipKey:[
-        {title:'复制',key:'Ctrl + C',id:'cs'},
-        {title:'打开',key:'Ctrl + O',id:'co'},
-        {title:'复制路径',key:'Ctrl + Alt + C',id:'cas'},
-        {title:'在资源管理器中打开',key:'Ctrl + Enter',id:'ce'},
-        {title:'添加收藏',key:'Ctrl + S',id:'cs'},
-        {title:'删除',key:'Delete',id:'d'}
+      fileClipKey: [
+        { title: '复制', key: 'Ctrl + C', id: 'cs' },
+        { title: '打开', key: 'Ctrl + O', id: 'co' },
+        { title: '复制路径', key: 'Ctrl + Alt + C', id: 'cas' },
+        { title: '在资源管理器中打开', key: 'Ctrl + Enter', id: 'ce' },
+        { title: '添加收藏', key: 'Ctrl + S', id: 'cs' },
+        { title: '删除', key: 'Delete', id: 'd' }
       ],
       settingsScroller: {
         useBothWheelAxes: true,
@@ -373,50 +400,55 @@ export default {
     }
   },
 
-  computed:{
-    ...mapWritableState(clipboardStore,['previewShow','clipMode']),
-    language(){
-      const index = this.codeLanguage.find(el=>{
-        return el.abbr === this.clipMode
+  computed: {
+    ...mapWritableState(clipboardStore, ['settings', 'previewShow', 'clipMode']),
+    timeText () {
+      const time = getDateTime(new Date(this.previewContent.createTime))
+      return `${time.hours}:${time.minutes}:${time.seconds}` + '&nbsp;&nbsp;&nbsp;' + `${time.month}月${time.day}日`
+    },
+    language () {
+      const index = this.codeLanguage.find(el => {
+        return el.abbr === this.settings.clipMode
       })
       return index
     }
   },
 
-  mounted(){
+  mounted () {
   },
 
-  methods:{
-    ...mapActions(clipboardStore,['isOpenPreview','changeClipMode']),
+  methods: {
+    ...mapActions(clipboardStore, ['isOpenPreview', 'changeClipMode', 'addToCollection', 'remove']),
+
     // 关闭预览全屏窗口
-    closePreview(){
+    closePreview () {
       this.isOpenPreview(false)
     },
     // 打开语言包选项配置
-    openCodeLanguage(){
+    openCodeLanguage () {
       this.$refs.previewRef.openDrawer()
     },
-    getArea(v){
+    getArea (v) {
       this.changeClipMode(v.abbr)
       // this.$refs.myClipCodeMirror.$forceUpdate()
     },
   },
 
-  watch:{
-    'defaultText':{
-      handler(){
+  watch: {
+    'defaultText': {
+      handler () {
         this.defaultText = this.defaultText
       },
-      immediate:true
+      immediate: true
     }
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.preview-container{
+.preview-container {
   position: fixed;
-  top:0;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
@@ -425,105 +457,113 @@ export default {
   backdrop-filter: blur(60px);
 }
 
-.type-text{
+.type-text {
   font-family: PingFangSC-Regular;
   font-size: 16px;
   color: var(--secondary-text);
   font-weight: 400;
 }
-.s-item{
+
+.s-item {
+  &:hover{
+    opacity: 0.7;
+  }
   background: var(--secondary-bg);
   color: var(--primary-text);
+  cursor: pointer;
 }
-.type-right{
+
+.type-right {
   font-family: PingFangSC-Regular;
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 400;
 }
-:deep(.CodeMirror){
-  height:calc(100% - 20px) !important;
+
+:deep(.CodeMirror) {
+  height: calc(100% - 20px) !important;
 }
 
-.clip-image{
+.clip-image {
   max-width: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.middle-clip{
+.middle-clip {
   max-width: 800px;
 
 }
 
 
-@media screen and (max-width:840px){
-  .clip-image{
+@media screen and (max-width: 840px) {
+  .clip-image {
     width: calc(100% / 1.2);
   }
-  .middle-clip{
+  .middle-clip {
     width: calc(100% / 1.2);
   }
-  :deep(.CodeMirror){
-    width:500px !important;
-    height: 480px !important; 
+  :deep(.CodeMirror) {
+    width: 500px !important;
+    height: 480px !important;
   }
 }
 
-@media screen and (min-width:841px) and (max-width:1140px) {
-  .clip-image{
+@media screen and (min-width: 841px) and (max-width: 1140px) {
+  .clip-image {
     width: calc(100% / 1.25);
   }
-  .middle-clip{
+  .middle-clip {
     width: calc(100% / 1.25);
   }
 
-  :deep(.CodeMirror){
-    width:600px !important;
+  :deep(.CodeMirror) {
+    width: 600px !important;
   }
 }
 
-@media screen and (min-width:1141px) and (max-width:1240px) {
-  .clip-image{
+@media screen and (min-width: 1141px) and (max-width: 1240px) {
+  .clip-image {
     width: calc(100% / 1.35);
   }
-  .middle-clip{
+  .middle-clip {
     width: calc(100% / 1.35);
   }
 
-  :deep(.CodeMirror){
-    width:700px !important;
+  :deep(.CodeMirror) {
+    width: 700px !important;
   }
 }
 
-@media screen and (min-width:1241px){
-  .clip-image{
+@media screen and (min-width: 1241px) {
+  .clip-image {
     width: calc(100% / 1);
   }
-  .middle-clip{
+  .middle-clip {
     width: calc(100% / 1);
   }
 }
 
-:deep(.ps__rail-y){
+:deep(.ps__rail-y) {
   display: none !important;
 }
 
 
-@media screen and (max-height:480px) {
-  :deep(.CodeMirror){
-    height:330px !important;
+@media screen and (max-height: 480px) {
+  :deep(.CodeMirror) {
+    height: 330px !important;
   }
 }
-@media screen and (min-height:481px) and (max-height:800px) {
-  :deep(.CodeMirror){
+
+@media screen and (min-height: 481px) and (max-height: 800px) {
+  :deep(.CodeMirror) {
     height: 600px !important;
   }
 }
 
-@media screen and (min-height:801px) and (max-height:1200px) {
-  :deep(.CodeMirror){
+@media screen and (min-height: 801px) and (max-height: 1200px) {
+  :deep(.CodeMirror) {
     height: 100% !important;
   }
 }

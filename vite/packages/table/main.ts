@@ -49,6 +49,7 @@ import dayjs from 'dayjs';
 
 import "../../public/css/styleSwitch/index.scss"
 import "../../public/css/styleSwitch/codemirror.scss"
+import "../../public/css/styleSwitch/toast.scss"
 import {router}from './router'
 
 
@@ -75,6 +76,13 @@ window.$chat=TUIKit.tim
 window.$TUIKit.tim.setLogLevel(4);
 const notice = new Notifications()
 window.$notice = notice
+
+
+window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(event) =>{  // 全局监听团队聊天消息
+  window.$notice.receiveNotification(event)
+})
+
+
 
 dayjs.locale('zh-cn');
 
@@ -106,6 +114,8 @@ app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
+
+
 window.$app=$app
 export {
   router

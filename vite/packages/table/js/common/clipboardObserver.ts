@@ -9,7 +9,7 @@ declare interface Options{
 export class ClipboardObserver {
   timer
   beforeText: string
-  beforeImage: NativeImage
+  beforeImage: any
   duration = 500
   textChange: (text: string, beforeText: string) => void
   imageChange: (image: any, beforeImage: any) => void

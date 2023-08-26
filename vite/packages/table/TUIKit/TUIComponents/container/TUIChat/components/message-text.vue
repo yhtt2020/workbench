@@ -41,6 +41,8 @@ export default defineComponent({
   font-size: inherit;
   word-break: break-word;
   font-size: 14px;
+  /**
   text-size-adjust: none;
+  **/
 }
 </style>

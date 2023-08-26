@@ -28,13 +28,20 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
-      <div hidden="" class="no-drag flex items-center pointer" @click="messageAlert">
-        <div class=" flex items-center justify-center" style="width: 20px;height: 20px;">
+      <div  v-if="noticeSettings.show && hasChat"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
+        <div class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
+          <div class="new-message-tag"></div>
         </div>
         <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
         <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
+
       </div>
+
+      <div v-else class="no-drag  flex items-center pointer justify-center pr-3" @click="messageAlert" style="color: var(--primary-text);">
+        <Icon icon="notification" style="font-size:1.5em;"></Icon>
+      </div>
+
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="no-drag truncate" v-if="!loading">
@@ -48,6 +55,7 @@
           </span>
         </div>
       </div>
+
     </div>
     <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg "
          style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
@@ -57,8 +65,8 @@
 
 
   <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer"
-            :bodyStyle="{padding:'12px',overflow:'hidden !important',}">
-    <MessagePopup></MessagePopup>
+            :bodyStyle="{padding:'12px',overflow:'hidden !important',}" @closeMessage="messageDrawer = false">
+    <MessagePopup ref="loadMessage"></MessagePopup>
   </a-drawer>
   <a-drawer v-model:visible="appStats" placement="left">
     <div class="app-stats">
@@ -113,7 +121,8 @@ import WindowController from './WindowController.vue'
 import MessagePopup from '../page/notice/noticeIndex.vue'
 import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
-import { clipboardStore } from '../store/clipboard'
+import { clipboardStore } from '../apps/clipboard/store'
+import { noticeStore } from '../store/notice'
 
 export default {
   name: 'TopPanel',
@@ -139,6 +148,7 @@ export default {
     ...mapWritableState(timerStore, ['lockTimeout']),
     ...mapWritableState(steamUserStore, ['runningGame']),
     ...mapState(clipboardStore, ['enable']),
+    ...mapState(noticeStore,['noticeSettings']),
     isMain,
     lockTimeoutDisplay () {
       // if(this.lockTimeout>=60){
@@ -184,6 +194,10 @@ export default {
     hasWeather () {
       return this.cities.length > 0
     },
+
+    hasChat(){
+      return this.$route.path !== '/chat'
+    }
   },
   async mounted () {
     window.onblur = () => {
@@ -205,6 +219,8 @@ export default {
     getIcon,
     getCover,
     ...mapActions(cardStore, ['setAppDate']),
+    ...mapActions(noticeStore,['hideNoticeEntry']),
+
     clearLockTimer () {
       if (this.lockTimer) {
         clearInterval(this.lockTimer)
@@ -261,6 +277,10 @@ export default {
     },
     messageAlert () {
       this.messageDrawer = true
+      this.$nextTick(()=>{
+        this.$refs.loadMessage.loadHistoryNotice()
+      })
+      this.hideNoticeEntry()
     }
 
   },
@@ -277,9 +297,6 @@ export default {
   height: 2em;
   border-radius: 100px;
   border: 1px solid #c4c4c4;
-}
-
-.btn-container {
 }
 
 .new-message {
@@ -322,6 +339,30 @@ export default {
     &:hover {
       opacity: 0.9;
     }
+  }
+}
+
+.new-message-tag::after{
+  content: "";
+  display: block;
+  width:7px;
+  height: 7px;
+  background-color:var(--error);
+  border-radius: 50%;
+  position:absolute;
+  top:0px;
+  right:0px;
+}
+
+
+.notification {
+
+  animation: blink 1s infinite;
+
+  @keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
   }
 }
 </style>

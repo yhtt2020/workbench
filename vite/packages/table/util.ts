@@ -12,6 +12,17 @@ export function fixHttp (str, ssl = true) {
     }
   }
 }
+export function formatFileSize(size) {
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let index = 0;
+
+  while (size >= 1024 && index < units.length-1) {
+    size /= 1024;
+    index++;
+  }
+
+  return size.toFixed(2) + " " + units[index];
+}
 
 export function formatSeconds (value) {
   //  秒
@@ -234,3 +245,59 @@ export function  initCanvas(refName,list,size,width,color,activeColor) {
   })
 
 }
+
+
+export function formatTime(dateTimeStamp){
+
+  const minute = 1000 * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const week = day * 7;
+  const now = new Date().getTime();
+  const diffValue = now - dateTimeStamp;
+  let result = '';
+
+  if (diffValue < 0) {
+   return;
+  }
+
+  const minC = diffValue / minute;
+  const hourC = diffValue / hour;
+  const dayC = diffValue / day;
+  const weekC = diffValue / week;
+
+  if (weekC >= 1 && weekC <= 4) {
+
+    result = ` ${parseInt(`${weekC}`, 10)}周前`;
+
+  }else if (dayC >= 1 && dayC <= 6){
+
+    result = ` ${parseInt(`${dayC}`, 10)}天前`;
+
+  }else if (hourC >= 1 && hourC <= 23){
+
+    result = ` ${parseInt(`${hourC}`, 10)}小时前`;
+
+  }else if (minC >= 1 && minC <= 59){
+
+    result = ` ${parseInt(`${minC}`, 10)}分钟前`;
+
+  }else if (diffValue >= 0 && diffValue <= minute){
+
+    result = '刚刚';
+
+  }else{
+
+    const datetime = new Date();
+    datetime.setTime(dateTimeStamp);
+    const Nyear = datetime.getFullYear();
+    const Nmonth = datetime.getMonth() + 1 < 10 ? `0${datetime.getMonth() + 1}` : datetime.getMonth() + 1;
+    const Ndate = datetime.getDate() < 10 ? `0${datetime.getDate()}` : datetime.getDate();
+     result = `${Nyear}-${Nmonth}-${Ndate}`;
+
+  }
+
+  return result;
+
+}
+

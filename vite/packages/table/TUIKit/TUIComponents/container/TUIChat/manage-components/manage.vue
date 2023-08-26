@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between" style="height: 92%;">
+  <div class="flex flex-col" style="height: 92%;">
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 12px 16px !important;margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterUpdateGroupName">
         <span class="font-14" style="color: var(--primary-text);">群信息</span>
@@ -30,17 +30,19 @@
         </div>
       </div>
       <div class="flex items-center">
-        <div v-for="item in memberList" class="flex flex-col items-center justify-center" style="margin-right:16px;">
+        <div v-for="item in memberList.slice(0,6) " class="flex flex-col items-center justify-center" style="margin-right:16px;">
+          <!-- conversation?.selfInfo?.role !== 'Member' ?: memberList.slice(0,8) -->
           <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
-          <div class="font-12">{{ item.nick }}</div>
+          <div class="font-12 truncate" style="max-width:48px;color: var(-primary-text);">{{ item.nick }}</div>
         </div>
 
-        <div class="flex" v-if="conversation?.selfInfo?.role !== 'Member'">
-          <div v-if="conversation.type === 'Work'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addGroupMember('addMember')">
+        <div class="flex" >
+          <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('addMember')">
            <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
         
-          <div class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
+          <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>
         </div>
@@ -49,7 +51,7 @@
 
 
     
-    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;">
+    <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;margin-bottom: 16px !important;">
       <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
@@ -58,7 +60,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群ID</span>
         <div class="flex">
-          <span  class="font-14" style="color: var(--primary-text);">{{ conversation.groupID }}</span>
+          <span  class="font-14" style="color: var(--secondary-text);">{{ conversation.groupID }}</span>
           <Icon icon="icon_copy" @click="handleGroupIDCopy"></Icon>
         </div>
       </div>
@@ -72,14 +74,21 @@
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
-        <span class="font-14" style="color: var(--secondary-text);">
-          {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
-        </span>
+        <div class="flex">
+          <span class="font-14" style="color: var(--secondary-text);">
+            {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+          </span>
+          <template v-if="conversation.type !== 'AVChatRoom' && conversation.type !== 'ChatRoom'">
+            <div v-if="conversation?.selfInfo?.role === 'Owner'" class="flex items-center" style="margin-left: 12px;" @click="updateGroupJoinWay">
+              <Icon icon="xiangyou"></Icon>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
      
     <template v-if="conversation?.selfInfo?.role === 'Owner'">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between" style="padding-bottom: 10px;">
          <div class="flex  rounded-lg pointer  active-button items-center justify-center" 
           style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);"
           @click="changeOwner('change')"
@@ -96,7 +105,7 @@
     </template>
 
     <template v-else>
-      <div class="flex items-center justify-center">    
+      <div class="flex items-center justify-center" style="padding-bottom: 10px;">    
         <div class="flex  rounded-lg pointer active-button items-center justify-center" 
           style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
           @click="exitGroupChat"
@@ -110,11 +119,10 @@
   </div>
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
-    
-    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID" :server="groupServer" @closeUser="close"></UserSelect>
+    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID"  @closeUser="close"></UserSelect>
  </ChangeModal>
  
-
+ <AddMemeber></AddMemeber>
 </template>
 
 <script>
@@ -123,25 +131,17 @@ import useClipboard from 'vue-clipboard3';
 import { message,Modal } from 'ant-design-vue'
 import ChangeModal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
+import AddMemeber from '../../../components/userselect/addMemeber.vue'
 
 const manage = defineComponent({
-  props:{
-    conversation: {
-      type: Object,
-      default: () => ({}),
-    },
-    memberList:{
-      type: Array,
-      default: () => ([]),
-    }
-  },
+  props:['manageData','conversation','memberList'],
 
   components:{ ChangeModal,UserSelect },
 
   setup(props,ctx){
-    const types = manage.TUIServer.TUICore.TIM.TYPES;
+    const types = window.$TUIKit.TIM.TYPES
     const { GroupServer } = manage;
-    const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
+    const { t } = window.$TUIKit.config.i18n.useI18n();
     
     const data = reactive({
       typeName: {
@@ -203,15 +203,16 @@ const manage = defineComponent({
     }
 
     const enterGroupNotice = () =>{  // 进入群公告界面 
-      
+      const info = {
+        groupID:props.conversation.groupID,
+        notification:props.conversation.notification !== '' ? props.conversation.notification : '',
+        role:props.conversation.selfInfo.role
+      }
+
       ctx.emit('updateName',
        {
         title:'群公告',id:2,
-        info:{
-          groupID:props.conversation.groupID,
-          notification:props.conversation.notification,
-          role:props.conversation.selfInfo.role
-        }
+        info:info
        }
       )
 
@@ -246,10 +247,24 @@ const manage = defineComponent({
     }
 
     const dismiss = async () =>{  // 解散群聊 
-      await GroupServer.dismissGroup(props.conversation.groupID);
-      manage.TUIServer.store.conversation = {};
-      (window)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
-      ctx.emit('close')
+      Modal.confirm({
+        content:'是否确认操作',
+        okText:'确认',
+        cancelText:'取消',
+        onOk () {
+          dismissGroup()
+          ctx.emit('close')
+        }
+      })
+      
+    }
+
+    const dismissGroup = async () =>{
+      const res =  await window.$chat.dismissGroup(props.conversation.groupID)
+      const result =  await window.$chat.deleteConversation(props.manageData.conversationID)
+      if(res.code === 0 && result.code === 0){
+        message.success(`${props.conversation.name}已被解散`)
+      }
     }
 
     const changeOwner = (type) =>{  // 转让群聊
@@ -282,13 +297,21 @@ const manage = defineComponent({
       data.friendList = list
     }
 
+    const updateGroupJoinWay = () =>{  // 修改加群方式
+      ctx.emit('updateName',{title:'修改加群方式',id:5,info:{
+        groupID:props.conversation.groupID,
+        conversation:props.conversation,
+        title:`${data.typeName[props.conversation.joinOption]}`
+      }})
+    }
+
     onMounted(getFriendLists)
 
     return{
       ...toRefs(data),handleGroupIDCopy,close,
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
-      dismiss,addGroupMember,getFriendLists,
+      dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,dismissGroup,
     }
   }
 

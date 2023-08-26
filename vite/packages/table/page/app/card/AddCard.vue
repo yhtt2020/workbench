@@ -197,6 +197,14 @@ export default {
           images: ['notes'],
           size: ['1x2']
         },
+        {
+          name:'news',
+          cname:'新闻资讯',
+          icon:"time-circle",
+          detail:'头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息',
+          images:['news'],
+          size:['4x4']
+        }
       ],
       cardType: {},
       show: false,

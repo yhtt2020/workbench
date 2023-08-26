@@ -8,7 +8,7 @@
   </div>
 
   <div class="flex flex-col" style="margin-top: 16px !important;">
-    <a-input class=" h-11 mb-6" v-model:value="friendValue" style="border-radius: 12px;"  @input="handleInput($event)"  enterkeyhint="search" placeholder="输入用户ID搜索" >
+    <a-input class=" h-11 mb-6" :spellcheck="false" v-model:value="friendValue" style="border-radius: 12px;"  @input="handleInput($event)"  enterkeyhint="search" placeholder="输入用户ID搜索" >
       <template #suffix>
         <SearchOutlined style="color:var(--secondary-text);font-size: 1.25em;" />
       </template>

@@ -44,7 +44,9 @@
         <MessageEmojiReact :message="message" type="content" v-if="needEmojiReact && isEmojiReactionInMessage(message)" />
       </div>
     </main>
+
     <label class="message-label fail" v-if="message.status === 'fail'" @click="resendMessage(message)">!</label>
+    
     <label
       class="message-label"
       :class="readReceiptStyle(message)"
@@ -83,8 +85,9 @@
   </label>
 
   <Teleport to="body">
-    <Modal v-if="show" v-model:visible="show" :blurFlag="true">
-      <MemberInfo :info="memberInfo" @submit="show = false"></MemberInfo>
+    <Modal v-if="userCardVisible" v-model:visible="userCardVisible" :blurFlag="true">
+      <UserCard :key="userCardUid" :uid="uid" :userInfo="memberInfo"></UserCard>
+      <!-- <MemberInfo :info="memberInfo" @submit="show = false"></MemberInfo> -->
     </Modal>
   </Teleport>
 
@@ -104,10 +107,11 @@ import { TUIEnv } from '../../../../TUIPlugin';
 import MessageEmojiReact from './message-emoji-react.vue';
 import TIM from '../../../../TUICore/tim/index';
 import Modal from '../../../../../components/Modal.vue';
-import MemberInfo from './memberInfo.vue';
-
+// import MemberInfo from './memberInfo.vue';
+import { appStore } from '../../../../../store'
 import {post,get} from "../../../../../js/axios/request";
 import {sUrl} from '../../../../../consts'
+import UserCard from '../../../../../components/small/UserCard.vue';
 
 
 const userCardUrl = sUrl('/app/com/userCard')  // 用户卡片信息
@@ -150,7 +154,9 @@ const messageBubble = defineComponent({
   emits: ['jumpID', 'resendMessage', 'showReadReceiptDialog', 'showRepliesDialog', 'dropDownOpen'],
  
   components: {
-    MessageReference,MemberInfo,
+    MessageReference,
+    // MemberInfo,
+    UserCard,
     MessageEmojiReact,Modal
   },
 
@@ -161,7 +167,7 @@ const messageBubble = defineComponent({
       env: TUIEnv(),
       message: {} as Message,
       messagesList: [],
-      show: false,
+      userCardVisible: false,
       type: {},
       referenceMessage: {},
       referenceForShow: {},
@@ -173,7 +179,12 @@ const messageBubble = defineComponent({
       url: '',
       needEmojiReact: false,
       memberInfo:{},
+      userCardUid:"",
+      uid:"",
     });
+
+    const store = appStore()
+    data.userCardUid = store.$state?.userCardUid
 
     watchEffect(() => {
       data.type = constant;
@@ -407,13 +418,15 @@ const messageBubble = defineComponent({
     };
 
     const clickPersonalInfo = async(message:Message) => {  // 点击消息列表头像显示用户信息  
-      data.show = true
+      data.userCardVisible = true
       
       const uid = message.from 
       const userResult = await post(userCardUrl,{uid:uid}) // 用户基本信息
       const gradeRes = await get(getUserGradeUrl,{uid:uid}) // 用户等级信息
       const medalRes = await get(getUserMedalUrl,{uid:uid}) // 用户排名信息
       
+      data.uid = uid
+
       data.memberInfo = {
         userinfo:{
         avatar:userResult.data.user.avatar, 
@@ -630,6 +643,7 @@ export default messageBubble;
     word-wrap: break-word;
     word-break: break-all;
     width: fit-content;
+    user-select: text !important;
     &-in {
       background: #fbfbfb;
       border-radius: 0px 10px 10px 10px;

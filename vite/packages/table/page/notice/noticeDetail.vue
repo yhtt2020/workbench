@@ -1,42 +1,24 @@
 <template>
-  <div v-for="(item,index) in detailItem" class="flex flex-col mb-3 p-4 rounded-lg"
-   style="width: 395px; background: var(--secondary-bg);position: relative;"
-   @contextmenu.stop="noticeMenu(index,$event)"
-  >
-
-    <div class="flex items-center justify-between mb-4" v-if="isStringEmpty(item)">
-      <div class="flex items-center">
-        <span class="pr-2 font-400" style="color: var(--primary-text);">收到了来自</span>
-        <a-avatar :size="24"  :src="item.from.avatarUrl"></a-avatar>
-        <span class="px-2 font-500"  style="color: var(--active-bg);">{{ item.from.username }}</span>
-        <span class="pr-2 font-400" style="color: var(--primary-text);">赠送的礼物</span>
-      </div>
+  <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
+    <div v-for="(item,index) in list" class="flex flex-col mb-3 p-4 rounded-lg"
+    style="width: 395px; background: var(--secondary-bg);position: relative;"
+    @contextmenu.stop="noticeMenu(item,$event)"
+    >
+    <div class="flex justify-between mb-4">
+     <div class="flex items-center">
+       <a-avatar :size="24"  :src="item.doc.content.icon"></a-avatar>
+       <span class="pl-3">{{item.doc.content.title}}</span>
+     </div>
+     <div class="flex items-center pointer active-button" @click="delNotice(item)">
+       <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
+     </div>
     </div>
-
-    <div class="delete-button">
-      <div class="pointer active-button flex p-1 items-center justify-center" @click="removeNotification(index)">
-        <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
-      </div>
+    <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.doc.content.body }}</div>
+    <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time) * 1000) }}</span>
+   
     </div>
-
-    <div class="font-400 mb-4" v-if="item.title !== ''" style="color: var(--primary-text);">{{item.title}}</div>
-
-    <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.body }}</div>
-
-    <div  class="flex items-center justify-between" style="height: 38px;">
-      <span class="font-400" style="color:var(--secondary-text);">{{ formatDate(item.time) }}</span>
-      <div  class="flex">
-        <div class="py-2 px-4 active-button rounded-lg ml-3 pointer"
-         style="background:var(--active-bg);color: var(--active-text);"
-         @click="goNotice"
-        >
-          立即查看
-        </div>
-      </div>
-    </div>
-
-  </div>
-
+  </vue-custom-scrollbar>
+ 
   <a-menu style="width: 120px;" :style="{position: 'fixed',top:`${contextMenuPosition.y}px`,left:`${contextMenuPosition.x}px`,zIndex: '999'}" class="dropdown-menu rounded-lg flex flex-col items-center justify-center" v-if="showMenu">
     <a-menu-item style="color:var(--secondary-text);" v-for="(item,index) in rightMenuControls" @click="handleMenuItemClick(item)">{{ item.title }}</a-menu-item>
   </a-menu>
@@ -44,40 +26,42 @@
 </template>
 
 <script>
+
 import { mapActions } from 'pinia'
 import { noticeStore } from '../../store/notice'
-import { formatDate } from '../../js/common/sessionNotice'
+import { formatTime } from '../../util'
+
 
 export default {
-  props:{
-    detailItem:{  // 列表数据
-      type:Object,
-      default:()=>[]
-    },
-    detailId:{  // 左侧选中状态
-      type:Number,
-    }
-  },
+  props:['list'],
 
   data(){
     return{
       showMenu:false, // 是否显示
       contextMenuPosition: { x: 0, y: 0 }, // 右键菜单的位置
       rightMenuControls:[{title:'打开应用',name:'Open'},{title:'删除通知',name:'remove'}],
-      delId:'',  // 接收单个消息通知删除下标
+      delItem:'',  // 接收单个消息通知删除下标
+      settingsScroller: {
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
     }
   },
 
   methods:{
-    ...mapActions(noticeStore,['deleteNotice']),
-    formatDate,
-    removeNotification(index){ // 删除指定消息通知
-      this.deleteNotice(this.detailId,index)
+    ...mapActions(noticeStore,['removeIMChatData','loadNoticeDB']),
+    formatTime,
+    removeNotification(){ // 删除指定消息通知
+      this.removeIMChatData(this.delItem)
+      this.loadNoticeDB()
     },
 
-    noticeMenu(index,evt){  // 鼠标右键显示下拉菜单
+    noticeMenu(item,evt){  // 鼠标右键显示下拉菜单
       evt.preventDefault();
-      this.delId = index
+      this.delItem = item
 
       // 获取鼠标点击位置
       const x = evt.clientX;
@@ -99,7 +83,8 @@ export default {
 
     handleMenuItemClick(item){
       if(item.name === 'remove'){  // 右键下拉菜单删除
-        this.deleteNotice(this.detailId,this.delId)
+        this.removeIMChatData(this.delItem)
+        this.loadNoticeDB()
       }else{
         // this.$router.push({name:'gameIndex'}) 模拟消息打开应用通知机制
       }

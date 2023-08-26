@@ -5,7 +5,7 @@
 
 <script>
 import { mapWritableState,mapActions } from 'pinia'
-import { clipboardStore } from '../../store/clipboard';
+import { clipboardStore } from '../../store';
 import CodeMirror from 'codemirror'
 
 export default {
@@ -15,23 +15,24 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(clipboardStore,['clipMode','clipTheme','previewShow','showLineNumber','clipSize']),
+    ...mapWritableState(clipboardStore,['settings']),
   },
   mounted(){
+    const {clipMode,clipTheme,previewShow,showLineNumber,clipSize}=this.settings
     this.myClipRefs = CodeMirror(this.$refs.myClip,{
       value:this.editorContent,
-      theme:this.clipTheme,
+      theme:clipTheme,
       smartIndent:true,
-      tabSize:this.clipSize,
+      tabSize:clipSize,
       indentWithTabs:true,
       lineWrapping: true,
-      lineNumbers: this.showLineNumber,
+      lineNumbers: showLineNumber,
       direction: "ltr",
       singleCursorHeightPerLine:true,
       autocorrect:true,
       viewportMargin:10,
       spellcheck:true,
-      mode:this.clipMode
+      mode:clipMode
     })
   }
 }

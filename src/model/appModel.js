@@ -355,26 +355,26 @@ const appModel = {
       })
     }
 
-    await appModel.updateAppData({ package: 'com.thisky.group' }, {
-      name: '轻聊',
-      logo: 'https://up.apps.vip/logo/group.png?t=2',
-      appid: 'qQ79Dw',
-      settings: JSON.stringify({
-        bounds: {
-          width: 920,
-          height: 720
-        },
-        autoRun: false,
-        showInSideBar: true
-      }),
-    })
+    // await appModel.updateAppData({ package: 'com.thisky.group' }, {
+    //   name: '轻聊',
+    //   logo: 'https://up.apps.vip/logo/group.png?t=2',
+    //   appid: 'qQ79Dw',
+    //   settings: JSON.stringify({
+    //     bounds: {
+    //       width: 920,
+    //       height: 720
+    //     },
+    //     autoRun: false,
+    //     showInSideBar: true
+    //   }),
+    // })
 
     await appModel.updateAppData({ name: '帮助教程' }, {
       appid: 't3VLx3',
     })
-    await appModel.updateAppData({ name: '轻聊' }, {
-      appid: 'qQ79Dw',
-    })
+    // await appModel.updateAppData({ name: '轻聊' }, {
+    //   appid: 'qQ79Dw',
+    // })
 
     await appModel.updateAppData({ name: '导入助手' }, {
       appid: 'N1OPW6',
@@ -926,40 +926,40 @@ const appModel = {
    */
   async insertDefaultApps () {
     const defaultApps = [
-      {
-        nanoid: nanoid(8),
-        name: '轻聊',
-        logo: 'https://up.apps.vip/logo/group.png?t=2',
-        summary: '团队沟通，随时与团队成员实时沟通',
-        type: 'web',
-        appid: 'qQ79Dw',
-        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
-        url: serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN,
-        preload: '/pages/group/imPreload.js',
-        package: 'com.thisky.group',
-        theme_color: '#6fafff',
-        user_theme_color: '',
-        create_time: Date.now(),
-        update_time: Date.now(),
-        account_avatar: '',
-        order: 0,
-        use_count: 3,
-        attribute: JSON.stringify({
-          isOffical: 1,
-          integration: 2
-        }),
-        last_execute_time: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 920,
-            height: 720
-          },
-          autoRun: false,
-          showInSideBar: true
-        }),
-        is_new: true,
-        unread_count: 0,
-      },
+      // {
+      //   nanoid: nanoid(8),
+      //   name: '轻聊',
+      //   logo: 'https://up.apps.vip/logo/group.png?t=2',
+      //   summary: '团队沟通，随时与团队成员实时沟通',
+      //   type: 'web',
+      //   appid: 'qQ79Dw',
+      //   //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+      //   url: serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN,
+      //   preload: '/pages/group/imPreload.js',
+      //   package: 'com.thisky.group',
+      //   theme_color: '#6fafff',
+      //   user_theme_color: '',
+      //   create_time: Date.now(),
+      //   update_time: Date.now(),
+      //   account_avatar: '',
+      //   order: 0,
+      //   use_count: 3,
+      //   attribute: JSON.stringify({
+      //     isOffical: 1,
+      //     integration: 2
+      //   }),
+      //   last_execute_time: Date.now(),
+      //   settings: JSON.stringify({
+      //     bounds: {
+      //       width: 920,
+      //       height: 720
+      //     },
+      //     autoRun: false,
+      //     showInSideBar: true
+      //   }),
+      //   is_new: true,
+      //   unread_count: 0,
+      // },
       {
         nanoid: nanoid(8),
         name: '元社区',

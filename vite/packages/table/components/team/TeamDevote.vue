@@ -1,16 +1,10 @@
 <template>
   <template v-if="team">
-    <div class="px-3 py-2" >
+    <div class="px-3 py-2 flex flex-col" style="height: 100%" >
       <HorizontalPanel :navList="incomeTitle" v-model:selectType="defaultIncome"></HorizontalPanel>
-      <div v-if="defaultIncome.name === 'MIC'" class="mt-3  flex flex-col">
-        <div class="flex justify-between items-center h-12" style="display: block;">
-          <!--        <span style="font-size: 16px;font-weight: 400;">累计收益: 0 分钟</span>-->
-          <span  @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3 xt-bg-2" style="color: var(--primary-text);">
-                一键领取
-              </span>
-        </div>
-        <a-divider style="height: 1px;background: rgba(255,255,255,0.10);" />
-        <div class="flex-shrink" style="height:265px">
+      <div v-if="defaultIncome.name === 'MIC'" class="mt-3  flex flex-col" style="flex:1;height: 0">
+
+        <div  style="height:0;flex:1">
           <a-empty style="margin-top: 3em" description="" v-if="memberDevoteDisplay.length===0">
           </a-empty>
           <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:100%;  ">
@@ -32,13 +26,22 @@
             </div>
           </vue-custom-scrollbar>
         </div>
-        <div class="flex items-center rounded-lg py-1 xt-bg-2" style="">
-          <a-col class="mr-4">
-            <a-avatar class="mt-3 ml-3" :size="40" shape="square" :src="team.avatar"></a-avatar>
+        <div class="flex items-center rounded-lg py-1 px-2 xt-bg-2" style="height:50px">
+          <a-col :span="3" class="mr-4 pt-2">
+            <a-avatar class="mt-3 ml-3 mt-2" :size="40" shape="square" style="" :src="team.avatar"></a-avatar>
           </a-col>
-          <div>
-            待领取总计：{{total.toFixed(2)}} 分钟
-          </div>
+          <a-col :span="12">
+            <span class="xt-text-2">总共待领取</span><br> <strong>{{total.toFixed(2)}}</strong> 分钟
+          </a-col>
+          <a-col :span="8">
+<!--            <div class="flex justify-between items-center h-12" style="display: block;">-->
+<!--              &lt;!&ndash;        <span style="font-size: 16px;font-weight: 400;">累计收益: 0 分钟</span>&ndash;&gt;-->
+<!--              <span  @click="doExchangeDevote(0)" class="rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-6 pr-6 pt-3 pb-3 xt-bg-2" style="color: var(&#45;&#45;primary-text);">-->
+
+<!--              </span>-->
+<!--            </div>-->
+            <XtButton class="p-1" type="theme" @click="doExchangeDevote(0)"> 一键领取</XtButton>
+          </a-col>
         </div>
       </div>
       <div v-else class="mt-4 flex flex-col text-center"  style="color: var(--primary-text);">
@@ -85,10 +88,11 @@ import HorizontalPanel from "../HorizontalPanel.vue";
 import UserAvatar from "../small/UserAvatar.vue";
 import {teamStore} from "../../store/team";
 import {message} from "ant-design-vue";
+import XtButton from '../../ui/libs/Button/index.vue'
 
 export default {
   name: "TeamDevote",
-  components: {UserAvatar, HorizontalPanel},
+  components: { XtButton, UserAvatar, HorizontalPanel},
   props:['teamLeader','teamMembers','team'],
   computed:{
     ...mapState(appStore, ['userInfo']),

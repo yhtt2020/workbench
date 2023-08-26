@@ -1,11 +1,7 @@
 <template>
   <div class="main-box">
     <div class="box xt-bg-2" v-for="(item, index) in navLists" :key="item.name">
-      <div
-        class="add no-drag"
-        @click="addNewCard(item)"
-        v-if="item.option.length <= 1"
-      >
+      <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
         <div class="icons">
           <Icon icon="tianjia2" style="color: #000"></Icon>
         </div>
@@ -16,25 +12,15 @@
       <div class="left no-drag" @click="fullScreen(item)">
         <template v-if="item.option.length > 1">
           <div class="top">
-            <img
-              :style="[{ zoom: item.option[0].zoom + '%' }]"
-              :src="getImg(item.option[0].name)"
-              alt=""
-            />
+            <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="" />
           </div>
           <div class="bottom">
             <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
           </div>
         </template>
-        <img
-          v-else
-          style=""
-          :src="getImg(item.option[0].name)"
-          alt=""
-          :style="[
-            { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
-          ]"
-        />
+        <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
+          { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
+        ]" />
       </div>
       <div class="right" style="">
         <div class="title" style="color: var(--primary-text)">
@@ -44,42 +30,25 @@
           {{ item.detail }}
         </div>
         <div class="icon">
-          <div
-            class="icon-box xt-active-bg-2"
-            v-for="i in item.sizes"
-            :key="i"
-            style="color: var(--secondary-text)"
-            :class="i === '社区分享' ? 'share' : ''"
-          >
+          <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i" style="color: var(--secondary-text)"
+            :class="i === '社区分享' ? 'share' : ''">
             {{ i }}
           </div>
         </div>
         <div class="data">
-          <Icon
-            icon="xiazai"
-            class="icons"
-            style="color: #508bfe; margin: 0; width: 20px"
-          ></Icon>
+          <Icon icon="xiazai" class="icons" style="color: #508bfe; margin: 0; width: 20px"></Icon>
           <div class="data-box">
             {{ item.download }}
           </div>
-          <Icon
-            icon="shijian"
-            class="icons"
-            style="color: #52c41a; margin: 0; width: 20px"
-          ></Icon>
+          <Icon icon="shijian" class="icons" style="color: #52c41a; margin: 0; width: 20px"></Icon>
           <div class="data-box">{{ formatTimestamp(item.time) }}</div>
         </div>
       </div>
     </div>
     <div class="box" style="opacity: 0; height: 1px"></div>
   </div>
-  <NewPreviewCardDetails
-    v-if="isCardDetails"
-    @addCardAchieve="addCardAchieve"
-    @closeCardDetails="closeCardDetails"
-    :cardDetails="cardDetails"
-  >
+  <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
+    :cardDetails="cardDetails">
   </NewPreviewCardDetails>
   <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit>
   <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
@@ -108,7 +77,7 @@ export default {
     desk: {
       type: Object,
       required: true,
-      default: () => {},
+      default: () => { },
     },
   },
   computed: {
@@ -152,7 +121,7 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     // 添加图标保存
     save() {
- 
+
       if (this.edit.src.length === 0) return message.error("图标不能为空");
       this.settingVisible = false;
       this.addCard(
@@ -202,7 +171,7 @@ export default {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
-        if(item.name === 'remote'){
+        if (item.name === 'remote') {
           this.openRemote = true
           this.remoteContent = item
           return
@@ -225,6 +194,8 @@ export default {
     },
     add(item, index) {
       index = index ?? this.carouselIndex;
+
+
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
@@ -232,7 +203,7 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
-    closeMarket(val){
+    closeMarket(val) {
       this.openRemote = val
     }
   },
@@ -416,8 +387,9 @@ export default {
     }
   }
 }
-.share{
-  background: rgba(250,173,20,0.2) !important;
+
+.share {
+  background: rgba(250, 173, 20, 0.2) !important;
   color: #FAAD14 !important;
   font-weight: 500;
 }

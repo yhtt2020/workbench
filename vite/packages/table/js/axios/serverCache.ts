@@ -65,11 +65,15 @@ export const localCache = {
       cacheData.expireTime = Date.now() + ttl * 1000
     }
     localStorage.setItem(key, JSON.stringify(cacheData))
-  }
+  },
 }
 
 
 export const serverCache = {
+   removeLocalCache(url){
+    const key='cache_' + encodeURIComponent(url)
+    localStorage.removeItem(key)
+  },
   /**
    * 通过服务器缓存代理请求，优先取服务器的数据，如果发现服务器没有数据，则再发起axios请求，得到数据后，再提交到服务器，作为最新的数据
    * @param url

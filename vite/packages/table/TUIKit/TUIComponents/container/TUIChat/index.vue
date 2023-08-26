@@ -128,14 +128,15 @@
 
   <slot v-else-if="slotDefault" />
 
-  <a-drawer placement="right" width="500" :closable="false" v-model:visible="groupVisible">
-    <div class="flex items-center" style="margin-bottom:16px;">
+  <a-drawer placement="right" width="500" title="群管理" v-model:visible="groupVisible" :bodyStyle="{padding:'24px 24px 40px 24px'}">
+    <!-- :closable="false" -->
+    <!-- <div class="flex items-center" style="margin-bottom:16px;">
       <div class="flex items-center active-button pointer justify-center rounded-lg" style="width: 48px;height: 48px;background: var(--secondary-bg);" @click="groupVisible = false">
         <Icon icon="guanbi" style="color: var(--primary-text);height: 24px;width: 24px;"></Icon>
       </div>
       <div class="flex items-center justify-center font-16" style="color: var(--primary-text);margin-left: 12px;">群管理</div>
-    </div>
-    <Manage v-if="conversation.groupProfile" @close="groupVisible = false"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
+    </div> -->
+    <Manage v-if="conversation.groupProfile" @close="groupVisible = false" :manageData="conversation"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
   </a-drawer>
 
   <a-drawer placement="right" width="500" :closable="false" v-model:visible="updateVisible">
@@ -147,11 +148,11 @@
     </div>
 
     <template v-if="index === 1">
-      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer"></UpdateGroupName>
+      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupName>
     </template>
 
     <template v-if="index === 2">
-      <UpdateGroupNotice :notice="info" @close="updateVisible = false" :server="GroupServer"></UpdateGroupNotice>
+      <UpdateGroupNotice :noticeInfo="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
     </template>
     
     <template v-if="index === 3">
@@ -160,6 +161,10 @@
     
     <template v-if="index === 4">
       <UpdateGroupManage :groupManageInfo="info" :server="GroupServer" @close="updateVisible = false"></UpdateGroupManage>
+    </template>
+
+    <template v-if="index === 5">
+      <UpdateJoinGroupWay :updateGroupInfo="info" @close="updateVisible = false"/>
     </template>
   </a-drawer>
 
@@ -209,12 +214,14 @@ import UpdateGroupName from '../TUIChat/updateMange/updateGroupName.vue'
 import UpdateMemeber from '../TUIChat/updateMange/updateGroupMember.vue'
 import UpdateGroupManage from './updateMange/updateGroupManage.vue'
 import UpdateGroupNotice from './updateMange/updateGroupNotice.vue';
+import UpdateJoinGroupWay from './updateMange/updateJoinGroupWay.vue';
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
   components: {
     MessageSystem,MessageTimestamp,Manage,MessageInput,
-    MessageItem,UpdateGroupName,UpdateMemeber,UpdateGroupManage,UpdateGroupNotice,
+    MessageItem,UpdateGroupName,UpdateMemeber,UpdateGroupManage,
+    UpdateGroupNotice,UpdateJoinGroupWay,
   },
   props: {
     isMsgNeedReadReceipt: {
@@ -243,7 +250,7 @@ const TUIChat: any = defineComponent({
       updateVisible:false, // 群组名称编辑控制
       title:'',  // 不同群组模块的标题
       index:'',   // 不同群组模块的标记
-      
+      info:'', // 不同群组模块的公告
     }
   },
 
@@ -904,8 +911,23 @@ const TUIChat: any = defineComponent({
       data.newManagerList = res.data.group
       
       const result = await GroupServer.getGroupMemberList(options)
-      data.memberList = result.data.memberList
+      // 将群组成员进行排序,将群主和管理员放在最前面
+      const list = result.data.memberList.sort((a: any,b: any)=>{ 
+        if (a.role === 'Owner' && b.role !== 'Owner') {
+         return -1; // a 排在 b 前面
+        } else if (b.role === 'Owner' && a.role !== 'Owner') {
+         return 1; // b 排在 a 前面
+        } else if (a.role === 'Admin' && b.role !== 'Admin') {
+         return -1; // a 排在 b 前面
+        } else if (b.role === 'Admin' && a.role !== 'Admin') {
+         return 1; // b 排在 a 前面
+        } else {
+         return 0; // 保持原有顺序
+        }
+      })
+      data.memberList = list
     }
+
 
     return {
       ...toRefs(data),
