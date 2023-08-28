@@ -31,7 +31,7 @@ export class Notifications{
       },
       {
         icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
-        pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast'
+        pauseOnHover:true,timeout:0,toastClassName:'notice-toast'
       }
     )
   }
@@ -190,11 +190,12 @@ export class Notifications{
       enablePlay:noticeStore().$state.noticeSettings.enablePlay, // 提示音开关
       isCurrentChat:window.$TUIKit.TUIServer.TUIChat.store.conversation?.conversationID === data.conversationID, // 判断是否为当前会话
       isAT:data.atUserList.length !== 0, // 判断@消息
-      noTrouble:window.$TUIKit.TUIServer.TUIChat.store.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify' // 是否开启免打扰
+      noTrouble:window.$TUIKit.TUIServer.TUIChat.store.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 是否开启免打扰
+      isEmpty:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length === 0, // 为空
     }
-    
+  
     // 判断消息开关和音频开关是否打开
-    if(settings.isEnable && settings.enablePlay && settings.noTrouble){
+    if(settings.isEmpty || settings.noTrouble && settings.isEnable && settings.enablePlay){
       // 根据text判断是否为系统通知
       const isText = data.payload.hasOwnProperty('text')
       if(isText){
@@ -209,13 +210,17 @@ export class Notifications{
         if(settings.isGlobal){
           // 显示消息入口
           noticeStore().showNoticeEntry()
-          const msg = {  
+          const newMsg = {  
             title:data.conversationType === 'C2C' ? friendTitle : groupTitle,
             icon:data.conversationType === 'C2C' ? data.avatar : avatar,
             body:data.payload.text,
             time:data.time,
           }
-          this.commonToast(msg,data.conversationID)
+          if(settings.isAT){
+            this.systemToast(newMsg,data.conversationID)
+          }else{
+            this.commonToast(newMsg,data.conversationID)
+          }
         }
 
         // 非当前会话只提示音频
