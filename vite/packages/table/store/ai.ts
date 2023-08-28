@@ -60,6 +60,13 @@ export const aiStore = defineStore("aiStore", {
       this.selectTopicIndex = obj.id;
       this.topicList[obj.id] = obj;
       this.chatList[obj.id] = [];
+      // tsbApi.db.put({
+      //   _id: "item:1",
+      //   category: "cat1",
+      //   content: "content",
+      //   createTime: Date.now(),
+      //   updateTime: Date.now(),
+      // });
     },
     delTopic() {
       for (let key in this.topicList) {

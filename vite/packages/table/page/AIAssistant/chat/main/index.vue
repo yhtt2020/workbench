@@ -54,6 +54,7 @@ export default {
     },
     async onSearch(serach) {
       if (this.check()) return;
+      this.isSearch = false;
       this.selectTopicIndex == -1;
       if (this.selectTopicIndex == -1) {
         this.addTopic();
@@ -76,9 +77,20 @@ export default {
             content: item.content,
           });
         });
-
+      await this.processGPTResults(arr);
+      this.isSearch = true;
+      tsbApi.db.put({
+        _id: `gpt:${this.selectTopicIndex}`,
+        content: this.chatList[this.selectTopicIndex],
+        updateTime: Date.now(),
+      });
+      let res = await tsbApi.db.allDocs([`gpt:${this.selectTopicIndex}`]);
+      console.log("res :>> ", res);
+    },
+    async processGPTResults(arr) {
       // 获取聊天机器人的回复
       for await (const result of gpt(arr)) {
+        console.log("result :>> ", result);
         if (result.value) {
           message.error(result.value.error.message);
           return;
@@ -105,7 +117,7 @@ export default {
           this.chatList[this.selectTopicIndex].push(assistant);
         }
       }
-      return;
+      console.log("结束了 :>> ");
     },
   },
 };

@@ -16,7 +16,7 @@ export async function* gpt(messages) {
       model: ai.gpt,
       stream: true,
       messages,
-      temperature: parseFloat(ai.temperature),
+        temperature: parseFloat(ai.temperature),
     }),
   });
 
@@ -31,30 +31,45 @@ export async function* gpt(messages) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-
   let resultData = "";
+
   while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
+    const res = await reader.read();
+    let { done, value } = res;
+    console.log("res :>> ", res);
+    if (res.done) {
+      // // 当 done 为 true 时，表示数据传输已完成
+      // console.log("数据传输已完成1");
+      // break;
+    }
+    if (done) {
+      // 当 done 为 true 时，表示数据传输已完成
+      console.log("数据传输已完成2");
+      break;
+    }
+
     resultData += decoder.decode(value);
     while (resultData.includes("\n")) {
       const messageIndex = resultData.indexOf("\n");
       const message = resultData.slice(0, messageIndex);
       resultData = resultData.slice(messageIndex + 1);
       if (message.startsWith("data: ")) {
-        const jsonMessage = JSON.parse(message.substring(5));
         if (resultData.includes("[DONE]")) {
           break;
         }
+        const jsonMessage = JSON.parse(message.substring(5));
         const createdID = jsonMessage.created;
         yield {
           content: jsonMessage.choices[0]?.delta?.content || "",
           role: "assistant",
           id: createdID,
         };
+        console.log("2222 :>> ", 2222);
       }
     }
   }
+
+  console.log("请求结束 :>> ");
 }
 
 // 获取余额

@@ -1,46 +1,37 @@
 <template>
   <!-- 动态头部 -->
   <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 70px">
-    <Item @itemClick="iconClick" :list="list.slice(0, last)"></Item>
-    <!-- <xt-icon
-      class="mb-3"
-      v-for="item in list.slice(0, last)"
-      v-bind="config"
-      :icon="item.icon"
-      @click="iconClick(item)"
-      :class="{
-        box: item.icon == currentIndex,
-      }"
-    ></xt-icon> -->
+    <template v-for="item in list.slice(0, last)">
+      <slot :name="item.slot" v-if="item.slot"> </slot>
+      <Item @itemClick="iconClick" :item="item">
+        <template #default>
+          <slot :name="item.slot">{{ item.slot }} </slot>
+        </template>
+      </Item>
+    </template>
 
     <!-- 动态适中 -->
     <div
-      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center"
+      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center mb-3"
     >
-      <!-- <Item @itemClick="iconClick" :list="list.slice(last, -1 * end)"></Item> -->
-
-      <Item :list="list.slice(last, -1 * end)"></Item>
-      <!-- <xt-icon
-        v-for="item in list.slice(last, -1 * end)"
-        v-bind="config"
-        class="mb-3"
-        :icon="item.icon"
-        @click="iconClick(item)"
-        :class="{
-          box: item.icon == currentIndex,
-        }"
-      ></xt-icon> -->
+      <template v-for="item in list.slice(last, -1 * end)">
+        <slot :name="item.slot" v-if="item.slot"> </slot>
+        <Item @itemClick="iconClick" :item="item">
+          <template #default>
+            <slot :name="item.slot"> </slot>
+          </template>
+        </Item>
+      </template>
     </div>
     <!-- 底部循环 -->
-    <Item :list="list.slice(-1 * end)"></Item>
-    <!-- <xt-icon
-      class="mt-3"
-      v-for="item in list.slice(-1 * end)"
-      v-bind="config"
-      :icon="item.icon"
-      @click="iconClick(item, true)"
-    >
-    </xt-icon> -->
+
+    <template v-for="item in list.slice(-1 * end)">
+      <Item @itemClick="iconClick" :item="item">
+        <template #default>
+          <slot :name="item.slot"> </slot>
+        </template>
+      </Item>
+    </template>
   </div>
 </template>
 
@@ -67,9 +58,7 @@ const props = defineProps({
     default: () => {
       return [
         {
-          icon: "message",
-          img: "/vite/public/icons/bg.png",
-          // C:\Users\16110\Desktop\demo1 (2)\browser\vite\public\icons\bg4.png
+          img: "/icons/bg.png",
         },
         {
           icon: "star",
