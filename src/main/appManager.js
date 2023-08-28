@@ -85,8 +85,8 @@ class AppManager {
           item.window.show()
         }
         item.window.focus()
-        if (barrageManager)
-          barrageManager.changeUrl(item.saApp.url)
+        // if (barrageManager)
+        //   barrageManager.changeUrl(item.saApp.url)
       }
     })
   }
@@ -1039,8 +1039,10 @@ class AppManager {
     let url = this.getUrl(saApp)
     let name = appModel.getName(saApp)
     let config = saApp.window[saApp.window.defaultType]
-    let windowParams = this.convertToWindowParams(config)
-
+    let windowParams = this.convertToWindowParams(config) || []
+    if(typeof saApp.window==='string'){
+      saApp.window=JSON.parse(saApp.window)
+    }
     if (saApp.window.defaultType === 'frameWindow') {
       //带边框窗体
       const defaultFrameWindowConfig = {
@@ -1082,7 +1084,7 @@ class AppManager {
             app: saApp
           })
           if (cb) {
-            cb()//执行启动后的回调
+            cb(appWindow.window)//执行启动后的回调
             cb = undefined
           }
         },
@@ -1108,7 +1110,6 @@ class AppManager {
         }
       })
       let frame = appWindow.frame
-
       frame.on('close', (event, args) => {
         if (saApp.canClose) {
           return
@@ -1146,7 +1147,6 @@ class AppManager {
 
       SidePanel.send('executedAppSuccess', { app: saApp })
       saApp.windowId = appWindow.windowId
-
       processingAppWindows.push({
         window: frame,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp,

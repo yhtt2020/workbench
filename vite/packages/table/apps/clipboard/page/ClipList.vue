@@ -2,86 +2,85 @@
   <div class="flex flex-wrap h-full"
        style="justify-items: center;align-content: start;flex-direction: column;
     justify-content: center;align-items: center;">
-    <div    v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg">
-      <ClipItem :key="item.updateTime" :clipItem="item" @previewItem="getItem"></ClipItem>
+    <div v-if="loading">
+      <div class="flex items-center justify-center">
+        <!--          <a-empty class="animate-ping" image="/emoji/wait.png" description="加载中…"/>-->
+      </div>
     </div>
-    <div   class="flex items-center justify-center w-full my-32" >
-      <div v-if="loading">
-        <div class="flex items-center justify-center"  >
-<!--          <a-empty class="animate-ping" image="/emoji/wait.png" description="加载中…"/>-->
+    <template v-else>
+      <div v-if="clipList.length>0" v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg">
+        <ClipItem :key="item.updateTime" :clipItem="item" @previewItem="getItem"></ClipItem>
+      </div>
+      <div v-else class="flex items-center justify-center w-full my-32">
+
+        <div v-if="clipList.length === 0" class="flex items-center justify-center">
+          <a-empty :image="simpleImage"/>
         </div>
       </div>
-      <div v-else-if="clipList.length === 0" class="flex items-center justify-center"  >
-        <a-empty :image="simpleImage"/>
-      </div>
-    </div>
+
+    </template>
 
   </div>
-  <ClipTextPreview :previewContent="previewData"></ClipTextPreview>
+  <ClipTextPreview ref="previewerRef" :previewContent="previewData"></ClipTextPreview>
 </template>
 
 <script>
-import ClipItem from '../components/ClipItem.vue';
-import ClipTextPreview from '../components/clipPreview/ClipTextPreview.vue';
-import { Empty } from 'ant-design-vue';
-import {toRaw} from "vue";
+import ClipItem from '../components/ClipItem.vue'
+import ClipTextPreview from '../components/clipPreview/Previewer.vue'
+import { Empty } from 'ant-design-vue'
+import { toRaw } from 'vue'
 import { mapWritableState } from 'pinia'
 import { clipboardStore } from '../store'
+
 export default {
-  components:{
+  components: {
     ClipItem,
     ClipTextPreview
   },
-  props:{
-    clipList:{
-      type:Array,
-      default:()=>[]
+  props: {
+    clipList: {
+      type: Array,
+      default: () => []
     }
   },
-  data(){
-    return{
+  data () {
+    return {
       simpleImage: '/public/img/test/not-data.png',
-      previewData:null
+      previewData: null
     }
   },
-  computed:{
-    ...mapWritableState(clipboardStore,['previewShow','loading'])
+  computed: {
+    ...mapWritableState(clipboardStore, ['previewShow', 'loading'])
   },
-  methods:{
+  methods: {
     // 获取item
-    getItem(item){
-      console.log('预览',item)
+    getItem (args) {
       // this.previewData = v
-      switch(item.type){
+      const item = args.item
+      this.previewData = item
+      switch (item.type) {
         case 'text':
-          this.previewData = item
-          break;
+          break
         case 'image':
-          const img = toRaw(item.content).toDataURL()
-          this.previewData = {
-            img,
-            timeText:item.timeText,
-            type:item.type
+          if (args.action === 'editImage') {
+            this.$refs.previewerRef.doEditImage()
           }
-          break;
+          break
         case 'video':
-          this.previewData = item
-          break;
+          break
         case 'file':
-          this.previewData = item
-          break;
+          break
         case 'audio':
-          this.previewData = item
-          break;
+          break
       }
-      this.previewShow=true
+      this.previewShow = true
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.s-bg{
+.s-bg {
   box-shadow: none !important;
   background: var(--secondary-bg);
   color: var(--primary-text) !important;
