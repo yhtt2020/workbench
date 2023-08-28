@@ -66,7 +66,8 @@ align-items: start;
     <template v-if="!simple && isMain">
       <Team></Team>
     </template>
-
+  <TaskBox></TaskBox>
+   
   </div>
   <div id="trans" v-show="visibleTrans"
        style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
@@ -121,6 +122,8 @@ align-items: start;
     <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
+
+
 </template>
 
 <script>
@@ -151,7 +154,7 @@ import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
-
+import TaskBox from "../apps/task/page/TaskBox.vue"
 export default {
   name: 'BottomPanel',
   components: {
@@ -166,10 +169,12 @@ export default {
     ChangeApp,
     ScrolX,
     GradeSmallTip,
-    Team
+    Team,
+    TaskBox
   },
   data () {
     return {
+ 
       tab: 'screen',
 
       lastTime: 0,

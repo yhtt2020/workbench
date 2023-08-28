@@ -9,6 +9,10 @@
         <a-avatar :src="t.img" :size="40"></a-avatar>
         <span>{{ t.title }}</span>
       </div>
+      <div class="team-item">
+        <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
+        <span>任务中心</span>
+      </div>
     </div>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
@@ -67,7 +71,7 @@ export default {
             name: 'prop'
           },
           type: 'route'
-        },
+        },  
       ],
       //显示小组提示
       showTeamTip: false,
