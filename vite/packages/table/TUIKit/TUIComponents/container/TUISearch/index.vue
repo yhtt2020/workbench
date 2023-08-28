@@ -7,7 +7,7 @@
       <template #overlay>
         <div class="flex items-center rounded-lg " style="background: var(--modal-bg);padding: 16px !important;">
           <div v-for="(item,index) in addList" style="margin-right: 20px;" class="flex add-item  flex-col items-center justify-center pointer" @click="showOpen(item.type,index)">
-            <div  class="flex items-center add-hover rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);">
+            <div  class="flex items-center add-hover rounded-lg justify-center h-11 w-11" style="background: var(--secondary-bg);margin-bottom: 10px;">
               <Icon :icon="item.icon" style="color: var(--secondary-text);"></Icon>
             </div>
             <div class="font-12" style="color: var(--secondary-text);">{{ item.title }}</div>
