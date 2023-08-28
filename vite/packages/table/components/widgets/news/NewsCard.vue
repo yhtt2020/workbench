@@ -272,6 +272,8 @@ export default {
   .center {
     width: 100%;
     height: 40px;
+    padding-left: 3px;
+    padding-right: 3px;
     border-radius: 8px;
     align-items: center;
     justify-content: center;
@@ -303,7 +305,6 @@ export default {
       padding-top: 0;
       padding-bottom: 0;
       border-left: none;
-      outline: none;
     }
 
     .item {
