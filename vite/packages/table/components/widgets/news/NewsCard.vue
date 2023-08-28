@@ -48,7 +48,7 @@
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
-        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择八个(小尺寸只显示前三个)</div>
+        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择八个(小尺寸(2x4)只显示前三个)</div>
         <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer>
       </vue-custom-scrollbar>
 
@@ -114,7 +114,7 @@ export default {
         
       ],
       options: {
-        className: 'card double',
+        className: 'card ',
         title: '新闻资讯',
         icon: '',
         type: 'news'
@@ -385,14 +385,6 @@ export default {
   background: var(--active-bg) !important;
 }
 }
-// .content:nth-child(odd)::after {
-//   content: '';
-//   display: block;
-//   width: 1px;
-//   height: 100%;
-//   background-color: #ffffff;
-// }
-
 </style>
   
   

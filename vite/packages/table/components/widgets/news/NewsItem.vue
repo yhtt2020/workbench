@@ -1,5 +1,5 @@
 <template>
-  <div class="card-item" :style="{ marginBottom:copyNum==12?'22px':'14px'}">
+  <div class="card-item" :style="{ marginBottom:copyNum==12?'20px':'12px'}">
 
     <div class="left" :style="{ width: showImg == false ? '260px' : '' }" >
       <div class="title" @click="goNews" style="color: var(--primary-text);" >
@@ -61,12 +61,12 @@ const img = computed(() => {
 <style lang='scss' scoped>
 .card-item {
   width: 222px;
-  height: 67px;
+  height: 68px;
   // margin-bottom: 15px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  cursor: pointer;
+  // cursor: pointer;
 
   .left {
     width: 150px;
@@ -96,12 +96,12 @@ const img = computed(() => {
 
     .bottom {
       width: 100%;
-      height: 17px;
+      height: 18px;
       display: flex;
       // justify-content: space-between;
       position: absolute;
       // margin-top: 9.2%;
-      bottom: 2px;
+      bottom: 3px;
 
       .date {
         span {
