@@ -10,6 +10,7 @@
         </div>
 
       </template>
+      <!-- {{ newsMsgList.length }} -->
       <div class="top-bar">
         <!-- <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
           <span>
@@ -234,8 +235,9 @@ export default {
     },
     // 判断不同高度返回不同个数
     copyNum() {
-      return this.showSize.height == 2 ? 6 : 8
+      return this.showSize.height == 2 ? 6 : 10
     },
+    // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
       return this.newsMsgList.slice(0, this.copyNum)
     }
