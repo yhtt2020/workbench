@@ -1,5 +1,5 @@
 <template>
-  <div class="card-item">
+  <div class="card-item" :style="{ marginBottom:copyNum==12?'22px':'14px'}">
 
     <div class="left" :style="{ width: showImg == false ? '260px' : '' }" >
       <div class="title" @click="goNews" style="color: var(--primary-text);" >
@@ -30,6 +30,9 @@ let showImg = ref(true)
 const newsMsgList = defineProps({
   newsMsgList: {
     type: Array,
+  },
+  copyNum:{
+    type:Number
   }
 
 })
@@ -57,15 +60,16 @@ const img = computed(() => {
 </script>
 <style lang='scss' scoped>
 .card-item {
-  width: 266px;
-  height: 93px;
-  margin-bottom: 1.9%;
+  width: 222px;
+  height: 67px;
+  // margin-bottom: 15px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 
   .left {
-    width: 152px;
+    width: 150px;
     // margin-left: 0.5%;
     position: relative;
 
@@ -97,7 +101,7 @@ const img = computed(() => {
       // justify-content: space-between;
       position: absolute;
       // margin-top: 9.2%;
-      bottom: 10px;
+      bottom: 2px;
 
       .date {
         span {
@@ -128,8 +132,8 @@ const img = computed(() => {
   .right {
     background: rgba(0, 0, 0, 0.30);
     border-radius: 10px;
-    width: 100px;
-    height: 77px;
+    width: 67px;
+    height: 67px;
     margin: 8px 0px;
     margin-right: 0.8%;
     background-size: cover;

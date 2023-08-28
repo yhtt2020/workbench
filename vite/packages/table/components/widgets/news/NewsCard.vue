@@ -19,7 +19,7 @@
         </div> -->
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
-            @click="setCurrentIndex(index)" >
+            @click="setCurrentIndex(index)" :style="{width:this.showSize.width==1?'81px':'67px'}">
             <span >{{ title.title }}</span>
           </div>
         </div>
@@ -34,7 +34,11 @@
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
         <div class="content" v-else>
-          <NewsItem v-for="(item, index) in newsItemList" :key="index" :newsMsgList="item" />
+          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type"> 
+            <span class="sort">{{ index+1 }}</span>
+            <NewsItem  :key="index" :newsMsgList="item" :copyNum="copyNum"/>
+          </div>
+          
         </div>
 
       </div>
@@ -44,7 +48,7 @@
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
-        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择七个</div>
+        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择八个(小尺寸只显示前三个)</div>
         <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer>
       </vue-custom-scrollbar>
 
@@ -90,6 +94,12 @@ export default {
       settingVisible: false,
       sizeList: [
         {
+          title: '2x4',
+          height: 2,
+          width: 1,
+          name: '2x4'
+        },
+        {
           title: '4x4',
           height: 2,
           width: 2,
@@ -101,6 +111,7 @@ export default {
           width: 2,
           name: '4x6'
         },
+        
       ],
       options: {
         className: 'card double',
@@ -186,16 +197,6 @@ export default {
     }
   },
   methods: {
-    // decrease() {
-    //   this.currentIndex = (this.currentIndex - 1 + this.showList.length) % this.showList.length
-    //   // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
-    //   console.log(this.newsMsgList[0])
-    //   console.log(11111)
-    // },
-    // increase() {
-    //   this.currentIndex = (this.currentIndex + 1) % this.showList.length
-    //   // this.getNewsMsg(this.aggList[this.currentIndex].tag,this.copyNum)
-    // },
     setCurrentIndex(index) {
       this.currentIndex = index
       this.getNewsData()
@@ -224,7 +225,7 @@ export default {
     },
     ...mapWritableState(newsStore, ['newsMsgList']),
     showList() {
-      return JSON.parse(JSON.stringify(this.aggList.slice(0, 7)))
+      return this.aggList.slice(0, this.copyItem)
     },
     // 判断尺寸大小
     showSize() {
@@ -235,7 +236,15 @@ export default {
     },
     // 判断不同高度返回不同个数
     copyNum() {
-      return this.showSize.height == 2 ? 6 : 10
+      // return this.showSize.height == 2 ? 6 : 10
+      if(this.showSize.width==1){
+        return 4
+      }
+      return this.showSize.height==2?8:12
+      
+    },
+    copyItem() {
+      return this.showSize.width==1?3:8
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
@@ -307,10 +316,11 @@ export default {
       padding-top: 0;
       padding-bottom: 0;
       border-left: none;
+      border: none;
     }
 
     .item {
-      width: 77px;
+      // width: 67px;
       height: 33px;
       margin: 0.6% 0;
       text-align: center;
@@ -337,7 +347,52 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  // flex-direction: column;
+  overflow: hidden;
+
+  // &::after{
+  //   content: '';
+  //   border: 1px solid #FFFFFF 10%;
+  // }
+  .sort {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mask-bg);
+  border-radius: 4px;
+  font-size: 16px;
+  color: var(--primary-text);
+  font-weight: 600;
+  margin-right: 8px;
+  margin-top: 8px;
 }
+
+.set-type:nth-of-type(1) > span {
+  background: #FE2C46;
+}
+
+.set-type:nth-of-type(2) > span {
+  background: #FF6600;
+}
+
+.set-type:nth-of-type(3) > span {
+  background: #FAAA10;
+}
+
+.active-index{
+  background: var(--active-bg) !important;
+}
+}
+// .content:nth-child(odd)::after {
+//   content: '';
+//   display: block;
+//   width: 1px;
+//   height: 100%;
+//   background-color: #ffffff;
+// }
+
 </style>
   
   
