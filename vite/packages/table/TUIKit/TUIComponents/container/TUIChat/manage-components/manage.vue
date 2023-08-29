@@ -90,6 +90,26 @@
           </span>
         </div>
       </div>
+
+      <div class="flex items-center justify-between" style="padding: 14px 0;">
+        <span class="font-14" style="color: var(--primary-text);">邀请方式</span>
+        
+        <template v-if="conversation?.selfInfo?.role !== 'Member'">
+          <div class="flex pointer" @click="updateGroupInviteWay">
+            <span class="font-14" style="color: var(--secondary-text);">
+              {{ typeName[conversation.inviteOption] }}
+            </span>
+            <div  class="flex items-center" style="margin-left: 12px;">
+              <Icon icon="xiangyou"></Icon>
+            </div>
+          </div>
+        </template>
+        <div v-else>
+          <span class="font-14" style="color: var(--secondary-text);">
+            {{ typeName[conversation.inviteOption] }}
+          </span>
+        </div>
+      </div>
     </div>
      
     <template v-if="conversation?.selfInfo?.role === 'Owner'">
@@ -157,6 +177,9 @@ const manage = defineComponent({
         [types.JOIN_OPTIONS_FREE_ACCESS]: '自由加入',
         [types.JOIN_OPTIONS_NEED_PERMISSION]: '需要验证',
         [types.JOIN_OPTIONS_DISABLE_APPLY]: '禁止加群',
+        [types.INVITE_OPTIONS_DISABLE_INVITE]:'禁止邀请',
+        [types.INVITE_OPTIONS_FREE_ACCESS]:'自由加入',
+        [types.INVITE_OPTIONS_NEED_PERMISSION]:'需要验证'
       },
       isChangeOwner:false,
       type:'',  // 转让群聊点击按钮类型
@@ -310,6 +333,18 @@ const manage = defineComponent({
       }})
     }
 
+    const updateGroupInviteWay = () =>{ // 修改群成员邀请
+       ctx.emit('updateName',{
+        title:'群成员邀请方式',
+        id:6,
+        info:{
+         groupID:props.conversation.groupID,
+         conversation:props.conversation,
+         title:`${data.typeName[props.conversation.joinOption]}`
+        }
+       })
+    }
+
     onMounted(getFriendLists)
 
     return{
@@ -317,6 +352,7 @@ const manage = defineComponent({
       enterGroupManage,enterUpdateGroupName,enterGroupMemeber,
       enterGroupNotice,exitGroupChat,quit,deleteMember,changeOwner,
       dismiss,addGroupMember,getFriendLists,updateGroupJoinWay,dismissGroup,
+      updateGroupInviteWay,
     }
   }
 

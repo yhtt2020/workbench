@@ -34,7 +34,7 @@ export default defineComponent({
 @import url('../../../styles/icon.scss');
 .message-tip {
   margin: 0 auto;
-  color: #999999;
+  color: var(--secondary-text);
   font-size: 12px;
   width: -webkit-fill-available;
   overflow-wrap: anywhere;

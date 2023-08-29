@@ -98,7 +98,7 @@ function calculateTimestamp(timestamp: number): string {
 @import url('../../../styles/icon.scss');
 .message-timestamp {
   margin: 0 auto;
-  color: #999999;
+  color: var(--secondary-text);
   font-size: 12px;
   width: -webkit-fill-available;
   overflow-wrap: anywhere;

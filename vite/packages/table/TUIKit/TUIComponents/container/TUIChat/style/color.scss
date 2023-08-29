@@ -48,7 +48,7 @@
 }
 .TUI-message-list {
   .message-more {
-    color: #999999;
+    color: var(--secondary-text);
     cursor: pointer;
   }
 }

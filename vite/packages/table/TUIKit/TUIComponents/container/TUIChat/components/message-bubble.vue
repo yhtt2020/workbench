@@ -599,7 +599,7 @@ export default messageBubble;
     padding-bottom: 4px;
     font-weight: 400;
     font-size: 0.8rem;
-    color: #999999;
+    color:var(--secondary-text);
     letter-spacing: 0;
   }
   .reference-content {

@@ -166,6 +166,9 @@
     <template v-if="index === 5">
       <UpdateJoinGroupWay :updateGroupInfo="info" @close="updateVisible = false" @updateGroupInfo="openGroup"/>
     </template>
+    <template v-if="index === 6">
+     <UpdateInviteWay :updateInviteInfo="info" @close="updateVisible = false" @updateGroupInfo="openGroup"></UpdateInviteWay>
+    </template>
   </a-drawer>
 
 
@@ -215,13 +218,14 @@ import UpdateMemeber from '../TUIChat/updateMange/updateGroupMember.vue'
 import UpdateGroupManage from './updateMange/updateGroupManage.vue'
 import UpdateGroupNotice from './updateMange/updateGroupNotice.vue';
 import UpdateJoinGroupWay from './updateMange/updateJoinGroupWay.vue';
+import UpdateInviteWay from './updateMange/updateInviteWay.vue'
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
   components: {
     MessageSystem,MessageTimestamp,Manage,MessageInput,
     MessageItem,UpdateGroupName,UpdateMemeber,UpdateGroupManage,
-    UpdateGroupNotice,UpdateJoinGroupWay,
+    UpdateGroupNotice,UpdateJoinGroupWay,UpdateInviteWay,
   },
   props: {
     isMsgNeedReadReceipt: {
