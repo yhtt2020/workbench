@@ -1,9 +1,7 @@
 <template>
   <div class="flex flex-col justify-between h-full xt-br mr-3">
     <div class="xt-scrollbar" style="width: 220px">
-      <!-- <Topic v-for="data in topicList" :data="data"></Topic> -->
-      <Top></Top>
-      <Today></Today>
+      <List></List>
     </div>
   </div>
 </template>
@@ -12,14 +10,12 @@
 import { defineAsyncComponent } from "vue";
 import { mapWritableState } from "pinia";
 import Topic from "./topic.vue";
-import Top from "./Top.vue";
-import Today from "./today.vue";
+import List from "./List.vue";
 import { aiStore } from "../../../../store/ai";
 export default {
   components: {
     Topic,
-    Top,
-    Today,
+    List,
     CreateTopic: defineAsyncComponent(() => import("./createTopic.vue")),
   },
   data() {

@@ -18,6 +18,7 @@ export default {
       "defaultData",
       "topicList",
       "selectTopicIndex",
+      "chatList",
     ]),
   },
   components: {
@@ -41,6 +42,7 @@ export default {
       obj.icon = { ...this.icon };
       this.selectTopicIndex = obj.id;
       this.topicList[obj.id] = obj;
+      this.chatList[obj.id] = [];
       this.close();
     },
   },

@@ -8,6 +8,7 @@
     <XtButton w="200" @click="clear()">清空对话记录</XtButton>
     <XtButton w="200" @click="del()">删除对话</XtButton>
   </div>
+  
 </template>
 
 <script>
@@ -19,7 +20,7 @@ import Dialog from "../components/Dialog.vue";
 import { Modal } from "ant-design-vue";
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["selectTopicIndex", "topicList"]),
+    ...mapWritableState(aiStore, ["selectTopicIndex", "chatList"]),
   },
   components: {
     Dialog,
@@ -40,7 +41,7 @@ export default {
         maskClosable: true,
         zIndex: 999999999999999,
         onOk: () => {
-          this.topicList[this.selectTopicIndex].chat = [];
+          this.chatList[this.selectTopicIndex] = [];
           message.success("已清空对话记录");
         },
       });
