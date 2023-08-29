@@ -74,15 +74,20 @@
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
-        <div class="flex">
+        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type === 'Public'">
+          <div class="flex pointer" @click="updateGroupJoinWay">
+            <span class="font-14" style="color: var(--secondary-text);">
+              {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+            </span>
+            <div  class="flex items-center" style="margin-left: 12px;">
+              <Icon icon="xiangyou"></Icon>
+            </div>
+          </div>
+        </template>
+        <div v-else>
           <span class="font-14" style="color: var(--secondary-text);">
             {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
           </span>
-          <template v-if="conversation.type !== 'AVChatRoom' && conversation.type !== 'ChatRoom'">
-            <div v-if="conversation?.selfInfo?.role === 'Owner'" class="flex items-center" style="margin-left: 12px;" @click="updateGroupJoinWay">
-              <Icon icon="xiangyou"></Icon>
-            </div>
-          </template>
         </div>
       </div>
     </div>

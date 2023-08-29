@@ -164,7 +164,7 @@
     </template>
 
     <template v-if="index === 5">
-      <UpdateJoinGroupWay :updateGroupInfo="info" @close="updateVisible = false"/>
+      <UpdateJoinGroupWay :updateGroupInfo="info" @close="updateVisible = false" @updateGroupInfo="openGroup"/>
     </template>
   </a-drawer>
 
