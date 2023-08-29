@@ -1,19 +1,16 @@
 <template>
-  <!-- {{ NewsMsgList.NewsMsgList.title }} -->
-  <!-- {{ timer[1] }} -->
-  <!-- {{ [hour,min] }} -->
-  <div class="CardItem">
+  <div class="card-item" :style="{ marginBottom:copyNum==12?'20px':'12px'}">
 
-    <div class="left">
-      <div class="title" @click="goNews" :style="{ width: showImg == false ? '260px' : '' }">
-        {{ NewsMsgList.NewsMsgList.title }}
+    <div class="left":style="{ width: showImg == false ? '260px' : '' }" >
+      <div class="title" @click="goNews" style="color: var(--primary-text);" >
+        {{ newsMsgList.newsMsgList.title }}
       </div>
-      <div class="bottom">
-        <div class="date">
-          <span>{{ timer[0] }} {{ timer[1] }}</span>
+      <div class="bottom" >
+        <div class="date"  >
+          <span style="color: var(--primary-text);">{{ timer[0] }} {{ timer[1] }}</span>
         </div>
         <div class="name">
-          <span>{{ NewsMsgList.NewsMsgList.author_name }}</span>
+          <span style="color: var(--primary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>
         </div>
       </div>
 
@@ -24,41 +21,37 @@
 
   </div>
 </template>
-  
+
 <script setup lang='ts'>
 import { ref, reactive, computed } from 'vue'
 // vite\packages\table\js\common\browser.ts
 import browser from '../../../js/common/browser'
-import { useRouter } from 'vue-router'
-const router = useRouter()
 let showImg = ref(true)
-const key='2ce91c43301c9528f2f9d1cd6f310e2b'
-const NewsMsgList = defineProps({
-  NewsMsgList: {
+const newsMsgList = defineProps({
+  newsMsgList: {
     type: Array,
+  },
+  copyNum:{
+    type:Number
   }
 
 })
 const goNews = () => {
-  
-  browser.openInUserSelect(NewsMsgList.NewsMsgList.url)
+
+  browser.openInUserSelect(newsMsgList.newsMsgList.url)
 }
 const timer = computed(() => {
-  let [updateDate, updateTime] = NewsMsgList.NewsMsgList.date.split(' ')
+  let [updateDate, updateTime] = newsMsgList.newsMsgList.date.split(' ')
   let [item, ...arr] = updateDate.split('-')
   let [hour, min, _] = updateTime.split(':')
   const Utime = [hour, min].join(':')
   const uDate = arr.join("-")
   return [uDate, Utime]
 })
-const title=computed(()=>{
-  let [tit,...arr1]=NewsMsgList.NewsMsgList.author_name.split(',')
-  return tit
-})
 
 const img = computed(() => {
-  if (NewsMsgList.NewsMsgList.thumbnail_pic_s) {
-    return NewsMsgList.NewsMsgList.thumbnail_pic_s
+  if (newsMsgList.newsMsgList.thumbnail_pic_s) {
+    return newsMsgList.newsMsgList.thumbnail_pic_s
   } else {
     return showImg.value = false
   }
@@ -66,16 +59,17 @@ const img = computed(() => {
 
 </script>
 <style lang='scss' scoped>
-.CardItem {
-  width: 266px;
-  height: 93px;
-  margin-bottom: 1.9%;
+.card-item {
+  width: 222px;
+  height: 68px;
+  // margin-bottom: 15px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  // cursor: pointer;
 
   .left {
-    width: 152px;
+    width: 150px;
     // margin-left: 0.5%;
     position: relative;
 
@@ -96,18 +90,18 @@ const img = computed(() => {
       color: rgba(255, 255, 255, 0.85);
       font-weight: 400;
       text-align: left;
-
+      cursor: pointer;
 
     }
 
     .bottom {
       width: 100%;
-      height: 17px;
+      height: 18px;
       display: flex;
       // justify-content: space-between;
       position: absolute;
       // margin-top: 9.2%;
-      bottom: 10px;
+      bottom: 3px;
 
       .date {
         span {
@@ -121,11 +115,14 @@ const img = computed(() => {
       .name {
         margin-left: 3px;
         overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         span {
           font-family: PingFangSC-Regular;
           font-size: 12px;
           color: rgba(255, 255, 255, 0.40);
           font-weight: 400;
+
         }
       }
 
@@ -135,11 +132,12 @@ const img = computed(() => {
   .right {
     background: rgba(0, 0, 0, 0.30);
     border-radius: 10px;
-    width: 100px;
-    height: 77px;
+    width: 67px;
+    height: 67px;
     margin: 8px 0px;
     margin-right: 0.8%;
     background-size: cover;
+    cursor: pointer;
   }
 }
 </style>

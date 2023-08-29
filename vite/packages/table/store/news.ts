@@ -1,18 +1,21 @@
 import {defineStore} from "pinia";
-import axios from "axios";
 import dbStorage from "./dbStorage";
 import {sUrl} from "../consts";
 import {get} from "../js/axios/request";
-
+import {localCache} from '../js/axios/serverCache'
 const juheGet = sUrl('/app/juhe/get')
 
 // @ts-ignore
 export const newsStore = defineStore("news", {
   state: () => ({
-    NewsMsgList: [],
+    newsMsgList: [],
   }),
   actions: {
+
     async getNewsMsg(tag, num) {
+      if(localCache.get(tag)){
+        this.newsMsgList = localCache.get(tag)
+      }
       let response = await get(juheGet, {
         apiName: 'toutiao.index',
         params: {
@@ -26,9 +29,9 @@ export const newsStore = defineStore("news", {
         }
       })
 
-      console.log(response, '接口返回')
       if(response.status){
-        this.NewsMsgList = response.data
+        this.newsMsgList = response.data
+        localCache.set(tag,this.newsMsgList,300)
       }
       else{
         return false
@@ -41,7 +44,7 @@ export const newsStore = defineStore("news", {
     strategies: [
       {
         storage: dbStorage,
-        paths: ['NewsMsgList'],
+        paths: ['newsMsgList'],
       }
     ]
   }
