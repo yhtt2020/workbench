@@ -204,7 +204,15 @@ export default {
           detail:'头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息',
           images:['news'],
           size:['4x4']
-        }
+        },
+        {
+          name:'AIaides',
+          cname:'AI助手',
+          icon:"time-circle",
+          detail:'你的专属AI助手,内置数个预设模板供你使用。',
+          images:['AIaides'],
+          size:['2x2']
+        },
       ],
       cardType: {},
       show: false,

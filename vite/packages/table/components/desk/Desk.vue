@@ -292,7 +292,7 @@ import Todo from '../widgets/todo/Todo.vue'
 import EatToday from '../widgets/eat/EatToday.vue'
 import HotSearch from '../widgets/HotSearch.vue'
 import CoolWidget from '../card/CoolWidget.vue'
-
+import AIaides from '../../apps/AIaides/card/AIaides.vue'
 export default {
   name: 'Desk',
   components: {
@@ -344,7 +344,8 @@ export default {
     SmallRank,
     Todo,
     EatToday,
-    HotSearch
+    HotSearch,
+    AIaides
   },
   props:
     {

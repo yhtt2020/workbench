@@ -739,7 +739,8 @@ export const NavList = [
     ],
   },
   {
-    cname: '施工中', children: [
+    cname: '施工中', 
+    children: [
       {
         name: 'smallRank',
         cname: '排行榜(开发中)',
@@ -754,6 +755,20 @@ export const NavList = [
         ],
         time: '2023/6/29'
 
+      },
+      {
+        name: 'AIaides',
+        cname: 'AI助手',
+        detail: '你的专属AI助手,内置数个预设模板供你使用。',
+        sizes: ['2x2','2x4'],
+        option: [
+          {
+            name: 'AIaides',
+            size: '2x2',
+            zoom: '30'
+          },
+        ],
+        time: '2023/8/25'
       },
     ]
   },
