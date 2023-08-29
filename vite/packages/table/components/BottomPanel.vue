@@ -22,8 +22,8 @@ align-items: start;
               <div v-if="footNavigationList.length <= 0" style="">
               </div>
               <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList " :key="item.name">
-                <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;"
-                     @click="clickNavigation(item)">
+                <div @contextmenu.stop="enableDrag" class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;"
+                     @click.stop="clickNavigation(item)">
                   <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
                        class="s-item flex justify-center items-center rounded-lg xt-bg-2">
 
@@ -174,6 +174,7 @@ export default {
   },
   data () {
     return {
+      sortable:null,
 
       tab: 'screen',
 
@@ -266,9 +267,6 @@ export default {
       event.preventDefault()
       // console.log('wheel',event)
       content.scrollLeft += event.deltaY
-    })
-    this.$nextTick(() => {
-      this.rowDrop()
     })
   },
   computed: {
@@ -474,10 +472,22 @@ export default {
           require('electron').shell.openPath(item.path)
       }
     },
-    rowDrop () {
+    disableDrag(){
+      if(this.sortable){
+        document.removeEventListener('click',this.disableDrag)
+        this.sortable.destroy()
+        this.sortable=null
+        message.info('已中止导航栏调整')
+      }
+    },
+    enableDrag () {
+      if(this.sortable){
+        return
+      }
+      document.addEventListener('click',this.disableDrag)
       let that = this
       let drop = document.getElementById('bottomContent')
-      Sortable.create(drop, {
+      this.sortable= Sortable.create(drop, {
         sort: true,
         animation: 150,
         onStart: function (event) {
@@ -533,6 +543,7 @@ export default {
 
         }
       })
+      message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
     delNavigation (sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
