@@ -2,7 +2,7 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
 
-    <div class="box common-panel hide-scrollbar s-bg  "
+    <div @click.stop class="box common-panel hide-scrollbar s-bg  "
          style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
           background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
           overflow-x: hidden;
@@ -10,8 +10,8 @@
          @contextmenu.stop="showMenu">
       <div   style="width: 67px;overflow-x: hidden">
         <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
-          <div @contextmenu.stop="enableDrag" v-for="item in sideNavigationList" :key="item.name" @click.stop="clickNavigation(item)">
-            <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
+          <div  v-for="item in sideNavigationList" :key="item.name" @click.stop="clickNavigation(item)">
+            <div  @contextmenu.stop="enableDrag"   class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">
                 <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
                       :class="{ 'active-color': current(item) }"></Icon>

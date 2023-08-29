@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
+  <div @click.stop class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
        @contextmenu.stop="showMenu">
     <!-- 快速搜索 底部 用户栏 -->
     <div v-if="isMain && !simple" class="common-panel user s-bg"
