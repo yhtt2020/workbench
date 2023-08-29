@@ -17,12 +17,12 @@ const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
-    loading:false,//控制加载动画
+    loading: false,//控制加载动画
     items: [],//剪切板的收集箱内容
-    filterType:'all',
-    findMap:{},//查询方法
+    filterType: 'all',
+    findMap: {},//查询方法
     index: 0,
-    hasNextPage: false,
+    hasNextPage: true,
     totalRows: 0,
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     previewShow: false,//预览
@@ -39,112 +39,119 @@ export const clipboardStore = defineStore("clipboardStore", {
   }),
   actions: {
     async nextPage(dbKey) {
-      if(this.items.length===0){
-        //防止首次加载分页
-        return
-      }
+      let time=Date.now()
       if (this.hasNextPage) {
-        if(this.filterType!=='all'){
-          await tsbApi.db.createIndex({
-            index:{
-              fields:['type','createTime']
-            }
-          })
-          this.loading=true
-          let rsFiltered=await tsbApi.db.find({
-            selector:{
-              type:this.filterType,
-              createTime:{
-                $lt:this.items[this.items.length-1].createTime
-              },
-              _id:{
-                $regex:/^clipboard:item:/
-              }
-            },
-            limit:this.settings.pageSize,
-            sort:[
-              {
-                '_id':'desc'
-              }
-            ]
-          })
-
-          this.items= this.items.concat(rsFiltered.docs)
-          this.loading=false
-          console.log(this.settings.pageSize,rsFiltered.docs.length)
-          this.hasNextPage = this.settings.pageSize === rsFiltered.docs.length
-          console.log('find结果',rsFiltered)
-          return
+        this.loading = true
+        await tsbApi.db.createIndex({
+          index: {
+            fields: ['type', 'createTime']
+          }
+        })
+        let map: any = {
+          _id: {
+            $regex: new RegExp(`^${dbKey}`)
+          }
+        }
+        if (this.filterType !== 'all') {
+          map.type = this.filterType
+        }
+        if (this.items.length > 0) {
+          map.createTime = {
+            $lt: this.items[this.items.length - 1].createTime
+          }
         }
 
-        const rs = await tsbApi.db.allDocsQuery({
-          start_key: this.items[this.items.length - 1]._id + '\ufff0',
-          end_key: dbKey,
-          skip: 1,
-          descending: true,
+        console.log('查询调节',map)
+        let rsFiltered = await tsbApi.db.find({
+          selector: map,
           limit: this.settings.pageSize,
-          include_docs: true,
-        })
-        this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
-        rs.rows.forEach(row => {
-          const doc = row?.doc
-          if (doc) {
-            this.items.push(doc)
-          }
-        })
-        this.totalRows = rs.total_rows
-        return this.hasNextPage
-      } else {
-        return false
-      }
-    },
-    async loadFromDb(key) {
-      this.loading=true
-      if(this.filterType!=='all'){
-        await tsbApi.db.createIndex({
-          index:{
-            fields:['type','createTime']
-          }
-        })
-        let rsFiltered=await tsbApi.db.find({
-          selector:{
-            type:this.filterType,
-            _id:{
-              $regex:/^clipboard:item:/
-            }
-          },
-          limit:this.settings.pageSize,
-          sort:[
+          sort: [
             {
-              '_id':'desc'
+              '_id': 'desc'
             }
           ]
         })
-        this.items=rsFiltered.docs
-        this.loading=false
-        this.hasNextPage = this.settings.pageSize === rsFiltered.docs.length
 
-        console.log('find结果',rsFiltered)
-        return
+        this.items = this.items.concat(rsFiltered.docs)
+        this.loading = false
+        this.hasNextPage = this.settings.pageSize === rsFiltered.docs.length
+        if (dbKey.includes('collection')) {
+          for (const item of rsFiltered.docs) {
+            if (!item.type) {
+              await tsbApi.db.remove(item)
+            }
+          }
+        }
+
+        return rsFiltered
       }
 
-
-      const rs = await tsbApi.db.allDocsQuery({
-        start_key: key + '\ufff0',
-        end_key: key,
-        // skip: (page - 1) * pageSize,
-        // limit:pageSize,
-        include_docs: true,
-        descending: true,
-        limit: this.settings.pageSize
-      })
-      this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
-      this.items = rs.rows.map(row => {
-        const doc = row?.doc
-        return doc
-      })
-      this.loading=false
-      this.totalRows = rs.total_rows
+      // const rs = await tsbApi.db.allDocsQuery({
+      //   start_key: this.items[this.items.length - 1]._id + '\ufff0',
+      //   end_key: dbKey,
+      //   skip: 1,
+      //   descending: true,
+      //   limit: this.settings.pageSize,
+      //   include_docs: true,
+      // })
+      // this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
+      // rs.rows.forEach(row => {
+      //   const doc = row?.doc
+      //   if (doc) {
+      //     this.items.push(doc)
+      //   }
+      // })
+      // this.totalRows = rs.total_rows
+      // return this.hasNextPage
+    },
+    async loadFromDb(key) {
+      // this.loading=true
+      // if(this.filterType!=='all'){
+      //   await tsbApi.db.createIndex({
+      //     index:{
+      //       fields:['type','createTime']
+      //     }
+      //   })
+      //
+      //   let rsFiltered=await tsbApi.db.find({
+      //     selector:{
+      //       type:this.filterType,
+      //       _id:{
+      //         $regex:new RegExp(`^${key}:`)
+      //       }
+      //     },
+      //     limit:this.settings.pageSize,
+      //     sort:[
+      //       {
+      //         '_id':'desc'
+      //       }
+      //     ]
+      //   })
+      //   this.items=rsFiltered.docs
+      //   this.loading=false
+      //   this.hasNextPage = this.settings.pageSize === rsFiltered.docs.length
+      //
+      //   console.log('find结果',rsFiltered)
+      //   return
+      // }
+      //
+      //
+      // const rs = await tsbApi.db.allDocsQuery({
+      //   start_key: key + '\ufff0',
+      //   end_key: key,
+      //   // skip: (page - 1) * pageSize,
+      //   // limit:pageSize,
+      //   include_docs: true,
+      //   descending: true,
+      //   limit: this.settings.pageSize
+      // })
+      // this.hasNextPage = this.settings.pageSize === rs.rows.length //如果页面尺寸大于当前的行数
+      // this.items = rs.rows.map(row => {
+      //   const doc = row?.doc
+      //   return doc
+      // })
+      // this.loading=false
+      // this.totalRows = rs.total_rows
       // console.log('分页后的rs',rs)
       // for await (const results of rs.pages()){
       //   console.log(results)
@@ -224,13 +231,22 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     async addToCollection(item) {
-      await tsbApi.db.put({
-        _id: 'clipboard:collection:' + Date.now(),
-        originData: item,
-        createTime: Date.now(),
-        updateTime: Date.now()
-      })
-      this.collections.unshift(item)
+
+      let collectionItem = {
+        ...item,
+      }
+      collectionItem._id = 'clipboard:collection:' + Date.now()
+      collectionItem.createTime = Date.now()
+      collectionItem.updateTime = Date.now()
+      delete collectionItem._rev
+      console.log('插入的', collectionItem)
+
+      let rs=await tsbApi.db.put(collectionItem)
+      // if(rs.ok){
+      //   this.collections.
+      // }
+      // console.log('插入结果',rs)
+      // this.collections.unshift(item)
 
     },
     /**
@@ -312,11 +328,11 @@ export const clipboardStore = defineStore("clipboardStore", {
           await this.videoChange(filepath)
           return
         }
-        if(['png','bmp','jpg','jpeg'].indexOf(fileExt)>-1){
+        if (['png', 'bmp', 'jpg', 'jpeg'].indexOf(fileExt) > -1) {
           await this.imageChange(filepath)
           return
         }
-        if(['wav','aiff','pcm','flac','alac','mp3','ogg','aac','wma'].indexOf(fileExt)>-1){
+        if (['wav', 'aiff', 'pcm', 'flac', 'alac', 'mp3', 'ogg', 'aac', 'wma'].indexOf(fileExt) > -1) {
           await this.audioChange(filepath)
           return
         }
@@ -341,7 +357,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         this.items.unshift(item)
       }
     },
-    async audioChange(audio){
+    async audioChange(audio) {
       const stat = fs.statSync(audio)
       await this.addItem({
         type: 'audio',
@@ -352,19 +368,19 @@ export const clipboardStore = defineStore("clipboardStore", {
       })
     },
     async imageChange(image: any) {
-      let filepath=''
+      let filepath = ''
       const now = Date.now()
-      if(typeof image==='string'){
+      if (typeof image === 'string') {
         //是文件，而非图片
-        filepath=image
-      }else{
+        filepath = image
+      } else {
         //是图片，而非文件
         //转存图片
         let dataPath = window.globalArgs['user-data-dir']
         const dir = require('path').join(dataPath, 'clipboard')
         fs.ensureDirSync(dir)
         const path = require('path').join(dir, 'image_' + now + '.png')
-        filepath=path
+        filepath = path
         fs.writeFileSync(filepath, image.toPNG())
       }
 
@@ -379,7 +395,7 @@ export const clipboardStore = defineStore("clipboardStore", {
           path: filepath,
         })
       } catch (e) {
-        console.error('图片写入失败',e)
+        console.error('图片写入失败', e)
       }
     },
     changeClipMode(code: string) {

@@ -6,7 +6,7 @@ import {clipboardStore} from "../store";
 import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
 import browser from "../../../js/common/browser";
-
+import _ from 'lodash-es'
 export default {
   name: "ClipItemWidget",
   props: ['clipItem', 'menuList'],
@@ -76,6 +76,11 @@ export default {
       let menuList=[...defaultMenu]
       if(this.urls.length===0){
         menuList.splice(1,1)
+      }
+      if(this.clipItem._id.includes('collection')){
+        _.remove(menuList,(item)=>{
+          return item.title==='添加到收藏'
+        })
       }
       // if (['image','video','audio'].includes(this.clipItem.type)){
       //   menuList.splice(1,1)

@@ -2,24 +2,20 @@
   <div class="flex flex-wrap h-full"
        style="justify-items: center;align-content: start;flex-direction: column;
     justify-content: center;align-items: center;">
+
+    <div v-if="clipList.length>0" v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg">
+      <ClipItem :key="item.updateTime" :clipItem="item" @previewItem="getItem"></ClipItem>
+    </div>
     <div v-if="loading">
-      <div class="flex items-center justify-center">
-        <!--          <a-empty class="animate-ping" image="/emoji/wait.png" description="加载中…"/>-->
+      <div class="flex items-center justify-center p-20" style="width:400px">
+<!--        <a-empty style="zoom:0.5" class="animate-ping" image="/emoji/wait.png" description="加载中…"/>-->
       </div>
     </div>
-    <template v-else>
-      <div v-if="clipList.length>0" v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg">
-        <ClipItem :key="item.updateTime" :clipItem="item" @previewItem="getItem"></ClipItem>
+    <div v-else-if="clipList.length === 0" class="flex items-center justify-center w-full my-32">
+      <div class="flex items-center justify-center">
+        <a-empty :image="simpleImage"/>
       </div>
-      <div v-else class="flex items-center justify-center w-full my-32">
-
-        <div v-if="clipList.length === 0" class="flex items-center justify-center">
-          <a-empty :image="simpleImage"/>
-        </div>
-      </div>
-
-    </template>
-
+    </div>
   </div>
   <ClipTextPreview ref="previewerRef" :previewContent="previewData"></ClipTextPreview>
 </template>

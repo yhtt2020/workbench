@@ -30,14 +30,9 @@
   </div>
 
   <!-- 剪切板列表展示区域开始 -->
-  <vue-custom-scrollbar @ps-x-reach-end="loadEvent" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
+  <vue-custom-scrollbar style="width: 100%" @ps-x-reach-end="doLoadNextPage" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         class="mx-4 my-2 py-4 h-full ">
-    <div v-if="tab.name === 'collect'">
-      <div class="flex items-center justify-center">
-        <a-empty :image="simpleImage"/>
-      </div>
-    </div>
-    <ClipList :clipList="clipContents" v-else></ClipList>
+    <ClipList :clipList="clipContents" ></ClipList>
   </vue-custom-scrollbar>
   <div class="text-center">
     {{clipContents.length}} 条记录
@@ -78,7 +73,6 @@ import { clipboardStore } from '../store'
 import _ from 'lodash-es'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
-import { fileList, videoList, audioList } from '../../../js/data/clipboardData'
 import ClipItem from '../components/ClipItem.vue'
 
 export default {
@@ -149,36 +143,13 @@ export default {
       if (this.items.length === 0) {
         return []
       }
-      // switch (this.currentFilter.typename) {
-      //   case 'all': // 默认全部
-      //     list = this.items
-      //     break
-      //   case 'text':   // 筛选文本
-      //     list = _.filter(this.items, function (o) { return o.type === 'text' })
-      //     break
-      //   case 'image':  // 筛选图片
-      //     list = _.filter(this.items, function (o) { return o.type === 'image' })
-      //     break
-      //   case 'file':  // 筛选文件
-      //     list = fileList   // 方便页面搭建暂时使用fileList这个列表,后期视情况而定
-      //     break
-      //   case 'video': // 筛选视频
-      //     list = videoList// 方便页面搭建暂时使用videoList这个列表,后期视情况而定
-      //     break
-      //   case 'audio': // 筛选音频
-      //     list = audioList
-      //     break
-      // }
       list = this.items
-      console.log(list, '列表内容')
       return list
 
     }
   },
   async mounted () {
-    this.loadEvent=_.debounce(this.doLoadNextPage,1000,{
-      leading:true
-    })
+    this.setLoadEvent()
     this.dbKey='clipboard:item:'
    this.pageLoad()
   },
@@ -187,32 +158,36 @@ export default {
   },
   methods: {
     ...mapActions(clipboardStore,['nextPage']),
-
+    setLoadEvent(){
+     this.loadEvent=_.debounce(async () => {
+          console.error('触底事件')
+          if (this.hasNextPage) {
+            console.log('查询下一页')
+            let rs = await this.nextPage(this.dbKey)
+            if (!rs) {
+              message.info({
+                content: '已经到底了',
+                key: 'loadInfo'
+              })
+              return
+            }
+          } else {
+            console.log('由于没有下一页返工')
+            return
+          }
+        },300,
+        {
+          leading:true
+        })
+    },
     async doLoadNextPage () {
-
-      if(this.hasNextPage){
-        let rs = await this.nextPage(this.dbKey)
-        if (!rs) {
-          message.info({
-            content:'已经到底了',
-            key:'loadInfo'
-          })
-        }
+      if(this.loadEvent){
+        this.loadEvent()
       }
-
-      console.log('到底防抖')
     },
 
     pageLoad () {
-      this.loadFromDb(this.dbKey,this.page, this.pageSize).then(count => {
-        this.count = count
-      })
-    },
-
-    pageLoadCollection(){
-      this.loadFromDb(this.dbKey,this.page,this.pageSize).then(count=>{
-        this.count=count
-      })
+      this.doLoadNextPage()
     },
     // 打开导航栏切换
     openClipType () {
@@ -239,23 +214,24 @@ export default {
   watch: {
     tab: {
       handler (newTab) {
+        this.hasNextPage=true
+        this.items=[]
         if (newTab.name === 'history') {
           this.dbKey='clipboard:item:'
-          this.pageLoad()
+          this.doLoadNextPage()
         } else if (newTab.name === 'collect') {
           this.dbKey='clipboard:collection:'
-          this.pageLoadCollection()
+          this.doLoadNextPage()
         }
-        console.log('切换tab')
       }
     },
     // 监听导航栏筛选切换
     'currentFilter': {
       handler () {
+        this.hasNextPage=true
         this.filterType = this.currentFilter.typename
         this.items=[]
-
-        this.pageLoad()
+        this.doLoadNextPage()
 
       },
       immediate: true,
