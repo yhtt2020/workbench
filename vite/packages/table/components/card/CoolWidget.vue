@@ -49,7 +49,7 @@ export default {
     <WujieVue
               width="100%"
               height="100%"
-              :name="'dd'"
+              :name="'dd'+Date.now()"
               url="http://localhost:5173/#/card1"
               :sync="true"
               :fetch="fetch"
