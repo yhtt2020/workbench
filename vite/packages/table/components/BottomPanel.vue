@@ -66,8 +66,8 @@ align-items: start;
     <template v-if="!simple && isMain">
       <Team></Team>
     </template>
-  <TaskBox></TaskBox>
-   
+<!--  <TaskBox></TaskBox>-->
+
   </div>
   <div id="trans" v-show="visibleTrans"
        style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
@@ -174,7 +174,7 @@ export default {
   },
   data () {
     return {
- 
+
       tab: 'screen',
 
       lastTime: 0,
