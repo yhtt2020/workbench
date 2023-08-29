@@ -56,7 +56,15 @@
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                          :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
+            <div
+              :class="{editing:editing}"
+              :editing="editing"
+              :style="{ zoom: (usingSettings.cardZoom * this.adjustZoom / 100).toFixed(2), }">
 
+
+<!--              <CoolWidget :appName="'cool'" :desk="currentDesk" :is="item.name" :customIndex="item.id"-->
+<!--                          :customData="item.customData" :editing="editing" @customEvent="customEvent"></CoolWidget>-->
+            </div>
           </template>
         </vuuri>
       </div>
@@ -283,10 +291,12 @@ import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
 import EatToday from '../widgets/eat/EatToday.vue'
 import HotSearch from '../widgets/HotSearch.vue'
+import CoolWidget from '../card/CoolWidget.vue'
 
 export default {
   name: 'Desk',
   components: {
+    CoolWidget,
     News,
     Template,
     HorizontalPanel,
