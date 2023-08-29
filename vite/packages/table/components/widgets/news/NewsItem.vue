@@ -1,7 +1,7 @@
 <template>
   <div class="card-item" :style="{ marginBottom:copyNum==12?'20px':'12px'}">
 
-    <div class="left":style="{ width: showImg == false ? '260px' : '' }" >
+    <div class="left" :style="{ width: showImg == false ? '260px' : '' }" >
       <div class="title" @click="goNews" style="color: var(--primary-text);" >
         {{ newsMsgList.newsMsgList.title }}
       </div>
