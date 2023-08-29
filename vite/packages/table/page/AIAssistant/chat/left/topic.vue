@@ -3,7 +3,7 @@
     class="group cursor-pointer flex items-center text-base relative h-12 rounded-xl pl-2 mb-2 mr-3"
     style="width: 212px"
     :class="{ 'xt-bg-2': selectTopicIndex === data.id }"
-    @click="handleIndex(data.id)"
+    @click="handleIndex()"
   >
     <Icon :icon="data.icon.name"></Icon>
     <div class="ml-2">{{ data.name }}</div>
@@ -11,7 +11,7 @@
       class="absolute top-1/2 -translate-y-1/2 cursor-pointer top-item xt-text-2 hidden"
       style="right: 40px"
       icon="shanchu"
-      @click.stop.prevent="handleDel()"
+      @click.stop.prevent="handleDel(data.id)"
     ></Icon>
     <Icon
       class="absolute top-1/2 -translate-y-1/2 cursor-pointer top-item xt-text-2"
@@ -34,7 +34,6 @@ export default {
   methods: {
     ...mapActions(aiStore, ["delTopic"]),
     handleTop() {
-      this.$emit("top");
       let id = this.data.id;
       for (let key in this.topicList) {
         let item = this.topicList[key];
@@ -45,10 +44,11 @@ export default {
       }
     },
     handleDel() {
+      this.selectTopicIndex = this.data.id;
       this.delTopic();
     },
-    handleIndex(id) {
-      this.selectTopicIndex = id;
+    handleIndex() {
+      this.selectTopicIndex = this.data.id;
     },
   },
   props: {

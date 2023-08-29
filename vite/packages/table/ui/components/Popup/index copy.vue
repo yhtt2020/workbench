@@ -15,9 +15,9 @@
       <div
         v-if="visible"
         v-bind="$attrs"
-        class="h-full bg-white-50 fixed top-1/2 -translate-y-1/2 rounded-xl"
+        class=" h-full bg-white-50 fixed top-1/2 -translate-y-1/2 rounded-xl"
         style="z-index: 9999; box-sizing: border-box"
-        :style="{ [position]: '0' }"
+        :style="{[position]: '0'}"
       >
         <slot> </slot>
       </div>
@@ -65,7 +65,6 @@ watch(
 }
 .popup-enter-from,
 .popup-leave-to {
-  transform: translate(100%);
-  // transform: all 0.3s;
+  transform: translateX(100%);
 }
 </style>

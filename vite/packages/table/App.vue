@@ -65,7 +65,7 @@
     </slot>
   </Modal>
 
- 
+
 
 </template>
 
@@ -237,7 +237,7 @@ export default {
       this.removeClock(0);
       this.$refs.clock.pause();
     },
- 
+
   },
   watch: {
     'settings.transparent': {

@@ -12,7 +12,7 @@
 import Text from "./Text.vue";
 import List from "./List.vue";
 import View from "./View.vue";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
 import { gpt } from "../../service/api/ai";
 import { message } from "ant-design-vue";
@@ -21,14 +21,14 @@ export default {
     ...mapWritableState(aiStore, [
       "selectTopicIndex",
       "topicList",
-      "chatObj",
+      "chatList",
       "url",
       "key",
       "count",
     ]),
     currentList() {
       if (this.selectTopicIndex == -1) return [];
-      return this.topicList[this.selectTopicIndex].chat;
+      return this.chatList[this.selectTopicIndex];
     },
   },
   components: {
@@ -39,12 +39,12 @@ export default {
   data() {
     return {
       markdown: "",
-      chatList: [],
       isSearch: true,
       flag: false,
     };
   },
   methods: {
+    ...mapActions(aiStore, ["addTopic"]),
     check() {
       if (!this.key || !this.url) {
         message.error("请先配置好信息");
@@ -52,26 +52,12 @@ export default {
       }
       return false;
     },
-    async getMdData() {
-      let res = await getMd();
-      this.markdown = res;
-    },
     async onSearch(serach) {
       if (this.check()) return;
+      this.isSearch = false;
+      this.selectTopicIndex == -1;
       if (this.selectTopicIndex == -1) {
-        let obj = {
-          chat: [],
-          icon: {
-            name: "message",
-            id: 0,
-          },
-          id: Date.now(),
-          time: Date.now(),
-          name: "新的对话",
-          top: false,
-        };
-        this.topicList[obj.id] = obj;
-        this.selectTopicIndex = obj.id;
+        this.addTopic();
       }
       let user = {
         content: serach,
@@ -79,11 +65,11 @@ export default {
         time: Date.now(),
         id: Date.now(),
       };
-      this.topicList[this.selectTopicIndex].chat.push(user);
+      this.chatList[this.selectTopicIndex].push(user);
 
       let arr = [];
 
-      this.topicList[this.selectTopicIndex].chat
+      this.chatList[this.selectTopicIndex]
         .slice(-1 * this.count)
         .forEach((item) => {
           arr.push({
@@ -91,10 +77,20 @@ export default {
             content: item.content,
           });
         });
-      console.log("arr :>> ", arr);
-
+      await this.processGPTResults(arr);
+      this.isSearch = true;
+      tsbApi.db.put({
+        _id: `gpt:${this.selectTopicIndex}`,
+        content: this.chatList[this.selectTopicIndex],
+        updateTime: Date.now(),
+      });
+      let res = await tsbApi.db.allDocs([`gpt:${this.selectTopicIndex}`]);
+      console.log("res :>> ", res);
+    },
+    async processGPTResults(arr) {
       // 获取聊天机器人的回复
       for await (const result of gpt(arr)) {
+        console.log("result :>> ", result);
         if (result.value) {
           message.error(result.value.error.message);
           return;
@@ -103,16 +99,14 @@ export default {
           break; // 终止循环
         }
         // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
-        const index = this.topicList[this.selectTopicIndex].chat.findIndex(
+        const index = this.chatList[this.selectTopicIndex].findIndex(
           (item) => item.id === result.id
         );
 
         if (index !== -1) {
-          this.topicList[this.selectTopicIndex].chat[
-            this.topicList[this.selectTopicIndex].chat.length - 1
+          this.chatList[this.selectTopicIndex][
+            this.chatList[this.selectTopicIndex].length - 1
           ].content += result.content;
-
-          // this.chatList[this.chatList.length - 1].content += result.content;
         } else {
           let assistant = {
             content: result.content,
@@ -120,10 +114,10 @@ export default {
             time: Date.now(),
             id: result.id,
           };
-          this.topicList[this.selectTopicIndex].chat.push(assistant);
+          this.chatList[this.selectTopicIndex].push(assistant);
         }
       }
-      return;
+      console.log("结束了 :>> ");
     },
   },
 };
