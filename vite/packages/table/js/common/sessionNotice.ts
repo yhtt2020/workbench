@@ -107,13 +107,14 @@ export class Notifications{
         if (msg.handleMessage === "加群" && msg.hasOwnProperty("handleMessage")) {
           info = `${userName}申请加入群组:${groupName}`;
         } else {
-          info = `${userName}接受${msg.nick}加入${groupName}群组`;
+          info = `${msg.nick === '' ? userName : msg.nick}加入${msg.payload.groupProfile?.groupName || msg.payload.groupProfile?.name}群聊`;
         }
         break;
       case 2:
         info = `成功加入群组：${groupName}`;
         break;
       case 3:
+        console.log(data);
         info = `申请加入群组:${groupName}被拒绝`;
         break;
       case 4:
@@ -206,6 +207,7 @@ export class Notifications{
         // 获取头像
         const avatar = await this.getGroupAvatar(notification)
 
+        
         // 全局情况下的普通消息弹窗
         if(settings.isGlobal){
           // 显示消息入口
@@ -213,7 +215,7 @@ export class Notifications{
           const newMsg = {  
             title:data.conversationType === 'C2C' ? friendTitle : groupTitle,
             icon:data.conversationType === 'C2C' ? data.avatar : avatar,
-            body:data.payload.text,
+            body:`${data.nick}${data.payload.text}`,
             time:data.time,
           }
           if(settings.isAT){
