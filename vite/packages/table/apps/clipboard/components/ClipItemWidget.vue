@@ -23,38 +23,40 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-
-      menuList: [
+    }
+  },
+  computed: {
+    urls(){
+      if (['image','video','audio'].includes(this.clipItem.type)){
+        return []
+      }else{
+        const str = this.clipItem.content
+// 提取file协议和http协议的URL
+        const regex = /((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
+        return str.match(regex) || []
+      }
+    },
+    menuList(){
+      const defaultMenu=[
         {
           title: '复制', shortKeys: 'Ctrl + C', id: 'cc', fn: (item) => {
             require('electron').clipboard.writeText(item.content)
+            //todo 不同类型的复制
             message.success('复制成功。')
           }
         },
         {
           title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
-            const str = item.content
-// 提取file协议和http协议的URL
-
-            const regex = /((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
-
-            const urls = str.match(regex);
-            if (!urls) {
+            if (this.urls.length===0) {
               message.error('不存在链接')
             } else {
-              browser.openInUserSelect(urls[0])
+              browser.openInUserSelect(this.urls[0])
               message.success('打开链接成功。')
             }
-            console.log(urls, '匹配到的url')
-
-
-// 打印提取到的URL
-
           }
         },
         {
           title: '预览', shortKeys: 'Space', id: 's', fn: (item) => {
-            console.log('预览内容', item)
             this.previewItem(item)
           }
         },
@@ -71,9 +73,17 @@ export default {
           }
         }
       ]
-    }
-  },
-  computed: {
+      let menuList=[...defaultMenu]
+      if(this.urls.length===0){
+        menuList.splice(1,1)
+      }
+      // if (['image','video','audio'].includes(this.clipItem.type)){
+      //   menuList.splice(1,1)
+      // }
+      return [
+        ...menuList
+      ]
+    },
     timeText() {
       const time = getDateTime(new Date(this.clipItem.createTime))
       return `${time.hours}:${time.minutes}:${time.seconds}` + '&nbsp;&nbsp;&nbsp;' + `${time.month}月${time.day}日`
