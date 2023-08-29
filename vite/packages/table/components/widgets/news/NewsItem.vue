@@ -1,16 +1,16 @@
 <template>
   <div class="card-item" :style="{ marginBottom:copyNum==12?'20px':'12px'}">
 
-    <div class="left":style="{ width: showImg == false ? '260px' : '' }" >
+    <div class="left" :style="{ width: showImg == false ? '260px' : '' }" >
       <div class="title" @click="goNews" style="color: var(--primary-text);" >
         {{ newsMsgList.newsMsgList.title }}
       </div>
       <div class="bottom" >
         <div class="date"  >
-          <span style="color: var(--primary-text);">{{ timer[0] }} {{ timer[1] }}</span>
+          <span style="color: var(--secondary-text);">{{ timer[0] }} {{ timer[1] }}</span>
         </div>
         <div class="name">
-          <span style="color: var(--primary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>
+          <span style="color: var(--secondary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>
         </div>
       </div>
 
@@ -69,10 +69,8 @@ const img = computed(() => {
   // cursor: pointer;
 
   .left {
-    width: 150px;
-    // margin-left: 0.5%;
+    width: 145px;
     position: relative;
-
     .title {
       width: 100%;
       height: auto;
@@ -101,7 +99,7 @@ const img = computed(() => {
       // justify-content: space-between;
       position: absolute;
       // margin-top: 9.2%;
-      bottom: 3px;
+      bottom: -6px;
 
       .date {
         span {
@@ -109,6 +107,11 @@ const img = computed(() => {
           font-size: 12px;
           color: rgba(255, 255, 255, 0.40);
           font-weight: 400;
+        }
+        &:after {
+          content: '·';
+          text-align: center;
+          margin: 0 4px;
         }
       }
 
