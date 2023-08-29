@@ -1,7 +1,7 @@
 .TUI-conversation {
   &-item {
     &:hover {
-      background: rgba(0,110,255,0.10);
+      background: var(--active-secondary-bg);
     }
     .left {
       .num {
@@ -31,11 +31,11 @@
         span {
           font-family: PingFangSC-Regular;
           font-weight: 400;
-          color: #999999;
+          color: var(--secondary-text);
         }
         p {
           font-weight: 400;
-          color: #999999;
+          color: var(--secondary-text);
           letter-spacing: 0;
         }
         &-at {
@@ -43,14 +43,14 @@
         }
     }
     .content-footer {
-      color: #999999;
+      color: var(--secondary-text);
         .time {
-        color: #BBBBBB;
+        color: var(--secondary-text);
       }
     }
   }
   .selected {
-    background: rgba(0,110,255,0.10);
+    background: var(--active-secondary-bg);
   }
   .pinned {
     background: #EEF0F3;
