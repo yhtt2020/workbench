@@ -51,6 +51,7 @@
     "swiper": "^9.2.3",
     "tailwindcss": "^3.2.7",
     "tinycolor2": "^1.6.0",
+    "tui-image-editor": "^3.15.3",
     "unplugin-vue-components": "^0.20.1",
     "v-calendar": "^3.0.3",
     "v-viewer": "^3.0.11",
@@ -62,6 +63,7 @@
     "vue3-resize": "^0.2.0",
     "vue3-seamless-scroll": "^2.0.1",
     "vuex": "^4.0.2",
+    "wujie-vue3": "^1.0.18",
     "xgplayer": "^2.32.2"
   },
   "devDependencies": {
