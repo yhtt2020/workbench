@@ -92,12 +92,12 @@ export const clipboardStore = defineStore("clipboardStore", {
           map['$or'] = [
             {
               content: {
-                $regex: new RegExp(`.*${words}.*`)
+                $regex: new RegExp(`.*${words}.*`,'ig')
               },
             },
             {
               searchKey: {
-                $regex: new RegExp(`.*${words}.*`)
+                $regex: new RegExp(`.*${words}.*`,'ig')
               },
             }
           ]
