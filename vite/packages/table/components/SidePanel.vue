@@ -2,16 +2,16 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
 
-    <div class="box common-panel s-bg  "
+    <div @click.stop class="box common-panel hide-scrollbar s-bg  "
          style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
           background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
           overflow-x: hidden;
           padding-top: 0;padding-bottom: 0;position:relative;" ref="sideContent"
          @contextmenu.stop="showMenu">
-      <div style="width: 67px;overflow-x: hidden">
-        <div :id="sortId" class="scroller-wrapper xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
-          <div v-for="item in sideNavigationList" :key="item.name" @click="clickNavigation(item)">
-            <div class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
+      <div   style="width: 67px;overflow-x: hidden">
+        <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
+          <div  v-for="item in sideNavigationList" :key="item.name" @click.stop="clickNavigation(item)">
+            <div  @contextmenu.stop="enableDrag"   class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">
                 <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
                       :class="{ 'active-color': current(item) }"></Icon>
@@ -65,7 +65,10 @@ export default {
     return {
       menuVisible: false,
       quick: false,
-      delNav: false
+      delNav: false,
+      sortable:null,
+      dragEnable:false,
+      dragEvent:null
     }
   },
   props: {
@@ -129,6 +132,80 @@ export default {
     }
   },
   methods: {
+    disableDrag(){
+      if(this.sortable){
+        document.removeEventListener('click',this.disableDrag)
+        this.sortable.destroy()
+        this.sortable=null
+        message.info('已中止侧栏调整')
+        return
+      }
+    },
+    enableDrag(){
+      if(this.sortable){
+        return
+      }
+      let that = this
+      let drop = document.getElementById(this.sortId)
+      document.addEventListener('click',this.disableDrag)
+
+      this.sortable=Sortable.create(drop,{
+        sort: true,
+        animation: 150,
+        onStart: function (event) {
+          let delIcon = document.getElementById('delIcon2')
+          that.$emit('getDelIcon',true)
+          this.delNav = true
+          if (this.delNav) {
+            delIcon.ondragover = function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop = function (ev) {
+            let oneNav = that.sideNavigationList[event.oldIndex]
+            //将要删除的是否是主要功能
+            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
+              that.delNavList(event.oldIndex)
+              return
+            }
+            let sumList = []
+            // 判断其他导航栏是否是打开状态，是则获取功能列表
+            if (that.otherSwitch1 && that.otherSwitch2) {
+              sumList = that.otherNavList1.concat(that.otherNavList2)
+            } else if (that.otherSwitch1 && !that.otherSwitch2) {
+              sumList = that.otherNavList1
+            } else if (!that.otherSwitch1 && that.otherSwitch2) {
+              sumList = that.otherNavList2
+            } else{
+              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+              // console.log('不可删除')
+              return
+            }
+            that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
+          }
+        },
+        onUpdate:function(event){
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let newItem = drop.children[newIndex]
+          let oldItem = drop.children[oldIndex]
+
+          // 先删除移动的节点
+          drop.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if (newIndex > oldIndex) {
+            drop.insertBefore(newItem, oldItem)
+          } else {
+            drop.insertBefore(newItem, oldItem.nextSibling)
+          }
+          that.sortNavigationList(event)
+        },
+        onEnd: function (event) {
+          that.$emit('getDelIcon',false)
+        }
+      })
+      message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
+    },
     current(item) {
       if (item.data?.name) {
         return this.$route.params.name === item.data.name
@@ -207,63 +284,7 @@ export default {
       this.menuVisible = false
     },
     colDrop () {
-      let that = this
-      let drop = document.getElementById(this.sortId)
-      Sortable.create(drop,{
-        sort: true,
-        animation: 150,
-        onStart: function (event) {
-          let delIcon = document.getElementById('delIcon2')
-          that.$emit('getDelIcon',true)
-          this.delNav = true
-          if (this.delNav) {
-            delIcon.ondragover = function (ev) {
-              ev.preventDefault()
-            }
-          }
-          delIcon.ondrop = function (ev) {
-            let oneNav = that.sideNavigationList[event.oldIndex]
-            //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
-              that.delNavList(event.oldIndex)
-              return
-            }
-            let sumList = []
-            // 判断其他导航栏是否是打开状态，是则获取功能列表
-            if (that.otherSwitch1 && that.otherSwitch2) {
-              sumList = that.otherNavList1.concat(that.otherNavList2)
-            } else if (that.otherSwitch1 && !that.otherSwitch2) {
-              sumList = that.otherNavList1
-            } else if (!that.otherSwitch1 && that.otherSwitch2) {
-              sumList = that.otherNavList2
-            } else{
-              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-              // console.log('不可删除')
-              return
-            }
-            that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
-          }
-        },
-        onUpdate:function(event){
-          let newIndex = event.newIndex,
-            oldIndex = event.oldIndex
-          let newItem = drop.children[newIndex]
-          let oldItem = drop.children[oldIndex]
 
-          // 先删除移动的节点
-          drop.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if (newIndex > oldIndex) {
-            drop.insertBefore(newItem, oldItem)
-          } else {
-            drop.insertBefore(newItem, oldItem.nextSibling)
-          }
-          that.sortNavigationList(event)
-        },
-        onEnd: function (event) {
-          that.$emit('getDelIcon',false)
-        }
-      })
     },
     delNavigation (sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
@@ -378,7 +399,7 @@ export default {
   }
 }
 
-.scroller-wrapper{
+.hide-scrollbar{
   &::-webkit-scrollbar {
     display: none; /* Chrome Safari */
   }

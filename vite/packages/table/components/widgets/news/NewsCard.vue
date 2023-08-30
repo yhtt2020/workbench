@@ -33,10 +33,17 @@
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
-        <div class="content" v-else>
-          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type">
+        <div class="content" v-else :style="{height:this.showSize.height==2?'340px':'528px'}">
+          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type"> 
             <span class="sort">{{ index+1 }}</span>
-            <NewsItem  :key="index" :newsMsgList="item" :copyNum="copyNum"/>
+            <div class="item">
+              <NewsItem  :key="index" :newsMsgList="item" :copyNum="copyNum"/>
+            </div>
+            <!-- 添加分割线 -->
+            <div class="divider" v-show="this.copyNum>=8">
+              <a-divider type="vertical" orientation="center" style="color: var(--divider); width: 1px; height: 100%;"/>
+            </div>
+            
           </div>
 
         </div>
@@ -243,6 +250,7 @@ export default {
       return this.showSize.height==2?8:12
 
     },
+    // 判断top-bar需要几个标签
     copyItem() {
       return this.showSize.width==1?3:8
     },
@@ -293,13 +301,10 @@ export default {
     box-sizing: border-box;
     overflow-x: auto;
     white-space: nowrap;
-    // scrollbar-width: thin; /* 或者设置为 none */
-    // scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1); /* 根据需要设置颜色 */
+    cursor: pointer;
 
     &::-webkit-scrollbar {
       width: 0;
-      // background-color: transparent;
-      // opacity: 0;
       display: none;
     }
 
@@ -343,17 +348,24 @@ export default {
 }
 
 .content {
-  margin-top: 1.8%;
+  margin-top: 1%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  // flex-direction: column;
+  align-content: space-between;
+  flex-direction: column;
   overflow: hidden;
-
-  // &::after{
-  //   content: '';
-  //   border: 1px solid #FFFFFF 10%;
-  // }
+  position: relative;
+  
+  .divider{
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    left: 285px;
+    right: 286px;
+    overflow: hidden;
+    
+  }
+  
   .sort {
   width: 24px;
   height: 24px;
