@@ -39,7 +39,7 @@
         <div class="flex" >
           <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
           <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('add')">
-           <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
+           <Icon icon="tianjia3" style="color: var(--success);"></Icon>
           </div>
         
           <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
