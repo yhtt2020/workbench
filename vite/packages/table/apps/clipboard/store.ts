@@ -434,6 +434,7 @@ export const clipboardStore = defineStore("clipboardStore", {
           ext: '.png',
           filename: 'image_' + now + '.png',
           path: filepath,
+          filepath:filepath,
           searchKey:filepath,
         })
       } catch (e) {

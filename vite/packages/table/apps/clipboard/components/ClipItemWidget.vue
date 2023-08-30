@@ -100,6 +100,13 @@ export default {
           return item.title === '添加到收藏'
         })
       }
+      if(['image','video','audio'].includes(this.clipItem.type)){
+        menuList.splice(2,0,{
+          title: '打开所在位置', shortKeys: 'Show', id: 's', fn: (item) => {
+            require('electron').shell.showItemInFolder(this.clipItem.path||this.clipItem.filepath)
+          }
+        })
+      }
       // if (['image','video','audio'].includes(this.clipItem.type)){
       //   menuList.splice(1,1)
       // }

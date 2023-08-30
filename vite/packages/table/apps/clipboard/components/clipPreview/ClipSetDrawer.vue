@@ -20,10 +20,10 @@
         <span>重置</span>
       </div>
     </div>
-    <span class="primary-title">历史记录容量</span>
-    <HorizontalPanel class="mt-6" :navList="historyCapacity" v-model:selectType="defaultCapacity"></HorizontalPanel>
-    <span class="primary-title">每次载入页数</span>
-    <HorizontalPanel class="mt-6" :navList="pageSizes" v-model:selectType="pageSizeTab"></HorizontalPanel>
+    <div class="primary-title mt-4">历史记录容量</div>
+    <HorizontalPanel class="mt-2" :navList="historyCapacity" v-model:selectType="defaultCapacity"></HorizontalPanel>
+    <div class="primary-title mt-4">每次载入页数</div>
+    <HorizontalPanel class="mt-2" :navList="pageSizes" v-model:selectType="pageSizeTab"></HorizontalPanel>
     <div @click="cleanData"
          class="w-full flex items-center button-active pointer justify-center rounded-lg py-3 button-bg my-6">
       <span>清除剪切板记录</span>
