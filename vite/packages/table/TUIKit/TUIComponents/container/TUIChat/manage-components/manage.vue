@@ -94,7 +94,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">邀请方式</span>
         
-        <template v-if="conversation?.selfInfo?.role !== 'Member'">
+        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'AVChatRoom'">
           <div class="flex pointer" @click="updateGroupInviteWay">
             <span class="font-14" style="color: var(--secondary-text);">
               {{ typeName[conversation.inviteOption] }}
@@ -329,6 +329,7 @@ const manage = defineComponent({
     const addGroupMember = (type) =>{  // 添加群聊成员
       if(props.conversation.inviteOption === 'DisableInvite'){
         data.enableVisible = false
+        message.error('群管理员开启禁止群成员邀请')
       }else{
         data.enableVisible = true
         data.memeberType = type
@@ -369,7 +370,7 @@ const manage = defineComponent({
         info:{
          groupID:props.conversation.groupID,
          conversation:props.conversation,
-         title:`${data.typeName[props.conversation.joinOption]}`
+         title:`${data.typeName[props.conversation.inviteOption]}`
         }
        })
     }
