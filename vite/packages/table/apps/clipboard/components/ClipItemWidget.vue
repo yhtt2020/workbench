@@ -7,6 +7,7 @@ import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
 import browser from "../../../js/common/browser";
 import _ from 'lodash-es'
+
 export default {
   name: "ClipItemWidget",
   props: ['clipItem', 'menuList'],
@@ -26,28 +27,45 @@ export default {
     }
   },
   computed: {
-    urls(){
-      if (['image','video','audio'].includes(this.clipItem.type)){
+    urls() {
+      if (['image', 'video', 'audio'].includes(this.clipItem.type)) {
         return []
-      }else{
+      } else {
         const str = this.clipItem.content
 // 提取file协议和http协议的URL
         const regex = /((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
         return str.match(regex) || []
       }
     },
-    menuList(){
-      const defaultMenu=[
+    menuList() {
+      const defaultMenu = [
         {
           title: '复制', shortKeys: 'Ctrl + C', id: 'cc', fn: (item) => {
-            require('electron').clipboard.writeText(item.content)
+
+            switch (this.clipItem.type) {
+              case 'text':
+                this.setClipboard('text', item.content)
+                break;
+              case 'image':
+                this.setClipboard('image', this.clipItem.path)
+                break
+              case 'video':
+                this.setClipboard('video', this.clipItem.filepath)
+                break;
+              case 'audio':
+                this.setClipboard('audio', this.clipItem.filepath)
+                break;
+              case 'file':
+                this.setClipboard('file', this.clipItem.files)
+                break;
+            }
             //todo 不同类型的复制
             message.success('复制成功。')
           }
         },
         {
           title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
-            if (this.urls.length===0) {
+            if (this.urls.length === 0) {
               message.error('不存在链接')
             } else {
               browser.openInUserSelect(this.urls[0])
@@ -73,13 +91,13 @@ export default {
           }
         }
       ]
-      let menuList=[...defaultMenu]
-      if(this.urls.length===0){
-        menuList.splice(1,1)
+      let menuList = [...defaultMenu]
+      if (this.urls.length === 0) {
+        menuList.splice(1, 1)
       }
-      if(this.clipItem._id.includes('collection')){
-        _.remove(menuList,(item)=>{
-          return item.title==='添加到收藏'
+      if (this.clipItem._id.includes('collection')) {
+        _.remove(menuList, (item) => {
+          return item.title === '添加到收藏'
         })
       }
       // if (['image','video','audio'].includes(this.clipItem.type)){
@@ -98,7 +116,7 @@ export default {
         case 'text':
           return this.clipItem.content.length + '个字符'
         case 'file':
-          return this.clipItem.files?.length +'个文件'
+          return this.clipItem.files?.length + '个文件'
         case 'image':
         case 'audio':
         case 'video':
@@ -137,7 +155,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(clipboardStore, ['remove', 'addToCollection']),
+    ...mapActions(clipboardStore, ['remove', 'addToCollection', 'setClipboard']),
     backClip() {
       this.tab = 'item'
     },
@@ -175,7 +193,7 @@ export default {
       </div>
     </div>
     <!-- 文本卡片顶部标题结束 -->
-    <div class="flex-center"   >
+    <div class="flex-center">
       <slot name="body">
       </slot>
     </div>
@@ -221,9 +239,10 @@ export default {
 </template>
 
 <style scoped lang="scss">
-.flex-center{
+.flex-center {
   display: flex;
-  flex:1;height: 0;
+  flex: 1;
+  height: 0;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   flex-direction: column;
