@@ -207,6 +207,9 @@ export default {
     setCurrentIndex(index) {
       this.currentIndex = index
       this.getNewsData()
+      if(this.customData){
+        this.newsItemList=this.customData
+      }
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -219,6 +222,7 @@ export default {
       // console.log(this.getNewsMsg);
       this.getNewsMsg(tag)
       // console.log('getNewsData',res);
+      this.customData.newsList={tag:this.newsItemList}
     }
   },
   computed: {

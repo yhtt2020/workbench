@@ -148,6 +148,19 @@ export const NavList = [
         time: '2023/6/28'
       },
       {
+        name:'OilPrices',
+        cname: '今日油价',
+        detail:'时刻关注你所在的城市的92号，96号，98号，0号油价',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'OilPrices',
+            size: '2x4',
+            zoom: '16'
+          }
+        ]
+      },
+      {
         name: 'supervisory',
         cname: '系统性能监控',
         detail: '同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。',
@@ -260,7 +273,7 @@ export const NavList = [
         name:'news',
         cname:'新闻头条',
         detail:'头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息',
-        sizes:['4x4','4x6'],
+        sizes:['2x4','4x4','4x6'],
         option:[
           {
             name:'news',
