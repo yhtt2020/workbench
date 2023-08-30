@@ -17,6 +17,8 @@ const clipboard = require('electron').clipboard
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
+    // 历史和收藏切换数组默认值
+    tab: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
     loading: false,//控制加载动画
     items: [],//剪切板的收集箱内容
     filterType: 'all',
@@ -284,25 +286,10 @@ export const clipboardStore = defineStore("clipboardStore", {
      * @param beforeText
      */
     async textChange(text: string, beforeText: string) {
-      const now = Date.now()
-      const time = getDateTime(new Date(now))
-      this.index++
-      let item: any = {
-        _id: "clipboard:item:" + now,
+      await this.addItem({
         type: 'text',
         content: text,
-        createTime: now,
-        index: this.index,
-        updateTime: now,
-      }
-      this.totalRows++
-      let rs = await tsbApi.db.put(item)
-      if (rs.ok) {
-        item._rev = rs.rev
-        this.items.unshift(item)
-      }
-
-
+      })
     },
     async videoChange(uri) {
       const stat = fs.statSync(uri)
@@ -333,7 +320,12 @@ export const clipboardStore = defineStore("clipboardStore", {
       if (rs.ok) {
         this.totalRows++
         item._rev = rs.rev
-        this.items.unshift(item)
+          //筛选同类且在item上
+        if((this.filterType===item.type || this.filterType==='all') && this.tab.name==='history'){
+          this.items.unshift(item)
+        }
+
+
       }
     },
     async uriChange(uri) {
@@ -355,25 +347,12 @@ export const clipboardStore = defineStore("clipboardStore", {
           return
         }
       }
-      const now = Date.now()
-      this.index++
-      const _id = "clipboard:item:" + now
-      let item: any = {
-        _id,
+      await this.addItem({
         type: 'file',
         content: '',
         count: uri.length,
         files: uri,
-        index: this.index,
-        updateTime: now,
-        createTime: now
-      }
-      this.totalRows++
-      let rs = await tsbApi.db.put(item)
-      if (rs.ok) {
-        item._rev = rs.rev
-        this.items.unshift(item)
-      }
+      })
     },
     async audioChange(audio) {
       const stat = fs.statSync(audio)
