@@ -29,6 +29,9 @@
     <!-- 搜索按钮和设置按钮结束 -->
   </div>
 
+  <div v-if="this.searchWords" class="xt-bg pointer rounded-full p-2 text-center mx-10" @click="drawerVisible=true">
+    关键词：{{this.searchWords}} <close-circle-filled class="ml-3" @click="this.searchWords='';this.doSearch()" />
+  </div>
   <!-- 剪切板列表展示区域开始 -->
   <vue-custom-scrollbar style="width: 100%" @ps-x-reach-end="doLoadNextPage" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         class="mx-4 my-2 py-4 h-full ">
@@ -45,7 +48,7 @@
   <!-- 搜索右侧抽屉开始 -->
   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
     <div class="flex mb-3">
-      <a-input placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchData"
+      <a-input @keydown.enter="clickSearch" allow-clear placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchWords"
                style="background: var(--secondary-bg);"></a-input>
       <div class="h-10 w-24 ml-3 s-item pointer flex button-active items-center justify-center rounded-lg"
            @click="clickSearch" style="background: var(--secondary-bg);">
@@ -71,6 +74,7 @@ import { Empty, message } from 'ant-design-vue'
 import { mapWritableState, mapActions } from 'pinia'
 import { clipboardStore } from '../store'
 import _ from 'lodash-es'
+import {CloseCircleFilled} from '@ant-design/icons-vue'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
 import ClipItem from '../components/ClipItem.vue'
@@ -84,7 +88,8 @@ export default {
     TabSwitching,
     HorizontalDrawer,
     ClipList,
-    ClipSetDrawer
+    ClipSetDrawer,
+    CloseCircleFilled
   },
 
   data () {
@@ -135,7 +140,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType','tab']),
+    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType','tab','searchWords']),
     // 根据剪切板列表不同状态进行数据显示
     clipContents () {
       let list = []
@@ -156,7 +161,7 @@ export default {
     this.items.splice(5,this.items.length-5) //退出的时候清理items，提升载入时间
   },
   methods: {
-    ...mapActions(clipboardStore,['nextPage']),
+    ...mapActions(clipboardStore,['nextPage','doSearch']),
     setLoadEvent(){
      this.loadEvent=_.debounce(async () => {
           console.error('触底事件')
@@ -206,7 +211,7 @@ export default {
     },
     // 搜索按钮事件
     clickSearch () {
-
+      this.doSearch()
     }
   },
 

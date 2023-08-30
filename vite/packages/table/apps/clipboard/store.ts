@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
+import file from "../../TUIKit/TUIComponents/container/TUIChat/plugin-components/file";
 
 //todo 此处要兼容web版
 const {win32} = window.$models
@@ -18,13 +19,14 @@ const clipboard = require('electron').clipboard
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     // 历史和收藏切换数组默认值
-    tab: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
+    tab: {title: '剪切板历史', icon: 'time-circle', name: 'history'},
     loading: false,//控制加载动画
     items: [],//剪切板的收集箱内容
     filterType: 'all',
     findMap: {},//查询方法
     index: 0,
     hasNextPage: true,
+    searchWords: '',//搜索关键词
     totalRows: 0,
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     previewShow: false,//预览
@@ -40,13 +42,25 @@ export const clipboardStore = defineStore("clipboardStore", {
     },
   }),
   actions: {
-    async nextPage(dbKey) {
-      let time=Date.now()
+    async doSearch() {
+      this.items = []
+      this.hasNextPage=true
+      this.nextPage()
+    },
+    async nextPage() {
+      let dbKey = ''
+      if (this.tab.name === 'history') {
+        dbKey = 'clipboard:item:'
+      } else {
+        dbKey = 'clipboard:collection:'
+      }
+
+      let time = Date.now()
       if (this.hasNextPage) {
         this.loading = true
         await tsbApi.db.createIndex({
           index: {
-            fields: ['type', 'createTime']
+            fields: ['type', 'createTime', 'content','searchKey']
           }
         })
         let map: any = {
@@ -63,7 +77,33 @@ export const clipboardStore = defineStore("clipboardStore", {
           }
         }
 
-        console.log('查询调节',map)
+        if (this.searchWords) {
+          function escapeSpecialChars(str) {
+            // 定义需要转义的特殊字符
+            const specialChars = /[.*+?^${}()|[\]\\]/g;
+
+            // 使用正则表达式替换特殊字符
+            return str.replace(specialChars, "\\$&");
+          }
+
+// 示例用法
+          const originalStr = "This is a special character: [*]";
+          const words=escapeSpecialChars(this.searchWords)
+          map['$or'] = [
+            {
+              content: {
+                $regex: new RegExp(`.*${words}.*`)
+              },
+            },
+            {
+              searchKey: {
+                $regex: new RegExp(`.*${words}.*`)
+              },
+            }
+          ]
+        }
+
+        console.log('查询调节', map)
         let rsFiltered = await tsbApi.db.find({
           selector: map,
           limit: this.settings.pageSize,
@@ -73,6 +113,7 @@ export const clipboardStore = defineStore("clipboardStore", {
             }
           ]
         })
+
 
         this.items = this.items.concat(rsFiltered.docs)
         this.loading = false
@@ -174,13 +215,13 @@ export const clipboardStore = defineStore("clipboardStore", {
     prepare() {
       clipboardChanged = this.changed
     },
-    setClipboard(type,item){
-      switch (type){
+    setClipboard(type, item) {
+      switch (type) {
         case 'text':
           require('electron').clipboard.writeText(item)
           break;
         case 'image':
-          require('electron').clipboard.writeImage( require('electron').nativeImage.createFromPath(item))
+          require('electron').clipboard.writeImage(require('electron').nativeImage.createFromPath(item))
           break
         case 'video':
         case 'audio':
@@ -260,7 +301,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       delete collectionItem._rev
       console.log('插入的', collectionItem)
 
-      let rs=await tsbApi.db.put(collectionItem)
+      let rs = await tsbApi.db.put(collectionItem)
       // if(rs.ok){
       //   this.collections.
       // }
@@ -299,6 +340,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: '',
         ext: require('path').extname(uri),
         size: stat.size,
+        searchKey:uri
       })
     },
     /**
@@ -320,8 +362,8 @@ export const clipboardStore = defineStore("clipboardStore", {
       if (rs.ok) {
         this.totalRows++
         item._rev = rs.rev
-          //筛选同类且在item上
-        if((this.filterType===item.type || this.filterType==='all') && this.tab.name==='history'){
+        //筛选同类且在item上
+        if ((this.filterType === item.type || this.filterType === 'all') && this.tab.name === 'history') {
           this.items.unshift(item)
         }
 
@@ -329,7 +371,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     async uriChange(uri) {
-      console.log('uri=',uri)
+      console.log('uri=', uri)
       if (uri.length === 1) {
         //是单个视频
         let filepath = uri[0]
@@ -352,6 +394,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: '',
         count: uri.length,
         files: uri,
+        searchKey:uri.join(',')
       })
     },
     async audioChange(audio) {
@@ -362,6 +405,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: '',
         ext: require('path').extname(audio),
         size: stat.size,
+        searchKey:audio
       })
     },
     async imageChange(image: any) {
@@ -390,6 +434,7 @@ export const clipboardStore = defineStore("clipboardStore", {
           ext: '.png',
           filename: 'image_' + now + '.png',
           path: filepath,
+          searchKey:filepath,
         })
       } catch (e) {
         console.error('图片写入失败', e)
