@@ -1,5 +1,5 @@
 <template>
-  <Widget :sizeList="bottomSizeList" :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
+  <Widget :editing="editing" :sizeList="bottomSizeList" :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
     :menuList="gameMiddleBare" ref="aggregateSearchSlot">
     <div class="flex items-center justify-center w-full p-2 mt-8 mb-3 rounded-xl pointer"
       style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click="enterSearchEngine">
@@ -44,7 +44,7 @@
   </Widget>
 
 
-  <a-drawer :width="500" title="设置" :placement="right" v-model:visible="aggSearchShow" @close="aggSearchShow = false">
+  <a-drawer :width="500" title="设置" placement="right" v-model:visible="aggSearchShow" @close="aggSearchShow = false">
     <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
       <div class="primary-title" style="color: var(--primary-text);">搜索引擎</div>
       <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序，最多支持在卡片上的展示5个搜索引擎</div>
@@ -84,6 +84,9 @@ export default {
     AggregateSearchDrawer
   },
   props: {
+    editing:{
+      type:Boolean,
+    },
     customIndex: {
       type: Number,
       default: 0,
