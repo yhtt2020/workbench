@@ -172,6 +172,23 @@ export const clipboardStore = defineStore("clipboardStore", {
     prepare() {
       clipboardChanged = this.changed
     },
+    setClipboard(type,item){
+      switch (type){
+        case 'text':
+          require('electron').clipboard.writeText(item)
+          break;
+        case 'image':
+          require('electron').clipboard.writeImage( require('electron').nativeImage.createFromPath(item))
+          break
+        case 'video':
+        case 'audio':
+          win32.setClipboardFilePaths([item])
+          break;
+        case 'file':
+          win32.setClipboardFilePaths(...item)
+
+      }
+    },
     changed() {
       console.log('剪切板内容变化')
       const availableFormats = clipboard.availableFormats()
@@ -320,6 +337,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     async uriChange(uri) {
+      console.log('uri=',uri)
       if (uri.length === 1) {
         //是单个视频
         let filepath = uri[0]
