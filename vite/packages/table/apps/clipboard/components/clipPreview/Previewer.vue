@@ -196,7 +196,7 @@
 
             <!-- 内容预览 -->
             <div class="flex h-full flex-col items-center justify-center">
-              <ClipVideo :videoUrl="previewContent.videoUrl" class="middle-clip rounded-lg"></ClipVideo>
+              <ClipVideo :playerProps="{ playbackRate: [0.5, 0.75, 1, 1.5, 2],}" :videoUrl="previewContent.filepath" class="middle-clip rounded-lg"></ClipVideo>
             </div>
           </div>
           <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
@@ -215,7 +215,7 @@
                   </div>
                   <div class="flex justify-between mb-6">
                     <span class="type-text">格式</span>
-                    <span class="type-right" v-if="previewContent.type === 'video'">mp4</span>
+                    <span class="type-right" v-if="previewContent.type === 'video'">{{ previewContent.ext }}</span>
                   </div>
                   <div class="flex justify-between mb-6">
                     <span class="type-text">时间</span>
@@ -232,7 +232,7 @@
                   <div class="flex justify-between flex-col mb-6">
                     <span class="type-text">路径</span>
                     <div class="type-right">
-                      {{ previewContent.videoUrl }}
+                      {{ previewContent.filepath }}
                     </div>
                   </div>
                 </div>
@@ -262,7 +262,7 @@
 
             <!-- 内容预览 -->
             <div class="flex h-full flex-col items-center justify-center">
-              <ClipAudio :fileUrl="previewContent.audioUrl" class="w-1/2"></ClipAudio>
+              <ClipAudio :fileUrl="previewContent.filepath" class="w-1/2"></ClipAudio>
             </div>
 
           </div>
@@ -299,7 +299,7 @@
                   <div class="flex justify-between flex-col mb-6">
                     <span class="type-text">路径</span>
                     <div class="type-right break-words">
-                      {{ previewContent.audioUrl }}
+                      {{ previewContent.filepath }}
                     </div>
                   </div>
                 </div>
