@@ -4,10 +4,10 @@ import {message} from "ant-design-vue";
 import browser from "../../../js/common/browser";
 import {mapActions} from "pinia";
 import {clipboardStore} from "../store";
-
+import _ from 'lodash-es'
 export default {
   name: "ClipMenuList",
-  props: ['clipItem'],
+  props: ['clipItem','hidePreview'],
   computed: {
     urls() {
       if (['image', 'video', 'audio'].includes(this.clipItem.type)) {
@@ -82,6 +82,11 @@ export default {
           return item.title === '添加到收藏'
         })
       }
+      if(this.hidePreview){
+        _.remove(menuList, (item) => {
+          return item.title === '预览'
+        })
+      }
       if (['image', 'video', 'audio'].includes(this.clipItem.type)) {
         menuList.splice(2, 0, {
           title: '打开所在位置', shortKeys: 'Show', id: 's', fn: (item) => {
@@ -105,8 +110,8 @@ export default {
     previewItem(item) {
       this.$emit('previewItem', {item})
     },
-    hideMenu(){
-      this.$emit('hideMenu')
+    clickItem(){
+      this.$emit('clickItem')
     }
   }
 }
@@ -114,7 +119,7 @@ export default {
 
 <template>
   <div class="menu-wrapper">
-    <div v-for="item in menuList" @click="this.hideMenu();item.fn(clipItem)"
+    <div v-for="item in menuList" @click="this.clickItem();item.fn(clipItem)"
          class="flex pointer justify-between s-item button-active  btn-list px-4 rounded-lg py-3 mb-2">
       <span>{{ item.title }}</span>
       <span>{{ item.shortKeys }}</span>

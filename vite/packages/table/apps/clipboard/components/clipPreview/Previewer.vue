@@ -52,11 +52,7 @@
               </div>
             </div>
             <div class="flex  flex-col justify-between">
-              <div @click="()=>{item.fn(previewContent)}"  v-for="item  in textClipKey" class="flex py-3 px-4 mt-3 rounded-lg justify-between s-item"
-                   style="background: var(--secondary-bg);">
-                <span>{{ item.title }}</span>
-                <span>{{ item.key }}</span>
-              </div>
+              <ClipMenuList  :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
             </div>
           </div>
         </template>
@@ -115,12 +111,7 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div  @click="item.fn()"  v-for="item  in fileClipKey"
-                       class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item"
-                       style="background: var(--secondary-bg);">
-                    <span>{{ item.title }}</span>
-                    <span>{{ item.key }}</span>
-                  </div>
+                  <ClipMenuList :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
                 </div>
               </div>
             </vue-custom-scrollbar>
@@ -171,11 +162,8 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div v-for="item  in fileClipKey"
-                       class="flex py-3 px-4 pointer mt-3 rounded-lg justify-between s-item"
-                       style="background: var(--secondary-bg);">
-                    <span>{{ item.title }}</span>
-                    <span>{{ item.key }}</span>
+                  <div class="flex  flex-col justify-between">
+                    <ClipMenuList  :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
                   </div>
                 </div>
               </div>
@@ -237,11 +225,8 @@
                   </div>
                 </div>
                 <div class="flex  flex-col justify-between">
-                  <div @click="item.fn()" v-for="item  in fileClipKey"
-                       class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item"
-                       style="background: var(--secondary-bg);">
-                    <span>{{ item.title }}</span>
-                    <span>{{ item.key }}</span>
+                  <div class="flex  flex-col justify-between">
+                    <ClipMenuList  :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
                   </div>
                 </div>
               </div>
@@ -304,10 +289,8 @@
                   </div>
                 </div>
                 <div class="flex n-drag flex-col justify-between">
-                  <div @click="()=>{item.fn(previewContent)}" v-for="item  in fileClipKey"
-                       class="flex py-3 px-4 mt-3 pointer rounded-lg justify-between s-item">
-                    <span class="type-right">{{ item.title }}</span>
-                    <span class="type-text">{{ item.key }}</span>
+                  <div class="flex  flex-col justify-between">
+                    <ClipMenuList  :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
                   </div>
                 </div>
               </div>
@@ -340,8 +323,10 @@ import { message, Modal } from 'ant-design-vue'
 import ImageEditor from './ImageEditor.vue'
 import XtButton from '../../../../ui/libs/Button/index.vue'
 import {EditOutlined} from '@ant-design/icons-vue'
+import ClipMenuList from '../ClipMenuList.vue'
 export default {
   components: {
+    ClipMenuList,
     XtButton,
     ImageEditor,
     ClipCodemirror,
@@ -601,5 +586,9 @@ export default {
   :deep(.CodeMirror) {
     height: 100% !important;
   }
+}
+:deep(.tui-image-editor-menu){
+  text-align: left !important;
+  padding-left: 10px !important;
 }
 </style>

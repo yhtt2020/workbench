@@ -144,7 +144,7 @@ export default {
       <div class="flex flex-col">
         <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
           <template v-if="tab==='menu'">
-            <ClipMenuList @hideMenu="hideMenu" @previewItem="previewItem" :clip-item="clipItem"></ClipMenuList>
+            <ClipMenuList @clickItem="hideMenu" @previewItem="previewItem" :clip-item="clipItem"></ClipMenuList>
           </template>
           <!-- 代码语言切换界面 -->
 
