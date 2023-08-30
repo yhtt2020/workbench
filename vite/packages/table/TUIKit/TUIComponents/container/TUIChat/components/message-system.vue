@@ -4,7 +4,7 @@
       <li v-for="(item, index) in messageList" :key="index">
         <template v-if="item.type === types.MSG_GRP_TIP || item.type === types.MSG_GRP_SYS_NOTICE">
           <i class="icon icon-system"></i>
-          <span>{{translateGroupSystemNotice(item)}}</span>
+          <span>{{getSystemInfo(item)}}</span>
           <div class="btn-box" v-if="item?.payload?.operationType === 1">
             <button class="btn btn-default" @click="handleApplication('Agree', item)">接受</button>
             <button class="btn btn-cancel" @click="handleApplication('Reject', item)">拒绝</button>
@@ -34,6 +34,7 @@ export default defineComponent({
     const data = reactive({
       messageList: [],
       types: {},
+      nick:'',
     });
 
     watchEffect(() => {
@@ -49,10 +50,26 @@ export default defineComponent({
       ctx.emit('application', options);
     };
 
+    const getSystemInfo = (item:any) =>{
+      console.log('右侧main中的数据',item);
+      const uid = item.payload.operatorID
+      window.$chat.getUserProfile({ userIDList: [`${uid}`] }).then((res:any)=>{
+        console.log('获取数据',res.data[0].nick);
+        
+        data.nick = res.data[0].nick
+      }).finally(()=>{
+        return;
+      })
+      const result = translateGroupSystemNotice(item,data?.nick)
+      console.log('测试::>>',result);
+      
+      // return result;
+    }
+
     return {
       ...toRefs(data),
       translateGroupSystemNotice,
-      handleApplication,
+      handleApplication,getSystemInfo,
     };
   },
 });

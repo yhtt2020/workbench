@@ -38,11 +38,11 @@
 
         <div class="flex" >
           <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
-          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('addMember')">
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('add')">
            <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
         
-          <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
+          <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>
         </div>
@@ -144,10 +144,21 @@
   </div>
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
-    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID"  @closeUser="close"></UserSelect>
+    <UserSelect :type="type" :list="type === 'change' ?  memberList : '' " 
+    :groupID="conversation.groupID"  @closeUser="close"
+    >
+    </UserSelect>
  </ChangeModal>
+
+ <!-- type === 'addMember' ? friendList : memberList -->
  
- <AddMemeber></AddMemeber>
+ <ChangeModal v-model:visible="enableVisible" v-if="enableVisible" :blurFlag="true">
+   <AddMemeber :type="memeberType" @closeUser="enableVisible = false"
+    :list="memeberType === 'remove' ? memberList : []" :groupID="conversation.groupID"
+    :updateGroup="openGroup"
+   >
+   </AddMemeber>
+ </ChangeModal>
 </template>
 
 <script>
@@ -159,9 +170,9 @@ import UserSelect from '../../../components/userselect/index.vue'
 import AddMemeber from '../../../components/userselect/addMemeber.vue'
 
 const manage = defineComponent({
-  props:['manageData','conversation','memberList'],
+  props:['manageData','conversation','memberList','openGroup'],
 
-  components:{ ChangeModal,UserSelect },
+  components:{ ChangeModal,UserSelect,AddMemeber },
 
   setup(props,ctx){
     const types = window.$TUIKit.TIM.TYPES
@@ -182,7 +193,9 @@ const manage = defineComponent({
         [types.INVITE_OPTIONS_NEED_PERMISSION]:'需要验证'
       },
       isChangeOwner:false,
+      enableVisible:false,
       type:'',  // 转让群聊点击按钮类型
+      memeberType:'',
       groupServer:GroupServer,
       friendList:[], // 获取好友数据
     })
@@ -267,10 +280,10 @@ const manage = defineComponent({
  
     const deleteMember = (type) => {  // 删除群组成员 
       if(props.memberList.length > 1){
-        data.isChangeOwner = true
-        data.type = type
+        data.enableVisible = true
+        data.memeberType = type
       }else{
-        data.isChangeOwner =  false
+        data.enableVisible =  false
       }
     }
 
@@ -311,8 +324,8 @@ const manage = defineComponent({
     }
 
     const addGroupMember = (type) =>{  // 添加群聊成员
-      data.isChangeOwner = true
-      data.type = type
+      data.enableVisible = true
+      data.memeberType = type
 
     }
 
