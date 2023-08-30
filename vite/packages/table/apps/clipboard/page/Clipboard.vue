@@ -98,8 +98,7 @@ export default {
         { title: '剪切板历史', icon: 'time-circle', name: 'history' },
         { title: '收藏', icon: 'star', name: 'collect' }
       ],
-      // 历史和收藏切换数组默认值
-      tab: { title: '剪切板历史', icon: 'time-circle', name: 'history' },
+
 
       // 导航栏筛选分类
       filterList: [
@@ -136,7 +135,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType']),
+    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType','tab']),
     // 根据剪切板列表不同状态进行数据显示
     clipContents () {
       let list = []
@@ -212,7 +211,7 @@ export default {
   },
 
   watch: {
-    tab: {
+    'tab': {
       handler (newTab) {
         this.hasNextPage=true
         this.items=[]
@@ -223,7 +222,8 @@ export default {
           this.dbKey='clipboard:collection:'
           this.doLoadNextPage()
         }
-      }
+      },
+      deep:true
     },
     // 监听导航栏筛选切换
     'currentFilter': {
