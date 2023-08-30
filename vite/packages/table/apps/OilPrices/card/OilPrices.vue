@@ -7,8 +7,8 @@
           <LineChartOutlined style="font-size: 20px;" />
         </div>
         </template>
-        <div class="city">
-            北京 <CaretDownOutlined style="font-size: 16px; " @click="showMuen"/>
+        <div class="city" @click="showMuen">
+            北京 <CaretDownOutlined style="font-size: 16px; " />
         </div>
         
         <div class="oil">
@@ -179,6 +179,7 @@ export default{
     font-size: 24px;
     color: rgba(255,255,255,0.85);
     font-weight: 500;
+    margin-top: 20px;
    }
 } 
 }
