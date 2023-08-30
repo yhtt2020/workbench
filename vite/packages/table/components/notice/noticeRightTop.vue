@@ -12,9 +12,9 @@
    <span class="pl-3 font-400" style="color: var(--primary-text);">{{appItem.title}}</span>
   </div>
 
-  <div class="flex items-center" hidden="">
+  <div class="flex items-center">
    <div class="w-8 pointer flex items-center justify-center h-8" @click="clear">
-    <Icon icon="clear" style="font-size: 2em;color: var(--secondary-text);"></Icon>
+    <Icon icon="clear" style="font-size: 1.4em;color: var(--secondary-text);"></Icon>
    </div>
   </div>
 
@@ -26,7 +26,7 @@ import { mapWritableState,mapActions } from 'pinia'
 import { noticeStore } from '../../store/notice'
 
 export default {
- props:['appType','appItem'],
+ props:['appType','appItem','list'],
 
  computed:{
   ...mapWritableState(noticeStore,['noticeSettings']),
@@ -34,9 +34,12 @@ export default {
  },
 
  methods:{
-  ...mapActions(noticeStore,['removeIMChatData']),
-  clear(){  // 清空历史消息通知记录   
-   this.removeIMChatData()
+  ...mapActions(noticeStore,['removeIMChatData','loadNoticeDB']),
+  async clear(){  // 清空历史消息通知记录   
+   for(let i=0;i<this.list.length;i++){
+    this.removeIMChatData(this.list[i])
+   }
+   await this.loadNoticeDB()
   },
 
 

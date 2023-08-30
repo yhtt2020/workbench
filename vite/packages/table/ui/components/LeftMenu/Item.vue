@@ -4,7 +4,7 @@
     :src="item.img"
     alt=""
     style="width: 40px; height: 40px"
-    class="mb-3"
+    class="mb-3 pointer"
     v-if="item.img"
     @click="iconClick(item)"
   />
