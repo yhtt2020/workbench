@@ -38,18 +38,7 @@
           <!-- 文本预览右侧 -->
           <div class="pl-6 flex flex-col justify-between" style="width: 352px;border-left: 1px solid var(--divider);">
             <div class="flex flex-col">
-              <div class="flex justify-between mb-6">
-                <span class="type-text">类型</span>
-                <span class="type-right" v-if="previewContent.type === 'text'">文本</span>
-              </div>
-              <div class="flex justify-between mb-6">
-                <span class="type-text">时间</span>
-                <span class="type-right" v-html="timeText"></span>
-              </div>
-              <div class="flex justify-between mb-6">
-                <span class="type-text">大小</span>
-                <span class="type-right">{{ previewContent.content.length }}个字符</span>
-              </div>
+              <PreviewDetail :preview-content="previewContent"></PreviewDetail>
             </div>
             <div class="flex  flex-col justify-between">
               <ClipMenuList  :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
@@ -90,25 +79,7 @@
             <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
               <div class="flex flex-col h-full justify-between">
                 <div class="flex flex-col">
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">类型</span>
-                    <span class="type-right" v-if="previewContent.type === 'image'">图片</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">格式</span>
-                    <span class="type-right" v-if="previewContent.type === 'image'">{{ ext }}</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">时间</span>
-                    <span class="type-right" v-html="timeText" v-if="previewContent.type === 'image'">
-                    </span>
-                  </div>
-                  <div class="flex justify-between flex-col mb-6">
-                    <span class="type-text">路径</span>
-                    <span class="type-right" v-if="previewContent.type === 'image'">
-                      {{ previewContent.path }}
-                    </span>
-                  </div>
+                  <PreviewDetail :preview-content="previewContent"></PreviewDetail>
                 </div>
                 <div class="flex  flex-col justify-between">
                   <ClipMenuList :hidePreview="true"   :clip-item="previewContent"></ClipMenuList>
@@ -140,26 +111,7 @@
             <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
               <div class="flex flex-col justify-between h-full">
                 <div class="flex flex-col">
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">类型</span>
-                    <span class="type-right" v-if="previewContent.type === 'file'">文件</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">格式</span>
-                    <span class="type-right" v-if="previewContent.type === 'file'">pdf</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">时间</span>
-                    <span class="type-right" v-if="previewContent.type === 'file'">
-                      {{ previewContent.timeText }}
-                    </span>
-                  </div>
-                  <div class="flex justify-between flex-col mb-6">
-                    <span class="type-text">路径</span>
-                    <span class="type-right" v-if="previewContent.type === 'file'">
-                      C:\PROGRAM FILES (X86)\CLIP
-                    </span>
-                  </div>
+                  <PreviewDetail :preview-content="previewContent"></PreviewDetail>
                 </div>
                 <div class="flex  flex-col justify-between">
                   <div class="flex  flex-col justify-between">
@@ -191,38 +143,7 @@
             <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
               <div class="flex flex-col justify-between h-full">
                 <div class="flex flex-col">
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">名称</span>
-                    <span class="type-right">
-                      {{ previewContent.content }}
-                    </span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">类型</span>
-                    <span class="type-right" v-if="previewContent.type === 'video'">视频</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">格式</span>
-                    <span class="type-right" v-if="previewContent.type === 'video'">{{ previewContent.ext }}</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">时间</span>
-                    <span class="type-right">
-                      {{ previewContent.timeText }}
-                    </span>
-                  </div>
-                  <div class="flex justify-between  mb-6">
-                    <span class="type-text">大小</span>
-                    <span class="type-right">
-                       1.2MB
-                    </span>
-                  </div>
-                  <div class="flex justify-between flex-col mb-6">
-                    <span class="type-text">路径</span>
-                    <div class="type-right">
-                      {{ previewContent.filepath }}
-                    </div>
-                  </div>
+                  <PreviewDetail :preview-content="previewContent"></PreviewDetail>
                 </div>
                 <div class="flex  flex-col justify-between">
                   <div class="flex  flex-col justify-between">
@@ -255,38 +176,7 @@
             <vue-custom-scrollbar :settings="settingsScroller" style="height:100vh;">
               <div class="flex flex-col h-full justify-between">
                 <div class="flex flex-col">
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">名称</span>
-                    <span class="type-right">
-                      {{ previewContent.content }}
-                    </span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">类型</span>
-                    <span class="type-right" v-if="previewContent.type === 'audio'">音频</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">格式</span>
-                    <span class="type-right" v-if="previewContent.type === 'audio'">mp3</span>
-                  </div>
-                  <div class="flex justify-between mb-6">
-                    <span class="type-text">时间</span>
-                    <span class="type-right">
-                      {{ previewContent.timeText }}
-                    </span>
-                  </div>
-                  <div class="flex justify-between  mb-6">
-                    <span class="type-text">大小</span>
-                    <span class="type-right">
-                      1.2MB
-                    </span>
-                  </div>
-                  <div class="flex justify-between flex-col mb-6">
-                    <span class="type-text">路径</span>
-                    <div class="type-right break-words">
-                      {{ previewContent.filepath }}
-                    </div>
-                  </div>
+                  <PreviewDetail :preview-content="previewContent"></PreviewDetail>
                 </div>
                 <div class="flex n-drag flex-col justify-between">
                   <div class="flex  flex-col justify-between">
@@ -324,8 +214,10 @@ import ImageEditor from './ImageEditor.vue'
 import XtButton from '../../../../ui/libs/Button/index.vue'
 import {EditOutlined} from '@ant-design/icons-vue'
 import ClipMenuList from '../ClipMenuList.vue'
+import PreviewDetail from '../previewDetail.vue'
 export default {
   components: {
+    PreviewDetail,
     ClipMenuList,
     XtButton,
     ImageEditor,
@@ -404,10 +296,7 @@ export default {
 
   computed: {
     ...mapWritableState(clipboardStore, ['settings', 'previewShow', 'clipMode']),
-    timeText () {
-      const time = getDateTime(new Date(this.previewContent.createTime))
-      return `${time.hours}:${time.minutes}:${time.seconds}` + '&nbsp;&nbsp;&nbsp;' + `${time.month}月${time.day}日`
-    },
+
     language () {
       const index = this.codeLanguage.find(el => {
         return el.abbr === this.settings.clipMode
