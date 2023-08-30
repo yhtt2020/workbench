@@ -122,7 +122,7 @@ export default {
     <div v-for="item in menuList" @click="this.clickItem();item.fn(clipItem)"
          class="flex pointer justify-between s-item button-active  btn-list px-4 rounded-lg py-3 mb-2">
       <span>{{ item.title }}</span>
-      <span>{{ item.shortKeys }}</span>
+<!--      <span>{{ item.shortKeys }}</span>-->
     </div>
   </div>
 
