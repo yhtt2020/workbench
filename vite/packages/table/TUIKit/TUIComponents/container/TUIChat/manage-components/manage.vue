@@ -154,7 +154,7 @@
  
  <ChangeModal v-model:visible="enableVisible" v-if="enableVisible" :blurFlag="true">
    <AddMemeber :type="memeberType" @closeUser="enableVisible = false"
-    :list="memeberType === 'remove' ? memberList : []" :groupID="conversation.groupID"
+    :list="memeberType === 'remove' ? memberList : friendList" :groupID="conversation.groupID"
     :updateGroup="openGroup"
    >
    </AddMemeber>
@@ -168,6 +168,8 @@ import { message,Modal } from 'ant-design-vue'
 import ChangeModal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
 import AddMemeber from '../../../components/userselect/addMemeber.vue'
+import _ from 'lodash-es'
+import {appStore} from '../../../../../store'
 
 const manage = defineComponent({
   props:['manageData','conversation','memberList','openGroup'],
@@ -178,7 +180,8 @@ const manage = defineComponent({
     const types = window.$TUIKit.TIM.TYPES
     const { GroupServer } = manage;
     const { t } = window.$TUIKit.config.i18n.useI18n();
-    
+    const state = appStore()
+
     const data = reactive({
       typeName: {
         [types.GRP_WORK]: '好友工作群',
@@ -324,8 +327,12 @@ const manage = defineComponent({
     }
 
     const addGroupMember = (type) =>{  // 添加群聊成员
-      data.enableVisible = true
-      data.memeberType = type
+      if(props.conversation.inviteOption === 'DisableInvite'){
+        data.enableVisible = false
+      }else{
+        data.enableVisible = true
+        data.memeberType = type
+      }
 
     }
 
@@ -335,8 +342,17 @@ const manage = defineComponent({
       for(let i=0;i<res.data.length;i++){
         list.push(res.data[i].profile)
       }
-      data.friendList = list
+      const newList = _.filter(list,function(o){
+        if(parseInt(o.userID) !== parseInt(state.$state?.userInfo?.uid)){
+          return o
+        }
+      })
+      data.friendList = newList
     }
+
+
+  
+
 
     const updateGroupJoinWay = () =>{  // 修改加群方式
       ctx.emit('updateName',{title:'修改加群方式',id:5,info:{

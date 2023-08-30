@@ -79,15 +79,24 @@ export default defineComponent({
   const submit = async () =>{  
     switch (props.type) {
       case 'remove':
-      const keys = data.adminList.map((item)=>{return item.userID});
-         const removeMemberOption = {
+        const keys = data.adminList.map((item)=>{return item.userID});
+        const removeMemberOption = {
           groupID:props.groupID,
           userIDList:keys,
-         }
-         await tim.deleteGroupMember(removeMemberOption)
-         await tim.getGroupProfile({groupID:props.groupID})
-         props.updateGroup()
-         ctx.emit('closeUser')
+        }
+        await tim.deleteGroupMember(removeMemberOption)
+        props.updateGroup()
+        ctx.emit('closeUser')
+        break;
+      case 'add':
+        const userList = data.adminList.map((item)=>{return item.userID});
+        const addOption = {
+          groupID:props.groupID,
+          userIDList:userList,
+        }
+        await tim.addGroupMember(addOption)
+        props.updateGroup()
+        ctx.emit('closeUser')
         break;
       default:
         break;

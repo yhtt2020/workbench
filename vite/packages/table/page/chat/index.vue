@@ -38,6 +38,10 @@ export default defineComponent({
           title: '通讯录',index: 'contact',icon:'team',
           route:{ name: 'contact' }
         },
+        // {
+        //   title:'小队',index:'team',icon:'smile',
+        //   route:{name:'imTeam'},
+        // }
       ]
     }
   },
