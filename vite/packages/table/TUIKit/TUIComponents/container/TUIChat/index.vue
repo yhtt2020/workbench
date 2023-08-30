@@ -136,7 +136,7 @@
       </div>
       <div class="flex items-center justify-center font-16" style="color: var(--primary-text);margin-left: 12px;">群管理</div>
     </div> -->
-    <Manage v-if="conversation.groupProfile" @close="groupVisible = false" :manageData="conversation"  :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
+    <Manage v-if="conversation.groupProfile" @close="groupVisible = false" :manageData="conversation" :openGroup="openGroup" :conversation="newManagerList" :memberList="memberList"  @updateName="getManege" />
   </a-drawer>
 
   <a-drawer placement="right" width="500" :closable="false" v-model:visible="updateVisible">

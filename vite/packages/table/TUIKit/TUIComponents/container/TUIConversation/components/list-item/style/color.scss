@@ -52,9 +52,11 @@
   .selected {
     background: var(--active-secondary-bg);
   }
-  .pinned {
+  /**
+   .pinned {
     background: #EEF0F3;
   }
+  **/
   .dialog{
     background: #fff;
     &-item {
