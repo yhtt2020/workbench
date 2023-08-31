@@ -27,7 +27,7 @@ export default {
       "count",
     ]),
     currentList() {
-      if (this.selectTopicIndex == -1) return [];
+      if (this.selectTopicIndex === -1) return [];
       return this.chatList[this.selectTopicIndex];
     },
   },
@@ -63,10 +63,11 @@ export default {
     async onSearch(search) {
       if (this.check()) return;
       this.isSearch = false;
-      this.selectTopicIndex == -1;
-      if (this.selectTopicIndex == -1) {
+      //this.selectTopicIndex == -1;
+      if (this.selectTopicIndex === -1) {
         this.addTopic();
       }
+      console.log(this.selectTopicIndex,'选中的索引', this.chatList)
       let user = {
         content: search,
         role: "user",

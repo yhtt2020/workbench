@@ -430,7 +430,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(clipboardStore, ['previewShow', 'clipSetShow', 'settings']),
+    ...mapWritableState(clipboardStore, ['previewShow', 'clipSetShow', 'settings','tab']),
     showArray () {
       if (!this.clipItem.showType) {
         if (this.clipSetShow) {

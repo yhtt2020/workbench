@@ -7,11 +7,13 @@ import {mapActions} from "pinia";
 import {message} from "ant-design-vue";
 import browser from "../../../js/common/browser";
 import _ from 'lodash-es'
+import ClipMenuList from "./ClipMenuList.vue";
+
 export default {
   name: "ClipItemWidget",
   props: ['clipItem', 'menuList'],
   emits: ['tabChanged'],
-  components: {textCodeMirror, ClipCodemirror},
+  components: {ClipMenuList, textCodeMirror, ClipCodemirror},
   data() {
     return {
       // 控制操作界面的显示
@@ -26,69 +28,6 @@ export default {
     }
   },
   computed: {
-    urls(){
-      if (['image','video','audio'].includes(this.clipItem.type)){
-        return []
-      }else{
-        const str = this.clipItem.content
-// 提取file协议和http协议的URL
-        const regex = /((file|http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/ig;
-        return str.match(regex) || []
-      }
-    },
-    menuList(){
-      const defaultMenu=[
-        {
-          title: '复制', shortKeys: 'Ctrl + C', id: 'cc', fn: (item) => {
-            require('electron').clipboard.writeText(item.content)
-            //todo 不同类型的复制
-            message.success('复制成功。')
-          }
-        },
-        {
-          title: '打开链接', shortKeys: 'Ctrl + O', id: 'co', fn: (item) => {
-            if (this.urls.length===0) {
-              message.error('不存在链接')
-            } else {
-              browser.openInUserSelect(this.urls[0])
-              message.success('打开链接成功。')
-            }
-          }
-        },
-        {
-          title: '预览', shortKeys: 'Space', id: 's', fn: (item) => {
-            this.previewItem(item)
-          }
-        },
-        {
-          title: '添加到收藏', shortKeys: 'Ctrl + S', id: 'cs', fn: (item) => {
-            this.addToCollection(item)
-            message.success('添加收藏成功。')
-          }
-        },
-        {
-          title: '删除', shortKeys: 'Delete', id: 'd', fn: (item) => {
-            this.remove(item)
-            message.success("删除成功。")
-          }
-        }
-      ]
-      let menuList=[...defaultMenu]
-      if(this.urls.length===0){
-        menuList.splice(1,1)
-      }
-      if(this.clipItem._id.includes('collection')){
-        _.remove(menuList,(item)=>{
-          return item.title==='添加到收藏'
-        })
-      }
-      // if (['image','video','audio'].includes(this.clipItem.type)){
-      //   menuList.splice(1,1)
-      // }
-      return [
-        ...menuList
-      ]
-    },
     timeText() {
       const time = getDateTime(new Date(this.clipItem.createTime))
       return `${time.hours}:${time.minutes}:${time.seconds}` + '&nbsp;&nbsp;&nbsp;' + `${time.month}月${time.day}日`
@@ -98,7 +37,7 @@ export default {
         case 'text':
           return this.clipItem.content.length + '个字符'
         case 'file':
-          return this.clipItem.files?.length +'个文件'
+          return this.clipItem.files?.length + '个文件'
         case 'image':
         case 'audio':
         case 'video':
@@ -137,12 +76,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(clipboardStore, ['remove', 'addToCollection']),
+    ...mapActions(clipboardStore, ['remove', 'addToCollection', 'setClipboard']),
     backClip() {
       this.tab = 'item'
     },
     showMenu() {
       this.tab = 'menu'
+    },
+    hideMenu(){
+      this.tab='item'
     },
     switchTab(tab) {
       this.tab = tab
@@ -150,8 +92,8 @@ export default {
         this.$emit('tabChanged', {tab: tab})
       }
     },
-    previewItem(item) {
-      this.$emit('previewItem', {item})
+    previewItem(event) {
+      this.$emit('previewItem', event)
     }
   }
 }
@@ -175,7 +117,7 @@ export default {
       </div>
     </div>
     <!-- 文本卡片顶部标题结束 -->
-    <div class="flex-center"   >
+    <div class="flex-center">
       <slot name="body">
       </slot>
     </div>
@@ -202,11 +144,7 @@ export default {
       <div class="flex flex-col">
         <vue-custom-scrollbar :settings="settingsScroller" style="height: 44vh;">
           <template v-if="tab==='menu'">
-            <div v-for="item in menuList" @click="item.fn(clipItem)"
-                 class="flex pointer justify-between s-item button-active  btn-list px-4 rounded-lg py-3 mb-2">
-              <span>{{ item.title }}</span>
-              <span>{{ item.shortKeys }}</span>
-            </div>
+            <ClipMenuList @clickItem="hideMenu" @previewItem="previewItem" :clip-item="clipItem"></ClipMenuList>
           </template>
           <!-- 代码语言切换界面 -->
 
@@ -221,9 +159,10 @@ export default {
 </template>
 
 <style scoped lang="scss">
-.flex-center{
+.flex-center {
   display: flex;
-  flex:1;height: 0;
+  flex: 1;
+  height: 0;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   flex-direction: column;
