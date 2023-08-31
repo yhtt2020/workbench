@@ -78,12 +78,14 @@ export default {
         },
 
         {
+          flag: true,
           icon: "tianjia2",
           callBack: () => {
             this.createChatVisible = true;
           },
         },
         {
+          flag: true,
           icon: "setting",
           callBack: () => {
             this.setVisible = true;
