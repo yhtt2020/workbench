@@ -10,10 +10,21 @@
         <!-- {{ currentCity }} -->
         <!-- {{ cityOilData }} -->
         <!-- {{ cityOilList }} -->
-        <div class="city" @click="showMenu">
-            {{ city[defaultCityIndex].city }} <CaretDownOutlined style="font-size: 16px; " />
+        <div v-if="isLoading">
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />
         </div>
-        
+        <template v-else-if="fail">
+          <a-result :status="null" title="请确认网络" style="margin-top: 3em">
+            <template #extra>
+              <a-button key="console" type="primary" @click="retry" style="background: var(--primary-bg);color:var(--primary-text)">重试</a-button>
+            </template>
+          </a-result>
+
+        </template>
+        <div v-else>
+          <div class="city" @click="showMenu">
+            {{cityOilList[0].city }} <CaretDownOutlined style="font-size: 16px; " />
+        </div>
         <div class="oil">
             <div class="oil-item mar-r">
                 <span>92号汽油</span>
@@ -40,6 +51,8 @@
                 </div>
             </div>
         </div>
+        </div>
+        
     </Widget>
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
@@ -84,6 +97,7 @@ export default{
   },
   data(){
     return {
+        fail:false,
         options: {
         className: 'card ',
         title: '今日油价',
@@ -112,6 +126,7 @@ export default{
       },
       defaultCityIndex:0,
       city:city,
+      isLoading:true
     }
   },
   methods:{
@@ -125,23 +140,36 @@ export default{
         this.settingVisible=true
     },
     ...mapActions(oilStore,['getCityOilData','getCity','cityOil']),
-    
+    retry(){
+      this.cityOil(this.city[this.defaultCityIndex].city).then(() => {
+      }).catch(()=>this.fail=true).finally(()=>{
+        this.isLoading = false
+      })
+    },
     
     
   },
   computed:{
     ...mapState(oilStore,['cityOilData','currentCity','cityOilList']),
   },
-  mounted(){
-   this.getCity()
-   console.log(this.currentCity);
-  //  await this.getCityOilData()
-  if(this.city.includes(this.currentCity.p)){
-    this.cityOil(this.currentCity.p)
-  }else{
-    this.cityOil(this.city[this.defaultCityIndex].city)
+  async mounted(){
+    this.isLoading=true
+    await this.getCity()
+    //  console.log(this.currentCity);
+    //  await this.getCityOilData()
+    // 判断用户ip是否在国内省市
+    const isCity=this.city.some(item=>item.city==this.currentCity.p)
+    // console.log(isCity);
+    if(isCity){
+      this.cityOil(this.currentCity.p)
+    }else{
+      this.cityOil(this.city[this.defaultCityIndex].city)
+    }
+    setTimeout(() => {
+      this.isLoading=false
+    }, 0);
   }
-  }
+  
 }
 </script>
 <style lang='scss' scoped>

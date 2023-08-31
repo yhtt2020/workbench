@@ -23,8 +23,8 @@ export const oilStore = defineStore("OilPrices", {
                 return item.city==city
             })
             this.cityOilList=data
-            console.log('city2',data);
-            console.log('city1',this.cityOilList);
+            // console.log('city2',data);
+            // console.log('city1',this.cityOilList);
             
             
             return this.cityOilList
