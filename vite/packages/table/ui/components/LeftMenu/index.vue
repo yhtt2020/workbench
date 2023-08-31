@@ -1,42 +1,49 @@
 <template>
   <!-- 动态头部 -->
-  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 70px">
-    <template v-for="item in list.slice(0, last)">
-      <slot :name="item.slot" v-if="item.slot"> </slot>
-      <Item @itemClick="iconClick" :item="item">
-        <template #default>
-          <slot :name="item.slot">{{ item.slot }} </slot>
-        </template>
-      </Item>
+  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 86px">
+    <template v-for="item in newList.slice(0, last)">
+      <div @click="iconSelectClick(item.id)">
+        <slot :name="item.slot" v-if="item.slot"> </slot>
+        <Item :item="item" :id="currentIndex">
+          <template #default>
+            <slot :name="item.slot">{{ item.slot }} </slot>
+          </template>
+        </Item>
+      </div>
     </template>
 
     <!-- 动态适中 -->
     <div
-      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center mb-3"
+      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center"
     >
-      <template v-for="item in list.slice(last, -1 * end)">
-        <slot :name="item.slot" v-if="item.slot"> </slot>
-        <Item @itemClick="iconClick" :item="item">
-          <template #default>
-            <slot :name="item.slot"> </slot>
-          </template>
-        </Item>
+      <template v-for="item in newList.slice(last, -1 * end)">
+        <div @click="iconSelectClick(item.id)">
+          <slot :name="item.slot" v-if="item.slot"> </slot>
+          <Item :item="item" :id="currentIndex">
+            <template #default>
+              <slot :name="item.slot">{{ item.slot }} </slot>
+            </template>
+          </Item>
+        </div>
       </template>
     </div>
     <!-- 底部循环 -->
 
-    <template v-for="item in list.slice(-1 * end)">
-      <Item @itemClick="iconClick" :item="item">
-        <template #default>
-          <slot :name="item.slot"> </slot>
-        </template>
-      </Item>
+    <template v-for="item in newList.slice(-1 * end)">
+      <div @click="iconSelectClick(item.id, item.flag)">
+        <slot :name="item.slot" v-if="item.slot"> </slot>
+        <Item :item="item" :id="currentIndex" m="mt">
+          <template #default>
+            <slot :name="item.slot">{{ item.slot }} </slot>
+          </template>
+        </Item>
+      </div>
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Item from "./Item.vue";
 const props = defineProps({
   config: {
@@ -52,6 +59,9 @@ const props = defineProps({
   },
   end: {
     default: 1,
+  },
+  index: {
+    default: 0,
   },
   modelValue: {},
   list: {
@@ -100,11 +110,21 @@ const props = defineProps({
     },
   },
 });
-const currentIndex = ref(props.list[0].icon);
-
-const iconClick = (item, flag) => {
-  if (!flag) currentIndex.value = item.icon;
-  item.callBack && item.callBack(item);
+const newList = computed(() => {
+  let id = -1;
+  let res = props.list.map((item) => {
+    id++;
+    return {
+      id,
+      ...item,
+    };
+  });
+  return res;
+});
+const currentIndex = ref(props.index);
+const iconSelectClick = (id, flag) => {
+  if (flag) return;
+  currentIndex.value = id;
 };
 </script>
 
