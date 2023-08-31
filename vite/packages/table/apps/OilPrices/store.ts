@@ -10,15 +10,31 @@ const juheGet = sUrl('/app/juhe/get')
 export const oilStore = defineStore("OilPrices", {
     state: () => ({
         cityOilData:[],
-        currentCity:{}
-
+        currentCity:[],
+        cityOilList:[],
     }),
     actions:{
+        // 获取目标省市的油价
+        cityOil(city){
+            this.getCityOilData()
+            // this.cityOilList=[]
+            // this.cityOilList.length=0
+            let  data= this.cityOilData.filter((item)=>{
+                return item.city==city
+            })
+            this.cityOilList=data
+            console.log('city2',data);
+            console.log('city1',this.cityOilList);
+            
+            
+            return this.cityOilList
+        },
 
         // 获取中国所有省份的油价
         async getCityOilData(){
             if(localCache.get('cityOilData')){
                 this.cityOilData=localCache.get('cityOilData')
+                // console.log(this.cityOilData);
                 return
             }
             let res=await get(juheGet,{
@@ -27,7 +43,7 @@ export const oilStore = defineStore("OilPrices", {
                 },
                 options:{
                     key:'toutiao.gnyj.query',
-                    ttl:60*60*24,
+                    ttl:60*60*12,
                     cache:1,
                 }
             })
@@ -39,7 +55,7 @@ export const oilStore = defineStore("OilPrices", {
                 }else{
                     this.cityOilData = res.data.result.data
                 }
-                localCache.set('cityOilData',this.cityOilData,60*60*24)
+                localCache.set('cityOilData',this.cityOilData,60*60*12)
             }
             else{
                 return false
@@ -48,10 +64,12 @@ export const oilStore = defineStore("OilPrices", {
         // 根据ip获取当前的省份
         async getCity(){
             let res=await axios.get('https://api.vore.top/api/IPdata')
-            if(res.code==200){
-                console.log(res);
+            // console.log('getcity',res.data.adcode);
+            if(res.status==200){
+                // console.log(res.data.adcode.p);
+                this.currentCity=res.data.adcode
+                // console.log(this.currentCity);
                 
-                this.currentCity=res.adcode || []
             }
         }
 

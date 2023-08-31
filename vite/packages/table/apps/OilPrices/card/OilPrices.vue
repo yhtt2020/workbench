@@ -7,8 +7,9 @@
           <LineChartOutlined style="font-size: 20px;" />
         </div>
         </template>
-        {{ currentCity }}
-        {{ cityOilData }}
+        <!-- {{ currentCity }} -->
+        <!-- {{ cityOilData }} -->
+        <!-- {{ cityOilList }} -->
         <div class="city" @click="showMenu">
             {{ city[defaultCityIndex].city }} <CaretDownOutlined style="font-size: 16px; " />
         </div>
@@ -17,25 +18,25 @@
             <div class="oil-item mar-r">
                 <span>92号汽油</span>
                 <div class="oil-price">
-                    8.05
+                    {{cityOilList[0]['92h']}}
                 </div>
             </div>
             <div class="oil-item">
                 <span>95号汽油</span>
                 <div class="oil-price">
-                    8.05
+                  {{cityOilList[0]['95h']}}
                 </div>
             </div>
             <div class="oil-item mar-r">
                 <span>98号汽油</span>
                 <div class="oil-price">
-                    8.05
+                  {{cityOilList[0]['98h']}}
                 </div>
             </div>
             <div class="oil-item">
                 <span>0号柴油</span>
                 <div class="oil-price">
-                    8.05
+                  {{cityOilList[0]['0h']}}
                 </div>
             </div>
         </div>
@@ -59,7 +60,7 @@
 import Widget from '../../../components/card/Widget.vue'
 import {LineChartOutlined,CaretDownOutlined} from '@ant-design/icons-vue'
 import city from '../city.ts'
-import { mapActions,mapStores } from 'pinia'
+import { mapActions,mapState } from 'pinia'
 import {oilStore} from '../store.ts'
 export default{
     name:'OilPrices',
@@ -109,23 +110,6 @@ export default{
         suppressScrollX: true,
         wheelPropagation: true
       },
-      rightSelect: [
-          {
-            city:'北京',
-          },
-          {
-            city:'上海',
-          },
-          {
-            city:'北京',
-          },
-          {
-            city:'北京',
-          },
-          {
-            city:'北京',
-          },
-      ],
       defaultCityIndex:0,
       city:city,
     }
@@ -134,45 +118,29 @@ export default{
     selectedAreaSuit(item){
         this.defaultCityIndex=(item.id -1)
         this.settingVisible=false
-        this.getCityOil()
+        this.cityOil(this.city[this.defaultCityIndex].city)
         // this.getCityOilData()
     },
     showMenu(){
         this.settingVisible=true
     },
-    ...mapActions(oilStore,['getCityOilData','getCity']),
-    // 获取当前城市油价
-    currentCityOil(){
-      if(city.includes(this.currentCity)){
-        this.customData.currentCity=this.currentCity
-        this.getCityOilData()
-        return this.cityOilData.filters((item)=>{
-          return item==this.currentCity
-        })
-      }
-    },
-    getCityOil(){
-      this.getCityOilData()
-    }
+    ...mapActions(oilStore,['getCityOilData','getCity','cityOil']),
+    
+    
     
   },
   computed:{
-    ...mapStores(oilStore,['cityOilData','currentCity']),
-    targetCity(){
-      let target
-      if(this.customData.city){
-        target=this.customData.city
-      }
-      target=this.city[this.defaultCityIndex]
-      return this.cityOilData.filters((item)=>{
-        return item.city==target.city
-      })
-    }
-    
+    ...mapState(oilStore,['cityOilData','currentCity','cityOilList']),
   },
-  async mounted(){
-   await this.getCity()
+  mounted(){
+   this.getCity()
+   console.log(this.currentCity);
   //  await this.getCityOilData()
+  if(this.city.includes(this.currentCity.p)){
+    this.cityOil(this.currentCity.p)
+  }else{
+    this.cityOil(this.city[this.defaultCityIndex].city)
+  }
   }
 }
 </script>
