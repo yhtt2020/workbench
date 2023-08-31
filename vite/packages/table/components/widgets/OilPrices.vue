@@ -71,11 +71,11 @@
 </template>
 
 <script>
-import Widget from '../../../components/card/Widget.vue'
+import Widget from '../card/Widget.vue'
 import {LineChartOutlined,CaretDownOutlined} from '@ant-design/icons-vue'
-import city from '../city.ts'
+import city from '../../js/axios/city.ts'
 import { mapActions,mapState } from 'pinia'
-import {oilStore} from '../store.ts'
+import {oilStore} from '../../store/store.ts'
 export default{
     name:'OilPrices',
     components:{
