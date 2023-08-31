@@ -7,8 +7,10 @@
           <LineChartOutlined style="font-size: 20px;" />
         </div>
         </template>
-        <div class="city" @click="showMuen">
-            北京 <CaretDownOutlined style="font-size: 16px; " />
+        {{ currentCity }}
+        {{ cityOilData }}
+        <div class="city" @click="showMenu">
+            {{ city[defaultCityIndex].city }} <CaretDownOutlined style="font-size: 16px; " />
         </div>
         
         <div class="oil">
@@ -42,8 +44,9 @@
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">选择地区</div>
         <div class="flex items-center justify-center w-full h-12 my-4 rounded-lg pointer s-list"
-      v-for="(item,index) in rightSelect" :class="defaultCityIndex === index ? 'drawer-active':''" @click="selectedAreaSuit(item,index)"
-    >
+      v-for="(item) in city" :class="defaultCityIndex=== item.id ? 'drawer-active':''" @click="selectedAreaSuit(item)">
+      <!-- {{ defaultCityIndex }} -->
+      <!-- {{ item.id }} -->
       {{ item.city }}
     </div>
       </vue-custom-scrollbar>
@@ -55,6 +58,9 @@
 <script>
 import Widget from '../../../components/card/Widget.vue'
 import {LineChartOutlined,CaretDownOutlined} from '@ant-design/icons-vue'
+import city from '../city.ts'
+import { mapActions,mapStores } from 'pinia'
+import {oilStore} from '../store.ts'
 export default{
     name:'OilPrices',
     components:{
@@ -120,17 +126,53 @@ export default{
             city:'北京',
           },
       ],
-      defaultCityIndex:0
+      defaultCityIndex:0,
+      city:city,
     }
   },
   methods:{
-    selectedAreaSuit(item,index){
-        this.defaultCityIndex=index
+    selectedAreaSuit(item){
+        this.defaultCityIndex=(item.id -1)
         this.settingVisible=false
+        this.getCityOil()
+        // this.getCityOilData()
     },
-    showMuen(){
+    showMenu(){
         this.settingVisible=true
+    },
+    ...mapActions(oilStore,['getCityOilData','getCity']),
+    // 获取当前城市油价
+    currentCityOil(){
+      if(city.includes(this.currentCity)){
+        this.customData.currentCity=this.currentCity
+        this.getCityOilData()
+        return this.cityOilData.filters((item)=>{
+          return item==this.currentCity
+        })
+      }
+    },
+    getCityOil(){
+      this.getCityOilData()
     }
+    
+  },
+  computed:{
+    ...mapStores(oilStore,['cityOilData','currentCity']),
+    targetCity(){
+      let target
+      if(this.customData.city){
+        target=this.customData.city
+      }
+      target=this.city[this.defaultCityIndex]
+      return this.cityOilData.filters((item)=>{
+        return item.city==target.city
+      })
+    }
+    
+  },
+  async mounted(){
+   await this.getCity()
+  //  await this.getCityOilData()
   }
 }
 </script>
@@ -179,7 +221,7 @@ export default{
     font-size: 24px;
     color: rgba(255,255,255,0.85);
     font-weight: 500;
-    margin-top: 20px;
+    margin-top: 30px;
    }
 } 
 }
