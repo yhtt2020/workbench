@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
-import dbStorage from "../../store/dbStorage";
-import {sUrl} from "../../consts";
-import {get} from "../../js/axios/request";
-import {localCache} from '../../js/axios/serverCache'
+import dbStorage from "./dbStorage";
+import {sUrl} from "../consts";
+import {get} from "../js/axios/request";
+import {localCache} from '../js/axios/serverCache'
 import axios from "axios";
 const juheGet = sUrl('/app/juhe/get')
 

@@ -32,7 +32,7 @@
 </template>
 
 <script >
-import Widget from '../../../components/card/Widget.vue'
+import Widget from '../card/Widget.vue'
 import { MessageOutlined, SendOutlined, RobotOutlined } from '@ant-design/icons-vue'
 export default {
     name: 'AIaides',
