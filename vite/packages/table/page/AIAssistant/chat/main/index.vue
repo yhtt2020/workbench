@@ -43,6 +43,14 @@ export default {
       flag: false,
     };
   },
+  mounted() {
+    let search = this.$route.params.value;
+    if (search) {
+      this.addTopic();
+      this.onSearch(search);
+    }
+    console.log('123 :>> ',  this.$route.params.value);
+  },
   methods: {
     ...mapActions(aiStore, ["addTopic"]),
     check() {
@@ -52,7 +60,7 @@ export default {
       }
       return false;
     },
-    async onSearch(serach) {
+    async onSearch(search) {
       if (this.check()) return;
       this.isSearch = false;
       //this.selectTopicIndex == -1;
@@ -61,7 +69,7 @@ export default {
       }
       console.log(this.selectTopicIndex,'选中的索引', this.chatList)
       let user = {
-        content: serach,
+        content: search,
         role: "user",
         time: Date.now(),
         id: Date.now(),

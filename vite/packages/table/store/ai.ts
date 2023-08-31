@@ -44,6 +44,11 @@ export const aiStore = defineStore("aiStore", {
     serachTopic: "",
   }),
   getters: {
+    recentList() {
+      const topicListArray = Object.values(this.topicList);
+      topicListArray.sort((a: any, b: any) => b.time - a.time);
+      return topicListArray;
+    },
     selectTitle() {
       if (this.selectTopicIndex == -1) {
         return "未选择对话";
