@@ -1,9 +1,9 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
-import "tui-image-editor/dist/tui-image-editor.css";
-import "tui-color-picker/dist/tui-color-picker.css";
+// import "tui-image-editor/dist/tui-image-editor.css";
+// import "tui-color-picker/dist/tui-color-picker.css";
 
-import ImageEditor from "tui-image-editor";
+// import ImageEditor from "tui-image-editor";
 import {message, Modal} from "ant-design-vue";
 const locale_zh = {
   ZoomIn: "放大",
