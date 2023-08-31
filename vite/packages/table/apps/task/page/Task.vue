@@ -1,7 +1,6 @@
 <template>
-  <xt-popup v-model="visible">
-    {{ dynamicComponent }}
-    <div class="xt-modal flex py-3 pr-3" style="width: 700px; height: 100%">
+  <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
+    <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
       <xt-left-menu :list="menus" last="2"></xt-left-menu>
       <div class="w-full">
         <Primary v-if="currentTask == 'Primary'"></Primary>
@@ -20,7 +19,7 @@ import Branch from "./Branch.vue";
 import Set from "./Set.vue";
 let currentTask = ref("Primary");
 const task = taskStore();
-
+console.log("task.mens :>> ", task.mens);
 // 切换任务
 const selectTab = (item) => {
   currentTask.value = item.value;
@@ -44,22 +43,6 @@ const menus = ref([
     callBack: selectTab,
   },
 ]);
-
-// 绑定弹窗
-const props = defineProps({
-  modelValue: {},
-});
-const visible = ref(props.modelValue);
-const emits = defineEmits("update:modelValue");
-watch(visible, (newW) => {
-  emits("update:modelValue", newW);
-});
-watch(
-  () => props.modelValue,
-  (newW) => {
-    visible.value = newW;
-  }
-);
 </script>
 
 <style lang="scss" scoped></style>

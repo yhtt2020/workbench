@@ -66,7 +66,7 @@ align-items: start;
     <template v-if="!simple && isMain">
       <Team></Team>
     </template>
-<!--  <TaskBox></TaskBox>-->
+ <TaskBox></TaskBox>
 
   </div>
   <div id="trans" v-show="visibleTrans"

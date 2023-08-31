@@ -1,16 +1,13 @@
 import { defineStore } from "pinia";
 // @ts-ignore
-export const taskStore = defineStore("taskStore", {
+export const guideStore = defineStore("guideStore", {
   state: () => ({
-    isTask: true, // 首页展示任务中心
-    isTaskDrawer: false, // 打开任务中心
+    // 添加卡片
+    taskID: "M0101",
+    step: 0,
   }),
-  getters: {
- 
-  },
-  actions: {
-
-  },
+  getters: {},
+  actions: {},
   persist: {
     enabled: true,
     strategies: [

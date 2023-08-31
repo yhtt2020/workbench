@@ -30,6 +30,11 @@ import  baseComponents from "./ui/libs/index"
 // import components from "./components/card/components/index"
 import components from "./ui/components/index"
 
+// 注册任务引导
+import VueShepherdPlugin from 'vue-shepherd';
+import 'shepherd.js/dist/css/shepherd.css';
+
+
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript'
@@ -109,7 +114,7 @@ const $app=app.use(pinia).use(Antd).use(baseComponents).use(components).use(Colo
       trigger:"mouseenter click"
     }, // => Global default options * see all props
   }
-).use(Toast,options).use(TUIKit).mount('#app')
+).use(Toast,options).use(TUIKit).use(VueShepherdPlugin).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

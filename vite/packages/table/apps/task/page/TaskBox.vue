@@ -1,7 +1,7 @@
 <template>
-  <xt-menu :menus="menus" v-if="task.showTask">
+  <xt-menu :menus="menus" v-if="task.isTask">
     <div
-      @click="visible = true"
+      @click="task.isTaskDrawer = true"
       class="xt-bg relative s-bg xt-base-btn"
       style="width: 70px; height: 70px; border-radius: 8px"
     >
@@ -22,20 +22,17 @@
     </div>
   </xt-menu>
 
-  <Task v-model="visible"></Task>
+  <Task></Task>
 </template>
 
 <script setup>
 import { reactive, ref } from "vue";
 import { taskStore } from "../store";
 import Task from "./Task.vue";
-
-const visible = ref(false);
 const task = taskStore();
 
 const closeTaskBox = () => {
-  console.log("task :>> ", task.showTask);
-  task.showTask = false;
+  task.isTask = false;
 };
 const menus = reactive([
   {

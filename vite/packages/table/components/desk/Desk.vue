@@ -56,15 +56,7 @@
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                          :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
             </div>
-            <div
-              :class="{editing:editing}"
-              :editing="editing"
-              :style="{ zoom: (usingSettings.cardZoom * this.adjustZoom / 100).toFixed(2), }">
 
-
-<!--              <CoolWidget :appName="'cool'" :desk="currentDesk" :is="item.name" :customIndex="item.id"-->
-<!--                          :customData="item.customData" :editing="editing" @customEvent="customEvent"></CoolWidget>-->
-            </div>
           </template>
         </vuuri>
       </div>
@@ -79,21 +71,39 @@
         left: 0;
         bottom: 0;
         z-index: 999;
-      " v-if="visibleAdd">
+      " v-if="addCardVisible">
       <NewAddCard @close="hideAddCard" @addSuccess="hideAddCard" :desk="currentDesk"
-                  @onBack="() => { this.visibleAdd = false }"></NewAddCard>
+                  @onBack="() => { this.addCardVisible = false }"></NewAddCard>
     </div>
   </transition>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer"
+
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer" style="z-index: 99999999999;"
             placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
-
+      <div style="height: 200px;" class="mb-3 hidden" >
+</div>
+    <xt-mask :modelValue="getStep"> 
       <a-col>
-        <div @click="newAddCard" class="btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>添加卡片</span></div>
-        </div>
+      <xt-popover :modelValue="getStep">  
+          <div @click="newAddCard" class="btn">
+            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+            <div><span>添加卡片</span></div>
+          </div>
+          <template #tip>
+                <div style="width: 300px">
+                  <xt-title m="">
+                    添加小组件
+                    <template #right> 2/3 </template>
+                  </xt-title>
+                  <div>
+                    点击这里进入「创意市场」，目前有数十个类型的小组件任你选择。
+                  </div>
+                </div>
+              </template>
+        </xt-popover>
       </a-col>
+    </xt-mask >
+
       <a-col>
         <div @click="newAddIcon" class="btn">
           <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
@@ -232,6 +242,7 @@
       <AddIcon @setCustoms="setCustoms" @close="iconHide" :desk="currentDesk"></AddIcon>
     </div>
   </transition>
+
 </template>
 
 <script>
@@ -291,12 +302,10 @@ import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
 import EatToday from '../widgets/eat/EatToday.vue'
 import HotSearch from '../widgets/HotSearch.vue'
-import CoolWidget from '../card/CoolWidget.vue'
-import AIaides from '../../apps/AIaides/card/AIaides.vue'
+import {guideStore} from "../../apps/task/guide"
 export default {
   name: 'Desk',
   components: {
-    CoolWidget,
     News,
     Template,
     HorizontalPanel,
@@ -344,8 +353,7 @@ export default {
     SmallRank,
     Todo,
     EatToday,
-    HotSearch,
-    AIaides
+    HotSearch
   },
   props:
     {
@@ -433,6 +441,14 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
+    ...mapWritableState(guideStore, ['taskID','step']),
+    getStep() {
+      if ( this.taskID == 'M0101' && this.step == 2) {
+        return true
+      }else {
+        return false
+      }
+    },
     usingSettings () {
       if (this.settings.enableZoom) {
         return this.settings
@@ -451,7 +467,7 @@ export default {
       hide: false,
       key: Date.now(),
       menuVisible: false,
-      visibleAdd: false,
+      addCardVisible: false,
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -533,11 +549,15 @@ export default {
       }
     },
     newAddCard () {
-      this.visibleAdd = true
+      if (this.step==2) {
+        this.step = 3
+      }
+      this.addCardVisible = true
+      // addCardVisible
       this.menuVisible = false
     },
     hideAddCard () {
-      this.visibleAdd = false
+      this.addCardVisible = false
     },
     onClose () {
       this.menuVisible = false
