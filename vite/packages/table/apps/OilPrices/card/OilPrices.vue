@@ -23,7 +23,7 @@
         </template>
         <div v-else>
           <div class="city" @click="showMenu">
-            {{cityOilList[0].city }} <CaretDownOutlined style="font-size: 16px; " />
+            {{this.currentCity.p?this.currentCity.p: this.customData.city }} <CaretDownOutlined style="font-size: 16px; " />
         </div>
         <div class="oil">
             <div class="oil-item mar-r">
@@ -54,6 +54,7 @@
         </div>
         
     </Widget>
+    {{ showOilData[0] }}
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">选择地区</div>
@@ -133,8 +134,19 @@ export default{
     selectedAreaSuit(item){
         this.defaultCityIndex=(item.id -1)
         this.settingVisible=false
-        this.cityOil(this.city[this.defaultCityIndex].city)
+        
+        // this.city[this.defaultCityIndex].city=this.customData.city
+        let defaultCity=this.city[this.defaultCityIndex].city
+        this.customData.city=defaultCity
+        this.currentCity.p=undefined
         // this.getCityOilData()
+        // this.showCity()
+        this.cityOil(this.customData.city)
+    },
+    showCity(){
+      if(this.currentCity.p!==this.customData.city){
+        this.currentCity.p=this.customData.city
+      }
     },
     showMenu(){
         this.settingVisible=true
@@ -151,6 +163,12 @@ export default{
   },
   computed:{
     ...mapState(oilStore,['cityOilData','currentCity','cityOilList']),
+    showOilData(){
+      let cityMsg= this.cityOilData.filter((item)=>{
+        return item.city==this.customData.city
+      })
+      return cityMsg
+    }
   },
   async mounted(){
     this.isLoading=true
@@ -159,11 +177,17 @@ export default{
     //  await this.getCityOilData()
     // 判断用户ip是否在国内省市
     const isCity=this.city.some(item=>item.city==this.currentCity.p)
-    // console.log(isCity);
+    console.log(isCity);
     if(isCity){
       this.cityOil(this.currentCity.p)
+      
     }else{
-      this.cityOil(this.city[this.defaultCityIndex].city)
+      if(this.customData && this.customData.city){
+        this.cityOil(this.customData.city)
+      }else{
+        this.cityOil(this.city[this.defaultCityIndex].city)
+      }
+      
     }
     setTimeout(() => {
       this.isLoading=false
