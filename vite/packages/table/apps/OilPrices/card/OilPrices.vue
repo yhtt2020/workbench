@@ -23,38 +23,38 @@
         </template>
         <div v-else>
           <div class="city" @click="showMenu">
-            {{this.currentCity.p?this.currentCity.p: this.customData.city }} <CaretDownOutlined style="font-size: 16px; " />
+            {{showOilData[0].city }} <CaretDownOutlined style="font-size: 16px; " />
         </div>
         <div class="oil">
             <div class="oil-item mar-r">
                 <span>92号汽油</span>
                 <div class="oil-price">
-                    {{cityOilList[0]['92h']}}
+                    {{showOilData[0]['92h']}}
                 </div>
             </div>
             <div class="oil-item">
                 <span>95号汽油</span>
                 <div class="oil-price">
-                  {{cityOilList[0]['95h']}}
+                  {{showOilData[0]['95h']}}
                 </div>
             </div>
             <div class="oil-item mar-r">
                 <span>98号汽油</span>
                 <div class="oil-price">
-                  {{cityOilList[0]['98h']}}
+                  {{showOilData[0]['98h']}}
                 </div>
             </div>
             <div class="oil-item">
                 <span>0号柴油</span>
                 <div class="oil-price">
-                  {{cityOilList[0]['0h']}}
+                  {{showOilData[0]['0h']}}
                 </div>
             </div>
         </div>
         </div>
         
     </Widget>
-    {{ showOilData[0] }}
+    <!-- {{ showOilData[0] }} -->
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">选择地区</div>
@@ -163,6 +163,7 @@ export default{
   },
   computed:{
     ...mapState(oilStore,['cityOilData','currentCity','cityOilList']),
+    // 获取当前组件省市的油价信息
     showOilData(){
       let cityMsg= this.cityOilData.filter((item)=>{
         return item.city==this.customData.city
@@ -179,7 +180,10 @@ export default{
     const isCity=this.city.some(item=>item.city==this.currentCity.p)
     console.log(isCity);
     if(isCity){
-      this.cityOil(this.currentCity.p)
+      // this.customData.city=this.currentCity.p
+      let city=this.currentCity.p
+      this.customData.city=city
+      this.cityOil(this.customData.city)
       
     }else{
       if(this.customData && this.customData.city){
