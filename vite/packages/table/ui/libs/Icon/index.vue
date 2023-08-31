@@ -2,7 +2,7 @@
   <div>
     <div
       :class="typeClass"
-      :style="customStyle"
+      :style="[customStyle]"
       class="xt-active xt-base-btn"
       @click="copyToClipboard()"
     >
@@ -22,9 +22,11 @@ export default {
       return {
         width: this.w + "px",
         height: this.w + "px",
+        "border-radius": this.radius + "px  !important",
         // height: this.h + "px",
       };
     },
+
     fontSizeStyle() {
       return {
         "font-size": this.size + "px ",
@@ -44,6 +46,10 @@ export default {
     type: {
       type: String,
       default: "default",
+    },
+    radius: {
+      type: String,
+      default: "12",
     },
     icon: {
       type: String,
