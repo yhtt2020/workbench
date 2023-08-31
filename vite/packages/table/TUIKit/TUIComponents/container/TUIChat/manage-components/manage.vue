@@ -38,11 +38,11 @@
 
         <div class="flex" >
           <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
-          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('addMember')">
-           <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('add')">
+           <Icon icon="tianjia3" style="color: var(--success);"></Icon>
           </div>
         
-          <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('removeMember')">
+          <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>
         </div>
@@ -94,7 +94,7 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">邀请方式</span>
         
-        <template v-if="conversation?.selfInfo?.role !== 'Member'">
+        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'AVChatRoom'">
           <div class="flex pointer" @click="updateGroupInviteWay">
             <span class="font-14" style="color: var(--secondary-text);">
               {{ typeName[conversation.inviteOption] }}
@@ -144,10 +144,21 @@
   </div>
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
-    <UserSelect :type="type" :list="type === 'change' ?  memberList : type === 'addMember' ? friendList : memberList" :groupID="conversation.groupID"  @closeUser="close"></UserSelect>
+    <UserSelect :type="type" :list="type === 'change' ?  memberList : '' " 
+    :groupID="conversation.groupID"  @closeUser="close"
+    >
+    </UserSelect>
  </ChangeModal>
+
+ <!-- type === 'addMember' ? friendList : memberList -->
  
- <AddMemeber></AddMemeber>
+ <ChangeModal v-model:visible="enableVisible" v-if="enableVisible" :blurFlag="true">
+   <AddMemeber :type="memeberType" @closeUser="enableVisible = false"
+    :list="memeberType === 'remove' ? memberList : friendList" :groupID="conversation.groupID"
+    :updateGroup="openGroup"
+   >
+   </AddMemeber>
+ </ChangeModal>
 </template>
 
 <script>
@@ -157,17 +168,20 @@ import { message,Modal } from 'ant-design-vue'
 import ChangeModal from '../../../../../components/Modal.vue';
 import UserSelect from '../../../components/userselect/index.vue'
 import AddMemeber from '../../../components/userselect/addMemeber.vue'
+import _ from 'lodash-es'
+import {appStore} from '../../../../../store'
 
 const manage = defineComponent({
-  props:['manageData','conversation','memberList'],
+  props:['manageData','conversation','memberList','openGroup'],
 
-  components:{ ChangeModal,UserSelect },
+  components:{ ChangeModal,UserSelect,AddMemeber },
 
   setup(props,ctx){
     const types = window.$TUIKit.TIM.TYPES
     const { GroupServer } = manage;
     const { t } = window.$TUIKit.config.i18n.useI18n();
-    
+    const state = appStore()
+
     const data = reactive({
       typeName: {
         [types.GRP_WORK]: '好友工作群',
@@ -182,7 +196,9 @@ const manage = defineComponent({
         [types.INVITE_OPTIONS_NEED_PERMISSION]:'需要验证'
       },
       isChangeOwner:false,
+      enableVisible:false,
       type:'',  // 转让群聊点击按钮类型
+      memeberType:'',
       groupServer:GroupServer,
       friendList:[], // 获取好友数据
     })
@@ -267,10 +283,10 @@ const manage = defineComponent({
  
     const deleteMember = (type) => {  // 删除群组成员 
       if(props.memberList.length > 1){
-        data.isChangeOwner = true
-        data.type = type
+        data.enableVisible = true
+        data.memeberType = type
       }else{
-        data.isChangeOwner =  false
+        data.enableVisible =  false
       }
     }
 
@@ -311,8 +327,13 @@ const manage = defineComponent({
     }
 
     const addGroupMember = (type) =>{  // 添加群聊成员
-      data.isChangeOwner = true
-      data.type = type
+      if(props.conversation.inviteOption === 'DisableInvite'){
+        data.enableVisible = false
+        message.error('群管理员开启禁止群成员邀请')
+      }else{
+        data.enableVisible = true
+        data.memeberType = type
+      }
 
     }
 
@@ -322,8 +343,17 @@ const manage = defineComponent({
       for(let i=0;i<res.data.length;i++){
         list.push(res.data[i].profile)
       }
-      data.friendList = list
+      const newList = _.filter(list,function(o){
+        if(parseInt(o.userID) !== parseInt(state.$state?.userInfo?.uid)){
+          return o
+        }
+      })
+      data.friendList = newList
     }
+
+
+  
+
 
     const updateGroupJoinWay = () =>{  // 修改加群方式
       ctx.emit('updateName',{title:'修改加群方式',id:5,info:{
@@ -340,7 +370,7 @@ const manage = defineComponent({
         info:{
          groupID:props.conversation.groupID,
          conversation:props.conversation,
-         title:`${data.typeName[props.conversation.joinOption]}`
+         title:`${data.typeName[props.conversation.inviteOption]}`
         }
        })
     }

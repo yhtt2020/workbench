@@ -1,7 +1,7 @@
 <template>
   <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
     <div v-for="(item,index) in list" class="flex flex-col mb-3 p-4 rounded-lg"
-    style="width: 395px; background: var(--secondary-bg);position: relative;"
+    style=" background: var(--secondary-bg);position: relative;"
     @contextmenu.stop="noticeMenu(item,$event)"
     >
     <div class="flex justify-between mb-4">
