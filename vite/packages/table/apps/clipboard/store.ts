@@ -31,14 +31,15 @@ export const clipboardStore = defineStore("clipboardStore", {
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     previewShow: false,//预览
     settings: {
+      historyCapacity:86400,//历史容量，默认一天
       enable: false,
       duration: 500,//ms
       codeHighlight: true, // 是否打开代码高亮
       showLineNumber: true, // 是否显示行号
-      clipSize: 4,
+      clipSize: 4,//缩进单位
       clipMode: 'javascript',  // 存储代码块语言包 默认js
       clipTheme: 'dracula',      // 存储代码块的主题颜色 默认monokai
-      pageSize: 10,
+      pageSize: 10,//每页显示数量
     },
   }),
   actions: {
@@ -78,6 +79,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         }
 
         if (this.searchWords) {
+          //替换掉特殊字符，保证查询准确性
           function escapeSpecialChars(str) {
             // 定义需要转义的特殊字符
             const specialChars = /[.*+?^${}()|[\]\\]/g;
@@ -85,9 +87,6 @@ export const clipboardStore = defineStore("clipboardStore", {
             // 使用正则表达式替换特殊字符
             return str.replace(specialChars, "\\$&");
           }
-
-// 示例用法
-          const originalStr = "This is a special character: [*]";
           const words=escapeSpecialChars(this.searchWords)
           map['$or'] = [
             {
@@ -214,6 +213,34 @@ export const clipboardStore = defineStore("clipboardStore", {
     },
     prepare() {
       clipboardChanged = this.changed
+    },
+    async removeExpiredItems() {
+      if (this.settings.historyCapacity === 0) {
+        return //无限期不做处理
+      }
+      let timeLimit = Date.now() - this.settings.historyCapacity * 1000 //截止时间
+      let map: any = {
+        _id: {
+          $regex: new RegExp(`^clipboard:item:`)
+        }
+      }
+      map.createTime = {
+        $lt: timeLimit
+      }
+      let rsFiltered = await tsbApi.db.find({
+        selector: map,
+        limit: this.settings.pageSize,
+        sort: [
+          {
+            '_id': 'desc'
+          }
+        ]
+      })
+      for (const item of rsFiltered.docs) {
+        await this.remove(item)
+      }
+
+
     },
     setClipboard(type, item) {
       switch (type) {
@@ -366,9 +393,8 @@ export const clipboardStore = defineStore("clipboardStore", {
         if ((this.filterType === item.type || this.filterType === 'all') && this.tab.name === 'history') {
           this.items.unshift(item)
         }
-
-
       }
+      this.removeExpiredItems()//执行清理
     },
     async uriChange(uri) {
       console.log('uri=', uri)

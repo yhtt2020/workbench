@@ -235,6 +235,17 @@ export default {
       handler(newVal){
         this.settings.pageSize=Number(newVal.name)
       }
+    },
+    'defaultCapacity':{
+      handler(newVal){
+        const values={
+          'day':86400,
+          'week':604800,
+          'month':2678400,
+          'unlimited':0
+        }
+        this.settings.historyCapacity=values[newVal.name]
+      }
     }
   }
 }
