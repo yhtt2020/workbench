@@ -33,7 +33,7 @@
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
-        <div class="content" v-else :style="{height:this.showSize.height==2?'340px':'528px'}">
+        <div class="content" v-else >
           <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type"> 
             <span class="sort">{{ index+1 }}</span>
             <div class="item">
@@ -207,6 +207,9 @@ export default {
     setCurrentIndex(index) {
       this.currentIndex = index
       this.getNewsData()
+      if(this.customData){
+        this.newsItemList=this.customData
+      }
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -219,6 +222,7 @@ export default {
       // console.log(this.getNewsMsg);
       this.getNewsMsg(tag)
       // console.log('getNewsData',res);
+      this.customData.newsList={tag:this.newsItemList}
     }
   },
   computed: {
@@ -351,8 +355,8 @@ export default {
   margin-top: 1%;
   display: flex;
   flex-wrap: wrap;
-  align-content: space-between;
-  flex-direction: column;
+  justify-content: space-between;
+  // flex-direction: column;
   overflow: hidden;
   position: relative;
   

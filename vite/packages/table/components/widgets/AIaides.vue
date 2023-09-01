@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import Widget from "../../../components/card/Widget.vue";
+import Widget from "../card/Widget.vue";
 import dayjs from "../../../components/card/hooks/day";
 import {
   MessageOutlined,
