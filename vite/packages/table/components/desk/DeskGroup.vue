@@ -92,7 +92,7 @@
     Testing
   </div>
   </xt-mask> -->
-  <xt-task :modelValue="true">123</xt-task>
+  <xt-task :modelValue="true">
           <xt-mask :modelValue="getStep">
             <xt-popover :modelValue="getStep">
               <a-tooltip title="菜单" placement="bottom">
@@ -120,6 +120,7 @@
               </template>
             </xt-popover>
           </xt-mask>
+        </xt-task>
         </div>
       </div>
     </div>
