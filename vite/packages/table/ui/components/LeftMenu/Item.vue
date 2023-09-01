@@ -8,7 +8,8 @@
     <img
       :src="item.img"
       alt=""
-      style="width: 20px; height: 20px; border-radius: 10px"
+      :style="[stateStyle]"
+      style="border-radius: 10px"
       @click="iconClick(item)"
     />
   </div>
@@ -24,14 +25,24 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 const props = defineProps({
   item: {},
   id: {},
   flag: {
     default: false,
   },
+  w: {
+    default: 20,
+  },
 });
 
+const stateStyle = computed(() => {
+  return {
+    width: props.w + "px",
+    height: props.w + "px",
+  };
+});
 const iconClick = (item, flag) => {
   console.log("item :>> ", item);
   item.callBack && item.callBack(item);

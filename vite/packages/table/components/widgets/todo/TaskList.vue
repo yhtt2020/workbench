@@ -44,6 +44,7 @@
     </div>
   </div>
   </vue-custom-scrollbar>
+
 </template>
 
 <script lang="ts">
@@ -54,15 +55,19 @@ import { taskStore } from "../../../page/app/todo/stores/task";
 import { ToTopOutlined } from "@ant-design/icons-vue";
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../../comp/Emoji.vue";
+import XtButton from "../../../ui/libs/Button/index.vue";
+import {PlusSquareOutlined} from '@ant-design/icons-vue'
 export default {
   name: "TaskList",
   props: {
     data: [] as ITaskInfo[],
   },
   components: {
+    XtButton,
     Emoji,
     VueCustomScrollbar,
     ToTopOutlined,
+    PlusSquareOutlined
   },
   data() {
     return {

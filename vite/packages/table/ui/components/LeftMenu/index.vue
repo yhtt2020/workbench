@@ -45,7 +45,7 @@
           >
             <slot :name="item.slot"> </slot>
           </div>
-          <Item :item="item" v-else>
+          <Item :item="item" v-else w="40">
             <template #default>
               <slot :name="item.slot">{{ item.slot }} </slot>
             </template>
