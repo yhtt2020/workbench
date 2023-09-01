@@ -168,10 +168,10 @@ export function handleTipMessageShowContext(message: any) {
   if (message?.type === TIM?.TYPES?.MSG_GRP_TIP) {
     switch (message.payload.operationType) {
       case TIM.TYPES.GRP_TIP_MBR_JOIN:
-        options.text = `${userName} ${t('message.tip.加入群聊')}`;
+        options.text = `${userName}加入群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_QUIT:
-        options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.退出群聊')}`;
+        options.text = `群成员：${userName} 退出群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
         options.text = `${t('message.tip.群成员')}：${userName}被群管理员踢出群聊`;
