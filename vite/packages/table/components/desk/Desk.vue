@@ -302,7 +302,7 @@ import SmallRank from '../widgets/SmallRank.vue'
 import Todo from '../widgets/todo/Todo.vue'
 import EatToday from '../widgets/eat/EatToday.vue'
 import HotSearch from '../widgets/HotSearch.vue'
-import {guideStore} from "../../apps/task/guide"
+import {taskStore} from "../../apps/task/store"
 export default {
   name: 'Desk',
   components: {
@@ -441,7 +441,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
-    ...mapWritableState(guideStore, ['taskID','step']),
+    ...mapWritableState(taskStore, ['taskID','step']),
     getStep() {
       if ( this.taskID == 'M0101' && this.step == 2) {
         return true

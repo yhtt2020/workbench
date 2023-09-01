@@ -1,7 +1,4 @@
 <template>
-  <xt-mask :modelValue="false">
-    <Test></Test>
-  </xt-mask>
   <div class="xt-bg-2 rounded-xl p-3">
     <xt-title m="">
       <div class="flex items-center">
@@ -39,10 +36,10 @@
     <div class="flex justify-center items-center flex-col">
       <xt-title type="text">完成奖励</xt-title>
 
-      <xt-title type="text" v-if="currentTask.guide"
+      <xt-title type="text" v-if="currentTask.task"
         >当前任务含有操作引导</xt-title
       >
-      <xt-button style="width: 100%" type="theme" @click="taskGuide(guide)"
+      <xt-button style="width: 100%" type="theme" @click="taskGuide(task)"
         >开始任务</xt-button
       >
     </div>
@@ -53,10 +50,7 @@
 import { computed } from "vue";
 import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
-import { guideStore } from "../guide";
-import Test from "./Test.vue";
 const task = taskStore();
-const guide = guideStore();
 const props = defineProps({
   currentStage: {},
   currentTaskId: {},
@@ -65,22 +59,25 @@ const props = defineProps({
 // 引导任务
 const emits = defineEmits(["close"]);
 const taskGuide = () => {
-  guide.step = 0;
-  if (currentTask.value.guide) {
+  console.log("1 :>> ", 1);
+  task.step = -1;
+  if (currentTask.value.task) {
     switch (currentTask.value.type) {
       case "store":
-        guide.taskID = currentTask.value.id;
-        // guide[currentTask.value.data] = true;
+        task.taskID = currentTask.value.id;
+        // task[currentTask.value.data] = true;
         break;
       default:
         break;
     }
-    guide.step = 1;
-    console.log("    guide.step  :>> ", guide.step);
-    console.log("    guide.taskID  :>> ", guide.taskID);
+    task.step = 1;
+    console.log("    task.step  :>> ", task.step);
+    console.log("    task.taskID  :>> ", task.taskID);
   } else {
     console.log("111111111 :>> ", 111111111);
   }
+  task.step = 1;
+  task.taskID = "M0101";
   task.isTaskDrawer = false;
 };
 // 获取当前任务的下标

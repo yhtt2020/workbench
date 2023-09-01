@@ -83,26 +83,23 @@
               <Icon style="font-size: 18px" icon="fullscreen"></Icon>
             </div>
           </a-tooltip>
-          <!-- <div ref="el">
-    Testing
-  </div> -->
-     
- 
-  <xt-task :modelValue="true">
-          <xt-mask :modelValue="getStep">
+    <a-tooltip title="菜单" placement="bottom">
+  <xt-task :modelValue="getStep">
+    
+      <div class="pl-3">
+        <div
+          @click="showMenu"
+          class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
+        >
+          <Icon style="font-size: 18px" icon="gengduo1"></Icon>
+        </div>
+      </div>
+  </xt-task>
+</a-tooltip>
+
+          <!-- <xt-mask :modelValue="getStep">
             <xt-popover :modelValue="getStep">
-              <a-tooltip title="菜单" placement="bottom">
-                <div class="pl-3">
-                  <!-- <div ref="el"> -->
-                  <div
-                    @click="showMenu"
-                    class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
-                  >
-                    <Icon style="font-size: 18px" icon="gengduo1"></Icon>
-                    <!-- </div> -->
-                  </div>
-                </div>
-              </a-tooltip>
+              
               <template #tip>
                 <div style="width: 300px">
                   <xt-title m="">
@@ -115,8 +112,7 @@
                 </div>
               </template>
             </xt-popover>
-          </xt-mask>
-        </xt-task>
+          </xt-mask> -->
         </div>
       </div>
     </div>
@@ -446,7 +442,7 @@
 <script lang="ts">
 import Desk from "./Desk.vue";
 import { appStore } from "../../store";
-import { guideStore } from "../../apps/task/guide";
+import { taskStore } from "../../apps/task/store";
 import { mapActions, mapWritableState, mapWritableState } from "pinia";
 import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
@@ -574,12 +570,15 @@ export default {
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen"]),
-    ...mapWritableState(guideStore, ["taskID", "step"]),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
       console.log('this.step == 1 :>> ', this.step == 1);
       if (this.taskID == "M0101" && this.step == 1) {
+        console.log('true :>> ', true);
         return true;
+
       }else {
+        console.log('false :>> ', false);
         return false
       }
       // if ( this.taskID == 'M0101' && this.step == 1) {
