@@ -1,10 +1,23 @@
 <template>
   <!-- 动态头部 -->
-  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 86px">
+  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px">
     <template v-for="item in newList.slice(0, last)">
-      <div @click="iconSelectClick(item.id)">
-        <slot :name="item.slot" v-if="item.slot"> </slot>
-        <Item :item="item" :id="currentIndex">
+      <div
+        @click="iconSelectClick(item.id, item.flag)"
+        class="xt-base-btn mb-2"
+        style="width: 50px; height: 50px; border-radius: 14px"
+        :style="[
+          item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
+        ]"
+      >
+        <div
+          v-if="item.slot"
+          style="width: 40px; height: 40px; border-radius: 10px"
+          class="xt-bg xt-base-btn"
+        >
+          <slot :name="item.slot"> </slot>
+        </div>
+        <Item :item="item" v-else>
           <template #default>
             <slot :name="item.slot">{{ item.slot }} </slot>
           </template>
@@ -14,12 +27,25 @@
 
     <!-- 动态适中 -->
     <div
-      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center"
+      class="xt-scrollbar xt-container h-full xt-bt py-1 xt-bm flex flex-col items-center"
     >
       <template v-for="item in newList.slice(last, -1 * end)">
-        <div @click="iconSelectClick(item.id)">
-          <slot :name="item.slot" v-if="item.slot"> </slot>
-          <Item :item="item" :id="currentIndex">
+        <div
+          @click="iconSelectClick(item.id, item.flag)"
+          class="xt-base-btn mb-2"
+          style="width: 50px; height: 50px; border-radius: 14px"
+          :style="[
+            item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
+          ]"
+        >
+          <div
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
+          >
+            <slot :name="item.slot"> </slot>
+          </div>
+          <Item :item="item" v-else>
             <template #default>
               <slot :name="item.slot">{{ item.slot }} </slot>
             </template>
@@ -28,11 +54,23 @@
       </template>
     </div>
     <!-- 底部循环 -->
-
     <template v-for="item in newList.slice(-1 * end)">
-      <div @click="iconSelectClick(item.id, item.flag)">
-        <slot :name="item.slot" v-if="item.slot"> </slot>
-        <Item :item="item" :id="currentIndex" m="mt">
+      <div
+        @click="iconSelectClick(item.id, item.flag)"
+        class="xt-base-btn mt-2"
+        style="width: 50px; height: 50px; border-radius: 14px"
+        :style="[
+          item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
+        ]"
+      >
+        <div
+          v-if="item.slot"
+          style="width: 40px; height: 40px; border-radius: 10px"
+          class="xt-bg xt-base-btn"
+        >
+          <slot :name="item.slot"> </slot>
+        </div>
+        <Item :item="item" v-else>
           <template #default>
             <slot :name="item.slot">{{ item.slot }} </slot>
           </template>
@@ -110,6 +148,7 @@ const props = defineProps({
     },
   },
 });
+
 const newList = computed(() => {
   let id = -1;
   let res = props.list.map((item) => {
@@ -121,6 +160,7 @@ const newList = computed(() => {
   });
   return res;
 });
+
 const currentIndex = ref(props.index);
 const iconSelectClick = (id, flag) => {
   if (flag) return;
@@ -132,5 +172,14 @@ const iconSelectClick = (id, flag) => {
 .box {
   border: 4px solid var(--active-bg) !important;
   border-radius: 12px;
+}
+.anticon {
+  width: 999px !important;
+  color: red !important;
+}
+:deep(.anticon) {
+  // border: 3px solid none;
+
+  font-size: 20px;
 }
 </style>
