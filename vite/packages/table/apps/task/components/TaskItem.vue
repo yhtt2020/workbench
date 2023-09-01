@@ -1,4 +1,7 @@
 <template>
+  <xt-mask :modelValue="false">
+    <Test></Test>
+  </xt-mask>
   <div class="xt-bg-2 rounded-xl p-3">
     <xt-title m="">
       <div class="flex items-center">
@@ -51,6 +54,7 @@ import { computed } from "vue";
 import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
 import { guideStore } from "../guide";
+import Test from "./Test.vue";
 const task = taskStore();
 const guide = guideStore();
 const props = defineProps({

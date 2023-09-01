@@ -1,12 +1,12 @@
 <template>
-  <!-- <Teleport to="body"> -->
+  <Teleport to="body">
     <div
       v-if="modelValue == true"
       class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"
-      style="z-index: 99999"
+      style="z-index: 9999"
       @click.stop.self="close()"
     ></div>
-  <!-- </Teleport> -->
+  </Teleport>
   <div class="" :style="{ zIndex: zIndexValue }"><slot></slot></div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     zIndexValue() {
-      return this.modelValue ? 99999999 : null;
+      return this.modelValue ? 999999 : null;
     },
   },
   methods: {

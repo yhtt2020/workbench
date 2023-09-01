@@ -86,10 +86,13 @@
           <!-- <div ref="el">
     Testing
   </div> -->
-          <!-- <div ref="el">
+     
+  <!-- <xt-mask :modelValue="true">
+    <div ref="el">
     Testing
-  </div> -->
-          {{ getStep }}
+  </div>
+  </xt-mask> -->
+  <xt-task :modelValue="true">123</xt-task>
           <xt-mask :modelValue="getStep">
             <xt-popover :modelValue="getStep">
               <a-tooltip title="菜单" placement="bottom">
@@ -517,7 +520,6 @@ export default {
   },
   data() {
     return {
-      tour: null,
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -560,8 +562,6 @@ export default {
     };
   },
   async mounted() {
-    // this.createTour();
-    // this.tour.start();
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0];
     }
@@ -637,28 +637,7 @@ export default {
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
-    createTour() {
-      this.tour = this.$shepherd({
-        useModalOverlay: true,
-      });
-
-      this.tour.addStep({
-        attachTo: { element: this.$refs.el, on: "top" },
-        id: "example-step",
-        text: "This step is attached to the bottom of the <code>.example-css-selector</code> element.",
-        // attachTo: {
-        //   element: '.example-css-selector',
-        //   on: 'bottom'
-        // },
-        classes: "example-step-extra-class",
-        buttons: [
-          {
-            text: "下一步",
-            action: this.tour.next,
-          },
-        ],
-      });
-    },
+   
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
