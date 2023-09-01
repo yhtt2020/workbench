@@ -22,7 +22,7 @@ export default {
   },
   props: {
     isSnow: {
-      type: String,
+      type: Boolean,
       default: true,
     },
   },
@@ -46,7 +46,7 @@ export default {
     },
   },
   destroyed() {
-    clearInterval(this.timerID);// 销毁定时器 
+    clearInterval(this.timerID);// 销毁定时器
   },
 };
 </script>

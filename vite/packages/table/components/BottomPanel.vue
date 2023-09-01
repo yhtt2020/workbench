@@ -157,6 +157,7 @@ import { message } from 'ant-design-vue'
 import TaskBox from "../apps/task/page/TaskBox.vue"
 export default {
   name: 'BottomPanel',
+  emits:['getDelIcon'],
   components: {
     MyAvatar,
     TeamTip,
