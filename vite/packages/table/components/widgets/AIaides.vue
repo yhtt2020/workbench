@@ -82,7 +82,6 @@
 
 <script>
 import Widget from "../card/Widget.vue";
-import dayjs from "../../components/card/hooks/day";
 import {
   MessageOutlined,
   SendOutlined,
