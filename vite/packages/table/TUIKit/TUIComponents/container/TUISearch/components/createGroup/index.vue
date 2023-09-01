@@ -30,7 +30,7 @@
             <a-avatar shape="square" :size="48" :src="item.avatar"></a-avatar>
             <div class="flex flex-col" style="margin-left:16px;">
               <span style="color: var(--primary-text);">{{ item.name }}</span>
-              <span style="color: var(--primary-text);">{{ item.maxMemberCount === '' ? 1 : item.maxMemberCount }}人</span>
+              <span style="color: var(--primary-text);">{{ total }}人</span>
             </div>
           </div>
           <div class="flex items-center rounded-lg pointer  justify-center active-button" 
@@ -148,6 +148,7 @@ import { computed, defineComponent, reactive, toRefs,watch } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue';
+import {chatStore} from '../../../../../../store/chat'
 
 const TUISearch = defineComponent({
   name: 'group',
@@ -166,7 +167,8 @@ const TUISearch = defineComponent({
 
     const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
     const { t } = TUIServer.TUICore.config.i18n.useI18n();
-    
+    const chat = chatStore()
+
     const data = reactive({
       searchId:'',
       currentGroup: null,
@@ -180,6 +182,7 @@ const TUISearch = defineComponent({
         suppressScrollX: true,
         wheelPropagation: true
       },
+      total:chat.$state.limitTotal
     })
     
     const closeJoinGroup = () =>{  // 关闭加入群聊弹窗  

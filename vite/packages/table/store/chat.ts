@@ -10,6 +10,7 @@ import {appStore} from "../store";
 export const chatStore = defineStore('chatStore', {
     state: () => ({
       userSig: '',
+      limitTotal:'200',
     }),
     actions: {
       async getUserSig() {
