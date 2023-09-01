@@ -52,6 +52,14 @@ export default defineComponent({
           route:{
             name:'clipboard'
           }
+        },
+        {
+          title:'待办',
+          name:'todo',
+          icon:'check-square',
+          route:{
+            name:'todo'
+          }
         }
       ]
     }

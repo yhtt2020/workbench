@@ -311,6 +311,11 @@ export default [
             name: 'shortcut',
             component: ShortcutKey,
           },
+          {
+            path: "/todo",
+            name: "todo",
+            component: Todo,
+          }
         ]
       },
       {
@@ -448,11 +453,7 @@ export default [
         name: "remoteCommunity",
         component: RemoteCommunity,
       },
-      {
-        path: "/todo",
-        name: "todo",
-        component: Todo,
-      }
+
     ],
   },
 ];
