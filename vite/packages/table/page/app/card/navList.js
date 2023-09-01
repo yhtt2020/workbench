@@ -257,6 +257,24 @@ export const NavList = [
     cname:'资讯',
     children:[
       {
+        name: 'singleDoubanFilm',
+        cname: '正在热映',
+        detail: '电影荒了？来看看近期正在上映的热门电影。',
+        sizes: ['2x4', '2x4'],
+        option: [
+          {
+            name: 'SingleFilm',
+            size: '2x4',
+            zoom: '11'
+          }, {
+            name: 'ManyFilm',
+            size: '2x4',
+            zoom: '11'
+          },
+        ],
+        time: '2023/5/31'
+      },
+      {
         name:'news',
         cname:'新闻头条',
         detail:'头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息',
@@ -269,12 +287,40 @@ export const NavList = [
           }
         ],
         time:'2023/8/18'
-      }
+      },
+      {
+        name: 'HotSearch',
+        cname: '微博热搜',
+        detail: '最近都发生了啥？看看微博上最新热门博文',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'HotSearch',
+            size: '2x4',
+            zoom: '36'
+          }
+        ],
+        time: '2023/5/31'
+      },
     ]
   },
   {
     cname: '效率',
     children: [
+      {
+        name: 'AIaides',
+        cname: 'AI助手',
+        detail: '你的专属AI助手,内置数个预设模板供你使用。',
+        sizes: ['2x2','2x4'],
+        option: [
+          {
+            name: 'AIaides',
+            size: '2x2',
+            zoom: '30'
+          },
+        ],
+        time: '2023/8/25'
+      },
       {
         name: 'clocks',
         cname: '时钟',
@@ -386,7 +432,7 @@ export const NavList = [
         ],
         time: '2023/5/24'
       },
-    
+
       {
         name: 'eatToday',
         cname:'今天吃什么小组件',
@@ -655,20 +701,7 @@ export const NavList = [
         ],
         time: '2023/5/31'
       },
-      {
-        name: 'HotSearch',
-        cname: '微博热搜',
-        detail: '最近都发生了啥？看看微博上最新热门博文',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'HotSearch',
-            size: '2x4',
-            zoom: '36'
-          }
-        ],
-        time: '2023/5/31'
-      },
+
     ],
   },
   {
@@ -739,7 +772,7 @@ export const NavList = [
     ],
   },
   {
-    cname: '施工中', 
+    cname: '施工中',
     children: [
       {
         name: 'smallRank',
@@ -756,20 +789,7 @@ export const NavList = [
         time: '2023/6/29'
 
       },
-      {
-        name: 'AIaides',
-        cname: 'AI助手',
-        detail: '你的专属AI助手,内置数个预设模板供你使用。',
-        sizes: ['2x2','2x4'],
-        option: [
-          {
-            name: 'AIaides',
-            size: '2x2',
-            zoom: '30'
-          },
-        ],
-        time: '2023/8/25'
-      },
+
     ]
   },
 ]
