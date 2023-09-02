@@ -8,8 +8,9 @@
 
     <div class="chat" v-show="!env?.isH5 || currentModel === 'message'">
       <TUIChat :isNeedEmojiReact="true">
-        <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用想天工作台</h1>
+        <!-- <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用想天工作台</h1> -->
       </TUIChat>
+      <Community />
     </div>
 
     <Drag :show="showCall" class="callkit-drag-container" domClassName="callkit-drag-container">
@@ -36,6 +37,7 @@ import TUIContact from "../../TUIKit/TUIComponents/container/TUIContact/index.vu
 import SecondPanel from "../../components/SecondPanel.vue";
 import {onBeforeRouteUpdate, useRoute} from 'vue-router'
 import {message} from "ant-design-vue";
+import Community from './Commun.vue';
 
 
 export default defineComponent({
@@ -44,6 +46,7 @@ export default defineComponent({
     SecondPanel,
     TUIContact,
     Drag,
+    Community,
   },
 
   setup() {
