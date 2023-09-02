@@ -115,7 +115,10 @@ export default defineComponent({
   
   const getReferData = async() =>{  // 获取存储在服务器端的数据
     try {
-      const result = await serverCache.getData('findData')
+      // const result = await serverCache.getData('findData')
+      const result = await serverCache.getDataWithLocalCache('findData',{localCache:true,ttl:30})
+      
+      // console.log('获取存储在服务器端的数据',result);
       if(result !== undefined){
         data.refUser = result.refUser
         data.groupList = result.group
