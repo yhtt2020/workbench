@@ -18,7 +18,12 @@ export const guide = {
     {
       title: "添加小组件",
       text: "点击这里进入「创意市场」，目前有数十个类型的小组件任你选择。",
-      position: "right",
+      position: "top",
+    },
+    {
+      title: "添加小组件",
+      text: "点击「添加按钮」将小组件添加到你的桌面。",
+      position: "top",
     },
   ],
 };

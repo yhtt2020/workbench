@@ -1,6 +1,6 @@
 <template>
   <xt-mask :modelValue="modelValue">
-    <div ref="el">
+    <div ref="el" >
       <slot></slot>
     </div>
   </xt-mask>
@@ -11,9 +11,7 @@ import { defineComponent } from "vue";
 import { guide } from "./guide";
 import { taskStore } from "../../../apps/task/store";
 import { mapWritableState } from "pinia";
-console.log("guide :>> ");
-guide["M0101"][0].fn();
-console.log(' guide["M0101"][1] :>> ', guide["M0101"][0]);
+
 export default defineComponent({
   data() {
     return {
@@ -42,7 +40,7 @@ export default defineComponent({
             this.start();
           } else {
             if (this.tour) {
-              this.tour.destroy();
+              // this.tour.destroy();
             }
             this.flag = false;
           }
@@ -54,8 +52,10 @@ export default defineComponent({
   methods: {
     start() {
       this.$nextTick(() => {
-        this.createTour();
-        this.tour.start();
+        requestAnimationFrame(() => {
+          this.createTour();
+          this.tour.start();
+        });
       });
     },
     createTour() {

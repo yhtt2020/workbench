@@ -572,20 +572,11 @@ export default {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      console.log('this.step == 1 :>> ', this.step == 1);
       if (this.taskID == "M0101" && this.step == 1) {
-        console.log('true :>> ', true);
         return true;
-
       }else {
-        console.log('false :>> ', false);
         return false
       }
-      // if ( this.taskID == 'M0101' && this.step == 1) {
-      //   return true
-      // }else {
-      //   return false
-      // }
     },
 
     // getHomeSize(){

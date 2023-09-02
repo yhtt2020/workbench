@@ -1,10 +1,8 @@
 <template>
-  <div class="hidden">{{ getStep }}</div>
   <div class="main-box">
     <template v-for="(item, index) in navLists" :key="item.name">
-      <template v-if="item.name == 'clocks' && step3">
-        <xt-mask :modelValue="getStep">
-          <xt-popover :modelValue="getStep">
+      <template v-if="item.name == 'clocks' && getStep">
+        <xt-task :modelValue="getStep" to="">
             <div class="box xt-bg-2" style="z-index: 99999999999">
               <div
                 class="add no-drag"
@@ -85,17 +83,7 @@
                 </div>
               </div>
             </div>
-            <template #tip>
-              <div style="width: 300px">
-                <xt-title m="">
-                  添加小组件
-                  <template #right> 3/3 </template>
-                </xt-title>
-                <div>点击「添加按钮」将小组件添加到你的桌面。</div>
-              </div>
-            </template>
-          </xt-popover>
-        </xt-mask>
+        </xt-task>
       </template>
       <div class="box xt-bg-2" v-else>
         <div
@@ -224,17 +212,14 @@ export default {
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
       if (this.taskID == "M0101" && this.step == 3) {
-        this.step3 = 1;
         return true;
       } else {
-        this.step3 = 0;
         return false;
       }
     },
   },
   data() {
     return {
-      step3: false,
       navLists: [],
       carouselIndex: 0,
       isCardDetails: false,
@@ -329,7 +314,7 @@ export default {
         this.addCardAchieve(item);
       }
       if (this.getStep) {
-        this.step =0
+        this.step =-1
         // 关闭
         // 这是一个api 调用 弹窗和api
       }

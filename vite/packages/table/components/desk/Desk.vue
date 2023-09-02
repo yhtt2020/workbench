@@ -82,17 +82,15 @@
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <div style="height: 200px;" class="mb-3 hidden" >
 </div>
-  
-    <xt-task :modelValue="getStep" to=""> 
+      <xt-task :modelValue="getStep" to="" @cb="newAddCard()">
       <a-col>
+        {{ getStep }} {{ step }}
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
             <div><span>添加卡片</span></div>
           </div>
       </a-col>
-
-    </xt-task >
-
+    </xt-task>
 
       <a-col>
         <div @click="newAddIcon" class="btn">
@@ -539,9 +537,7 @@ export default {
       }
     },
     newAddCard () {
-      if (this.step==2) {
-        this.step = 3
-      }
+console.log('123321 :>> ', 123321);
       this.addCardVisible = true
       // addCardVisible
       this.menuVisible = false
