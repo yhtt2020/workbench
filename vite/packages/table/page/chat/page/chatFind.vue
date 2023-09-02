@@ -16,7 +16,7 @@
     <div class="flex flex-col">
       <span class="font-16 mb-6" style="color:var(--primary-text);">推荐用户</span>
       <div class="flex grid grid-cols-2 gap-4 mb-6">
-       <div v-for="item in refUser" class="flex items-center px-4 justify-between py-5 rounded-xl" style="background: var(--secondary-text);">
+       <div v-for="item in refUser" class="flex items-center px-4 justify-between py-5 rounded-xl" style="background: var(--secondary-bg);">
         <div class="flex items-center">
          <a-avatar :src="item.avatar" :size="48"></a-avatar>
          <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.nickname }}</span>
@@ -110,7 +110,7 @@ export default defineComponent({
     const group = result.data.group
     refList.group.push(group)
    }
-   serverCache.set('findData',refList,60)
+   serverCache.set('findData',refList,30)
   }
   
   const getReferData = async() =>{  // 获取存储在服务器端的数据

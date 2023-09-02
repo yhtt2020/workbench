@@ -18,10 +18,11 @@
  </a-dropdown>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, reactive, toRefs} from 'vue'
 import { EllipsisOutlined,MenuUnfoldOutlined,AppstoreOutlined} from '@ant-design/icons-vue'
-// < />
+import { chatStore } from '../../../store/chat'
+
 export default defineComponent({
  components:{ 
   EllipsisOutlined,
@@ -30,17 +31,25 @@ export default defineComponent({
  },
 
 
- setup () {
+ setup (props,ctx) {
+  const chat = chatStore()
+
   const data = reactive({
    dropDownList:[
-    {icon:'MenuUnfoldOutlined',title:'收起边栏'},
-    {icon:'AppstoreOutlined',title:'切换双列'}
+    {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
+    {icon:'AppstoreOutlined',title:'切换双列',type:'change'}
    ],
    dropDownIndex:0,
   })
 
   const selectMenuItem = (item,index) =>{
    data.dropDownIndex = index
+   if(item.type === 'change'){
+     chat.setDouble(true)
+     ctx.emit('updatePage')
+   }else{
+     
+   }
   }
 
   return {

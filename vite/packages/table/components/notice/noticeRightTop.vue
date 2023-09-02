@@ -35,11 +35,9 @@ export default {
 
  methods:{
   ...mapActions(noticeStore,['removeIMChatData','loadNoticeDB']),
-  async clear(){  // 清空历史消息通知记录   
-   for(let i=0;i<this.list.length;i++){
-    this.removeIMChatData(this.list[i])
-   }
-   await this.loadNoticeDB()
+  clear(){  // 清空历史消息通知记录   
+   this.removeIMChatData()
+   this.$emit('updateNotice')
   },
 
 
