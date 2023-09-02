@@ -14,51 +14,77 @@
 
    <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
 
-   <ChatFold :title="use">
-    <div>折叠</div>
-   </ChatFold>
-   
+   <div class="flex flex-col thisky-content">
+    <ChatFold title="常用">
+      <div class="flex items-center pointer py-3" v-for="item in use">
+       <template v-if="item.type === 'message'">
+        <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+       </template>
+       <template v-if="item.type === 'link'">
+        <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+       </template>
+       <span class="font-16 ml-3" style="color: var(--primary-text);">{{ item.title }}</span>
+      </div>
+    </ChatFold>
+    
+    <ChatFold title="产品相关">
+     <div class="flex items-center pointer py-3" v-for="item in product">
+      <template v-if="item.type === 'message'">
+       <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+      </template>
+      <template v-if="item.type === 'link'">
+       <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+      </template>
+      <template v-if="item.type === 'app'">
+       <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+      </template>
+      <span class="font-16 ml-3" style="color: var(--primary-text);">{{ item.title }}</span>
+     </div>
+    </ChatFold>
+ 
+    <ChatFold title="交流群">
+     <div class="flex items-center pointer py-3" v-for="item in talkGroup">
+      <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+      <span class="font-16 ml-3" style="color: var(--primary-text);">{{ item.title }}</span>
+     </div>
+    </ChatFold>
+   </div>
+ 
   </div>
 
+  <div class="flex">
+   右侧
+  </div>
  </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent,reactive,toRefs } from 'vue'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
 import { chatList } from '../../../js/data/chatList'
-import { CaretRightOutlined } from '@ant-design/icons-vue'
+import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 
 export default defineComponent({
 
  components:{
+  AppstoreOutlined,MessageOutlined,LinkOutlined,
   ChatDropDown,
   ChatFold,
-  CaretRightOutlined
  },
 
  setup () {
   const data = reactive({
-   use:'常用',
-   // icon:'CaretRightOutlined',
-   // treeData:[
-   //  {
-   //   title:'常用',
-   //   key: '0-0',
-   //   children:chatList.commonUse
-   //  },
-   //  {
-   //   title:'产品相关',
-   //   key:'0-1',
-   //   children:chatList.productRelated
-   //  },
-   //  {
-   //   title:'交流群',
-   //   key:'0-2',
-   //   children:chatList.group
-   //  }
-   // ]
+   use:chatList.commonUse,
+   product:chatList.productRelated,
+   talkGroup:chatList.group,
+  //  settingsScroller: {
+  //   useBothWheelAxes: true,
+  //   swipeEasing: true,
+  //   suppressScrollY: false,
+  //   suppressScrollX: true,
+  //   wheelPropagation: true
+  //  }
   })
 
   return {
@@ -79,5 +105,37 @@ export default defineComponent({
  font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
+}
+
+.font-16{
+ font-family: PingFangSC-Regular;
+ font-size: 16px;
+ font-weight: 400;
+}
+
+.thisky-content{
+  height: 100%;
+  overflow-y: auto;
+  /* 定义滚动条的样式 */
+  &::-webkit-scrollbar {
+    width: 2px; /* 设置滚动条的宽度 */
+  }
+
+  /* 滚动条轨道样式 */
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 设置滚动条轨道的背景颜色 */
+  }
+
+  /* 滚动条滑块样式 */
+  &::-webkit-scrollbar-thumb {
+    background-color: #888; /* 设置滚动条滑块的背景颜色 */
+    border-radius: 4px; /* 设置滚动条滑块的圆角 */
+  }
+
+  /* 鼠标悬停在滚动条上时的样式 */
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* 设置鼠标悬停时滚动条滑块的背景颜色 */
+  }
+
 }
 </style>
