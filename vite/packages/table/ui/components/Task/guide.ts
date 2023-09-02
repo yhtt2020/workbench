@@ -5,7 +5,7 @@ export const guide = {
     {
       fn: () => {
         const router = useRouter();
-        console.log('router :>> ', router);
+        console.log("router :>> ", router);
         router?.push({
           path: "home",
         });
@@ -14,7 +14,11 @@ export const guide = {
     {
       title: "桌面操作菜单",
       text: "点击这里（或桌面空白处「单击右键键」），打开桌面的底部操作栏，可以选择桌面相关的功能操作。",
-      fn: () => {},
+    },
+    {
+      title: "添加小组件",
+      text: "点击这里进入「创意市场」，目前有数十个类型的小组件任你选择。",
+      position: "right",
     },
   ],
 };

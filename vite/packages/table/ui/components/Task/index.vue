@@ -25,11 +25,11 @@ export default defineComponent({
     modelValue: {
       default: false,
     },
+    fn: {},
   },
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step"]),
     task() {
-      console.log(' guide["M0101"][1] :>> ', guide["M0101"][0]);
       return guide[this.taskID][this.step];
     },
   },
@@ -53,8 +53,10 @@ export default defineComponent({
   },
   methods: {
     start() {
-      this.createTour();
-      this.tour.start();
+      this.$nextTick(() => {
+        this.createTour();
+        this.tour.start();
+      });
     },
     createTour() {
       this.tour = this.$shepherd({
@@ -62,7 +64,7 @@ export default defineComponent({
       });
 
       this.tour.addStep({
-        attachTo: { element: this.$refs.el, on: "top" },
+        attachTo: { element: this.$refs.el, on: this.task?.position ?? "top" },
         text: this.task.text,
         title: this.task.title,
         buttons: [
@@ -71,6 +73,7 @@ export default defineComponent({
             action: (tour) => {
               // 在这里处理按钮点击事件，例如跳转到下一个导览步骤
               this.tour.next();
+              this.$emit("cb");
               this.step++;
             },
           },

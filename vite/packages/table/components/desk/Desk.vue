@@ -82,27 +82,17 @@
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <div style="height: 200px;" class="mb-3 hidden" >
 </div>
-    <xt-mask :modelValue="getStep"> 
+  
+    <xt-task :modelValue="getStep" to=""> 
       <a-col>
-      <xt-popover :modelValue="getStep">  
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
             <div><span>添加卡片</span></div>
           </div>
-          <template #tip>
-                <div style="width: 300px">
-                  <xt-title m="">
-                    添加小组件
-                    <template #right> 2/3 </template>
-                  </xt-title>
-                  <div>
-                    点击这里进入「创意市场」，目前有数十个类型的小组件任你选择。
-                  </div>
-                </div>
-              </template>
-        </xt-popover>
       </a-col>
-    </xt-mask >
+
+    </xt-task >
+
 
       <a-col>
         <div @click="newAddIcon" class="btn">
