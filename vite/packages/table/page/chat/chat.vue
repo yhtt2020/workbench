@@ -1,59 +1,70 @@
 <template>
   <div class="flex h-full py-3">
-    <xt-left-menu :list="chatLeftList" :index="2" last="2" end="1"></xt-left-menu>
-    
-    <template v-if="index === 'chat'">
+    <xt-left-menu :list="chatLeftList" :index="index" last="2" end="1"></xt-left-menu>
+    <!-- <router-view></router-view> -->
+    <template v-if="type === 'chat'">
       <ChatMain></ChatMain>
     </template>
 
-    <template v-else-if="index === 'find'">
-      <ChatFind></ChatFind>
+    <template v-if="type === 'find'">
+      <ChatFind @updateChat="updateChat"></ChatFind>
     </template>
 
-    <template v-else-if="index === 'thisky'">
+    <template v-if="type === 'thisky'">
       <ThiskyIndex></ThiskyIndex>
     </template>
   </div>
-
-  <!-- <TUISearch class="search"/> -->
 </template>
 
-<script>
-import { defineComponent,ref,toRefs,reactive } from 'vue'
+<script lang="ts">
+import { defineComponent,ref,onMounted,reactive,toRefs } from 'vue'
+// import {useRouter} from 'vue-router'
 import ChatMain from './page/chatMain.vue'
-import ThiskyIndex from './page/thiskyIndex.vue'
 import ChatFind from './page/chatFind.vue'
+import ThiskyIndex from './page/thiskyIndex.vue'
+
 export default defineComponent({
   components:{
     ChatMain,
-    ThiskyIndex,
-    ChatFind
+    ChatFind,
+    ThiskyIndex
   },
 
   setup () {
     const data = reactive({
-      index:'thisky'
+      index:2,
+      type:'thisky'
     })
 
-    const selectTab = (item) =>{
-      data.index = item.type
+    const selectTab = (item:any) =>{
+      // router.push(item.route)
+      data.type = item.type
     }
 
     const chatLeftList = ref([
       {
         icon:'message',
         type:'chat',
+        // route:{
+        //   name:'chatMain'
+        // },
         callBack:selectTab,
       },
       {
         icon:'zhinanzhen',
         type:'find',
         callBack:selectTab,
+        // route:{
+        //   name:'chatFind'
+        // }
       },
       {
         img:'/icons/bz1.png',
         type:'thisky',
         callBack:selectTab,
+        // route:{
+        //   name:'chatThisky'
+        // }
       },
       {
         icon:'tianjia2'
@@ -61,15 +72,26 @@ export default defineComponent({
       },
     ])
 
+    // const router = useRouter()
+    
+    // onMounted(()=>{
+    //   router.push({name:'chatThisky'})
+    // })
+
+    const updateChat = () =>{
+      data.index = 0
+      data.type = 'chat'
+    }
+
     return {
       chatLeftList,
-      ...toRefs(data),selectTab,
+      ...toRefs(data),updateChat,
     }
   }
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 :deep(.xt-br){
   margin-right:0px !important;
 }

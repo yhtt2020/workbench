@@ -15,7 +15,7 @@
 
    <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
 
-   <div class="flex flex-col thisky-content">
+   <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
     <ChatFold title="常用">
       <div class="flex flex-col" v-if="doubleCol === false">
         <div class="flex items-center pointer py-3" v-for="item in use">
@@ -86,7 +86,7 @@
         </div>
       </div>
     </ChatFold>
-   </div>
+   </vue-custom-scrollbar>
  
   </div>
 
@@ -121,13 +121,13 @@ export default defineComponent({
    product:chatList.productRelated,
    talkGroup:chatList.group,
 
-  //  settingsScroller: {
-  //   useBothWheelAxes: true,
-  //   swipeEasing: true,
-  //   suppressScrollY: false,
-  //   suppressScrollX: true,
-  //   wheelPropagation: true
-  //  }
+   settingsScroller: {
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true
+   }
   })
 
   const updatePage = () =>{
@@ -161,29 +161,4 @@ export default defineComponent({
  font-weight: 400;
 }
 
-.thisky-content{
-  height: 100%;
-  overflow-y: auto;
-  /* 定义滚动条的样式 */
-  &::-webkit-scrollbar {
-    width: 2px; /* 设置滚动条的宽度 */
-  }
-
-  /* 滚动条轨道样式 */
-  &::-webkit-scrollbar-track {
-    background-color: #f1f1f1; /* 设置滚动条轨道的背景颜色 */
-  }
-
-  /* 滚动条滑块样式 */
-  &::-webkit-scrollbar-thumb {
-    background-color: #888; /* 设置滚动条滑块的背景颜色 */
-    border-radius: 4px; /* 设置滚动条滑块的圆角 */
-  }
-
-  /* 鼠标悬停在滚动条上时的样式 */
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: #555; /* 设置鼠标悬停时滚动条滑块的背景颜色 */
-  }
-
-}
 </style>

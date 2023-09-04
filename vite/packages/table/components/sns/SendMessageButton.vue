@@ -24,14 +24,15 @@ export default {
   },
   methods: {
     sendMessage() {
-      this.$router.push({
-        name: 'chat',
-        params: {
-          action: 'sendMessage',
-          uid: String(this.uid)
-        }
+      // this.$router.push({
+      //   name: 'chat',
+      //   params: {
+      //     action: 'sendMessage',
+      //     uid: String(this.uid)
+      //   }
 
-      })
+      // })
+      this.$emit('send',this.uid)
     }
   }
 }
