@@ -95,23 +95,6 @@
               </div>
             </xt-task>
           </a-tooltip>
-
-          <!-- <xt-mask :modelValue="getStep">
-            <xt-popover :modelValue="getStep">
-              
-              <template #tip>
-                <div style="width: 300px">
-                  <xt-title m="">
-                    桌面操作菜单
-                    <template #right> 1/3 </template>
-                  </xt-title>
-                  <div>
-                    点击这里（或桌面空白处「单击右键键」），打开桌面的底部操作栏，可以选择桌面相关的功能操作。
-                  </div>
-                </div>
-              </template>
-            </xt-popover>
-          </xt-mask> -->
         </div>
       </div>
     </div>
@@ -146,14 +129,12 @@
           <a-row class="text-center" style="margin-top: 20px" :gutter="20">
               <a-col>
             <xt-task :modelValue="1">
-
                 <div @click="showAddDeskForm" class="btn">
                   <Icon style="font-size: 3em" icon="desktop"></Icon>
                   <div><span>添加桌面</span></div>
                 </div>
               </xt-task>
               </a-col>
-    
             <a-col>
               <div @click="importDesk" class="btn">
                 <Icon style="font-size: 3em" icon="daoru"></Icon>
