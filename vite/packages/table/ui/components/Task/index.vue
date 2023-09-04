@@ -16,7 +16,6 @@ export default defineComponent({
   data() {
     return {
       tour: null,
-      flag: this.modelValue,
     };
   },
   props: {
@@ -36,13 +35,11 @@ export default defineComponent({
       handler(newV) {
         this.$nextTick(() => {
           if (newV) {
-            this.flag = true;
             this.start();
           } else {
             if (this.tour) {
               // this.tour.destroy();
             }
-            this.flag = false;
           }
         });
       },
@@ -73,8 +70,8 @@ export default defineComponent({
             action: (tour) => {
               // 在这里处理按钮点击事件，例如跳转到下一个导览步骤
               this.tour.next();
-              this.$emit("cb");
               this.step++;
+              this.$emit("cb");
             },
           },
         ],

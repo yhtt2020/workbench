@@ -1,7 +1,7 @@
 import { useRouter } from "vue-router";
 export const guide = {
   M0101: [
-    // 第一个变量负责定位和启动任务
+    // 第一个负责定位和启动任务
     {
       fn: () => {
         const router = useRouter();
@@ -21,6 +21,12 @@ export const guide = {
       position: "top",
     },
     {
+      title: "添加小组件",
+      text: "点击「添加按钮」将小组件添加到你的桌面。",
+      position: "top",
+    },
+    {
+      flag:true,
       title: "添加小组件",
       text: "点击「添加按钮」将小组件添加到你的桌面。",
       position: "top",

@@ -85,7 +85,6 @@
           </a-tooltip>
     <a-tooltip title="菜单" placement="bottom">
   <xt-task :modelValue="getStep" @cb="showMenu">
-    
       <div class="pl-3">
         <div
           @click="showMenu"
@@ -683,6 +682,7 @@ export default {
       });
     },
     showMenu() {
+      if (this.getStep) return
       this.$refs.currentDeskRef.showMenu();
     },
     showMore() {

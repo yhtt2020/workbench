@@ -2,87 +2,83 @@
   <div class="main-box">
     <template v-for="(item, index) in navLists" :key="item.name">
       <template v-if="item.name == 'clocks' && getStep">
-        <xt-task :modelValue="getStep" to="">
-            <div class="box xt-bg-2" style="z-index: 99999999999">
-              <div
-                class="add no-drag"
-                @click="addNewCard(item)"
-                v-if="item.option.length <= 1"
-              >
-                <div class="icons">
-                  <Icon icon="tianjia2" style="color: #000"></Icon>
-                </div>
-              </div>
-              <div class="add no-drag" @click="addNewCard(item)" v-else>
-                <div class="text" style="color: #fff">· · ·</div>
-              </div>
-              <div class="left no-drag" @click="fullScreen(item)">
-                <template v-if="item.option.length > 1">
-                  <div class="top">
-                    <img
-                      :style="[{ zoom: item.option[0].zoom + '%' }]"
-                      :src="getImg(item.option[0].name)"
-                      alt=""
-                    />
-                  </div>
-                  <div class="bottom">
-                    <img
-                      v-for="i in item.option"
-                      :src="getImg(i.name)"
-                      alt=""
-                    />
-                  </div>
-                </template>
-                <img
-                  v-else
-                  style=""
-                  :src="getImg(item.option[0].name)"
-                  alt=""
-                  :style="[
-                    {
-                      zoom: item.option[0].zoom
-                        ? item.option[0].zoom + '%'
-                        : '11%',
-                    },
-                  ]"
-                />
-              </div>
-              <div class="right" style="">
-                <div class="title" style="color: var(--primary-text)">
-                  {{ item.cname }}
-                </div>
-                <div class="text" style="color: var(--secondary-text)">
-                  {{ item.detail }}
-                </div>
-                <div class="icon">
-                  <div
-                    class="icon-box xt-active-bg-2"
-                    v-for="i in item.sizes"
-                    :key="i"
-                    style="color: var(--secondary-text)"
-                    :class="i === '社区分享' ? 'share' : ''"
-                  >
-                    {{ i }}
-                  </div>
-                </div>
-                <div class="data">
-                  <Icon
-                    icon="xiazai"
-                    class="icons"
-                    style="color: #508bfe; margin: 0; width: 20px"
-                  ></Icon>
-                  <div class="data-box">
-                    {{ item.download }}
-                  </div>
-                  <Icon
-                    icon="shijian"
-                    class="icons"
-                    style="color: #52c41a; margin: 0; width: 20px"
-                  ></Icon>
-                  <div class="data-box">{{ formatTimestamp(item.time) }}</div>
-                </div>
+        <xt-task :modelValue="getStep" to="" @cb="addNewCard(item)">
+          <div class="box xt-bg-2" style="z-index: 99999999999">
+            <div
+              class="add no-drag"
+              @click="addNewCard(item)"
+              v-if="item.option.length <= 1"
+            >
+              <div class="icons">
+                <Icon icon="tianjia2" style="color: #000"></Icon>
               </div>
             </div>
+            <div class="add no-drag" @click="addNewCard(item)" v-else>
+              <div class="text" style="color: #fff">· · ·</div>
+            </div>
+            <div class="left no-drag" @click="fullScreen(item)">
+              <template v-if="item.option.length > 1">
+                <div class="top">
+                  <img
+                    :style="[{ zoom: item.option[0].zoom + '%' }]"
+                    :src="getImg(item.option[0].name)"
+                    alt=""
+                  />
+                </div>
+                <div class="bottom">
+                  <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
+                </div>
+              </template>
+              <img
+                v-else
+                style=""
+                :src="getImg(item.option[0].name)"
+                alt=""
+                :style="[
+                  {
+                    zoom: item.option[0].zoom
+                      ? item.option[0].zoom + '%'
+                      : '11%',
+                  },
+                ]"
+              />
+            </div>
+            <div class="right" style="">
+              <div class="title" style="color: var(--primary-text)">
+                {{ item.cname }}
+              </div>
+              <div class="text" style="color: var(--secondary-text)">
+                {{ item.detail }}
+              </div>
+              <div class="icon">
+                <div
+                  class="icon-box xt-active-bg-2"
+                  v-for="i in item.sizes"
+                  :key="i"
+                  style="color: var(--secondary-text)"
+                  :class="i === '社区分享' ? 'share' : ''"
+                >
+                  {{ i }}
+                </div>
+              </div>
+              <div class="data">
+                <Icon
+                  icon="xiazai"
+                  class="icons"
+                  style="color: #508bfe; margin: 0; width: 20px"
+                ></Icon>
+                <div class="data-box">
+                  {{ item.download }}
+                </div>
+                <Icon
+                  icon="shijian"
+                  class="icons"
+                  style="color: #52c41a; margin: 0; width: 20px"
+                ></Icon>
+                <div class="data-box">{{ formatTimestamp(item.time) }}</div>
+              </div>
+            </div>
+          </div>
         </xt-task>
       </template>
       <div class="box xt-bg-2" v-else>
@@ -302,7 +298,6 @@ export default {
       });
     },
     addNewCard(item) {
-   
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
@@ -314,13 +309,11 @@ export default {
         this.addCardAchieve(item);
       }
       if (this.getStep) {
-        this.step =-1
-        // 关闭
-        // 这是一个api 调用 弹窗和api
+        console.log('1233 :>> ', 1233);
       }
     },
     fullScreen(item) {
-      if (this.getStep) return
+      if (this.getStep) return;
       this.cardDetails = item;
       this.isCardDetails = true;
     },

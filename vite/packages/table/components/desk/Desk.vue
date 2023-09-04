@@ -84,7 +84,6 @@
 </div>
       <xt-task :modelValue="getStep" to="" @cb="newAddCard()">
       <a-col>
-        {{ getStep }} {{ step }}
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
             <div><span>添加卡片</span></div>
