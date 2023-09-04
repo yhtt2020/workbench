@@ -12,7 +12,6 @@
 import { MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 
-
 const props = defineProps({
   // Markdown 文本数据
   content: {
@@ -28,7 +27,6 @@ const props = defineProps({
 const theme = "dark";
 const previewTheme = "default";
 const codeTheme = "github";
-
 </script>
 
 <style lang="scss" scoped>
