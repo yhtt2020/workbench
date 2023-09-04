@@ -10,7 +10,8 @@
       <TUIChat :isNeedEmojiReact="true">
         <!-- <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用想天工作台</h1> -->
       </TUIChat>
-      <Community />
+      <Community >
+      </Community>
     </div>
 
     <Drag :show="showCall" class="callkit-drag-container" domClassName="callkit-drag-container">
