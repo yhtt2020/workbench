@@ -2,97 +2,85 @@
   <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px">
     <!-- 头部 -->
     <div>
-      <template v-for="item in newList.slice(0, last)">
-        <Menu :list="item.children">
+      <Menu :list="item.children" v-for="item in newList.slice(0, last)">
+        <Box
+          :item="item"
+          @selectClick="selectClick"
+          :id="currentId"
+          class="mb-2"
+        >
           <div
-            @click="selectClick(item.id, item.flag)"
-            class="xt-base-btn mb-2"
-            style="width: 50px; height: 50px; border-radius: 14px"
-            :style="[
-              item.id == currentId ? 'border: 3px solid var(--active-bg)' : '',
-            ]"
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
           >
-            <div
-              v-if="item.slot"
-              style="width: 40px; height: 40px; border-radius: 10px"
-              class="xt-bg xt-base-btn"
-            >
-              <slot :name="item.slot"> </slot>
-            </div>
-            <Item :item="item" v-else>
-              <template #default>
-                <slot :name="item.slot">{{ item.slot }} </slot>
-              </template>
-            </Item>
+            <slot :name="item.slot"> </slot>
           </div>
-        </Menu>
-      </template>
+          <Item :item="item" v-else>
+            <template #default>
+              <slot :name="item.slot"> </slot>
+            </template>
+          </Item>
+        </Box>
+      </Menu>
     </div>
-    <!-- 动态适中 -->
+    <!-- 中间 -->
     <div
-      class="flex-1 xt-scrollbar xt-container h-full xt-bt xt-bm flex flex-col items-center"
+      class="flex-1 xt-scrollbar xt-container xt-bt pb-2 xt-bm flex flex-col items-center"
     >
-      <template v-for="item in newList.slice(last, -1 * end)">
-        <Menu :list="item.children">
+      <Menu :list="item.children" v-for="item in newList.slice(last, -1 * end)">
+        <Box
+          :item="item"
+          @selectClick="selectClick"
+          :id="currentId"
+          class="mt-2"
+        >
           <div
-            @click="selectClick(item.id, item.flag)"
-            class="xt-base-btn mt-2"
-            style="width: 50px; height: 50px; border-radius: 14px"
-            :style="[
-              item.id == currentId ? 'border: 3px solid var(--active-bg)' : '',
-            ]"
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
           >
-            <div
-              v-if="item.slot"
-              style="width: 40px; height: 40px; border-radius: 10px"
-              class="xt-bg xt-base-btn"
-            >
-              <slot :name="item.slot"> </slot>
-            </div>
-            <Item :item="item" v-else w="40">
-              <template #default>
-                <slot :name="item.slot">{{ item.slot }} </slot>
-              </template>
-            </Item>
+            <slot :name="item.slot"> </slot>
           </div>
-        </Menu>
-      </template>
+          <Item :item="item" w="40">
+            <template #default>
+              <slot :name="item.slot"></slot>
+            </template>
+          </Item>
+        </Box>
+      </Menu>
     </div>
-
     <!-- 底部 -->
     <div>
-      <template v-for="item in newList.slice(-1 * end)">
-        <Menu :list="item.children">
+      <Menu :list="item.children" v-for="item in newList.slice(-1 * end)">
+        <Box
+          :item="item"
+          @selectClick="selectClick"
+          :id="currentId"
+          class="mb-2"
+        >
           <div
-            @click="selectClick(item.id, item.flag)"
-            class="xt-base-btn mt-2"
-            style="width: 50px; height: 50px; border-radius: 14px"
-            :style="[
-              item.id == currentId ? 'border: 3px solid var(--active-bg)' : '',
-            ]"
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
           >
-            <div
-              v-if="item.slot"
-              style="width: 40px; height: 40px; border-radius: 10px"
-              class="xt-bg xt-base-btn"
-            >
-              <slot :name="item.slot"> </slot>
-            </div>
-            <Item :item="item" v-else>
-              <template #default>
-                <slot :name="item.slot">{{ item.slot }} </slot>
-              </template>
-            </Item>
+            <slot :name="item.slot"> </slot>
           </div>
-        </Menu>
-      </template>
+          <Item :item="item" v-else>
+            <template #default>
+              <slot :name="item.slot"> </slot>
+            </template>
+          </Item>
+        </Box>
+      </Menu>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
-import Menu from "./menu.vue";
+import Menu from "./Menu.vue";
+import Box from "./Box.vue";
 import Item from "./Item.vue";
 import { nanoid } from "nanoid";
 
