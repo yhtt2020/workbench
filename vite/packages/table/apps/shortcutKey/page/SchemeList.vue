@@ -5,10 +5,10 @@ import XtButton from "../../../ui/libs/Button/index.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import NotShortcutKey from "../shortcutKey/NotShortcutKey.vue";
-
+import {PlusOutlined} from '@ant-design/icons-vue'
 export default {
   name: "schemeList",
-  components: {NotShortcutKey, XtButton, Search},
+  components: {NotShortcutKey, XtButton, Search,PlusOutlined},
   data() {
     return {
       shortcutSchemeList: [],
@@ -16,7 +16,20 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['shortcutKeyList', 'schemeList', 'currentApp']),
+    ...mapWritableState(keyStore, ['shortcutKeyList', 'schemeList', 'currentApp','settings']),
+  },
+  watch:{
+     currentApp:{
+       handler(){
+         if(this.settings.enableAutoChange){
+           this.exeName=this.currentApp.exeName
+           this.refreshList()
+
+         }
+
+       },
+       deep:true
+     }
   },
   mounted() {
     this.exeName = this.$route.params.exeName
@@ -29,11 +42,24 @@ export default {
   methods: {
     ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes']),
     async refreshList() {
+      console.log(this.exeName,'查询调节')
+
       this.shortcutSchemeList = await this.loadShortcutSchemes(this.exeName)
+      if(this.settings.enableAutoEnter && this.shortcutSchemeList.length>0){
+          this.btnDetail(this.shortcutSchemeList[0])
+      }
     },
     createScheme(){
-      this.$router.push({name: 'shareKey'})
-    }
+      this.$router.push({name: 'shareKey',params:{
+        exeName:this.exeName
+        }})
+    },
+    btnDetail (item) {
+      this.setRecentlyUsedList(item)
+      this.$router.push({
+        name:'schemeDetail'
+      })
+    },
   }
 }
 </script>
@@ -72,8 +98,9 @@ export default {
       </div>
       <div>
         <div class="btn-item mt-3">
+          <div class="pointer" @click="createScheme"><plus-outlined /> 创建方案</div>
           <div class="pointer" @click="market">创意市场</div>
-          <div class="pointer" @click="share">我来分享</div>
+
           <span class="button-active pointer" @click="setShow = true">
                 <Icon icon="setting" style="width: 20px;height: 20px;color:var(--primary-text);"></Icon>
             </span>

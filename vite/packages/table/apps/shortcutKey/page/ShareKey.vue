@@ -1,22 +1,32 @@
 <template>
   <div class="p-3   box">
     <!-- 头部导航栏 -->
-    <div class="flex items-center justify-between">
-      <div class="flex">
+
+    <div class="flex    ">
+      <div class="flex flex-1">
         <div @click="onBack"
              class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="xiangzuo" style="font-size: 1.5em;color:var(--primary-text)"></Icon>
         </div>
-        <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
+        <div class="ml-3" style="font-size: 18px;line-height: 40px">关联软件： {{exeName}}</div>
       </div>
+
       <div class="flex btn-item">
         <div class="pointer" @click="bulkEdit">{{ bulkEditKey ? '完成编辑' : '批量编辑' }}</div>
-        <div class="pointer" @click="saveScheme">保存</div>
+        <div class="pointer" @click="doSaveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
           <div class="pointer xt-active-btn" @click="saveShare">保存并分享</div>
         </a-tooltip>
       </div>
+    </div>
+    <div class="flex mt-2 items-center justify-center">
+      <div>
+        {{totalKeys}}
+        <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
+      </div>
+
+
     </div>
     <!-- 基本信息 -->
     <div class="add-content" v-if="defaultNavType.name === 'message'">
@@ -263,6 +273,8 @@ export default {
   },
   data () {
     return {
+
+      exeName:'',//当前方案的应用名
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -307,9 +319,23 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList','currentApp'])
+    ...mapWritableState(keyStore, ['recentlyUsedList','currentApp']),
+    totalKeys(){
+      let sum=0
+      this.keyList.map(item => {
+        if (item.keys) {
+          if(item.keys.length>0){
+            sum ++
+          }
+
+        }
+        console.log(item.keys)
+      })
+      return sum
+    }
   },
   mounted () {
+    this.exeName=this.$route.params.exeName
     this.getData()
     this.$nextTick(() => {
       this.keyDrop()
@@ -317,7 +343,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty']),
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty','addScheme','saveScheme']),
     async getData () {
       if (this.$route.params.id) {
         this.paramsId = this.$route.params.id
@@ -336,6 +362,7 @@ export default {
         this.addShortcutKey()
       }else{
         this.applyName=this.currentApp.software.alias
+        this.icon=this.currentApp.software.icon
       }
     },
     //深拷贝
@@ -360,7 +387,7 @@ export default {
       this.delRecentlyEmpty({ keyList: this.keyList, id: this.paramsId })
     },
     // 保存
-    saveScheme () {
+    doSaveScheme () {
       if (!this.applyName) return message.info('名称不能为空')
       this.delNotData()
 
@@ -375,15 +402,15 @@ export default {
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
-        this.appContent.number = sum
-        this.setSchemeList(this.appContent)
+        this.appContent.number = this.keyList.length
+        this.saveScheme(this.appContent)
       } else {
         const time = new Date().valueOf()
         this.appContent = {
           id: nanoid(),  //唯一标识
-          icon: this.file.path, //方案的图片
+          icon: this.file.path || this.icon, //方案的图片
           name: this.applyName, //方案名称
-          number: sum, //快捷键总数
+          number: this.keyList.length, //快捷键总数
           commonUse: this.introduce, //方案简介
           avatar: '/icons/logo128.png', //方案人
           nickName: 'Victor Ruiz', //头像
@@ -395,9 +422,10 @@ export default {
           isMyCreate: true, //是否是自己创建
           isShare: false, //是否分享到社区
           isCommunity: false, //是否来自社区
-          keyList: this.keyList //快捷键列表
+          keyList: this.keyList, //快捷键列表
+          exeName:this.exeName,
         }
-        this.setShortcutKeyList(this.appContent)
+        this.addScheme(this.appContent,this.exeName)
       }
       message.success('成功保存')
       this.$router.go(-1)
@@ -1051,13 +1079,14 @@ export default {
   margin: 0 100px 0 48px;
   padding: 0 12px;
   width: 370px;
-  height: 22px;
-  text-align: right;
+
+  text-align: left;
   position: relative;
 }
 
 .note-val {
   position: relative;
+  text-align: left;
   top: -14px;
   font-size: 16px;
   color: var(--secondary-text);
@@ -1068,7 +1097,6 @@ export default {
   position: absolute;
   right: -100px;
   top: 0;
-  height: 22px;
   margin-left: 10px;
   border-right: solid rgba(255, 255, 255, 0.1) 1px;
 }

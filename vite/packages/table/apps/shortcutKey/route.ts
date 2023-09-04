@@ -2,6 +2,7 @@ import ShortcutIndex from './Index.vue'
 import SchemeList from './page/SchemeList.vue'
 import ShortcutKey from './ShortcutKey.vue'
 import ShareKey from "./page/ShareKey.vue"
+import SchemeDetail from './page/SchemeDetail.vue'
 export default {
   path: '/shortcutKey',
   name: 'shortcutIndex',
@@ -22,5 +23,10 @@ export default {
       name:'shareKey',
       component: ShareKey
     },
+    {
+      path:'/schemeDetail',
+      name:'schemeDetail',
+      component: SchemeDetail
+    }
   ]
 }

@@ -3337,7 +3337,11 @@ export const keyStore = defineStore("key", {
         children: []
       },
     ],
-    schemeList:[]
+    schemeList:[],
+    settings:{
+      enableAutoChange:true,
+      enableAutoEnter:true,
+    }
   }),
   actions: {
     async loadShortcutSchemes(exeName) {
@@ -3357,7 +3361,7 @@ export const keyStore = defineStore("key", {
           fields: ['exeName']
         }
       })
-      this.schemeList = (await tsbApi.db.find({
+     let rs = (await tsbApi.db.find({
         selector: map,
         sort: [
           {
@@ -3365,22 +3369,23 @@ export const keyStore = defineStore("key", {
           }
         ]
       })).docs
-      let schemes=[]
-      if(this.schemeList.length===0){
-        for (const scheme of keyData) {
-          let rs=await tsbApi.db.put({
-            _id: 'shortcut:scheme:'+Date.now(),
-            ...scheme
-          })
-          console.log(rs,'添加')
-          if(rs.ok){
-            schemes.push(rs.doc)
-          }
-        }
-        console.log(schemes,'方案列表')
 
-       // this.schemeList=[...keyData.concat()]
-      }
+      let schemes=rs
+      // if(this.schemeList.length===0){
+      //  //  for (const scheme of keyData) {
+      //  //    let rs=await tsbApi.db.put({
+      //  //      _id: 'shortcut:scheme:'+Date.now(),
+      //  //      ...scheme
+      //  //    })
+      //  //    console.log(rs,'添加')
+      //  //    if(rs.ok){
+      //  //      schemes.push(rs.doc)
+      //  //    }
+      //  //  }
+      //  // // console.log(schemes,'方案列表')
+      //
+      //  // this.schemeList=[...keyData.concat()]
+      // }
       return schemes
     },
     setRecentlyUsedList(item) {
@@ -3395,6 +3400,25 @@ export const keyStore = defineStore("key", {
           this.shortcutKeyList.splice(index, 1, item)
         }
       })
+    },
+    async saveScheme(scheme){
+      let rs = await tsbApi.db.put({
+        ...scheme
+      })
+      if (rs.ok) {
+        return rs.doc
+      }
+    },
+    async addScheme(scheme,exeName) {
+      let rs = await tsbApi.db.put({
+        _id: 'shortcut:scheme:' + Date.now(),
+        ...scheme,
+        exeName:exeName
+      })
+      console.log(rs.doc,'文档')
+      if (rs.ok) {
+        return rs.doc
+      }
     },
     setShortcutKeyList(item) {
       this.shortcutKeyList.push(JSON.parse(JSON.stringify(item)))

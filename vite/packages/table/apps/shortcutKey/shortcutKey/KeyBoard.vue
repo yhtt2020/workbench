@@ -2,7 +2,7 @@
   <div class="prompt-modal xt-mask">
     <div class="xt-modal box">
       <div class="box-head">
-        <span class="title">选择需要的组合健</span>
+        <div class="title">选择需要的组合健</div>
         <div @click="onBack" class="head-icon xt-text">
           <Icon icon="guanbi" style="font-size: 1.5em;"></Icon>
         </div>
@@ -12,11 +12,11 @@
           <div>
             <span class="title">修饰键1</span>
             <div class="key-box mt-6">
-              <div v-for="(item, index) in modifierKeyOne" 
-                :key="item" 
-                :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
-                @click="onKeyDown(item, index, 'modifierKeyOne')" 
-                class="key-item">
+              <div v-for="(item, index) in modifierKeyOne"
+                   :key="item"
+                   :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
+                   @click="onKeyDown(item, index, 'modifierKeyOne')"
+                   class="key-item">
                 {{ item.key }}
               </div>
             </div>
@@ -24,42 +24,43 @@
           <div>
             <span class="title">修饰键2</span>
             <div class="key-box mt-6">
-              <div v-for="(item, index) in modifierKeyTwo" 
-                :key="item"
-                :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
-                @click="onKeyDown(item, index, 'modifierKeyTwo')" 
-                class="key-item px-3">
+              <div v-for="(item, index) in modifierKeyTwo"
+                   :key="item"
+                   :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
+                   @click="onKeyDown(item, index, 'modifierKeyTwo')"
+                   class="key-item px-3">
                 {{ item.key }}
               </div>
             </div>
           </div>
         </div>
         <div class="box-right">
-          <span class="title">键盘</span>
-          <div class="key-box mt-6">
-            <div v-for="(item, index) in keyList[0]" 
-              :key="item" 
-              :class="item.checked ? 'xt-active-btn':'' "
-              @click="onKeyDown(item, index, 'keyList[0]')" 
-              class="key-item w-11">
+          <div class="title mb-1">快捷键</div>
+          <div class="key-box ">
+            <div v-for="(item, index) in keyList[0]"
+                 :key="item"
+                 :class="item.checked ? 'xt-active-btn':'' "
+                 @click="onKeyDown(item, index, 'keyList[0]')"
+                 class="key-item w-11">
+              {{ item.key }}
+            </div>
+          </div>
+          <div class="title mb-1">字母</div>
+          <div class="key-box ">
+            <div v-for="(item, index) in keyList[1]"
+                 :key="item"
+                 :class="item.checked ? 'xt-active-btn':'' "
+                 @click="onKeyDown(item, index, 'keyList[1]')"
+                 class="key-item w-11">
               {{ item.key }}
             </div>
           </div>
           <div class="key-box">
-            <div v-for="(item, index) in keyList[1]" 
-              :key="item" 
-              :class="item.checked ? 'xt-active-btn':'' "
-              @click="onKeyDown(item, index, 'keyList[1]')" 
-              class="key-item w-11">
-              {{ item.key }}
-            </div>
-          </div>
-          <div class="key-box">
-            <div v-for="(item, index) in keyList[2]" 
-              :key="item" 
-              :class="item.checked ? 'xt-active-btn':'' "
-              @click="onKeyDown(item, index, 'keyList[2]')" 
-              class="key-item px-3">
+            <div v-for="(item, index) in keyList[2]"
+                 :key="item"
+                 :class="item.checked ? 'xt-active-btn':'' "
+                 @click="onKeyDown(item, index, 'keyList[2]')"
+                 class="key-item px-3">
               {{ item.key }}
             </div>
           </div>
@@ -84,9 +85,10 @@
 </template>
 
 <script>
-import { message } from 'ant-design-vue';
+import { message } from 'ant-design-vue'
+
 export default {
-  name: "KeyBoard",
+  name: 'KeyBoard',
   props: {
     //需要修改的内容
     selectKey: {
@@ -98,78 +100,78 @@ export default {
       defalut: () => []
     }
   },
-  data() {
+  data () {
     return {
       modifierKeyOne: [
         {
-          key:'Ctrl',
+          key: 'Ctrl',
           checked: false,
           isGray: false,
         },
         {
-          key:'Space',
+          key: 'Space',
           checked: false,
           isGray: false,
         },
         {
-          key:'Shift',
+          key: 'Shift',
           checked: false,
           isGray: false,
         },
         {
-          key:'Tab',
+          key: 'Tab',
           checked: false,
           isGray: false,
         },
         {
-          key:'Win',
+          key: 'Win',
           checked: false,
           isGray: false,
         },
         {
-          key:'Fn',
+          key: 'Fn',
           checked: false,
           isGray: false,
         },
         {
-          key:'Alt',
+          key: 'Alt',
           checked: false,
           isGray: false,
         }
       ],
       modifierKeyTwo: [
         {
-          key:'Ctrl',
+          key: 'Ctrl',
           checked: false,
           isGray: false,
         },
         {
-          key:'Space',
+          key: 'Space',
           checked: false,
           isGray: false,
         },
         {
-          key:'Shift',
+          key: 'Shift',
           checked: false,
           isGray: false,
         },
         {
-          key:'Tab',
+          key: 'Tab',
           checked: false,
           isGray: false,
         },
         {
-          key:'Win',
+          key: 'Win',
           checked: false,
           isGray: false,
         },
         {
-          key:'Fn',
+          key: 'Fn',
           checked: false,
           isGray: false,
         },
         {
-          key:'Alt',
+          key: 'Alt',
           checked: false,
           isGray: false,
         }
@@ -177,153 +179,240 @@ export default {
       keyList: [
         [
           {
-            key:'A',
+            key: 'ESC',
             checked: false,
           },
           {
-            key:'B',
+            key: 'F1',
             checked: false,
           },
           {
-            key:'C',
+            key: 'F2',
             checked: false,
           },
           {
-            key:'D',
+            key: 'F3',
             checked: false,
           },
           {
-            key:'E',
+            key: 'F4',
             checked: false,
           },
           {
-            key:'F',
+            key: 'F5',
             checked: false,
           },
           {
-            key:'G',
+            key: 'F6',
             checked: false,
           },
           {
-            key:'H',
+            key: 'F7',
             checked: false,
           },
           {
-            key:'I',
+            key: 'F8',
             checked: false,
           },
           {
-            key:'J',
+            key: 'F9',
             checked: false,
           },
           {
-            key:'K',
+            key: 'F10',
             checked: false,
           },
           {
-            key:'L',
+            key: 'F11',
             checked: false,
           },
           {
-            key:'M',
+            key: 'F12',
             checked: false,
           },
           {
-            key:'N',
-            checked: false,
-          },{
-            key:'O',
+            key: '1',
             checked: false,
           },
           {
-            key:'P',
+            key: '2',
+            checked: false,
+          }, {
+          key: '3',
+          checked: false,
+        },
+          {
+            key: '4',
             checked: false,
           },
           {
-            key:'Q',
+            key: '5',
             checked: false,
           },
           {
-            key:'R',
+            key: '6',
             checked: false,
           },
           {
-            key:'S',
+            key: '7',
             checked: false,
           },
           {
-            key:'T',
+            key: '8',
             checked: false,
           },
           {
-            key:'U',
+            key: '9',
             checked: false,
-          },{
-            key:'V',
+          }, {
+          key: '0',
+          checked: false,
+        },
+          {
+            key: 'Home',
             checked: false,
           },
           {
-            key:'W',
+            key: 'End',
             checked: false,
           },
           {
-            key:'X',
+            key: 'PgUp',
             checked: false,
           },
           {
-            key:'Y',
+            key: 'PgDn',
             checked: false,
           },
           {
-            key:'Z',
+            key: 'Pause',
+            checked: false,
+          },
+          {
+            key: 'Insert',
+            checked: false,
+          },
+          {
+            key: 'Del',
+            checked: false,
+          },
+          {
+            key: 'PrtSc',
+            checked: false,
+          }
+        ],
+        [
+          {
+            key: 'A',
+            checked: false,
+          },
+          {
+            key: 'B',
+            checked: false,
+          },
+          {
+            key: 'C',
+            checked: false,
+          },
+          {
+            key: 'D',
+            checked: false,
+          },
+          {
+            key: 'E',
+            checked: false,
+          },
+          {
+            key: 'F',
+            checked: false,
+          },
+          {
+            key: 'G',
+            checked: false,
+          },
+          {
+            key: 'H',
+            checked: false,
+          },
+          {
+            key: 'I',
+            checked: false,
+          },
+          {
+            key: 'J',
+            checked: false,
+          },
+          {
+            key: 'K',
+            checked: false,
+          },
+          {
+            key: 'L',
+            checked: false,
+          },
+          {
+            key: 'M',
+            checked: false,
+          },
+          {
+            key: 'N',
+            checked: false,
+          }, {
+          key: 'O',
+          checked: false,
+        },
+          {
+            key: 'P',
+            checked: false,
+          },
+          {
+            key: 'Q',
+            checked: false,
+          },
+          {
+            key: 'R',
+            checked: false,
+          },
+          {
+            key: 'S',
+            checked: false,
+          },
+          {
+            key: 'T',
+            checked: false,
+          },
+          {
+            key: 'U',
+            checked: false,
+          }, {
+          key: 'V',
+          checked: false,
+        },
+          {
+            key: 'W',
+            checked: false,
+          },
+          {
+            key: 'X',
+            checked: false,
+          },
+          {
+            key: 'Y',
+            checked: false,
+          },
+          {
+            key: 'Z',
             checked: false,
           },
         ],
         [
+
           {
-            key:'1',
+            key: '[',
             checked: false,
           },
           {
-            key:'2',
-            checked: false,
-          },{
-            key:'3',
-            checked: false,
-          },
-          {
-            key:'4',
-            checked: false,
-          },
-          {
-            key:'5',
-            checked: false,
-          },
-          {
-            key:'6',
-            checked: false,
-          },
-          {
-            key:'7',
-            checked: false,
-          },
-          {
-            key:'8',
-            checked: false,
-          },
-          {
-            key:'9',
-            checked: false,
-          },{
-            key:'0',
-            checked: false,
-          },
-          {
-            key:'[',
-            checked: false,
-          },
-          {
-            key:']',
+            key: ']',
             checked: false,
           },
           {
@@ -331,22 +420,22 @@ export default {
             checked: false,
           },
           {
-            key:';',
+            key: ';',
             checked: false,
           },
           {
-            key:'‘',
+            key: '‘',
             checked: false,
           },
           {
-            key:',',
+            key: ',',
             checked: false,
-          },{
-            key:'.',
-            checked: false,
-          },
+          }, {
+          key: '.',
+          checked: false,
+        },
           {
-            key:'/',
+            key: '/',
             checked: false,
           },
           {
@@ -354,29 +443,29 @@ export default {
             checked: false,
           },
           {
-            key:'=',
+            key: '=',
             checked: false,
           },
         ],
         [
           {
-            key:'Up',
+            key: 'Up',
             checked: false,
           },
           {
-            key:'Down',
+            key: 'Down',
             checked: false,
           },
           {
-            key:'Left',
+            key: 'Left',
             checked: false,
           },
           {
-            key:'Right',
+            key: 'Right',
             checked: false,
           },
           {
-            key:'Back',
+            key: 'Back',
             checked: false,
           },
         ]
@@ -385,38 +474,38 @@ export default {
       keyContent: {}
     }
   },
-  mounted(){
-    this.keyContent = this.deepClone(this.selectKey,this.keyContent)
+  mounted () {
+    this.keyContent = this.deepClone(this.selectKey, this.keyContent)
     this.keyContent.keyArr.forEach(item => {
-      this.isKeyChecked(item.field,item.index,true)
+      this.isKeyChecked(item.field, item.index, true)
     })
   },
   methods: {
     //深拷贝
-    deepClone(obj, newObj) {
-        var newObj = newObj || {};
-        for (let key in obj) {
-          if (typeof obj[key] == 'object') {
-            newObj[key] = (obj[key].constructor === Array) ? [] : {}
-            this.deepClone(obj[key], newObj[key]);
-          } else {
-            newObj[key] = obj[key]
-          }
+    deepClone (obj, newObj) {
+      var newObj = newObj || {}
+      for (let key in obj) {
+        if (typeof obj[key] == 'object') {
+          newObj[key] = (obj[key].constructor === Array) ? [] : {}
+          this.deepClone(obj[key], newObj[key])
+        } else {
+          newObj[key] = obj[key]
         }
-        return newObj;
+      }
+      return newObj
     },
     // 取消
-    onBack(){
+    onBack () {
       this.keyContent = []
       this.$emit('closeKeyBoard')
     },
     // 确定
-    confirm(){
+    confirm () {
       // if(!this.keyContent.keyArr.length) return message.info('不能为空')
-      if(!this.keyContent.keyArr.length){
+      if (!this.keyContent.keyArr.length) {
         this.keyContent.keyStr = '?'
-        this.keyContent.keys.splice(0,this.keyContent.keys.length,'?')
-        this.$emit('saveKey',this.keyContent)
+        this.keyContent.keys.splice(0, this.keyContent.keys.length, '?')
+        this.$emit('saveKey', this.keyContent)
         this.$emit('closeKeyBoard')
         return
       }
@@ -433,18 +522,18 @@ export default {
       let retArr = this.parentKeyList.find(item => {
         return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
       })
-      if(retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
-      this.$emit('saveKey',this.keyContent)
+      if (retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
+      this.$emit('saveKey', this.keyContent)
       this.$emit('closeKeyBoard')
-      
+
     },
     // 按键
-    onKeyDown(item, index, field){
+    onKeyDown (item, index, field) {
       let flag = false // 阻止触发改变数据操作
-      let isChecked = true 
+      let isChecked = true
 
       //置灰不能点击
-      if(item.isGray){
+      if (item.isGray) {
         return
       }
 
@@ -455,11 +544,11 @@ export default {
       //选择数不能大于三
       flag = this.keyContent.keyArr.length >= 3
       // 再次点击选择的【取消选择】
-      if(hasKeyIndex != -1){
+      if (hasKeyIndex != -1) {
         flag = false
       }
 
-      if(flag){
+      if (flag) {
         message.info('最多选择三个快捷按钮')
         return
       }
@@ -470,7 +559,7 @@ export default {
         key: item.key
       }
       // 移除已存在
-      if(hasKeyIndex != -1){
+      if (hasKeyIndex != -1) {
         isChecked = false
         this.isKeyChecked(
           this.keyContent.keyArr[hasKeyIndex].field,
@@ -478,150 +567,167 @@ export default {
           isChecked
         )
         this.keyContent.keyArr.splice(hasKeyIndex, 1)
-      }else{
+      } else {
         this.keyContent.keyArr.push(keyItem)
         isChecked = true
-        this.isKeyChecked(field,index,isChecked)
+        this.isKeyChecked(field, index, isChecked)
       }
     },
     // 设置是否选中
-    isKeyChecked(field,index,isChecked){
-      switch(field){
+    isKeyChecked (field, index, isChecked) {
+      switch (field) {
         case 'modifierKeyOne':
           this.modifierKeyOne[index].checked = isChecked
           this.modifierKeyTwo[index].isGray = isChecked
-          break;
+          break
         case 'modifierKeyTwo':
           this.modifierKeyTwo[index].checked = isChecked
           this.modifierKeyOne[index].isGray = isChecked
-          break;
+          break
         case 'keyList[0]':
           this.keyList[0][index].checked = isChecked
-          break;
+          break
         case 'keyList[1]':
           this.keyList[1][index].checked = isChecked
-          break;
+          break
         case 'keyList[2]':
           this.keyList[2][index].checked = isChecked
-          break;
+          break
       }
     }
   },
 }
 </script>
 <style lang="scss" scoped>
-   .prompt-modal{
-    position: absolute;
-    top:0;
-    bottom:0;
-    right:0;
-    left:0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .box{
-    // width: 74%;
-    width: 942px;
-    height: 634px;
-    overflow: auto;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    .box-head{
-      height: 85px;
-      line-height: 72px;
-      .head-icon{
-        cursor: pointer;
-        height: 48px;
-        width: 48px;
-        display: flex;
-        align-items: center;
-        border-radius: 12px;
-        justify-content: center;
-        margin-right: 12px;
-        position: absolute;
-        background: var(--secondary-bg);
-        top: 12px;
-        right: 18px;
-      }
-    }
-    .box-body{
-      width: 92%;
+.prompt-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 111;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  // width: 74%;
+  width: 950px;
+  height: 634px;
+  overflow: auto;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+
+  .box-head {
+    height: 85px;
+    line-height: 50px;
+
+    .head-icon {
+      cursor: pointer;
+      height: 48px;
+      width: 48px;
       display: flex;
-      justify-content: space-between;
-      .box-left{
-        width: 30%;
-      }
-      .key-box{
-          display: flex;
-          flex-wrap: wrap;
-          color: var(--primary-text);
-          .key-item{
-            background: var(--secondary-bg);
-            border-radius: 8px;
-            height: 44px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 12px 12px 0;
-            padding: 0 10px;
-            min-width: 44px;
-          }
-          .text-gray{
-            opacity: 0.3;
-          }
-        }
-      .box-right{
-        width: 66%;
-      }
+      align-items: center;
+      border-radius: 12px;
+      justify-content: center;
+      margin-right: 12px;
+      position: absolute;
+      background: var(--secondary-bg);
+      top: 12px;
+      right: 18px;
     }
-    .box-foot{
-      width: 100%;
-      font-size: 16px;
-      margin: 24px 0;
+  }
+
+  .box-body {
+    width: 92%;
+    display: flex;
+    justify-content: space-between;
+
+    .box-left {
+      width: 30%;
+    }
+
+    .key-box {
+      display: flex;
+      flex-wrap: wrap;
       color: var(--primary-text);
-      .active{
+
+      .key-item {
+        background: var(--secondary-bg);
+        border-radius: 8px;
+        height: 44px;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 48px;
-        .key-item{
-          background: var(--active-bg);
-          color: var(--active-text);
-          border-radius: 8px;
-          height: 44px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-align: justify;
-          text-align-last: justify;
-        }
+        margin: 0 12px 12px 0;
+        padding: 0 10px;
+        min-width: 44px;
       }
-      .btn-box{
+
+      .text-gray {
+        opacity: 0.3;
+      }
+    }
+
+    .box-right {
+      width: 66%;
+    }
+  }
+
+  .box-foot {
+    width: 100%;
+    font-size: 16px;
+    margin: 12px 0;
+    color: var(--primary-text);
+
+    .active {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 48px;
+
+      .key-item {
+        background: var(--active-bg);
+        color: var(--active-text);
+        border-radius: 8px;
+        height: 44px;
         display: flex;
         justify-content: center;
-        margin-top: 24px;
-        >div{
-          background: var(--secondary-bg);
-          border-radius: 12px;
-          width: 120px;
-          height: 48px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+        align-items: center;
+        text-align: justify;
+        text-align-last: justify;
       }
     }
-    .title{
-      font-size: 16px;
-      color: var(--primary-text);
+
+    .btn-box {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+
+      > div {
+        background: var(--secondary-bg);
+        border-radius: 12px;
+        width: 120px;
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
-  .box::-webkit-scrollbar{
-    display: none;
+
+  .title {
+    font-size: 16px;
+    color: var(--primary-text);
   }
+}
+
+.box::-webkit-scrollbar {
+  display: none;
+}
 </style>

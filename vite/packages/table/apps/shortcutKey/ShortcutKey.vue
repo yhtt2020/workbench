@@ -79,7 +79,7 @@
   </a-drawer>
   <!-- 快捷键详情 -->
 
-  <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
+
 </template>
 
 <script>
