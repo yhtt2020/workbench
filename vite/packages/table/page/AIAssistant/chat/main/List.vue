@@ -21,7 +21,10 @@
         </div>
       </div>
       <div v-else>
-        <div class="inline-block text-base xt-bg-2 rounded-xl mr-10">
+        <div
+          class="inline-block text-base xt-bg-2 rounded-xl mr-10"
+
+        >
           <GPT :content="item.content"></GPT>
         </div>
         <xt-button

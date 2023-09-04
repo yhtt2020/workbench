@@ -54,7 +54,7 @@
 
 
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
-                         :customData="item.customData" :editing="editing" @customEvent="customEvent"></component>
+                         :customData="item.customData" :editing="editing"></component>
             </div>
             <div
               :class="{editing:editing}"
@@ -167,10 +167,9 @@
       <div>
         <a-input v-model:value="currentDesk.name"></a-input>
       </div>
-
       <div class="my-3" style="font-size: 1.2em;font-weight: bold;">
         独立缩放：
-        <div class="line" style="font-size: 14px;font-weight: normal">
+        <div class="line xt-text-2" style="font-size: 14px;font-weight: normal">
           开启独立缩放后，将不再使用通用桌面设置中的缩放设置。
         </div>
         <a-switch v-model:checked="settings.enableZoom" @change="update"></a-switch>
@@ -195,6 +194,7 @@
     </template>
     <template v-else>
       <div class="line-title">卡片设置：</div>
+
       <template v-if="settings.enableZoom">
         <div class="mb-2" style="color:orangered">
           <icon icon="tishi-xianxing"></icon>

@@ -1,44 +1,107 @@
 <template>
   <!-- 动态头部 -->
-  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 70px">
-    <template v-for="item in list.slice(0, last)">
-      <slot :name="item.slot" v-if="item.slot"> </slot>
-      <Item @itemClick="iconClick" :item="item">
-        <template #default>
-          <slot :name="item.slot">{{ item.slot }} </slot>
-        </template>
-      </Item>
+  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px">
+    <template v-for="item in newList.slice(0, last)">
+      <div
+        @click="iconSelectClick(item.id, item.flag)"
+        class="xt-base-btn mb-2"
+        style="width: 50px; height: 50px; border-radius: 14px"
+        :style="[
+          item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
+        ]"
+      >
+        <div
+          v-if="item.slot"
+          style="width: 40px; height: 40px; border-radius: 10px"
+          class="xt-bg xt-base-btn"
+        >
+          <slot :name="item.slot"> </slot>
+        </div>
+        <Item :item="item" v-else>
+          <template #default>
+            <slot :name="item.slot">{{ item.slot }} </slot>
+          </template>
+        </Item>
+      </div>
     </template>
 
     <!-- 动态适中 -->
     <div
-      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center mb-3"
+      class="xt-scrollbar xt-container h-full xt-bt py-1 xt-bm flex flex-col items-center"
     >
-      <template v-for="item in list.slice(last, -1 * end)">
-        <slot :name="item.slot" v-if="item.slot"> </slot>
-        <Item @itemClick="iconClick" :item="item">
-          <template #default>
+      <vue-custom-scrollbar :settings="scrollerSettings" style="height:100%">
+        <div style="height: auto">
+
+
+      <template v-for="item in newList.slice(last, -1 * end)">
+        <a-tooltip :title="item.title" placement="right">
+        <div
+          @click="iconSelectClick(item.id, item.flag)"
+          class="xt-base-btn mb-2"
+          style="width: 50px; height: 50px; border-radius: 14px"
+          :style="[
+            item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
+          ]"
+        >
+          <div
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
+          >
             <slot :name="item.slot"> </slot>
-          </template>
-        </Item>
+          </div>
+          <Item :item="item" v-else w="40">
+            <template #default>
+              <slot :name="item.slot">{{ item.slot }} </slot>
+            </template>
+          </Item>
+        </div>
+        </a-tooltip>
       </template>
+        </div>
+      </vue-custom-scrollbar>
     </div>
     <!-- 底部循环 -->
-
-    <template v-for="item in list.slice(-1 * end)">
-      <Item @itemClick="iconClick" :item="item">
-        <template #default>
+    <template v-for="item in newList.slice(-1 * end)">
+      <div
+        @click="iconSelectClick(item.id, item.flag)"
+        class="xt-base-btn mt-2"
+        style="width: 50px; height: 50px; border-radius: 14px"
+        :style="[
+          item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
+        ]"
+      >
+        <div
+          v-if="item.slot"
+          style="width: 40px; height: 40px; border-radius: 10px"
+          class="xt-bg xt-base-btn"
+        >
           <slot :name="item.slot"> </slot>
-        </template>
-      </Item>
+        </div>
+        <Item :item="item" v-else>
+          <template #default>
+            <slot :name="item.slot">{{ item.slot }} </slot>
+          </template>
+        </Item>
+      </div>
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Item from "./Item.vue";
+import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 const props = defineProps({
+  scrollerSettings: {
+    default: {
+      useBothWheelAxes: true,
+      swipeEasing: true,
+      suppressScrollY: false,
+      suppressScrollX: true,
+      wheelPropagation: true
+    }
+  },
   config: {
     default: () => {
       return {
@@ -52,6 +115,9 @@ const props = defineProps({
   },
   end: {
     default: 1,
+  },
+  index: {
+    default: 0,
   },
   modelValue: {},
   list: {
@@ -100,11 +166,24 @@ const props = defineProps({
     },
   },
 });
-const currentIndex = ref(props.list[0].icon);
 
-const iconClick = (item, flag) => {
-  if (!flag) currentIndex.value = item.icon;
-  item.callBack && item.callBack(item);
+const newList = computed(() => {
+  let id = -1;
+  let res = props.list.map((item) => {
+    id++;
+    return {
+      id,
+      ...item,
+    };
+  });
+  return res;
+});
+const emit = defineEmits(["index"])
+const currentIndex = ref(props.index);
+const iconSelectClick = (id, flag) => {
+  if (flag) return;
+  currentIndex.value = id;
+  emit('update:index',id)
 };
 </script>
 
@@ -112,5 +191,17 @@ const iconClick = (item, flag) => {
 .box {
   border: 4px solid var(--active-bg) !important;
   border-radius: 12px;
+}
+.anticon {
+  width: 999px !important;
+  color: red !important;
+}
+:deep(.anticon) {
+  // border: 3px solid none;
+
+  font-size: 20px;
+}
+:deep(.ps__rail-y){
+  display: none;
 }
 </style>

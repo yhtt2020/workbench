@@ -7,6 +7,9 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
+  <!-- <List :chatList="currentList"></List>
+
+  <Text @onSearch="onSearch" :isSearch="isSearch"></Text> -->
 </template>
 <script>
 import Text from "./Text.vue";
@@ -16,6 +19,7 @@ import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
 import { gpt } from "../../service/api/ai";
 import { message } from "ant-design-vue";
+import { getStreamData } from "./api";
 export default {
   computed: {
     ...mapWritableState(aiStore, [
@@ -27,7 +31,7 @@ export default {
       "count",
     ]),
     currentList() {
-      if (this.selectTopicIndex == -1) return [];
+      if (this.selectTopicIndex === -1) return [];
       return this.chatList[this.selectTopicIndex];
     },
   },
@@ -43,6 +47,14 @@ export default {
       flag: false,
     };
   },
+  mounted() {
+    let search = this.$route.params.value;
+    if (search) {
+      this.addTopic();
+      this.onSearch(search);
+    }
+    console.log("123 :>> ", this.$route.params.value);
+  },
   methods: {
     ...mapActions(aiStore, ["addTopic"]),
     check() {
@@ -52,15 +64,16 @@ export default {
       }
       return false;
     },
-    async onSearch(serach) {
+    async onSearch(search) {
       if (this.check()) return;
       this.isSearch = false;
-      this.selectTopicIndex == -1;
-      if (this.selectTopicIndex == -1) {
+      //this.selectTopicIndex == -1;
+      if (this.selectTopicIndex === -1) {
         this.addTopic();
       }
+      console.log(this.selectTopicIndex,'选中的索引', this.chatList)
       let user = {
-        content: serach,
+        content: search,
         role: "user",
         time: Date.now(),
         id: Date.now(),
@@ -79,18 +92,17 @@ export default {
         });
       await this.processGPTResults(arr);
       this.isSearch = true;
-      tsbApi.db.put({
-        _id: `gpt:${this.selectTopicIndex}`,
-        content: this.chatList[this.selectTopicIndex],
-        updateTime: Date.now(),
-      });
-      let res = await tsbApi.db.allDocs([`gpt:${this.selectTopicIndex}`]);
-      console.log("res :>> ", res);
+      // tsbApi.db.put({
+      //   _id: `gpt:${this.selectTopicIndex}`,
+      //   content: this.chatList[this.selectTopicIndex],
+      //   updateTime: Date.now(),
+      // });
+      // let res = await tsbApi.db.allDocs([`gpt:${this.selectTopicIndex}`]);
+      // console.log("res :>> ", res);
     },
     async processGPTResults(arr) {
       // 获取聊天机器人的回复
-      for await (const result of gpt(arr)) {
-        console.log("result :>> ", result);
+      for await (const result of getStreamData(arr)) {
         if (result.value) {
           message.error(result.value.error.message);
           return;
@@ -117,7 +129,6 @@ export default {
           this.chatList[this.selectTopicIndex].push(assistant);
         }
       }
-      console.log("结束了 :>> ");
     },
   },
 };

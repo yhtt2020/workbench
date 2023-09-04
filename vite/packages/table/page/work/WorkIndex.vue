@@ -1,7 +1,11 @@
 <template>
-  <div class="flex flex-row ml-1" style="height: 100%;width: 100%">
+  <div
+    :class="{'ml-1':!fullScreen}"
+    class="flex flex-row" style="height: 100%;width: 100%">
 <SecondPanel @changeTab="changeTab" v-if="!fullScreen"  :menus="tabs"></SecondPanel>
-  <div class="flex-1 ml-2 content-view mb-2" style="padding-top: 1em;height: 99%;display: flex;flex-direction: column;width: 0">
+  <div
+    :class="{'ml-2':!fullScreen,'height':fullScreen?'100%':'99%','padding-top':fullScreen?'0':'1em'}"
+    class="flex-1 content-view " style="display: flex;flex-direction: column;width: 0">
     <router-view></router-view>
   </div>
   </div>
@@ -51,6 +55,14 @@ export default defineComponent({
           icon:'xiangmu',
           route:{
             name:'clipboard'
+          }
+        },
+        {
+          title:'待办',
+          name:'todo',
+          icon:'check-square',
+          route:{
+            name:'todo'
           }
         }
       ]

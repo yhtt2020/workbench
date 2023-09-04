@@ -1,7 +1,5 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
-import {compareTime, randomData, sendRequest} from '../js/axios/api'
-import {nanoid} from "nanoid";
 import {steamProtocol} from "../js/common/game";
 import cache from "../components/card/hooks/cache";
 const {steamUser, steamSession, path, https, steamFs} = $models
@@ -13,6 +11,7 @@ window.client = client
 // @ts-ignore
 export const steamUserStore = defineStore("steamUser", {
   state: () => ({
+
     runningGame:{},
     recentGameList:[],
     settings:{
