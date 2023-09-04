@@ -38,12 +38,8 @@
             </div>
           </div>
 
-
-          <!-- <div class="h-10 ml-10 pointer rounded-lg flex items-center justify-center button-active" 
-           style="color: var(--active-text);background: var(--active-bg);width:96px;"
-          >
-           加入
-          </div> -->
+          <XtButton v-if="isGroup" style="width: 96px;background: var(--active-secondary-bg);" @click="quitGroup(item.groupID)">已加入</XtButton>
+          <XtButton v-else style="width: 96px;background: var(--active-bg);" @click="addGroup(item.groupID)">加入</XtButton>
         </div>
       </div>
     </div> 
@@ -83,11 +79,11 @@ export default defineComponent({
    groupList:[],  // 接收推荐群数据
    simpleImage:'/img/state/null.png', // 空状态数据
    total:'200',
-   relationship: 'unload'
+   relationship: 'unload',
+   memberList:[],  // 接收群成员数据
   })
 
   const findStore = appStore()
-  
 
   const setReferredUsers = async () =>{  // 获取发现用户数据
    const refList = {
@@ -137,29 +133,50 @@ export default defineComponent({
     }
   }
 
-  const isGroup = computed(()=>{
-  
-    // return this.members.some(member => member.userId === this.userId);
-  })
+
+  const getMemeber = async () =>{  // 获取群成员数据
+    for(let i=0;i<data.group.length;i++){
+      const option = {
+        groupID:data.group[i].groupID,
+        count:100,
+        offset:0,
+      }
+      const res = await window.$chat.getGroupMemberList(option)
+      data.memberList = res.data.memberList
+    }
+  }
  
   const updateRelationship = (e) =>{
     data.relationship = e.relationship
   }
-
   
+  const isGroup = computed( () =>{
+    const uid = findStore.$state.userInfo.uid
+    return data.memberList.some(member => parseInt(member.userID) === uid);
+  })
+  
+  const addGroup = async (id) =>{  // 加入推荐群聊
+    const option = {
+      groupID:id,
+    }
+    await window.$chat.joinGroup(option)
+  }
 
+  const quitGroup = async (id) =>{  // 退出群聊
+    await window.$chat.quitGroup(`${id}`)
+  }
 
   onMounted(()=>{
    setReferredUsers()
-   nextTick(()=>{
-    getReferData()
-   })
+   getReferData()
+   getMemeber()
   })
 
   return {
-   serverCache,isLoading,isGroup,
+   serverCache,isLoading, isGroup,
    ...toRefs(data),setReferredUsers,
    getReferData,updateRelationship,
+   getMemeber,quitGroup,addGroup
   }
  }
 })
