@@ -1,5 +1,6 @@
 <template>
   <div class="xt-bg px-6 box">
+    {{ currentWindow }}
     <!-- 头部导航 -->
     <div class="flex items-center justify-between" style="height: 96px;">
       <div @click="onBack" class="pointer flex items-center rounded-lg justify-center"
@@ -35,10 +36,11 @@
 
 <script>
 import MarketList from './MarketList.vue'
-import Search from '../../../components/Search.vue'
-import NavMenu from '../../../components/NavMenu.vue'
+import Search from '../../components/Search.vue'
+import NavMenu from '../../components/NavMenu.vue'
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../../store/key'
+import { keyStore } from '../../store/key'
+
 export default {
   name: "CreativeMarket",
   components: {
@@ -48,6 +50,7 @@ export default {
   },
   data() {
     return {
+
       tab: '',
       gallery: false,
       select: 0,
@@ -582,6 +585,7 @@ export default {
   mounted(){
     // this.$router.push({name: 'marketList'})
   },
+
 }
 </script>
 <style lang="scss" scoped>
