@@ -8,7 +8,8 @@ import * as sns from '../../js/common/sns'
 export default {
   name: "AddFriendButton",
   props: [
-    'uid'
+    'uid',
+    'bgColor',
   ],
   emits: ['loaded', 'relationshipChanged'],
   computed: {
@@ -90,7 +91,7 @@ export default {
     <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
     加为好友
   </XtButton>
-  <XtButton @click="deleteFriend" v-else-if="relationship==='yes'" style="width: 100%"
+  <XtButton @click="deleteFriend" v-else-if="relationship==='yes'" style="width: 100%;" :style="bgColor"
             class="rounded-full w-full">
     <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
     解除好友

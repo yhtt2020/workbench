@@ -16,16 +16,15 @@
     <div class="flex flex-col">
       <span class="font-16 mb-6" style="color:var(--primary-text);">推荐用户</span>
       <div class="flex grid grid-cols-2 gap-4 mb-6">
-       <div v-for="item in refUser" class="flex items-center px-4 justify-between py-5 rounded-xl" style="background: var(--secondary-bg);">
+       <div v-for="item in refUser" class="flex items-center px-4 justify-between py-5 rounded-xl" style="width:400px;background: var(--secondary-bg);">
         <div class="flex items-center">
          <a-avatar :src="item.avatar" :size="48"></a-avatar>
          <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.nickname }}</span>
         </div>
-        <div class="h-10 rounded-lg pointer flex items-center justify-center button-active" 
-         style="color: var(--active-text);background: var(--active-bg);width:96px;"
+        <AddFriendButton  :uid="item.uid"  :key="item.uid" @relationshipChanged="updateRelationship"
+          :bgColor="{background:'var(--active-secondary-bg)'}"
         >
-          加为好友
-        </div>
+        </AddFriendButton>
        </div>
       </div>
       <span class="font-16 mb-6" style="color:var(--primary-text);">推荐群聊</span>
@@ -38,11 +37,13 @@
               <span class="pl-4 font-16" style="color:var(--primary-text)">{{ total }}人</span>
             </div>
           </div>
-          <div class="h-10 ml-10 pointer rounded-lg flex items-center justify-center button-active" 
+
+
+          <!-- <div class="h-10 ml-10 pointer rounded-lg flex items-center justify-center button-active" 
            style="color: var(--active-text);background: var(--active-bg);width:96px;"
           >
            加入
-          </div>
+          </div> -->
         </div>
       </div>
     </div> 
@@ -52,12 +53,15 @@
 </template>
 
 <script>
-import { defineComponent,onMounted,reactive,toRefs,nextTick, ref,watch } from 'vue'
+import { defineComponent,onMounted,reactive,toRefs,nextTick, ref,watch, computed } from 'vue'
 import { appStore } from '../../../store'
 import { serverCache } from '../../../js/axios/serverCache'
-
+import AddFriendButton from '../../../components/sns/AddFriendButton.vue'
 
 export default defineComponent({
+ components:{
+  AddFriendButton
+ }, 
  setup () {
   const isLoading = ref(0) // 根据这个来判断第一次加载数据返回undefined
 
@@ -75,10 +79,11 @@ export default defineComponent({
     // {groupID:'trade'},{groupID:'developer'},{groupID:'3dprint'},{groupID:'screen_diy'},
     // {groupID:'player'},{groupID:'3dgitial'},
    ],
-   refUser:[],
-   groupList:[],
+   refUser:[], // 接收推荐用户数据
+   groupList:[],  // 接收推荐群数据
    simpleImage:'/img/state/null.png', // 空状态数据
    total:'200',
+   relationship: 'unload'
   })
 
   const findStore = appStore()
@@ -117,7 +122,7 @@ export default defineComponent({
     try {
       // const result = await serverCache.getData('findData')
       const result = await serverCache.getDataWithLocalCache('findData',{localCache:true,ttl:30})
-      
+
       // console.log('获取存储在服务器端的数据',result);
       if(result !== undefined){
         data.refUser = result.refUser
@@ -132,8 +137,16 @@ export default defineComponent({
     }
   }
 
+  const isGroup = computed(()=>{
+  
+    // return this.members.some(member => member.userId === this.userId);
+  })
+ 
+  const updateRelationship = (e) =>{
+    data.relationship = e.relationship
+  }
 
-
+  
 
 
   onMounted(()=>{
@@ -144,9 +157,9 @@ export default defineComponent({
   })
 
   return {
-   serverCache,isLoading,
+   serverCache,isLoading,isGroup,
    ...toRefs(data),setReferredUsers,
-   getReferData,
+   getReferData,updateRelationship,
   }
  }
 })
@@ -167,5 +180,9 @@ export default defineComponent({
   &:hover{
     opacity: 0.8;
   }
+}
+
+:deep(.xt-active){
+  width:115px !important;
 }
 </style>
