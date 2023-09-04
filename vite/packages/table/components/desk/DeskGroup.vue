@@ -83,18 +83,18 @@
               <Icon style="font-size: 18px" icon="fullscreen"></Icon>
             </div>
           </a-tooltip>
-    <a-tooltip title="菜单" placement="bottom">
-  <xt-task :modelValue="getStep" @cb="showMenu">
-      <div class="pl-3">
-        <div
-          @click="showMenu"
-          class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
-        >
-          <Icon style="font-size: 18px" icon="gengduo1"></Icon>
-        </div>
-      </div>
-  </xt-task>
-</a-tooltip>
+          <a-tooltip title="菜单" placement="bottom">
+            <xt-task :modelValue="getStep" @cb="showMenu">
+              <div class="pl-3">
+                <div
+                  @click="showMenu"
+                  class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
+                >
+                  <Icon style="font-size: 18px" icon="gengduo1"></Icon>
+                </div>
+              </div>
+            </xt-task>
+          </a-tooltip>
 
           <!-- <xt-mask :modelValue="getStep">
             <xt-popover :modelValue="getStep">
@@ -144,12 +144,16 @@
 
         <template #outMenu>
           <a-row class="text-center" style="margin-top: 20px" :gutter="20">
-            <a-col>
-              <div @click="showAddDeskForm" class="btn">
-                <Icon style="font-size: 3em" icon="desktop"></Icon>
-                <div><span>添加桌面</span></div>
-              </div>
-            </a-col>
+              <a-col>
+            <xt-task :modelValue="1">
+
+                <div @click="showAddDeskForm" class="btn">
+                  <Icon style="font-size: 3em" icon="desktop"></Icon>
+                  <div><span>添加桌面</span></div>
+                </div>
+              </xt-task>
+              </a-col>
+    
             <a-col>
               <div @click="importDesk" class="btn">
                 <Icon style="font-size: 3em" icon="daoru"></Icon>
@@ -571,10 +575,13 @@ export default {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      if (this.taskID == "M0101" && this.step == 1) {
+      if (
+        this.taskID == "M0101" ||
+        (this.taskID == "M0102" && this.step == 1)
+      ) {
         return true;
-      }else {
-        return false
+      } else {
+        return false;
       }
     },
 
@@ -623,7 +630,7 @@ export default {
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
-   
+
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
@@ -682,7 +689,7 @@ export default {
       });
     },
     showMenu() {
-      if (this.getStep) return
+      if (this.getStep) return;
       this.$refs.currentDeskRef.showMenu();
     },
     showMore() {

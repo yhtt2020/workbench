@@ -56,8 +56,6 @@ export default defineComponent({
       this.tour.next();
       this.step++;
       this.$emit("cb");
-      console.log("this.task :>> ", this.task);
-      console.log("this.task :>> ", this.task);
       if (this.task?.flag) {
         console.log("任务以完成 :>> ");
       }
@@ -83,7 +81,6 @@ export default defineComponent({
           {
             text: "下一步",
             action: (tour) => {
-              // 在这里处理按钮点击事件，例如跳转到下一个导览步骤
               this.action();
             },
           },
