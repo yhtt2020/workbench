@@ -37,8 +37,8 @@
     <div class="side-nav" v-if="showSide">
       <Search inputStyle="width:220px;" placeholder="搜索"></Search>
       <div class="nav-box">
-        <div class="nav-item" 
-        v-for="(item,index) in sideNav" :key="item.id" 
+        <div class="nav-item"
+        v-for="(item,index) in sideNav" :key="item.id"
         @click="updateNavIndex(item, index)">
           {{ item.groupName }}
         </div>
@@ -169,7 +169,7 @@ import NotShortcutKey from './NotShortcutKey.vue'
 // import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
 import Search from '../../components/Search.vue'
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from '../../apps/shortcutKey/key'
 import { message } from 'ant-design-vue';
 export default {
   name: 'ShortcutKeyDetail',
@@ -221,7 +221,7 @@ export default {
       this.appContent = this.appList[0]
       if(!this.keyList.length)this.isData = false
       this.sideNav = this.keyList.filter(i => i.groupName)
-      
+
       if(this.sideNav.length < 4){
         this.showSide = false
       }else{
@@ -395,11 +395,11 @@ export default {
     flex-direction: column;
     align-content: flex-start;
     // overflow: auto;
-    padding: 24px 0; 
+    padding: 24px 0;
     flex-wrap: wrap;
     height: 100%;
     width: 100%;
-    
+
   }
   .key-box::-webkit-scrollbar{
     display: none;
@@ -434,14 +434,14 @@ export default {
   }
   .s-bg{
     box-shadow: none !important;
-  }  
+  }
   .key-title{
     flex: 1;
     max-width: 160px;
     text-align: right;
   }
 
-  
+
   .text-note{
     margin: 0 20px 8px;
     padding: 0 12px;

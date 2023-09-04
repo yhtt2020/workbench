@@ -62,7 +62,7 @@
 <script>
 import { appStore } from '../../store';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from '../../apps/shortcutKey/key'
 import Preview from './Preview.vue';
 export default {
   name: "NotShortcutKey",

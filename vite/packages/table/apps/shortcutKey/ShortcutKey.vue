@@ -71,7 +71,7 @@ import NotShortcutKey from '../../components/shortcutKey/NotShortcutKey.vue'
 import ShortcutKeyDetail from '../../components/shortcutKey/ShortcutKeyDetail.vue'
 import Search from '../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
-import { keyStore } from '../../store/key'
+import { keyStore } from './key'
 
 
 

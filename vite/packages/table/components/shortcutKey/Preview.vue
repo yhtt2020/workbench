@@ -10,7 +10,7 @@
       </div>
     </div>
     <div style="width:98%;height:80%;">
-      <ShortcutKeyList :keyList="keyScheme.keyList" :keyBoxStyle="{background:'var(--primary-bg)'}"></ShortcutKeyList>  
+      <ShortcutKeyList :keyList="keyScheme.keyList" :keyBoxStyle="{background:'var(--primary-bg)'}"></ShortcutKeyList>
     </div>
     <div class="foot">
       <div>{{ keyScheme.number }}个快捷键</div>
@@ -58,7 +58,7 @@
 import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from '../../apps/shortcutKey/key'
 import { appStore } from '../../store';
 export default {
   name: "Preview",

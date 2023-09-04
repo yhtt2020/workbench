@@ -233,7 +233,7 @@ import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import KeyBoard from '../../components/shortcutKey/KeyBoard.vue';
 import ShareModal from '../../components/ShareModal.vue';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from './key'
 import {nanoid} from 'nanoid'
 import { message } from 'ant-design-vue';
 export default {

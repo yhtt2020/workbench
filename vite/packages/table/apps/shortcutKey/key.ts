@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
-import dbStorage from "./dbStorage";
+import dbStorage from "../../store/dbStorage";
 
 let keyData = [
-  {   
+  {
     id: 1,  //唯一标识
     icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png', //方案的图片
     name: 'Adobe Lightroom', //方案名称
@@ -27,7 +27,7 @@ let keyData = [
       },
       {
         id: 2,
-        keys: ['Space','H','3'],
+        keys: ['Space', 'H', '3'],
         keyStr: 'Space + H + 3',
         // 用于区分编辑的键一键二
         keyArr: [
@@ -55,7 +55,7 @@ let keyData = [
       },
       {
         id: 3,
-        keys: ['Win','A'],
+        keys: ['Win', 'A'],
         keyStr: 'Win + A',
         keyArr: [
           {
@@ -77,7 +77,7 @@ let keyData = [
       },
       {
         id: 4,
-        keys: ['Tab','X'],
+        keys: ['Tab', 'X'],
         keyStr: 'Tab + X',
         keyArr: [
           {
@@ -99,7 +99,7 @@ let keyData = [
       },
       {
         id: 5,
-        keys: ['Alt','Y','L'],
+        keys: ['Alt', 'Y', 'L'],
         keyStr: 'Alt + Y + L',
         keyArr: [
           {
@@ -131,7 +131,7 @@ let keyData = [
       },
       {
         id: 7,
-        keys: ['Ctrl','Q'],
+        keys: ['Ctrl', 'Q'],
         keyStr: 'Ctrl + Q',
         keyArr: [
           {
@@ -150,7 +150,7 @@ let keyData = [
       },
       {
         id: 8,
-        keys: ['Ctrl','I','K'],
+        keys: ['Ctrl', 'I', 'K'],
         keyStr: 'Ctrl + I + K',
         keyArr: [
           {
@@ -174,7 +174,7 @@ let keyData = [
       },
       {
         id: 9,
-        keys: ['Tab','X','W'],
+        keys: ['Tab', 'X', 'W'],
         keyStr: 'Tab + X + W',
         keyArr: [
           {
@@ -198,7 +198,7 @@ let keyData = [
       },
       {
         id: 10,
-        keys: ['Tab','Ctrl','E'],
+        keys: ['Tab', 'Ctrl', 'E'],
         keyStr: 'Tab + Ctrl + E',
         keyArr: [
           {
@@ -222,7 +222,7 @@ let keyData = [
       },
       {
         id: 11,
-        keys: ['Fn','Ctrl','L'],
+        keys: ['Fn', 'Ctrl', 'L'],
         keyStr: 'Fn + Ctrl + L',
         keyArr: [
           {
@@ -246,7 +246,7 @@ let keyData = [
       },
       {
         id: 12,
-        keys: ['Ctrl','V'],
+        keys: ['Ctrl', 'V'],
         keyStr: 'Ctrl + V',
         keyArr: [
           {
@@ -270,7 +270,7 @@ let keyData = [
       },
       {
         id: 14,
-        keys: ['Alt','D','X'],
+        keys: ['Alt', 'D', 'X'],
         keyStr: 'Alt + D + X',
         keyArr: [
           {
@@ -294,7 +294,7 @@ let keyData = [
       },
       {
         id: 15,
-        keys: ['Ctrl','.'],
+        keys: ['Ctrl', '.'],
         keyStr: 'Ctrl + .',
         keyArr: [
           {
@@ -313,7 +313,7 @@ let keyData = [
       },
     ]
   },
-  {   
+  {
     id: 2,
     icon: 'http://a.apps.vip/icons/flappy.jpg',
     name: 'Adobe InDesign',
@@ -338,7 +338,7 @@ let keyData = [
       },
       {
         id: 2,
-        keys: ['Space','H','3'],
+        keys: ['Space', 'H', '3'],
         keyStr: 'Space + H + 3',
         // 用于区分编辑的键一键二
         keyArr: [
@@ -363,7 +363,7 @@ let keyData = [
       },
       {
         id: 3,
-        keys: ['Win','A'],
+        keys: ['Win', 'A'],
         keyStr: 'Win + A',
         keyArr: [
           {
@@ -382,7 +382,7 @@ let keyData = [
       },
       {
         id: 4,
-        keys: ['Tab','X'],
+        keys: ['Tab', 'X'],
         keyStr: 'Tab + X',
         keyArr: [
           {
@@ -401,7 +401,7 @@ let keyData = [
       },
       {
         id: 5,
-        keys: ['Alt','Y','L'],
+        keys: ['Alt', 'Y', 'L'],
         keyStr: 'Alt + Y + L',
         keyArr: [
           {
@@ -430,7 +430,7 @@ let keyData = [
       },
       {
         id: 7,
-        keys: ['Ctrl','Q'],
+        keys: ['Ctrl', 'Q'],
         keyStr: 'Ctrl + Q',
         keyArr: [
           {
@@ -449,7 +449,7 @@ let keyData = [
       },
       {
         id: 8,
-        keys: ['Ctrl','I','K'],
+        keys: ['Ctrl', 'I', 'K'],
         keyStr: 'Ctrl + I + K',
         keyArr: [
           {
@@ -473,7 +473,7 @@ let keyData = [
       },
       {
         id: 9,
-        keys: ['Tab','X','W'],
+        keys: ['Tab', 'X', 'W'],
         keyStr: 'Tab + X + W',
         keyArr: [
           {
@@ -497,7 +497,7 @@ let keyData = [
       },
       {
         id: 10,
-        keys: ['Tab','Ctrl','E'],
+        keys: ['Tab', 'Ctrl', 'E'],
         keyStr: 'Tab + Ctrl + E',
         keyArr: [
           {
@@ -523,8 +523,11 @@ let keyData = [
   }
 ]
 
+// @ts-ignore
 export const keyStore = defineStore("key", {
   state: () => ({
+    executedApps:[],//运行过的应用
+    sessionList: [],//会话列表
     //快捷键方案列表
     // shortcutKeyList: [...keyData.concat()],
     shortcutKeyList: [],
@@ -538,7 +541,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '推荐',
         children: [
-          {   
+          {
             id: 1,  //唯一标识
             icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png', //方案的图片
             name: 'Adobe Lightroom', //方案名称
@@ -563,7 +566,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -588,7 +591,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -607,7 +610,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 4,
-                keys: ['Tab','X'],
+                keys: ['Tab', 'X'],
                 keyStr: 'Tab + X',
                 keyArr: [
                   {
@@ -626,7 +629,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 5,
-                keys: ['Alt','Y','L'],
+                keys: ['Alt', 'Y', 'L'],
                 keyStr: 'Alt + Y + L',
                 keyArr: [
                   {
@@ -655,7 +658,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -674,7 +677,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -698,7 +701,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -722,7 +725,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -746,7 +749,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -770,7 +773,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 12,
-                keys: ['Ctrl','V'],
+                keys: ['Ctrl', 'V'],
                 keyStr: 'Ctrl + V',
                 keyArr: [
                   {
@@ -794,7 +797,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 14,
-                keys: ['Alt','D','X'],
+                keys: ['Alt', 'D', 'X'],
                 keyStr: 'Alt + D + X',
                 keyArr: [
                   {
@@ -818,7 +821,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -837,7 +840,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 2,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe InDesign',
@@ -862,7 +865,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -887,7 +890,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -911,7 +914,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -930,7 +933,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -954,7 +957,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -978,7 +981,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -1002,7 +1005,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -1026,7 +1029,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -1045,7 +1048,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 3,
             icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
             name: 'Microsoft Edge',
@@ -1070,7 +1073,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -1095,7 +1098,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -1119,7 +1122,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -1138,7 +1141,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -1162,7 +1165,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 100,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe Lightroom',
@@ -1187,7 +1190,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -1212,7 +1215,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -1236,7 +1239,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -1255,7 +1258,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -1284,7 +1287,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '游戏',
         children: [
-          {   
+          {
             id: 4,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe Lightroom',
@@ -1309,7 +1312,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -1334,7 +1337,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -1358,7 +1361,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -1377,7 +1380,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -1401,7 +1404,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 5,
             icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png',
             name: 'Adobe Lightroom',
@@ -1426,7 +1429,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -1451,7 +1454,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -1475,7 +1478,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -1494,7 +1497,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -1518,7 +1521,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -1542,7 +1545,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -1566,7 +1569,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -1590,7 +1593,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -1609,7 +1612,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 6,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe XD',
@@ -1634,7 +1637,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -1659,7 +1662,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -1683,7 +1686,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -1702,7 +1705,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -1726,7 +1729,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -1750,7 +1753,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -1774,7 +1777,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -1798,7 +1801,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -1822,7 +1825,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '效率',
         children: [
-          {   
+          {
             id: 7,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe Lightroom',
@@ -1847,7 +1850,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -1872,7 +1875,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -1891,7 +1894,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 4,
-                keys: ['Tab','X'],
+                keys: ['Tab', 'X'],
                 keyStr: 'Tab + X',
                 keyArr: [
                   {
@@ -1910,7 +1913,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 5,
-                keys: ['Alt','Y','L'],
+                keys: ['Alt', 'Y', 'L'],
                 keyStr: 'Alt + Y + L',
                 keyArr: [
                   {
@@ -1939,7 +1942,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -1958,7 +1961,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -1982,7 +1985,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -2006,7 +2009,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -2030,7 +2033,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -2054,7 +2057,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 12,
-                keys: ['Ctrl','V'],
+                keys: ['Ctrl', 'V'],
                 keyStr: 'Ctrl + V',
                 keyArr: [
                   {
@@ -2078,7 +2081,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 14,
-                keys: ['Alt','D','X'],
+                keys: ['Alt', 'D', 'X'],
                 keyStr: 'Alt + D + X',
                 keyArr: [
                   {
@@ -2102,7 +2105,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -2121,7 +2124,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 8,
             icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
             name: 'Adobe InDesign',
@@ -2146,7 +2149,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -2171,7 +2174,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -2195,7 +2198,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -2214,7 +2217,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -2238,7 +2241,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -2262,7 +2265,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -2286,7 +2289,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -2310,7 +2313,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -2329,7 +2332,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 9,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe Lightroom',
@@ -2354,7 +2357,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -2379,7 +2382,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -2403,7 +2406,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -2422,7 +2425,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -2451,7 +2454,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '办公',
         children: [
-          {   
+          {
             id: 10,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe InDesign',
@@ -2476,7 +2479,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -2501,7 +2504,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -2525,7 +2528,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -2544,7 +2547,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -2568,7 +2571,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -2592,7 +2595,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -2616,7 +2619,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 11,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -2640,7 +2643,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -2659,7 +2662,7 @@ export const keyStore = defineStore("key", {
               },
             ]
           },
-          {   
+          {
             id: 11,
             icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
             name: 'Microsoft Edge',
@@ -2684,7 +2687,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -2709,7 +2712,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -2733,7 +2736,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -2752,7 +2755,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -2781,7 +2784,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '系统',
         children: [
-          {   
+          {
             id: 12,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe InDesign',
@@ -2806,7 +2809,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -2831,7 +2834,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -2850,7 +2853,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 4,
-                keys: ['Tab','X'],
+                keys: ['Tab', 'X'],
                 keyStr: 'Tab + X',
                 keyArr: [
                   {
@@ -2869,7 +2872,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 5,
-                keys: ['Alt','Y','L'],
+                keys: ['Alt', 'Y', 'L'],
                 keyStr: 'Alt + Y + L',
                 keyArr: [
                   {
@@ -2898,7 +2901,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -2917,7 +2920,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -2941,7 +2944,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -2965,7 +2968,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -2994,7 +2997,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '娱乐',
         children: [
-          {   
+          {
             id: 5,
             icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png',
             name: 'Adobe Lightroom',
@@ -3019,7 +3022,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -3044,7 +3047,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -3068,7 +3071,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -3087,7 +3090,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -3111,7 +3114,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 9,
-                keys: ['Tab','X','W'],
+                keys: ['Tab', 'X', 'W'],
                 keyStr: 'Tab + X + W',
                 keyArr: [
                   {
@@ -3135,7 +3138,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 10,
-                keys: ['Tab','Ctrl','E'],
+                keys: ['Tab', 'Ctrl', 'E'],
                 keyStr: 'Tab + Ctrl + E',
                 keyArr: [
                   {
@@ -3159,7 +3162,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 13,
-                keys: ['Fn','Ctrl','L'],
+                keys: ['Fn', 'Ctrl', 'L'],
                 keyStr: 'Fn + Ctrl + L',
                 keyArr: [
                   {
@@ -3183,7 +3186,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 15,
-                keys: ['Ctrl','.'],
+                keys: ['Ctrl', '.'],
                 keyStr: 'Ctrl + .',
                 keyArr: [
                   {
@@ -3207,7 +3210,7 @@ export const keyStore = defineStore("key", {
       {
         cname: '其他',
         children: [
-          {   
+          {
             id: 14,
             icon: 'http://a.apps.vip/icons/flappy.jpg',
             name: 'Adobe Lightroom',
@@ -3232,7 +3235,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 2,
-                keys: ['Space','H','3'],
+                keys: ['Space', 'H', '3'],
                 keyStr: 'Space + H + 3',
                 // 用于区分编辑的键一键二
                 keyArr: [
@@ -3257,7 +3260,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 3,
-                keys: ['Win','A'],
+                keys: ['Win', 'A'],
                 keyStr: 'Win + A',
                 keyArr: [
                   {
@@ -3281,7 +3284,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 7,
-                keys: ['Ctrl','Q'],
+                keys: ['Ctrl', 'Q'],
                 keyStr: 'Ctrl + Q',
                 keyArr: [
                   {
@@ -3300,7 +3303,7 @@ export const keyStore = defineStore("key", {
               },
               {
                 id: 8,
-                keys: ['Ctrl','I','K'],
+                keys: ['Ctrl', 'I', 'K'],
                 keyStr: 'Ctrl + I + K',
                 keyArr: [
                   {
@@ -3333,51 +3336,51 @@ export const keyStore = defineStore("key", {
     ],
   }),
   actions: {
-    setRecentlyUsedList(item){
-      this.recentlyUsedList.forEach((i,index) => {
-        if(i.id === item.id) this.recentlyUsedList.splice(index,1)
+    setRecentlyUsedList(item) {
+      this.recentlyUsedList.forEach((i, index) => {
+        if (i.id === item.id) this.recentlyUsedList.splice(index, 1)
       })
       this.recentlyUsedList.unshift(item)
     },
-    setSchemeList(item){
-      this.shortcutKeyList.find((i,index) => {
-        if(i.id === item.id){
-          this.shortcutKeyList.splice(index,1,item)
+    setSchemeList(item) {
+      this.shortcutKeyList.find((i, index) => {
+        if (i.id === item.id) {
+          this.shortcutKeyList.splice(index, 1, item)
         }
       })
     },
-    setShortcutKeyList(item){
+    setShortcutKeyList(item) {
       this.shortcutKeyList.push(JSON.parse(JSON.stringify(item)))
     },
-    removeShortcutKeyList(item){
-      this.shortcutKeyList.map((i,index) => {
-        if(item.id === i.id)this.shortcutKeyList.splice(index, 1)
+    removeShortcutKeyList(item) {
+      this.shortcutKeyList.map((i, index) => {
+        if (item.id === i.id) this.shortcutKeyList.splice(index, 1)
       })
-      this.recentlyUsedList.map((i,index) => {
-        if(item.id === i.id)this.recentlyUsedList.splice(index, 1)
+      this.recentlyUsedList.map((i, index) => {
+        if (item.id === i.id) this.recentlyUsedList.splice(index, 1)
       })
-      this.marketList[this.marketList.length-1].children.map((i,index) => {
-        if(item.id === i.id)this.marketList[this.marketList.length-1].children.splice(index, 1)
+      this.marketList[this.marketList.length - 1].children.map((i, index) => {
+        if (item.id === i.id) this.marketList[this.marketList.length - 1].children.splice(index, 1)
       })
     },
-    setMarketList(item){
-      if(this.marketList[this.marketList.length-1].children.find(i => i.id === item.id )){
-        this.marketList[this.marketList.length-1].children.find((i,index) => {
-          if(i.id === item.id){
-            this.marketList[this.marketList.length-1].children.splice(index,1,item)
+    setMarketList(item) {
+      if (this.marketList[this.marketList.length - 1].children.find(i => i.id === item.id)) {
+        this.marketList[this.marketList.length - 1].children.find((i, index) => {
+          if (i.id === item.id) {
+            this.marketList[this.marketList.length - 1].children.splice(index, 1, item)
           }
         })
         this.setSchemeList(item)
-      }else{
-        this.marketList[this.marketList.length-1].children.push(item)
-        if(this.shortcutKeyList.find(i => i.id === item.id )){
+      } else {
+        this.marketList[this.marketList.length - 1].children.push(item)
+        if (this.shortcutKeyList.find(i => i.id === item.id)) {
           this.setSchemeList(item)
-        }else{
+        } else {
           this.setShortcutKeyList(item)
         }
       }
     },
-    delRecentlyEmpty({keyList, id}){
+    delRecentlyEmpty({keyList, id}) {
       this.recentlyUsedList.forEach((item, index) => {
         if (item.id == id) {
           this.recentlyUsedList[index].keyList = keyList
@@ -3392,8 +3395,8 @@ export const keyStore = defineStore("key", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['shortcutKeyList','recentlyUsedList','sellSchemeList','marketList'],
-        storage: sessionStorage,
+        paths: ['shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList','executedApps'],
+        storage: dbStorage,
         // state 中的字段名，按组打包储存
       },
     ],
