@@ -3,7 +3,10 @@
   <div
     v-else-if="item.img"
     style="width: 40px; height: 40px"
-    class="xt-base-btn xt-bg"
+    class="xt-base-btn "
+    :class="{
+      'xt-bg':!item.noBg
+    }"
   >
     <img
       :src="item.img"
@@ -44,7 +47,7 @@ const stateStyle = computed(() => {
   };
 });
 const iconClick = (item, flag) => {
-  console.log("item :>> ", item);
+  // console.log("item :>> ", item);
   item.callBack && item.callBack(item);
 };
 </script>

@@ -36,10 +36,10 @@
 
 <script>
 import MarketList from './MarketList.vue'
-import Search from '../../components/Search.vue'
-import NavMenu from '../../components/NavMenu.vue'
+import Search from '../../../components/Search.vue'
+import NavMenu from '../../../components/NavMenu.vue'
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
+import { keyStore } from '../store'
 
 export default {
   name: "CreativeMarket",

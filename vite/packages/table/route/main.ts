@@ -56,7 +56,6 @@ import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
 import RemoteCommunity from '../page/app/card/RemoteCommunity.vue'
-import ShortcutIndex from '../apps/shortcutKey/Index.vue'
 //应用
 import TomatoStart from '../page/app/tomato/TomatoStart.vue'
 import Tomato from '../page/app/tomato/Tomato.vue'
@@ -64,10 +63,10 @@ import Tomato from '../page/app/tomato/Tomato.vue'
 import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
-import ShortcutKey from "../apps/shortcutKey/ShortcutKey.vue";
+import ShortcutKey from "../apps/shortcutKey/page/ShortcutKey.vue";
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
-
+import ShortcutKeyRoute from '../apps/shortcutKey/route'
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
@@ -327,11 +326,7 @@ export default [
             name: 'clipboard',
             component: Clipboard,
           },
-          {
-            path: '/shortcutKey',
-            name: 'shortcut',
-            component: ShortcutIndex,
-          },
+          ShortcutKeyRoute,
           {
             path: "/todo",
             name: "todo",

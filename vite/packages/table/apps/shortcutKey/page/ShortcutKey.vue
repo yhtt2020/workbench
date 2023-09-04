@@ -5,12 +5,12 @@
 
 
   <!-- 有内容 -->
-  <div class="container rounded-lg" v-if="softwareList.length && !detailToggle">
+  <div class="container rounded-lg w-full" v-if="schemeList.length && !detailToggle">
     <div class="flex justify-between px-4">
       <div class="flex items-center">
         <Search :searchValue="searchValue" @changeInput="changeInput"></Search>
         <span class="ml-3" style="font-size: 16px;color: var(--secondary-text);width:200px;">共{{
-            softwareList.length
+            schemeList.length
           }}个应用快捷键方案</span>
       </div>
       <div class="btn-item">
@@ -31,8 +31,25 @@
             @click="closePrompt = false"></Icon>
     </div>
     <!-- 列表 -->
+    <div class="mb-2  rounded-md px-2 m-2">
+      <div hidden="">
+        - {{ currentApp.pid }} - {{ currentApp.title }}
+      </div>
+      <div hidden="" class="xt-text-2">
+        {{ currentApp.path }}
+      </div>
+      <div hidden="">{{ currentApp.lastFocus }}</div>
+      <div class="xt-bg p-2 rounded-md my-1 truncate">
+        <a-avatar shape="square" :src="currentApp.software.icon"></a-avatar>
+        {{ currentApp.software.alias }}
+        <div v-if="!currentApp.inRep" class="mt-2">
+          <xt-button type="theme" size="mini" style="width:100%" :h="36">登记入库</xt-button>
+        </div>
+      </div>
+
+    </div>
     <div class="main-part item-content" :style="closePrompt ? 'height:80%' : 'height:90%'">
-      <div v-for="item in softwareList" class="flex items-center pointer" @click="btnDetail(item)">
+      <div v-for="item in schemeList" class="flex items-center pointer" @click="btnDetail(item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
@@ -42,12 +59,11 @@
           <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
         </div>
       </div>
-      <div v-if="softwareList.length > 2" style="opacity:0;height: 1px;"></div>
-      <div v-if="softwareList.length > 2" style="opacity:0;height: 1px;"></div>
+      <div v-if="schemeList.length > 2" style="opacity:0;height: 1px;"></div>
+      <div v-if="schemeList.length > 2" style="opacity:0;height: 1px;"></div>
     </div>
   </div>
-  <!-- 无内容 -->
-  <NotShortcutKey v-else-if="!softwareList.length && !detailToggle"></NotShortcutKey>
+
 
   <!-- 设置抽屉 -->
   <a-drawer v-model:visible="setShow" title="设置" width="500" placement="right">
@@ -63,21 +79,23 @@
   </a-drawer>
   <!-- 快捷键详情 -->
 
-  <ShortcutKeyDetail v-if="detailToggle" @detailShow="detailShow"></ShortcutKeyDetail>
+
 </template>
 
 <script>
-import NotShortcutKey from '../../components/shortcutKey/NotShortcutKey.vue'
-import ShortcutKeyDetail from '../../components/shortcutKey/ShortcutKeyDetail.vue'
-import Search from '../../components/Search.vue'
+import NotShortcutKey from './NotShortcutKey.vue'
+import ShortcutKeyDetail from '../shortcutKey/ShortcutKeyDetail.vue'
+import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
-import { keyStore } from '../../store/key'
+import { keyStore } from '../store'
+import XtButton from '../../../ui/libs/Button/index.vue'
 
 
 
 export default {
   name: 'ShortcutKey',
   components: {
+    XtButton,
     ShortcutKeyDetail,
     Search,
     NotShortcutKey
@@ -90,7 +108,6 @@ export default {
       //提示开关
       closePrompt: true,
       // 快捷键方案
-      softwareList: [],
       //推荐方案
       // notDownloadList: [
       //     {
@@ -169,17 +186,18 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['shortcutKeyList']),
+    ...mapWritableState(keyStore, ['shortcutKeyList','schemeList','currentApp']),
   },
   mounted () {
     this.detailToggle = false
-    this.softwareList = this.shortcutKeyList
+    this.loadShortcutSchemes()
+    console.log(this.schemeList,'当前所有的快捷键方案')
 
   },
 
 
   methods: {
-    ...mapActions(keyStore, ['setRecentlyUsedList']),
+    ...mapActions(keyStore, ['setRecentlyUsedList','loadShortcutSchemes']),
     //点击跳转到详情页
     btnDetail (item) {
       this.setRecentlyUsedList(item)
@@ -205,90 +223,18 @@ export default {
 
 <style scoped lang="scss">
 .container {
-  margin: 0 auto 12px;
   padding: 16px 0;
   //   width: 1164px;
   //   height: 568px;
   height: 98%;
   width: 98%;
-  background: var(--primary-bg);
   overflow: hidden;
 }
 
-.btn-item {
-  display: flex;
 
-  > div {
-    color: var(--primary-text);
-    font-size: 16px;
-    background: var(--mask-bg);
-    width: 160px;
-    text-align: center;
-    height: 48px;
-    line-height: 48px;
-    margin: 0 7px;
-    border-radius: 12px;
-  }
 
-  > span {
-    background: var(--mask-bg);
-    border-radius: 12px;
-    width: 48px;
-    height: 48px;
-    line-height: 54px;
-    text-align: center;
-  }
-}
 
-.prompt {
-  background: var(--mask-bg);
-  border-radius: 12px;
-  height: 56px;
-}
 
-.main-part {
-  > div {
-    background: var(--mask-bg);
-    border-radius: 12px;
-    width: 364px;
-    height: 88px;
-    position: relative;
-    margin: 16px 8px 0;
-
-    > div {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      width: 88px;
-      height: 88px;
-      background: var(--mask-bg);
-      border-radius: 0px 12px 12px 0px;
-
-      > span:nth-child(1) {
-        font-family: Oswald-SemiBold;
-        font-size: 28px;
-        color: var(--primary-text);
-        font-weight: 600;
-      }
-    }
-  }
-}
-
-.item-content {
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  overflow: auto;
-  padding-bottom: 40px;
-  justify-content: center;
-}
-
-.item-content::-webkit-scrollbar {
-  display: none;
-}
 
 .recommend {
   background: var(--mask-bg);
