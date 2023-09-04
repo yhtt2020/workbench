@@ -299,6 +299,38 @@ export default {
           {
             key: 'PrtSc',
             checked: false,
+          },
+          {
+            key: 'NLock',
+            checked: false,
+          },
+          {
+            key: 'CLock',
+            checked: false,
+          },
+          {
+            key: 'Left',
+            checked: false,
+          },
+          {
+            key: 'Up',
+            checked: false,
+          },
+          {
+            key: 'Right',
+            checked: false,
+          },
+          {
+            key: 'Down',
+            checked: false,
+          },
+          {
+            key: 'Fn',
+            checked: false,
+          },
+          {
+            key: 'Back',
+            checked: false,
           }
         ],
         [

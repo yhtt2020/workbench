@@ -249,7 +249,7 @@
 import Sortable from 'sortablejs'
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import ShortcutKeyList from '../shortcutKey/ShortcutKeyList.vue'
-import KeyBoard from '../shortcutKey/KeyBoard.vue'
+import KeyBoard from '../components/KeyBoard.vue'
 import ShareModal from '../../../components/ShareModal.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'

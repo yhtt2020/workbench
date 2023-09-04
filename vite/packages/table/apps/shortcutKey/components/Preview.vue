@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import ShortcutKeyList from './ShortcutKeyList.vue';
+import ShortcutKeyList from '../shortcutKey/ShortcutKeyList.vue';
 import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../store'

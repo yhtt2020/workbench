@@ -83,12 +83,12 @@
 </template>
 
 <script>
-import NotShortcutKey from './shortcutKey/NotShortcutKey.vue'
-import ShortcutKeyDetail from './shortcutKey/ShortcutKeyDetail.vue'
-import Search from '../../components/Search.vue'
+import NotShortcutKey from './NotShortcutKey.vue'
+import ShortcutKeyDetail from '../shortcutKey/ShortcutKeyDetail.vue'
+import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
-import { keyStore } from './store'
-import XtButton from '../../ui/libs/Button/index.vue'
+import { keyStore } from '../store'
+import XtButton from '../../../ui/libs/Button/index.vue'
 
 
 

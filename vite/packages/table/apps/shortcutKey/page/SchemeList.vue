@@ -4,7 +4,7 @@ import Search from "../../../components/Search.vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
-import NotShortcutKey from "../shortcutKey/NotShortcutKey.vue";
+import NotShortcutKey from "./NotShortcutKey.vue";
 import {PlusOutlined} from '@ant-design/icons-vue'
 export default {
   name: "schemeList",

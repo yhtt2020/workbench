@@ -1,12 +1,12 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
-import XtButton from "../../ui/libs/Button/index.vue";
+import XtButton from "../../../ui/libs/Button/index.vue";
 import {SettingFilled} from "@ant-design/icons-vue";
 import {mapWritableState} from "pinia";
-import {keyStore} from "./store";
-import {appStore} from "../../store";
+import {keyStore} from "../store";
+import {appStore} from "../../../store";
 const winappIcon='/icons/winapp.png'
-import './static/style.scss'
+import '../static/style.scss'
 const appMap = [
   {
     exeName: '',

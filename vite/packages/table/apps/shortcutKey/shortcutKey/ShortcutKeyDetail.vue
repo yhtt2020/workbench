@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import NotShortcutKey from './NotShortcutKey.vue'
+import NotShortcutKey from '../page/NotShortcutKey.vue'
 // import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
 import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'

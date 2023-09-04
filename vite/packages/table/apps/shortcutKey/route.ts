@@ -1,6 +1,6 @@
-import ShortcutIndex from './Index.vue'
+import ShortcutIndex from './page/Index.vue'
 import SchemeList from './page/SchemeList.vue'
-import ShortcutKey from './ShortcutKey.vue'
+import ShortcutKey from './page/ShortcutKey.vue'
 import ShareKey from "./page/ShareKey.vue"
 import SchemeDetail from './page/SchemeDetail.vue'
 export default {
