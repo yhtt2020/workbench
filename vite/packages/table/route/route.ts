@@ -7,8 +7,8 @@ import main from './main'
 import Splash from '../page/Splash.vue'
 //import index from './index'
 // 快捷键
-import CreativeMarket from "../apps/shortcutKey/CreativeMarket.vue"
-import MarketList from "../apps/shortcutKey/MarketList.vue"
+import CreativeMarket from "../apps/shortcutKey/page/CreativeMarket.vue"
+import MarketList from "../apps/shortcutKey/page/MarketList.vue"
 
 const routes = [
   ...main,

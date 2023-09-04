@@ -63,7 +63,7 @@ import Tomato from '../page/app/tomato/Tomato.vue'
 import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
-import ShortcutKey from "../apps/shortcutKey/ShortcutKey.vue";
+import ShortcutKey from "../apps/shortcutKey/page/ShortcutKey.vue";
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
 import ShortcutKeyRoute from '../apps/shortcutKey/route'
