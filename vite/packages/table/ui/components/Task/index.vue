@@ -1,6 +1,6 @@
 <template>
   <xt-mask :modelValue="modelValue">
-    <div ref="el" >
+    <div style="z-index: 999999" ref="el" @click.prevent.stop="next($event)">
       <slot></slot>
     </div>
   </xt-mask>
@@ -47,12 +47,27 @@ export default defineComponent({
     },
   },
   methods: {
+    next(event) {
+      if (!this.modelValue) return;
+      event.stopPropagation(); // 阻止事件冒泡
+      this.action();
+    },
+    action() {
+      this.tour.next();
+      this.step++;
+      this.$emit("cb");
+      console.log("this.task :>> ", this.task);
+      console.log("this.task :>> ", this.task);
+      if (this.task?.flag) {
+        console.log("任务以完成 :>> ");
+      }
+    },
     start() {
       this.$nextTick(() => {
-        requestAnimationFrame(() => {
+        setTimeout(() => {
           this.createTour();
           this.tour.start();
-        });
+        }, this.task?.time ?? 0);
       });
     },
     createTour() {
@@ -69,9 +84,7 @@ export default defineComponent({
             text: "下一步",
             action: (tour) => {
               // 在这里处理按钮点击事件，例如跳转到下一个导览步骤
-              this.tour.next();
-              this.step++;
-              this.$emit("cb");
+              this.action();
             },
           },
         ],

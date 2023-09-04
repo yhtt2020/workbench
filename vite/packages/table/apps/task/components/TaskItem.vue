@@ -50,34 +50,31 @@
 import { computed } from "vue";
 import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
+import { useRouter } from "vue-router";
+import { guide } from "../../../ui/components/Task/guide";
+const router = useRouter();
 const task = taskStore();
 const props = defineProps({
   currentStage: {},
   currentTaskId: {},
 });
-
 // 引导任务
 const emits = defineEmits(["close"]);
 const taskGuide = () => {
-  console.log("1 :>> ", 1);
-  task.step = -1;
-  if (currentTask.value.task) {
-    switch (currentTask.value.type) {
-      case "store":
-        task.taskID = currentTask.value.id;
-        // task[currentTask.value.data] = true;
-        break;
-      default:
-        break;
-    }
-    task.step = 1;
-    console.log("    task.step  :>> ", task.step);
-    console.log("    task.taskID  :>> ", task.taskID);
-  } else {
-    console.log("111111111 :>> ", 111111111);
-  }
+  // 重置任务步骤
   task.step = 1;
-  task.taskID = "M0101";
+  task.taskID = props.currentTaskId;
+  let currentTask = guide[props.currentTaskId][0];
+  switch (currentTask.type) {
+    case "router":
+      router.push({
+        name: currentTask.value,
+      });
+      break;
+    default:
+      break;
+  }
+
   task.isTaskDrawer = false;
 };
 // 获取当前任务的下标

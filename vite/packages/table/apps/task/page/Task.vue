@@ -1,8 +1,8 @@
 <template>
   <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
-    <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
+    <div class="xt-modal flex py-3 pr-3 " style="width: 500px; height: 100%">
       <xt-left-menu :list="menus" last="2"></xt-left-menu>
-      <div class="w-full">
+      <div class="w-full  xt-scrollbar">
         <Primary v-if="currentTask == 'Primary'"></Primary>
         <Branch v-else-if="currentTask == 'Branch'"></Branch>
         <Set v-else-if="currentTask == 'Set'"></Set>

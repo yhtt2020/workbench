@@ -2,7 +2,7 @@
   <xt-menu :menus="menus" v-if="task.isTask">
     <div
       @click="task.isTaskDrawer = true"
-      class="xt-bg relative s-bg xt-base-btn"
+      class="xt-bg relative s-bg h-full xt-base-btn"
       style="width: 70px; height: 70px; border-radius: 8px"
     >
       <img src="/img/task/star.png" style="width: 56px; height: 56px" alt="" />

@@ -130,6 +130,7 @@ export default {
     // 获取app信息
 
     async returnApp(item) {
+      // console.log('item :>> ', item);
       this.edit.open.name = item.name;
       // 当图片状态为空时
       if (!this.edit.src) {

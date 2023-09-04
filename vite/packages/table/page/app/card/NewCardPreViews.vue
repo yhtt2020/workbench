@@ -308,12 +308,8 @@ export default {
         }
         this.addCardAchieve(item);
       }
-      if (this.getStep) {
-        console.log('1233 :>> ', 1233);
-      }
     },
     fullScreen(item) {
-      if (this.getStep) return;
       this.cardDetails = item;
       this.isCardDetails = true;
     },
