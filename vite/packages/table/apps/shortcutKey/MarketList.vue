@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import { appStore } from '../../../store';
-import ShortcutKeyList from '../../../components/shortcutKey/ShortcutKeyList.vue';
+import { appStore } from '../../store';
+import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../../store/key'
-import Preview from '../../../components/shortcutKey/Preview.vue';
+import { keyStore } from '../../store/key'
+import Preview from '../../components/shortcutKey/Preview.vue';
 export default {
   name: "MarketList",
   components: {
