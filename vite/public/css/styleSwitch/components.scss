@@ -90,7 +90,7 @@
 
 // 滚动条
 .xt-scrollbar {
-  flex-grow: 1;
+  flex: 1 1 0%;
   overflow: hidden;
   overflow-y: auto;
 }

@@ -1,88 +1,101 @@
 <template>
-  <!-- 动态头部 -->
   <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px">
-    <template v-for="item in newList.slice(0, last)">
-      <div
-        @click="iconSelectClick(item.id, item.flag)"
-        class="xt-base-btn mb-2"
-        style="width: 50px; height: 50px; border-radius: 14px"
-        :style="[
-          item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
-        ]"
-      >
-        <div
-          v-if="item.slot"
-          style="width: 40px; height: 40px; border-radius: 10px"
-          class="xt-bg xt-base-btn"
-        >
-          <slot :name="item.slot"> </slot>
-        </div>
-        <Item :item="item" v-else>
-          <template #default>
-            <slot :name="item.slot">{{ item.slot }} </slot>
-          </template>
-        </Item>
-      </div>
-    </template>
-
-    <!-- 动态适中 -->
-    <div
-      class="xt-scrollbar xt-container h-full xt-bt py-1 xt-bm flex flex-col items-center"
-    >
-      <template v-for="item in newList.slice(last, -1 * end)">
-        <div
-          @click="iconSelectClick(item.id, item.flag)"
-          class="xt-base-btn mb-2"
-          style="width: 50px; height: 50px; border-radius: 14px"
-          :style="[
-            item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
-          ]"
-        >
+    <!-- 头部 -->
+    <div>
+      <template v-for="item in newList.slice(0, last)">
+        <Menu :list="item.children">
           <div
-            v-if="item.slot"
-            style="width: 40px; height: 40px; border-radius: 10px"
-            class="xt-bg xt-base-btn"
+            @click="selectClick(item.id, item.flag)"
+            class="xt-base-btn mb-2"
+            style="width: 50px; height: 50px; border-radius: 14px"
+            :style="[
+              item.id == currentId ? 'border: 3px solid var(--active-bg)' : '',
+            ]"
           >
-            <slot :name="item.slot"> </slot>
+            <div
+              v-if="item.slot"
+              style="width: 40px; height: 40px; border-radius: 10px"
+              class="xt-bg xt-base-btn"
+            >
+              <slot :name="item.slot"> </slot>
+            </div>
+            <Item :item="item" v-else>
+              <template #default>
+                <slot :name="item.slot">{{ item.slot }} </slot>
+              </template>
+            </Item>
           </div>
-          <Item :item="item" v-else w="40">
-            <template #default>
-              <slot :name="item.slot">{{ item.slot }} </slot>
-            </template>
-          </Item>
-        </div>
+        </Menu>
       </template>
     </div>
-    <!-- 底部循环 -->
-    <template v-for="item in newList.slice(-1 * end)">
-      <div
-        @click="iconSelectClick(item.id, item.flag)"
-        class="xt-base-btn mt-2"
-        style="width: 50px; height: 50px; border-radius: 14px"
-        :style="[
-          item.id == currentIndex ? 'border: 3px solid var(--active-bg)' : '',
-        ]"
-      >
-        <div
-          v-if="item.slot"
-          style="width: 40px; height: 40px; border-radius: 10px"
-          class="xt-bg xt-base-btn"
-        >
-          <slot :name="item.slot"> </slot>
-        </div>
-        <Item :item="item" v-else>
-          <template #default>
-            <slot :name="item.slot">{{ item.slot }} </slot>
-          </template>
-        </Item>
-      </div>
-    </template>
+    <!-- 动态适中 -->
+    <div
+      class="flex-1 xt-scrollbar xt-container h-full xt-bt xt-bm flex flex-col items-center"
+    >
+      <template v-for="item in newList.slice(last, -1 * end)">
+        <Menu :list="item.children">
+          <div
+            @click="selectClick(item.id, item.flag)"
+            class="xt-base-btn mt-2"
+            style="width: 50px; height: 50px; border-radius: 14px"
+            :style="[
+              item.id == currentId ? 'border: 3px solid var(--active-bg)' : '',
+            ]"
+          >
+            <div
+              v-if="item.slot"
+              style="width: 40px; height: 40px; border-radius: 10px"
+              class="xt-bg xt-base-btn"
+            >
+              <slot :name="item.slot"> </slot>
+            </div>
+            <Item :item="item" v-else w="40">
+              <template #default>
+                <slot :name="item.slot">{{ item.slot }} </slot>
+              </template>
+            </Item>
+          </div>
+        </Menu>
+      </template>
+    </div>
+
+    <!-- 底部 -->
+    <div>
+      <template v-for="item in newList.slice(-1 * end)">
+        <Menu :list="item.children">
+          <div
+            @click="selectClick(item.id, item.flag)"
+            class="xt-base-btn mt-2"
+            style="width: 50px; height: 50px; border-radius: 14px"
+            :style="[
+              item.id == currentId ? 'border: 3px solid var(--active-bg)' : '',
+            ]"
+          >
+            <div
+              v-if="item.slot"
+              style="width: 40px; height: 40px; border-radius: 10px"
+              class="xt-bg xt-base-btn"
+            >
+              <slot :name="item.slot"> </slot>
+            </div>
+            <Item :item="item" v-else>
+              <template #default>
+                <slot :name="item.slot">{{ item.slot }} </slot>
+              </template>
+            </Item>
+          </div>
+        </Menu>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
+import Menu from "./menu.vue";
 import Item from "./Item.vue";
+import { nanoid } from "nanoid";
+
 const props = defineProps({
   config: {
     default: () => {
@@ -98,10 +111,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
-  index: {
-    default: 0,
-  },
-  modelValue: {},
+  id: { default: false },
   list: {
     default: () => {
       return [
@@ -120,27 +130,6 @@ const props = defineProps({
         {
           icon: "yanjing",
         },
-
-        // ----------
-        {
-          icon: "smile",
-        },
-        {
-          icon: "aixin",
-        },
-        {
-          icon: "yanjing",
-        },
-        {
-          icon: "smile",
-        },
-        {
-          icon: "aixin",
-        },
-        {
-          icon: "yanjing",
-        },
-        // -----------
         {
           icon: "shezhi1",
         },
@@ -149,10 +138,10 @@ const props = defineProps({
   },
 });
 
+// 动态添加ID
 const newList = computed(() => {
-  let id = -1;
   let res = props.list.map((item) => {
-    id++;
+    let id = item.id ?? nanoid();
     return {
       id,
       ...item,
@@ -161,11 +150,21 @@ const newList = computed(() => {
   return res;
 });
 
-const currentIndex = ref(props.index);
-const iconSelectClick = (id, flag) => {
+// 动态获取ID
+const id = computed(() => {
+  return isNaN(props.id.value) ? newList.value[0].id : props.id.value;
+});
+
+// 选择ID
+const currentId = ref(id.value);
+
+//选中事件
+const selectClick = (id, flag) => {
   if (flag) return;
-  currentIndex.value = id;
+  currentId.value = id;
 };
+
+// 点击事件
 </script>
 
 <style lang="scss" scoped>
@@ -178,8 +177,6 @@ const iconSelectClick = (id, flag) => {
   color: red !important;
 }
 :deep(.anticon) {
-  // border: 3px solid none;
-
   font-size: 20px;
 }
 </style>
