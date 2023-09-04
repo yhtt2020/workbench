@@ -78,8 +78,10 @@ export const noticeStore = defineStore('notice',{
     },
     
 
-    async removeIMChatData(item:any){  // 聊天消息数据从db数据库中清空
-      await tsbApi.db.remove(item.doc)
+    async removeIMChatData(){  // 聊天消息数据从db数据库中清空
+      for(let i=0;i<this.notice.messageContent.length;i++){
+        await tsbApi.db.remove(this.notice.messageContent[i].doc)
+      }
     }
     
 

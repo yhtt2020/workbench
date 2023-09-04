@@ -2,7 +2,7 @@
   <div class="flex h-full">
     <xt-left-menu :list="leftApp" end="2"></xt-left-menu>
     <div class="w-full" v-if="rightVisible !== 'setting'">
-      <NoticeRightTop  :appType="rightVisible" :list="appContentList" :appItem="topTitle"></NoticeRightTop>
+      <NoticeRightTop  :appType="rightVisible" :list="appContentList" :appItem="topTitle" @updateNotice="updateNotice"></NoticeRightTop>
       <AllNotice v-if="rightVisible === 'all'" :list="appContentList"></AllNotice>
       <NoticeDetail v-else :list="otherList"></NoticeDetail>
        <!-- <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip> -->
@@ -93,6 +93,10 @@ export default defineComponent({
       store.setMessagePrompt(evt)
     }
 
+    const updateNotice = async() =>{
+      await store.loadNoticeDB()
+    }
+
     const leftApp = ref([
       {
         id: "all",
@@ -123,7 +127,7 @@ export default defineComponent({
 
     return{
       leftApp,appContentList,
-      ...toRefs(data),changeEnable,
+      ...toRefs(data),changeEnable,updateNotice,
     }
   },
 });
