@@ -29,7 +29,12 @@
     <div
       class="xt-scrollbar xt-container h-full xt-bt py-1 xt-bm flex flex-col items-center"
     >
+      <vue-custom-scrollbar :settings="scrollerSettings" style="height:100%">
+        <div style="height: auto">
+
+
       <template v-for="item in newList.slice(last, -1 * end)">
+        <a-tooltip :title="item.title" placement="right">
         <div
           @click="iconSelectClick(item.id, item.flag)"
           class="xt-base-btn mb-2"
@@ -51,7 +56,10 @@
             </template>
           </Item>
         </div>
+        </a-tooltip>
       </template>
+        </div>
+      </vue-custom-scrollbar>
     </div>
     <!-- 底部循环 -->
     <template v-for="item in newList.slice(-1 * end)">
@@ -83,7 +91,17 @@
 <script setup>
 import { ref, computed } from "vue";
 import Item from "./Item.vue";
+import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 const props = defineProps({
+  scrollerSettings: {
+    default: {
+      useBothWheelAxes: true,
+      swipeEasing: true,
+      suppressScrollY: false,
+      suppressScrollX: true,
+      wheelPropagation: true
+    }
+  },
   config: {
     default: () => {
       return {
@@ -160,11 +178,12 @@ const newList = computed(() => {
   });
   return res;
 });
-
+const emit = defineEmits(["index"])
 const currentIndex = ref(props.index);
 const iconSelectClick = (id, flag) => {
   if (flag) return;
   currentIndex.value = id;
+  emit('update:index',id)
 };
 </script>
 
@@ -181,5 +200,8 @@ const iconSelectClick = (id, flag) => {
   // border: 3px solid none;
 
   font-size: 20px;
+}
+:deep(.ps__rail-y){
+  display: none;
 }
 </style>
