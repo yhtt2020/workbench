@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 import {message} from "ant-design-vue";
 import TencentCloudChat from "tim-js-sdk";
 import {mapState} from "pinia";
@@ -14,7 +14,7 @@ export default {
   emits: ['loaded', 'relationshipChanged'],
   computed: {
     ...mapState(appStore, {
-      'myUserInfo': 'userInfo'
+    'myUserInfo': 'userInfo'
     }),
   },
   async mounted() {
@@ -49,34 +49,6 @@ export default {
         console.error(imError)
       })
     },
-    deleteFriend() {
-      let promise = window.$chat.deleteFriend({
-        userIDList: [String(this.uid)],
-        type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH
-      })
-      promise.then((imResponse) => {
-        const {successUserIDList, failureUserIDList} = imResponse.data
-        // 删除成功的 userIDList
-        successUserIDList.forEach((item) => {
-          const {userID} = item
-          if (userID === String(this.uid)) {
-            message.success('删除好友成功。')
-            this.relationship = 'not'
-            this.$emit('relationshipChanged', {relationship: this.relationship})
-          }
-        })
-        // 删除失败的 userIDList
-        failureUserIDList.forEach((item) => {
-          const {userID, code, message} = item
-          if (userID === String(this.uid)) {
-            message.error('删除好友失败。')
-          }
-        })
-        // 如果好友列表有变化，则 SDK 会触发 TencentCloudChat.EVENT.FRIEND_LIST_UPDATED 事件
-      }).catch(function (imError) {
-        message.error('删除好友意外失败。', imError)
-      })
-    },
     async checkFriendship() {
       this.relationship = await sns.checkFriendship(this.uid)
       this.$emit('relationshipChanged', {relationship: this.relationship})
@@ -86,15 +58,10 @@ export default {
 </script>
 
 <template>
-  <XtButton @click="addFriend" v-if="relationship==='not'" type="theme" style="width: 100%"
+  <XtButton @click="addFriend" type="theme" style="width: 100%"
             class="rounded-full w-full">
     <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
     加为好友
-  </XtButton>
-  <XtButton @click="deleteFriend" v-else-if="relationship==='yes'" style="width: 100%;" :style="bgColor"
-            class="rounded-full w-full">
-    <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
-    解除好友
   </XtButton>
 </template>
 

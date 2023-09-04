@@ -26,7 +26,7 @@ export default {
    CaretRightOutlined
  },
  setup() {
-   const collapsed = ref(true);
+   const collapsed = ref(false);
 
    const toggleCollapse = () => {
      collapsed.value = !collapsed.value;

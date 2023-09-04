@@ -73,6 +73,9 @@ import Contact from '../page/chat/contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
 import ImTeam from '../page/chat/team.vue'
+// import ChatMain from '../page/chat/page/chatMain.vue'
+// import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
+// import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
 
 export default [
@@ -207,6 +210,23 @@ export default [
             path: '',
             name: 'chat',
             component: Chat,
+            // children:[
+            //   {
+            //     path:'',
+            //     name:'chatMain',
+            //     component:ChatMain
+            //   },
+            //   {
+            //     path:'',
+            //     name:'chatFind',
+            //     component:ChatFind
+            //   },
+            //   {
+            //     path:'',
+            //     name:'chatThisky',
+            //     component:ThiskyIndex
+            //   }
+            // ]
           },
           {
             path: '/contact',
