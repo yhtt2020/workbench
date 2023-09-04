@@ -7,7 +7,6 @@ import main from './main'
 import Splash from '../page/Splash.vue'
 //import index from './index'
 // 快捷键
-import ShareKey from "../apps/shortcutKey/ShareKey.vue"
 import CreativeMarket from "../apps/shortcutKey/CreativeMarket.vue"
 import MarketList from "../apps/shortcutKey/MarketList.vue"
 
@@ -38,11 +37,7 @@ const routes = [
     name:'wizard',
     component: Wizard
   },
-  {
-    path:'/shareKey',
-    name:'shareKey',
-    component: ShareKey
-  },
+
   {
     path:'/creativeMarket',
     name:'creativeMarket',

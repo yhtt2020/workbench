@@ -1,15 +1,16 @@
 <template>
-  <div class="p-3 xt-bg box">
+  <div class="p-3   box">
     <!-- 头部导航栏 -->
     <div class="flex items-center justify-between">
       <div class="flex">
-        <div @click="onBack" class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+        <div @click="onBack"
+             class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="xiangzuo" style="font-size: 1.5em;color:var(--primary-text)"></Icon>
         </div>
         <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
       <div class="flex btn-item">
-        <div class="pointer" @click="bulkEdit">{{ bulkEditKey ? '完成编辑' : '批量编辑'}}</div>
+        <div class="pointer" @click="bulkEdit">{{ bulkEditKey ? '完成编辑' : '批量编辑' }}</div>
         <div class="pointer" @click="saveScheme">保存</div>
         <a-tooltip>
           <template #title>保存并分享到创意市场</template>
@@ -23,7 +24,7 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar shape="square" :size="100" :src="file.path ? file.path : icon" />
+            <a-avatar shape="square" :size="100" :src="file.path ? file.path : icon"/>
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
@@ -31,22 +32,28 @@
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
 
-        <a-upload
-          name="file"
-          :showUploadList="false"
-          :customRequest="uploadImage"
-          :beforeUpload="beforeUpload"
-          accept="image/jpeg,image/jpg,image/png"
-        >
-        <div class="pointer xt-bg-2 xt-text-2 flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div>
-        </a-upload>
+          <a-upload
+            name="file"
+            :showUploadList="false"
+            :customRequest="uploadImage"
+            :beforeUpload="beforeUpload"
+            accept="image/jpeg,image/jpg,image/png"
+          >
+            <div class="pointer xt-bg-2 xt-text-2 flex items-center rounded-lg justify-center mr-3 mt-2"
+                 @click="imageSelect" style="width:120px; height:48px;">自定义上传
+            </div>
+          </a-upload>
         </div>
       </div>
       <span>应用名称</span>
-      <a-input v-model:value="applyName" spellcheck ="false" class="input" placeholder="请输入应用名称" aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
+      <a-input v-model:value="applyName"  spellcheck="false" class="input" placeholder="请输入应用名称"
+               aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
-      <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text"  placeholder="请输入描述" aria-placeholder="font-size: 14px;" :rows="4" style="width:480px;height: 100px;"/>
-      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6 xt-active-btn" style="width:480px;height:48px;font-size: 16px;">下一步</div>
+      <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text" placeholder="请输入描述"
+                  aria-placeholder="font-size: 14px;" :rows="4" style="width:480px;height: 100px;"/>
+      <div @click="nextStep" class="pointer flex items-center rounded-lg justify-center mr-3 mt-6 xt-active-btn"
+           style="width:480px;height:48px;font-size: 16px;">下一步
+      </div>
     </div>
     <!-- 快捷键 -->
     <div class="key-content" v-show="defaultNavType.name === 'shortcutkey'">
@@ -56,7 +63,8 @@
           <Icon icon="tishi-xianxing" style="width: 21px;height: 21px;color:#508BFE;"></Icon>
           <span class="mx-4 xt-text">支持长按拖拽排序</span>
         </span>
-        <Icon icon="guanbi2" class="pointer" style="width: 20px;height: 20px;color:#7A7A7A;" @click="closePrompt = false"></Icon>
+        <Icon icon="guanbi2" class="pointer" style="width: 20px;height: 20px;color:#7A7A7A;"
+              @click="closePrompt = false"></Icon>
       </div>
       <!-- 快捷键列表 -->
       <!-- <div :style="closePrompt ? 'height:90%' : 'height:100%'"> -->
@@ -67,14 +75,14 @@
             <div v-if="!item.keys" class="key-item border-right" @click="editItem(item,index,'name')">
               <div class="flex items-center" v-if="item.isEdit">
                 <a-input class="input"
-                  v-model:value="item.groupName"
-                  :ref="`inputNameEdit_${index}`"
-                  spellcheck="false"
-                  placeholder="分类名称"
-                  style="width:370px;height: 48px;"
-                  @blur="lostFocus(item,'groupName')"
+                         v-model:value="item.groupName"
+                         :ref="`inputNameEdit_${index}`"
+                         spellcheck="false"
+                         placeholder="分类名称"
+                         style="width:370px;height: 48px;"
+                         @blur="lostFocus(item,'groupName')"
                 />
-                  <span @click.stop="delKey(index,item)">
+                <span @click.stop="delKey(index,item)">
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
               </div>
@@ -82,41 +90,42 @@
             </div>
             <!-- 快捷键 -->
             <div v-else class="border-right key-item"
-            @click="editItem(item,index,'item')">
+                 @click="editItem(item,index,'item')">
               <div class="flex">
                 <template v-if="!item.isEdit">
                   <div v-for="i in item.keys" :key="i" class="flex">
-                    <span style="min-width:32px;padding:0 8px;" class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                    <span style="min-width:32px;padding:0 8px;"
+                          class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
                   </div>
                 </template>
                 <div v-else class="flex items-center mr-3" @click="openKeyBoard(item,'key')">
                   <a-input class="input pointer"
-                    v-model:value="item.keyStr"
-                    readonly
-                    spellcheck="false"
-                    placeholder="按下组合键"
-                    style="width:179px;height: 48px;"
+                           v-model:value="item.keyStr"
+                           readonly
+                           spellcheck="false"
+                           placeholder="按下组合键"
+                           style="width:179px;height: 48px;"
                   >
                     <template #suffix>
-                    <div class="w-8 h-8 flex rounded-lg justify-center items-center"
-                    style="background: rgba(80,139,254,0.20);">
-                      <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
-                    </div>
+                      <div class="w-8 h-8 flex rounded-lg justify-center items-center"
+                           style="background: rgba(80,139,254,0.20);">
+                        <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
+                      </div>
                     </template>
                   </a-input>
                 </div>
               </div>
               <div>
-                <div class="key-title truncate" v-if="!item.isEdit">{{ item.title}}</div>
+                <div class="key-title truncate" v-if="!item.isEdit">{{ item.title }}</div>
                 <a-input class="input text-right"
-                  v-else
-                  v-model:value="item.title"
-                  :id="`keyName_${item.id}`"
-                  spellcheck="false"
-                  placeholder="快捷键名称"
-                  style="width:179px;height: 48px;"
-                  @blur="lostFocus(item,'keyName')"
-                  />
+                         v-else
+                         v-model:value="item.title"
+                         :id="`keyName_${item.id}`"
+                         spellcheck="false"
+                         placeholder="快捷键名称"
+                         style="width:179px;height: 48px;"
+                         @blur="lostFocus(item,'keyName')"
+                />
               </div>
               <span v-if="item.isEdit" class="flex">
                 <a-tooltip v-if="!item.addNote">
@@ -135,14 +144,14 @@
               <div class="key-item border-right" v-if="item.isNote">
                 <div class="flex items-center">
                   <a-input class="input text-right"
-                    v-model:value="item.noteVal"
-                    :id="`note_${item.id}`"
-                    spellcheck="false"
-                    placeholder="备注"
-                    style="width:370px;height: 48px;"
-                    @blur="lostFocus(item,'note')"
+                           v-model:value="item.noteVal"
+                           :id="`note_${item.id}`"
+                           spellcheck="false"
+                           placeholder="备注"
+                           style="width:370px;height: 48px;"
+                           @blur="lostFocus(item,'note')"
                   />
-                    <span @click.stop="delNote(index,item)">
+                  <span @click.stop="delNote(index,item)">
                       <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                     </span>
                 </div>
@@ -154,62 +163,62 @@
           </div>
           <!-- 添加单个快捷键 -->
           <!-- <div class="input-item"> -->
-            <!-- 添加组合键 -->
-            <!-- <div class="border-right key-item input-item"> -->
-            <!-- <div class="border-right key-item input-item" v-for="(item,i) in addKeyList" :key="i">
-              <div class="flex">
-                <div class="flex items-center mr-3" @click="openKeyBoard(i,'addKey')">
-                  <a-input class="input pointer"
-                    :value="keyCombination[i]"
-                    readonly
-                    spellcheck="false"
-                    placeholder="按下组合键"
-                    style="width:179px;height: 48px;"
-                  >
-                    <template #suffix>
-                    <div class="w-8 h-8 flex rounded-lg justify-center items-center"
-                    style="background: rgba(80,139,254,0.20);">
-                      <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
-                    </div>
-                    </template>
-                  </a-input>
-                </div>
-              </div>
-              <div>
-                <a-input class="input text-right"
-                  v-model:value="combinationName[i]"
+          <!-- 添加组合键 -->
+          <!-- <div class="border-right key-item input-item"> -->
+          <!-- <div class="border-right key-item input-item" v-for="(item,i) in addKeyList" :key="i">
+            <div class="flex">
+              <div class="flex items-center mr-3" @click="openKeyBoard(i,'addKey')">
+                <a-input class="input pointer"
+                  :value="keyCombination[i]"
+                  readonly
                   spellcheck="false"
-                  placeholder="快捷键名称"
+                  placeholder="按下组合键"
                   style="width:179px;height: 48px;"
-                  :ref="'inputFocusKey_'+ i"
-                  @click="getFocus('key',i)"
-                  @blur="lostFocus('inputFocusKey_'+ i,'addKeyName')"
-                  />
+                >
+                  <template #suffix>
+                  <div class="w-8 h-8 flex rounded-lg justify-center items-center"
+                  style="background: rgba(80,139,254,0.20);">
+                    <Icon icon="jianpan-xianxing" class="active-bg" style="color:#508BFE;"></Icon>
+                  </div>
+                  </template>
+                </a-input>
               </div>
-              <span @click.stop="delStaging('key')">
-                <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
-              </span>
-            </div> -->
-            <!-- 添加分类名称 -->
-            <!-- <div class="key-item border-right input-item">
-              <div class="flex items-center">
-                <a-input class="input"
-                  v-model:value="addGroupName"
-                  spellcheck="false"
-                  placeholder="分类名称"
-                  style="width:370px;height: 48px;"
-                  ref="inputFocusName"
-                  @click="getFocus('name')"
-                  />
-                  <span @click.stop="delStaging('name')">
-                    <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
-                  </span>
-              </div>
-            </div> -->
-            <div class="add-box input-item">
-              <div class="add-btn" style="width:181px" @click="addShortcutKey">新增快捷键</div>
-              <div class="add-btn" @click="addGroup">新增分类</div>
             </div>
+            <div>
+              <a-input class="input text-right"
+                v-model:value="combinationName[i]"
+                spellcheck="false"
+                placeholder="快捷键名称"
+                style="width:179px;height: 48px;"
+                :ref="'inputFocusKey_'+ i"
+                @click="getFocus('key',i)"
+                @blur="lostFocus('inputFocusKey_'+ i,'addKeyName')"
+                />
+            </div>
+            <span @click.stop="delStaging('key')">
+              <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+            </span>
+          </div> -->
+          <!-- 添加分类名称 -->
+          <!-- <div class="key-item border-right input-item">
+            <div class="flex items-center">
+              <a-input class="input"
+                v-model:value="addGroupName"
+                spellcheck="false"
+                placeholder="分类名称"
+                style="width:370px;height: 48px;"
+                ref="inputFocusName"
+                @click="getFocus('name')"
+                />
+                <span @click.stop="delStaging('name')">
+                  <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
+                </span>
+            </div>
+          </div> -->
+          <div class="add-box input-item">
+            <div class="add-btn" style="width:181px" @click="addShortcutKey">新增快捷键</div>
+            <div class="add-btn" @click="addGroup">新增分类</div>
+          </div>
           <!-- </div> -->
         </div>
       </vue-custom-scrollbar>
@@ -220,22 +229,23 @@
   <ShareModal :shareModal="shareModal" :shareName="applyName" @closeShare="closeShare" :back="true"></ShareModal>
   <!-- 键盘 -->
   <KeyBoard v-if="keyBoard"
-  :selectKey="selectKey"
-  :parentKeyList="keyList"
-  @closeKeyBoard="closeKeyBoard"
-  @saveKey="saveKey"></KeyBoard>
+            :selectKey="selectKey"
+            :parentKeyList="keyList"
+            @closeKeyBoard="closeKeyBoard"
+            @saveKey="saveKey"></KeyBoard>
 </template>
 
 <script>
 import Sortable from 'sortablejs'
-import HorizontalPanel from '../../components/HorizontalPanel.vue'
-import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
-import KeyBoard from '../../components/shortcutKey/KeyBoard.vue';
-import ShareModal from '../../components/ShareModal.vue';
-import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from './key'
-import {nanoid} from 'nanoid'
-import { message } from 'ant-design-vue';
+import HorizontalPanel from '../../../components/HorizontalPanel.vue'
+import ShortcutKeyList from '../shortcutKey/ShortcutKeyList.vue'
+import KeyBoard from '../shortcutKey/KeyBoard.vue'
+import ShareModal from '../../../components/ShareModal.vue'
+import { mapActions, mapWritableState } from 'pinia'
+import { keyStore } from '../store'
+import { nanoid } from 'nanoid'
+import { message } from 'ant-design-vue'
+
 export default {
   name: 'ShareKey',
   components: {
@@ -245,14 +255,14 @@ export default {
     ShareModal
   },
   directives: {
-      focus: {
-          inserted(el) {
-              el.focus();
-          }
+    focus: {
+      inserted (el) {
+        el.focus()
       }
+    }
   },
-  data(){
-    return{
+  data () {
+    return {
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -260,11 +270,11 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true
       },
-      navType:[
-         {title:'基本信息',name:'message'},
-         {title:'快捷键',name:'shortcutkey'}
+      navType: [
+        { title: '基本信息', name: 'message' },
+        { title: '快捷键', name: 'shortcutkey' }
       ],
-      defaultNavType:{title:'基本信息',name:'message'},
+      defaultNavType: { title: '基本信息', name: 'message' },
       closePrompt: true, //提示
       keyList: [], //快捷键列表
       imageUrl: '',
@@ -291,15 +301,15 @@ export default {
   },
   watch: {
     recentlyUsedList: {
-        deep:true,
-        handler(newV,oldV){
+      deep: true,
+      handler (newV, oldV) {
       }
     }
   },
   computed: {
-    ...mapWritableState(keyStore,['recentlyUsedList'])
+    ...mapWritableState(keyStore, ['recentlyUsedList','currentApp'])
   },
-  mounted(){
+  mounted () {
     this.getData()
     this.$nextTick(() => {
       this.keyDrop()
@@ -307,14 +317,14 @@ export default {
 
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList','setShortcutKeyList','setMarketList', 'delRecentlyEmpty']),
-    async getData(){
-      if(this.$route.params.id){
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty']),
+    async getData () {
+      if (this.$route.params.id) {
         this.paramsId = this.$route.params.id
         // let usedList = this.deepClone({},this.recentlyUsedList)
         this.recentlyUsedList.find(i => {
-          if(i.id == this.paramsId){
-            let item =  JSON.parse(JSON.stringify(this.deepClone({},i)))
+          if (i.id == this.paramsId) {
+            let item = JSON.parse(JSON.stringify(this.deepClone({}, i)))
             this.appContent = item
             this.icon = item.icon
             this.keyList = item.keyList
@@ -324,50 +334,52 @@ export default {
         })
         //执行添加默认添加一个可编辑的空数据
         this.addShortcutKey()
+      }else{
+        this.applyName=this.currentApp.software.alias
       }
     },
     //深拷贝
-    deepClone(obj, newObj) {
-      var newObj = newObj || {};
+    deepClone (obj, newObj) {
+      var newObj = newObj || {}
       for (let key in obj) {
         if (typeof obj[key] == 'object') {
           newObj[key] = (obj[key].constructor === Array) ? [] : {}
-          this.deepClone(obj[key], newObj[key]);
+          this.deepClone(obj[key], newObj[key])
         } else {
           newObj[key] = obj[key]
         }
       }
-      return newObj;
+      return newObj
     },
     // 删除空数据
-    delNotData(){
+    delNotData () {
       // 检测快捷键列表中的空数据后进行删除操作
       this.keyList = this.keyList.filter(item => {
         return item.keyStr !== '' && item.groupName !== '' && item.title !== ''
       })
-      this.delRecentlyEmpty({keyList: this.keyList, id: this.paramsId})
+      this.delRecentlyEmpty({ keyList: this.keyList, id: this.paramsId })
     },
     // 保存
-    saveScheme(){
-      if(!this.applyName)return message.info('名称不能为空')
+    saveScheme () {
+      if (!this.applyName) return message.info('名称不能为空')
       this.delNotData()
 
       let sum = 0
       this.keyList.map(item => {
-        if(item.keys){
+        if (item.keys) {
           sum += item.keys.length
         }
       })
-      if(this.paramsId !== -1){
+      if (this.paramsId !== -1) {
         this.appContent.icon = this.icon || this.file.path
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
         this.appContent.number = sum
         this.setSchemeList(this.appContent)
-      }else{
+      } else {
         const time = new Date().valueOf()
-        this.appContent =  {
+        this.appContent = {
           id: nanoid(),  //唯一标识
           icon: this.file.path, //方案的图片
           name: this.applyName, //方案名称
@@ -387,22 +399,22 @@ export default {
         }
         this.setShortcutKeyList(this.appContent)
       }
-      message.success('成功保存');
+      message.success('成功保存')
       this.$router.go(-1)
     },
     // 保存并分享
     // setMarketList
-    saveShare(){
+    saveShare () {
       this.delNotData()
-      if(!this.applyName)return message.info('名称不能为空')
-      if(!this.keyList.length)return message.info('快捷键列表不能为空')
+      if (!this.applyName) return message.info('名称不能为空')
+      if (!this.keyList.length) return message.info('快捷键列表不能为空')
       let sum = 0
       this.keyList.map(item => {
-        if(item.keys){
+        if (item.keys) {
           sum += item.keys.length
         }
       })
-      if(this.paramsId !== -1){
+      if (this.paramsId !== -1) {
         this.appContent.icon = this.icon || this.file.path
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
@@ -410,11 +422,11 @@ export default {
         this.appContent.number = sum
         this.appContent.isShare = true
         this.appContent.isMyCreate = true
-        this.appContent.isCommunity =  false
+        this.appContent.isCommunity = false
         this.setMarketList(this.appContent)
-      }else{
+      } else {
         const time = new Date().valueOf()
-        this.appContent =  {
+        this.appContent = {
           id: nanoid(),  //唯一标识
           icon: this.file.path, //方案的图片
           name: this.applyName, //方案名称
@@ -436,27 +448,27 @@ export default {
       }
       this.shareModal = true
     },
-    onBack(){
+    onBack () {
       this.delNotData()
       this.$router.go(-1)
     },
-    nextStep(){
-      this.defaultNavType = {title:'快捷键',name:'shortcutkey'}
+    nextStep () {
+      this.defaultNavType = { title: '快捷键', name: 'shortcutkey' }
     },
     // close(){
     //   this.shareModal = false
     //   this.$router.go(-1)
     // },
-    closeShare(val){
+    closeShare (val) {
       this.shareModal = val
     },
     // 编辑内容
-    editItem({id,groupName,keyStr,title},index,type){
+    editItem ({ id, groupName, keyStr, title }, index, type) {
       this.keyList.forEach(i => {
-        if(i.id === id || i.keyStr === '' || i.groupName === '' || i.title === '' || this.bulkEditKey){
+        if (i.id === id || i.keyStr === '' || i.groupName === '' || i.title === '' || this.bulkEditKey) {
           i.isEdit = true
           i.isNote = true
-        }else{
+        } else {
           i.isEdit = false
           i.isNote = false
         }
@@ -467,10 +479,10 @@ export default {
           this.$nextTick(() => {
             this.$refs[`inputNameEdit_${index}`][0].focus()
           })
-          break;
+          break
         case 'item':
           this.keyList.forEach(i => {
-            if(i.id === id){
+            if (i.id === id) {
               i.isEdit = true
               i.isNote = true
             }
@@ -480,104 +492,104 @@ export default {
           // this.$nextTick(() => {
           //   this.$refs[`inputKeyEdit_${index}`][0].focus()
           // })
-          break;
+          break
         case 'note':
           this.keyList.forEach(i => {
-            if(i.id === id){
+            if (i.id === id) {
               i.isEdit = true
               i.isNote = true
             }
           })
-          break;
+          break
       }
     },
     //添加的input获取焦点 (禁止拖拽导致需要手动获取焦点)
-    getFocus(type,index){
+    getFocus (type, index) {
       switch (type) {
         case 'key':
           this.$refs[`inputFocusKey_${index}`][0].focus()
-          break;
+          break
         case 'name':
-        this.$refs.inputFocusName.focus()
-          break;
+          this.$refs.inputFocusName.focus()
+          break
       }
 
     },
     // 失去焦点，保存修改
-    lostFocus(item,type){
-      setTimeout(()=>{
+    lostFocus (item, type) {
+      setTimeout(() => {
         switch (type) {
           case 'groupName':
-            if(!item.groupName.trim()){
+            if (!item.groupName.trim()) {
               item.groupName = this.groupName
-              return message.info('分组名称不能为空');
-            }else{
-              if(!this.bulkEditKey){
-                 this.keyList.forEach(kItem => {
-                  if(kItem.id === item.id)kItem.isEdit = false
+              return message.info('分组名称不能为空')
+            } else {
+              if (!this.bulkEditKey) {
+                this.keyList.forEach(kItem => {
+                  if (kItem.id === item.id) kItem.isEdit = false
                 })
               }
             }
-            break;
+            break
           case 'keyName':
-            if(!item.title.trim()){
+            if (!item.title.trim()) {
               item.title = this.keyName
-              return message.info('快捷键名称不能为空');
-            }else{
-              if(!item.keys.length){
+              return message.info('快捷键名称不能为空')
+            } else {
+              if (!item.keys.length) {
                 item.keyStr = '?'
                 item.keys.push('?')
               }
-              if(!this.bulkEditKey){
+              if (!this.bulkEditKey) {
                 // if(item.keys.length){
-                  this.keyList.forEach(kItem => {
-                    if(kItem.id === item.id){
-                      // 查找你要判断的文本框
-                      var  myInput = document.getElementById( 'note_' + item.id );
-                      if(myInput != document.activeElement) {
-                        setTimeout(()=> {
-                          kItem.isEdit = false
-                          kItem.isNote = false
-                          if(!kItem.noteVal){
-                            kItem.addNote = false
-                          }
-                        }, 200)
-                      }
+                this.keyList.forEach(kItem => {
+                  if (kItem.id === item.id) {
+                    // 查找你要判断的文本框
+                    var myInput = document.getElementById('note_' + item.id)
+                    if (myInput != document.activeElement) {
+                      setTimeout(() => {
+                        kItem.isEdit = false
+                        kItem.isNote = false
+                        if (!kItem.noteVal) {
+                          kItem.addNote = false
+                        }
+                      }, 200)
                     }
-                  })
+                  }
+                })
                 // }
               }
             }
-            break;
+            break
           case 'note':
-          if(!this.bulkEditKey){
-            this.keyList.forEach(kItem => {
-              if(kItem.id === item.id){
+            if (!this.bulkEditKey) {
+              this.keyList.forEach(kItem => {
+                if (kItem.id === item.id) {
 
-                // 查找你要判断的文本框
-                var  myInput = document.getElementById( 'keyName_' + item.id );
-                if  (myInput != document.activeElement) {
-                  setTimeout(()=> {
-                    kItem.isEdit = false
-                    kItem.isNote = false
-                    if(!kItem.noteVal){
-                      kItem.addNote = false
-                    }
-                  }, 200)
+                  // 查找你要判断的文本框
+                  var myInput = document.getElementById('keyName_' + item.id)
+                  if (myInput != document.activeElement) {
+                    setTimeout(() => {
+                      kItem.isEdit = false
+                      kItem.isNote = false
+                      if (!kItem.noteVal) {
+                        kItem.addNote = false
+                      }
+                    }, 200)
+                  }
                 }
-              }
-            })
-          }
+              })
+            }
         }
-      },200)
+      }, 200)
 
     },
     // 开启键盘
-    openKeyBoard(item,type){
+    openKeyBoard (item, type) {
       switch (type) {
         case 'key':
           this.selectKey = item
-          break;
+          break
         case 'addKey':
           this.addNumber = item
           // this.stagingKey.id ? this.stagingKey :
@@ -590,36 +602,36 @@ export default {
             isEdit: item.keyStr ? true : false,
             addInputIndex: item
           }
-          break;
+          break
       }
 
       this.keyBoard = true
     },
     // 关闭键盘
-    closeKeyBoard(){
+    closeKeyBoard () {
       this.keyBoard = false
     },
     // 保存修改的快捷键
-    saveKey(keyArr){
+    saveKey (keyArr) {
 
       this.keyBoard = false
-      this.keyList.forEach((item,index) => {
-        if(item.id === keyArr.id){
-          if(keyArr.title && !this.bulkEditKey){
+      this.keyList.forEach((item, index) => {
+        if (item.id === keyArr.id) {
+          if (keyArr.title && !this.bulkEditKey) {
             keyArr.isEdit = false
             keyArr.isNote = false
           }
-          this.keyList.splice(index,1,keyArr)
+          this.keyList.splice(index, 1, keyArr)
           this.keyContent = keyArr.keyStr
         }
-        if(item.keyStr === '' || item.title === ''){
+        if (item.keyStr === '' || item.title === '') {
           item.isEdit = true
           item.isNote = true
         }
       })
     },
     // 添加快捷键
-    addShortcutKey(){
+    addShortcutKey () {
       this.keyList.push({
         id: nanoid(),
         keys: [],
@@ -630,7 +642,7 @@ export default {
       })
     },
     // 添加分类名称
-    addGroup(){
+    addGroup () {
       this.keyList.push({
         id: nanoid(),
         groupName: '',
@@ -651,15 +663,15 @@ export default {
       // }
     },
     // 删除一列快捷键
-    delKey(index,item){
+    delKey (index, item) {
       this.keyList.forEach(i => {
-        if(item.id === i.id)this.keyList.splice(index,1)
+        if (item.id === i.id) this.keyList.splice(index, 1)
       })
       // this.keyList.splice(index,1)
     },
-    delNote(index,item){
+    delNote (index, item) {
       this.keyList.forEach(i => {
-        if(item.id === i.id){
+        if (item.id === i.id) {
           i.addNote = false
           i.isNote = false
           i.noteVal = ''
@@ -667,37 +679,37 @@ export default {
       })
     },
     //添加备注
-    setAddNote(index,item){
+    setAddNote (index, item) {
       item.addNote = true
       item.isNote = true
     },
     // 删除暂存添加的内容
-    delStaging(type){
+    delStaging (type) {
       switch (type) {
         case 'key':
           this.stagingKey = {}
           this.keyCombination = ''
           this.combinationName = ''
-          break;
+          break
         case 'name':
           this.addGroupName = ''
-          break;
+          break
       }
     },
     // 批量编辑
-    bulkEdit(){
+    bulkEdit () {
       this.bulkEditKey = !this.bulkEditKey
-      if(this.bulkEditKey){
+      if (this.bulkEditKey) {
         this.keyList.forEach(item => {
           item.isEdit = true
           item.isNote = true
         })
-      }else{
+      } else {
         this.keyList.forEach(item => {
-          if(item.title === '' || item.keys === '' || item.groupName === ''){
+          if (item.title === '' || item.keys === '' || item.groupName === '') {
             item.isEdit = true
             item.isNote = true
-          }else{
+          } else {
             item.isEdit = false
             item.isNote = false
           }
@@ -705,39 +717,39 @@ export default {
       }
     },
     //拖拽排序
-    keyDrop(){
-      let that = this;
+    keyDrop () {
+      let that = this
       let side = document.getElementById('keyBox')
       Sortable.create(side, {
         sort: true,
         filter: '.input-item',
         animation: 150,
-        onUpdate:function(event){
+        onUpdate: function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
-          let  newItem = side.children[newIndex]
-          let  oldItem = side.children[oldIndex]
+          let newItem = side.children[newIndex]
+          let oldItem = side.children[oldIndex]
           // 先删除移动的节点
           side.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
-          if(newIndex > oldIndex) {
-            side.insertBefore(newItem,oldItem)
+          if (newIndex > oldIndex) {
+            side.insertBefore(newItem, oldItem)
           } else {
-            side.insertBefore(newItem,oldItem.nextSibling)
+            side.insertBefore(newItem, oldItem.nextSibling)
           }
           let temp = that.keyList[oldIndex]
           that.keyList.splice(oldIndex, 1)
           that.keyList.splice(newIndex, 0, temp)
         }
-      });
+      })
     },
     // 删除上传的方案图标
-    delIcon(){
+    delIcon () {
       this.file = {}
       this.icon = ''
     },
     // 上传头像前校验
-    beforeUpload(file) {
+    beforeUpload (file) {
       const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png'
       if (!isJpgOrPng) {
         this.$message.error('只能上传jpg/png格式的头像!')
@@ -749,7 +761,7 @@ export default {
       return isJpgOrPng && isLt2M
     },
     // 上传头像
-    uploadImage(file) {
+    uploadImage (file) {
       this.file = file.file
       // this.avatarLoading = true
       // const formData = new FormData()
@@ -807,233 +819,258 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .box{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-  }
-  .btn-item{
-    display: flex;
-    >div{
-      background: var(--primary-bg);
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: PingFangSC-Regular;
-      font-size: 16px;
-      color: var(--primary-text);
-    }
-    div:nth-child(1),
-    div:nth-child(2){
-      width: 120px;
-      height: 48px;
-      margin-right: 12px;
-    }
-    div:nth-child(3){
-      width: 150px;
-      height: 48px;
-    }
-  }
-  .add-content{
-    height: 90%;
-    width: 480px;
-    margin: 0 auto;
-    overflow-x: hidden;
-    overflow-y: auto;
-    >span{
-      font-family: PingFangSC-Medium;
-      font-size: 16px;
-      color: var(--primary-text);
-      font-weight: 500;
-      margin: 21px 0;
-      display: block;
-    }
-  }
-  .avatar{
-    width: 100px;
-    height: 100px;
-    position: relative;
-    >span{
-      position: absolute;
-      top: -10px;
-      right: -10px;
-    }
-  }
-  .key-content{
-    height: 90%;
-  }
-  .add-box{
-    margin-left: 48px;
-    display: flex;
-    .add-btn{
-      cursor: pointer;
-      background: var(--secondary-bg);
-      display: flex;
-      align-items: center;
-      border-radius: 12px;
-      justify-content: center;
-      margin-left: 12px;
-      width:180px;
-      height:48px;
-      font-size: 16px;
-      color: var(--primary-text);
-    }
-  }
-  .key-list{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    overflow: hidden;
-    align-content: flex-start;
-    padding: 24px 0;
-    height: 500px;
-  }
-  .add-content::-webkit-scrollbar{
-    display: none;
-  }
-  .prompt{
-      background: var(--mask-bg);
-      border-radius: 12px;
-      height: 56px;
-    }
-  .right-text{
-    margin: 0 40px;
-  }
-  .border-right{
-    position: relative;
-  }
-  .border-right::after{
-    content: '';
-    position: absolute;
-    right: -100px;
-    top: 0;
-    height: 56px;
-    margin-left: 10px;
-    border-right: solid rgba(255,255,255,0.1) 1px;
-  }
-  // .input-item{
-    // justify-content: space-between;
-    // margin: 28px 12px 16px;
-    // >div{
-    //   display: flex;
-    // }
-  // }
-  .input{
-    width:227px;
-    height: 48px;
-    background: var(--secondary-bg);
+.box {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.btn-item {
+  display: flex;
+
+  > div {
+    background: var(--primary-bg);
     border-radius: 12px;
-    color: var(--primary-text);
-    font-size: 16px;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .key-title{
-    flex: 1;
-    max-width: 160px;
-    text-align: right;
-  }
-  .edit-item{
-    width:227px;
-    height: 48px;
-    background: var(--secondary-bg);
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .add-scheme{
-    background: var(--secondary-bg);
-    border-radius: 12px;
-    width: 80px;
-    height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  .drawer-center{
-    .title{
-      font-size: 16px;
-      color: var(--primary-text);
-      font-weight: 500;
-    }
-    .trend-content{
-      background: var(--secondary-bg);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      height:100px;
-    }
-    .drawer-img{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 24px 0;
-      .btnCopy{
-        background: var(--secondary-bg);
-        border-radius: 12px;
-        width: 128px;
-        height: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-  }
-  .key-box{
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-content: flex-start;
-    // overflow: auto;
-    padding: 24px 0;
-    flex-wrap: wrap;
-    height: 100%;
-    width: 100%;
-
-  }
-  .key-box::-webkit-scrollbar{
-    display: none;
-  }
-  .key-item{
-    padding: 0 12px;
-    margin: 0 100px 8px 48px;
-    width: 370px;
-    height:48px;
-    line-height:48px;
+    font-family: PingFangSC-Regular;
     font-size: 16px;
     color: var(--primary-text);
-    display: flex;
-    border-radius: 8px;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 8px;
-  }
-  .text-note{
-    margin: 0 100px 0 48px;
-    padding: 0 12px;
-    width: 370px;
-    height: 22px;
-    text-align:right;
-    position: relative;
-  }
-  .note-val{
-    position: relative;
-    top: -14px;
-    font-size: 16px;
-    color: var(--secondary-text);
   }
 
-  .text-note::after {
-    content: '';
-    position: absolute;
-    right: -100px;
-    top: 0;
-    height: 22px;
-    margin-left: 10px;
-    border-right: solid rgba(255,255,255,0.1) 1px;
+  div:nth-child(1),
+  div:nth-child(2) {
+    width: 120px;
+    height: 48px;
+    margin-right: 12px;
   }
+
+  div:nth-child(3) {
+    width: 150px;
+    height: 48px;
+  }
+}
+
+.add-content {
+  height: 90%;
+  width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  > span {
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 500;
+    margin: 21px 0;
+    display: block;
+  }
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  position: relative;
+
+  > span {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+  }
+}
+
+.key-content {
+  height: 90%;
+}
+
+.add-box {
+  margin-left: 48px;
+  display: flex;
+
+  .add-btn {
+    cursor: pointer;
+    background: var(--secondary-bg);
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    justify-content: center;
+    margin-left: 12px;
+    width: 180px;
+    height: 48px;
+    font-size: 16px;
+    color: var(--primary-text);
+  }
+}
+
+.key-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: hidden;
+  align-content: flex-start;
+  padding: 24px 0;
+  height: 500px;
+}
+
+.add-content::-webkit-scrollbar {
+  display: none;
+}
+
+.prompt {
+  background: var(--mask-bg);
+  border-radius: 12px;
+  height: 56px;
+}
+
+.right-text {
+  margin: 0 40px;
+}
+
+.border-right {
+  position: relative;
+}
+
+.border-right::after {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: 0;
+  height: 56px;
+  margin-left: 10px;
+  border-right: solid rgba(255, 255, 255, 0.1) 1px;
+}
+
+// .input-item{
+// justify-content: space-between;
+// margin: 28px 12px 16px;
+// >div{
+//   display: flex;
+// }
+// }
+.input {
+  width: 227px;
+  height: 48px;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  color: var(--primary-text);
+  font-size: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.key-title {
+  flex: 1;
+  max-width: 160px;
+  text-align: right;
+}
+
+.edit-item {
+  width: 227px;
+  height: 48px;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.add-scheme {
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  width: 80px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.drawer-center {
+  .title {
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 500;
+  }
+
+  .trend-content {
+    background: var(--secondary-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    height: 100px;
+  }
+
+  .drawer-img {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 24px 0;
+
+    .btnCopy {
+      background: var(--secondary-bg);
+      border-radius: 12px;
+      width: 128px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.key-box {
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  // overflow: auto;
+  padding: 24px 0;
+  flex-wrap: wrap;
+  height: 100%;
+  width: 100%;
+
+}
+
+.key-box::-webkit-scrollbar {
+  display: none;
+}
+
+.key-item {
+  padding: 0 12px;
+  margin: 0 100px 8px 48px;
+  width: 370px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 16px;
+  color: var(--primary-text);
+  display: flex;
+  border-radius: 8px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.text-note {
+  margin: 0 100px 0 48px;
+  padding: 0 12px;
+  width: 370px;
+  height: 22px;
+  text-align: right;
+  position: relative;
+}
+
+.note-val {
+  position: relative;
+  top: -14px;
+  font-size: 16px;
+  color: var(--secondary-text);
+}
+
+.text-note::after {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: 0;
+  height: 22px;
+  margin-left: 10px;
+  border-right: solid rgba(255, 255, 255, 0.1) 1px;
+}
 
 </style>

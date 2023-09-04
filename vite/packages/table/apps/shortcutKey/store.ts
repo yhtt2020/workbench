@@ -526,6 +526,9 @@ let keyData = [
 // @ts-ignore
 export const keyStore = defineStore("key", {
   state: () => ({
+    currentApp: {
+      software: {}
+    },//当前应用
     executedApps:[],//运行过的应用
     sessionList: [],//会话列表
     //快捷键方案列表
@@ -3334,8 +3337,52 @@ export const keyStore = defineStore("key", {
         children: []
       },
     ],
+    schemeList:[]
   }),
   actions: {
+    async loadShortcutSchemes(exeName) {
+      console.log('从数据库查询scheme')
+      const dbKey = 'shortcut:scheme:'
+
+      let map: any = {
+        _id: {
+          $regex: new RegExp(`^${dbKey}`)
+        },
+      }
+      if(exeName){
+        map.exeName=exeName
+      }
+      await tsbApi.db.createIndex({
+        index: {
+          fields: ['exeName']
+        }
+      })
+      this.schemeList = (await tsbApi.db.find({
+        selector: map,
+        sort: [
+          {
+            '_id': 'desc',
+          }
+        ]
+      })).docs
+      let schemes=[]
+      if(this.schemeList.length===0){
+        for (const scheme of keyData) {
+          let rs=await tsbApi.db.put({
+            _id: 'shortcut:scheme:'+Date.now(),
+            ...scheme
+          })
+          console.log(rs,'添加')
+          if(rs.ok){
+            schemes.push(rs.doc)
+          }
+        }
+        console.log(schemes,'方案列表')
+
+       // this.schemeList=[...keyData.concat()]
+      }
+      return schemes
+    },
     setRecentlyUsedList(item) {
       this.recentlyUsedList.forEach((i, index) => {
         if (i.id === item.id) this.recentlyUsedList.splice(index, 1)
@@ -3395,7 +3442,7 @@ export const keyStore = defineStore("key", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList','executedApps'],
+        paths: ['shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList','executedApps','currentApp'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

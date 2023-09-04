@@ -55,11 +55,11 @@
 </template>
 
 <script>
-import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue';
+import ShortcutKeyList from './ShortcutKeyList.vue';
 import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../apps/shortcutKey/key'
-import { appStore } from '../../store';
+import { keyStore } from '../store'
+import { appStore } from '../../../store';
 export default {
   name: "Preview",
   components: {

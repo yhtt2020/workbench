@@ -232,12 +232,12 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
-import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
-import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import ShortcutKeyDetail from "../apps/shortcutKey/shortcutKey/ShortcutKeyDetail.vue";
+import NotShortcutKey from "../apps/shortcutKey/shortcutKey/NotShortcutKey.vue";
+import ShortcutKeyList from "../apps/shortcutKey/shortcutKey/ShortcutKeyList.vue";
 import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
-import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
+import KeyBoard from "../apps/shortcutKey/shortcutKey/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
 import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue';

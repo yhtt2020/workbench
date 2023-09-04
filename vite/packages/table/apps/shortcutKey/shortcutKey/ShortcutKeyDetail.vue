@@ -167,9 +167,9 @@
 <script>
 import NotShortcutKey from './NotShortcutKey.vue'
 // import ShortcutKeyList from '../../components/shortcutKey/ShortcutKeyList.vue'
-import Search from '../../components/Search.vue'
+import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../apps/shortcutKey/key'
+import { keyStore } from '../store'
 import { message } from 'ant-design-vue';
 export default {
   name: 'ShortcutKeyDetail',

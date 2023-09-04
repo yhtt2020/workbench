@@ -3,13 +3,15 @@ import {defineComponent} from 'vue'
 import XtButton from "../../ui/libs/Button/index.vue";
 import {SettingFilled} from "@ant-design/icons-vue";
 import {mapWritableState} from "pinia";
-import {keyStore} from "./key";
-
+import {keyStore} from "./store";
+import {appStore} from "../../store";
+const winappIcon='/icons/winapp.png'
+import './static/style.scss'
 const appMap = [
   {
     exeName: '',
     alias: '未知应用',
-    icon: 'docker',
+    icon: winappIcon,
     company: '',
     id: 'unknown'
   },
@@ -17,7 +19,7 @@ const appMap = [
     exeName: 'electron.exe',
     alias: 'Electron调试程序',
     company: '想天软件',
-    icon: 'https://files.getquicker.net/_icons/C6BA2B955AED4FCBD1A380D29935A284925DDB3D.png',
+    icon: winappIcon,
     id: 'qq.exe'
   },
   {
@@ -78,10 +80,8 @@ export default defineComponent({
   components: {SettingFilled, XtButton},
   data() {
     return {
-      currentApp: {
-        software: {}
-      },//当前应用
-      currentIndex: 'list',
+
+      currentIndex: '',
       watchDog: {},//监听狗
       currentWindow: {},//当前窗口
       selectTab: '',
@@ -98,7 +98,8 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['sessionList', 'executedApps']),
+    ...mapWritableState(keyStore, ['sessionList', 'executedApps','currentApp']),
+    ...mapWritableState(appStore,['fullScreen']),
     leftMenu() {
       const startMenu = [
         {
@@ -146,9 +147,14 @@ export default defineComponent({
         return {
           img: app.software.icon,
           title: app.software.alias,
-          id: app.pid,
+          id: app.exeName,
+          noBg:true,
           callBack: () => {
             this.currentApp = app
+            this.$router.push({
+              name:'schemeList',
+              exeName:app.exeName
+            })
           }
         }
       })
@@ -176,6 +182,9 @@ export default defineComponent({
       let path = win32.getProcessidFilePath(pid)
       let exeName = require('path').basename(path)
       let software = this.getRepApp(exeName)
+      if(software.id==='unknown'){
+        software.alias=exeName
+      }
       let currentApp = {
         pid: pid,
         title: title,
@@ -187,7 +196,10 @@ export default defineComponent({
       }
       this.executedApps.unshift(currentApp)
       this.currentApp = currentApp
+
     })
+    console.log(this.currentApp,'dd')
+    this.currentIndex=this.currentApp.exeName
   }, unmounted() {
     this.watchDog.quit()
   },
@@ -211,34 +223,20 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex h-full xt-bg rounded-lg py-2 " style="">
-
-    <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="2">
-      <!--  -->
-      <template #test>
-        <setting-filled/>
-      </template>
-    </xt-left-menu>
-    <div class=" xt-text h-full rounded-lg">
+  <div :class="{'rounded-lg':!fullScreen}"
+    class="flex h-full xt-bg  py-2" style="">
+    <div>
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="2">
+        <!--  -->
+        <template #test>
+          <setting-filled/>
+        </template>
+      </xt-left-menu>
+    </div>
+    <div class=" xt-text h-full rounded-lg flex-1">
       <a-row class="h-full" v-if="currentApp">
-        <a-col :span="4">
-          <div class="mb-2  rounded-md px-1">
-            <div hidden="">
-              - {{ currentApp.pid }} - {{ currentApp.title }}
-            </div>
-            <div hidden="" class="xt-text-2">
-              {{ currentApp.path }}
-            </div>
-            <div hidden="">{{ currentApp.lastFocus }}</div>
-            <div class="xt-bg-2 p-2 rounded-md my-1 truncate">
-              <a-avatar shape="square" :src="currentApp.software.icon"></a-avatar>
-              {{ currentApp.software.alias }}
-              <div v-if="!currentApp.inRep" class="mt-2">
-                <xt-button type="theme" size="mini" style="width:100%" :h="36">登记入库</xt-button>
-              </div>
-            </div>
 
-          </div>
+
           <!--          <div   class="mb-2 s-bg rounded-md p-2" v-for="app in executedApps ">-->
           <!--            {{ app.exeName }} - {{ app.pid }} - {{ app.title }}-->
 
@@ -256,10 +254,10 @@ export default defineComponent({
           <!--              <xt-button type="theme">登记入库</xt-button>-->
           <!--            </div>-->
           <!--          </div>-->
-        </a-col>
-        <a-col class="h-full" :span='20'>
-          <RouterView></RouterView>
-        </a-col>
+
+        <keep-alive>
+        <RouterView></RouterView>
+        </keep-alive>
       </a-row>
 
     </div>
