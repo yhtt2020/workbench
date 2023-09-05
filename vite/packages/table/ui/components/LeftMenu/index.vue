@@ -159,7 +159,8 @@ const newList = computed(() => {
 
 // 动态获取ID
 const index = computed(() => {
-  return isNaN(props.id.value) ? newList.value[0].id : props.index.value;
+
+  return isNaN(props.id?.value) ? newList.value[0].id : props.index.value;
 });
 
 // 选择ID
