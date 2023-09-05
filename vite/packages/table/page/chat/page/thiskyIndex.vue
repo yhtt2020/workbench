@@ -18,7 +18,10 @@
    <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
     <ChatFold title="常用">
       <div class="flex flex-col" v-if="doubleCol === false">
-        <div class="flex items-center pointer py-3" v-for="item in use">
+        <div class="flex items-center rounded-lg pointer pl-4 group-item py-3" v-for="item in use"
+         style="width: 156px;"
+         :style="item.title.length > 4 ? {paddingLeft:'16px',paddingRight:'12px'} : {paddingLeft:'16px'}"
+        >
           <template v-if="item.type === 'message'">
            <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
           </template>
@@ -29,7 +32,10 @@
         </div>
       </div>
       <div class="flex grid grid-cols-2 gap-4" v-else>
-        <div class="flex items-center pointer py-3" v-for="item in use">
+        <div class="flex items-center rounded-lg pl-4 pointer group-item py-3" v-for="item in use"
+         style="width: 156px;"
+         :style="item.title.length > 4 ? {paddingLeft:'12px',paddingRight:'12px'} : {paddingLeft:'16px'}"
+        >
           <template v-if="item.type === 'message'">
            <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
           </template>
@@ -43,7 +49,10 @@
     
     <ChatFold title="产品相关">
       <div class="flex flex-col" v-if="doubleCol === false">
-        <div class="flex items-center pointer py-3" v-for="item in product">
+        <div class="flex items-center rounded-lg pl-4 pointer py-3 group-item" v-for="item in product"
+        style="width: 156px;"
+        :style="item.title.length > 4 ? {paddingLeft:'12px',paddingRight:'12px'} : {paddingLeft:'16px'}"
+        >
           <template v-if="item.type === 'message'">
            <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
           </template>
@@ -57,7 +66,8 @@
         </div>
       </div>
       <div class="flex grid grid-cols-2 gap-4" v-else>
-        <div class="flex items-center pointer py-3" v-for="item in product">
+        <div class="flex items-center rounded-lg pointer group-item py-3" v-for="item in product" style="width: 156px;"
+        :style="item.title.length > 4 ? {paddingLeft:'12px',paddingRight:'12px'} : {paddingLeft:'16px'}">
           <template v-if="item.type === 'message'">
            <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
           </template>
@@ -74,13 +84,13 @@
  
     <ChatFold title="交流群">
       <div class="flex flex-col" v-if="doubleCol === false">
-        <div class="flex items-center pointer py-3" v-for="item in talkGroup">
+        <div class="flex items-center rounded-lg pl-3 pointer rounded-lg group-item py-3" v-for="item in talkGroup">
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
           <span class="font-16 ml-3" style="color: var(--primary-text);">{{ item.title }}</span>
         </div>
       </div>
       <div class="flex grid grid-cols-2 gap-4" v-else>
-        <div class="flex items-center pointer py-3" v-for="item in talkGroup">
+        <div class="flex items-center rounded-lg pointer pl-3 py-3 group-item" v-for="item in talkGroup">
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
           <span class="font-16 ml-3" style="color: var(--primary-text);">{{ item.title }}</span>
         </div>
@@ -127,7 +137,9 @@ export default defineComponent({
     suppressScrollY: false,
     suppressScrollX: true,
     wheelPropagation: true
-   }
+   },
+
+   
   })
 
   const updatePage = () =>{
@@ -161,4 +173,13 @@ export default defineComponent({
  font-weight: 400;
 }
 
+.group-item{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    background: var(--active-secondary-bg);
+  }
+}
 </style>
