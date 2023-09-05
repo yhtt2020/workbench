@@ -2,7 +2,9 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {sUrl} from "../consts";
 import {get, post} from "../js/axios/request";
+import {serverCache,localCache} from '../js/axios/serverCache'
 import TUIKit from "../TUIKit";
+
 
 const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
@@ -11,10 +13,22 @@ export const chatStore = defineStore('chatStore', {
     state: () => ({
       userSig: '',
       limitTotal:'200',
-
+      users:[
+        { uid:'4'}, {uid:'36'}, {uid:'10'},{ uid:'23'}
+      ],
+      group:[
+        {groupID:'suggest'},// {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
+       // {groupID:'update'},{groupID:'develop_group'},
+       // {groupID:'trade'},{groupID:'developer'},{groupID:'3dprint'},{groupID:'screen_diy'},
+       // {groupID:'player'},{groupID:'3dgitial'},
+      ],
       settings:{
         showDouble:false,  // 是否展示社群双列
-      }
+        isLoading:0,
+      },
+      refUser:[], // 接收推荐用户数据
+      groupList:[],  // 接收推荐群数据
+      memberList:[], // 成员列表数据
     }),
     actions: {
       async getUserSig() {
@@ -47,6 +61,69 @@ export const chatStore = defineStore('chatStore', {
       
       setDouble(value:any){
        this.settings.showDouble = value
+      },
+      async setReferredUsers (){
+        const findStore = appStore()
+
+        const refList = { refUser:[], group:[] }
+        // 遍历获取推荐用户
+        for(let i=0;i<this.users.length;i++){
+          const uid = this.users[i].uid
+          const userRes = await findStore.getUserCard(uid)
+          const referItem = {
+           uid:userRes.data.user.uid,
+           nickname:userRes.data.user.nickname,
+           avatar:userRes.data.user.avatar,
+          }
+          refList.refUser.push(referItem)
+        }
+  
+        // 遍历获取推荐群聊
+        for(let i=0;i<this.group.length;i++){
+         const option = {
+          groupID:this.group[i].groupID
+         }
+         const result  = await window.$chat.getGroupProfile(option)
+         const group = result.data.group
+         refList.group.push(group)
+        }
+        localCache.set('findData',refList,10*60)
+        serverCache.setData('findData',refList,10*60)
+        
+      },
+
+      async getMemeber(){
+        for(let i=0;i<this.group.length;i++){
+          const option = {
+           groupID:this.group[i].groupID,
+           count:100,
+           offset:0,
+          }
+          const res = await window.$chat.getGroupMemberList(option)
+          this.memberList = res.data.memberList
+         }
+      },
+
+      async getReferData(){  // 获取推荐用户数据
+        try {
+          const result = await serverCache.getDataWithLocalCache('findData',{
+           localCache: true, ttl: 10 * 60,
+           cache: false
+          })
+          if(result){
+           this.refUser = result.refUser
+           this.groupList = result.group
+           this.settings.isLoading = 0
+          }else{
+           console.warn('获取数据失败,返回undefined',result);
+           this.setReferredUsers()
+           this.settings.isLoading = 1
+          }
+
+        } catch (error) {
+          console.error('获取数据失败',error)
+        }
+       
       }
 
     },

@@ -2,8 +2,8 @@ export const chatList = {
  commonUse: [
   {title:'闲话畅聊',type:'message'},
   {title:'直面开发团队',type:'message'},
-  {title:'阿皮动态',type:'link'},
-  {title:'B站视频',type:'link'}
+  {title:'阿皮动态',type:'link',alias:'api'},
+  {title:'B站视频',type:'link',alias:'bili'}
  ],
  productRelated: [
   {title:'新手入门',type:'app'},
