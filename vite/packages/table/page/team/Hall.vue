@@ -72,7 +72,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      take:1000,
+      take:100,
       page:1,
       selectTeam: {},
       actionVisible: false,
@@ -105,7 +105,7 @@ export default {
         }
         if(randomNums.indexOf(randomNum) >= -1){
           randomNums.push(randomNum)
-          if(randomNums.length>=6){
+          if(randomNums.length>=12){
             break
           }
         }
