@@ -32,8 +32,8 @@ export default defineComponent({
 
   setup () {
     const data = reactive({
-      index:2,
-      type:'thisky'
+      index:0,
+      type:'chat'
     })
 
     const selectTab = (item:any) =>{
