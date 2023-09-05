@@ -30,22 +30,26 @@
 
             <div>
                 <div class="flex items-center justify-center">
-                    <img :src="cardData.options.topImg" alt="" class="w-1/4 h-full mr-5" v-if="cardData.options?.topImg">
-                    <video src="cardData.options.topVed" class="w-1/4 h-full" v-if="cardData.options?.topVed"></video>
+                    <img :src="cardData.options.img" alt="" class="w-1/4 h-full mr-5" v-if="cardData.options?.img.length===1">
+                    <video src="cardData.options.viedo" class="w-1/4 h-full" v-if="cardData.options?.viedo"></video>
                     <!-- <div class="w-1/3 h-full bg-image"></div> -->
-                    <!-- 插入正文元素  :class="[omit:options.topImg]" -->
-                    <slot name="content" ></slot>
+                    <!-- 插入正文元素  :class="[omit:options.img]" -->
+                    <!-- <div class="omit"> -->
+                        <slot name="content" ></slot>
+                    <!-- </div> -->
+                    
+                    
                 </div>
-                <template v-if="cardData.options?.btmImg" >
-                    <ul class="flex p-0 mt-6 mb-6">
-                      <img :src="item" alt="" v-for="item in cardData.options?.btmImg" class="w-1/6 mr-3 h-1/6">  
-                    </ul>
+                <template v-if="cardData.options?.img.length>1">
+                        <ul class="flex p-0 mt-6 mb-6" >
+                          <img :src="item" alt="" v-for="(item,index) in cardData.options?.img"  class="w-1/6 mr-3 h-1/6" :key="index">  
+                        </ul>
                 </template>
                 
                 
             </div>
 
-            <div class="card-bottom " v-if="!isShow" style="color: var(--primary-text);">
+            <div class="card-bottom " style="color: var(--primary-text);">
                 <span class="view" style="cursor: pointer;">1626 浏览</span>
                 <span class="like" style="cursor: pointer;">13 点赞</span>
                 <span class="comments" style="cursor: pointer;">23 评论</span>
@@ -132,14 +136,14 @@ const props = defineProps({
             line-height: 22px;
             font-weight: 400;
         }
-        // .omit{
-        //     white-space: pre-wrap;
-        //     display: -webkit-box;
-        //     -webkit-line-clamp: 2;
-        //     -webkit-box-orient: vertical;
-        //     text-overflow: ellipsis;
-        //     overflow: hidden;
-        // }
+        .omit{
+            white-space: pre-wrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
 
         .card-bottom {
             margin-top: 12px;

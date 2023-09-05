@@ -12,92 +12,99 @@
 
     <template v-if="type === 'thisky'">
       <ThiskyIndex></ThiskyIndex>
+      <!-- <Commun /> -->
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, toRefs, onMounted,ref} from 'vue';
-import {TUIEnv} from '../../TUIKit/TUIPlugin';
+import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue';
+import { TUIEnv } from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
-import {handleErrorPrompts} from '../../TUIKit/TUIComponents/container/utils';
+import { handleErrorPrompts } from '../../TUIKit/TUIComponents/container/utils';
 import TUIContact from "../../TUIKit/TUIComponents/container/TUIContact/index.vue";
 import SecondPanel from "../../components/SecondPanel.vue";
-import {onBeforeRouteUpdate, useRoute} from 'vue-router'
-import {message} from "ant-design-vue";
-
-
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { message } from "ant-design-vue";
+// import Commun from './Commun.vue'
+import ChatFind from "./page/ChatFind.vue"
+import ChatMain from './page/chatMain.vue';
+import ThiskyIndex from './page/thiskyIndex.vue'
 export default defineComponent({
   name: 'App',
   components: {
     SecondPanel,
     TUIContact,
     Drag,
+    ChatFind,
+    ThiskyIndex,
+    ChatMain
+    
   },
 
-  setup () {
+  setup() {
     const data = reactive({
-      index:2,
-      type:'thisky'
+      index: 2,
+      type: 'thisky'
     })
 
-    const selectTab = (item:any) =>{
+    const selectTab = (item: any) => {
       // router.push(item.route)
       data.type = item.type
     }
 
     const chatLeftList = ref([
       {
-        icon:'message',
-        type:'chat',
+        icon: 'message',
+        type: 'chat',
         // route:{
         //   name:'chatMain'
         // },
-        callBack:selectTab,
+        callBack: selectTab,
       },
       {
-        icon:'zhinanzhen',
-        type:'find',
-        callBack:selectTab,
+        icon: 'zhinanzhen',
+        type: 'find',
+        callBack: selectTab,
         // route:{
         //   name:'chatFind'
         // }
       },
       {
-        img:'/icons/bz1.png',
-        type:'thisky',
-        callBack:selectTab,
+        img: '/icons/bz1.png',
+        type: 'thisky',
+        callBack: selectTab,
         // route:{
         //   name:'chatThisky'
         // }
       },
       {
-        icon:'tianjia2'
+        icon: 'tianjia2'
 
       },
     ])
 
     // const router = useRouter()
-    
+
     // onMounted(()=>{
     //   router.push({name:'chatThisky'})
     // })
 
-    const updateChat = () =>{
+    const updateChat = () => {
       data.index = 0
       data.type = 'chat'
     }
 
     return {
       chatLeftList,
-      ...toRefs(data),updateChat,
+      ...toRefs(data), updateChat,
     }
   }
 })
 </script>
 
 <style scoped>
-:deep(.xt-br){
-  margin-right:0px !important;
+:deep(.xt-br) {
+  margin-right: 0px !important;
 }
 </style>

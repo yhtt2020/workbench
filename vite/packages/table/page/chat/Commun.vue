@@ -11,9 +11,10 @@
                 <a-button type="primary" :icon="h(PlusCircleOutlined)" style="color: var(--primary-text);">发布</a-button>
             </div>
         </div>
-        <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-            <div class="flex justify-center ">
+        <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
+            <div class="flex justify-center h-full" >
                 <!-- 左侧卡片区域 -->
+                <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
                 <div class="flex justify-center content" :style="{ width: isShow ? '40%' : '60%' }">
                     <!-- 循环渲染多个 ComCard -->
                     <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card"
@@ -23,15 +24,17 @@
                             <!-- 添加数据的文本内容-标题和内容分开 -->
                             <div>
                                 <div id="title" style="color: var(--primary-text);">{{ card.content.title }}</div>
-                                <div id="context" style="color:  var(--secondary-text);">{{ card.content.context }}</div>
+                                <div id="context" style="color:  var(--secondary-text);" :class="[{'omit':card.options?.img.length===1}]">{{ card.content.context }}</div>
                             </div>
                             <!-- 自定义添加内容 -->
                             <!-- <slot></slot> -->
                         </template>
                     </ComCard>
                 </div>
+                </vue-custom-scrollbar>
                 <!-- 右侧详情区域 -->
-                <div class="ml-3 detail" v-if="isShow" :style="{ width: isShow ? '55%' : '40%' }">
+                <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+                <div class="h-full ml-3 detail" v-if="isShow" :style="{ width: isShow ? '55%' : '40%' }">
                     <DetailCard :cardData="comCards[currentIndex]">
                         <template #top-right>
                             <CloseCircleOutlined @click="close(currentIndex)" class="text-xl"
@@ -50,9 +53,9 @@
                         </template>
                     </DetailCard>
                 </div>
-
+            </vue-custom-scrollbar>
             </div>
-        </vue-custom-scrollbar>
+        <!-- </vue-custom-scrollbar> -->
     </div>
 </template>
   
@@ -84,8 +87,8 @@ const comCards = ref([
             context: ''
         },
         options: {
-            btmImg: ['../../../public/img/unlock.svg','../../../public/img/unlock.svg'],
-            topVed: ''
+            img: ['../../../public/img/unlock.svg','../../../public/img/unlock.svg'],
+            viedo: ''
         }
     },
     {
@@ -94,7 +97,7 @@ const comCards = ref([
             context: '目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…'
         },
         options: {
-            topImg: '../../../public/img/unlock.svg',
+            img: ['../../../public/img/unlock.svg'],
         }
     },
 ]);
@@ -175,6 +178,7 @@ const close = (index) => {
         align-items: center;
         flex-direction: column;
         justify-content: center;
+        
 
         // overflow: scroll;
         .card-content {
@@ -247,13 +251,18 @@ const close = (index) => {
         font-weight: 400;
     }
 
-    #omit {
+    .omit {
         white-space: pre-wrap;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
+    }
+    .scroll{
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }
 </style>

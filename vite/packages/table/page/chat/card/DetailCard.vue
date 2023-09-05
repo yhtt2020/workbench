@@ -30,9 +30,13 @@
 
             <div>
                 <div>
-                    <img :src="cardData.options.btmImg" alt="" class="w-full h-[218px]" v-if="cardData.options?.btmImg">
-                    <img :src="cardData.options.topImg" alt="" class="w-full h-[218px]" v-if="cardData.options?.topImg">
                     <video src="cardData.options.topVed" class="w-full h-[218px]" v-if="cardData.options?.topVed"></video>
+                    <template v-if="cardData.options?.img" >
+                        <ul class="p-0 mt-6 mb-6 ">
+                          <img :src="item" alt="" v-for="item in cardData.options?.img" class="w-full h-[158px]">  
+                        </ul>
+                    </template>
+                    <!-- <img :src="cardData.options.topImg" alt="" class="w-full h-[218px]" v-if="cardData.options?.topImg"> -->
                     <slot name="content"></slot>
                 </div>
 
