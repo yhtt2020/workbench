@@ -65,6 +65,8 @@ const taskGuide = () => {
   task.step = 1;
   task.taskID = props.currentTaskId;
   let currentTask = guide[props.currentTaskId][0];
+
+  console.log('object :>> ', currentTask);
   switch (currentTask.type) {
     case "router":
       router.push({

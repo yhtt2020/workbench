@@ -106,12 +106,14 @@
           </div>
         </div>
       </a-col>
+      <xt-task :modelValue="m01032" to="" @cb="showSetting">
       <a-col>
         <div @click="showSetting" class="btn">
           <Icon style="font-size: 3em" icon="shezhi1"></Icon>
           <div><span>设置</span></div>
         </div>
       </a-col>
+    </xt-task>
       <a-col>
         <div @click="clear" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
@@ -431,6 +433,13 @@ export default {
     ...mapWritableState(taskStore, ['taskID','step']),
     getStep() {
       if ( this.taskID == 'M0101' && this.step == 2) {
+        return true
+      }else {
+        return false
+      }
+    },
+    m01032() {
+      if ( this.taskID == 'M0103' && this.step == 2) {
         return true
       }else {
         return false

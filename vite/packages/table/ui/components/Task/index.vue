@@ -1,9 +1,9 @@
 <template>
-  <xt-mask :modelValue="modelValue">
+  <!-- <xt-mask :modelValue="modelValue"> -->
     <div style="z-index: 999999" ref="el" @click.prevent.stop="next($event)">
       <slot></slot>
     </div>
-  </xt-mask>
+  <!-- </xt-mask> -->
 </template>
 
 <script>
@@ -53,10 +53,10 @@ export default defineComponent({
       this.action();
     },
     action() {
+      this.$emit("cb");
       this.tour.next();
       this.step++;
-      this.$emit("cb");
-      if (this.task?.flag) {
+      if (this.task?.success) {
         console.log("任务以完成 :>> ");
       }
     },
@@ -173,5 +173,8 @@ export default defineComponent({
   z-index: 9999999999999 !important;
   border: 1px solid var(--divider) !important;
   background: var(--modal-bg) !important;
+}
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  z-index: 9999999999999999 !important;
 }
 </style>

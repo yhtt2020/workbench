@@ -84,16 +84,18 @@
             </div>
           </a-tooltip>
           <a-tooltip title="菜单" placement="bottom">
-            <xt-task :modelValue="getStep" @cb="showMenu">
+    
               <div class="pl-3">
+                <xt-task :modelValue="getStep" @cb="showMenu">
                 <div
                   @click="showMenu"
                   class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
                 >
                   <Icon style="font-size: 18px" icon="gengduo1"></Icon>
                 </div>
-              </div>
             </xt-task>
+
+              </div>
           </a-tooltip>
         </div>
       </div>
@@ -127,15 +129,17 @@
 
         <template #outMenu>
           <a-row class="text-center" style="margin-top: 20px" :gutter="20">
+            <xt-task :modelValue="getM0102" to="" @cb="showAddDeskForm">
               <a-col>
-            <xt-task :modelValue="1">
+          
                 <div @click="showAddDeskForm" class="btn">
                   <Icon style="font-size: 3em" icon="desktop"></Icon>
                   <div><span>添加桌面</span></div>
                 </div>
-              </xt-task>
               </a-col>
-            <a-col>
+            </xt-task>
+
+              <a-col>
               <div @click="importDesk" class="btn">
                 <Icon style="font-size: 3em" icon="daoru"></Icon>
                 <div><span>导入桌面</span></div>
@@ -312,13 +316,14 @@
       "
     ></AllDeskList>
   </a-drawer>
+
   <a-drawer
     v-if="addDeskVisible"
     v-model:visible="addDeskVisible"
     width="500"
     title="添加桌面"
     @close="shareCode = false"
-  >
+  >    
     <HorizontalPanel
       :nav-list="currentAddMethod"
       v-model:select-type="currentAddTab"
@@ -352,6 +357,7 @@
       </div>
     </div>
     <div v-else>
+   
       <div class="desk-title mt-4">标题</div>
       <a-input
         v-model:value="deskTitle"
@@ -360,6 +366,7 @@
         placeholder="请输入"
         aria-placeholder="font-size: 16px;"
       />
+      <xt-task :modelValue="getM01022" @cb="doAddDesk">
       <span class="desk-title">初始布局</span>
       <div class="mt-6">
         <HorizontalPanel
@@ -368,6 +375,8 @@
         ></HorizontalPanel>
       </div>
       <div @click="doAddDesk" class="btn-item xt-active-bg">立即添加</div>
+    </xt-task>
+
       <div>
         <div @click="importDesk" class="btn-item">导入桌面</div>
       </div>
@@ -385,6 +394,7 @@
       />
     </div>
   </a-drawer>
+
   <ShareDesk
     :deskList="deskList"
     ref="shareDeskRef"
@@ -446,7 +456,6 @@ import { marketStore } from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
-
 export default {
   name: "DeskGroup",
   components: {
@@ -556,16 +565,29 @@ export default {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      if (
-        this.taskID == "M0101" ||
-        (this.taskID == "M0102" && this.step == 1)
-      ) {
+      if ( (this.taskID == "M0101" || this.taskID == "M0102"|| this.taskID == "M0103") && this.step == 1) 
+      {
         return true;
       } else {
         return false;
       }
     },
-
+getM0102(){
+  if ( this.taskID == "M0102" && this.step == 2) 
+      {
+        return true;
+      } else {
+        return false;
+      }
+},
+getM01022(){
+  if ( this.taskID == "M0102" && this.step == 3) 
+      {
+        return true;
+      } else {
+        return false;
+      }
+},
     // getHomeSize(){
     //   this.$nextTick(() => {
     //     let height = document.getElementById("cardContent")?.offsetHeight;
@@ -670,7 +692,6 @@ export default {
       });
     },
     showMenu() {
-      if (this.getStep) return;
       this.$refs.currentDeskRef.showMenu();
     },
     showMore() {
@@ -720,6 +741,16 @@ export default {
       }
     },
     showAddDeskForm() {
+      if (this.getM0102){
+        this.deskTitle = '新桌面'
+        this.currentAddTab =   {
+        "title": "自行添加",
+        "name": "custom",
+        "state": false
+      } 
+      }
+     console.log('object :>> ',  this.currentAddTab);
+
       this.$refs.currentDeskRef.hideMenu();
       this.menuVisible = false;
       this.addDeskVisible = true;

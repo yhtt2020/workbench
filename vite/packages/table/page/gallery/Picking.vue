@@ -30,8 +30,10 @@
           <a-spin v-if="isLoading" />
         </div>
         <a-row :gutter="[20, 20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
-          <a-col class="image-wrapper " v-for=" img  in  pickImageData " :span="6" style="">
-            <img @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src" :data-source="img.path"
+          <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" style="">
+            <!-- 拾光壁纸循环位置 -->
+        <xt-task v-if="index==0" :modelValue="1" @cb="pickShow(img)">
+          <img @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src" :data-source="img.path"
               :alt="img.resolution" style="position: relative">
             <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
               <div @click.stop="addToMy(img)" class="bottom-actions pointer"
@@ -40,6 +42,18 @@
                 <Icon v-else style="" icon="yiwancheng"></Icon>
               </div>
             </div>
+        </xt-task>
+        <template v-else>
+          <img @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src" :data-source="img.path"
+              :alt="img.resolution" style="position: relative">
+            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+              <div @click.stop="addToMy(img)" class="bottom-actions pointer"
+                :style="{ background: isInMyPapers(img) ? '#009d00a8' : '' }">
+                <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+                <Icon v-else style="" icon="yiwancheng"></Icon>
+              </div>
+            </div>
+        </template>
           </a-col>
         </a-row>
       </viewer>
@@ -133,11 +147,14 @@
         </div>
       </a-col>
       <a-col :span="4">
+      <xt-task :modelValue="1" >
         <div @click="setAppPaper" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>设为工作台背景</div>
           <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
         </div>
+
+      </xt-task>
       </a-col>
 
     </a-row>
