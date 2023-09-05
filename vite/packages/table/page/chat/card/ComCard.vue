@@ -5,7 +5,7 @@
         <div class="card-content">
             <div class="card-top">
                 <div class="top-left">
-                    <a-avatar :size="32">
+                    <a-avatar :size="32" src="https://up.apps.vip/avatar/003.png">
                         <template #icon>
                             <UserOutlined />
                         </template>
@@ -14,7 +14,7 @@
                         <div class="username" style="color: var(--primary-text);">
                             我是皮克斯呀
                         </div>
-                        <div class="self-msg " style="color: var(--primary-text);">
+                        <div  class="self-msg xt-text-2 " style="color: var(--primary-text);">
                             <span class="date">08-09</span>
                             <span class="time">16:16</span>
                             <span class="ip">浙江</span>
@@ -29,24 +29,24 @@
             </div>
 
             <div>
-                <div class="flex items-center justify-center">
-                    <img :src="cardData.options.img" alt="" class="w-1/4 h-full mr-5" v-if="cardData.options?.img.length===1">
-                    <video src="cardData.options.viedo" class="w-1/4 h-full" v-if="cardData.options?.viedo"></video>
+                <div class="flex items-center justify-center ">
+                    <img :src="cardData.data.img" alt="" class="w-1/4 h-full mr-5 object-cover" v-if="cardData.data?.img.length===1">
+                    <video src="cardData.data.viedo" class="w-1/4 h-full " v-if="cardData.data?.viedo"></video>
                     <!-- <div class="w-1/3 h-full bg-image"></div> -->
-                    <!-- 插入正文元素  :class="[omit:options.img]" -->
+                    <!-- 插入正文元素  :class="[omit:data.img]" -->
                     <!-- <div class="omit"> -->
                         <slot name="content" ></slot>
                     <!-- </div> -->
-                    
-                    
+
+
                 </div>
-                <template v-if="cardData.options?.img.length>1">
-                        <ul class="flex p-0 mt-6 mb-6" >
-                          <img :src="item" alt="" v-for="(item,index) in cardData.options?.img"  class="w-1/6 mr-3 h-1/6" :key="index">  
-                        </ul>
+                <template v-if="cardData.data?.img.length>1">
+                        <div class="flex w-full p-0 mt-2 mb-2  whitespace-pre-wrap cover-wrapper" >
+                          <img :src="item" alt="" v-for="(item,index) in cardData.data?.img"   class="cover-sm  mr-2 object-cover rounded-md" :key="index">
+                        </div>
                 </template>
-                
-                
+
+
             </div>
 
             <div class="card-bottom " style="color: var(--primary-text);">
@@ -73,6 +73,15 @@ const props = defineProps({
 </script>
 <style lang='scss' scoped>
 .card {
+  .cover-wrapper{
+    flex-wrap: wrap;
+  }
+  .cover-sm{
+    margin-bottom: 10px;
+    width:100px;
+    height:100px;
+    aspect-ratio: 1 / 1;
+  }
     display: flex;
     // 占满整个父元素
     flex-grow: 1;

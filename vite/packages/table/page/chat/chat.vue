@@ -30,7 +30,7 @@ import { message } from "ant-design-vue";
 import ChatFind from "./page/ChatFind.vue"
 import ChatMain from './page/chatMain.vue';
 import ThiskyIndex from './page/thiskyIndex.vue'
-export default defineComponent({
+export default {
   name: 'App',
   components: {
     SecondPanel,
@@ -39,7 +39,7 @@ export default defineComponent({
     ChatFind,
     ThiskyIndex,
     ChatMain
-    
+
   },
 
   setup() {
@@ -100,7 +100,7 @@ export default defineComponent({
       ...toRefs(data), updateChat,
     }
   }
-})
+}
 </script>
 
 <style scoped>

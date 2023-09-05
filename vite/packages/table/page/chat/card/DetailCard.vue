@@ -1,11 +1,11 @@
 <template >
     <!-- {{ isShow.isShow }} -->
-    <div class="w-full card">
+    <div class="w-full card" style="height:auto">
         <!-- {{ isShow.isShow }} -->
         <div class="card-content">
             <div class="card-top">
                 <div class="top-left">
-                    <a-avatar :size="32">
+                    <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32">
                         <template #icon>
                             <UserOutlined />
                         </template>
@@ -33,7 +33,7 @@
                     <video src="cardData.options.topVed" class="w-full h-[218px]" v-if="cardData.options?.topVed"></video>
                     <template v-if="cardData.options?.img" >
                         <ul class="p-0 mt-6 mb-6 ">
-                          <img :src="item" alt="" v-for="item in cardData.options?.img" class="w-full h-[158px]">  
+                          <img :src="item" alt="" v-for="item in cardData.options?.img" class="w-full h-[158px]">
                         </ul>
                     </template>
                     <!-- <img :src="cardData.options.topImg" alt="" class="w-full h-[218px]" v-if="cardData.options?.topImg"> -->
@@ -71,9 +71,7 @@ const props = defineProps({
     // 占满整个父元素
     flex-grow: 1;
     // width: 600px;
-    background: rgba(0, 0, 0, 0.30);
-    border-radius: 12px;
-    margin-bottom: 12px;
+
 
     .card-content {
         margin: 16px;
@@ -117,9 +115,7 @@ const props = defineProps({
                 }
             }
 
-            .top-right {
-                background: #000000;
-            }
+
         }
 
         .card-content {
