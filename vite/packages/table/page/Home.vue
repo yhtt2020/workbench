@@ -85,13 +85,13 @@
     <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
-        <div class="line-title ">背景设置：</div>
+        <div class="line-title xt-text" >背景设置：</div>
         <div class="line" @click="setTransparent()">
           透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
         </div>
         <div class="line" v-if="!appSettings.transparent">
           <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
-          <a-button @click="clearWallpaper">清除背景</a-button>
+          <a-button @click="clearWallpaper" class="xt-text">清除背景</a-button>
         </div>
         <div v-if="!appSettings.transparent" class="line">
           <div class="line">

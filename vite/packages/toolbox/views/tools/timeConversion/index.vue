@@ -5,7 +5,7 @@
       <XtIcon :copy="getDate()" icon="fuzhi" size="22" type=""></XtIcon>
     </div>
     <div class="flex items-center">
-      <div class="my-3">当前时间戳：{{ currentTimeStamp }}</div>
+      <div class="my-3">当前时间戳（毫秒）：{{ currentTimeStamp }}</div>
       <XtIcon :copy="currentTimeStamp" icon="fuzhi" size="22" type=""></XtIcon>
     </div>
 

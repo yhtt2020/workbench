@@ -5,6 +5,7 @@
       <a-space :size="space">
         <div class="flex flex-wrap">
           <a-radio
+            class="xt-text"
             v-for="(item, index) in list"
             :key="item[`${value}`]"
             :value="item[`${value}`]"

@@ -1,30 +1,27 @@
 <template>
-  <slot :name="item.slot" v-if="item.slot"></slot>
-  <div
-    v-else-if="item.img"
-    style="width: 40px; height: 40px"
-    class="xt-base-btn "
-    :class="{
-      'xt-bg':!item.noBg
-    }"
-  >
-    <img
-      :src="item.img"
-      alt=""
-      :style="[stateStyle]"
-      style="border-radius: 10px"
-      @click="iconClick(item)"
-    />
+  <div @click="itemClick(item)">
+    <slot :name="item.slot" v-if="item.slot"></slot>
+    <div
+      v-else-if="item.img"
+      style="width: 40px; height: 40px"
+      class="xt-base-btn xt-bg"
+    >
+      <img
+        :src="item.img"
+        alt=""
+        :style="[stateStyle]"
+        style="border-radius: 10px"
+      />
+    </div>
+    <xt-icon
+      v-else-if="item.icon"
+      w="40"
+      size="20"
+      radius="10"
+      v-bind="config"
+      :icon="item.icon"
+    ></xt-icon>
   </div>
-  <xt-icon
-    v-else-if="item.icon"
-    w="40"
-    size="20"
-    radius="10"
-    v-bind="config"
-    :icon="item.icon"
-    @click="iconClick(item)"
-  ></xt-icon>
 </template>
 
 <script setup>
@@ -46,8 +43,7 @@ const stateStyle = computed(() => {
     height: props.w + "px",
   };
 });
-const iconClick = (item, flag) => {
-  // console.log("item :>> ", item);
+const itemClick = (item, flag) => {
   item.callBack && item.callBack(item);
 };
 </script>

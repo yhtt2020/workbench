@@ -38,7 +38,7 @@
 }
 // 切换按钮
 .ant-switch {
-  background: var(--active-secondary-bg);
+  background: var(--active-secondary-bg) !important;
 }
 
 .ant-message {
@@ -94,7 +94,7 @@
 }
 // 按钮开始
 .ant-btn {
-  color: var(--primary-text);
+  color: var(--primary-text) !important;
 }
 // 按钮结束
 // 进度条开始
@@ -156,7 +156,7 @@
 .ant-picker-input,
 .ant-input-number-input-wrap {
   input {
-    color: var(--primary-text);
+    color: var(--primary-text) !important; 
   }
 }
 
