@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box h-full">
       <!-- 无内容 -->
       <div class="container rounded-lg flex flex-col items-center"
       :style="detailJump ? 'height: 90%;' : 'height: 100%;'">
@@ -10,7 +10,7 @@
         </div>
         <div class="btn-item flex justify-center">
           <div class="pointer" @click="market">浏览创意市场</div>
-          <div class="pointer" @click="share">我来分享</div>
+          <div class="pointer" @click="share">创建方案</div>
         </div>
         <div class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">
           <div v-for="item in notAppList" @click="previewKay(item)" :key="item.id" class="pointer recommend">
@@ -60,15 +60,16 @@
 </template>
 
 <script>
-import { appStore } from '../../store';
+import { appStore } from '../../../store';
 import { mapActions, mapWritableState } from "pinia";
-import { keyStore } from '../../store/key'
-import Preview from './Preview.vue';
+import { keyStore } from '../store'
+import Preview from '../components/Preview.vue';
 export default {
   name: "NotShortcutKey",
   components: {
     Preview
   },
+  emits:['createScheme'],
   props: {
     detailJump: {
       type: Boolean,
@@ -100,7 +101,7 @@ export default {
     },
     //跳转到分享页
     share(){
-      this.$router.push({name: 'shareKey'})
+      this.$emit('createScheme')
     },
     // 跳转到创意市场
     market(){

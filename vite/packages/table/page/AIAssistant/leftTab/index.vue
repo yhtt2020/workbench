@@ -1,61 +1,109 @@
 <template>
-  <xt-left-menu :list="menuList" last="1" end="2">
-    <!--  -->
+  <xt-left-menu :list="menuList" last="2" end="2">
+    <!-- 插槽用法 -->
     <template #test>
       <setting-filled />
     </template>
   </xt-left-menu>
 
   <!-- 新建对话 -->
-  <XtView
+  <xt-view
     v-model="createChatVisible"
     type="popup"
     title="新建模板"
     :showFull="false"
   >
-    <CreateTopic @close="createChatVisible = false"></CreateTopic>
-  </XtView>
-  <!-- 系统设置 -->
-  <xt-drawer title="12" v-model="setVisible" placement="right">
-    <template #title>
-      <div>设置</div>
-    </template>
-    <Edit></Edit>
-  </xt-drawer>
+    <xt-button w="300"> new Caht View </xt-button>
+  </xt-view>
 </template>
 
 <script>
-import CreateTopic from "../chat/left/createTopic.vue";
-import { mapWritableState } from "pinia";
-import { aiStore } from "../../../store/ai";
-import Edit from "./edit.vue";
 import { SettingFilled } from "@ant-design/icons-vue";
 export default {
   components: {
-    CreateTopic,
-    Edit,
-
     SettingFilled,
-  },
-  computed: {
-    ...mapWritableState(aiStore, [
-      "selectTab",
-      "isFull",
-      "temperature",
-      "count",
-    ]),
   },
   data() {
     return {
-      select: "Chat",
       menuList: [
+        // 携带子菜单
         {
           icon: "message",
+          children: [
+            {
+              icon: "message",
+              name: "message",
+              callBack: () => {
+                console.log("子菜单点击事件触发 :>> ");
+              },
+            },
+            {
+              icon: "message",
+              name: "message",
+              callBack: () => {
+                console.log("子菜单点击事件触发 :>> ");
+              },
+            },
+          ],
+        },
+        // iconfont
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
           callBack: () => {
-            this.selectTab = "Chat";
+            this.createChatVisible = true;
           },
         },
-
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        // 回调事件
         {
           flag: true,
           icon: "tianjia2",
@@ -66,12 +114,8 @@ export default {
         {
           flag: true,
           icon: "setting",
-          callBack: () => {
-            this.setVisible = true;
-          },
         },
       ],
-      setVisible: false,
       createChatVisible: false,
     };
   },

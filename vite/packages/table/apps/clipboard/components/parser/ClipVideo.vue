@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="rounded-md w-full" style="overflow: hidden">
     <!-- 剪切板视频组件 -->
-     <div ref="clipVideo"></div>
+     <div class="rounded-lg" ref="clipVideo"></div>
   </div>
 </template>
 
@@ -11,6 +11,9 @@ export default {
   props:{
       videoUrl:{
         type:String,
+      },
+      playerProps:{
+        type:Object,
       }
   },
 
@@ -22,7 +25,11 @@ export default {
     loadXgPlayer(){
       const url = this.videoUrl
       this.$nextTick(()=>{
-        window.$xgplayer = new Player({
+        console.log(this.playerProps,'播放参数')
+        // if(window.$xgplayerClipboard){
+        //   window.$xgplayerClipboard.destroy()
+        // }
+        window.$xgplayerClipboard = new Player({
           el:this.$refs.clipVideo,
           url: url,
           fitVideoSize: 'fixWidth',
@@ -32,6 +39,7 @@ export default {
           // fluid: true,
           videoInit: true,
           controlsList: ['nofullscreen'],
+          ...this.playerProps
         })
       })
     }

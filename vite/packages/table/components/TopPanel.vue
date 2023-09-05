@@ -64,7 +64,7 @@
   </div>
 
 
-  <a-drawer :width="500" :closable="false" style="z-index:1000;" :placement="right" v-model:visible="messageDrawer"
+  <a-drawer :width="500" :closable="false" style="z-index:1000;" placement="right" v-model:visible="messageDrawer"
             :bodyStyle="{padding:'12px 12px 12px 0 ',overflow:'hidden !important',}" @closeMessage="messageDrawer = false">
     <MessagePopup></MessagePopup>
   </a-drawer>

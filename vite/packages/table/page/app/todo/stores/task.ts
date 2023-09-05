@@ -67,7 +67,7 @@ export const taskStore = defineStore('task', {
                 description: '',
                 descriptionType: {title: '纯文字',name: 'text'}
             }))
-            this.tasks.push(newTask)
+            this.tasks.unshift(newTask)
         },
         setActiveTask(task: TaskInfo) {
             this.activeTask = task

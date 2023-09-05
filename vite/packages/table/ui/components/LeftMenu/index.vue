@@ -6,7 +6,7 @@
         <Box
           :item="item"
           @selectClick="selectClick"
-          :id="currentId"
+          :id="currentIndex"
           class="mb-2"
         >
           <div
@@ -26,29 +26,38 @@
     </div>
     <!-- 中间 -->
     <div
-      class="flex-1 xt-scrollbar xt-container xt-bt pb-2 xt-bm flex flex-col items-center"
+      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3 xt-bm flex flex-col items-center"
     >
-      <Menu :list="item.children" v-for="item in newList.slice(last, -1 * end)">
-        <Box
-          :item="item"
-          @selectClick="selectClick"
-          :id="currentId"
-          class="mt-2"
-        >
-          <div
-            v-if="item.slot"
-            style="width: 40px; height: 40px; border-radius: 10px"
-            class="xt-bg xt-base-btn"
+      <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
+        <div style="height: auto">
+          <Menu
+            :list="item.children"
+            v-for="item in newList.slice(last, -1 * end)"
           >
-            <slot :name="item.slot"> </slot>
-          </div>
-          <Item :item="item" w="40">
-            <template #default>
-              <slot :name="item.slot"></slot>
-            </template>
-          </Item>
-        </Box>
-      </Menu>
+            <a-tooltip :title="item.title" placement="right">
+              <Box
+                :item="item"
+                @selectClick="selectClick"
+                :id="currentIndex"
+                class="mt-2"
+              >
+                <div
+                  v-if="item.slot"
+                  style="width: 40px; height: 40px; border-radius: 10px"
+                  class="xt-bg xt-base-btn"
+                >
+                  <slot :name="item.slot"> </slot>
+                </div>
+                <Item :item="item" w="40">
+                  <template #default>
+                    <slot :name="item.slot"></slot>
+                  </template>
+                </Item>
+              </Box>
+            </a-tooltip>
+          </Menu>
+        </div>
+      </vue-custom-scrollbar>
     </div>
     <!-- 底部 -->
     <div>
@@ -56,7 +65,7 @@
         <Box
           :item="item"
           @selectClick="selectClick"
-          :id="currentId"
+          :id="currentIndex"
           class="mb-2"
         >
           <div
@@ -82,9 +91,19 @@ import { ref, computed } from "vue";
 import Menu from "./Menu.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
+import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
 
 const props = defineProps({
+  scrollerSettings: {
+    default: {
+      useBothWheelAxes: true,
+      swipeEasing: true,
+      suppressScrollY: false,
+      suppressScrollX: true,
+      wheelPropagation: true,
+    },
+  },
   config: {
     default: () => {
       return {
@@ -99,7 +118,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
-  id: { default: false },
+  index: { default: false },
   list: {
     default: () => {
       return [
@@ -139,17 +158,19 @@ const newList = computed(() => {
 });
 
 // 动态获取ID
-const id = computed(() => {
-  return isNaN(props.id.value) ? newList.value[0].id : props.id.value;
+const index = computed(() => {
+  return isNaN(props.id.value) ? newList.value[0].id : props.index.value;
 });
 
 // 选择ID
-const currentId = ref(id.value);
+const currentIndex = ref(index.value);
 
 //选中事件
+const emit = defineEmits(["index"]);
 const selectClick = (id, flag) => {
+  emit("update:index", id);
   if (flag) return;
-  currentId.value = id;
+  currentIndex.value = id;
 };
 
 // 点击事件
@@ -166,5 +187,8 @@ const selectClick = (id, flag) => {
 }
 :deep(.anticon) {
   font-size: 20px;
+}
+:deep(.ps__rail-y) {
+  display: none;
 }
 </style>

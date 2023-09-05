@@ -30,18 +30,28 @@
         </div>
       </div>
       <div class="flex items-center">
-        <div v-for="item in memberList.slice(0,6) " class="flex flex-col items-center justify-center" style="margin-right:16px;">
-          <!-- conversation?.selfInfo?.role !== 'Member' ?: memberList.slice(0,8) -->
-          <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
-          <div class="font-12 truncate" style="max-width:48px;color: var(-primary-text);">{{ item.nick }}</div>
-        </div>
+        <template v-if="conversation?.selfInfo?.role !== 'Member'">
+          <div v-for="item in memberList.slice(0,6) " class="flex flex-col items-center justify-center" style="margin-right:12px;">
+            <!-- conversation?.selfInfo?.role !== 'Member' ?: memberList.slice(0,8) -->
+            <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
+            <div class="font-12 truncate" style="max-width:48px;color: var(-primary-text);">{{ item.nick }}</div>
+          </div>
+        </template>
+
+        <template v-else>
+          <div v-for="item in memberList.slice(0,7) " class="flex flex-col items-center justify-center" style="margin-right:10px;">
+            <!-- conversation?.selfInfo?.role !== 'Member' ?: memberList.slice(0,8) -->
+            <a-avatar shape="circle" :size="32" :src="item.avatar"></a-avatar>
+            <div class="font-12 truncate" style="max-width:48px;color: var(-primary-text);">{{ item.nick }}</div>
+          </div>
+        </template>
+        
 
         <div class="flex" >
           <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
-          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:16px;" @click="addGroupMember('add')">
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;" @click="addGroupMember('add')">
            <Icon icon="tianjia3" style="color: var(--success);"></Icon>
           </div>
-        
           <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>

@@ -30,7 +30,12 @@ export const newsStore = defineStore("news", {
       })
 
       if(response.status){
-        this.newsMsgList = response.data
+        if(response.data instanceof Array){
+          this.newsMsgList=response.data
+          
+        }else{
+          this.newsMsgList = response.data.result.data
+        }
         localCache.set(tag,this.newsMsgList,300)
       }
       else{

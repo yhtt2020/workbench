@@ -81,15 +81,14 @@
 </template>
 
 <script>
-import Widget from "../../../components/card/Widget.vue";
-import dayjs from "../../../components/card/hooks/day";
+import Widget from "../card/Widget.vue";
 import {
   MessageOutlined,
   SendOutlined,
   RobotOutlined,
 } from "@ant-design/icons-vue";
 
-import { aiStore } from "../../../store/ai";
+import { aiStore } from "../../store/ai";
 import { mapWritableState } from "pinia";
 export default {
   name: "AIaides",

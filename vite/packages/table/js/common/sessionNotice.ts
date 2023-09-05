@@ -215,7 +215,7 @@ export class Notifications{
           const newMsg = {  
             title:data.conversationType === 'C2C' ? friendTitle : groupTitle,
             icon:data.conversationType === 'C2C' ? data.avatar : avatar,
-            body:`${data.nick}${data.payload.text}`,
+            body:`${data.nick}：${data.payload.text}`,
             time:data.time,
           }
           if(settings.isAT){

@@ -29,7 +29,7 @@ import browser from '../../../js/common/browser'
 let showImg = ref(true)
 const newsMsgList = defineProps({
   newsMsgList: {
-    type: Array,
+    type: Object,
   },
   copyNum:{
     type:Number

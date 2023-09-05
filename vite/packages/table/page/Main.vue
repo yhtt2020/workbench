@@ -6,44 +6,50 @@
       <TopPanel v-if="!fullScreen"></TopPanel>
     </div>
     <div :class="{ 'mt-3': !fullScreen }"
-      style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;padding: 8px;margin: -3px">
-      <div v-if="!fullScreen && navigationToggle[0]" style="display: flex;align-content: center;align-items: center;height: 100%">
+         :style="{margin:fullScreen?0:'-3px',padding:fullScreen?0:'8px'}"
+         style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
+
+      <div v-if="!fullScreen && navigationToggle[0]"
+           style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
-        <SidePanel sortId="left" 
-        :sideNavigationList="sideNavigationList" 
-        :sortNavigationList="sortSideNavigationList" 
-        :delNavList="removeSideNavigationList"
-        :otherSwitch1="navigationToggle[1]"
-        :otherSwitch2="navigationToggle[2]"
-        :otherNavList1="rightNavigationList"
-        :otherNavList2="footNavigationList"
-        @getDelIcon="getDelIcon"
+        <SidePanel sortId="left"
+                   :sideNavigationList="sideNavigationList"
+                   :sortNavigationList="sortSideNavigationList"
+                   :delNavList="removeSideNavigationList"
+                   :otherSwitch1="navigationToggle[1]"
+                   :otherSwitch2="navigationToggle[2]"
+                   :otherNavList1="rightNavigationList"
+                   :otherNavList2="footNavigationList"
+                   @getDelIcon="getDelIcon"
         ></SidePanel>
       </div>
       <div
-        style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;padding: 8px;margin: -8px;">
+        :style="{margin:fullScreen?0:'-8px',padding:fullScreen?0:'8px'}"
+
+        style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;"
+      >
         <!--主题区域，自动滚动条        -->
-          <router-view></router-view>
+        <router-view></router-view>
         <!-- 删除区域 -->
         <div class="del-icon" id="delIcon2" v-show="delZone">拖到此处删除图标</div>
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
-          style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;z-index:120">
+             style="height: auto;display: flex;flex-direction: column;align-items: center;justify-content: center;z-index:120">
           <TeamPanel></TeamPanel>
         </div>
       </Transition>
       <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
-        <SidePanel sortId="right" 
-        :sideNavigationList="rightNavigationList" 
-        :sortNavigationList="sortRightNavigationList"
-        :delNavList="removeRightNavigationList"
-        :otherSwitch1="navigationToggle[0]"
-        :otherSwitch2="navigationToggle[2]"
-        :otherNavList1="leftNavigationList"
-        :otherNavList2="footNavigationList"
-        @getDelIcon="getDelIcon"
+        <SidePanel sortId="right"
+                   :sideNavigationList="rightNavigationList"
+                   :sortNavigationList="sortRightNavigationList"
+                   :delNavList="removeRightNavigationList"
+                   :otherSwitch1="navigationToggle[0]"
+                   :otherSwitch2="navigationToggle[2]"
+                   :otherNavList1="leftNavigationList"
+                   :otherNavList2="footNavigationList"
+                   @getDelIcon="getDelIcon"
         ></SidePanel>
       </div>
     </div>
@@ -57,28 +63,32 @@
 import SidePanel from '../components/SidePanel.vue'
 import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
-import { mapActions,mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { appStore } from '../store'
-import TeamPanel from "../components/team/TeamPanel.vue";
+import TeamPanel from '../components/team/TeamPanel.vue'
 import { teamStore } from '../store/team'
 import { isMain } from '../js/common/screenUtils'
-import {navStore} from "../store/nav";
+import { navStore } from '../store/nav'
+import fullScreen from '../components/widgets/myIcons/icons/fullScreen.vue'
 
 export default {
   name: 'Main',
   components: { TeamPanel, BottomPanel, TopPanel, SidePanel },
-  mounted() {
+  mounted () {
     this.$router.afterEach((to, from) => {
       this.routeUpdateTime = Date.now()
     })
   },
   computed: {
+    fullScreen () {
+      return fullScreen
+    },
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
-    ...mapWritableState(navStore,['sideNavigationList','rightNavigationList','navigationToggle','footNavigationList']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList']),
     isMain
   },
-  data() {
+  data () {
     return {
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -91,15 +101,18 @@ export default {
     }
   },
   methods: {
+    marginLeft () {
+      return marginLeft
+    },
     ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList']),
-    getDelIcon(val){
+    getDelIcon (val) {
       this.delZone = val
     }
   }
 }
 </script>
 
-<style >
+<style>
 .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
