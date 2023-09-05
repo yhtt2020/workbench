@@ -161,11 +161,11 @@ export const chatStore = defineStore('chatStore', {
       },
 
       async loadRecommendData() {
-        const time1 = Date.now()
+        // const time1 = Date.now()
         Promise.all([this.loadRecommendUsers(), this.loadRecommendGroups()]).then(result => {
           this.updateUsersRelationship()
           this.loadGroupRelationship()
-          console.log(result)
+          // console.log(result)
           //群组后处理，处理他的群成员关系
           this.isLoading = false
           localCache.set('findData', this.recommendData, 10 * 60)

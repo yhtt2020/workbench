@@ -3,7 +3,7 @@
  <div class="home-TUIKit-main w-full">
    <div :class="env?.isH5 ? 'conversation-h5' : 'conversation'" v-show="!env?.isH5 || currentModel === 'conversation'">
     <TUIConversation  @current="handleCurrentConversation"/>
-    <TUISearch class="search"/>
+    <!-- <TUISearch class="search"/> -->
    </div>
 
    <div class="chat" v-show="!env?.isH5 || currentModel === 'message'">

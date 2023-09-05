@@ -71,6 +71,7 @@ export default {
         // }
       },
       {
+        icon:'',
         img: '/icons/bz1.png',
         type: 'thisky',
         callBack: selectTab,
@@ -79,8 +80,21 @@ export default {
         // }
       },
       {
-        icon: 'tianjia2'
-
+        icon: 'tianjia2',
+        children:[
+          {
+            icon: 'message',
+            name:'发起群聊',
+          },
+          {
+            icon: 'team',
+            name:'加入群聊',
+          },
+          {
+            icon: 'tianjiachengyuan',
+            name:'添加好友',
+          }
+        ]
       },
     ])
 
