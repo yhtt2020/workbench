@@ -2,33 +2,47 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {sUrl} from "../consts";
 import {get, post} from "../js/axios/request";
-import {serverCache,localCache} from '../js/axios/serverCache'
+import {serverCache, localCache} from '../js/axios/serverCache'
 import TUIKit from "../TUIKit";
 
 
 const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
+import * as sns from "../js/common/sns";
+import {result} from "lodash-es";
 // @ts-ignore
 export const chatStore = defineStore('chatStore', {
     state: () => ({
       userSig: '',
-      limitTotal:'200',
-      users:[
-        { uid:'4'}, {uid:'36'}, {uid:'10'},{ uid:'23'}
+      limitTotal: '200',
+      users: [
+        {
+          uid: '4',
+          reason: '阿皮大号'
+        },
+        {uid: '36', reason: '想天小客服'},
+        {uid: '10', reason: '测试同学'},
+        {uid: '23', reason: '产品同学'}
       ],
-      group:[
-        {groupID:'suggest'},// {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
-       // {groupID:'update'},{groupID:'develop_group'},
-       // {groupID:'trade'},{groupID:'developer'},{groupID:'3dprint'},{groupID:'screen_diy'},
-       // {groupID:'player'},{groupID:'3dgitial'},
+      group: [
+        {groupID: 'suggest'},// {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
+        // {groupID:'update'},{groupID:'develop_group'},
+        // {groupID:'trade'},{groupID:'developer'},{groupID:'3dprint'},{groupID:'screen_diy'},
+        // {groupID:'player'},{groupID:'3dgitial'},
       ],
-      settings:{
-        showDouble:false,  // 是否展示社群双列
-        isLoading:0,
+      settings: {
+        showDouble: false,  // 是否展示社群双列
       },
-      refUser:[], // 接收推荐用户数据
-      groupList:[],  // 接收推荐群数据
-      memberList:[], // 成员列表数据
+      isLoading: false,//是否在加载中
+
+      //推荐数据
+      recommendData: {
+        users: [],
+        groups: []
+      },
+      refUser: [], // 接收推荐用户数据
+      groupList: [],  // 接收推荐群数据
+      memberList: [], // 成员列表数据
     }),
     actions: {
       async getUserSig() {
@@ -58,82 +72,155 @@ export const chatStore = defineStore('chatStore', {
         });
         await this.updateUserInfo()
       },
-      
-      setDouble(value:any){
-       this.settings.showDouble = value
+
+      setDouble(value: any) {
+        this.settings.showDouble = value
       },
-      async setReferredUsers (){
+      async loadRecommendUsers() {
+        let time1=Date.now()
         const findStore = appStore()
 
-        const refList = { refUser:[], group:[] }
+        // const recommendList = {refUser: [], group: []}
+
+        let users = []
         // 遍历获取推荐用户
-        for(let i=0;i<this.users.length;i++){
+        for (let i = 0; i < this.users.length; i++) {
           const uid = this.users[i].uid
           const userRes = await findStore.getUserCard(uid)
           const referItem = {
-           uid:userRes.data.user.uid,
-           nickname:userRes.data.user.nickname,
-           avatar:userRes.data.user.avatar,
+            uid: userRes.data.user.uid,
+            nickname: userRes.data.user.nickname,
+            avatar: userRes.data.user.avatar,
+            reason: this.users[i].reason
           }
-          refList.refUser.push(referItem)
+          users.push(referItem)
         }
-  
-        // 遍历获取推荐群聊
-        for(let i=0;i<this.group.length;i++){
-         const option = {
-          groupID:this.group[i].groupID
-         }
-         const result  = await window.$chat.getGroupProfile(option)
-         const group = result.data.group
-         refList.group.push(group)
+        //用户后处理，处理他的好友关系
+        for (const user of users) {
+          user.reason = await user.reason //添加上原因
+          //todo 检测好友关系
         }
-        localCache.set('findData',refList,10*60)
-        serverCache.setData('findData',refList,10*60)
-        
+        //let friendships= (await sns.checkFriendship(this.uid))==='yes'
+
+        this.recommendData.users = users //常规写法
+       console.log(Date.now()-time1,'users')
+      },
+      async updateUsersRelationship(){
+
+        let users =this.recommendData.users
+        let uids=this.users.map(u=>{
+          return u.uid
+        })
+        let relations = await sns.checkFriendship(uids) //todo 当只有一个用户的时候，这个返回的是一个字符串，而不是数组
+        //用户后处理，处理他的好友关系
+        console.log('好友检查结果',relations)
+        for (const user of users) {
+          user.reason = await user.reason //添加上原因
+          //todo 检测好友关系
+        }
+        if (users.length === 1) {
+          //一个推荐用户的特殊情况
+          users[0].relationship = relations
+        } else {
+          for (let i = 0; i < uids.length; i++) {
+            users[i].relationship = relations[i]
+          }
+        }
       },
 
-      async getMemeber(){
-        for(let i=0;i<this.group.length;i++){
+
+      async loadRecommendGroups() {
+        let time1=Date.now()
+        let groups = []
+        // 遍历获取推荐群聊
+        for (let i = 0; i < this.group.length; i++) {
           const option = {
-           groupID:this.group[i].groupID,
-           count:100,
-           offset:0,
+            groupID: this.group[i].groupID
+          }
+          const result = await window.$chat.getGroupProfile(option)
+          const group = result.data.group
+          groups.push(group)
+        }
+
+
+        for (const group of this.recommendData.groups) {
+
+        }
+
+        this.recommendData.groups = groups
+        console.log(Date.now()-time1,'groups')
+      },
+
+
+      async loadRecommendData() {
+        const time1 = Date.now()
+        Promise.all([this.loadRecommendUsers(), this.loadRecommendGroups()]).then(result => {
+          this.updateUsersRelationship()
+          console.log(result)
+          //群组后处理，处理他的群成员关系
+          console.log('执行总耗时：' + String(Date.now() - time1) + 'ms')
+          this.isLoading = false
+          localCache.set('findData', this.recommendData, 10 * 60)
+          serverCache.setData('findData', this.recommendData, 10 * 60)
+        })
+
+
+      },
+
+      async getMember() {
+        for (let i = 0; i < this.group.length; i++) {
+          const option = {
+            groupID: this.group[i].groupID,
+            count: 100,
+            offset: 0,
           }
           const res = await window.$chat.getGroupMemberList(option)
           this.memberList = res.data.memberList
-         }
+        }
       },
 
-      async getReferData(){  // 获取推荐用户数据
+      async getReferData() {  // 获取推荐用户数据
         try {
-          const result = await serverCache.getDataWithLocalCache('findData',{
-           localCache: true, ttl: 10 * 60,
-           cache: false
+          if(this.recommendData.users.length){
+            this.recommendData.users.forEach(user=>{
+              delete user.relationship
+            })
+          }
+
+
+          const result = await serverCache.getDataWithLocalCache('findData', {
+            localCache: true, ttl: 10 * 60,
+            cache: false
           })
-          if(result){
-           this.refUser = result.refUser
-           this.groupList = result.group
-           this.settings.isLoading = 0
-          }else{
-           console.warn('获取数据失败,返回undefined',result);
-           this.setReferredUsers()
-           this.settings.isLoading = 1
+          if (result) { //去除缓存
+            this.recommendData=result
+            this.updateUsersRelationship()
+            this.isLoading = false
+          } else {
+            // this.recommendData = {
+            //   users: [],
+            //   groups: []
+            // }
+            console.warn('获取数据失败,返回undefined', result);
+            this.isLoading = this.recommendData.users.length === 0
+            this.loadRecommendData()
           }
 
         } catch (error) {
-          console.error('获取数据失败',error)
+          console.error('获取数据失败', error)
         }
-       
+
       }
 
     },
 
     persist: {
-      enabled: false,
+      enabled: true,
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
         storage: dbStorage,
+        paths: ['settings', 'recommendData']
         // state 中的字段名，按组打包储存
       }]
     }
