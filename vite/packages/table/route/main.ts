@@ -199,6 +199,13 @@ export default [
             path: '',
             name: 'chat',
             component: Chat,
+            children:[
+              {
+                path: '/contact',
+                name: 'contact',
+                component: Contact,
+              },
+            ]
             // children:[
             //   {
             //     path:'',
@@ -217,11 +224,7 @@ export default [
             //   }
             // ]
           },
-          {
-            path: '/contact',
-            name: 'contact',
-            component: Contact,
-          },
+
           {
             path: "/team",
             name: "team",
