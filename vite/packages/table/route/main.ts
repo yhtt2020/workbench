@@ -95,18 +95,7 @@ export default [
         name: 'tomato',
         component: Tomato
       },
-      {
-        path: "/team",
-        name: "team",
-        component: Team,
-        children: [
-          {
-            path: "",
-            name: "hall",
-            component: Hall,
-          },
-        ],
-      },
+
       {
         path: "/inspector",
         name: "inspector",
@@ -234,10 +223,17 @@ export default [
             component: Contact,
           },
           {
-            path:'',
-            name:'imTeam',
-            component:ImTeam
-          }
+            path: "/team",
+            name: "team",
+            component: Team,
+            children: [
+              {
+                path: "",
+                name: "hall",
+                component: Hall,
+              },
+            ],
+          },
 
         ]
       },

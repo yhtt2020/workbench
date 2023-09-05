@@ -26,10 +26,10 @@ export default defineComponent({
   data() {
     return {
       menus:[
-        {
-          title:'桌面',index:'desk',icon:'desktop',
-          route:{name:'chatDesk'},
-        },
+        // {
+        //   title:'桌面',index:'desk',icon:'desktop',
+        //   route:{name:'chatDesk'},
+        // },
         {
           title: '聊天',index: 'chat',icon:'message',
           route:{ name: 'chat'}
@@ -38,10 +38,10 @@ export default defineComponent({
           title: '通讯录',index: 'contact',icon:'team',
           route:{ name: 'contact' }
         },
-        // {
-        //   title:'小队',index:'team',icon:'smile',
-        //   route:{name:'imTeam'},
-        // }
+        {
+          title:'小队',index:'team',icon:'smile',
+          route:{name:'hall'},
+        }
       ]
     }
   },
