@@ -27,7 +27,7 @@ import SecondPanel from "../../components/SecondPanel.vue";
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import { message } from "ant-design-vue";
 // import Commun from './Commun.vue'
-import ChatFind from "./page/ChatFind.vue"
+import ChatFind from "./page/chatFind.vue"
 import ChatMain from './page/chatMain.vue';
 import ThiskyIndex from './page/thiskyIndex.vue'
 export default {
