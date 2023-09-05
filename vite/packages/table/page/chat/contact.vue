@@ -1,6 +1,9 @@
 <!-- 联系人页面 -->
 <template>
-  <TUIContact :display-online-status="false"></TUIContact>
+  <div style="margin-top: -12px;height:100%;width: 100%;display: flex;flex-direction: column">
+    <TUIContact style="height: 100%" :display-online-status="false"></TUIContact>
+  </div>
+
 </template>
 
 

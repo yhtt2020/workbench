@@ -5,7 +5,7 @@
     <SecondPanel   @changeTab="changeTab" :menus="menus"></SecondPanel>
 
     <!-- 右侧内容显示 -->
-    <div style="flex: 1;height: 100%">
+    <div style="flex: 1;height: 100%;">
       <div class="s-bg xt-bg" style="height: calc(100% - 1em);border-radius: 10px;overflow: hidden;margin-top: 1em;margin: 0.5em">
         <router-view></router-view>
       </div>
@@ -34,10 +34,10 @@ export default defineComponent({
           title: '聊天',index: 'chat',icon:'message',
           route:{ name: 'chat'}
         },
-        {
-          title: '通讯录',index: 'contact',icon:'team',
-          route:{ name: 'contact' }
-        },
+        // {
+        //   title: '通讯录',index: 'contact',icon:'team',
+        //   route:{ name: 'contact' }
+        // },
         {
           title:'小队',index:'team',icon:'smile',
           route:{name:'hall'},

@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full py-3">
-    <xt-left-menu :list="chatLeftList" :index="index" last="2" end="1"></xt-left-menu>
+    <xt-left-menu :list="chatLeftList" :index="index" last="3" end="1"></xt-left-menu>
     <!-- <router-view></router-view> -->
     <template v-if="type === 'chat'">
       <ChatMain></ChatMain>
@@ -14,11 +14,16 @@
       <ThiskyIndex></ThiskyIndex>
       <!-- <Commun /> -->
     </template>
+
+    <div v-show="type==='contact'" style="flex:1;width: 0" >
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
 import { TUIEnv } from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
 import { handleErrorPrompts } from '../../TUIKit/TUIComponents/container/utils';
@@ -30,6 +35,7 @@ import { message } from "ant-design-vue";
 import ChatFind from "./page/chatFind.vue"
 import ChatMain from './page/chatMain.vue';
 import ThiskyIndex from './page/thiskyIndex.vue'
+
 export default {
   name: 'App',
   components: {
@@ -43,24 +49,40 @@ export default {
   },
 
   setup() {
+    const router = useRouter()
     const data = reactive({
       index:0,
       type:'chat'
     })
 
     const selectTab = (item: any) => {
+
       // router.push(item.route)
       data.type = item.type
+      if(item.type==='contact'){
+        router.push({
+          name:'contact'
+        })
+      }
     }
 
     const chatLeftList = ref([
       {
         icon: 'message',
         type: 'chat',
+        title:'消息',
         // route:{
         //   name:'chatMain'
         // },
         callBack: selectTab,
+      },
+      {
+        icon: 'team',
+        type: 'contact',
+        callBack: selectTab,
+        // route:{
+        //   name:'chatFind'
+        // }
       },
       {
         icon: 'zhinanzhen',
