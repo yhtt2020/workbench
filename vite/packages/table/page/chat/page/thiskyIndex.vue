@@ -16,80 +16,80 @@
 
       <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
 
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-        <ChatFold title="常用">
-          <div class="flex flex-col" v-if="doubleCol === false">
-            <div class="flex items-center py-3 pointer" v-for="item in use">
-              <template v-if="item.type === 'message'">
-                <MessageOutlined style="color:var(--warning);font-size: 1.25em;" />
-              </template>
-              <template v-if="item.type === 'link'">
-                <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;" />
-              </template>
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-            </div>
-          </div>
-          <div class="flex grid grid-cols-2 gap-4" v-else>
-            <div class="flex items-center py-3 pointer" v-for="item in use">
-              <template v-if="item.type === 'message'">
-                <MessageOutlined style="color:var(--warning);font-size: 1.25em;" />
-              </template>
-              <template v-if="item.type === 'link'">
-                <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;" />
-              </template>
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-            </div>
-          </div>
-        </ChatFold>
-
-        <ChatFold title="产品相关">
-          <div class="flex flex-col" v-if="doubleCol === false">
-            <div class="flex items-center py-3 pointer" v-for="item in product">
-              <template v-if="item.type === 'message'">
-                <MessageOutlined style="color:var(--warning);font-size: 1.25em;" />
-              </template>
-              <template v-if="item.type === 'link'">
-                <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;" />
-              </template>
-              <template v-if="item.type === 'app'">
-                <AppstoreOutlined style="color:var(--success);font-size: 1.25em;" />
-              </template>
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-            </div>
-          </div>
-          <div class="flex grid grid-cols-2 gap-4" v-else>
-            <div class="flex items-center py-3 pointer" v-for="item in product">
-              <template v-if="item.type === 'message'">
-                <MessageOutlined style="color:var(--warning);font-size: 1.25em;" />
-              </template>
-              <template v-if="item.type === 'link'">
-                <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;" />
-              </template>
-              <template v-if="item.type === 'app'">
-                <AppstoreOutlined style="color:var(--success);font-size: 1.25em;" />
-              </template>
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-            </div>
-          </div>
-        </ChatFold>
-
-        <ChatFold title="交流群">
-          <div class="flex flex-col" v-if="doubleCol === false">
-            <div class="flex items-center py-3 pointer" v-for="item in talkGroup">
-              <MessageOutlined style="color:var(--warning);font-size: 1.25em;" />
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-            </div>
-          </div>
-          <div class="flex grid grid-cols-2 gap-4" v-else>
-            <div class="flex items-center py-3 pointer" v-for="item in talkGroup">
-              <MessageOutlined style="color:var(--warning);font-size: 1.25em;" />
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-            </div>
-          </div>
-        </ChatFold>
-      </vue-custom-scrollbar>
-
-    </div>
+   <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+    <ChatFold title="常用">
+      <div class="flex flex-col" v-if="doubleCol === false">
+        <div class="flex items-center py-3 pointer" v-for="item in use">
+          <template v-if="item.type === 'message'">
+           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+          </template>
+          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+        </div>
+      </div>
+      <div class="flex grid grid-cols-2 gap-4" v-else>
+        <div class="flex items-center py-3 pointer" v-for="item in use">
+          <template v-if="item.type === 'message'">
+           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+          </template>
+          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+        </div>
+      </div>
+    </ChatFold>
+    
+    <ChatFold title="产品相关">
+      <div class="flex flex-col" v-if="doubleCol === false">
+        <div class="flex items-center py-3 pointer" v-for="item in product">
+          <template v-if="item.type === 'message'">
+           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+          </template>
+          <template v-if="item.type === 'app'">
+           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+          </template>
+          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+        </div>
+      </div>
+      <div class="flex grid grid-cols-2 gap-4" v-else>
+        <div class="flex items-center py-3 pointer" v-for="item in product">
+          <template v-if="item.type === 'message'">
+           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+          </template>
+          <template v-if="item.type === 'app'">
+           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+          </template>
+          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+        </div>
+      </div>
+    </ChatFold>
+ 
+    <ChatFold title="交流群">
+      <div class="flex flex-col" v-if="doubleCol === false">
+        <div class="flex items-center py-3 pointer" v-for="item in talkGroup">
+          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+        </div>
+      </div>
+      <div class="flex grid grid-cols-2 gap-4" v-else>
+        <div class="flex items-center py-3 pointer" v-for="item in talkGroup">
+          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+        </div>
+      </div>
+    </ChatFold>
+   </vue-custom-scrollbar>
+ 
+  </div>
 
     <div class="flex">
       <Commun></Commun>
@@ -124,14 +124,16 @@ export default defineComponent({
       product: chatList.productRelated,
       talkGroup: chatList.group,
 
-      settingsScroller: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      }
-    })
+   settingsScroller: {
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true
+   },
+
+   
+  })
 
     const updatePage = () => {
       doubleCol.value = chat.$state.settings.showDouble
@@ -162,5 +164,15 @@ export default defineComponent({
   font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
+}
+
+.group-item{
+  &:active{
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover{
+    background: var(--active-secondary-bg);
+  }
 }
 </style>
