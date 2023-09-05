@@ -9,9 +9,6 @@
         <icon class="mr-1" style="font-size: 1.2em" icon="shuaxin"></icon>
         换一换</div>
     </a-col>
-    <a-col :span="13">
-      <div style="float: right" class="p-3 text-lg"  > {{list.length}} 小队</div>
-    </a-col>
   </a-row>
   <div style="flex: 1;overflow:hidden;" class="">
     <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 100%">
