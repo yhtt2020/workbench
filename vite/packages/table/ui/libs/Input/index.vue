@@ -131,6 +131,7 @@ export default {
   border: 0;
 }
 :deep(.ant-input) {
+  color: var(--primary-text);
   &:focus {
     box-shadow: none;
   }

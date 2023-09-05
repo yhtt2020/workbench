@@ -2,11 +2,11 @@
 
   <div class="p-3 flex" style="height: 100%;display: flex;">
 
-    <div>
-      <SecondPanel :menus="menus">
+<!--    <div>-->
+<!--      <SecondPanel :menus="menus">-->
 
-      </SecondPanel>
-    </div>
+<!--      </SecondPanel>-->
+<!--    </div>-->
     <div class="ml-10" style="flex: 1;height: 100%;display: flex;flex-direction: column;">
       <router-view></router-view>
     </div>

@@ -82,10 +82,11 @@
       </div>
     <div v-else>
       <div>事件名称</div>
-      <a-input class="rounded-lg  h-10 mt-4 " allow-clear v-model:value="eventValue" placeholder="请输入"/>
+      <xt-input class="rounded-lg  h-12 mt-4 xt-text"   style="height: 48px;" v-model:value="eventValue" placeholder="请输入"></xt-input>
+      <!-- <a-input class="rounded-lg  h-10 mt-4 xt-text" allow-clear v-model:value="eventValue" placeholder="请输入"/> -->
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
-      <div class="flex flex-row items-center w-full justify-center mt-4">
+      <div class="flex flex-row items-center w-full justify-center mt-4 xt-text"  style="color: var(--primary-text);">
         <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2 " style="  ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
         <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-active-bg" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
       </div>

@@ -44,20 +44,6 @@ export default {
       "temperature",
       "count",
     ]),
-    showName() {
-      return this.isFull ? false : true;
-    },
-    widthStyle() {
-      if (this.isFull) {
-        return {
-          width: "60px",
-        };
-      } else {
-        return {
-          width: "150px",
-        };
-      }
-    },
   },
   data() {
     return {
@@ -65,22 +51,14 @@ export default {
       menuList: [
         {
           icon: "message",
-          // img: "/icons/bg.png",
           callBack: () => {
             this.selectTab = "Chat";
           },
         },
-        // {
-        //   slot: "test",
-        //   callBack: () => {
-        //     this.createChatVisible = true;
-        //   },
-        // },
+
         {
           flag: true,
           icon: "tianjia2",
-          // img: "/img/task/star.png",
-
           callBack: () => {
             this.createChatVisible = true;
           },

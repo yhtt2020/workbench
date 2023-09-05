@@ -43,7 +43,7 @@
     </template>
     <div>
       <div>事件名称</div>
-      <a-input class="rounded-lg  h-10 mt-4 " v-model:value="eventValue" placeholder="请输入"/>
+      <a-input class="rounded-lg  h-10 mt-4 xt-text" v-model:value="eventValue" placeholder="请输入"/>
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
       <div class="flex flex-row items-center w-full justify-center mt-4">

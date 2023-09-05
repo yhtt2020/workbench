@@ -9,9 +9,6 @@
         <icon class="mr-1" style="font-size: 1.2em" icon="shuaxin"></icon>
         换一换</div>
     </a-col>
-    <a-col :span="13">
-      <div style="float: right" class="p-3 text-lg"  > {{list.length}} 小队</div>
-    </a-col>
   </a-row>
   <div style="flex: 1;overflow:hidden;" class="">
     <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 100%">
@@ -72,7 +69,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      take:1000,
+      take:100,
       page:1,
       selectTeam: {},
       actionVisible: false,
@@ -105,7 +102,7 @@ export default {
         }
         if(randomNums.indexOf(randomNum) >= -1){
           randomNums.push(randomNum)
-          if(randomNums.length>=6){
+          if(randomNums.length>=12){
             break
           }
         }
