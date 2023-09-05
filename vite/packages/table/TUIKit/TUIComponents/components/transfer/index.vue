@@ -144,10 +144,7 @@ import _ from 'lodash-es'
 
 export default defineComponent({
   props:[
-    'server','list','selectedList',
-    'isSearch','resultShow','isH5',
-    'isRadio','isCustomItem','title',
-    'type',
+    'isH5',
   ],
 
   // props: {
@@ -193,7 +190,6 @@ export default defineComponent({
 
   setup(props, ctx){
     const friendValue = ref('')
-   
     const data = reactive({
       addFriendLists:[],
       simpleImage:'/img/state/null.png', // 空状态图片
@@ -203,8 +199,7 @@ export default defineComponent({
     const infoStore = appStore()  // 获取state用户信息
     const isSelfUid = infoStore.$state.userInfo.uid  // 是否为自己的uid
 
-    const tim = props.server.TUICore.tim  // 小tim
-    const TIM = props.server.TUICore.TIM  // 大tim
+    const TIM = window.$TUIKit.TIM  // 大tim
 
     const closeAddFriend = () =>{  // 关闭添加好友弹窗  
       ctx.emit('close')
@@ -216,7 +211,8 @@ export default defineComponent({
         return
       }else{
         const val = friendValue.value
-        const imResponse = await  props.server.getUserProfile([val])
+        console.log(val);
+        const imResponse = await  window.$chat.getUserProfile({userIDList:[`${val}`]})
         data.addFriendLists = imResponse.data
       }
 
@@ -231,7 +227,7 @@ export default defineComponent({
         remark:item.nick
       }
 
-      await tim.addFriend(option)
+      await window.$chat.addFriend(option)
       ctx.emit('close')
     }
 
@@ -247,7 +243,7 @@ export default defineComponent({
     })
 
     const loadFriend = async () => {   // 加载获取好友列表
-      const res = await tim.getFriendList()
+      const res = await window.$chat.getFriendList()
       data.friendLists = res.data
     }
 

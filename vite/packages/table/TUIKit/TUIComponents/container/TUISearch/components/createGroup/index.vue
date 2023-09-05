@@ -165,14 +165,17 @@ const TUISearch = defineComponent({
  
   setup(props,ctx){
 
-    const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
-    const { t } = TUIServer.TUICore.config.i18n.useI18n();
+    // const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
+    const TUIServer = window.$chat
+    const { t } = window.$TUIKit.config.i18n.useI18n();
+    const Server = window.$TUIKit
+
     const chat = chatStore()
 
     const data = reactive({
       searchId:'',
       currentGroup: null,
-      env: TUIServer.TUICore.TUIEnv,
+      env: Server.TUIEnv,
       searchResult:[],
       simpleImage:'/img/state/null.png',
       settingsScroller: {  // 滚动条配置 
@@ -202,10 +205,12 @@ const TUISearch = defineComponent({
     const joinGroup = async(group) =>{ // 加入群组方法
       const options = {
         groupID: group.groupID,
-        applyMessage: group.applyMessage || t('TUIContact.加群'),
+        applyMessage: group.applyMessage ||  t('TUIContact.加群'),
+        // t('TUIContact.加群')
         type: group?.type,
       }
       const res = await TUIServer.joinGroup(options);
+      // console.log('检测::>>',res);
       if(res.data.status === 'WaitAdminApproval'){
         message.success('入群申请已发出,等待群主和管理员审核')
         data.currentGroup = { apply:true }
