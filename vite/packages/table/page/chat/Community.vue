@@ -3,8 +3,8 @@
     <div class="top-bar">
       <div class="left shrink">
         <a class="text-base ant-dropdown-link" @click.prevent style="color: var(--primary-text);">
-          最近更新 {{ selectedIndex }}
-          <DownOutlined class="text-base"/>
+          最近更新
+          <DownOutlined class="text-base" />
         </a>
       </div>
       <div class="right shrink">
@@ -15,63 +15,38 @@
     <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
     <div class="flex justify-center flex-1" style="height: 0">
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef"  :class="{'detail-visible':detailVisible}"  class="thread-list"  :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
-                            :style="{ width: detailVisible ? '40%' : '60%' }">
+      <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="thread-list"
+        :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
+        :style="{ width: detailVisible ? '40%' : '60%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
-          <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card"
-                   @click="showDetail(index)"
-                   class="xt-bg"
-                   :style="{ backgroundColor: selectedIndex === index ? 'rgba(80,139,254,0.20)' : 'rgba(0,0,0,0.30)', flex: 1 }">
-            <template #content>
-              <!-- 添加数据的文本内容-标题和内容分开 -->
-              <div>
-                <div id="title" style="color: var(--primary-text);">{{ card.content.title }}</div>
-                <div id="context" style="color:  var(--secondary-text);"
-                     :class="[{'omit':card.options?.img.length===1}]">{{ card.content.context }}
-                </div>
-              </div>
-              <!-- 自定义添加内容 -->
-              <!-- <slot></slot> -->
-            </template>
+          <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)"
+            class="xt-bg"
+            :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
+
           </ComCard>
         </div>
       </vue-custom-scrollbar>
       <!-- 右侧详情区域 -->
-      <vue-custom-scrollbar class="thread-detail  xt-bg  rounded-lg ml-2" :key="selectedIndex" v-if="detailVisible"
-                            :settings="settingsScroller" style="height: 100%;"
-                            :style="{ width: detailVisible ? '55%' : '40%' }">
+      <vue-custom-scrollbar class="ml-2 rounded-lg thread-detail xt-bg" :key="selectedIndex" v-if="detailVisible"
+        :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full ml-3 detail" v-if="detailVisible">
           <DetailCard :cardData="comCards[selectedIndex]">
             <template #top-right>
-              <CloseCircleOutlined @click="close(selectedIndex)" class="text-xl xt-text"/>
-            </template>
-            <template #content>
-              <div>
-                <div>
-                                    <span id="title" style="color: var(--primary-text);">{{
-                                        comCards[selectedIndex].content.title
-                                      }}</span>
-                  <br>
-                  <span id="context" style="color:  var(--secondary-text);">{{
-                      comCards[selectedIndex].content.context
-                    }}</span>
-                </div>
-              </div>
+              <CloseCircleOutlined @click="close()" class="text-xl xt-text" />
             </template>
           </DetailCard>
         </div>
       </vue-custom-scrollbar>
     </div>
-    <!-- </vue-custom-scrollbar> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, reactive, nextTick, h, computed, watch,getCurrentInstance} from 'vue';
-import {DownOutlined, PlusCircleOutlined, CloseCircleOutlined} from '@ant-design/icons-vue';
-import ComCard from './card/ComCard.vue';
-import DetailCard from './card/DetailCard.vue';
+import { ref, reactive, nextTick, h, computed, watch, getCurrentInstance } from 'vue';
+import { DownOutlined, PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
+import ComCard from './com/ComList.vue';
+import DetailCard from './com/Detail.vue';
 
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
@@ -100,7 +75,7 @@ const comCards = ref([
       img: ['https://ts1.cn.mm.bing.net/th?id=ORMS.ee894d967b3d81162540134424ce96e5&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1&p=0',
         'https://tse1-mm.cn.bing.net/th/id/OIP-C.X7wB1GrLLb9az8I04ePzZwHaLH?w=203&h=304&c=7&r=0&o=5&dpr=1.1&pid=1.7',
         'https://ts1.cn.mm.bing.net/th?id=ORMS.eabeec2ac6b24658735f4528f013f55d&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=1&p=0'],
-      viedo: ''
+      video: ['https://vodpub1.v.news.cn/original/20210426/61ccdd548e144eed9b4689968bc05430.mp4']
     }
   },
   {
@@ -108,15 +83,16 @@ const comCards = ref([
       title: '8月9日，近期开发内容日志：桌面市场、超级工具箱、待办.经历了连续的几天的服务器震荡。',
       context: '目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…'
     },
-    options: {
-      img: ['../../../public/img/unlock.svg'],
+    data: {
+      img: ['https://ts4.cn.mm.bing.net/th?id=ORMS.69f3f16b106791e0f42b6f86cae85a80&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1.5&p=0'],
+      video: ['https://vodpub1.v.news.cn/original/20210426/61ccdd548e144eed9b4689968bc05430.mp4']
     }
   },
 ]);
-const threadListRef=ref()
- function updateScroller(){
-   console.log(threadListRef)
-   threadListRef.value.update()
+const threadListRef = ref()
+function updateScroller() {
+  console.log(threadListRef)
+  threadListRef.value.update()
 }
 // 控制显示状态和选中状态的变量
 const detailVisible = ref(false);
@@ -132,33 +108,34 @@ const showDetail = (index) => {
 };
 
 // 关闭详情的函数
-const close = (index) => {
+const close = () => {
   if (detailVisible.value) {
     detailVisible.value = false;
     selectedIndex.value = -1
   }
   updateScroller()
 }
-
-
-
 </script>
 <style lang='scss' scoped>
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 1200px) {
   .thread-list {
-    width:100% !important;
-    margin-left: 10px;margin-right: 10px;
+    width: 100% !important;
+    margin-left: 10px;
+    margin-right: 10px;
 
   }
-  .thread-detail{
+
+  .thread-detail {
     margin-left: 10px;
     width: 100% !important;
     margin-right: 10px;
   }
-  .detail-visible{
+
+  .detail-visible {
     display: none;
   }
 }
+
 .container {
   width: 100%;
   height: 100%;
@@ -268,23 +245,7 @@ const close = (index) => {
     background-color: rgba(80, 139, 254, 0.20);
   }
 
-  #title {
-    font-family: PingFangSC-Regular;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.85);
-    text-align: justify;
-    line-height: 22px;
-    font-weight: 400;
-  }
 
-  #context {
-    font-family: PingFangSC-Regular;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.60);
-    text-align: justify;
-    line-height: 22px;
-    font-weight: 400;
-  }
 
   .omit {
     white-space: pre-wrap;

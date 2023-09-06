@@ -2,6 +2,7 @@
     <!-- {{ isShow.isShow }} -->
     <div class="w-full card">
         <!-- {{ isShow.isShow }} -->
+        <!-- {{ cardData.data?.video[0] }} -->
         <div class="card-content">
             <div class="card-top">
                 <div class="top-left">
@@ -14,7 +15,7 @@
                         <div class="username" style="color: var(--primary-text);">
                             我是皮克斯呀
                         </div>
-                        <div  class="self-msg xt-text-2 " style="color: var(--primary-text);">
+                        <div class="self-msg xt-text-2 " style="color: var(--primary-text);">
                             <span class="date">08-09</span>
                             <span class="time">16:16</span>
                             <span class="ip">浙江</span>
@@ -29,21 +30,30 @@
             </div>
 
             <div>
-                <div class="flex items-center justify-center ">
-                    <img :src="cardData.data.img" alt="" class="w-1/4 h-full mr-5 object-cover" v-if="cardData.data?.img.length===1">
-                    <video src="cardData.data.viedo" class="w-1/4 h-full " v-if="cardData.data?.viedo"></video>
-                    <!-- <div class="w-1/3 h-full bg-image"></div> -->
-                    <!-- 插入正文元素  :class="[omit:data.img]" -->
-                    <!-- <div class="omit"> -->
-                        <slot name="content" ></slot>
-                    <!-- </div> -->
-
-
-                </div>
-                <template v-if="cardData.data?.img.length>1">
-                        <div class="flex w-full p-0 mt-2 mb-2  whitespace-pre-wrap cover-wrapper" >
-                          <img :src="item" alt="" v-for="(item,index) in cardData.data?.img"   class="cover-sm  mr-2 object-cover rounded-md" :key="index">
+                <div class="flex items-center justify-center">
+                    <!-- 单个图片 -->
+                    <template v-if="cardData.data?.img.length === 1 && !cardData.data?.video">
+                        <img :src="cardData.data.img" class="object-cover mr-5 rounded-md cover-im"
+                            style="text-align: center;">
+                    </template>
+                    <video class="object-cover mr-5 rounded-md cover-im " v-if="cardData.data?.video">
+                        <source :src="cardData.data.video[0]" type="video/mp4" />
+                        <source :src="cardData.data.video[0]" type="video/webm" />
+                    </video>
+                    <!-- 正文内容 -->
+                    <div>
+                        <div id="title" style="color: var(--primary-text);">{{ cardData.content.title }}</div>
+                        <div id="context" style="color:  var(--secondary-text);"
+                            :class="[{ 'omit': cardData.data?.img.length === 1 }]">
+                            {{ cardData.content.context }}
                         </div>
+                    </div>
+                </div>
+                <template v-if="cardData.data?.img.length > 1 || cardData.data?.video">
+                    <div class="flex w-full p-0 mt-2 mb-2 whitespace-pre-wrap cover-wrapper">
+                        <img :src="item" alt="" v-for="(item, index) in cardData.data?.img"
+                            class="object-cover mr-2 rounded-md cover-sm" :key="index">
+                    </div>
                 </template>
 
 
@@ -73,20 +83,29 @@ const props = defineProps({
 </script>
 <style lang='scss' scoped>
 .card {
-  .cover-wrapper{
-    flex-wrap: wrap;
-  }
-  .cover-sm{
-    margin-bottom: 10px;
-    width:100px;
-    height:100px;
-    aspect-ratio: 1 / 1;
-  }
+    .cover-wrapper {
+        flex-wrap: wrap;
+    }
+
+    .cover-sm {
+        margin-bottom: 10px;
+        width: 100px;
+        height: 100px;
+        aspect-ratio: 1 / 1;
+    }
+
+    .cover-im {
+        // margin-bottom: 10px;
+        width: 100px;
+        height: 100px;
+        aspect-ratio: 1 / 1;
+    }
+
     display: flex;
     // 占满整个父元素
     flex-grow: 1;
     // width: 600px;
-    background: rgba(0, 0, 0, 0.30);
+    // background: rgba(0, 0, 0, 0.30);
     border-radius: 12px;
     margin-bottom: 12px;
 
@@ -145,13 +164,32 @@ const props = defineProps({
             line-height: 22px;
             font-weight: 400;
         }
-        .omit{
+
+        .omit {
             white-space: pre-wrap;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             overflow: hidden;
+        }
+
+        #title {
+            font-family: PingFangSC-Regular;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: justify;
+            line-height: 22px;
+            font-weight: 500;
+        }
+
+        #context {
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.60);
+            text-align: justify;
+            line-height: 22px;
+            font-weight: 400;
         }
 
         .card-bottom {
@@ -172,5 +210,4 @@ const props = defineProps({
         }
     }
 
-}
-</style>
+}</style>
