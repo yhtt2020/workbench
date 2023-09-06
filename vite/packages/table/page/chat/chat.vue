@@ -2,7 +2,7 @@
   <div class="flex h-full py-3">
     <xt-left-menu :list="chatLeftList" :index="index" last="3" end="1"></xt-left-menu>
     <!-- <router-view></router-view> -->
-    <template v-if="type === 'chat'">
+    <!-- <template v-if="type === 'chat'">
       <ChatMain></ChatMain>
     </template>
 
@@ -12,12 +12,14 @@
 
     <template v-if="type === 'thisky'">
       <ThiskyIndex></ThiskyIndex>
-      <!-- <Commun /> -->
+      <Commun />
     </template>
 
     <div v-show="type==='contact'" style="flex:1;width: 0" >
-      <router-view></router-view>
-    </div>
+      
+    </div> -->
+
+    <router-view></router-view>
   </div>
 
   <teleport to='body'>
@@ -45,7 +47,7 @@ import Modal from '../../components/Modal.vue'
 import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
-import { handleErrorPrompts, handleSuccessPrompts } from '../../TUIKit/TUIComponents/container/utils';
+// import { handleErrorPrompts, handleSuccessPrompts } from '../../TUIKit/TUIComponents/container/utils';
 
 export default {
   name: 'App',
@@ -62,12 +64,12 @@ export default {
 
   setup() {
     const router = useRouter()
+    const route = useRoute()
     const TUIServer = (window as any).$TUIKit
-    console.log(TUIServer)
     const Server = (window as any).$chat
     const data = reactive({
-      index:0,
-      type:'chat',
+      index:'chat',
+      // type:'chat',
       addIndex:'',
       open:false,
       env: TUIServer.TUIEnv,
@@ -80,12 +82,16 @@ export default {
     const selectTab = (item: any) => {
 
       // router.push(item.route)
-      data.type = item.type
-      if(item.type==='contact'){
-        router.push({
-          name:'contact'
-        })
-      }
+      // data.type = item.type
+      
+      data.index = item.type
+      router.push(item.route)
+      
+      // if(item.type==='contact'){
+      //   router.push({
+      //     name:'contact'
+      //   })
+      // }
     }
 
     const selectDorpTab = (item:any) =>{
@@ -98,35 +104,35 @@ export default {
         icon: 'message',
         type: 'chat',
         title:'消息',
-        // route:{
-        //   name:'chatMain'
-        // },
+        route:{
+          name:'chatMain'
+        },
         callBack: selectTab,
       },
       {
         icon: 'team',
         type: 'contact',
         callBack: selectTab,
-        // route:{
-        //   name:'chatFind'
-        // }
+        route:{
+          name:'contact'
+        }
       },
       {
         icon: 'zhinanzhen',
         type: 'find',
         callBack: selectTab,
-        // route:{
-        //   name:'chatFind'
-        // }
+        route:{
+          name:'chatFind'
+        }
       },
       {
         icon:'',
         img: '/icons/bz1.png',
         type: 'thisky',
         callBack: selectTab,
-        // route:{
-        //   name:'chatThisky'
-        // }
+        route:{
+          name:'chatThisky'
+        }
       },
       {
         icon: 'tianjia2',
@@ -155,18 +161,22 @@ export default {
 
     // const router = useRouter()
 
-    // onMounted(()=>{
-    //   router.push({name:'chatThisky'})
-    // })
+    onMounted(()=>{
+      router.push({name:'chatMain'})
+    })
 
-    const updateChat = () => {
-      data.index = 0
-      data.type = 'chat'
-    }
+    // const updateChat = (v:any) => {
+    //   console.log('获取返回数据',v.type);
+      
+    //   // data.index = this.$route.meta.type
+    //   // data.type = 'chat'
+    // }
 
     return {
-      chatLeftList,
-      ...toRefs(data), updateChat,
+      chatLeftList,route,router,
+      ...toRefs(data), 
+      
+      // updateChat,
     }
   }
 }

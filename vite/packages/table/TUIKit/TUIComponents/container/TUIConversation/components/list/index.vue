@@ -33,6 +33,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs, watch, watchEffect } from 'vue';
 import LiteItem from '../list-item';
+
 const TUIConversationList: any = defineComponent({
   props: {
     data: {
@@ -85,6 +86,7 @@ const TUIConversationList: any = defineComponent({
     );
 
     const handleListItem = (item: any) => {
+      console.log('测试::>>',item);
       ctx.emit('handleItem', item);
     };
 
@@ -163,7 +165,8 @@ const TUIConversationList: any = defineComponent({
     const scrollChange = () => {
       obj.toggleID && (obj.toggleID = '');
     };
-
+ 
+    
     return {
       ...toRefs(obj),
       handleListItem,
