@@ -43,8 +43,9 @@ const stateStyle = computed(() => {
     height: props.w + "px",
   };
 });
+const emit = defineEmits(["itemClick"]);
 const itemClick = (item, flag) => {
-  item.callBack && item.callBack(item);
+  emit("itemClick", item);
 };
 </script>
 
