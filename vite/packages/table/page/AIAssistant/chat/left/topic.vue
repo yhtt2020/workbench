@@ -18,6 +18,12 @@
           {{ text }}
         </div>
       </div>
+      <div
+        class="absolute"
+        :class="{
+          triangle: data.top == true,
+        }"
+      ></div>
     </div>
   </xt-menu>
 </template>
@@ -55,7 +61,7 @@ export default {
     ...mapActions(aiStore, ["delTopic"]),
     getData() {
       let obj = {
-        ...this.chatList[this.data.id][this.chatList[this.data.id].length - 1],
+        ...this.chatList[this.data.id][this.chatList[this.data.id].length - 2],
       };
 
       return obj;
@@ -89,5 +95,17 @@ export default {
   &:hover .top-item {
     display: block;
   }
+}
+
+.triangle {
+  top: -1px;
+  right: -4px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--active-bg);
+  transform: rotate(45deg);
+  border-radius: 20px;
 }
 </style>

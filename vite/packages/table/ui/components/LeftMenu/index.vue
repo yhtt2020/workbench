@@ -31,7 +31,7 @@
     </div>
     <!-- 中间 -->
     <div
-      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3 xt-bm flex flex-col items-center"
+      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3  flex flex-col items-center"
     >
       <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
         <div style="height: auto">
@@ -87,7 +87,7 @@
           >
             <slot :name="item.slot"> </slot>
           </div>
-          <Item :item="item" v-else>
+          <Item :item="item" type="" v-else>
             <template #default>
               <slot :name="item.slot"> </slot>
             </template>

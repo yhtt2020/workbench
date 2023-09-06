@@ -18,6 +18,7 @@
       w="40"
       size="20"
       radius="10"
+      :type="type"
       v-bind="config"
       :icon="item.icon"
     ></xt-icon>
@@ -34,6 +35,9 @@ const props = defineProps({
   },
   w: {
     default: 20,
+  },
+  type: {
+    default: "default",
   },
 });
 
