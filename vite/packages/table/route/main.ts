@@ -63,10 +63,9 @@ import Tomato from '../page/app/tomato/Tomato.vue'
 import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
-import ShortcutKey from "../apps/shortcutKey/page/ShortcutKey.vue";
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
-import ShortcutKeyRoute from '../apps/shortcutKey/route'
+
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
@@ -77,6 +76,11 @@ import ImTeam from '../page/chat/team.vue'
 // import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
 // import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
+
+//导入应用路由
+import ShortcutKeyRoute from '../apps/shortcutKey/route'
+import BarrageRoute from '../apps/barrage/route'
+
 
 export default [
   {
@@ -190,6 +194,7 @@ export default [
         component: ChatIndex,
         name: 'chatIndex',
         children: [
+          BarrageRoute,
           {
             path:'',
             name:'chatDesk',

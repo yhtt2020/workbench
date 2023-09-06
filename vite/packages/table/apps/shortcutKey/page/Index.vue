@@ -236,7 +236,7 @@ export default defineComponent({
       </xt-left-menu>
     </div>
     <div class=" xt-text h-full rounded-lg flex-1 flex flex-col">
-      <a-row class="h-full" v-if="currentApp">
+      <div class="h-full" style="flex:1;height:0" v-if="currentApp">
 
 
           <!--          <div   class="mb-2 s-bg rounded-md p-2" v-for="app in executedApps ">-->
@@ -261,7 +261,7 @@ export default defineComponent({
         <RouterView></RouterView>
         </keep-alive>
 
-      </a-row>
+      </div>
       <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
         <strong>常用快捷功能开关：</strong>
         <a-switch v-model:checked="settings.enableAutoChange"> </a-switch> 自动切换方案

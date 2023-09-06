@@ -41,7 +41,11 @@ export default defineComponent({
         {
           title:'小队',index:'team',icon:'smile',
           route:{name:'hall'},
-        }
+        },
+        {
+          title: '弹幕',index: 'barrage',icon:'text-align-left',
+          route:{ name: 'barrage'}
+        },
       ]
     }
   },
