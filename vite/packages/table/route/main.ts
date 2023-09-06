@@ -63,16 +63,19 @@ import Tomato from '../page/app/tomato/Tomato.vue'
 import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
-import ShortcutKey from "../page/work/shortcutKey/ShortcutKey.vue";
+import ShortcutKey from "../apps/shortcutKey/page/ShortcutKey.vue";
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
-
+import ShortcutKeyRoute from '../apps/shortcutKey/route'
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
 import ImTeam from '../page/chat/team.vue'
+// import ChatMain from '../page/chat/page/chatMain.vue'
+// import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
+// import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
 
 export default [
@@ -92,18 +95,7 @@ export default [
         name: 'tomato',
         component: Tomato
       },
-      {
-        path: "/team",
-        name: "team",
-        component: Team,
-        children: [
-          {
-            path: "",
-            name: "hall",
-            component: Hall,
-          },
-        ],
-      },
+
       {
         path: "/inspector",
         name: "inspector",
@@ -207,17 +199,44 @@ export default [
             path: '',
             name: 'chat',
             component: Chat,
+            children:[
+              {
+                path: '/contact',
+                name: 'contact',
+                component: Contact,
+              },
+            ]
+            // children:[
+            //   {
+            //     path:'',
+            //     name:'chatMain',
+            //     component:ChatMain
+            //   },
+            //   {
+            //     path:'',
+            //     name:'chatFind',
+            //     component:ChatFind
+            //   },
+            //   {
+            //     path:'',
+            //     name:'chatThisky',
+            //     component:ThiskyIndex
+            //   }
+            // ]
           },
+
           {
-            path: '/contact',
-            name: 'contact',
-            component: Contact,
+            path: "/team",
+            name: "team",
+            component: Team,
+            children: [
+              {
+                path: "",
+                name: "hall",
+                component: Hall,
+              },
+            ],
           },
-          {
-            path:'',
-            name:'imTeam',
-            component:ImTeam
-          }
 
         ]
       },
@@ -306,11 +325,12 @@ export default [
             name: 'clipboard',
             component: Clipboard,
           },
+          ShortcutKeyRoute,
           {
-            path: '/shortcutKey',
-            name: 'shortcut',
-            component: ShortcutKey,
-          },
+            path: "/todo",
+            name: "todo",
+            component: Todo,
+          }
         ]
       },
       {
@@ -448,11 +468,7 @@ export default [
         name: "remoteCommunity",
         component: RemoteCommunity,
       },
-      {
-        path: "/todo",
-        name: "todo",
-        component: Todo,
-      }
+
     ],
   },
 ];

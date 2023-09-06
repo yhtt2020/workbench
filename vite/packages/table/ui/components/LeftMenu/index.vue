@@ -1,51 +1,109 @@
 <template>
-  <!-- 动态头部 -->
-  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 86px">
-    <template v-for="item in newList.slice(0, last)">
-      <div @click="iconSelectClick(item.id)">
-        <slot :name="item.slot" v-if="item.slot"> </slot>
-        <Item :item="item" :id="currentIndex">
-          <template #default>
-            <slot :name="item.slot">{{ item.slot }} </slot>
-          </template>
-        </Item>
-      </div>
-    </template>
-
-    <!-- 动态适中 -->
-    <div
-      class="xt-scrollbar xt-container h-full xt-bt py-3 xt-bm flex flex-col items-center"
-    >
-      <template v-for="item in newList.slice(last, -1 * end)">
-        <div @click="iconSelectClick(item.id)">
-          <slot :name="item.slot" v-if="item.slot"> </slot>
-          <Item :item="item" :id="currentIndex">
+  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px;min-width: 72px">
+    <!-- 头部 -->
+    <div>
+      <Menu :list="item.children" v-for="item in newList.slice(0, last)">
+        <Box
+          :item="item"
+          @selectClick="selectClick"
+          :id="currentIndex"
+          class="mb-2"
+        >
+          <div
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
+          >
+            <slot :name="item.slot"> </slot>
+          </div>
+          <Item :item="item" v-else>
             <template #default>
-              <slot :name="item.slot">{{ item.slot }} </slot>
+              <slot :name="item.slot"> </slot>
             </template>
           </Item>
-        </div>
-      </template>
+        </Box>
+      </Menu>
     </div>
-    <!-- 底部循环 -->
-
-    <template v-for="item in newList.slice(-1 * end)">
-      <div @click="iconSelectClick(item.id, item.flag)">
-        <slot :name="item.slot" v-if="item.slot"> </slot>
-        <Item :item="item" :id="currentIndex" m="mt">
-          <template #default>
-            <slot :name="item.slot">{{ item.slot }} </slot>
-          </template>
-        </Item>
-      </div>
-    </template>
+    <!-- 中间 -->
+    <div
+      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3 xt-bm flex flex-col items-center"
+    >
+      <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
+        <div style="height: auto">
+          <Menu
+            :list="item.children"
+            v-for="item in newList.slice(last, -1 * end)"
+          >
+            <a-tooltip :title="item.title" placement="right">
+              <Box
+                :item="item"
+                @selectClick="selectClick"
+                :id="currentIndex"
+                class="mt-2"
+              >
+                <div
+                  v-if="item.slot"
+                  style="width: 40px; height: 40px; border-radius: 10px"
+                  class="xt-bg xt-base-btn"
+                >
+                  <slot :name="item.slot"> </slot>
+                </div>
+                <Item :item="item" w="40">
+                  <template #default>
+                    <slot :name="item.slot"></slot>
+                  </template>
+                </Item>
+              </Box>
+            </a-tooltip>
+          </Menu>
+        </div>
+      </vue-custom-scrollbar>
+    </div>
+    <!-- 底部 -->
+    <div>
+      <Menu :list="item.children" v-for="item in newList.slice(-1 * end)">
+        <Box
+          :item="item"
+          @selectClick="selectClick"
+          :id="currentIndex"
+          class="mb-2"
+        >
+          <div
+            v-if="item.slot"
+            style="width: 40px; height: 40px; border-radius: 10px"
+            class="xt-bg xt-base-btn"
+          >
+            <slot :name="item.slot"> </slot>
+          </div>
+          <Item :item="item" v-else>
+            <template #default>
+              <slot :name="item.slot"> </slot>
+            </template>
+          </Item>
+        </Box>
+      </Menu>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
+import Menu from "./Menu.vue";
+import Box from "./Box.vue";
 import Item from "./Item.vue";
+import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
+import { nanoid } from "nanoid";
+
 const props = defineProps({
+  scrollerSettings: {
+    default: {
+      useBothWheelAxes: true,
+      swipeEasing: true,
+      suppressScrollY: false,
+      suppressScrollX: true,
+      wheelPropagation: true,
+    },
+  },
   config: {
     default: () => {
       return {
@@ -60,10 +118,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
-  index: {
-    default: 0,
-  },
-  modelValue: {},
+  index: { default: false },
   list: {
     default: () => {
       return [
@@ -82,27 +137,6 @@ const props = defineProps({
         {
           icon: "yanjing",
         },
-
-        // ----------
-        {
-          icon: "smile",
-        },
-        {
-          icon: "aixin",
-        },
-        {
-          icon: "yanjing",
-        },
-        {
-          icon: "smile",
-        },
-        {
-          icon: "aixin",
-        },
-        {
-          icon: "yanjing",
-        },
-        // -----------
         {
           icon: "shezhi1",
         },
@@ -110,10 +144,11 @@ const props = defineProps({
     },
   },
 });
+
+// 动态添加ID
 const newList = computed(() => {
-  let id = -1;
   let res = props.list.map((item) => {
-    id++;
+    let id = item.id ?? nanoid();
     return {
       id,
       ...item,
@@ -121,16 +156,40 @@ const newList = computed(() => {
   });
   return res;
 });
-const currentIndex = ref(props.index);
-const iconSelectClick = (id, flag) => {
+
+// 动态获取ID
+const index = computed(() => {
+
+  return isNaN(props.id?.value) ? newList.value[0].id : props.index.value;
+});
+
+// 选择ID
+const currentIndex = ref(index.value);
+
+//选中事件
+const emit = defineEmits(["index"]);
+const selectClick = (id, flag) => {
+  emit("update:index", id);
   if (flag) return;
   currentIndex.value = id;
 };
+
+// 点击事件
 </script>
 
 <style lang="scss" scoped>
 .box {
   border: 4px solid var(--active-bg) !important;
   border-radius: 12px;
+}
+.anticon {
+  width: 999px !important;
+  color: red !important;
+}
+:deep(.anticon) {
+  font-size: 20px;
+}
+:deep(.ps__rail-y) {
+  display: none;
 }
 </style>

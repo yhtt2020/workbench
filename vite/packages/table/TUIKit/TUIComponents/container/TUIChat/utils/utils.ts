@@ -4,6 +4,7 @@ import TIM from '../../../../TUICore/tim';
 import constant from '../../constant';
 import { Message } from '../interface';
 
+
 // Handling avatars
 export function handleAvatar(item: any) {
   let avatar = '';
@@ -162,18 +163,18 @@ export function handleTipMessageShowContext(message: any) {
     });
     userName = userName?.slice(0, -1);
   }
+
+
   if (message?.type === TIM?.TYPES?.MSG_GRP_TIP) {
     switch (message.payload.operationType) {
       case TIM.TYPES.GRP_TIP_MBR_JOIN:
-        options.text = `${userName} ${t('message.tip.加入群组')}`;
+        options.text = `${userName}加入群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_QUIT:
-        options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.退出群组')}`;
+        options.text = `群成员：${userName} 退出群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
-        options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.被')}${message.payload.operatorID}${t(
-          'message.tip.踢出群组'
-        )}`;
+        options.text = `${t('message.tip.群成员')}：${userName}被群管理员踢出群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
         options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.成为管理员')}`;
@@ -205,6 +206,8 @@ export function handleTipMessageShowContext(message: any) {
   }
   return options;
 }
+
+
 
 function handleTipGrpUpdated(message: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
@@ -431,37 +434,37 @@ export function translateGroupSystemNotice(message: any) {
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
   switch (message.payload.operationType) {
     case 1:
-      return `${message.payload.operatorID} ${t('message.tip.申请加入群组')}：${groupName}`;
+      return `${message.nick} ${t('message.tip.申请加入群组')}：${groupName}`;
     case 2:
       return `${t('message.tip.成功加入群组')}：${groupName}`;
     case 3:
       return `${t('message.tip.申请加入群组')}：${groupName} ${t('message.tip.被拒绝')}`;
     case 4:
-      return `${t('message.tip.你被管理员')}${message.payload.operatorID} ${t('message.tip.踢出群组')}：${groupName}`;
+      return `${t('message.tip.你被管理员')}${message.nick} ${t('message.tip.踢出群组')}：${groupName}`;
     case 5:
-      return `${t('message.tip.群')}：${groupName} ${t('message.tip.被')} ${message.payload.operatorID} ${t(
+      return `${t('message.tip.群')}：${groupName} ${t('message.tip.被')} ${message.nick} ${t(
         'message.tip.解散'
       )}`;
     case 6:
-      return `${message.payload.operatorID} ${t('message.tip.创建群')}：${groupName}`;
+      return `${message.nick} ${t('message.tip.创建群')}：${groupName}`;
     case 7:
-      return `${message.payload.operatorID} ${t('message.tip.邀请你加群')}：${groupName}`;
+      return `${message.nick} ${t('message.tip.邀请你加群')}：${groupName}`;
     case 8:
       return `${t('message.tip.你退出群组')}：${groupName}`;
     case 9:
-      return `${t('message.tip.你被')}${message.payload.operatorID} ${t('message.tip.设置为群')}：${groupName} ${t(
+      return `${t('message.tip.你被')}${message.nick} ${t('message.tip.设置为群')}：${groupName} ${t(
         'message.tip.的管理员'
       )}`;
     case 10:
-      return `${t('message.tip.你被')}${message.payload.operatorID} ${t('message.tip.撤销群')}：${groupName} ${t(
+      return `${t('message.tip.你被')}${message?.nick} ${t('message.tip.撤销群')}：${groupName} ${t(
         'message.tip.的管理员身份'
       )}`;
     case 12:
-      return `${message.payload.operatorID} ${t('message.tip.邀请你加群')}：${groupName}`;
+      return `${message?.nick} ${t('message.tip.邀请你加群')}：${groupName}`;
     case 13:
-      return `${message.payload.operatorID} ${t('message.tip.同意加群')}：${groupName}`;
+      return `${message?.nick} ${t('message.tip.同意加群')}：${groupName}`;
     case 14:
-      return `${message.payload.operatorID} ${t('message.tip.拒接加群')}：${groupName}`;
+      return `${message?.nick} ${t('message.tip.拒接加群')}：${groupName}`;
     case 255:
       return `${t('message.tip.自定义群系统通知')}: ${message.payload.userDefinedField}`;
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="h-full w-full flex flex-col">
     <div
-      class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar mt-3"
+      class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar mt-3 w-full"
       ref="contentRef"
       @scroll="handleScroll"
     >

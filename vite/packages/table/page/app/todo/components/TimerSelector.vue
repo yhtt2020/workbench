@@ -4,6 +4,9 @@
     :style="{ color: this.modelValue ? '#1890ff' : '#BBBBBB' }"
   /> -->
   <Icon class="pointer" @click="selectTime" :style="{ color: this.modelValue ? '#1890ff' : 'var(--disable-text)' }" icon="calendar-check" style="font-size:20px"></Icon>
+  <teleport to="body">
+
+
   <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
     <div class="px-5 pb-5 xt-modal flex flex-col justify-between items-center" style="width:380px;height:300px;border-radius:16px">
       <div class="head-nav">
@@ -45,7 +48,7 @@
         <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="seTime">确定</div>
       </div>
     </div>
-  </Modal>
+  </Modal>  </teleport>
   <!-- <a-modal
     @ok="seTime"
     @cancel="clearDeadTime"
@@ -130,7 +133,7 @@ export default {
     selectTime() {
       // this.dateTimePickerVisible = true;
       this.promptVisible = true
-      this.fullScreen = true
+     // this.fullScreen = true
     },
     setTimeDayEnd(force = false) {
       if (force || this.newTime === null) {
@@ -176,7 +179,7 @@ export default {
       }
       let time = newTime.unix();
       // this.dateTimePickerVisible = false;
-      this.fullScreen = false
+     // this.fullScreen = false
       this.promptVisible = false
       this.$emit("update:modelValue", time);
     },

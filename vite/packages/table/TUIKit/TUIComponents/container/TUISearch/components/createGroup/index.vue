@@ -30,7 +30,7 @@
             <a-avatar shape="square" :size="48" :src="item.avatar"></a-avatar>
             <div class="flex flex-col" style="margin-left:16px;">
               <span style="color: var(--primary-text);">{{ item.name }}</span>
-              <span style="color: var(--primary-text);">{{ item.maxMemberCount === '' ? 1 : item.maxMemberCount }}人</span>
+              <span style="color: var(--primary-text);">{{ total }}人</span>
             </div>
           </div>
           <div class="flex items-center rounded-lg pointer  justify-center active-button" 
@@ -148,6 +148,7 @@ import { computed, defineComponent, reactive, toRefs,watch } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue';
+import {chatStore} from '../../../../../../store/chat'
 
 const TUISearch = defineComponent({
   name: 'group',
@@ -164,13 +165,17 @@ const TUISearch = defineComponent({
  
   setup(props,ctx){
 
-    const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
-    const { t } = TUIServer.TUICore.config.i18n.useI18n();
-    
+    // const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
+    const TUIServer = window.$chat
+    const { t } = window.$TUIKit.config.i18n.useI18n();
+    const Server = window.$TUIKit
+
+    const chat = chatStore()
+
     const data = reactive({
       searchId:'',
       currentGroup: null,
-      env: TUIServer.TUICore.TUIEnv,
+      env: Server.TUIEnv,
       searchResult:[],
       simpleImage:'/img/state/null.png',
       settingsScroller: {  // 滚动条配置 
@@ -180,6 +185,7 @@ const TUISearch = defineComponent({
         suppressScrollX: true,
         wheelPropagation: true
       },
+      total:chat.$state.limitTotal
     })
     
     const closeJoinGroup = () =>{  // 关闭加入群聊弹窗  
@@ -199,10 +205,12 @@ const TUISearch = defineComponent({
     const joinGroup = async(group) =>{ // 加入群组方法
       const options = {
         groupID: group.groupID,
-        applyMessage: group.applyMessage || t('TUIContact.加群'),
+        applyMessage: group.applyMessage ||  t('TUIContact.加群'),
+        // t('TUIContact.加群')
         type: group?.type,
       }
       const res = await TUIServer.joinGroup(options);
+      // console.log('检测::>>',res);
       if(res.data.status === 'WaitAdminApproval'){
         message.success('入群申请已发出,等待群主和管理员审核')
         data.currentGroup = { apply:true }

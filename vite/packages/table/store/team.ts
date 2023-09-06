@@ -24,6 +24,7 @@ const getUserMedalUrl = Server.baseUrl + '/app/medal/getUserMedal'
 const getListUrl = Server.baseUrl + '/app/team/getList'
 import {appStore} from "../store";
 import _ from "lodash-es";
+import {get} from "../js/axios/request";
 
 // @ts-ignore
 export const teamStore = defineStore("teamStore", {
@@ -119,10 +120,11 @@ export const teamStore = defineStore("teamStore", {
       } = query
       let conf = await getConfig()
       conf.params = query
-      let response = await axios.get(getListUrl, conf)
-      if (response.code === 1000) {
-        return response.data
-      }
+      let time=Date.now()
+      let rs= await get(getListUrl)
+
+      console.log(Date.now()-time +"ms 耗时")
+      return rs
     },
 
     async getTeamLeader(no, cache = 1, userCache = 1) {

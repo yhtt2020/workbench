@@ -1,10 +1,11 @@
 <template>
   <div class="message-tip">
-    <span>{{ message?.text }}</span>
+    <span v-if="hasCreateGroup(message?.text)">{{ `${message?.message.nick}创建群聊` }}</span>
+    <span v-else>{{ message?.text }}</span>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
 
 export default defineComponent({
@@ -14,7 +15,7 @@ export default defineComponent({
       default: () => ({}),
     },
   },
-  setup(props: any, ctx: any) {
+  setup(props, ctx) {
     const data = reactive({
       message: {},
     });
@@ -23,8 +24,12 @@ export default defineComponent({
       data.message = props.data;
     });
 
+    const hasCreateGroup = (text) =>{
+      return text.includes('创建')
+    }
+
     return {
-      ...toRefs(data),
+      ...toRefs(data),hasCreateGroup
     };
   },
 });

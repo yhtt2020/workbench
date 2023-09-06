@@ -213,6 +213,14 @@ export default {
           images:['AIaides'],
           size:['2x2']
         },
+        {
+          name:'OilPrices',
+          cname:'今日油价',
+          icon:"time-circle",
+          detail:'时刻关注你所在的城市的92号，96号，98号，0号油价',
+          images:['OilPrices'],
+          size:['2x4']
+        },
       ],
       cardType: {},
       show: false,

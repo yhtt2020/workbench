@@ -1,23 +1,27 @@
 <template>
-  <slot :name="item.slot">{{ item.slot }}</slot>
-  <img
-    :src="item.img"
-    alt=""
-    style="width: 40px; height: 40px"
-    class="xt-b"
-    :class="[typeClass]"
-    v-if="item.img"
-    @click="iconClick(item)"
-  />
-  <xt-icon
-    v-else-if="item.icon"
-    class="rounded-xl"
-    :class="[typeClass]"
-    :style="[item.id == id ? 'border: 3px solid var(--active-bg)' : '']"
-    v-bind="config"
-    :icon="item.icon"
-    @click="iconClick(item)"
-  ></xt-icon>
+  <div @click="itemClick(item)">
+    <slot :name="item.slot" v-if="item.slot"></slot>
+    <div
+      v-else-if="item.img"
+      style="width: 40px; height: 40px"
+      class="xt-base-btn xt-bg"
+    >
+      <img
+        :src="item.img"
+        alt=""
+        :style="[stateStyle]"
+        style="border-radius: 10px"
+      />
+    </div>
+    <xt-icon
+      v-else-if="item.icon"
+      w="40"
+      size="20"
+      radius="10"
+      v-bind="config"
+      :icon="item.icon"
+    ></xt-icon>
+  </div>
 </template>
 
 <script setup>
@@ -28,17 +32,25 @@ const props = defineProps({
   flag: {
     default: false,
   },
-  m: {
-    default: "mb",
+  w: {
+    default: 20,
   },
 });
-const typeClass = computed(() => {
-  return props.m + "-3";
+
+const stateStyle = computed(() => {
+  return {
+    width: props.w + "px",
+    height: props.w + "px",
+  };
 });
-const iconClick = (item, flag) => {
-  console.log("item :>> ", item);
+const itemClick = (item, flag) => {
   item.callBack && item.callBack(item);
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.xt-base-btn{
+  //box-sizing: border-box;
+}
+
+</style>

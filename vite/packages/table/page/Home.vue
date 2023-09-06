@@ -87,7 +87,7 @@
       <template #settingsAll>
         <xt-task :modelValue="m01033" to="" >
             </xt-task>
-        <div class="line-title ">背景设置：</div>
+        <div class="line-title xt-text" >背景设置：</div>
         <div class="line" @click="setTransparent()">
           透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
         </div>
@@ -96,7 +96,7 @@
         <xt-task :modelValue="m01034" to="" @cb="goPaper">
           <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
       </xt-task>
-          <a-button @click="clearWallpaper">清除背景</a-button>
+          <a-button @click="clearWallpaper" class="xt-text">清除背景</a-button>
         </div>
         <div v-if="!appSettings.transparent" class="line">
           <div class="line">
@@ -237,12 +237,12 @@ import Clocks from '../components/widgets/clock/index.vue'
 import Notes from "../components/widgets/note/index.vue"
 import myIcons from "../components/widgets/myIcons/index.vue"
 import NewAddCard from "./app/card/NewAddCard.vue"
-import ShortcutKeyDetail from "../components/shortcutkey/ShortcutKeyDetail.vue";
-import NotShortcutKey from "../components/shortcutkey/NotShortcutKey.vue";
-import ShortcutKeyList from "../components/shortcutkey/ShortcutKeyList.vue";
+import ShortcutKeyDetail from "../apps/shortcutKey/shortcutKey/ShortcutKeyDetail.vue";
+import NotShortcutKey from "../apps/shortcutKey/page/NotShortcutKey.vue";
+import ShortcutKeyList from "../apps/shortcutKey/shortcutKey/ShortcutKeyList.vue";
 import GameStrategy from '../components/widgets/games/GameStrategy.vue'
 import AddIcon from "./app/addIcon/index.vue"
-import KeyBoard from "../components/shortcutkey/KeyBoard.vue";
+import KeyBoard from "../apps/shortcutKey/components/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
 import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue';
