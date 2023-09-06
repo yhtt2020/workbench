@@ -18,7 +18,7 @@ import { ref } from "vue";
  * 处理主线任务
  */
 // 这里应该是去api请求
-let currentTaskId = ref("M0101");
+let currentTaskId = ref("M0104");
 
 // 取出任务
 let currentStage = tasks.find((item) => {
