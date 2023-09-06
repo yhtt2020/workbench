@@ -1,9 +1,9 @@
 <template>
   <!-- 快速搜索 基础设置->基础设置 菜单 -->
-<xt-task :modelValue="M01035"></xt-task>
+
   <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
     id="secondPanel">
-   
+    <xt-task :modelValue="M01035"></xt-task>
     <div style="margin-bottom:2em;" v-if="gallery === true">
       <div :onClick="goHome" class="second-panel-back s-icon" style="color:var(--primary-text)">
         <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>

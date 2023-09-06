@@ -32,7 +32,7 @@
         <a-row :gutter="[20, 20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
           <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" style="">
             <!-- 拾光壁纸循环位置 -->
-        <xt-task v-if="index==0" :modelValue="1" @cb="pickShow(img)">
+        <xt-task v-if="index==0" :modelValue="m01036" @cb="pickShow(img)">
           <img @contextmenu.stop="pickShow(img)" class="image-item pointer" :src="img.src" :data-source="img.path"
               :alt="img.resolution" style="position: relative">
             <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
@@ -147,7 +147,7 @@
         </div>
       </a-col>
       <a-col :span="4">
-      <xt-task :modelValue="1" >
+      <xt-task :modelValue="m01037"  @cb="setAppPaper">
         <div @click="setAppPaper" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>设为工作台背景</div>
@@ -166,12 +166,12 @@ import { defineComponent, ref } from 'vue';
 import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import axios from 'axios';
 import { paperStore } from "../../store/paper";
-import { mapActions, mapState } from "pinia";
+import { mapActions, mapState,mapWritableState } from "pinia";
 import { message, Modal } from 'ant-design-vue'
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import { appStore } from "../../store";
 import browser from '../../js/common/browser'
-
+import { taskStore } from '../../apps/task/store';
 export default defineComponent({
   name: 'Picking',
   components: {
@@ -179,6 +179,21 @@ export default defineComponent({
   },
   computed: {
     ...mapState(paperStore, ["myPapers"]),
+    ...mapWritableState(taskStore, ['taskID','step']),
+    m01036() {
+      if ( this.taskID == "M0103" && this.step == 6) 
+      {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    ,m01037() {
+      if ( this.taskID == "M0103" && this.step ==7) 
+      {
+        return true;
+      } 
+    }
   },
   data() {
     return {

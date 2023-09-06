@@ -1,8 +1,15 @@
 <template>
   <!-- <xt-mask :modelValue="modelValue"> -->
-    <div style="z-index: 999999" ref="el" @click.prevent.stop="next($event)">
-      <slot></slot>
-    </div>
+    {{ zIndexValue }}
+  <div
+  style="opacity: 1;"
+    :style="{ zIndex: zIndexValue }"
+    ref="el"
+    @click.prevent.stop="next($event)"
+    @contextmenu.prevent.stop="next($event)"
+  >
+    <slot></slot>
+  </div>
   <!-- </xt-mask> -->
 </template>
 
@@ -29,6 +36,9 @@ export default defineComponent({
     task() {
       return guide[this.taskID][this.step];
     },
+    zIndexValue() {
+      return this.modelValue ? 999999 : null;
+    },
   },
   watch: {
     modelValue: {
@@ -48,6 +58,7 @@ export default defineComponent({
   },
   methods: {
     next(event) {
+      console.log('1111111111 :>> ', 1111111111);
       if (!this.modelValue) return;
       event.stopPropagation(); // 阻止事件冒泡
       this.action();
