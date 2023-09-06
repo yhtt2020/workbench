@@ -17,7 +17,13 @@
   
         <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.doc.content.body }}</div>
         
-        <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time)*1000) }}</span>
+        <!-- <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time)*1000) }}</span> -->
+        <div class="flex items-center justify-between">
+          <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time) * 1000) }}</span>
+          <div class="font-14 px-3.5 py-1.5 pointer rounded-lg active-button" style="color:var(--active-bg);background: var(--active-secondary-bg);" @click="noticeDetail">
+            查看
+          </div>
+        </div>
       </div>
 
     </div>
@@ -34,6 +40,7 @@
 import { defineComponent,reactive,ref,toRefs } from 'vue'
 import { formatTime } from '../../util'
 import { noticeStore } from '../../store/notice'
+import {useRouter} from 'vue-router'
 
 export default defineComponent({
  props:['list'],
@@ -41,6 +48,7 @@ export default defineComponent({
 
  setup(props,ctx){
    const store = noticeStore()
+   const router = useRouter()
 
    const data = reactive({
     settingsScroller: {
@@ -100,10 +108,16 @@ export default defineComponent({
    }
 
 
+   const noticeDetail = () =>{
+      router.push({name:'chatMain'})
+      ctx.emit('closeMessage')
+   }
+
    return{
     content,dialog,
     ...toRefs(data),formatTime,delNotice,
     handleRightKey,removeContextmenu,handleMenuItemClick,
+    noticeDetail,
    }
  }
 
@@ -232,5 +246,10 @@ export default defineComponent({
   position: absolute;
   z-index: 5;
   padding: 2px 20px;
+}
+.font-14{
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  font-weight: 400;
 }
 </style>
