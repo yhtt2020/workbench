@@ -18,19 +18,6 @@
           {{ text }}
         </div>
       </div>
-      <!-- <Icon
-      class="absolute top-1/2 -translate-y-1/2 cursor-pointer top-item xt-text-2 hidden"
-      style="right: 40px"
-      icon="shanchu"
-      @click.stop.prevent="handleDel(data.id)"
-    ></Icon>
-    <Icon
-      class="absolute top-1/2 -translate-y-1/2 cursor-pointer top-item xt-text-2"
-      :class="[data.top ? 'block' : 'hidden']"
-      style="right: 15px"
-      icon="Pushpin"
-      @click.stop.prevent="handleTop()"
-    ></Icon> -->
     </div>
   </xt-menu>
 </template>
