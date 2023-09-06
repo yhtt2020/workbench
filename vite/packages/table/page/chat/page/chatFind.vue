@@ -38,24 +38,23 @@
         <div class="content-list">
 
           <div v-for="item in recommendData.groups " class="flex items-center content-item justify-between px-4 py-5 rounded-xl mb-3"
-               style="background: var(--secondary-bg);width: 400px;">
+          style="background: var(--secondary-bg);width: 400px;">
             <div class="flex items-center">
-              <a-avatar :src="item.avatar" shape="square" :size="48"></a-avatar>
-              <div class="flex flex-col justify-center">
-                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.name }}</span>
-                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ limitTotal }}人</span>
-              </div>
+            <a-avatar :src="item.avatar" shape="square" :size="48"></a-avatar>
+            <div class="flex flex-col justify-center">
+              <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.name }}</span>
+              <span class="pl-4 font-16" style="color:var(--primary-text)">{{ limitTotal }}人</span>
             </div>
-
-            <XtButton v-if="isGroup" style="width: 96px;background: var(--active-secondary-bg);"
+            </div>  
+            
+            <XtButton v-show="item.relationShip ==='yes'" style="width: 96px;background: var(--active-secondary-bg);"
                       @click="enterGroup(item)">
               <icon icon="message"></icon>
               进入群聊
             </XtButton>
-
-            <XtButton v-else style="width: 96px;background: var(--active-bg);" @click="addGroup(item.groupID)">
+            <XtButton v-show="item.relationShip ==='not'" style="width: 96px;background: var(--active-bg);" @click="addGroup(item.groupID)">
               加入
-            </XtButton>
+            </XtButton> 
           </div>
 
 
@@ -83,6 +82,7 @@ import AddFindButton from '../../../components/sns/AddFindButton.vue'
 import SendMessageButton from '../../../components/sns/SendMessageButton.vue'
 import Modal from '../../../components/Modal.vue'
 import UserCard from '../../../components/small/UserCard.vue'
+import * as sns from '../../../js/common/sns'
 
 export default {
   components: {
@@ -111,10 +111,10 @@ export default {
 
   async mounted () {
     await this.getReferData()
-    await this.getMember()
+    // await this.getMember()
   },
   methods: {
-    ...mapActions(chatStore, ['getReferData', 'getMember']),
+    ...mapActions(chatStore, ['getReferData','loadGroupRelationship']),
     openUserCard (uid) {
       this.cardVisible = true
       this.userCardUid = uid
@@ -124,12 +124,15 @@ export default {
       item.relationship = e.relationship
     },
 
+
+
     // 加入推荐群聊
     async addGroup (id) {
       const option = {
         groupID: id,
       }
       await window.$chat.joinGroup(option)
+      this.loadGroupRelationship()
     },
 
     // 进入群聊
@@ -150,7 +153,7 @@ export default {
       window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
         window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
       })
-    }
+    },
 
   }
 }
@@ -194,5 +197,9 @@ export default {
     grid-template-columns: 1.1fr 1fr;
     justify-content: space-between;
   }
+}
+
+:deep(.xt-base-btn){
+  background: var(--active-secondary-bg);
 }
 </style>

@@ -1,5 +1,6 @@
 import TencentCloudChat from "tim-js-sdk";
 import {appStore} from "../../store";
+import _ from 'lodash-es'
 
 let chat
 
@@ -25,8 +26,6 @@ export async function checkFriendship(uid) {
       } else {
         uids = [String(uid)]
       }
-
-      console.log(uids, '待检测的对象')
 
       let rs = await chat.checkFriend({
         userIDList: uids,
@@ -65,4 +64,30 @@ export async function checkFriendship(uid) {
   } else {
     return 'self'
   }
+}
+
+
+export async function checkGroupShip(groupID:any) {
+  getChat()
+  const res  = await chat.getGroupList()
+  const allGroupList = res.data.groupList
+  try {
+    const index = _.findIndex(allGroupList,function(u){
+      // console.log('查找下标',u.groupID === groupID);
+      return u.groupID === groupID
+    })
+    let successArray = []
+    if(index !== -1){
+      // console.log('匹配到了',index);
+      successArray.push('yes')
+    }else{
+      // console.log('不存在',index);
+      successArray.push('not')
+    }
+
+    return successArray
+  } catch (error) {
+    return error
+  }
+
 }

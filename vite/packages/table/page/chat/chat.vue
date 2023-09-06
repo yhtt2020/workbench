@@ -19,6 +19,14 @@
       <router-view></router-view>
     </div>
   </div>
+
+  <teleport to='body'>
+     <Modal  v-if="open" v-model:visible="open" :blurFlag="true">
+       <AddFriend v-if="addIndex === 0" @close="open = false"></AddFriend>
+       <CreateGroup v-if="addIndex === 1"  @close="open = false" :isH5="env.isH5" />
+       <Transfer v-if="addIndex === 2" @close="open = false" :isH5="env.isH5"></Transfer>
+     </Modal>
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -26,15 +34,18 @@ import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { TUIEnv } from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
-import { handleErrorPrompts } from '../../TUIKit/TUIComponents/container/utils';
 import TUIContact from "../../TUIKit/TUIComponents/container/TUIContact/index.vue";
 import SecondPanel from "../../components/SecondPanel.vue";
-import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import { message } from "ant-design-vue";
 // import Commun from './Commun.vue'
-import ChatFind from "./page/ChatFind.vue"
+import ChatFind from "./page/chatFind.vue"
 import ChatMain from './page/chatMain.vue';
 import ThiskyIndex from './page/thiskyIndex.vue'
+import Modal from '../../components/Modal.vue'
+import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
+import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
+import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
+import { handleErrorPrompts, handleSuccessPrompts } from '../../TUIKit/TUIComponents/container/utils';
 
 export default {
   name: 'App',
@@ -44,15 +55,26 @@ export default {
     Drag,
     ChatFind,
     ThiskyIndex,
-    ChatMain
-
+    ChatMain,Modal,
+    AddFriend,CreateGroup,
+    Transfer,
   },
 
   setup() {
     const router = useRouter()
+    const TUIServer = (window as any).$TUIKit
+    console.log(TUIServer)
+    const Server = (window as any).$chat
     const data = reactive({
-      index: 2,
-      type: 'thisky'
+      index:0,
+      type:'chat',
+      addIndex:'',
+      open:false,
+      env: TUIServer.TUIEnv,
+      needSearch: !TUIServer.isOfficial,
+      TUIServer:Server,
+      createConversationType:'',
+
     })
 
     const selectTab = (item: any) => {
@@ -64,6 +86,11 @@ export default {
           name:'contact'
         })
       }
+    }
+
+    const selectDorpTab = (item:any) =>{
+      data.addIndex = item.index
+      data.open = true
     }
 
     const chatLeftList = ref([
@@ -93,6 +120,7 @@ export default {
         // }
       },
       {
+        icon:'',
         img: '/icons/bz1.png',
         type: 'thisky',
         callBack: selectTab,
@@ -101,8 +129,27 @@ export default {
         // }
       },
       {
-        icon: 'tianjia2'
-
+        icon: 'tianjia2',
+        children:[
+          {
+            icon: 'message',
+            name:'发起群聊',
+            index:0,
+            callBack:selectDorpTab
+          },
+          {
+            icon: 'team',
+            name:'加入群聊',
+            index:1,
+            callBack:selectDorpTab
+          },
+          {
+            icon: 'tianjiachengyuan',
+            name:'添加好友',
+            index:2,
+            callBack:selectDorpTab
+          }
+        ]
       },
     ])
 

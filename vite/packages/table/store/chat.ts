@@ -10,6 +10,7 @@ const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
 import * as sns from "../js/common/sns";
 import {result} from "lodash-es";
+import _ from "lodash-es";
 // @ts-ignore
 export const chatStore = defineStore('chatStore', {
     state: () => ({
@@ -76,12 +77,10 @@ export const chatStore = defineStore('chatStore', {
       setDouble(value: any) {
         this.settings.showDouble = value
       },
+
       async loadRecommendUsers() {
-        let time1=Date.now()
         const findStore = appStore()
-
         // const recommendList = {refUser: [], group: []}
-
         let users = []
         // 遍历获取推荐用户
         for (let i = 0; i < this.users.length; i++) {
@@ -103,7 +102,6 @@ export const chatStore = defineStore('chatStore', {
         //let friendships= (await sns.checkFriendship(this.uid))==='yes'
 
         this.recommendData.users = users //常规写法
-       console.log(Date.now()-time1,'users')
       },
       async updateUsersRelationship(){
 
@@ -113,12 +111,13 @@ export const chatStore = defineStore('chatStore', {
         })
         let relations = await sns.checkFriendship(uids) //todo 当只有一个用户的时候，这个返回的是一个字符串，而不是数组
         //用户后处理，处理他的好友关系
-        console.log('好友检查结果',relations)
         for (const user of users) {
           user.reason = await user.reason //添加上原因
           //todo 检测好友关系
         }
         if (users.length === 1) {
+          console.log(users);
+          
           //一个推荐用户的特殊情况
           users[0].relationship = relations
         } else {
@@ -130,7 +129,6 @@ export const chatStore = defineStore('chatStore', {
 
 
       async loadRecommendGroups() {
-        let time1=Date.now()
         let groups = []
         // 遍历获取推荐群聊
         for (let i = 0; i < this.group.length; i++) {
@@ -138,27 +136,37 @@ export const chatStore = defineStore('chatStore', {
             groupID: this.group[i].groupID
           }
           const result = await window.$chat.getGroupProfile(option)
-          const group = result.data.group
+          const group = {...result.data.group,relationShip:''}
           groups.push(group)
         }
 
-
-        for (const group of this.recommendData.groups) {
-
-        }
-
         this.recommendData.groups = groups
-        console.log(Date.now()-time1,'groups')
       },
 
+      async loadGroupRelationship(){
+        let groups = this.recommendData.groups
+        let groupIDs = groups.map((u)=>{
+          return u.groupID
+        })
+        const groupShip = await sns.checkGroupShip(groupIDs[0])
+        // console.log('最后结果',groupShip);
+        if(groups.length === 1){
+          groups[0].relationShip = groupShip[0]
+        }else{
+          for(let i=0;i<groupIDs.length;i++){
+            groups[i].relationShip = groupShip[i]
+          }
+        }
+        
+      },
 
       async loadRecommendData() {
-        const time1 = Date.now()
+        // const time1 = Date.now()
         Promise.all([this.loadRecommendUsers(), this.loadRecommendGroups()]).then(result => {
           this.updateUsersRelationship()
-          console.log(result)
+          this.loadGroupRelationship()
+          // console.log(result)
           //群组后处理，处理他的群成员关系
-          console.log('执行总耗时：' + String(Date.now() - time1) + 'ms')
           this.isLoading = false
           localCache.set('findData', this.recommendData, 10 * 60)
           serverCache.setData('findData', this.recommendData, 10 * 60)
@@ -167,17 +175,17 @@ export const chatStore = defineStore('chatStore', {
 
       },
 
-      async getMember() {
-        for (let i = 0; i < this.group.length; i++) {
-          const option = {
-            groupID: this.group[i].groupID,
-            count: 100,
-            offset: 0,
-          }
-          const res = await window.$chat.getGroupMemberList(option)
-          this.memberList = res.data.memberList
-        }
-      },
+      // async getMember() {
+      //   for (let i = 0; i < this.group.length; i++) {
+      //     const option = {
+      //       groupID: this.group[i].groupID,
+      //       count: 100,
+      //       offset: 0,
+      //     }
+      //     const res = await window.$chat.getGroupMemberList(option)
+      //     this.memberList = res.data.memberList
+      //   }
+      // },
 
       async getReferData() {  // 获取推荐用户数据
         try {
@@ -195,6 +203,7 @@ export const chatStore = defineStore('chatStore', {
           if (result) { //去除缓存
             this.recommendData=result
             this.updateUsersRelationship()
+            this.loadGroupRelationship()
             this.isLoading = false
           } else {
             // this.recommendData = {
@@ -211,7 +220,6 @@ export const chatStore = defineStore('chatStore', {
         }
 
       }
-
     },
 
     persist: {
@@ -226,3 +234,5 @@ export const chatStore = defineStore('chatStore', {
     }
   }
 )
+
+
