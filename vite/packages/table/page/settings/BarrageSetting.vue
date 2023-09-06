@@ -3,6 +3,10 @@
   <h2 class="s-text"  style="color:var(--primary-text)">弹幕设置</h2>
   <div style="padding: 1em;width: 30em">
     <div class="line">
+      <a-alert v-if="!settings.enableBarrage" message="目前弹幕功能未开启，请点击下方开关启用。" type="warning" show-icon />
+      <div class="mt-2" >开启弹幕： <a-switch v-model:checked="settings.enableBarrage"></a-switch></div>
+    </div>
+    <div class="line">
 
       页面允许渲染弹幕数：<a-input-number v-model:value="settings.barrage.limit" style="color: var(--primary-text)"></a-input-number>
     </div>
@@ -32,7 +36,7 @@
 <script>
 import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 export default {
   name: 'BarrageSetting',
   computed: {
@@ -40,13 +44,32 @@ export default {
   },
   methods: {
     refresh() {
-      window.$manager.setOptions(
-        {
-          ...this.settings.barrage
-        }
-      )
-      window.$manager.test()
-      message.success('刷新成功。')
+      if(!this.settings.enableBarrage){
+        Modal.confirm({
+          centered:true,
+          content:'当前未启用弹幕功能，需要启用后方可测试。',
+          okText:'启用并测试',
+          onOk:()=>{
+            this.settings.enableBarrage=true
+            window.$manager.setOptions(
+              {
+                ...this.settings.barrage
+              }
+            )
+            window.$manager.test()
+            message.success('刷新成功。')
+          }
+        })
+      }else{
+        window.$manager.setOptions(
+          {
+            ...this.settings.barrage
+          }
+        )
+        window.$manager.test()
+        message.success('刷新成功。')
+      }
+
     }
   }
 }

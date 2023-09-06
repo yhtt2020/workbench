@@ -110,16 +110,16 @@ export default {
         callBack: selectTab,
       },
       {
-        icon: 'team',
-        type: 'contact',
+        icon: 'zhinanzhen',
+        type: 'find',
         callBack: selectTab,
         route:{
           name:'contact'
         }
       },
       {
-        icon: 'zhinanzhen',
-        type: 'find',
+        icon: 'team',
+        type: 'contact',
         callBack: selectTab,
         route:{
           name:'chatFind'
