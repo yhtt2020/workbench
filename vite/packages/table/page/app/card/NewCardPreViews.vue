@@ -1,8 +1,8 @@
 <template>
   <div class="main-box">
     <template v-for="(item, index) in navLists" :key="item.name">
-      <template v-if="item.name == 'clocks' && getStep">
-        <xt-task :modelValue="getStep" to="" @cb="addNewCard(item)">
+      <template v-if="item.name == 'clocks' && M01013">
+        <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
           <div class="box xt-bg-2" style="z-index: 99999999999">
             <div
               class="add no-drag"
@@ -206,12 +206,8 @@ export default {
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    getStep() {
-      if (this.taskID == "M0101" && this.step == 3) {
-        return true;
-      } else {
-        return false;
-      }
+    M01013() {
+        return this.taskID == "M0101" && this.step == 3
     },
   },
   data() {

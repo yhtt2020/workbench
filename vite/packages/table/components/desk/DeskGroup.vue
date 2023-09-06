@@ -129,7 +129,7 @@
 
         <template #outMenu>
           <a-row class="text-center" style="margin-top: 20px" :gutter="20">
-            <xt-task :modelValue="getM0102" to="" @cb="showAddDeskForm">
+            <xt-task :modelValue="M01022" to="" @cb="showAddDeskForm">
               <a-col>
           
                 <div @click="showAddDeskForm" class="btn">
@@ -366,7 +366,7 @@
         placeholder="请输入"
         aria-placeholder="font-size: 16px;"
       />
-      <xt-task :modelValue="getM01022" @cb="doAddDesk">
+      <xt-task :modelValue="M01023" @cb="doAddDesk">
       <span class="desk-title">初始布局</span>
       <div class="mt-6">
         <HorizontalPanel
@@ -568,25 +568,13 @@ export default {
       if ( (this.taskID == "M0101" || this.taskID == "M0102"|| this.taskID == "M0103") && this.step == 1) 
       {
         return true;
-      } else {
-        return false;
-      }
+      } 
     },
-getM0102(){
-  if ( this.taskID == "M0102" && this.step == 2) 
-      {
-        return true;
-      } else {
-        return false;
-      }
+M01022(){
+        return this.taskID == "M0102" && this.step == 2; 
 },
-getM01022(){
-  if ( this.taskID == "M0102" && this.step == 3) 
-      {
-        return true;
-      } else {
-        return false;
-      }
+M01023(){
+        return this.taskID == "M0102" && this.step == 3
 },
     // getHomeSize(){
     //   this.$nextTick(() => {
@@ -741,7 +729,7 @@ getM01022(){
       }
     },
     showAddDeskForm() {
-      if (this.getM0102){
+      if (this.M01022){
         this.deskTitle = '新桌面'
         this.currentAddTab =   {
         "title": "自行添加",

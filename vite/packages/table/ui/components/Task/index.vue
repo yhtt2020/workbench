@@ -1,8 +1,6 @@
 <template>
-  <!-- <xt-mask :modelValue="modelValue"> -->
-    {{ zIndexValue }}
   <div
-  style="opacity: 1;"
+    style="opacity: 1"
     :style="{ zIndex: zIndexValue }"
     ref="el"
     @click.prevent.stop="next($event)"
@@ -10,7 +8,6 @@
   >
     <slot></slot>
   </div>
-  <!-- </xt-mask> -->
 </template>
 
 <script>
@@ -58,7 +55,7 @@ export default defineComponent({
   },
   methods: {
     next(event) {
-      console.log('1111111111 :>> ', 1111111111);
+      console.log("1111111111 :>> ", 1111111111);
       if (!this.modelValue) return;
       event.stopPropagation(); // 阻止事件冒泡
       this.action();

@@ -446,20 +446,10 @@ export default {
     ...mapWritableState(deskStore, ['deskList']),
     ...mapWritableState(taskStore, ['taskID','step']),
     m01033(){
-      if ( this.taskID == "M0103" && this.step == 3) 
-      {
-        return true;
-      } else {
-        return false;
-      }
+        return this.taskID == "M0103" && this.step == 3
     },
     m01034(){
-      if ( this.taskID == "M0103" && this.step == 4) 
-      {
-        return true;
-      } else {
-        return false;
-      }
+        return this.taskID == "M0103" && this.step == 4;
     },
     desksList() {
       return this.desks.map((desk) => {

@@ -181,18 +181,10 @@ export default defineComponent({
     ...mapState(paperStore, ["myPapers"]),
     ...mapWritableState(taskStore, ['taskID','step']),
     m01036() {
-      if ( this.taskID == "M0103" && this.step == 6) 
-      {
-        return true;
-      } else {
-        return false;
-      }
+        return this.taskID == "M0103" && this.step == 6
     }
     ,m01037() {
-      if ( this.taskID == "M0103" && this.step ==7) 
-      {
-        return true;
-      } 
+        return this.taskID == "M0103" && this.step ==7
     }
   },
   data() {

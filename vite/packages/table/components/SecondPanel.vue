@@ -63,16 +63,14 @@ export default {
     M01035() {
       if ( this.taskID == 'M0103' && this.step == 5) {
         this.change(1, {
-    "index": "p",
-    "title": "拾光壁纸",
-    "icon": "wallpaper",
-    "route": {
-        "name": "pickingPaper"
+          "index": "p",
+          "title": "拾光壁纸",
+          "icon": "wallpaper",
+          "route": {
+              "name": "pickingPaper"
     }
 })
         return true
-      }else {
-        return false
       }
     },
   },

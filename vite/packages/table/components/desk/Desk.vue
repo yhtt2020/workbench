@@ -82,7 +82,7 @@
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <div style="height: 200px;" class="mb-3 hidden" >
 </div>
-      <xt-task :modelValue="getStep" to="" @cb="newAddCard()">
+      <xt-task :modelValue="m01012" to="" @cb="newAddCard()">
       <a-col>
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
@@ -436,19 +436,11 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
     ...mapWritableState(taskStore, ['taskID','step']),
-    getStep() {
-      if ( this.taskID == 'M0101' && this.step == 2) {
-        return true
-      }else {
-        return false
-      }
+    m01012() {
+        return this.taskID == 'M0101' && this.step == 2
     },
     m01032() {
-      if ( this.taskID == 'M0103' && this.step == 2) {
-        return true
-      }else {
-        return false
-      }
+        return this.taskID == 'M0103' && this.step == 2
     },
     usingSettings () {
       if (this.settings.enableZoom) {
