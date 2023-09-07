@@ -26,7 +26,7 @@ export const chatStore = defineStore('chatStore', {
         {uid: '23', reason: '产品同学'}
       ],
       group: [
-        {groupID: 'suggest'},// {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
+        {groupID: 'suggest'}, {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
         {groupID: 'update'}, {groupID: 'develop_group'},
         {groupID: 'trade'}, {groupID: 'developer'}, {groupID: '3dprint'}, {groupID: 'screen_diy'},
         {groupID: 'player'}, {groupID: '3cdigital'},
@@ -139,10 +139,8 @@ export const chatStore = defineStore('chatStore', {
         // 遍历获取推荐群聊
         for (let i = 0; i < this.group.length; i++) {
           try {
-            const option = {
-              groupID: this.group[i].groupID
-            }
-            const result = await window.$chat.getGroupProfile(option)
+            const option = this.group[i].groupID
+            const result = await window.$chat.searchGroupByID(option)
             const group = {...result.data.group, relationShip: ''}
             groups.push(group)
 
@@ -156,11 +154,12 @@ export const chatStore = defineStore('chatStore', {
 
       async loadGroupRelationship() {
         let groups = this.recommendData.groups
-        let groupIDs = groups.map((u) => {
-          return u.groupID
+        let groupIDs = groups.map(async(u) => {
+          return u.groupID  
         })
-        const groupShip = await sns.checkGroupShip(groupIDs[0])
-        // console.log('最后结果',groupShip);
+
+        const groupShip = await sns.checkGroupShip(groupIDs)
+
         if (groups.length === 1) {
           groups[0].relationShip = groupShip[0]
         } else {
@@ -172,7 +171,7 @@ export const chatStore = defineStore('chatStore', {
       },
 
       async loadRecommendData() {
-        // const time1 = Date.now()
+        const time1 = Date.now()
         Promise.all([this.loadRecommendUsers(), this.loadRecommendGroups()]).then(result => {
           this.updateUsersRelationship()
           this.loadGroupRelationship()
@@ -181,8 +180,9 @@ export const chatStore = defineStore('chatStore', {
           this.isLoading = false
           localCache.set('findData', this.recommendData, 10 * 60)
           serverCache.setData('findData', this.recommendData, 10 * 60)
+          
+          
         })
-
 
       },
 
@@ -217,6 +217,7 @@ export const chatStore = defineStore('chatStore', {
             localCache: true, ttl: 10 * 60,
             cache: false
           })
+         
           if (result && false) { //去除缓存
             this.recommendData = result
             this.updateUsersRelationship()
