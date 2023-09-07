@@ -1,11 +1,14 @@
 <template>
-  <XtTitle type="text"
+  <XtTitle
+    type="text"
+    class="xt-text"
+    style="color: var(--primary-text) !important"
     >对话
     <template #right>
       <xt-base-icon
         @click="add()"
         icon="tianjia2"
-        class="mr-3"
+        class="mr-3 xt-text"
         style="font-size: 16px"
       ></xt-base-icon>
     </template>

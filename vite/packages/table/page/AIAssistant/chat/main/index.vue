@@ -53,7 +53,6 @@ export default {
       this.addTopic();
       this.onSearch(search);
     }
-    console.log("123 :>> ", this.$route.params.value);
   },
   methods: {
     ...mapActions(aiStore, ["addTopic"]),

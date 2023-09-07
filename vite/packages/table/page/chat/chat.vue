@@ -16,7 +16,7 @@
     </template>
 
     <div v-show="type==='contact'" style="flex:1;width: 0" >
-      
+
     </div> -->
 
     <router-view></router-view>
@@ -83,10 +83,10 @@ export default {
 
       // router.push(item.route)
       // data.type = item.type
-      
+
       data.index = item.type
       router.push(item.route)
-      
+
       // if(item.type==='contact'){
       //   router.push({
       //     name:'contact'
@@ -125,15 +125,15 @@ export default {
           name:'chatFind'
         }
       },
-      {
-        icon:'',
-        img: '/icons/bz1.png',
-        type: 'thisky',
-        callBack: selectTab,
-        route:{
-          name:'chatThisky'
-        }
-      },
+      // {
+      //   icon:'',
+      //   img: '/icons/bz1.png',
+      //   type: 'thisky',
+      //   callBack: selectTab,
+      //   route:{
+      //     name:'chatThisky'
+      //   }
+      // },
       {
         icon: 'tianjia2',
         children:[
@@ -167,15 +167,15 @@ export default {
 
     // const updateChat = (v:any) => {
     //   console.log('获取返回数据',v.type);
-      
+
     //   // data.index = this.$route.meta.type
     //   // data.type = 'chat'
     // }
 
     return {
       chatLeftList,route,router,
-      ...toRefs(data), 
-      
+      ...toRefs(data),
+
       // updateChat,
     }
   }
