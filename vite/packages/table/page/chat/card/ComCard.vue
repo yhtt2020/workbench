@@ -31,7 +31,7 @@
             <div>
                 <div class="flex items-center justify-center ">
                     <img :src="cardData.data.img" alt="" class="w-1/4 h-full mr-5 object-cover" v-if="cardData.data?.img.length===1">
-                    <video src="cardData.data.viedo" class="w-1/4 h-full " v-if="cardData.data?.viedo"></video>
+                    <video :src="cardData.data.viedo" class="w-1/4 h-full " v-if="cardData.data?.viedo"></video>
                     <!-- <div class="w-1/3 h-full bg-image"></div> -->
                     <!-- 插入正文元素  :class="[omit:data.img]" -->
                     <!-- <div class="omit"> -->
