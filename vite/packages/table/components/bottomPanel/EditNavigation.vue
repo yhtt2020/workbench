@@ -159,9 +159,12 @@
             </div>
           </div>
           <div>
+            <xt-task :modelValue="m01043" ></xt-task>
+           <xt-task :modelValue="m01044" @cb="addEdit('foot')">
             <Icon icon="tianjia"
                   style="width: 56px;height: 56px;color:var(--secondary-text);position:relative;top:2px;"
                   class="pointer mr-8" @click="addEdit('foot')"></Icon>
+           </xt-task>
           </div>
           <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);"
                class="flex justify-center items-center pointer  pl-6 mr-6">
@@ -236,7 +239,7 @@ import Sortable from 'sortablejs'
 import navigationData from '../../js/data/tableData'
 import Classification from '../comp/Classification.vue'
 import { message } from 'ant-design-vue'
-
+import {taskStore} from "../../apps/task/store"
 const { appModel } = window.$models
 const suggestNavigationList = [
 
@@ -347,6 +350,13 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m01043() {
+      return this.taskID == "M0104" && this.step == 3;
+    },
+    m01044() {
+      return this.taskID == "M0104" && this.step == 4;
+    },
     filterList () {
       return this.ClassifyData.filter(i => {return i.type === this.nowClassify && i.name.includes(this.selectContent)})
     }

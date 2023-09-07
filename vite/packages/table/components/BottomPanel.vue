@@ -20,8 +20,6 @@
       <MyAvatar :chat="true" :level="true"></MyAvatar>
     </div>
     <!-- 快速搜索 底部栏区域 -->
-    {{ m01041 }}
-
     <div
       v-show="navigationToggle[2]"
       class="flex flex-row items-center pl-4 s-bg"

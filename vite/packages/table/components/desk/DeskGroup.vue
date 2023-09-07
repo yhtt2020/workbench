@@ -324,7 +324,8 @@
     title="添加桌面"
     @close="shareCode = false"
   >    
-    <HorizontalPanel
+
+  <HorizontalPanel
       :nav-list="currentAddMethod"
       v-model:select-type="currentAddTab"
     >
@@ -357,8 +358,10 @@
       </div>
     </div>
     <div v-else>
-   
-      <div class="desk-title mt-4">标题</div>
+
+        <xt-task :modelValue="M01023">
+  </xt-task>
+  <div class="desk-title mt-4">标题</div>
       <a-input
         v-model:value="deskTitle"
         spellcheck="false"
@@ -366,7 +369,7 @@
         placeholder="请输入"
         aria-placeholder="font-size: 16px;"
       />
-      <xt-task :modelValue="M01023" @cb="doAddDesk">
+      <xt-task :modelValue="M01024" @cb="doAddDesk">
       <span class="desk-title">初始布局</span>
       <div class="mt-6">
         <HorizontalPanel
@@ -393,6 +396,8 @@
         aria-placeholder="font-size: 16px;"
       />
     </div>
+
+
   </a-drawer>
 
   <ShareDesk
@@ -575,6 +580,9 @@ M01022(){
 },
 M01023(){
         return this.taskID == "M0102" && this.step == 3
+},
+M01024(){
+        return this.taskID == "M0102" && this.step == 4
 },
     // getHomeSize(){
     //   this.$nextTick(() => {

@@ -36,6 +36,11 @@ export default defineComponent({
     zIndexValue() {
       return this.modelValue ? 999999 : null;
     },
+    currentStep() {
+      let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
+      let next = this.task?.next ? this.task?.next : "下一步";
+      return `${next} ${this.step} / ${length}`;
+    },
   },
   watch: {
     modelValue: {
@@ -55,7 +60,6 @@ export default defineComponent({
   },
   methods: {
     next(event) {
-      console.log("1111111111 :>> ", 1111111111);
       if (!this.modelValue) return;
       event.stopPropagation(); // 阻止事件冒泡
       this.action();
@@ -87,7 +91,7 @@ export default defineComponent({
         title: this.task.title,
         buttons: [
           {
-            text: "下一步",
+            text: this.currentStep,
             action: (tour) => {
               this.action();
             },
@@ -159,6 +163,7 @@ export default defineComponent({
 .shepherd-content,
 .shepherd-header {
   background: var(--modal-bg) !important;
+  padding-bottom: 0 !important;
 }
 .shepherd-element {
   z-index: 9999999999999 !important;
@@ -168,6 +173,7 @@ export default defineComponent({
 /* 内容文本 */
 .shepherd-text {
   color: var(--primary-text) !important;
+  font-size: 14px !important;
 }
 .shepherd-title {
   font-size: 16px !important;
