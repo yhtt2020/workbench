@@ -14,7 +14,7 @@
                         <div class="username" style="color: var(--primary-text);">
                             我是皮克斯呀
                         </div>
-                        <div class="self-msg " style="color: var(--primary-text);">
+                        <div class="self-msg " style="color:  var(--secondary-text);">
                             <span class="date">08-09</span>
                             <span class="time">16:16</span>
                             <span class="ip">浙江</span>
@@ -30,27 +30,35 @@
 
             <div>
                 <div>
-                    <video :src="cardData.options.topVed" class="w-full h-[218px]" v-if="cardData.options?.topVed"></video>
-                    <template v-if="cardData.options?.img" >
-                        <ul class="p-0 mt-6 mb-6 ">
-                          <img :src="item" alt="" v-for="item in cardData.options?.img" class="w-full h-[158px]">
+                    <div class="flex flex-col items-center ">
+                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video" autoplay>
+                            <source :src="cardData.data.video" type="video/mp4" />
+                            <source :src="cardData.data.video" type="video/webm" />
+                        </video>
+                    </div>
+                    <template v-if="cardData.data?.img">
+                        <ul class="flex flex-col items-center p-0 mb-0">
+                            <img :src="item" v-for="(item,index) in cardData.data?.img" class="mb-2 rounded-md cover-lm" :key="index">
                         </ul>
                     </template>
-                    <!-- <img :src="cardData.options.topImg" alt="" class="w-full h-[218px]" v-if="cardData.options?.topImg"> -->
-                    <slot name="content"></slot>
+                    <!-- 正文元素 -->
+                    <div class="mt-1">
+                        <div>
+                            <span id="title" style="color: var(--primary-text); " >{{
+                                cardData.content.title
+                            }}</span>
+                            <br>
+                            <span id="context" style="color:  var(--secondary-text);">{{
+                                cardData.content.context
+                            }}</span>
+                        </div>
+
+                    </div>
                 </div>
 
-                <!-- <img :src="options.btmImg" alt="" v-if="options.btmImg" class="w-1/4 mt-6 mb-6 h-1/3" > -->
             </div>
 
-            <!-- <div class="card-bottom " v-if="!isShow" style="color: var(--primary-text);">
-                <span class="view" style="cursor: pointer;">1626 浏览</span>
-                <span class="like" style="cursor: pointer;">13 点赞</span>
-                <span class="comments" style="cursor: pointer;">23 评论</span>
-            </div> -->
-
         </div>
-
     </div>
 </template>
 
@@ -121,37 +129,37 @@ const props = defineProps({
         .card-content {
             font-family: PingFangSC-Regular;
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            text-align: justify;
+            // color: rgba(255, 255, 255, 0.85);
+            // text-align: justify;
             line-height: 22px;
             font-weight: 400;
         }
 
-        // .omit{
-        //     white-space: pre-wrap;
-        //     display: -webkit-box;
-        //     -webkit-line-clamp: 2;
-        //     -webkit-box-orient: vertical;
-        //     text-overflow: ellipsis;
-        //     overflow: hidden;
-        // }
+        .cover-lm {
+            width: 330px;
+            height: 200px;
+            text-align: center;
+            object-fit: cover;
 
-        .card-bottom {
-            margin-top: 12px;
-
-            .view::after {
-                content: '·';
-                margin-left: 5px;
-                margin-right: 5px;
-
-            }
-
-            .like::after {
-                content: '·';
-                margin-left: 5px;
-                margin-right: 5px;
-            }
         }
+    }
+
+    #title {
+        font-family: PingFangSC-Regular;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.85);
+        text-align: justify;
+        line-height: 22px;
+        font-weight: 400;
+    }
+
+    #context {
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.60);
+        text-align: justify;
+        line-height: 22px;
+        font-weight: 400;
     }
 
 }

@@ -101,7 +101,7 @@
   </div>
 
   <div class="flex">
-    <Commun />
+    <Community />
   </div>
  </div>
 </template>
@@ -110,7 +110,7 @@
 import { defineComponent,reactive,toRefs,ref } from 'vue'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
-import Commun from '../Commun.vue'
+import Community from '../Community.vue'
 import { chatList } from '../../../js/data/chatList'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 import { chatStore } from '../../../store/chat'
@@ -121,7 +121,7 @@ export default defineComponent({
   AppstoreOutlined,MessageOutlined,LinkOutlined,
   ChatDropDown,
   ChatFold,
-  Commun
+  Community
  },
 
  setup () {
