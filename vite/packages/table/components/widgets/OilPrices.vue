@@ -180,7 +180,7 @@ export default {
     //  console.log(this.currentCity);
     //  await this.getCityOilData()
     // 判断用户ip是否在国内省市
-    // const isCity = this.city.some(item => item.city == this.currentCity.p)
+    const isCity = this.city.some(item => item.city == this.currentCity.p)
     // console.log(isCity);
     if (this.customData && this.customData.city) {
       // console.log(this.customData.city);

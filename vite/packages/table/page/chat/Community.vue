@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="right shrink">
-        <a-button type="primary" :icon="h(PlusCircleFilled)" style="color: var(--primary-text);">发布</a-button>
+        <a-button type="primary" :icon="h(PlusCircleTwoTone)" style="color: var(--primary-text);">发布</a-button>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, nextTick, h, computed, watch, getCurrentInstance } from 'vue';
-import { DownOutlined, PlusCircleFilled, CloseCircleOutlined } from '@ant-design/icons-vue';
+import { DownOutlined, CloseCircleOutlined,PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
 const menuList = ref(['全部', '热门', '精华'])

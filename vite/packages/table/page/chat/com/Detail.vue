@@ -57,7 +57,14 @@
                 </div>
 
             </div>
-
+            <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
+                <span class="view" style="cursor: pointer;">1626 浏览</span>
+                <span class="like" style="cursor: pointer;">13 点赞</span>
+                <span class="comments" style="cursor: pointer;">23 评论</span>
+            </div>
+            <!-- 分隔线 -->
+            <div class="w-full h-[2px] mt-4 xt-bg-2"></div>
+            <Comment />
         </div>
     </div>
 </template>
@@ -65,6 +72,8 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
+import Comment from './comment.vue';
+
 const props = defineProps({
     isShow: Boolean,
     cardData: {
@@ -161,6 +170,22 @@ const props = defineProps({
         line-height: 22px;
         font-weight: 400;
     }
+    .card-bottom {
+            margin-top: 12px;
+
+            .view::after {
+                content: '·';
+                margin-left: 5px;
+                margin-right: 5px;
+
+            }
+
+            .like::after {
+                content: '·';
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+        }
 
 }
 </style>
