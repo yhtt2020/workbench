@@ -9,7 +9,7 @@
             @click="setCurrentIndex(index)">{{ item }}</div>
         </div>
         <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16" style="cursor: pointer">
-          <a-dropdown trigger="click" placement="bottom" overlayStyle="background-color: var(--primary-bg);">
+          <a-dropdown trigger="click" placement="bottom" overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px;">
             <span class="ant-dropdown-link" @click.prevent>
               {{ checkMenuList[checkMenuCurrentIndex] }}
               <DownOutlined  class="text-sm"/>

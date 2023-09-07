@@ -23,33 +23,33 @@
         </a-result>
 
       </template>
-      <div v-else>
-        <div class="city" @click="showMenu">
+      <div v-else >
+        <div class="city xt-bg xt-text" @click="showMenu">
           {{ showOilData[0].city }}
           <CaretDownOutlined style="font-size: 16px; " />
         </div>
         <div class="oil">
-          <div class="oil-item mar-r">
-            <span>92号汽油</span>
-            <div class="oil-price">
+          <div class="oil-item mar-r xt-bg ">
+            <span class="xt-text">92号汽油</span>
+            <div class="oil-price xt-text">
               {{ showOilData[0]['92h'] }}
             </div>
           </div>
-          <div class="oil-item">
-            <span>95号汽油</span>
-            <div class="oil-price">
+          <div class="oil-item xt-bg">
+            <span class="xt-text">95号汽油</span>
+            <div class="oil-price xt-text">
               {{ showOilData[0]['95h'] }}
             </div>
           </div>
-          <div class="oil-item mar-r">
-            <span>98号汽油</span>
-            <div class="oil-price">
+          <div class="oil-item mar-r xt-bg">
+            <span class="xt-text">98号汽油</span>
+            <div class="oil-price xt-text">
               {{ showOilData[0]['98h'] }}
             </div>
           </div>
-          <div class="oil-item">
-            <span>0号柴油</span>
-            <div class="oil-price">
+          <div class="oil-item xt-bg">
+            <span class="xt-text">0号柴油</span>
+            <div class="oil-price xt-text">
               {{ showOilData[0]['0h'] }}
             </div>
           </div>
