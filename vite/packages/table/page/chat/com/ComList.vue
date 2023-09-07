@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <template v-if="cardData.data?.img?.length > 1">
-                    <div class="flex w-full p-0 mt-2 -mb-1 whitespace-pre-wrap cover-wrapper">
+                    <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper">
                         <img :src="item" alt="" v-for="(item, index) in cardData.data?.img"
                             class="object-cover mr-2 rounded-md cover-sm" :key="index">
                     </div>

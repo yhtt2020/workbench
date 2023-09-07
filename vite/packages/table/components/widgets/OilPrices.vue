@@ -183,7 +183,7 @@ export default {
     // const isCity = this.city.some(item => item.city == this.currentCity.p)
     // console.log(isCity);
     if (this.customData && this.customData.city) {
-      console.log(this.customData.city);
+      // console.log(this.customData.city);
       this.cityOil(this.customData.city)
     } else {
       if (isCity && this.currentCity.p) {

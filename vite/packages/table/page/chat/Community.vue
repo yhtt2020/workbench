@@ -5,19 +5,21 @@
         <!-- style="color: var(--primary-text);" -->
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
-            class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16" :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
-            @click="setCurrentIndex(index)">{{ item }}</div>
+            class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
+            :class="[{ action: currentIndex == index }]" style="cursor: pointer;" @click="setCurrentIndex(index)">{{ item
+            }}</div>
         </div>
         <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16" style="cursor: pointer">
-          <a-dropdown trigger="click" placement="bottom" overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px;">
-            <span class="ant-dropdown-link" @click.prevent>
+          <a-dropdown trigger="click" placement="bottom"
+            overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
+            <span class=" ant-dropdown-link" @click.prevent>
               {{ checkMenuList[checkMenuCurrentIndex] }}
-              <DownOutlined  class="text-sm"/>
+              <DownOutlined class="text-sm" />
             </span>
             <template #overlay>
-              <a-menu class=" xt-bg">
+              <a-menu class="text-center xt-bg">
                 <a-menu-item v-for="(item, index) in checkMenuList" :key="index" @click="handleMenuItemClick(index)">
-                  <span class="xt-text">{{ item }}</span>
+                  <span class="text-center xt-text">{{ item }}</span>
                 </a-menu-item>
               </a-menu>
             </template>
@@ -64,7 +66,7 @@ import { DownOutlined, PlusCircleFilled, CloseCircleOutlined } from '@ant-design
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
 const menuList = ref(['全部', '热门', '精华'])
-const checkMenuList=ref(['最近更新','最近回复'])
+const checkMenuList = ref(['最近更新', '最近回复'])
 const currentIndex = ref(0)
 const checkMenuCurrentIndex = ref(0)
 const handleMenuItemClick = (index) => {
