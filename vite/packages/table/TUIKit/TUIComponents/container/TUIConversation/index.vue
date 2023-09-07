@@ -17,10 +17,13 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed, watch,defineExpose } from 'vue';
+import { defineComponent, reactive, toRefs, computed, watch,defineExpose,onMounted,nextTick } from 'vue';
 import TUIConversationList from './components/list';
 import { caculateTimeago, isArrayEqual } from '../utils';
 import { handleAvatar, handleName, handleShowLastMessage, handleAt } from '../TUIChat/utils/utils';
+import {message} from "ant-design-vue";
+import { useRouter } from 'vue-router'
+import { chatStore } from '../../../../store/chat'
 
 const TUIConversation = defineComponent({
   name: 'TUIConversation',
@@ -36,6 +39,10 @@ const TUIConversation = defineComponent({
   },
   setup(props: any, ctx: any) {
     const TUIServer: any = TUIConversation?.TUIServer;
+    const router = useRouter()
+
+    const store = chatStore()
+
     const data = reactive({
       currentConversationID: '',
       conversationData: {
@@ -120,6 +127,44 @@ const TUIConversation = defineComponent({
     const handleCurrentConversation = (value: any) => {
       TUIServer.handleCurrentConversation(value);
     };
+  
+    onMounted(()=>{
+     // 判断会话列表第一次是否为空
+     nextTick(()=>{
+      const dataList = (window as any).$TUIKit.TUIServer?.TUIConversation.currentStore.conversationData
+      const dataChat = (window as any).$TUIKit.TUIServer?.TUIChat.currentStore.conversation
+      if(dataList.list.length === 0){
+        message.warn('！温馨提示,当前聊天页没有对话,进入发现页创建聊天会话或者点击左侧栏底部添加按钮创建')
+        router.push({name:'chatFind'})
+      }else{
+        const conversationName = store.$state.conversations.conversationID;
+        // 会话列表有数据,并且有点击的情况下,就默认选中上次点击的会话列表
+        if(conversationName && conversationName !== undefined){
+          data.currentConversationID = conversationName;
+          (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationName).then((imResponse:any) => {
+            // 通知 TUIConversation 添加当前会话
+            // Notify TUIConversation to toggle the current conversation
+            (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+          })
+        }else{   // 会话列表有数据,用户没有点击的情况下,默认选中会话列表第一个
+          const name = dataList.list[0].conversationID
+          data.currentConversationID = name;
+          (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse:any) => {
+            // 通知 TUIConversation 添加当前会话
+            // Notify TUIConversation to toggle the current conversation
+            (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+          })
+        }
+        
+       
+
+        // dataChat.conversationID = store.$state.conversations.conversationID
+        // console.log('获取当前会话ID',);
+      }
+     })
+
+    })
+    
 
     return {
       ...toRefs(data),

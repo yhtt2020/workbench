@@ -78,12 +78,14 @@
 import { mapWritableState, mapActions } from 'pinia'
 import { chatStore } from '../../../store/chat'
 import { appStore } from '../../../store'
+// import { useRouter, useRoute } from 'vue-router'
 import AddFindButton from '../../../components/sns/AddFindButton.vue'
 import SendMessageButton from '../../../components/sns/SendMessageButton.vue'
 import Modal from '../../../components/Modal.vue'
 import UserCard from '../../../components/small/UserCard.vue'
 import * as sns from '../../../js/common/sns'
 
+// const router = useRouter()
 export default {
   components: {
     AddFindButton,
@@ -137,8 +139,8 @@ export default {
 
     // 进入群聊
     async enterGroup (item) {
-      // router.push({name:'chatMain'})
-      this.$emit('updateChat')
+      // this.$emit('updateChat',this.$route.meta)
+      this.$router.push({name:'chatMain'})
       const conversationID = `GROUP${item.groupID}`
       // 通知 TUIConversation 添加当前会话
       // Notify TUIConversation to toggle the current conversation
@@ -148,7 +150,8 @@ export default {
     },
 
     enterChatList (uid) {
-      this.$emit('updateChat')
+      // this.$emit('updateChat')
+      this.$router.push({name:'chatMain'})
       const name = `C2C${uid}`
       window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
         window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
