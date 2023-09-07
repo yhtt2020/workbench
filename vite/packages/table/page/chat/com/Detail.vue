@@ -31,7 +31,7 @@
             <div>
                 <div>
                     <div class="flex flex-col items-center ">
-                        <video class="object-cover rounded-md cover-lm" v-if="cardData.data?.video" autoplay>
+                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video" autoplay>
                             <source :src="cardData.data.video" type="video/mp4" />
                             <source :src="cardData.data.video" type="video/webm" />
                         </video>
@@ -41,7 +41,7 @@
                             <img :src="item" v-for="(item,index) in cardData.data?.img" class="mb-2 rounded-md cover-lm" :key="index">
                         </ul>
                     </template>
-                    <!-- 插入正文元素 -->
+                    <!-- 正文元素 -->
                     <div class="mt-1">
                         <div>
                             <span id="title" style="color: var(--primary-text); " >{{
@@ -136,9 +136,10 @@ const props = defineProps({
         }
 
         .cover-lm {
-            width: 300px;
+            width: 330px;
             height: 200px;
             text-align: center;
+            object-fit: cover;
 
         }
     }

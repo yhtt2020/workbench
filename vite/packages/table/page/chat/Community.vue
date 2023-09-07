@@ -3,11 +3,25 @@
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
         <!-- style="color: var(--primary-text);" -->
-        <div class="flex check-box w-[200px] h-[40px] justify-center xt-bg rounded-lg" >
-            <div v-for="(item,index) in menuList" :key="index" class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16" :class="[{action:currentIndex==index}]" @click="setCurrentIndex(index)">{{ item }}</div>
+        <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
+          <div v-for="(item, index) in menuList" :key="index"
+            class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16" :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
+            @click="setCurrentIndex(index)">{{ item }}</div>
         </div>
-        <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16">
-          最近更新 <DownOutlined class="text-sm"/>
+        <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16" style="cursor: pointer">
+          <a-dropdown trigger="click" placement="bottom" overlayStyle="background-color: var(--primary-bg);">
+            <span class="ant-dropdown-link" @click.prevent>
+              {{ checkMenuList[checkMenuCurrentIndex] }}
+              <DownOutlined  class="text-sm"/>
+            </span>
+            <template #overlay>
+              <a-menu class=" xt-bg">
+                <a-menu-item v-for="(item, index) in checkMenuList" :key="index" @click="handleMenuItemClick(index)">
+                  <span class="xt-text">{{ item }}</span>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
       </div>
       <div class="right shrink">
@@ -23,8 +37,8 @@
         :style="{ width: detailVisible ? '40%' : '60%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
-          <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)" :detailVisible="detailVisible"
-            class="xt-bg"
+          <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)"
+            :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
         </div>
@@ -49,10 +63,14 @@ import { ref, reactive, nextTick, h, computed, watch, getCurrentInstance } from 
 import { DownOutlined, PlusCircleFilled, CloseCircleOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
-const menuList=ref(['全部','热门','精华'])
+const menuList = ref(['全部', '热门', '精华'])
+const checkMenuList=ref(['最近更新','最近回复'])
 const currentIndex = ref(0)
-
-const setCurrentIndex=(index)=>{
+const checkMenuCurrentIndex = ref(0)
+const handleMenuItemClick = (index) => {
+  checkMenuCurrentIndex.value = index
+}
+const setCurrentIndex = (index) => {
   currentIndex.value = index
 }
 //当前选中的详情帖子的索引
@@ -165,12 +183,13 @@ const close = () => {
     justify-content: space-between;
     //当屏幕最大宽度为767px
 
-    .font-16{
+    .font-16 {
       font-family: PingFangSC-Regular;
       font-size: 16px;
       font-weight: 400;
     }
-    .action{
+
+    .action {
       background: var(--active-bg);
       border-radius: 8px;
       cursor: pointer;
@@ -180,25 +199,25 @@ const close = () => {
       padding: 0px;
       margin-right: 0px;
       text-align: center;
-      color:  var(--active-text);
+      color: var(--active-text);
       border: none;
     }
-      
-    }
 
-    .right {
-      width: 83px;
-      height: 40px;
-      margin-right: 24px;
+  }
 
-      :deep(.ant-btn) {
-        width: 100%;
-        height: 100%;
-        background: rgba(80, 139, 254, 0.20);
-        border-radius: 10px;
-      }
+  .right {
+    width: 83px;
+    height: 40px;
+    margin-right: 24px;
+
+    :deep(.ant-btn) {
+      width: 100%;
+      height: 100%;
+      background: rgba(80, 139, 254, 0.20);
+      border-radius: 10px;
     }
-  
+  }
+
 
 
   .content {
@@ -279,5 +298,4 @@ const close = () => {
       display: none;
     }
   }
-}
-</style>
+}</style>

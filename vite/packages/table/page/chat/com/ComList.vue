@@ -1,12 +1,5 @@
 <template >
-    <!-- {{ cardWidth }} -->
-    <!-- {{ isShow.isShow }} -->
     <div class="w-full card">
-        <!-- {{ isShow.isShow }} -->
-        <!-- {{ cardData.data?.video[0] }} -->
-        <!-- {{ visibleImg }}
-        {{ cardWidth  }} -->
-        <!-- {{ detailVisible }} -->
         <div class="card-content">
             <div class="card-top">
                 <div class="top-left">
@@ -19,7 +12,7 @@
                         <div class="text-sm username" style="color: var(--primary-text);">
                             我是皮克斯呀
                         </div>
-                        <div class="text-xs self-msg xt-text-2" >
+                        <div class="text-xs self-msg xt-text-2">
                             <span class="date">08-09</span>
                             <span class="time">16:16</span>
                             <span class="ip">浙江</span>
@@ -32,21 +25,23 @@
             <div>
                 <div class="flex items-center justify-center">
                     <!-- 单个图片 -->
-                    <template v-if="cardData.data?.img?.length === 1 && !cardData.data?.video"  >
-                        <img :src="cardData.data.img" class="object-cover mr-2 rounded-md cover-im " :class="{'hide-images-video':detailVisible}"
-                            style="text-align: center;">
+                    <template v-if="cardData.data?.img?.length === 1 && !cardData.data?.video">
+                        <img :src="cardData.data.img" class="object-cover mr-2 rounded-md cover-im "
+                            :class="{ 'hide-images-video': detailVisible }" style="text-align: center;">
                     </template>
-                    <video class="object-cover mr-2 rounded-md cover-im" v-if="cardData.data?.video" :class="{'hide-images-video':detailVisible}">
+                    <video class="object-cover mr-2 rounded-md cover-im" v-if="cardData.data?.video"
+                        :class="{ 'hide-images-video': detailVisible }">
                         <source :src="cardData.data?.video" type="video/mp4" />
                         <source :src="cardData.data?.video" type="video/webm" />
                     </video>
                     <!-- 正文内容 -->
                     <div>
-                        <div id="title" style="color: var(--primary-text);">{{ cardData.content.title }}</div>
-                        <div id="context" style="color:  var(--secondary-text);" class="mt-1"
-                        :class="{'omit':cardData.data?.img?.length===1 || cardData.data?.video}" >
-                            {{ cardData.content.context }}
-                        </div>
+                        <div id="title" style="color: var(--primary-text);"
+                            :class="{ 'omit-title': cardData.data?.img?.length === 1 || cardData.data?.video }">{{
+                                cardData.content.title }}</div>
+                        <div id="context" style="color:  var(--secondary-text);"
+                            :class="{ 'omit': cardData.data?.img?.length === 1 || cardData.data?.video }">
+                            {{ cardData.content.context }}</div>
                     </div>
                 </div>
                 <template v-if="cardData.data?.img?.length > 1">
@@ -71,7 +66,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed,onMounted,onBeforeMount,nextTick} from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeMount, nextTick } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
     detailVisible: Boolean,
@@ -80,27 +75,6 @@ const props = defineProps({
         default: () => []
     }
 })
-// const visibleImg=ref(false)
-// let cardWidth
-
-// const checkElementWidth=(()=>{
-//     const card:HTMLElement=document.querySelector('.card')
-//     nextTick(()=>{
-//         cardWidth=card.offsetWidth
-//         if(cardWidth<300){
-//             visibleImg.value=true
-//         }else{
-//             visibleImg.value=false
-//         }
-//     })
-// })
-// onMounted(()=>{
-//     checkElementWidth()
-//     window.addEventListener('resize',checkElementWidth)
-// })
-// onBeforeMount(()=>{
-//     window.removeEventListener('resize',checkElementWidth)
-// })
 </script>
 <style lang='scss' scoped>
 .card {
@@ -186,6 +160,15 @@ const props = defineProps({
             font-weight: 400;
         }
 
+        .omit-title {
+            white-space: pre-wrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
         .omit {
             white-space: pre-wrap;
             display: -webkit-box;
@@ -194,9 +177,11 @@ const props = defineProps({
             text-overflow: ellipsis;
             overflow: hidden;
         }
+
         .hide-images-video {
             display: none;
         }
+
         #title {
             font-family: PingFangSC-Regular;
             font-size: 16px;
@@ -233,9 +218,8 @@ const props = defineProps({
         }
 
 
-        
+
 
     }
 
-}
-</style>
+}</style>
