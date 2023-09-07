@@ -31,7 +31,7 @@
     </div>
     <!-- 中间 -->
     <div
-      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3  flex flex-col items-center"
+      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3 flex flex-col items-center"
     >
       <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
         <div style="height: auto">
@@ -40,28 +40,26 @@
             :list="item.children"
             v-for="item in newList.slice(last, -1 * end)"
           >
-            <a-tooltip :title="item.title" placement="right">
-              <Box
-                @itemClick="itemClick"
-                :item="item"
-                @selectClick="selectClick"
-                :id="currentIndex"
-                class="mt-2"
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mt-2"
+            >
+              <div
+                v-if="item.slot"
+                style="width: 40px; height: 40px; border-radius: 10px"
+                class="xt-bg xt-base-btn"
               >
-                <div
-                  v-if="item.slot"
-                  style="width: 40px; height: 40px; border-radius: 10px"
-                  class="xt-bg xt-base-btn"
-                >
-                  <slot :name="item.slot"> </slot>
-                </div>
-                <Item :item="item" w="40">
-                  <template #default>
-                    <slot :name="item.slot"></slot>
-                  </template>
-                </Item>
-              </Box>
-            </a-tooltip>
+                <slot :name="item.slot"> </slot>
+              </div>
+              <Item :item="item" w="40">
+                <template #default>
+                  <slot :name="item.slot"></slot>
+                </template>
+              </Item>
+            </Box>
           </Menu>
         </div>
       </vue-custom-scrollbar>

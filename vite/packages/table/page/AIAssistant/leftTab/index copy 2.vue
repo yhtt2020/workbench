@@ -116,6 +116,7 @@ export default {
         {
           flag: true,
           icon: "setting",
+          title:"name",
           children: [
             {
               icon: "message",
