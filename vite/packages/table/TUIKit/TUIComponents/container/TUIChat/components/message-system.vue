@@ -51,10 +51,10 @@ export default defineComponent({
     };
 
     const getSystemInfo = (item:any) =>{
-      console.log('右侧main中的数据',item);
+      // console.log('右侧main中的数据',item);
       const uid = item.payload.operatorID
       window.$chat.getUserProfile({ userIDList: [`${uid}`] }).then((res:any)=>{
-        console.log('获取数据',res.data[0].nick);
+        // console.log('获取数据',res.data[0].nick);
         
         data.nick = res.data[0].nick
       }).finally(()=>{
