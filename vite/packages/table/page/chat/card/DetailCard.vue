@@ -30,7 +30,7 @@
 
             <div>
                 <div>
-                    <video src="cardData.options.topVed" class="w-full h-[218px]" v-if="cardData.options?.topVed"></video>
+                    <video :src="cardData.options.topVed" class="w-full h-[218px]" v-if="cardData.options?.topVed"></video>
                     <template v-if="cardData.options?.img" >
                         <ul class="p-0 mt-6 mb-6 ">
                           <img :src="item" alt="" v-for="item in cardData.options?.img" class="w-full h-[158px]">
