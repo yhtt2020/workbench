@@ -35,10 +35,10 @@
     <xt-title type="text">{{ currentTask.description }}</xt-title>
     <div class="flex justify-center items-center flex-col">
       <xt-title type="text">完成奖励</xt-title>
-
-      <xt-title type="text" v-if="currentTask.task"
+{{ currentTask }}
+      <!-- <xt-title type="text" v-if="currentTask.task"
         >当前任务含有操作引导</xt-title
-      >
+      > -->
       <xt-button style="width: 100%" type="theme" @click="taskGuide(task)"
         >开始任务</xt-button
       >
@@ -60,13 +60,12 @@ const props = defineProps({
 });
 // 引导任务
 const emits = defineEmits(["close"]);
+
 const taskGuide = () => {
   // 重置任务步骤
   task.step = 1;
   task.taskID = props.currentTaskId;
   let currentTask = guide[props.currentTaskId][0];
-
-  console.log('object :>> ', currentTask);
   switch (currentTask.type) {
     case "router":
       router.push({
@@ -79,28 +78,30 @@ const taskGuide = () => {
 
   task.isTaskDrawer = false;
 };
-// 获取当前任务的下标
-const stage = computed(() => {
-  let index = 0;
-  props.currentStage.tasks.find((item) => {
-    if (props.currentTaskId === item.id) {
-      return true;
-    }
-    index++;
-    return false;
-  });
-  return index;
-});
 
-// 任务进度
-const progress = computed(() => {
-  let res = (stage.value / props.currentStage.tasks.length) * 100;
-  return res;
-});
-// 当前任务
-const currentTask = computed(() => {
-  return props.currentStage.tasks[stage.value];
-});
+console.log('object :>> ', props.currentStage);
+// 获取当前任务的下标;
+// const stage = computed(() => {
+//   let index = 0;
+//   props.currentStage.tasks.find((item) => {
+//     if (props.currentTaskId === item.id) {
+//       return true;
+//     }
+//     index++;
+//     return false;
+//   });
+//   return index;
+// });
+
+// // 任务进度
+// const progress = computed(() => {
+//   let res = (stage.value / props.currentStage.tasks.length) * 100;
+//   return res;
+// });
+// // 当前任务
+// const currentTask = computed(() => {
+//   return props.currentStage.tasks[stage.value];
+// });
 </script>
 
 <style lang="scss" scoped></style>

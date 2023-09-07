@@ -7,15 +7,13 @@ export const taskStore = defineStore("taskStore", {
     taskID: "M0101", // 任务ID
     step: -1, // 任务步骤
   }),
-  getters: {
-    
-  },
+  getters: {},
   actions: {},
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: [],
+        paths: ["taskID"],
         storage: localStorage,
       },
     ],

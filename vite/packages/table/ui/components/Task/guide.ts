@@ -144,7 +144,6 @@ export const guide = {
       position: "top",
     },
     {
-      time: 300,
       title: "编辑导航",
       text: "在这里，你可以选择系统应用和功能、酷应用，windows应用，自定义应用和轻应用。本次任务，让我们来添加一个「系统应用」图标。",
       position: "top",
@@ -152,7 +151,6 @@ export const guide = {
     {
       title: "编辑导航",
       text: "在这里，你可以选择系统应用和功能、酷应用，windows应用，自定义应用和轻应用。本次任务，让我们来添加一个「系统应用」图标。",
-      position: "right",
     },
     {
       title: "编辑导航",
