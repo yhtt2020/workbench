@@ -14,7 +14,7 @@
                         <div class="username" style="color: var(--primary-text);">
                             我是皮克斯呀
                         </div>
-                        <div class="self-msg " style="color: var(--primary-text);">
+                        <div class="self-msg " style="color:  var(--secondary-text);">
                             <span class="date">08-09</span>
                             <span class="time">16:16</span>
                             <span class="ip">浙江</span>

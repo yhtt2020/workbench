@@ -1,14 +1,17 @@
 <template>
   <div @resize="updateScroller" class="container flex flex-col xt-text">
     <div class="top-bar">
-      <div class="left shrink">
-        <a class="text-base ant-dropdown-link" @click.prevent style="color: var(--primary-text);">
-          最近更新
-          <DownOutlined class="text-base" />
-        </a>
+      <div class="left shrink h-[40px] flex">
+        <!-- style="color: var(--primary-text);" -->
+        <div class="flex check-box w-[200px] h-[40px] justify-center xt-bg rounded-lg" >
+            <div v-for="(item,index) in menuList" :key="index" class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16" :class="[{action:currentIndex==index}]" @click="setCurrentIndex(index)">{{ item }}</div>
+        </div>
+        <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16">
+          最近更新 <DownOutlined class="text-sm"/>
+        </div>
       </div>
       <div class="right shrink">
-        <a-button type="primary" :icon="h(PlusCircleOutlined)" style="color: var(--primary-text);">发布</a-button>
+        <a-button type="primary" :icon="h(PlusCircleFilled)" style="color: var(--primary-text);">发布</a-button>
       </div>
     </div>
 
@@ -23,7 +26,6 @@
           <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)"
             class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
-
           </ComCard>
         </div>
       </vue-custom-scrollbar>
@@ -44,10 +46,15 @@
 
 <script setup lang="ts">
 import { ref, reactive, nextTick, h, computed, watch, getCurrentInstance } from 'vue';
-import { DownOutlined, PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
+import { DownOutlined, PlusCircleFilled, CloseCircleOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
+const menuList=ref(['全部','热门','精华'])
+const currentIndex = ref(0)
 
+const setCurrentIndex=(index)=>{
+  currentIndex.value = index
+}
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
 const settingsScroller = reactive({
@@ -75,7 +82,6 @@ const comCards = ref([
       img: ['https://ts1.cn.mm.bing.net/th?id=ORMS.ee894d967b3d81162540134424ce96e5&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1&p=0',
         'https://tse1-mm.cn.bing.net/th/id/OIP-C.X7wB1GrLLb9az8I04ePzZwHaLH?w=203&h=304&c=7&r=0&o=5&dpr=1.1&pid=1.7',
         'https://ts1.cn.mm.bing.net/th?id=ORMS.eabeec2ac6b24658735f4528f013f55d&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=1&p=0'],
-      video: ['https://vodpub1.v.news.cn/original/20210426/61ccdd548e144eed9b4689968bc05430.mp4']
     }
   },
   {
@@ -85,26 +91,34 @@ const comCards = ref([
     },
     data: {
       img: ['https://ts4.cn.mm.bing.net/th?id=ORMS.69f3f16b106791e0f42b6f86cae85a80&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1.5&p=0'],
+    }
+  },
+  {
+    content: {
+      title: '8月9日，近期开发内容日志：桌面市场、超级工具箱、待办.经历了连续的几天的服务器震荡。',
+      context: '目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…'
+    },
+    data: {
       video: ['https://vodpub1.v.news.cn/original/20210426/61ccdd548e144eed9b4689968bc05430.mp4']
     }
   },
 ]);
 const threadListRef = ref()
 function updateScroller() {
-  console.log(threadListRef)
+  // console.log(threadListRef)
   threadListRef.value.update()
 }
 // 控制显示状态和选中状态的变量
 const detailVisible = ref(false);
-let currentIndex = 0
+
 // 切换选中状态的函数
 const showDetail = (index) => {
-  console.log(index, '点钟了')
+  // console.log(index, '点钟了')
   // 切换显示状态
   detailVisible.value = true;
   // 切换选中状态
   selectedIndex.value = index;
-  console.log(selectedIndex)
+  // console.log(selectedIndex)
 };
 
 // 关闭详情的函数
@@ -151,21 +165,25 @@ const close = () => {
     justify-content: space-between;
     //当屏幕最大宽度为767px
 
-    .left {
-      width: 115px;
-      height: 40px;
-      background: rgba(0, 0, 0, 0.30);
-      border-radius: 10px;
+    .font-16{
+      font-family: PingFangSC-Regular;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    .action{
+      background: var(--active-bg);
+      border-radius: 8px;
+      cursor: pointer;
+      width: 64px;
+      height: 32px;
+      border-left: 0px;
+      padding: 0px;
+      margin-right: 0px;
       text-align: center;
-      line-height: 40px;
-
-      .ant-dropdown-link {
-        font-family: PingFangSC-Regular;
-        // font-size: 16px;
-        color: rgba(255, 255, 255, 0.60);
-        font-weight: 400;
-        // color: red;
-      }
+      color:  var(--active-text);
+      border: none;
+    }
+      
     }
 
     .right {
@@ -180,7 +198,7 @@ const close = () => {
         border-radius: 10px;
       }
     }
-  }
+  
 
 
   .content {
