@@ -23,7 +23,7 @@
         :style="{ width: detailVisible ? '40%' : '60%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
-          <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)"
+          <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)" :detailVisible="detailVisible"
             class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>

@@ -37,14 +37,14 @@
                         </video>
                     </div>
                     <template v-if="cardData.data?.img">
-                        <ul class="flex flex-col items-center p-0 mt-2">
+                        <ul class="flex flex-col items-center p-0 mb-0">
                             <img :src="item" v-for="(item,index) in cardData.data?.img" class="mb-2 rounded-md cover-lm" :key="index">
                         </ul>
                     </template>
                     <!-- 插入正文元素 -->
-                    <div>
+                    <div class="mt-1">
                         <div>
-                            <span id="title" style="color: var(--primary-text);">{{
+                            <span id="title" style="color: var(--primary-text); " >{{
                                 cardData.content.title
                             }}</span>
                             <br>
@@ -129,8 +129,8 @@ const props = defineProps({
         .card-content {
             font-family: PingFangSC-Regular;
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            text-align: justify;
+            // color: rgba(255, 255, 255, 0.85);
+            // text-align: justify;
             line-height: 22px;
             font-weight: 400;
         }
