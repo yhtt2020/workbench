@@ -1,6 +1,6 @@
 <template>
   <!-- 统一子菜单 -->
-  <a-dropdown :trigger="['click']">
+  <a-dropdown :trigger="['click']" placement="top">
     <template #overlay v-if="list">
       <div class="xt-modal rounded-xl p-1 xt-b">
         <template v-for="item in list">
@@ -23,9 +23,10 @@
 const props = defineProps({
   list: {},
 });
+const emits = defineEmits(["itemClick"]);
 
-const itemClick = (item, flag) => {
-  item.callBack && item.callBack(item);
+const itemClick= (item) => {
+  emits("itemClick", item);
 };
 </script>
 

@@ -59,11 +59,15 @@ import {SDKAppID} from "./js/chat/chat";
 
 import { Notifications } from './js/common/sessionNotice'
 
+
+import WujieVue from 'wujie-vue3'
+// const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
  // Your SDKAppID
 // init TUIKit
 const TUIKit = TUICore.init({
   SDKAppID,
 });
+TUIKit.tim.setLogLevel(0);//关闭日志，如果需要调试，改为4
 // TUIKit add TUIComponents
 TUIKit.use(TUIComponents);
 // TUIKit add TUICallKit
@@ -73,7 +77,7 @@ TUIKit.use(TUICallKit);
 window.$TUIKit=TUIKit
 window.$chat=TUIKit.tim
 
-window.$TUIKit.tim.setLogLevel(4);
+
 const notice = new Notifications()
 window.$notice = notice
 
@@ -109,14 +113,16 @@ const $app=app.use(pinia).use(Antd).use(baseComponents).use(components).use(Colo
       trigger:"mouseenter click"
     }, // => Global default options * see all props
   }
-).use(Toast,options).use(TUIKit).mount('#app')
+).use(Toast,options).use(TUIKit).use(WujieVue).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
 app.component('vueCustomScrollbar',vueCustomScrollbar)
 
+window.USER_DATA_PATH=window.globalArgs['user-data-dir']//挂载一个用户数据目录的常量，方便后续开发
 
 window.$app=$app
+
 export {
   router
 };

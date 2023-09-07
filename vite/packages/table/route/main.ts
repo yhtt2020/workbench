@@ -63,20 +63,24 @@ import Tomato from '../page/app/tomato/Tomato.vue'
 import Todo from '../page/app/todo/App.vue'
 /*办公助手*/
 import WorkIndex from '../page/work/WorkIndex.vue'
-import ShortcutKey from "../apps/shortcutKey/page/ShortcutKey.vue";
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
-import ShortcutKeyRoute from '../apps/shortcutKey/route'
+
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
-import ImTeam from '../page/chat/team.vue'
-// import ChatMain from '../page/chat/page/chatMain.vue'
-// import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
-// import ChatFind from '../page/chat/page/chatFind.vue'
+// import ImTeam from '../page/chat/team.vue'
+import ChatMain from '../page/chat/page/chatMain.vue'
+import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
+import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
+
+//导入应用路由
+import ShortcutKeyRoute from '../apps/shortcutKey/route'
+import BarrageRoute from '../apps/barrage/route'
+
 
 export default [
   {
@@ -95,18 +99,7 @@ export default [
         name: 'tomato',
         component: Tomato
       },
-      {
-        path: "/team",
-        name: "team",
-        component: Team,
-        children: [
-          {
-            path: "",
-            name: "hall",
-            component: Hall,
-          },
-        ],
-      },
+
       {
         path: "/inspector",
         name: "inspector",
@@ -201,6 +194,7 @@ export default [
         component: ChatIndex,
         name: 'chatIndex',
         children: [
+          BarrageRoute,
           {
             path:'',
             name:'chatDesk',
@@ -210,34 +204,54 @@ export default [
             path: '',
             name: 'chat',
             component: Chat,
-            // children:[
-            //   {
-            //     path:'',
-            //     name:'chatMain',
-            //     component:ChatMain
-            //   },
-            //   {
-            //     path:'',
-            //     name:'chatFind',
-            //     component:ChatFind
-            //   },
-            //   {
-            //     path:'',
-            //     name:'chatThisky',
-            //     component:ThiskyIndex
-            //   }
-            // ]
+            children:[
+              {
+                path: '/contact',
+                name: 'contact',
+                component: Contact,
+                meta:{
+                  type:'contact'
+                }
+              },
+              {
+                path:'/chatMain',
+                name:'chatMain',
+                component:ChatMain,
+                meta:{
+                  type:'chat'
+                }
+              },
+              {
+                path:'/chatFind',
+                name:'chatFind',
+                component:ChatFind,
+                meta:{
+                  type:'find'
+                }
+              },
+              {
+                path:'/thisky',
+                name:'chatThisky',
+                component:ThiskyIndex,
+                meta:{
+                  type:'thisky'
+                }
+              }
+            ]
           },
+
           {
-            path: '/contact',
-            name: 'contact',
-            component: Contact,
+            path: "/team",
+            name: "team",
+            component: Team,
+            children: [
+              {
+                path: "",
+                name: "hall",
+                component: Hall,
+              },
+            ],
           },
-          {
-            path:'',
-            name:'imTeam',
-            component:ImTeam
-          }
 
         ]
       },
