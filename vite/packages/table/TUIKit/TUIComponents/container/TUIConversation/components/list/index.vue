@@ -86,7 +86,6 @@ const TUIConversationList: any = defineComponent({
     );
 
     const handleListItem = (item: any) => {
-      console.log('测试::>>',item);
       ctx.emit('handleItem', item);
     };
 

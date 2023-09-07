@@ -8,6 +8,7 @@ import { appStore } from '../../store'
 const toast = useToast()
 
 export class Notifications{
+  private noticeObj:null
   
   // 系统toast
   private systemToast(msg:any,conversationID:any){
@@ -187,7 +188,13 @@ export class Notifications{
     const audioElement: HTMLAudioElement = createOrUpdateAudioElement();
     
     const data = notification.data[0]
-    
+    const c2cData = {
+      type:data.conversationType,
+      nickname: data.conversationType === 'C2C' ? data.nick : data.to,
+      text:data.payload.hasOwnProperty('text') ? `${data.payload.text}`:''
+    }
+    this.noticeObj = c2cData
+  
     const settings = {
       isStore:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length !== 0, // 判断chat界面缓存不为空
       isEnable:noticeStore().$state.noticeSettings.enable, // 消息开关
