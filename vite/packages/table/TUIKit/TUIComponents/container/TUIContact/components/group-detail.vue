@@ -110,7 +110,7 @@ export default defineComponent({
   }
 
   const enter = async (ID, type) => {  // 进入群聊
-   router.push({name:'chat'})
+   router.push({name:'chatMain'})
    const name = `${type}${ID}`;
    window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
      // 通知 TUIConversation 添加当前会话

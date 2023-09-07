@@ -571,7 +571,7 @@ const TUIChat: any = defineComponent({
       }
     };
 
-    const forwardMessage = (message: Message) => {
+    const forwardMessage = (message: Message) => {   // 转发回调函数
       data.currentMessage = message;
       conversationData.list = TUIServer.TUICore.getStore().TUIConversation.conversationList;
       data.forwardStatus = true;
@@ -688,10 +688,11 @@ const TUIChat: any = defineComponent({
           data.currentMessage = message;
           data.repliesDialogStatus = true;
           break;
-        case 'forward':
-          data.currentMessage = message;
-          conversationData.list = TUIServer.TUICore.getStore().TUIConversation.conversationList;
-          data.forwardStatus = true;
+        case 'forward':   // 显示转发内容的回调函数
+          console.log('测试转发功能是否有用::>>')
+          // data.currentMessage = message;
+          // conversationData.list = TUIServer.TUICore.getStore().TUIConversation.conversationList;
+          // data.forwardStatus = true;
           break;
         case 'previewImage':
           data.showImagePreview = !data.showImagePreview;
