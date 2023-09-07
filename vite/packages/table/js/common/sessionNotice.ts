@@ -45,6 +45,7 @@ export class Notifications{
           'nowCheck':function(){
             noticeStore().hideNoticeEntry()  
             noticeStore().putIMChatData(msg,'message')
+            console.log('检测this',this)
           },
           'examine': function(){
             router.push({name:'chatMain'})
@@ -59,9 +60,9 @@ export class Notifications{
       {
        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
        pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast',
-       onClose() {
-        noticeStore().putIMChatData(msg,'message')
-       },
+      //  onClose() {
+      //   noticeStore().putIMChatData(msg,'message')
+      //  },
       }
     )
   }
