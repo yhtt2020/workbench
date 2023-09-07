@@ -18,6 +18,7 @@
       w="40"
       size="20"
       radius="10"
+      :type="type"
       v-bind="config"
       :icon="item.icon"
     ></xt-icon>
@@ -35,6 +36,9 @@ const props = defineProps({
   w: {
     default: 20,
   },
+  type: {
+    default: "default",
+  },
 });
 
 const stateStyle = computed(() => {
@@ -43,8 +47,9 @@ const stateStyle = computed(() => {
     height: props.w + "px",
   };
 });
+const emit = defineEmits(["itemClick"]);
 const itemClick = (item, flag) => {
-  item.callBack && item.callBack(item);
+  emit("itemClick", item);
 };
 </script>
 

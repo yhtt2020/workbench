@@ -2,8 +2,13 @@
   <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px;min-width: 72px">
     <!-- 头部 -->
     <div>
-      <Menu :list="item.children" v-for="item in newList.slice(0, last)">
+      <Menu
+        @itemClick="itemClick"
+        :list="item.children"
+        v-for="item in newList.slice(0, last)"
+      >
         <Box
+          @itemClick="itemClick"
           :item="item"
           @selectClick="selectClick"
           :id="currentIndex"
@@ -26,16 +31,18 @@
     </div>
     <!-- 中间 -->
     <div
-      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3 xt-bm flex flex-col items-center"
+      class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3  flex flex-col items-center"
     >
       <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
         <div style="height: auto">
           <Menu
+            @itemClick="itemClick"
             :list="item.children"
             v-for="item in newList.slice(last, -1 * end)"
           >
             <a-tooltip :title="item.title" placement="right">
               <Box
+                @itemClick="itemClick"
                 :item="item"
                 @selectClick="selectClick"
                 :id="currentIndex"
@@ -61,8 +68,13 @@
     </div>
     <!-- 底部 -->
     <div>
-      <Menu :list="item.children" v-for="item in newList.slice(-1 * end)">
+      <Menu
+        @itemClick="itemClick"
+        :list="item.children"
+        v-for="item in newList.slice(-1 * end)"
+      >
         <Box
+          @itemClick="itemClick"
           :item="item"
           @selectClick="selectClick"
           :id="currentIndex"
@@ -75,7 +87,7 @@
           >
             <slot :name="item.slot"> </slot>
           </div>
-          <Item :item="item" v-else>
+          <Item :item="item" type="" v-else>
             <template #default>
               <slot :name="item.slot"> </slot>
             </template>
@@ -118,6 +130,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
+  modelValue: {},
   index: { default: false },
   list: {
     default: () => {
@@ -159,15 +172,14 @@ const newList = computed(() => {
 
 // 动态获取ID
 const index = computed(() => {
-
-  return isNaN(props.id?.value) ? newList.value[0].id : props.index.value;
+  return isNaN(props.index.value) ? newList.value[0].id : props.index.value;
 });
 
 // 选择ID
 const currentIndex = ref(index.value);
 
 //选中事件
-const emit = defineEmits(["index"]);
+const emit = defineEmits(["modelValue", "index"]);
 const selectClick = (id, flag) => {
   emit("update:index", id);
   if (flag) return;
@@ -175,6 +187,12 @@ const selectClick = (id, flag) => {
 };
 
 // 点击事件
+const itemClick = (item) => {
+  selectClick(item.id, item.flag);
+  if (item.children) return;
+  emit("update:modelValue", item);
+  item.callBack && item.callBack(item);
+};
 </script>
 
 <style lang="scss" scoped>

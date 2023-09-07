@@ -1,38 +1,71 @@
 <template>
-  <div
-    class="group cursor-pointer flex items-center text-base relative h-12 rounded-xl pl-2 mb-2 mr-3"
-    style="width: 212px"
-    :class="{ 'xt-bg-2': selectTopicIndex === data.id }"
-    @click="handleIndex()"
-  >
-    <Icon :icon="data.icon.name"></Icon>
-    <div class="ml-2">{{ data.name }}</div>
-    <Icon
-      class="absolute top-1/2 -translate-y-1/2 cursor-pointer top-item xt-text-2 hidden"
-      style="right: 40px"
-      icon="shanchu"
-      @click.stop.prevent="handleDel(data.id)"
-    ></Icon>
-    <Icon
-      class="absolute top-1/2 -translate-y-1/2 cursor-pointer top-item xt-text-2"
-      :class="[data.top ? 'block' : 'hidden']"
-      style="right: 15px"
-      icon="Pushpin"
-      @click.stop.prevent="handleTop()"
-    ></Icon>
-  </div>
+  <xt-menu :menus="menus">
+    <div
+      class="group cursor-pointer flex items-center text-base relative rounded-xl pl-2 mb-2 mr-3"
+      style="width: 212px; height: 72px"
+      :class="{ 'xt-active-bg-2': selectTopicIndex === data.id }"
+      @click="handleIndex()"
+    >
+      <Icon :icon="data.icon.name" style="font-size: 17.5px"></Icon>
+      <div class="ml-2 flex flex-col">
+        <div class="flex justify-between">
+          {{ data.name }}
+          <div class="xt-text-2 text-xs">
+            {{ time }}
+          </div>
+        </div>
+        <div class="truncate xt-text-2 text-sm mt-1" style="width: 160px">
+          {{ text }}
+        </div>
+      </div>
+      <div
+        class="absolute"
+        :class="{
+          triangle: data.top == true,
+        }"
+      ></div>
+    </div>
+  </xt-menu>
 </template>
 
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
-
+import dayjs from "dayjs";
 export default {
-  computed: {
-    ...mapWritableState(aiStore, ["topicList", "selectTopicIndex"]),
+  data() {
+    return {
+      menus: [
+        {
+          icon: "Pushpin",
+          label: this.data.top ? "取消置顶" : "置顶",
+          callBack: this.handleTop,
+        },
+        { icon: "shanchu", label: "删除", callBack: this.handleDel },
+      ],
+    };
   },
+  computed: {
+    ...mapWritableState(aiStore, ["topicList", "selectTopicIndex", "chatList"]),
+    text() {
+      return this.getData().content;
+    },
+    time() {
+      const timestamp = this.getData().time; // 假设您已经获取了时间戳
+      const formattedDate = dayjs(timestamp).format("MM-DD");
+      return formattedDate;
+    },
+  },
+  mounted() {},
   methods: {
     ...mapActions(aiStore, ["delTopic"]),
+    getData() {
+      let obj = {
+        ...this.chatList[this.data.id][this.chatList[this.data.id].length - 2],
+      };
+
+      return obj;
+    },
     handleTop() {
       let id = this.data.id;
       for (let key in this.topicList) {
@@ -62,5 +95,17 @@ export default {
   &:hover .top-item {
     display: block;
   }
+}
+
+.triangle {
+  top: -1px;
+  right: -4px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--active-bg);
+  transform: rotate(45deg);
+  border-radius: 20px;
 }
 </style>

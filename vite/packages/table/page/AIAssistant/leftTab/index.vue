@@ -6,7 +6,7 @@
     </template>
   </xt-left-menu>
 
-  <!-- 新建对话 -->
+  <!-- 新建对话  -->
   <XtView
     v-model="createChatVisible"
     type="popup"

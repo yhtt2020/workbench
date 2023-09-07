@@ -113,7 +113,7 @@ const pos = computed(() => {
 
 <style lang="less" scoped>
 .container {
-  width: 100px;
+  width: 184px;
   z-index: 999999999999;
   .list {
     border-radius: 12px;
@@ -122,9 +122,9 @@ const pos = computed(() => {
 
     .item {
       box-sizing: border-box;
-      height: 30px;
+      height: 44px;
       text-align: center;
-      line-height: 30px;
+      line-height: 44px;
       font-size: 14px;
       overflow: hidden;
       &:hover {
