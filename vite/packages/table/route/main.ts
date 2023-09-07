@@ -71,10 +71,10 @@ import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
-import ImTeam from '../page/chat/team.vue'
-// import ChatMain from '../page/chat/page/chatMain.vue'
-// import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
-// import ChatFind from '../page/chat/page/chatFind.vue'
+// import ImTeam from '../page/chat/team.vue'
+import ChatMain from '../page/chat/page/chatMain.vue'
+import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
+import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
 
 //导入应用路由
@@ -209,25 +209,35 @@ export default [
                 path: '/contact',
                 name: 'contact',
                 component: Contact,
+                meta:{
+                  type:'contact'
+                }
               },
+              {
+                path:'/chatMain',
+                name:'chatMain',
+                component:ChatMain,
+                meta:{
+                  type:'chat'
+                }
+              },
+              {
+                path:'/chatFind',
+                name:'chatFind',
+                component:ChatFind,
+                meta:{
+                  type:'find'
+                }
+              },
+              {
+                path:'/thisky',
+                name:'chatThisky',
+                component:ThiskyIndex,
+                meta:{
+                  type:'thisky'
+                }
+              }
             ]
-            // children:[
-            //   {
-            //     path:'',
-            //     name:'chatMain',
-            //     component:ChatMain
-            //   },
-            //   {
-            //     path:'',
-            //     name:'chatFind',
-            //     component:ChatFind
-            //   },
-            //   {
-            //     path:'',
-            //     name:'chatThisky',
-            //     component:ThiskyIndex
-            //   }
-            // ]
           },
 
           {

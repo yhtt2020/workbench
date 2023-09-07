@@ -44,6 +44,10 @@ export const chatStore = defineStore('chatStore', {
       refUser: [], // 接收推荐用户数据
       groupList: [],  // 接收推荐群数据
       memberList: [], // 成员列表数据
+      conversations:{  // 存储上一次会话记录
+        conversationID:undefined,
+      }, 
+
     }),
     actions: {
       async getUserSig() {
@@ -195,6 +199,12 @@ export const chatStore = defineStore('chatStore', {
             })
           }
 
+          if(this.recommendData.groups.length){
+            this.recommendData.groups.forEach(group=>{
+              delete group.relationship
+            })
+          }
+
 
           const result = await serverCache.getDataWithLocalCache('findData', {
             localCache: true, ttl: 10 * 60,
@@ -228,7 +238,7 @@ export const chatStore = defineStore('chatStore', {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
         storage: dbStorage,
-        paths: ['settings', 'recommendData']
+        paths: ['settings', 'recommendData','conversations']
         // state 中的字段名，按组打包储存
       }]
     }

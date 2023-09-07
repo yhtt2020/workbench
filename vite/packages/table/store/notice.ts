@@ -37,33 +37,32 @@ export const noticeStore = defineStore('notice',{
   }),
 
   actions:{
-    async loadNoticeDB(){  // 获取所有聊天数据
-      const result = await tsbApi.db.allDocs('notice')
-      this.notice.messageContent = result.rows
-    },
-
     showNoticeEntry(){  // 显示消息通知入口
       this.noticeSettings.show = true
     },
-
     hideNoticeEntry(){  // 隐藏消息通知入口
       this.noticeSettings.show = false
     },
-    
     setNoticeOnOff(val:boolean){  // 设置消息通知是否开启  
       this.noticeSettings.enable = val
     },
-
     setMessagePrompt(val:boolean){  // 设置消息通知提示语开关
       this.noticeSettings.enablePlay = val
     },
-
     setMessagePlay(){ // 设置消息提示语
       this.noticeSettings.messagePlay = true
     },
-
     setNoticePlay(){  // 设置通知提示语
       this.noticeSettings.noticePlay = true
+    },
+
+    // 获取所有聊天数据
+    async loadNoticeDB(){  
+      const result = await tsbApi.db.allDocs('notice')
+      const sortReuslt = result.rows.sort((a,b)=>{
+        return b.doc.content.time - a.doc.content.time
+      })
+      this.notice.messageContent = sortReuslt
     },
 
     async putIMChatData(val:object,type:string) {  // 将聊天消息数据进行db数据库存储
@@ -78,12 +77,16 @@ export const noticeStore = defineStore('notice',{
     },
     
 
-    async removeIMChatData(){  // 聊天消息数据从db数据库中清空
+    async removeIMChatData(item:any){  // 聊天消息数据从db数据库中清空
+      await tsbApi.db.remove(item.doc)
+    },
+    
+    async clean(){
       for(let i=0;i<this.notice.messageContent.length;i++){
         await tsbApi.db.remove(this.notice.messageContent[i].doc)
       }
+      this.notice.messageContent = []
     }
-    
 
     
     

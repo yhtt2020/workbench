@@ -202,7 +202,7 @@ const manage = defineComponent({
         [types.JOIN_OPTIONS_NEED_PERMISSION]: '需要验证',
         [types.JOIN_OPTIONS_DISABLE_APPLY]: '禁止加群',
         [types.INVITE_OPTIONS_DISABLE_INVITE]:'禁止邀请',
-        [types.INVITE_OPTIONS_FREE_ACCESS]:'自由加入',
+        [types.INVITE_OPTIONS_FREE_ACCESS]:'自由邀请',
         [types.INVITE_OPTIONS_NEED_PERMISSION]:'需要验证'
       },
       isChangeOwner:false,

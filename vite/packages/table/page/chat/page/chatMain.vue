@@ -29,15 +29,15 @@
 
 
 <script lang="ts">
-import {defineComponent, reactive, toRefs, onMounted,ref} from 'vue';
+import {defineComponent, reactive, toRefs, onMounted,ref,nextTick} from 'vue';
 import {TUIEnv} from '../../../TUIKit/TUIPlugin';
 import Drag from '../../../TUIKit/TUIComponents/components/drag';
 import {handleErrorPrompts} from '../../../TUIKit/TUIComponents/container/utils';
 import TUIContact from "../../../TUIKit/TUIComponents/container/TUIContact/index.vue";
 import SecondPanel from "../../../components/SecondPanel.vue";
-import {onBeforeRouteUpdate, useRoute} from 'vue-router'
+import {onBeforeRouteUpdate, useRoute,useRouter} from 'vue-router'
 import {message} from "ant-design-vue";
-
+import { chatStore } from '../../../store/chat'
 
 export default defineComponent({
  name: 'App',
@@ -58,11 +58,15 @@ export default defineComponent({
    });
 
    const route = useRoute()
+   const router = useRouter()
+   const store = chatStore()
    const TUIServer = (window as any)?.TUIKitTUICore?.TUIServer;
    const TIM = TUIServer.TUICallKit.TUICore.TIM
    const tim = TUIServer.TUICallKit.tim
 
    const handleCurrentConversation = (value: string) => {
+     console.log('检测::>>',value)
+     store.conversations.conversationID = value
      data.currentModel = value ? 'message' : 'conversation';
    };
    // beforeCalling：在拨打电话前与收到通话邀请前执行
@@ -114,6 +118,7 @@ export default defineComponent({
 
 
    return {
+     router,route,
      ...toRefs(data),
      handleCurrentConversation,
      beforeCalling,
