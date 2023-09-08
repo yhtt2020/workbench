@@ -515,4 +515,10 @@ export default {
   background-color: var(--active-bg);
   color: var(--active-text) !important;
 }
+
+:deep(.ant-input){
+  &::placeholder{
+    color:var(--secondary-text) !important;
+  }
+}
 </style>

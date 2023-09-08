@@ -53,7 +53,7 @@
   <div class="flex justify-end  h-12">
     <div class="flex items-center">
      <a-button class="rounded-lg" style="background: var(--secondary-bg);color:var(--secondary-text);width:100px;height: 44px;" @click="closeForwardModal">取消</a-button>
-     <a-button class="ml-4 rounded-lg" type="primary" style="width:100px;height: 44px;" @click="forwardSend">转发</a-button>
+     <a-button class="ml-4 rounded-lg" type="primary" style="width:100px;height: 44px;color:var(--active-text);" @click="forwardSend">转发</a-button>
     </div>
   </div>
  </div>
@@ -239,7 +239,9 @@ export default defineComponent({
  border-radius: 8px;
 }
 
-:deep(.ant-input-placeholder ){
- color:var(--secondary-text);
+:deep(.ant-input){
+  &::placeholder{
+    color:var(--secondary-text) !important;
+  }
 }
 </style>

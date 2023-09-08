@@ -1,6 +1,6 @@
 <template>
  <div class="collapse-container">
-   <div class="header " @click="toggleCollapse">
+   <div class="header mb-2" @click="toggleCollapse">
      <div class="flex items-center justify-center" :class="['icon', { 'rotate': !collapsed }]">
        <CaretRightOutlined style="font-size: 1em;"/>
      </div>
@@ -9,7 +9,8 @@
      </span>
    </div>
    <transition name="collapse">
-    <div v-if="!collapsed" class="content">
+    <!-- class="content" -->
+    <div v-if="!collapsed" >
       <slot></slot>
     </div>
    </transition>
@@ -59,9 +60,11 @@ export default {
  transform: rotate(90deg);  /* 旋转图标 */
 }
 
+/**
 .content {
  padding: 10px;
 }
+**/
 
 /* 定义过渡效果样式 */
 .collapse-enter-active,
