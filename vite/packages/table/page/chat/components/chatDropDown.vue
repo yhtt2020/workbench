@@ -5,7 +5,7 @@
   </div>
   <template #overlay>
    <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
-    <a-menu-item v-for="(item,index) in dropDownList" 
+    <a-menu-item v-for="(item,index) in dropDownList"
      style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
      :class="{'select':dropDownIndex === index}"
      @click="selectMenuItem(item,index)"
@@ -24,7 +24,7 @@ import { EllipsisOutlined,MenuUnfoldOutlined,AppstoreOutlined} from '@ant-design
 import { chatStore } from '../../../store/chat'
 
 export default defineComponent({
- components:{ 
+ components:{
   EllipsisOutlined,
   MenuUnfoldOutlined,
   AppstoreOutlined
@@ -37,7 +37,7 @@ export default defineComponent({
   const data = reactive({
    dropDownList:[
     {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
-    {icon:'AppstoreOutlined',title:'切换双列',type:'change'}
+    {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
    ],
    dropDownIndex:0,
   })
@@ -45,10 +45,8 @@ export default defineComponent({
   const selectMenuItem = (item,index) =>{
    data.dropDownIndex = index
    if(item.type === 'change'){
-     chat.setDouble(true)
+     chat.setDouble()
      ctx.emit('updatePage')
-   }else{
-     
    }
   }
 

@@ -54,15 +54,11 @@
         >
           最近对话
         </div>
-        {{ topicList }}
         <div v-for="index in copyNum">
           <div class="ai-msg" @click="goPage(index)">
-            <!-- <div class="msg-icon">
-              <MessageOutlined />
-            </div> -->
             <xt-base-icon
               class="msg-icon"
-              :icon="recentList[index].icon.name"
+              :icon="recentList[index]?.icon.name || 'message' "
             ></xt-base-icon>
             <div
               class="msg-title"

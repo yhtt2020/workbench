@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="xt-text flex h-full"
-    style="box-sizing: border-box; z-index: 111"
-    :class="[typeClass]"
-  >
-    <!-- 左侧区域开始 -->
+  <div class="flex h-full xt-bg pr-3 py-3 rounded-xl mr-3 mt-3">
     <div
       class="flex flex-col items-center h-full xt-br mr-3"
       style="width: 72px; min-width: 72px"
@@ -30,7 +25,6 @@
             >
               <slot :name="item.slot"> </slot>
             </div>
-            <FullBtn v-else-if="item.full"></FullBtn>
             <Item :item="item" v-else>
               <template #default>
                 <slot :name="item.slot"> </slot>
@@ -40,7 +34,9 @@
         </Menu>
       </div>
       <!-- 中间 -->
-      <div class="flex-1 xt-scrollbar xt-bt flex flex-col items-center">
+      <div
+        class="flex-1 xt-scrollbar xt-container xt-bt pb-3 mb-3 flex flex-col items-center"
+      >
         <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
           <div style="height: auto">
             <Menu
@@ -62,8 +58,7 @@
                 >
                   <slot :name="item.slot"> </slot>
                 </div>
-                <FullBtn v-else-if="item.full"></FullBtn>
-                <Item v-else :item="item" w="40">
+                <Item :item="item" w="40">
                   <template #default>
                     <slot :name="item.slot"></slot>
                   </template>
@@ -85,7 +80,7 @@
             :item="item"
             @selectClick="selectClick"
             :id="currentIndex"
-            class="mt-2"
+            class="mb-2"
           >
             <div
               v-if="item.slot"
@@ -94,11 +89,6 @@
             >
               <slot :name="item.slot"> </slot>
             </div>
-            <FullBtn
-              v-else-if="item.full"
-              v-model:full="isFull"
-              type=""
-            ></FullBtn>
             <Item :item="item" type="" v-else>
               <template #default>
                 <slot :name="item.slot"> </slot>
@@ -108,11 +98,10 @@
         </Menu>
       </div>
     </div>
-    <!-- 左侧区域结束 -->
-    <div class="h-full w-full flex">
-      <!-- 主体区域开始 -->
-      <slot></slot>
-      <!-- 主体区域结束 -->
+    <div class="h-full flex-grow flex flex-col">
+      <div class="xt-scrollbar">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -120,7 +109,6 @@
 <script setup>
 import { ref, computed } from "vue";
 import Menu from "./Menu.vue";
-import FullBtn from "./FullBtn.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
@@ -173,26 +161,14 @@ const props = defineProps({
         {
           icon: "shezhi1",
         },
-        {
-          full: true,
-        },
       ];
     },
   },
 });
-const full = ref(false);
-const isFull = ref(false);
-const typeClass = computed(() => {
-  if (full.value) {
-    return isFull.value
-      ? " fixed left-0 right-0 top-0 bottom-0 xt-modal pr-3 py-3 "
-      : "xt-b xt-bg pr-3 py-3 rounded-xl";
-  }
-});
+
 // 动态添加ID
 const newList = computed(() => {
   let res = props.list.map((item) => {
-    if (item.full) full.value = true;
     let id = item.id ?? nanoid();
     return {
       id,
@@ -220,10 +196,6 @@ const selectClick = (id, flag) => {
 
 // 点击事件
 const itemClick = (item) => {
-  if (item.full) {
-    isFull.value = !isFull.value;
-    return;
-  }
   selectClick(item.id, item.flag);
   if (item.children) return;
   emit("update:modelValue", item);

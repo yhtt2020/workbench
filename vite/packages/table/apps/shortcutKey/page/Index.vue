@@ -124,6 +124,9 @@ export default defineComponent({
       ]
       const endMenu = [
         {
+          full:true,
+        },
+        {
           flag: true,
           icon: "tianjia2",
           id: 'create',
@@ -226,17 +229,15 @@ export default defineComponent({
 
 <template>
   <div :class="{'rounded-lg':!fullScreen}"
-    class="flex h-full xt-bg  py-2" style="">
-    <div>
-      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="2">
+    class="flex h-full w-full   py-2" style="">
+    <div class="w-full">
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="3" class="w-full">
         <!--  -->
         <template #test>
           <setting-filled/>
         </template>
-      </xt-left-menu>
-    </div>
-    <div class=" xt-text h-full rounded-lg flex-1 flex flex-col">
-      <div class="h-full" style="flex:1;height:0" v-if="currentApp">
+        <div class=" xt-text h-full rounded-lg flex-1 flex flex-col">
+        <div class="h-full" style="flex:1;height:0" v-if="currentApp">
 
 
           <!--          <div   class="mb-2 s-bg rounded-md p-2" v-for="app in executedApps ">-->
@@ -257,18 +258,23 @@ export default defineComponent({
           <!--            </div>-->
           <!--          </div>-->
 
-        <keep-alive>
-        <RouterView></RouterView>
-        </keep-alive>
+          <keep-alive>
+            <RouterView></RouterView>
+          </keep-alive>
 
-      </div>
-      <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
-        <strong>常用快捷功能开关：</strong>
-        <a-switch v-model:checked="settings.enableAutoChange"> </a-switch> 自动切换方案
-        &nbsp;&nbsp;
-        <a-switch  v-model:checked="settings.enableAutoEnter"> </a-switch> 自动进入
-      </div>
+        </div>
+        <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
+          <strong>常用快捷功能开关：</strong>
+          <a-switch v-model:checked="settings.enableAutoChange"> </a-switch> 自动切换方案
+          &nbsp;&nbsp;
+          <a-switch  v-model:checked="settings.enableAutoEnter"> </a-switch> 自动进入
+        </div>
+        </div>
+      </xt-left-menu>
     </div>
+
+
+
   </div>
 
 </template>
