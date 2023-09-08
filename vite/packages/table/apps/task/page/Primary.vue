@@ -67,8 +67,9 @@ const router = useRouter();
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0104";
+  store.taskID = "M0101";
   store.success = false;
+  store.step = -1;
 };
 const store = taskStore();
 
@@ -131,6 +132,7 @@ const taskGuide = () => {
 
 // 领取奖励
 const receive = () => {
+  store.list.push(store.taskID);
   store.taskID = currentTask.value.suf;
   store.success = false;
 };
