@@ -11,15 +11,15 @@
   
   <div class="flex-grow flex justify-between w-full px-1">
     <div class="flex flex-col" style="width: 293px;">
-     <a-input class="h-11" placeholder="搜索好友、群聊" style="color:var(--secondary-text);">
+     <a-input class="h-11" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch">
       <template #suffix>
-       <div class="flex items-center justify-center pointer active-button" > 
+       <div class="flex items-center justify-center pointer active-button" @click="enterSearch"> 
         <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" />
        </div>
       </template>
      </a-input>
      <span class="font-400 my-3" style="color:var(--secondary-text);">最近聊天</span>
-     <vue-custom-scrollbar :settings="settingsScroller" style="height: 37vh;">
+     <vue-custom-scrollbar :settings="settingsScroller" style="height: 308px;">
       <!-- :class="{'select-bg':isSelect(index)}" -->
       <div v-for="(item,index) in list"   class="flex items-center rounded-lg p-3 pointer" @click="selectItem(item)">
        <a-avatar shape="square" v-if="item.type === 'GROUP'" size="32" :src="item?.groupProfile?.avatar"></a-avatar>
@@ -64,7 +64,7 @@ import { defineComponent, onMounted, reactive,toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined,MinusCircleOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
-// import { pinyin } from 'pinyin-pro'
+// import { pinyin,match,toRaw } from 'pinyin-pro'
 
 export default defineComponent({
  components:{ 
@@ -87,7 +87,8 @@ export default defineComponent({
     wheelPropagation: true
    },
    rightSelectList:[], // 存放选中用户和群聊
-   
+   forwardText:'', // 转发搜索
+   allList:[]
   })
   
   // 获取会话列表
@@ -97,7 +98,9 @@ export default defineComponent({
    const sortList = list.sort((a,b)=>{
     return b.lastMessage.lastTime - a.lastMessage.lastTime
    })
-   data.list = sortList.slice(0,20)
+   data.allList = sortList // 将所有的数据进行获取
+   console.log('获取20条',sortList.slice(0,20).length);
+   data.list = sortList.slice(0,20)  // 只获取20条
   }
 
   // 关闭转发对话框
@@ -152,10 +155,30 @@ export default defineComponent({
     payload:props.content
    }
    const r = await window.$chat.createForwardMessage(option)
-   const res =  await window.$chat.sendMessage(r)
-   if(res.code === '0'){
-    message.success('消息转发成功')
-   }
+   await window.$chat.sendMessage(r)
+  }
+
+  // 搜索
+  const enterSearch = () =>{
+    data.list = []
+    let  searchResult = []
+    if(data.forwardText === ''){
+      return;
+    }
+
+    // const forwardTextAsRaw = toRaw(data.forwardText);
+    // const inputPinyin = pinyin(forwardTextAsRaw,{style:'NORMAL'})
+    // console.log('输入的拼音',inputPinyin);
+    searchResult = data.allList.filter(item=>{
+      const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
+
+      // const itemPinyin = pinyin(item,{style:'NORMAL'})
+
+      return data.forwardText === text
+    })
+    // console.log('结果',searchResult);
+    data.list = searchResult
+   
   }
 
   onMounted(()=>{
@@ -166,7 +189,7 @@ export default defineComponent({
    ...toRefs(data),
    getForwardList,closeForwardModal,
    selectItem,cancelSelect,forwardSend,
-   forwardMessage,
+   forwardMessage,enterSearch,
    // isSelect,
   }
  }
