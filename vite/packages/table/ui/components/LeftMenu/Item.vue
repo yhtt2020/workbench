@@ -4,7 +4,10 @@
     <div
       v-else-if="item.img"
       style="width: 40px; height: 40px"
-      class="xt-base-btn xt-bg"
+      class="xt-base-btn "
+      :class="{
+      'xt-bg':!item.noBg
+    }"
     >
       <img
         :src="item.img"
