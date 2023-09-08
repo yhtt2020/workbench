@@ -48,6 +48,9 @@ import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
 // import { handleErrorPrompts, handleSuccessPrompts } from '../../TUIKit/TUIComponents/container/utils';
+import config from './config'
+import {appStore} from "../../store";
+import {storeToRefs} from "pinia";
 
 export default {
   name: 'App',
@@ -99,6 +102,10 @@ export default {
       data.open = true
     }
 
+    const appS=appStore()
+    const {userInfo}=appS
+
+    console.log(userInfo.uid,'uidddddd',config.adminUids)
     const chatLeftList = ref([
       {
         icon: 'message',
@@ -117,6 +124,18 @@ export default {
           name:'contact'
         }
       },
+      ...(config.adminUids.includes(userInfo.uid))?[
+        {
+          icon: 'diannao',
+          type: 'admin',
+          title:'管理面板(仅管理员可见)',
+          callBack: selectTab,
+          route:{
+            name:'chatAdmin'
+          }
+        }
+      ]:{},
+
       {
         icon: 'zhinanzhen',
         type: 'find',
