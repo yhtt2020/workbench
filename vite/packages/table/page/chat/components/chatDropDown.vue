@@ -22,6 +22,7 @@
 import { defineComponent, reactive, toRefs} from 'vue'
 import { EllipsisOutlined,MenuUnfoldOutlined,AppstoreOutlined} from '@ant-design/icons-vue'
 import { chatStore } from '../../../store/chat'
+// import { chatList } from '../../../js/data/chatList'
 
 export default defineComponent({
  components:{
