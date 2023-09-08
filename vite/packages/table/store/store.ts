@@ -5,7 +5,11 @@ import {get} from "../js/axios/request";
 import {localCache} from '../js/axios/serverCache'
 import axios from "axios";
 const juheGet = sUrl('/app/juhe/get')
-
+const https=require('https')
+// 跳过检验证书
+const agent=new https.Agent({
+    rejectUnauthorized:false
+})
 
 export const oilStore = defineStore("OilPrices", {
     state: () => ({
@@ -47,7 +51,7 @@ export const oilStore = defineStore("OilPrices", {
                     cache:1,
                 }
             })
-            console.log(res);
+            // console.log(res);
             
             if(res.status){
                 if(res.data instanceof Array){
@@ -63,7 +67,7 @@ export const oilStore = defineStore("OilPrices", {
         },
         // 根据ip获取当前的省份
         async getCity(){
-            let res=await axios.get('https://api.vore.top/api/IPdata')
+            let res=await axios.get('https://api.vore.top/api/IPdata',{httpsAgent:agent})
             // console.log('getcity',res.data.adcode);
             if(res.status==200){
                 // console.log(res.data.adcode.p);

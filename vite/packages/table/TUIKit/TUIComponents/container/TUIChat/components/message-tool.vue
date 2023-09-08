@@ -138,6 +138,7 @@ export default defineComponent({
           await TUIServer.deleteMessage([message]);
           break;
         case constant.handleMessage.forward:
+          console.log('触发转发事件')
           ctx.emit('handleMessage', message, constant.handleMessage.forward);
           break;
         case constant.handleMessage.reference:

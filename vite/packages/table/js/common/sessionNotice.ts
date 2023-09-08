@@ -3,12 +3,13 @@ import { router } from "../../router";
 import { useToast } from 'vue-toastification'
 import NoticeToastButton from '../../components/notice/noticeToastButton.vue'
 import SystemNoticeToast from '../../components/notice/systemNoticeToast.vue'
-
+import { appStore } from '../../store'
 
 const toast = useToast()
 
 export class Notifications{
-
+  private noticeObj:null
+  
   // 系统toast
   private systemToast(msg:any,conversationID:any){
     toast.info(
@@ -20,7 +21,7 @@ export class Notifications{
             noticeStore().putIMChatData(msg,'Notice')
           },
           'systemExamine':function(){
-            router.push({name:'chat'})
+            router.push({name:'chatMain'})
             window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
               // Notify TUIConversation to toggle the current conversation
@@ -45,9 +46,10 @@ export class Notifications{
           'nowCheck':function(){
             noticeStore().hideNoticeEntry()  
             noticeStore().putIMChatData(msg,'message')
+            console.log('检测this',this)
           },
           'examine': function(){
-            router.push({name:'chat'})
+            router.push({name:'chatMain'})
             window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
               // Notify TUIConversation to toggle the current conversation
@@ -59,9 +61,9 @@ export class Notifications{
       {
        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
        pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast',
-       onClose() {
-        noticeStore().putIMChatData(msg,'message')
-       },
+      //  onClose() {
+      //   noticeStore().putIMChatData(msg,'message')
+      //  },
       }
     )
   }
@@ -168,6 +170,8 @@ export class Notifications{
 
   // 接收IM聊天消息通知公共方法
   public async receiveNotification(notification:any){
+    const store = appStore()
+
     // 创建一个audio标签
     function createOrUpdateAudioElement(): HTMLAudioElement {
       let audioElement = document.getElementById('messageAudio') as HTMLAudioElement;
@@ -184,17 +188,26 @@ export class Notifications{
     const audioElement: HTMLAudioElement = createOrUpdateAudioElement();
     
     const data = notification.data[0]
+    const c2cData = {
+      type:data.conversationType,
+      nickname: data.conversationType === 'C2C' ? data.nick : data.to,
+      text:data.payload.hasOwnProperty('text') ? `${data.payload.text}`:''
+    }
+    this.noticeObj = c2cData
+  
     const settings = {
       isStore:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length !== 0, // 判断chat界面缓存不为空
       isEnable:noticeStore().$state.noticeSettings.enable, // 消息开关
-      isGlobal:router.options.history.state.current !== '/chat', // 判断是否在全局页面
+      isGlobal:router.options.history.state.current !== '/chatMain', // 判断是否在全局页面
       enablePlay:noticeStore().$state.noticeSettings.enablePlay, // 提示音开关
       isCurrentChat:window.$TUIKit.TUIServer.TUIChat.store.conversation?.conversationID === data.conversationID, // 判断是否为当前会话
       isAT:data.atUserList.length !== 0, // 判断@消息
+      isAtMe:data.atUserList.includes(String(store.$state.userInfo.uid)),
       noTrouble:window.$TUIKit.TUIServer.TUIChat.store.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 是否开启免打扰
       isEmpty:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length === 0, // 为空
     }
   
+
     // 判断消息开关和音频开关是否打开
     if(settings.isEmpty || settings.noTrouble && settings.isEnable && settings.enablePlay){
       // 根据text判断是否为系统通知
@@ -218,7 +231,7 @@ export class Notifications{
             body:`${data.nick}：${data.payload.text}`,
             time:data.time,
           }
-          if(settings.isAT){
+          if(settings.isAtMe){
             this.systemToast(newMsg,data.conversationID)
           }else{
             this.commonToast(newMsg,data.conversationID)
@@ -227,7 +240,7 @@ export class Notifications{
 
         // 非当前会话只提示音频
         else if(settings.isStore === false && settings.isCurrentChat === false){
-          if(settings.isAT){
+          if(settings.isAtMe){
             audioElement.play()
           }else{
             audioElement.play()
@@ -256,6 +269,10 @@ export class Notifications{
     else{
 
     }
+
+
+
+    
   }
 
   

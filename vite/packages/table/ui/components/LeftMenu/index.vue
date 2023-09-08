@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px">
+  <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px;min-width: 72px">
     <!-- 头部 -->
     <div>
       <Menu
