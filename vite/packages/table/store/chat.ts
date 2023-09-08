@@ -78,8 +78,12 @@ export const chatStore = defineStore('chatStore', {
         await this.updateUserInfo()
       },
 
-      setDouble(value: any) {
-        this.settings.showDouble = value
+      setDouble(value: any=undefined) {
+        if(value===undefined){
+          this.settings.showDouble=!this.settings.showDouble
+        } else{
+          this.settings.showDouble=value
+        }
       },
 
       async loadRecommendUsers() {
