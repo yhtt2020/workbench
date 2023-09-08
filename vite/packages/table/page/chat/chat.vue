@@ -128,8 +128,9 @@ export default {
       // 写社群相关静态内容时临时打开的路由
       {
         icon:'',
-        img: '/icons/bz1.png',
+        img: '/icons/logo128.png',
         type: 'thisky',
+        noBg:true,
         callBack: selectTab,
         route:{
           name:'chatThisky'

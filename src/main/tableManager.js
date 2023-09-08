@@ -107,7 +107,7 @@ class TableManager {
       // })
       tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
       tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-        let allowedPermissions = ['audioCapture', 'media','fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+        let allowedPermissions = ['audioCapture', 'media', 'fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
         if (allowedPermissions.includes(permission)) {
           callback(true) // Approve permission request
@@ -158,7 +158,7 @@ class TableManager {
       tableWin.window.on('enter-full-screen', () => {
         this.saveBounds()
       })
-      tableWin.window.on('ready-to-show',()=>{
+      tableWin.window.on('ready-to-show', () => {
         tableWin.window.show()
         tableWin.window.focus()
       })
@@ -246,13 +246,19 @@ app.whenReady().then(() => {
     let result = []
     let path = require('path')
     for (let file of files) {
-      try {
         let link = null
         let title = path.basename(file)
         if (file.endsWith('.lnk')) {
           link = require('electron').shell.readShortcutLink(file)
         }
-        let icon = await app.getFileIcon(link ? link.target : file)
+        let icon =''
+        try{
+          icon=await app.getFileIcon(link ? link.target : file)
+        }catch (e){
+          icon ='/icons/winapp.png'
+          console.log('获取图标失败')
+        }
+
         result.push({
           name: path.parse(file).name,
           ext: path.parse(file).ext,
@@ -260,9 +266,6 @@ app.whenReady().then(() => {
           icon: icon.toDataURL(),
           title: title
         })
-      } catch (e) {
-        console.warn('存在失败的', e, file)
-      }
 
     }
     e.returnValue = result
@@ -278,22 +281,26 @@ app.whenReady().then(() => {
       //read directory
       let files = fs.readdirSync(_dir)
       files.forEach(_file => {
+
+        let _p = _dir + '/' + _file
+        //changes slashing for file paths
+        let _path = _p.replace(/\\\\/g, '/')
+        let name = path.parse(_path).name
+
         try {
-          let _p = _dir + '/' + _file
-          //changes slashing for file paths
-          let _path = _p.replace(/\\\\/g, '/')
-          let name = path.parse(_path).name
           if (_path.endsWith('.lnk')) {
             _path = require('electron').shell.readShortcutLink(_path).target
           }
-          filepaths.push({
-            name: name,
-            path: _path,
-            ext: path.parse(_path).ext
-          })
         } catch (e) {
           console.warn('存在失败的', e, _file)
+          _path = '/icons/winapp.png'
         }
+        filepaths.push({
+          name: name,
+          path: _path,
+          ext: path.parse(_path).ext
+        })
+
         //console.log(_file);
 
       })
@@ -349,7 +356,7 @@ app.whenReady().then(() => {
         }
         return {
           name: s.name,
-          type:s.id.startsWith('screen')?'screen':'window',
+          type: s.id.startsWith('screen') ? 'screen' : 'window',
           id: s.id,
           src: file,
           icon: icon
