@@ -172,6 +172,11 @@
   </a-drawer>
 
 
+  <teleport to='body' >
+    <Modal v-model:visible="inForward" v-if="inForward" :blurFlag="true">
+       <ForwardModal :content="currentMessage" @close="inForward =false"></ForwardModal>
+    </Modal>
+  </teleport>
   
 
 </template>
@@ -219,6 +224,8 @@ import UpdateGroupManage from './updateMange/updateGroupManage.vue'
 import UpdateGroupNotice from './updateMange/updateGroupNotice.vue';
 import UpdateJoinGroupWay from './updateMange/updateJoinGroupWay.vue';
 import UpdateInviteWay from './updateMange/updateInviteWay.vue'
+import Modal from '../../../../components/Modal.vue';
+import ForwardModal from './components/forwardModal.vue';
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
@@ -226,6 +233,7 @@ const TUIChat: any = defineComponent({
     MessageSystem,MessageTimestamp,Manage,MessageInput,
     MessageItem,UpdateGroupName,UpdateMemeber,UpdateGroupManage,
     UpdateGroupNotice,UpdateJoinGroupWay,UpdateInviteWay,
+    Modal,ForwardModal
   },
   props: {
     isMsgNeedReadReceipt: {
@@ -337,6 +345,8 @@ const TUIChat: any = defineComponent({
       typingRef: null,
       newManagerList:{}, // 接收群组管理信息
       memberList:[], // 获取群组成员数据
+      inForward:false,// 点击转发功能
+      // forWardContent:'',// 接收转发的内容
     });
 
     const slotDefault = !!useSlots().default;
@@ -689,10 +699,11 @@ const TUIChat: any = defineComponent({
           data.repliesDialogStatus = true;
           break;
         case 'forward':   // 显示转发内容的回调函数
-          console.log('测试转发功能是否有用::>>')
-          // data.currentMessage = message;
+          data.inForward = true;
+          // console.log('测试转发功能是否有用::>>',message)
+          // data.forWardContent = message.payload
+          data.currentMessage = message;
           // conversationData.list = TUIServer.TUICore.getStore().TUIConversation.conversationList;
-          // data.forwardStatus = true;
           break;
         case 'previewImage':
           data.showImagePreview = !data.showImagePreview;
