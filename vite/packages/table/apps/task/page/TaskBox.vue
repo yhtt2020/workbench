@@ -1,7 +1,5 @@
 <template>
   <xt-menu :menus="menus" style="" v-if="store.isTask">
-    {{ store.taskID }}
-    <xt-button @click="store.taskID = 'M0102'"></xt-button>
     <div
       @click="store.isTaskDrawer = true"
       class="xt-bg relative s-bg h-full xt-base-btn"
@@ -15,8 +13,8 @@
         <div class="xt-active-bg" :style="[progress]"></div>
         <div class="flex-1 xt-bg-2"></div>
         <div
-          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
-          style="width: 60px; font-size: 12px"
+          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 "
+          style="width: 60px; font-size: 11px"
         >
           主线 {{ width }} %
         </div>
@@ -54,7 +52,6 @@ const progress = computed(() => {
   });
 
   let res = (currentCount.value / count.value) * 100;
-  console.log("res :>> ", res);
   width.value = res;
   return {
     width: res + "%",

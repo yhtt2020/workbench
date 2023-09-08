@@ -49,6 +49,9 @@ import { tasks } from "../config/Primary";
 import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
 import { ref, reactive, computed } from "vue";
+import { guide } from "../../../ui/components/Task/guide";
+import { useRouter } from "vue-router";
+const router = useRouter();
 /**
  * 处理主线任务
  */
@@ -90,10 +93,9 @@ const emits = defineEmits(["close"]);
 
 const taskGuide = () => {
   // 重置任务步骤
-  task.step = 1;
-  task.taskID = props.currentTaskId;
-  let currentTask = guide[props.currentTaskId][0];
-  switch (currentTask.type) {
+  store.step = 1;
+  let currentTask = guide[store.taskID][0];
+  switch (currentTask.value) {
     case "router":
       router.push({
         name: currentTask.value,
@@ -103,7 +105,7 @@ const taskGuide = () => {
       break;
   }
 
-  task.isTaskDrawer = false;
+  store.isTaskDrawer = false;
 };
 // console.log("currentStage :>> ", currentStage);
 </script>
