@@ -3,8 +3,8 @@
     <xt-left-menu :list="leftApp" end="2"></xt-left-menu>
     <div class="w-full" v-if="rightVisible !== 'setting'">
       <NoticeRightTop  :appType="rightVisible" :list="appContentList" :appItem="topTitle" @updateNotice="updateNotice"></NoticeRightTop>
-      <AllNotice v-if="rightVisible === 'all'" :list="appContentList"></AllNotice>
-      <NoticeDetail v-else :list="otherList"></NoticeDetail>
+      <AllNotice v-if="rightVisible === 'all'" @closeMessage="close" :list="appContentList"></AllNotice>
+      <NoticeDetail v-else :list="otherList" @closeMessage="close" ></NoticeDetail>
        <!-- <AllMiddleTip v-if="appType === 'all'" :list="appContentList"></AllMiddleTip> -->
     </div>
 
@@ -97,6 +97,10 @@ export default defineComponent({
       await store.loadNoticeDB()
     }
 
+    const close = ()=>{
+      ctx.emit('closeMessage')
+    }
+
     const leftApp = ref([
       {
         id: "all",
@@ -116,11 +120,13 @@ export default defineComponent({
       },
       {
         icon:"notification",
+        title: "通知",
         callBack: enableNotice,
       },
       {
         icon: "shezhi",
         alias:'setting',
+        title: "设置",
         callBack: clickSetting,
       },
     ]);
@@ -128,6 +134,7 @@ export default defineComponent({
     return{
       leftApp,appContentList,
       ...toRefs(data),changeEnable,updateNotice,
+      close
     }
   },
 });

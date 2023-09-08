@@ -271,7 +271,7 @@ export default {
       }else{
         this.userCardVisible=false
         this.$router.push({
-          name:'chat',
+          name:'chatMain',
           params:{
             action:'sendMessage',
             uid:String(this.uid)

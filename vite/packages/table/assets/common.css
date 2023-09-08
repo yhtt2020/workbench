@@ -3443,9 +3443,10 @@
 
 .TUI-conversation {
   background: transparent !important;
-  height: calc(100% - 70px) !important; }
-  .TUI-conversation .content-footer .time {
-    color: var(--secondary-text) !important; }
+}
+.TUI-conversation .content-footer .time {
+  color: var(--secondary-text) !important; 
+}
 
 .TUI-conversation-item .left .avatar {
   object-fit: cover; }

@@ -34,6 +34,7 @@ export default {
     setInterval(() => {
       this.loadMessages()
     }, 10000)
+
   },
   methods: {
     setMinute() {
@@ -107,7 +108,7 @@ export default {
       this.$router.push({name:'socialMy'})
     },
     enterIM() {
-      this.$router.push({name:'chat'})
+      this.$router.push({name:'chatMain'})
     },
   }
 }

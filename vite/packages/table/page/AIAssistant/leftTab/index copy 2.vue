@@ -1,10 +1,11 @@
 <template>
-  <xt-left-menu :list="menuList" last="2" end="2">
+  <xt-left-menu :list="menuList" v-model="test" last="2" end="2">
     <!-- 插槽用法 -->
     <template #test>
       <setting-filled />
     </template>
   </xt-left-menu>
+  {{ test }}
 
   <!-- 新建对话 -->
   <xt-view
@@ -25,6 +26,7 @@ export default {
   },
   data() {
     return {
+      test: null,
       menuList: [
         // 携带子菜单
         {
@@ -61,6 +63,48 @@ export default {
             this.createChatVisible = true;
           },
         },
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        {
+          icon: "message",
+        },
+        // 图片
+        {
+          img: "/icons/bg.png",
+        },
+        // 插槽
+        {
+          slot: "test",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
         // 回调事件
         {
           flag: true,
@@ -72,6 +116,23 @@ export default {
         {
           flag: true,
           icon: "setting",
+          title:"name",
+          children: [
+            {
+              icon: "message",
+              name: "message",
+              callBack: () => {
+                console.log("子菜单点击事件触发 :>> ");
+              },
+            },
+            {
+              icon: "message",
+              name: "message",
+              callBack: () => {
+                console.log("子菜单点击事件触发 :>> ");
+              },
+            },
+          ],
         },
       ],
       createChatVisible: false,

@@ -1,7 +1,5 @@
 <template >
-    <!-- {{ isShow.isShow }} -->
     <div class="w-full card">
-        <!-- {{ isShow.isShow }} -->
         <div class="card-content">
             <div class="card-top">
                 <div class="top-left">
@@ -11,45 +9,52 @@
                         </template>
                     </a-avatar>
                     <div class="user-msg">
-                        <div class="username" style="color: var(--primary-text);">
+                        <div class="text-sm username" style="color: var(--primary-text);">
                             我是皮克斯呀
                         </div>
-                        <div  class="self-msg xt-text-2 " style="color: var(--primary-text);">
+                        <div class="text-xs self-msg xt-text-2">
                             <span class="date">08-09</span>
                             <span class="time">16:16</span>
                             <span class="ip">浙江</span>
                         </div>
                     </div>
                 </div>
-                <div class="top-right">
-                    <!-- 当展示文章详情时,需要一个返回按钮去返回上一级 -->
-                    <slot name="top-right"></slot>
-                </div>
 
             </div>
 
             <div>
-                <div class="flex items-center justify-center ">
-                    <img :src="cardData.data.img" alt="" class="w-1/4 h-full mr-5 object-cover" v-if="cardData.data?.img.length===1">
-                    <video src="cardData.data.viedo" class="w-1/4 h-full " v-if="cardData.data?.viedo"></video>
-                    <!-- <div class="w-1/3 h-full bg-image"></div> -->
-                    <!-- 插入正文元素  :class="[omit:data.img]" -->
-                    <!-- <div class="omit"> -->
-                        <slot name="content" ></slot>
-                    <!-- </div> -->
-
-
+                <div class="flex items-center justify-center">
+                    <!-- 单个图片 -->
+                    <template v-if="cardData.data?.img?.length === 1 && !cardData.data?.video">
+                        <img :src="cardData.data.img" class="object-cover mr-2 rounded-md cover-im "
+                            :class="{ 'hide-images-video': detailVisible }" style="text-align: center;">
+                    </template>
+                    <video class="object-cover mr-2 rounded-md cover-im" v-if="cardData.data?.video"
+                        :class="{ 'hide-images-video': detailVisible }">
+                        <source :src="cardData.data?.video" type="video/mp4" />
+                        <source :src="cardData.data?.video" type="video/webm" />
+                    </video>
+                    <!-- 正文内容 -->
+                    <div>
+                        <div id="title" style="color: var(--primary-text);"
+                            :class="{ 'omit-title': cardData.data?.img?.length === 1 || cardData.data?.video }">{{
+                                cardData.content.title }}</div>
+                        <div id="context" style="color:  var(--secondary-text);"
+                            :class="{ 'omit': cardData.data?.img?.length === 1 || cardData.data?.video }">
+                            {{ cardData.content.context }}</div>
+                    </div>
                 </div>
-                <template v-if="cardData.data?.img.length>1">
-                        <div class="flex w-full p-0 mt-2 mb-2  whitespace-pre-wrap cover-wrapper" >
-                          <img :src="item" alt="" v-for="(item,index) in cardData.data?.img"   class="cover-sm  mr-2 object-cover rounded-md" :key="index">
-                        </div>
+                <template v-if="cardData.data?.img?.length > 1">
+                    <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper">
+                        <img :src="item" alt="" v-for="(item, index) in cardData.data?.img"
+                            class="object-cover mr-2 rounded-md cover-sm" :key="index">
+                    </div>
                 </template>
 
 
             </div>
 
-            <div class="card-bottom " style="color: var(--primary-text);">
+            <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
                 <span class="view" style="cursor: pointer;">1626 浏览</span>
                 <span class="like" style="cursor: pointer;">13 点赞</span>
                 <span class="comments" style="cursor: pointer;">23 评论</span>
@@ -61,10 +66,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeMount, nextTick } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
-    isShow: Boolean,
+    detailVisible: Boolean,
     cardData: {
         type: Object,
         default: () => []
@@ -73,25 +78,34 @@ const props = defineProps({
 </script>
 <style lang='scss' scoped>
 .card {
-  .cover-wrapper{
-    flex-wrap: wrap;
-  }
-  .cover-sm{
-    margin-bottom: 10px;
-    width:100px;
-    height:100px;
-    aspect-ratio: 1 / 1;
-  }
+    .cover-wrapper {
+        flex-wrap: wrap;
+    }
+
+    .cover-sm {
+        margin-bottom: 10px;
+        width: 100px;
+        height: 100px;
+        aspect-ratio: 1 / 1;
+    }
+
+
+    .cover-im {
+        // margin-bottom: 10px;
+        width: 150px;
+        height: 100px;
+    }
+
     display: flex;
     // 占满整个父元素
     flex-grow: 1;
     // width: 600px;
-    background: rgba(0, 0, 0, 0.30);
+    // background: rgba(0, 0, 0, 0.30);
     border-radius: 12px;
     margin-bottom: 12px;
 
     .card-content {
-        margin: 16px;
+        margin: 12px;
 
         .card-top {
             display: flex;
@@ -116,8 +130,8 @@ const props = defineProps({
 
                 .self-msg {
                     font-family: PingFangSC-Regular;
-                    font-size: 12px;
-                    color: rgba(255, 255, 255, 0.40);
+                    // font-size: 12px;
+                    // color: rgba(255, 255, 255, 0.40);
                     font-weight: 400;
 
                     .date {
@@ -145,13 +159,45 @@ const props = defineProps({
             line-height: 22px;
             font-weight: 400;
         }
-        .omit{
+
+        .omit-title {
+            white-space: pre-wrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .omit {
             white-space: pre-wrap;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             overflow: hidden;
+        }
+
+        .hide-images-video {
+            display: none;
+        }
+
+        #title {
+            font-family: PingFangSC-Regular;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: justify;
+            line-height: 22px;
+            font-weight: 500;
+        }
+
+        #context {
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.60);
+            text-align: justify;
+            line-height: 22px;
+            font-weight: 400;
         }
 
         .card-bottom {
@@ -170,7 +216,10 @@ const props = defineProps({
                 margin-right: 5px;
             }
         }
+
+
+
+
     }
 
-}
-</style>
+}</style>

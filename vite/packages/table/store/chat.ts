@@ -26,10 +26,10 @@ export const chatStore = defineStore('chatStore', {
         {uid: '23', reason: '产品同学'}
       ],
       group: [
-        {groupID: 'suggest'},// {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
-        // {groupID:'update'},{groupID:'develop_group'},
-        // {groupID:'trade'},{groupID:'developer'},{groupID:'3dprint'},{groupID:'screen_diy'},
-        // {groupID:'player'},{groupID:'3dgitial'},
+        {groupID: 'suggest'}, {groupID:'noob'},{groupID:'bug'},{groupID:'fans'},
+        {groupID: 'update'}, {groupID: 'develop_group'},
+        {groupID: 'trade'}, {groupID: 'developer'}, {groupID: '3dprint'}, {groupID: 'screen_diy'},
+        {groupID: 'player'}, {groupID: '3cdigital'},
       ],
       settings: {
         showDouble: false,  // 是否展示社群双列
@@ -44,6 +44,10 @@ export const chatStore = defineStore('chatStore', {
       refUser: [], // 接收推荐用户数据
       groupList: [],  // 接收推荐群数据
       memberList: [], // 成员列表数据
+      conversations: {  // 存储上一次会话记录
+        conversationID: undefined,
+      },
+
     }),
     actions: {
       async getUserSig() {
@@ -103,10 +107,10 @@ export const chatStore = defineStore('chatStore', {
 
         this.recommendData.users = users //常规写法
       },
-      async updateUsersRelationship(){
+      async updateUsersRelationship() {
 
-        let users =this.recommendData.users
-        let uids=this.users.map(u=>{
+        let users = this.recommendData.users
+        let uids = this.users.map(u => {
           return u.uid
         })
         let relations = await sns.checkFriendship(uids) //todo 当只有一个用户的时候，这个返回的是一个字符串，而不是数组
@@ -117,7 +121,7 @@ export const chatStore = defineStore('chatStore', {
         }
         if (users.length === 1) {
           console.log(users);
-          
+
           //一个推荐用户的特殊情况
           users[0].relationship = relations
         } else {
@@ -129,39 +133,45 @@ export const chatStore = defineStore('chatStore', {
 
 
       async loadRecommendGroups() {
+
+
         let groups = []
         // 遍历获取推荐群聊
         for (let i = 0; i < this.group.length; i++) {
-          const option = {
-            groupID: this.group[i].groupID
+          try {
+            const option = this.group[i].groupID
+            const result = await window.$chat.searchGroupByID(option)
+            const group = {...result.data.group, relationShip: ''}
+            groups.push(group)
+
+          } catch (e) {
+            console.log(this.group[i].groupID, e)
           }
-          const result = await window.$chat.getGroupProfile(option)
-          const group = {...result.data.group,relationShip:''}
-          groups.push(group)
         }
 
         this.recommendData.groups = groups
       },
 
-      async loadGroupRelationship(){
+      async loadGroupRelationship() {
         let groups = this.recommendData.groups
-        let groupIDs = groups.map((u)=>{
-          return u.groupID
+        let groupIDs = groups.map(async(u) => {
+          return u.groupID  
         })
-        const groupShip = await sns.checkGroupShip(groupIDs[0])
-        // console.log('最后结果',groupShip);
-        if(groups.length === 1){
+
+        const groupShip = await sns.checkGroupShip(groupIDs)
+
+        if (groups.length === 1) {
           groups[0].relationShip = groupShip[0]
-        }else{
-          for(let i=0;i<groupIDs.length;i++){
+        } else {
+          for (let i = 0; i < groupIDs.length; i++) {
             groups[i].relationShip = groupShip[i]
           }
         }
-        
+
       },
 
       async loadRecommendData() {
-        // const time1 = Date.now()
+        const time1 = Date.now()
         Promise.all([this.loadRecommendUsers(), this.loadRecommendGroups()]).then(result => {
           this.updateUsersRelationship()
           this.loadGroupRelationship()
@@ -170,8 +180,9 @@ export const chatStore = defineStore('chatStore', {
           this.isLoading = false
           localCache.set('findData', this.recommendData, 10 * 60)
           serverCache.setData('findData', this.recommendData, 10 * 60)
+          
+          
         })
-
 
       },
 
@@ -189,9 +200,15 @@ export const chatStore = defineStore('chatStore', {
 
       async getReferData() {  // 获取推荐用户数据
         try {
-          if(this.recommendData.users.length){
-            this.recommendData.users.forEach(user=>{
+          if (this.recommendData.users.length) {
+            this.recommendData.users.forEach(user => {
               delete user.relationship
+            })
+          }
+
+          if (this.recommendData.groups.length) {
+            this.recommendData.groups.forEach(group => {
+              delete group.relationship
             })
           }
 
@@ -200,8 +217,9 @@ export const chatStore = defineStore('chatStore', {
             localCache: true, ttl: 10 * 60,
             cache: false
           })
-          if (result) { //去除缓存
-            this.recommendData=result
+         
+          if (result && false) { //去除缓存
+            this.recommendData = result
             this.updateUsersRelationship()
             this.loadGroupRelationship()
             this.isLoading = false
@@ -228,7 +246,7 @@ export const chatStore = defineStore('chatStore', {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
         storage: dbStorage,
-        paths: ['settings', 'recommendData']
+        paths: ['settings', 'recommendData', 'conversations']
         // state 中的字段名，按组打包储存
       }]
     }

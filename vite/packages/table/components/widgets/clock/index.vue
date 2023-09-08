@@ -124,7 +124,6 @@ export default {
   },
   created() {},
   mounted() {
-    console.log("clock开始注册 :>> ");
     let setData = {};
     if (!this.customData.clockId) {
       setData.clockId = "clock4";
