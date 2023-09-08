@@ -192,4 +192,11 @@ export default {
   font-size: 14px;
   font-weight: 400;
 }
+
+:deep(.search){
+  &::placeholder{
+    color: var(--secondary-text);
+  }
+}
+
 </style>
