@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center mr-3">
+  <div class="flex justify-between items-center">
     <div class="flex items-center">
       <!-- 搜索 和 创建 -->
       <!-- <a-input
