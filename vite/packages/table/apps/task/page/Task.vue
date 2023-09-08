@@ -3,14 +3,14 @@
     <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
       <xt-left-menu :list="menus" last="3">
         <template #star>
-          <StarFilled />
+          <StarFilled  />
         </template>
         <template #flag>
           <FlagOutlined />
         </template>
 
         <template #info>
-          <InfoCircleOutlined  />
+          <InfoCircleOutlined />
         </template>
       </xt-left-menu>
       <div class="w-full xt-scrollbar">

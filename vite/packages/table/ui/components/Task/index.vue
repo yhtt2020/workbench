@@ -29,7 +29,7 @@ export default defineComponent({
     fn: {},
   },
   computed: {
-    ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(taskStore, ["taskID", "step",'success']),
     task() {
       return guide[this.taskID][this.step];
     },
@@ -70,6 +70,9 @@ export default defineComponent({
       this.step++;
       if (this.task?.success) {
         console.log("任务以完成 :>> ");
+        this.success = true
+        // 发奖励
+       
       }
     },
     start() {

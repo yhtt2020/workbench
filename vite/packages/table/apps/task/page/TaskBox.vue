@@ -13,7 +13,7 @@
         <div class="xt-active-bg" :style="[progress]"></div>
         <div class="flex-1 xt-bg-2"></div>
         <div
-          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 "
+          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
           style="width: 60px; font-size: 11px"
         >
           主线 {{ width }} %
@@ -50,9 +50,8 @@ const progress = computed(() => {
       count.value++;
     });
   });
-
   let res = (currentCount.value / count.value) * 100;
-  width.value = res;
+  width.value = Math.round(res);
   return {
     width: res + "%",
   };
@@ -68,14 +67,4 @@ const menus = reactive([
 ]);
 </script>
 
-<style lang="scss" scoped>
-:deep(.ant-progress-inner) {
-  // border-radius: 2px !important;
-}
-:deep(.ant-progress-bg) {
-  height: 20px !important;
-}
-:deep(.ant-progress-inner) {
-  height: 20px;
-}
-</style>
+<style lang="scss" scoped></style>
