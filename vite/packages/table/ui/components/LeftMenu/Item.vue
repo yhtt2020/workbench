@@ -1,6 +1,7 @@
 <template>
   <div @click="itemClick(item)">
     <slot :name="item.slot" v-if="item.slot"></slot>
+ 
     <div
       v-else-if="item.img"
       style="width: 40px; height: 40px"
@@ -19,7 +20,6 @@
       size="20"
       radius="10"
       :type="type"
-      v-bind="config"
       :icon="item.icon"
     ></xt-icon>
   </div>
@@ -53,9 +53,4 @@ const itemClick = (item, flag) => {
 };
 </script>
 
-<style lang="scss" scoped>
-.xt-base-btn{
-  //box-sizing: border-box;
-}
-
-</style>
+<style lang="scss" scoped></style>
