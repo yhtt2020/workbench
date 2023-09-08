@@ -155,7 +155,7 @@ export const chatStore = defineStore('chatStore', {
       async loadGroupRelationship() {
         let groups = this.recommendData.groups
         let groupIDs = groups.map(async(u) => {
-          return u.groupID  
+          return u.groupID
         })
 
         const groupShip = await sns.checkGroupShip(groupIDs)
@@ -180,8 +180,8 @@ export const chatStore = defineStore('chatStore', {
           this.isLoading = false
           localCache.set('findData', this.recommendData, 10 * 60)
           serverCache.setData('findData', this.recommendData, 10 * 60)
-          
-          
+
+
         })
 
       },
@@ -217,8 +217,8 @@ export const chatStore = defineStore('chatStore', {
             localCache: true, ttl: 10 * 60,
             cache: false
           })
-         
-          if (result && false) { //去除缓存
+
+          if (result) { //去除缓存
             this.recommendData = result
             this.updateUsersRelationship()
             this.loadGroupRelationship()
