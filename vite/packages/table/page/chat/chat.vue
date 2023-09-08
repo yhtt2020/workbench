@@ -125,15 +125,16 @@ export default {
           name:'chatFind'
         }
       },
-      // {
-      //   icon:'',
-      //   img: '/icons/bz1.png',
-      //   type: 'thisky',
-      //   callBack: selectTab,
-      //   route:{
-      //     name:'chatThisky'
-      //   }
-      // },
+      // 写社群相关静态内容时临时打开的路由
+      {
+        icon:'',
+        img: '/icons/bz1.png',
+        type: 'thisky',
+        callBack: selectTab,
+        route:{
+          name:'chatThisky'
+        }
+      },
       {
         icon: 'tianjia2',
         children:[
