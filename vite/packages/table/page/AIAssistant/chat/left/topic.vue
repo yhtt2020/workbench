@@ -14,7 +14,10 @@
             {{ time }}
           </div>
         </div>
-        <div class="truncate xt-text-2 text-sm mt-1" style="width: 160px">
+        <div
+          class="truncate xt-text-2 text-sm mt-1"
+          style="width: 160px; height: 22px"
+        >
           {{ text }}
         </div>
       </div>
@@ -48,7 +51,7 @@ export default {
   computed: {
     ...mapWritableState(aiStore, ["topicList", "selectTopicIndex", "chatList"]),
     text() {
-      return this.getData().content;
+      return this.getData().content || "暂无数据";
     },
     time() {
       const timestamp = this.getData().time; // 假设您已经获取了时间戳

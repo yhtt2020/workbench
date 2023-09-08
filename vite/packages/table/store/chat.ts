@@ -9,7 +9,6 @@ import TUIKit from "../TUIKit";
 const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
 import * as sns from "../js/common/sns";
-import {result} from "lodash-es";
 import _ from "lodash-es";
 // @ts-ignore
 export const chatStore = defineStore('chatStore', {
