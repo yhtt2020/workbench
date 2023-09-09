@@ -50,8 +50,35 @@
         <span>{{ data.custom }}</span>
       </div>
     </template>
+    <!-- 判断自定义消息展示类型 -->
+<!--    <template v-else-if="isCustom. === constant.typeTextLink">-->
+<!--      <div class="textLink">-->
+<!--        &lt;!&ndash; 展示文本 &ndash;&gt;-->
+<!--        <p>{{isCustom.text}}</p>-->
+<!--        &lt;!&ndash; 展示超链接 &ndash;&gt;-->
+<!--        <a :href="isCustom.link" target="view_window">{{$t('message.custom.查看详情>>')}}</a>-->
+<!--      </div>-->
+<!--    </template>-->
+
     <template v-else>
-      <span v-html="data.custom"></span>
+      <div v-if="isCustom.type==='game'">
+        <!--      {{steam游戏格式}}-->
+        <img style="border-radius: 5px;width: 250px" :src="isCustom.game?.header">
+        <div class="mt-2 " style="margin-top: 10px">
+          <div class="truncate" style="max-width: 160px;float: left;margin-right: 10px">
+            <a-avatar :size="30" shape="square" :src="isCustom.game?.icon"></a-avatar>  <strong>{{isCustom.game?.chineseName}}</strong>
+          </div>
+
+          <div  style="float: right">
+            <xt-button @click="goGameDetail(isCustom.game?.appid)" :w="70" :h="35" size="mini"><ShopOutlined></ShopOutlined> 查看</xt-button>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <span v-html="data.custom"></span>
+      </div >
+
+
     </template>
   </div>
 </template>
@@ -61,7 +88,8 @@ import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
 import { isUrl, JSONToObject } from '../utils/utils';
 import constant from '../../constant';
 import { useStore } from 'vuex';
-
+import {useRouter} from "vue-router";
+import {ShopOutlined} from '@ant-design/icons-vue'
 export default defineComponent({
   props: {
     data: {
@@ -69,10 +97,16 @@ export default defineComponent({
       default: () => ({}),
     },
   },
+  components:{
+    ShopOutlined
+  },
   setup(props: any, ctx: any) {
     const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {};
+    const router= useRouter()
     const data = reactive({
       data: {} as any,
+      payload:{},
+      name:'',//自定义消息类型
       extension: {},
       isCustom: '',
       constant: constant,
@@ -82,6 +116,8 @@ export default defineComponent({
       const {
         message: { payload },
       } = props.data;
+      data.name=payload.name
+      data.payload=payload
       data.isCustom = payload.data || ' ';
       data.isCustom = JSONToObject(payload.data);
       if (payload.data === constant.typeService) {
@@ -106,6 +142,15 @@ export default defineComponent({
       }
       return className;
     };
+
+    const goGameDetail=(id)=>{
+      router.push({
+          name:'GameDiscountDetail',
+          params:{
+            id:id
+          }
+        })
+    }
 
     const handleCallAgain = async () => {
       const callType = JSON.parse(JSON.parse(props?.data?.message?.payload?.data)?.data)?.call_type;
@@ -137,6 +182,7 @@ export default defineComponent({
       openLink,
       handleCallMessageIcon,
       handleCallAgain,
+      goGameDetail
     };
   },
 });

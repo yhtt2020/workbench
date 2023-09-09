@@ -80,6 +80,7 @@ import ChatFind from '../page/chat/page/chatFind.vue'
 //导入应用路由
 import ShortcutKeyRoute from '../apps/shortcutKey/route'
 import BarrageRoute from '../apps/barrage/route'
+import ChatAdmin from '../page/chat/page/admin.vue'
 
 
 export default [
@@ -200,6 +201,7 @@ export default [
             name:'chatDesk',
             component:ChatDesk
           },
+
           {
             path: '',
             name: 'chat',
@@ -219,6 +221,14 @@ export default [
                 component:ChatMain,
                 meta:{
                   type:'chat'
+                }
+              },
+              {
+                path:'/chatAdmin',
+                name:'chatAdmin',
+                component:ChatAdmin,
+                meta:{
+                    type:'chatAdmin'
                 }
               },
               {
