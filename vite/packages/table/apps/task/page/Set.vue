@@ -5,7 +5,7 @@
       >显示在底部导航
 
       <template #right>
-        <a-switch v-model:checked="task.showTask"></a-switch>
+        <a-switch v-model:checked="task.isTask"></a-switch>
       </template>
     </xt-title>
     <xt-title type="text" m="mt"

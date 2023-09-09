@@ -85,12 +85,17 @@
     <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
+        <xt-task :modelValue="m01033" to="" >
+            </xt-task>
         <div class="line-title xt-text" >背景设置：</div>
         <div class="line" @click="setTransparent()">
           透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
         </div>
-        <div class="line" v-if="!appSettings.transparent">
+        <div class="line flex" v-if="!appSettings.transparent">
+  
+        <xt-task :modelValue="m01034" to="" @cb="goPaper">
           <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
+      </xt-task>
           <a-button @click="clearWallpaper" class="xt-text">清除背景</a-button>
         </div>
         <div v-if="!appSettings.transparent" class="line">
@@ -254,7 +259,7 @@ import EatToday from '../components/widgets/eat/EatToday.vue'
 import HotSearch from '../components/widgets/HotSearch.vue'
 // import News from "../components/widgets/news/NewsCard.vue";
 import { setTransparent, detTransparent } from "../components/card/hooks/themeSwitch"
-
+import {taskStore} from "../apps/task/store"
 
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -439,6 +444,13 @@ export default {
       appSettings: "settings",
     }),
     ...mapWritableState(deskStore, ['deskList']),
+    ...mapWritableState(taskStore, ['taskID','step']),
+    m01033(){
+        return this.taskID == "M0103" && this.step == 3
+    },
+    m01034(){
+        return this.taskID == "M0103" && this.step == 4;
+    },
     desksList() {
       return this.desks.map((desk) => {
         return {

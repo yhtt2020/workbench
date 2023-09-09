@@ -47,7 +47,7 @@
 import TUIEnv from '../../../../../TUIPlugin/TUIEnv';
 import { defineProps, ref, defineEmits, watchEffect, onMounted, onUnmounted } from 'vue';
 import { Message } from '../../interface';
-import { isNumber } from '@vueuse/core';
+// import { isNumber } from '@vueuse/core';
 
 interface touchesPosition {
   pageX1?: number;
