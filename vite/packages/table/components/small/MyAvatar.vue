@@ -188,7 +188,7 @@ export default {
               </a-col>
               <a-col :span="18" class="pt-1">
                 <div class="text flex items-center font-bold">
-                  组织
+                  社群
                   <div class="rounded-full flex items-center justify-center  ml-3" style="width:20px;height:20px; background:var(--error);color:var(--active-text);" v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
                     {{ unReadStatus }}
                   </div>
