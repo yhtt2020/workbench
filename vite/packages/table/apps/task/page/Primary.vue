@@ -53,6 +53,7 @@
     </div>
   </template>
   <div v-else>已完成所有任务</div>
+  {{ chapter }}
 </template>
 
 <script setup>
@@ -67,7 +68,7 @@ const router = useRouter();
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0101";
+  store.taskID = "M0201";
   store.success = false;
   store.step = -1;
 };
@@ -107,6 +108,7 @@ const progress = computed(() => {
 });
 // 获取当前任务
 const currentTask = computed(() => {
+  
   return chapter.value.tasks[stage.value];
 });
 
@@ -116,6 +118,7 @@ const emits = defineEmits(["close"]);
 const taskGuide = () => {
   // 重置任务步骤
   store.step = 1;
+  console.log('guide :>> ', guide);
   let currentTask = guide[store.taskID][0];
   switch (currentTask.value) {
     case "router":
@@ -136,7 +139,6 @@ const receive = () => {
   store.taskID = currentTask.value.suf;
   store.success = false;
 };
-// console.log("currentStage :>> ", currentStage);
 </script>
 
 <style lang="scss" scoped></style>
