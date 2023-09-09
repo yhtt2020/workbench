@@ -1,5 +1,5 @@
 <template>
-  <xt-button @click="test()"></xt-button>
+<!--  <xt-button @click="test()"></xt-button>-->
 
   <xt-title>主线任务</xt-title>
   <template v-if="store.taskID">
@@ -37,8 +37,9 @@
       <xt-title type="text">{{ currentTask.description }}</xt-title>
       <div class="flex justify-center items-center flex-col">
         <xt-title type="text">完成奖励</xt-title>
+        <div>暂无任务奖励，后续完工后，我们会自动补发奖励</div>
         <xt-title type="text" v-if="currentTask.guide"
-          >当前任务含有操作引导</xt-title
+          >提示：当前任务含有操作引导</xt-title
         >
         <xt-button
           v-if="store.success"
