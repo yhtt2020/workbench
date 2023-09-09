@@ -205,9 +205,9 @@ export default {
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
-    ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
     M01013() {
-        return this.taskID == "M0101" && this.step == 3
+      return this.taskID == "M0101" && this.step == 3;
     },
   },
   data() {
@@ -325,6 +325,7 @@ export default {
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
       );
+      // if (this.M01013) this.success = true;
       this.$emit("addSuccess");
       message.success("添加成功！");
     },

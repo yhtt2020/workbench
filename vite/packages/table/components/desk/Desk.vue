@@ -90,13 +90,14 @@
           </div>
       </a-col>
     </xt-task>
-
+    <xt-task :modelValue="m02012" to="" @cb="newAddIcon()">
       <a-col>
         <div @click="newAddIcon" class="btn">
           <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
           <div><span>添加图标</span></div>
         </div>
       </a-col>
+    </xt-task>
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="line-dragdroptuofang"></Icon>
@@ -442,6 +443,9 @@ export default {
     m01032() {
         return this.taskID == 'M0103' && this.step == 2
     },
+    m02012() {
+      return this.taskID == 'M0201' && this.step == 2
+    },
     usingSettings () {
       if (this.settings.enableZoom) {
         return this.settings
@@ -542,7 +546,6 @@ export default {
       }
     },
     newAddCard () {
-console.log('123321 :>> ', 123321);
       this.addCardVisible = true
       // addCardVisible
       this.menuVisible = false

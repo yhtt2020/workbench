@@ -10,7 +10,7 @@
           <div
             :style="{
               'border-right':
-                item.component == navName ? '1px solid var(--active-bg)' : '',
+                item.component == name ? '1px solid var(--active-bg)' : '',
             }"
             v-for="item in navList"
           >
@@ -18,22 +18,26 @@
               class="flex justify-center items-center rounded-xl cursor-pointer h-12 mr-2"
               style="width: 120px"
               :key="item.name"
-              @click="navName = item.component"
-              :class="{ 'xt-bg-2': item.component == navName }"
+              @click="name = item.component"
+              :class="{ 'xt-bg-2': item.component == name }"
             >
               {{ item.name }}
             </div>
           </div>
         </div>
       </div>
-      <div class="pl-2 w-full h-full">
-        <component
-          ref="apps"
-          :is="navName"
-          :type="type"
-          @updateData="updateData"
-        ></component>
-      </div>
+      <xt-task :modelValue="m02014">
+        <div class="pl-2 w-full h-full">
+          <xt-task :modelValue="m02013"></xt-task>
+
+          <component
+            ref="apps"
+            :is="name"
+            :type="type"
+            @updateData="updateData"
+          ></component>
+        </div>
+      </xt-task>
     </main>
     <div class="flex items-center my-3" v-if="selectAppsLenght">
       <div style="width: 130px" class="flex justify-end">
@@ -53,7 +57,7 @@
     </div>
     <footer class="flex items-center justify-center mt-2">
       <XtTab
-        v-if="navName == 'Links'"
+        v-if="name == 'Links'"
         style="width: 380px; height: 48px"
         boxClass="my-2 p-1 xt-bg-2"
         v-model="type"
@@ -76,7 +80,7 @@ import { myIcons } from "../../../store/myIcons.ts";
 import { scrollable } from "./hooks/scrollable";
 import { mapActions, mapWritableState } from "pinia";
 import { useBase64AsImage } from "../../../../table/components/card/hooks/base64";
-
+import { taskStore } from "../../../apps/task/store";
 export default {
   emits: ["update:navName"],
   props: {
@@ -109,6 +113,7 @@ export default {
   },
   data() {
     return {
+      name: this.navName,
       screenWidth: 0,
       screenHeight: 0,
       selectApps: {},
@@ -149,6 +154,16 @@ export default {
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+
+    m02013() {
+      this.name = "Desktop";
+      return this.taskID == "M0201" && this.step == 3;
+    },
+    m02014() {
+      this.name = "Desktop";
+      return this.taskID == "M0201" && this.step == 4;
+    },
     height() {
       let h = this.screenHeight;
       if (h > 901) return 415;
