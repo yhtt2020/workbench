@@ -1,12 +1,12 @@
 <template>
     <div class="w-full mt-2 xt-bg box">
         <div class="p-3">
-            <div class="flex justify-between xt-text h-[64px] items-center ">
+            <div class="flex justify-between xt-text h-[44px] items-center ">
                 <span class="text-center font-16 xt-text">回复 {{ userName }}</span>
-                <a-button type="text" :icon="h(CloseOutlined)" class="xt-text " style="border-radius: 8px;"></a-button>
+                <a-button type="text" :icon="h(CloseOutlined)" class="xt-text " style="border-radius: 8px;" @click="changeStatus"></a-button>
             </div>
             <div class="mt-2 mb-2 ml-3 mr-3 xt-bg-2 reply-textarea">
-                <a-textarea v-model:value="replyValue" placeholder="回复" :autoSize="{ minRows: 3, maxRows: 8 }" />
+                <a-textarea v-model:value="replyValue" placeholder="回复" :autoSize="{ minRows: 3, maxRows: 8 }" @keyup.enter="addComment"/>
             </div>
             <div class="h-[56px] flex items-center justify-between">
                 <div class="flex items-center xt-text-2">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="flex">
                     <a-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;">取消</a-button>
+                        style="border-radius:10px ; color: var(--secondary-text) !important;" @click="changeStatus">取消</a-button>
                     <a-button type="primary" class="ml-2 mr-2 xt-text"
                         style="border-radius:10px ; color: var(--secondary-text) !important;">回复</a-button>
                 </div>
@@ -36,7 +36,22 @@ const replyValue = ref('')
 const props = defineProps({
     replyVisible: Boolean
 })
-
+const replyText=ref('')
+const replyFlag=ref(false)
+const emit=defineEmits(['changeStatus','addComment'])
+const changeStatus=()=>{
+    // replyFlag.value=!replyFlag.value
+    emit('changeStatus',replyFlag.value)
+}
+const addComment=()=>{
+    if(replyValue.value){
+        replyText.value=replyValue.value
+        replyValue.value=''
+    }
+    emit('addComment',replyText.value)
+    console.log(replyText.value);
+    
+}
 </script>
 <style lang='scss' scoped>
 .box {

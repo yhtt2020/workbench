@@ -11,8 +11,7 @@
                 </div>
             </div>
             <div class="mt-2 font-16 xt-text" style="user-select: text;">
-                老版本的自动升级无法了解升级内容，很多用户在升级之前不知道有什么新特性。
-                所以这次我们增加了升级内容的展示。
+                {{ replyCom }}
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14">
                 <div class="flex items-center justify-center ">
@@ -31,9 +30,9 @@
                     <span>8:20</span>
                 </div>
             </div>
-            
+            <reply :replyVisible="replyVisible" v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"/>
         </div>
-        <reply :replyVisible="replyVisible" v-if="replyVisible"/>
+        
     </div>
 </template>
 
@@ -43,11 +42,25 @@ import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import reply from './reply.vue'
 const isLike=ref(false)
 const replyVisible=ref(false)
+const replyCmmentList=ref([])
+const props=defineProps({
+    replyCom:String
+})
 const clickLike = () => {
     isLike.value=!isLike.value
 }
 const replyStatus=()=>{
     replyVisible.value=!replyVisible.value
+}
+const getReplyFlag=(val)=>{
+    // console.log(val);
+    replyVisible.value=val
+    
+}
+const getReplyText=(val)=>{
+    // console.log(val);
+    replyCmmentList.value.unshift(val)
+    
 }
 </script>
 <style lang='scss' scoped>

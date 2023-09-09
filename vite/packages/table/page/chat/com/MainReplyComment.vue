@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full box">
+    <div class="w-full mb-3 box">
         <div class="mb-3">
             <div class="flex ">
                 <a-avatar src="https://up.apps.vip/avatar/003.png" :size="24" class="mr-2"></a-avatar>
@@ -11,8 +11,7 @@
                 </div>
             </div>
             <div class="mt-2 ml-8 font-16 xt-text" style="user-select: text;">
-                老版本的自动升级无法了解升级内容，很多用户在升级之前不知道有什么新特性。
-                所以这次我们增加了升级内容的展示。
+                {{ commentList }}
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14 ml-8">
                 <div class="flex items-center justify-center ">
@@ -32,11 +31,11 @@
                 </div>
                
             </div>
-            <reply :replyVisible="replyVisible" v-if="replyVisible"/>
+            <reply :replyVisible="replyVisible" v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"/>
         </div>
         <div class="ml-8 ">
-            <ReplyComment :replyVisible="replyVisible" />
-            <replyEmoji/>
+            <ReplyComment :replyVisible="replyVisible" v-for="(item,index) in replyCmmentList" :key="index" :replyCom="item"/>
+            <!-- <replyEmoji/> -->
         </div>
     </div>
 </template>
@@ -49,11 +48,25 @@ import replyEmoji from './replyEmoji.vue';
 import reply from './reply.vue';
 const isLike = ref(false)
 const replyVisible=ref(false)
+const replyCmmentList=ref([])
 const clickLike = () => {
     isLike.value=!isLike.value
 }
 const replyStatus=()=>{
     replyVisible.value=!replyVisible.value
+}
+const props=defineProps({
+    commentList:Array
+})
+const getReplyFlag=(val)=>{
+    // console.log(val);
+    replyVisible.value=val
+    
+}
+const getReplyText=(val)=>{
+    // console.log(val);
+    replyCmmentList.value.unshift(val)
+    
 }
 </script>
 <style lang='scss' scoped>
