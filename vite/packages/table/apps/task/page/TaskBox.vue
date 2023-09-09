@@ -1,7 +1,7 @@
 <template>
   <xt-task :modelValue="firstTask" @cb="resetting">
     <xt-menu :menus="menus" style="" v-if="store.isTask">
-      <xt-button @click="store.firstTask = false"></xt-button>
+      <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
       <div
         @click="store.isTaskDrawer = true"
         class="xt-bg relative s-bg h-full xt-base-btn"
