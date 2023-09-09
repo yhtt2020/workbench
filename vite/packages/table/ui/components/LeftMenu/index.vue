@@ -30,7 +30,7 @@
             >
               <slot :name="item.slot"> </slot>
             </div>
-            <FullBtn v-else-if="item.full"></FullBtn>
+            <Full v-else-if="item.full"></Full>
             <Item :item="item" v-else>
               <template #default>
                 <slot :name="item.slot"> </slot>
@@ -62,7 +62,7 @@
                 >
                   <slot :name="item.slot"> </slot>
                 </div>
-                <FullBtn v-else-if="item.full"></FullBtn>
+                <Full v-else-if="item.full"></Full>
                 <Item v-else :item="item" w="40">
                   <template #default>
                     <slot :name="item.slot"></slot>
@@ -94,11 +94,11 @@
             >
               <slot :name="item.slot"> </slot>
             </div>
-            <FullBtn
+            <Full
               v-else-if="item.full"
               v-model:full="isFull"
               type=""
-            ></FullBtn>
+            ></Full>
             <Item :item="item" type="" v-else>
               <template #default>
                 <slot :name="item.slot"> </slot>
@@ -109,18 +109,18 @@
       </div>
     </div>
     <!-- 左侧区域结束 -->
+    <!-- 主体区域开始 -->
     <div class="h-full w-full flex">
-      <!-- 主体区域开始 -->
       <slot></slot>
-      <!-- 主体区域结束 -->
     </div>
+    <!-- 主体区域结束 -->
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import Menu from "./Menu.vue";
-import FullBtn from "./FullBtn.vue";
+import Full from "./Full.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
@@ -185,8 +185,8 @@ const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
     return isFull.value
-      ? " fixed left-0 right-0 top-0 bottom-0 xt-modal pr-3 py-3 "
-      : "xt-b xt-bg pr-3 py-3 rounded-xl";
+      ? " fixed left-0 right-0 top-0 bottom-0 xt-bg pr-3 py-3 "
+      : "xt-bg pr-3 py-3 rounded-xl";
   }
 });
 // 动态添加ID

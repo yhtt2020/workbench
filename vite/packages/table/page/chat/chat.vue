@@ -1,6 +1,10 @@
 <template>
-  <div class="flex h-full py-3">
-    <xt-left-menu :list="chatLeftList" :index="index" last="3" end="1"></xt-left-menu>
+
+    <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
+      <div class="w-full">
+        <router-view></router-view>
+      </div>
+    </xt-left-menu>
     <!-- <router-view></router-view> -->
     <!-- <template v-if="type === 'chat'">
       <ChatMain></ChatMain>
@@ -19,8 +23,7 @@
 
     </div> -->
 
-    <router-view></router-view>
-  </div>
+
 
   <teleport to='body'>
      <Modal  v-if="open" v-model:visible="open" :blurFlag="true">
@@ -124,7 +127,7 @@ export default {
           name:'contact'
         }
       },
-      ...(config.adminUids.includes(userInfo.uid))?[
+      ...(config.adminUids.includes(userInfo.uid)?[
         {
           icon: 'diannao',
           type: 'admin',
@@ -134,7 +137,7 @@ export default {
             name:'chatAdmin'
           }
         }
-      ]:{},
+      ]:[]),
 
       {
         icon: 'zhinanzhen',
@@ -154,6 +157,9 @@ export default {
         route:{
           name:'chatThisky'
         }
+      },
+      {
+        full:true,
       },
       {
         icon: 'tianjia2',

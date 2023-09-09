@@ -26,7 +26,6 @@ const props = defineProps({
 const emits = defineEmits(["itemClick"]);
 
 const onItemClick = (item) => {
-  console.log("111 :>> ", 111);
   emits("itemClick", item);
 };
 </script>

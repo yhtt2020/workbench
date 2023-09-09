@@ -216,6 +216,7 @@ export default {
       }
     },
     clickNavigation(item) {
+      console.log('item :>> ', item);
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {

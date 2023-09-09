@@ -1,9 +1,19 @@
 <template>
-  <xt-popup v-model="visible">
-    {{ dynamicComponent }}
-    <div class="xt-modal flex py-3 pr-3" style="width: 700px; height: 100%">
-      <xt-left-menu :list="menus" last="2"></xt-left-menu>
-      <div class="w-full">
+  <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
+    <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
+      <xt-left-menu :list="menus" last="3">
+        <template #star>
+          <StarFilled  />
+        </template>
+        <template #flag>
+          <FlagOutlined />
+        </template>
+
+        <template #info>
+          <InfoCircleOutlined />
+        </template>
+      </xt-left-menu>
+      <div class="w-full xt-scrollbar">
         <Primary v-if="currentTask == 'Primary'"></Primary>
         <Branch v-else-if="currentTask == 'Branch'"></Branch>
         <Set v-else-if="currentTask == 'Set'"></Set>
@@ -18,9 +28,14 @@ import { taskStore } from "../store";
 import Primary from "./Primary.vue";
 import Branch from "./Branch.vue";
 import Set from "./Set.vue";
+import {
+  StarFilled,
+  FlagOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons-vue";
+
 let currentTask = ref("Primary");
 const task = taskStore();
-
 // 切换任务
 const selectTab = (item) => {
   currentTask.value = item.value;
@@ -29,37 +44,27 @@ const selectTab = (item) => {
 // 任务配置
 const menus = ref([
   {
-    icon: "message",
+    slot: "star",
     value: "Primary",
     callBack: selectTab,
   },
   {
-    icon: "message",
+    slot: "flag",
+    value: "Branch",
+    callBack: selectTab,
+  },
+  {
+    slot: "info",
     value: "Branch",
     callBack: selectTab,
   },
   {
     icon: "shezhi1",
+
     value: "Set",
     callBack: selectTab,
   },
 ]);
-
-// 绑定弹窗
-const props = defineProps({
-  modelValue: {},
-});
-const visible = ref(props.modelValue);
-const emits = defineEmits("update:modelValue");
-watch(visible, (newW) => {
-  emits("update:modelValue", newW);
-});
-watch(
-  () => props.modelValue,
-  (newW) => {
-    visible.value = newW;
-  }
-);
 </script>
 
 <style lang="scss" scoped></style>

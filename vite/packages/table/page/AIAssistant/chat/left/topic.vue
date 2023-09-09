@@ -54,9 +54,29 @@ export default {
       return this.getData().content || "暂无数据";
     },
     time() {
-      const timestamp = this.getData().time; // 假设您已经获取了时间戳
-      const formattedDate = dayjs(timestamp).format("MM-DD");
-      return formattedDate;
+      let timestamp = this.getData().time; // 假设您已经获取了时间戳
+      if (!timestamp) {
+        timestamp = this.topicList[this.data.id].time;
+      }
+
+      const targetDate = dayjs(timestamp);
+      const now = dayjs();
+      const diffMinutes = now.diff(targetDate, "minute");
+
+      if (diffMinutes < 3) {
+        return "刚刚";
+      } else if (diffMinutes < 60) {
+        return `${diffMinutes}分钟前`;
+      } else if (diffMinutes < 1440) {
+        const diffHours = Math.floor(diffMinutes / 60);
+        return `${diffHours}小时前`;
+      } else if (now.isSame(targetDate, "day")) {
+        return `今天 ${targetDate.format("HH:mm")}`;
+      } else if (now.subtract(1, "day").isSame(targetDate, "day")) {
+        return `昨天 ${targetDate.format("HH:mm")}`;
+      } else {
+        return targetDate.format("MM-DD");
+      }
     },
   },
   mounted() {},
@@ -66,7 +86,8 @@ export default {
       let obj = {
         ...this.chatList[this.data.id][this.chatList[this.data.id].length - 2],
       };
-
+      console.log("obj :>> ", obj);
+      console.log("obj.time :>> ", obj.time);
       return obj;
     },
     handleTop() {
