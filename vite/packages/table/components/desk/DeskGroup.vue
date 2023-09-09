@@ -377,7 +377,8 @@
           v-model:selectType="selectDesk"
         ></HorizontalPanel>
       </div>
-      <div @click="doAddDesk" class="btn-item xt-active-bg">立即添加</div>
+      <!-- <div @click="doAddDesk" class="btn-item xt-active-bg xt-text">立即添加</div> -->
+      <xt-button style="width: 100%;" type="theme" @click="doAddDesk" class="mt-4" >立即添加</xt-button>
     </xt-task>
 
       <div>
@@ -570,7 +571,7 @@ export default {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      if ( (this.taskID == "M0101" || this.taskID == "M0102"|| this.taskID == "M0103") && this.step == 1) 
+      if ( (this.taskID == "M0101" || this.taskID == "M0102"|| this.taskID == "M0103"|| this.taskID == "M0201") && this.step == 1) 
       {
         return true;
       } 
