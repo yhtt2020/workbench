@@ -11,7 +11,7 @@
   
   <div class="flex-grow flex justify-between w-full px-1">
     <div class="flex flex-col" style="width: 293px;">
-     <a-input class="h-11" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch">
+     <a-input class="h-11" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch($event)" @change="search($event)">
       <template #suffix>
        <div class="flex items-center justify-center pointer active-button" @click="enterSearch"> 
         <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" />
@@ -64,7 +64,7 @@ import { defineComponent, onMounted, reactive,toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined,MinusCircleOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
-// import { pinyin,match,toRaw } from 'pinyin-pro'
+import { pinyin } from 'pinyin-pro'
 
 export default defineComponent({
  components:{ 
@@ -158,27 +158,45 @@ export default defineComponent({
    await window.$chat.sendMessage(r)
   }
 
-  // 搜索
-  const enterSearch = () =>{
+  // 搜索回车
+  const enterSearch = (e) =>{
     data.list = []
     let  searchResult = []
     if(data.forwardText === ''){
-      return;
+      e.stopPropagation();
+      // return;
     }
+    
+    // const inputPinyin = pinyin(data.forwardText,{style:pinyin.STYLE_NORMAL})
+    // console.log('拼音结果::>>',inputPinyin);
 
-    // const forwardTextAsRaw = toRaw(data.forwardText);
-    // const inputPinyin = pinyin(forwardTextAsRaw,{style:'NORMAL'})
-    // console.log('输入的拼音',inputPinyin);
     searchResult = data.allList.filter(item=>{
       const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
+      const id = item.type  === 'C2C' ? item.userProfile.userID : item.groupProfile.groupID
+      
+      // const namePinyin = pinyin(item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name,{
+      //   style:pinyin.STYLE_NORMAL
+      // })
+      // console.log('过滤的拼音结果::>>',namePinyin);
 
-      // const itemPinyin = pinyin(item,{style:'NORMAL'})
-
-      return data.forwardText === text
+      if(text.includes(data.forwardText)){
+        return item
+      }
+      if(id.includes(data.forwardText)){
+        return item
+      }
     })
-    // console.log('结果',searchResult);
+    console.log('结果',searchResult);
     data.list = searchResult
-   
+  }
+
+  // 实时搜索
+  const search = () =>{
+    if(data.forwardText.trim() === ''){
+      getForwardList()
+    }else{
+      return;
+    }
   }
 
   onMounted(()=>{
@@ -189,7 +207,7 @@ export default defineComponent({
    ...toRefs(data),
    getForwardList,closeForwardModal,
    selectItem,cancelSelect,forwardSend,
-   forwardMessage,enterSearch,
+   forwardMessage,enterSearch,search
    // isSelect,
   }
  }

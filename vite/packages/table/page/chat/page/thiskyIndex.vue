@@ -34,7 +34,7 @@
             </div>
 
             <div class="flex grid grid-cols-2 gap-1" v-else>
-              <div v-for="item in item.children" class="flex items-center py-2  rounded-lg pointer group-item">
+              <div v-for="item in item.children"  @click="currentItem(item)" class="flex items-center py-2  rounded-lg pointer group-item">
                 <div class="mx-2 flex items-center">
                   <template v-if="item.type === 'message'">
                     <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
@@ -105,7 +105,9 @@ export default defineComponent({
     }
 
     const currentItem = (item) =>{
+      // console.log('排查问题',item);
       if(item.type === 'link'){
+        // console.log('排查',item.props.url);
         const url = item.props.url !== '' ? item.props.url : ''
         browser.openInUserSelect(url)  // 想天浏览器打开
         // browser.openInSystem(url)
