@@ -13,7 +13,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <a-avatar :src="getUrl()"></a-avatar>
+  <a-avatar shape="square" :src="getUrl()"></a-avatar>
 </template>
 
 <style scoped lang="scss">

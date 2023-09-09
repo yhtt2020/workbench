@@ -85,7 +85,7 @@
       </a-row>
       <div class="text-center" v-else>
         <icon icon="tishi-xianxing"></icon>
-        对方未登录过组织，无法使用好友功能
+        对方未登录过社群，无法使用好友功能
       </div>
     </div>
   </div>

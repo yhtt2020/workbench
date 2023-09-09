@@ -9,7 +9,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -25,6 +24,12 @@ export default {
         },
       ],
     };
+  },
+  watch: {
+    selectTab(newV) {
+      console.log("newV :>> ", newV);
+      this.$emit("update:data", newV);
+    },
   },
 };
 </script>
