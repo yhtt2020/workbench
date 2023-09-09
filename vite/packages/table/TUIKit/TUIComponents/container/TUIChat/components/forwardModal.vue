@@ -11,7 +11,7 @@
   
   <div class="flex-grow flex justify-between w-full px-1">
     <div class="flex flex-col" style="width: 293px;">
-     <a-input class="h-11" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch($event)" @change="search($event)">
+     <a-input class="h-11" :allowClear="true" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch($event)" @change="search($event)">
       <template #suffix>
        <div class="flex items-center justify-center pointer active-button" @click="enterSearch"> 
         <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" />
@@ -99,7 +99,7 @@ export default defineComponent({
     return b.lastMessage.lastTime - a.lastMessage.lastTime
    })
    data.allList = sortList // 将所有的数据进行获取
-   console.log('获取20条',sortList.slice(0,20).length);
+  //  console.log('获取20条',sortList.slice(0,20).length);
    data.list = sortList.slice(0,20)  // 只获取20条
   }
 

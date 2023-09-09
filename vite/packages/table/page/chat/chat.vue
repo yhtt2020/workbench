@@ -124,7 +124,7 @@ export default {
           name:'contact'
         }
       },
-      ...(config.adminUids.includes(userInfo.uid))?[
+      ...(config.adminUids.includes(userInfo.uid)?[
         {
           icon: 'diannao',
           type: 'admin',
@@ -134,7 +134,7 @@ export default {
             name:'chatAdmin'
           }
         }
-      ]:{},
+      ]:[]),
 
       {
         icon: 'zhinanzhen',

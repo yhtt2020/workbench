@@ -31,7 +31,7 @@ export const appStore = defineStore('appStore', {
     saving: true,//性能模式
 
     simple: false,//极简模式
-    agreeTest: false,
+    agreeTest: true,
     infoVisible:false, // 修改我的信息显示时机
     secondaryVisible:false, // 我的信息页面二次判断是否为默认头像
     init: false, //是否已经初始化
@@ -125,8 +125,8 @@ export const appStore = defineStore('appStore', {
     setBackgroundImage(value) {
       this.backgroundImage = value
     },
-    setAgreeTest(value) {
-      this.agreeTest = value
+    setAgreeTest() {
+      this.agreeTest = false
     },
     setInfoVisible(value){
       this.infoVisible = value
