@@ -63,7 +63,8 @@
                 <span class="comments" style="cursor: pointer;">23 评论</span>
             </div>
             <!-- 分隔线 -->
-            <div class="w-full h-[2px] mt-4 xt-bg-2"></div>
+            <!-- <div class="w-full h-[2px] mt-4 xt-bg-2"></div> -->
+            <a-divider   class="w-full h-[2px] mt-4 xt-bg-2" />
             <Comment />
         </div>
     </div>

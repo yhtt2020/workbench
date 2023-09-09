@@ -19,7 +19,7 @@
                     <a-button type="text" class=" xt-text xt-bg-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;" @click="changeStatus">取消</a-button>
                     <a-button type="primary" class="ml-2 mr-2 xt-text"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;">回复</a-button>
+                        style="border-radius:10px ; color: var(--secondary-text) !important;" @click="addComment">回复</a-button>
                 </div>
             </div>
         </div>

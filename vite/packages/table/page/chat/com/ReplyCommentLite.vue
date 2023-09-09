@@ -30,20 +30,16 @@
                     <span>8:20</span>
                 </div>
             </div>
-            <reply :replyVisible="replyVisible" v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"/>
         </div>
-        <ReplyCommentLite v-for="item in replyCmmentList" :key="item" :replyCom="item" :replyVisible="replyVisible"></ReplyCommentLite>
+        
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
-import reply from './reply.vue'
-import ReplyCommentLite from './ReplyCommentLite.vue';
 const isLike=ref(false)
 const replyVisible=ref(false)
-const replyCmmentList=ref([])
 const props=defineProps({
     replyCom:String
 })
@@ -52,16 +48,6 @@ const clickLike = () => {
 }
 const replyStatus=()=>{
     replyVisible.value=!replyVisible.value
-}
-const getReplyFlag=(val)=>{
-    // console.log(val);
-    replyVisible.value=val
-    
-}
-const getReplyText=(val)=>{
-    // console.log(val);
-    replyCmmentList.value.push(val)
-    
 }
 </script>
 <style lang='scss' scoped>

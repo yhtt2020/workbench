@@ -9,7 +9,7 @@
                 <a-textarea v-model:value="replyValue" placeholder="回复" :autoSize="{ minRows: 3, maxRows: 8 }" :bordered="false"/>
                 <div class="xt-bg-2 rounded-xl ">
                     <vue-custom-scrollbar :settings="settingsScroller" class="w-2/3 p-2 xt-bg h-[150px] xt-bg-2" >
-                        <img :src="item" alt="" v-for="(item,index) in folderPath" :key="index" class="w-[32px] h-[32px] mr-1 mb-1">
+                        <img :src="item" alt="" v-for="(item,index) in folderPath" :key="index" class="w-[32px] h-[32px] mr-2 mb-2">
                     </vue-custom-scrollbar>
                 </div>
             </div>
@@ -45,33 +45,13 @@ const settingsScroller = reactive({
   wheelPropagation: true,
 });
 let folderPath=reactive([])
-// const loadImages=() => {
-//     const folderPath='../../../../../public/emoji/emojistatic/emojistatic/'
-//     const supportedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-//     const imagesList=[]
-//     return new Promise((resolve, reject) => {
-//         const fileReader=new FileReader()
-//         fileReader.onload=()=>{
-            
-//         }
-//     })
-// }
 onMounted(()=>{
-    // console.log(props.replyVisible)
     const emojiList=import.meta.globEager('../../../../../public/emoji/emojistatic/emojistatic/*.png')
-    
-    // emojiList.forEach(item => {
-        
-    // });
     const keys=Object.keys(emojiList)
     keys.forEach(item=>{
         folderPath.push(item)
     })
-    // console.log(keys);
 })
-console.log(folderPath);
-
-
 </script>
 <style lang='scss' scoped>
 .box {

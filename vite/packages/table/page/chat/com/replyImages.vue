@@ -8,12 +8,15 @@
             <div class="mt-2 mb-2 ml-3 mr-3 xt-bg-2 reply-textarea">
                 <a-textarea v-model:value="replyValue" placeholder="回复" :autoSize="{ minRows: 3, maxRows: 8 }"
                     :bordered="false" />
-                <a-upload v-model:file-list="fileList" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    list-type="picture-card" @preview="handlePreview" class="ml-2 ">
+                <a-upload v-model:file-list="fileList" action="" list-type="picture-card" @preview="handlePreview"
+                    class="ml-2 ">
                     <div v-if="fileList.length < 6">
                         <plus-outlined style="font-size: 20px;" />
                     </div>
                 </a-upload>
+                <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                    <img style="width: 100%" :src="previewImage" />
+                </a-modal>
             </div>
             <div class="h-[56px] flex items-center justify-between">
                 <div class="flex items-center xt-text-2">
@@ -45,60 +48,56 @@ const props = defineProps({
     replyVisible: Boolean
 })
 function getBase64(file: File) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
 }
-const fileList = reactive([
-    
-    {
-        uid: '-2',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-])
+
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
+
+const fileList = ref<UploadProps['fileList']>([
+  {
+    uid: '-1',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-2',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-3',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-4',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+]);
+
 const handleCancel = () => {
-    previewVisible.value = false;
-    previewTitle.value = '';
+  previewVisible.value = false;
+  previewTitle.value = '';
 };
 const handlePreview = async (file: UploadProps['fileList'][number]) => {
-    if (!file.url && !file.preview) {
-        file.preview = (await getBase64(file.originFileObj)) as string;
-    }
-    previewImage.value = file.url || file.preview;
-    previewVisible.value = true;
-    previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+  if (!file.url && !file.preview) {
+    file.preview = (await getBase64(file.originFileObj)) as string;
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+  previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
 </script>
 <style lang='scss' scoped>
@@ -126,7 +125,6 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
 }
-
 .reply-textarea {
     border-radius: 10px;
 
@@ -139,4 +137,5 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
             }
         }
     }
-}</style>
+}
+</style>

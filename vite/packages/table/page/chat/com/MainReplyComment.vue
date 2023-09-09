@@ -37,6 +37,7 @@
             <ReplyComment :replyVisible="replyVisible" v-for="(item,index) in replyCmmentList" :key="index" :replyCom="item"/>
             <!-- <replyEmoji/> -->
         </div>
+        
     </div>
 </template>
 
@@ -44,25 +45,30 @@
 import { ref, reactive } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyComment from './ReplyComment.vue';
-import replyEmoji from './replyEmoji.vue';
+
 import reply from './reply.vue';
 const isLike = ref(false)
 const replyVisible=ref(false)
 const replyCmmentList=ref([])
+// 点赞
 const clickLike = () => {
     isLike.value=!isLike.value
 }
+// 回复评论框状态改变
 const replyStatus=()=>{
     replyVisible.value=!replyVisible.value
 }
+// 接收评论列表
 const props=defineProps({
     commentList:Array
 })
+// 接收回复框的状态
 const getReplyFlag=(val)=>{
     // console.log(val);
     replyVisible.value=val
     
 }
+// 接收回复框的内容
 const getReplyText=(val)=>{
     // console.log(val);
     replyCmmentList.value.unshift(val)
