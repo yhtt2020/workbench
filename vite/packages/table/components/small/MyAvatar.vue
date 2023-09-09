@@ -188,9 +188,10 @@ export default {
               </a-col>
               <a-col :span="18" class="pt-1">
                 <div class="text flex items-center font-bold">
-                  组织
-                  <div class="rounded-full flex items-center justify-center  ml-3" style="width:20px;height:20px; background:var(--error);color:var(--active-text);" v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
-                    {{ unReadStatus }}
+                  <span>组织</span>
+                  <div class="rounded-full flex items-center justify-center px-2 ml-3" style="background:var(--error);color:var(--active-text);" v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
+                    <span v-if="unReadStatus > 99 ">99+</span>
+                    <span v-else> {{ unReadStatus }} </span>
                   </div>
                 </div>
                 <div>举杯，同是科技咖</div>
