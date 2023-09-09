@@ -124,7 +124,7 @@ export default defineComponent({
         icon: "",
         img: "/icons/IM.png",
         alias: "teamChat",
-        title: "团队聊天",
+        title: "社群沟通",
         callBack: selectTab,
       },
       {

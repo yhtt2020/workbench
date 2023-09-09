@@ -9,7 +9,7 @@ const toast = useToast()
 
 export class Notifications{
   private noticeObj:null
-  
+
   // 系统toast
   private systemToast(msg:any,conversationID:any){
     toast.info(
@@ -17,7 +17,7 @@ export class Notifications{
         component:SystemNoticeToast,props:{content:msg,noticeType:'notice',isPlay:noticeStore().$state.noticeSettings.noticePlay},
         listeners:{
           'nowCheck':function(){
-            noticeStore().hideNoticeEntry()  
+            noticeStore().hideNoticeEntry()
             noticeStore().putIMChatData(msg,'Notice')
           },
           'systemExamine':function(){
@@ -31,7 +31,7 @@ export class Notifications{
         }
       },
       {
-        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
+        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
         pauseOnHover:true,timeout:0,toastClassName:'notice-toast'
       }
     )
@@ -44,7 +44,7 @@ export class Notifications{
         component:NoticeToastButton,props:{message:msg,messageType:'message',isPlay:noticeStore().$state.noticeSettings.enablePlay},
         listeners:{
           'nowCheck':function(){
-            noticeStore().hideNoticeEntry()  
+            noticeStore().hideNoticeEntry()
             noticeStore().putIMChatData(msg,'message')
             console.log('检测this',this)
           },
@@ -59,7 +59,7 @@ export class Notifications{
         },
       },
       {
-       icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true, 
+       icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
        pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast',
       //  onClose() {
       //   noticeStore().putIMChatData(msg,'message')
@@ -85,7 +85,7 @@ export class Notifications{
       return res.data.group.avatar
     }
   }
-  
+
   // 根据参数获取用户名称
   private async getUserProfile(msg: any) {
     // 根据用户名称
@@ -101,9 +101,9 @@ export class Notifications{
     const groupName = data.groupProfile?.name || data.groupProfile?.groupID;
     const userName = await this.getUserProfile(data);
     let info: any; // 接收不同系统通知消息
-   
+
     console.log(data.operationType);
-    
+
     switch (data.operationType) {
       case 1:
         if (msg.handleMessage === "加群" && msg.hasOwnProperty("handleMessage")) {
@@ -128,7 +128,7 @@ export class Notifications{
         break;
       case 5:
         if(data.hasOwnProperty('memberList') && data.memberList.length !== 0 && data.memberList[0].role === 200){
-          info = `${data.memberList[0].nick}被${userName} 撤销群：${groupName} 的管理员身份`; 
+          info = `${data.memberList[0].nick}被${userName} 撤销群：${groupName} 的管理员身份`;
         }else{
           info = `群：${groupName}被${userName} 解散`;
         }
@@ -163,7 +163,7 @@ export class Notifications{
         info = `自定义群系统通知: ${data.userDefinedField}`;
         break;
     }
-    
+
     return info
   }
 
@@ -175,18 +175,18 @@ export class Notifications{
     // 创建一个audio标签
     function createOrUpdateAudioElement(): HTMLAudioElement {
       let audioElement = document.getElementById('messageAudio') as HTMLAudioElement;
-      
+
       if (!audioElement) {
         audioElement = document.createElement('audio');
         audioElement.src = '/sound/message.mp3'
         audioElement.setAttribute('id', 'messageAudio');
         document.body.appendChild(audioElement);
       }
-      
+
       return audioElement;
     }
     const audioElement: HTMLAudioElement = createOrUpdateAudioElement();
-    
+
     const data = notification.data[0]
     const c2cData = {
       type:data.conversationType,
@@ -194,7 +194,7 @@ export class Notifications{
       text:data.payload.hasOwnProperty('text') ? `${data.payload.text}`:''
     }
     this.noticeObj = c2cData
-  
+
     const settings = {
       isStore:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length !== 0, // 判断chat界面缓存不为空
       isEnable:noticeStore().$state.noticeSettings.enable, // 消息开关
@@ -206,7 +206,7 @@ export class Notifications{
       noTrouble:window.$TUIKit.TUIServer.TUIChat.store.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 是否开启免打扰
       isEmpty:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length === 0, // 为空
     }
-  
+
 
     // 判断消息开关和音频开关是否打开
     if(settings.isEmpty || settings.noTrouble && settings.isEnable && settings.enablePlay){
@@ -216,16 +216,16 @@ export class Notifications{
         // 好友名称标题
         const friendTitle = data.nick ? `${data.nick}` : ''
         // 群组名称标题
-        const groupTitle = await this.getName(data) !== '' ?  `${await this.getName(data)}` : '' 
+        const groupTitle = await this.getName(data) !== '' ?  `${await this.getName(data)}` : ''
         // 获取头像
         const avatar = await this.getGroupAvatar(notification)
 
-        
+
         // 全局情况下的普通消息弹窗
         if(settings.isGlobal){
           // 显示消息入口
           noticeStore().showNoticeEntry()
-          const newMsg = {  
+          const newMsg = {
             title:data.conversationType === 'C2C' ? friendTitle : groupTitle,
             icon:data.conversationType === 'C2C' ? data.avatar : avatar,
             body:`${data.nick}：${data.payload.text}`,
@@ -250,14 +250,14 @@ export class Notifications{
         // 当前会话没有任何提示
         else{
           return;
-        }        
+        }
       }
       // 团队系统通知
       else if(data.payload.description !== ''){
         const body = await this.getSystemBody(data)
         if(body !== ''){
           const notice = {
-            title:'团队系统通知',
+            title:'社群沟通',
             body:body,
             icon:'/icons/IM.png',
             time:data.time
@@ -272,11 +272,11 @@ export class Notifications{
 
 
 
-    
+
   }
 
-  
 
-  
+
+
 
 }

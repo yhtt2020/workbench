@@ -65,9 +65,9 @@
               </div>
             </a-col>
 
-            <a-col v-if="isMain() && !simple" :span="12">
+            <a-col v-if="isMain() " :span="12">
               <div class="btn relative">
-                社群(沟通)<br />
+                社群沟通<br />
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
               </div>
             </a-col>
