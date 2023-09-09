@@ -1,5 +1,5 @@
 <template>
-<!--  <xt-button @click="test()"></xt-button>-->
+ <xt-button @click="test()"></xt-button>
 
   <xt-title>主线任务</xt-title>
   <template v-if="store.taskID">
@@ -68,7 +68,7 @@ const router = useRouter();
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0101";
+  store.taskID = "M0201";
   store.success = false;
   store.step = -1;
 };
@@ -118,7 +118,6 @@ const emits = defineEmits(["close"]);
 const taskGuide = () => {
   // 重置任务步骤
   store.step = 1;
-  console.log('guide :>> ', guide);
   let currentTask = guide[store.taskID][0];
   switch (currentTask.value) {
     case "router":
