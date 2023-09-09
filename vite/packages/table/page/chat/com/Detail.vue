@@ -31,7 +31,7 @@
             <div>
                 <div>
                     <div class="flex flex-col items-center ">
-                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video" autoplay>
+                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video">
                             <source :src="cardData.data.video" type="video/mp4" />
                             <source :src="cardData.data.video" type="video/webm" />
                         </video>
@@ -91,7 +91,7 @@ const props = defineProps({
 
 
     .card-content {
-        margin: 16px;
+        margin: 12px;
 
         .card-top {
             display: flex;
