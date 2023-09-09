@@ -19,7 +19,7 @@
       </template>
      </a-input>
      <span class="font-400 my-3" style="color:var(--secondary-text);">最近聊天</span>
-     <vue-custom-scrollbar :settings="settingsScroller" style="height: 308px;">
+     <vue-custom-scrollbar :settings="settingsScroller" style="height: 350px;">
       <!-- :class="{'select-bg':isSelect(index)}" -->
       <div v-for="(item,index) in list"   class="flex items-center rounded-lg p-3 pointer" @click="selectItem(item)">
        <a-avatar shape="square" v-if="item.type === 'GROUP'" size="32" :src="item?.groupProfile?.avatar"></a-avatar>
@@ -31,9 +31,9 @@
 
     <a-divider type="vertical" style="height: 100%; background-color:var(--divider);" />
     
-    <div class="" style="width: 293px;">
+    <div class="flex flex-col" style="width: 293px;">
       <span class="font-400" style="color:var(--secondary-text);">已选({{ rightSelectList.length }}个)</span>
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 37vh;">
+      <vue-custom-scrollbar :settings="settingsScroller" style="height:371px;">
        <div class="flex flex-col">
         <div v-for="item in rightSelectList" class="flex justify-between p-3 pointer" >
           <div class="flex tems-center">
@@ -47,13 +47,12 @@
         </div>
        </div>
       </vue-custom-scrollbar>
-    </div>
-  </div>
-
-  <div class="flex justify-end  h-12">
-    <div class="flex items-center">
-     <a-button class="rounded-lg" style="background: var(--secondary-bg);color:var(--secondary-text);width:100px;height: 44px;" @click="closeForwardModal">取消</a-button>
-     <a-button class="ml-4 rounded-lg" type="primary" style="width:100px;height: 44px;color:var(--active-text);" @click="forwardSend">转发</a-button>
+      <div class="flex justify-end  h-12">
+        <div class="flex items-center">
+         <a-button class="rounded-lg" style="background: var(--secondary-bg);color:var(--secondary-text);width:100px;height: 44px;" @click="closeForwardModal">取消</a-button>
+         <a-button class="ml-4 rounded-lg" type="primary" style="width:100px;height: 44px;color:var(--active-text);" @click="forwardSend">转发</a-button>
+        </div>
+      </div>
     </div>
   </div>
  </div>
