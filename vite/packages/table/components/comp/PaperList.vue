@@ -1,7 +1,7 @@
 <template>
   <viewer :images="list" :options="options">
     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
-      <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
+      <a-col class="image-wrapper " v-for="(img,index) in list" :span="6" style="">
         <img @contextmenu.stop="paperShowMenu(img)"  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
           <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
@@ -9,6 +9,7 @@
             <Icon v-else style="" icon="yiwancheng"></Icon>
           </div>
         </div>
+      <!-- </template> -->
       </a-col>
     </a-row>
   </viewer>

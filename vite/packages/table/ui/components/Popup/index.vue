@@ -14,7 +14,6 @@
     <transition name="popup">
       <div
         v-if="visible"
-        v-bind="$attrs"
         class="h-full bg-white-50 fixed top-1/2 -translate-y-1/2 rounded-xl"
         style="z-index: 9999; box-sizing: border-box"
         :style="{ [position]: '0' }"
@@ -36,7 +35,6 @@ const props = defineProps({
 const visible = ref(props.modelValue);
 const emits = defineEmits("update:modelValue");
 watch(visible, (newW) => {
-  console.log("112 :>> ", 112);
   emits("update:modelValue", newW);
 });
 watch(

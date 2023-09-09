@@ -1,57 +1,180 @@
 <template>
   <div class="main-box">
-    <div class="box xt-bg-2" v-for="(item, index) in navLists" :key="item.name">
-      <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
-        <div class="icons">
-          <Icon icon="tianjia2" style="color: #000"></Icon>
+    <template v-for="(item, index) in navLists" :key="item.name">
+      <template v-if="item.name == 'clocks' && M01013">
+        <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
+          <div class="box xt-bg-2" style="z-index: 99999999999">
+            <div
+              class="add no-drag"
+              @click="addNewCard(item)"
+              v-if="item.option.length <= 1"
+            >
+              <div class="icons">
+                <Icon icon="tianjia2" style="color: #000"></Icon>
+              </div>
+            </div>
+            <div class="add no-drag" @click="addNewCard(item)" v-else>
+              <div class="text" style="color: #fff">· · ·</div>
+            </div>
+            <div class="left no-drag" @click="fullScreen(item)">
+              <template v-if="item.option.length > 1">
+                <div class="top">
+                  <img
+                    :style="[{ zoom: item.option[0].zoom + '%' }]"
+                    :src="getImg(item.option[0].name)"
+                    alt=""
+                  />
+                </div>
+                <div class="bottom">
+                  <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
+                </div>
+              </template>
+              <img
+                v-else
+                style=""
+                :src="getImg(item.option[0].name)"
+                alt=""
+                :style="[
+                  {
+                    zoom: item.option[0].zoom
+                      ? item.option[0].zoom + '%'
+                      : '11%',
+                  },
+                ]"
+              />
+            </div>
+            <div class="right" style="">
+              <div class="title" style="color: var(--primary-text)">
+                {{ item.cname }}
+              </div>
+              <div class="text" style="color: var(--secondary-text)">
+                {{ item.detail }}
+              </div>
+              <div class="icon">
+                <div
+                  class="icon-box xt-active-bg-2"
+                  v-for="i in item.sizes"
+                  :key="i"
+                  style="color: var(--secondary-text)"
+                  :class="i === '社区分享' ? 'share' : ''"
+                >
+                  {{ i }}
+                </div>
+              </div>
+              <div class="data">
+                <Icon
+                  icon="xiazai"
+                  class="icons"
+                  style="color: #508bfe; margin: 0; width: 20px"
+                ></Icon>
+                <div class="data-box">
+                  {{ item.download }}
+                </div>
+                <Icon
+                  icon="shijian"
+                  class="icons"
+                  style="color: #52c41a; margin: 0; width: 20px"
+                ></Icon>
+                <div class="data-box">{{ formatTimestamp(item.time) }}</div>
+              </div>
+            </div>
+          </div>
+        </xt-task>
+      </template>
+      <div class="box xt-bg-2" v-else>
+        <div
+          class="add no-drag"
+          @click="addNewCard(item)"
+          v-if="item.option.length <= 1"
+        >
+          <div class="icons">
+            <Icon icon="tianjia2" style="color: #000"></Icon>
+          </div>
+        </div>
+        <div class="add no-drag" @click="addNewCard(item)" v-else>
+          <div class="text" style="color: #fff">· · ·</div>
+        </div>
+        <div class="left no-drag" @click="fullScreen(item)">
+          <template v-if="item.option.length > 1">
+            <div class="top">
+              <img
+                :style="[{ zoom: item.option[0].zoom + '%' }]"
+                :src="getImg(item.option[0].name)"
+                alt=""
+              />
+            </div>
+            <div class="bottom">
+              <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
+            </div>
+          </template>
+          <img
+            v-else
+            style=""
+            :src="getImg(item.option[0].name)"
+            alt=""
+            :style="[
+              { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
+            ]"
+          />
+        </div>
+        <div class="right" style="">
+          <div class="title" style="color: var(--primary-text)">
+            {{ item.cname }}
+          </div>
+          <div class="text" style="color: var(--secondary-text)">
+            {{ item.detail }}
+          </div>
+          <div class="icon">
+            <div
+              class="icon-box xt-active-bg-2"
+              v-for="i in item.sizes"
+              :key="i"
+              style="color: var(--secondary-text)"
+              :class="i === '社区分享' ? 'share' : ''"
+            >
+              {{ i }}
+            </div>
+          </div>
+          <div class="data">
+            <Icon
+              icon="xiazai"
+              class="icons"
+              style="color: #508bfe; margin: 0; width: 20px"
+            ></Icon>
+            <div class="data-box">
+              {{ item.download }}
+            </div>
+            <Icon
+              icon="shijian"
+              class="icons"
+              style="color: #52c41a; margin: 0; width: 20px"
+            ></Icon>
+            <div class="data-box">{{ formatTimestamp(item.time) }}</div>
+          </div>
         </div>
       </div>
-      <div class="add no-drag" @click="addNewCard(item)" v-else>
-        <div class="text" style="color: #fff">· · ·</div>
-      </div>
-      <div class="left no-drag" @click="fullScreen(item)">
-        <template v-if="item.option.length > 1">
-          <div class="top">
-            <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="" />
-          </div>
-          <div class="bottom">
-            <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
-          </div>
-        </template>
-        <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
-          { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
-        ]" />
-      </div>
-      <div class="right" style="">
-        <div class="title" style="color: var(--primary-text)">
-          {{ item.cname }}
-        </div>
-        <div class="text" style="color: var(--secondary-text)">
-          {{ item.detail }}
-        </div>
-        <div class="icon">
-          <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i" style="color: var(--secondary-text)"
-            :class="i === '社区分享' ? 'share' : ''">
-            {{ i }}
-          </div>
-        </div>
-        <div class="data">
-          <Icon icon="xiazai" class="icons" style="color: #508bfe; margin: 0; width: 20px"></Icon>
-          <div class="data-box">
-            {{ item.download }}
-          </div>
-          <Icon icon="shijian" class="icons" style="color: #52c41a; margin: 0; width: 20px"></Icon>
-          <div class="data-box">{{ formatTimestamp(item.time) }}</div>
-        </div>
-      </div>
-    </div>
+    </template>
+
     <div class="box" style="opacity: 0; height: 1px"></div>
   </div>
-  <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
-    :cardDetails="cardDetails">
+  <NewPreviewCardDetails
+    v-if="isCardDetails"
+    @addCardAchieve="addCardAchieve"
+    @closeCardDetails="closeCardDetails"
+    :cardDetails="cardDetails"
+  >
   </NewPreviewCardDetails>
-  <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit>
-  <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
+  <edit
+    v-if="settingVisible"
+    @close="settingVisible = false"
+    @save="save()"
+  ></edit>
+  <RemoteMarket
+    :openRemote="openRemote"
+    :custom="remoteContent"
+    :desk="desk"
+    @closeMarket="closeMarket"
+  ></RemoteMarket>
 </template>
 
 <script>
@@ -63,7 +186,7 @@ import Edit from "../../../components/widgets/myIcons/edit/index.vue";
 import RemoteMarket from "./RemoteMarket.vue";
 import { myIcons } from "../../../store/myIcons.ts";
 import _ from "lodash-es";
-
+import { taskStore } from "../../../apps/task/store";
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -77,11 +200,15 @@ export default {
     desk: {
       type: Object,
       required: true,
-      default: () => { },
+      default: () => {},
     },
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    M01013() {
+        return this.taskID == "M0101" && this.step == 3
+    },
   },
   data() {
     return {
@@ -91,13 +218,13 @@ export default {
       cardDetails: {},
       settingVisible: false,
       openRemote: false,
-      remoteContent: {}
+      remoteContent: {},
     };
   },
   components: {
     NewPreviewCardDetails,
     Edit,
-    RemoteMarket
+    RemoteMarket,
   },
   watch: {
     navList: {
@@ -121,7 +248,6 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     // 添加图标保存
     save() {
-
       if (this.edit.src.length === 0) return message.error("图标不能为空");
       this.settingVisible = false;
       this.addCard(
@@ -171,10 +297,10 @@ export default {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
-        if (item.name === 'remote') {
-          this.openRemote = true
-          this.remoteContent = item
-          return
+        if (item.name === "remote") {
+          this.openRemote = true;
+          this.remoteContent = item;
+          return;
         }
         this.addCardAchieve(item);
       }
@@ -195,7 +321,6 @@ export default {
     add(item, index) {
       index = index ?? this.carouselIndex;
 
-
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
@@ -204,8 +329,8 @@ export default {
       message.success("添加成功！");
     },
     closeMarket(val) {
-      this.openRemote = val
-    }
+      this.openRemote = val;
+    },
   },
 };
 </script>
@@ -390,7 +515,7 @@ export default {
 
 .share {
   background: rgba(250, 173, 20, 0.2) !important;
-  color: #FAAD14 !important;
+  color: #faad14 !important;
   font-weight: 500;
 }
 </style>

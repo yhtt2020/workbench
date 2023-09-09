@@ -30,8 +30,11 @@
               </div>
             </div>
           </div>
+          
           <div class="center-text" style="transform: translateY(-20px)">
             <div class="con-center" v-show="navText && !promptModal" style="width:800px">
+            <xt-task :modelValue="m01043" ></xt-task>
+
               <span class="mt-5 mb-4">本界面不支持触摸，请使用滚轮滚动，支持鼠标拖拽！</span>
 <!--              <div class="   mb-2">
                 <div class="mb-2 xt-text-2">
@@ -49,6 +52,7 @@
                 </div>
 
               </div>-->
+
               <div class="mb-2 xt-text-2">必选功能（拖拽添加）</div>
               <div class="main-nav" id="mainList" style="width: 320px;zoom:0.8">
                 <div v-for="item in mainNavList" :key="item.name" style="margin:5px">
@@ -159,9 +163,11 @@
             </div>
           </div>
           <div>
+           <xt-task :modelValue="m01044" @cb="addEdit('foot')">
             <Icon icon="tianjia"
                   style="width: 56px;height: 56px;color:var(--secondary-text);position:relative;top:2px;"
                   class="pointer mr-8" @click="addEdit('foot')"></Icon>
+           </xt-task>
           </div>
           <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);"
                class="flex justify-center items-center pointer  pl-6 mr-6">
@@ -181,9 +187,18 @@
             </template>
           </a-input>
           <vue-custom-scrollbar key="scrollbar" :settings="rightScrollbarSettings"
-                                class="relative" style="height: calc(100% - 40px);padding: 5px 0">
-            <listItem v-for="(item,index) in filterList" :item="item"
+         class="relative" style="height: calc(100% - 40px);padding: 5px 0">
+<template v-for="(item,index) in filterList">
+  <xt-task :modelValue="m01046" v-if="item.name == '主页'" @cb="clickRightListItem(item,index)">
+            <listItem  :item="item"
                       class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+                    </xt-task>
+
+                    <listItem v-else  :item="item"
+                      class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+</template>
+        
+
           </vue-custom-scrollbar>
         </div>
         <!-- 拖拽文件快速定位 -->
@@ -236,7 +251,7 @@ import Sortable from 'sortablejs'
 import navigationData from '../../js/data/tableData'
 import Classification from '../comp/Classification.vue'
 import { message } from 'ant-design-vue'
-
+import {taskStore} from "../../apps/task/store"
 const { appModel } = window.$models
 const suggestNavigationList = [
 
@@ -347,6 +362,16 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m01043() {
+      return this.taskID == "M0104" && this.step == 3;
+    },
+    m01044() {
+      return this.taskID == "M0104" && this.step == 4;
+    },
+    m01046() {
+      return this.taskID == "M0104" && this.step == 6;
+    },
     filterList () {
       return this.ClassifyData.filter(i => {return i.type === this.nowClassify && i.name.includes(this.selectContent)})
     }
