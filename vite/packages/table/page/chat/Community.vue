@@ -27,10 +27,18 @@
         </div>
       </div>
       <div class="right shrink">
-        <a-button type="primary" :icon="h(PlusCircleTwoTone)" style="color: var(--primary-text);">发布</a-button>
+        <a-button type="primary" :icon="h(PlusCircleTwoTone)" style="color: var(--primary-text);" @click="visibleModal">
+          发布</a-button>
       </div>
-    </div>
+      <!-- 发布模态框 -->
+      <!-- <a-modal v-if="showPublishModal" title="Basic Modal" @ok="handleOk">
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </a-modal> -->
 
+    </div>
+    
     <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
     <div class="flex justify-center flex-1" style="height: 0">
       <!-- 左侧卡片区域 -->
@@ -38,6 +46,7 @@
         :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
         :style="{ width: detailVisible ? '40%' : '60%' }">
         <div class="flex justify-center content">
+          <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal"/>
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)"
             :detailVisible="detailVisible" class="xt-bg"
@@ -62,9 +71,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, nextTick, h, computed, watch, getCurrentInstance } from 'vue';
-import { DownOutlined, CloseCircleOutlined,PlusCircleTwoTone } from '@ant-design/icons-vue';
+import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
+import publishModal from './com/publishModal.vue';
 const menuList = ref(['全部', '热门', '精华'])
 const checkMenuList = ref(['最近更新', '最近回复'])
 const currentIndex = ref(0)
@@ -84,7 +94,11 @@ const settingsScroller = reactive({
   suppressScrollX: true,
   wheelPropagation: true,
 });
-
+// 
+const showPublishModal = ref(false)
+const visibleModal = () => {
+  showPublishModal.value = !showPublishModal.value
+}
 // 定义 ComCard 的数据数组，每个元素都包含内容和点击状态
 const comCards = ref([
   {
@@ -300,4 +314,5 @@ const close = () => {
       display: none;
     }
   }
-}</style>
+}
+</style>
