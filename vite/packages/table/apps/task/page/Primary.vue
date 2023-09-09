@@ -54,7 +54,6 @@
     </div>
   </template>
   <div v-else>已完成所有任务</div>
-  {{ chapter }}
 </template>
 
 <script setup>
