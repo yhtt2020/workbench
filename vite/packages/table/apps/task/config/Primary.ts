@@ -1,5 +1,12 @@
 export const tasks = [
   {
+    tasks: [
+      {
+        id: "firstTask",
+      },
+    ],
+  },
+  {
     chapter: "第一章",
     tasks: [
       {

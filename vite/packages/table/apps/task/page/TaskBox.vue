@@ -1,27 +1,33 @@
 <template>
-  <xt-menu :menus="menus" style="" v-if="store.isTask">
-    <div
-      @click="store.isTaskDrawer = true"
-      class="xt-bg relative s-bg h-full xt-base-btn"
-      style="width: 70px; height: 70px; border-radius: 8px"
-    >
-      <img src="/img/task/star.png" style="width: 56px; height: 56px" alt="" />
+  <xt-task :modelValue="firstTask" @cb="resetting">
+    <xt-menu :menus="menus" style="" v-if="store.isTask">
+      <xt-button @click="store.firstTask = false"></xt-button>
       <div
-        class="absolute text-center xt-text rounded-md left-1/2 -translate-x-1/2 flex overflow-hidden"
-        style="width: 90%; bottom: 4px; height: 20px; z-index: 9999"
+        @click="store.isTaskDrawer = true"
+        class="xt-bg relative s-bg h-full xt-base-btn"
+        style="width: 70px; height: 70px; border-radius: 8px"
       >
-        <div class="xt-active-bg" :style="[progress]"></div>
-        <div class="flex-1 xt-bg-2"></div>
+        <img
+          src="/img/task/star.png"
+          style="width: 56px; height: 56px"
+          alt=""
+        />
         <div
-          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
-          style="width: 60px; font-size: 11px"
+          class="absolute text-center xt-text rounded-md left-1/2 -translate-x-1/2 flex overflow-hidden"
+          style="width: 90%; bottom: 4px; height: 20px; z-index: 9999"
         >
-          主线 {{ width }} %
+          <div class="xt-active-bg" :style="[progress]"></div>
+          <div class="flex-1 xt-bg-2"></div>
+          <div
+            class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
+            style="width: 60px; font-size: 11px"
+          >
+            主线 {{ width }} %
+          </div>
         </div>
       </div>
-    </div>
-  </xt-menu>
-
+    </xt-menu>
+  </xt-task>
   <Task></Task>
 </template>
 
@@ -32,6 +38,25 @@ import { tasks } from "../config/Primary";
 import Task from "./Task.vue";
 const store = taskStore();
 
+/**
+ * 首次引导任务
+ */
+let firstTask = ref(false);
+if (!store.firstTask) {
+  store.step = 1;
+  store.taskID = "firstTask";
+  firstTask.value = true;
+}
+
+/**
+ * 回归主线任务
+ */
+const resetting = () => {
+  store.firstTask = true;
+  store.taskID = "M0101";
+  store.step = -9;
+  firstTask.value = false;
+};
 // 主线任务进展
 let width = ref();
 

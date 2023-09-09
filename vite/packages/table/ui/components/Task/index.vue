@@ -61,7 +61,6 @@ export default defineComponent({
   methods: {
     next(event) {
       if (!this.modelValue) return;
-      console.log('next :>> ', );
       this.action();
       event.stopPropagation(); // 阻止事件冒泡  
     },
@@ -69,8 +68,6 @@ export default defineComponent({
       this.$emit("cb");
       this.tour.next();
       this.step++;
-      console.log('action :>> ', this.task.success);
-      console.log('this.step :>> ', this.step);
       if (this.task.success) {
         console.log("任务以完成 :>> ");
         this.success = true
@@ -93,8 +90,8 @@ export default defineComponent({
 
       this.tour.addStep({
         attachTo: { element: this.$refs.el, on: this.task?.position ?? "top" },
-        text: this.task.text,
-        title: this.task.title,
+        text: this.task?.text,
+        title: this.task?.title,
         buttons: [
           {
             text: this.currentStep,
