@@ -1,7 +1,6 @@
 <template>
   <div @click="itemClick(item)">
     <slot :name="item.slot" v-if="item.slot"></slot>
- 
     <div
       v-else-if="item.img"
       style="width: 40px; height: 40px"
@@ -47,10 +46,6 @@ const stateStyle = computed(() => {
     height: props.w + "px",
   };
 });
-const emit = defineEmits(["itemClick"]);
-const itemClick = (item, flag) => {
-  emit("itemClick", item);
-};
 </script>
 
 <style lang="scss" scoped></style>
