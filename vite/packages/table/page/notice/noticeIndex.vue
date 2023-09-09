@@ -22,7 +22,7 @@
         </div>
       </div>
     </template>
-  
+
   </div>
 </template>
 
@@ -33,7 +33,7 @@ import _ from 'lodash-es'
 import NoticeRightTop from '../../components/notice/noticeRightTop.vue'
 import AllNotice from '../../components/notice/allNotice.vue'
 import AllMiddleTip from '../../components/notice/allMiddleTip.vue'
-import NoticeDetail from './noticeDetail.vue' 
+import NoticeDetail from './noticeDetail.vue'
 
 export default defineComponent({
 
@@ -46,7 +46,7 @@ export default defineComponent({
 
   setup() {
     const store = noticeStore();
-    
+
     const data = reactive({
       rightVisible:'all', // 切换消息
       topTitle:'',
@@ -86,6 +86,15 @@ export default defineComponent({
         data.otherList = index
       }else{
         return;
+      }
+    })
+
+    watch(()=>store.$state.noticeSettings.enable,(newVal)=>{
+      console.log('坚挺到变化')
+      if(newVal){
+        leftApp.value[leftApp.value.length - 2].icon = 'notification'
+      }else{
+        leftApp.value[leftApp.value.length - 2].icon = 'notification-off'
       }
     })
 

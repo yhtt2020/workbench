@@ -9,7 +9,6 @@ import TUIKit from "../TUIKit";
 const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
 import * as sns from "../js/common/sns";
-import {result} from "lodash-es";
 import _ from "lodash-es";
 // @ts-ignore
 export const chatStore = defineStore('chatStore', {
@@ -78,8 +77,12 @@ export const chatStore = defineStore('chatStore', {
         await this.updateUserInfo()
       },
 
-      setDouble(value: any) {
-        this.settings.showDouble = value
+      setDouble(value: any=undefined) {
+        if(value===undefined){
+          this.settings.showDouble=!this.settings.showDouble
+        } else{
+          this.settings.showDouble=value
+        }
       },
 
       async loadRecommendUsers() {
@@ -155,7 +158,7 @@ export const chatStore = defineStore('chatStore', {
       async loadGroupRelationship() {
         let groups = this.recommendData.groups
         let groupIDs = groups.map(async(u) => {
-          return u.groupID  
+          return u.groupID
         })
 
         const groupShip = await sns.checkGroupShip(groupIDs)
@@ -180,8 +183,8 @@ export const chatStore = defineStore('chatStore', {
           this.isLoading = false
           localCache.set('findData', this.recommendData, 10 * 60)
           serverCache.setData('findData', this.recommendData, 10 * 60)
-          
-          
+
+
         })
 
       },
@@ -217,8 +220,8 @@ export const chatStore = defineStore('chatStore', {
             localCache: true, ttl: 10 * 60,
             cache: false
           })
-         
-          if (result && false) { //去除缓存
+
+          if (result) { //去除缓存
             this.recommendData = result
             this.updateUsersRelationship()
             this.loadGroupRelationship()

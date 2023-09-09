@@ -1,9 +1,10 @@
 <template>
-  <xt-left-menu :list="menuList" last="1" end="2">
+  <xt-left-menu :list="menuList" last="1" end="3">
     <!--  -->
     <template #test>
       <setting-filled />
     </template>
+    <slot></slot>
   </xt-left-menu>
 
   <!-- 新建对话  -->
@@ -55,7 +56,9 @@ export default {
             this.selectTab = "Chat";
           },
         },
-
+        {
+          full: true,
+        },
         {
           flag: true,
           icon: "tianjia2",

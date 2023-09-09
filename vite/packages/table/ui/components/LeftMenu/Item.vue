@@ -4,7 +4,10 @@
     <div
       v-else-if="item.img"
       style="width: 40px; height: 40px"
-      class="xt-base-btn xt-bg"
+      class="xt-base-btn "
+      :class="{
+      'xt-bg':!item.noBg
+    }"
     >
       <img
         :src="item.img"
@@ -19,7 +22,6 @@
       size="20"
       radius="10"
       :type="type"
-      v-bind="config"
       :icon="item.icon"
     ></xt-icon>
   </div>
@@ -47,15 +49,6 @@ const stateStyle = computed(() => {
     height: props.w + "px",
   };
 });
-const emit = defineEmits(["itemClick"]);
-const itemClick = (item, flag) => {
-  emit("itemClick", item);
-};
 </script>
 
-<style lang="scss" scoped>
-.xt-base-btn{
-  //box-sizing: border-box;
-}
-
-</style>
+<style lang="scss" scoped></style>

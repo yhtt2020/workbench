@@ -20,6 +20,7 @@ export default {
     return {
       messages: [],
       myFrameUrl:'',
+      unReadStatus:undefined,
     }
   },
   props: ['size','chat','level'],
@@ -93,6 +94,10 @@ export default {
       if (this.messages.length > 2) {
         this.messages.splice(2)
       }
+      // 监听IM聊天消息是否已读,未读总数
+      window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED,(e)=>{
+        this.unReadStatus = e.data
+      })
     },
     login() {
       tsbApi.user.login((data) => {
@@ -182,8 +187,11 @@ export default {
                 <icon style="font-size: 18px" icon="xiaoxi"></icon>
               </a-col>
               <a-col :span="18" class="pt-1">
-                <div class="text font-bold">
+                <div class="text flex items-center font-bold">
                   组织
+                  <div class="rounded-full flex items-center justify-center  ml-3" style="width:20px;height:20px; background:var(--error);color:var(--active-text);" v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
+                    {{ unReadStatus }}
+                  </div>
                 </div>
                 <div>举杯，同是科技咖</div>
               </a-col>

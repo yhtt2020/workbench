@@ -35,6 +35,7 @@
     <xt-title type="text">{{ currentTask.description }}</xt-title>
     <div class="flex justify-center items-center flex-col">
       <xt-title type="text">完成奖励</xt-title>
+
 {{ currentTask }}
       <!-- <xt-title type="text" v-if="currentTask.task"
         >当前任务含有操作引导</xt-title

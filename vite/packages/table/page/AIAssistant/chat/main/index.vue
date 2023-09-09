@@ -7,9 +7,6 @@
       <Text @onSearch="onSearch" :isSearch="isSearch"></Text>
     </template>
   </View>
-  <!-- <List :chatList="currentList"></List>
-
-  <Text @onSearch="onSearch" :isSearch="isSearch"></Text> -->
 </template>
 <script>
 import Text from "./Text.vue";
@@ -17,7 +14,6 @@ import List from "./List.vue";
 import View from "./View.vue";
 import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
-import { gpt } from "../../service/api/ai";
 import { message } from "ant-design-vue";
 import { getStreamData } from "./api";
 export default {
@@ -70,7 +66,7 @@ export default {
       if (this.selectTopicIndex === -1) {
         this.addTopic();
       }
-      console.log(this.selectTopicIndex,'选中的索引', this.chatList)
+      console.log(this.selectTopicIndex, "选中的索引", this.chatList);
       let user = {
         content: search,
         role: "user",
@@ -91,6 +87,7 @@ export default {
         });
       await this.processGPTResults(arr);
       this.isSearch = true;
+      // this.topicList[this.selectTopicIndex].time = Date.now();
       // tsbApi.db.put({
       //   _id: `gpt:${this.selectTopicIndex}`,
       //   content: this.chatList[this.selectTopicIndex],
