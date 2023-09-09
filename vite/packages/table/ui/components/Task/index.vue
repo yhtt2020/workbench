@@ -1,6 +1,6 @@
 <template>
   <div
-    style="opacity: 1"
+    style="opacity: 1000"
     :style="{ zIndex: zIndexValue }"
     ref="el"
     @click.prevent.stop="next($event)"
@@ -34,7 +34,7 @@ export default defineComponent({
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      return this.modelValue ? 999999 : null;
+      return this.modelValue ? 99999999999 : null;
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
@@ -61,14 +61,14 @@ export default defineComponent({
   methods: {
     next(event) {
       if (!this.modelValue) return;
-      event.stopPropagation(); // 阻止事件冒泡
       this.action();
+      event.stopPropagation(); // 阻止事件冒泡  
     },
     action() {
       this.$emit("cb");
       this.tour.next();
       this.step++;
-      if (this.task?.success) {
+      if (this.task.success) {
         console.log("任务以完成 :>> ");
         this.success = true
         // 发奖励
@@ -90,8 +90,8 @@ export default defineComponent({
 
       this.tour.addStep({
         attachTo: { element: this.$refs.el, on: this.task?.position ?? "top" },
-        text: this.task.text,
-        title: this.task.title,
+        text: this.task?.text,
+        title: this.task?.title,
         buttons: [
           {
             text: this.currentStep,
