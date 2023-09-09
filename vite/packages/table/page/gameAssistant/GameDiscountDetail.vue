@@ -130,7 +130,7 @@ export default {
     methods:{
       ...mapActions(steamStore,['getDiscountDetail']),
       goBack(){
-        this.$router.push({name:'recommend'})
+        this.$router.go(-1)
       },
 
       enterSteamStore(){
