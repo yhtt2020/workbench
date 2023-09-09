@@ -25,7 +25,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <a-tooltip title="社群">
+  <a-tooltip title="社群沟通">
   <div @click.stop="enterIM" style="padding:0.6em !important;;position:relative;" >
     <emoji style="width: 52px;height:52px" icon="chat"></emoji>
     <div class="rounded-full flex items-center justify-center  ml-3"
