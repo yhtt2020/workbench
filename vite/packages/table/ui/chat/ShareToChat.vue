@@ -15,7 +15,7 @@
       <div class="flex-grow flex justify-between w-full px-1">
         <div class="flex flex-col" style="width: 293px;">
           <a-input class="h-11" v-model:value="forwardText" placeholder="搜索好友、群聊"
-                   style="color:var(--secondary-text);" @pressEnter="enterSearch">
+                   style="color:var(--secondary-text);" @pressEnter="enterSearch" @change="search($event)">
             <template #suffix>
               <div class="flex items-center justify-center pointer active-button" @click="enterSearch">
                 <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);"/>
@@ -222,16 +222,40 @@ export default defineComponent({
       // const inputPinyin = pinyin(forwardTextAsRaw,{style:'NORMAL'})
       // console.log('输入的拼音',inputPinyin);
       searchResult = data.allList.filter(item => {
+        // const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
+
+        // // const itemPinyin = pinyin(item,{style:'NORMAL'})
+
+        // return data.forwardText === text
+
         const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
+        const id = item.type  === 'C2C' ? item.userProfile.userID : item.groupProfile.groupID
+      
+       // const namePinyin = pinyin(item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name,{
+      //   style:pinyin.STYLE_NORMAL
+      // })
+      // console.log('过滤的拼音结果::>>',namePinyin);
 
-        // const itemPinyin = pinyin(item,{style:'NORMAL'})
-
-        return data.forwardText === text
+      if(text.includes(data.forwardText)){
+        return item
+      }
+       if(id.includes(data.forwardText)){
+         return item
+       }
       })
       // console.log('结果',searchResult);
       data.list = searchResult
 
     }
+
+    // 实时搜索
+    const search = () =>{
+     if(data.forwardText.trim() === ''){
+      getForwardList()
+     }else{
+      return;
+     }
+    }  
 
     onMounted(() => {
       getForwardList()
@@ -242,7 +266,7 @@ export default defineComponent({
       doShare,
       getForwardList, closeForwardModal,
       selectItem, cancelSelect, forwardSend,
-      forwardMessage, enterSearch,
+      forwardMessage, enterSearch,search,
       // isSelect,
     }
   }

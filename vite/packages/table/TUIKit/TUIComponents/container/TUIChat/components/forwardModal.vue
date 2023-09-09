@@ -186,7 +186,7 @@ export default defineComponent({
         return item
       }
     })
-    console.log('结果',searchResult);
+    // console.log('结果',searchResult);
     data.list = searchResult
   }
 
