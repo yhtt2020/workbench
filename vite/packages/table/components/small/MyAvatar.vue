@@ -1,44 +1,45 @@
 <script>
-import {ThunderboltFilled} from "@ant-design/icons-vue";
-import Template from "../../../user/pages/Template.vue";
-import BorderAavtar from "../avatar/BorderAavtar.vue";
-import FrameAvatar from '../avatar/FrameAvatar.vue';
-import {mapWritableState} from "pinia";
-import {messageStore} from "../../store/message";
-import {appStore} from "../../store";
-import {Modal} from "ant-design-vue";
-const { messageModel } = window.$models
+import { ThunderboltFilled } from '@ant-design/icons-vue'
+import Template from '../../../user/pages/Template.vue'
+import BorderAavtar from '../avatar/BorderAavtar.vue'
+import FrameAvatar from '../avatar/FrameAvatar.vue'
+import { mapWritableState } from 'pinia'
+import { messageStore } from '../../store/message'
+import { appStore } from '../../store'
+import { Modal } from 'ant-design-vue'
+import Emoji from '../comp/Emoji.vue'
 
+const { messageModel } = window.$models
 
 export default {
   components: {
+    Emoji,
     ThunderboltFilled,
     BorderAavtar,
     FrameAvatar
   },
-  data() {
+  data () {
     return {
       messages: [],
-      myFrameUrl:'',
-      unReadStatus:undefined,
+      myFrameUrl: '',
     }
   },
-  props: ['size','chat','level'],
+  props: ['size', 'chat', 'level'],
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
   },
-  mounted() {
+  mounted () {
     this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
     this.setMinute()
-    this.loadMessages()
-    setInterval(() => {
-      this.loadMessages()
-    }, 10000)
+    // this.loadMessages()
+    // setInterval(() => {
+    //   this.loadMessages()
+    // }, 10000)
 
   },
   methods: {
-    setMinute() {
+    setMinute () {
       setInterval(() => {
         this.$refs.minute?.classList.add('move')
         this.lvInfo.remainMinute--
@@ -59,61 +60,55 @@ export default {
         }, 1000)
       }, 60000)
     },
-    async loadMessages() {
-      this.messages = await messageModel.allList()
-      this.messages.forEach(mes => {
-        //修正一下登录小助手的
-        if (mes.title === '登录小助手') {
-          mes.body = '[提醒]'
-        }
-      })
-      if (this.lastTime === 0) {
-        let barrages = this.messages.slice(0, 10)
-        window.$manager.sendChat(barrages)
-        if (barrages.length > 0) {
-          this.lastTime = barrages[0].create_time//重新设置指标
-        } else {
-          this.lastTime = Date.now()
-        }
-      } else {
-        let readyToSend = this.messages.filter(mes => {
-          return mes.create_time > this.lastTime
-        })
-        //readyToSend.splice(0,10)
-        if (readyToSend.length > 0) {
-          window.$manager.sendChat(readyToSend)
-        }
-        if (this.messages.length > 0) {
-          this.lastTime = this.messages[0].create_time//重新设置指标
-        } else {
-          this.lastTime = Date.now()
-        }
-
-        localStorage.setItem('lastBarrageMessageTime', this.lastTime)
-      }
-      if (this.messages.length > 2) {
-        this.messages.splice(2)
-      }
-      // 监听IM聊天消息是否已读,未读总数
-      window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED,(e)=>{
-        this.unReadStatus = e.data
-      })
-    },
-    login() {
+    // async loadMessages() {
+    //   this.messages = await messageModel.allList()
+    //   this.messages.forEach(mes => {
+    //     //修正一下登录小助手的
+    //     if (mes.title === '登录小助手') {
+    //       mes.body = '[提醒]'
+    //     }
+    //   })
+    //   if (this.lastTime === 0) {
+    //     let barrages = this.messages.slice(0, 10)
+    //     window.$manager.sendChat(barrages)
+    //     if (barrages.length > 0) {
+    //       this.lastTime = barrages[0].create_time//重新设置指标
+    //     } else {
+    //       this.lastTime = Date.now()
+    //     }
+    //   } else {
+    //     let readyToSend = this.messages.filter(mes => {
+    //       return mes.create_time > this.lastTime
+    //     })
+    //     //readyToSend.splice(0,10)
+    //     if (readyToSend.length > 0) {
+    //       window.$manager.sendChat(readyToSend)
+    //     }
+    //     if (this.messages.length > 0) {
+    //       this.lastTime = this.messages[0].create_time//重新设置指标
+    //     } else {
+    //       this.lastTime = Date.now()
+    //     }
+    //
+    //     localStorage.setItem('lastBarrageMessageTime', this.lastTime)
+    //   }
+    //   if (this.messages.length > 2) {
+    //     this.messages.splice(2)
+    //   }
+    //
+    // },
+    login () {
       tsbApi.user.login((data) => {
         ipc.send('getDetailUserInfo')
       })
     },
-    social() {
+    social () {
       // if (this.totalCount) {
       //   this.$router.push({name: 'message'})
       // } else {
       //
       // }
-      this.$router.push({name:'socialMy'})
-    },
-    enterIM() {
-      this.$router.push({name:'chatMain'})
+      this.$router.push({ name: 'socialMy' })
     },
   }
 }
@@ -122,7 +117,7 @@ export default {
 <template>
   <div v-if="!userInfo">
     <div @click="login" style="padding: 0.5em">
-      <a-avatar :size="size||54"  class="xt-text">未登录</a-avatar>
+      <a-avatar :size="size||54" class="xt-text">未登录</a-avatar>
       <div>
       </div>
       <div>
@@ -130,26 +125,27 @@ export default {
     </div>
   </div>
 
-  <div v-else :style="{ width: settings.enableChat && !simple ? '23em' : (simple ? '4.5em' : '11em') }">
+  <div v-else :style="{ width: '11em'}">
     <a-row class="pointer" @click="social">
-      <a-col class="user-info" :span="settings.enableChat && !simple ? 10 : 24" style="padding: 0.6em;position:relative;">
+      <a-col class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10">
-          <a-col :span="12"  :style="{paddingLeft:simple?'20px':'5px'}">
+          <a-col :span="12" :style="{paddingLeft:simple?'20px':'5px'}">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
-            <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50" :frameUrl="userInfo.frame"></FrameAvatar>
+            <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
+                         :frameUrl="userInfo.frame"></FrameAvatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->
           </a-col>
           <!-- 等级 -->
-          <a-col  :span="12" v-if="!simple && level" @click.stop="goMy()" style="position: relative;">
+          <a-col :span="12" v-if="!simple && level" @click.stop="goMy()" style="position: relative;">
             <span ref="minute" class="tip">+1</span>
-            <div style="padding-top: 0.1em; min-height: 50px">
+            <div class="xt-text" style="padding-top: 0.1em; min-height: 50px">
               <span style="font-size: 0.8em;"></span> {{ lvInfo.lv }}级 <br>
               <span>
                     <a-tooltip>
-                      <a-progress strokeColor="#666" trailColor="#4d4d4d" :percent="lvInfo.percentage" :showInfo="false"
+                      <a-progress strokeColor="var(--active-bg)" trailColor="var(--secondary-bg)" :percent="lvInfo.percentage" :showInfo="false"
                                   style="width:4em"/>
                       <template #title>
                         <thunderbolt-filled class="thunder"
@@ -178,30 +174,9 @@ export default {
         </a-row>
       </a-col>
 
-      <a-col  class="chat" v-if="settings.enableChat && !simple && chat" :span="14"
+      <a-col class="chat" v-if="settings.enableChat && !simple && chat" :span="14"
              style="text-align: left;padding-top: 0.5em;line-height: 1.75">
-        <div style="font-size: 13px;" >
-          <div class="pointer ml-3" @click.stop="enterIM">
-            <a-row :gutter="10">
-              <a-col :span="6" class="pt-2">
-                <icon style="font-size: 18px" icon="xiaoxi"></icon>
-              </a-col>
-              <a-col :span="18" class="pt-1">
-                <div class="text flex items-center font-bold">
-                  社群
-                  <div class="rounded-full flex items-center justify-center  ml-3" style="width:20px;height:20px; background:var(--error);color:var(--active-text);" v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
-                    {{ unReadStatus }}
-                  </div>
-                </div>
-                <div>举杯，同是科技咖</div>
-              </a-col>
-            </a-row>
 
-          </div>
-        </div>
-        <div hidden class="pointer" @click.stop="enterIM">
-          <div v-for=" message  in  messages " class="text-more">{{ message.title }}：{{ message.body }}</div>
-        </div>
       </a-col>
     </a-row>
   </div>
@@ -220,7 +195,6 @@ export default {
   display: inline-block;
   background: rgba(42, 40, 40, 0.51);
 }
-
 
 
 .thunder {
@@ -273,7 +247,8 @@ export default {
 
   }
 }
-:deep(.ant-badge-count){
+
+:deep(.ant-badge-count) {
   box-shadow: none;
 }
 </style>
