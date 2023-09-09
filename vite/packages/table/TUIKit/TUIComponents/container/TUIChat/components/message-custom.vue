@@ -61,16 +61,18 @@
 <!--    </template>-->
 
     <template v-else>
-      <div v-if="isCustom.type==='game'">
+      <div  v-if="isCustom.type==='game'">
         <!--      {{steam游戏格式}}-->
         <img style="border-radius: 5px;width: 250px" :src="isCustom.game?.header">
-        <div class="mt-2 " style="margin-top: 10px">
+        <div class="mt-2 " style="margin-top: 10px;">
           <div class="truncate" style="max-width: 160px;float: left;margin-right: 10px">
             <a-avatar :size="30" shape="square" :src="isCustom.game?.icon"></a-avatar>  <strong>{{isCustom.game?.chineseName}}</strong>
           </div>
 
           <div  style="float: right">
             <xt-button @click="goGameDetail(isCustom.game?.appid)" :w="70" :h="35" size="mini"><ShopOutlined></ShopOutlined> 查看</xt-button>
+          </div>
+          <div style="clear: both">
           </div>
         </div>
       </div>
