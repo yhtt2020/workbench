@@ -78,13 +78,13 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群类型</span>
         <span class="font-14" style="color: var(--secondary-text);">
-          {{ $t(`TUIChat.manage.${typeName[conversation.type]}`) }}
+          {{ typeName[conversation.type] }}
         </span>
       </div>
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
-        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type === 'Public'">
+        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'Private' && conversation.joinOption !== 'DisableApply'">
           <div class="flex pointer" @click="updateGroupJoinWay">
             <span class="font-14" style="color: var(--secondary-text);">
               {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
@@ -96,14 +96,13 @@
         </template>
         <div v-else>
           <span class="font-14" style="color: var(--secondary-text);">
-            {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+            {{ typeName[conversation.joinOption]  }}
           </span>
         </div>
       </div>
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">邀请方式</span>
-        
         <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'AVChatRoom'">
           <div class="flex pointer" @click="updateGroupInviteWay">
             <span class="font-14" style="color: var(--secondary-text);">
