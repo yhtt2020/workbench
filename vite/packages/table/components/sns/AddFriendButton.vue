@@ -87,12 +87,12 @@ export default {
 
 <template>
   <XtButton @click="addFriend" v-if="relationship==='not'" type="theme" style="width: 100%"
-            class="rounded-full w-full">
+            class="rounded-lg w-full">
     <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
     加为好友
   </XtButton>
   <XtButton @click="deleteFriend" v-else-if="relationship==='yes'" style="width: 100%;" :style="bgColor"
-            class="rounded-full w-full">
+            class="rounded-lg w-full">
     <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
     解除好友
   </XtButton>

@@ -133,7 +133,7 @@ export default defineComponent({
           ] as any;
           break;
         case TIM.TYPES.CONV_GROUP:
-          data.allMemberList = TUIChatStore?.allMemberList?.memberList;
+          data.allMemberList = TUIChatStore?.allMemberList;//修复表态成员名称错误
           break;
         default:
           break;

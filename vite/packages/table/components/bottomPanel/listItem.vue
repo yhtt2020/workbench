@@ -1,5 +1,6 @@
 <template>
-  <div class="flex-row flex items-center  pointer h-16 p-3 w-full mb-2">
+
+    <div class="flex-row flex items-center  pointer h-16 p-3 w-full mb-2">
     <div class="h-10 w-10 rounded-lg flex justify-center items-center xt-bg xt-text" style="background:rgb(80, 80, 80);"
       v-if="item.type === 'systemApp'">
       <Icon style="font-size: 24px" :icon="item.icon" class="h-10 w-10"></Icon>

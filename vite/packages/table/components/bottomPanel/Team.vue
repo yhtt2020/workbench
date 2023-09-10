@@ -9,7 +9,7 @@
         <a-avatar :src="t.img" :size="40"></a-avatar>
         <span>{{ t.title }}</span>
       </div>
-      <div class="team-item">
+      <div class="team-item" @click="openTask()">
         <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
         <span>任务中心</span>
       </div>
@@ -25,6 +25,7 @@ import { mapWritableState, mapActions } from 'pinia'
 import { teamStore } from '../../store/team'
 import MyProp from '../team/MyProp.vue'
 import Emoji from '../comp/Emoji.vue'
+import { taskStore } from '../../apps/task/store'
 export default {
   name: "Team",
   components: {
@@ -81,9 +82,13 @@ export default {
   },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
+    ...mapWritableState(taskStore, [ 'isTaskDrawer']),
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
+    openTask(){
+      this.isTaskDrawer=true
+    },
     async jump(type,val){
       switch(type){
         case 'route':

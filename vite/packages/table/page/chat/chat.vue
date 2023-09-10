@@ -1,6 +1,10 @@
 <template>
-  <div class="flex h-full py-3">
-    <xt-left-menu :list="chatLeftList" :index="index" last="3" end="1"></xt-left-menu>
+
+    <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
+      <div class="w-full">
+        <router-view></router-view>
+      </div>
+    </xt-left-menu>
     <!-- <router-view></router-view> -->
     <!-- <template v-if="type === 'chat'">
       <ChatMain></ChatMain>
@@ -19,8 +23,7 @@
 
     </div> -->
 
-    <router-view></router-view>
-  </div>
+
 
   <teleport to='body'>
      <Modal  v-if="open" v-model:visible="open" :blurFlag="true">
@@ -48,6 +51,9 @@ import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
 // import { handleErrorPrompts, handleSuccessPrompts } from '../../TUIKit/TUIComponents/container/utils';
+import config from './config'
+import {appStore} from "../../store";
+import {storeToRefs} from "pinia";
 
 export default {
   name: 'App',
@@ -99,6 +105,10 @@ export default {
       data.open = true
     }
 
+    const appS=appStore()
+    const {userInfo}=appS
+
+    console.log(userInfo.uid,'uidddddd',config.adminUids)
     const chatLeftList = ref([
       {
         icon: 'message',
@@ -117,6 +127,18 @@ export default {
           name:'contact'
         }
       },
+      ...(config.adminUids.includes(userInfo.uid)?[
+        {
+          icon: 'diannao',
+          type: 'admin',
+          title:'管理面板(仅管理员可见)',
+          callBack: selectTab,
+          route:{
+            name:'chatAdmin'
+          }
+        }
+      ]:[]),
+
       {
         icon: 'zhinanzhen',
         type: 'find',
@@ -128,12 +150,16 @@ export default {
       // 写社群相关静态内容时临时打开的路由
       {
         icon:'',
-        img: '/icons/bz1.png',
+        img: '/icons/logo128.png',
         type: 'thisky',
+        noBg:true,
         callBack: selectTab,
         route:{
           name:'chatThisky'
         }
+      },
+      {
+        full:true,
       },
       {
         icon: 'tianjia2',

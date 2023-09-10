@@ -64,6 +64,21 @@
                 ></a-switch>
               </div>
             </a-col>
+
+            <a-col v-if="isMain() " :span="12">
+              <div class="btn relative">
+                社群沟通<br />
+                <a-switch v-model:checked="settings.enableChat"></a-switch>
+              </div>
+            </a-col>
+            <a-col v-if="isMain()" :span="12">
+              <div    class="btn relative">
+                消息免打扰<br />
+                <a-switch
+                  v-model:checked="noticeSettings.enable"
+                ></a-switch>
+              </div>
+            </a-col>
             <a-col v-if="isMain()" :span="12">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br />
@@ -71,12 +86,6 @@
                   @click.stop="() => {}"
                   v-model:checked="simple"
                 ></a-switch>
-              </div>
-            </a-col>
-            <a-col v-if="isMain() && !simple" :span="12">
-              <div class="btn relative">
-                组织(沟通)<br />
-                <a-switch v-model:checked="settings.enableChat"></a-switch>
               </div>
             </a-col>
           </a-row>
@@ -143,6 +152,12 @@
               :gutter="[10, 10]"
             >
               <a-col v-if="isMain()" :span="6">
+                <div @click="editNavigationVisible=true" class="btn">
+                  <Icon icon="Pushpin" style="font-size: 2em"></Icon>
+                  <div>导航栏编辑</div>
+                </div>
+              </a-col>
+              <a-col v-if="isMain()" :span="6">
                 <div @click="wizard" class="btn">
                   <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
                   <div>配置向导</div>
@@ -202,7 +217,9 @@
       <div></div>
     </vue-custom-scrollbar>
   </div>
-
+  <div class="home-blur fixed inset-0" style="z-index: 999" v-if="editNavigationVisible">
+    <EditNavigation @setQuick="editNavigationVisible=false"></EditNavigation>
+  </div>
   <a-drawer
     :width="500"
     v-if="styleVisible"
@@ -281,9 +298,11 @@ import SecondPanel from "../components/SecondPanel.vue";
 import GradeSmallTip from "../components/GradeSmallTip.vue";
 import { isMain } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
+import { noticeStore } from '../store/notice'
+import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 export default {
   name: "Setting",
-  components: { MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
+  components: { EditNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
   data() {
     return {
       bgColor: "",
@@ -298,6 +317,7 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true,
       },
+      editNavigationVisible:false,
     };
   },
   watch: {
@@ -329,10 +349,15 @@ export default {
       "showWindowController",
     ]),
     ...mapWritableState(appStore, ["userInfo"]),
+    ...mapWritableState(noticeStore,['noticeSettings'])
   },
   methods: {
+    ...mapActions(noticeStore,['setNoticeOnOff']),
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     isMain: isMain,
+    editNavigation(){
+      this.editNavigationVisible=true
+    },
     clearBgColor() {
       delBgColor();
       delSecondaryBgColor();

@@ -4,6 +4,7 @@
     <div @click="closeAdd" class="pointer  xt-bg ">
       <Icon icon="guanbi" class="no-drag xt-text" style="width:18px;height:18px;" ></Icon>
     </div>
+    <xt-task :modelValue="m01045"></xt-task>
     <div class="add-navigation-content flex flex-row">
       <div class="left-content">
         <div v-for="(item,index) in navClassify" :style="activeItem ===index?' border-right: 1px rgba(22, 119, 255, 1) solid;' :''">
@@ -20,6 +21,8 @@
 </template>
 
 <script>
+import { taskStore } from '../../apps/task/store';
+import {mapWritableState} from "pinia"
 export default {
   name: "Classification",
   data(){
@@ -27,6 +30,12 @@ export default {
       activeItem:0,
     }
   },
+computed:{
+  ...mapWritableState(taskStore, ["taskID", "step"]),
+    m01045() {
+      return this.taskID == "M0104" && this.step == 5;
+    },
+},
   props:['navClassify','show'],
   methods:{
     closeAdd(){

@@ -1,83 +1,204 @@
 <template>
-  <div @click.stop class="bottom-panel mb-3 flex flex-row items-center justify-center w-full" style="text-align: center"
-       @contextmenu.stop="showMenu">
+  <div
+    @click.stop
+    class="bottom-panel mb-3 flex flex-row items-center justify-center w-full"
+    style="text-align: center"
+    @contextmenu.stop="showMenu"
+  >
     <!-- 快速搜索 底部 用户栏 -->
-    <div v-if="isMain && !simple" class="common-panel user s-bg"
-         style="display: inline-block;vertical-align: top;margin-top: 0;background: var(--primary-bg);color: var(--primary-text);">
-      <MyAvatar :chat="true" :level="true"></MyAvatar>
+    <div
+      v-if="isMain && (!simple || settings.enableChat)"
+      class="common-panel user s-bg flex flex-row"
+      style="
+        vertical-align: top;
+        margin-top: 0;
+        background: var(--primary-bg);
+        color: var(--primary-text);
+      "
+    >
+      <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
+      <div v-show="settings.enableChat" class="pointer">
+        <ChatButton></ChatButton>
+      </div>
     </div>
+
+
     <!-- 快速搜索 底部栏区域 -->
-    <div v-show="navigationToggle[2]" class=" flex flex-row  items-center pl-4  s-bg"
-         style="display: flex;flex-direction: column;justify-content: center;justify-items: center;align-content: center;align-items: center; border-radius: 8px; height: 73px;overflow: hidden;margin-right: 10px;background: var(--primary-bg);color: var(--primary-text);">
-      <div style="display: flex;flex-direction: row;width: 100%;height:56px;
-align-items: start;
-    flex-wrap: nowrap;
-    justify-content: center;
-">
-        <div style="height: 56px;width: 100%;overflow: hidden">
-          <div class="scroll-content mr-6" style="overflow-y:hidden;overflow-x: auto;flex:1;display: flex;"
-               ref="content">
-
-            <div style="white-space: nowrap;display: flex;align-items: center" id="bottomContent">
-              <div v-if="footNavigationList.length <= 0" style="">
+    <div
+      v-show="navigationToggle[2]"
+      class="flex flex-row items-center pl-4 s-bg"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        justify-items: center;
+        align-content: center;
+        align-items: center;
+        border-radius: 8px;
+        height: 73px;
+        overflow: hidden;
+        margin-right: 10px;
+        background: var(--primary-bg);
+        color: var(--primary-text);
+      "
+    >
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          height: 56px;
+          align-items: start;
+          flex-wrap: nowrap;
+          justify-content: center;
+        "
+      >
+        <div @contextmenu.stop="showMenu" style="height: 56px; width: 100%; overflow: hidden">
+          <div
+            class="scroll-content mr-6"
+            style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex"
+            ref="content"
+          >
+            <xt-task :modelValue="m01041" @cb="showMenu">
+              <div
+                style="white-space: nowrap; display: flex; align-items: center"
+                id="bottomContent"
+              >
+                <div v-if="footNavigationList.length <= 0" style=""></div>
+                <a-tooltip
+                  v-else
+                  :title="item.name"
+                  v-for="item in footNavigationList"
+                  :key="item.name"
+                >
+                  <div
+                    @contextmenu.stop="enableDrag"
+                    class="pointer mr-3 mr-6"
+                    style="white-space: nowrap; display: inline-block"
+                    @click.stop="clickNavigation(item)"
+                  >
+                    <div
+                      style="width: 56px; height: 56px"
+                      v-if="item.type === 'systemApp'"
+                      class="s-item flex justify-center items-center rounded-lg xt-bg-2"
+                    >
+                      <Icon
+                        :icon="item.icon"
+                        class="test"
+                        style="
+                          width: 32px;
+                          height: 32px;
+                          fill: var(--primary-text);
+                        "
+                      ></Icon>
+                    </div>
+                    <div
+                      v-else
+                      style="width: 45px; height: 45px"
+                      class="flex justify-center items-center"
+                    >
+                      <a-avatar
+                        :size="40"
+                        shape="square"
+                        :src="item.icon"
+                      ></a-avatar>
+                    </div>
+                  </div>
+                </a-tooltip>
               </div>
-              <a-tooltip v-else :title="item.name" v-for=" item  in  footNavigationList " :key="item.name">
-                <div @contextmenu.stop="enableDrag" class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block;"
-                     @click.stop="clickNavigation(item)">
-                  <div style="width: 56px;height:56px;" v-if="item.type === 'systemApp'"
-                       class="s-item flex justify-center items-center rounded-lg xt-bg-2">
-
-                    <Icon :icon="item.icon" class="test"
-                          style="width: 32px;height: 32px;fill: var(--primary-text)"></Icon>
-                  </div>
-                  <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
-                    <a-avatar :size="40" shape="square" :src="item.icon"></a-avatar>
-                  </div>
-                </div>
-              </a-tooltip>
-            </div>
-
+            </xt-task>
           </div>
         </div>
 
         <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-          <div @click="appChange" v-if="isMain"
-               style="flex-shrink:0;border-left: 1px solid var(--divider);width: 72px;height: 58px"
-               class="flex justify-center items-center  h-2/3 pointer ">
+          <div
+            @click="appChange"
+            v-if="isMain"
+            style="
+              flex-shrink: 0;
+              border-left: 1px solid var(--divider);
+              width: 72px;
+              height: 58px;
+            "
+            class="flex justify-center items-center h-2/3 pointer"
+          >
             <template v-if="!showScreen">
-              <Icon icon="fuzhi" style="width: 40px;height: 40px;margin-left: 5px;margin-bottom: 3px"></Icon>
+              <Icon
+                icon="fuzhi"
+                style="
+                  width: 40px;
+                  height: 40px;
+                  margin-left: 5px;
+                  margin-bottom: 3px;
+                "
+              ></Icon>
               <span
-                style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px">{{
-                  runningApps.length + runningTableApps.length
-                }}</span>
+                style="
+                  position: absolute;
+                  width: 48px;
+                  height: 48px;
+                  text-align: center;
+                  line-height: 48px;
+                  font-weight: bold;
+                  font-size: 18px;
+                "
+              >{{ runningApps.length + runningTableApps.length }}</span
+              >
             </template>
             <template v-else>
-              <Icon icon="touping" style="width: 40px;height: 40px;margin-left: 2px;"></Icon>
+              <Icon
+                icon="touping"
+                style="width: 40px; height: 40px; margin-left: 2px"
+              ></Icon>
               <span
-                style="position: absolute;width: 48px;height: 48px;text-align: center;line-height: 48px;font-weight: bold;font-size: 18px;margin-bottom: 6px">{{
-                  runningScreen
-                }}</span>
+                style="
+                  position: absolute;
+                  width: 48px;
+                  height: 48px;
+                  text-align: center;
+                  line-height: 48px;
+                  font-weight: bold;
+                  font-size: 18px;
+                  margin-bottom: 6px;
+                "
+              >{{ runningScreen }}</span
+              >
             </template>
-
           </div>
         </a-tooltip>
       </div>
     </div>
+
     <template v-if="!simple && isMain">
       <Team></Team>
     </template>
-<!--  <TaskBox></TaskBox>-->
 
+    <TaskBox></TaskBox>
   </div>
-  <div id="trans" v-show="visibleTrans"
-       style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
-    <a-button @click="visibleTrans = false" style="position:fixed;left: 10px;top: 10px">取消</a-button>
-    <iframe id="transFrame" style="width:100vw;height: 100vh;border: none">
 
+  <div
+    id="trans"
+    v-show="visibleTrans"
+    style="
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #2c2c2c;
+    "
+  >
+    <a-button
+      @click="visibleTrans = false"
+      style="position: fixed; left: 10px; top: 10px"
+    >取消
+    </a-button
+    >
+    <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
     </iframe>
   </div>
   <a-drawer
-    :contentWrapperStyle="{backgroundColor:'#212121',height:'216px'}"
+    :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }"
     class="drawer"
     :closable="true"
     placement="bottom"
@@ -87,12 +208,22 @@ align-items: start;
     <a-row>
       <a-col>
         <div @click="editNavigation" class="btn relative">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>编辑导航</span></div>
+          <xt-task :modelValue="m01042" @cb="editNavigation">
+            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+            <div><span>编辑导航</span></div>
+          </xt-task>
         </div>
-        <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
+
+        <div
+          @click="clickNavigation(item)"
+          class="btn"
+          v-for="item in builtInFeatures"
+          :key="item.name"
+        >
           <Icon style="font-size: 3em" :icon="item.icon"></Icon>
-          <div><span>{{ item.name }}</span></div>
+          <div>
+            <span>{{ item.name }}</span>
+          </div>
         </div>
       </a-col>
     </a-row>
@@ -116,14 +247,20 @@ align-items: start;
     </div>
   </transition>
 
-  <div class="home-blur fixed inset-0" style="z-index: 999;background: var(--mask-background-color);" v-if="changeFlag"
-       @click="closeChangeApp">
-
-    <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+  <div
+    class="home-blur fixed inset-0"
+    style="z-index: 999; background: var(--mask-background-color)"
+    v-if="changeFlag"
+    @click="closeChangeApp"
+  >
+    <ChangeApp
+      :tab="tab"
+      @closeChangeApp="closeChangeApp"
+      :full="full"
+      @setFull="setFull"
+    ></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
-
-
 </template>
 
 <script>
@@ -154,11 +291,17 @@ import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
-import TaskBox from "../apps/task/page/TaskBox.vue"
+import TaskBox from '../apps/task/page/TaskBox.vue'
+import { taskStore } from '../apps/task/store'
+import Emoji from './comp/Emoji.vue'
+import ChatButton from './bottomPanel/ChatButton.vue'
+
 export default {
   name: 'BottomPanel',
-  emits:['getDelIcon'],
+  emits: ['getDelIcon'],
   components: {
+    ChatButton,
+    Emoji,
     MyAvatar,
     TeamTip,
     SecondPanel,
@@ -171,11 +314,11 @@ export default {
     ScrolX,
     GradeSmallTip,
     Team,
-    TaskBox
+    TaskBox,
   },
   data () {
     return {
-      sortable:null,
+      sortable: null,
 
       tab: 'screen',
 
@@ -204,18 +347,17 @@ export default {
       showScreen: false,
       leftNav: false,
       rightNav: false,
-      delNav: false
+      delNav: false,
       //screenWidth: document.body.clientWidth
     }
   },
   props: {
     delZone: {
       type: Boolean,
-      default: () => false
-    }
+      default: () => false,
+    },
   },
   unmounted () {
-
     let that = this
     window.removeEventListener('resize', that.checkScroll)
     clearInterval(this.updateMessageTimer)
@@ -260,9 +402,7 @@ export default {
     //     that.screenWidth = window.screenWidth
     //   }()
     // }
-    window.addEventListener('resize',
-      that.checkScroll
-    )
+    window.addEventListener('resize', that.checkScroll)
     let content = this.$refs.content
     content.addEventListener('wheel', (event) => {
       event.preventDefault()
@@ -276,7 +416,21 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore, ['screens']),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(navStore, ['footNavigationList', 'builtInFeatures', 'navigationToggle', 'sideNavigationList', 'rightNavigationList', 'mainNavigationList']),
+    ...mapWritableState(taskStore, ['taskID', 'step']),
+    ...mapWritableState(navStore, [
+      'footNavigationList',
+      'builtInFeatures',
+      'navigationToggle',
+      'sideNavigationList',
+      'rightNavigationList',
+      'mainNavigationList',
+    ]),
+    m01041 () {
+      return this.taskID == 'M0104' && this.step == 1
+    },
+    m01042 () {
+      return this.taskID == 'M0104' && this.step == 2
+    },
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
@@ -284,13 +438,13 @@ export default {
     },
     runningScreen () {
       let count = 0
-      this.screens.forEach(s => {
+      this.screens.forEach((s) => {
         if (s.running) {
           count++
         }
       })
       return count
-    }
+    },
   },
   watch: {
     footNavigationList: {
@@ -304,10 +458,9 @@ export default {
         //     this.$refs.content.style.marginTop='0px'
         //   }
         // })
-
       },
       immediate: true,
-      deep: true
+      deep: true,
     },
     delZone (val) {
       this.delNav = val
@@ -318,13 +471,17 @@ export default {
       handler (val) {
         this.leftNav = val[0]
         this.rightNav = val[1]
-      }
-    }
+      },
+    },
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList']),
+    ...mapActions(navStore, [
+      'setFootNavigationList',
+      'sortFootNavigationList',
+      'removeFootNavigationList',
+    ]),
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -333,7 +490,6 @@ export default {
       } else {
         this.teamVisible = !this.teamVisible
       }
-
     },
     closeDrawer () {
       this.menuVisible = false
@@ -357,26 +513,39 @@ export default {
     appChange () {
       if (this.showScreen) {
         this.tab = 'screen'
-        this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+        this.routeParams.url &&
+        ipc.send('hideTableApp', {
+          app: JSON.parse(JSON.stringify(this.routeParams)),
+        })
       } else {
         this.tab = 'apps'
-        this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+        this.routeParams.url &&
+        ipc.send('hideTableApp', {
+          app: JSON.parse(JSON.stringify(this.routeParams)),
+        })
       }
       this.changeFlag = true
     },
     closeChangeApp () {
-      this.routeParams.url && setTimeout(() => { this.$router.push({ name: 'app', params: this.routeParams }) }, 400)
+      this.routeParams.url &&
+      setTimeout(() => {
+        this.$router.push({ name: 'app', params: this.routeParams })
+      }, 400)
       this.changeFlag = false
     },
     showMenu () {
-      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
+      this.routeParams.url &&
+      ipc.send('hideTableApp', {
+        app: JSON.parse(JSON.stringify(this.routeParams)),
+      })
       this.menuVisible = true
     },
     hideMenu () {
       this.menuVisible = false
     },
     onClose () {
-      this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
+      this.routeParams.url &&
+      this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
     editNavigation () {
@@ -419,9 +588,8 @@ export default {
           url: 'https://szfilehelper.weixin.qq.com/',
           preload: 'fileHelper',
           background: false,
-        }
+        },
       })
-
     },
     async setFullScreen () {
       // await tsbApi.window.isFullScreen()
@@ -432,7 +600,6 @@ export default {
         this.full = true
         tsbApi.window.setFullScreen(true)
       }
-
     },
 
     clickNavigation (item) {
@@ -451,7 +618,7 @@ export default {
           } else if (item.data) {
             this.$router.push({
               name: 'app',
-              params: item.data
+              params: item.data,
             })
           } else {
             this.$router.push({ name: item.event })
@@ -460,7 +627,7 @@ export default {
         case 'coolApp':
           this.$router.push({
             name: 'app',
-            params: item.data
+            params: item.data,
           })
           break
         case 'localApp':
@@ -473,22 +640,22 @@ export default {
           require('electron').shell.openPath(item.path)
       }
     },
-    disableDrag(){
-      if(this.sortable){
-        document.removeEventListener('click',this.disableDrag)
+    disableDrag () {
+      if (this.sortable) {
+        document.removeEventListener('click', this.disableDrag)
         this.sortable.destroy()
-        this.sortable=null
+        this.sortable = null
         message.info('已中止导航栏调整')
       }
     },
     enableDrag () {
-      if(this.sortable){
+      if (this.sortable) {
         return
       }
-      document.addEventListener('click',this.disableDrag)
+      document.addEventListener('click', this.disableDrag)
       let that = this
       let drop = document.getElementById('bottomContent')
-      this.sortable= Sortable.create(drop, {
+      this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
         onStart: function (event) {
@@ -503,14 +670,16 @@ export default {
           delIcon.ondrop = function (ev) {
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
+            if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
               that.removeFootNavigationList(event.oldIndex)
               return
             }
             let sumList = []
             // 判断其他导航栏是否是打开状态，是则获取功能列表
             if (that.leftNav && that.rightNav) {
-              sumList = that.sideNavigationList.concat(that.rightNavigationList)
+              sumList = that.sideNavigationList.concat(
+                that.rightNavigationList
+              )
             } else if (that.leftNav && !that.rightNav) {
               sumList = that.sideNavigationList
             } else if (!that.leftNav && that.rightNav) {
@@ -520,7 +689,12 @@ export default {
               // console.log('不可删除')
               return
             }
-            that.delNavigation(sumList, oneNav, event.oldIndex, that.removeFootNavigationList)
+            that.delNavigation(
+              sumList,
+              oneNav,
+              event.oldIndex,
+              that.removeFootNavigationList
+            )
           }
         },
         onUpdate: function (event) {
@@ -541,17 +715,16 @@ export default {
         },
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
-
-        }
+        },
       })
       message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
     delNavigation (sumList, oneNav, index, delMethod) {
-      if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
+      if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
         //如果不是必须的
         delMethod(index)
       } else {
-        if (sumList.find(item => item.name === oneNav.name)) {
+        if (sumList.find((item) => item.name === oneNav.name)) {
           //正常移除
           delMethod(index)
         } else {
@@ -560,7 +733,7 @@ export default {
         }
       }
     },
-  }
+  },
 }
 </script>
 <style></style>
@@ -596,7 +769,6 @@ export default {
 .bottom-panel .common-panel {
   padding: 0.2em 1em 0.2em 1em !important;
 }
-
 
 //
 //@media screen and (max-height: 510px) {
@@ -644,12 +816,9 @@ export default {
 //  }
 //}
 
-
 .scroll-content {
-
   :last-child {
     margin-right: 0;
   }
 }
-
 </style>

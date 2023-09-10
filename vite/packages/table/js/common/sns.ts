@@ -71,20 +71,19 @@ export async function checkGroupShip(groupID:any) {
   getChat()
   const res  = await chat.getGroupList()
   const allGroupList = res.data.groupList
+  const successArray = []
   try {
-    const index = _.findIndex(allGroupList,function(u){
-      // console.log('查找下标',u.groupID === groupID);
-      return u.groupID === groupID
-    })
-    let successArray = []
-    if(index !== -1){
-      // console.log('匹配到了',index);
-      successArray.push('yes')
-    }else{
-      // console.log('不存在',index);
-      successArray.push('not')
+    for(let i=0;i<groupID.length;i++){
+      const id = await groupID[i]
+      const index = _.findIndex(allGroupList,function(u){
+        return u.groupID === id
+      })
+      if(index !== -1){
+        successArray.push('yes')
+      }else{
+        successArray.push('not')
+      }
     }
-
     return successArray
   } catch (error) {
     return error

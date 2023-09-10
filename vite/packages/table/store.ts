@@ -52,7 +52,7 @@ export const appStore = defineStore('appStore', {
       houserun: false,//rgb跑马灯
       zoomFactor: 100,//缩放比
       openUrlBrowser: 'builtin',//默认打开浏览器
-      enableChat: false,//主界面显示聊天
+      enableChat: true,//主界面显示聊天，默认开启聊天
       preventLock: false,//阻止锁屏
 
       enableBarrage: false, //启用弹幕

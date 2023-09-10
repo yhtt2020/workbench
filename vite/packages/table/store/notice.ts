@@ -20,17 +20,17 @@ export const noticeStore = defineStore('notice',{
           icon:'',
           image:'/icons/IM.png',
           alias:'teamChat',
-          title:'团队聊天'
+          title:'社群沟通'
         }
-      ], 
-      messageContent:[], // 右侧消息通知内容 
+      ],
+      messageContent:[], // 右侧消息通知内容
     },
 
-    noticeSettings:{   
+    noticeSettings:{
       enable:true,  // 开启消息通知
       enablePlay:true, // 开启消息提示语开关
       messagePlay:false, // 消息接收提示语播放
-      noticePlay:false, // 通知接收提示语播放 
+      noticePlay:false, // 通知接收提示语播放
       show:false, // 工作台页面顶部消息图标显示
     },
 
@@ -43,7 +43,7 @@ export const noticeStore = defineStore('notice',{
     hideNoticeEntry(){  // 隐藏消息通知入口
       this.noticeSettings.show = false
     },
-    setNoticeOnOff(val:boolean){  // 设置消息通知是否开启  
+    setNoticeOnOff(val:boolean){  // 设置消息通知是否开启
       this.noticeSettings.enable = val
     },
     setMessagePrompt(val:boolean){  // 设置消息通知提示语开关
@@ -57,7 +57,7 @@ export const noticeStore = defineStore('notice',{
     },
 
     // 获取所有聊天数据
-    async loadNoticeDB(){  
+    async loadNoticeDB(){
       const result = await tsbApi.db.allDocs('notice')
       const sortReuslt = result.rows.sort((a,b)=>{
         return b.doc.content.time - a.doc.content.time
@@ -75,12 +75,12 @@ export const noticeStore = defineStore('notice',{
       })
 
     },
-    
+
 
     async removeIMChatData(item:any){  // 聊天消息数据从db数据库中清空
       await tsbApi.db.remove(item.doc)
     },
-    
+
     async clean(){
       for(let i=0;i<this.notice.messageContent.length;i++){
         await tsbApi.db.remove(this.notice.messageContent[i].doc)
@@ -88,9 +88,9 @@ export const noticeStore = defineStore('notice',{
       this.notice.messageContent = []
     }
 
-    
-    
-    
+
+
+
 
 
 

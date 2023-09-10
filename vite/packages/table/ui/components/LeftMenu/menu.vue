@@ -5,8 +5,8 @@
       <div class="xt-modal rounded-xl p-1 xt-b">
         <template v-for="item in list">
           <div
-            @click="itemClick(item)"
-            class="flex items-center pl-3 cursor-pointer box text-base"
+            @click="onItemClick(item)"
+            class="flex items-center pl-3 cursor-pointer box text-base xt-text"
             style="width: 184px; height: 44px; border-radius: 10px"
           >
             <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
@@ -25,7 +25,7 @@ const props = defineProps({
 });
 const emits = defineEmits(["itemClick"]);
 
-const itemClick= (item) => {
+const onItemClick = (item) => {
   emits("itemClick", item);
 };
 </script>

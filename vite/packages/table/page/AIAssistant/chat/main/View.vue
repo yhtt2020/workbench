@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex flex-col">
+  <!-- <div class="w-full flex flex-col flex-grow xt-b"> -->
     <div
       class="flex-grow overflow-hidden overflow-y-auto xt-scrollbar mt-3 w-full"
       ref="contentRef"
@@ -10,7 +10,7 @@
     <div class="pt-1">
       <slot name="text"></slot>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script setup>

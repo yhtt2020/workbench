@@ -1,158 +1,114 @@
 <template>
- <div class="flex w-full h-full">
-  <!--  -->
-  <div class="flex flex-col px-3" :style="doubleCol ? { width:'336px' } :{ width:'240px'}" style="border-right:1px solid var(--divider)">
+  <div class="flex w-full h-full">
+    <div class="flex flex-col px-3" :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"  style=" border-right:1px solid var(--divider)">
+      <div class="flex flex-col">
+        <div class="flex justify-between w-full mb-2.5">
+          <span class="font-500" style="color:var(--primary-text);">{{ groupName }}</span>
+          <ChatDropDown @updatePage="updatePage"/>
+        </div>
+        <div class="font-14" style="color:var(--secondary-text);">
+          {{ summary }}
+        </div>
+      </div>
 
-   <div class="flex flex-col">
-    <div class="flex justify-between mb-2.5">
-     <span class="font-500" style="color:var(--primary-text);">想天工作台官方社群</span>
-     <ChatDropDown @updatePage="updatePage"/>
+      <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
+
+      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+        <div v-for="item in list[0].commonUse">
+           <ChatFold :title="item.name">
+            <div class="flex flex-col" v-if="doubleCol === false">
+              <div v-for="item in item.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
+                <template v-if="item.type === 'message'">
+                  <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                </template> 
+                <template v-if="item.type === 'link'">
+                  <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                </template>
+                <template v-if="item.type === 'app'">
+                  <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                 </template>
+                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+              </div>
+            </div>
+
+            <div class="flex grid grid-cols-2 gap-1" v-else>
+              <div v-for="item in item.children" class="flex items-center py-2  rounded-lg pointer group-item">
+                <div class="mx-2 flex items-center">
+                  <template v-if="item.type === 'message'">
+                    <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                  </template> 
+                  <template v-if="item.type === 'link'">
+                    <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                  </template>
+                  <template v-if="item.type === 'app'">
+                    <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                   </template>
+                </div>
+                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
+              </div>
+            </div>
+           </ChatFold>
+        </div>
+      </vue-custom-scrollbar>
+
     </div>
-    <div class="font-14" style="color:var(--secondary-text);">
-     欢迎加入想天工作台官方社群，在这里您可以了解到和产品有关的一切
+
+    <div class="flex">
+      <Community />
     </div>
-   </div>
-
-   <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
-
-   <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-    <ChatFold title="常用">
-      <div class="flex flex-col" v-if="doubleCol === false">
-        <div class="flex items-center py-3 pl-4 rounded-lg pointer group-item" v-for="item in use"
-         style="width: 156px;"
-         :style="item.title.length > 4 ? {paddingLeft:'16px',paddingRight:'12px'} : {paddingLeft:'16px'}"
-        >
-          <template v-if="item.type === 'message'">
-           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-          </template>
-          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-        </div>
-      </div>
-      <div class="flex grid grid-cols-2 gap-4" v-else>
-        <div class="flex items-center py-3 pl-4 rounded-lg pointer group-item" v-for="item in use"
-         style="width: 156px;"
-         :style="item.title.length > 4 ? {paddingLeft:'12px',paddingRight:'12px'} : {paddingLeft:'16px'}"
-        >
-          <template v-if="item.type === 'message'">
-           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-          </template>
-          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-        </div>
-      </div>
-    </ChatFold>
-    
-    <ChatFold title="产品相关">
-      <div class="flex flex-col" v-if="doubleCol === false">
-        <div class="flex items-center py-3 pl-4 rounded-lg pointer group-item" v-for="item in product"
-        style="width: 156px;"
-        :style="item.title.length > 4 ? {paddingLeft:'12px',paddingRight:'12px'} : {paddingLeft:'16px'}"
-        >
-          <template v-if="item.type === 'message'">
-           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-          </template>
-          <template v-if="item.type === 'app'">
-           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-          </template>
-          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-        </div>
-      </div>
-      <div class="flex grid grid-cols-2 gap-4" v-else>
-        <div class="flex items-center py-3 rounded-lg pointer group-item" v-for="item in product" style="width: 156px;"
-        :style="item.title.length > 4 ? {paddingLeft:'12px',paddingRight:'12px'} : {paddingLeft:'16px'}">
-          <template v-if="item.type === 'message'">
-           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-          </template>
-          <template v-if="item.type === 'app'">
-           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-          </template>
-          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-        </div>
-      </div>
-    </ChatFold>
- 
-    <ChatFold title="交流群">
-      <div class="flex flex-col" v-if="doubleCol === false">
-        <div class="flex items-center py-3 pl-3 rounded-lg pointer group-item" v-for="item in talkGroup">
-          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-        </div>
-      </div>
-      <div class="flex grid grid-cols-2 gap-4" v-else>
-        <div class="flex items-center py-3 pl-3 rounded-lg pointer group-item" v-for="item in talkGroup">
-          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-          <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
-        </div>
-      </div>
-    </ChatFold>
-   </vue-custom-scrollbar>
- 
   </div>
-
-  <div class="flex">
-    <Community />
-  </div>
- </div>
 </template>
 
 <script>
-import { defineComponent,reactive,toRefs,ref } from 'vue'
+import { defineComponent, reactive, toRefs,ref } from 'vue'
+import { chatList } from '../../../js/data/chatList'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
-import Community from '../Community.vue'
-import { chatList } from '../../../js/data/chatList'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
+import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
 
+
 export default defineComponent({
+  components:{
+    ChatDropDown,
+    ChatFold,Community,
+    AppstoreOutlined,MessageOutlined,LinkOutlined
+  },
 
- components:{
-  AppstoreOutlined,MessageOutlined,LinkOutlined,
-  ChatDropDown,
-  ChatFold,
-  Community
- },
+  setup () {
 
- setup () {
-  const chat = chatStore()
+    const chat = chatStore()
 
-  const doubleCol = ref(chat.$state.settings.showDouble)
-  const data = reactive({
-   use:chatList.commonUse,
-   product:chatList.productRelated,
-   talkGroup:chatList.group,
+    const doubleCol = ref(chat.$state.settings.showDouble)
 
-   settingsScroller: {
-    useBothWheelAxes: true,
-    swipeEasing: true,
-    suppressScrollY: false,
-    suppressScrollX: true,
-    wheelPropagation: true
-   },
+    const data = reactive({
+      list:chatList,
+      groupName:chatList[0].name,
+      enable:chatList[0].props.enableColumns,
+      summary:chatList[0].summary,
 
-   
-  })
+      settingsScroller: {
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
+      
+    })
+  
+    const updatePage = () =>{
+     doubleCol.value = chat.$state.settings.showDouble
+    }
 
-  const updatePage = () =>{
-    doubleCol.value = chat.$state.settings.showDouble
+
+
+    return {
+      doubleCol,
+      ...toRefs(data),updatePage,
+    }
   }
-
-  return {
-    doubleCol,
-   ...toRefs(data),updatePage,
-  }
- }
 })
 </script>
 
@@ -184,4 +140,6 @@ export default defineComponent({
     background: var(--active-secondary-bg);
   }
 }
+
+
 </style>
