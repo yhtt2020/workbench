@@ -79,7 +79,8 @@ export default defineComponent({
 
     const is3dFile=(filename)=>{
       const ext=require('path').extname(filename)
-      if(['.stl'].includes(ext)){
+      if(['.stl','.obj','.3ds','.ply','.gltf','.off','.3dm','.fbx','.dae','.wrl','.3mf','.amf','.ifc',
+      '.brep','.step','.iges','.fcstd','.bim'].includes(ext)){
         return true
       }
     }
