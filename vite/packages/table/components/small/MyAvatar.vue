@@ -173,33 +173,6 @@ export default {
           </a-col>
         </a-row>
       </a-col>
-
-      <a-col class="chat" v-if="settings.enableChat && !simple && chat" :span="14"
-             style="text-align: left;padding-top: 0.5em;line-height: 1.75">
-        <div style="font-size: 13px;" >
-          <div class="pointer ml-3" @click.stop="enterIM">
-            <a-row :gutter="10">
-              <a-col :span="6" class="pt-2">
-                <icon style="font-size: 18px" icon="xiaoxi"></icon>
-              </a-col>
-              <a-col :span="18" class="pt-1">
-                <div class="text flex items-center font-bold">
-                  <span>组织</span>
-                  <div class="rounded-full flex items-center justify-center px-2 ml-3" style="background:var(--error);color:var(--active-text);" v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
-                    <span v-if="unReadStatus > 99 ">99+</span>
-                    <span v-else> {{ unReadStatus }} </span>
-                  </div>
-                </div>
-                <div>举杯，同是科技咖</div>
-              </a-col>
-            </a-row>
-
-          </div>
-        </div>
-        <div hidden class="pointer" @click.stop="enterIM">
-          <div v-for=" message  in  messages " class="text-more">{{ message.title }}：{{ message.body }}</div>
-        </div>
-      </a-col>
     </a-row>
   </div>
 </template>

@@ -31,7 +31,8 @@ export default defineComponent({
     <div class="rounded-full flex items-center justify-center  ml-3"
          style="width:20px;height:20px; background:var(--error);color:var(--active-text); position: absolute;right: 5px;top:10px"
          v-if="unReadStatus !== undefined &&  unReadStatus !== 0">
-      {{ unReadStatus }}
+      <span v-if="unReadStatus > 99 ">99+</span>
+      <span v-else> {{ unReadStatus }} </span>
     </div>
   </div>
   </a-tooltip>
