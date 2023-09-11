@@ -27,7 +27,7 @@ export const chatList = [
             role: 'channel', type: 'group', name: '直面开发团队', props: { id: 'develop_group' }
           },
           {
-            role: 'channel', type: 'link', name: '阿皮动态',
+            role: 'channel', type: 'link', title: '阿皮动态',
             props: {
               url: 'https://space.bilibili.com/167397379/video',
               openMethod: 'userSelect'  //根据用户工作台设置
@@ -67,7 +67,7 @@ export const chatList = [
               id: ''
             },
           },
-          { role: 'channel', name: '开发计划公示', type: 'link', props: { url: 'https://www.yuque.com/tswork/mqon1y/fnpwl9ax44ha1sb0' } },
+          { role: 'channel', title: '开发计划公示', type: 'link', props: { url: 'https://www.yuque.com/tswork/mqon1y/fnpwl9ax44ha1sb0' } },
         ]
       },
       {
@@ -77,7 +77,7 @@ export const chatList = [
         children: [
           { role: 'channel', name: '官方运营', type: 'group', props: {} },
           { role: 'channel', name: '圈主交流', type: 'group', props: {} },
-          { role: 'channel', name: '开发者交流', type: 'group', props: {} },
+          { role: 'channel', name: '开发者交流', type: 'group', props: {id:'developer'} },
         ]
       }
     ]

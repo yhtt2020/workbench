@@ -1,7 +1,5 @@
 <template>
- 
-
-  <div class="w-full flex items-center justify-center px-3">
+  <div class="w-full h-full flex items-center justify-center px-3">
     <vue-custom-scrollbar :settings="settingsScroller" style="height:100%;">
       <template v-if="isLoading">
         <a-spin/>
