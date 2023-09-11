@@ -1,5 +1,5 @@
 <template>
- <xt-button @click="test()"></xt-button>
+  <xt-button @click="test()"></xt-button>
 
   <xt-title>主线任务</xt-title>
   <template v-if="store.taskID">
@@ -47,9 +47,7 @@
           @click="receive()"
           >领取奖励</xt-button
         >
-        <xt-button v-else style="width: 100%" type="theme" @click="taskGuide()"
-          >开始任务</xt-button
-        >
+        <PrimaryTask v-else ></PrimaryTask>
       </div>
     </div>
   </template>
@@ -57,13 +55,12 @@
 </template>
 
 <script setup>
+import PrimaryTask from "./PrimaryTask.vue";
 import { tasks } from "../config/Primary";
 import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
 import { ref, reactive, computed } from "vue";
-import { guide } from "../../../ui/components/Task/guide";
-import { useRouter } from "vue-router";
-const router = useRouter();
+
 /**
  * 处理主线任务
  */
@@ -108,29 +105,8 @@ const progress = computed(() => {
 });
 // 获取当前任务
 const currentTask = computed(() => {
-  
   return chapter.value.tasks[stage.value];
 });
-
-// 引导任务
-const emits = defineEmits(["close"]);
-
-const taskGuide = () => {
-  // 重置任务步骤
-  store.step = 1;
-  let currentTask = guide[store.taskID][0];
-  switch (currentTask.value) {
-    case "router":
-      router.push({
-        name: currentTask.value,
-      });
-      break;
-    default:
-      break;
-  }
-
-  store.isTaskDrawer = false;
-};
 
 // 领取奖励
 const receive = () => {

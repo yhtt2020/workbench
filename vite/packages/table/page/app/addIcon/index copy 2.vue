@@ -1,6 +1,7 @@
 <template>
   <XtView type="popup" @close="close()" title="批量添加图标" :showFull="false">
     <main class="flex h-full p-1" style="min-width: 200px !important">
+      <xt-task :modelValue="m02013"></xt-task>
       <div style="" class="h-full">
         <div
           class="overflow-y-auto xt-container"
@@ -25,8 +26,8 @@
           </div>
         </div>
       </div>
+
       <div class="pl-2 w-full h-full">
-        <xt-task :modelValue="m02013"></xt-task>
         <component
           ref="apps"
           :is="name"
@@ -53,17 +54,15 @@
     </div>
     <footer class="flex items-center justify-center mt-2">
       <XtTab
-        v-if="name == 'Links'"
+        v-if="navName == 'Links'"
         style="width: 380px; height: 48px"
         boxClass="my-2 p-1 xt-bg-2"
         v-model:data="type"
         :list="linkList"
       ></XtTab>
-      <xt-task :modelValue="m02015" @cb="commitIcons">
-        <XtButton type="theme" class="ml-2" @click="commitIcons()">
-          确认
-        </XtButton>
-      </xt-task>
+      <XtButton type="theme" class="ml-2" @click="commitIcons()">
+        确认
+      </XtButton>
     </footer>
   </XtView>
 </template>
@@ -79,7 +78,6 @@ import { scrollable } from "./hooks/scrollable";
 import { mapActions, mapWritableState } from "pinia";
 import { useBase64AsImage } from "../../../../table/components/card/hooks/base64";
 import { taskStore } from "../../../apps/task/store";
-
 export default {
   emits: ["update:navName"],
   props: {
@@ -158,9 +156,6 @@ export default {
       this.name = "Desktop";
       return this.taskID == "M0201" && this.step == 3;
     },
-    m02015() {
-      return this.taskID == "M0201" && this.step == 5;
-    },
     height() {
       let h = this.screenHeight;
       if (h > 901) return 415;
@@ -175,7 +170,7 @@ export default {
     },
     selectedWidth() {
       let w = this.width;
-      if (this.name == "Links") w += 128;
+      if (this.navName == "Links") w += 128;
       return {
         width: w + 8 + "px",
       };
@@ -230,7 +225,7 @@ export default {
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";
-          if (this.name !== "Desktop" && this.name !== "MyApps") {
+          if (this.navName !== "Desktop" && this.navName !== "MyApps") {
             iconOption.src = item.icon;
           } else {
             iconOption.src = await useBase64AsImage(item.icon);
