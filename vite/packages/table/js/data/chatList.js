@@ -15,7 +15,7 @@ export const chatList = [
       role:'gossip',type:'message',title:'闲话畅聊', props:{ gossipID:''}
      },
      {
-      role:'gossip', type:'message', title:'直面开发团队', props:{ gossipID:''}
+      role:'gossip', type:'message', title:'直面开发团队', props:{ groupID:'GROUPdevelop_group'}
      },
      {
       role:'gossip', type:'link', title:'阿皮动态',
