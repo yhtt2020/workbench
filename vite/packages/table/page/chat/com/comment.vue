@@ -16,25 +16,7 @@
             </div>
 
         </div>
-        <div class="flex items-center justify-between w-full">
-            <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32"></a-avatar>
-            <!-- <div class="w-full ml-3 "> -->
-            <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
-                @keyup.enter="addComment" />
-            <!-- </div> -->
-        </div>
-        <div class="flex justify-between mt-2 mb-4 font-14 input-btm">
-            <div>
-                <a-button type="text" class=" w-[68px] h-[32px]  xt-text-2 ml-8 " :icon="h(SmileOutlined)"
-                    style="color: var(--secondary-text) !important; text-align: center !important;"
-                    @click="emojiVisible">表情</a-button>
-                <a-button type="text" :icon="h(PictureOutlined)" class="w-[68px] h-[32px] xt-text-2"
-                    style="color: var(--secondary-text) !important; text-align: center !important;"
-                    @click="imageVisible">图片</a-button>
-            </div>
-            <a-button type="primary" class="reply xt-text" style="color: var(--secondary-text) !important; "
-                @click="addComment">回复</a-button>
-        </div>
+        <reply />
         <replyImages v-if="replyImageVisible" />
         <replyEmoji v-if="replyEmojiVisible" />
         <div class="mb-4 font-14 xt-text">
@@ -51,6 +33,7 @@ import { SmileOutlined, PictureOutlined } from '@ant-design/icons-vue'
 import MainReplyComment from './MainReplyComment.vue'
 import replyEmoji from './replyEmoji.vue';
 import replyImages from './replyImages.vue';
+import reply from './reply.vue'
 const like = ref(12)
 const collection = ref(22)
 const value = ref('')
