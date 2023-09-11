@@ -7,7 +7,7 @@
       <div class="" v-else>
 
         <xt-button @click="showModel=true" type="theme"  style="width: 200px" :h="200">点击预览</xt-button>
-        <div class="xt-text-2 text-center">模型超过10MB，请点击预览</div>
+        <div class="text-center" style="opacity: 0.5;">模型超过10MB，请点击预览</div>
       </div>
     </div>
 
