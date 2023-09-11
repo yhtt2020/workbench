@@ -1,13 +1,16 @@
 <template>
   <div class="message-file">
     <div v-if="is3dFile(data.name) && !data.progress">
-      <div v-if="judgeSize(data.size)" class="model-preview">
+      <div v-if="judgeSize(data.size)" class="model-preview"  >
       <model-file :data="data"></model-file>
       </div>
-      <div class="" v-else>
+      <div class="text-center " v-else>
 
-        <xt-button @click="showModel=true" type="theme"  style="width: 200px" :h="200">点击预览</xt-button>
-        <div class="text-center" style="opacity: 0.5;">模型超过10MB，请点击预览</div>
+        <xt-button   @click="showModel=true" type="theme"  style="width: 200px;margin-bottom:10px" :h="200" >点击预览
+
+        <br>
+          <div class="text-center xt-active-text" style="opacity: 0.5;zoom:0.8">模型超过10MB</div></xt-button>
+
       </div>
     </div>
 
