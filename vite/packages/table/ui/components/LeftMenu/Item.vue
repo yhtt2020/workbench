@@ -1,5 +1,5 @@
 <template>
-  <div @click="itemClick(item)">
+  <div>
     <slot :name="item.slot" v-if="item.slot"></slot>
     <div
       v-else-if="item.img"

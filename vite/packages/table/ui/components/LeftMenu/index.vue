@@ -16,27 +16,32 @@
           :list="item.children"
           v-for="item in newList.slice(0, last)"
         >
-          <Box
-            @itemClick="itemClick"
-            :item="item"
-            @selectClick="selectClick"
-            :id="currentIndex"
-            class="mb-2"
-          >
-            <div
-              v-if="item.slot"
-              style="width: 40px; height: 40px; border-radius: 10px"
-              class="xt-bg xt-base-btn"
+          <a-dropdown :trigger="['hover']" placement="right">
+            <template #overlay>
+              <slot v-if="item.float" :name="item.float"> </slot>
+            </template>
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mb-2"
             >
-              <slot :name="item.slot"> </slot>
-            </div>
-            <Full v-else-if="item.full"></Full>
-            <Item :item="item" v-else>
-              <template #default>
+              <div
+                v-if="item.slot"
+                style="width: 40px; height: 40px; border-radius: 10px"
+                class="xt-bg xt-base-btn"
+              >
                 <slot :name="item.slot"> </slot>
-              </template>
-            </Item>
-          </Box>
+              </div>
+              <Full v-else-if="item.full"></Full>
+              <Item :item="item" v-else>
+                <template #default>
+                  <slot :name="item.slot"> </slot>
+                </template>
+              </Item>
+            </Box>
+          </a-dropdown>
         </Menu>
       </div>
       <!-- 中间 -->
@@ -48,27 +53,32 @@
               :list="item.children"
               v-for="item in newList.slice(last, -1 * end)"
             >
-              <Box
-                @itemClick="itemClick"
-                :item="item"
-                @selectClick="selectClick"
-                :id="currentIndex"
-                class="mt-2"
-              >
-                <div
-                  v-if="item.slot"
-                  style="width: 40px; height: 40px; border-radius: 10px"
-                  class="xt-bg xt-base-btn"
+              <a-dropdown :trigger="['hover']" placement="right">
+                <template #overlay>
+                  <slot v-if="item.float" :name="item.float"> </slot>
+                </template>
+                <Box
+                  @itemClick="itemClick"
+                  :item="item"
+                  @selectClick="selectClick"
+                  :id="currentIndex"
+                  class="mt-2"
                 >
-                  <slot :name="item.slot"> </slot>
-                </div>
-                <Full v-else-if="item.full"></Full>
-                <Item v-else :item="item" w="40">
-                  <template #default>
-                    <slot :name="item.slot"></slot>
-                  </template>
-                </Item>
-              </Box>
+                  <div
+                    v-if="item.slot"
+                    style="width: 40px; height: 40px; border-radius: 10px"
+                    class="xt-bg xt-base-btn"
+                  >
+                    <slot :name="item.slot"> </slot>
+                  </div>
+                  <Full v-else-if="item.full"></Full>
+                  <Item v-else :item="item" w="40">
+                    <template #default>
+                      <slot :name="item.slot"></slot>
+                    </template>
+                  </Item>
+                </Box>
+              </a-dropdown>
             </Menu>
           </div>
         </vue-custom-scrollbar>
@@ -80,31 +90,32 @@
           :list="item.children"
           v-for="item in newList.slice(-1 * end)"
         >
-          <Box
-            @itemClick="itemClick"
-            :item="item"
-            @selectClick="selectClick"
-            :id="currentIndex"
-            class="mt-2"
-          >
-            <div
-              v-if="item.slot"
-              style="width: 40px; height: 40px; border-radius: 10px"
-              class="xt-bg xt-base-btn"
+          <a-dropdown :trigger="['hover']" placement="right">
+            <template #overlay>
+              <slot v-if="item.float" :name="item.float"> </slot>
+            </template>
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mt-2"
             >
-              <slot :name="item.slot"> </slot>
-            </div>
-            <Full
-              v-else-if="item.full"
-              v-model:full="isFull"
-              type=""
-            ></Full>
-            <Item :item="item" type="" v-else>
-              <template #default>
+              <div
+                v-if="item.slot"
+                style="width: 40px; height: 40px; border-radius: 10px"
+                class="xt-bg xt-base-btn"
+              >
                 <slot :name="item.slot"> </slot>
-              </template>
-            </Item>
-          </Box>
+              </div>
+              <Full v-else-if="item.full" v-model:full="isFull" type=""></Full>
+              <Item :item="item" type="" v-else>
+                <template #default>
+                  <slot :name="item.slot"> </slot>
+                </template>
+              </Item>
+            </Box>
+          </a-dropdown>
         </Menu>
       </div>
     </div>
