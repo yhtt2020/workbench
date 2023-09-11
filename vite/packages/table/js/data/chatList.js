@@ -67,7 +67,7 @@ export const chatList = [
               id: ''
             },
           },
-          { role: 'channel', name: '开发计划公示', type: 'link', props: { url: ' enableColumns: false,' } },
+          { role: 'channel', name: '开发计划公示', type: 'link', props: { url: 'https://www.yuque.com/tswork/mqon1y/fnpwl9ax44ha1sb0' } },
         ]
       },
       {
