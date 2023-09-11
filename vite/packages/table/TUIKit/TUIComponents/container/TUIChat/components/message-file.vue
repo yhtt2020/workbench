@@ -1,5 +1,16 @@
 <template>
   <div class="message-file">
+    <div v-if="is3dFile(data.name) && !data.progress">
+      <div v-if="judgeSize(data.size)" class="model-preview">
+      <model-file :data="data"></model-file>
+      </div>
+      <div class="" v-else>
+
+        <xt-button @click="showModel=true" type="theme"  style="width: 200px" :h="200">点击预览</xt-button>
+        <div class="xt-text-2 text-center">模型超过10MB，请点击预览</div>
+      </div>
+    </div>
+
     <div class="box" @click="download" :title="$t('TUIChat.单击下载')">
       <i class="icon icon-files"></i>
       <div class="message-file-content">
@@ -7,14 +18,18 @@
         <span>{{ data.size }}</span>
       </div>
     </div>
+
     <progress v-if="data.progress" :value="data.progress" max="1"></progress>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
+import _3dFile from "./model-file.vue";
+import ModelFile from "./model-file.vue";
 
 export default defineComponent({
+  components: {ModelFile, _3dFile},
   props: {
     data: {
       type: Object,
@@ -23,7 +38,10 @@ export default defineComponent({
   },
   setup(props: any, ctx: any) {
     const data = reactive({
-      data: {},
+      data: {
+
+      },
+      showModel:false,//强制显示模型
     });
 
     watchEffect(() => {
@@ -59,9 +77,29 @@ export default defineComponent({
       }
     };
 
+    const is3dFile=(filename)=>{
+      const ext=require('path').extname(filename)
+      if(['.stl'].includes(ext)){
+        return true
+      }
+    }
+    const judgeSize=(size)=>{
+      if(data.showModel){
+        return true
+      }
+      if(size.includes('Mb')){
+        if(Number(size.replace('Mb',''))>10){
+          return false
+        }
+      }else{
+        return true
+      }
+    }
     return {
       ...toRefs(data),
       download,
+      is3dFile,
+      judgeSize
     };
   },
 });
