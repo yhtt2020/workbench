@@ -16,11 +16,9 @@
             </div>
 
         </div>
-        <reply />
-        <replyImages v-if="replyImageVisible" />
-        <replyEmoji v-if="replyEmojiVisible" />
+        <reply @addComment="getReplyText"/>
         <div class="mb-4 font-14 xt-text">
-            评论 {{ comment }}
+            评论 7
             <!-- {{ commentList }} -->
         </div>
         <MainReplyComment :commentList="item" v-for="(item, index) in commentList" :key="index"></MainReplyComment>
@@ -29,29 +27,11 @@
 
 <script setup lang='ts'>
 import { ref, reactive, h, computed } from 'vue'
-import { SmileOutlined, PictureOutlined } from '@ant-design/icons-vue'
 import MainReplyComment from './MainReplyComment.vue'
-import replyEmoji from './replyEmoji.vue';
-import replyImages from './replyImages.vue';
 import reply from './reply.vue'
 const like = ref(12)
 const collection = ref(22)
 const value = ref('')
-// const comment = ref(7)
-const replyImageVisible = ref(false)
-const replyEmojiVisible = ref(false)
-const emojiVisible = () => {
-    if (replyImageVisible.value === true) {
-        replyImageVisible.value = false
-    }
-    replyEmojiVisible.value = !replyEmojiVisible.value
-}
-const imageVisible = () => {
-    if (replyEmojiVisible.value === true) {
-        replyEmojiVisible.value = false
-    }
-    replyImageVisible.value = !replyImageVisible.value
-}
 // 评论内容列表
 const commentList = ref([])
 // 点赞
@@ -60,15 +40,10 @@ const isLike = ref(false)
 const clickLike = () => {
     isLike.value = !isLike.value
 }
-const addComment = () => {
-    if (value.value) {
-        commentList.value.push(value.value)
-        value.value = ''
-    }
+const getReplyText=(val)=>{
+    // console.log(val);
+    commentList.value=val.value
 }
-const comment = computed(() => {
-    return commentList.value.length
-})
 </script>
 <style lang='scss' scoped>
 .font-14 {
@@ -89,13 +64,6 @@ const comment = computed(() => {
         font-weight: 400;
         // margin-left: 3px;
     }
-}
-
-.comment-input {
-    border-radius: 8px;
-    height: 40px;
-    // width: 300px;
-    width: calc(100% - 45px);
 }
 
 .reply {

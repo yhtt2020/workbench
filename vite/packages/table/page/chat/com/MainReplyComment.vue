@@ -5,7 +5,7 @@
                 <a-avatar src="https://up.apps.vip/avatar/003.png" :size="24" class="mr-2"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
                     <span class="font-16 xt-text">
-                        我是皮克斯呀
+                        {{ userName }}
                     </span>
                     <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1">作者</div>
                 </div>
@@ -31,7 +31,7 @@
                 </div>
                
             </div>
-            <reply :replyVisible="replyVisible" v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"/>
+            <replyComments  v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText" :userName="userName"/>
         </div>
         <div class="ml-8 ">
             <ReplyComment :replyVisible="replyVisible" v-for="(item,index) in replyCmmentList" :key="index" :replyCom="item"/>
@@ -45,11 +45,11 @@
 import { ref, reactive } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyComment from './ReplyComment.vue';
-
-import reply from './reply.vue';
+import replyComments from './replyComments.vue'
 const isLike = ref(false)
 const replyVisible=ref(false)
 const replyCmmentList=ref([])
+const userName=ref('我是皮克斯呀')
 // 点赞
 const clickLike = () => {
     isLike.value=!isLike.value
@@ -71,7 +71,9 @@ const getReplyFlag=(val)=>{
 // 接收回复框的内容
 const getReplyText=(val)=>{
     // console.log(val);
-    replyCmmentList.value.unshift(val)
+    replyCmmentList.value=val.value
+    
+    
     
 }
 </script>

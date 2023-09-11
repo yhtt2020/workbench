@@ -1,13 +1,13 @@
 <template>
-    <div class="flex items-center justify-between w-full">
+    <div class="flex items-center justify-between w-full mt-4">
         <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" :placeholder="holderUser" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
-        <a-upload v-model:file-list="fileList" 
+        <a-upload v-model:file-list="fileList" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
             list-type="picture-card" @preview="handlePreview">
             <div v-if="fileList.length < 3">
                 <plus-outlined style="font-size: 20px;" />
@@ -19,7 +19,7 @@
     </div>
     <div class="flex justify-between mt-2 mb-4 font-14 input-btm">
         <div>
-            <button  class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2" 
+            <button  class=" w-[68px] h-[32px]  xt-text-2 ml-10 xt-bg-2" 
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="emojiVisible"><SmileOutlined style="font-size: 16px !important; margin-right: 4px;"/> 表情</button>
             <button  class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
@@ -37,12 +37,18 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h ,onMounted} from 'vue'
+import { ref, reactive, h ,onMounted ,computed} from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const commentList = ref([])
 const emojiVis = ref(false)
 const imageVis = ref(false)
+const props=defineProps({
+    userName:String
+})
+const holderUser=computed(()=>{
+    return `回复 ${props.userName}`
+})
 const emit=defineEmits(['addComment'])
 const addComment = () => {
     if (value.value) {

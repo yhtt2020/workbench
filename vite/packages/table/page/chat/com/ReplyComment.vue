@@ -5,7 +5,7 @@
                 <a-avatar src="https://up.apps.vip/avatar/003.png" :size="24" class="mr-2"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
                     <span class="font-16 xt-text">
-                        我是皮克斯呀
+                        {{ userName }}
                     </span>
                     <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1">作者</div>
                 </div>
@@ -30,7 +30,7 @@
                     <span>8:20</span>
                 </div>
             </div>
-            <reply :replyVisible="replyVisible" v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"/>
+            <replyComments  v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText" :userName="userName"/>
         </div>
         <ReplyCommentLite v-for="item in replyCmmentList" :key="item" :replyCom="item" :replyVisible="replyVisible"></ReplyCommentLite>
     </div>
@@ -39,11 +39,12 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
-import reply from './reply.vue'
 import ReplyCommentLite from './ReplyCommentLite.vue';
+import replyComments from './replyComments.vue';
 const isLike=ref(false)
 const replyVisible=ref(false)
 const replyCmmentList=ref([])
+const userName=ref('我是皮克斯呀')
 const props=defineProps({
     replyCom:String
 })
@@ -60,7 +61,7 @@ const getReplyFlag=(val)=>{
 }
 const getReplyText=(val)=>{
     // console.log(val);
-    replyCmmentList.value.push(val)
+    replyCmmentList.value=val.value
     
 }
 </script>
