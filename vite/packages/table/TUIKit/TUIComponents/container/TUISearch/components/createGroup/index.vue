@@ -203,19 +203,26 @@ const TUISearch = defineComponent({
     }
 
     const joinGroup = async(group) =>{ // 加入群组方法
-      const options = {
-        groupID: group.groupID,
-        applyMessage: group.applyMessage ||  t('TUIContact.加群'),
-        // t('TUIContact.加群')
-        type: group?.type,
+      // console.log('排查问题::>>',group)
+      const disabledJoin = group.joinOption === 'DisableApply'
+      if(disabledJoin){
+        message.warn('群管理员开启了禁止加群设置')
+      }else{
+        const options = {
+         groupID: group.groupID,
+         applyMessage: group.applyMessage ||  t('TUIContact.加群'),
+         // t('TUIContact.加群')
+         type: group?.type,
+        }
+        const res = await TUIServer.joinGroup(options);
+        // console.log('检测::>>',res);
+        if(res.data.status === 'WaitAdminApproval'){
+         message.success('入群申请已发出,等待群主和管理员审核')
+         data.currentGroup = { apply:true }
+        }
+        ctx.emit('close')
       }
-      const res = await TUIServer.joinGroup(options);
-      // console.log('检测::>>',res);
-      if(res.data.status === 'WaitAdminApproval'){
-        message.success('入群申请已发出,等待群主和管理员审核')
-        data.currentGroup = { apply:true }
-      }
-      ctx.emit('close')
+      
     }
 
     watch(()=>data.searchId,(newVal)=>{

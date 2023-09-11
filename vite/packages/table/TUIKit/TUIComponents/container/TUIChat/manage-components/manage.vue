@@ -84,10 +84,10 @@
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
-        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'Private' && conversation.joinOption !== 'DisableApply'">
+        <template v-if=" conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'Private'">
           <div class="flex pointer" @click="updateGroupJoinWay">
             <span class="font-14" style="color: var(--secondary-text);">
-              {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+              {{ typeName[conversation.joinOption] }}
             </span>
             <div  class="flex items-center" style="margin-left: 12px;">
               <Icon icon="xiangyou"></Icon>

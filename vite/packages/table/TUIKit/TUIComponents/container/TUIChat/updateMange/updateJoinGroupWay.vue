@@ -18,7 +18,7 @@ export default defineComponent({
   const data = reactive({
    dataType:[
     {title:'需要验证',name:types.JOIN_OPTIONS_NEED_PERMISSION},
-    {title:'自由加入',name:types.JOIN_OPTIONS_FREE_ACCESS},
+    {title:'自由邀请',name:types.JOIN_OPTIONS_FREE_ACCESS},
     {title:'禁止加群',name:types.JOIN_OPTIONS_DISABLE_APPLY}
    ],
    defaultType:{title:props.updateGroupInfo.title,name:props.updateGroupInfo.conversation.joinOption}
