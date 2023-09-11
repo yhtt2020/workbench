@@ -12,7 +12,8 @@
     </div>
 
     <div class="box" @click="download" :title="$t('TUIChat.单击下载')">
-      <i class="icon icon-files"></i>
+      <CodepenOutlined class="model-icon" v-if="is3dFile(data.name)"/>
+      <i v-else class="icon icon-files"></i>
       <div class="message-file-content">
         <label>{{ data.name }}</label>
         <span>{{ data.size }}</span>
@@ -27,9 +28,9 @@
 import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
 import _3dFile from "./model-file.vue";
 import ModelFile from "./model-file.vue";
-
+import {CodepenOutlined} from '@ant-design/icons-vue'
 export default defineComponent({
-  components: {ModelFile, _3dFile},
+  components: {ModelFile, _3dFile,CodepenOutlined},
   props: {
     data: {
       type: Object,
@@ -100,7 +101,7 @@ export default defineComponent({
       ...toRefs(data),
       download,
       is3dFile,
-      judgeSize
+      judgeSize,
     };
   },
 });
@@ -143,5 +144,11 @@ export default defineComponent({
       border-radius: 0.25rem;
     }
   }
+}
+.model-icon{
+  color:#666;
+  margin-right: 5px;
+  vertical-align: text-top
+
 }
 </style>
