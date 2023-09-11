@@ -15,9 +15,11 @@
 
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div v-for="item in list[0].commonUse">
-           <ChatFold :title="item.name">
+          <ChatFold :title="item.name">
             <div class="flex flex-col" v-if="doubleCol === false">
-              <div v-for="item in item.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
+              <div v-for="item in item.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
+              @click="currentItem(item)"
+              >
                 <template v-if="item.type === 'message'">
                   <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
                 </template> 
@@ -32,7 +34,7 @@
             </div>
 
             <div class="flex grid grid-cols-2 gap-1" v-else>
-              <div v-for="item in item.children" class="flex items-center py-2  rounded-lg pointer group-item">
+              <div v-for="item in item.children"  @click="currentItem(item)" class="flex items-center py-2  rounded-lg pointer group-item">
                 <div class="mx-2 flex items-center">
                   <template v-if="item.type === 'message'">
                     <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
@@ -47,7 +49,7 @@
                 <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.title }}</span>
               </div>
             </div>
-           </ChatFold>
+          </ChatFold>
         </div>
       </vue-custom-scrollbar>
 
@@ -67,7 +69,7 @@ import ChatFold from '../components/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
-
+import  browser  from '../../../js/common/browser' 
 
 export default defineComponent({
   components:{
@@ -102,11 +104,22 @@ export default defineComponent({
      doubleCol.value = chat.$state.settings.showDouble
     }
 
+    const currentItem = (item) =>{
+      // console.log('排查问题',item);
+      if(item.type === 'link'){
+        // console.log('排查',item.props.url);
+        const url = item.props.url !== '' ? item.props.url : ''
+        browser.openInUserSelect(url)  // 想天浏览器打开
+        // browser.openInSystem(url)
+      }
+    }
+
 
 
     return {
       doubleCol,
       ...toRefs(data),updatePage,
+      currentItem,
     }
   }
 })

@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 100%;width: 360px" class="flex-col py-4">
+  <div style="max-width: 100%;width: 360px" class="flex-col">
     <div class="flex items-center my-3 mx-3">
       <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
         <FrameAvatar :frame="displayUserInfo?.equippedItems?.frameDetail" :avatarSize="60"
@@ -64,7 +64,7 @@
         <Medal :medal="medal" v-for="medal in medals"></Medal>
       </div>
     </div>
-    <div class="px-5" v-if="uid!==myUserInfo.uid" v-show="relationship!=='unload'">
+    <div class="px-5 pb-4" v-if="uid!==myUserInfo.uid" v-show="relationship!=='unload'">
       <a-row :gutter="12" v-if="relationship!=='unknown'">
         <a-col :span="12">
           <XtButton @click="addFriend" v-if="relationship==='not'"  style="width: 100%"
