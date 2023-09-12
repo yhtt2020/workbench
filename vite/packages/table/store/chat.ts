@@ -47,6 +47,7 @@ export const chatStore = defineStore('chatStore',{
     //  开关设置
     settings:{
       showDouble: false,  // 是否展示社群双列
+      enableHide:false, // 隐藏边栏
     },    
 
   }),
@@ -234,13 +235,13 @@ export const chatStore = defineStore('chatStore',{
     },
 
 
-    setDouble(value: any=undefined) {
-      if(value===undefined){
-        this.settings.showDouble=!this.settings.showDouble
-      } else{
-        this.settings.showDouble=value
-      }
+    setDouble() {
+      this.settings.showDouble=!this.settings.showDouble
     },
+
+    setFloatVisible(){
+      this.settings.enableHide = !this.settings.enableHide
+    }
 
   },
 

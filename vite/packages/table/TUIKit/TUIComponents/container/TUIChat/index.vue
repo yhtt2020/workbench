@@ -4,8 +4,15 @@
       <i class="icon icon-back" @click="back" v-if="env.isH5"></i>
       <TypingHeader :needTyping="needTyping" :conversation="conversation" :messageList="messageList" ref="typingRef" />
       
-      <div class="flex items-center pointer" v-if="conversation.groupProfile" @click="openGroup">
-         <Icon icon="gengduo1" style="color: var(--secondary-text);"></Icon>
+      <div class="flex"  v-if="conversation.groupProfile">
+        <div class="flex items-center pointer" @click="openNotice">
+          <SoundOutlined style="color: var(--secondary-text);font-size: 1.25em;"/>
+          <!-- <Icon icon="akar-icons:sound-on" /> -->
+        </div>
+  
+        <div class="flex items-center pointer " style="margin-left:12px;" @click="openGroup">
+          <Icon icon="gengduo1" style="color: var(--secondary-text);"></Icon>
+        </div>
       </div>
     </header>
 
@@ -197,6 +204,7 @@ import {
 import { MessageSystem, MessageItem, MessageTimestamp } from './components';
 import { onClickOutside } from '@vueuse/core';
 import { Manage } from './manage-components';
+import { SoundOutlined } from '@ant-design/icons-vue'
 
 import {
   handleAvatar,
@@ -226,6 +234,8 @@ import UpdateJoinGroupWay from './updateMange/updateJoinGroupWay.vue';
 import UpdateInviteWay from './updateMange/updateInviteWay.vue'
 import Modal from '../../../../components/Modal.vue';
 import ForwardModal from './components/forwardModal.vue';
+// import { Icon } from '@iconify/vue'
+// 
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
@@ -233,7 +243,7 @@ const TUIChat: any = defineComponent({
     MessageSystem,MessageTimestamp,Manage,MessageInput,
     MessageItem,UpdateGroupName,UpdateMemeber,UpdateGroupManage,
     UpdateGroupNotice,UpdateJoinGroupWay,UpdateInviteWay,
-    Modal,ForwardModal
+    Modal,ForwardModal,SoundOutlined
   },
   props: {
     isMsgNeedReadReceipt: {
@@ -273,7 +283,17 @@ const TUIChat: any = defineComponent({
       this.info = val.info
       this.updateVisible = true
     },
-  
+    // 点击公告打开公告界面
+    openNotice(){
+      const info = {
+        groupID:this.conversation.groupProfile.groupID,
+        notification:this.conversation.groupProfile.notification,
+        role:this.conversation.groupProfile.selfInfo.role
+      }
+      this.updateVisible = true
+      this.index = 2
+      this.info = info
+    }
   },
 
   setup(props) {
@@ -943,6 +963,8 @@ const TUIChat: any = defineComponent({
       })
       data.memberList = list
     }
+
+
 
 
     return {
