@@ -1,7 +1,14 @@
 <template>
+<!--  <div id="viewer" class="online_3d_viewer"-->
+<!--       style="width: 800px; height: 600px;"-->
+<!--       model="/model/model.stl">-->
+<!--  </div>-->
+
+
 
     <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
       <div class="w-full">
+
         <router-view></router-view>
       </div>
     </xt-left-menu>
@@ -55,6 +62,7 @@ import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
 
+
 export default {
   name: 'App',
   components: {
@@ -65,10 +73,12 @@ export default {
     ThiskyIndex,
     ChatMain,Modal,
     AddFriend,CreateGroup,
-    Transfer,
+    Transfer
   },
 
   setup() {
+
+
     const router = useRouter()
     const route = useRoute()
     const TUIServer = (window as any).$TUIKit
@@ -189,6 +199,20 @@ export default {
     // const router = useRouter()
 
     onMounted(()=>{
+      // OV.SetExternalLibLocation ('../libs');
+      //
+      // // get the parent element of the viewer
+      // let parentDiv = document.getElementById ('viewer');
+      //
+      // console.error(parentDiv,'parentDiv')
+      // // initialize the viewer with the parent element and some parameters
+      // let viewer = new OV.EmbeddedViewer (parentDiv, {
+      // });
+      //
+      // // load a model providing model urls
+      // viewer.LoadModelFromUrlList ([
+      //   'https://a.apps.vip/download/model.stl'
+      // ]);
       router.push({name:'chatMain'})
     })
 

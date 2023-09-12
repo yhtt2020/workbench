@@ -1,20 +1,39 @@
 <template>
   <div class="message-file">
+    <div v-if="is3dFile(data.name) && !data.progress">
+      <div v-if="judgeSize(data.size)" class="model-preview"  >
+      <model-file :data="data"></model-file>
+      </div>
+      <div class="text-center " v-else>
+
+        <xt-button   @click="showModel=true" type="theme"  style="width: 200px;margin-bottom:10px" :h="200" >点击预览
+
+        <br>
+          <div class="text-center xt-active-text" style="opacity: 0.5;zoom:0.8">模型超过10MB</div></xt-button>
+
+      </div>
+    </div>
+
     <div class="box" @click="download" :title="$t('TUIChat.单击下载')">
-      <i class="icon icon-files"></i>
+      <CodepenOutlined class="model-icon" v-if="is3dFile(data.name)"/>
+      <i v-else class="icon icon-files"></i>
       <div class="message-file-content">
         <label>{{ data.name }}</label>
         <span>{{ data.size }}</span>
       </div>
     </div>
+
     <progress v-if="data.progress" :value="data.progress" max="1"></progress>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
-
+import _3dFile from "./model-file.vue";
+import ModelFile from "./model-file.vue";
+import {CodepenOutlined} from '@ant-design/icons-vue'
 export default defineComponent({
+  components: {ModelFile, _3dFile,CodepenOutlined},
   props: {
     data: {
       type: Object,
@@ -23,7 +42,10 @@ export default defineComponent({
   },
   setup(props: any, ctx: any) {
     const data = reactive({
-      data: {},
+      data: {
+
+      },
+      showModel:false,//强制显示模型
     });
 
     watchEffect(() => {
@@ -59,9 +81,30 @@ export default defineComponent({
       }
     };
 
+    const is3dFile=(filename)=>{
+      const ext=require('path').extname(filename)
+      if(['.stl','.obj','.3ds','.ply','.gltf','.off','.3dm','.fbx','.dae','.wrl','.3mf','.amf','.ifc',
+      '.brep','.step','.iges','.fcstd','.bim'].includes(ext)){
+        return true
+      }
+    }
+    const judgeSize=(size)=>{
+      if(data.showModel){
+        return true
+      }
+      if(size.includes('Mb')){
+        if(Number(size.replace('Mb',''))>10){
+          return false
+        }
+      }else{
+        return true
+      }
+    }
     return {
       ...toRefs(data),
       download,
+      is3dFile,
+      judgeSize,
     };
   },
 });
@@ -104,5 +147,11 @@ export default defineComponent({
       border-radius: 0.25rem;
     }
   }
+}
+.model-icon{
+  color:#666;
+  margin-right: 5px;
+  vertical-align: text-top
+
 }
 </style>
