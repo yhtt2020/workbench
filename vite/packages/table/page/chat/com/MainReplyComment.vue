@@ -2,22 +2,22 @@
     <div class="w-full mb-3 box">
         <div class="mb-3">
             <div class="flex ">
-                <a-avatar src="https://up.apps.vip/avatar/003.png" :size="24" class="mr-2"></a-avatar>
+                <a-avatar :src="props.commentList.user.avatar" :size="24" class="mr-2"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
                     <span class="font-16 xt-text">
-                        {{ userName }}
+                        {{ props.commentList.user.nickname }}
                     </span>
-                    <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1">作者</div>
+                    <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1" v-if="commentList.author_uid===commentList.uid">作者</div>
                 </div>
             </div>
             <div class="mt-2 ml-8 font-16 xt-text" style="user-select: text;">
-                {{ commentList }}
+                {{ props.commentList.content }}
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14 ml-8">
                 <div class="flex items-center justify-center ">
                     <div class="flex" @click="clickLike" :class="{'xt-theme-text':isLike}">
                         <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />
-                        <div class="mr-4 text-center" >12 点赞</div>
+                        <div class="mr-4 text-center" >{{ commentList.support_count }} 点赞</div>
                     </div>
                     <div class="flex" @click="replyStatus">
                         <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
@@ -25,9 +25,9 @@
                     </div>
                 </div>
                 <div class="">
-                    <span class="local-city">浙江</span>
-                    <span class="mr-1">8-20</span>
-                    <span>8:20</span>
+                    <span class="local-city">{{ commentList.user.ip_home.region }}</span>
+                    <span class="mr-1">{{ createTime[0] }}</span>
+                    <span>{{ createTime[1] }}</span>
                 </div>
                
             </div>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyComment from './ReplyComment.vue';
 import replyComments from './replyComments.vue'
@@ -72,10 +72,11 @@ const getReplyFlag=(val)=>{
 const getReplyText=(val)=>{
     // console.log(val);
     replyCmmentList.value=val.value
-    
-    
-    
 }
+const createTime=computed(()=>{
+    let [date, time]=props.commentList.time.split(' ')
+    return [date,time]
+})
 </script>
 <style lang='scss' scoped>
 .box {

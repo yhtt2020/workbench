@@ -5,17 +5,20 @@
         <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] -mt-2 mb-2">
             分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="https://s.apps.vip/">元社区</a>
         </div>
-        <div class="w-full mt-2 xt-bg box ">
+        <div class="w-full mt-2 xt-bg box font-16">
             <div>
                 <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
                     <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
                         :bordered="false" />
-                    <a-upload v-model:file-list="fileList" action="" class="ml-2"
-                        list-type="picture-card" @preview="handlePreview" >
-                        <div v-if="fileList.length < 6">
-                            <plus-outlined />
-                        </div>
-                    </a-upload>
+                    <div style="font-size: 16px !important;">
+                        <a-upload v-model:file-list="fileList" action="" class="ml-2" list-type="picture-card"
+                            @preview="handlePreview">
+                            <div v-if="fileList.length < 6">
+                                <plus-outlined style="font-size: 1em;" />
+                            </div>
+                        </a-upload>
+                    </div>
+
                     <!-- <a-modal v-model:visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
                         <img style="width: 100%" :src="previewImage" />
                     </a-modal> -->
@@ -35,11 +38,11 @@
                     <div class="flex items-center justify-center xt-text-2">
                         <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
                             style="color: var(--secondary-text) !important;"><template #icon>
-                                <SmileOutlined style="font-size: 16px !important;" />
+                                <SmileOutlined style="font-size: 0.6em !important;" />
                             </template> 表情</a-button>
                         <a-button type="text" size="small" class="xt-text"
                             style="color: var(--secondary-text) !important;"><template #icon>
-                                <PictureOutlined style="font-size: 16px !important;" />
+                                <PictureOutlined style="font-size: 0.6em !important;" />
                             </template> 图片</a-button>
                     </div>
 
@@ -151,15 +154,14 @@ const handleOk = (e: MouseEvent) => {
 
 </script>
 <style lang='scss' scoped>
-html{
-    font-size: 8px;
+// :deep(.lg .ant-modal-body .ant-btn){
+//     font-size: 16px !important;
+//     margin-right: 5px !important;
+// }
+:deep(.lg .ant-modal-body svg) {
+    font-size: 1rem;
 }
-:deep(.lg .ant-modal-body ){
-    // font-size: 16px !important;
-    & svg{
-        font-size: 16px !important;
-    }
-}
+
 .box {
     border-radius: 12px;
 }
@@ -167,7 +169,7 @@ html{
 .font-16 {
     font-family: PingFangSC-Regular;
     font-size: 16px;
-    text-align: center;
+    // text-align: center;
     font-weight: 400;
 }
 
@@ -187,6 +189,7 @@ html{
     width: 64px;
     height: 64px;
 }
+
 :deep(.ant-input) {
     &::placeholder {
         font-weight: 400;

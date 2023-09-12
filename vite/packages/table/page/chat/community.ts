@@ -5,9 +5,16 @@ import {post} from "../../js/axios/request";
 import {localCache} from '../../js/axios/serverCache'
 const community=sUrl('/app/com/forum/getDetail')
 const cate=sUrl('/app/com/forum/getThreadClasses')
+const threadList=sUrl('/app/com/forum/getThreadList')
+const detail=sUrl('/app/com/thread/getDetail')
+const replyList=sUrl('/app/com/thread/getReplyList')
 export const useCommunityStore = defineStore('community',{
     state:()=>({
-        communityInfo:[]
+        communityInfo:[],
+        communityCate:[],
+        communityPost:[],
+        communityPostDetail:[],
+        communityReply:[],
     }),
     actions:{
         // 根据板块id来获取板块信息
@@ -29,7 +36,48 @@ export const useCommunityStore = defineStore('community',{
             })
             console.log(res);
             
-        }
+        },
+        // 获取查询板块下的所有帖子
+        async getCommunityPost(id,type){
+            let res=await post(threadList,{
+                fid:id,
+                page:1,
+                row:10,
+                type:type,
+                classId:67
+            })
+            if(res.code===200){
+                this.communityPost=res.data
+                // console.log(this.communityPost);
+            }
+            
+        },
+        // 查看帖子详情
+        async getCommunityPostDetail(id){
+            let res=await post(detail,{
+                tid:id
+            })
+            // console.log('datail', res);
+            if(res.code===200){
+                this.communityPostDetail=res.data
+                // console.log(this.communityPostDetail);
+            }
+        },
+        //查看帖子回复
+        async getCommunityPostReply(id){
+            let res=await post(replyList,{
+                tid:id,
+                page:1,
+                row:10,
+                type:1
+            })
+            console.log('reply',res);
+            if(res.code===200){
+                this.communityReply=res.data
+            }
+        } 
+
+
 
     },
     persist: {
@@ -37,7 +85,7 @@ export const useCommunityStore = defineStore('community',{
         strategies: [
           {
             storage: dbStorage,
-            paths: ['communityInfo'],
+            paths: ['communityInfo','communityCate','communityPost','communityPostDetail','communityReply'],
           }
         ]
       }
