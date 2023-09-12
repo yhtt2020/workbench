@@ -26,7 +26,7 @@ export const useCommunityStore = defineStore('community',{
                 fid:id
             })
             console.log(res);
-            
+
         },
         // 获取板块下的所有分类
         async getCommunityCate(id){
@@ -35,7 +35,7 @@ export const useCommunityStore = defineStore('community',{
                 fid:id
             })
             console.log(res);
-            
+
         },
         // 获取查询板块下的所有帖子
         async getCommunityPost(id,type){
@@ -47,10 +47,11 @@ export const useCommunityStore = defineStore('community',{
                 classId:67
             })
             if(res.code===200){
+              console.log(res,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost);
             }
-            
+
         },
         // 查看帖子详情
         async getCommunityPostDetail(id){
@@ -75,7 +76,7 @@ export const useCommunityStore = defineStore('community',{
             if(res.code===200){
                 this.communityReply=res.data
             }
-        } 
+        }
 
 
 
@@ -89,6 +90,6 @@ export const useCommunityStore = defineStore('community',{
           }
         ]
       }
-    
+
 })
 

@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, h, onMounted,computed} from 'vue';
+import { ref, reactive, nextTick, h, onMounted,computed,watch} from 'vue';
 import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
@@ -83,6 +83,12 @@ import { useCommunityStore } from './community'
 // import {} from 'pinia'
 // import communityStore  from './community';
 const store = useCommunityStore();
+const props=defineProps({
+  forumId:{
+    type:Number,
+    required:false
+  }
+})
 const menuList = ref([
   {
   name: '全部',
@@ -103,7 +109,7 @@ const handleMenuItemClick = (index) => {
 }
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(index,menuList.value[currentIndex.value].type)
+  store.getCommunityPost(props.forumId,menuList.value[currentIndex.value].type)
 }
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
@@ -114,7 +120,11 @@ const settingsScroller = reactive({
   suppressScrollX: true,
   wheelPropagation: true,
 });
-// 
+
+watch(()=> props.forumId,(newValue)=>{
+  setCurrentIndex(currentIndex.value)
+})
+//
 const showPublishModal = ref(false)
 const modalVisible = (val) => {
   showPublishModal.value = val.value
@@ -183,7 +193,7 @@ const showDetail = (index) => {
   selectedIndex.value = index;
   // console.log(selectedIndex)
   // console.log(comCards);
-  
+
   let tid= store.communityPost.list[index].pay_set.tid
   // console.log(tid);
   store.getCommunityPostDetail(tid)
@@ -205,9 +215,9 @@ const close = () => {
   updateScroller()
 }
 
-// onMounted(() => {
-//   store.getCommunityInfo(3)
-// }),
+onMounted(() => {
+  setCurrentIndex(0)
+})
 </script>
 <style lang='scss' scoped>
 @media screen and (max-width: 1200px) {

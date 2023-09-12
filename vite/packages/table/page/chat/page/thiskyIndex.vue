@@ -11,10 +11,10 @@
           {{ summary }}
         </div>
       </div>
-  
+
       <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
-  
-      
+
+
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div v-for="item in list[0].channelList">
           <ChatFold :title="item.name">
@@ -24,7 +24,7 @@
               >
                 <template v-if="item.type === 'group'">
                   <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-                </template> 
+                </template>
                 <template v-if="item.type === 'link'">
                   <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
                 </template>
@@ -34,13 +34,13 @@
                 <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
               </div>
             </div>
-  
+
             <div class="flex grid grid-cols-2 gap-1" v-else>
               <div v-for="item in item.children"  @click="currentItem(item)" class="flex items-center py-2  rounded-lg pointer group-item">
                 <div class="mx-2 flex items-center">
                   <template v-if="item.type === 'group'">
                     <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-                  </template> 
+                  </template>
                   <template v-if="item.type === 'link'">
                     <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
                   </template>
@@ -56,12 +56,24 @@
       </vue-custom-scrollbar>
     </a-col>
     <a-col flex=" 1 1 200px" class="h-full">
+      <div class="line-title px-4 mb-0">
+        <span style="vertical-align: text-top"><template v-if="currentChannel.type === 'group'">
+          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+        </template>
+        <template v-if="currentChannel.type === 'link'">
+          <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+        </template>
+        <template v-if="currentChannel.type === 'forum'">
+          <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+        </template> </span> {{currentChannel.name}}
+      </div>
       <template v-if="mainType === ''">
         <div class="flex items-center h-full justify-center">
           <a-empty :image="simpleImage" description="暂无内容"></a-empty>
         </div>
       </template>
-      <Community  v-else-if="mainType === 'forum'" />
+      <Community :forum-id="currentChannel.props.id" v-else-if="mainType === 'forum'" />
+
       <TUIChat v-else></TUIChat>
     </a-col>
   </a-row>
@@ -76,7 +88,7 @@ import ChatFold from '../components/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
-import  browser  from '../../../js/common/browser' 
+import  browser  from '../../../js/common/browser'
 
 export default defineComponent({
   components:{
@@ -105,9 +117,10 @@ export default defineComponent({
        wheelPropagation: true
       },
       mainType:'',
+      currentChannel:{},
       simpleImage: '/public/img/test/load-ail.png',
     })
-  
+
     const updatePage = () =>{
      doubleCol.value = chat.$state.settings.showDouble
     }
@@ -135,8 +148,10 @@ export default defineComponent({
 
       if(item.type === 'forum'){
         data.mainType = 'forum'
+
       }
 
+      data.currentChannel=item
     }
 
 
