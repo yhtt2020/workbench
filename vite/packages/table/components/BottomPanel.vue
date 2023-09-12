@@ -61,46 +61,92 @@
                 id="bottomContent"
               >
                 <div v-if="footNavigationList.length <= 0" style=""></div>
-                <a-tooltip
-                  v-else
-                  :title="item.name"
-                  v-for="item in footNavigationList"
-                  :key="item.name"
-                >
-                  <div
-                    @contextmenu.stop="enableDrag"
-                    class="pointer mr-3 mr-6"
-                    style="white-space: nowrap; display: inline-block"
-                    @click.stop="clickNavigation(item)"
+              <template 
+                     :key="item.name"
+                      v-else 
+                        v-for="item in footNavigationList"
                   >
-                    <div
-                      style="width: 56px; height: 56px"
-                      v-if="item.type === 'systemApp'"
-                      class="s-item flex justify-center items-center rounded-lg xt-bg-2"
-                    >
-                      <Icon
-                        :icon="item.icon"
-                        class="test"
-                        style="
-                          width: 32px;
-                          height: 32px;
-                          fill: var(--primary-text);
-                        "
-                      ></Icon>
-                    </div>
-                    <div
-                      v-else
-                      style="width: 45px; height: 45px"
-                      class="flex justify-center items-center"
-                    >
-                      <a-avatar
-                        :size="40"
-                        shape="square"
-                        :src="item.icon"
-                      ></a-avatar>
-                    </div>
-                  </div>
-                </a-tooltip>
+                  <xt-task v-if="item.name == '基础设置'" class="mr-6" :modelValue="m03011" @cb="clickNavigation(item)">
+                    <a-tooltip
+                        :title="item.name"
+                >
+
+             <div
+               @contextmenu.stop="enableDrag"
+               class="pointer  "
+               style="white-space: nowrap; display: inline-block"
+               @click.stop="clickNavigation(item)"
+             >
+               <div
+                 style="width: 56px; height: 56px"
+                 v-if="item.type === 'systemApp'"
+                 class="s-item flex justify-center items-center rounded-lg xt-bg-2"
+               >
+                 <Icon
+                   :icon="item.icon"
+                   class="test"
+                   style="
+                 width: 32px;
+                 height: 32px;
+                 fill: var(--primary-text);
+               "
+                 ></Icon>
+               </div>
+               <div
+                 v-else
+                 style="width: 45px; height: 45px"
+                 class="flex justify-center items-center"
+               >
+                 <a-avatar
+                   :size="40"
+                   shape="square"
+                   :src="item.icon"
+                 ></a-avatar>
+               </div>
+             </div>
+           </a-tooltip>
+          </xt-task>
+                  <a-tooltip
+                        :title="item.name"
+                        v-else
+                >
+         <div
+           @contextmenu.stop="enableDrag"
+           class="pointer mr-3 mr-6"
+           style="white-space: nowrap; display: inline-block"
+           @click.stop="clickNavigation(item)"
+         >
+           <div
+             style="width: 56px; height: 56px"
+             v-if="item.type === 'systemApp'"
+             class="s-item flex justify-center items-center rounded-lg xt-bg-2"
+           >
+             <Icon
+               :icon="item.icon"
+               class="test"
+               style="
+                 width: 32px;
+                 height: 32px;
+                 fill: var(--primary-text);
+               "
+             ></Icon>
+           </div>
+           <div
+             v-else
+             style="width: 45px; height: 45px"
+             class="flex justify-center items-center"
+           >
+             <a-avatar
+               :size="40"
+               shape="square"
+               :src="item.icon"
+             ></a-avatar>
+           </div>
+         </div>
+       </a-tooltip>
+              </template>
+               
+              
               </div>
             </xt-task>
           </div>
@@ -420,6 +466,9 @@ export default {
     },
     m01042() {
       return this.taskID == "M0104" && this.step == 2;
+    },
+    m03011() {
+      return this.taskID == "M0301" && this.step == 1;
     },
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 

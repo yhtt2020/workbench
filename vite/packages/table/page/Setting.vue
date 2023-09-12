@@ -1,14 +1,9 @@
 <template>
   <div style="display: flex; width: 100%">
-    <vue-custom-scrollbar
-      :settings="scrollbarSettings"
-      style="position: relative; border-radius: 8px; height: 100%"
-    >
+    <vue-custom-scrollbar :settings="scrollbarSettings" style="position: relative; border-radius: 8px; height: 100%">
       <div style="width: auto; white-space: nowrap">
         <!-- 快速搜索 快速开关功能 -->
-        <div
-          class="s-bg"
-          style="
+        <div class="s-bg" style="
             margin: 1em;
             margin-right: 0em;
             padding: 1em;
@@ -17,51 +12,35 @@
             display: inline-block;
             color: var(--primary-text);
             background: var(--primary-bg);
-          "
-        >
+          ">
           <h3 style="color: var(--primary-text)">快速开关功能</h3>
-          <a-row
-            :gutter="[20, 20]"
-            style="font-size: 1.2em; text-align: center"
-          >
+          <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
             <a-col :span="12">
               <div class="btn relative">
                 弹幕
                 <br />
-                <a-switch
-                  @change="switchBarrage"
-                  v-model:checked="settings.enableBarrage"
-                ></a-switch>
+                <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
 
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="btn relative">
                 节能模式<br />
-                <a-switch
-                  @click.stop="() => {}"
-                  v-model:checked="saving"
-                ></a-switch>
+                <a-switch @click.stop="() => { }" v-model:checked="saving"></a-switch>
               </div>
             </a-col>
 
             <a-col :span="12">
-              <div  class="btn relative">
+              <div class="btn relative">
                 窗口控制<br />
-                <a-switch
-                  @click.stop="() => {}"
-                  v-model:checked="showWindowController"
-                ></a-switch>
+                <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
               </div>
             </a-col>
             <a-col :span="12">
-              <div  class="btn relative test">
+              <div class="btn relative test">
                 浅色模式<br />
                 <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
-                <a-switch
-                  @click="themeSwitch()"
-                  v-model:checked="styles"
-                ></a-switch>
+                <a-switch @click="themeSwitch()" v-model:checked="styles"></a-switch>
               </div>
             </a-col>
 
@@ -72,20 +51,15 @@
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
-              <div    class="btn relative">
+              <div class="btn relative">
                 消息免打扰<br />
-                <a-switch
-                  v-model:checked="noticeSettings.enable"
-                ></a-switch>
+                <a-switch v-model:checked="noticeSettings.enable"></a-switch>
               </div>
             </a-col>
             <a-col v-if="isMain()" :span="12">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br />
-                <a-switch
-                  @click.stop="() => {}"
-                  v-model:checked="simple"
-                ></a-switch>
+                <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
           </a-row>
@@ -93,17 +67,14 @@
           <div></div>
         </div>
         <div style="display: inline-block; vertical-align: top">
-          <div
-            style="
+          <div style="
               margin: 1em;
               padding: 1em;
               border-radius: 0.5em;
               width: 40em;
               color: var(--primary-text);
               background: var(--primary-bg);
-            "
-            class="s-bg"
-          >
+            " class="s-bg">
             <h3 style="color: var(--primary-text)">常用</h3>
             <a-row style="font-size: 1.2em; text-align: center">
               <a-col v-if="isMain()" :span="6">
@@ -136,23 +107,17 @@
             </a-row>
             <div></div>
           </div>
-          <div
-            style="
+          <div style="
               margin: 1em;
               padding: 1em;
               border-radius: 0.5em;
               width: 40em;
               color: var(--primary-text);
               background: var(--primary-bg);
-            "
-            class="s-bg"
-          >
-            <a-row
-              style="font-size: 1.2em; text-align: center"
-              :gutter="[10, 10]"
-            >
+            " class="s-bg">
+            <a-row style="font-size: 1.2em; text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
-                <div @click="editNavigationVisible=true" class="btn">
+                <div @click="editNavigationVisible = true" class="btn">
                   <Icon icon="Pushpin" style="font-size: 2em"></Icon>
                   <div>导航栏编辑</div>
                 </div>
@@ -183,10 +148,12 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <div @click="styleVisible = true" class="btn">
-                  <Icon icon="yifu" style="font-size: 2em"></Icon>
-                  <div>主题颜色</div>
-                </div>
+                <xt-task :modelValue="m03012" @cb="styleVisible = true">
+                  <div @click="styleVisible = true" class="btn">
+                    <Icon icon="yifu" style="font-size: 2em"></Icon>
+                    <div>主题颜色</div>
+                  </div>
+                </xt-task>
               </a-col>
               <a-col v-if="isMain()" :span="6">
                 <div @click="invite" class="btn">
@@ -200,10 +167,7 @@
                   <div>受邀</div>
                 </div>
               </a-col>
-              <a-col
-                v-if="userInfo && userInfo.uid === 4 && isMain() && false"
-                :span="6"
-              >
+              <a-col v-if="userInfo && userInfo.uid === 4 && isMain() && false" :span="6">
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div>生成激活码</div>
@@ -218,50 +182,21 @@
     </vue-custom-scrollbar>
   </div>
   <div class="home-blur fixed inset-0" style="z-index: 999" v-if="editNavigationVisible">
-    <EditNavigation @setQuick="editNavigationVisible=false"></EditNavigation>
+    <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
   </div>
-  <a-drawer
-    :width="500"
-    v-if="styleVisible"
-    v-model:visible="styleVisible"
-    placement="right"
-    style="z-index: 9999999"
-  >
-    <XtColor
-      v-model:color="bgColor"
-      title="主题"
-      btnText="恢复默认主题颜色"
-      @onBtnClick="clearBgColor"
-    ></XtColor>
-    <XtColor
-      v-model:color="textColor"
-      title="文本"
-      btnText="恢复默认文本颜色"
-      @onBtnClick="clearTextColor"
-    ></XtColor>
-    <XtColor
-      v-model:color="wallpaperColor"
-      title="背景"
-      @onBtnClick="clearWallpaperColor"
-      btnText="恢复默认壁纸颜色"
-    ></XtColor>
+  <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
+    <xt-task :modelValue="m03013"></xt-task>
+    <XtColor v-model:color="bgColor" title="主题" btnText="恢复默认主题颜色" @onBtnClick="clearBgColor"></XtColor>
+    <XtColor v-model:color="textColor" title="文本" btnText="恢复默认文本颜色" @onBtnClick="clearTextColor"></XtColor>
+    <XtColor v-model:color="wallpaperColor" title="背景" @onBtnClick="clearWallpaperColor" btnText="恢复默认壁纸颜色"></XtColor>
   </a-drawer>
 
-  <a-modal
-    v-model:visible="visibleChooseScreen"
-    :title="null"
-    width="100%"
-    :footer="null"
-    wrap-class-name="full-modal"
-    @ok="
-      () => {
+  <a-modal v-model:visible="visibleChooseScreen" :title="null" width="100%" :footer="null" wrap-class-name="full-modal"
+    @ok="() => {
         this.visibleChooseScreen = false;
       }
-    "
-  >
-    <div
-      style="zoom: 1.5; font-size: 16px; padding-top: 5em; text-align: center"
-    >
+      ">
+    <div style="zoom: 1.5; font-size: 16px; padding-top: 5em; text-align: center">
       <div style="width: 500px; overflow: visible; display: inline-block">
         <ChooseScreen></ChooseScreen>
       </div>
@@ -300,6 +235,7 @@ import { isMain } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 import { noticeStore } from '../store/notice'
 import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
+import { taskStore } from "../apps/task/store";
 export default {
   name: "Setting",
   components: { EditNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
@@ -317,7 +253,7 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true,
       },
-      editNavigationVisible:false,
+      editNavigationVisible: false,
     };
   },
   watch: {
@@ -349,14 +285,22 @@ export default {
       "showWindowController",
     ]),
     ...mapWritableState(appStore, ["userInfo"]),
-    ...mapWritableState(noticeStore,['noticeSettings'])
+    ...mapWritableState(noticeStore, ['noticeSettings']),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+
+    m03012() {
+      return this.taskID == "M0301" && this.step == 2;
+    },
+    m03013() {
+      return this.taskID == "M0301" && this.step == 3;
+    },
   },
   methods: {
-    ...mapActions(noticeStore,['setNoticeOnOff']),
+    ...mapActions(noticeStore, ['setNoticeOnOff']),
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     isMain: isMain,
-    editNavigation(){
-      this.editNavigationVisible=true
+    editNavigation() {
+      this.editNavigationVisible = true
     },
     clearBgColor() {
       delBgColor();
@@ -498,6 +442,7 @@ export default {
 .btn {
   background: var(--secondary-bg);
 }
+
 .btn:hover {
   color: var(--primary-text);
   background: var(--active-secondary-bg);
