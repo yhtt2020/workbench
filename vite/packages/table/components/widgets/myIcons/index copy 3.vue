@@ -1,6 +1,5 @@
 <!-- 图标组件入口 -->
 <template>
-  <xt-task :modelValue="m0202" slot="noMenu" @cb="handleMenu">
   <!-- 图标组件开始 -->
   <div
     ref="iconRef"
@@ -45,11 +44,13 @@
             customData.iconList !== undefined && customData.iconList.length > 0
           "
         >
-          <icon
-            v-bind="customData.iconList[0]"
-            @rightClick="rightClick"
-            @custom-event="handleCustomEvent"
-          ></icon>
+          <xt-task :modelValue="m0202" slot="noMenu" @cb="handleMenu">
+            <icon
+              v-bind="customData.iconList[0]"
+              @rightClick="rightClick"
+              @custom-event="handleCustomEvent"
+            ></icon>
+          </xt-task>
         </template>
       </drag-and-follow>
     </droppable-area>
@@ -65,7 +66,6 @@
     >
     </Widget>
   </div>
-</xt-task>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
@@ -99,6 +99,9 @@ import BottomEdit from "./components/bottomEdit.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
+import { taskStore } from "../../../apps/task/store";
+
+
 import { myIcons } from "../../../store/myIcons.ts";
 
 import { message } from "ant-design-vue";
@@ -189,6 +192,24 @@ export default {
       "iconSelect",
       "edit",
     ]),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m02021() {
+      return (
+        this.customData.copy === true &&
+        this.step == 1 &&
+        this.taskID == "M0202"
+      );
+    },
+    m02023() {
+      return (
+        this.customData.merge === true &&
+        this.step == 3 &&
+        this.taskID == "M0202"
+      );
+    },
+    m0202() {
+      return this.m02021 || this.m02023;
+    },
     dragStyle() {
       if (this.isSelect) {
         return {

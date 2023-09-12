@@ -1,6 +1,4 @@
 <template>
-  <!-- -->
-
   <div
     v-if="slot == 'default'"
     style="opacity: 1000"
@@ -76,10 +74,12 @@ export default defineComponent({
   methods: {
     next(event) {
       if (!this.modelValue) return;
+      console.log("next :>> ");
       this.action();
       event.stopPropagation(); // 阻止事件冒泡
     },
     action() {
+      console.log("action :>> ");
       this.$emit("cb");
       this.tour.next();
       this.step++;

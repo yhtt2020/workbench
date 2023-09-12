@@ -15,7 +15,6 @@
           class="truncate pr-3 tab s-bg xt-text"
           v-for="(item, index) in displayDesks"
         >
-        {{ item.id }}
           <a-avatar
             v-if="item.iconUrl"
             shape="square"
@@ -611,7 +610,6 @@ M01024(){
     },
 
     displayDesks() {
-      console.log('this.deskList :>> ', this.deskList);
       return [
         ...this.deskList.filter((desk) => {
           return desk.pin;

@@ -90,14 +90,14 @@ const ok = () => {
     desk
   );
   obj.titleValue = "合并图标";
-  // card.addCard(
-  //   {
-  //     name: "myIcons",
-  //     id: Date.now() + 2,
-  //     customData: { iconList: [{ ...obj }], merge: true },
-  //   },
-  //   desk
-  // );
+  card.addCard(
+    {
+      name: "myIcons",
+      id: Date.now() + 2,
+      customData: { iconList: [{ ...obj }], merge: true },
+    },
+    desk
+  );
   init();
 };
 

@@ -219,11 +219,24 @@ export const guide = {
     },
     {
       time: 1000,
-      title: "栓q",
+      title: "栓q2",
       text: "在「底部导航」或「侧边导航行」上「右键单击」」",
       position: "bottom",
     },
-
+    {
+      time: 300,
+      title: "栓q",
+      text: "在「底部导航」或「侧边导航行」上「右键单击」」",
+    },
+    {
+      title: "栓q",
+      text: "在「底部导航」或「侧边导航行」上「右键单击」」",
+    },
+    {
+      time: 300,
+      title: "栓q",
+      text: "在「底部导航」或「侧边导航行」上「右键单击」」",
+    },
     // 最后一个是完成任务的标记
     {
       success: true,
