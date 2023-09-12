@@ -98,11 +98,55 @@ export default {
       this.setBackgroundImage(this.paperCurrent)
       this.visibleMenu = false
     },
-    add(){}
+    add(){
+      if(this.settings.savePath === ''){
+        Modal.confirm({
+          centered:true,
+          style:{'z-index':999999},
+          content: '您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。',
+          onOk: async () => {
+            await this.queryStart()
+          }
+        })
+      }else{
+        // console.log('测试::>>',this.paperCurrent)
+        this.doStartDownload(this.paperCurrent.src)
+        
+      }
+    },
+
+    // 开始下载
+    doStartDownload(item){
+      message.info('开始下载壁纸')
+      const name = item.split('&')[1].slice(3)
+      tsbApi.download.start({
+        url: item,
+        savePath: this.settings.savePath + '/static/' + name,
+        done: (args) => {
+          message.success('壁纸下载完成')
+        }
+      })
+      this.visibleMenu = false
+    },
+
+    // 选择目录
+    async queryStart () {
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: '选择目录', message: '请选择下载壁纸的目录', properties: [
+          'openDirectory', 'createDirectory',
+        ]
+      })
+      if (savePath) {
+        this.settings.savePath = savePath[0]
+        this.doStartDownload(this.paperCurrent.src)
+      } else {
+      }
+    },
+
+
   },
   computed:{
-    ...mapState(paperStore,['myPapers']),
-
+    ...mapState(paperStore,['myPapers','settings']),
     // ...mapState(appStore,[
     //   {
     //     'papers':'appData.wallpapers.myPapers'

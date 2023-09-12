@@ -227,9 +227,6 @@ export default defineComponent({
         }
       })
     },
-    download() {
-
-    },
 
     showMenu(item) {
       this.currentPaper = item
@@ -433,6 +430,62 @@ export default defineComponent({
         window.$xgplayer = null
       }
     },
+    
+    // 下载壁纸
+    download() {
+      if(this.settings.savePath === ''){
+        Modal.confirm({
+          centered:true,
+          style:{'z-index':999999},
+          content: '您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。',
+          onOk: async () => {
+            await this.queryStart()
+          }
+        })
+      }else{
+        // console.log('测试::>>',this.currentPaper.path)
+        this.doStartDownload(this.currentPaper.path)
+      }
+    },
+
+    // 开始下载
+    doStartDownload(item){
+      message.info('开始下载壁纸')
+      const name = this.currentPaper.path.split('&')[1].slice(3)
+      // item.percent = 0
+      tsbApi.download.start({
+        url: item,
+        savePath: this.settings.savePath + '/static/' + name,
+        // updated: (args) => {
+        //   // item.done = 1
+        //   // item.percent = (args.downloadInfo.receivedBytes / args.downloadInfo.totalBytes * 100).toFixed(0)
+        //   //https://www.electronjs.org/zh/docs/latest/api/download-item#%E4%BA%8B%E4%BB%B6%E5%90%8D-updated
+        // },
+        done: (args) => {
+          // item.percent = 100
+          // item.done = 1
+          message.success('壁纸下载完成')
+        },
+        willDownload: (args) => {
+        }
+      })
+      this.visibleMenu = false
+    },
+
+    // 选择目录
+    async queryStart () {
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: '选择目录', message: '请选择下载壁纸的目录', properties: [
+          'openDirectory', 'createDirectory',
+        ]
+      })
+      if (savePath) {
+        this.settings.savePath = savePath[0]
+        this.doStartDownload(this.currentItem)
+      } else {
+      }
+    },
+
 
   },
 })

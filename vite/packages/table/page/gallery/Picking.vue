@@ -178,7 +178,7 @@ export default defineComponent({
     InfoCircleOutlined, GradeSmallTip
   },
   computed: {
-    ...mapState(paperStore, ["myPapers"]),
+    ...mapState(paperStore, ["myPapers","settings"]),
     ...mapWritableState(taskStore, ['taskID','step']),
     m01036() {
         return this.taskID == "M0103" && this.step == 6
@@ -364,7 +364,49 @@ export default defineComponent({
     },
 
     // 下载壁纸
-    add() { },
+    add() {
+      if(this.settings.savePath === ''){
+        Modal.confirm({
+          centered:true,
+          content: '您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。',
+          onOk: async () => {
+            await this.queryStart()
+          }
+        })
+      }else{
+        this.doStartDownload(this.currentPaper.path)
+      }
+    },
+
+    //开始下载文件
+    doStartDownload(item){
+      message.info('开始下载壁纸')
+      const name = item.split('/')
+      const fileName  = name[name.length - 1]
+      tsbApi.download.start({
+        url:item,
+        savePath: this.settings.savePath + '/static/' + fileName,
+        done:(args)=>{
+          console.log('排查::>>',args)
+          message.success('壁纸下载完成')
+        }
+      })
+      this.visibleMenu = false
+    },
+
+    // 用户没有选中指定文件时需要提示选中文件
+    async queryStart (){
+      let savePath = await tsbApi.dialog.showOpenDialog({
+        title: '选择目录', message: '请选择下载壁纸的目录', properties: [
+          'openDirectory', 'createDirectory',
+        ]
+      })
+      if (savePath) {
+        this.settings.savePath = savePath[0]
+        this.doStartDownload(this.currentPaper.path)
+      } else {
+      }
+    },
 
     setDesktopPaper() {
       Modal.confirm({
