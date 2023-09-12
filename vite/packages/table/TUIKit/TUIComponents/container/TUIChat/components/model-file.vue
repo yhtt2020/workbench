@@ -13,7 +13,6 @@ export default defineComponent({
     }
   },
   mounted() {
-    console.error(this.data)
     OV.SetExternalLibLocation ('../libs');
 
     // get the parent element of the viewer
