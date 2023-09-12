@@ -1,6 +1,5 @@
 <!-- 图标组件入口 -->
 <template>
-  <xt-task :modelValue="m0202" slot="noMenu" @cb="handleMenu">
   <!-- 图标组件开始 -->
   <div
     ref="iconRef"
@@ -8,64 +7,67 @@
     :style="dragStyle"
     @contextmenu.stop="handleMenu()"
   >
-    <!-- 可放置区域 -->
-    <droppable-area @drop="handleDrop">
-      <drag-and-follow
-        :isSelect="isSelect"
-        :length="this.iconsRefs.length"
-        @drag-end="handleDragEnd"
-        @drag-start="handleDragStart"
-      >
-        <!-- 多图标组件 -->
-        <template
-          v-if="
-            customData.iconList !== undefined && customData.iconList.length > 1
-          "
+    <xt-task :modelValue="m0202" slot="noMenu" @cb="handleMenu">
+      <!-- 可放置区域 -->
+      <droppable-area @drop="handleDrop">
+        <drag-and-follow
+          :isSelect="isSelect"
+          :length="this.iconsRefs.length"
+          @drag-end="handleDragEnd"
+          @drag-start="handleDragStart"
         >
-          <div>
-            <icons
-              v-model:width="customData.size.w"
-              v-model:height="customData.size.h"
-              :groupTitle="customData.groupTitle"
-              :iconList="customData.iconList"
-              :zoom="customData.zoom"
+          <!-- 多图标组件 -->
+          <template
+            v-if="
+              customData.iconList !== undefined &&
+              customData.iconList.length > 1
+            "
+          >
+            <div>
+              <icons
+                v-model:width="customData.size.w"
+                v-model:height="customData.size.h"
+                :groupTitle="customData.groupTitle"
+                :iconList="customData.iconList"
+                :zoom="customData.zoom"
+                @custom-event="handleCustomEvent"
+                @disbandGroup="disbandGroup"
+                @updateGroupTitle="updateGroupTitle"
+                @deleteIcons="deleteIcons"
+                @editIcons="editIcons"
+                @dragAddIcon="dragAddIcon"
+                @iconsRightClick="handleMenu()"
+              ></icons>
+            </div>
+          </template>
+          <!-- 单图标组件 -->
+          <template
+            v-else-if="
+              customData.iconList !== undefined &&
+              customData.iconList.length > 0
+            "
+          >
+            <icon
+              v-bind="customData.iconList[0]"
+              @rightClick="rightClick"
               @custom-event="handleCustomEvent"
-              @disbandGroup="disbandGroup"
-              @updateGroupTitle="updateGroupTitle"
-              @deleteIcons="deleteIcons"
-              @editIcons="editIcons"
-              @dragAddIcon="dragAddIcon"
-              @iconsRightClick="handleMenu()"
-            ></icons>
-          </div>
-        </template>
-        <!-- 单图标组件 -->
-        <template
-          v-else-if="
-            customData.iconList !== undefined && customData.iconList.length > 0
-          "
-        >
-          <icon
-            v-bind="customData.iconList[0]"
-            @rightClick="rightClick"
-            @custom-event="handleCustomEvent"
-          ></icon>
-        </template>
-      </drag-and-follow>
-    </droppable-area>
-    <!-- 卡片核心 -->
-    <Widget
-      :customData="customData"
-      :editing="true"
-      :customIndex="customIndex"
-      :options="options"
-      :menuList="menuList"
-      ref="homelSlotRef"
-      :desk="desk"
-    >
-    </Widget>
+            ></icon>
+          </template>
+        </drag-and-follow>
+      </droppable-area>
+      <!-- 卡片核心 -->
+      <Widget
+        :customData="customData"
+        :editing="true"
+        :customIndex="customIndex"
+        :options="options"
+        :menuList="menuList"
+        ref="homelSlotRef"
+        :desk="desk"
+      >
+      </Widget>
+    </xt-task>
   </div>
-</xt-task>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
@@ -84,7 +86,11 @@
   </XtDrawer>
   <!-- 底部导航 -->
   <XtDrawer v-model="menuVisible">
-    <BottomEdit :menuList="menuList"></BottomEdit>
+    <BottomEdit
+      :menuList="menuList"
+      :copy="customData.copy"
+      :merge="customData.merge"
+    ></BottomEdit>
   </XtDrawer>
 </template>
 <script>
@@ -99,6 +105,8 @@ import BottomEdit from "./components/bottomEdit.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
+import { taskStore } from "../../../apps/task/store";
+
 import { myIcons } from "../../../store/myIcons.ts";
 
 import { message } from "ant-design-vue";
@@ -189,6 +197,24 @@ export default {
       "iconSelect",
       "edit",
     ]),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m02021() {
+      return (
+        this.customData.copy === true &&
+        this.step == 1 &&
+        this.taskID == "M0202"
+      );
+    },
+    m02023() {
+      return (
+        this.customData.merge === true &&
+        this.step == 3 &&
+        this.taskID == "M0202"
+      );
+    },
+    m0202() {
+      return this.m02021 || this.m02023;
+    },
     dragStyle() {
       if (this.isSelect) {
         return {
