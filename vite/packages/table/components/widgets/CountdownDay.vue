@@ -82,7 +82,7 @@
       </div>
     <div v-else>
       <div>事件名称</div>
-      <xt-input class="rounded-lg  h-12 mt-4 xt-text"   style="height: 48px;" v-model:value="eventValue" placeholder="请输入"></xt-input>
+      <xt-input class="rounded-lg  h-12 mt-4 xt-text"   style="height: 48px;" v-model="eventValue" placeholder="请输入"></xt-input>
       <!-- <a-input class="rounded-lg  h-10 mt-4 xt-text" allow-clear v-model:value="eventValue" placeholder="请输入"/> -->
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
