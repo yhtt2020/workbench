@@ -873,7 +873,7 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@simonwep/pickr@~1.8.0":
+"@simonwep/pickr@1.8.2", "@simonwep/pickr@~1.8.0":
   version "1.8.2"
   resolved "https://registry.npmmirror.com/@simonwep/pickr/-/pickr-1.8.2.tgz"
   integrity sha512-/l5w8BIkrpP6n1xsetx9MWPWlU6OblN5YgZZphxan0Tq4BByTCETL6lyIeY8lagalS2Nbt4F2W034KHLIiunKA==
@@ -2148,6 +2148,11 @@ downloadjs@1.4.7:
   resolved "https://registry.npmmirror.com/downloadjs/-/downloadjs-1.4.7.tgz"
   integrity sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==
 
+draco3d@1.5.6:
+  version "1.5.6"
+  resolved "https://registry.npmmirror.com/draco3d/-/draco3d-1.5.6.tgz#0d570a9792e3a3a9fafbfea065b692940441c626"
+  integrity sha512-+3NaRjWktb5r61ZFoDejlykPEFKT5N/LkbXsaddlw6xNSXBanUYpFc2AXXpbJDilPHazcSreU/DpQIaxfX0NfQ==
+
 draggabilly@^2.2.0:
   version "2.4.1"
   resolved "https://registry.npmmirror.com/draggabilly/-/draggabilly-2.4.1.tgz"
@@ -2499,6 +2504,11 @@ fastq@^1.6.0:
   integrity sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==
   dependencies:
     reusify "^1.0.4"
+
+fflate@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.npmmirror.com/fflate/-/fflate-0.8.0.tgz#f93ad1dcbe695a25ae378cf2386624969a7cda32"
+  integrity sha512-FAdS4qMuFjsJj6XHbBaZeXOgaypXp8iw/Tpyuq/w3XA41jjLHT8NPA+n7czH/DDhdncq0nAyDZmPeWXh2qmdIg==
 
 filename-reserved-regex@^3.0.0:
   version "3.0.0"
@@ -3471,12 +3481,30 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
+occt-import-js@0.0.21:
+  version "0.0.21"
+  resolved "https://registry.npmmirror.com/occt-import-js/-/occt-import-js-0.0.21.tgz#8a25fc37b26df1b35539502872a113a35256dbc8"
+  integrity sha512-na+clmW5OmkEeZDtEVKnQNG9l3GIdEZSCN36lYIt+yJ3OM2MM8t5BYYI9Lrqb7sDPLP/Dt6HkjCNGlEd5JKFgQ==
+
 once@^1.3.0, once@^1.3.1:
   version "1.4.0"
   resolved "https://registry.npmmirror.com/once/-/once-1.4.0.tgz"
   integrity sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==
   dependencies:
     wrappy "1"
+
+online-3d-viewer@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.npmmirror.com/online-3d-viewer/-/online-3d-viewer-0.10.0.tgz#f4000503c020bf976ba71143a87dfaab1849ff17"
+  integrity sha512-XmsqhfVaer6nPseVpF+rg3b3JIOD0lRbTbnoZyape+Yn0TKz+hgoHtj/BfYs1CriWAiQTNvqYtkjV8xfgimsSQ==
+  dependencies:
+    "@simonwep/pickr" "1.8.2"
+    draco3d "1.5.6"
+    fflate "0.8.0"
+    occt-import-js "0.0.21"
+    rhino3dm "7.15.0"
+    three "0.154.0"
+    web-ifc "0.0.39"
 
 optionator@^0.8.1:
   version "0.8.3"
@@ -3992,6 +4020,11 @@ reusify@^1.0.4:
   resolved "https://registry.npmmirror.com/reusify/-/reusify-1.0.4.tgz"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
+rhino3dm@7.15.0:
+  version "7.15.0"
+  resolved "https://registry.npmmirror.com/rhino3dm/-/rhino3dm-7.15.0.tgz#e0a252ed4d4aa62751774f08afb224dec63ca40a"
+  integrity sha512-EOYK79KqgWNvonzXRH3eSO5Qmz1aBUzFvEZad2JUMTGq65lNOOU/LoUgFCJ0P/EZNdMJD+pNTdn9zgANOautgw==
+
 rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.npmmirror.com/rimraf/-/rimraf-3.0.2.tgz"
@@ -4314,6 +4347,11 @@ text-segmentation@^1.0.3:
   integrity sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==
   dependencies:
     utrie "^1.0.2"
+
+three@0.154.0:
+  version "0.154.0"
+  resolved "https://registry.npmmirror.com/three/-/three-0.154.0.tgz#dbef21e10fe6015ec283acc60d0eb58733991e27"
+  integrity sha512-Uzz8C/5GesJzv8i+Y2prEMYUwodwZySPcNhuJUdsVMH2Yn4Nm8qlbQe6qRN5fOhg55XB0WiLfTPBxVHxpE60ug==
 
 throttle-debounce@5.0.0:
   version "5.0.0"
@@ -4768,6 +4806,11 @@ warning@^4.0.0:
   integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
   dependencies:
     loose-envify "^1.0.0"
+
+web-ifc@0.0.39:
+  version "0.0.39"
+  resolved "https://registry.npmmirror.com/web-ifc/-/web-ifc-0.0.39.tgz#c3c7e9b16aad79f8ad78e346671cb5b854480737"
+  integrity sha512-sg+DyxDiyXBqlXXbz+uSqw8IGX+mVvHmn2+hg6UXDvAcrzJJw8EI2H4ZzlxWxCqqdpGVeK0wCpdeQm43UCDbrA==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
