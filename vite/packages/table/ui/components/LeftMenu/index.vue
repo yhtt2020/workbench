@@ -38,7 +38,7 @@
         </Menu>
       </div>
       <!-- 中间 -->
-      <div class="flex-1 xt-scrollbar xt-bt flex flex-col items-center">
+      <div class="xt-scrollbar xt-bt flex flex-col items-center flex-1">
         <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
           <div style="height: auto">
             <Menu
