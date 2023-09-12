@@ -1,6 +1,7 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3" :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"  style=" border-right:1px solid var(--divider)">
+    <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3" :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"  style=" border-right:1px solid var(--divider);" >
+      <!-- v-if="isFloat === false" -->
       <div class="flex flex-col">
         <div class="flex justify-between w-full mb-2.5">
           <span class="font-500" style="color:var(--primary-text);">{{ groupName }}</span>
@@ -65,71 +66,10 @@
     </a-col>
   </a-row>
 
- <!-- <div class="flex w-full h-full">
-  <div class="find-left flex flex-col px-3" :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"  style=" border-right:1px solid var(--divider)">
-    <div class="flex flex-col">
-      <div class="flex justify-between w-full mb-2.5">
-        <span class="font-500" style="color:var(--primary-text);">{{ groupName }}</span>
-        <ChatDropDown @updatePage="updatePage"/>
-      </div>
-      <div class="font-14" style="color:var(--secondary-text);">
-        {{ summary }}
-      </div>
-    </div>
-
-    <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
-
-    
-    <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-      <div v-for="item in list[0].channelList">
-        <ChatFold :title="item.name">
-          <div class="flex flex-col" v-if="doubleCol === false">
-            <div v-for="item in item.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
-            @click="currentItem(item)"
-            >
-              <template v-if="item.type === 'group'">
-                <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-              </template> 
-              <template v-if="item.type === 'link'">
-                <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-              </template>
-              <template v-if="item.type === 'forum'">
-                <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-               </template>
-              <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-            </div>
-          </div>
-
-          <div class="flex grid grid-cols-2 gap-1" v-else>
-            <div v-for="item in item.children"  @click="currentItem(item)" class="flex items-center py-2  rounded-lg pointer group-item">
-              <div class="mx-2 flex items-center">
-                <template v-if="item.type === 'group'">
-                  <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-                </template> 
-                <template v-if="item.type === 'link'">
-                  <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-                </template>
-                <template v-if="item.type === 'forum'">
-                  <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-                 </template>
-              </div>
-              <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-            </div>
-          </div>
-        </ChatFold>
-      </div>
-    </vue-custom-scrollbar>
-  </div>
-
-  <div class="find-right">
-    <Community  v-if="mainType === 'forum'" />
-    <TUIChat v-else></TUIChat>
-  </div>
- </div> -->
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs,ref } from 'vue'
+import { defineComponent, reactive, toRefs,ref,computed } from 'vue'
 import { chatList } from '../../../js/data/chatList'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
@@ -200,9 +140,14 @@ export default defineComponent({
     }
 
 
+    // 通过计算属性获取是否收起侧边栏
+    const isFloat = computed(()=>{
+      return chat.$state.settings.enableHide
+    })
+
 
     return {
-      doubleCol,
+      doubleCol,isFloat,
       ...toRefs(data),updatePage,
       currentItem,
     }

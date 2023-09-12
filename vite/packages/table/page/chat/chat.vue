@@ -8,10 +8,51 @@
 
     <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
       <div class="w-full">
-
         <router-view></router-view>
       </div>
+
+  
+      <template #floating>
+        <!-- 此处代码暂时保留,该功能后期需要实现 -->
+        <!-- <div class="rounded-lg flex flex-col px-3 py-4" style="position:relative; top:60px; left:20px; width:336px;height:638px;background:var(--secondary-bg);">
+          <div class="flex flex-col">
+            <div class="flex justify-between mb-2.5">
+              <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
+              <ChatDropDown />
+            </div>
+            <div class="font-14" style="color:var(--secondary-text);">
+              {{ community.summary }}
+            </div>
+          </div>
+
+          <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
+
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+            <div v-for="items in community.channelList">
+              <ChatFold :title="items.name">
+                <div class="flex flex-col">
+                  <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
+                    <template v-if="item.type === 'group'">
+                      <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                    </template> 
+                    <template v-if="item.type === 'link'">
+                      <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                    </template>
+                    <template v-if="item.type === 'forum'">
+                      <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                     </template>
+                    <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+                  </div>
+                </div>
+              </ChatFold>
+            </div>
+          </vue-custom-scrollbar>
+        </div> -->
+      </template>
+
     </xt-left-menu>
+
+    
     <!-- <router-view></router-view> -->
     <!-- <template v-if="type === 'chat'">
       <ChatMain></ChatMain>
@@ -39,6 +80,8 @@
        <Transfer v-if="addIndex === 2" @close="open = false" :isH5="env.isH5"></Transfer>
      </Modal>
   </teleport>
+
+  
 </template>
 
 <script lang="ts">
@@ -61,7 +104,10 @@ import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
 import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
-
+import { chatList } from '../../js/data/chatList'
+import ChatDropDown from './components/chatDropDown.vue'
+import ChatFold from './components/chatFold.vue'
+import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 
 export default {
   name: 'App',
@@ -73,7 +119,9 @@ export default {
     ThiskyIndex,
     ChatMain,Modal,
     AddFriend,CreateGroup,
-    Transfer
+    Transfer,
+    ChatDropDown,ChatFold,
+    AppstoreOutlined, MessageOutlined,LinkOutlined,
   },
 
   setup() {
@@ -92,7 +140,14 @@ export default {
       needSearch: !TUIServer.isOfficial,
       TUIServer:Server,
       createConversationType:'',
-
+      community:chatList[0],
+      settingsScroller: {
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
     })
 
     const selectTab = (item: any) => {
@@ -162,6 +217,7 @@ export default {
         icon:'',
         img: '/icons/logo128.png',
         type: 'thisky',
+        float:"floating",
         noBg:true,
         callBack: selectTab,
         route:{
@@ -233,8 +289,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 :deep(.xt-br) {
   margin-right: 0px !important;
+}
+
+.font-16-500{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  font-weight: 500; 
+}
+
+.font-14{
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  font-weight: 400;
 }
 </style>
