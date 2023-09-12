@@ -33,7 +33,7 @@
                 <template v-if="item.type === 'forum'">
                   <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
                 </template>
-                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  <SelectOutlined  class="ml-1 xt-text-2 flip" style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
               </div>
             </div>
 
@@ -51,7 +51,7 @@
                     <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
                   </template>
                 </div>
-                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
               </div>
             </div>
           </ChatFold>
@@ -96,7 +96,7 @@ import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
 import { chatList } from '../../../js/data/chatList'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
-import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
+import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
 import browser from '../../../js/common/browser'
@@ -107,7 +107,7 @@ export default defineComponent({
     Emoji,
     ChatDropDown,
     ChatFold, Community,
-    AppstoreOutlined, MessageOutlined, LinkOutlined
+    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
   },
 
   setup () {
@@ -205,5 +205,8 @@ export default defineComponent({
 :deep(.ant-row) {
   display: flex !important;
   flex: row nowrap !important;
+}
+.flip{
+  transform: rotateY(180deg)
 }
 </style>
