@@ -3,6 +3,7 @@
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
         <!-- style="color: var(--primary-text);" -->
+        <!-- {{ store.communityInfo }} -->
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
             class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
@@ -36,6 +37,7 @@
         <p>Some contents...</p>
         <p>Some contents...</p>
       </a-modal> -->
+      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"/>
 
     </div>
     
@@ -46,7 +48,6 @@
         :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
         :style="{ width: detailVisible ? '40%' : '60%' }">
         <div class="flex justify-center content">
-          <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal"/>
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards" :key="index" :cardData="card" @click="showDetail(index)"
             :detailVisible="detailVisible" class="xt-bg"
@@ -70,17 +71,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, h, computed, watch, getCurrentInstance } from 'vue';
+import { ref, reactive, nextTick, h, onMounted } from 'vue';
 import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
 import publishModal from './com/publishModal.vue';
+import {useCommunityStore} from './community'
+// import {} from 'pinia'
+// import communityStore  from './community';
+const store = useCommunityStore();
 const menuList = ref(['全部', '热门', '精华'])
 const checkMenuList = ref(['最近更新', '最近回复'])
 const currentIndex = ref(0)
 const checkMenuCurrentIndex = ref(0)
 const handleMenuItemClick = (index) => {
   checkMenuCurrentIndex.value = index
+  store.getCommunityInfo(index)
 }
 const setCurrentIndex = (index) => {
   currentIndex.value = index
@@ -96,6 +102,13 @@ const settingsScroller = reactive({
 });
 // 
 const showPublishModal = ref(false)
+const modalVisible=(val)=>{
+  showPublishModal.value=val.value
+  // console.log(val.value);
+  // console.log(showPublishModal.value);
+  
+  
+}
 const visibleModal = () => {
   showPublishModal.value = !showPublishModal.value
 }
@@ -163,6 +176,10 @@ const close = () => {
   }
   updateScroller()
 }
+
+// onMounted(() => {
+//   store.getCommunityInfo(3)
+// }),
 </script>
 <style lang='scss' scoped>
 @media screen and (max-width: 1200px) {

@@ -129,7 +129,13 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
 }
-
+:deep(.ant-input){
+    &::placeholder{
+        font-weight: 400;
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+    }
+}
 .btn {
     border: none;
 }

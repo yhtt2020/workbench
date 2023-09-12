@@ -1,49 +1,75 @@
 
 <template>
-    <a-modal v-model:visible="props.showPublishModal" title="写动态" class="publish" @ok="handleOk"> 
-        <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[45px] -mt-3 mb-2">
-            分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="#">元社区</a>
+    <a-modal v-model:visible="props.showPublishModal" title="写动态" class="w-full rounded-lg publish" @ok="handleOk"
+        @cancel="handleOk">
+        <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] -mt-2 mb-2">
+            分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="https://s.apps.vip/">元社区</a>
         </div>
         <div class="w-full mt-2 xt-bg box ">
             <div>
                 <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
                     <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
                         :bordered="false" />
-                    <a-upload v-model:file-list="fileList" action="" list-type="picture-card" @preview="handlePreview"
-                        class="ml-2 ">
+                    <a-upload v-model:file-list="fileList" action="" class="ml-2"
+                        list-type="picture-card" @preview="handlePreview" >
                         <div v-if="fileList.length < 6">
+                            <plus-outlined />
+                        </div>
+                    </a-upload>
+                    <!-- <a-modal v-model:visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                        <img style="width: 100%" :src="previewImage" />
+                    </a-modal> -->
+                    <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                        <img alt="example" style="width: 100%" :src="previewImage" />
+                    </a-modal>
+                    <!-- <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview">
+                        <div v-if="fileList.length < 3">
                             <plus-outlined style="font-size: 20px;" />
                         </div>
                     </a-upload>
                     <a-modal v-model:visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
                         <img style="width: 100%" :src="previewImage" />
-                    </a-modal>
+                    </a-modal> -->
                 </div>
                 <div class="h-[56px] flex items-center justify-between">
-                    <div class="flex items-center xt-text-2">
-                        <a-button type="text" :icon="h(SmileOutlined)" size="small" class="ml-2 xt-text"
-                            style="color: var(--secondary-text) !important;">表情</a-button>
-                        <a-button type="text" :icon="h(PictureOutlined)" size="small" class="xt-text"
-                            style="color: var(--secondary-text) !important;">图片</a-button>
+                    <div class="flex items-center justify-center xt-text-2">
+                        <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
+                            style="color: var(--secondary-text) !important;"><template #icon>
+                                <SmileOutlined style="font-size: 16px !important;" />
+                            </template> 表情</a-button>
+                        <a-button type="text" size="small" class="xt-text"
+                            style="color: var(--secondary-text) !important;"><template #icon>
+                                <PictureOutlined style="font-size: 16px !important;" />
+                            </template> 图片</a-button>
                     </div>
 
                 </div>
+                <!-- <tippy toSelector=".emojiVis">
+                    <vue-custom-scrollbar :settings="settingsScroller"
+                        class="w-2/5 p-1  xt-bg h-[100px] xt-bg-2 rounded-lg ml-2">
+                        <img :src="item" alt="" v-for="(item, index) in folderPath" :key="index"
+                            class="w-[32px] h-[32px] mr-2 mb-1">
+                    </vue-custom-scrollbar>
+                </tippy> -->
             </div>
         </div>
-        <div class="flex items-center justify-between h-[56px]">
-            <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button>
-            <div class="flex items-center">
-                <a-button type="text" class=" xt-text xt-bg-2"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">取消</a-button>
-                <a-button type="primary" class=" xt-text"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">发布</a-button>
+        <template #footer>
+            <div class="flex items-center justify-between h-[56px] ml-2 mr-2">
+                <a-button type="text" class=" xt-text xt-bg-2 font-14"
+                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button>
+                <div class="flex items-center">
+                    <a-button type="text" class=" xt-text xt-bg-2"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;"
+                        @click="handleOk">取消</a-button>
+                    <a-button type="primary" class=" xt-text"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;">发布</a-button>
+                </div>
             </div>
-        </div>
+        </template>
     </a-modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, h } from 'vue'
+import { ref, reactive, h, onMounted } from 'vue'
 import { CloseOutlined, SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 // const userName = ref('我是皮克斯呀')
@@ -52,7 +78,7 @@ const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
 })
-const visible=ref(false)
+const visible = ref(false)
 function getBase64(file: File) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -61,11 +87,29 @@ function getBase64(file: File) {
         reader.onerror = error => reject(error);
     });
 }
-
+const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-
+let folderPath = reactive([])
+onMounted(() => {
+    const emojiList = import.meta.globEager('../../../../../public/emoji/emojistatic/emojistatic/*.png')
+    const keys = Object.keys(emojiList)
+    keys.forEach(item => {
+        folderPath.push(item)
+    })
+})
+const settingsScroller = reactive({
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true,
+});
+// const emojiVis=ref(false)
+// const emojiVisible=()=>{
+//     emojiVis.value=!emojiVis.value
+// }
 const fileList = ref<UploadProps['fileList']>([
     {
         uid: '-1',
@@ -101,10 +145,21 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 };
 const handleOk = (e: MouseEvent) => {
     console.log(e);
+    visible.value = false
+    emit('handleOk', visible)
 };
 
 </script>
 <style lang='scss' scoped>
+html{
+    font-size: 8px;
+}
+:deep(.lg .ant-modal-body ){
+    // font-size: 16px !important;
+    & svg{
+        font-size: 16px !important;
+    }
+}
 .box {
     border-radius: 12px;
 }
@@ -132,33 +187,40 @@ const handleOk = (e: MouseEvent) => {
     width: 64px;
     height: 64px;
 }
-
-:deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
-    font-size: 8px;
-}
-.publish{
-    :deep(.ant-modal-title) {
-    text-align: center;
-    font-family: PingFangSC-Regular;
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--primary-text) !important;
-    }
-    :deep(.lg .ant-modal-body svg) {
-    font-size: 1rem !important;
+:deep(.ant-input) {
+    &::placeholder {
+        font-weight: 400;
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
     }
 }
 
+// :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
+//     font-size: 8px;
+// }
+
+// .publish {
+//     :deep(.ant-modal-title) {
+//         text-align: center;
+//         font-family: PingFangSC-Regular;
+//         font-size: 16px;
+//         font-weight: 400;
+//         color: var(--primary-text) !important;
+//     }
+
+
+// }
 
 
 
-:deep(.lg .ant-modal-body .ant-btn) {
-    margin-right: 5px !important;
-}
 
-:deep(.ant-modal-footer) {
-    display: none !important;
-}
+// :deep(.lg .ant-modal-body .ant-btn) {
+//     margin-right: 5px !important;
+// }
+
+// :deep(.ant-modal-footer) {
+//     display: none !important;
+// }
 
 .reply-textarea {
     border-radius: 10px;
