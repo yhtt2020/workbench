@@ -49,7 +49,7 @@ export const NavList = [
       },
       {
         name: "countdownDay",
-        cname: "倒数日",
+        cname: "纪念日",
         detail: "记录关于你的纪念日、考试日等重要的日子。",
         sizes: ["2x2", "2x4"],
         option: [
@@ -374,7 +374,7 @@ export const NavList = [
       // },
       {
         name: "countdownDay",
-        cname: "倒数日",
+        cname: "纪念日",
         detail: "记录关于你的纪念日、考试日等重要的日子。",
         sizes: ["2x2", "2x4"],
         option: [
