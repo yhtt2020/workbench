@@ -93,9 +93,7 @@ export default defineComponent({
         return true
       }
       if(size.includes('Mb')){
-        if(Number(size.replace('Mb',''))>10){
-          return false
-        }
+        return Number(size.replace('Mb', '')) <= 10;
       }else{
         return true
       }

@@ -40,6 +40,7 @@
     "md-editor-v3": "^4.3.0",
     "muuri": "^0.9.5",
     "nanoid": "^4.0.0",
+    "online-3d-viewer": "^0.10.0",
     "perfect-scrollbar": "^1.5.5",
     "pinia": "^2.0.23",
     "postcss": "^8.4.21",
