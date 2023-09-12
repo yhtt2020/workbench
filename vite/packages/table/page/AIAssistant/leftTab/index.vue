@@ -1,6 +1,5 @@
 <template>
   <xt-left-menu :list="menuList" last="1" end="3">
-    <!--  -->
     <template #test>
       <setting-filled />
     </template>

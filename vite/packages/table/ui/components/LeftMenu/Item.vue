@@ -1,6 +1,12 @@
 <template>
   <div>
-    <slot :name="item.slot" v-if="item.slot"></slot>
+    <div
+      v-if="item.slot"
+      style="width: 40px; height: 40px; border-radius: 10px"
+      class="xt-bg xt-base-btn"
+    >
+      <slot :name="item.slot"> </slot>
+    </div>
     <div
       v-else-if="item.img"
       style="width: 40px; height: 40px"
