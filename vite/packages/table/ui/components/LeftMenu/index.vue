@@ -27,17 +27,10 @@
               :id="currentIndex"
               class="mb-2"
             >
-              <div
-                v-if="item.slot"
-                style="width: 40px; height: 40px; border-radius: 10px"
-                class="xt-bg xt-base-btn"
-              >
-                <slot :name="item.slot"> </slot>
-              </div>
-              <Full v-else-if="item.full"></Full>
+              <Full v-if="item.full"></Full>
               <Item :item="item" v-else>
-                <template #default>
-                  <slot :name="item.slot"> </slot>
+                <template #[item.slot]>
+                  <slot :name="item.slot"></slot>
                 </template>
               </Item>
             </Box>
@@ -45,7 +38,7 @@
         </Menu>
       </div>
       <!-- 中间 -->
-      <div class="flex-1 xt-scrollbar xt-bt flex flex-col items-center">
+      <div class="xt-scrollbar xt-bt flex flex-col items-center flex-1">
         <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
           <div style="height: auto">
             <Menu
@@ -64,16 +57,9 @@
                   :id="currentIndex"
                   class="mt-2"
                 >
-                  <div
-                    v-if="item.slot"
-                    style="width: 40px; height: 40px; border-radius: 10px"
-                    class="xt-bg xt-base-btn"
-                  >
-                    <slot :name="item.slot"> </slot>
-                  </div>
-                  <Full v-else-if="item.full"></Full>
+                  <Full v-if="item.full" v-model:full="isFull" type=""></Full>
                   <Item v-else :item="item" w="40">
-                    <template #default>
+                    <template #[item.slot]>
                       <slot :name="item.slot"></slot>
                     </template>
                   </Item>
@@ -101,17 +87,10 @@
               :id="currentIndex"
               class="mt-2"
             >
-              <div
-                v-if="item.slot"
-                style="width: 40px; height: 40px; border-radius: 10px"
-                class="xt-bg xt-base-btn"
-              >
-                <slot :name="item.slot"> </slot>
-              </div>
-              <Full v-else-if="item.full" v-model:full="isFull" type=""></Full>
+              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
               <Item :item="item" type="" v-else>
-                <template #default>
-                  <slot :name="item.slot"> </slot>
+                <template #[item.slot]>
+                  <slot :name="item.slot"></slot>
                 </template>
               </Item>
             </Box>
@@ -247,10 +226,7 @@ const itemClick = (item) => {
   border: 4px solid var(--active-bg) !important;
   border-radius: 12px;
 }
-.anticon {
-  width: 999px !important;
-  color: red !important;
-}
+
 :deep(.anticon) {
   font-size: 20px;
 }
