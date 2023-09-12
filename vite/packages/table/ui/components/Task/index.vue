@@ -1,10 +1,22 @@
 <template>
+  <!-- -->
+
   <div
+    v-if="slot == 'default'"
     style="opacity: 1000"
     :style="{ zIndex: zIndexValue }"
     ref="el"
     @click.prevent.stop="next($event)"
     @contextmenu.prevent.stop="next($event)"
+  >
+    <slot></slot>
+  </div>
+  <div
+    v-else-if="slot == 'noMenu'"
+    style="opacity: 1000"
+    :style="{ zIndex: zIndexValue }"
+    ref="el"
+    @click.prevent.stop="next($event)"
   >
     <slot></slot>
   </div>
@@ -23,13 +35,16 @@ export default defineComponent({
     };
   },
   props: {
+    slot: {
+      default: "default",
+    },
     modelValue: {
       default: false,
     },
     fn: {},
   },
   computed: {
-    ...mapWritableState(taskStore, ["taskID", "step",'success']),
+    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
     task() {
       return guide[this.taskID][this.step];
     },
@@ -62,7 +77,7 @@ export default defineComponent({
     next(event) {
       if (!this.modelValue) return;
       this.action();
-      event.stopPropagation(); // 阻止事件冒泡  
+      event.stopPropagation(); // 阻止事件冒泡
     },
     action() {
       this.$emit("cb");
@@ -70,9 +85,8 @@ export default defineComponent({
       this.step++;
       if (this.task.success) {
         console.log("任务以完成 :>> ");
-        this.success = true
+        this.success = true;
         // 发奖励
-       
       }
     },
     start() {

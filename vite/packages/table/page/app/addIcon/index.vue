@@ -155,8 +155,10 @@ export default {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     m02013() {
-      this.name = "Desktop";
-      return this.taskID == "M0201" && this.step == 3;
+      if (this.taskID == "M0201" && this.step == 3) {
+        this.name = "Desktop";
+        return this.taskID == "M0201" && this.step == 3;
+      }
     },
     m02015() {
       return this.taskID == "M0201" && this.step == 5;

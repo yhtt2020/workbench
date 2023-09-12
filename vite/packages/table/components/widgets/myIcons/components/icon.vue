@@ -1,32 +1,34 @@
 <template>
+<xt-task :modelValue="1" slot="noMenu">
   <div
     class="cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around"
     :data-index="index"
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
-    <div
-      class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
-      :style="[bgSize, backgroundState]"
-      :data-index="index"
-    >
-      <img
-        v-if="src && src.length > 0"
-        :src="src"
-        alt=""
-        :style="[imgSize, radiusState, imgStateStyle]"
+      <div
+        class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
+        :style="[bgSize, backgroundState]"
         :data-index="index"
-      />
-    </div>
-    <div
-      v-if="isTitle"
-      class="text-center xt-text h-5 truncate mx-auto"
-      :style="[textSize]"
-      :data-index="index"
-    >
-      {{ titleValue }}
-    </div>
+      >
+        <img
+          v-if="src && src.length > 0"
+          :src="src"
+          alt=""
+          :style="[imgSize, radiusState, imgStateStyle]"
+          :data-index="index"
+        />
+      </div>
+      <div
+        v-if="isTitle"
+        class="text-center xt-text h-5 truncate mx-auto"
+        :style="[textSize]"
+        :data-index="index"
+      >
+        {{ titleValue }}
+      </div>
   </div>
+</xt-task>
 
   <XtGuided v-if="visible" @close="visible = false"></XtGuided>
 </template>
@@ -35,6 +37,7 @@
 import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
+
 export default {
   mixins: [editProps],
   props: {
@@ -195,7 +198,7 @@ export default {
       //   }
       //   return;
       // }
-   
+
       if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");

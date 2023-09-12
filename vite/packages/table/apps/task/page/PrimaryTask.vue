@@ -15,16 +15,11 @@
 
 <script setup>
 import { reactive, ref } from "vue";
-import { taskStore } from "../store";
 import { useRouter } from "vue-router";
 import { guide } from "../../../ui/components/Task/guide";
+import { cardStore } from "../../../store/card";
+import { taskStore } from "../store";
 
-import {cardStore} from "../../../store/card"
-
-console.log('111 :>> ', 111);
-const card = cardStore()
-let res = card.getCurrentDesk()
-console.log('res :>> ', res);
 // 初始化
 const store = taskStore();
 const router = useRouter();
@@ -63,6 +58,46 @@ const taskGuide = () => {
 
 const ok = () => {
   store.isTaskDrawer = false;
+
+  let obj = {
+    size: "mini",
+    link: "link",
+    linkValue: "",
+    open: {
+      value: "http://a.apps.vip/doc",
+      type: "internal",
+    },
+    isTitle: true,
+    titleValue: "移动图标",
+    src: "http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/mRdv-NzQq-plHV-ZKl_",
+    isRadius: true,
+    radius: 5,
+    imgState: "cover",
+    imgShape: "square",
+    isBackground: false,
+    backgroundColor: "",
+    backgroundIndex: 0,
+  };
+  const card = cardStore();
+
+  let desk = card.desks.find((item) => card.currentDeskId == item.id);
+  card.addCard(
+    {
+      name: "myIcons",
+      id: Date.now() + 1,
+      customData: { iconList: [{ ...obj }], copy: true },
+    },
+    desk
+  );
+  obj.titleValue = "合并图标";
+  // card.addCard(
+  //   {
+  //     name: "myIcons",
+  //     id: Date.now() + 2,
+  //     customData: { iconList: [{ ...obj }], merge: true },
+  //   },
+  //   desk
+  // );
   init();
 };
 
