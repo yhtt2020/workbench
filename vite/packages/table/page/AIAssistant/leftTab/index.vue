@@ -51,6 +51,7 @@ export default {
       menuList: [
         {
           icon: "message",
+          // float: "test",
           callBack: () => {
             this.selectTab = "Chat";
           },
