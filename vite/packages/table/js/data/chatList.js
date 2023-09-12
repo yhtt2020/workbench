@@ -57,12 +57,7 @@ export const chatList = [
               id: ''
             },
           },
-          {
-            role: 'channel', name: '功能建议', type: 'group', props: {
-              id: 'suggest'
-            },
-          },
-          { role: 'channel', title: '开发计划公示', type: 'link', props: { url: 'https://www.yuque.com/tswork/mqon1y/fnpwl9ax44ha1sb0' } },
+          { role: 'channel', title: 'Roadmap', type: 'link', props: { url: 'http://kanban.xiangtian.ren/b/Bd6fRiZPo3RTxq9ok/board' } },
         ]
       },
       {
