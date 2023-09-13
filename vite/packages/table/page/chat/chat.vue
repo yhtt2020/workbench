@@ -247,6 +247,16 @@ export default {
             name:'添加好友',
             index:2,
             callBack:selectDorpTab
+          },
+          {
+            icon:'smile',
+            name:'创建社群',
+            callBack:selectDorpTab
+          },
+          {
+            icon:'team',
+            name:'加入社群',
+            callBack:selectDorpTab,
           }
         ]
       },
