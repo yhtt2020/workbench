@@ -3,7 +3,7 @@
     <label v-if="message.flow === 'in'">{{message.nick || message.from}}</label>
     <label v-else>{{$t('TUIChat.您')}}</label>
     <span>{{$t("TUIChat.撤回了一条消息")}}</span>
-    <span class="edit" v-if="message.flow === 'out'&&isEdit" @click="edit">{{$t('TUIChat.重新编辑')}}</span>
+    <span class="edit pointer" v-if="message.flow === 'out'&&isEdit" @click="edit">{{$t('TUIChat.重新编辑')}}</span>
   </div>
 </template>
 
