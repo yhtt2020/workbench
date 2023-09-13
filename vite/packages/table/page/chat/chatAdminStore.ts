@@ -5,9 +5,6 @@ import {get} from "../../js/axios/request";
 export const chatAdminStore = defineStore('chatAdminStore', {
   state: () => ({
     stats:{},
-    communityData:{
-      communityModal:null,
-    },
   }),
   actions: {
     /**
