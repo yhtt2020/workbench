@@ -5,7 +5,7 @@
         <div class="w-full card-content">
             <div class="card-top">
                 <div class="top-left">
-                    <a-avatar :src="cardData.user.avatar" :size="32">
+                    <a-avatar :src="cardData.user.avatar" :size="32" class="pointer" @click.stop="showCard(uid,userInfo)">
                         <template #icon>
                             <UserOutlined />
                         </template>
@@ -91,6 +91,17 @@ import { ref, reactive,computed } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
 import { useCommunityStore } from '../community'
+import {appStore} from '../../../../table/store'
+const useUserStore=appStore()
+let uid=props.cardData.user.uid
+let userInfo={
+    uid:uid,
+    nickname:props.cardData.user.nickname,
+    avatar:props.cardData.user.avatar_128
+}
+const showCard=(uid,userInfo)=>{
+    useUserStore.showUserCard(uid,userInfo)
+}
 const store = useCommunityStore();
 // 点赞
 const isLike = ref(false)

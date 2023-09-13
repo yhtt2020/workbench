@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-between w-full">
-        <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32"></a-avatar>
+        <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32" ></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
         <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
@@ -94,12 +94,6 @@ onMounted(() => {
     })
 })
 const fileList = ref<UploadProps['fileList']>([
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
 ]);
 
 const handleCancel = () => {

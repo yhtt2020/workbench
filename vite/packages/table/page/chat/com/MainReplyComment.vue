@@ -2,7 +2,7 @@
     <div class="w-full mb-3 box">
         <div class="mb-3">
             <div class="flex ">
-                <a-avatar :src="props.commentList.user.avatar" :size="24" class="mr-2"></a-avatar>
+                <a-avatar :src="props.commentList.user.avatar" :size="24" class="mr-2 pointer"  @click.stop="showCard(uid,userInfo)"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
                     <span class="font-16 xt-text">
                         {{ props.commentList.user.nickname }}
@@ -46,10 +46,20 @@ import { ref, reactive,computed } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyComment from './ReplyComment.vue';
 import replyComments from './replyComments.vue'
+import {appStore} from '../../../../table/store'
+const useUserStore=appStore()
+let uid=props.commentList.user.uid
+let userInfo={
+    uid:uid,
+    nickname:props.commentList.user.nickname,
+    avatar:props.commentList.user.avatar_128
+}
+const showCard=(uid,userInfo)=>{
+    useUserStore.showUserCard(uid,userInfo)
+}
 const isLike = ref(false)
 const replyVisible=ref(false)
 const replyCmmentList=ref([])
-const userName=ref('我是皮克斯呀')
 // 点赞
 const clickLike = () => {
     isLike.value=!isLike.value

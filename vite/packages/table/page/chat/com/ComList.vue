@@ -5,7 +5,7 @@
     <!-- {{ Imageheight.width }} -->
             <div class="w-full card-top">
                 <div class="top-left">
-                    <a-avatar :size="32" :src="cardData.user.avatar" class="pointer" @click.stop="showUserCard(uid,userInfo)">
+                    <a-avatar :size="32" :src="cardData.user.avatar" class="pointer" @click.stop="showCard(uid,userInfo)">
                         <template #icon>
                             <UserOutlined />
                         </template>
@@ -70,7 +70,8 @@
 <script setup lang='ts'>
 import { ref, reactive, computed, onMounted, onBeforeUpdate, nextTick } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-import {appStore} from '../../../../app/store'
+import UserAvatar from '../../../components/small/UserAvatar.vue';
+import {appStore} from '../../../../table/store'
 const useUserStore=appStore()
 let uid=props.cardData.user.uid
 let userInfo={
@@ -78,9 +79,11 @@ let userInfo={
     nickname:props.cardData.user.nickname,
     avatar:props.cardData.user.avatar_128
 }
+const showCard=(uid,userInfo)=>{
+    useUserStore.showUserCard(uid,userInfo)
+}
 
-
-const Imageheight=props.cardData.image[0]
+// const Imageheight=props.cardData.image[0]
 
 // console.log(Imageheight.length);
 

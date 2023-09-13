@@ -8,6 +8,7 @@ const cate=sUrl('/app/com/forum/getThreadClasses')
 const threadList=sUrl('/app/com/forum/getThreadList')
 const detail=sUrl('/app/com/thread/getDetail')
 const replyList=sUrl('/app/com/thread/getReplyList')
+const upload=sUrl('/app/upload')
 export const useCommunityStore = defineStore('community',{
     state:()=>({
         communityInfo:[],
@@ -98,6 +99,12 @@ export const useCommunityStore = defineStore('community',{
                 this.communityReply=res.data
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*24)
             }
+        },
+        // 图片上传
+        async uploadImage(file){
+            let res=await post(upload,{
+                file:file
+            })
         }
 
 
