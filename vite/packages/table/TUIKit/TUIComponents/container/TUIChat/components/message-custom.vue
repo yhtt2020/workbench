@@ -63,10 +63,10 @@
     <template v-else>
       <div  v-if="isCustom.type==='game'">
         <!--      {{steam游戏格式}}-->
-        <img style="border-radius: 5px;width: 250px" :src="isCustom.game?.header">
+        <img @click.stop="goGameDetail(isCustom.game?.appid)" style="border-radius: 5px;width: 250px;cursor:pointer!important;position: relative;pointer-events: auto;" :src="isCustom.game?.header" alt="">
         <div class="mt-2 " style="margin-top: 10px;">
           <div class="truncate" style="max-width: 160px;float: left;margin-right: 10px">
-            <a-avatar :size="30" shape="square" :src="isCustom.game?.icon"></a-avatar>  <strong>{{isCustom.game?.chineseName}}</strong>
+            <a-avatar :size="30" shape="square" :src="isCustom.game?.icon || '/emoji/game.png'"></a-avatar>  <strong>{{isCustom.game?.chineseName}}</strong>
           </div>
 
           <div  style="float: right">

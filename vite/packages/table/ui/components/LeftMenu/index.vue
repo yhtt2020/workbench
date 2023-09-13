@@ -16,8 +16,8 @@
           :list="item.children"
           v-for="item in newList.slice(0, last)"
         >
-          <a-dropdown :trigger="['hover']" placement="right">
-            <template #overlay>
+          <tippy trigger="mouseenter" :interactive="true" placement="right">
+            <template #content>
               <slot v-if="item.float" :name="item.float"> </slot>
             </template>
             <Box
@@ -34,7 +34,8 @@
                 </template>
               </Item>
             </Box>
-          </a-dropdown>
+            <!-- </a-dropdown> -->
+          </tippy>
         </Menu>
       </div>
       <!-- 中间 -->
@@ -46,8 +47,8 @@
               :list="item.children"
               v-for="item in newList.slice(last, -1 * end)"
             >
-              <a-dropdown :trigger="['hover']" placement="right">
-                <template #overlay>
+              <tippy trigger="mouseenter" :interactive="true" placement="right">
+                <template #content>
                   <slot v-if="item.float" :name="item.float"> </slot>
                 </template>
                 <Box
@@ -64,7 +65,7 @@
                     </template>
                   </Item>
                 </Box>
-              </a-dropdown>
+              </tippy>
             </Menu>
           </div>
         </vue-custom-scrollbar>
@@ -76,8 +77,8 @@
           :list="item.children"
           v-for="item in newList.slice(-1 * end)"
         >
-          <a-dropdown :trigger="['hover']" placement="right">
-            <template #overlay>
+          <tippy trigger="mouseenter" :interactive="true" placement="right">
+            <template #content>
               <slot v-if="item.float" :name="item.float"> </slot>
             </template>
             <Box
@@ -94,7 +95,7 @@
                 </template>
               </Item>
             </Box>
-          </a-dropdown>
+          </tippy>
         </Menu>
       </div>
     </div>

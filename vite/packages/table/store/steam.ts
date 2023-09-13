@@ -89,6 +89,7 @@ export const steamStore = defineStore("steam", {
       const result = await sendRequest(url,{},{localCache:true,localTtl:60*12*60})
       const res = result.data[id].data
       const newLanguages = res.supported_languages.replaceAll('<strong>*</strong>','') // 将语言中的strong标签去除
+      console.log(res)
       this.discountDetail.name = res.name
       this.discountDetail.content = res.short_description
       if(res.movies){
@@ -97,6 +98,8 @@ export const steamStore = defineStore("steam", {
         this.discountDetail.movie_image=res.screenshots
       }
 
+      this.discountDetail.appid=res.steam_appid
+      this.discountDetail.header=res.header_image
       this.discountDetail.IssueDate = res.release_date.date
       this.discountDetail.developers = res.developers[0]
       this.discountDetail.language = newLanguages.split('<br>')[0]

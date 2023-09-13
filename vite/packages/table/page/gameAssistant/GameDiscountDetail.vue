@@ -1,4 +1,6 @@
 <template>
+  <ShareToChat :visible="shareVisible" @close="shareVisible=false" :content="shareContent" type="game" alias="游戏"></ShareToChat>
+
   <div class="flex">
     <div class="flex-grow">
       <div class="left-flex flex items-center">
@@ -10,6 +12,9 @@
     </div>
     <div class="flex-grow-0">
       <div class="right-flex flex items-center justify-center mr-5">
+        <xt-button class="mr-3" @click="shareSteamGame" :w="40" :h="40">
+          <Icon style="" icon="fenxiang"></Icon>
+        </xt-button>
         <span class="rounded-lg px-10 py-2 button-active detail-bg pointer mr-3 min-store" @click="enterSteamStore">前往购买</span>
         <span class="px-10 py-2 detail-bg button-active rounded-lg pointer" @click="openDetailDrawer">地区:{{defaultDetailRegion.name}}</span>
       </div>
@@ -54,6 +59,7 @@
                 <span class="oswald-font" style="font-size: 18px;color:rgba(255, 77, 79, 1);font-weight: 500;">{{ discountDetail.newPrice }}</span>
              </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -79,6 +85,8 @@ import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 import browser from '../../js/common/browser'
 import { mapActions, mapWritableState } from 'pinia';
 import { steamStore } from '../../store/steam';
+import ShareToChat from '../../ui/chat/ShareToChat.vue'
+import XtButton from '../../ui/libs/Button/index.vue'
 export default {
     name:'GameDiscountDetail',
     props:{
@@ -92,11 +100,14 @@ export default {
       }
     },
     components:{
+      XtButton,
+      ShareToChat,
       WheelCastingUnit,
       HorizontalDrawer
     },
     data(){
       return{
+        shareVisible:false,//分享组件可见
         loading:true,
         rightSelect:regionRange,
         defaultDetailRegion:{
@@ -119,6 +130,18 @@ export default {
         if(this.discountDetail && this.discountDetail.movie_image){
           return this.discountDetail.movie_image
         }
+      },
+      shareContent(){
+        return {
+          description:'steam游戏',
+          data:JSON.stringify({
+            type:'game',
+            game:{
+              ...this.discountDetail,
+              chineseName:this.discountDetail.name,
+            }
+          })
+        }
       }
     },
     mounted(){
@@ -132,7 +155,9 @@ export default {
       goBack(){
         this.$router.go(-1)
       },
-
+      shareSteamGame () {
+        this.shareVisible=true
+      },
       enterSteamStore(){
         browser.openInUserSelect(`https://store.steampowered.com/app/${this.id}`)
       },
