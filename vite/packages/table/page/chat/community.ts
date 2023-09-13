@@ -94,7 +94,7 @@ export const useCommunityStore = defineStore('community',{
                 row:10,
                 type:1
             })
-            // console.log('reply',res);
+            console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*24)
