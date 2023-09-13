@@ -4,7 +4,7 @@
          class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col"
          style=";width: 600px;height: 80%;background: var(--modal-bg);">
       <div class="head-nav">
-        <span class="ml-2" style="font-size: 16px;color: var(--primary-text);font-weight: 500;">外部小组件</span>
+        <span class="ml-2" style="font-size: 16px;color: var(--primary-text);font-weight: 500;">1外部小组件</span>
         <div @click="close" class="h-11 w-11 flex justify-center items-center xt-bg-2 rounded-lg pointer">
           <Icon icon="guanbi" style="color:var(--primary-text);font-size:24px"></Icon>
         </div>
@@ -102,6 +102,7 @@
         this.isCardDetails = true;
       },
       add(item, index = 0) {
+        console.log('item :>> ', item);
         index = index ?? this.carouselIndex;
         this.addCard(
           { name: item.option[index].name, id: Date.now(), customData: {} },

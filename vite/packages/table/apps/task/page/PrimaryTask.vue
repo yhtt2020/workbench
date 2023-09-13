@@ -1,15 +1,8 @@
 <template>
   <!-- 任务弹窗 -->
-  <xt-message
-    @ok="ok()"
-    @no="no()"
-    v-model="data.visible"
-    :text="data.text"
-  ></xt-message>
+  <xt-message @ok="ok()" @no="no()" v-model="data.visible" :text="data.text"></xt-message>
   <!-- 任务按钮 -->
-  <xt-button style="width: 100%" type="theme" @click="taskGuide()"
-    >开始任务</xt-button
-  >
+  <xt-button style="width: 100%" type="theme" @click="taskGuide()">开始任务</xt-button>
   <div></div>
 </template>
 
@@ -17,7 +10,7 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { guide } from "../../../ui/components/Task/guide";
-import { cardStore } from "../../../store/card";
+import { lastGuide } from "./lastGuide";
 import { taskStore } from "../store";
 
 // 初始化
@@ -57,47 +50,14 @@ const taskGuide = () => {
 };
 
 const ok = () => {
+  // let fn = lastGuide["M0202"]
+  // fn()
+  // return
+
   store.isTaskDrawer = false;
-
-  let obj = {
-    size: "mini",
-    link: "link",
-    linkValue: "",
-    open: {
-      value: "http://a.apps.vip/doc",
-      type: "internal",
-    },
-    isTitle: true,
-    titleValue: "移动图标",
-    src: "http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/mRdv-NzQq-plHV-ZKl_",
-    isRadius: true,
-    radius: 5,
-    imgState: "cover",
-    imgShape: "square",
-    isBackground: false,
-    backgroundColor: "",
-    backgroundIndex: 0,
-  };
-  const card = cardStore();
-
-  let desk = card.desks.find((item) => card.currentDeskId == item.id);
-  card.addCard(
-    {
-      name: "myIcons",
-      id: Date.now() + 1,
-      customData: { iconList: [{ ...obj }], copy: true },
-    },
-    desk
-  );
-  obj.titleValue = "合并图标";
-  card.addCard(
-    {
-      name: "myIcons",
-      id: Date.now() + 2,
-      customData: { iconList: [{ ...obj }], merge: true },
-    },
-    desk
-  );
+  //  这里执行fn
+  let fn = lastGuide[store.taskID]
+  fn()
   init();
 };
 
