@@ -7,13 +7,6 @@
       <span v-if="validateObj.joinOption  === 'NeedPermission'" class="font-16-400" style="color:var(--primary-text);">
          申请加入
       </span>
-
-      <div class="w-10 h-10 rounded-lg pointer active-button flex items-center justify-center" 
-       style="position: absolute; top:8px;right: 12px;background: var(--secondary-bg);"
-       @click="closeValidate"
-      >
-       <CloseOutlined style="font-size: 1.25em;"/>
-      </div>
    </div>
 
    <div class="flex px-6 flex-col mb-6">
@@ -33,8 +26,7 @@
      </div>
    </div>
  
-   <div class="flex px-6 items-center justify-end">
-     <XtButton style="width: 64px;"  @click="closeValidate">取消</XtButton>
+   <div class="flex px-6 items-center justify-center">
 
      <XtButton class="ml-3" v-if="validateObj.joinOption  === 'FreeAccess'"
       style="width: 96px;background: var(--active-bg);color:var(--active-text);"
@@ -68,12 +60,6 @@ export default defineComponent({
   const data = reactive({
    validateObj:props.data,
   })
-
-  // 关闭弹窗回调
-  const closeValidate = () =>{
-    ctx.emit('close')
-  }
-
   // 立即加入
   const joinNow = async () =>{
    const option = {
@@ -82,16 +68,20 @@ export default defineComponent({
    const res = await window.$chat.joinGroup(option)
    
    if(res.data.status === 'JoinedSuccess'){
-      ctx.emit('close')
       message.success('加群成功')
+      const name = `GROUP${props.data.groupID}`
+      window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse)=>{
+         // 通知 TUIConversation 添加当前会话
+         // Notify TUIConversation to toggle the current conversation
+         window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+      })
    }else if(res.data.status === 'WaitAdminApproval'){
       message.info('入群申请已经发出,需要等待群管理员审核通过')
-      ctx.emit('close')
    }
   }
 
   return {
-   ...toRefs(data),closeValidate,
+   ...toRefs(data),
    joinNow
   }
  }

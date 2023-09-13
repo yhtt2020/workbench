@@ -60,6 +60,7 @@
         </div>
       </vue-custom-scrollbar>
     </a-col>
+
     <a-col flex=" 1 1 200px" class="h-full flex flex-col">
       <div class="line-title px-4 mb-0">
         <span style="vertical-align: text-top">
@@ -76,7 +77,11 @@
        {{ currentChannel.name }}
       </div>
 
-      <div style="height: 0;flex:1">
+      <div v-if="isChat === 'not'" class="flex h-full items-center  justify-center">
+        <ValidateModal :data="group"></ValidateModal>
+      </div>
+
+      <div style="height: 0;flex:1" v-else>
         <template v-if="!currentChannel.name">
           <div class="flex items-center h-full justify-center">
             <a-empty :image="simpleImage" description="暂无内容"></a-empty>
@@ -91,14 +96,11 @@
         </template>
 
       </div>
-    </a-col>
-  </a-row>
 
-  <teleport to='body'>
-    <Modal v-if="showModal" v-model:visible="showModal" :blurFlag="true">
-      <ValidateModal :data="group" @close="showModal = false"></ValidateModal>
-    </Modal>
-  </teleport>
+     
+    </a-col>
+
+  </a-row>
 
 </template>
 
@@ -150,7 +152,7 @@ export default defineComponent({
       simpleImage: '/public/img/test/load-ail.png',
       showModal:false, // 没有加入社群提示弹窗控制
       group:{}, // 接收传递的社群id
-      isChat:'not',
+      isChat:'yes',
     })
 
     const updatePage = () => {
@@ -167,6 +169,7 @@ export default defineComponent({
       if(item.type === 'group'){
         const res = await window.$chat.searchGroupByID(item.props.id)
         const enableGroup = await checkGroupShip([`${item.props.id}`])
+        data.isChat = enableGroup[0]
         const isDisable = res.data.group.joinOption !== 'DisableApply'
         // 判断有没有加入社群, yes表示已经加入, not表示没有加入
         if(enableGroup[0] === 'yes'){
@@ -180,7 +183,7 @@ export default defineComponent({
           // isDisable判断群聊是否禁止加入
           if(isDisable){
             data.group = res.data.group
-            data.showModal = true
+            // data.showModal = true
           }else{
             message.warn('该群禁止加入')
           }
