@@ -54,6 +54,7 @@
         >
           最近对话
         </div>
+       <template v-if="recentList">
         <div v-for="index in copyNum">
           <div class="ai-msg" @click="goPage(index)">
             <xt-base-icon
@@ -67,10 +68,14 @@
                 lineHeight: copyNum == 4 ? '56px' : '48px',
               }"
             >
-              {{ recentList[index].name }}
+              {{ recentList[index]?.name }}
             </div>
           </div>
         </div>
+       </template>
+       <!-- <template v-else>
+        <div>暂无对话</div>
+       </template> -->
       </div>
     </Widget>
   </div>
