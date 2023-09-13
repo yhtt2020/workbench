@@ -77,16 +77,20 @@
 
   <teleport to='body'>
      <Modal  v-if="open" v-model:visible="open" :blurFlag="true">
-       <AddFriend v-if="addIndex === 0" @close="open = false"></AddFriend>
-       <CreateGroup v-if="addIndex === 1"  @close="open = false" :isH5="env.isH5" />
-       <Transfer v-if="addIndex === 2" @close="open = false" :isH5="env.isH5"></Transfer>
+      <AddFriend v-if="addIndex === 'launch'" @close="open = false"></AddFriend>
+      <CreateGroup v-if="addIndex === 'addGroup'"  @close="open = false" :isH5="env.isH5" />
+      <Transfer v-if="addIndex === 'addFriend'" @close="open = false" :isH5="env.isH5"></Transfer>
+      <CreateCommunity v-if="addIndex === 'createCom'" @close="open = false"></CreateCommunity>
+      
      </Modal>
   </teleport>
+
+
 
   
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { TUIEnv } from '../../TUIKit/TUIPlugin';
@@ -102,7 +106,7 @@ import Modal from '../../components/Modal.vue'
 import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
-// import { handleErrorPrompts, handleSuccessPrompts } from '../../TUIKit/TUIComponents/container/utils';
+import CreateCommunity from './components/createCommunity.vue'
 import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
@@ -114,6 +118,7 @@ import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons
 export default {
   name: 'App',
   components: {
+    AppstoreOutlined, MessageOutlined,LinkOutlined,
     SecondPanel,
     TUIContact,
     Drag,
@@ -123,7 +128,7 @@ export default {
     AddFriend,CreateGroup,
     Transfer,
     ChatDropDown,ChatFold,
-    AppstoreOutlined, MessageOutlined,LinkOutlined,
+    CreateCommunity,
   },
 
   setup() {
@@ -131,8 +136,8 @@ export default {
 
     const router = useRouter()
     const route = useRoute()
-    const TUIServer = (window as any).$TUIKit
-    const Server = (window as any).$chat
+    const TUIServer = window.$TUIKit
+    const Server = window.$chat
     const data = reactive({
       index:'chat',
       // type:'chat',
@@ -152,7 +157,7 @@ export default {
       },
     })
 
-    const selectTab = (item: any) => {
+    const selectTab = (item) => {
 
       // router.push(item.route)
       // data.type = item.type
@@ -167,7 +172,7 @@ export default {
       // }
     }
 
-    const selectDorpTab = (item:any) =>{
+    const selectDorpTab = (item) =>{
       data.addIndex = item.index
       data.open = true
     }
@@ -235,29 +240,31 @@ export default {
           {
             icon: 'message',
             name:'发起群聊',
-            index:0,
+            index:"launch",
             callBack:selectDorpTab
           },
           {
             icon: 'team',
             name:'加入群聊',
-            index:1,
+            index:"addGroup",
             callBack:selectDorpTab
           },
           {
             icon: 'tianjiachengyuan',
             name:'添加好友',
-            index:2,
+            index:"addFriend",
             callBack:selectDorpTab
           },
           {
             icon:'smile',
             name:'创建社群',
+            index:'createCom',
             callBack:selectDorpTab
           },
           {
             icon:'team',
             name:'加入社群',
+            index:"addCom",
             callBack:selectDorpTab,
           }
         ]
