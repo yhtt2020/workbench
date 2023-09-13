@@ -1,32 +1,15 @@
 <template>
-  <div
-    class="xt-text flex h-full"
-    style="box-sizing: border-box; z-index: 111"
-    :class="[typeClass]"
-  >
+  <div class="xt-text flex h-full" style="box-sizing: border-box; z-index: 111" :class="[typeClass]">
     <!-- 左侧区域开始 -->
-    <div
-      class="flex flex-col items-center h-full xt-br mr-3"
-      style="width: 72px; min-width: 72px"
-    >
+    <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px">
       <!-- 头部 -->
       <div>
-        <Menu
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in newList.slice(0, last)"
-        >
+        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(0, last)">
           <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content>
-              <slot v-if="item.float" :name="item.float"> </slot>
+            <template #content v-if="item.float">
+              <slot :name="item.float"> </slot>
             </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mb-2"
-            >
+            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mb-2">
               <Full v-if="item.full"></Full>
               <Item :item="item" v-else>
                 <template #[item.slot]>
@@ -34,7 +17,6 @@
                 </template>
               </Item>
             </Box>
-            <!-- </a-dropdown> -->
           </tippy>
         </Menu>
       </div>
@@ -42,22 +24,12 @@
       <div class="xt-scrollbar xt-bt flex flex-col items-center flex-1">
         <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
           <div style="height: auto">
-            <Menu
-              @itemClick="itemClick"
-              :list="item.children"
-              v-for="item in newList.slice(last, -1 * end)"
-            >
+            <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
               <tippy trigger="mouseenter" :interactive="true" placement="right">
-                <template #content>
-                  <slot v-if="item.float" :name="item.float"> </slot>
+                <template #content v-if="item.float">
+                  <slot :name="item.float"> </slot>
                 </template>
-                <Box
-                  @itemClick="itemClick"
-                  :item="item"
-                  @selectClick="selectClick"
-                  :id="currentIndex"
-                  class="mt-2"
-                >
+                <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
                   <Full v-if="item.full" v-model:full="isFull" type=""></Full>
                   <Item v-else :item="item" w="40">
                     <template #[item.slot]>
@@ -72,22 +44,12 @@
       </div>
       <!-- 底部 -->
       <div>
-        <Menu
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in newList.slice(-1 * end)"
-        >
+        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(-1 * end)">
           <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content>
-              <slot v-if="item.float" :name="item.float"> </slot>
+            <template #content v-if="item.float">
+              <slot :name="item.float"> </slot>
             </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mt-2"
-            >
+            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
               <Item :item="item" type="" v-else>
                 <template #[item.slot]>
@@ -231,6 +193,7 @@ const itemClick = (item) => {
 :deep(.anticon) {
   font-size: 20px;
 }
+
 :deep(.ps__rail-y) {
   display: none;
 }
