@@ -58,5 +58,15 @@ export const lastGuide = {
       time: 1685462400000,
       download: 5301,
     };
+    const card: any = cardStore();
+    let desk = card.desks.find((item) => card.currentDeskId == item.id);
+    card.addCard(
+      {
+        name: "remote",
+        id: Date.now() + 2,
+        customData: { task: true },
+      },
+      desk
+    );
   },
 };

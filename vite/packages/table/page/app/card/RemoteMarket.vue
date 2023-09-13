@@ -103,6 +103,7 @@
       },
       add(item, index = 0) {
         console.log('item :>> ', item);
+        console.log(' item.option[index].name :>> ',  item.option[index].name);
         index = index ?? this.carouselIndex;
         this.addCard(
           { name: item.option[index].name, id: Date.now(), customData: {} },

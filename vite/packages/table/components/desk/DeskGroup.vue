@@ -329,9 +329,10 @@
       v-model:select-type="currentAddTab"
     >
     </HorizontalPanel>
-    <div v-if="currentAddTab.name === 'market'">
-      <xt-task :modelValue="M03023">
+    <xt-task :modelValue="M03023">
     </xt-task>
+    <div v-if="currentAddTab.name === 'market'">
+      
       <!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
       <!--      <div class="p-2 pt-0">-->
       <!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->

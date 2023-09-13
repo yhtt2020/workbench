@@ -1,29 +1,12 @@
 <template>
-  <div
-    class="cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around"
-    :data-index="index"
-    @click.stop="iconClick($event)"
-    :style="[iconSize]"
-  >
-    <div
-      class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
-      :style="[bgSize, backgroundState]"
-      :data-index="index"
-    >
-      <img
-        v-if="src && src.length > 0"
-        :src="src"
-        alt=""
-        :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index"
-      />
+  <div class="cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around" :data-index="index"
+    @click.stop="iconClick($event)" :style="[iconSize]">
+    <div class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
+      :style="[bgSize, backgroundState]" :data-index="index">
+      <img v-if="src && src.length > 0" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+        :data-index="index" />
     </div>
-    <div
-      v-if="isTitle"
-      class="text-center xt-text h-5 truncate mx-auto"
-      :style="[textSize]"
-      :data-index="index"
-    >
+    <div v-if="isTitle" class="text-center xt-text h-5 truncate mx-auto" :style="[textSize]" :data-index="index">
       {{ titleValue }}
     </div>
   </div>
@@ -90,7 +73,7 @@ export default {
     },
   },
   watch: {
-    imgShape(newV) {},
+    imgShape(newV) { },
   },
   methods: {
     getSizeValues(size) {
@@ -110,8 +93,8 @@ export default {
         this.size == "icons1" || this.size == "icons2"
           ? imgH
           : this.isTitle
-          ? h - 20
-          : h;
+            ? h - 20
+            : h;
       return {
         bgSize: {
           width: `${w}px`,
@@ -241,8 +224,8 @@ export default {
         this.linkValue.path
           ? require("electron").shell.openPath(this.linkValue.path)
           : require("electron").shell.openPath(
-              require("path").normalize(this.linkValue)
-            );
+            require("path").normalize(this.linkValue)
+          );
       }
     },
   },

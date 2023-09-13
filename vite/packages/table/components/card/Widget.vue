@@ -36,10 +36,18 @@
     <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="my-8 ml-4 mr-4"
         v-if="sizeList && sizeList.length > 0"/>
     <div class="flex flex-row">
-      <div class="w-24 h-24 ml-4 option" @click="()=>{this.menuVisible=false;item.fn()}" v-for="item in menuList">
+    <template v-for="item in menuList">
+    <xt-task v-if="0">
+      <div class="w-24 h-24 ml-4 option" @click="()=>{this.menuVisible=false;item.fn()}" >
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}
       </div>
+    </xt-task>
+    <div v-else class="w-24 h-24 ml-4 option" @click="()=>{this.menuVisible=false;item.fn()}" >
+        <Icon class="icon" :icon="item.icon"></Icon>
+        {{ item.title }}
+      </div>
+    </template>
       <slot name="menuExtra"></slot>
       <div class="w-24 h-24 ml-4 option" @click="doRemoveCard">
         <Icon class="icon" icon="guanbi2"></Icon>

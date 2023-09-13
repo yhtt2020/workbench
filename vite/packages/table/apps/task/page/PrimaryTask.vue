@@ -53,6 +53,7 @@ const ok = () => {
   // let fn = lastGuide["M0202"]
   // fn()
   // return
+  console.log(' lastGuide[store.taskID] :>> ',  lastGuide[store.taskID]);
 
   store.isTaskDrawer = false;
   //  这里执行fn
