@@ -23,28 +23,6 @@ export const chatAdminStore = defineStore('chatAdminStore', {
         this.stats={}
       }
     },
-
-    /***
-     * 获取社群数据进行是否加入判断
-     * 
-    */
-    async getCommunityData (id:any) {
-      // const options  = {
-      //   groupID:id,
-      // };
-      // (window as any).$chat.getGroupProfile(options).then((res:any)=>{
-      //   this.communityData.communityModal = false
-      //   console.log('获取结果',res);
-      // }).catch((error:any)=>{
-      //   this.communityData.communityModal = true
-      //   return error
-      // })
-      // const groupMember = await chat.getGroupMemberList({groupID:id})
-      // Promise.all([groupRes,groupMember]).then(res=>{
-      //   console.log('返回结果::>>',res);
-        
-      // })
-    },
   }
 
 })

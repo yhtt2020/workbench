@@ -33,7 +33,8 @@
                 <template v-if="item.type === 'forum'">
                   <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
                 </template>
-                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  <SelectOutlined  class="ml-1 xt-text-2 flip" style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
+                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  
+                <SelectOutlined  class="ml-1 xt-text-2 flip" style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
               </div>
             </div>
 
@@ -51,7 +52,8 @@
                     <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
                   </template>
                 </div>
-                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
+                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  
+                <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
               </div>
             </div>
           </ChatFold>
@@ -60,7 +62,8 @@
     </a-col>
     <a-col flex=" 1 1 200px" class="h-full flex flex-col">
       <div class="line-title px-4 mb-0">
-        <span style="vertical-align: text-top"><template v-if="currentChannel.type === 'group'">
+        <span style="vertical-align: text-top">
+        <template v-if="currentChannel.type === 'group'">
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
         </template>
         <template v-if="currentChannel.type === 'link'">
@@ -68,7 +71,9 @@
         </template>
         <template v-if="currentChannel.type === 'forum'">
           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-        </template> </span> {{ currentChannel.name }}
+        </template> 
+       </span> 
+       {{ currentChannel.name }}
       </div>
 
       <div style="height: 0;flex:1">
@@ -78,7 +83,7 @@
           </div>
         </template>
         <Community v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
-        <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
+        <TUIChat v-else-if="currentChannel.type==='group' && isChat === 'yes'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'"  style="text-align: center;margin-top: 30%"><Emoji icon="link" :size="20"></Emoji> 当前频道需要浏览器打开。</div>
           <iframe  v-else :src="currentChannel.props.url" class="m-2" style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
@@ -88,6 +93,12 @@
       </div>
     </a-col>
   </a-row>
+
+  <teleport to='body'>
+    <Modal v-if="showModal" v-model:visible="showModal" :blurFlag="true">
+      <ValidateModal :data="group" @close="showModal = false"></ValidateModal>
+    </Modal>
+  </teleport>
 
 </template>
 
@@ -99,26 +110,25 @@ import ChatFold from '../components/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
-<<<<<<< HEAD
-import  browser  from '../../../js/common/browser' 
-import { chatAdminStore } from '../chatAdminStore' 
-=======
 import browser from '../../../js/common/browser'
 import Emoji from '../../../components/comp/Emoji.vue'
->>>>>>> develop-60
+import { checkGroupShip } from '../../../js/common/sns'
+import Modal from '../../../components/Modal.vue'
+import ValidateModal from '../components/validationPrompts.vue'
+import { message } from 'ant-design-vue'
 
 export default defineComponent({
   components: {
     Emoji,
     ChatDropDown,
-    ChatFold, Community,
+    ChatFold, Community,Modal,ValidateModal,
     AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
   },
 
   setup () {
 
     const chat = chatStore()
-    const community = chatAdminStore()
+    // const community = chatAdminStore()
 
     const doubleCol = ref(chat.$state.settings.showDouble)
 
@@ -138,57 +148,54 @@ export default defineComponent({
       mainType: '',
       currentChannel: {},
       simpleImage: '/public/img/test/load-ail.png',
+      showModal:false, // 没有加入社群提示弹窗控制
+      group:{}, // 接收传递的社群id
+      isChat:'not',
     })
 
     const updatePage = () => {
       doubleCol.value = chat.$state.settings.showDouble
     }
 
-    const currentItem = (item) => {
+    const currentItem = async (item) => {
       if(item.type==='link'){
         if(item.props.openMethod==='userSelect'){
           browser.openInUserSelect(item.props.url)
         }
       }
-<<<<<<< HEAD
 
       if(item.type === 'group'){
-        
-        const name = `GROUP${item.props.id}`
-        community.getCommunityData(item.props.id)
-        if(community.communityData.communityModal !== null && community.communityData.communityModal === false){
-          console.log('展示聊天内容界面') 
-          // data.mainType = 'group'
-        // console.log('排查::>>',name);
-        // window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-        //   console.log('排查111::>>',imResponse);
-        //  // 通知 TUIConversation 添加当前会话
-        //  // Notify TUIConversation to toggle the current conversation
-        //  window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-        // });
-        }else if(community.communityData.communityModal !== null && community.communityData.communityModal === true){
-          console.log('展示社群提示弹窗')
+        const res = await window.$chat.searchGroupByID(item.props.id)
+        const enableGroup = await checkGroupShip([`${item.props.id}`])
+        const isDisable = res.data.group.joinOption !== 'DisableApply'
+        data.isChat = enableGroup[0]
+
+        // isDisable判断群聊是否禁止加入
+        if(isDisable){
+          
+          // 判断有没有加入社群, yes表示已经加入, not表示没有加入
+          if(enableGroup[0] === 'yes'){
+            data.mainType = 'group'
+            const name = `GROUP${item.props.id}`
+            window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+             // 通知 TUIConversation 添加当前会话
+             // Notify TUIConversation to toggle the current conversation
+             window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+            })
+          }else{
+            data.group = res.data.group
+            data.showModal = true
+          }
+
+        }else{
+
+          message.warn('该群禁止加入')
+
         }
-        
-       
       }
 
-      if(item.type === 'forum'){
-        data.mainType = 'forum'
-=======
-      if (item.type === 'group') {
-        const name = `GROUP${item.props.id}`
-        data.mainType = 'group'
-        console.log('排查::>>', name)
-        window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-          console.log('排查111::>>', imResponse)
-          // 通知 TUIConversation 添加当前会话
-          // Notify TUIConversation to toggle the current conversation
-          window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-        })
->>>>>>> develop-60
-      }
       data.currentChannel = item
+
     }
 
     // 通过计算属性获取是否收起侧边栏
@@ -199,7 +206,7 @@ export default defineComponent({
     return {
       doubleCol, isFloat,
       ...toRefs(data), updatePage,
-      currentItem,
+      currentItem,checkGroupShip,
     }
   }
 })
