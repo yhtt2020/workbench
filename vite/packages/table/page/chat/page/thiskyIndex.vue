@@ -77,6 +77,7 @@ import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons
 import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
 import  browser  from '../../../js/common/browser' 
+import { chatAdminStore } from '../chatAdminStore' 
 
 export default defineComponent({
   components:{
@@ -88,6 +89,7 @@ export default defineComponent({
   setup () {
 
     const chat = chatStore()
+    const community = chatAdminStore()
 
     const doubleCol = ref(chat.$state.settings.showDouble)
 
@@ -122,15 +124,24 @@ export default defineComponent({
       }
 
       if(item.type === 'group'){
+        
         const name = `GROUP${item.props.id}`
-        data.mainType = 'group'
-        console.log('排查::>>',name);
-        window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-          console.log('排查111::>>',imResponse);
-         // 通知 TUIConversation 添加当前会话
-         // Notify TUIConversation to toggle the current conversation
-         window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-        });
+        community.getCommunityData(item.props.id)
+        if(community.communityData.communityModal !== null && community.communityData.communityModal === false){
+          console.log('展示聊天内容界面') 
+          // data.mainType = 'group'
+        // console.log('排查::>>',name);
+        // window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+        //   console.log('排查111::>>',imResponse);
+        //  // 通知 TUIConversation 添加当前会话
+        //  // Notify TUIConversation to toggle the current conversation
+        //  window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+        // });
+        }else if(community.communityData.communityModal !== null && community.communityData.communityModal === true){
+          console.log('展示社群提示弹窗')
+        }
+        
+       
       }
 
       if(item.type === 'forum'){
