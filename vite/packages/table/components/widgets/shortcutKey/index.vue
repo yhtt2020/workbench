@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Widget :customData="customData" :customIndex="customIndex"       :menuList="menuList" :options="options" ref="homelSlotRef" :desk="desk">
+        <Widget :customData="customData" :customIndex="customIndex"       :menuList="menuList" :options="options" ref="cardSlot" :desk="desk">
             <div class="icon">
                 <Icon icon="solar:keyboard-bold" />
             </div>
@@ -57,8 +57,8 @@
 
         
             <div class="buttonBom">
-            <!-- shan -->
-            <div class="pFirse"  @click="this.isFlag = !this.isFlag" >
+            <!-- shan   @click="this.isFlag = !this.isFlag"  -->
+            <div class="pFirse">
                 <icon></icon>更多快捷键
             </div>
             <div class="pSecond">
@@ -71,8 +71,8 @@
         </div>
 
         <div class="topList"  v-show="isFlag"  >
-            <!-- shan -->
-            <div class="pFirse" @click="onBack" :class="topBar">
+            <!-- shan @click="onBack" -->
+            <div class="pFirse" :class="topBar">
                 <div class="nameImg">
                     <img src="" alt="">
                     <span>Adobe Lightroom</span>
@@ -190,18 +190,18 @@
           21324154165
         </div> -->
         <p>需要在小组件内显示的数据</p>
-        <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
-        <p>需要在小组件内显示的数据</p>
-        <!-- <div class="btn-list">
-            <div class="btn-l">
-                <i></i>
-                <span>最近使用列表</span>
-            </div>
-            <div class="btn-r">
-                <i></i>
-                <span>指定快捷键详情</span>
-            </div>
-        </div> -->
+        <RadioTab :navList="dataType" v-model:selectType="defaultType" @click="onChangeList(selectType)"></RadioTab>
+        <div v-if="defaultType.name == 'thisList'">
+            <p style="margin-top: 14px;">选择快捷键方案</p>
+            <a-select :style="selectStyle" style="width: 100%;"
+                class="select rounded-lg  text-xs flex items-center" size="large" :bordered="false"
+                v-model:value="selectValue" 
+                @change="onChangeShortcutKey(selectValue)"
+                placeholder="请选择">
+                <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{item.name}}
+                </a-select-option>
+            </a-select>
+        </div>
       </vue-custom-scrollbar>
 
     </a-drawer>
@@ -213,7 +213,6 @@ import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
 import RadioTab from "../../RadioTab.vue"
-
 // import BottomEdit from "..";
 export default {
     components:{
@@ -243,32 +242,38 @@ export default {
     },
     data() {
         return {
+            settingVisible: false,
+            selectValue: '请选择',
+            // 选择快捷键方案
+            sortType: [
+                { name: 'Adobe PS', value: 'Adobe PS' },
+                { name: 'Adobe AI', value: 'Adobe AI' },
+                { name: 'Adobe PR', value: 'Adobe PR' },
+                { name: 'Adobe AX', value: 'Adobe AX' },
+            ],
+            // 需要在小组件显示的数据
             dataType: [
                 { title: '最近使用列表', name: 'useList' },
                 { title: '指定快捷键详情', name: 'thisList' }
             ],
             defaultType: { title: '最近使用列表', name: 'useList' },
-            settingVisible: false,
             options: {
                 className: "card double",
                 title: "快捷键",
-                // icon: "solar:keyboard-bold",
-                // icon: "shezhi1",
-                // icon: "iconamoon:history-fill",
-                // icon: "games-16-filled",
             },
-            dataList:[
-                
-            ],
+            dataList:[],
             menuList: [
                 {
                     icon: 'shezhi1',
                     title: '设置',
-                    fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+                    fn: () => { 
+                        this.settingVisible = true; 
+                        this.$refs.cardSlot.visible = false 
+                    }
                 },
             ],
             
-            isFlag:true,
+            isFlag:false,
             // types:"123",
             keyList:[
                 {
@@ -313,6 +318,18 @@ export default {
         },
         onBack(){
             this.isFlag = !this.isFlag
+        },
+        // 查看切换的应用
+        onChangeShortcutKey(key){
+            // console.log("xuanzel;e")
+            // console.log(key)
+        },
+        // 切换卡片类型 目前还有点问题 找不到触发事件
+        onChangeList(selectType){
+            // console.log("selectType",selectType)
+
+            this.isFlag = !this.isFlag
+
         }
     }
 };
