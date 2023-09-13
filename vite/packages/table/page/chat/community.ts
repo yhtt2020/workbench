@@ -19,13 +19,15 @@ export const useCommunityStore = defineStore('community',{
     actions:{
         // 根据板块id来获取板块信息
         async getCommunityInfo(id){
-            if(localCache.get(id)){
-                this.communityInfo=localCache.get(id)
+            if(localCache.get(`communityInfo_${id}`)){
+                this.communityInfo=localCache.get(`communityInfo_${id}`)
             }
             let res=await post(community,{
                 fid:id
             })
             console.log(res);
+            this.communityInfo=res.data
+            localCache.set(`communityInfo_${id}`,res.data,60*60*24)
 
         },
         // 获取板块下的所有分类
@@ -36,9 +38,13 @@ export const useCommunityStore = defineStore('community',{
             })
             console.log(res);
 
+
         },
         // 获取查询板块下的所有帖子
         async getCommunityPost(id,type){
+            if(localCache.get(`communityPost_${id}-${type}`)){
+                this.communityPost=localCache.get(`communityPost_${id}-${type}`)
+            }
             let res=await post(threadList,{
                 fid:id,
                 page:1,
@@ -50,11 +56,15 @@ export const useCommunityStore = defineStore('community',{
               console.log(res,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost);
+                localCache.set(`communityPost_${id}-${type}`,res.data,60*60*24)
             }
 
         },
         // 查看帖子详情
         async getCommunityPostDetail(id){
+            if(localCache.get(`communityPostDetail_${id}`)){
+                this.communityPostDetail=localCache.get(`communityPostDetail_${id}`)
+            }
             let res=await post(detail,{
                 tid:id
             })
@@ -62,10 +72,14 @@ export const useCommunityStore = defineStore('community',{
             if(res.code===200){
                 this.communityPostDetail=res.data
                 // console.log(this.communityPostDetail);
+                localCache.set(`communityPostDetail_${id}`,res.data,60*60*24)
             }
         },
         //查看帖子回复
         async getCommunityPostReply(id){
+            if(localCache.get(`communityReply_${id}`)){
+                this.communityReply=localCache.get(`communityReply_${id}`)
+            }
             let res=await post(replyList,{
                 tid:id,
                 page:1,
