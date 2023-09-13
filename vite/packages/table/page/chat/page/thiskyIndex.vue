@@ -83,7 +83,7 @@
           </div>
         </template>
         <Community v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
-        <TUIChat v-else-if="currentChannel.type==='group' && isChat === 'yes'"></TUIChat>
+        <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'"  style="text-align: center;margin-top: 30%"><Emoji icon="link" :size="20"></Emoji> 当前频道需要浏览器打开。</div>
           <iframe  v-else :src="currentChannel.props.url" class="m-2" style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
@@ -158,7 +158,7 @@ export default defineComponent({
     }
 
     const currentItem = async (item) => {
-      if(item.type==='link'){
+      if( item.type==='link' ){
         if(item.props.openMethod==='userSelect'){
           browser.openInUserSelect(item.props.url)
         }
@@ -168,34 +168,26 @@ export default defineComponent({
         const res = await window.$chat.searchGroupByID(item.props.id)
         const enableGroup = await checkGroupShip([`${item.props.id}`])
         const isDisable = res.data.group.joinOption !== 'DisableApply'
-        data.isChat = enableGroup[0]
-
-        // isDisable判断群聊是否禁止加入
-        if(isDisable){
-          
-          // 判断有没有加入社群, yes表示已经加入, not表示没有加入
-          if(enableGroup[0] === 'yes'){
-            data.mainType = 'group'
-            const name = `GROUP${item.props.id}`
-            window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-             // 通知 TUIConversation 添加当前会话
-             // Notify TUIConversation to toggle the current conversation
-             window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-            })
-          }else{
+        // 判断有没有加入社群, yes表示已经加入, not表示没有加入
+        if(enableGroup[0] === 'yes'){
+          const name = `GROUP${item.props.id}`
+          window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse)=>{
+            // 通知 TUIConversation 添加当前会话
+            // Notify TUIConversation to toggle the current conversation
+            window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+          })
+        }else{
+          // isDisable判断群聊是否禁止加入
+          if(isDisable){
             data.group = res.data.group
             data.showModal = true
+          }else{
+            message.warn('该群禁止加入')
           }
-
-        }else{
-
-          message.warn('该群禁止加入')
-
         }
       }
 
       data.currentChannel = item
-
     }
 
     // 通过计算属性获取是否收起侧边栏

@@ -12,9 +12,11 @@
       </div>
 
   
-      <template #floating>
-        <!-- 此处代码暂时保留,该功能后期需要实现 -->
-        <!-- <div class="rounded-lg flex flex-col px-3 py-4" style="position:relative; top:60px; left:20px; width:336px;height:638px;background:var(--secondary-bg);">
+      <!--  此处代码暂时保留,该功能后期需要实现 -->
+      <!-- 社群悬浮弹窗 -->
+      <!-- <template #floating>
+       
+        <div class="rounded-lg flex flex-col px-3 py-4" style="position:relative; top:60px; left:20px; width:336px;height:638px;background:var(--secondary-bg);">
           <div class="flex flex-col">
             <div class="flex justify-between mb-2.5">
               <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
@@ -47,8 +49,8 @@
               </ChatFold>
             </div>
           </vue-custom-scrollbar>
-        </div> -->
-      </template>
+        </div>
+      </template> -->
 
     </xt-left-menu>
 
