@@ -1,14 +1,8 @@
 <template>
     <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
         <Icon icon="iconamoon:history-fill" class="icon1"/>
-
             <div class="date">{{this.history.date}}</div>
             <div class="title">{{this.history.title}}</div>
-            <!-- <div class="date">"159年9月9日"</div>
-            <div class="title">"东汉梁冀灭门"</div> -->
-
-
-
     </Widget>
 </template>
   

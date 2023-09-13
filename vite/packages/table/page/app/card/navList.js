@@ -62,63 +62,6 @@ export const NavList = [
         time: "2023/5/31",
       },
       {
-        name: 'gameInformation',
-        cname: '电竞资讯',
-        detail: '时刻关注电竞游戏资讯',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'gameInformation',
-            size: '2x2',
-            zoom: '20'
-          },
-        ],
-        time: '2023/6/28'
-      },
-      {
-        name: 'historyInfo',
-        cname: '历史上的今天',
-        detail: '历史上的今天都发生了什么大事呢？',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'historyInfo',
-            size: '2x2',
-            zoom: '40'
-          },
-        ],
-        time: '2023/6/28'
-      },      
-
-      {
-        name: 'shortcutKey',
-        cname: '快捷键小组件',
-        detail: '在你的桌面上快速访问最近使用的快捷键数据。',
-        sizes: ['4x4'],
-        option: [
-          {
-            name: 'shortcutKey',
-            size: '4x4',
-            zoom: '20'
-          },
-        ],
-        time: '2023/6/28'
-      },
-      {
-        name: 'clipBoard',
-        cname: '剪贴板小组件',
-        detail: '在你的桌面上快速访问最近的剪贴板数据。',
-        sizes: ['4x4'],
-        option: [
-          {
-            name: 'clipBoard',
-            size: '4x4',
-            zoom: '24'
-          },
-        ],
-        time: '2023/6/28'
-      },
-      {
         name: "weather",
         cname: "天气",
         detail: "查看某地当前的天气状况和未来的天气预报。",
@@ -851,7 +794,63 @@ export const NavList = [
         ],
         time: "2023/6/29",
       },
+      {
+        name: 'gameInformation',
+        cname: '电竞资讯(开发中)',
+        detail: '时刻关注电竞游戏资讯',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'gameInformation',
+            size: '2x2',
+            zoom: '20'
+          },
+        ],
+        time: '2023/9/8'
+      },
+      {
+        name: 'historyInfo',
+        cname: '历史上的今天(开发中)',
+        detail: '历史上的今天都发生了什么大事呢？',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'historyInfo',
+            size: '2x2',
+            zoom: '40'
+          },
+        ],
+        time: '2023/9/9'
+      },      
 
+      {
+        name: 'shortcutKey',
+        cname: '快捷键小组件(开发中)',
+        detail: '在你的桌面上快速访问最近使用的快捷键数据。',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'shortcutKey',
+            size: '4x4',
+            zoom: '20'
+          },
+        ],
+        time: '2023/9/13'
+      },
+      {
+        name: 'clipBoard',
+        cname: '剪贴板小组件(开发中)',
+        detail: '在你的桌面上快速访问最近的剪贴板数据。',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'clipBoard',
+            size: '4x4',
+            zoom: '24'
+          },
+        ],
+        time: '2023/9/14'
+      },
     ]
   },
 ];

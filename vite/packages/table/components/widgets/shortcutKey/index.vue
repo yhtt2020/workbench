@@ -6,62 +6,62 @@
             </div>
             
             <div v-show="!isFlag" class="topList">
-            <div class="cardApp" @click="onChangeCard(1)">
+            <div class="card-app" @click="onChangeCard(1)">
                 <img src="" alt="">
-                <div class="titleText">Adobe PSs44d56a4sas4a6das</div>
-                <div class="rightBox">
+                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
+                <div class="right-box">
                     <div class="num">92</div>
-                    <div class="titleKey">快捷键</div>
+                    <div class="title-key">快捷键</div>
                 </div>
             </div>
-            <div class="cardApp" @click="onChangeCard(2)">
+            <div class="card-app" @click="onChangeCard(2)">
                 <img src="" alt="">
-                <div class="titleText">Adobe PSs44d56a4sas4a6das</div>
-                <div class="rightBox">
+                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
+                <div class="right-box">
                     <div class="num">92</div>
-                    <div class="titleKey">快捷键</div>
+                    <div class="title-key">快捷键</div>
                 </div>
             </div>
-            <div class="cardApp">
+            <div class="card-app">
                 <img src="" alt="">
-                <div class="titleText">Adobe PSs44d56a4sas4a6das</div>
-                <div class="rightBox">
+                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
+                <div class="right-box">
                     <div class="num">92</div>
-                    <div class="titleKey">快捷键</div>
+                    <div class="title-key">快捷键</div>
                 </div>
             </div>
-            <div class="cardApp">
+            <div class="card-app">
                 <img src="" alt="">
-                <div class="titleText">Adobe PSs44d56a4sas4a6das</div>
-                <div class="rightBox">
+                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
+                <div class="right-box">
                     <div class="num">92</div>
-                    <div class="titleKey">快捷键</div>
+                    <div class="title-key">快捷键</div>
                 </div>
             </div>
-            <div class="cardApp">
+            <div class="card-app">
                 <img src="" alt="">
-                <div class="titleText">Adobe PSs44d56a4sas4a6das</div>
-                <div class="rightBox">
+                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
+                <div class="right-box">
                     <div class="num">92</div>
-                    <div class="titleKey">快捷键</div>
+                    <div class="title-key">快捷键</div>
                 </div>
             </div>
-            <div class="cardApp">
+            <div class="card-app">
                 <img src="" alt="">
-                <div class="titleText">Adobe PSs44d56a4sas4a6das</div>
-                <div class="rightBox">
+                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
+                <div class="right-box">
                     <div class="num">92</div>
-                    <div class="titleKey">快捷键</div>
+                    <div class="title-key">快捷键</div>
                 </div>
             </div>
 
         
-            <div class="buttonBom">
+            <div class="button-bom">
             <!-- shan   @click="this.isFlag = !this.isFlag"  -->
-            <div class="pFirse">
+            <div class="p-firse">
                 <icon></icon>更多快捷键
             </div>
-            <div class="pSecond">
+            <div class="p-second">
                 <icon></icon>搜索
             </div>
         </div>
@@ -72,105 +72,105 @@
 
         <div class="topList"  v-show="isFlag"  >
             <!-- shan @click="onBack" -->
-            <div class="pFirse" :class="topBar">
-                <div class="nameImg">
+            <div class="p-firse" :class="topBar">
+                <div class="name-img">
                     <img src="" alt="">
                     <span>Adobe Lightroom</span>
                 </div>
-                <div class="pageChange">
+                <div class="page-change">
                     <i>&lt;</i>
                     <i>&gt;</i>
                 </div>
             </div>
-            <div class="keyBody">
-                <div class="keyName" >常用</div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+            <div class="key-body">
+                <div class="key-name" >常用</div>
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项sfasfafdfgsdfsfdfs</div>
+                    <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                     </div>
-                    <div class="keyTitle">首选项sfasfafdfgsdfsfdfs</div>
+                    <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="keyTitle">首选项</div>
-                </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
+                </div>
+                <div class="key-flex">
+                    <div class="key-item">
+                        <span>Space</span>
+                        <span>H</span>
+                        <span>3</span>
+                    </div>
+                    <div class="key-title">首选项</div>
                 </div>
                 
-                <div class="keyName" >常用</div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-name" >常用</div>
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
-                <div class="keyFlex">
-                    <div class="keyItem">
+                <div class="key-flex">
+                    <div class="key-item">
                         <span>Space</span>
                         <span>H</span>
                         <span>3</span>
                     </div>
-                    <div class="keyTitle">首选项</div>
+                    <div class="key-title">首选项</div>
                 </div>
             </div>
 
@@ -350,7 +350,7 @@ export default {
         height: 24px;
     }
 
-    .cardApp{
+    .card-app{
         float: left;
         // border: 1px solid #fff;
         width: 265px;
@@ -359,17 +359,17 @@ export default {
         background: rgba(0,0,0,0.30);
         border-radius: 12px;
     }
-    .cardApp:nth-last-of-type(2n){
+    .card-app:nth-last-of-type(2n){
         margin-right: 14px;
     }
-    .cardApp img{
+    .card-app img{
         width: 56px;
         height: 56px;
         float: left;
         margin: 16px;
     }
     
-    .titleText{
+    .title-text{
         font-family: 'PingFang SC';
         float: left;
         width: 88px;
@@ -387,7 +387,7 @@ export default {
         -webkit-line-clamp: 2;
     }
 
-    .rightBox{
+    .right-box{
         float: left;
         width: 42px;
         height: 60px;
@@ -395,14 +395,14 @@ export default {
         margin-top: 5px;
     }
 
-    .rightBox .num{
+    .right-box .num{
         font-family: 'Oswald';
         font-size: 28px;
         opacity: 0.85;
         text-align: center;
     }
 
-    .rightBox .titleKey{
+    .right-box .title-key{
         font-family: 'PingFang SC';
         width: 42px;
         height: 20px;
@@ -410,7 +410,7 @@ export default {
         opacity: 0.6;
     }
 
-    .buttonBom{
+    .button-bom{
         font-family: PingFangSC-Regular;
         font-size: 16px;
         color: rgba(255,255,255,0.85);
@@ -418,7 +418,7 @@ export default {
         font-weight: 400;
         line-height: 44px;
     }
-    .buttonBom .pFirse{
+    .button-bom .p-firse{
         width: 266px;
         height: 44px;
         float: left;
@@ -427,19 +427,19 @@ export default {
         margin-top: 16px;
     }
     
-    .nameImg{
+    .name-img{
         float: left;
         line-height: 44px;
     }
     
-    .nameImg img{
+    .name-img img{
         line-height: 44px;
         margin-right: 10px;
         width: 32px;
         height: 32px;
     }
     
-    .nameImg span{
+    .name-img span{
         margin-right: 10px;
         font-family: PingFangSC-Regular;
         font-size: 16px;
@@ -447,7 +447,7 @@ export default {
     }
 
 
-    .buttonBom .pSecond{
+    .button-bom .p-second{
         width: 266px;
         height: 44px;
         float: left;
@@ -458,14 +458,14 @@ export default {
     }
 
 
-    .pageChange{
+    .page-change{
        width: 100%; 
     //    border: 1px solid #fff;
        text-align: right;
        margin-top: 10px;
     }
 
-    .pageChange i{
+    .page-change i{
         display: inline-block;
         width: 44px;
         height: 44px;
@@ -482,7 +482,7 @@ export default {
 
     }
 
-    .keyBody{
+    .key-body{
         margin-top: 10px;
         width: 544px;
         overflow: hidden;
@@ -496,17 +496,17 @@ export default {
 
     }
 
-    .keyBody>div{
+    .key-body>div{
         width: 240px;
         height: 32px;
         margin: 0 16px 18px 20px;
     }
 
-    .keyFlex{
+    .key-flex{
         display: flex;
         line-height: 32px;
     }
-    .keyName{
+    .key-name{
         font-size: 16px;
         font-family: PingFangSC-Regular;
         color: rgba(255,255,255,0.85);
@@ -515,11 +515,11 @@ export default {
         padding: 5px;
     }
 
-    .keyItem{
-        // display: flex;
-    }
+    // .key-item{
+    //     // display: flex;
+    // }
 
-    .keyTitle{
+    .key-title{
         text-align: right;
         flex: 1;
         font-family: PingFangSC-Regular;
@@ -532,7 +532,7 @@ export default {
     }
 
 
-    .keyFlex span{
+    .key-flex span{
         width: 32px;
         height: 32px;
         background: rgba(0,0,0,0.30);
