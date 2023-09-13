@@ -136,10 +136,12 @@
                 </div>
               </a-col>
               <a-col :span="6">
+               <xt-task :modelValue="m04012" @cb="basic">
                 <div @click="basic" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div>通用设置</div>
                 </div>
+               </xt-task>
               </a-col>
               <a-col :span="6">
                 <div @click="power" class="btn">
@@ -293,6 +295,9 @@ export default {
     },
     m03013() {
       return this.taskID == "M0301" && this.step == 3;
+    },
+    m04012() {
+      return this.taskID == "M0401" && this.step == 2;
     },
   },
   methods: {

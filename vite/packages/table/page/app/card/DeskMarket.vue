@@ -5,38 +5,78 @@
       <div class="text-center w-full" v-if="displayItems.length==0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
-      <div v-else v-for="item in displayItems" :key="item.id" class="pointer recommend mb-2" :style="deskItemStyle"
-           @click="previewKay(item)">
-        <div class=" cover-wrapper" style="">
-          <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-          <img class="cover-preview" :src="item.cover"/>
-        </div>
-        <div style="padding: 0 14px 14px">
-          <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong>
-            <span class="label" v-if="item.tags"
-                  v-for="x in item.tags?.split(',')"
-                  :key="x">{{ x }}</span>
-          </div>
-          <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
-            <span class="flex items-center">
-              <div @click="showCard(item.id)">
-                <a-avatar :src="item.userInfo?.avatar" :size="32"></a-avatar>
+      <template  v-else v-for="(item, index) in displayItems" :key="item.id" >
+
+          <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
+            {{ m03025 }}{{ index }}
+            <div  class="pointer recommend mb-2" :style="deskItemStyle"
+            @click="previewKay(item)">
+            <div class=" cover-wrapper" style="">
+              <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
+              <img class="cover-preview" :src="item.cover"/>
+            </div>
+            <div style="padding: 0 14px 14px">
+              <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong>
+                <span class="label" v-if="item.tags"
+                      v-for="x in item.tags?.split(',')"
+                      :key="x">{{ x }}</span>
               </div>
-              <span class="ml-3" style="color: var(--secondary-text);">{{ item.userInfo?.nickname }}</span>
-            </span>
-            <span style="color: var(--secondary-text);">
-              <span>
-                <Icon icon="dianzan" class="mr-2"></Icon>
-                <span>{{ item.support }}</span>
+              <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
+                <span class="flex items-center">
+                  <div @click="showCard(item.id)">
+                    <a-avatar :src="item.userInfo?.avatar" :size="32"></a-avatar>
+                  </div>
+                  <span class="ml-3" style="color: var(--secondary-text);">{{ item.userInfo?.nickname }}</span>
+                </span>
+                <span style="color: var(--secondary-text);">
+                  <span>
+                    <Icon icon="dianzan" class="mr-2"></Icon>
+                    <span>{{ item.support }}</span>
+                  </span>
+                  <span class="ml-3">
+                    <Icon icon="xiazai" class="mr-2"></Icon>
+                    <span>{{ item.count }}</span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          </xt-task>
+       
+        <div v-else class="pointer recommend mb-2" :style="deskItemStyle"
+             @click="previewKay(item)">
+          <div class=" cover-wrapper" style="">
+            <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
+            <img class="cover-preview" :src="item.cover"/>
+          </div>
+          <div style="padding: 0 14px 14px">
+            <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong>
+              <span class="label" v-if="item.tags"
+                    v-for="x in item.tags?.split(',')"
+                    :key="x">{{ x }}</span>
+            </div>
+            <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
+              <span class="flex items-center">
+                <div @click="showCard(item.id)">
+                  <a-avatar :src="item.userInfo?.avatar" :size="32"></a-avatar>
+                </div>
+                <span class="ml-3" style="color: var(--secondary-text);">{{ item.userInfo?.nickname }}</span>
               </span>
-              <span class="ml-3">
-                <Icon icon="xiazai" class="mr-2"></Icon>
-                <span>{{ item.count }}</span>
+              <span style="color: var(--secondary-text);">
+                <span>
+                  <Icon icon="dianzan" class="mr-2"></Icon>
+                  <span>{{ item.support }}</span>
+                </span>
+                <span class="ml-3">
+                  <Icon icon="xiazai" class="mr-2"></Icon>
+                  <span>{{ item.count }}</span>
+                </span>
               </span>
-            </span>
+            </div>
           </div>
         </div>
-      </div>
+        </template>
+   
     </div>
   </div>
   <!-- 预览 -->
@@ -46,11 +86,18 @@
 <script>
 import { appStore } from '../../../store'
 import { mapActions, mapWritableState } from 'pinia'
+import { taskStore } from '../../../apps/task/store'
 // import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
   name: 'DeskMarket',
   components: {
     // DeskPreview
+  },
+  computed:{
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m03025( ) {
+      return this.taskID == "M0302" && this.step == 5
+    }
   },
   data () {
     return {

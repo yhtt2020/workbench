@@ -129,9 +129,8 @@
 
         <template #outMenu>
           <a-row class="text-center" style="margin-top: 20px" :gutter="20">
-            <xt-task :modelValue="M01022" to="" @cb="showAddDeskForm">
+            <xt-task :modelValue="mixTask" to="" @cb="showAddDeskForm">
               <a-col>
-          
                 <div @click="showAddDeskForm" class="btn">
                   <Icon style="font-size: 3em" icon="desktop"></Icon>
                   <div><span>添加桌面</span></div>
@@ -331,6 +330,8 @@
     >
     </HorizontalPanel>
     <div v-if="currentAddTab.name === 'market'">
+      <xt-task :modelValue="M03023">
+    </xt-task>
       <!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
       <!--      <div class="p-2 pt-0">-->
       <!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->
@@ -343,9 +344,11 @@
           <span class="desk-title mr-2">热门桌面</span>
           <Icon style="font-size: 20px" icon="daohang_remen-xuanzhong"></Icon>
         </span>
-        <div class="btn-item" @click="moreDesk" style="width: 160px">
+<xt-task :modelValue="M03024" @cb="moreDesk">
+  <div class="btn-item" @click="moreDesk" style="width: 160px">
           更多桌面分享
         </div>
+</xt-task>
       </div>
       <div>
         <DeskMarket
@@ -359,11 +362,13 @@
     </div>
     <div v-else>
 
-        <xt-task :modelValue="M01023">
-  </xt-task>
-  <div class="desk-title mt-4">标题</div>
-      <a-input
-        v-model:value="deskTitle"
+    <xt-task :modelValue="M01023">
+    </xt-task>
+  
+
+    <div class="desk-title mt-4">标题</div>
+        <a-input
+          v-model:value="deskTitle"
         spellcheck="false"
         class="input"
         placeholder="请输入"
@@ -571,20 +576,32 @@ export default {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      if ( (this.taskID == "M0101" || this.taskID == "M0102"|| this.taskID == "M0103"|| this.taskID == "M0201") && this.step == 1) 
+      if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1) 
       {
         return true;
       } 
     },
-M01022(){
-        return this.taskID == "M0102" && this.step == 2; 
-},
-M01023(){
-        return this.taskID == "M0102" && this.step == 3
-},
-M01024(){
-        return this.taskID == "M0102" && this.step == 4
-},
+    M01022() {
+      return this.taskID == "M0102" && this.step == 2;
+    },
+    M03022() {
+      return this.taskID == "M0302" && this.step == 2;
+    },
+    mixTask() {
+      return this.M01022 || this.M03022
+    },
+    M01023() {
+      return this.taskID == "M0102" && this.step == 3
+    },
+    M03023() {
+      return this.taskID == "M0302" && this.step == 3
+    },
+    M03024() {
+      return this.taskID == "M0302" && this.step == 4
+    },
+    M01024() {
+      return this.taskID == "M0102" && this.step == 4
+    },
     // getHomeSize(){
     //   this.$nextTick(() => {
     //     let height = document.getElementById("cardContent")?.offsetHeight;

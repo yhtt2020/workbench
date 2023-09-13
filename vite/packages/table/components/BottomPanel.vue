@@ -66,7 +66,7 @@
                       v-else 
                         v-for="item in footNavigationList"
                   >
-                  <xt-task v-if="item.name == '基础设置'" class="mr-6" :modelValue="m03011" @cb="clickNavigation(item)">
+                  <xt-task v-if="item.name == '基础设置'" class="mr-6" :modelValue="mixTask" @cb="clickNavigation(item)">
                     <a-tooltip
                         :title="item.name"
                 >
@@ -142,11 +142,9 @@
                :src="item.icon"
              ></a-avatar>
            </div>
-         </div>
-       </a-tooltip>
+                </div>
+               </a-tooltip>
               </template>
-               
-              
               </div>
             </xt-task>
           </div>
@@ -469,6 +467,12 @@ export default {
     },
     m03011() {
       return this.taskID == "M0301" && this.step == 1;
+    },
+    m04011() {
+      return this.taskID == "M0401" && this.step == 1;
+    },
+    mixTask() {
+      return this.m03011 || this.m04011
     },
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 

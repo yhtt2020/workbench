@@ -16,7 +16,8 @@
 <script>
 import SecondPanel from '../../components/SecondPanel.vue'
 import { isMain } from '../../js/common/screenUtils'
-
+import { taskStore } from '../../apps/task/store'
+import { mapWritableState } from 'pinia'
 const menus = [
   {
     title: '通用',
@@ -92,7 +93,25 @@ export default {
     // })
   },
   computed: {
-    isMain
+    isMain,
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+  },
+  watch: {
+    taskID:{
+      handler(newV) {
+      if (this.taskID === 'M0401' && this.step == 3) {
+        let obj = {
+          "menu": {
+            "route": {
+              "name": "key"
+            }
+          },
+        }
+        this.change(obj)
+      }
+    },
+    immediate:true
+    }
   },
   methods: {
     change(tab) {
