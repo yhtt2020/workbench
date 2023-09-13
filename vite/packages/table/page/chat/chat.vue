@@ -177,10 +177,15 @@ export default {
       data.open = true
     }
 
+    const openAddCom = () =>{
+      data.addIndex = 'createCom'
+      data.open = true
+    }
+
     const appS=appStore()
     const {userInfo}=appS
 
-    console.log(userInfo.uid,'uidddddd',config.adminUids)
+    // console.log(userInfo.uid,'uidddddd',config.adminUids)
     const chatLeftList = ref([
       {
         icon: 'message',
@@ -230,6 +235,11 @@ export default {
         route:{
           name:'chatThisky'
         }
+      },
+      {
+       //  icon:'ic:baseline-add',
+       icon:'tianjia2',
+       callBack:openAddCom,
       },
       {
         full:true,
