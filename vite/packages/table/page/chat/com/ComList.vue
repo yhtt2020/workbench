@@ -3,7 +3,6 @@
     <div class="w-full card">
         <div class=" card-content">
     <!-- {{ Imageheight.width }} -->
-
             <div class="w-full card-top">
                 <div class="top-left">
                     <a-avatar :size="32" :src="cardData.user.avatar" class="pointer" @click.stop="showUserCard(uid,userInfo)">
@@ -38,8 +37,8 @@
                         <source :src="cardData.data?.video" type="video/webm" />
                     </video>
                     <!-- 正文内容 -->
-                    <div>
-                        <div id="title" style="color: var(--primary-text);"
+                    <div class="flex flex-col justify-between" >
+                        <div id="title" style="color: var(--primary-text);" v-if="cardData.title"
                             :class="{ 'omit-title': cardData.image.length === 1 || cardData.data?.video }">
                             {{cardData.title }}</div>
                         <div id="context" style="color:  var(--secondary-text);"
@@ -96,9 +95,9 @@ const createTime=computed(()=>{
     let [date, time]=props.cardData.create_time.split(' ')
     return [date,time]
 })
-onMounted(() => {
-    console.log(props.cardData);
-})
+// onMounted(() => {
+//     console.log(props.cardData);
+// })
 </script>
 <style lang='scss' scoped>
 .card {

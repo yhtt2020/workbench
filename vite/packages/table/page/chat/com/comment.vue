@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h, computed ,onMounted} from 'vue'
+import { ref, reactive, h, computed ,onBeforeMount} from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
 import {useCommunityStore} from '../community'
@@ -29,11 +29,11 @@ const commentList = computed(()=>{
 const getReplyText=(val)=>{
     // console.log(val);
     commentList.value=val.value
-    console.log('com',commentList);
-    console.log('comstore',store.communityReply);
+    // console.log('com',commentList);
+    // console.log('comstore',store.communityReply);
     
 }
-onMounted(()=>{
+onBeforeMount(()=>{
     store.getCommunityPostReply(props.tid)
 })
 </script>

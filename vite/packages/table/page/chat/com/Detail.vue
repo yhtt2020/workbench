@@ -30,8 +30,8 @@
 
             <div>
                 <div>
-                    <div class="flex flex-col items-center ">
-                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video">
+                    <div class="flex flex-col items-center " v-if="cardData.data?.video">
+                        <video class="object-cover mb-2 rounded-md cover-lm" >
                             <source :src="cardData.data.video" type="video/mp4" />
                             <source :src="cardData.data.video" type="video/webm" />
                         </video>
@@ -44,13 +44,12 @@
                     <!-- 正文元素 -->
                     <div class="mt-1">
                         <div>
-                            <span id="title" style="color: var(--primary-text); " >{{
+                            <div id="title" style="color: var(--primary-text); " v-if="cardData.title">{{
                                 cardData.title
-                            }}</span>
-                            <br>
-                            <span id="context" style="color:  var(--secondary-text);">{{
+                            }}</div>
+                            <div id="context" style="color:  var(--secondary-text);">{{
                                 cardData.summary
-                            }}</span>
+                            }}</div>
                         </div>
 
                     </div>
@@ -72,13 +71,13 @@
                 <button class="mr-3 reply w-[57px] h-[32px]  pl-5 " :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
                     style="position: relative;border: none;cursor: pointer;" >{{ cardData.support_count }}</button>
                 <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
-                    style="position: absolute;left:45px;">
+                    style="position: absolute;left:34px;">
             </div>
             <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
-                <button class="reply w-[57px] h-[32px]  pl-6" :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" 
+                <button class="reply w-[57px] h-[32px]  pl-5" :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" 
                     style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count }}</button>
                 <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
-                    style="position: absolute;left:114px;">
+                    style="position: absolute;left:102px;">
             </div>
 
         </div>
@@ -115,7 +114,16 @@ const createTime=computed(()=>{
     let [date, time]=props.cardData.create_time.split(' ')
     return [date,time]
 })
-const tid=store.communityPostDetail.pay_set.tid
+// const tid=store.communityPostDetail.pay_set.tid 
+let tid
+// console.log(store.communityPostDetail);
+
+if(store.communityPostDetail.pay_set ){
+    tid=store.communityPostDetail.pay_set.tid 
+}else{
+    // 
+    tid=1234
+}
 </script>
 <style lang='scss' scoped>
 .card {

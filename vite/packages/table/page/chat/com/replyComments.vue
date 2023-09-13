@@ -7,7 +7,7 @@
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
-        <a-upload v-model:file-list="fileList" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        <a-upload v-model:file-list="fileList" action=""
             list-type="picture-card" @preview="handlePreview">
             <div v-if="fileList.length < 3">
                 <plus-outlined style="font-size: 20px;" />

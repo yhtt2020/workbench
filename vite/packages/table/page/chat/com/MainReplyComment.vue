@@ -15,23 +15,23 @@
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14 ml-8">
                 <div class="flex items-center justify-center ">
-                    <div class="flex" @click="clickLike" :class="{'xt-theme-text':isLike}">
+                    <div class="flex " @click="clickLike" :class="{'xt-theme-text':isLike}">
                         <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />
-                        <div class="mr-4 text-center" >{{ commentList.support_count }} 点赞</div>
+                        <div class="mr-4 text-center font-14 xt-text-2" >{{ commentList.support_count }} 点赞</div>
                     </div>
                     <div class="flex" @click="replyStatus">
                         <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
-                        <div>回复</div>
+                        <div class="font-14 xt-text-2">回复</div>
                     </div>
                 </div>
                 <div class="">
-                    <span class="local-city">{{ commentList.user.ip_home.region }}</span>
-                    <span class="mr-1">{{ createTime[0] }}</span>
-                    <span>{{ createTime[1] }}</span>
+                    <span class="local-city font-14 xt-text-2">{{ commentList.user.ip_home.region }}</span>
+                    <span class="mr-1 font-14 xt-text-2">{{ createTime[0] }}</span>
+                    <span class="font-14 xt-text-2">{{ createTime[1] }}</span>
                 </div>
                
             </div>
-            <replyComments  v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText" :userName="userName"/>
+            <replyComments  v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText" :userName="props.commentList.user.nickname"/>
         </div>
         <div class="ml-8 ">
             <ReplyComment :replyVisible="replyVisible" v-for="(item,index) in replyCmmentList" :key="index" :replyCom="item"/>
