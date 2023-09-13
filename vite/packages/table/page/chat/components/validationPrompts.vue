@@ -80,10 +80,13 @@ export default defineComponent({
       groupID:props.data.groupID
    }
    const res = await window.$chat.joinGroup(option)
- 
+   
    if(res.data.status === 'JoinedSuccess'){
       ctx.emit('close')
       message.success('加群成功')
+   }else if(res.data.status === 'WaitAdminApproval'){
+      message.info('入群申请已经发出,需要等待群管理员审核通过')
+      ctx.emit('close')
    }
   }
 
