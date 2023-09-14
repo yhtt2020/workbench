@@ -30,6 +30,7 @@ import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import {Icon as MyIcon} from '@iconify/vue';
 import { message } from 'ant-design-vue'
+import {getGameInfo} from "../../../store/gameInfomation"
 export default {
     components:{
         Widget,
@@ -68,39 +69,12 @@ export default {
         };
     },
     async mounted() {
-        await this.onTest()
+        await this.onGetInfo()
     },
     methods:{
-        ...mapActions(gameStore,["gameInfo"]),
-        onTest(){
-            // let res = gameStore("/app/juhe/get");
-            // let res = mapActions(gameStore,["gameInfo"])
-            // console.log(res)
-            // console.log(gameStore)
-            // this.gameData = dataList
-            get(sUrl("/app/juhe/get"),{
-                apiName:"fapigx.esports.query",
-                params:{
-                    "num":10,
-                    "page":1,
-                    "rand":1,
-                    "apiName":"fapigx.esports.query"
-                },
-                options:{
-                "cache":1,
-                "ttl":60,
-                "key":"fapigx.esports.query"
-                },
-            }).then(res=>{
-                var dataList =[];
-                for(let i=0;i<res.data.newslist.length&&i<3;i++){
-                    dataList[i] = res.data.newslist[i]
-                }
-
-                // console.log(dataList)
-
-                this.gameData = dataList
-            })
+        async onGetInfo(){
+            let dataList = await getGameInfo("/app/juhe/get");
+            this.gameData = dataList;
         },
         jump(url){
             browser.openInUserSelect(url)
@@ -111,7 +85,7 @@ export default {
                 this.$refs.refreshButton.classList.remove('animate-spin')
                 message.success({content:'刷新资讯成功',key:'refreshZixun'})
             },500)
-            this.onTest()
+            this.onGetInfo()
         }
     }
 };
