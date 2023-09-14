@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-text flex h-full" style="box-sizing: border-box; z-index: 111" :class="[typeClass]">
+  <div class="xt-text flex h-full" style="box-sizing: border-box; " :class="[typeClass]">
     <!-- 左侧区域开始 -->
     <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px">
       <!-- 头部 -->
