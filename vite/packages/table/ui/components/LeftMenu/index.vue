@@ -80,15 +80,15 @@ import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue"
 import { nanoid } from "nanoid";
 
 const props = defineProps({
-  scrollerSettings: {
-    default: {
-      useBothWheelAxes: true,
-      swipeEasing: true,
-      suppressScrollY: false,
-      suppressScrollX: true,
-      wheelPropagation: true,
-    },
-  },
+  // scrollerSettings: {
+  //   default: {
+  //     useBothWheelAxes: true,
+  //     swipeEasing: true,
+  //     suppressScrollY: false,
+  //     suppressScrollX: true,
+  //     wheelPropagation: true,
+  //   },
+  // },
   config: {
     default: () => {
       return {
@@ -185,16 +185,16 @@ const itemClick = (item) => {
 </script>
 
 <style lang="scss" scoped>
-.box {
-  border: 4px solid var(--active-bg) !important;
-  border-radius: 12px;
-}
+// .box {
+//   border: 4px solid var(--active-bg) !important;
+//   border-radius: 12px;
+// }
 
-:deep(.anticon) {
-  font-size: 20px;
-}
+// :deep(.anticon) {
+//   font-size: 20px;
+// }
 
-:deep(.ps__rail-y) {
-  display: none;
-}
+// :deep(.ps__rail-y) {
+//   display: none;
+// }
 </style>
