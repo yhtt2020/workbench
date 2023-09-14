@@ -4,8 +4,8 @@
       <router-view></router-view>
     </div>
 
-    <template #floating>
-      <div class="rounded-lg flex flex-col px-3 py-4" style="position:relative; top:60px; left:20px; width:336px;height:638px;background:var(--secondary-bg);">
+    <template #test>
+      <div class="flex flex-col p-2 ">
         <div class="flex flex-col">
           <div class="flex justify-between mb-2.5">
             <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
@@ -18,28 +18,32 @@
 
         <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
 
-        <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-          <div v-for="items in community.channelList">
-            <ChatFold :title="items.name">
-              <div class="flex flex-col">
-                <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
-                  <template v-if="item.type === 'group'">
-                      <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
-                  </template> 
-                  <template v-if="item.type === 'link'">
-                    <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
-                  </template>
-                  <template v-if="item.type === 'forum'">
-                    <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-                  </template>
-                  <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+        <div style="height:500px;">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+            <div v-for="items in community.channelList">
+              <ChatFold :title="items.name">
+                <div class="flex flex-col">
+                  <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
+                    <template v-if="item.type === 'group'">
+                        <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                    </template> 
+                    <template v-if="item.type === 'link'">
+                      <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                    </template>
+                    <template v-if="item.type === 'forum'">
+                      <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                    </template>
+                    <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+                  </div>
                 </div>
-              </div>
-            </ChatFold>
-          </div>
-        </vue-custom-scrollbar>
+              </ChatFold>
+            </div>
+          </vue-custom-scrollbar>
+        </div>
+
       </div>
     </template>
+  
   </xt-left-menu>
 
   <teleport to='body'>
@@ -182,7 +186,7 @@ export default {
         icon:'',
         img: '/icons/logo128.png',
         type: 'thisky',
-        float:"floating",
+        float:"test",
         noBg:true,
         callBack: selectTab,
         route:{
