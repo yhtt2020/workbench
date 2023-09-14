@@ -59,7 +59,8 @@
             <div class="button-bom">
             <!-- shan   @click="this.isFlag = !this.isFlag"  -->
             <div class="p-firse">
-                <icon></icon>更多快捷键
+                <!-- <icon></icon> -->
+                更多快捷键
             </div>
             <div class="p-second">
                 <icon></icon>搜索
@@ -78,8 +79,8 @@
                     <span>Adobe Lightroom</span>
                 </div>
                 <div class="page-change">
-                    <i>&lt;</i>
-                    <i>&gt;</i>
+                    <left-outlined />
+                    <right-outlined />
                 </div>
             </div>
             <div class="key-body">
@@ -213,12 +214,18 @@ import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
 import RadioTab from "../../RadioTab.vue"
+import { defineComponent } from 'vue';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+
+
 // import BottomEdit from "..";
 export default {
     components:{
         Widget,
         Icon,
-        RadioTab
+        RadioTab,
+        LeftOutlined,
+        RightOutlined
     },
 
     props: {
@@ -273,7 +280,7 @@ export default {
                 },
             ],
             
-            isFlag:false,
+            isFlag:true,
             // types:"123",
             keyList:[
                 {
@@ -465,12 +472,12 @@ export default {
        margin-top: 10px;
     }
 
-    .page-change i{
+    .page-change span{
         display: inline-block;
         width: 44px;
         height: 44px;
         font-size: 20px;
-        line-height: 34px;
+        line-height: 47px;
         text-align: center;
         background-color: rgba(0,0,0,0.3);
         color: rgba(255,255,255,0.85);
