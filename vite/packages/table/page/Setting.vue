@@ -382,7 +382,7 @@ export default {
     tipSimple() {
       Modal.info({
         content:
-          "使用极简模式后，将隐藏一些娱乐、社交类的功能，例如小队功能、聊天功能。",
+          "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如小队功能。",
         centered: true,
       });
     },
