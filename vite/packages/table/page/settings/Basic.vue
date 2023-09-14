@@ -99,7 +99,7 @@ export default {
   watch: {
     taskID:{
       handler(newV) {
-      if (this.taskID === 'M0401' && this.step == 3) {
+      if (this.taskID === 'M0401' && this.step == 2) {
         let obj = {
           "menu": {
             "route": {

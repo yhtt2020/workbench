@@ -1,21 +1,10 @@
 <template>
-  <div
-    v-if="slot == 'default'"
-    style="opacity: 1000"
-    :style="{ zIndex: zIndexValue }"
-    ref="el"
-    @click.prevent.stop="next($event)"
-    @contextmenu.prevent.stop="next($event)"
-  >
+  <div v-if="slot == 'default'" style="opacity: 1000" :style="{ zIndex: zIndexValue }" ref="el"
+    @click.prevent.stop="next($event)" @contextmenu.prevent.stop="next($event)">
     <slot></slot>
   </div>
-  <div
-    v-else-if="slot == 'noMenu'"
-    style="opacity: 1000"
-    :style="{ zIndex: zIndexValue }"
-    ref="el"
-    @click.prevent.stop="next($event)"
-  >
+  <div v-else-if="slot == 'noMenu'" style="opacity: 1000" :style="{ zIndex: zIndexValue }" ref="el"
+    @click.prevent.stop="next($event)">
     <slot></slot>
   </div>
 </template>
@@ -51,7 +40,7 @@ export default defineComponent({
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
-      let next = this.task?.next ? this.task?.next : "下一步";
+      let next = this.step == length ? '完成' : this.task?.next || '下一步';
       return `${next} ${this.step} / ${length}`;
     },
   },
@@ -163,7 +152,7 @@ export default defineComponent({
     },
   },
 
-  mounted() {},
+  mounted() { },
 });
 </script>
 
@@ -174,37 +163,45 @@ export default defineComponent({
   border: 1px solid #ccc;
   padding: 20px;
 }
+
 .shepherd-element {
   border: 1px solid var(--divider) !important;
 }
+
 .shepherd-content,
 .shepherd-header {
   background: var(--modal-bg) !important;
   padding-bottom: 0 !important;
 }
+
 .shepherd-element {
   z-index: 9999999999999 !important;
   margin-top: 12px;
   background: none;
 }
+
 /* 内容文本 */
 .shepherd-text {
   color: var(--primary-text) !important;
   font-size: 14px !important;
 }
+
 .shepherd-title {
   font-size: 16px !important;
   color: var(--primary-text) !important;
 }
+
 .shepherd-button {
   background: var(--active-bg) !important;
 }
+
 /* 箭头 */
 .shepherd-arrow:before {
   z-index: 9999999999999 !important;
   border: 1px solid var(--divider) !important;
   background: var(--modal-bg) !important;
 }
+
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   z-index: 9999999999999999 !important;
 }

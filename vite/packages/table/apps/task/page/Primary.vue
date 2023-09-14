@@ -6,9 +6,7 @@
     <div class="xt-bg-2 rounded-xl p-3">
       <xt-title m="">
         <div class="flex items-center">
-          <StarFilled
-            aria-label="1"
-            style="
+          <StarFilled aria-label="1" style="
               font-size: 12px;
               background: #ff4d4f;
               width: 20px;
@@ -18,8 +16,7 @@
               justify-content: center;
               align-items: center;
               margin-right: 8px;
-            "
-          />
+            " />
           {{ chapter.chapter }}
         </div>
         <template #right>{{ stage }} / {{ chapter.tasks.length }} </template>
@@ -37,17 +34,12 @@
       <xt-title type="text">{{ currentTask.description }}</xt-title>
       <div class="flex justify-center items-center flex-col">
         <xt-title type="text">完成奖励</xt-title>
-        <div>暂无任务奖励，后续完工后，我们会自动补发奖励</div>
-        <xt-title type="text" v-if="currentTask.guide"
-          >提示：当前任务含有操作引导</xt-title
-        >
-        <xt-button
-          v-if="store.success"
-          style="background: #faad14 !important; width: 100%"
-          @click="receive()"
-          >领取奖励</xt-button
-        >
-        <PrimaryTask v-else ></PrimaryTask>
+        <div class="xt-theme-text">暂无任务奖励，后续完工后，我们会自动补发奖励</div>
+        <div class="xt-theme-text">当前版本建议根据引导按钮来完成操作</div>
+        <xt-title type="text" v-if="currentTask.guide">提示：当前任务含有操作引导</xt-title>
+        <xt-button v-if="store.success" style="background: #faad14 !important; width: 100%"
+          @click="receive()">领取奖励</xt-button>
+        <PrimaryTask v-else></PrimaryTask>
       </div>
     </div>
   </template>
@@ -65,7 +57,7 @@ import { ref, reactive, computed } from "vue";
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0303";
+  store.taskID = "M0302";
   store.success = false;
   store.step = -1;
 };

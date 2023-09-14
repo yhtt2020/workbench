@@ -136,7 +136,7 @@
                 </div>
               </a-col>
               <a-col :span="6">
-               <xt-task :modelValue="m04012" @cb="basic">
+               <xt-task :modelValue="m04011" @cb="basic">
                 <div @click="basic" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div>通用设置</div>
@@ -150,7 +150,7 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <xt-task :modelValue="m03012" @cb="styleVisible = true">
+                <xt-task :modelValue="m03011" @cb="styleVisible = true">
                   <div @click="styleVisible = true" class="btn">
                     <Icon icon="yifu" style="font-size: 2em"></Icon>
                     <div>主题颜色</div>
@@ -187,7 +187,7 @@
     <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
   </div>
   <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
-    <xt-task :modelValue="m03013"></xt-task>
+    <xt-task :modelValue="m03012"></xt-task>
     <XtColor v-model:color="bgColor" title="主题" btnText="恢复默认主题颜色" @onBtnClick="clearBgColor"></XtColor>
     <XtColor v-model:color="textColor" title="文本" btnText="恢复默认文本颜色" @onBtnClick="clearTextColor"></XtColor>
     <XtColor v-model:color="wallpaperColor" title="背景" @onBtnClick="clearWallpaperColor" btnText="恢复默认壁纸颜色"></XtColor>
@@ -290,14 +290,14 @@ export default {
     ...mapWritableState(noticeStore, ['noticeSettings']),
     ...mapWritableState(taskStore, ["taskID", "step"]),
 
+    m03011() {
+      return this.taskID == "M0301" && this.step == 1;
+    },
     m03012() {
       return this.taskID == "M0301" && this.step == 2;
     },
-    m03013() {
-      return this.taskID == "M0301" && this.step == 3;
-    },
-    m04012() {
-      return this.taskID == "M0401" && this.step == 2;
+    m04011() {
+      return this.taskID == "M0401" && this.step == 1;
     },
   },
   methods: {

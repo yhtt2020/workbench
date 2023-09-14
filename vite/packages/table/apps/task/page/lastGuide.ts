@@ -43,21 +43,6 @@ export const lastGuide = {
     );
   },
   M0303: () => {
-    let obj = {
-      name: "remote",
-      cname: "外部小组件",
-      detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
-      sizes: ["社区分享", "自定义大小"],
-      option: [
-        {
-          name: "Remote",
-          size: "自定义大小",
-          zoom: "11",
-        },
-      ],
-      time: 1685462400000,
-      download: 5301,
-    };
     const card: any = cardStore();
     let desk = card.desks.find((item) => card.currentDeskId == item.id);
     card.addCard(

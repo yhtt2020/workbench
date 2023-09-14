@@ -27,8 +27,8 @@ export default {
   },
   computed:{
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    m04013( ) {
-      return this.taskID == "M0401" && this.step ==3
+    m04012( ) {
+      return this.taskID == "M0401" && this.step == 2
     }
   },
   async mounted() {
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <template>
-  <xt-task :modelValue="m04013"></xt-task>
+  <xt-task :modelValue="m04012"></xt-task>
   <div v-for="key in Object.keys(this.keys)">
     <div class="line">
       {{this.keys[key].title}}快捷键
