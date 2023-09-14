@@ -30,9 +30,6 @@ import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import {Icon as MyIcon} from '@iconify/vue';
 import { message } from 'ant-design-vue'
-import {sUrl} from "../../../consts"
-import {get} from "../../../js/axios/request"
-import { appStore } from '../../../store'
 export default {
     components:{
         Widget,
@@ -74,25 +71,34 @@ export default {
         await this.onTest()
     },
     methods:{
+        ...mapActions(gameStore,["gameInfo"]),
         onTest(){
-            let params = {
+            // let res = gameStore("/app/juhe/get");
+            // let res = mapActions(gameStore,["gameInfo"])
+            // console.log(res)
+            // console.log(gameStore)
+            // this.gameData = dataList
+            get(sUrl("/app/juhe/get"),{
+                apiName:"fapigx.esports.query",
                 params:{
                     "num":10,
                     "page":1,
                     "rand":1,
                     "apiName":"fapigx.esports.query"
-                }
-            }
-            let options = {
+                },
+                options:{
                 "cache":1,
                 "ttl":60,
                 "key":"fapigx.esports.query"
-            }
-            get(sUrl("/app/juhe/get?apiName=fapigx.esports.query&options=%7B%22cache%22:1,%22ttl%22:60,%22key%22:%22fapigx.esports.query%22%7D"),params).then(res=>{
+                },
+            }).then(res=>{
                 var dataList =[];
                 for(let i=0;i<res.data.newslist.length&&i<3;i++){
                     dataList[i] = res.data.newslist[i]
                 }
+
+                // console.log(dataList)
+
                 this.gameData = dataList
             })
         },
