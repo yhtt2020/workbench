@@ -138,6 +138,7 @@ export default defineComponent({
 }
 
 :deep(.search){
+ color: var(--secondary-text);
  &::placeholder{
    color: var(--secondary-text);
  }

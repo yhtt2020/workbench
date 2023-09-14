@@ -52,7 +52,7 @@
       <CreateGroup v-if="addIndex === 'addGroup'"  @close="open = false" :isH5="env.isH5" />
       <Transfer v-if="addIndex === 'addFriend'" @close="open = false" :isH5="env.isH5"></Transfer>
       <CreateCommunity v-if="addIndex === 'createCom'" @close="open = false"></CreateCommunity>
-      
+      <JoinCommunity v-if="addIndex === 'joinCom'" @close="open = false"></JoinCommunity>
      </Modal>
   </teleport>
 
@@ -81,6 +81,7 @@ import {storeToRefs} from "pinia";
 import { chatList } from '../../js/data/chatList'
 import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
+import JoinCommunity  from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 
 export default {
@@ -96,7 +97,7 @@ export default {
     AddFriend,CreateGroup,
     Transfer,
     ChatDropDown,ChatFold,
-    CreateCommunity,
+    CreateCommunity,JoinCommunity,
   },
 
   setup() {
@@ -231,7 +232,7 @@ export default {
           {
             icon:'team',
             name:'加入社群',
-            index:"addCom",
+            index:"joinCom",
             callBack:selectDorpTab,
           }
         ]
