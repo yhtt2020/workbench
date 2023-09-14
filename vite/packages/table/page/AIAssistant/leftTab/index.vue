@@ -51,11 +51,17 @@ export default {
       menuList: [
         {
           icon: "message",
-          // float: "test",
           callBack: () => {
             this.selectTab = "Chat";
           },
         },
+        // {
+        //   icon: "message",
+        //   float: "test",
+        //   callBack: () => {
+        //     this.selectTab = "Chat";
+        //   },
+        // },
         {
           full: true,
         },
@@ -66,6 +72,7 @@ export default {
             this.createChatVisible = true;
           },
         },
+        
         {
           flag: true,
           icon: "setting",
