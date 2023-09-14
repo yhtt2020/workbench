@@ -65,7 +65,7 @@
               </div>
             </a-col>
 
-            <a-col v-if="isMain() " :span="12">
+            <a-col  :span="12">
               <div class="btn relative">
                 社群沟通<br />
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -79,7 +79,7 @@
                 ></a-switch>
               </div>
             </a-col>
-            <a-col v-if="isMain()" :span="12">
+            <a-col :span="12">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br />
                 <a-switch
