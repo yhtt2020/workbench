@@ -38,7 +38,7 @@
                     </div>
                     <template v-if="cardData.image">
                         <ul class="flex flex-col items-center p-0 mb-0">
-                            <img :src="item.image" v-for="(item,index) in cardData.image" class="mb-2 rounded-md cover-lm" :key="index">
+                            <img :src="item.image" v-for="(item,index) in cardData.image_350_173" class="mb-2 rounded-md cover-lm" :key="index">
                         </ul>
                     </template>
                     <!-- 正文元素 -->
@@ -199,8 +199,8 @@ if(store.communityPostDetail.pay_set ){
         }
 
         .cover-lm {
-            width: 240px;
-            height: 150px;
+            width: 250px;
+            height: 175px;
             text-align: center;
             // object-fit: cover;
 

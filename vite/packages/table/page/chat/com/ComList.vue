@@ -28,10 +28,10 @@
                 <div class="flex ">
                     <!-- 单个图片 -->
                     <template v-if="cardData.image.length === 1 && !cardData.data?.video">
-                        <div class="relative object-cover mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;">
-                            <img :src="cardData.image[0].image" class="absolute " 
-                                 style="text-align: center; top: -50%; left: -50%; ">
-                        </div>
+                        <!-- <div > -->
+                            <img :src="cardData.image_350_173[0].image" class="object-cover mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: center;"
+                                 >
+                        <!-- </div> -->
 
                     </template>
                     <video class="object-cover mr-2 rounded-md cover-im" v-if="cardData.data?.video"
@@ -51,9 +51,9 @@
                 </div>
                 <template v-if="cardData.image.length > 1">
                     <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper ">
-                        <div v-for="(item, index) in cardData.image" class="relative object-cover mr-2 overflow-hidden rounded-md cover-sm" >
-                            <img :src="item.image" alt="" :key="index" class="absolute " style="top: -30%; left: -40%;">
-                        </div>
+                        <!-- <div> -->
+                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_350_173" class="object-cover mr-2 overflow-hidden rounded-md cover-sm" >
+                        <!-- </div> -->
                         
                     </div>
                 </template>

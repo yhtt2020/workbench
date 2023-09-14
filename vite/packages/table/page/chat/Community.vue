@@ -48,7 +48,7 @@
     <div class="flex justify-center flex-1 " style="height: 0">
       <!-- 左侧卡片区域 -->
       <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
-         :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
+         :settings="settingsScroller" style="height: 100%;overflow: hidden; "
         :style="{ width: detailVisible ? '41%' : '60%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
@@ -190,13 +190,13 @@ const detailText = computed(() => {
   }
 })
 
-const pageToggle = computed(() => {
-  if (comCards.list === null) {
-    return false
-  } else {
-    return true
-  }
-})
+// const pageToggle = computed(() => {
+//   if (comCards.list === null) {
+//     return false
+//   } else {
+//     return true
+//   }
+// })
 // if(store.communityPostDetail.pay_set===undefined){
 //   message.info('暂无数据')
 
