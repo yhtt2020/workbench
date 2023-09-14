@@ -73,10 +73,9 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
+import {  computed } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
-import html2canvas from 'html2canvas'
 const useUserStore = appStore()
 let uid = props.cardData.user.uid
 let userInfo = {
@@ -99,27 +98,6 @@ const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
 })
-// const generateThumbnail =async () => {
-//     const thumbnail = document.querySelector('.thumbnail');
-
-//     // thumbnailCons.forEach(async (item) => {
-//         const canvas = await html2canvas(thumbnail);
-
-//         const thumbnailImage = new Image();
-//         thumbnailImage.src = canvas.toDataURL('image/png');
-//         console.log(thumbnailImage.src);
-        
-//         document.querySelector('.thumbnail-con').appendChild(thumbnailImage);
-//     // });
-// };
-// onMounted(() => {
-//     watch(() => props.cardData, () => {
-//         setTimeout(() => {
-//             generateThumbnail();
-//         })
-//         // generateThumbnail();
-//     })
-// })
 </script>
 <style lang='scss' scoped>
 .card {
