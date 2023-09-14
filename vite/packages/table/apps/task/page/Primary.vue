@@ -57,7 +57,7 @@ import { ref, reactive, computed } from "vue";
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0302";
+  store.taskID = "M0101";
   store.success = false;
   store.step = -1;
 };
@@ -95,6 +95,7 @@ const progress = computed(() => {
   let res = (stage.value / chapter.value.tasks.length) * 100;
   return res;
 });
+
 // 获取当前任务
 const currentTask = computed(() => {
   return chapter.value.tasks[stage.value];

@@ -146,8 +146,8 @@ export const tasks = [
       {
         id: "M0401",
         title: "使用快捷键呼出工作台",
-        pre: "M0104",
-        suf: "M0202",
+        pre: "M0303",
+        suf: "",
         repeatable: "是",
         frequency: "一次",
         guide: true,
