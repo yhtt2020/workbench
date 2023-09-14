@@ -16,12 +16,12 @@
           (message.type === types.MSG_FILE || message.type === types.MSG_VIDEO || message.type === types.MSG_IMAGE) &&
           !env.isH5
         "
-        @click="openMessage(message)"
+        @click="openMessage(message)"  class="pointer"
       >
         <i class="icon icon-msg-copy"></i>
         <span>{{ $t('TUIChat.打开') }}</span>
       </li>
-      <li v-if="message.type === types.MSG_TEXT" @click="handleMessage(message, constant.handleMessage.copy)">
+      <li v-if="message.type === types.MSG_TEXT"  class="pointer" @click="handleMessage(message, constant.handleMessage.copy)">
         <i class="icon icon-msg-copy"></i>
         <span>{{ $t('TUIChat.复制') }}</span>
       </li>
@@ -29,22 +29,22 @@
         <i class="icon icon-msg-forward"></i>
         <span>{{ $t('TUIChat.转发') }}</span>
       </li>
-      <li v-if="message.status === 'success'" @click="handleMessage(message, constant.handleMessage.reference)">
+      <li v-if="message.status === 'success'"  class="pointer" @click="handleMessage(message, constant.handleMessage.reference)">
         <i class="icon icon-msg-quote"></i>
         <span>{{ $t('TUIChat.引用') }}</span>
       </li>
-      <li v-if="message.status === 'success'" @click="handleMessage(message, constant.handleMessage.reply)">
+      <li v-if="message.status === 'success'"  class="pointer" @click="handleMessage(message, constant.handleMessage.reply)">
         <i class="icon icon-msg-reply"></i>
         <span>{{ $t('TUIChat.回复') }}</span>
       </li>
       <li
         v-if="message.flow === 'out' && message.status === 'success' && message.type !== types.MSG_CUSTOM"
-        @click="handleMessage(message, constant.handleMessage.revoke)"
+        @click="handleMessage(message, constant.handleMessage.revoke)"  class="pointer"
       >
         <i class="icon icon-msg-revoke"></i>
         <span>{{ $t('TUIChat.撤回') }}</span>
       </li>
-      <li v-if="message.status === 'success'" @click="handleMessage(message, constant.handleMessage.delete)">
+      <li v-if="message.status === 'success'"  class="pointer" @click="handleMessage(message, constant.handleMessage.delete)">
         <i class="icon icon-msg-del"></i>
         <span>{{ $t('TUIChat.删除') }}</span>
       </li>

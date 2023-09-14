@@ -5,7 +5,7 @@
         <div class="w-full card-content">
             <div class="card-top">
                 <div class="top-left">
-                    <a-avatar :src="cardData.user.avatar" :size="32">
+                    <a-avatar :src="cardData.user.avatar" :size="32" class="pointer" @click.stop="showCard(uid,userInfo)">
                         <template #icon>
                             <UserOutlined />
                         </template>
@@ -30,27 +30,26 @@
 
             <div>
                 <div>
-                    <div class="flex flex-col items-center ">
-                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video">
+                    <div class="flex flex-col items-center " v-if="cardData.data?.video">
+                        <video class="object-cover mb-2 rounded-md cover-lm" >
                             <source :src="cardData.data.video" type="video/mp4" />
                             <source :src="cardData.data.video" type="video/webm" />
                         </video>
                     </div>
                     <template v-if="cardData.image">
                         <ul class="flex flex-col items-center p-0 mb-0">
-                            <img :src="item.image" v-for="(item,index) in cardData.image" class="mb-2 rounded-md cover-lm" :key="index">
+                            <img :src="item.image" v-for="(item,index) in cardData.image_170_170" class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
                         </ul>
                     </template>
                     <!-- 正文元素 -->
                     <div class="mt-1">
                         <div>
-                            <span id="title" style="color: var(--primary-text); " >{{
+                            <div id="title" style="color: var(--primary-text); " v-if="cardData.title">{{
                                 cardData.title
-                            }}</span>
-                            <br>
-                            <span id="context" style="color:  var(--secondary-text);">{{
+                            }}</div>
+                            <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;">{{
                                 cardData.summary
-                            }}</span>
+                            }}</div>
                         </div>
 
                     </div>
@@ -72,17 +71,17 @@
                 <button class="mr-3 reply w-[57px] h-[32px]  pl-5 " :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
                     style="position: relative;border: none;cursor: pointer;" >{{ cardData.support_count }}</button>
                 <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
-                    style="position: absolute;left:45px;">
+                    style="position: absolute;left:34px;">
             </div>
             <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
-                <button class="reply w-[57px] h-[32px]  pl-6" :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" 
+                <button class="reply w-[57px] h-[32px]  pl-5" :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" 
                     style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count }}</button>
                 <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
-                    style="position: absolute;left:114px;">
+                    style="position: absolute;left:102px;">
             </div>
 
         </div>
-            <Comment :tid="tid" :reply="cardData.reply_count"/>
+            <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid"/>
         </div>
     </div>
 </template>
@@ -92,6 +91,17 @@ import { ref, reactive,computed } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
 import { useCommunityStore } from '../community'
+import {appStore} from '../../../../table/store'
+const useUserStore=appStore()
+let uid=props.cardData.user.uid
+let userInfo={
+    uid:uid,
+    nickname:props.cardData.user.nickname,
+    avatar:props.cardData.user.avatar_128
+}
+const showCard=(uid,userInfo)=>{
+    useUserStore.showUserCard(uid,userInfo)
+}
 const store = useCommunityStore();
 // 点赞
 const isLike = ref(false)
@@ -115,7 +125,16 @@ const createTime=computed(()=>{
     let [date, time]=props.cardData.create_time.split(' ')
     return [date,time]
 })
-const tid=store.communityPostDetail.pay_set.tid
+// const tid=store.communityPostDetail.pay_set.tid 
+let tid
+// console.log(store.communityPostDetail);
+
+if(store.communityPostDetail.pay_set ){
+    tid=store.communityPostDetail.pay_set.tid 
+}else{
+    // 
+    tid=1234
+}
 </script>
 <style lang='scss' scoped>
 .card {
@@ -180,8 +199,8 @@ const tid=store.communityPostDetail.pay_set.tid
         }
 
         .cover-lm {
-            width: 240px;
-            height: 150px;
+            width: 250px;
+            height: 175px;
             text-align: center;
             // object-fit: cover;
 
@@ -207,6 +226,8 @@ const tid=store.communityPostDetail.pay_set.tid
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
     .card-bottom {
             margin-top: 12px;
