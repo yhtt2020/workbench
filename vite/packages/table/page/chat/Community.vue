@@ -49,7 +49,7 @@
       <!-- 左侧卡片区域 -->
       <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
          :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
-        :style="{ width: detailVisible ? '40%' : '60%' }">
+        :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
@@ -167,7 +167,7 @@ const showDetail = async (index) => {
   // console.log(selectedIndex)
   // console.log(comCards);
 
-  let tid = store.communityPost.list[index].pay_set.tid
+  let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
 
