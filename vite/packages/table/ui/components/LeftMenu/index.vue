@@ -25,7 +25,7 @@
         <!-- <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
           <div style="height: auto"> -->
         <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right">
+          <tippy trigger="mouseenter" :interactive="true" placement="right" :arrow="false" >
             <template #content v-if="item.float">
               <slot :name="item.float"> </slot>
             </template>
@@ -197,4 +197,6 @@ const itemClick = (item) => {
 // :deep(.ps__rail-y) {
 //   display: none;
 // }
+
+
 </style>

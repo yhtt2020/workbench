@@ -5,7 +5,7 @@
     </div>
 
     <template #test>
-      <div class="flex flex-col p-2 ">
+      <div class="flex flex-col p-2 mt-3">
         <div class="flex flex-col">
           <div class="flex justify-between mb-2.5">
             <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
@@ -18,7 +18,7 @@
 
         <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
 
-        <div style="height:500px;">
+        <div style="height:510px;">
           <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
             <div v-for="items in community.channelList">
               <ChatFold :title="items.name">
@@ -43,7 +43,7 @@
 
       </div>
     </template>
-  
+
   </xt-left-menu>
 
   <teleport to='body'>
@@ -267,4 +267,12 @@ export default {
   font-size: 14px;
   font-weight: 400;
 }
+
+
+:deep(#tippy-4){
+  z-index:1000 !important;
+  top:23px !important;
+  left: 12px !important;
+}
+
 </style>
