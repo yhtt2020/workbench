@@ -160,7 +160,7 @@ const handleWheel = (e: any) => {
   e.preventDefault();
   if (Math.abs(e.deltaX) !== 0 && Math.abs(e.deltaY) !== 0) return;
   let scale = zoom.value;
-  scale += e.deltaY * (e.ctrlKey ? -0.01 : 0.002);
+  scale -= e.deltaY * (e.ctrlKey ? -0.01 : 0.002);
   scale = Math.min(Math.max(0.125, scale), 4);
   zoom.value = scale;
 };

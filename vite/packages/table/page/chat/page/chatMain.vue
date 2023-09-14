@@ -65,7 +65,7 @@ export default defineComponent({
    const tim = TUIServer.TUICallKit.tim
 
    const handleCurrentConversation = (value: string) => {
-     console.log('检测::>>',value)
+    //  console.log('检测::>>',value)
      store.conversations.conversationID = value
      data.currentModel = value ? 'message' : 'conversation';
    };
@@ -98,10 +98,10 @@ export default defineComponent({
        const {uid} =to.params
        const type= 'C2C'
        const name = `${type}${uid}`;
-       window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
+       (window as any).TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse: any) => {
          // 通知 TUIConversation 添加当前会话
          // Notify TUIConversation to toggle the current conversation
-         window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+         (window as any).TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
 
        });
      }
