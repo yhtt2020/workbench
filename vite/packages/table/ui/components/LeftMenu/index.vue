@@ -21,26 +21,26 @@
         </Menu>
       </div>
       <!-- 中间 -->
-      <div class="xt-scrollbar xt-bt flex flex-col items-center flex-1">
-        <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
-          <div style="height: auto">
-            <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
-              <tippy trigger="mouseenter" :interactive="true" placement="right">
-                <template #content v-if="item.float">
-                  <slot :name="item.float"> </slot>
+      <div class="xt-scrollbar xt-container  xt-bt flex flex-col items-center flex-1">
+        <!-- <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
+          <div style="height: auto"> -->
+        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
+          <tippy trigger="mouseenter" :interactive="true" placement="right">
+            <template #content v-if="item.float">
+              <slot :name="item.float"> </slot>
+            </template>
+            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
+              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
+              <Item v-else :item="item" w="40">
+                <template #[item.slot]>
+                  <slot :name="item.slot"></slot>
                 </template>
-                <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
-                  <Full v-if="item.full" v-model:full="isFull" type=""></Full>
-                  <Item v-else :item="item" w="40">
-                    <template #[item.slot]>
-                      <slot :name="item.slot"></slot>
-                    </template>
-                  </Item>
-                </Box>
-              </tippy>
-            </Menu>
-          </div>
-        </vue-custom-scrollbar>
+              </Item>
+            </Box>
+          </tippy>
+        </Menu>
+        <!-- </div>
+        </vue-custom-scrollbar> -->
       </div>
       <!-- 底部 -->
       <div>
