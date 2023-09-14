@@ -48,8 +48,8 @@
     <div class="flex justify-center flex-1 " style="height: 0">
       <!-- 左侧卡片区域 -->
       <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
-         :settings="settingsScroller" style="height: 100%;overflow: hidden; "
-        :style="{ width: detailVisible ? '41%' : '60%' }">
+         :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
+        :style="{ width: detailVisible ? '40%' : '60%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
