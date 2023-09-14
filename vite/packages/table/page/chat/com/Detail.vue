@@ -47,7 +47,7 @@
                             <div id="title" style="color: var(--primary-text); " v-if="cardData.title">{{
                                 cardData.title
                             }}</div>
-                            <div id="context" style="color:  var(--secondary-text);">{{
+                            <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;">{{
                                 cardData.summary
                             }}</div>
                         </div>
@@ -226,6 +226,8 @@ if(store.communityPostDetail.pay_set ){
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
     .card-bottom {
             margin-top: 12px;

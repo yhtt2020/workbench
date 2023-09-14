@@ -49,7 +49,7 @@ export const useCommunityStore = defineStore('community',{
 
         },
         // 获取查询板块下的所有帖子
-        async getCommunityPost(id,type){
+        async getCommunityPost(id,type,order=''){
             if(localCache.get(`communityPost_${id}-${type}`)){
                 this.communityPost=localCache.get(`communityPost_${id}-${type}`)
             }
@@ -58,10 +58,11 @@ export const useCommunityStore = defineStore('community',{
                 page:1,
                 row:10,
                 type:type,
-                classId:67
+                classId:67,
+                order:order
             })
             if(res.code===200){
-            //   console.log(res,'返回数据')
+              console.log(res.data,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost);
                 localCache.set(`communityPost_${id}-${type}`,this.communityPost,60*60*24)
@@ -94,7 +95,7 @@ export const useCommunityStore = defineStore('community',{
                 row:10,
                 type:1
             })
-            console.log('reply',res);
+            // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*24)

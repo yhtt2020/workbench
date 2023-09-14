@@ -9,20 +9,21 @@
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
             class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
-            :class="[{ action: currentIndex == index }]" style="cursor: pointer;" @click="setCurrentIndex(index)">{{ item.name
+            :class="[{ action: currentIndex == index }]" style="cursor: pointer;" @click="setCurrentIndex(index)">{{
+              item.name
             }}</div>
         </div>
         <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16" style="cursor: pointer">
           <a-dropdown trigger="click" placement="bottom"
             overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
             <span class=" ant-dropdown-link" @click.prevent>
-              {{ checkMenuList[checkMenuCurrentIndex] }}
+              {{ checkMenuList[checkMenuCurrentIndex].type }}
               <DownOutlined class="text-sm" />
             </span>
             <template #overlay>
               <a-menu class="text-center xt-bg">
                 <a-menu-item v-for="(item, index) in checkMenuList" :key="index" @click="handleMenuItemClick(index)">
-                  <span class="text-center xt-text">{{ item }}</span>
+                  <span class="text-center xt-text">{{ item.type }}</span>
                 </a-menu-item>
               </a-menu>
             </template>
@@ -44,11 +45,11 @@
     </div>
 
     <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
-    <div class="flex justify-center flex-1" style="height: 0">
+    <div class="flex justify-center flex-1 " style="height: 0">
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list" v-if="pageToggle"
-        :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
-        :style="{ width: detailVisible ? '40%' : '60%' }">
+      <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
+         :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
+        :style="{ width: detailVisible ? '41%' : '60%' }">
         <div class="flex justify-center content">
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
@@ -57,10 +58,10 @@
           </ComCard>
         </div>
       </vue-custom-scrollbar>
-      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
+      <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
       <!-- 右侧详情区域 -->
       <vue-custom-scrollbar class="ml-2 rounded-lg thread-detail xt-bg" :key="selectedIndex" v-if="detailVisible"
-        :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }" >
+        :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full detail" v-if="detailVisible">
           <DetailCard :cardData="detailText">
             <template #top-right>
@@ -74,35 +75,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, h, onMounted,computed,watch} from 'vue';
+import { ref, reactive, nextTick, h, onMounted, computed, watch } from 'vue';
 import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
 import DataStatu from '../../../table/components/widgets/DataStatu.vue';
 import publishModal from './com/publishModal.vue';
 import { useCommunityStore } from './community'
-import {message} from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 // import {} from 'pinia'
 // import communityStore  from './community';
 const store = useCommunityStore();
-const props=defineProps({
-  forumId:{
-    type:Number,
-    required:false
+const props = defineProps({
+  forumId: {
+    type: Number,
+    required: false
   }
 })
 const menuList = ref([
   {
-  name: '全部',
-  type: 'all'
+    name: '全部',
+    type: 'all'
+  }, {
+    name: '热门',
+    type: 'hot'
+  }, {
+    name: '精华',
+    type: 'essence'
+  }])
+const checkMenuList = ref([{
+  type: '最近更新',
+  order: store.communityPost.create_time
 }, {
-  name: '热门',
-  type: 'hot'
-}, {
-  name: '精华',
-  type: 'essence'
+  type: '最近回复',
+  order: store.communityPost.last_post_time
+
 }])
-const checkMenuList = ref(['最近更新', '最近回复'])
 const currentIndex = ref(0)
 const checkMenuCurrentIndex = ref(0)
 const handleMenuItemClick = (index) => {
@@ -111,7 +119,7 @@ const handleMenuItemClick = (index) => {
 }
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(props.forumId,menuList.value[currentIndex.value].type)
+  store.getCommunityPost(props.forumId, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
 }
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
@@ -123,7 +131,7 @@ const settingsScroller = reactive({
   wheelPropagation: true,
 });
 
-watch(()=> props.forumId,(newValue)=>{
+watch(() => props.forumId, (newValue) => {
   setCurrentIndex(currentIndex.value)
 })
 //
@@ -138,7 +146,7 @@ const modalVisible = (val) => {
 const visibleModal = () => {
   showPublishModal.value = !showPublishModal.value
 }
-const comCards=computed(()=>{
+const comCards = computed(() => {
   return store.communityPost
 })
 const threadListRef = ref()
@@ -159,39 +167,39 @@ const showDetail = async (index) => {
   // console.log(selectedIndex)
   // console.log(comCards);
 
-  let tid= store.communityPost.list[index].pay_set.tid
+  let tid = store.communityPost.list[index].pay_set.tid
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
-  
+
   // console.log(store.communityPostDetail.pay_set);
-  
-  
+
+
 
   // store.getCommunityPostDetail()
 }
-const detailText=computed(()=>{
-  if(store.communityPostDetail.pay_set===undefined){
+const detailText = computed(() => {
+  if (store.communityPostDetail.pay_set === undefined) {
     // console.log(detailStorage);
-    detailVisible.value=false
+    detailVisible.value = false
     // console.log(detailVisible.value);
     // message.info('暂无数据')
     return detailStorage
-  }else{
-    detailStorage=store.communityPostDetail
+  } else {
+    detailStorage = store.communityPostDetail
     return store.communityPostDetail
   }
 })
 
-const pageToggle=computed(()=>{
-  if(comCards.list===null){
+const pageToggle = computed(() => {
+  if (comCards.list === null) {
     return false
-  }else{
+  } else {
     return true
   }
 })
 // if(store.communityPostDetail.pay_set===undefined){
 //   message.info('暂无数据')
-  
+
 // }
 // console.log(store.communityPostDetail);
 
