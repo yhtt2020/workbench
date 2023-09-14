@@ -38,7 +38,7 @@
                     </div>
                     <template v-if="cardData.image">
                         <ul class="flex flex-col items-center p-0 mb-0">
-                            <img :src="item.image" v-for="(item,index) in cardData.image_350_173" class="mb-2 rounded-md cover-lm" :key="index">
+                            <img :src="item.image" v-for="(item,index) in cardData.image_170_170" class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
                         </ul>
                     </template>
                     <!-- 正文元素 -->
@@ -81,7 +81,7 @@
             </div>
 
         </div>
-            <Comment :tid="tid" :reply="cardData.reply_count"/>
+            <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid"/>
         </div>
     </div>
 </template>

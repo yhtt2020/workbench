@@ -14,7 +14,7 @@
                 {{ replyCom.content }}
             </div>
             <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper" v-if="replyCom.image">
-                <img :src="item" alt="" v-for="(item, index) in replyCom.image"
+                <img :src="item" alt="" v-for="(item, index) in replyCom.image_pc"
                     class="object-cover mr-2 rounded-md cover-sm" :key="index">
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14">

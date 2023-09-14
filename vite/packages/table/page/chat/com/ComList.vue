@@ -29,7 +29,7 @@
                     <!-- 单个图片 -->
                     <template v-if="cardData.image.length === 1 && !cardData.data?.video">
                         <!-- <div > -->
-                            <img :src="cardData.image_350_173[0].image" class="object-cover mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: center;"
+                            <img :src="cardData.image_170_170[0].image" class="object-fill mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: "
                                  >
                         <!-- </div> -->
 
@@ -52,7 +52,7 @@
                 <template v-if="cardData.image.length > 1">
                     <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper ">
                         <!-- <div> -->
-                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_350_173" class="object-cover mr-2 overflow-hidden rounded-md cover-sm" >
+                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-contain mr-2 overflow-hidden rounded-md cover-sm" >
                         <!-- </div> -->
                         
                     </div>

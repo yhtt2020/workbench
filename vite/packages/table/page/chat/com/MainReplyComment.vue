@@ -1,7 +1,10 @@
 <template>
     <div class="w-full mb-3 box">
+        <!-- {{ commentList.user.uid }} -->
         <div class="mb-3">
             <div class="flex ">
+                <!-- {{ props.uid }} -->
+                
                 <a-avatar :src="props.commentList.user.avatar" :size="24" class="mr-2 pointer"
                     @click.stop="showCard(uid, userInfo)"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
@@ -9,7 +12,7 @@
                         {{ props.commentList.user.nickname }}
                     </span>
                     <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1"
-                        v-if="commentList.author_uid === commentList.uid">作者</div>
+                        v-if="props.uid === commentList.user.uid">作者</div>
                 </div>
             </div>
             <div class="mt-2 ml-8 font-16 xt-text" style="user-select: text;text-align: left;">
@@ -41,7 +44,7 @@
                 :userName="props.commentList.user.nickname" />
         </div>
         <div class="ml-8 ">
-            <ReplyComment :replyVisible="replyVisible" v-for="(item, index) in replyCmmentList" :key="index"
+            <ReplyComment :replyVisible="replyVisible" v-for="(item, index) in replyCmmentList" :key="index" :uid="props.uid"
                 :replyCom="item" />
             <!-- <replyEmoji/> -->
         </div>
@@ -80,7 +83,8 @@ const replyStatus = () => {
 }
 // 接收评论列表
 const props = defineProps({
-    commentList: Array
+    commentList: Array,
+    uid:Number
 })
 // 接收回复框的状态
 const getReplyFlag = (val) => {

@@ -6,7 +6,7 @@
             评论 {{ props.reply }}
             <!-- {{ commentList }} -->
         </div>
-        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index"></MainReplyComment>
+        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
     </div>
 </template>
 
@@ -18,7 +18,8 @@ import {useCommunityStore} from '../community'
 const store=useCommunityStore()
 const props=defineProps({
     tid:Number,
-    reply:Number
+    reply:Number,
+    uid:Number
 })
 const value = ref('')
 // 评论内容列表

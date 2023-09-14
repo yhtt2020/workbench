@@ -7,7 +7,7 @@
                     <span class="font-16 xt-text">
                         {{ replyCom.user.nickname }}
                     </span>
-                    <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1" v-if="replyCom.author_uid === replyCom.user.uid">作者</div>
+                    <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1" v-if="props.uid === replyCom.user.uid">作者</div>
                 </div>
             </div>
             <div class="mt-2 font-16 xt-text" style="user-select: text; text-align: left;">
@@ -63,7 +63,8 @@ const replyCmmentList=computed(()=>{
 })
 // const userName=ref('我是皮克斯呀')
 const props=defineProps({
-    replyCom:String
+    replyCom:String,
+    uid:Number
 })
 const clickLike = () => {
     isLike.value=!isLike.value
