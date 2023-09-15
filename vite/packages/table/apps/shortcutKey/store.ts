@@ -3470,14 +3470,10 @@ export const keyStore = defineStore("key", {
       let found = this.customApps.find(item => {
         return item.exeName === exeName
       })
-      console.log('item=',found)
       if (found) {
         return found
       } else {
-
-        console.log(filePath, '路径')
         let icon = await tsbApi.system.extractFileIcon(filePath)
-        console.log('需要添加一个自定义应用', icon)
         let newApp = {
           exeName: exeName,
           alias: exeName,
