@@ -1,5 +1,5 @@
 <template>
-  <div v-if="slot == 'default'" ref="el" @click.stop="next($event)" @contextmenu.prevent.stop="next($event)" class="box">
+  <div v-if="slot == 'default'" ref="el" @click.stop="next($event)" @contextmenu="next($event)" class="box">
     <div :class="{ 'container': zIndexValue }">
       <slot></slot>
       <div class="" :class="{ 'overlay': zIndexValue }"></div>
