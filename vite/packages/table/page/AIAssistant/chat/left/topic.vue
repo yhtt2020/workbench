@@ -86,8 +86,6 @@ export default {
       let obj = {
         ...this.chatList[this.data.id][this.chatList[this.data.id].length - 2],
       };
-      console.log("obj :>> ", obj);
-      console.log("obj.time :>> ", obj.time);
       return obj;
     },
     handleTop() {
