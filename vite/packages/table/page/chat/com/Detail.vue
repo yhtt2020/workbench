@@ -17,7 +17,7 @@
                         <div class="self-msg " style="color:  var(--secondary-text);">
                             <span class="date">{{ createTime[0] }}</span>
                             <span class="time">{{ createTime[1] }}</span>
-                            <span class="ip">{{ cardData.user.ip_home.region }}</span>
+                            <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
                         </div>
                     </div>
                 </div>
@@ -47,9 +47,7 @@
                             <div id="title" style="color: var(--primary-text); " v-if="cardData.title">{{
                                 cardData.title
                             }}</div>
-                            <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;">{{
-                                cardData.summary
-                            }}</div>
+                            <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;" :innerHTML="cardData.content"></div>
                         </div>
 
                     </div>
@@ -99,6 +97,7 @@ let userInfo={
     nickname:props.cardData.user.nickname,
     avatar:props.cardData.user.avatar_128
 }
+// 弹出用户个人卡片
 const showCard=(uid,userInfo)=>{
     useUserStore.showUserCard(uid,userInfo)
 }
@@ -128,7 +127,7 @@ const createTime=computed(()=>{
 // const tid=store.communityPostDetail.pay_set.tid 
 let tid
 // console.log(store.communityPostDetail);
-
+// 当tid不存在时，处理
 if(store.communityPostDetail.pay_set ){
     tid=store.communityPostDetail.pay_set.tid 
 }else{

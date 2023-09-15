@@ -80,7 +80,7 @@ export const useCommunityStore = defineStore('community',{
             // console.log('datail', res);
             if(res.code===200){
                 this.communityPostDetail=res.data
-                // console.log('chakan',this.communityPostDetail);
+                console.log('chakan',this.communityPostDetail);
                 localCache.set(`communityPostDetail_${id}`,this.communityPostDetail,60*60*24)
             }
         },

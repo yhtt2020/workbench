@@ -4,20 +4,19 @@
         <div class="mb-3">
             <div class="flex ">
                 <!-- {{ props.uid }} -->
-                
+                <!-- {{ content }} -->
                 <a-avatar :src="props.commentList.user.avatar" :size="24" class="mr-2 pointer"
                     @click.stop="showCard(uid, userInfo)"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
                     <span class="font-16 xt-text">
                         {{ props.commentList.user.nickname }}
+                        <!-- {{ content }} -->
                     </span>
                     <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1"
                         v-if="props.uid === commentList.user.uid">作者</div>
                 </div>
             </div>
-            <div class="mt-2 ml-8 font-16 xt-text" style="user-select: text;text-align: left;">
-                {{ props.commentList.content }}
-            </div>
+            <div class="mt-2 ml-8 font-16 xt-text content-image" style="user-select: text;text-align: left;" :innerHTML="content"></div>
             <div class="flex w-full p-0 mt-3 ml-8 -mb-1 whitespace-pre-wrap cover-wrapper" v-if="commentList.image">
                 <img :src="item" alt="" v-for="(item, index) in commentList.image"
                     class="object-cover mr-2 rounded-md cover-sm" :key="index">
@@ -44,8 +43,8 @@
                 :userName="props.commentList.user.nickname" />
         </div>
         <div class="ml-8 ">
-            <ReplyComment :replyVisible="replyVisible" v-for="(item, index) in replyCmmentList" :key="index" :uid="props.uid"
-                :replyCom="item" />
+            <ReplyComment :replyVisible="replyVisible" v-for="(item, index) in replyCmmentList" :key="index"
+                :uid="props.uid" :replyCom="item" />
             <!-- <replyEmoji/> -->
         </div>
 
@@ -67,18 +66,92 @@ let userInfo = {
 }
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
+    console.log(content);
+    
 }
 const isLike = ref(false)
 const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
     return props.commentList.comment
 })
+const fluentEmojis = reactive({
+    "[Kiss]": "Face Blowing a Kiss.png",
+    "[Tears]": "Face with Tears of Joy.png",
+    "[Cry]": "Loudly Crying Face.png",
+    "[Smiling]": "Smiling Face with Open Hands.png",
+    "[Confound]": "Confounded Face.png",
+    "[Mask]": "Face with Medical Mask.png",
+    "[Zany]": "Zany Face.png",
+    "[Vomit]": "Face Vomiting.png",
+    "[Kissing]": "Kissing Face.png",
+    "[Fearful]": "Fearful Face.png",
+    "[Pleading]": "Pleading Face.png",
+    "[Scream]": "Face Screaming in Fear.png",
+    "[AngryFace]": "Angry Face.png",
+    "[Zipper]": "Zipper-Mouth Face.png",
+    "[Expressionless]": "Expressionless Face.png",
+    "[SpiralEyes]": "Face with Spiral Eyes.png",
+    "[Shushing]": "Shushing Face.png",
+    "[MoneyMouth]": "Money-Mouth Face.png",
+    "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
+    "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
+    "[Victory]": "Victory Hand Light Skin Tone.png",
+    "[Ok]": "OK Hand Light Skin Tone.png",
+    "[Pingching]": "Pinching Hand Light Skin Tone.png",
+    "[Hands]": "Folded Hands Light Skin Tone.png",
+    "[Clap]": "Clapping Hands Light Skin Tone.png",
+    "[OpenHands]": "Open Hands Light Skin Tone.png",
+    "[Waing]": "Waving Hand Light Skin Tone.png",
+    "[Writing]": "Writing Hand Light Skin Tone.png",
+    "[PigFace]": "Pig Face.png",
+    "[Cat]": "Cat with Wry Smile.png",
+    "[Blowfish]": "Blowfish.png",
+    "[Yen]": "Yen Banknote.png",
+    "[Triangular]": "Triangular Flag.png",
+    "[Heart]": "Beating Heart.png",
+    "[Broken]": "Broken Heart.png",
+    "[1st]": "1st Place Medal.png",
+    "[2nd]": "2nd Place Medal.png",
+    "[3rd]": "3rd Place Medal.png",
+    "[Selfie]": "Selfie Light Skin Tone.png",
+    "[Teacup]": "Teacup Without Handle.png",
+    "[New]": "New Button.png",
+    "[Check]": "Check Mark Button.png",
+    "[Anger]": "Anger Symbol.png",
+    "[Acceptable]": 'Japanese Acceptable Button.png',
+    "[Hundred]": "Hundred Points.png",
+    "[Crab]": "Crab.png",
+    "[MoneyBag]": "Money Bag.png",
+    "[Zzz]": "Zzz.png",
+    "[Bomb]": "Bomb.png",
+})
+
+
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
-const content=computed(()=>{
-    
-})
+const content = computed(() => {
+    let result = props.commentList.content.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
+        let emojiValue;
+        Object.entries(fluentEmojis).forEach(([key, value]) => {
+            if (key == item) {
+                emojiValue = value;
+            }
+        });
+
+        if (emojiValue) {
+            let url = `https://sad.apps.vip/public/static/emoji/emojistatic/${emojiValue}`;
+            return `<img src="${url}" class=" w-[22px] h-[22px]">`;
+        }
+
+        return item;
+    });
+
+    return result;
+});
+
+
+
 // 点赞
 const clickLike = () => {
     isLike.value = !isLike.value
@@ -90,7 +163,7 @@ const replyStatus = () => {
 // 接收评论列表
 const props = defineProps({
     commentList: Array,
-    uid:Number
+    uid: Number
 })
 // 接收回复框的状态
 const getReplyFlag = (val) => {
@@ -131,19 +204,23 @@ const createTime = computed(() => {
     font-size: 14px;
     font-weight: 400;
 }
-.cover-wrapper {
-        flex-wrap: wrap;
-    }
 
-    .cover-sm {
-        margin-bottom: 10px;
-        width: 56px;
-        height: 56px;
-        aspect-ratio: 1 / 1;
-    }
+.cover-wrapper {
+    flex-wrap: wrap;
+}
+
+
+.cover-sm {
+    margin-bottom: 10px;
+    width: 56px;
+    height: 56px;
+    aspect-ratio: 1 / 1;
+}
+
 .local-city {
     &::after {
         content: '·';
         margin: 0 4px;
     }
-}</style>
+}
+</style>
