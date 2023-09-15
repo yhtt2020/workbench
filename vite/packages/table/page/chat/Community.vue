@@ -75,13 +75,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, h, onMounted, computed, watch } from 'vue';
+import { ref, reactive, onBeforeMount, h, onMounted, computed, watch } from 'vue';
 import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
 import DataStatu from '../../../table/components/widgets/DataStatu.vue';
 import publishModal from './com/publishModal.vue';
 import { useCommunityStore } from './community'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import { message } from 'ant-design-vue'
 // import {} from 'pinia'
 // import communityStore  from './community';
@@ -213,9 +215,12 @@ const close = () => {
   }
   updateScroller()
 }
-
+onBeforeMount(()=>{
+  NProgress.start()
+})
 onMounted(() => {
   setCurrentIndex(0)
+  NProgress.done()
 })
 </script>
 <style lang='scss' scoped>
@@ -351,7 +356,10 @@ onMounted(() => {
   .select {
     background-color: rgba(80, 139, 254, 0.20);
   }
-
+  #nprogress .bar{
+    background: #66B1FF !important;
+    height: 10px !important;
+  }
 
 
   .omit {
