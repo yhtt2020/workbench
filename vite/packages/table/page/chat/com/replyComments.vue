@@ -7,7 +7,7 @@
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
-        <a-upload v-model:file-list="fileList" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        <a-upload v-model:file-list="fileList" action=""
             list-type="picture-card" @preview="handlePreview">
             <div v-if="fileList.length < 3">
                 <plus-outlined style="font-size: 20px;" />
@@ -19,12 +19,12 @@
     </div>
     <div class="flex justify-between mt-2 mb-4 font-14 input-btm">
         <div>
-            <button  class=" w-[68px] h-[32px]  xt-text-2 ml-10 xt-bg-2" 
+            <button  class=" w-[54px] h-[32px]  xt-text-2 ml-10 xt-bg-2" 
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
-                @click="emojiVisible"><SmileOutlined style="font-size: 16px !important; margin-right: 4px;"/> 表情</button>
-            <button  class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
+                @click="emojiVisible"><SmileOutlined style="font-size: 16px !important; margin-right: 4px;"/> </button>
+            <button  class="w-[54px] h-[32px] xt-text-2 xt-bg-2"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
-                @click="imageVisible"><PictureOutlined style="font-size: 16px !important; margin-right: 4px;"/> 图片</button>
+                @click="imageVisible"><PictureOutlined style="font-size: 16px !important; margin-right: 4px;"/> </button>
         </div>
         <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
             @click="addComment">回复</a-button>
@@ -94,12 +94,7 @@ onMounted(()=>{
     })
 })
 const fileList = ref<UploadProps['fileList']>([
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
+    
 ]);
 
 const handleCancel = () => {

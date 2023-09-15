@@ -33,7 +33,8 @@
                 <template v-if="item.type === 'forum'">
                   <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
                 </template>
-                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  <SelectOutlined  class="ml-1 xt-text-2 flip" style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
+                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  
+                <SelectOutlined  class="ml-1 xt-text-2 flip" style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
               </div>
             </div>
 
@@ -51,16 +52,19 @@
                     <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
                   </template>
                 </div>
-                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
+                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>  
+                <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.props.openMethod==='userSelect'" />
               </div>
             </div>
           </ChatFold>
         </div>
       </vue-custom-scrollbar>
     </a-col>
+
     <a-col flex=" 1 1 200px" class="h-full flex flex-col">
       <div class="line-title px-4 mb-0">
-        <span style="vertical-align: text-top"><template v-if="currentChannel.type === 'group'">
+        <span style="vertical-align: text-top">
+        <template v-if="currentChannel.type === 'group'">
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
         </template>
         <template v-if="currentChannel.type === 'link'">
@@ -68,10 +72,16 @@
         </template>
         <template v-if="currentChannel.type === 'forum'">
           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
-        </template> </span> {{ currentChannel.name }}
+        </template> 
+       </span> 
+       {{ currentChannel.name }}
       </div>
 
-      <div style="height: 0;flex:1">
+      <div v-if="isChat === 'not'" class="flex h-full items-center  justify-center">
+        <ValidateModal :data="group"></ValidateModal>
+      </div>
+
+      <div style="height: 0;flex:1" v-else>
         <template v-if="!currentChannel.name">
           <div class="flex items-center h-full justify-center">
             <a-empty :image="simpleImage" description="暂无内容"></a-empty>
@@ -86,7 +96,10 @@
         </template>
 
       </div>
+
+     
     </a-col>
+
   </a-row>
 
 </template>
@@ -101,18 +114,23 @@ import Community from '../Community.vue'
 import { chatStore } from '../../../store/chat'
 import browser from '../../../js/common/browser'
 import Emoji from '../../../components/comp/Emoji.vue'
+import { checkGroupShip } from '../../../js/common/sns'
+import Modal from '../../../components/Modal.vue'
+import ValidateModal from '../components/validationPrompts.vue'
+import { message } from 'ant-design-vue'
 
 export default defineComponent({
   components: {
     Emoji,
     ChatDropDown,
-    ChatFold, Community,
+    ChatFold, Community,Modal,ValidateModal,
     AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
   },
 
   setup () {
 
     const chat = chatStore()
+    // const community = chatAdminStore()
 
     const doubleCol = ref(chat.$state.settings.showDouble)
 
@@ -132,29 +150,46 @@ export default defineComponent({
       mainType: '',
       currentChannel: {},
       simpleImage: '/public/img/test/load-ail.png',
+      showModal:false, // 没有加入社群提示弹窗控制
+      group:{}, // 接收传递的社群id
+      isChat:'yes',
     })
 
     const updatePage = () => {
       doubleCol.value = chat.$state.settings.showDouble
     }
 
-    const currentItem = (item) => {
-      if(item.type==='link'){
+    const currentItem = async (item) => {
+      if( item.type==='link' ){
         if(item.props.openMethod==='userSelect'){
           browser.openInUserSelect(item.props.url)
         }
       }
-      if (item.type === 'group') {
-        const name = `GROUP${item.props.id}`
-        data.mainType = 'group'
-        console.log('排查::>>', name)
-        window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-          console.log('排查111::>>', imResponse)
-          // 通知 TUIConversation 添加当前会话
-          // Notify TUIConversation to toggle the current conversation
-          window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-        })
+
+      if(item.type === 'group'){
+        const res = await window.$chat.searchGroupByID(item.props.id)
+        const enableGroup = await checkGroupShip([`${item.props.id}`])
+        data.isChat = enableGroup[0]
+        const isDisable = res.data.group.joinOption !== 'DisableApply'
+        // 判断有没有加入社群, yes表示已经加入, not表示没有加入
+        if(enableGroup[0] === 'yes'){
+          const name = `GROUP${item.props.id}`
+          window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse)=>{
+            // 通知 TUIConversation 添加当前会话
+            // Notify TUIConversation to toggle the current conversation
+            window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+          })
+        }else{
+          // isDisable判断群聊是否禁止加入
+          if(isDisable){
+            data.group = res.data.group
+            // data.showModal = true
+          }else{
+            message.warn('该群禁止加入')
+          }
+        }
       }
+
       data.currentChannel = item
     }
 
@@ -166,7 +201,7 @@ export default defineComponent({
     return {
       doubleCol, isFloat,
       ...toRefs(data), updatePage,
-      currentItem,
+      currentItem,checkGroupShip,
     }
   }
 })

@@ -62,7 +62,7 @@
 
     
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner' && conversation.type !== 'AVChatRoom' && conversation.type !== 'Private'"  @click="enterGroupManage">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner' && conversation.type !== 'AVChatRoom'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>

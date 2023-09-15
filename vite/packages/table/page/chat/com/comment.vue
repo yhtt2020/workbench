@@ -6,19 +6,20 @@
             评论 {{ props.reply }}
             <!-- {{ commentList }} -->
         </div>
-        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index"></MainReplyComment>
+        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h, computed ,onMounted} from 'vue'
+import { ref, reactive, h, computed ,onBeforeMount} from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
 import {useCommunityStore} from '../community'
 const store=useCommunityStore()
 const props=defineProps({
     tid:Number,
-    reply:Number
+    reply:Number,
+    uid:Number
 })
 const value = ref('')
 // 评论内容列表
@@ -29,11 +30,11 @@ const commentList = computed(()=>{
 const getReplyText=(val)=>{
     // console.log(val);
     commentList.value=val.value
-    console.log('com',commentList);
-    console.log('comstore',store.communityReply);
+    // console.log('com',commentList);
+    // console.log('comstore',store.communityReply);
     
 }
-onMounted(()=>{
+onBeforeMount(()=>{
     store.getCommunityPostReply(props.tid)
 })
 </script>

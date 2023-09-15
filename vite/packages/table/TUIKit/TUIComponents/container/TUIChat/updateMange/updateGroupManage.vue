@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-col">
-    <div class="rounded-lg px-4 py-3 flex flex-col font-14 mb-4" style="width: 468px;height:119px;background: var(--secondary-bg);">
+
+    <div v-if="groupManageInfo.conversation.type !== 'Private'" class="rounded-lg px-4 py-3 flex flex-col font-14 mb-4" style="width: 468px;height:119px;background: var(--secondary-bg);">
       <span class="font-14" style="color: var(--primary-text);">群管理员</span>
+
+      
 
       <div class="flex  items-center mt-3">
         <!-- 群管理员列表 -->

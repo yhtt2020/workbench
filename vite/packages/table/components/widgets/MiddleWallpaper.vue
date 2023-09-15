@@ -358,7 +358,7 @@ export default {
       }, 500);
     },
     collect() {
-      if (this.addressType.name === "PickingPaper") {
+      if (this.addressType.name === "pickingPaper") {
         this.removeToMyPaper(this.imgList[this.imgIndex]);
       } else if (this.addressType.name === "bing") {
         let image = {
