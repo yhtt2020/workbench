@@ -103,6 +103,7 @@ export default {
   },
 
   setup() {
+    const myCom  = myCommunityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
@@ -135,6 +136,7 @@ export default {
     const selectDorpTab = (item) =>{
       data.addIndex = item.index
       data.open = true
+
     }
 
     const openAddCom = () =>{
@@ -143,11 +145,11 @@ export default {
     }
 
     const appS=appStore()
-    const myCom  = myCommunityStore()
+   
     const {userInfo}=appS
     const { myCommunityList } = myCom
     // console.log('测试::>>', myCommunityList)
-
+    
     const newArr = []
 
     // 遍历将社群进行UI层数据替换
@@ -170,6 +172,12 @@ export default {
         }
       }
 
+    }
+
+    const addCom = (item) =>{
+      data.addIndex = item.index
+      data.open = true
+      myCom.getRecommendCommunityList()
     }
   
 
@@ -267,7 +275,7 @@ export default {
             icon:'team',
             name:'加入社群',
             index:"joinCom",
-            callBack:selectDorpTab,
+            callBack:addCom,
           }
         ]
       },

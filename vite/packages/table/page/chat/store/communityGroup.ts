@@ -4,13 +4,17 @@ import { sUrl } from "../../../consts";
 import { post, postMock } from "../../../js/axios/request";
 import { serverCache, localCache } from "../../../js/axios/serverCache";
 
-const createCommunity = sUrl("/app/community/create");
-const getMyCommunity = sUrl("/app/community/my")
+const createCommunity = sUrl("/app/community/create"); // 创建社群
+const getMyCommunity = sUrl("/app/community/my")  // 我的社群
+const getRecommendCommunity = sUrl("/app/community/getRecommendList") // 获取推荐社群
+const applyJoin = sUrl("/app/community/join") // 申请加入社群
+
 
 // @ts-ignore
 export const myCommunityStore = defineStore('myCommunity',{
   state: () => ({
     myCommunityList:[], // 接收我的社群
+    recommendCommunityList:[], // 存储推荐社群
   }),
 
   actions: {
@@ -27,8 +31,20 @@ export const myCommunityStore = defineStore('myCommunity',{
     // console.log('获取我的社群',localCache.get('list'));
     this.myCommunityList = localCache.get('list')
     
-   }
+   },
 
+   // 申请加入社群
+   async joinCommunity(option:any){
+    return await post(applyJoin,option)
+   },
+
+   // 获取推荐社群
+   async getRecommendCommunityList(){
+    const res = await post(getRecommendCommunity,{})
+    // console.log('执行了吗',res.data);
+    localCache.set('recommendList',res.data,10*60)
+    this.recommendCommunityList =  localCache.get('recommendList')
+   }
 
   },
 
@@ -38,7 +54,7 @@ export const myCommunityStore = defineStore('myCommunity',{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['myCommunityList']
+      paths: ['myCommunityList','recommendCommunityList']
       // state 中的字段名，按组打包储存
     }]
   }
