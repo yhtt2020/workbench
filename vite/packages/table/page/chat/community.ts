@@ -62,7 +62,7 @@ export const useCommunityStore = defineStore('community',{
                 order:order
             })
             if(res.code===200){
-              console.log(res.data,'返回数据')
+            //   console.log(res.data,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost);
                 localCache.set(`communityPost_${id}-${type}`,this.communityPost,60*60*24)
@@ -80,7 +80,7 @@ export const useCommunityStore = defineStore('community',{
             // console.log('datail', res);
             if(res.code===200){
                 this.communityPostDetail=res.data
-                console.log('chakan',this.communityPostDetail);
+                // console.log('chakan',this.communityPostDetail);
                 localCache.set(`communityPostDetail_${id}`,this.communityPostDetail,60*60*24)
             }
         },
@@ -95,7 +95,7 @@ export const useCommunityStore = defineStore('community',{
                 row:10,
                 type:1
             })
-            console.log('reply',res);
+            // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*24)
