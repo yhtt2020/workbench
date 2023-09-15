@@ -52,13 +52,6 @@ const appMap = [
     icon: 'https://files.getquicker.net/_icons/8CA38E5B25AEF1F7B980CCC72CE0D063FC0254A8.png',
     id: 'webstorm'
   },
-  {
-    exeName: 'Docker Desktop.exe',
-    alias: 'Docker桌面版',
-    icon: 'docker',
-    company: '',
-    id: 'dockerDesktop'
-  },
 
 ]
 
