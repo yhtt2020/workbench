@@ -79,12 +79,46 @@
                     <span>Adobe Lightroom</span>
                 </div>
                 <div class="page-change">
-                    <left-outlined />
-                    <right-outlined />
+                    <!-- 换页 -->
+                    <left-outlined @click="onChangePage(go)"/>
+                    <right-outlined @click="onChangePage(after)"/>
                 </div>
             </div>
+            <!-- 分页 开发中 -->
+            <!-- <div class="key-body">
+                <div class="key-flex">
+                    <div class="key-item">
+                        <div class="key-name">{{ item.name }}</div>
+                    </div>
+                </div>
+                <div class="key-flex">
+                    <div class="key-item" v-for="(shortcut,index) in item.key">
+                        <span>{{ shortcut.keyc }}</span>
+                    </div>
+                </div>
+                <div class="key-flex">
+                    <div class="key-item">
+                        <span>Space</span>
+                    </div>
+                    <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
+                </div>
+                <div class="key-flex">
+                    <div class="key-item">
+                        <span>Space</span>
+                        <span>H</span>
+                        <span>3</span>
+                    </div>
+                    <div class="key-title">首选项</div>
+                </div>
+            </div> -->
             <div class="key-body">
-                <div class="key-name" >常用</div>
+                <div class="key-item">
+                    </div>
+                <div class="key-flex">
+                    <div class="key-item">
+                        <div class="key-name" >常用</div>
+                    </div>
+                </div>
                 <div class="key-flex">
                     <div class="key-item">
                         <span>Space</span>
@@ -98,72 +132,6 @@
                         <span>Space</span>
                     </div>
                     <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-                
-                <div class="key-name" >常用</div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
                 </div>
                 <div class="key-flex">
                     <div class="key-item">
@@ -334,10 +302,11 @@ export default {
         // 切换卡片类型 目前还有点问题 找不到触发事件
         onChangeList(selectType){
             // console.log("selectType",selectType)
-
             this.isFlag = !this.isFlag
-
-        }
+        },
+        onChangePage(type){
+            // type
+        },
     }
 };
 </script>
@@ -500,6 +469,7 @@ export default {
         flex-direction: column;
         height: 330px;
         color: rgba(255,255,255,0.85);
+        overflow: hidden;
 
     }
 
