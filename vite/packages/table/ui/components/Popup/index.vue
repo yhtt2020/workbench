@@ -7,12 +7,9 @@
     </transition>
     <!-- 内容 -->
     <transition name="popup">
-      <!-- <div v-if="visible" class="h-full bg-white-50 fixed top-1/2 -translate-y-1/2 rounded-xl"
-        style="z-index: 9999; box-sizing: border-box" :style="{ [position]: '0' }">
-        <slot> </slot>
-      </div> -->
-      <div v-if="visible" class="h-full bg-white-50 fixed top-1/2 -translate-y-1/2 rounded-xl"
-        style="z-index: 9999; box-sizing: border-box" :style="{ [position]: '0' }">
+      <!-- top-1/2 -translate-y-1/2 -->
+      <div v-if="visible" class="h-full bg-white-50 fixed  rounded-xl"
+        style="z-index: 9999; box-sizing: border-box;  top: 0; bottom: 0;" :style="{ [position]: '0' }">
         <slot> </slot>
       </div>
     </transition>
@@ -58,11 +55,11 @@ watch(
 
 .popup-enter-active,
 .popup-leave-active {
-  transition: transform 0.3s ease-in-out;  
+  transition: transform 0.3s ease-in-out;
 }
 
 .popup-enter-from,
 .popup-leave-to {
-  transform: translateX(100%);  
+  transform: translateX(100%);
 }
 </style>

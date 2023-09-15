@@ -6,11 +6,6 @@
     <slot></slot>
   </xt-left-menu>
 
-  <transition name="slide-right">
-    <div v-if="showRightPanel" class="right-panel">
-      <!-- Right panel content goes here -->
-    </div>
-  </transition>
   <!-- 新建对话  -->
   <XtView v-model="createChatVisible" type="popup" title="新建模板" :showFull="false">
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
@@ -52,7 +47,7 @@ export default {
       menuList: [
         {
           icon: "message",
-          float: 'test',
+          // float: 'test',
           callBack: () => {
             this.selectTab = "Chat";
           },
@@ -74,7 +69,7 @@ export default {
             this.createChatVisible = true;
           },
         },
-        
+
         {
           flag: true,
           icon: "setting",
@@ -89,5 +84,5 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>  
+</style>
