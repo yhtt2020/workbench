@@ -1,6 +1,6 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3"
+    <a-col flex=" 0 1 300px" class="flex flex-col h-full px-3 find-left"
            :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
            style=" border-right:1px solid var(--divider);">
       <!-- v-if="isFloat === false" -->
@@ -21,7 +21,7 @@
         <div v-for="item in list[0].channelList">
           <ChatFold :title="item.name">
             <div class="flex flex-col" v-if="doubleCol === false">
-              <div v-for="item in item.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
+              <div v-for="item in item.children" class="flex items-center px-4 py-3 rounded-lg pointer group-item"
                    @click="currentItem(item)"
               >
                 <template v-if="item.type === 'group'">
@@ -39,8 +39,8 @@
 
             <div class="flex grid grid-cols-2 gap-1" v-else>
               <div v-for="item in item.children" @click="currentItem(item)"
-                   class="flex items-center py-2  rounded-lg pointer group-item">
-                <div class="mx-2 flex items-center">
+                   class="flex items-center py-2 rounded-lg pointer group-item">
+                <div class="flex items-center mx-2">
                   <template v-if="item.type === 'group'">
                     <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
                   </template>
@@ -58,8 +58,8 @@
         </div>
       </vue-custom-scrollbar>
     </a-col>
-    <a-col flex=" 1 1 200px" class="h-full flex flex-col">
-      <div class="line-title px-4 mb-0">
+    <a-col flex=" 1 1 200px" class="flex flex-col h-full">
+      <div class="px-4 mb-0 line-title">
         <span style="vertical-align: text-top"><template v-if="currentChannel.type === 'group'">
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
         </template>
@@ -73,11 +73,11 @@
 
       <div style="height: 0;flex:1">
         <template v-if="!currentChannel.name">
-          <div class="flex items-center h-full justify-center">
+          <div class="flex items-center justify-center h-full">
             <a-empty :image="simpleImage" description="暂无内容"></a-empty>
           </div>
         </template>
-        <Community v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
+        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'"  style="text-align: center;margin-top: 30%"><Emoji icon="link" :size="20"></Emoji> 当前频道需要浏览器打开。</div>
@@ -97,7 +97,7 @@ import { chatList } from '../../../js/data/chatList'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
-import Community from '../Community.vue'
+import Commun from '../Commun.vue'
 import { chatStore } from '../../../store/chat'
 import browser from '../../../js/common/browser'
 import Emoji from '../../../components/comp/Emoji.vue'
@@ -106,7 +106,7 @@ export default defineComponent({
   components: {
     Emoji,
     ChatDropDown,
-    ChatFold, Community,
+    ChatFold, Commun,
     AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
   },
 

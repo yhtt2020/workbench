@@ -86,7 +86,7 @@
 import { ref, reactive,computed } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
-import { useCommunityStore } from '../community'
+import { useCommunityStore } from '../commun'
 import {appStore} from '../../../../table/store'
 const useUserStore=appStore()
 let uid=props.cardData.user.uid

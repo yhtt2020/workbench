@@ -79,12 +79,10 @@ import { ref, reactive, onBeforeMount, h, onMounted, computed, watch } from 'vue
 import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
-import DataStatu from '../../../table/components/widgets/DataStatu.vue';
 import publishModal from './com/publishModal.vue';
-import { useCommunityStore } from './community'
+import { useCommunityStore } from './commun'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { message } from 'ant-design-vue'
 // import {} from 'pinia'
 // import communityStore  from './community';
 const store = useCommunityStore();
