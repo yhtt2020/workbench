@@ -50,7 +50,7 @@
  import { LeftOutlined, CloseOutlined, CameraOutlined} from '@ant-design/icons-vue'
  import {fileUpload} from '../../../components/card/hooks/imageProcessing'
  import { message } from 'ant-design-vue'
- import { communityGroupStore } from '../store/communityGroup'
+ import { myCommunityStore } from '../store/communityGroup'
  
  
  export default defineComponent({
@@ -58,7 +58,7 @@
    LeftOutlined,CloseOutlined,CameraOutlined
   },
   setup (props,ctx) {
-   const community = communityGroupStore()
+   const community = myCommunityStore()
 
    const data = reactive({
      communityName:'',
