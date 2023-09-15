@@ -239,8 +239,9 @@ export const chatStore = defineStore('chatStore',{
       this.settings.showDouble=!this.settings.showDouble
     },
 
-    setFloatVisible(){
-      this.settings.enableHide = !this.settings.enableHide
+    setFloatVisible(value:any){
+      localCache.set('float',value,30*60)
+      this.settings.enableHide = localCache.get('float')
     }
 
   },

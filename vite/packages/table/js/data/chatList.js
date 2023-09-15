@@ -120,3 +120,14 @@ export const recommendedJoin = [
     type:'PublicJoin',
   }
 ]
+
+
+export const hideDropList = [
+  {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
+  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+]
+
+export const showDropList = [
+  {icon:'MenuFoldOutlined',title:'展开边栏',type:'show'},
+  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+]

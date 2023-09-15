@@ -9,7 +9,7 @@
         <div class="flex flex-col">
           <div class="flex justify-between mb-2.5">
             <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
-            <ChatDropDown />
+            <ChatDropDown :list="showDropList"/>
           </div>
           <div class="font-14" style="color:var(--secondary-text);">
             {{ community.summary }}
@@ -78,11 +78,12 @@ import CreateCommunity from './components/createCommunity.vue'
 import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
-import { chatList } from '../../js/data/chatList'
+import { chatList,showDropList } from '../../js/data/chatList'
 import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity  from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
+
 
 export default {
   name: 'App',
@@ -245,7 +246,7 @@ export default {
     })
 
     return {
-      chatLeftList,route,router,
+      chatLeftList,route,router,showDropList,
       ...toRefs(data),
     }
   }
