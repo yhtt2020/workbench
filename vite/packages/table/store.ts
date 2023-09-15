@@ -125,8 +125,8 @@ export const appStore = defineStore('appStore', {
     setBackgroundImage(value) {
       this.backgroundImage = value
     },
-    setAgreeTest(value) {
-      this.agreeTest = value
+    setAgreeTest() {
+      this.agreeTest = false
     },
     setInfoVisible(value){
       this.infoVisible = value
@@ -144,6 +144,7 @@ export const appStore = defineStore('appStore', {
      */
     finishWizard() {
       this.init = true;
+      this.agreeTest = true
     },
 
     setMusic(status) {

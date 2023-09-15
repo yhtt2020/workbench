@@ -62,7 +62,7 @@
 
     
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner'"  @click="enterGroupManage">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner' && conversation.type !== 'AVChatRoom'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>
@@ -78,16 +78,16 @@
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">群类型</span>
         <span class="font-14" style="color: var(--secondary-text);">
-          {{ $t(`TUIChat.manage.${typeName[conversation.type]}`) }}
+          {{ typeName[conversation.type] }}
         </span>
       </div>
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">加群方式</span>
-        <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type === 'Public'">
+        <template v-if=" conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'Private'">
           <div class="flex pointer" @click="updateGroupJoinWay">
             <span class="font-14" style="color: var(--secondary-text);">
-              {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+              {{ typeName[conversation.joinOption] }}
             </span>
             <div  class="flex items-center" style="margin-left: 12px;">
               <Icon icon="xiangyou"></Icon>
@@ -96,14 +96,13 @@
         </template>
         <div v-else>
           <span class="font-14" style="color: var(--secondary-text);">
-            {{  $t(`TUIChat.manage.${typeName[conversation.joinOption]}`)  }}
+            {{ typeName[conversation.joinOption]  }}
           </span>
         </div>
       </div>
 
       <div class="flex items-center justify-between" style="padding: 14px 0;">
         <span class="font-14" style="color: var(--primary-text);">邀请方式</span>
-        
         <template v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'AVChatRoom'">
           <div class="flex pointer" @click="updateGroupInviteWay">
             <span class="font-14" style="color: var(--secondary-text);">

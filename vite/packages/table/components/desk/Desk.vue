@@ -274,6 +274,11 @@ import SmallCountdownDay from '../widgets/SmallCountdownDay.vue'
 import Clock from '../widgets/Clock.vue'
 import CountdownDay from '../widgets/CountdownDay.vue'
 import Notes from '../widgets/note/index.vue'
+import GameInformation from '../widgets/gameInformation/index.vue'
+import HistoryInfo from '../widgets/historyInfo/index.vue'
+import ShortcutKey from '../widgets/shortcutKey/index.vue'
+import ClipBoard from '../widgets/clipBoard/index.vue'
+
 
 const NewAddCard = defineAsyncComponent(() => import('../../page/app/card/NewAddCard.vue'))
 import myIcons from '../widgets/myIcons/index.vue'
@@ -299,6 +304,10 @@ import {taskStore} from "../../apps/task/store"
 export default {
   name: 'Desk',
   components: {
+    GameInformation,
+    HistoryInfo,
+    ShortcutKey,
+    ClipBoard,
     News,
     Template,
     HorizontalPanel,

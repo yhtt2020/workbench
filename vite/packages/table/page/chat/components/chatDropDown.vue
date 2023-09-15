@@ -48,6 +48,8 @@ export default defineComponent({
    if(item.type === 'change'){
      chat.setDouble()
      ctx.emit('updatePage')
+   }else{
+    chat.setFloatVisible()
    }
   }
 

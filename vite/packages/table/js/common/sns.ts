@@ -69,8 +69,7 @@ export async function checkFriendship(uid) {
 
 export async function checkGroupShip(groupID:any) {
   getChat()
-  const res  = await chat.getGroupList()
-  const allGroupList = res.data.groupList
+  const allGroupList = (window as any).$TUIKit.TUIServer.TUIGroup.store.groupList
   const successArray = []
   try {
     for(let i=0;i<groupID.length;i++){

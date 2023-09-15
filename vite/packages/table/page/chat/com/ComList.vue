@@ -1,33 +1,38 @@
 <template >
+    <!-- {{ props.cardData }} -->
     <div class="w-full card">
-        <div class="card-content">
-            <div class="card-top">
+        <div class=" card-content">
+            <!-- {{ Imageheight.width }} -->
+            <div class="w-full card-top">
                 <div class="top-left">
-                    <a-avatar :size="32" src="https://up.apps.vip/avatar/003.png">
+                    <a-avatar :size="32" :src="cardData.user.avatar" class="pointer" @click.stop="showCard(uid, userInfo)">
                         <template #icon>
                             <UserOutlined />
                         </template>
                     </a-avatar>
                     <div class="user-msg">
                         <div class="text-sm username" style="color: var(--primary-text);">
-                            我是皮克斯呀
+                            {{ cardData.user.nickname }}
                         </div>
                         <div class="text-xs self-msg xt-text-2">
-                            <span class="date">08-09</span>
-                            <span class="time">16:16</span>
-                            <span class="ip">浙江</span>
+                            <span class="date">{{ createTime[0] }}</span>
+                            <span class="time">{{ createTime[1] }}</span>
+                            <span class="ip">{{ cardData.user.ip_home.region }}</span>
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div>
-                <div class="flex items-center justify-center">
+            <div class="w-full">
+                <div class="flex ">
                     <!-- 单个图片 -->
-                    <template v-if="cardData.data?.img?.length === 1 && !cardData.data?.video">
-                        <img :src="cardData.data.img" class="object-cover mr-2 rounded-md cover-im "
-                            :class="{ 'hide-images-video': detailVisible }" style="text-align: center;">
+                    <template v-if="cardData.image.length === 1 && !cardData.data?.video">
+                        <!-- <div > -->
+                            <img :src="cardData.image_170_170[0].image" class="object-fill mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: "
+                                 >
+                        <!-- </div> -->
+
                     </template>
                     <video class="object-cover mr-2 rounded-md cover-im" v-if="cardData.data?.video"
                         :class="{ 'hide-images-video': detailVisible }">
@@ -35,19 +40,21 @@
                         <source :src="cardData.data?.video" type="video/webm" />
                     </video>
                     <!-- 正文内容 -->
-                    <div>
-                        <div id="title" style="color: var(--primary-text);"
-                            :class="{ 'omit-title': cardData.data?.img?.length === 1 || cardData.data?.video }">{{
-                                cardData.content.title }}</div>
-                        <div id="context" style="color:  var(--secondary-text);"
-                            :class="{ 'omit': cardData.data?.img?.length === 1 || cardData.data?.video }">
-                            {{ cardData.content.context }}</div>
+                    <div class="flex flex-col justify-between" style="flex-shrink: 1;">
+                        <div id="title" style="color: var(--primary-text);" v-if="cardData.title"
+                            :class="{ 'omit-title': cardData.image.length === 1 || cardData.data?.video }">
+                            {{ cardData.title }}</div>
+                        <div id="context" style="color:  var(--secondary-text); text-align: left;"
+                            :class="{ 'omit': cardData.image.length === 1 || cardData.data?.video }">
+                            {{ cardData.summary }}</div>
                     </div>
                 </div>
-                <template v-if="cardData.data?.img?.length > 1">
-                    <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper">
-                        <img :src="item" alt="" v-for="(item, index) in cardData.data?.img"
-                            class="object-cover mr-2 rounded-md cover-sm" :key="index">
+                <template v-if="cardData.image.length > 1">
+                    <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper ">
+                        <!-- <div> -->
+                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-contain mr-2 overflow-hidden rounded-md cover-sm" >
+                        <!-- </div> -->
+                        
                     </div>
                 </template>
 
@@ -55,9 +62,9 @@
             </div>
 
             <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
-                <span class="view" style="cursor: pointer;">1626 浏览</span>
-                <span class="like" style="cursor: pointer;">13 点赞</span>
-                <span class="comments" style="cursor: pointer;">23 评论</span>
+                <span class="view" style="cursor: pointer;">{{ cardData.view_count }} 浏览</span>
+                <span class="like" style="cursor: pointer;">{{ cardData.support_count }} 点赞</span>
+                <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
             </div>
 
         </div>
@@ -66,14 +73,30 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, onMounted, onBeforeMount, nextTick } from 'vue'
+import {  computed } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
+import { appStore } from '../../../../table/store'
+const useUserStore = appStore()
+let uid = props.cardData.user.uid
+let userInfo = {
+    uid: uid,
+    nickname: props.cardData.user.nickname,
+    avatar: props.cardData.user.avatar_128
+}
+const showCard = (uid, userInfo) => {
+    useUserStore.showUserCard(uid, userInfo)
+}
+
 const props = defineProps({
     detailVisible: Boolean,
     cardData: {
         type: Object,
         default: () => []
     }
+})
+const createTime = computed(() => {
+    let [date, time] = props.cardData.create_time.split(' ')
+    return [date, time]
 })
 </script>
 <style lang='scss' scoped>
@@ -186,18 +209,22 @@ const props = defineProps({
             font-family: PingFangSC-Regular;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.85);
-            text-align: justify;
+            text-align: left;
             line-height: 22px;
             font-weight: 500;
+            white-space: pre-wrap;
         }
 
         #context {
             font-family: PingFangSC-Regular;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.60);
-            text-align: justify;
+            text-align: left;
             line-height: 22px;
             font-weight: 400;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            // overflow: scroll;
         }
 
         .card-bottom {
@@ -222,4 +249,5 @@ const props = defineProps({
 
     }
 
-}</style>
+}
+</style>

@@ -340,7 +340,6 @@ export default {
         return this.steamGameList
     },
     shareContent(){
-      console.log(this.currentSteam)
       return {
         description:'steam游戏',
         data:JSON.stringify({

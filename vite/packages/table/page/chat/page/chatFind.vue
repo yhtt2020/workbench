@@ -1,7 +1,5 @@
 <template>
- 
-
-  <div class="w-full flex items-center justify-center px-3">
+  <div class="w-full h-full flex items-center justify-center px-3">
     <vue-custom-scrollbar :settings="settingsScroller" style="height:100%;">
       <template v-if="isLoading">
         <a-spin/>
@@ -26,7 +24,7 @@
                   <a-col @click.stop  flex="100px" v-if="item.uid!=userInfo.uid && item.relationship!==undefined">
                     <AddFindButton v-show="item.relationship==='not'" @relationshipChanged="updateRelationship($event,item)" :key="item.uid"
                                    :uid="item.uid"></AddFindButton>
-                    <SendMessageButton :uid="item.uid" :enable="true" @send="enterChatList"
+                    <SendMessageButton :uid="item.uid" :enable="false" @send="enterChatList"
                                        v-show="item.relationship==='yes'"></SendMessageButton>
                   </a-col>
                 </a-row>

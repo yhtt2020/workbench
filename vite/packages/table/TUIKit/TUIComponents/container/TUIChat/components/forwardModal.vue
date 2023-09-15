@@ -11,7 +11,7 @@
   
   <div class="flex-grow flex justify-between w-full px-1">
     <div class="flex flex-col" style="width: 293px;">
-     <a-input class="h-11" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch">
+     <a-input class="h-11" :allowClear="true" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch($event)" @change="search($event)">
       <template #suffix>
        <div class="flex items-center justify-center pointer active-button" @click="enterSearch"> 
         <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" />
@@ -19,7 +19,7 @@
       </template>
      </a-input>
      <span class="font-400 my-3" style="color:var(--secondary-text);">最近聊天</span>
-     <vue-custom-scrollbar :settings="settingsScroller" style="height: 308px;">
+     <vue-custom-scrollbar :settings="settingsScroller" style="height: 350px;">
       <!-- :class="{'select-bg':isSelect(index)}" -->
       <div v-for="(item,index) in list"   class="flex items-center rounded-lg p-3 pointer" @click="selectItem(item)">
        <a-avatar shape="square" v-if="item.type === 'GROUP'" size="32" :src="item?.groupProfile?.avatar"></a-avatar>
@@ -31,9 +31,9 @@
 
     <a-divider type="vertical" style="height: 100%; background-color:var(--divider);" />
     
-    <div class="" style="width: 293px;">
+    <div class="flex flex-col" style="width: 293px;">
       <span class="font-400" style="color:var(--secondary-text);">已选({{ rightSelectList.length }}个)</span>
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 37vh;">
+      <vue-custom-scrollbar :settings="settingsScroller" style="height:371px;">
        <div class="flex flex-col">
         <div v-for="item in rightSelectList" class="flex justify-between p-3 pointer" >
           <div class="flex tems-center">
@@ -47,13 +47,12 @@
         </div>
        </div>
       </vue-custom-scrollbar>
-    </div>
-  </div>
-
-  <div class="flex justify-end  h-12">
-    <div class="flex items-center">
-     <a-button class="rounded-lg" style="background: var(--secondary-bg);color:var(--secondary-text);width:100px;height: 44px;" @click="closeForwardModal">取消</a-button>
-     <a-button class="ml-4 rounded-lg" type="primary" style="width:100px;height: 44px;color:var(--active-text);" @click="forwardSend">转发</a-button>
+      <div class="flex justify-end  h-12">
+        <div class="flex items-center">
+         <a-button class="rounded-lg" style="background: var(--secondary-bg);color:var(--secondary-text);width:100px;height: 44px;" @click="closeForwardModal">取消</a-button>
+         <a-button class="ml-4 rounded-lg" type="primary" style="width:100px;height: 44px;color:var(--active-text);" @click="forwardSend">转发</a-button>
+        </div>
+      </div>
     </div>
   </div>
  </div>
@@ -64,7 +63,7 @@ import { defineComponent, onMounted, reactive,toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined,MinusCircleOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
-// import { pinyin,match,toRaw } from 'pinyin-pro'
+import { pinyin } from 'pinyin-pro'
 
 export default defineComponent({
  components:{ 
@@ -93,13 +92,12 @@ export default defineComponent({
   
   // 获取会话列表
   const getForwardList = async()=>{
-   const resList = await (window).$chat.getConversationList()
-   const list = resList.data.conversationList
+   const list = window.$TUIKit.TUIServer.TUIConversation.store.conversationList
    const sortList = list.sort((a,b)=>{
     return b.lastMessage.lastTime - a.lastMessage.lastTime
    })
    data.allList = sortList // 将所有的数据进行获取
-   console.log('获取20条',sortList.slice(0,20).length);
+  //  console.log('获取20条',sortList.slice(0,20).length);
    data.list = sortList.slice(0,20)  // 只获取20条
   }
 
@@ -158,27 +156,45 @@ export default defineComponent({
    await window.$chat.sendMessage(r)
   }
 
-  // 搜索
-  const enterSearch = () =>{
+  // 搜索回车
+  const enterSearch = (e) =>{
     data.list = []
     let  searchResult = []
     if(data.forwardText === ''){
-      return;
+      e.stopPropagation();
+      // return;
     }
+    
+    // const inputPinyin = pinyin(data.forwardText,{style:pinyin.STYLE_NORMAL})
+    // console.log('拼音结果::>>',inputPinyin);
 
-    // const forwardTextAsRaw = toRaw(data.forwardText);
-    // const inputPinyin = pinyin(forwardTextAsRaw,{style:'NORMAL'})
-    // console.log('输入的拼音',inputPinyin);
     searchResult = data.allList.filter(item=>{
       const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
+      const id = item.type  === 'C2C' ? item.userProfile.userID : item.groupProfile.groupID
+      
+      // const namePinyin = pinyin(item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name,{
+      //   style:pinyin.STYLE_NORMAL
+      // })
+      // console.log('过滤的拼音结果::>>',namePinyin);
 
-      // const itemPinyin = pinyin(item,{style:'NORMAL'})
-
-      return data.forwardText === text
+      if(text.includes(data.forwardText)){
+        return item
+      }
+      if(id.includes(data.forwardText)){
+        return item
+      }
     })
     // console.log('结果',searchResult);
     data.list = searchResult
-   
+  }
+
+  // 实时搜索
+  const search = () =>{
+    if(data.forwardText.trim() === ''){
+      getForwardList()
+    }else{
+      return;
+    }
   }
 
   onMounted(()=>{
@@ -189,7 +205,7 @@ export default defineComponent({
    ...toRefs(data),
    getForwardList,closeForwardModal,
    selectItem,cancelSelect,forwardSend,
-   forwardMessage,enterSearch,
+   forwardMessage,enterSearch,search
    // isSelect,
   }
  }

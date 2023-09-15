@@ -14,6 +14,11 @@ export async function get(url, params = {}) {
   }
 }
 
+// mock测试环境下的请求方式
+export async function postMock(url, data, options = {crud: false}) {
+  url=url.replace('https://wad.apps.vip/api','https://mock.apifox.cn/m1/1677090-0-default')
+  return post(url, data, options)
+}
 
 export async function post(url, data, options = {crud: false}) {
   let conf = await getConfig()

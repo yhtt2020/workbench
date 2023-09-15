@@ -1,6 +1,5 @@
 <template>
   <xt-left-menu :list="menuList" last="1" end="3">
-    <!--  -->
     <template #test>
       <xt-button @click="showRightPanel = !showRightPanel">Toggle Right Panel</xt-button>
     </template>
@@ -58,6 +57,13 @@ export default {
             this.selectTab = "Chat";
           },
         },
+        // {
+        //   icon: "message",
+        //   float: "test",
+        //   callBack: () => {
+        //     this.selectTab = "Chat";
+        //   },
+        // },
         {
           full: true,
         },
@@ -68,6 +74,7 @@ export default {
             this.createChatVisible = true;
           },
         },
+        
         {
           flag: true,
           icon: "setting",

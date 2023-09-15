@@ -46,6 +46,7 @@ export const aiStore = defineStore("aiStore", {
   getters: {
     recentList() {
       const topicListArray = Object.values(this.topicList);
+      if (topicListArray.length == 0) return null;
       topicListArray.sort((a: any, b: any) => b.time - a.time);
       return topicListArray;
     },

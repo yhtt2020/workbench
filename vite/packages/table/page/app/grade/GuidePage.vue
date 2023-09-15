@@ -239,7 +239,7 @@ export default {
         }
 
         // 当所有步骤执行完以后
-        this.setAgreeTest(true)
+        this.setAgreeTest()
         this.$router.push({ name: 'home'})
         let postTimer = setTimeout(()=>{
          const avatar = this.userInfo.avatar
