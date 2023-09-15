@@ -71,19 +71,33 @@ export default defineComponent({
   }
 
   // 创建社群
-  const createCommunity = async() =>{
+  const createCommunity = async(evt) =>{
+    const chineseCharReg = /[\u4e00-\u9fa5]/g; // 匹配2-16个汉字
+    const nonChineseCharReg = /[^\u4e00-\u9fa5]/g; // 匹配4-32个字符
+    const chineseCharCount = (data.communityName.match(chineseCharReg) || []).length;
+    const nonCharCount = (data.communityName.match(nonChineseCharReg) || []).length;
+    const totalCount = chineseCharCount + nonCharCount
+
     const option = {
       name:data.communityName,
       icon:data.avatarUrl
     }
-    const res = await postMock(createGroupUrl,option)
-    // console.log('排查结果',res)
-    if(res.status === 1){
-      message.success(`${res.info}`)
-      ctx.emit('close')
-    }else{
+
+    if((chineseCharCount >= 2 && chineseCharCount <= 16 && totalCount <= 32) || (totalCount >= 4 && totalCount <= 32)){
+      const res = await postMock(createGroupUrl,option)
+      // console.log('排查结果',res)
+      if(res.status === 1){
+       message.success(`${res.info}`)
+       ctx.emit('close')
+      }else{
       
+      }
+    }else{
+      evt.preventDefault();
+      message.error('不能超过2-16个汉字')
     }
+    
+    
   }
 
 
