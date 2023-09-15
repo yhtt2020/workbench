@@ -12,11 +12,11 @@
     <CloseOutlined style="font-size: 1.25em;" />
    </div>
   </div>
-  
+
   <div class="flex items-center flex-col">
 
    <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
-    <div class="rounded-lg flex pointer items-center justify-center" 
+    <div class="rounded-lg flex pointer items-center justify-center"
      style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
     >
     <!--  -->
@@ -32,9 +32,9 @@
    </div>
 
    <a-input v-model:value="communityName" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
-   
+
    <a-input hidden="" :disabled="true" placeholder="ID:UH7631" class="h-12 search"  style="width: 340px;margin-top: 12px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
-  
+
   </div>
 
   <div class="flex items-center justify-end ">
@@ -50,7 +50,7 @@ import { defineComponent, reactive,toRefs } from 'vue'
 import { LeftOutlined, CloseOutlined, CameraOutlined} from '@ant-design/icons-vue'
 import { sUrl } from '../../../consts'
 import { postMock,post} from '../../../js/axios/request'
-import {fileUpload} from '../../../components/card/hooks/imageProcessing' 
+import {fileUpload} from '../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 
 const createGroupUrl = sUrl('/app/community/create')
@@ -76,19 +76,19 @@ export default defineComponent({
       name:data.communityName,
       icon:data.avatarUrl
     }
-    const res = await postMock(createGroupUrl,option)
+    const res = await post(createGroupUrl,option)
     // console.log('排查结果',res)
     if(res.status === 1){
       message.success(`${res.info}`)
       ctx.emit('close')
     }else{
-      
+
     }
   }
 
 
   // 获取头像
-  const updateGroupAvatar = async () =>{  
+  const updateGroupAvatar = async () =>{
     document.querySelector('#groupFileID').click()
   }
 
