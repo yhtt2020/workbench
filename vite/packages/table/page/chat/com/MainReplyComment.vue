@@ -73,6 +73,12 @@ const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
     return props.commentList.comment
 })
+// 用于在动态和评论中使用的表情
+// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
+// https://sad.apps.vip/public/static/emoji/emojistatic/
+const content=computed(()=>{
+    
+})
 // 点赞
 const clickLike = () => {
     isLike.value = !isLike.value
