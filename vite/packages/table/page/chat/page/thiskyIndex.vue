@@ -1,13 +1,12 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3"
+    <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3" v-if="isFloat === false"
            :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
            style=" border-right:1px solid var(--divider);">
-      <!-- v-if="isFloat === false" -->
       <div class="flex flex-col">
         <div class="flex justify-between w-full mb-2.5">
           <span class="font-500" style="color:var(--primary-text);">{{ groupName }}</span>
-          <ChatDropDown @updatePage="updatePage"/>
+          <ChatDropDown @updatePage="updatePage" :list="hideDropList"/>
         </div>
         <div class="font-14" style="color:var(--secondary-text);">
           {{ summary }}
@@ -106,7 +105,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
-import { chatList } from '../../../js/data/chatList'
+import { chatList,hideDropList } from '../../../js/data/chatList'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
@@ -118,6 +117,7 @@ import { checkGroupShip } from '../../../js/common/sns'
 import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/validationPrompts.vue'
 import { message } from 'ant-design-vue'
+
 
 export default defineComponent({
   components: {
@@ -199,7 +199,7 @@ export default defineComponent({
     })
 
     return {
-      doubleCol, isFloat,
+      doubleCol, isFloat,hideDropList,
       ...toRefs(data), updatePage,
       currentItem,checkGroupShip,
     }

@@ -4,7 +4,7 @@
    <span class="font-16-400" style="color: var(--primary-text);">加入社群</span>
 
    <div class="flex items-center pointer active-button rounded-lg justify-center close h-10 w-10" @click="closeJoinCom">
-    <CloseOutlined style="font-size: 1.25em;" />
+    <CloseOutlined style="font-size: 1.25em;color:var(--secondary-text);" />
    </div>
   </div>
 
@@ -26,25 +26,62 @@
     </div>
   </div>
 
+  <vue-custom-scrollbar :settings="settingsScroller" style="height:466px;">
+    <div class="w-full flex items-center justify-center">
+      <div class="flex grid grid-cols-2 gap-3" style="width:452px;">
+        <div v-for="item in recommendedJoin" class="flex flex-col rounded-lg p-4" style="background: var(--secondary-bg);">
+          <div class="flex items-center mb-3">
+            <a-avatar :size="40" :src="item.url" shape="square"></a-avatar>
+            <span class="font-16-500 pl-3" style="color:var(--primary-text);">{{ item.name }}</span>
+          </div>
+
+          <span  class="font-14-400 mb-2.5" style="color:var(--primary-text);">{{ item.summary }}</span>
+
+          <div class="flex justify-between">
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.memberNum }}人</span>
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.type === 'PublicJoin' ? '公开加入' : '审核加入' }}</span>
+          </div>
+          <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;" />
+          <XtButton  style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;">立即加入</XtButton>
+        </div>
+      </div>
+    </div>
+  </vue-custom-scrollbar>
 
  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
 import { CloseOutlined,SearchOutlined } from '@ant-design/icons-vue'
+import { recommendedJoin } from '../../../js/data/chatList'
 
 export default defineComponent({
  components:{
   CloseOutlined,SearchOutlined
  },
  setup (props,ctx) {
+
+  const data = reactive({
+    settingsScroller: {
+      useBothWheelAxes: true,
+      swipeEasing: true,
+      suppressScrollY: false,
+      suppressScrollX: true,
+      wheelPropagation: true
+    },
+  })
+
+  // 关闭加入弹窗
   const closeJoinCom = () =>{
     ctx.emit('close')
   }  
+
+
   
   return {
-   closeJoinCom
+   recommendedJoin,
+   closeJoinCom,...toRefs(data)
   }
  }
 })
@@ -92,5 +129,17 @@ export default defineComponent({
   font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
+}
+
+.font-16-500{
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.font-12-400{
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  font-weight: 400; 
 }
 </style>
