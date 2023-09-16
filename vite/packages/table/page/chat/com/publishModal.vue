@@ -226,6 +226,9 @@ const handleOk = (e: MouseEvent) => {
     vertical-align: super;
     margin-left: 6px;
 }
+:deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail){
+    font-size: 8px;
+}
 :deep(.ant-modal-header .ant-modal-title) {
     display: flex;
     justify-content: center;

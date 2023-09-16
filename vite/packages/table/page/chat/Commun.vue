@@ -114,7 +114,7 @@ const createOrder = computed(() => store.communityPost?.list[0].create_time)
 const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
 const checkMenuList = ref([{
   type: '最近更新',
-  order: createOrder
+  order: createOrder ? new Date(createOrder).getTime() : 0,
 }, {
   type: '最近回复',
   order: replyOrder
