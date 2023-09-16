@@ -134,7 +134,7 @@ const handleMenuItemClick = (index) => {
 const setCurrentIndex = (index) => {
   currentIndex.value = index
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
-  console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
+  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
   
 }
 const goYuan = () => {

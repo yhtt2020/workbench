@@ -68,8 +68,8 @@
     </a-modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, h, onMounted } from 'vue'
-import { CloseOutlined, SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { ref, reactive,  onMounted } from 'vue'
+import {  SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 const goYuan = () => {
@@ -173,12 +173,7 @@ const settingsScroller = reactive({
     wheelPropagation: true,
 });
 const fileList = ref<UploadProps['fileList']>([
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }
+    
 ]);
 
 const handleCancel = () => {
