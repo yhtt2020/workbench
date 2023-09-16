@@ -63,7 +63,7 @@ export default defineComponent({
 
   const data = reactive({
     communityName:'',
-    avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/ERRU-oLYf-1bKi-Va_l'
+    avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/0GTr--Xk2-UEZG-XfNR'
   })
 
   const closeCreateCom = () =>{
