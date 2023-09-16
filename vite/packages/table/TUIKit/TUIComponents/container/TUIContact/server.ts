@@ -547,14 +547,6 @@ export default class TUIContactServer extends IComponentServer {
     await this.getConversationList();
     await this.getFriendList();
 
-    
-    if(params.systemMessageList !== undefined){
-      const arr = params.systemMessageList.map((item:any)=>{
-        return item.payload.operatorID
-      })
-      await this.getUserNick(arr)
-    }
-
     const option = {
       friendNum:params.friendList.length,
       groupNum:params.groupList.length,
@@ -562,6 +554,17 @@ export default class TUIContactServer extends IComponentServer {
     }
     chat.updateNum(option)
 
+    
+    if(params.systemMessageList !== undefined){
+      const arr = params.systemMessageList.map((item:any)=>{
+        return item.payload.operatorID
+      })
+      await this.getUserNick(arr)
+    }else{
+      return;
+    }
+
+    
     
     return this.currentStore;
   }

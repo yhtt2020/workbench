@@ -153,7 +153,7 @@ const TUIContact = defineComponent({
     
 
     onMounted( async ()=>{
-      // 解决通讯录对接初始化
+      // 解决通讯录初始化
       if(data.sideIndex === 'system'){
         await TUIServer.getSystemMessageList();
         await TUIServer.setMessageRead();

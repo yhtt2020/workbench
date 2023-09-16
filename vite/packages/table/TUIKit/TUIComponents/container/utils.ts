@@ -48,10 +48,11 @@ export function translateGroupSystemNotice(message: any) {
   const index = _.find(message.userInfo,function(o:any){
     return o.userID  === message.payload.operatorID 
   })
-  const username = index?.nick
-  const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
+  if(index !== undefined){
+    const username = index?.nick
+    const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
 
-  switch (type) {
+    switch (type) {
     case 1:
       return `${username} ${t('message.tip.申请加入群组')}：${groupName}`;
     case 2:
@@ -86,6 +87,7 @@ export function translateGroupSystemNotice(message: any) {
       return `${username} ${t('message.tip.拒接加群')}：${groupName}`;
     case 255:
       return `${t('message.tip.自定义群系统通知')}: ${message.payload.userDefinedField}`;
+    }
   }
 }
 
