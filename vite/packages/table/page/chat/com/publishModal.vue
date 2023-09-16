@@ -3,7 +3,7 @@
     <a-modal v-model:visible="props.showPublishModal" title="写动态" class="w-full rounded-lg publish" @ok="handleOk" bodyStyle="font-size=16px !important;"
         @cancel="handleOk">
         <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] -mt-2 mb-2">
-            分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="https://s.apps.vip/">元社区</a>
+            分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click="goYuan">元社区</a>
         </div>
         <div class="w-full mt-2 xt-bg box font-16">
             <div style="font-size: 1rem !important;">
@@ -39,13 +39,13 @@
                             </template>
                             <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
                                 style="color: var(--secondary-text) !important;"><template #icon>
-                                    <SmileOutlined style="font-size: 0.6em !important;" />
+                                    <SmileOutlined style="font-size: 0.6em !important;vertical-align: bottom;" />
                                 </template> 表情</a-button>
                         </tippy>
 
                         <a-button type="text" size="small" class="xt-text"
                             style="color: var(--secondary-text) !important;"><template #icon>
-                                <PictureOutlined style="font-size: 0.6em !important;" />
+                                <PictureOutlined style="font-size: 0.6em !important;vertical-align: bottom;" />
                             </template> 图片</a-button>
                     </div>
 
@@ -71,6 +71,10 @@
 import { ref, reactive, h, onMounted } from 'vue'
 import { CloseOutlined, SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
+import browser from '../../../js/common/browser';
+const goYuan = () => {
+    browser.openInUserSelect('https://s.apps.vip/')
+}
 // const userName = ref('我是皮克斯呀')
 const replyValue = ref('')
 const props = defineProps({
@@ -174,19 +178,7 @@ const fileList = ref<UploadProps['fileList']>([
         name: 'image.png',
         status: 'done',
         url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-        uid: '-2',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-        uid: '-3',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
+    }
 ]);
 
 const handleCancel = () => {
@@ -234,9 +226,14 @@ const handleOk = (e: MouseEvent) => {
     line-height: 20px;
     font-weight: 400;
 }
-:deep(#vcDialogTitle0){
-    text-align: center !important;
-    // color: red;
+:deep(.ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-eye){
+    font-size: 8px !important;
+    vertical-align: super;
+    margin-left: 6px;
+}
+:deep(.ant-modal-header .ant-modal-title) {
+    display: flex;
+    justify-content: center;
 }
 :deep(.ant-upload.ant-upload-select-picture-card) {
     width: 64px;
@@ -257,12 +254,7 @@ const handleOk = (e: MouseEvent) => {
 }
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-actions){
     width: 85%;
-    font-size: 16px !important;
    
-}
-:deep(.ant-upload-list-picture-card .ant-upload-list-item-actions .action-eye svg){
-    // width: 85%;
-   font-size: 1rem !important;
 }
 
 
