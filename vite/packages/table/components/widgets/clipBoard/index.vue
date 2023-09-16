@@ -271,8 +271,8 @@ export default {
 
     .icon-topline{
         position: absolute;
-        top: 10px;
-        left: 18px;
+        top: 16px;
+        left: 20px;
     }
     .icon-topline span{
         width: 20px !important;

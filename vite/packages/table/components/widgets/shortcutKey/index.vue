@@ -1,175 +1,82 @@
 <template>
     <div>
-        <Widget :customData="customData" :customIndex="customIndex"       :menuList="menuList" :options="options" ref="cardSlot" :desk="desk">
+        <Widget :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="cardSlot" :desk="desk">
             <div class="icon">
                 <Icon icon="solar:keyboard-bold" />
             </div>
-            
-            <div v-show="!isFlag" class="topList">
-            <div class="card-app" @click="onChangeCard(1)">
-                <img src="" alt="">
-                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
-                <div class="right-box">
-                    <div class="num">92</div>
-                    <div class="title-key">快捷键</div>
-                </div>
-            </div>
-            <div class="card-app" @click="onChangeCard(2)">
-                <img src="" alt="">
-                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
-                <div class="right-box">
-                    <div class="num">92</div>
-                    <div class="title-key">快捷键</div>
-                </div>
-            </div>
-            <div class="card-app">
-                <img src="" alt="">
-                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
-                <div class="right-box">
-                    <div class="num">92</div>
-                    <div class="title-key">快捷键</div>
-                </div>
-            </div>
-            <div class="card-app">
-                <img src="" alt="">
-                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
-                <div class="right-box">
-                    <div class="num">92</div>
-                    <div class="title-key">快捷键</div>
-                </div>
-            </div>
-            <div class="card-app">
-                <img src="" alt="">
-                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
-                <div class="right-box">
-                    <div class="num">92</div>
-                    <div class="title-key">快捷键</div>
-                </div>
-            </div>
-            <div class="card-app">
-                <img src="" alt="">
-                <div class="title-text">Adobe PSs44d56a4sas4a6das</div>
-                <div class="right-box">
-                    <div class="num">92</div>
-                    <div class="title-key">快捷键</div>
-                </div>
-            </div>
-
-        
-            <div class="button-bom">
-            <!-- shan   @click="this.isFlag = !this.isFlag"  -->
-            <div class="p-firse">
-                <!-- <icon></icon> -->
-                更多快捷键
-            </div>
-            <div class="p-second">
-                <icon></icon>搜索
-            </div>
-        </div>
-
-        
-
-        </div>
-
-        <div class="topList"  v-show="isFlag"  >
-            <!-- shan @click="onBack" -->
-            <div class="p-firse" :class="topBar">
-                <div class="name-img">
-                    <img src="" alt="">
-                    <span>Adobe Lightroom</span>
-                </div>
-                <div class="page-change">
-                    <!-- 换页 -->
-                    <left-outlined @click="onChangePage(go)"/>
-                    <right-outlined @click="onChangePage(after)"/>
-                </div>
-            </div>
-            <!-- 分页 开发中 -->
-            <!-- <div class="key-body">
-                <div class="key-flex">
-                    <div class="key-item">
-                        <div class="key-name">{{ item.name }}</div>
+            <!-- 快捷键列表 更多快捷键 -->
+            <div v-show="showFlag == 'showMore'" class="top-list" >
+                <div style="height: 306px;">
+                    <div class="card-app pointer" v-for="(item,index) in cardList" :key="index">
+                        <img :src="item.imgUrl" alt="">
+                        <div class="title-text">{{ item.title }}</div>
+                        <div class="right-box">
+                            <div class="num">{{ item.num }}</div>
+                            <div class="title-key">快捷键</div>
+                        </div>
                     </div>
                 </div>
-                <div class="key-flex">
-                    <div class="key-item" v-for="(shortcut,index) in item.key">
-                        <span>{{ shortcut.keyc }}</span>
+
+                <div class="button-bom">
+                    <div class="p-firse pointer">
+                        <!-- <icon></icon> -->
+                        更多快捷键
+                    </div>
+                    <div class="p-second pointer">
+                        <icon></icon>搜索
                     </div>
                 </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
+            </div>         
+            <!-- 快捷键详情面板 -->
+            <div class="top-list"  v-show = "showFlag == 'showDetail'"  >
+                <div class="p-firse" :class="topBar">
+                    <div class="name-img">
+                        <img src="" alt="">
+                        <span>Adobe Lightroom</span>
                     </div>
-                    <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
-                </div>
-            </div> -->
-            <div class="key-body">
-                <div class="key-item">
-                    </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <div class="key-name" >常用</div>
+                    <div class="page-change">
+                        <!-- 换页 -->
+                        <left-outlined @click="onChangePage(go)"/>
+                        <right-outlined @click="onChangePage(after)"/>
                     </div>
                 </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
+                <div class="key-body">
+                    <!-- 循环类型 -->
+                    <div class="key-flex" v-for="item in keyList" :key="item.id">
+                        <!-- 标题 -->
+                        <div class="key-item" v-if="item.groupName != ''">
+                            <div class="key-name">{{ item.groupName }}</div>
+                        </div>
+                        <!-- 快捷键 -->
+                        <div class="key-item" v-if="item.keyStr != ''">
+                            <div class="key-item">
+                                <span v-for="(keySpan,index) in item.keys" :key="index">{{ keySpan }}</span>
+                            </div>
+                        </div>
+                        <div class="key-title">{{ item.title }}</div>
                     </div>
-                    <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                    </div>
-                    <div class="key-title">首选项sfasfafdfgsdfsfdfs</div>
-                </div>
-                <div class="key-flex">
-                    <div class="key-item">
-                        <span>Space</span>
-                        <span>H</span>
-                        <span>3</span>
-                    </div>
-                    <div class="key-title">首选项</div>
                 </div>
             </div>
-
-
-
-        </div>
-
-
         </Widget>
     </div>
     <!-- 设置面板 -->
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-        <!-- <div class="primary-title" style="color: var(--primary-text);">选择地区</div>
-        <div class="flex items-center justify-center w-full h-12 my-4 rounded-lg pointer s-list" v-for="(item) in city"
-          :class="defaultCityIndex === item.id ? 'drawer-active' : ''" @click="selectedAreaSuit(item)">
-          21324154165
-        </div> -->
         <p>需要在小组件内显示的数据</p>
-        <RadioTab :navList="dataType" v-model:selectType="defaultType" @click="onChangeList(selectType)"></RadioTab>
-        <div v-if="defaultType.name == 'thisList'">
+        <RadioTab :navList="dataType" v-model:selectType="defaultType" @click="onChangeList(1)" 
+        @change="onChangeList(22)"></RadioTab>
+        <div v-if="defaultType.name == 'showDetail'">
             <p style="margin-top: 14px;">选择快捷键方案</p>
-            <a-select :style="selectStyle" style="width: 100%;"
+            <a-select
                 class="select rounded-lg  text-xs flex items-center" size="large" :bordered="false"
-                v-model:value="selectValue" 
-                @change="onChangeShortcutKey(selectValue)"
-                placeholder="请选择">
-                <a-select-option class="no-drag" v-for="item in sortType" :value="item.value" :key="item">{{item.name}}
-                </a-select-option>
-            </a-select>
+                v-model:selValue="selValue"
+                show-search
+                placeholder="请选择"
+                style="width: 100%"
+                :filter-option="filterOption"
+                @change="handleChange"
+                :options="sortType"
+            ></a-select> 
         </div>
       </vue-custom-scrollbar>
 
@@ -178,7 +85,6 @@
 </template>
   
 <script>
-import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
 import RadioTab from "../../RadioTab.vue"
@@ -193,7 +99,8 @@ export default {
         Icon,
         RadioTab,
         LeftOutlined,
-        RightOutlined
+        RightOutlined,
+        defineComponent
     },
 
     props: {
@@ -217,6 +124,7 @@ export default {
     },
     data() {
         return {
+            selValue:"",
             settingVisible: false,
             selectValue: '请选择',
             // 选择快捷键方案
@@ -228,15 +136,20 @@ export default {
             ],
             // 需要在小组件显示的数据
             dataType: [
-                { title: '最近使用列表', name: 'useList' },
-                { title: '指定快捷键详情', name: 'thisList' }
+                { title: '最近使用列表', name: 'showMore' },
+                { title: '指定快捷键详情', name: 'showDetail' }
             ],
-            defaultType: { title: '最近使用列表', name: 'useList' },
+            defaultType: { title: '最近使用列表', name: 'showMore' },
             options: {
                 className: "card double",
                 title: "快捷键",
             },
-            dataList:[],
+            // 控制面板显示
+            // showMore 查看更多
+            // showDetail 查看详情
+            showFlag: "showMore",
+            // 
+            // dataList:[],
             menuList: [
                 {
                     icon: 'shezhi1',
@@ -247,38 +160,336 @@ export default {
                     }
                 },
             ],
-            
-            isFlag:true,
-            // types:"123",
-            keyList:[
+            // 快捷键测试数据
+            cardList:[
                 {
-                    name:"常用",
-                    key:[
-                        {
-                            keyc:["Space","H","3"],
-                            keyName:"首选项"
-                        },
-                        {
-                            keyc:["Space","H","3"],
-                            keyName:"首选项"
-                        }
-                    ]
+                    title:"Adobe Lighting",
+                    imgUrl:"s",
+                    num:"92"
                 },
                 {
-                    name:"文件",
-                    key:[
-                        {
-                            keyc:["Space","H","3"],
-                            keyName:"首选项"
-                        },
-                        {
-                            keyc:["Space","H","3"],
-                            keyName:"首选项"
-                        }
-                    ]
-                }
+                    title:"Adobe Lighting",
+                    imgUrl:"s",
+                    num:"92"
+                },
+                {
+                    title:"Adobe Lighting",
+                    imgUrl:"s",
+                    num:"92"
+                },
+                {
+                    title:"Adobe Lighting",
+                    imgUrl:"s",
+                    num:"92"
+                },
+                {
+                    title:"Adobe Lighting",
+                    imgUrl:"s",
+                    num:"92"
+                },
+                {
+                    title:"Adobe Lighting",
+                    imgUrl:"s",
+                    num:"92"
+                },
             ],
-            
+
+            // 快捷键测试数据 提交删
+            keyList: [
+              {
+                id: 1,//唯一标识
+                groupName: '常用',
+                isEdit: false
+              },
+              {
+                id: 2,
+                keys: ['Space', 'H', '3'],
+                keyStr: 'Space + H + 3',
+                // 用于区分编辑的键一键二
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 1,
+                    key: 'Space'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 7,
+                    key: 'H'
+                  },
+                  {
+                    field: 'keyList[1]',
+                    index: 2,
+                    key: '3'
+                  }
+                ],
+                title: '首选项',
+                isEdit: false
+              },
+              {
+                id: 3,
+                keys: ['Win', 'A'],
+                keyStr: 'Win + A',
+                keyArr: [
+                  {
+                    field: 'modifierKeyOne',
+                    index: 4,
+                    key: 'Win'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 0,
+                    key: 'A'
+                  }
+                ],
+                title: '清除浏览器数据',
+                isEdit: false
+              },
+              {
+                id: 4,
+                keys: ['Tab', 'X'],
+                keyStr: 'Tab + X',
+                keyArr: [
+                  {
+                    field: 'modifierKeyOne',
+                    index: 3,
+                    key: 'Tab'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 23,
+                    key: 'X'
+                  }
+                ],
+                title: '隐藏 Microsoft Edge',
+                isEdit: false
+              },
+              {
+                id: 5,
+                keys: ['Alt', 'Y', 'L'],
+                keyStr: 'Alt + Y + L',
+                keyArr: [
+                  {
+                    field: 'modifierKeyOne',
+                    index: 6,
+                    key: 'Alt'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 24,
+                    key: 'Y'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 11,
+                    key: 'L'
+                  }
+                ],
+                title: '通过系统对话框打印',
+                isEdit: false
+              },
+              {
+                id: 6,
+                groupName: '文件',
+                isEdit: false
+              },
+              {
+                id: 7,
+                keys: ['Ctrl', 'Q'],
+                keyStr: 'Ctrl + Q',
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 0,
+                    key: 'Ctrl'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 16,
+                    key: 'Q'
+                  }
+                ],
+                title: '打印',
+                isEdit: false
+              },
+              {
+                id: 8,
+                keys: ['Ctrl', 'I', 'K'],
+                keyStr: 'Ctrl + I + K',
+                keyArr: [
+                  {
+                    field: 'modifierKeyOne',
+                    index: 0,
+                    key: 'Ctrl'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 8,
+                    key: 'I'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 10,
+                    key: 'K'
+                  }
+                ],
+                title: '隐藏其他',
+                isEdit: false
+              },
+              {
+                id: 9,
+                keys: ['Tab', 'X', 'W'],
+                keyStr: 'Tab + X + W',
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 3,
+                    key: 'Tab'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 23,
+                    key: 'X'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 22,
+                    key: 'W'
+                  }
+                ],
+                title: '电子邮件链接',
+                isEdit: false
+              },
+              {
+                id: 10,
+                keys: ['Tab', 'Ctrl', 'E'],
+                keyStr: 'Tab + Ctrl + E',
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 3,
+                    key: 'Tab'
+                  },
+                  {
+                    field: 'modifierKeyOne',
+                    index: 0,
+                    key: 'Ctrl'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 4,
+                    key: 'E'
+                  }
+                ],
+                title: '新建 InPrivate 窗口',
+                isEdit: false
+              },
+              {
+                id: 11,
+                keys: ['Fn', 'Ctrl', 'L'],
+                keyStr: 'Fn + Ctrl + L',
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 5,
+                    key: 'Fn'
+                  },
+                  {
+                    field: 'modifierKeyOne',
+                    index: 0,
+                    key: 'Ctrl'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 11,
+                    key: 'L'
+                  }
+                ],
+                title: '关闭标签页',
+                isEdit: false
+              },
+              {
+                id: 12,
+                keys: ['Ctrl', 'V'],
+                keyStr: 'Ctrl + V',
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 0,
+                    key: 'Ctrl'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 21,
+                    key: 'V'
+                  }
+                ],
+                title: '页面另存为',
+                isEdit: false
+              },
+              {
+                id: 13,
+                groupName: '其他',
+                isEdit: false
+              },
+              {
+                id: 14,
+                keys: ['Alt', 'D', 'X'],
+                keyStr: 'Alt + D + X',
+                keyArr: [
+                  {
+                    field: 'modifierKeyOne',
+                    index: 6,
+                    key: 'Alt'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 3,
+                    key: 'D'
+                  },
+                  {
+                    field: 'keyList[0]',
+                    index: 23,
+                    key: 'X'
+                  }
+                ],
+                title: '退出 Microsoft Edge',
+                isEdit: false
+              },
+              {
+                id: 15,
+                keys: ['Ctrl', '.'],
+                keyStr: 'Ctrl + .',
+                keyArr: [
+                  {
+                    field: 'modifierKeyTwo',
+                    index: 0,
+                    key: 'Ctrl'
+                  },
+                  {
+                    field: 'keyList[1]',
+                    index: 16,
+                    key: '.'
+                  }
+                ],
+                title: '退出并保留窗口',
+                isEdit: false
+              },
+            ],
+            selectOptions:[
+                {
+                    value: 'jack',
+                    label: 'Jack',
+                },
+                {
+                    value: 'lucy',
+                    label: 'Lucy',
+                }, 
+                {
+                    value: 'tom',
+                    label: 'Tom',
+                }
+            ]
         };
     },
     async mounted() {
@@ -286,27 +497,20 @@ export default {
     },
     methods:{
 
-        // 切换卡片进入快捷键
-        // shan
-        onChangeCard(){
-            this.isFlag = !this.isFlag
-        },
-        onBack(){
-            this.isFlag = !this.isFlag
-        },
-        // 查看切换的应用
-        onChangeShortcutKey(key){
-            // console.log("xuanzel;e")
-            // console.log(key)
-        },
-        // 切换卡片类型 目前还有点问题 找不到触发事件
-        onChangeList(selectType){
-            // console.log("selectType",selectType)
-            this.isFlag = !this.isFlag
-        },
+        // 换页
         onChangePage(type){
             // type
         },
+
+        handleChange(value){
+            console.log(`selected ${value}`);
+        },
+        filterOption(input, option){
+            return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        },
+
+
+
     }
 };
 </script>
@@ -325,7 +529,7 @@ export default {
         width: 24px;
         height: 24px;
     }
-
+    
     .card-app{
         float: left;
         // border: 1px solid #fff;
@@ -335,8 +539,8 @@ export default {
         background: rgba(0,0,0,0.30);
         border-radius: 12px;
     }
-    .card-app:nth-last-of-type(2n){
-        margin-right: 14px;
+    .card-app:nth-of-type(2n){
+        margin-left: 14px;
     }
     .card-app img{
         width: 56px;
@@ -474,9 +678,9 @@ export default {
     }
 
     .key-body>div{
-        width: 240px;
+        width: 260px;
         height: 32px;
-        margin: 0 16px 18px 20px;
+        margin: 0 16px 18px 0px;
     }
 
     .key-flex{
@@ -492,9 +696,10 @@ export default {
         padding: 5px;
     }
 
-    // .key-item{
-    //     // display: flex;
-    // }
+    .key-item span:nth-of-type(1){
+        margin-left: -10px;
+        // display: flex;
+    }
 
     .key-title{
         text-align: right;
