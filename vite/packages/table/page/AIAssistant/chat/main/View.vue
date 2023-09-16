@@ -27,8 +27,6 @@ const props = defineProps({
   },
 });
 
-
-
 function handleScroll() {
   const content = contentRef.value;
   const scrollHeight = content.scrollHeight;

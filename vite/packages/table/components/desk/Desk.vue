@@ -1,6 +1,5 @@
 <template>
 
-
   <div style="height:100%;width: calc(100% - 20px); " v-if="currentDesk.cards">
     <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
          v-if="currentDesk.cards.length === 0">
@@ -158,7 +157,6 @@
          v-model="currentSettingTab"
          :list="settingsTab"
     ></XtTab>
-
     <template v-if="currentSettingTab==='current'">
       <div class="line-title">基础设置</div>
       <div class="mt-2 line">

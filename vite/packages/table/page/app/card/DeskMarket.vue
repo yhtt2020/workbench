@@ -6,9 +6,7 @@
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
       <template  v-else v-for="(item, index) in displayItems" :key="item.id" >
-
           <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
-            {{ m03025 }}{{ index }}
             <div  class="pointer recommend mb-2" :style="deskItemStyle"
             @click="previewKay(item)">
             <div class=" cover-wrapper" style="">
