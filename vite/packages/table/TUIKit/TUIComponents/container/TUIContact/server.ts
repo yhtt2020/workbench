@@ -1,4 +1,5 @@
 import IComponentServer from '../IComponentServer';
+import { chatStore } from '../../../../store/chat' 
 
 const store: any = {};
 
@@ -177,19 +178,25 @@ export default class TUIContactServer extends IComponentServer {
    * @returns {Promise}
    */
   public async getSystemMessageList() {
-    const options = {
-      conversationID: this.store.systemConversation.conversationID,
-      count: 15,
-    };
-    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
-      try {
-        const imResponse = await this.TUICore.tim.getMessageList(options);
-        this.store.systemMessageList = imResponse.data.messageList;
-        resolve(imResponse);
-      } catch (error) {
-        reject(error);
-      }
-    });
+    // console.log('是否进入::>>',);
+    if(this.store.systemConversation !== undefined){
+      const options = {
+        conversationID: this.store.systemConversation.conversationID,
+        count: 15,
+      };
+      return this.handlePromiseCallback(async (resolve: any, reject: any) => {
+        try {
+          const imResponse = await this.TUICore.tim.getMessageList(options);
+          this.store.systemMessageList = imResponse.data.messageList;
+          resolve(imResponse);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }else{
+      return {}
+    }
+
   }
 
   /**
@@ -200,16 +207,21 @@ export default class TUIContactServer extends IComponentServer {
    * @returns {Promise}
    */
   public async setMessageRead() {
-    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
-      try {
-        const imResponse: any = await this.TUICore.tim.setMessageRead({
-          conversationID: this.store.systemConversation.conversationID,
-        });
-        resolve(imResponse);
-      } catch (error) {
-        reject(error);
-      }
-    });
+    if(this.store.systemConversation !== undefined){
+      return this.handlePromiseCallback(async (resolve: any, reject: any) => {
+        try {
+          const imResponse: any = await this.TUICore.tim.setMessageRead({
+            conversationID: this.store.systemConversation.conversationID,
+          });
+          resolve(imResponse);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }else{
+      return {}
+    }
+  
   }
 
   /**
@@ -501,6 +513,27 @@ export default class TUIContactServer extends IComponentServer {
   }
 
   /**
+   * 获取用户昵称
+   * @param list 用户ID列表
+   * **/
+  public async getUserNick(list:Array<string>){
+    return this.handlePromiseCallback(async(resolve:any,reject:any)=>{
+      try {
+        const imResponse = await this.TUICore.tim.getUserProfile({userIDList:list})
+        if(this.store.systemMessageList !== undefined){
+          this.store.systemMessageList = this.store.systemMessageList.map((item:any)=>{
+            return{
+              ...item,userInfo:imResponse.data
+            }
+          })
+        }
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  /**
    * 赋值
    * Bind
    *
@@ -508,10 +541,28 @@ export default class TUIContactServer extends IComponentServer {
    * @returns {Object} 数据/data
    */
   public async bind(params: any) {
+    const chat:any = chatStore();
     this.currentStore = params;
     await this.getGroupList();
     await this.getConversationList();
     await this.getFriendList();
+
+    
+    if(params.systemMessageList !== undefined){
+      const arr = params.systemMessageList.map((item:any)=>{
+        return item.payload.operatorID
+      })
+      await this.getUserNick(arr)
+    }
+
+    const option = {
+      friendNum:params.friendList.length,
+      groupNum:params.groupList.length,
+      noticeNum:params.systemMessageList === undefined ? 0 : params.systemMessageList.length
+    }
+    chat.updateNum(option)
+
+    
     return this.currentStore;
   }
 }

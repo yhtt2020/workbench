@@ -50,7 +50,15 @@ export const chatStore = defineStore('chatStore',{
     settings:{
       showDouble: false,  // 是否展示社群双列
       enableHide:false, // 隐藏边栏
-    },    
+    },   
+    
+    
+    //通讯录数据存储
+    contactsSet:{
+      groupNum:0,
+      friendNum:0,
+      noticeNum:0,
+    }
 
   }),
 
@@ -245,7 +253,15 @@ export const chatStore = defineStore('chatStore',{
     setFloatVisible(value:any){
       localCache.set('float',value,30*60)
       this.settings.enableHide = localCache.get('float')
-    }
+    },
+
+   
+    updateNum(option:any){
+      this.contactsSet = option
+    },
+
+    
+
 
   },
 

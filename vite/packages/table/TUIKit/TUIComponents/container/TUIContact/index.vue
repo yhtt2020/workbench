@@ -2,290 +2,79 @@
   <transition>
     <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
       <aside class="TUI-contact-left">
-        <div v-for="item in sideList" :class="{'active-bg':sideIndex === item.index}" class="flex pointer items-center"  style="padding: 16px;" @click="select(item.index)">
-         <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
-          <Icon :icon="item.icon" style="color: var(--active-text);"></Icon>
-         </div>
-         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
-          {{ item.title }} ({{ groupList.length }}个)
-         </div>
-         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
-          {{ item.title }} ({{ friendLists.length }}个)
-         </div>
-         <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
-          {{ item.title }} ({{ systemMessageList ? systemMessageList.length : 0 }}个)
-         </div>
-        </div>
+        <div v-for="item in sideList" class="flex pointer items-center"  style="padding: 16px;" 
+        :class="{'active-bg':sideIndex === item.index}" @click="select(item)"
+        >
+          <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
+            <Icon :icon="item.icon" style="color: var(--active-text);"></Icon>
+          </div>
 
-        <!-- <ul class="TUI-contact-column" v-if="!isSearch">
-          <li class="TUI-contact-column-item">
-            <header @click="select('system')">
-              <i class="icon icon-right" :class="[columnName === 'system' && 'icon-down']"></i>
-              <main>
-                <label>{{ $t('TUIContact.群聊通知') }}</label>
-                <span class="num" v-if="systemConversation && systemConversation.unreadCount > 0">{{
-                  systemConversation.unreadCount
-                }}</span>
-              </main>
-            </header>
-            <ul class="TUI-contact-list" v-if="columnName === 'system'">
-              <li class="TUI-contact-list-item selected not-aside">
-                <label>{{ $t('TUIContact.系统通知') }}</label>
-                <span class="num" v-if="systemConversation && systemConversation.unreadCount > 0">{{
-                  systemConversation.unreadCount
-                }}</span>
-              </li>
-            </ul>
-          </li>
-          <li class="TUI-contact-column-item">
-            <header @click="select('group')">
-              <i class="icon icon-right" :class="[columnName === 'group' && 'icon-down']"></i>
-              <main>
-                <label>{{ $t('TUIContact.我的群聊') }}</label>
-              </main>
-            </header>
-            <ul class="TUI-contact-list" v-show="columnName === 'group'">
-              <li
-                class="TUI-contact-list-item"
-                :class="[currentGroup?.groupID === item?.groupID && 'selected']"
-                v-for="(item, index) in groupList"
-                :key="index"
-                @click="handleListItem(item)"
-              >
-                <aside class="left">
-                  <img
-                    class="avatar"
-                    :src="item?.avatar || 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'"
-                    onerror="this.src='https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'"
-                  />
-                </aside>
-                <main class="content">
-                  <ul>
-                    <li class="name">{{ item?.name }}</li>
-                    <li class="ID">
-                      <label>ID：</label>
-                      <span>{{ item?.groupID }}</span>
-                    </li>
-                  </ul>
-                  <span class="type">{{ item?.type }}</span>
-                </main>
-              </li>
-            </ul>
-          </li>
-          <li class="TUI-contact-column-item">
-            <header @click="select('friend')">
-              <i class="icon icon-right" :class="[columnName === 'friend' && 'icon-down']"></i>
-              <main>
-                <label>{{ $t('TUIContact.我的好友') }}</label>
-              </main>
-            </header>
-            <ul class="TUI-contact-list" v-show="columnName === 'friend'">
-              <li
-                class="TUI-contact-list-item"
-                :class="[currentFriend?.userID === item?.userID && 'selected']"
-                v-for="(item, index) in friendList"
-                :key="index"
-                @click="handleListItem(item)"
-              >
-                <aside class="left">
-                  <img
-                    class="avatar"
-                    :src="item?.profile?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                    onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                  />
-                  <div
-                    class="online-status"
-                    :class="
-                      userStatusList.get(item?.userID)?.statusType === 1
-                        ? 'online-status-online'
-                        : 'online-status-offline'
-                    "
-                    v-if="displayOnlineStatus"
-                  ></div>
-                </aside>
-                <main class="content">
-                  <ul>
-                    <li class="name">{{ item?.profile?.nick || item?.userID }}</li>
-                  </ul>
-                </main>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <ul class="TUI-contact-list" v-else>
-          <li
-            v-if="!!searchGroup?.groupID"
-            class="TUI-contact-list-item"
-            :class="[currentGroup?.groupID === searchGroup?.groupID && 'selected']"
-            @click="handleListItem(searchGroup)"
-          >
-            <aside class="left">
-              <img
-                class="avatar"
-                :src="searchGroup?.avatar || 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'"
-                onerror="this.src='https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'"
-              />
-            </aside>
-            <main class="content">
-              <ul>
-                <li class="name">{{ searchGroup?.name }}</li>
-                <li class="ID">
-                  <label>ID：</label>
-                  <span>{{ searchGroup?.groupID }}</span>
-                </li>
-              </ul>
-              <span class="type">{{ searchGroup?.type }}</span>
-            </main>
-          </li>
-        </ul> -->
+          <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
+            {{ item.title }} 
+            ({{ num.groupNum }}个)
+          </div>
+
+          <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
+            {{ item.title }} 
+            ({{ num.friendNum }}个)
+          </div>
+
+          <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
+            {{ item.title }} 
+            ({{ num.noticeNum }}个)
+          </div>
+
+        </div>
       </aside>
+
       <main class="TUI-contact-main">
 
+        <!-- 系统通知 -->
         <div class="TUI-contact-system" v-if="sideIndex === 'system'">
           <header class="TUI-contact-system-header" v-if="!env.isH5">
             <div class="font-16" style="color:var(--primary-text);">{{ $t('TUIContact.群聊通知') }}</div>
           </header>
-          <MessageSystem
-            :isH5="env.isH5"
-            :data="systemMessageList"
-            :types="types"
-            @application="handleGroupApplication"
+          <MessageSystem :isEmpty="isUndefined"  :isH5="env.isH5" 
+           :types="types" :data="systemMessageList"  @application="handleGroupApplication"
           />
         </div>
 
+        <!-- 群聊 -->
         <div v-else-if="sideIndex === 'group' " class="TUI-contact-main-info">
           <Group :list="groupList"></Group>
         </div>
 
+        <!-- 好友 -->
         <div v-else-if="sideIndex === 'friend' " class="TUI-contact-main-info">
           <Friend :list="friendLists"></Friend>
         </div>
-        
-        <!-- <header class="TUI-contact-main-h5-title" v-if="env.isH5">
-          <i class="icon icon-back" @click="back"></i>
-          <h1>{{ currentGroup?.name || $t('TUIContact.系统通知') }}</h1>
-        </header> -->
-
-<!-- 
-        <div v-if="!!currentGroup?.groupID && columnName === 'group' " class="TUI-contact-main-info">
-          <Group :list="groupList"></Group>
-          
-          <header class="TUI-contact-main-info-header">
-            <ul class="list">
-              <h1>{{ currentGroup?.name }}</h1>
-              <li>
-                <label>{{ $t('TUIContact.群ID') }}：</label>
-                <span>{{ currentGroup?.groupID }}</span>
-              </li>
-              <li>
-                <label>{{ $t('TUIContact.群类型') }}：</label>
-                <span>{{ currentGroup?.type }}</span>
-              </li>
-            </ul>
-            <img
-              class="avatar"
-              :src="currentGroup?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/group_avatar.png'"
-              onerror="this.src='https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg'"
-            />
-          </header>
-          <main class="TUI-contact-main-info-main" v-if="isNeedPermission">
-            <label>{{ $t('TUIContact.请填写验证信息') }}</label>
-            <textarea v-model="currentGroup.applyMessage" :disabled="currentGroup.apply"></textarea>
-          </main>
-          <footer class="TUI-contact-main-info-footer">
-            <p v-if="currentGroup.apply && currentGroup.type === 'AVChatRoom'">{{ $t('TUIContact.已加入') }}</p>
-            <p v-else-if="currentGroup.apply">{{ $t('TUIContact.已申请') }}</p>
-            <button class="btn btn-default" v-else-if="isNeedPermission" @click="join(currentGroup)">
-              {{ $t('TUIContact.申请加入') }}
-            </button>
-            <button class="btn btn-default" v-else-if="!currentGroup.selfInfo.userID" @click="join(currentGroup)">
-              {{ $t('TUIContact.加入群聊') }}
-            </button>
-            <button
-              class="btn btn-cancel"
-              v-else-if="
-                currentGroup.selfInfo.userID &&
-                currentGroup.selfInfo.role === 'Owner' &&
-                currentGroup.type !== 'Private'
-              "
-              @click="dismiss(currentGroup)"
-            >
-              {{ $t('TUIContact.解散群聊') }}
-            </button>
-            <button class="btn btn-cancel" v-else @click="quit(currentGroup)">{{ $t('TUIContact.退出群聊') }}</button>
-            <button
-              v-if="currentGroup.selfInfo.userID"
-              class="btn btn-default"
-              @click="enter(currentGroup.groupID, 'GROUP')"
-            >
-              {{ $t('TUIContact.进入群聊') }}
-            </button>
-          </footer>
-        </div> -->
-
-
-        <!-- <div v-else-if="currentFriend?.userID && columnName === 'friend'" class="TUI-contact-main-info">
-          
-          <header class="TUI-contact-main-info-header">
-            <ul class="list">
-              <h1>{{ currentFriend?.profile?.nick || currentFriend?.userID }}</h1>
-              <li>
-                <label>ID：</label>
-                <span>{{ currentFriend?.profile?.userID }}</span>
-              </li>
-              <li>
-                <label>{{ $t('TUIContact.个性签名') }}：</label>
-                <span>{{ currentFriend?.profile?.selfSignature }}</span>
-              </li>
-            </ul>
-            <img
-              class="avatar"
-              :src="
-                currentFriend?.profile?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'
-              "
-              onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-            />
-          </header>
-
-          <footer class="TUI-contact-main-info-footer">
-           <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">
-             {{ $t('TUIContact.发送消息') }}
-           </button>
-            <SendMessageButton :uid="currentFriend.userID"></SendMessageButton>
-          </footer>
-        </div> -->
-
-
-       
-
       </main>
     </div>
   </transition>
 </template>
-<script lang="ts">
-import { computed, defineComponent, reactive, toRefs, watch } from 'vue';
-import MessageSystem from './components/message-system.vue';
+
+<script>
+import { defineComponent, reactive,toRefs,onMounted,watch,computed,nextTick} from 'vue'
+import { appStore } from '../../../../store';
 import { handleErrorPrompts, isArrayEqual } from '../utils';
-import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
+import { chatStore }  from '../../../../store/chat'
+
 import Group from './addressbook/group.vue'
 import Friend from './addressbook/friend.vue';
-import { appStore } from '../../../../store';
+import MessageSystem from './components/message-system.vue';
 
 const TUIContact = defineComponent({
-  name: 'TUIContact',
-  components: {
-    MessageSystem,SendMessageButton,
-    Group,Friend
+  components:{
+    Group,Friend,MessageSystem,
   },
-  props: {
-    displayOnlineStatus: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props: any, ctx: any) {
-    const TUIServer: any = TUIContact.TUIServer;
-    const { t } = TUIServer.TUICore.config.i18n.useI18n();
+
+  props:['displayOnlineStatus'],
+
+  setup (props,ctx) {
+    const TUIServer = TUIContact.TUIServer;
+    const store = appStore()
+    const chat = chatStore()
+
     const data = reactive({
       groupList: [],
       searchGroup: {},
@@ -311,145 +100,73 @@ const TUIContact = defineComponent({
         { title:'好友',icon:'smile',color:'var(--warning)',index:'friend' },
       ],
       sideIndex:'system', // 接收通讯录侧边列表项下标
-    });
+      isUndefined: TUIServer.store.systemConversation === undefined,
+    })
 
-    TUIServer.bind(data);
+    TUIServer.bind(data)
 
-    const store = appStore()
-
-    watch(
-      () => props.displayOnlineStatus,
-      async (newVal: any, oldVal: any) => {
-        if (newVal === oldVal) return;
-        data.displayOnlineStatus = newVal;
-        TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
-      },
-      {
-        immediate: true,
-      }
-    );
-
-    watch(
-      () => data.userIDList,
-      (newVal: Array<string>, oldVal: Array<string>) => {
-        if (isArrayEqual(newVal, oldVal)) return;
-        TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
-      }
-    );
-
-    const isNeedPermission = computed(() => {
-      const isHaveSeif = (data.currentGroup as any).selfInfo.userID;
-      const isPermission =
-        (data.currentGroup as any).joinOption === TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION;
-      return !isHaveSeif && isPermission;
-    });
-
-    const handleListItem = async (item: any) => {
-      switch (data.columnName) {
-        case 'group':
-          data.currentGroup = item;
-          break;
-        case 'friend':
-          data.currentFriend = item;
-          break;
-      }
-      if (data.isSearch) {
-        data.currentGroup = item;
-      }
-    };
-
-    const handleSearchGroup = async (e: any) => {
-      data.currentGroup = null;
-      if (data.searchID.trim()) {
-        try {
-          await TUIServer.searchGroupByID(data.searchID.trim());
-        } catch (error) {
-          const message = t('TUIContact.该群组不存在');
-          handleErrorPrompts(message, data.env);
-        }
-      }
-    };
-
-    const join = async (group: any) => {
-      const options: any = {
-        groupID: group.groupID,
-        applyMessage: group.applyMessage || t('TUIContact.加群'),
-        type: group?.type,
-      };
-      await TUIServer.joinGroup(options);
-      (data.currentGroup as any).apply = true;
-    };
-
-
-
-    const select = async (name: string) => {
-      data.sideIndex = name
-      if(name === 'system'){
+    const select = async(item) =>{
+      data.sideIndex = item.index
+      if(item.name === 'system'){
         await TUIServer.getSystemMessageList();
         await TUIServer.setMessageRead();
-      }else if(name === 'group'){
-        (data.currentGroup as any) = data.groupList[0];
-      }else if(name === 'friend'){
+      }else if(item.name === 'group'){
+        (data.currentGroup) = data.groupList[0];
+      }else if(item.name === 'friend'){
         const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
-        (data.currentGroup as any) = index
+        (data.currentGroup) = index
       }
+    }
 
-      // if (data.columnName !== 'system' && name === 'system' && (data.systemConversation as any)?.conversationID) {
-        // await TUIServer.getSystemMessageList();
-        // await TUIServer.setMessageRead();
-      // }
-      // // (data.currentGroup as any) = {};
-      // if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
-      //   (data.currentGroup as any) = data.groupList[0];
-      // } else {
-      //   (data.currentGroup as any) = data.friendList[0];
-      // }
-      // data.searchID = '';
-      // data.columnName = data.columnName === name ? '' : name;
-    };
 
-    const toggleSearch = () => {
-      data.isSearch = !data.isSearch;
-      data.columnName = '';
-      data.searchID = '';
-      data.searchGroup = {};
-      (data.currentGroup as any) = {};
-    };
+    watch(()=>data.userIDList, (newVal, oldVal)=>{
+      if (isArrayEqual(newVal, oldVal)) return;
+      TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
+    })
 
-    const handleGroupApplication = (params: any) => {
-      TUIServer.handleGroupApplication(params);
-    };
-    const back = () => {
-      (data.currentGroup as any) = {};
-      (data.currentFriend as any) = {};
-      data.columnName = '';
-    };
 
-    const getUserStatusList = (userList: Array<string>) => {
-      TUIServer.TUICore.getUserStatusList(userList);
-    };
+    watch(()=>props.displayOnlineStatus,async(newVal,oldVal)=>{
+      if (newVal === oldVal) return;
+      data.displayOnlineStatus = newVal;
+      TUIServer.handleUserStatus(data.displayOnlineStatus, data.userIDList);
+    },{immediate: true,})
 
+    const isNeedPermission = computed(()=>{
+      const isHaveSeif = (data.currentGroup).selfInfo.userID;
+      const isPermission =   (data.currentGroup).joinOption === TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION;
+      return !isHaveSeif && isPermission;
+    })
 
     const friendLists = computed(() =>{
       const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
       return index
     })
 
+    const num = computed(()=>{
+      return chat.$state.contactsSet
+    })
+
+    const handleGroupApplication = (params) => {
+      TUIServer.handleGroupApplication(params);
+    }
+
+    
+
+    onMounted( async ()=>{
+      // 解决通讯录对接初始化
+      if(data.sideIndex === 'system'){
+        await TUIServer.getSystemMessageList();
+        await TUIServer.setMessageRead();
+      }
+    })
+
     return {
-      ...toRefs(data),
-      handleListItem,
-      handleSearchGroup,
-      join,
-      isNeedPermission,friendLists,
-      select,
-      handleGroupApplication,
-      toggleSearch,
-      back,
-      getUserStatusList,
-    };
-  },
-});
-export default TUIContact;
+      isNeedPermission,friendLists,num,
+      ...toRefs(data),select,handleGroupApplication
+    }
+  }
+})
+export default TUIContact
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
@@ -467,5 +184,4 @@ export default TUIContact;
 :deep(.TUI-contact-main-info){
   padding:0  16px !important;
 }
-
 </style>
