@@ -1,6 +1,6 @@
 
 <template>
-    <a-modal v-model:visible="props.showPublishModal" title="写动态" class="w-full rounded-lg publish" @ok="handleOk"
+    <a-modal v-model:visible="props.showPublishModal" title="写动态" class="w-full rounded-lg publish" @ok="handleOk" bodyStyle="font-size=16px !important;"
         @cancel="handleOk">
         <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] -mt-2 mb-2">
             分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="https://s.apps.vip/">元社区</a>
@@ -234,7 +234,10 @@ const handleOk = (e: MouseEvent) => {
     line-height: 20px;
     font-weight: 400;
 }
-
+:deep(#vcDialogTitle0){
+    text-align: center !important;
+    // color: red;
+}
 :deep(.ant-upload.ant-upload-select-picture-card) {
     width: 64px;
     height: 64px;
@@ -254,6 +257,7 @@ const handleOk = (e: MouseEvent) => {
 }
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-actions){
     width: 85%;
+    font-size: 16px !important;
    
 }
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-actions .action-eye svg){

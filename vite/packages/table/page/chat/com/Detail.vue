@@ -2,10 +2,21 @@
     <!-- {{ isShow.isShow }} -->
     <div class="w-full card" style="height:auto">
         <!-- {{ isShow.isShow }} -->
+       
         <div class="w-full card-content">
+            <div class="flex justify-between">
+            <span class="xt-text-2">详情</span>
+            <div class="flex items-center">
+                <iconify-icon class="font-14" icon="fluent:more-horizontal-16-filled"></iconify-icon>
+                <iconify-icon class="font-14" icon="akar-icons:arrow-clockwise"></iconify-icon>
+                <iconify-icon class="font-14" icon="majesticons:open"></iconify-icon>
+                <iconify-icon class="font-14" icon="akar-icons:cross"></iconify-icon>
+                <Icon icon="fluent:more-horizontal-16-filled" />
+            </div>
+        </div>
             <div class="card-top">
                 <div class="top-left">
-                    <a-avatar :src="cardData.user.avatar" :size="32" class="pointer" @click.stop="showCard(uid,userInfo)">
+                    <a-avatar :src="cardData.user.avatar" :size="32" class="pointer" @click.stop="showCard(uid, userInfo)">
                         <template #icon>
                             <UserOutlined />
                         </template>
@@ -31,21 +42,24 @@
             <div>
                 <div>
                     <div class="flex flex-col items-center " v-if="cardData.data?.video">
-                        <video class="object-cover mb-2 rounded-md cover-lm" >
+                        <video class="object-cover mb-2 rounded-md cover-lm">
                             <source :src="cardData.data.video" type="video/mp4" />
                             <source :src="cardData.data.video" type="video/webm" />
                         </video>
                     </div>
                     <template v-if="cardData.image">
                         <ul class="flex flex-col items-center p-0 mb-0">
-                            <img :src="item.image" v-for="(item,index) in cardData.image_170_170" class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
+                            <img :src="item.image" v-for="(item, index) in cardData.image_170_170"
+                                class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
                         </ul>
                     </template>
                     <!-- 正文元素 -->
                     <div class="mt-1">
                         <div>
-                            <div id="title" style="color: var(--primary-text); " v-if="cardData.title" :innerHTML="title"></div>
-                            <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;" :innerHTML="content"></div>
+                            <div id="title" style="color: var(--primary-text); " v-if="cardData.title" :innerHTML="title">
+                            </div>
+                            <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;"
+                                :innerHTML="content"></div>
                         </div>
 
                     </div>
@@ -59,45 +73,48 @@
             </div>
             <!-- 分隔线 -->
             <!-- <div class="w-full h-[2px] mt-4 xt-bg-2"></div> -->
-            <a-divider   class="w-full h-[2px] mt-4 xt-bg-2" />
+            <a-divider class="w-full h-[2px] mt-4 xt-bg-2" />
             <div class="flex mt-4 mb-4 ">
-            <!-- :icon="h(SearchOutlined)" -->
-            <!-- {{ isLike }} -->
-            <div class="flex items-center "  style="cursor: pointer;" @click="clickLike">
-                <button class="mr-3 reply w-[57px] h-[32px]  pl-5 " :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                    style="position: relative;border: none;cursor: pointer;" >{{ cardData.support_count }}</button>
-                <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
-                    style="position: absolute;left:34px;">
-            </div>
-            <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
-                <button class="reply w-[57px] h-[32px]  pl-5" :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" 
-                    style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count }}</button>
-                <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
-                    style="position: absolute;left:102px;">
-            </div>
+                <!-- :icon="h(SearchOutlined)" -->
+                <!-- {{ isLike }} -->
+                <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
+                    <button class="mr-3 reply w-[57px] h-[32px]  pl-5 "
+                        :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
+                        style="position: relative;border: none;cursor: pointer;">{{ cardData.support_count }}</button>
+                    <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
+                        style="position: absolute;left:34px;">
+                </div>
+                <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
+                    <button class="reply w-[57px] h-[32px]  pl-5"
+                        :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
+                        style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count }}</button>
+                    <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
+                        style="position: absolute;left:102px;">
+                </div>
 
-        </div>
-            <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid"/>
+            </div>
+            <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
 import { useCommunityStore } from '../commun'
-import {appStore} from '../../../../table/store'
-const useUserStore=appStore()
-let uid=props.cardData.user.uid
-let userInfo={
-    uid:uid,
-    nickname:props.cardData.user.nickname,
-    avatar:props.cardData.user.avatar_128
+import { appStore } from '../../../../table/store'
+// import { Icon } from '@iconify/vue';
+const useUserStore = appStore()
+let uid = props.cardData.user.uid
+let userInfo = {
+    uid: uid,
+    nickname: props.cardData.user.nickname,
+    avatar: props.cardData.user.avatar_128
 }
 // 弹出用户个人卡片
-const showCard=(uid,userInfo)=>{
-    useUserStore.showUserCard(uid,userInfo)
+const showCard = (uid, userInfo) => {
+    useUserStore.showUserCard(uid, userInfo)
 }
 const store = useCommunityStore();
 // 点赞
@@ -108,7 +125,7 @@ const clickLike = () => {
 }
 const isCollect = ref(false)
 // 
-const clickCollect  = () => {
+const clickCollect = () => {
     isCollect.value = !isCollect.value
 }
 const props = defineProps({
@@ -118,19 +135,19 @@ const props = defineProps({
         default: () => []
     }
 })
-const createTime=computed(()=>{
-    let [date, time]=props.cardData.create_time.split(' ')
-    return [date,time]
+const createTime = computed(() => {
+    let [date, time] = props.cardData.create_time.split(' ')
+    return [date, time]
 })
 // const tid=store.communityPostDetail.pay_set.tid 
 let tid
 // console.log(store.communityPostDetail);
 // 当tid不存在时，处理
-if(store.communityPostDetail.pay_set ){
-    tid=store.communityPostDetail.pay_set.tid 
-}else{
+if (store.communityPostDetail.pay_set) {
+    tid = store.communityPostDetail.pay_set.tid
+} else {
     // 
-    tid=1234
+    tid = 1234
 }
 
 const fluentEmojis = reactive({
@@ -298,8 +315,9 @@ const title = computed(() => {
 
         }
     }
+
     .reply {
-    border-radius: 8px;
+        border-radius: 8px;
     }
 
     #title {
@@ -321,22 +339,23 @@ const title = computed(() => {
         white-space: pre-wrap;
         word-wrap: break-word;
     }
+
     .card-bottom {
-            margin-top: 12px;
+        margin-top: 12px;
 
-            .view::after {
-                content: '·';
-                margin-left: 5px;
-                margin-right: 5px;
+        .view::after {
+            content: '·';
+            margin-left: 5px;
+            margin-right: 5px;
 
-            }
-
-            .like::after {
-                content: '·';
-                margin-left: 5px;
-                margin-right: 5px;
-            }
         }
+
+        .like::after {
+            content: '·';
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
 
 }
 </style>

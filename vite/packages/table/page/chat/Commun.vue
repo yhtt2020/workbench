@@ -2,10 +2,9 @@
   <div @resize="updateScroller" class="container flex flex-col xt-text">
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
-        <!-- style="color: var(--primary-text);" -->
-        <!-- {{ store.communityInfo }} -->
-        <!-- {{ store.communityPost.list }} -->
-        <!-- {{ comCards.list[1] }} -->
+        <div class="w-[76px] h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2" style="line-height: 40px;">
+          <span class="mr-1">ID:</span>{{ 123 }}
+        </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
             class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
@@ -33,18 +32,11 @@
       <div class="right shrink">
         <a-button type="primary" :icon="h(PlusCircleTwoTone)" style="color: var(--primary-text);" @click="visibleModal">
           发布</a-button>
+        
       </div>
-      <!-- 发布模态框 -->
-      <!-- <a-modal v-if="showPublishModal" title="Basic Modal" @ok="handleOk">
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </a-modal> -->
       <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" />
 
     </div>
-
-    <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
     <div class="flex justify-center flex-1 " style="height: 0">
       <!-- 左侧卡片区域 -->
       <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
