@@ -7,7 +7,7 @@
   >
     <!-- 快速搜索 底部 用户栏 -->
     <div
-      v-if="isMain && (!simple || settings.enableChat)"
+      v-if=" (!simple || settings.enableChat)"
       class="common-panel user s-bg flex flex-row"
       style="
         vertical-align: top;

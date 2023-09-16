@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMain" class="top-panel drag w-full flex items-center justify-between" style="width: calc(100%);">
+  <div  class="top-panel drag w-full flex items-center justify-between" style="width: calc(100%);">
 
     <div @contextmenu.stop="toggleAppStats" class="flex items-center no-drag flex-row">
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">

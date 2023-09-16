@@ -65,7 +65,7 @@
               </div>
             </a-col>
 
-            <a-col v-if="isMain() " :span="12">
+            <a-col  :span="12">
               <div class="btn relative">
                 社群沟通<br />
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -79,7 +79,7 @@
                 ></a-switch>
               </div>
             </a-col>
-            <a-col v-if="isMain()" :span="12">
+            <a-col :span="12">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br />
                 <a-switch
@@ -382,7 +382,7 @@ export default {
     tipSimple() {
       Modal.info({
         content:
-          "使用极简模式后，将隐藏一些娱乐、社交类的功能，例如小队功能、聊天功能。",
+          "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如小队功能。",
         centered: true,
       });
     },

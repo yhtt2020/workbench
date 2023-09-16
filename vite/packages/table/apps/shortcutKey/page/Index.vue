@@ -2,31 +2,19 @@
 import {defineComponent} from 'vue'
 import XtButton from "../../../ui/libs/Button/index.vue";
 import {SettingFilled} from "@ant-design/icons-vue";
-import {mapWritableState} from "pinia";
+import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import {appStore} from "../../../store";
-const winappIcon='/icons/winapp.png'
+
+const winappIcon = '/icons/winapp.png'
 import '../static/style.scss'
+
 const appMap = [
-  {
-    exeName: '',
-    alias: '未知应用',
-    icon: winappIcon,
-    company: '',
-    id: 'unknown'
-  },
   {
     exeName: 'electron.exe',
     alias: 'Electron调试程序',
     company: '想天软件',
     icon: winappIcon,
-    id: 'qq.exe'
-  },
-  {
-    exeName: '想天工作台.exe',
-    alias: '想天工作台',
-    company: '想天软件',
-    icon: 'https://files.getquicker.net/_icons/C6BA2B955AED4FCBD1A380D29935A284925DDB3D.png',
     id: 'qq.exe'
   },
   {
@@ -64,18 +52,11 @@ const appMap = [
     icon: 'https://files.getquicker.net/_icons/8CA38E5B25AEF1F7B980CCC72CE0D063FC0254A8.png',
     id: 'webstorm'
   },
-  {
-    exeName: 'Docker Desktop.exe',
-    alias: 'Docker桌面版',
-    icon: 'docker',
-    company: '',
-    id: 'dockerDesktop'
-  },
 
 ]
 
 const win32 = window.$models.win32
-export default defineComponent({
+export default {
   name: "Index",
   components: {SettingFilled, XtButton},
   data() {
@@ -98,8 +79,8 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['sessionList', 'executedApps','currentApp','settings']),
-    ...mapWritableState(appStore,['fullScreen']),
+    ...mapWritableState(keyStore, ['sessionList', 'executedApps', 'currentApp', 'settings']),
+    ...mapWritableState(appStore, ['fullScreen']),
     leftMenu() {
       const startMenu = [
         {
@@ -124,7 +105,7 @@ export default defineComponent({
       ]
       const endMenu = [
         {
-          full:true,
+          full: true,
         },
         {
           flag: true,
@@ -142,7 +123,9 @@ export default defineComponent({
           id: 'setting',
           icon: "setting",
           callBack: () => {
-            this.setVisible = true;
+            this.$router.push({
+              name: 'shortcutKeySettings'
+            })
           },
         },
       ]
@@ -151,13 +134,13 @@ export default defineComponent({
           img: app.software.icon,
           title: app.software.alias,
           id: app.exeName,
-          noBg:true,
+          noBg: true,
           callBack: () => {
             this.currentApp = app
             this.$router.push({
-              name:'schemeList',
-              params:{
-                exeName:app.exeName
+              name: 'schemeList',
+              params: {
+                exeName: app.exeName
               }
             })
           }
@@ -186,9 +169,9 @@ export default defineComponent({
       }
       let path = win32.getProcessidFilePath(pid)
       let exeName = require('path').basename(path)
-      let software = this.getRepApp(exeName)
-      if(software.id==='unknown'){
-        software.alias=exeName
+      let software = await this.getRepApp(exeName, path)
+      if (software.id === 'unknown') {
+        software.alias = exeName
       }
       let currentApp = {
         pid: pid,
@@ -203,13 +186,13 @@ export default defineComponent({
       this.currentApp = currentApp
 
     })
-    console.log(this.currentApp,'dd')
-    this.currentIndex=this.currentApp.exeName
+    this.currentIndex = this.currentApp.exeName
   }, unmounted() {
     this.watchDog.quit()
   },
   methods: {
-    getRepApp(exeName) {
+    ...mapActions(keyStore, ['getCustomApp']),
+    async getRepApp(exeName, filePath) {
       let found = appMap.find(app => {
         if (typeof app.exeName == 'string') {
           return app.exeName === exeName
@@ -217,19 +200,22 @@ export default defineComponent({
           return app.exeName.includes(exeName)
         }
       })
+
+      console.log('找到',found)
       if (!found) {
-        return appMap[0]
-      } else {
+        console.log('接下来要请求')
+        return await this.getCustomApp(exeName, filePath)
+      }else{
         return found
       }
     }
   }
-})
+}
 </script>
 
 <template>
   <div :class="{'rounded-lg':!fullScreen}"
-    class="flex h-full w-full   py-2" style="">
+       class="flex h-full w-full   py-2" style="">
     <div class="w-full">
       <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="3" class="w-full">
         <!--  -->
@@ -237,42 +223,46 @@ export default defineComponent({
           <setting-filled/>
         </template>
         <div class=" xt-text h-full rounded-lg flex-1 flex flex-col">
-        <div class="h-full" style="flex:1;height:0" v-if="currentApp">
+          <div class="h-full" style="flex:1;height:0" v-if="currentApp">
 
 
-          <!--          <div   class="mb-2 s-bg rounded-md p-2" v-for="app in executedApps ">-->
-          <!--            {{ app.exeName }} - {{ app.pid }} - {{ app.title }}-->
+            <!--          <div   class="mb-2 s-bg rounded-md p-2" v-for="app in executedApps ">-->
+            <!--            {{ app.exeName }} - {{ app.pid }} - {{ app.title }}-->
 
-          <!--            <div class="xt-text-2">-->
-          <!--              {{ app.path }}-->
-          <!--            </div>-->
-          <!--            <div>{{ app.lastFocus }}</div>-->
-          <!--            <div class="xt-bg-2 p-2 rounded-md my-1" v-if="app.inRep">-->
-          <!--              <a-avatar shape="square" :src="app.software.icon"></a-avatar>-->
-          <!--              {{app.software.alias}}-->
+            <!--            <div class="xt-text-2">-->
+            <!--              {{ app.path }}-->
+            <!--            </div>-->
+            <!--            <div>{{ app.lastFocus }}</div>-->
+            <!--            <div class="xt-bg-2 p-2 rounded-md my-1" v-if="app.inRep">-->
+            <!--              <a-avatar shape="square" :src="app.software.icon"></a-avatar>-->
+            <!--              {{app.software.alias}}-->
 
-          <!--            </div>-->
-          <!--            <div v-else>-->
-          <!--              此应用未入库，只有入库的应用才可以使用快捷键方案-->
-          <!--              <xt-button type="theme">登记入库</xt-button>-->
-          <!--            </div>-->
-          <!--          </div>-->
+            <!--            </div>-->
+            <!--            <div v-else>-->
+            <!--              此应用未入库，只有入库的应用才可以使用快捷键方案-->
+            <!--              <xt-button type="theme">登记入库</xt-button>-->
+            <!--            </div>-->
+            <!--          </div>-->
 
-          <keep-alive>
+            <keep-alive >
+              <RouterView></RouterView>
+            </keep-alive>
+
+          </div>
+          <div class="h-full" style="flex:1;height:0" v-else>
             <RouterView></RouterView>
-          </keep-alive>
-
-        </div>
-        <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
-          <strong>常用快捷功能开关：</strong>
-          <a-switch v-model:checked="settings.enableAutoChange"> </a-switch> 自动切换方案
-          &nbsp;&nbsp;
-          <a-switch  v-model:checked="settings.enableAutoEnter"> </a-switch> 自动进入
-        </div>
+          </div>
+          <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
+            <strong>常用快捷功能开关：</strong>
+            <a-switch v-model:checked="settings.enableAutoChange"></a-switch>
+            自动切换方案
+            &nbsp;&nbsp;
+            <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
+            自动进入
+          </div>
         </div>
       </xt-left-menu>
     </div>
-
 
 
   </div>
