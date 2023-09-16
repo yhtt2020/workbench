@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
+import {nanoid} from "nanoid";
 
 let keyData = [
   {
@@ -529,7 +530,9 @@ export const keyStore = defineStore("key", {
     currentApp: {
       software: {}
     },//当前应用
-    executedApps:[],//运行过的应用
+    executedApps: [],//运行过的应用
+
+    customApps: [],//自定义应用，就是那些我们没定义的应用
     sessionList: [],//会话列表
     //快捷键方案列表
     // shortcutKeyList: [...keyData.concat()],
@@ -3337,10 +3340,10 @@ export const keyStore = defineStore("key", {
         children: []
       },
     ],
-    schemeList:[],
-    settings:{
-      enableAutoChange:true,
-      enableAutoEnter:true,
+    schemeList: [],
+    settings: {
+      enableAutoChange: true,
+      enableAutoEnter: true,
     }
   }),
   actions: {
@@ -3353,15 +3356,15 @@ export const keyStore = defineStore("key", {
           $regex: new RegExp(`^${dbKey}`)
         },
       }
-      if(exeName){
-        map.exeName=exeName
+      if (exeName) {
+        map.exeName = exeName
       }
       await tsbApi.db.createIndex({
         index: {
           fields: ['exeName']
         }
       })
-     let rs = (await tsbApi.db.find({
+      let rs = (await tsbApi.db.find({
         selector: map,
         sort: [
           {
@@ -3370,7 +3373,7 @@ export const keyStore = defineStore("key", {
         ]
       })).docs
 
-      let schemes=rs
+      let schemes = rs
       // if(this.schemeList.length===0){
       //  //  for (const scheme of keyData) {
       //  //    let rs=await tsbApi.db.put({
@@ -3401,7 +3404,7 @@ export const keyStore = defineStore("key", {
         }
       })
     },
-    async saveScheme(scheme){
+    async saveScheme(scheme) {
       let rs = await tsbApi.db.put({
         ...scheme
       })
@@ -3409,13 +3412,13 @@ export const keyStore = defineStore("key", {
         return rs.doc
       }
     },
-    async addScheme(scheme,exeName) {
+    async addScheme(scheme, exeName) {
       let rs = await tsbApi.db.put({
         _id: 'shortcut:scheme:' + Date.now(),
         ...scheme,
-        exeName:exeName
+        exeName: exeName
       })
-      console.log(rs.doc,'文档')
+      console.log(rs.doc, '文档')
       if (rs.ok) {
         return rs.doc
       }
@@ -3459,6 +3462,29 @@ export const keyStore = defineStore("key", {
       })
     },
 
+    /**
+     * 获取应用，如果不存在，则根据filePath自动拉取icon，并创建新的应用信息
+     * @param exeName
+     * @param filePath
+     */ async getCustomApp(exeName, filePath) {
+      let found = this.customApps.find(item => {
+        return item.exeName === exeName
+      })
+      if (found) {
+        return found
+      } else {
+        let icon = await tsbApi.system.extractFileIcon(filePath)
+        let newApp = {
+          exeName: exeName,
+          alias: exeName,
+          icon: icon || '/icons/winapp.png',
+          company: '',
+          id: nanoid(8)
+        }
+        this.customApps.push(newApp)
+        return newApp
+      }
+    }
   },
   persist: {
     enabled: true,
@@ -3466,7 +3492,7 @@ export const keyStore = defineStore("key", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList','executedApps','currentApp'],
+        paths: ['customApps', 'shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList', 'executedApps', 'currentApp'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },
