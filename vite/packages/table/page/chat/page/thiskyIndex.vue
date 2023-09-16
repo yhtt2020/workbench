@@ -74,9 +74,6 @@
         </div>
       </vue-custom-scrollbar>
     </a-col>
-    <a-col flex=" 1 1 200px" class="flex flex-col h-full">
-      <div class="px-4 mb-0 line-title">
-        <span style="vertical-align: text-top"><template v-if="currentChannel.type === 'group'">
 
     <a-col flex=" 1 1 200px" class="flex flex-col h-full">
       <div class="px-4 mb-0 line-title">
