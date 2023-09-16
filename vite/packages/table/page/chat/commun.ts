@@ -52,13 +52,13 @@ export const useCommunityStore = defineStore('community',{
 
         },
         // 获取查询板块下的所有帖子
-        async getCommunityPost(id,type,order=''){
+        async getCommunityPost(id,page=1,type,order=''){
             if(localCache.get(`communityPost_${id}-${type}`)){
                 this.communityPost=localCache.get(`communityPost_${id}-${type}`)
             }
             let res=await post(threadList,{
                 fid:id,
-                page:1,
+                page:page,
                 row:10,
                 type:type,
                 classId:67,
@@ -68,7 +68,7 @@ export const useCommunityStore = defineStore('community',{
             //   console.log(res.data,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost);
-                localCache.set(`communityPost_${id}-${type}`,this.communityPost,60*60*12)
+                localCache.set(`communityPost_${id}-${page}-${type}`,this.communityPost,60*60*12)
             }
 
         },

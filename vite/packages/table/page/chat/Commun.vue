@@ -57,6 +57,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
+          <a-pagination v-model:current="current" :total="100" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -84,10 +85,9 @@ import { Icon } from '@iconify/vue'
 import browser from '../../js/common/browser';
 // import {} from 'pinia'
 // import communityStore  from './community';
+const current=ref(1)
 // 更新帖子列表
 const refreshFlag=ref(false)
-// 更新详情页
-const refreshDetailFlag=ref(false)
 const store = useCommunityStore();
 const props = defineProps({
   forumId: {
@@ -122,7 +122,7 @@ const handleMenuItemClick = (index) => {
 }
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(props.forumId, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  store.getCommunityPost(props.forumId,current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
 }
 const goYuan = () => {
   browser.openInUserSelect('https://s.apps.vip/')
@@ -130,11 +130,16 @@ const goYuan = () => {
 const refreshPost =  () => {
   refreshFlag.value = true
   setTimeout(async () => {
-    await store.getCommunityPost(props.forumId, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+    await store.getCommunityPost(props.forumId,current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
     refreshFlag.value = false
   });
   
 }
+const changePage = (page) => {
+  current.value = page
+  store.getCommunityPost(props.forumId,current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+}
+
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
 const settingsScroller = reactive({
@@ -184,12 +189,6 @@ const showDetail = async (index) => {
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
-
-  // console.log(store.communityPostDetail.pay_set);
-
-
-
-  // store.getCommunityPostDetail()
 }
 const detailText = computed(() => {
   if (store.communityPostDetail.pay_set === undefined) {
