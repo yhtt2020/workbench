@@ -4,7 +4,7 @@ import {get} from "../../js/axios/request";
 
 export const chatAdminStore = defineStore('chatAdminStore', {
   state: () => ({
-    stats:{}
+    stats:{},
   }),
   actions: {
     /**
@@ -19,7 +19,7 @@ export const chatAdminStore = defineStore('chatAdminStore', {
       }else{
         this.stats={}
       }
-    }
+    },
   }
 
 })

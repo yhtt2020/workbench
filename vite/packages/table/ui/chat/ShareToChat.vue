@@ -115,8 +115,7 @@ export default defineComponent({
 
     // 获取会话列表
     const getForwardList = async () => {
-      const resList = await (window).$chat.getConversationList()
-      const list = resList.data.conversationList
+      const list = window.$TUIKit.TUIServer.TUIConversation.store.conversationList
       const sortList = list.sort((a, b) => {
         return b.lastMessage.lastTime - a.lastMessage.lastTime
       })

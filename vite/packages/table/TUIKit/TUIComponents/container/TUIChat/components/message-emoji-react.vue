@@ -3,7 +3,7 @@
     <div class="face-list collapse">
       <ul class="face-list-collapse">
         <li
-          class="face-list-item"
+          class="face-list-item "
           v-for="(childrenItem, childrenIndex) in emojiCollapseList"
           :key="childrenIndex"
           @click.stop="select(childrenItem)"
@@ -202,6 +202,7 @@ export default defineComponent({
     overflow: hidden;
     flex-wrap: nowrap;
     flex-direction: row;
+    cursor: pointer;
     &-collapse {
       display: flex;
       overflow: hidden;

@@ -1,10 +1,11 @@
-const Watch=require('./apiHander/watch')
+const Watch = require('./apiHander/watch')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
-const { ipcMain: ipc } = require('electron')
+const { ipcMain: ipc, app } = require('electron')
 const captureHelper = require('./captureHelper')
-
+const SystemHelper=require('./libs/systemHelper')
+console.log(SystemHelper,'系统帮助')
 const apiList = {
 
   window: [
@@ -15,18 +16,18 @@ const apiList = {
 class ApiHandler {
   apiInstance = []
   static onUrlChanged = []
-  static downloadingItems=[]
-  static downloadWebContents=[]
-  static downloadSession=[]
+  static downloadingItems = []
+  static downloadWebContents = []
+  static downloadSession = []
 
-  static handlers=[]
+  static handlers = []
 
   constructor () {
   }
 
   static bindIPC () {
     ApiHandler.handlers.push(new Watch())
-    ApiHandler.handlers.forEach(handler=>{
+    ApiHandler.handlers.forEach(handler => {
       handler.bindIPC()
     })
     ipc.on('changeUrl', (e, a) => {
@@ -50,45 +51,46 @@ class ApiHandler {
       }
     })
 
-    ApiHandler.on('settings','get',(event,args,instance)=>{
-      event.returnValue=settings.get(args.key)
+    ApiHandler.on('settings', 'get', (event, args, instance) => {
+      event.returnValue = settings.get(args.key)
     })
-    ApiHandler.on('settings','set',(event,args,instance)=>{
-      console.log('set ',args.key,args.value)
-      event.returnValue=settings.set(args.key,args.value)
+    ApiHandler.on('settings', 'set', (event, args, instance) => {
+      console.log('set ', args.key, args.value)
+      event.returnValue = settings.set(args.key, args.value)
     })
 
-    ApiHandler.on('settings','setAutoRun',(event,args)=>{
-      event.returnValue=settings.set('autoRun',args)
+    ApiHandler.on('settings', 'setAutoRun', (event, args) => {
+      event.returnValue = settings.set('autoRun', args)
       require('electron').app.setLoginItemSettings({
-        openAtLogin:args,
-        path:process.execPath,
-        args:[]
+        openAtLogin: args,
+        path: process.execPath,
+        args: []
       })
     })
 
-    ApiHandler.on('dialog','showOpenDialog',(event,args,instance)=>{
+    ApiHandler.on('dialog', 'showOpenDialog', (event, args, instance) => {
       console.log(args)
-      event.returnValue =  require('electron').dialog.showOpenDialogSync(instance.window||instance.view,args)
+      event.returnValue = require('electron').dialog.showOpenDialogSync(instance.window || instance.view, args)
     })
-    ApiHandler.on('dialog','showSaveDialog',(event,args,instance)=>{
-      event.returnValue =  require('electron').dialog.showSaveDialogSync(instance.window||instance.view,args)
+    ApiHandler.on('dialog', 'showSaveDialog', (event, args, instance) => {
+      event.returnValue = require('electron').dialog.showSaveDialogSync(instance.window || instance.view, args)
     })
-    ApiHandler.on('dialog','showMessageBox',(event,args,instance)=>{
-      event.returnValue =  require('electron').dialog.showMessageBoxSync(instance.window||instance.view,args)
+    ApiHandler.on('dialog', 'showMessageBox', (event, args, instance) => {
+      event.returnValue = require('electron').dialog.showMessageBoxSync(instance.window || instance.view, args)
     })
-    ApiHandler.on('dialog','showErrorBox',(event,args,instance)=>{
-      require('electron').dialog.showErrorBox(instance.window||instance.view,args)
-      event.returnValue =true
+    ApiHandler.on('dialog', 'showErrorBox', (event, args, instance) => {
+      require('electron').dialog.showErrorBox(instance.window || instance.view, args)
+      event.returnValue = true
     })
 
-    ApiHandler.on('download','start',(event,args,instance)=>{
+    ApiHandler.on('download', 'start', (event, args, instance) => {
       //启动一个下载
-      let ins=instance.window||instance.view
-      let webContents=ins.webContents
-        args.webContentsId=webContents.id
+      let ins = instance.window || instance.view
+      let webContents = ins.webContents
+      args.webContentsId = webContents.id
 
-        ApiHandler.downloadingItems.push(args)
+      ApiHandler.downloadingItems.push(args)
+
       /*
       * url:this.getVideo(item),
         savePath: this.appData.papers.settings.savePath+'/lively/'+item.name,
@@ -103,84 +105,100 @@ class ApiHandler {
        * @param url
        * @returns {*}
        */
-      function getDownloadingItem(url){
-        return   ApiHandler.downloadingItems.find(di=>{
-          return di.url===url
+      function getDownloadingItem (url) {
+        return ApiHandler.downloadingItems.find(di => {
+          return di.url === url
         })
       }
-      let originEvent=event
-      function send(webContents,channel,args){
-        if(webContents && !webContents.isDestroyed()){
-          webContents.send(channel,args)
+
+      let originEvent = event
+
+      function send (webContents, channel, args) {
+        if (webContents && !webContents.isDestroyed()) {
+          webContents.send(channel, args)
         }
       }
-      function bindDownloadListener(webContents){
-        let found= ApiHandler.downloadSession.find(ds=>{
-          return ds===webContents.session
+
+      function bindDownloadListener (webContents) {
+        let found = ApiHandler.downloadSession.find(ds => {
+          return ds === webContents.session
         })
-        if(found){
+        if (found) {
           //已经绑定了直接return
           return
-        }else{
-          let session=webContents.session
-          webContents.on('closed',()=>{
+        } else {
+          let session = webContents.session
+          webContents.on('closed', () => {
             //当webcontent被关闭的时候，自动清理掉downloadWebcontents
-            ApiHandler.downloadWebContents.splice(ApiHandler.downloadWebContents.findIndex(wc=>{
-              return wc===webContents
+            ApiHandler.downloadWebContents.splice(ApiHandler.downloadWebContents.findIndex(wc => {
+              return wc === webContents
             }),)
           })
-          session.on('will-download', (event, item,webContents) => {
-            let myItem= getDownloadingItem(item.getURL())
-            let saveDir= require('path').dirname(myItem.savePath)
-            let fs=require('fs-extra')
+          session.on('will-download', (event, item, webContents) => {
+            let myItem = getDownloadingItem(item.getURL())
+            let saveDir = require('path').dirname(myItem.savePath)
+            let fs = require('fs-extra')
             fs.ensureDirSync(saveDir)
-            let savePath=require('path').normalize(myItem.savePath)
-            if(fs.existsSync(myItem.savePath)){
+            let savePath = require('path').normalize(myItem.savePath)
+            if (fs.existsSync(myItem.savePath)) {
               fs.rmSync(myItem.savePath)//自动删除已经存在的文件，放置文件不存在无法下载
             }
             item.setSavePath(savePath)
-            send(webContents,'download.onWillDownload',{item:myItem})
+            send(webContents, 'download.onWillDownload', { item: myItem })
 
             //绑定更新
-            item.on('updated',(event,state)=>{
-              let myItem= getDownloadingItem(item.getURL())
-              send(webContents,'download.onUpdated',{item:myItem,state:state,downloadInfo:{
-                 totalBytes:item.getTotalBytes(),
-                  receivedBytes:item.getReceivedBytes(),
-                }})
+            item.on('updated', (event, state) => {
+              let myItem = getDownloadingItem(item.getURL())
+              send(webContents, 'download.onUpdated', {
+                item: myItem, state: state, downloadInfo: {
+                  totalBytes: item.getTotalBytes(),
+                  receivedBytes: item.getReceivedBytes(),
+                }
+              })
             })
             //绑定下载完成
-            item.on('done',(event,state)=>{
-              let myItem= getDownloadingItem(item.getURL())
-              if(myItem){
-                let foundIndex= ApiHandler.downloadingItems.findIndex(di=>{
-                  return di.url===item.getURL()
+            item.on('done', (event, state) => {
+              let myItem = getDownloadingItem(item.getURL())
+              if (myItem) {
+                let foundIndex = ApiHandler.downloadingItems.findIndex(di => {
+                  return di.url === item.getURL()
                 })
-                if(foundIndex>-1){
-                  ApiHandler.downloadingItems.splice(foundIndex,1)
+                if (foundIndex > -1) {
+                  ApiHandler.downloadingItems.splice(foundIndex, 1)
                 }
 
               }
-              send(webContents,'download.onDone',{item:myItem,state:state,downloadInfo:{
-                totalBytes:item.getTotalBytes(),
-                  receivedBytes:item.getReceivedBytes()
-              }})
+              send(webContents, 'download.onDone', {
+                item: myItem, state: state, downloadInfo: {
+                  totalBytes: item.getTotalBytes(),
+                  receivedBytes: item.getReceivedBytes()
+                }
+              })
             })
           })
 
           ApiHandler.downloadWebContents.push(webContents)
         }
       }
-      try{
+
+      try {
         bindDownloadListener(webContents)
         webContents.downloadURL(args.url)
-      }catch (e) {
-        console.warn('下载失败，原因',e)
+      } catch (e) {
+        console.warn('下载失败，原因', e)
       }
 
     })
 
-
+    ApiHandler.on('system', 'extractFileIcon', async (event, args) => {
+      try {
+        console.log(args,'需要获取icon')
+        event.returnValue = await SystemHelper.extractFileIcon(args.uri)
+      } catch (e) {
+        console.error('获取文件图标失败', e)
+        return event.returnValue = ''
+      }
+    })
 
     ApiHandler.on('runtime', 'init', (event, args, instance) => {
       try {
@@ -265,7 +283,7 @@ class ApiHandler {
       if (instance.type === 'frameWindow') {
         event.returnValue = instance.view.getSize()
       } else if (instance.type === 'window') {
-        event.returnValue =instance.window.getSize()
+        event.returnValue = instance.window.getSize()
       }
     })
 
@@ -339,7 +357,7 @@ class ApiHandler {
       }
     })
 
-    ApiHandler.onWindow('getCapture',async (event, args, instance) => {
+    ApiHandler.onWindow('getCapture', async (event, args, instance) => {
       if (instance.type === 'window') {
         let captureImg = await captureHelper.capture(event.sender)
         if (captureImg) {
