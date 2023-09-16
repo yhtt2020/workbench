@@ -33,7 +33,9 @@ export default defineConfig({
     require('autoprefixer')],
   base:'./',
   build:{
+    // sourcemap:true,//不打包sourcemap
     rollupOptions:{
+
       input :inputs,
       output:{
         manualChunks: {
@@ -42,5 +44,5 @@ export default defineConfig({
       }
     }
   },
- 
+
 })
