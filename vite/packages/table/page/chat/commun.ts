@@ -27,8 +27,11 @@ export const useCommunityStore = defineStore('community',{
                 fid:id
             })
             // console.log(res);
+            if(res.code===200){
             this.communityInfo=res.data
-            localCache.set(`communityInfo_${id}`,this.communityInfo,60*60*24)
+            // console.log(this.communityInfo,'this.communityInfo');
+            localCache.set(`communityInfo_${id}`,this.communityInfo,60*60*12)
+            }
 
         },
         // 获取板块下的所有分类
@@ -43,7 +46,7 @@ export const useCommunityStore = defineStore('community',{
             // console.log(res);
             if(res.code===200){
                 this.communityCate=res.data
-                localCache.set(`communityCate_${id}`,this.communityCate,60*60*24)
+                localCache.set(`communityCate_${id}`,this.communityCate,60*60*12)
             }
 
 
@@ -65,7 +68,7 @@ export const useCommunityStore = defineStore('community',{
             //   console.log(res.data,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost);
-                localCache.set(`communityPost_${id}-${type}`,this.communityPost,60*60*24)
+                localCache.set(`communityPost_${id}-${type}`,this.communityPost,60*60*12)
             }
 
         },
@@ -80,8 +83,8 @@ export const useCommunityStore = defineStore('community',{
             // console.log('datail', res);
             if(res.code===200){
                 this.communityPostDetail=res.data
-                // console.log('chakan',this.communityPostDetail);
-                localCache.set(`communityPostDetail_${id}`,this.communityPostDetail,60*60*24)
+                console.log('chakan',this.communityPostDetail);
+                localCache.set(`communityPostDetail_${id}`,this.communityPostDetail,60*60*12)
             }
         },
         //查看帖子回复
@@ -98,7 +101,7 @@ export const useCommunityStore = defineStore('community',{
             // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
-                localCache.set(`communityReply_${id}`,this.communityReply,60*60*24)
+                localCache.set(`communityReply_${id}`,this.communityReply,60*60*12)
             }
         },
         // 图片上传
