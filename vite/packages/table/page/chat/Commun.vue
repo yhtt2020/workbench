@@ -31,13 +31,17 @@
       </div>
       <div class="flex mr-6 right">
         <!-- <div class="flex items-center"> -->
-          <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
-            <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
-          </a-button>
-          <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="refreshPost"><Icon class="text-lg xt-text"  style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" /></button>
-          <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan"><Icon class="text-lg xt-text"  style="vertical-align: sub;" icon="majesticons:open" /></button>
-          
-          
+        <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
+          <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
+        </a-button>
+        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="refreshPost">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
+        </button>
+        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
+        </button>
+
+
         <!-- </div> -->
 
       </div>
@@ -65,7 +69,7 @@
       <vue-custom-scrollbar class="ml-2 rounded-lg thread-detail xt-bg" :key="selectedIndex" v-if="detailVisible"
         :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full detail" v-if="detailVisible">
-          <DetailCard :cardData="detailText" @closeDetail="closeDetail" ></DetailCard>
+          <DetailCard :cardData="detailText" @closeDetail="closeDetail"></DetailCard>
         </div>
       </vue-custom-scrollbar>
     </div>
@@ -73,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, h, onMounted, computed, watch ,onBeforeUpdate,onUpdated} from 'vue';
+import { ref, reactive, onBeforeMount, h, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
@@ -85,9 +89,9 @@ import { Icon } from '@iconify/vue'
 import browser from '../../js/common/browser';
 // import {} from 'pinia'
 // import communityStore  from './community';
-const current=ref(1)
+const current = ref(1)
 // 更新帖子列表
-const refreshFlag=ref(false)
+const refreshFlag = ref(false)
 const store = useCommunityStore();
 const props = defineProps({
   forumId: {
@@ -106,38 +110,49 @@ const menuList = ref([
     name: '精华',
     type: 'essence'
   }])
+const createOrder = computed(() => store.communityPost?.list[0].create_time)
+const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
 const checkMenuList = ref([{
   type: '最近更新',
-  order: store.communityPost.create_time
+  order: createOrder
 }, {
   type: '最近回复',
-  order: store.communityPost.last_post_time
+  order: replyOrder
 
 }])
+
 const currentIndex = ref(0)
 const checkMenuCurrentIndex = ref(0)
+// 选择最近更新与最近回复
 const handleMenuItemClick = (index) => {
   checkMenuCurrentIndex.value = index
   // store.getCommunityPostReply(index+1234,1)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[checkMenuCurrentIndex.value].order)
+  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[checkMenuCurrentIndex.value].order);
 }
+// 选择全部，热门的内容
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(props.forumId,current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
+  
 }
 const goYuan = () => {
   browser.openInUserSelect('https://s.apps.vip/')
 }
-const refreshPost =  () => {
+const refreshPost = () => {
   refreshFlag.value = true
   setTimeout(async () => {
-    await store.getCommunityPost(props.forumId,current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+    await store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
     refreshFlag.value = false
   });
-  
+
 }
 const changePage = (page) => {
+  refreshFlag.value = true
   current.value = page
-  store.getCommunityPost(props.forumId,current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  refreshFlag.value = false
 }
 
 //当前选中的详情帖子的索引
@@ -286,7 +301,7 @@ onUpdated(() => {
   }
 
   .right {
-    
+
     // margin-right: 24px;
 
     :deep(.ant-btn) {
@@ -381,5 +396,4 @@ onUpdated(() => {
       display: none;
     }
   }
-}
-</style>
+}</style>
