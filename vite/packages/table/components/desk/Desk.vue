@@ -278,6 +278,12 @@ import GameInformation from '../widgets/gameInformation/index.vue'
 import HistoryInfo from '../widgets/historyInfo/index.vue'
 import ShortcutKey from '../widgets/shortcutKey/index.vue'
 import ClipBoard from '../widgets/clipBoard/index.vue'
+import CommunityGuider from '../widgets/openSNS/communityGuider.vue'
+import CommunityTodo from '../widgets/openSNS/communityTodo.vue'
+import SmallCommunityDashboard from '../widgets/openSNS/smallCommunityDashboard.vue'
+import MiddleCommunityDashboard from '../widgets/openSNS/middleCommunityDashboard.vue'
+import CommunityChart from '../widgets/openSNS/communityChart.vue'
+
 
 
 const NewAddCard = defineAsyncComponent(() => import('../../page/app/card/NewAddCard.vue'))
@@ -308,6 +314,11 @@ export default {
     HistoryInfo,
     ShortcutKey,
     ClipBoard,
+    CommunityGuider,
+    CommunityTodo,
+    SmallCommunityDashboard,
+    MiddleCommunityDashboard,
+    CommunityChart,
     News,
     Template,
     HorizontalPanel,

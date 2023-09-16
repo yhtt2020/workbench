@@ -851,6 +851,67 @@ export const NavList = [
         ],
         time: '2023/9/14'
       },
+      {
+        name: 'communityDashboard',
+        cname: '社区数据看板(开发中)',
+        detail: '支持自定义短说运营数据看板，时刻关注你的社区活跃情况',
+        sizes: ['2x4','4x4'],
+        option: [
+          {
+            name: 'smallCommunityDashboard',
+            size: '2x4',
+            zoom: '44'
+          },
+          {
+            name: 'middleCommunityDashboard',
+            size: '4x4',
+            zoom: '30'
+          },
+        ],
+        time: '2023/9/15'
+      },
+      {
+        name: 'communityTodo',
+        cname: '社区待办(开发中)',
+        detail: '短说社区审核通知不再遗漏，在工作台中即可快速查看和访问',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'communityTodo',
+            size: '2x4',
+            zoom: '30'
+          },
+        ],
+        time: '2023/9/16'
+      },
+      {
+        name: 'communityGuider',
+        cname: '社区助手(开发中)',
+        detail: '短说社区助手，随时翻阅使用手册，快速进入客服交流群',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'communityGuider',
+            size: '2x4',
+            zoom: '30'
+          },
+        ],
+        time: '2023/9/18'
+      },
+      {
+        name: 'communityChart',
+        cname: '社区数据图表(开发中)',
+        detail: '将短说管理后台的数据统计面板搬到了工作台，运营数据时刻查看',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'communityChart',
+            size: '4x4',
+            zoom: '24'
+          },
+        ],
+        time: '2023/9/19'
+      },
     ]
   },
 ];
