@@ -96,8 +96,21 @@
 
       <div style="height: 0;flex:1" v-else>
         <template v-if="!currentChannel.name">
-          <div class="flex items-center justify-center h-full">
-            <a-empty :image="simpleImage" description="暂无内容"></a-empty>
+          <div class="flex flex-col items-center justify-center h-full">
+            <div style="width:64px;height:64px;" class="rounded-full mb-6">
+              <img src="/icons/logo128.png" class="w-full h-full object-cover rounded-full"/>
+            </div>
+            <span class="font-24-500" style="color:var(--primary-text);">欢迎加入，想天工作台官方社群</span>
+            <div class="mt-4 flex justify-center items-center" style="width:362px;">
+              <div class="flex items-center">
+                <div class="w-2.5 h-2.5 rounded-full mr-2.5" style="background:var(--success);"></div>
+                <span>2,874人在线</span>
+              </div>
+              <div class="flex items-center ml-6">
+                <div class="w-2.5 h-2.5 rounded-full mr-2.5" style="background:var(--secondary-text);"></div>
+                <span>1,039,485成员</span>
+              </div>
+            </div>
           </div>
         </template>
         <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
@@ -172,6 +185,8 @@ export default defineComponent({
       showModal: false, // 没有加入社群提示弹窗控制
       group: {}, // 接收传递的社群id
       isChat: 'yes',
+
+      avatarUrl:'/icons/logo28.png'
     })
 
     const updatePage = () => {
@@ -263,5 +278,11 @@ export default defineComponent({
 
 .flip {
   transform: rotateY(180deg)
+}
+
+.font-24-500{
+  font-family: PingFangSC-Medium;
+  font-size: 24px;
+  font-weight: 500;
 }
 </style>

@@ -26,13 +26,13 @@
                 <div class="flex flex-col">
                   <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
                     <template v-if="item.type === 'group'">
-                        <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                      <chatIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
                     </template> 
                     <template v-if="item.type === 'link'">
-                      <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                      <chatIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
                     </template>
                     <template v-if="item.type === 'forum'">
-                      <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                      <chatIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                     </template>
                     <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
                   </div>
@@ -88,13 +88,14 @@ import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons
 import { myCommunityStore } from './store/myCommunity'
 import { localCache } from '../../js/axios/serverCache'
 import MyCommunity from './page/myCommunity.vue';
+import { Icon as chatIcon } from '@iconify/vue'
 
 export default {
   name: 'App',
   components: {
     AppstoreOutlined, MessageOutlined,LinkOutlined,
     SecondPanel,
-    TUIContact,
+    TUIContact,chatIcon,
     Drag,
     ChatFind,
     CommunityIndex,
