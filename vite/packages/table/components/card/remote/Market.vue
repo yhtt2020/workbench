@@ -1,11 +1,13 @@
 <template>
   <!-- <div style="width:100%;height:100%;overflow:auto"> -->
   <div>
+    <xt-task :modelValue="m03033"></xt-task>
     <div class="head-nav" id="nav" v-if="listType === 'my'">
       <span>我分享外部小组件（{{ shareList.length }}）</span>
       <div class="block-btn" @click="shareNow">立即分享</div>
     </div>
     <div class="head-nav" id="nav" v-else>
+
       <span>来自社区用户的分享（{{ dataList.length }}）<strong style="color:red">！此功能正在开发中！</strong></span>
       <a-select style=" z-index: 9; position: relative;" v-model:value="sortVal" class="select rounded-lg  s-item flex items-center text-center" :bordered="false"
         size="large" @change="handleChange"
@@ -128,7 +130,15 @@
   import NewPreviewCardDetails from "../../../page/app/card/NewPreviewCardDetails.vue";
   import { dataList,shareList,delList } from './testData';
   import Modal from '../../Modal.vue'
+  import { taskStore } from "../../../apps/task/store";
   export default{
+    computed:{
+      ...mapWritableState(taskStore, ["taskID", "step"]),
+      m03033(){
+        return this.step == 3 &&
+                this.taskID == "M0303"
+      }
+    },
     components: {
       NewPreviewCardDetails,
       Modal

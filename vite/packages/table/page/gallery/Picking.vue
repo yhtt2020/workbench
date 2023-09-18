@@ -181,9 +181,9 @@ export default defineComponent({
     ...mapState(paperStore, ["myPapers","settings"]),
     ...mapWritableState(taskStore, ['taskID','step']),
     m01036() {
-        return this.taskID == "M0103" && this.step == 6
-    }
-    ,m01037() {
+        return  this.step === 6 && this.taskID == "M0103"
+    },
+    m01037() {
         return this.taskID == "M0103" && this.step ==7
     }
   },
@@ -359,6 +359,7 @@ export default defineComponent({
     },
 
     pickShow(item) {
+console.log('11111 :>> ', 11111);
       this.currentPaper = item
       this.visibleMenu = true
     },

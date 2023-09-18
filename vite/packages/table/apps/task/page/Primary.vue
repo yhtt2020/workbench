@@ -1,14 +1,12 @@
 <template>
-<!-- <xt-button @click="test()"></xt-button>-->
+<xt-button @click="test()"></xt-button>
 
   <xt-title>主线任务</xt-title>
   <template v-if="store.taskID">
     <div class="xt-bg-2 rounded-xl p-3">
       <xt-title m="">
         <div class="flex items-center">
-          <StarFilled
-            aria-label="1"
-            style="
+          <StarFilled aria-label="1" style="
               font-size: 12px;
               background: #ff4d4f;
               width: 20px;
@@ -18,8 +16,7 @@
               justify-content: center;
               align-items: center;
               margin-right: 8px;
-            "
-          />
+            " />
           {{ chapter.chapter }}
         </div>
         <template #right>{{ stage }} / {{ chapter.tasks.length }} </template>
@@ -37,19 +34,12 @@
       <xt-title type="text">{{ currentTask.description }}</xt-title>
       <div class="flex justify-center items-center flex-col">
         <xt-title type="text">完成奖励</xt-title>
-        <div class="xt-text-2 font-bold">暂无任务奖励，后续完工后，我们会自动补发奖励</div>
-        <xt-title type="text" v-if="currentTask.guide"
-          >提示：当前任务含有操作引导</xt-title
-        >
-        <xt-button
-          v-if="store.success"
-          style="background: #faad14 !important; width: 100%"
-          @click="receive()"
-          >领取奖励</xt-button
-        >
-        <xt-button v-else style="width: 100%" type="theme" @click="taskGuide()"
-          >开始任务</xt-button
-        >
+        <div class="xt-theme-text">暂无任务奖励，后续完工后，我们会自动补发奖励</div>
+        <div class="xt-theme-text">当前版本建议根据引导按钮来完成操作</div>
+        <xt-title type="text" v-if="currentTask.guide">提示：当前任务含有操作引导</xt-title>
+        <xt-button v-if="store.success" style="background: #faad14 !important; width: 100%"
+          @click="receive()">领取奖励</xt-button>
+        <PrimaryTask v-else></PrimaryTask>
       </div>
     </div>
   </template>
@@ -57,18 +47,17 @@
 </template>
 
 <script setup>
+import PrimaryTask from "./PrimaryTask.vue";
 import { tasks } from "../config/Primary";
 import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
 import { ref, reactive, computed } from "vue";
-import { guide } from "../../../ui/components/Task/guide";
-import { useRouter } from "vue-router";
-const router = useRouter();
+
 /**
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0201";
+  store.taskID = "M0303";
   store.success = false;
   store.step = -1;
 };
@@ -106,31 +95,11 @@ const progress = computed(() => {
   let res = (stage.value / chapter.value.tasks.length) * 100;
   return res;
 });
+
 // 获取当前任务
 const currentTask = computed(() => {
-
   return chapter.value.tasks[stage.value];
 });
-
-// 引导任务
-const emits = defineEmits(["close"]);
-
-const taskGuide = () => {
-  // 重置任务步骤
-  store.step = 1;
-  let currentTask = guide[store.taskID][0];
-  switch (currentTask.value) {
-    case "router":
-      router.push({
-        name: currentTask.value,
-      });
-      break;
-    default:
-      break;
-  }
-
-  store.isTaskDrawer = false;
-};
 
 // 领取奖励
 const receive = () => {
