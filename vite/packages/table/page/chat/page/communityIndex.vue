@@ -36,13 +36,13 @@
                    @click="currentItem(item)"
               >
                 <template v-if="item.type === 'group'">
-                  <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                  <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
                 </template>
                 <template v-if="item.type === 'link'">
-                  <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                  <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
                 </template>
                 <template v-if="item.type === 'forum'">
-                  <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                  <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                 </template>
                 <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
                 <SelectOutlined class="ml-1 xt-text-2 flip" style="font-size: 14px"
@@ -55,13 +55,13 @@
                    class="flex items-center py-2 rounded-lg pointer group-item">
                 <div class="flex items-center mx-2">
                   <template v-if="item.type === 'group'">
-                    <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                    <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
                   </template>
                   <template v-if="item.type === 'link'">
-                    <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                    <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
                   </template>
                   <template v-if="item.type === 'forum'">
-                    <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                    <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                   </template>
                 </div>
                 <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
@@ -78,13 +78,13 @@
       <div class="px-4 mb-0 line-title">
         <span style="vertical-align: text-top">
         <template v-if="currentChannel.type === 'group'">
-          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
         </template>
         <template v-if="currentChannel.type === 'link'">
-          <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
         </template>
         <template v-if="currentChannel.type === 'forum'">
-          <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
         </template>
        </span>
         {{ currentChannel.name }}
@@ -96,15 +96,28 @@
 
       <div style="height: 0;flex:1" v-else>
         <template v-if="!currentChannel.name">
-          <div class="flex items-center justify-center h-full">
-            <a-empty :image="simpleImage" description="暂无内容"></a-empty>
+          <div class="flex flex-col items-center justify-center h-full">
+            <div style="width:64px;height:64px;" class="rounded-full mb-6">
+              <img src="/icons/logo128.png" class="w-full h-full object-cover rounded-full"/>
+            </div>
+            <span class="font-24-500" style="color:var(--primary-text);">欢迎加入，想天工作台官方社群</span>
+            <div class="mt-4 flex justify-center items-center" style="width:362px;">
+              <div class="flex items-center">
+                <div class="w-2.5 h-2.5 rounded-full mr-2.5" style="background:var(--success);"></div>
+                <span>2,874人在线</span>
+              </div>
+              <div class="flex items-center ml-6">
+                <div class="w-2.5 h-2.5 rounded-full mr-2.5" style="background:var(--secondary-text);"></div>
+                <span>1,039,485成员</span>
+              </div>
+            </div>
           </div>
         </template>
         <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'" style="text-align: center;margin-top: 30%">
-            <Emoji icon="link" :size="20"></Emoji>
+            
             当前频道需要浏览器打开。
           </div>
           <iframe v-else :src="currentChannel.props.url" class="m-2"
@@ -135,6 +148,7 @@ import { checkGroupShip } from '../../../js/common/sns'
 import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/validationPrompts.vue'
 import { message } from 'ant-design-vue'
+import { Icon as communityIcon } from '@iconify/vue'
 
 
 export default defineComponent({
@@ -142,7 +156,7 @@ export default defineComponent({
     Emoji,
     ChatDropDown,
     ChatFold, Commun, Modal, ValidateModal,
-    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
+    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined,communityIcon
   },
 
   setup () {
@@ -171,6 +185,8 @@ export default defineComponent({
       showModal: false, // 没有加入社群提示弹窗控制
       group: {}, // 接收传递的社群id
       isChat: 'yes',
+
+      avatarUrl:'/icons/logo28.png'
     })
 
     const updatePage = () => {
@@ -262,5 +278,11 @@ export default defineComponent({
 
 .flip {
   transform: rotateY(180deg)
+}
+
+.font-24-500{
+  font-family: PingFangSC-Medium;
+  font-size: 24px;
+  font-weight: 500;
 }
 </style>

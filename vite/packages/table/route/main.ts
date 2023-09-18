@@ -73,7 +73,7 @@ import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
 // import ImTeam from '../page/chat/team.vue'
 import ChatMain from '../page/chat/page/chatMain.vue'
-import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
+import CommunityIndex from '../page/chat/page/communityIndex.vue'
 import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
 
@@ -240,12 +240,10 @@ export default [
                 }
               },
               {
-                path:'/thisky',
-                name:'chatThisky',
-                component:ThiskyIndex,
-                meta:{
-                  type:'thisky'
-                }
+                path:'/community',
+                name:'defaultCommunity',
+                component:CommunityIndex,
+                props:true,
               }
             ]
           },

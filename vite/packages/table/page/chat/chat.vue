@@ -1,10 +1,11 @@
 <template>
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
     <div class="w-full">
-      <router-view></router-view>
+      <MyCommunity v-if="currentCom" :info="info" />
+      <router-view v-else></router-view>
     </div>
 
-    <template #test>
+    <template #communityFloat>
       <div class="flex flex-col p-2 mt-3">
         <div class="flex flex-col">
           <div class="flex justify-between mb-2.5">
@@ -25,13 +26,13 @@
                 <div class="flex flex-col">
                   <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
                     <template v-if="item.type === 'group'">
-                        <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                      <chatIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
                     </template> 
                     <template v-if="item.type === 'link'">
-                      <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                      <chatIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
                     </template>
                     <template v-if="item.type === 'forum'">
-                      <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                      <chatIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                     </template>
                     <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
                   </div>
@@ -59,7 +60,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, ref,computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { TUIEnv } from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
@@ -69,12 +70,13 @@ import { message } from "ant-design-vue";
 // import Commun from './Commun.vue'
 import ChatFind from "./page/chatFind.vue"
 import ChatMain from './page/chatMain.vue';
-import ThiskyIndex from './page/thiskyIndex.vue'
+import CommunityIndex from './page/communityIndex.vue'
 import Modal from '../../components/Modal.vue'
 import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
 import CreateCommunity from './components/createCommunity.vue'
+import _ from 'lodash-es'
 import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
@@ -83,23 +85,25 @@ import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity  from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
-import { myCommunityStore } from './store/communityGroup'
-import _ from 'lodash-es'
+import { myCommunityStore } from './store/myCommunity'
+import { localCache } from '../../js/axios/serverCache'
+import MyCommunity from './page/myCommunity.vue';
+import { Icon as chatIcon } from '@iconify/vue'
 
 export default {
   name: 'App',
   components: {
     AppstoreOutlined, MessageOutlined,LinkOutlined,
     SecondPanel,
-    TUIContact,
+    TUIContact,chatIcon,
     Drag,
     ChatFind,
-    ThiskyIndex,
+    CommunityIndex,
     ChatMain,Modal,
     AddFriend,CreateGroup,
     Transfer,
     ChatDropDown,ChatFold,
-    CreateCommunity,JoinCommunity,
+    CreateCommunity,JoinCommunity,MyCommunity,
   },
 
   setup() {
@@ -126,6 +130,7 @@ export default {
        suppressScrollX: true,
        wheelPropagation: true
       },
+      info:{},
     })
 
     const selectTab = (item) => {
@@ -144,34 +149,47 @@ export default {
       data.open = true
     }
 
+    const selectCommunityTab = (item) =>{
+      // console.log('排查问题::>>',item)
+      localCache.set('communityId',item.type)
+      data.index = item.type
+      data.info = item.info
+    }
+
     const appS=appStore()
    
     const {userInfo}=appS
     const { myCommunityList } = myCom
-    // console.log('测试::>>', myCommunityList)
+    
     
     const newArr = []
 
     // 遍历将社群进行UI层数据替换
     for(let i=0;i<myCommunityList.length;i++){
-      if(myCommunityList[i].communityInfo.icon !== null){
-        const index = _.findIndex(newArr,function(o){ return o.cno === myCommunityList[i].cno })
-        if(index === -1){
-         const item = {
-          name:myCommunityList[i].communityInfo.name,
-          img:myCommunityList[i].communityInfo.icon,
-          type: 'thisky',
-          float:"test",
-          noBg:true,
-          callBack: selectTab,
-          route:{ name:'chatThisky',info:myCommunityList[i]},
-         }
-         newArr.push(item)
-        }else{
-         return
+      if(Object.keys(myCommunityList[i].communityInfo).length !== 0 && myCommunityList.length !== 0 && myCommunityList.length !== 0 && myCommunityList[i].communityInfo){
+        if(myCommunityList.length !== 0 && myCommunityList[i].communityInfo && myCommunityList[i].communityInfo.icon !== null){
+          const index = _.findIndex(newArr,function(o){ return o.cno === myCommunityList[i].cno })
+          if(index === -1){
+           const item = {
+            name:myCommunityList[i].communityInfo.name,
+            img:myCommunityList[i].communityInfo.icon,
+            type: `community${myCommunityList[i].cno}`,
+            float:"communityFloat",
+            noBg:true,
+            callBack: selectCommunityTab,
+            info:myCommunityList[i]
+            // route:{ name:'defaultCommunity',info:myCommunityList[i]},
+           }
+           newArr.push(item)
+          }else{
+           return
+          }
         }
+      }else{
+        console.error('该社群不存在')
+        return;
       }
-
+      
     }
 
     const addCom = (item) =>{
@@ -180,6 +198,10 @@ export default {
       myCom.getRecommendCommunityList()
     }
   
+
+    const currentCom = computed(()=>{
+      return data.index === localCache.get('communityId')
+    })
 
     // console.log('获取我的社群列表',...newArr)
 
@@ -225,12 +247,12 @@ export default {
       {
         icon:'',
         img: '/icons/logo128.png',
-        type: 'thisky',
-        float:"test",
+        type: 'community',
+        float:"communityFloat",
         noBg:true,
         callBack: selectTab,
         route:{
-          name:'chatThisky'
+          name:'defaultCommunity'
         }
       },
 
@@ -287,7 +309,7 @@ export default {
     })
 
     return {
-      chatLeftList,route,router,showDropList,
+      chatLeftList,route,router,showDropList,newArr,currentCom,
       ...toRefs(data),
     }
   }
