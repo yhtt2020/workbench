@@ -1,8 +1,5 @@
 <template>
- <div>
-   {{ info }}
- </div>
- <!-- <a-row class="w-full h-full">
+ <a-row class="w-full h-full">
   <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3"  style=" border-right:1px solid var(--divider);">
    <div class="flex flex-col">
     <div class="flex justify-between w-full mb-2.5">
@@ -21,19 +18,22 @@
   <a-col flex=" 1 1 200px" class="h-full flex flex-col">
 
   </a-col>
- </a-row> -->
+ </a-row>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, toRefs} from 'vue'
 
 export default defineComponent({
  props:['info'],
  setup (props,ctx) {
-  
+  // const data = reactive({
+  //  communityInfo:props.info,
+  // })
+
 
   return {
-   info:props.info,
+   // ...toRefs(data),
 
   }
  }

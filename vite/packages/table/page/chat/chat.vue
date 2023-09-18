@@ -1,7 +1,8 @@
 <template>
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
     <div class="w-full">
-      <router-view></router-view>
+      <MyCommunity v-if="currentCom" :info="info" />
+      <router-view v-else></router-view>
     </div>
 
     <template #communityFloat>
@@ -59,7 +60,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, ref,computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { TUIEnv } from '../../TUIKit/TUIPlugin';
 import Drag from '../../TUIKit/TUIComponents/components/drag';
@@ -85,7 +86,8 @@ import ChatFold from './components/chatFold.vue'
 import JoinCommunity  from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
 import { myCommunityStore } from './store/myCommunity'
-
+import { localCache } from '../../js/axios/serverCache'
+import MyCommunity from './page/myCommunity.vue';
 
 export default {
   name: 'App',
@@ -100,7 +102,7 @@ export default {
     AddFriend,CreateGroup,
     Transfer,
     ChatDropDown,ChatFold,
-    CreateCommunity,JoinCommunity,
+    CreateCommunity,JoinCommunity,MyCommunity,
   },
 
   setup() {
@@ -127,6 +129,7 @@ export default {
        suppressScrollX: true,
        wheelPropagation: true
       },
+      info:{},
     })
 
     const selectTab = (item) => {
@@ -145,11 +148,18 @@ export default {
       data.open = true
     }
 
+    const selectCommunityTab = (item) =>{
+      // console.log('排查问题::>>',item)
+      localCache.set('communityId',item.type)
+      data.index = item.type
+      data.info = item.info
+    }
+
     const appS=appStore()
    
     const {userInfo}=appS
     const { myCommunityList } = myCom
-    // console.log('测试::>>', myCommunityList)
+    
     
     const newArr = []
 
@@ -165,8 +175,9 @@ export default {
             type: `community${myCommunityList[i].cno}`,
             float:"communityFloat",
             noBg:true,
-            callBack: selectTab,
-            route:{ name:'defaultCommunity',info:myCommunityList[i]},
+            callBack: selectCommunityTab,
+            info:myCommunityList[i]
+            // route:{ name:'defaultCommunity',info:myCommunityList[i]},
            }
            newArr.push(item)
           }else{
@@ -186,6 +197,10 @@ export default {
       myCom.getRecommendCommunityList()
     }
   
+
+    const currentCom = computed(()=>{
+      return data.index === localCache.get('communityId')
+    })
 
     // console.log('获取我的社群列表',...newArr)
 
@@ -293,7 +308,7 @@ export default {
     })
 
     return {
-      chatLeftList,route,router,showDropList,
+      chatLeftList,route,router,showDropList,newArr,currentCom,
       ...toRefs(data),
     }
   }
