@@ -3,7 +3,7 @@
     <xt-mask :modelValue="true"> </xt-mask>
     <Teleport to="body">
       <div
-        class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-3"
+        class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-3 xt-text"
         style="z-index: 99999999"
       >
         <div class="flex items-center justify-center">

@@ -229,6 +229,7 @@ export default {
       }
       for (let key in this.selectApps) {
         this.selectApps[key].forEach(async (item) => {
+          console.log('item :>> ', item);
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";

@@ -1,22 +1,38 @@
 import { nanoid } from "nanoid";
 import { cardStore } from "../../../store/card";
-const desk1 = () => {
+const getDesk = () => {
   const store: any = cardStore();
-  let desk = {
-    name: "任务桌面",
-    id: nanoid(4),
-    icon: "desktop",
-    cards: [],
-    layoutSize: {
-      width: 1498,
-      height: 466,
-    },
-  };
-  // store.desks.push(desk);
-  // console.log("store.desks :>> ", store.desks);
+  let id = nanoid(4);
+  let desk = store.desks.find((item) => item.name === "任务桌面");
+  if (desk) {
+    // console.log("有桌面 :>> ");
+    id = desk.id;
+  } else {
+    // console.log("没桌面 :>> ");
+    let obj = {
+      name: "任务桌面",
+      id,
+      icon: "desktop",
+      cards: [],
+      layoutSize: {
+        width: 1498,
+        height: 466,
+      },
+      settings: {
+        cardMargin: 5,
+        cardZoom: 100,
+        marginTop: 0,
+        enableZoom: true,
+      },
+    };
+    store.desks.push(obj);
+  }
+  store.currentDeskId = id;
+  return store.desks.find((item) => id == item.id);
 };
 export const lastGuide = {
   M0202: () => {
+    let desk = getDesk();
     let obj = {
       size: "mini",
       link: "link",
@@ -38,7 +54,6 @@ export const lastGuide = {
     };
     const card: any = cardStore();
 
-    let desk = card.desks.find((item) => card.currentDeskId == item.id);
     card.addCard(
       {
         name: "myIcons",
@@ -57,10 +72,9 @@ export const lastGuide = {
       desk
     );
   },
-  M0303: () => {
-    desk1();
+  M0303: async () => {
+    let desk = getDesk();
     const card: any = cardStore();
-    let desk = card.desks.find((item) => card.currentDeskId == item.id);
     card.addCard(
       {
         name: "remote",
