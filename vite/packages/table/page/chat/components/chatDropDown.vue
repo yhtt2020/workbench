@@ -20,7 +20,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs} from 'vue'
-import { EllipsisOutlined,MenuUnfoldOutlined,AppstoreOutlined} from '@ant-design/icons-vue'
+import { EllipsisOutlined,MenuUnfoldOutlined,AppstoreOutlined,MenuFoldOutlined} from '@ant-design/icons-vue'
 import { chatStore } from '../../../store/chat'
 // import { chatList } from '../../../js/data/chatList'
 
@@ -28,18 +28,17 @@ export default defineComponent({
  components:{
   EllipsisOutlined,
   MenuUnfoldOutlined,
-  AppstoreOutlined
+  AppstoreOutlined,
+  MenuFoldOutlined
  },
 
+ props:['list'],
 
  setup (props,ctx) {
   const chat = chatStore()
 
   const data = reactive({
-   dropDownList:[
-    {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
-    {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
-   ],
+   dropDownList:props.list,
    dropDownIndex:0,
   })
 
@@ -48,8 +47,10 @@ export default defineComponent({
    if(item.type === 'change'){
      chat.setDouble()
      ctx.emit('updatePage')
+   }else if(item.type === 'hidden'){
+    chat.setFloatVisible(true)
    }else{
-    chat.setFloatVisible()
+    chat.setFloatVisible(false)
    }
   }
 

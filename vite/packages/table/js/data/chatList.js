@@ -88,3 +88,46 @@ export const chatList = [
     ]
   }
 ]
+
+
+export const recommendedJoin = [
+  {
+    url:'/icons/bz1.png',
+    name:'铁匠铺',
+    summary:'一起打磨出闪闪发光的技术宝石！',
+    memberNum:'129',
+    type:'PublicJoin',
+  },
+  {
+    url:'/icons/bz1.png',
+    name:'火箭',
+    summary:'“火箭”小队，我们热爱挑战和探索未知，勇往直前！',
+    memberNum:'874',
+    type:'AuditJoin',
+  },
+  {
+    url:'/icons/bz1.png',
+    name:'码农驿站',
+    summary:'一群热爱编程的人，不断学习和探索新技术',
+    memberNum:'89',
+    type:'AuditJoin',
+  },
+  {
+    url:'/icons/bz1.png',
+    name:'诗与远方之旅',
+    summary:'热爱诗歌和旅行的人，用笔和镜头记录生活，探寻世界之美',
+    memberNum:'235',
+    type:'PublicJoin',
+  }
+]
+
+
+export const hideDropList = [
+  {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
+  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+]
+
+export const showDropList = [
+  {icon:'MenuFoldOutlined',title:'展开边栏',type:'show'},
+  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+]

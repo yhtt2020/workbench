@@ -1,21 +1,20 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col flex=" 0 1 300px" class="find-left h-full flex flex-col px-3"
+    <a-col flex=" 0 1 300px" class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
            :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
            style=" border-right:1px solid var(--divider);">
-      <!-- v-if="isFloat === false" -->
       <div class="flex flex-col">
         <div class="flex justify-between w-full mb-2.5">
           <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ groupName }}</span>
-          <ChatDropDown @updatePage="updatePage"/>
+          <ChatDropDown @updatePage="updatePage"  :list="hideDropList"/>
         </div>
         <div class="font-14" style="color:var(--secondary-text);">
           {{ summary }}
         </div>
         <div>
           <a-row :gutter="10">
-            <a-col flex="55px" class="text-right mt-1">
-              <span class="xt-active-bg rounded-full px-2">0 级</span>
+            <a-col flex="55px" class="mt-1 text-right">
+              <span class="px-2 rounded-full xt-active-bg">0 级</span>
             </a-col>
             <a-col  flex="auto" style="padding-top: 3px">
               <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="10"></a-progress>
@@ -33,7 +32,7 @@
         <div v-for="item in list[0].channelList">
           <ChatFold :title="item.name">
             <div class="flex flex-col" v-if="doubleCol === false">
-              <div v-for="item in item.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
+              <div v-for="item in item.children" class="flex items-center px-4 py-3 rounded-lg pointer group-item"
                    @click="currentItem(item)"
               >
                 <template v-if="item.type === 'group'">
@@ -53,8 +52,8 @@
 
             <div class="flex grid grid-cols-2 gap-1" v-else>
               <div v-for="item in item.children" @click="currentItem(item)"
-                   class="flex items-center py-2  rounded-lg pointer group-item">
-                <div class="mx-2 flex items-center">
+                   class="flex items-center py-2 rounded-lg pointer group-item">
+                <div class="flex items-center mx-2">
                   <template v-if="item.type === 'group'">
                     <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
                   </template>
@@ -75,8 +74,8 @@
       </vue-custom-scrollbar>
     </a-col>
 
-    <a-col flex=" 1 1 200px" class="h-full flex flex-col">
-      <div class="line-title px-4 mb-0">
+    <a-col flex=" 1 1 200px" class="flex flex-col h-full">
+      <div class="px-4 mb-0 line-title">
         <span style="vertical-align: text-top">
         <template v-if="currentChannel.type === 'group'">
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
@@ -91,17 +90,17 @@
         {{ currentChannel.name }}
       </div>
 
-      <div v-if="isChat === 'not'" class="flex h-full items-center  justify-center">
+      <div v-if="isChat === 'not'" class="flex items-center justify-center h-full">
         <ValidateModal :data="group"></ValidateModal>
       </div>
 
       <div style="height: 0;flex:1" v-else>
         <template v-if="!currentChannel.name">
-          <div class="flex items-center h-full justify-center">
+          <div class="flex items-center justify-center h-full">
             <a-empty :image="simpleImage" description="暂无内容"></a-empty>
           </div>
         </template>
-        <Community v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id"/>
+        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'" style="text-align: center;margin-top: 30%">
@@ -124,11 +123,11 @@
 
 <script>
 import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
-import { chatList } from '../../../js/data/chatList'
+import { chatList,hideDropList } from '../../../js/data/chatList'
 import ChatDropDown from '../components/chatDropDown.vue'
 import ChatFold from '../components/chatFold.vue'
-import { AppstoreOutlined, MessageOutlined, LinkOutlined, SelectOutlined } from '@ant-design/icons-vue'
-import Community from '../Community.vue'
+import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
+import Commun from '../Commun.vue'
 import { chatStore } from '../../../store/chat'
 import browser from '../../../js/common/browser'
 import Emoji from '../../../components/comp/Emoji.vue'
@@ -137,12 +136,13 @@ import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/validationPrompts.vue'
 import { message } from 'ant-design-vue'
 
+
 export default defineComponent({
   components: {
     Emoji,
     ChatDropDown,
-    ChatFold, Community, Modal, ValidateModal,
-    AppstoreOutlined, MessageOutlined, LinkOutlined, SelectOutlined
+    ChatFold, Commun, Modal, ValidateModal,
+    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
   },
 
   setup () {
@@ -217,7 +217,7 @@ export default defineComponent({
     })
 
     return {
-      doubleCol, isFloat,
+      doubleCol, isFloat,hideDropList,
       ...toRefs(data), updatePage,
       currentItem, checkGroupShip,
     }

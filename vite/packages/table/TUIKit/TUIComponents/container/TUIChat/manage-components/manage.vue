@@ -25,7 +25,7 @@
       <div class="flex items-center justify-between" style="margin-bottom: 11px;"  @click="enterGroupMemeber">
         <span class="font-14" style="color: var(--primary-text);">群成员</span>
         <div class="flex items-center">
-          <span class="font-14" style="color: var(--primary-text);">{{memberList.length}}人</span>
+          <span class="font-14" style="color: var(--primary-text);">{{conversation.memberCount}}人</span>
           <Icon icon="xiangyou"></Icon>
         </div>
       </div>

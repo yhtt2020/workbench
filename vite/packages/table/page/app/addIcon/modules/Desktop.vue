@@ -36,16 +36,18 @@ export default {
     async loadDeskIconApps() {
       const desktopApps = await ipc.sendSync("getDeskApps");
       let data = [];
-      desktopApps.forEach((item) => {
+      //todo 要增加一个提示界面
+      for (const item of desktopApps) {
         data.push({
           ...item,
+          icon:await tsbApi.system.extractFileIcon(item.path),
           open: {
             type: "tableApp",
             value: item.path,
             name: item.name,
           },
         });
-      });
+      }
       this.allApps = data;
     },
   },

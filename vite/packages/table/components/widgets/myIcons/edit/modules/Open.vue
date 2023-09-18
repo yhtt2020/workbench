@@ -134,8 +134,10 @@ export default {
           type: "tableApp",
           value: item.path,
           name: item.name,
+          src:item.src
         };
         item = this.edit.open;
+
       }
       //  else if (item.type === "systemApp") {
       //   // 本地应用数据
@@ -146,6 +148,7 @@ export default {
       //   };
       //   item = this.edit.open;
       // }
+
       this.edit.linkValue = item;
       this.edit.link = "fast";
     },
@@ -155,7 +158,7 @@ export default {
       fileRef.click();
       let that = this;
       // 用户选择执行
-      fileRef.onchange = function () {
+      fileRef.onchange = async function () {
         if (this.files.length === 0) {
           this.clear();
           return;
@@ -167,6 +170,7 @@ export default {
           value: file.path,
         };
         that.edit.link = "nav";
+        that.edit.src = await tsbApi.system.extractFileIcon(file.path)
         this.value = "";
       };
     },

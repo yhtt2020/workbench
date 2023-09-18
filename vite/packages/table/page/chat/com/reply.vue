@@ -18,14 +18,16 @@
     </div>
     <div class="flex justify-between w-full mt-2 mb-4 font-14 input-btm">
         <div class="w-full">
-            <tippy trigger=" click" placement="bottom">
+            <tippy trigger=" click" placement="bottom" :interactive="true">
                 <template #content>
                     <!-- <div class="w-full"> -->
-                        <vue-custom-scrollbar :settings="settingsScroller"
-                            class="w-full  xt-bg h-[150px] xt-bg-2 rounded-lg ">
-                            <img :src="item" alt="" v-for="(item, index) in folderPath" :key="index"
-                                class="w-[32px] h-[32px] mr-1 mb-2 ml-1" @click="addEmoji(index)">
-                        </vue-custom-scrollbar>
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-1/2 h-[150px] xt-bg-2 rounded-lg flex  "
+                        style="flex-wrap: wrap;">
+                        <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
+                            @click="addEmoji(item)" :key="index" style="cursor: pointer;">
+                            <img :src="item" class="w-[32px] h-[32px]">
+                        </div>
+                    </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
                 <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
@@ -54,9 +56,15 @@ const value = ref('')
 const commentList = ref([])
 // const emojiVis = ref(false)
 const imageVis = ref(false)
-const addEmoji=(index)=>{
-    console.log(index,fluentEmojis[index]);
+// 添加表情
+const addEmoji = ( item) => {
+    const lastSlashIndex = item.lastIndexOf('/');
+    const emoiiValue = item.substring(lastSlashIndex + 1);
+    console.log(emoiiValue);
     
+    const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
+    value.value +=`${key}`
+
 }
 const emit = defineEmits(['addComment'])
 const addComment = () => {
@@ -146,16 +154,9 @@ const fluentEmojis = reactive({
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 let folderPath = reactive([])
 onMounted(() => {
-    // const emojiList = import.meta.globEager('../../../../../public/emoji/emojistatic/emojistatic/*.png')
-    // console.log(emojiList);
-    // const keys = Object.keys(emojiList)
-    // keys.forEach(item => {
-    //     folderPath.push(item)
-    // })
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
-    // console.log(folderPath);
 
 })
 const fileList = ref<UploadProps['fileList']>([
