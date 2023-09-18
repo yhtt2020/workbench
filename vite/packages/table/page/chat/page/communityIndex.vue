@@ -36,14 +36,13 @@
                    @click="currentItem(item)"
               >
                 <template v-if="item.type === 'group'">
-                  <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                  <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
                 </template>
                 <template v-if="item.type === 'link'">
-                  <Emoji icon="link" :size="20"></Emoji>
-                  <!-- <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/> -->
+                  <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
                 </template>
                 <template v-if="item.type === 'forum'">
-                  <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                  <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                 </template>
                 <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
                 <SelectOutlined class="ml-1 xt-text-2 flip" style="font-size: 14px"
@@ -56,14 +55,13 @@
                    class="flex items-center py-2 rounded-lg pointer group-item">
                 <div class="flex items-center mx-2">
                   <template v-if="item.type === 'group'">
-                    <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+                    <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
                   </template>
                   <template v-if="item.type === 'link'">
-                    <Emoji icon="link" :size="20"></Emoji>
-                    <!-- <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/> -->
+                    <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
                   </template>
                   <template v-if="item.type === 'forum'">
-                    <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+                    <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                   </template>
                 </div>
                 <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
@@ -80,14 +78,13 @@
       <div class="px-4 mb-0 line-title">
         <span style="vertical-align: text-top">
         <template v-if="currentChannel.type === 'group'">
-          <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
+          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
         </template>
         <template v-if="currentChannel.type === 'link'">
-          <!-- <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/> -->
-          <Emoji icon="link" :size="20"></Emoji>
+          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
         </template>
         <template v-if="currentChannel.type === 'forum'">
-          <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
+          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
         </template>
        </span>
         {{ currentChannel.name }}
@@ -107,7 +104,7 @@
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'" style="text-align: center;margin-top: 30%">
-            <Emoji icon="link" :size="20"></Emoji>
+            
             当前频道需要浏览器打开。
           </div>
           <iframe v-else :src="currentChannel.props.url" class="m-2"
@@ -138,6 +135,7 @@ import { checkGroupShip } from '../../../js/common/sns'
 import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/validationPrompts.vue'
 import { message } from 'ant-design-vue'
+import { Icon as communityIcon } from '@iconify/vue'
 
 
 export default defineComponent({
@@ -145,7 +143,7 @@ export default defineComponent({
     Emoji,
     ChatDropDown,
     ChatFold, Commun, Modal, ValidateModal,
-    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined
+    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined,communityIcon
   },
 
   setup () {
