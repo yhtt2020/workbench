@@ -2,6 +2,7 @@
   <!--  <div class="card  gradient gradient&#45;&#45;14  content small" style="display: flex;flex-direction: column;align-content: center;align-items: center">-->
   <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
   <!--  </div>-->
+<xt-task :modelValue="m03031" @cb="openRightMenu">
   <Widget :customIndex="customIndex" :size="customSize" :options="options" :menuList="menuList"
     ref="remote" :custom-data="customData" :desk="desk" :showRightIcon="notTrigger ? false : true">
     <div ref="cardSize" style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center" :class="notTrigger ? 'trigger' : '' ">
@@ -17,6 +18,7 @@
       </template>
     </div>
   </Widget>
+</xt-task>
   <a-drawer v-model:visible="panelVisible">
     <div class="line">
       卡片地址： <a-input v-model:value="url" style="width:230px" placeholder="请输入远程地址，需带协议"></a-input>
@@ -45,6 +47,8 @@
 <script>
 import Widget from '../../card/Widget.vue'
 import { message } from 'ant-design-vue'
+import {taskStore} from "../../../apps/task/store"
+import { mapWritableState } from 'pinia';
 // import RemoteShare from '../../card/remote/RemoteShare.vue';
 function loadScript(src, id, callback) {
   const s = document.createElement("script", id);
@@ -143,6 +147,9 @@ export default {
     }
   },
   methods: {
+    openRightMenu(){
+      this.$refs.remote.menuVisible = true
+    },
     closeModal(val){
       this.showCommunity = val
     },
@@ -190,6 +197,10 @@ export default {
     // }
   },
   computed: {
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m03031() {
+      return this.customData.task && this.taskID == "M0303" && this.step == 1; 
+    },
     customSize() {
       return {
         width: (this.customData.width || 1) * 280 + (this.customData.width - 1) * 10 + 'px',

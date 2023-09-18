@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { taskStore } from "../../../../apps/task/store";
+import { mapWritableState } from "pinia";
 export default {
   inject: ["width", "height"],
   props: {
@@ -50,8 +52,16 @@ export default {
         this.$emit("updateSelectApps", this.selectApps);
       },
     },
+    // 这里是m02014的步骤
+    step(newV) {
+      if (newV == 4 && this.taskID == "M0201") {
+        this.selectApp(this.data[0], 0);
+        this.selectApp(this.data[1], 1);
+      }
+    },
   },
   computed: {
+    ...mapWritableState(taskStore, ["taskID", "step"]),
     // 全选状态
     selectAll() {
       if (

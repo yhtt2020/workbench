@@ -32,10 +32,9 @@
           </div>
           
           <div class="center-text" style="transform: translateY(-20px)">
+       
             <div class="con-center" v-show="navText && !promptModal" style="width:800px">
-            <xt-task :modelValue="m01043" ></xt-task>
-
-              <span class="mt-5 mb-4">本界面不支持触摸，请使用滚轮滚动，支持鼠标拖拽！</span>
+               <span class="mt-5 mb-4">本界面不支持触摸，请使用滚轮滚动，支持鼠标拖拽！</span>
 <!--              <div class="   mb-2">
                 <div class="mb-2 xt-text-2">
                   注意：侧边栏图标风格会自动调整
@@ -52,7 +51,7 @@
                 </div>
 
               </div>-->
-
+              <xt-task :modelValue="m01043"></xt-task>
               <div class="mb-2 xt-text-2">必选功能（拖拽添加）</div>
               <div class="main-nav" id="mainList" style="width: 320px;zoom:0.8">
                 <div v-for="item in mainNavList" :key="item.name" style="margin:5px">
