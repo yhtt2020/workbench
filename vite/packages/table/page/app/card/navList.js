@@ -62,63 +62,6 @@ export const NavList = [
         time: "2023/5/31",
       },
       {
-        name: 'gameInformation',
-        cname: '电竞资讯',
-        detail: '时刻关注电竞游戏资讯',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'gameInformation',
-            size: '2x2',
-            zoom: '20'
-          },
-        ],
-        time: '2023/6/28'
-      },
-      {
-        name: 'historyInfo',
-        cname: '历史上的今天',
-        detail: '历史上的今天都发生了什么大事呢？',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'historyInfo',
-            size: '2x2',
-            zoom: '40'
-          },
-        ],
-        time: '2023/6/28'
-      },      
-
-      {
-        name: 'shortcutKey',
-        cname: '快捷键小组件',
-        detail: '在你的桌面上快速访问最近使用的快捷键数据。',
-        sizes: ['4x4'],
-        option: [
-          {
-            name: 'shortcutKey',
-            size: '4x4',
-            zoom: '20'
-          },
-        ],
-        time: '2023/6/28'
-      },
-      {
-        name: 'clipBoard',
-        cname: '剪贴板小组件',
-        detail: '在你的桌面上快速访问最近的剪贴板数据。',
-        sizes: ['4x4'],
-        option: [
-          {
-            name: 'clipBoard',
-            size: '4x4',
-            zoom: '24'
-          },
-        ],
-        time: '2023/6/28'
-      },
-      {
         name: "weather",
         cname: "天气",
         detail: "查看某地当前的天气状况和未来的天气预报。",
@@ -851,7 +794,124 @@ export const NavList = [
         ],
         time: "2023/6/29",
       },
+      {
+        name: 'gameInformation',
+        cname: '电竞资讯(开发中)',
+        detail: '时刻关注电竞游戏资讯',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'gameInformation',
+            size: '2x2',
+            zoom: '20'
+          },
+        ],
+        time: '2023/9/8'
+      },
+      {
+        name: 'historyInfo',
+        cname: '历史上的今天(开发中)',
+        detail: '历史上的今天都发生了什么大事呢？',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'historyInfo',
+            size: '2x2',
+            zoom: '40'
+          },
+        ],
+        time: '2023/9/9'
+      },      
 
+      {
+        name: 'shortcutKey',
+        cname: '快捷键小组件(开发中)',
+        detail: '在你的桌面上快速访问最近使用的快捷键数据。',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'shortcutKey',
+            size: '4x4',
+            zoom: '20'
+          },
+        ],
+        time: '2023/9/13'
+      },
+      {
+        name: 'clipBoard',
+        cname: '剪贴板小组件(开发中)',
+        detail: '在你的桌面上快速访问最近的剪贴板数据。',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'clipBoard',
+            size: '4x4',
+            zoom: '24'
+          },
+        ],
+        time: '2023/9/14'
+      },
+      {
+        name: 'communityDashboard',
+        cname: '社区数据看板(开发中)',
+        detail: '支持自定义短说运营数据看板，时刻关注你的社区活跃情况',
+        sizes: ['2x4','4x4'],
+        option: [
+          {
+            name: 'smallCommunityDashboard',
+            size: '2x4',
+            zoom: '44'
+          },
+          {
+            name: 'middleCommunityDashboard',
+            size: '4x4',
+            zoom: '30'
+          },
+        ],
+        time: '2023/9/15'
+      },
+      {
+        name: 'communityTodo',
+        cname: '社区待办(开发中)',
+        detail: '短说社区审核通知不再遗漏，在工作台中即可快速查看和访问',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'communityTodo',
+            size: '2x4',
+            zoom: '30'
+          },
+        ],
+        time: '2023/9/16'
+      },
+      {
+        name: 'communityGuider',
+        cname: '社区助手(开发中)',
+        detail: '短说社区助手，随时翻阅使用手册，快速进入客服交流群',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'communityGuider',
+            size: '2x4',
+            zoom: '30'
+          },
+        ],
+        time: '2023/9/18'
+      },
+      {
+        name: 'communityChart',
+        cname: '社区数据图表(开发中)',
+        detail: '将短说管理后台的数据统计面板搬到了工作台，运营数据时刻查看',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'communityChart',
+            size: '4x4',
+            zoom: '24'
+          },
+        ],
+        time: '2023/9/19'
+      },
     ]
   },
 ];
