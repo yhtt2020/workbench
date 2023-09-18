@@ -170,7 +170,7 @@ watch(() => props.forumId, (newValue) => {
   setCurrentIndex(currentIndex.value)
 })
 //
-const showPublishModal = ref(true)
+const showPublishModal = ref(false)
 const modalVisible = (val) => {
   showPublishModal.value = val.value
   // console.log(val.value);

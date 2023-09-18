@@ -2,7 +2,7 @@
 <template>
     <Modal :maskNoClose="true" class="" :animationName="t-b-close">
         <div class="w-[500px] pl-4 pr-4">
-            <div class="flex justify-between w-full h-[64px] items-center mb-2">
+            <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="font-16">写动态</div>
                 </div>
@@ -11,7 +11,7 @@
                 </button>
 
             </div>
-            <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] -mt-2 mb-2">
+            <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
                 分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click="goYuan">元社区</a>
             </div>
             <div class="w-full mt-2 xt-bg box font-16">
@@ -19,7 +19,7 @@
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
                         <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
                             :bordered="false" />
-                        <div style="font-size: 16px !important;">
+                        <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                                 @preview="handlePreview">
                                 <div v-if="fileList.length < 6">
@@ -31,7 +31,7 @@
                             <img alt="example" style="width: 100%" :src="previewImage" />
                         </a-modal>
                     </div>
-                    <div class="h-[56px] flex items-center justify-between">
+                    <div class="h-[45px] flex items-center justify-between">
                         <div class="flex items-center justify-center xt-text-2">
                             <tippy trigger=" click" placement="bottom" :interactive="true">
                                 <template #content>
@@ -52,7 +52,7 @@
                                     </template> 表情</a-button>
                             </tippy>
 
-                            <a-button type="text" size="small" class="xt-text"
+                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible=!imageLoadVisible"
                                 style="color: var(--secondary-text) !important;"><template #icon>
                                     <PictureOutlined style="" />
                                 </template> 图片</a-button>
@@ -83,6 +83,7 @@ import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
 import { Icon } from '@iconify/vue';
+const imageLoadVisible=ref(true)
 const goYuan = () => {
     browser.openInUserSelect('https://s.apps.vip/')
 }
