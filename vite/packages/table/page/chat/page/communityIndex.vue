@@ -39,7 +39,8 @@
                   <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
                 </template>
                 <template v-if="item.type === 'link'">
-                  <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                  <Emoji icon="link" :size="20"></Emoji>
+                  <!-- <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/> -->
                 </template>
                 <template v-if="item.type === 'forum'">
                   <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
@@ -58,7 +59,8 @@
                     <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
                   </template>
                   <template v-if="item.type === 'link'">
-                    <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+                    <Emoji icon="link" :size="20"></Emoji>
+                    <!-- <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/> -->
                   </template>
                   <template v-if="item.type === 'forum'">
                     <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>
@@ -81,7 +83,8 @@
           <MessageOutlined style="color:var(--warning);font-size: 1.25em;"/>
         </template>
         <template v-if="currentChannel.type === 'link'">
-          <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/>
+          <!-- <LinkOutlined style="color:var(--active-bg);font-size: 1.25em;"/> -->
+          <Emoji icon="link" :size="20"></Emoji>
         </template>
         <template v-if="currentChannel.type === 'forum'">
           <AppstoreOutlined style="color:var(--success);font-size: 1.25em;"/>

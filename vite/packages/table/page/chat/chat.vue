@@ -4,7 +4,7 @@
       <router-view></router-view>
     </div>
 
-    <template #test>
+    <template #communityFloat>
       <div class="flex flex-col p-2 mt-3">
         <div class="flex flex-col">
           <div class="flex justify-between mb-2.5">
@@ -69,12 +69,13 @@ import { message } from "ant-design-vue";
 // import Commun from './Commun.vue'
 import ChatFind from "./page/chatFind.vue"
 import ChatMain from './page/chatMain.vue';
-import ThiskyIndex from './page/thiskyIndex.vue'
+import CommunityIndex from './page/communityIndex.vue'
 import Modal from '../../components/Modal.vue'
 import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
 import CreateCommunity from './components/createCommunity.vue'
+import _ from 'lodash-es'
 import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
@@ -83,8 +84,8 @@ import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity  from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
-import { myCommunityStore } from './store/communityGroup'
-import _ from 'lodash-es'
+import { myCommunityStore } from './store/myCommunity'
+
 
 export default {
   name: 'App',
@@ -94,7 +95,7 @@ export default {
     TUIContact,
     Drag,
     ChatFind,
-    ThiskyIndex,
+    CommunityIndex,
     ChatMain,Modal,
     AddFriend,CreateGroup,
     Transfer,
@@ -154,24 +155,29 @@ export default {
 
     // 遍历将社群进行UI层数据替换
     for(let i=0;i<myCommunityList.length;i++){
-      if(myCommunityList[i].communityInfo.icon !== null){
-        const index = _.findIndex(newArr,function(o){ return o.cno === myCommunityList[i].cno })
-        if(index === -1){
-         const item = {
-          name:myCommunityList[i].communityInfo.name,
-          img:myCommunityList[i].communityInfo.icon,
-          type: 'thisky',
-          float:"test",
-          noBg:true,
-          callBack: selectTab,
-          route:{ name:'chatThisky',info:myCommunityList[i]},
-         }
-         newArr.push(item)
-        }else{
-         return
+      if(Object.keys(myCommunityList[i].communityInfo).length !== 0 && myCommunityList.length !== 0 && myCommunityList.length !== 0 && myCommunityList[i].communityInfo){
+        if(myCommunityList.length !== 0 && myCommunityList[i].communityInfo && myCommunityList[i].communityInfo.icon !== null){
+          const index = _.findIndex(newArr,function(o){ return o.cno === myCommunityList[i].cno })
+          if(index === -1){
+           const item = {
+            name:myCommunityList[i].communityInfo.name,
+            img:myCommunityList[i].communityInfo.icon,
+            type: `community${myCommunityList[i].cno}`,
+            float:"communityFloat",
+            noBg:true,
+            callBack: selectTab,
+            route:{ name:'defaultCommunity',info:myCommunityList[i]},
+           }
+           newArr.push(item)
+          }else{
+           return
+          }
         }
+      }else{
+        console.error('该社群不存在')
+        return;
       }
-
+      
     }
 
     const addCom = (item) =>{
@@ -225,12 +231,12 @@ export default {
       {
         icon:'',
         img: '/icons/logo128.png',
-        type: 'thisky',
-        float:"test",
+        type: 'community',
+        float:"communityFloat",
         noBg:true,
         callBack: selectTab,
         route:{
-          name:'chatThisky'
+          name:'defaultCommunity'
         }
       },
 

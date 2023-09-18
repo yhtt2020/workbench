@@ -134,6 +134,7 @@ export default {
 
     // 加入推荐群聊
     async addGroup (id) {
+      this.$router.push({name:'chatMain'})
       const option = {
         groupID: id,
       }
