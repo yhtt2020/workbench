@@ -9,7 +9,7 @@
         <div class="flex flex-col">
           <div class="flex justify-between mb-2.5">
             <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
-            <ChatDropDown />
+            <ChatDropDown :list="showDropList"/>
           </div>
           <div class="font-14" style="color:var(--secondary-text);">
             {{ community.summary }}
@@ -78,11 +78,13 @@ import CreateCommunity from './components/createCommunity.vue'
 import config from './config'
 import {appStore} from "../../store";
 import {storeToRefs} from "pinia";
-import { chatList } from '../../js/data/chatList'
+import { chatList,showDropList } from '../../js/data/chatList'
 import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity  from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
+import { myCommunityStore } from './store/communityGroup'
+import _ from 'lodash-es'
 
 export default {
   name: 'App',
@@ -101,12 +103,12 @@ export default {
   },
 
   setup() {
-
-
+    const myCom  = myCommunityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
     const Server = window.$chat
+
     const data = reactive({
       index:'chat',
       // type:'chat',
@@ -134,6 +136,7 @@ export default {
     const selectDorpTab = (item) =>{
       data.addIndex = item.index
       data.open = true
+
     }
 
     const openAddCom = () =>{
@@ -142,7 +145,43 @@ export default {
     }
 
     const appS=appStore()
+   
     const {userInfo}=appS
+    const { myCommunityList } = myCom
+    // console.log('测试::>>', myCommunityList)
+    
+    const newArr = []
+
+    // 遍历将社群进行UI层数据替换
+    for(let i=0;i<myCommunityList.length;i++){
+      if(myCommunityList[i].communityInfo.icon !== null){
+        const index = _.findIndex(newArr,function(o){ return o.cno === myCommunityList[i].cno })
+        if(index === -1){
+         const item = {
+          name:myCommunityList[i].communityInfo.name,
+          img:myCommunityList[i].communityInfo.icon,
+          type: 'thisky',
+          float:"test",
+          noBg:true,
+          callBack: selectTab,
+          route:{ name:'chatThisky',info:myCommunityList[i]},
+         }
+         newArr.push(item)
+        }else{
+         return
+        }
+      }
+
+    }
+
+    const addCom = (item) =>{
+      data.addIndex = item.index
+      data.open = true
+      myCom.getRecommendCommunityList()
+    }
+  
+
+    // console.log('获取我的社群列表',...newArr)
 
     const chatLeftList = ref([
       {
@@ -194,6 +233,9 @@ export default {
           name:'chatThisky'
         }
       },
+
+      ...newArr,
+
       {
        //  icon:'ic:baseline-add',
        icon:'tianjia2',
@@ -233,7 +275,7 @@ export default {
             icon:'team',
             name:'加入社群',
             index:"joinCom",
-            callBack:selectDorpTab,
+            callBack:addCom,
           }
         ]
       },
@@ -245,7 +287,7 @@ export default {
     })
 
     return {
-      chatLeftList,route,router,
+      chatLeftList,route,router,showDropList,
       ...toRefs(data),
     }
   }
