@@ -1,6 +1,6 @@
 <template >
     <!-- {{ isShow.isShow }} -->
-    <div class="w-full card" style="height:auto">
+    <div class="w-full card " style="height:auto">
         <!-- {{ isShow.isShow }} -->
 
         <div class="w-full card-content">
@@ -103,7 +103,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed,onBeforeUpdate } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
 import { useCommunityStore } from '../commun'
@@ -154,15 +154,12 @@ const createTime = computed(() => {
     return [date, time]
 })
 // const tid=store.communityPostDetail.pay_set.tid 
-let tid
+let tid=store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id
 // console.log(store.communityPostDetail);
 // 当tid不存在时，处理
-if (store.communityPostDetail.pay_set) {
-    tid = store.communityPostDetail.pay_set.tid
-} else {
-    // 
-    tid = 1234
-}
+// if (store.communityPostDetail.pay_set) {
+//     tid = store.communityPostDetail.pay_set.tid
+// }
 
 const fluentEmojis = reactive({
     "[Kiss]": "Face Blowing a Kiss.png",
@@ -221,7 +218,9 @@ const refreshDetail = async () => {
     await store.getCommunityPostDetail(tid)
     refreshDetailFlag.value = true
 }
-
+// onBeforeUpdate(()=>{
+//     store.getCommunityPostDetail(tid)
+// })
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/

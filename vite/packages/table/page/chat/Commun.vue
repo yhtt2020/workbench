@@ -49,9 +49,9 @@
 
     </div>
     <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
-    <div class="flex justify-center flex-1 " style="height: 0" v-else>
+    <div class="flex justify-center flex-auto " style="height: 0;" v-else>
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
+      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
         :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
         :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
@@ -70,6 +70,7 @@
         :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full detail" v-if="detailVisible">
           <DetailCard :cardData="detailText" @closeDetail="closeDetail"></DetailCard>
+          <!-- <a-pagination v-model:current="detailCurrent" :total="totalReply" simple @change="changePage" /> -->
         </div>
       </vue-custom-scrollbar>
     </div>
@@ -77,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, h, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
@@ -169,7 +170,7 @@ watch(() => props.forumId, (newValue) => {
   setCurrentIndex(currentIndex.value)
 })
 //
-const showPublishModal = ref(false)
+const showPublishModal = ref(true)
 const modalVisible = (val) => {
   showPublishModal.value = val.value
   // console.log(val.value);
@@ -200,7 +201,8 @@ const showDetail = async (index) => {
   selectedIndex.value = index;
   // console.log(selectedIndex)
   // console.log(comCards);
-
+  // console.log(store.communityPost.list[selectedIndex].reply_count,'count');
+  
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
@@ -217,7 +219,10 @@ const detailText = computed(() => {
     return store.communityPostDetail
   }
 })
-
+// const detailCurrent = ref(1)
+// const totalReply = computed(() => {
+//   return store.communityPost.list[selectedIndex].reply_count
+// })
 // 关闭详情页
 const closeDetail = (value) => {
   if (detailVisible.value) {
