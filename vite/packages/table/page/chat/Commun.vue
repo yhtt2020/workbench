@@ -2,10 +2,9 @@
   <div @resize="updateScroller" class="container flex flex-col xt-text">
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
-        <!-- style="color: var(--primary-text);" -->
-        <!-- {{ store.communityInfo }} -->
-        <!-- {{ store.communityPost.list }} -->
-        <!-- {{ comCards.list[1] }} -->
+        <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1" style="line-height: 40px;">
+          <span class="mr-1">ID:</span>{{ store.communityPost.list[0].fid }}
+        </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
             class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
@@ -30,32 +29,39 @@
           </a-dropdown>
         </div>
       </div>
-      <div class="right shrink">
-        <a-button type="primary" :icon="h(PlusCircleTwoTone)" style="color: var(--primary-text);" @click="visibleModal">
-          发布</a-button>
+      <div class="flex mr-6 right">
+        <!-- <div class="flex items-center"> -->
+        <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
+          <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
+        </a-button>
+        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="refreshPost">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
+        </button>
+        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
+        </button>
+
+
+        <!-- </div> -->
+
       </div>
-      <!-- 发布模态框 -->
-      <!-- <a-modal v-if="showPublishModal" title="Basic Modal" @ok="handleOk">
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </a-modal> -->
       <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" />
 
     </div>
-
-    <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
-    <div class="flex justify-center flex-1 " style="height: 0">
+    <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
+    <div class="flex justify-center flex-1 " style="height: 0" v-else>
       <!-- 左侧卡片区域 -->
       <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
-         :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
+        :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
         :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
+          <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
+          <a-pagination v-model:current="current" :total="100" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -63,11 +69,7 @@
       <vue-custom-scrollbar class="ml-2 rounded-lg thread-detail xt-bg" :key="selectedIndex" v-if="detailVisible"
         :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full detail" v-if="detailVisible">
-          <DetailCard :cardData="detailText">
-            <template #top-right>
-              <CloseCircleOutlined @click="close()" class="text-xl xt-text" />
-            </template>
-          </DetailCard>
+          <DetailCard :cardData="detailText" @closeDetail="closeDetail"></DetailCard>
         </div>
       </vue-custom-scrollbar>
     </div>
@@ -75,16 +77,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, h, onMounted, computed, watch } from 'vue';
-import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
+import { ref, reactive, onBeforeMount, h, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
+import { DownOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
-import DataStatu from '../../../table/components/widgets/DataStatu.vue';
 import publishModal from './com/publishModal.vue';
-import { useCommunityStore } from './community'
-import { message } from 'ant-design-vue'
+import { useCommunityStore } from './commun'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import { Icon } from '@iconify/vue'
+import browser from '../../js/common/browser';
 // import {} from 'pinia'
 // import communityStore  from './community';
+const current = ref(1)
+// 更新帖子列表
+const refreshFlag = ref(false)
 const store = useCommunityStore();
 const props = defineProps({
   forumId: {
@@ -103,24 +110,51 @@ const menuList = ref([
     name: '精华',
     type: 'essence'
   }])
+const createOrder = computed(() => store.communityPost?.list[0].create_time)
+const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
 const checkMenuList = ref([{
   type: '最近更新',
-  order: store.communityPost.create_time
+  order: createOrder ? new Date(createOrder).getTime() : 0,
 }, {
   type: '最近回复',
-  order: store.communityPost.last_post_time
+  order: replyOrder
 
 }])
+
 const currentIndex = ref(0)
 const checkMenuCurrentIndex = ref(0)
+// 选择最近更新与最近回复
 const handleMenuItemClick = (index) => {
   checkMenuCurrentIndex.value = index
   // store.getCommunityPostReply(index+1234,1)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[checkMenuCurrentIndex.value].order)
+  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[checkMenuCurrentIndex.value].order);
 }
+// 选择全部，热门的内容
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(props.forumId, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
+  
 }
+const goYuan = () => {
+  browser.openInUserSelect('https://s.apps.vip/')
+}
+const refreshPost = () => {
+  refreshFlag.value = true
+  setTimeout(async () => {
+    await store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+    refreshFlag.value = false
+  });
+
+}
+const changePage = (page) => {
+  refreshFlag.value = true
+  current.value = page
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  refreshFlag.value = false
+}
+
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
 const settingsScroller = reactive({
@@ -170,12 +204,6 @@ const showDetail = async (index) => {
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
-
-  // console.log(store.communityPostDetail.pay_set);
-
-
-
-  // store.getCommunityPostDetail()
 }
 const detailText = computed(() => {
   if (store.communityPostDetail.pay_set === undefined) {
@@ -190,32 +218,29 @@ const detailText = computed(() => {
   }
 })
 
-// const pageToggle = computed(() => {
-//   if (comCards.list === null) {
-//     return false
-//   } else {
-//     return true
-//   }
-// })
-// if(store.communityPostDetail.pay_set===undefined){
-//   message.info('暂无数据')
-
-// }
-// console.log(store.communityPostDetail);
-
-
-
-// 关闭详情的函数
-const close = () => {
+// 关闭详情页
+const closeDetail = (value) => {
   if (detailVisible.value) {
-    detailVisible.value = false;
+    detailVisible.value = value;
     selectedIndex.value = -1
   }
   updateScroller()
 }
-
+onBeforeMount(() => {
+  NProgress.start()
+  NProgress.configure({ showSpinner: false });
+})
 onMounted(() => {
   setCurrentIndex(0)
+  // NProgress.done()
+})
+onBeforeUpdate(() => {
+  NProgress.start()
+  NProgress.configure({ showSpinner: false });
+})
+onUpdated(() => {
+  NProgress.done()
+  NProgress.configure({ showSpinner: false });
 })
 </script>
 <style lang='scss' scoped>
@@ -276,9 +301,8 @@ onMounted(() => {
   }
 
   .right {
-    width: 83px;
-    height: 40px;
-    margin-right: 24px;
+
+    // margin-right: 24px;
 
     :deep(.ant-btn) {
       width: 100%;
@@ -352,6 +376,10 @@ onMounted(() => {
     background-color: rgba(80, 139, 254, 0.20);
   }
 
+  #nprogress .bar {
+    background: #66B1FF !important;
+    height: 10px !important;
+  }
 
 
   .omit {
@@ -368,5 +396,4 @@ onMounted(() => {
       display: none;
     }
   }
-}
-</style>
+}</style>
