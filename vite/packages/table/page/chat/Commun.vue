@@ -3,7 +3,7 @@
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
         <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1" style="line-height: 40px;">
-          <span class="mr-1">ID:</span>{{ store.communityPost.list[0].fid }}
+          <span class="mr-1">ID:</span>{{ props.forumId }}
         </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
@@ -61,7 +61,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
-          <a-pagination v-model:current="current" :total="100" simple @change="changePage" />
+          <a-pagination v-model:current="current" :total="50" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -138,7 +138,7 @@ const setCurrentIndex = (index) => {
   
 }
 const goYuan = () => {
-  browser.openInUserSelect('https://s.apps.vip/')
+  browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
 const refreshPost = () => {
   refreshFlag.value = true

@@ -11,10 +11,16 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed ,onBeforeMount} from 'vue'
+import { ref, computed ,onMounted,onBeforeUpdate} from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
 import {useCommunityStore} from '../commun'
+onBeforeUpdate( ()=>{
+    // props.tid
+    // console.log(props.tid);
+    
+    store.getCommunityPostReply(store.communityPostDetail.pay_set.tid)
+})
 const store=useCommunityStore()
 const props=defineProps({
     tid:Number,
@@ -34,9 +40,7 @@ const getReplyText=(val)=>{
     // console.log('comstore',store.communityReply);
     
 }
-onBeforeMount(()=>{
-    store.getCommunityPostReply(props.tid)
-})
+
 </script>
 <style lang='scss' scoped>
 .font-14 {

@@ -77,6 +77,16 @@ import {  computed,reactive } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
 const useUserStore = appStore()
+
+
+const props = defineProps({
+    detailVisible: Boolean,
+    cardData: {
+        type: Object,
+        default: () => []
+    }
+})
+
 let uid = props.cardData.user.uid
 let userInfo = {
     uid: uid,
@@ -86,14 +96,6 @@ let userInfo = {
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
 }
-
-const props = defineProps({
-    detailVisible: Boolean,
-    cardData: {
-        type: Object,
-        default: () => []
-    }
-})
 const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
