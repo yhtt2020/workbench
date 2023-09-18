@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     zIndexValue() {
-      return this.modelValue ? 999999 : null;
+      return this.modelValue ? 999999999 : null;
     },
   },
   methods: {

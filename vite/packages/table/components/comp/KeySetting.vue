@@ -1,7 +1,8 @@
 <script lang="ts">
 import KeyInput from "./KeyInput.vue";
 import {message} from "ant-design-vue";
-
+import {taskStore}from "../../apps/task/store"
+import { mapWritableState } from "pinia";
 export default {
   name: "KeySetting",
   components: {KeyInput},
@@ -22,6 +23,12 @@ export default {
         },
       },
       keyMap:{}//设置中取回的键位
+    }
+  },
+  computed:{
+    ...mapWritableState(taskStore, ["taskID", "step"]),
+    m04012( ) {
+      return this.taskID == "M0401" && this.step == 2
     }
   },
   async mounted() {
@@ -54,6 +61,7 @@ export default {
 </script>
 
 <template>
+  <xt-task :modelValue="m04012"></xt-task>
   <div v-for="key in Object.keys(this.keys)">
     <div class="line">
       {{this.keys[key].title}}快捷键

@@ -54,7 +54,7 @@ export default defineComponent({
     chatStore().login()
   },
   computed:{
-    ...mapState(appStore,['fullScreen'])
+    ...mapState(appStore,['fullScreen']),
   },
   methods:{
     ...mapActions(chatStore,['login']),

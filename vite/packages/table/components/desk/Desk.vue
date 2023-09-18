@@ -1,6 +1,5 @@
 <template>
 
-
   <div style="height:100%;width: calc(100% - 20px); " v-if="currentDesk.cards">
     <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto"
          v-if="currentDesk.cards.length === 0">
@@ -158,7 +157,6 @@
          v-model="currentSettingTab"
          :list="settingsTab"
     ></XtTab>
-
     <template v-if="currentSettingTab==='current'">
       <div class="line-title">基础设置</div>
       <div class="mt-2 line">
@@ -278,6 +276,12 @@ import GameInformation from '../widgets/gameInformation/index.vue'
 import HistoryInfo from '../widgets/historyInfo/index.vue'
 import ShortcutKey from '../widgets/shortcutKey/index.vue'
 import ClipBoard from '../widgets/clipBoard/index.vue'
+import CommunityGuider from '../widgets/openSNS/communityGuider.vue'
+import CommunityTodo from '../widgets/openSNS/communityTodo.vue'
+import SmallCommunityDashboard from '../widgets/openSNS/smallCommunityDashboard.vue'
+import MiddleCommunityDashboard from '../widgets/openSNS/middleCommunityDashboard.vue'
+import CommunityChart from '../widgets/openSNS/communityChart.vue'
+
 
 
 const NewAddCard = defineAsyncComponent(() => import('../../page/app/card/NewAddCard.vue'))
@@ -308,6 +312,11 @@ export default {
     HistoryInfo,
     ShortcutKey,
     ClipBoard,
+    CommunityGuider,
+    CommunityTodo,
+    SmallCommunityDashboard,
+    MiddleCommunityDashboard,
+    CommunityChart,
     News,
     Template,
     HorizontalPanel,

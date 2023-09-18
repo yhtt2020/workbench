@@ -3,19 +3,19 @@
 
         <!-- icon图标<icon icon="shuaxin"></icon> -->
         <MyIcon icon="fluent:games-16-filled" class="myIcon" />
-        <div class="box1">
+        <div class="box-border">
             <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
-            <div class="card1"   v-for="(value,index) in this.gameData" :key="index" @click="jump(value.url)" >
-                <div class="left_card">
-                    <div class="title1">{{value.title}}</div>
-                    <div class="message1">{{value.description}}</div>
-                    <div class="buttom1" style="margin-top: 9px;">
-                        <div class="time1">{{value.ctime}}</div>
-                        <div class="name1">{{value.source}}</div>
+            <div class="card-body"   v-for="(value,index) in this.gameData" :key="index" @click="jump(value.url)" >
+                <div class="left-card">
+                    <div class="title-article">{{value.title}}</div>
+                    <div class="message-article">{{value.description}}</div>
+                    <div class="bottom-article" style="margin-top: 9px;">
+                        <div class="time-article">{{value.ctime}}</div>
+                        <div class="source-article">{{value.source}}</div>
                     </div>
                 </div>
                 <div class="right_card">
-                    <img class="img1" :src="value.picUrl" alt="">
+                    <img class="img-article" :src="value.picUrl" alt="">
                 </div>
             </div>
         </div>
@@ -30,8 +30,7 @@ import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import {Icon as MyIcon} from '@iconify/vue';
 import { message } from 'ant-design-vue'
-import {sUrl} from "../../../consts"
-import {get} from "../../../js/axios/request"
+import {getGameInfo} from "../../../store/gameInfomation"
 export default {
     components:{
         Widget,
@@ -70,29 +69,12 @@ export default {
         };
     },
     async mounted() {
-        await this.onTest()
+        await this.onGetInfo()
     },
     methods:{
-        onTest(){
-            let params = {
-                params:{
-                    "num":10,
-                    "page":1,
-                    "rand":1
-                }
-            }
-            let options = {
-                "cache":1,
-                "ttl":60,
-                "key":"fapigx.esports.query"
-            }
-            get(sUrl("/app/juhe/get?apiName=fapigx.esports.query&options=%7B%22cache%22:1,%22ttl%22:60,%22key%22:%22fapigx.esports.query%22%7D"),params).then(res=>{
-                var dataList =[];
-                for(let i=0;i<res.data.newslist.length&&i<3;i++){
-                    dataList[i] = res.data.newslist[i]
-                }
-                this.gameData = dataList
-            })
+        async onGetInfo(){
+            let dataList = await getGameInfo("/app/juhe/get");
+            this.gameData = dataList;
         },
         jump(url){
             browser.openInUserSelect(url)
@@ -103,7 +85,7 @@ export default {
                 this.$refs.refreshButton.classList.remove('animate-spin')
                 message.success({content:'刷新资讯成功',key:'refreshZixun'})
             },500)
-            this.onTest()
+            this.onGetInfo()
         }
     }
 };
@@ -120,7 +102,7 @@ export default {
         overflow: hidden;
 
     }
-    .card1{
+    .card-body{
         position: relative;
         width: 544px;
         height: 110px;
@@ -129,10 +111,10 @@ export default {
         // border: 1px solid #fff;
         padding: 8px;
     }
-    .left_card{
+    .left-card{
         width: 368px;
     }
-    .title1{
+    .title-article{
         width:368px;
         height: 20px;
         font-size: 14px;
@@ -142,9 +124,9 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
         margin-bottom: 8px;
-
+        cursor: pointer;
     }
-    .message1{
+    .message-article{
         width:368px;
         height: 40px;
         font-size: 14px;
@@ -158,34 +140,37 @@ export default {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
+        cursor: pointer;
     }
 
-    .time1{
+    .time-article{
         width: 107px;
         height: 17px;
         font-size: 12px;
         opacity: 0.4;
         float: left;
+        cursor: pointer;
     }
     
-    .name1{
+    .source-article{
         font-size: 12px;
         max-width: 100px;
         height: 17px;
         opacity: 0.4;
-        
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         float: right;
+        cursor: pointer;
     }
 
-    .img1{
+    .img-article{
         width: 148px;
         height: 94px;
         position: absolute;
         top: 10px;
         left: 384px;
+        cursor: pointer;
         // border: 1px solid #fff;
     }
 </style>

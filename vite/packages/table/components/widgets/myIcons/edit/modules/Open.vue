@@ -1,42 +1,23 @@
 <template>
   <XtTitle> 链接/快捷方式 </XtTitle>
   <div class="flex justify-between" v-if="edit.link == ''">
-    <div
-      class="xt-btn xt-text xt-hover h-12"
-      style="width: 142px"
-      @click="linkClick()"
-    >
+    <div class="xt-btn xt-text xt-hover h-12" style="width: 142px" @click="linkClick()">
       网页链接
     </div>
-    <div
-      class="xt-btn xt-text xt-hover h-12"
-      style="width: 142px"
-      @click="fastClick()"
-    >
+    <div class="xt-btn xt-text xt-hover h-12" style="width: 142px" @click="fastClick()">
       快捷方式
     </div>
-    <div
-      class="xt-btn xt-text xt-hover h-12"
-      style="width: 142px"
-      @click="navClick()"
-    >
+    <div class="xt-btn xt-text xt-hover h-12" style="width: 142px" @click="navClick()">
       应用导航
     </div>
   </div>
   <!-- 链接方式 -->
   <template v-else-if="edit.link === 'link'">
-    <a-input
-      @blur="leaveInput()"
-      v-model:value="edit.open.value"
-      placeholder="以http/https开头"
-      class="xt-bg-2 xt-border h-12 rounded-xl"
-    >
+    <a-input @blur="leaveInput()" v-model:value="edit.open.value" placeholder="以http/https开头"
+      class="xt-bg-2 xt-border h-12 rounded-xl">
       <template #suffix>
-        <div
-          style="border-radius: 50%; padding: 5px"
-          class="xt-bg-2 flex justify-center items-center xt-hover cursor-pointer"
-          @click="clear()"
-        >
+        <div style="border-radius: 50%; padding: 5px"
+          class="xt-bg-2 flex justify-center items-center xt-hover cursor-pointer" @click="clear()">
           <Icon class="icon xt-text no-drag" icon="guanbi"></Icon>
         </div>
       </template>
@@ -46,36 +27,19 @@
   </template>
   <!-- 快捷和应用 -->
   <template v-else>
-    <a-input
-      v-model:value="title"
-      placeholder=""
-      class="xt-bg-2 xt-border h-12 rounded-xl"
-      style="border: 0"
-    >
+    <a-input v-model:value="title" placeholder="" class="xt-bg-2 xt-border h-12 rounded-xl" style="border: 0">
       <template #suffix>
-        <div
-          style="border-radius: 50%; padding: 5px; cursor: pointer"
-          class="xt-bg-2 flex justify-center items-center xt-hover"
-          @click="clear()"
-        >
+        <div style="border-radius: 50%; padding: 5px; cursor: pointer"
+          class="xt-bg-2 flex justify-center items-center xt-hover" @click="clear()">
           <Icon class="icon xt-text no-drag" icon="guanbi"></Icon>
         </div>
       </template>
     </a-input>
   </template>
-  <FastNav
-    v-if="edit.link != 'link' && edit.link != 'nav'"
-    style="z-index: 999999999999999"
-    @returnApp="returnApp"
-    ref="fastNavRef"
-  ></FastNav>
+  <FastNav v-if="edit.link != 'link' && edit.link != 'nav'" style="z-index: 999999999999999" @returnApp="returnApp"
+    ref="fastNavRef"></FastNav>
 
-  <input
-    style="display: none"
-    ref="fileRef"
-    type="file"
-    v-if="edit.link !== 'link' && edit.link !== 'fast'"
-  />
+  <input style="display: none" ref="fileRef" type="file" v-if="edit.link !== 'link' && edit.link !== 'fast'" />
 </template>
 
 <script>
@@ -130,7 +94,10 @@ export default {
     // 获取app信息
 
     async returnApp(item) {
-      // console.log('item :>> ', item);
+      console.log('item :>> ', item);
+      console.log('item.path :>> ', item.path);
+      let img = await tsbApi.system.extractFileIcon(item.path )
+      console.log('img :>> ', img);
       this.edit.open.name = item.name;
       // 当图片状态为空时
       if (!this.edit.src) {
