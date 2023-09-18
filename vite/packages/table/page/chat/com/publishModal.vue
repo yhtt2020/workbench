@@ -1,77 +1,89 @@
 
 <template>
-    <a-modal v-model:visible="props.showPublishModal" title="写动态" class="w-full rounded-lg publish" @ok="handleOk" bodyStyle="font-size=16px !important;"
-        @cancel="handleOk">
-        <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] -mt-2 mb-2">
-            分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click="goYuan">元社区</a>
-        </div>
-        <div class="w-full mt-2 xt-bg box font-16">
-            <div style="font-size: 1rem !important;">
-                <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                    <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
-                        :bordered="false" />
-                    <div style="font-size: 16px !important;">
-                        <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
-                            @preview="handlePreview">
-                            <div v-if="fileList.length < 6">
-                                <plus-outlined style="font-size: 1em;" />
-                            </div>
-                        </a-upload>
-                    </div>
-                    <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                        <img alt="example" style="width: 100%" :src="previewImage" />
-                    </a-modal>
+    <Modal :maskNoClose="true" class="" :animationName="t-b-close">
+        <div class="w-[500px] pl-4 pr-4">
+            <div class="flex justify-between w-full h-[64px] items-center ">
+                <div class="flex justify-center w-full">
+                    <div class="font-16">写动态</div>
                 </div>
-                <div class="h-[56px] flex items-center justify-between">
-                    <div class="flex items-center justify-center xt-text-2">
-                        <tippy trigger=" click" placement="bottom" :interactive="true">
-                            <template #content>
-                                <!-- <div class="w-full"> -->
-                                <vue-custom-scrollbar :settings="settingsScroller"
-                                    class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
-                                    <div v-for="(item, index) in folderPath"
-                                        class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
-                                        :key="index" style="cursor: pointer;">
-                                        <img :src="item" class="w-[32px] h-[32px]">
-                                    </div>
-                                </vue-custom-scrollbar>
-                                <!-- </div> -->
-                            </template>
-                            <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
-                                style="color: var(--secondary-text) !important;"><template #icon>
-                                    <SmileOutlined style="font-size: 0.6em !important;vertical-align: bottom;" />
-                                </template> 表情</a-button>
-                        </tippy>
+                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center" @click="handleOk">
+                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross"  />
+                </button>
 
-                        <a-button type="text" size="small" class="xt-text"
-                            style="color: var(--secondary-text) !important;"><template #icon>
-                                <PictureOutlined style="font-size: 0.6em !important;vertical-align: bottom;" />
-                            </template> 图片</a-button>
+            </div>
+            <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
+                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click="goYuan">元社区</a>
+            </div>
+            <div class="w-full mt-2 xt-bg box font-16">
+                <div style="font-size: 1rem !important;">
+                    <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
+                        <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
+                            :bordered="false" />
+                        <div style="font-size: 16px !important;" v-if="imageLoadVisible">
+                            <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
+                                @preview="handlePreview">
+                                <div v-if="fileList.length < 6">
+                                    <plus-outlined style="font-size: 1em;" />
+                                </div>
+                            </a-upload>
+                        </div>
+                        <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                            <img alt="example" style="width: 100%" :src="previewImage" />
+                        </a-modal>
                     </div>
+                    <div class="h-[45px] flex items-center justify-between">
+                        <div class="flex items-center justify-center xt-text-2">
+                            <tippy trigger=" click" placement="bottom" :interactive="true">
+                                <template #content>
+                                    <!-- <div class="w-full"> -->
+                                    <vue-custom-scrollbar :settings="settingsScroller"
+                                        class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
+                                        <div v-for="(item, index) in folderPath"
+                                            class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
+                                            :key="index" style="cursor: pointer;">
+                                            <img :src="item" class="w-[32px] h-[32px]">
+                                        </div>
+                                    </vue-custom-scrollbar>
+                                    <!-- </div> -->
+                                </template>
+                                <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
+                                    style="color: var(--secondary-text) !important;"><template #icon>
+                                        <SmileOutlined style="" />
+                                    </template> 表情</a-button>
+                            </tippy>
 
+                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible=!imageLoadVisible"
+                                style="color: var(--secondary-text) !important;"><template #icon>
+                                    <PictureOutlined style="" />
+                                </template> 图片</a-button>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-        <template #footer>
-            <div class="flex items-center justify-between h-[56px] ml-2 mr-2">
+            <div class="flex items-center justify-between h-[56px] ">
                 <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button>
                 <div class="flex items-center">
                     <a-button type="text" class=" xt-text xt-bg-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;"
                         @click="handleOk">取消</a-button>
-                    <a-button type="primary" class=" xt-text"
+                    <a-button type="primary" class="ml-2 xt-text"
                         style="border-radius:10px ; color: var(--secondary-text) !important;">发布</a-button>
                 </div>
             </div>
-        </template>
-    </a-modal>
+        </div>
+
+    </Modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive,  onMounted } from 'vue'
-import {  SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, onMounted } from 'vue'
+import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
+import Modal from '../../../components/Modal.vue'
+import { Icon } from '@iconify/vue';
+const imageLoadVisible=ref(true)
 const goYuan = () => {
     browser.openInUserSelect('https://s.apps.vip/')
 }
@@ -82,13 +94,13 @@ const props = defineProps({
     showPublishModal: Boolean,
 })
 // 添加表情
-const addEmoji = ( item) => {
+const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
     console.log(emoiiValue);
-    
+
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    replyValue.value +=`${key}`
+    replyValue.value += `${key}`
 
 }
 const visible = ref(false)
@@ -172,9 +184,7 @@ const settingsScroller = reactive({
     suppressScrollX: true,
     wheelPropagation: true,
 });
-const fileList = ref<UploadProps['fileList']>([
-    
-]);
+const fileList = ref<UploadProps['fileList']>([]);
 
 const handleCancel = () => {
     previewVisible.value = false;
@@ -196,14 +206,6 @@ const handleOk = (e: MouseEvent) => {
 
 </script>
 <style lang='scss' scoped>
-// :deep(.lg .ant-modal-body .ant-btn){
-//     font-size: 16px !important;
-//     margin-right: 5px !important;
-// }
-// :deep(.lg .ant-modal-body svg) {
-//     font-size: 1rem;
-// }
-
 .box {
     border-radius: 12px;
 }
@@ -221,18 +223,11 @@ const handleOk = (e: MouseEvent) => {
     line-height: 20px;
     font-weight: 400;
 }
-:deep(.ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-eye){
-    font-size: 8px !important;
-    vertical-align: super;
-    margin-left: 6px;
-}
-:deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail){
+
+:deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
 }
-:deep(.ant-modal-header .ant-modal-title) {
-    display: flex;
-    justify-content: center;
-}
+
 :deep(.ant-upload.ant-upload-select-picture-card) {
     width: 64px;
     height: 64px;
@@ -250,10 +245,6 @@ const handleOk = (e: MouseEvent) => {
         font-family: PingFangSC-Regular;
     }
 }
-:deep(.ant-upload-list-picture-card .ant-upload-list-item-actions){
-    width: 85%;
-   
-}
 
 
 
@@ -269,5 +260,4 @@ const handleOk = (e: MouseEvent) => {
             }
         }
     }
-}
-</style>
+}</style>

@@ -3,7 +3,7 @@
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
         <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1" style="line-height: 40px;">
-          <span class="mr-1">ID:</span>{{ store.communityPost.list[0].fid }}
+          <span class="mr-1">ID:</span>{{ props.forumId }}
         </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
@@ -49,9 +49,9 @@
 
     </div>
     <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
-    <div class="flex justify-center flex-1 " style="height: 0" v-else>
+    <div class="flex justify-center flex-auto " style="height: 0;" v-else>
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
+      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
         :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
         :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
@@ -61,7 +61,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
-          <a-pagination v-model:current="current" :total="100" simple @change="changePage" />
+          <a-pagination v-model:current="current" :total="50" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -70,6 +70,7 @@
         :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full detail" v-if="detailVisible">
           <DetailCard :cardData="detailText" @closeDetail="closeDetail"></DetailCard>
+          <!-- <a-pagination v-model:current="detailCurrent" :total="totalReply" simple @change="changePage" /> -->
         </div>
       </vue-custom-scrollbar>
     </div>
@@ -77,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, h, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
@@ -138,7 +139,7 @@ const setCurrentIndex = (index) => {
   
 }
 const goYuan = () => {
-  browser.openInUserSelect('https://s.apps.vip/')
+  browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
 const refreshPost = () => {
   refreshFlag.value = true
@@ -200,7 +201,8 @@ const showDetail = async (index) => {
   selectedIndex.value = index;
   // console.log(selectedIndex)
   // console.log(comCards);
-
+  // console.log(store.communityPost.list[selectedIndex].reply_count,'count');
+  
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
@@ -217,7 +219,10 @@ const detailText = computed(() => {
     return store.communityPostDetail
   }
 })
-
+// const detailCurrent = ref(1)
+// const totalReply = computed(() => {
+//   return store.communityPost.list[selectedIndex].reply_count
+// })
 // 关闭详情页
 const closeDetail = (value) => {
   if (detailVisible.value) {
