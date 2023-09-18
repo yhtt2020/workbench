@@ -4,6 +4,9 @@
         <div class="top-icon">
             <Icon icon="akar-icons:chat-question" />
         </div>
+        <div class="link-icon">
+            <Icon icon="fluent:open-20-filled" />
+        </div>
         <div class="guider-body">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index">
                 <div class="cell-icon">
@@ -97,11 +100,21 @@ export default {
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
-        top:18px;
+        top:17px;
     }
     .top-icon svg{
         width:20px;
         height:20px;
+    }
+    .link-icon{
+        position: absolute;
+        top:17px;
+        left: 117px;
+        cursor: pointer;
+    }
+    .link-icon svg{
+        width: 20px;
+        height: 20px;
     }
     .guider-body{
         display: flex;
@@ -138,7 +151,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        
+        font-weight: 400;
     }
 </style>
   
