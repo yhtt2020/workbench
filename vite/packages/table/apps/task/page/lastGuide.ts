@@ -1,17 +1,21 @@
 import { nanoid } from "nanoid";
 import { cardStore } from "../../../store/card";
+import { taskStore } from "../store";
+
 const getDesk = () => {
   const store: any = cardStore();
-  let id = nanoid(4);
+  const task: any = taskStore();
+  task.deskID = nanoid(4);
+
   let desk = store.desks.find((item) => item.name === "任务桌面");
   if (desk) {
     // console.log("有桌面 :>> ");
-    id = desk.id;
+    task.deskID = desk.id;
   } else {
     // console.log("没桌面 :>> ");
     let obj = {
       name: "任务桌面",
-      id,
+      id: task.deskID,
       icon: "desktop",
       cards: [],
       layoutSize: {
@@ -27,8 +31,8 @@ const getDesk = () => {
     };
     store.desks.push(obj);
   }
-  store.currentDeskId = id;
-  return store.desks.find((item) => id == item.id);
+  store.currentDeskId = task.deskID;
+  return store.desks.find((item) => task.deskID == item.id);
 };
 export const lastGuide = {
   M0202: () => {
