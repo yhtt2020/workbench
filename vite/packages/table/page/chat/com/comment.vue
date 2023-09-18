@@ -7,7 +7,7 @@
             <!-- {{ commentList }} -->
         </div>
         <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
-        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" class="mt-1"/>
+        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible"/>
     </div>
 </template>
 
@@ -30,6 +30,9 @@ const changePage=(val)=>{
 }
 const totalReply=computed(()=>{
     return props.reply
+})
+const paginationVisible=computed(()=>{
+    return totalReply.value>0?true:false
 })
 const store=useCommunityStore()
 const props=defineProps({
