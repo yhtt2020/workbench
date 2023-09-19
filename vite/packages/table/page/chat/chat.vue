@@ -1,7 +1,7 @@
 <template>
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
     <div class="w-full">
-      <MyCommunity v-if="currentCom" :info="info" />
+      <MyCommunity v-if="currentCom" :info="info"/>
       <router-view v-else></router-view>
     </div>
 
@@ -17,19 +17,21 @@
           </div>
         </div>
 
-        <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)" />
+        <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
 
         <div style="height:510px;">
           <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
             <div v-for="items in community.channelList">
               <ChatFold :title="items.name">
                 <div class="flex flex-col">
-                  <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item">
+                  <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
+
+                  >
                     <template v-if="item.type === 'group'">
-                      <chatIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
-                    </template> 
+                      <chatIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+                    </template>
                     <template v-if="item.type === 'link'">
-                      <chatIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
+                      <chatIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
                     </template>
                     <template v-if="item.type === 'forum'">
                       <chatIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
@@ -48,89 +50,89 @@
   </xt-left-menu>
 
   <teleport to='body'>
-     <Modal  v-if="open" v-model:visible="open" :blurFlag="true">
+    <Modal v-if="open" v-model:visible="open" :blurFlag="true">
       <AddFriend v-if="addIndex === 'launch'" @close="open = false"></AddFriend>
-      <CreateGroup v-if="addIndex === 'addGroup'"  @close="open = false" :isH5="env.isH5" />
+      <CreateGroup v-if="addIndex === 'addGroup'" @close="open = false" :isH5="env.isH5"/>
       <Transfer v-if="addIndex === 'addFriend'" @close="open = false" :isH5="env.isH5"></Transfer>
       <CreateCommunity v-if="addIndex === 'createCom'" @close="open = false"></CreateCommunity>
       <JoinCommunity v-if="addIndex === 'joinCom'" @close="open = false"></JoinCommunity>
-     </Modal>
+    </Modal>
   </teleport>
 
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, ref,computed } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { TUIEnv } from '../../TUIKit/TUIPlugin';
-import Drag from '../../TUIKit/TUIComponents/components/drag';
-import TUIContact from "../../TUIKit/TUIComponents/container/TUIContact/index.vue";
-import SecondPanel from "../../components/SecondPanel.vue";
-import { message } from "ant-design-vue";
+import { TUIEnv } from '../../TUIKit/TUIPlugin'
+import Drag from '../../TUIKit/TUIComponents/components/drag'
+import TUIContact from '../../TUIKit/TUIComponents/container/TUIContact/index.vue'
+import SecondPanel from '../../components/SecondPanel.vue'
+import { message } from 'ant-design-vue'
 // import Commun from './Commun.vue'
-import ChatFind from "./page/chatFind.vue"
-import ChatMain from './page/chatMain.vue';
+import ChatFind from './page/chatFind.vue'
+import ChatMain from './page/chatMain.vue'
 import CommunityIndex from './page/communityIndex.vue'
 import Modal from '../../components/Modal.vue'
-import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
+import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue'
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue'
-import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
+import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue'
 import CreateCommunity from './components/createCommunity.vue'
 import _ from 'lodash-es'
 import config from './config'
-import {appStore} from "../../store";
-import {storeToRefs} from "pinia";
-import { chatList,showDropList } from '../../js/data/chatList'
+import { appStore } from '../../store'
+import { storeToRefs } from 'pinia'
+import { chatList, showDropList } from '../../js/data/chatList'
 import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
-import JoinCommunity  from './components/joinCommunity.vue'
-import { AppstoreOutlined, MessageOutlined,LinkOutlined} from '@ant-design/icons-vue'
+import JoinCommunity from './components/joinCommunity.vue'
+import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
 import { myCommunityStore } from './store/myCommunity'
 import { localCache } from '../../js/axios/serverCache'
-import MyCommunity from './page/myCommunity.vue';
+import MyCommunity from './page/myCommunity.vue'
 import { Icon as chatIcon } from '@iconify/vue'
 
 export default {
   name: 'App',
   components: {
-    AppstoreOutlined, MessageOutlined,LinkOutlined,
+    AppstoreOutlined, MessageOutlined, LinkOutlined,
     SecondPanel,
-    TUIContact,chatIcon,
+    TUIContact, chatIcon,
     Drag,
     ChatFind,
     CommunityIndex,
-    ChatMain,Modal,
-    AddFriend,CreateGroup,
+    ChatMain, Modal,
+    AddFriend, CreateGroup,
     Transfer,
-    ChatDropDown,ChatFold,
-    CreateCommunity,JoinCommunity,MyCommunity,
+    ChatDropDown, ChatFold,
+    CreateCommunity, JoinCommunity, MyCommunity,
   },
 
-  setup() {
-    const myCom  = myCommunityStore()
+  setup () {
+    const myCom = myCommunityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
     const Server = window.$chat
 
     const data = reactive({
-      index:'chat',
+      index: 'chat',
       // type:'chat',
-      addIndex:'',
-      open:false,
+      addIndex: '',
+      open: false,
       env: TUIServer.TUIEnv,
       needSearch: !TUIServer.isOfficial,
-      TUIServer:Server,
-      createConversationType:'',
-      community:chatList[0],
+      TUIServer: Server,
+      createConversationType: '',
+      community: chatList[0],
       settingsScroller: {
-       useBothWheelAxes: true,
-       swipeEasing: true,
-       suppressScrollY: false,
-       suppressScrollX: true,
-       wheelPropagation: true
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
       },
-      info:{},
+      info: {},
     })
 
     const selectTab = (item) => {
@@ -138,80 +140,70 @@ export default {
       router.push(item.route)
     }
 
-    const selectDorpTab = (item) =>{
+    const selectDorpTab = (item) => {
       data.addIndex = item.index
       data.open = true
 
     }
 
-    const openAddCom = () =>{
+    const openAddCom = () => {
       data.addIndex = 'createCom'
       data.open = true
     }
 
-    const selectCommunityTab = (item) =>{
+    const selectCommunityTab = (item) => {
       // console.log('排查问题::>>',item)
-      localCache.set('communityId',item.type)
+      localCache.set('communityId', item.type)
       data.index = item.type
       data.info = item.info
     }
 
-    const appS=appStore()
-   
-    const {userInfo}=appS
-    const { myCommunityList } = myCom
-    
-    
-    const newArr = []
+    const appS = appStore()
 
+    const { userInfo } = appS
+    const { myCommunityList } = myCom
+
+    const menuCommunityList = []
     // 遍历将社群进行UI层数据替换
-    for(let i=0;i<myCommunityList.length;i++){
-      if(Object.keys(myCommunityList[i].communityInfo).length !== 0 && myCommunityList.length !== 0 && myCommunityList.length !== 0 && myCommunityList[i].communityInfo){
-        if(myCommunityList.length !== 0 && myCommunityList[i].communityInfo && myCommunityList[i].communityInfo.icon !== null){
-          const index = _.findIndex(newArr,function(o){ return o.cno === myCommunityList[i].cno })
-          if(index === -1){
-           const item = {
-            name:myCommunityList[i].communityInfo.name,
-            img:myCommunityList[i].communityInfo.icon,
-            type: `community${myCommunityList[i].cno}`,
-            float:"communityFloat",
-            noBg:true,
-            callBack: selectCommunityTab,
-            info:myCommunityList[i]
-            // route:{ name:'defaultCommunity',info:myCommunityList[i]},
-           }
-           newArr.push(item)
-          }else{
-           return
-          }
+    for (let i = 0; i < myCommunityList.length; i++) {
+      if (myCommunityList[i].communityInfo) {
+        const item = {
+          name: myCommunityList[i].communityInfo.name,
+          img: myCommunityList[i].communityInfo.icon,
+          type: `community${myCommunityList[i].cno}`,
+          float: 'communityFloat',
+          noBg: true,
+          callBack: selectCommunityTab,
+          info: myCommunityList[i],
+
+          // route:{ name:'defaultCommunity',info:myCommunityList[i]},
         }
-      }else{
+        menuCommunityList.push(item)
+      } else {
         console.error('该社群不存在')
-        return;
       }
-      
     }
 
-    const addCom = (item) =>{
+    const addCom = (item) => {
       data.addIndex = item.index
       data.open = true
       myCom.getRecommendCommunityList()
     }
-  
 
-    const currentCom = computed(()=>{
+    const currentCom = computed(() => {
       return data.index === localCache.get('communityId')
     })
 
+    console.log(menuCommunityList, '菜单社群')
     // console.log('获取我的社群列表',...newArr)
 
     const chatLeftList = ref([
       {
         icon: 'message',
         type: 'chat',
-        title:'消息',
-        route:{
-          name:'chatMain'
+        title: '消息',
+        route: {
+          name: 'chatMain'
         },
         callBack: selectTab,
       },
@@ -219,97 +211,96 @@ export default {
         icon: 'team',
         type: 'contact',
         callBack: selectTab,
-        route:{
-          name:'contact'
+        route: {
+          name: 'contact'
         }
       },
-      ...(config.adminUids.includes(userInfo.uid)?[
+      ...(config.adminUids.includes(userInfo.uid) ? [
         {
           icon: 'diannao',
           type: 'admin',
-          title:'管理面板(仅管理员可见)',
+          title: '管理面板(仅管理员可见)',
           callBack: selectTab,
-          route:{
-            name:'chatAdmin'
+          route: {
+            name: 'chatAdmin'
           }
         }
-      ]:[]),
+      ] : []),
 
       {
         icon: 'zhinanzhen',
         type: 'find',
         callBack: selectTab,
-        route:{
-          name:'chatFind'
+        route: {
+          name: 'chatFind'
         }
       },
       // 写社群相关静态内容时临时打开的路由
       {
-        icon:'',
+        icon: '',
         img: '/icons/logo128.png',
         type: 'community',
-        float:"communityFloat",
-        noBg:true,
+        float: 'communityFloat',
+        noBg: true,
         callBack: selectTab,
-        route:{
-          name:'defaultCommunity'
+        route: {
+          name: 'defaultCommunity'
         }
       },
 
-      ...newArr,
+      ...menuCommunityList,
 
       {
-       //  icon:'ic:baseline-add',
-       icon:'tianjia2',
-       callBack:openAddCom,
+        //  icon:'ic:baseline-add',
+        icon: 'tianjia2',
+        callBack: openAddCom,
       },
       {
-        full:true,
+        full: true,
       },
       {
         icon: 'tianjia2',
-        children:[
+        children: [
           {
             icon: 'message',
-            name:'发起群聊',
-            index:"launch",
-            callBack:selectDorpTab
+            name: '发起群聊',
+            index: 'launch',
+            callBack: selectDorpTab
           },
           {
             icon: 'team',
-            name:'加入群聊',
-            index:"addGroup",
-            callBack:selectDorpTab
+            name: '加入群聊',
+            index: 'addGroup',
+            callBack: selectDorpTab
           },
           {
             icon: 'tianjiachengyuan',
-            name:'添加好友',
-            index:"addFriend",
-            callBack:selectDorpTab
+            name: '添加好友',
+            index: 'addFriend',
+            callBack: selectDorpTab
           },
           {
-            icon:'smile',
-            name:'创建社群',
-            index:'createCom',
-            callBack:selectDorpTab
+            icon: 'smile',
+            name: '创建社群',
+            index: 'createCom',
+            callBack: selectDorpTab
           },
           {
-            icon:'team',
-            name:'加入社群',
-            index:"joinCom",
-            callBack:addCom,
+            icon: 'team',
+            name: '加入社群',
+            index: 'joinCom',
+            callBack: addCom,
           }
         ]
       },
     ])
 
-
-    onMounted(()=>{
-      router.push({name:'chatMain'})
+    onMounted(() => {
+      router.push({ name: 'chatMain' })
     })
 
     return {
-      chatLeftList,route,router,showDropList,newArr,currentCom,
+      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,
       ...toRefs(data),
     }
   }
@@ -321,22 +312,22 @@ export default {
   margin-right: 0px !important;
 }
 
-.font-16-500{
+.font-16-500 {
   font-family: PingFangSC-Medium;
   font-size: 16px;
-  font-weight: 500; 
+  font-weight: 500;
 }
 
-.font-14{
+.font-14 {
   font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
 }
 
 
-:deep(#tippy-4){
-  z-index:1000 !important;
-  top:23px !important;
+:deep(#tippy-4) {
+  z-index: 1000 !important;
+  top: 23px !important;
   left: 12px !important;
 }
 

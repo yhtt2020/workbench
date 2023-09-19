@@ -32,7 +32,7 @@
         <div v-for="item in list[0].channelList">
           <ChatFold :title="item.name">
             <div class="flex flex-col" v-if="doubleCol === false">
-              <div v-for="item in item.children" class="flex items-center px-4 py-3 rounded-lg pointer group-item"
+              <div :class="{active:currentChannel.id===item.id}" v-for="item in item.children" class="flex items-center px-4 py-3 rounded-lg pointer group-item"
                    @click="currentItem(item)"
               >
                 <template v-if="item.type === 'group'">
@@ -52,7 +52,7 @@
 
             <div class="flex grid grid-cols-2 gap-1" v-else>
               <div v-for="item in item.children" @click="currentItem(item)"
-                   class="flex items-center py-2 rounded-lg pointer group-item">
+                   :class="{active:currentChannel.id===item.id}"   class="flex items-center py-2 rounded-lg pointer group-item">
                 <div class="flex items-center mx-2">
                   <template v-if="item.type === 'group'">
                     <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
@@ -117,7 +117,7 @@
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'" style="text-align: center;margin-top: 30%">
-            
+
             当前频道需要浏览器打开。
           </div>
           <iframe v-else :src="currentChannel.props.url" class="m-2"
@@ -266,7 +266,7 @@ export default defineComponent({
     opacity: 0.8;
   }
 
-  &:hover {
+  &:hover ,&.active {
     background: var(--active-secondary-bg);
   }
 }
