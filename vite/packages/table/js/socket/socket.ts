@@ -12,7 +12,12 @@ export const initSocket = async () => {
     autoConnect: false,
     extraHeaders: {
       authorization: config.headers.Authorization
+    },
+    query:{
+      clientId:tsbApi.runtime.clientId,
+      platform:process.platform,//此处要指定设备平台
     }
+
   });
 
   socket.open();
