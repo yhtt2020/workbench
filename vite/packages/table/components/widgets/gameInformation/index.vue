@@ -5,7 +5,7 @@
         <MyIcon icon="fluent:games-16-filled" class="myIcon" />
         <div class="box-border">
             <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
-            <div class="card-body"   v-for="(value,index) in this.gameData" :key="index" @click="jump(value.url)" >
+            <div class="card-body"   v-for="(value,index) in gameData" :key="index" @click="jump(value.url)" >
                 <div class="left-card">
                     <div class="title-article">{{value.title}}</div>
                     <div class="message-article">{{value.description}}</div>
@@ -31,6 +31,7 @@ import Widget from "../../card/Widget.vue";
 import {Icon as MyIcon} from '@iconify/vue';
 import { message } from 'ant-design-vue'
 import {getGameInfo} from "../../../store/gameInfomation"
+import browser from '../../../js/common/browser'
 export default {
     components:{
         Widget,
@@ -77,7 +78,8 @@ export default {
             this.gameData = dataList;
         },
         jump(url){
-            browser.openInUserSelect(url)
+            console.log("https:"+url);
+            browser.openInUserSelect("https:" + url)
         },
         refreshNow(){
             this.$refs.refreshButton.classList.add('animate-spin')
