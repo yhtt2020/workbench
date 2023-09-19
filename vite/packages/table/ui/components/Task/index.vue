@@ -156,7 +156,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 /* .box {
   position: relative;
 } */

@@ -8,6 +8,7 @@ const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
 const getRecommendCommunity = sUrl("/app/community/getRecommendList") // 获取推荐社群
 const applyJoin = sUrl("/app/community/join") // 申请加入社群
+const searchRecommendCommunity = sUrl("/app/community/searchCommunity") // 搜索
 
 
 // @ts-ignore
@@ -27,8 +28,6 @@ export const myCommunityStore = defineStore('myCommunity',{
    async getMyCommunity(){
     const res = await post(getMyCommunity,{})
     localCache.set('list',res.data.list,20*60)
-    // const resData = localCache.get('list')
-    // console.log('获取我的社群',localCache.get('list'));
     this.myCommunityList = localCache.get('list')
     
    },
@@ -41,9 +40,13 @@ export const myCommunityStore = defineStore('myCommunity',{
    // 获取推荐社群
    async getRecommendCommunityList(){
     const res = await post(getRecommendCommunity,{})
-    // console.log('执行了吗',res.data);
     localCache.set('recommendList',res.data,10*60)
     this.recommendCommunityList =  localCache.get('recommendList')
+   },
+
+   // 搜索社群
+   async searchCommendCommunity(val:any){
+    return await post(searchRecommendCommunity,{keywords:val})
    }
 
   },
