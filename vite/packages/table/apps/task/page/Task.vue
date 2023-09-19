@@ -1,7 +1,7 @@
 <template>
   <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
     <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
-      <xt-left-menu :list="menus" last="3">
+      <xt-left-menu :list="menus" last="1">
         <template #star>
           <StarFilled  />
         </template>
@@ -48,16 +48,16 @@ const menus = ref([
     value: "Primary",
     callBack: selectTab,
   },
-  {
-    slot: "flag",
-    value: "Branch",
-    callBack: selectTab,
-  },
-  {
-    slot: "info",
-    value: "Branch",
-    callBack: selectTab,
-  },
+  // {
+  //   slot: "flag",
+  //   value: "Branch",
+  //   callBack: selectTab,
+  // },
+  // {
+  //   slot: "info",
+  //   value: "Branch",
+  //   callBack: selectTab,
+  // },
   {
     icon: "shezhi1",
 

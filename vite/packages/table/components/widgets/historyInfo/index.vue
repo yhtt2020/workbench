@@ -1,15 +1,21 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
+
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
         <Icon icon="iconamoon:history-fill" class="icon1"/>
             <div class="date">{{this.history.date}}</div>
             <div class="title">{{this.history.title}}</div>
     </Widget>
+
+
 </template>
   
 <script>
 import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
+import {sUrl} from "../../../consts"
+import {get} from "../../../js/axios/request"
+import {getHistoryInfo} from "../../../store/historyInfo"
 export default {
     components:{
         Widget,
@@ -45,7 +51,10 @@ export default {
                 icon: "iconamoon:history-fill",
                 // icon: "games-16-filled",
             },
-            history:{},
+            history:{
+                date:"",
+                tetle:""
+            },
         };
     },
     async mounted() {
@@ -54,14 +63,11 @@ export default {
     },
     methods:{
         // 获取今天所发生的的事情
-        onHistoryMessage(){
-            // console.log(123)
-            let now = new Date;
-            let date = now.getMonth() +1  + '/' + now.getDate()
-            axios.get("http://v.juhe.cn/todayOnhistory/queryEvent.php?date=" + date + "&key=290696b4fa0687b6f093d0794fdd71d5").then(res=>{
-                this.history = res.data.result[0]
-            })
-        }
+        async onHistoryMessage(){
+            let getData = await getHistoryInfo("/app/juhe/get");
+            this.history = getData;
+        },
+
     }
 };
 </script>

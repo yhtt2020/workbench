@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h, computed ,onBeforeMount} from 'vue'
+import { ref, computed ,onBeforeMount} from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
-import {useCommunityStore} from '../community'
+import {useCommunityStore} from '../commun'
 const store=useCommunityStore()
 const props=defineProps({
     tid:Number,

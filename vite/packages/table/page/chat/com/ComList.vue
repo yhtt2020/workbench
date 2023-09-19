@@ -42,11 +42,11 @@
                     <!-- 正文内容 -->
                     <div class="flex flex-col justify-between" style="flex-shrink: 1;">
                         <div id="title" style="color: var(--primary-text);" v-if="cardData.title"
-                            :class="{ 'omit-title': cardData.image.length === 1 || cardData.data?.video }">
-                            {{ cardData.title }}</div>
+                            :class="{ 'omit-title': cardData.image.length === 1 || cardData.data?.video }" :innerHTML="title">
+                            </div>
                         <div id="context" style="color:  var(--secondary-text); text-align: left;"
-                            :class="{ 'omit': cardData.image.length === 1 || cardData.data?.video }">
-                            {{ cardData.summary }}</div>
+                            :class="{ 'omit': cardData.image.length === 1 || cardData.data?.video }" :innerHTML="content">
+                            </div>
                     </div>
                 </div>
                 <template v-if="cardData.image.length > 1">
@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang='ts'>
-import {  computed } from 'vue'
+import {  computed,reactive } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
 const useUserStore = appStore()
@@ -98,6 +98,102 @@ const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
 })
+
+const fluentEmojis = reactive({
+    "[Kiss]": "Face Blowing a Kiss.png",
+    "[Tears]": "Face with Tears of Joy.png",
+    "[Cry]": "Loudly Crying Face.png",
+    "[Smiling]": "Smiling Face with Open Hands.png",
+    "[Confound]": "Confounded Face.png",
+    "[Mask]": "Face with Medical Mask.png",
+    "[Zany]": "Zany Face.png",
+    "[Vomit]": "Face Vomiting.png",
+    "[Kissing]": "Kissing Face.png",
+    "[Fearful]": "Fearful Face.png",
+    "[Pleading]": "Pleading Face.png",
+    "[Scream]": "Face Screaming in Fear.png",
+    "[AngryFace]": "Angry Face.png",
+    "[Zipper]": "Zipper-Mouth Face.png",
+    "[Expressionless]": "Expressionless Face.png",
+    "[SpiralEyes]": "Face with Spiral Eyes.png",
+    "[Shushing]": "Shushing Face.png",
+    "[MoneyMouth]": "Money-Mouth Face.png",
+    "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
+    "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
+    "[Victory]": "Victory Hand Light Skin Tone.png",
+    "[Ok]": "OK Hand Light Skin Tone.png",
+    "[Pingching]": "Pinching Hand Light Skin Tone.png",
+    "[Hands]": "Folded Hands Light Skin Tone.png",
+    "[Clap]": "Clapping Hands Light Skin Tone.png",
+    "[OpenHands]": "Open Hands Light Skin Tone.png",
+    "[Waing]": "Waving Hand Light Skin Tone.png",
+    "[Writing]": "Writing Hand Light Skin Tone.png",
+    "[PigFace]": "Pig Face.png",
+    "[Cat]": "Cat with Wry Smile.png",
+    "[Blowfish]": "Blowfish.png",
+    "[Yen]": "Yen Banknote.png",
+    "[Triangular]": "Triangular Flag.png",
+    "[Heart]": "Beating Heart.png",
+    "[Broken]": "Broken Heart.png",
+    "[1st]": "1st Place Medal.png",
+    "[2nd]": "2nd Place Medal.png",
+    "[3rd]": "3rd Place Medal.png",
+    "[Selfie]": "Selfie Light Skin Tone.png",
+    "[Teacup]": "Teacup Without Handle.png",
+    "[New]": "New Button.png",
+    "[Check]": "Check Mark Button.png",
+    "[Anger]": "Anger Symbol.png",
+    "[Acceptable]": 'Japanese Acceptable Button.png',
+    "[Hundred]": "Hundred Points.png",
+    "[Crab]": "Crab.png",
+    "[MoneyBag]": "Money Bag.png",
+    "[Zzz]": "Zzz.png",
+    "[Bomb]": "Bomb.png",
+})
+
+
+// 用于在动态和评论中使用的表情
+// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
+// https://sad.apps.vip/public/static/emoji/emojistatic/
+const content = computed(() => {
+    let result = props.cardData.summary.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
+        let emojiValue;
+        Object.entries(fluentEmojis).forEach(([key, value]) => {
+            if (key == item) {
+                emojiValue = value;
+            }
+        });
+
+        if (emojiValue) {
+            let url = `https://sad.apps.vip/public/static/emoji/emojistatic/${emojiValue}`;
+            return `<img src="${url}" class=" w-[22px] h-[22px]">`;
+        }
+
+        return item;
+    });
+
+    return result;
+});
+const title = computed(() => {
+    let result = props.cardData.title.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
+        let emojiValue;
+        Object.entries(fluentEmojis).forEach(([key, value]) => {
+            if (key == item) {
+                emojiValue = value;
+            }
+        });
+
+        if (emojiValue) {
+            let url = `https://sad.apps.vip/public/static/emoji/emojistatic/${emojiValue}`;
+            return `<img src="${url}" class=" w-[22px] h-[22px]">`;
+        }
+
+        return item;
+    });
+
+    return result;
+});
+
 </script>
 <style lang='scss' scoped>
 .card {

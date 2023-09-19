@@ -26,8 +26,8 @@
           <div style="height: auto"> -->
         <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
           <tippy trigger="mouseenter" :interactive="true" placement="right" :arrow="false" >
-            <template #content v-if="item.float">
-              <slot :name="item.float"> </slot>
+            <template #content v-if="item.float ">
+              <slot :name="isFloat === true ? item.float : ''"> </slot>
             </template>
             <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
@@ -78,6 +78,7 @@ import Box from "./Box.vue";
 import Item from "./Item.vue";
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
+import { chatStore } from '../../../store/chat'
 
 const props = defineProps({
   // scrollerSettings: {
@@ -182,6 +183,11 @@ const itemClick = (item) => {
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };
+
+// 判断是否展开悬浮模式
+const isFloat = computed(()=>{
+  return chatStore().$state.settings.enableHide
+});
 </script>
 
 <style lang="scss" scoped>
