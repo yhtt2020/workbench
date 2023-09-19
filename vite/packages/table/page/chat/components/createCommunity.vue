@@ -86,6 +86,7 @@
        const res = await community.createCommunity(option)
       //  console.log('排查结果',res)
        if(res.status === 1){
+        community.getMyCommunity()
         message.success(`${res.info}`)
         ctx.emit('close')
        }else{
