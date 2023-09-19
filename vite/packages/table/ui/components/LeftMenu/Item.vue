@@ -19,7 +19,7 @@
         :src="item.img"
         alt=""
         :style="[stateStyle]"
-        style="border-radius: 10px"
+        style="border-radius: 10px;object-fit: cover"
       />
     </div>
     <xt-icon

@@ -50,7 +50,7 @@
  import { LeftOutlined, CloseOutlined, CameraOutlined} from '@ant-design/icons-vue'
  import {fileUpload} from '../../../components/card/hooks/imageProcessing'
  import { message } from 'ant-design-vue'
- import { myCommunityStore } from '../store/communityGroup'
+ import { myCommunityStore } from '../store/myCommunity'
  
  
  export default defineComponent({

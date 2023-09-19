@@ -9,7 +9,7 @@ const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
 import * as sns from "../js/common/sns";
 import _ from "lodash-es";
-import { myCommunityStore } from '../page/chat/store/communityGroup'
+import { myCommunityStore } from '../page/chat/store/myCommunity'
 
 // @ts-ignore
 export const chatStore = defineStore('chatStore',{

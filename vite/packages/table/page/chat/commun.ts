@@ -83,24 +83,25 @@ export const useCommunityStore = defineStore('community',{
             // console.log('datail', res);
             if(res.code===200){
                 this.communityPostDetail=res.data
-                // console.log('chakan',this.communityPostDetail);
+                console.log('chakan',this.communityPostDetail);
                 localCache.set(`communityPostDetail_${id}`,this.communityPostDetail,60*60*12)
             }
         },
         //查看帖子回复
-        async getCommunityPostReply(id){
+        async getCommunityPostReply(id,page=1){
             if(localCache.get(`communityReply_${id}`)){
                 this.communityReply=localCache.get(`communityReply_${id}`)
             }
             let res=await post(replyList,{
                 tid:id,
-                page:1,
+                page:page,
                 row:10,
                 type:1
             })
             // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
+                console.log(this.communityReply,'res');
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*12)
             }
         },
