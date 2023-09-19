@@ -31,7 +31,7 @@ export default {
     }
 
     this.timer = setInterval(() => {
-      this.changeUrl('table').then()
+      //this.changeUrl('table').then() //已经通过socket实现，无需轮询
       this.getTeamBarrage().then()
     }, 60000)
     // this.$router.afterEach((to, from) => {
