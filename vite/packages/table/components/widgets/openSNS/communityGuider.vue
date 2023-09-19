@@ -4,9 +4,6 @@
         <div class="top-icon">
             <Icon icon="akar-icons:chat-question" />
         </div>
-        <div class="link-icon">
-            <Icon icon="fluent:open-20-filled" />
-        </div>
         <div class="guider-body">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index">
                 <div class="cell-icon">
@@ -58,6 +55,7 @@ export default {
                 // icon: "bianji",
                 // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
+                rightIcon:"fluent:open-20-filled",
                 // icon: "games-16-filled",
             },
             dataList:[
@@ -105,16 +103,6 @@ export default {
     .top-icon svg{
         width:20px;
         height:20px;
-    }
-    .link-icon{
-        position: absolute;
-        top:17px;
-        left: 117px;
-        cursor: pointer;
-    }
-    .link-icon svg{
-        width: 20px;
-        height: 20px;
     }
     .guider-body{
         display: flex;
