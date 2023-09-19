@@ -8,7 +8,7 @@
                 <span class="xt-text-2 font-16">详情</span>
                 <div class="flex items-center">
                     <Icon class="text-xl xt-text pointer" icon="fluent:more-horizontal-16-filled" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail"/>
+                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail" />
                     <Icon class="ml-3 text-xl xt-text pointer" icon="majesticons:open" @click="goYuan" />
                     <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:cross" @click="closeDetail" />
                 </div>
@@ -48,11 +48,37 @@
                                 <source :src="cardData.data.video" type="video/webm" />
                             </video>
                         </div>
-                        <template v-if="cardData.image">
-                            <ul class="flex flex-col items-center p-0 mb-0">
+                        <template v-if="cardData.image_170_170">
+                            <ul class="flex flex-col items-center p-0 mb-0" v-if="cardData.image_170_170.length===1">
                                 <img :src="item.image" v-for="(item, index) in cardData.image_170_170"
-                                    class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
+                                    @click="showImage(item)" class="mb-2 rounded-md cover-lm " :key="index"
+                                    style="object-fit: fill;">
                             </ul>
+                            <div v-else-if="cardData.image_170_170.length>1" class="flex items-center">
+                                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center" @click="addCurrentIndex">
+                                            <Icon class="text-xl text-center xt-text pointer" icon="fluent:chevron-left-16-filled" />
+                                </button>
+                                <img :src="cardData.image_170_170[currentIndex].image" class="mb-2 ml-1 mr-1 rounded-md cover-lm" @click="showImage(cardData.image_170_170[currentIndex])">
+                                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center" @click="decreaseCurrentIndex">
+                                            <Icon class="text-xl text-center rotate-180 xt-text pointer" icon="fluent:chevron-left-16-filled" />
+                                </button>
+                            </div>
+                            <Modal v-if="showImageFlag" maskNoClose="true" class="rounded-lg">
+                                <div class="p-3 xt-bg w-[500px] ">
+                                    <div class="flex justify-between w-full h-[50px] items-center mb-2">
+                                        <div class="flex justify-center w-full">
+                                            <div class="font-16">图片详情</div>
+                                        </div>
+                                        <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center" @click="closeImage">
+                                            <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                                        </button>
+                                    </div>
+                                    <div class="flex justify-center w-full rounded-lg xt-bg-2">
+                                        <img :src="imageSrc" alt="" class="object-contain w-[300px] h-[300px] p-2">
+                                    </div>
+                                </div>
+
+                            </Modal>
                         </template>
                         <!-- 正文元素 -->
                         <div class="mt-1">
@@ -97,13 +123,14 @@
                 </div>
                 <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
             </div>
-            <a-spin v-else tip="Loading..." size="large" style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
+            <a-spin v-else tip="Loading..." size="large"
+                style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed,onBeforeUpdate } from 'vue'
+import { ref, reactive, computed, onBeforeUpdate } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
 import { useCommunityStore } from '../commun'
@@ -111,6 +138,7 @@ import { appStore } from '../../../../table/store'
 import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
+import Modal from '../../../components/Modal.vue';
 const useUserStore = appStore()
 let uid = props.cardData.user.uid
 let userInfo = {
@@ -155,13 +183,38 @@ const createTime = computed(() => {
     return [date, time]
 })
 // const tid=store.communityPostDetail.pay_set.tid 
-let tid=store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id
-// console.log(store.communityPostDetail);
-// 当tid不存在时，处理
-// if (store.communityPostDetail.pay_set) {
-//     tid = store.communityPostDetail.pay_set.tid
-// }
+let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
 
+// 大图显示
+let imageSrc
+// 控制图片是否大图显示
+let showImageFlag = ref(false)
+const showImage = (item) => {
+    // console.log(item);
+    // console.log(props.cardData.image_170_170);
+    
+    showImageFlag.value = !showImageFlag.value
+    imageSrc = item.image
+}
+const closeImage = () => {
+    showImageFlag.value = false
+}
+// 
+const currentIndex=ref(0)
+const addCurrentIndex = () => {
+    if(currentIndex.value < props.cardData.image_170_170.length - 1) {
+        currentIndex.value++
+    }else{
+        currentIndex.value = 0
+    }
+}
+const decreaseCurrentIndex = () => {
+    if(currentIndex.value > 0) {
+        currentIndex.value--
+    }else{
+        currentIndex.value = props.cardData.image_170_170.length - 1
+    }
+}
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
     refreshDetailFlag.value = false

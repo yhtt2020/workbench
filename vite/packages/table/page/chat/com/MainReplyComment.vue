@@ -1,10 +1,7 @@
 <template>
     <div class="w-full mb-3 box">
-        <!-- {{ commentList.user.uid }} -->
         <div class="mb-3">
             <div class="flex ">
-                <!-- {{ props.uid }} -->
-                <!-- {{ content }} -->
                 <a-avatar :src="props.commentList.user.avatar" :size="24" class="mr-2 pointer"
                     @click.stop="showCard(uid, userInfo)"></a-avatar>
                 <div class="flex items-center ml-2 text-center">
@@ -59,17 +56,7 @@ import replyComments from './replyComments.vue'
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 const useUserStore = appStore()
-let uid = props.commentList.user.uid
-let userInfo = {
-    uid: uid,
-    nickname: props.commentList.user.nickname,
-    avatar: props.commentList.user.avatar_128
-}
-const showCard = (uid, userInfo) => {
-    useUserStore.showUserCard(uid, userInfo)
-    console.log(content);
-    
-}
+
 const isLike = ref(false)
 const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
@@ -83,8 +70,6 @@ const content = computed(() => {
     return result;
 });
 
-
-
 // 点赞
 const clickLike = () => {
     isLike.value = !isLike.value
@@ -95,9 +80,23 @@ const replyStatus = () => {
 }
 // 接收评论列表
 const props = defineProps({
-    commentList: Array,
+    commentList: {
+        type: Object,
+        default: () => []
+    },
     uid: Number
 })
+let uid = props.commentList.user.uid
+let userInfo = {
+    uid: uid,
+    nickname: props.commentList.user.nickname,
+    avatar: props.commentList.user.avatar_128
+}
+const showCard = (uid, userInfo) => {
+    useUserStore.showUserCard(uid, userInfo)
+    // console.log(content);
+    
+}
 // 接收回复框的状态
 const getReplyFlag = (val) => {
     // console.log(val);

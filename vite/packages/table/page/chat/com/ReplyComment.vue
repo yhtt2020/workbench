@@ -48,6 +48,20 @@ import replyComments from './replyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 const useUserStore = appStore()
+
+const isLike=ref(false)
+const replyVisible=ref(false)
+const replyCmmentList=computed(()=>{
+    return props.replyCom.comment
+})
+// const userName=ref('我是皮克斯呀')
+const props=defineProps({
+    replyCom:{
+        type: Object,
+        default: () => []
+    },
+    uid:Number
+})
 let uid = props.replyCom.user.uid
 let userInfo = {
     uid: uid,
@@ -57,16 +71,6 @@ let userInfo = {
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
 }
-const isLike=ref(false)
-const replyVisible=ref(false)
-const replyCmmentList=computed(()=>{
-    return props.replyCom.comment
-})
-// const userName=ref('我是皮克斯呀')
-const props=defineProps({
-    replyCom:String,
-    uid:Number
-})
 const clickLike = () => {
     isLike.value=!isLike.value
 }
