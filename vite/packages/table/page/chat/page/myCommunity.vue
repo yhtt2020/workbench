@@ -17,7 +17,7 @@
    <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
    
    <div class="flex items-center h-full justify-center flex-col">
-     <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3" style="background: var(--secondary-bg);">
+     <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3" style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
         <component :is="item.icon"></component>
         <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
      </div>
@@ -31,6 +31,12 @@
     
   </a-col>
  </a-row>
+
+
+<Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
+   <AddNewChannel v-if="type === 'addChannel'" @close="addShow = false"></AddNewChannel>
+</Modal>
+
 </template>
 
 <script>
@@ -40,27 +46,37 @@ import { Icon as CommunityIcon } from '@iconify/vue'
 import { UserAddOutlined,PlusOutlined,MenuUnfoldOutlined } from '@ant-design/icons-vue'
 
 import ChatDropDown from '../components/chatDropDown.vue'
+import Modal from '../../../components/Modal.vue'
+import AddNewChannel from '../components/addNewChannel.vue'
 
 export default defineComponent({
  props:['info'],
  components:{
-  ChatDropDown,CommunityIcon,
+  ChatDropDown,CommunityIcon,Modal,AddNewChannel,
   UserAddOutlined,PlusOutlined,MenuUnfoldOutlined
  },
 
  setup (props,ctx) {
   const data = reactive({
     emptyList:[
-      {},
-      { icon:PlusOutlined,name:'添加新应用',},
-      {},
-    ]
+      { icon:UserAddOutlined,name:'邀请其他人',type:'inviteOther' },
+      { icon:PlusOutlined,name:'添加新频道',type:'addChannel'},
+      { icon:MenuUnfoldOutlined,name:'添加新分组' ,type:'addNewGroup'},
+    ],
+    type:'',
+    addShow:false, // 点击按钮弹窗
   })
+
+
+  const clickEmptyButton = (item) =>{
+    data.type = item.type
+    data.addShow = true
+  }
 
 
   return {
     showDropList,
-   ...toRefs(data),
+   ...toRefs(data),clickEmptyButton,
 
   }
  }
