@@ -1,12 +1,12 @@
 <template>
   <div v-if="slot == 'default'" ref="el" @click.stop="next($event)" @contextmenu="next($event)" class="box">
-    <div :class="{ 'container': zIndexValue }">
+    <div :class="{ 'xt-task-container': zIndexValue }">
       <slot></slot>
-      <div class="" :class="{ 'overlay': zIndexValue }"></div>
+      <div class="" :class="{ 'xt-task-overlay': zIndexValue }"></div>
     </div>
   </div>
   <div v-else-if="slot == 'noMenu'" ref="el" @click.prevent.stop="next($event)">
-    <div :class="{ 'container': zIndexValue }">
+    <div :class="{ 'xt-task-container': zIndexValue }">
       <slot></slot>
     </div>
   </div>
@@ -156,18 +156,18 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style >
 /* .box {
   position: relative;
 } */
 
-.container {
+.xt-task-container {
   position: relative;
   cursor: pointer;
   z-index: 99999;
 }
 
-.container::before {
+.xt-task-container::before {
   content: "";
   position: absolute;
   top: 0;
@@ -180,7 +180,7 @@ export default defineComponent({
   /* 设置比 .container 的 z-index 更低的值 */
 }
 
-.overlay {
+.xt-task-overlay {
   position: absolute;
   top: 0;
   left: 0;
