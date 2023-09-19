@@ -54,7 +54,7 @@
                                     @click="showImage(item)" class="mb-2 rounded-md cover-lm " :key="index"
                                     style="object-fit: fill;">
                             </ul>
-                            <div v-else-if="cardData.image_170_170.length>1" class="flex items-center">
+                            <div v-else-if="cardData.image_170_170.length>1" class="flex items-center justify-center">
                                 <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center" @click="addCurrentIndex">
                                             <Icon class="text-xl text-center xt-text pointer" icon="fluent:chevron-left-16-filled" />
                                 </button>
@@ -74,7 +74,7 @@
                                         </button>
                                     </div>
                                     <div class="flex justify-center w-full rounded-lg xt-bg-2">
-                                        <img :src="imageSrc" alt="" class="object-contain w-[300px] h-[300px] p-2">
+                                        <img :src="imageSrc" alt="" class="object-contain w-[450px] h-[300px] p-2">
                                     </div>
                                 </div>
 
