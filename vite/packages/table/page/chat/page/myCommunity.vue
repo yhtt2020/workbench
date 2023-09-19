@@ -4,7 +4,7 @@
    <div class="flex flex-col">
     <div class="flex justify-between items-center w-full mb-2.5">
      <div class="flex  flex-col">
-      <span class="font-500" style="color:var(--primary-text);">{{ info.communityInfo.name }}</span> 
+      <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ info.communityInfo.name }}</span>
       <span class="font-14" style="color:var(--secondary-text);">一起打磨出闪闪发光的技术宝石！</span>
      </div>
      <ChatDropDown :list="showDropList"/>

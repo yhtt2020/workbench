@@ -14,11 +14,11 @@
      你可以选择添加桌面，关联工作台内部的酷应用，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
     </span>
    </div>
-   <div class="flex flex-col">
-    <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 my-4" 
+   <div class="flex flex-col mt-4">
+    <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4" 
      style="background: var(--secondary-bg);" :class="{'select-bg':selectIndex === item.type}" @click="selectChannel(item)">
      <ChannelIcon :icon="item.icon" style="font-size: 2.5em;"></ChannelIcon>
-     <span class="pl-4">{{ item.name }}</span>
+     <span class="pl-4 font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
    </div>
   </div>
@@ -64,7 +64,7 @@ export default defineComponent({
   const data = reactive({
    channelList:[
     { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
-    { icon:'fluent-emoji-flat:placard',name:'频道',type:'channel' },
+    { icon:'fluent-emoji-flat:placard',name:'社区',type:'channel' },
     { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'chat' },
     { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'web' }
    ],

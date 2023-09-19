@@ -2,7 +2,7 @@
   <div class="flex flex-col justify-between px-3 pt-3 pb-4" style="width:500px;">
    <div class="flex w-full h-10 items-center justify-center" style="position: relative;margin-bottom: 46px;">
     <!-- 左侧返回按钮 -->
-    <div hidden="" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" >
+    <div v-if="id === 'chat'" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" @click="backCreate">
      <LeftOutlined style="font-size: 1.25em;" />
     </div>
  
@@ -57,6 +57,9 @@
   components:{
    LeftOutlined,CloseOutlined,CameraOutlined
   },
+
+  props:['id'],
+
   setup (props,ctx) {
    const community = myCommunityStore()
 
@@ -99,6 +102,11 @@
      }
    
    }
+
+   // 返回上一层
+   const backCreate = () =>{
+    ctx.emit('back')
+   }
  
  
    // 获取头像
@@ -117,7 +125,7 @@
    return {
      ...toRefs(data),
     closeCreateCom,createCommunity,updateGroupAvatar,
-    getFileInfo
+    getFileInfo,backCreate
    }
   }
  })

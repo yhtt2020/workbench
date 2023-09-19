@@ -4,7 +4,7 @@
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
     <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
    </div>
-   <span class="font-16-400" style="color:var(--primary-text);">选择频道</span>
+   <span class="font-16-400" style="color:var(--primary-text);">选择社区圈子</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <CloseOutlined  style="font-size: 1.25em;"/>
    </div>
