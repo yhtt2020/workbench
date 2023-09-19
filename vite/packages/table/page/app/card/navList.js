@@ -860,12 +860,12 @@ export const NavList = [
           {
             name: 'smallCommunityDashboard',
             size: '2x4',
-            zoom: '44'
+            zoom: '10'
           },
           {
             name: 'middleCommunityDashboard',
             size: '4x4',
-            zoom: '30'
+            zoom: '10'
           },
         ],
         time: '2023/9/15'

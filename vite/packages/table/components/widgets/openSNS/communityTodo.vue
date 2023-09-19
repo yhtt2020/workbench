@@ -4,6 +4,9 @@
         <div class="top-icon">
             <Icon icon="akar-icons:check-box" />
         </div>
+        <div class="link-icon">
+            <Icon icon="fluent:open-20-filled" />
+        </div>
         <div class="dash-board">
             <div class="dash-cell pointer" :class="item.className" v-for="(item, index) in dataList" :key="index">
                 <div class="cell-title">{{ item.title }}</div>
@@ -100,11 +103,21 @@ export default {
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
-        top:18px;
+        top:17px;
     }
     .top-icon svg{
         width:20px;
         height:20px;
+    }
+    .link-icon{
+        position: absolute;
+        top:17px;
+        left: 117px;
+        cursor: pointer;
+    }
+    .link-icon svg{
+        width: 20px;
+        height: 20px;
     }
     .dash-board{
         display: flex;

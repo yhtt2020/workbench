@@ -476,20 +476,6 @@ export default {
                 isEdit: false
               },
             ],
-            selectOptions:[
-                {
-                    value: 'jack',
-                    label: 'Jack',
-                },
-                {
-                    value: 'lucy',
-                    label: 'Lucy',
-                }, 
-                {
-                    value: 'tom',
-                    label: 'Tom',
-                }
-            ]
         };
     },
     async mounted() {
