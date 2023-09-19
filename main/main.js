@@ -102,6 +102,7 @@ if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
 
 
 global.isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
+console.log(process.argv,'启动参数们')
  if (process.platform === 'win32')
 {
   //修复通知出现应用名electron.app
@@ -134,6 +135,19 @@ if (process.platform === 'win32') {
 	// })()
 }
 
+//调整执行顺序，保证数据调试的数据目录没错
+const args = process.argv.slice(2);
+
+// 检查是否存在 user-data-dir 参数
+const userDataDirIndex = args.findIndex(arg => arg.startsWith('--user-data-dir='));
+if (userDataDirIndex !== -1) {
+  // 提取 user-data-dir 参数的值
+  const userDataDir = args[userDataDirIndex].split('=')[1];
+
+  // 设置应用的数据目录为 user-data-dir
+  app.setPath('userData', userDataDir);
+}
+
 if (isDevelopmentMode) {
 	app.setPath('userData', app.getPath('userData') + '-development')
 }
@@ -148,17 +162,6 @@ app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 
 const originDataPath=app.getPath('userData') //记录下原始路径，后面会判断是不是原始路径，如果是原始路径，则直接退出。
 // 获取命令行参数
-const args = process.argv.slice(2);
-
-// 检查是否存在 user-data-dir 参数
-const userDataDirIndex = args.findIndex(arg => arg.startsWith('--user-data-dir='));
-if (userDataDirIndex !== -1) {
-  // 提取 user-data-dir 参数的值
-  const userDataDir = args[userDataDirIndex].split('=')[1];
-
-  // 设置应用的数据目录为 user-data-dir
-  app.setPath('userData', userDataDir);
-}
 
 
 global.userDataPath = app.getPath('userData')
