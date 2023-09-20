@@ -4,8 +4,6 @@
     style="box-sizing: border-box"
     :class="[typeClass]"
   >
-    {{ index }}
-    <p>{{ newList }}</p>
     <!-- 左侧区域开始 -->
     <div
       class="flex flex-col items-center h-full xt-br mr-3"
@@ -13,135 +11,62 @@
     >
       <!-- 头部 -->
       <div>
-        <Menu
+        <Float
           @itemClick="itemClick"
           :list="item.children"
           v-for="item in newList.slice(0, last)"
+          :key="item.id"
+          :data="item"
         >
-          <Test :item="item">
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mb-2"
-            >
-              <Full v-if="item.full"></Full>
-              <Item :item="item" v-else>
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-            <template #content> <slot :name="item.float"> </slot> </template
-          ></Test>
-          <!-- <tippy
-            trigger="mouseenter"
-            :interactive="true"
-            placement="right"
-            v-if="item.float"
-          >
-            <template #content>
-              <slot :name="item.float"> </slot>
-            </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mb-2"
-            >
-              <Full v-if="item.full"></Full>
-              <Item :item="item" v-else>
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-          </tippy>
-          <Box
-            v-else
-            @itemClick="itemClick"
-            :item="item"
-            @selectClick="selectClick"
-            :id="currentIndex"
-            class="mb-2"
-          >
-            <Full v-if="item.full"></Full>
-            <Item :item="item" v-else>
+          <Box :item="item" :id="currentIndex" class="mb-2">
+            <Item :item="item">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
               </template>
             </Item>
-          </Box> -->
-        </Menu>
+          </Box>
+          <template #content> <slot :name="item.float"> </slot> </template>
+        </Float>
       </div>
       <!-- 中间 -->
       <div
         class="xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1"
       >
-        <Menu
+        <Float
           @itemClick="itemClick"
           :list="item.children"
           v-for="item in newList.slice(last, -1 * end)"
+          :key="item.id"
+          :data="item"
         >
-          <tippy
-            :trigger="item.float ? 'mouseenter' : ''"
-            :interactive="true"
-            placement="right"
-            :arrow="false"
-          >
-            <template #content v-if="item.float">
-              <slot :name="isFloat === true ? item.float : ''"> </slot>
-            </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mt-2"
-            >
-              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
-              <Item v-else :item="item" w="40">
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-          </tippy>
-        </Menu>
+          <Box :item="item" :id="currentIndex" class="mt-2">
+            <Item :item="item" w="40">
+              <template #[item.slot]>
+                <slot :name="item.slot"></slot>
+              </template>
+            </Item>
+          </Box>
+          <template #content> <slot :name="item.float"> </slot> </template>
+        </Float>
       </div>
       <!-- 底部 -->
       <div>
-        <Menu
+        <Float
           @itemClick="itemClick"
           :list="item.children"
           v-for="item in newList.slice(-1 * end)"
+          :key="item.id"
+          :data="item"
         >
-          <tippy
-            :trigger="item.float ? 'mouseenter' : ''"
-            :interactive="true"
-            placement="right"
-          >
-            <template #content v-if="item.float !== false">
-              <slot :name="item.float"> </slot>
-            </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mt-2"
-            >
-              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
-              <Item :item="item" type="" v-else>
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-          </tippy>
-        </Menu>
+          <Box :item="item" :id="currentIndex" class="mt-2">
+            <Item :item="item" type="">
+              <template #[item.slot]>
+                <slot :name="item.slot"></slot>
+              </template>
+            </Item>
+          </Box>
+          <template #content> <slot :name="item.float"> </slot> </template>
+        </Float>
       </div>
     </div>
     <!-- 左侧区域结束 -->
@@ -155,11 +80,9 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import Menu from "./Menu.vue";
-import Full from "./Full.vue";
+import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
-import Test from "./test.vue";
 import { nanoid } from "nanoid";
 
 const props = defineProps({
@@ -220,7 +143,7 @@ const typeClass = computed(() => {
 const newList = computed(() => {
   let res = props.list.map((item) => {
     if (item.full) full.value = true;
-    let id = item.id ?? nanoid();
+    let id = item.id ?? nanoid(4);
     return {
       id,
       ...item,
@@ -229,8 +152,14 @@ const newList = computed(() => {
   return res;
 });
 
+// 动态获取ID
+const index = computed(() => {
+  return isNaN(props.index.value) ? newList.value[0].id : props.index.value;
+});
+
 // 选择ID
-const currentIndex = ref(0);
+const currentIndex = ref(index.value);
+
 //选中事件
 const emit = defineEmits(["modelValue", "index"]);
 const selectClick = (id, flag) => {
@@ -239,22 +168,15 @@ const selectClick = (id, flag) => {
   currentIndex.value = id;
 };
 
-// 动态获取ID
-const index = computed(() => {
-  console.log("id更新了 :>> ");
-  const id = isNaN(props.index.value) ? newList.value[0].id : props.index.value;
-  selectClick(id);
-  return id;
-});
-
 // 点击事件
 const itemClick = (item) => {
-  if (item.full) {
+  if (item?.full) {
     isFull.value = !isFull.value;
+    return;
+  } else if (item?.children) {
     return;
   }
   selectClick(item.id, item.flag);
-  if (item.children) return;
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };

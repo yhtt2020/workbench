@@ -1,6 +1,6 @@
 <template>
   <!-- -->
-  <xt-left-menu :list="test" last="1" end="1">
+  <xt-left-menu :list="test" last="2" end="2">
     <template #test> 123 </template>
     <template #test1> test1 </template>
     <div>
@@ -17,11 +17,40 @@ export default {
       return [
         {
           icon: "message",
-          float: this.a ? "test" : '',
+          float: this.a ? "test" : "",
         },
         {
           icon: "message",
-          float: this.a ? "test1" : false,
+          children: [
+            {
+              icon: "message",
+              name: "test1",
+            },
+            {
+              icon: "message",
+              name: "test2",
+            },
+            {
+              icon: "message",
+              name: "test3",
+            },
+          ],
+        },
+        {
+          flag: true,
+          icon: "tianjia2",
+        },
+        {
+          full: true,
+        },
+        {
+          icon: "message",
+          children: [
+            {
+              icon: "message",
+              name: "test",
+            },
+          ],
         },
       ];
     },
