@@ -53,7 +53,7 @@ import BrowserMain from '../page/app/browser/Browser.vue';
 import Rank from '../page/social/Rank.vue';
 import BillingRecord from '../page/social/BillingRecord.vue';
 
-import Share from '../apps/share/page/index.vue';
+import Promotion from '../apps/promotion/page/index.vue';
 import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
@@ -170,9 +170,9 @@ export default [
             component: BillingRecord
           },
           {
-            path: "/share",
-            name: 'share',
-            component: Share
+            path: "/promotion",
+            name: 'promotion',
+            component: Promotion
           }
         ],
       },
