@@ -48,6 +48,7 @@
       <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" />
 
     </div>
+    <!-- {{ store.communityPost.count }} -->
     <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
     <div class="flex justify-center flex-auto " style="height: 0;" v-else>
       <!-- 左侧卡片区域 -->
@@ -61,7 +62,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
-          <a-pagination v-model:current="current" :total="50" simple @change="changePage" />
+          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -88,8 +89,6 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { Icon } from '@iconify/vue'
 import browser from '../../js/common/browser';
-// import {} from 'pinia'
-// import communityStore  from './community';
 const current = ref(1)
 // 更新帖子列表
 const refreshFlag = ref(false)
@@ -111,7 +110,18 @@ const menuList = ref([
     name: '精华',
     type: 'essence'
   }])
-const createOrder = computed(() => store.communityPost?.list[0].create_time)
+const createOrder = computed(() => {
+  let createTime=store.communityPost?.list[0].create_time
+  if(createTime.split('-').length<3){
+    const currentYear = new Date().getFullYear();
+    const dateStr = `${currentYear}-${createTime}`;
+    console.log(dateStr);
+    
+    return dateStr
+  }else{
+    return createTime
+  }
+})
 const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
 const checkMenuList = ref([{
   type: '最近更新',
@@ -135,8 +145,6 @@ const handleMenuItemClick = (index) => {
 const setCurrentIndex = (index) => {
   currentIndex.value = index
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
-  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
-  
 }
 const goYuan = () => {
   browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
@@ -155,7 +163,9 @@ const changePage = (page) => {
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
   refreshFlag.value = false
 }
-
+const totalPost=computed(()=>{
+  return store.communityPost.count
+})
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
 const settingsScroller = reactive({
@@ -173,10 +183,6 @@ watch(() => props.forumId, (newValue) => {
 const showPublishModal = ref(false)
 const modalVisible = (val) => {
   showPublishModal.value = val.value
-  // console.log(val.value);
-  // console.log(showPublishModal.value);
-
-
 }
 const visibleModal = () => {
   showPublishModal.value = !showPublishModal.value
@@ -199,10 +205,6 @@ const showDetail = async (index) => {
   detailVisible.value = true;
   // 切换选中状态
   selectedIndex.value = index;
-  // console.log(selectedIndex)
-  // console.log(comCards);
-  // console.log(store.communityPost.list[selectedIndex].reply_count,'count');
-  
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
@@ -211,18 +213,12 @@ const detailText = computed(() => {
   if (store.communityPostDetail.pay_set === undefined) {
     // console.log(detailStorage);
     detailVisible.value = false
-    // console.log(detailVisible.value);
-    // message.info('暂无数据')
     return detailStorage
   } else {
     detailStorage = store.communityPostDetail
     return store.communityPostDetail
   }
 })
-// const detailCurrent = ref(1)
-// const totalReply = computed(() => {
-//   return store.communityPost.list[selectedIndex].reply_count
-// })
 // 关闭详情页
 const closeDetail = (value) => {
   if (detailVisible.value) {
@@ -237,15 +233,18 @@ onBeforeMount(() => {
 })
 onMounted(() => {
   setCurrentIndex(0)
-  // NProgress.done()
+  NProgress.done()
+  NProgress.configure({parent:'.container'})
 })
 onBeforeUpdate(() => {
   NProgress.start()
-  NProgress.configure({ showSpinner: false });
+  
+
+  // NProgress.configure({ showSpinner: false });
 })
 onUpdated(() => {
   NProgress.done()
-  NProgress.configure({ showSpinner: false });
+  // NProgress.configure({ showSpinner: false });
 })
 </script>
 <style lang='scss' scoped>
