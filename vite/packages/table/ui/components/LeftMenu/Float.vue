@@ -5,6 +5,7 @@
     placement="right"
     @click.stop="onItemClick(data)"
   >
+    <!-- 点击层 -->
     <a-dropdown :trigger="['click']" placement="top">
       <template #overlay v-if="data.children">
         <div class="xt-modal rounded-xl p-1 xt-b">
@@ -20,19 +21,24 @@
           </template>
         </div>
       </template>
-      <tippy
-        placement="right"
-        :trigger="trigger"
-        :interactive="true"
-        :arrow="false"
-      >
-        <!-- 鼠标经过层 -->
-        <template v-if="data.float" #content>
-          <slot name="content"> </slot>
-        </template>
-        <!-- 默认层 -->
-        <slot></slot>
-      </tippy>
+      <!-- 默认插槽 -->
+      <template v-if="data.float">
+        <!-- 拓展 -->
+        <tippy
+          placement="right"
+          :trigger="trigger"
+          :interactive="true"
+          :arrow="false"
+        >
+          <!-- 鼠标经过层 -->
+          <template #content>
+            <slot name="content"> </slot>
+          </template>
+          <!-- 默认层 -->
+          <slot></slot>
+        </tippy>
+      </template>
+      <template v-else> <slot></slot></template>
     </a-dropdown>
   </a-tooltip>
 </template>
