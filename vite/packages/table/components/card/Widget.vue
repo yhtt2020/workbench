@@ -92,7 +92,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {HorizontalPanel},
+  components: {HorizontalPanel,BottomEdit},
 
   name: "Widget",
 
