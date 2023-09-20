@@ -1,32 +1,15 @@
 <template>
-  <div
-    class="xt-text flex h-full"
-    style="box-sizing: border-box; z-index: 111"
-    :class="[typeClass]"
-  >
+  <div class="xt-text flex h-full" style="box-sizing: border-box; " :class="[typeClass]">
     <!-- 左侧区域开始 -->
-    <div
-      class="flex flex-col items-center h-full xt-br mr-3"
-      style="width: 72px; min-width: 72px"
-    >
+    <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px">
       <!-- 头部 -->
       <div>
-        <Menu
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in newList.slice(0, last)"
-        >
+        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(0, last)">
           <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content>
-              <slot v-if="item.float" :name="item.float"> </slot>
+            <template #content v-if="item.float">
+              <slot :name="item.float"> </slot>
             </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mb-2"
-            >
+            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mb-2">
               <Full v-if="item.full"></Full>
               <Item :item="item" v-else>
                 <template #[item.slot]>
@@ -34,60 +17,39 @@
                 </template>
               </Item>
             </Box>
-            <!-- </a-dropdown> -->
           </tippy>
         </Menu>
       </div>
       <!-- 中间 -->
-      <div class="xt-scrollbar xt-bt flex flex-col items-center flex-1">
-        <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
-          <div style="height: auto">
-            <Menu
-              @itemClick="itemClick"
-              :list="item.children"
-              v-for="item in newList.slice(last, -1 * end)"
-            >
-              <tippy trigger="mouseenter" :interactive="true" placement="right">
-                <template #content>
-                  <slot v-if="item.float" :name="item.float"> </slot>
+      <div class="xt-scrollbar xt-container  xt-bt flex flex-col items-center flex-1">
+        <!-- <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
+          <div style="height: auto"> -->
+        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
+          <tippy trigger="mouseenter" :interactive="true" placement="right" :arrow="false" >
+            <template #content v-if="item.float ">
+              <slot :name="isFloat === true ? item.float : ''"> </slot>
+            </template>
+            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
+              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
+              <Item v-else :item="item" w="40">
+                <template #[item.slot]>
+                  <slot :name="item.slot"></slot>
                 </template>
-                <Box
-                  @itemClick="itemClick"
-                  :item="item"
-                  @selectClick="selectClick"
-                  :id="currentIndex"
-                  class="mt-2"
-                >
-                  <Full v-if="item.full" v-model:full="isFull" type=""></Full>
-                  <Item v-else :item="item" w="40">
-                    <template #[item.slot]>
-                      <slot :name="item.slot"></slot>
-                    </template>
-                  </Item>
-                </Box>
-              </tippy>
-            </Menu>
-          </div>
-        </vue-custom-scrollbar>
+              </Item>
+            </Box>
+          </tippy>
+        </Menu>
+        <!-- </div>
+        </vue-custom-scrollbar> -->
       </div>
       <!-- 底部 -->
       <div>
-        <Menu
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in newList.slice(-1 * end)"
-        >
+        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(-1 * end)">
           <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content>
-              <slot v-if="item.float" :name="item.float"> </slot>
+            <template #content v-if="item.float">
+              <slot :name="item.float"> </slot>
             </template>
-            <Box
-              @itemClick="itemClick"
-              :item="item"
-              @selectClick="selectClick"
-              :id="currentIndex"
-              class="mt-2"
-            >
+            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
               <Item :item="item" type="" v-else>
                 <template #[item.slot]>
@@ -116,17 +78,18 @@ import Box from "./Box.vue";
 import Item from "./Item.vue";
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
+import { chatStore } from '../../../store/chat'
 
 const props = defineProps({
-  scrollerSettings: {
-    default: {
-      useBothWheelAxes: true,
-      swipeEasing: true,
-      suppressScrollY: false,
-      suppressScrollX: true,
-      wheelPropagation: true,
-    },
-  },
+  // scrollerSettings: {
+  //   default: {
+  //     useBothWheelAxes: true,
+  //     swipeEasing: true,
+  //     suppressScrollY: false,
+  //     suppressScrollX: true,
+  //     wheelPropagation: true,
+  //   },
+  // },
   config: {
     default: () => {
       return {
@@ -220,18 +183,26 @@ const itemClick = (item) => {
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };
+
+// 判断是否展开悬浮模式
+const isFloat = computed(()=>{
+  return chatStore().$state.settings.enableHide
+});
 </script>
 
 <style lang="scss" scoped>
-.box {
-  border: 4px solid var(--active-bg) !important;
-  border-radius: 12px;
-}
+// .box {
+//   border: 4px solid var(--active-bg) !important;
+//   border-radius: 12px;
+// }
 
-:deep(.anticon) {
-  font-size: 20px;
-}
-:deep(.ps__rail-y) {
-  display: none;
-}
+// :deep(.anticon) {
+//   font-size: 20px;
+// }
+
+// :deep(.ps__rail-y) {
+//   display: none;
+// }
+
+
 </style>

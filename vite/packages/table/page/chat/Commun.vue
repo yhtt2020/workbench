@@ -2,70 +2,75 @@
   <div @resize="updateScroller" class="container flex flex-col xt-text">
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
-        <!-- style="color: var(--primary-text);" -->
-        <!-- {{ store.communityInfo }} -->
-        <!-- {{ store.communityPost.list }} -->
-        <!-- {{ comCards.list[1] }} -->
+        <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1" style="line-height: 40px;">
+          <span class="mr-1">ID:</span>{{ props.forumId }}
+        </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
             class="w-[64px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
-            :class="[{ action: currentIndex == index }]" style="cursor: pointer;" @click="setCurrentIndex(index)">{{ item.name
+            :class="[{ action: currentIndex == index }]" style="cursor: pointer;" @click="setCurrentIndex(index)">{{
+              item.name
             }}</div>
         </div>
         <div class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16" style="cursor: pointer">
           <a-dropdown trigger="click" placement="bottom"
             overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
             <span class=" ant-dropdown-link" @click.prevent>
-              {{ checkMenuList[checkMenuCurrentIndex] }}
+              {{ checkMenuList[checkMenuCurrentIndex].type }}
               <DownOutlined class="text-sm" />
             </span>
             <template #overlay>
               <a-menu class="text-center xt-bg">
                 <a-menu-item v-for="(item, index) in checkMenuList" :key="index" @click="handleMenuItemClick(index)">
-                  <span class="text-center xt-text">{{ item }}</span>
+                  <span class="text-center xt-text">{{ item.type }}</span>
                 </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
         </div>
       </div>
-      <div class="right shrink">
-        <a-button type="primary" :icon="h(PlusCircleTwoTone)" style="color: var(--primary-text);" @click="visibleModal">
-          发布</a-button>
+      <div class="flex mr-6 right">
+        <!-- <div class="flex items-center"> -->
+        <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
+          <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
+        </a-button>
+        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="refreshPost">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
+        </button>
+        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
+        </button>
+
+
+        <!-- </div> -->
+
       </div>
-      <!-- 发布模态框 -->
-      <!-- <a-modal v-if="showPublishModal" title="Basic Modal" @ok="handleOk">
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </a-modal> -->
       <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" />
 
     </div>
-
-    <!-- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;"> -->
-    <div class="flex justify-center flex-1" style="height: 0">
+    <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
+    <div class="flex justify-center flex-auto " style="height: 0;" v-else>
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef" :class="{ 'detail-visible': detailVisible }" class="thread-list"
-        :settings="settingsScroller" style="height: 100%;    overflow: hidden;"
-        :style="{ width: detailVisible ? '40%' : '60%' }">
+      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
+        :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
+        :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
+          <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
           <!-- 循环渲染多个 ComCard -->
           <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
+          <a-pagination v-model:current="current" :total="50" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
+      <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
       <!-- 右侧详情区域 -->
       <vue-custom-scrollbar class="ml-2 rounded-lg thread-detail xt-bg" :key="selectedIndex" v-if="detailVisible"
         :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
-        <div class="h-full ml-3 detail" v-if="detailVisible">
-          <DetailCard :cardData="detailText">
-            <template #top-right>
-              <CloseCircleOutlined @click="close()" class="text-xl xt-text" />
-            </template>
-          </DetailCard>
+        <div class="h-full detail" v-if="detailVisible">
+          <DetailCard :cardData="detailText" @closeDetail="closeDetail"></DetailCard>
+          <!-- <a-pagination v-model:current="detailCurrent" :total="totalReply" simple @change="changePage" /> -->
         </div>
       </vue-custom-scrollbar>
     </div>
@@ -73,44 +78,84 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, h, onMounted,computed,watch} from 'vue';
-import { DownOutlined, CloseCircleOutlined, PlusCircleTwoTone } from '@ant-design/icons-vue';
+import { ref, reactive, onBeforeMount, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
+import { DownOutlined } from '@ant-design/icons-vue';
 import ComCard from './com/ComList.vue';
 import DetailCard from './com/Detail.vue';
 import publishModal from './com/publishModal.vue';
-import { useCommunityStore } from './community'
-
+import { useCommunityStore } from './commun'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import { Icon } from '@iconify/vue'
+import browser from '../../js/common/browser';
 // import {} from 'pinia'
 // import communityStore  from './community';
+const current = ref(1)
+// 更新帖子列表
+const refreshFlag = ref(false)
 const store = useCommunityStore();
-const props=defineProps({
-  forumId:{
-    type:Number,
-    required:false
+const props = defineProps({
+  forumId: {
+    type: Number,
+    required: false
   }
 })
 const menuList = ref([
   {
-  name: '全部',
-  type: 'all'
+    name: '全部',
+    type: 'all'
+  }, {
+    name: '热门',
+    type: 'hot'
+  }, {
+    name: '精华',
+    type: 'essence'
+  }])
+const createOrder = computed(() => store.communityPost?.list[0].create_time)
+const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
+const checkMenuList = ref([{
+  type: '最近更新',
+  order: createOrder ? new Date(createOrder).getTime() : 0,
 }, {
-  name: '热门',
-  type: 'hot'
-}, {
-  name: '精华',
-  type: 'essence'
+  type: '最近回复',
+  order: replyOrder
+
 }])
-const checkMenuList = ref(['最近更新', '最近回复'])
+
 const currentIndex = ref(0)
 const checkMenuCurrentIndex = ref(0)
+// 选择最近更新与最近回复
 const handleMenuItemClick = (index) => {
   checkMenuCurrentIndex.value = index
   // store.getCommunityPostReply(index+1234,1)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[checkMenuCurrentIndex.value].order)
+  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[checkMenuCurrentIndex.value].order);
 }
+// 选择全部，热门的内容
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(props.forumId,menuList.value[currentIndex.value].type)
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
+  
 }
+const goYuan = () => {
+  browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
+}
+const refreshPost = () => {
+  refreshFlag.value = true
+  setTimeout(async () => {
+    await store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+    refreshFlag.value = false
+  });
+
+}
+const changePage = (page) => {
+  refreshFlag.value = true
+  current.value = page
+  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  refreshFlag.value = false
+}
+
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
 const settingsScroller = reactive({
@@ -121,7 +166,7 @@ const settingsScroller = reactive({
   wheelPropagation: true,
 });
 
-watch(()=> props.forumId,(newValue)=>{
+watch(() => props.forumId, (newValue) => {
   setCurrentIndex(currentIndex.value)
 })
 //
@@ -136,45 +181,7 @@ const modalVisible = (val) => {
 const visibleModal = () => {
   showPublishModal.value = !showPublishModal.value
 }
-// 定义 ComCard 的数据数组，每个元素都包含内容和点击状态
-// const comCards = ref([
-//   {
-//     content: {
-//       title: '6.3.3版本测试体验版，欢迎大家下载体验。主要对聊天功能进行了加强。如何加入团队？开启聊天功能，设置-》快捷开关-》启用聊天搜索加入群聊，给大家一个体验群ID：@TGS#2QXE7QDNI',
-//       context: ''
-//     },
-//   },
-//   {
-//     content: {
-//       title: '各位工作台的小伙伴们大家好。由于近期我们的服务器受到一些来自印度？海外的不明IP攻击。主要是攻击了我们产品站www.apps.vip。',
-//       context: ''
-//     },
-//     data: {
-//       img: ['https://ts1.cn.mm.bing.net/th?id=ORMS.ee894d967b3d81162540134424ce96e5&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1&p=0',
-//         'https://tse1-mm.cn.bing.net/th/id/OIP-C.X7wB1GrLLb9az8I04ePzZwHaLH?w=203&h=304&c=7&r=0&o=5&dpr=1.1&pid=1.7',
-//         'https://ts1.cn.mm.bing.net/th?id=ORMS.eabeec2ac6b24658735f4528f013f55d&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=1&p=0'],
-//     }
-//   },
-//   {
-//     content: {
-//       title: '8月9日，近期开发内容日志：桌面市场、超级工具箱、待办.经历了连续的几天的服务器震荡。',
-//       context: '目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…'
-//     },
-//     data: {
-//       img: ['https://ts4.cn.mm.bing.net/th?id=ORMS.69f3f16b106791e0f42b6f86cae85a80&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1.5&p=0'],
-//     }
-//   },
-//   {
-//     content: {
-//       title: '8月9日，近期开发内容日志：桌面市场、超级工具箱、待办.经历了连续的几天的服务器震荡。',
-//       context: '目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…'
-//     },
-//     data: {
-//       video: ['https://vodpub1.v.news.cn/original/20210426/61ccdd548e144eed9b4689968bc05430.mp4']
-//     }
-//   },
-// ]);
-const comCards=computed(()=>{
+const comCards = computed(() => {
   return store.communityPost
 })
 const threadListRef = ref()
@@ -184,8 +191,9 @@ function updateScroller() {
 }
 // 控制显示状态和选中状态的变量
 const detailVisible = ref(false);
+let detailStorage
 // 切换选中状态的函数
-const showDetail = (index) => {
+const showDetail = async (index) => {
   // console.log(index, '点钟了')
   // 切换显示状态
   detailVisible.value = true;
@@ -193,30 +201,51 @@ const showDetail = (index) => {
   selectedIndex.value = index;
   // console.log(selectedIndex)
   // console.log(comCards);
-
-  let tid= store.communityPost.list[index].pay_set.tid
+  // console.log(store.communityPost.list[selectedIndex].reply_count,'count');
+  
+  let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
-  store.getCommunityPostDetail(tid)
-
-  // store.getCommunityPostDetail()
+  await store.getCommunityPostDetail(tid)
 }
-const detailText=computed(()=>{
-  return store.communityPostDetail
+const detailText = computed(() => {
+  if (store.communityPostDetail.pay_set === undefined) {
+    // console.log(detailStorage);
+    detailVisible.value = false
+    // console.log(detailVisible.value);
+    // message.info('暂无数据')
+    return detailStorage
+  } else {
+    detailStorage = store.communityPostDetail
+    return store.communityPostDetail
+  }
 })
-
-
-
-// 关闭详情的函数
-const close = () => {
+// const detailCurrent = ref(1)
+// const totalReply = computed(() => {
+//   return store.communityPost.list[selectedIndex].reply_count
+// })
+// 关闭详情页
+const closeDetail = (value) => {
   if (detailVisible.value) {
-    detailVisible.value = false;
+    detailVisible.value = value;
     selectedIndex.value = -1
   }
   updateScroller()
 }
-
+onBeforeMount(() => {
+  NProgress.start()
+  NProgress.configure({ showSpinner: false });
+})
 onMounted(() => {
   setCurrentIndex(0)
+  // NProgress.done()
+})
+onBeforeUpdate(() => {
+  NProgress.start()
+  NProgress.configure({ showSpinner: false });
+})
+onUpdated(() => {
+  NProgress.done()
+  NProgress.configure({ showSpinner: false });
 })
 </script>
 <style lang='scss' scoped>
@@ -277,9 +306,8 @@ onMounted(() => {
   }
 
   .right {
-    width: 83px;
-    height: 40px;
-    margin-right: 24px;
+
+    // margin-right: 24px;
 
     :deep(.ant-btn) {
       width: 100%;
@@ -353,6 +381,10 @@ onMounted(() => {
     background-color: rgba(80, 139, 254, 0.20);
   }
 
+  #nprogress .bar {
+    background: #66B1FF !important;
+    height: 10px !important;
+  }
 
 
   .omit {
@@ -369,5 +401,4 @@ onMounted(() => {
       display: none;
     }
   }
-}
-</style>
+}</style>

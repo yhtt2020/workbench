@@ -1,18 +1,13 @@
 <template>
   <xt-left-menu :list="menuList" last="1" end="3">
     <template #test>
-      <setting-filled />
+      <xt-button @click="showRightPanel = !showRightPanel">Toggle Right Panel</xt-button>
     </template>
     <slot></slot>
   </xt-left-menu>
 
   <!-- 新建对话  -->
-  <XtView
-    v-model="createChatVisible"
-    type="popup"
-    title="新建模板"
-    :showFull="false"
-  >
+  <XtView v-model="createChatVisible" type="popup" title="新建模板" :showFull="false">
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
   </XtView>
   <!-- 系统设置 -->
@@ -47,15 +42,23 @@ export default {
   },
   data() {
     return {
+      showRightPanel: false,
       select: "Chat",
       menuList: [
         {
           icon: "message",
-          // float: "test",
+          // float: 'test',
           callBack: () => {
             this.selectTab = "Chat";
           },
         },
+        // {
+        //   icon: "message",
+        //   float: "test",
+        //   callBack: () => {
+        //     this.selectTab = "Chat";
+        //   },
+        // },
         {
           full: true,
         },
@@ -66,6 +69,7 @@ export default {
             this.createChatVisible = true;
           },
         },
+
         {
           flag: true,
           icon: "setting",
@@ -80,5 +84,5 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>  
+</style>

@@ -17,16 +17,18 @@ export const chatList = [
         props: {},
         children: [
           {
-            id: '',
+            id: 1,
             role: 'channel',//代表频道
             type: 'group',//代表频道类型 group代表群聊
             name: '闲话畅聊',
             props: { id: 'xianhua' }//相关属性
           },
           {
+            id:2,
             role: 'channel', type: 'group', name: '直面开发团队', props: { id: 'develop_group' }
           },
           {
+            id:3,
             role: 'channel', type: 'link', name: '阿皮动态',
             props: {
               url: 'https://space.bilibili.com/167397379/video',
@@ -34,6 +36,7 @@ export const chatList = [
             }
           },
           {
+            id:4,
             role: 'channel', type: 'link', name: 'B站视频',
             props: {
               gossipID: '',
@@ -44,21 +47,25 @@ export const chatList = [
         ]
       },
       {
+        id:5,
         role: 'category',
         name: '产品相关',
         props: {},
         children: [
           {
+            id:444444,
             role: 'channel', name: '新手入门', type: 'forum', props: {
               id: 3
             },
           },
           {
+            id:32,
             role: 'channel', name: '版本更新', type: 'forum', props: {
               id: 100304
             },
           },
           {
+            id:35,
             role: 'channel',
             name: 'Roadmap',
             type: 'link',
@@ -67,24 +74,69 @@ export const chatList = [
         ]
       },
       {
+        id:6,
         role: 'category',
         name: '交流群',
         props: {},
         children: [
           {
+            id:324,
             role: 'channel', name: '官方运营', type: 'group', props: {
               id: 'yunying'
             }
           },
-          { role: 'channel', name: '群主交流', type: 'group', props: { id: 'qunzhu' } },
-          { role: 'channel', name: '开发者交流', type: 'group', props: { id: 'developer' } },
-          { role: 'channel', name: '3D打印', type: 'group', props: { id: '3dprint' } },
-          { role: 'channel', name: '3C数码交流', type: 'group', props: { id: '3cdigital' } },
-          { role: 'channel', name: '屏幕DIY', type: 'group', props: { id: 'screen_diy' } },
-          { role: 'channel', name: '游戏玩家交流', type: 'group', props: { id: 'player' } },
-          { role: 'channel', name: '闲置交易群', type: 'group', props: { id: 'trade' } },
+          {id:'333', role: 'channel', name: '群主交流', type: 'group', props: { id: 'qunzhu' } },
+          {id:'444',  role: 'channel', name: '开发者交流', type: 'group', props: { id: 'developer' } },
+          {id:'555',  role: 'channel', name: '3D打印', type: 'group', props: { id: '3dprint' } },
+          {id:'666',  role: 'channel', name: '3C数码交流', type: 'group', props: { id: '3cdigital' } },
+          {id:'777',  role: 'channel', name: '屏幕DIY', type: 'group', props: { id: 'screen_diy' } },
+          {id:'888',  role: 'channel', name: '游戏玩家交流', type: 'group', props: { id: 'player' } },
+          {id:'999',  role: 'channel', name: '闲置交易群', type: 'group', props: { id: 'trade' } },
         ]
       }
     ]
   }
+]
+
+
+export const recommendedJoin = [
+  {
+    url:'/icons/bz1.png',
+    name:'铁匠铺',
+    summary:'一起打磨出闪闪发光的技术宝石！',
+    memberNum:'129',
+    type:'PublicJoin',
+  },
+  {
+    url:'/icons/bz1.png',
+    name:'火箭',
+    summary:'“火箭”小队，我们热爱挑战和探索未知，勇往直前！',
+    memberNum:'874',
+    type:'AuditJoin',
+  },
+  {
+    url:'/icons/bz1.png',
+    name:'码农驿站',
+    summary:'一群热爱编程的人，不断学习和探索新技术',
+    memberNum:'89',
+    type:'AuditJoin',
+  },
+  {
+    url:'/icons/bz1.png',
+    name:'诗与远方之旅',
+    summary:'热爱诗歌和旅行的人，用笔和镜头记录生活，探寻世界之美',
+    memberNum:'235',
+    type:'PublicJoin',
+  }
+]
+
+
+export const hideDropList = [
+  {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
+  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+]
+
+export const showDropList = [
+  {icon:'MenuFoldOutlined',title:'展开边栏',type:'show'},
+  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
 ]

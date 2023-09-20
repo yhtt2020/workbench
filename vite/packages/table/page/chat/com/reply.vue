@@ -17,14 +17,18 @@
         </a-modal>
     </div>
     <div class="flex justify-between w-full mt-2 mb-4 font-14 input-btm">
-        <div>
-            <tippy trigger=" click" placement="bottom" >
+        <div class="w-full">
+            <tippy trigger=" click" placement="bottom" :interactive="true">
                 <template #content>
-                    <vue-custom-scrollbar :settings="settingsScroller"
-                        class="w-full  xt-bg h-[100px] xt-bg-2 rounded-lg " >
-                        <img :src="item" alt="" v-for="(item, index) in folderPath" :key="index"
-                            class="w-[32px] h-[32px] mr-2 mb-2">
+                    <!-- <div class="w-full"> -->
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-1/2 h-[150px] xt-bg-2 rounded-lg flex  "
+                        style="flex-wrap: wrap;">
+                        <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
+                            @click="addEmoji(item)" :key="index" style="cursor: pointer;">
+                            <img :src="item" class="w-[32px] h-[32px]">
+                        </div>
                     </vue-custom-scrollbar>
+                    <!-- </div> -->
                 </template>
                 <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
@@ -48,11 +52,20 @@
 <script setup lang='ts'>
 import { ref, reactive, h, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { useTippy } from 'vue-tippy'
 const value = ref('')
 const commentList = ref([])
 // const emojiVis = ref(false)
 const imageVis = ref(false)
+// 添加表情
+const addEmoji = ( item) => {
+    const lastSlashIndex = item.lastIndexOf('/');
+    const emoiiValue = item.substring(lastSlashIndex + 1);
+    console.log(emoiiValue);
+    
+    const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
+    value.value +=`${key}`
+
+}
 const emit = defineEmits(['addComment'])
 const addComment = () => {
     if (value.value) {
@@ -85,21 +98,68 @@ const settingsScroller = reactive({
     suppressScrollX: true,
     wheelPropagation: true,
 });
+const fluentEmojis = reactive({
+    "[Kiss]": "Face Blowing a Kiss.png",
+    "[Tears]": "Face with Tears of Joy.png",
+    "[Cry]": "Loudly Crying Face.png",
+    "[Smiling]": "Smiling Face with Open Hands.png",
+    "[Confound]": "Confounded Face.png",
+    "[Mask]": "Face with Medical Mask.png",
+    "[Zany]": "Zany Face.png",
+    "[Vomit]": "Face Vomiting.png",
+    "[Kissing]": "Kissing Face.png",
+    "[Fearful]": "Fearful Face.png",
+    "[Pleading]": "Pleading Face.png",
+    "[Scream]": "Face Screaming in Fear.png",
+    "[AngryFace]": "Angry Face.png",
+    "[Zipper]": "Zipper-Mouth Face.png",
+    "[Expressionless]": "Expressionless Face.png",
+    "[SpiralEyes]": "Face with Spiral Eyes.png",
+    "[Shushing]": "Shushing Face.png",
+    "[MoneyMouth]": "Money-Mouth Face.png",
+    "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
+    "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
+    "[Victory]": "Victory Hand Light Skin Tone.png",
+    "[Ok]": "OK Hand Light Skin Tone.png",
+    "[Pingching]": "Pinching Hand Light Skin Tone.png",
+    "[Hands]": "Folded Hands Light Skin Tone.png",
+    "[Clap]": "Clapping Hands Light Skin Tone.png",
+    "[OpenHands]": "Open Hands Light Skin Tone.png",
+    "[Waing]": "Waving Hand Light Skin Tone.png",
+    "[Writing]": "Writing Hand Light Skin Tone.png",
+    "[PigFace]": "Pig Face.png",
+    "[Cat]": "Cat with Wry Smile.png",
+    "[Blowfish]": "Blowfish.png",
+    "[Yen]": "Yen Banknote.png",
+    "[Triangular]": "Triangular Flag.png",
+    "[Heart]": "Beating Heart.png",
+    "[Broken]": "Broken Heart.png",
+    "[1st]": "1st Place Medal.png",
+    "[2nd]": "2nd Place Medal.png",
+    "[3rd]": "3rd Place Medal.png",
+    "[Selfie]": "Selfie Light Skin Tone.png",
+    "[Teacup]": "Teacup Without Handle.png",
+    "[New]": "New Button.png",
+    "[Check]": "Check Mark Button.png",
+    "[Anger]": "Anger Symbol.png",
+    "[Acceptable]": 'Japanese Acceptable Button.png',
+    "[Hundred]": "Hundred Points.png",
+    "[Crab]": "Crab.png",
+    "[MoneyBag]": "Money Bag.png",
+    "[Zzz]": "Zzz.png",
+    "[Bomb]": "Bomb.png",
+})
+// 用于在动态和评论中使用的表情
+// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
+// https://sad.apps.vip/public/static/emoji/emojistatic/
 let folderPath = reactive([])
 onMounted(() => {
-    const emojiList = import.meta.globEager('../../../../../public/emoji/emojistatic/emojistatic/*.png')
-    const keys = Object.keys(emojiList)
-    keys.forEach(item => {
-        folderPath.push(item)
+    Object.values(fluentEmojis).forEach((item) => {
+        folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
+
 })
 const fileList = ref<UploadProps['fileList']>([
-    {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
 ]);
 
 const handleCancel = () => {

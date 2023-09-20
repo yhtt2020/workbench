@@ -1,12 +1,14 @@
 <template>
-  <div
-    style="opacity: 1000"
-    :style="{ zIndex: zIndexValue }"
-    ref="el"
-    @click.prevent.stop="next($event)"
-    @contextmenu.prevent.stop="next($event)"
-  >
-    <slot></slot>
+  <div v-if="slot == 'default'" ref="el" @click.stop="next($event)" @contextmenu="next($event)" class="box">
+    <div :class="{ 'container': zIndexValue }">
+      <slot></slot>
+      <div class="" :class="{ 'overlay': zIndexValue }"></div>
+    </div>
+  </div>
+  <div v-else-if="slot == 'noMenu'" ref="el" @click.prevent.stop="next($event)">
+    <div :class="{ 'container': zIndexValue }">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -23,22 +25,25 @@ export default defineComponent({
     };
   },
   props: {
+    slot: {
+      default: "default",
+    },
     modelValue: {
       default: false,
     },
     fn: {},
   },
   computed: {
-    ...mapWritableState(taskStore, ["taskID", "step",'success']),
+    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
     task() {
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      return this.modelValue ? 99999999999 : null;
+      return this.modelValue ? true : null;
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
-      let next = this.task?.next ? this.task?.next : "下一步";
+      let next = this.step == length ? '完成' : this.task?.next || '下一步';
       return `${next} ${this.step} / ${length}`;
     },
   },
@@ -62,17 +67,15 @@ export default defineComponent({
     next(event) {
       if (!this.modelValue) return;
       this.action();
-      event.stopPropagation(); // 阻止事件冒泡  
+      event.stopPropagation(); // 阻止事件冒泡
     },
     action() {
       this.$emit("cb");
       this.tour.next();
       this.step++;
       if (this.task.success) {
-        console.log("任务以完成 :>> ");
-        this.success = true
+        this.success = true;
         // 发奖励
-       
       }
     },
     start() {
@@ -149,48 +152,91 @@ export default defineComponent({
     },
   },
 
-  mounted() {},
+  mounted() { },
 });
 </script>
 
-<style>
+<style scoped>
+/* .box {
+  position: relative;
+} */
+
+.container {
+  position: relative;
+  cursor: pointer;
+  z-index: 99999;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.0);
+  /* 设置半透明黑色背景，可以根据需要调整 */
+  z-index: 999999999999998;
+  /* 设置比 .container 的 z-index 更低的值 */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.0);
+  /* 设置半透明黑色背景，可以根据需要调整 */
+  z-index: 999999999999999;
+  /* 设置比 .relative 的 z-index 更高的值 */
+}
+
 .tour-step {
   margin-bottom: 20px;
   text-align: center;
   border: 1px solid #ccc;
   padding: 20px;
 }
+
 .shepherd-element {
   border: 1px solid var(--divider) !important;
 }
+
 .shepherd-content,
 .shepherd-header {
   background: var(--modal-bg) !important;
   padding-bottom: 0 !important;
 }
+
 .shepherd-element {
   z-index: 9999999999999 !important;
   margin-top: 12px;
   background: none;
 }
+
 /* 内容文本 */
 .shepherd-text {
   color: var(--primary-text) !important;
   font-size: 14px !important;
 }
+
 .shepherd-title {
   font-size: 16px !important;
   color: var(--primary-text) !important;
 }
+
 .shepherd-button {
   background: var(--active-bg) !important;
 }
+
 /* 箭头 */
 .shepherd-arrow:before {
   z-index: 9999999999999 !important;
   border: 1px solid var(--divider) !important;
   background: var(--modal-bg) !important;
 }
+
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   z-index: 9999999999999999 !important;
 }

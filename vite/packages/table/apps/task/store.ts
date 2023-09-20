@@ -9,6 +9,7 @@ export const taskStore = defineStore("taskStore", {
     success: false,
     step: -1, // 任务步骤
     list: [],
+    deskID: 0,
   }),
   getters: {},
   actions: {},

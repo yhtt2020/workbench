@@ -3,7 +3,7 @@
     <div
       v-if="item.slot"
       style="width: 40px; height: 40px; border-radius: 10px"
-      class="xt-bg xt-base-btn"
+      class="xt-bg-2 xt-base-btn"
     >
       <slot :name="item.slot"> </slot>
     </div>
@@ -19,7 +19,7 @@
         :src="item.img"
         alt=""
         :style="[stateStyle]"
-        style="border-radius: 10px"
+        style="border-radius: 10px;object-fit: cover"
       />
     </div>
     <xt-icon

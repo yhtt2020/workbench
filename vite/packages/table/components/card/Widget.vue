@@ -42,10 +42,8 @@
     <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="my-8 ml-4 mr-4"
         v-if="sizeList && sizeList.length > 0"/>
     <div class="flex flex-row">
-      <div class="w-24 h-24 ml-4 option" @click="()=>{this.menuVisible=false;item.fn()}" v-for="item in menuList">
-        <Icon class="icon" :icon="item.icon"></Icon>
-        {{ item.title }}
-      </div>
+    <!-- 根据任务需求 抽离了底部选择区 -->
+    <BottomEdit :menuList="menuList" @close="menuVisible = false"/>
       <slot name="menuExtra"></slot>
       <div class="w-24 h-24 ml-4 option" @click="doRemoveCard">
         <Icon class="icon" icon="guanbi2"></Icon>
@@ -72,7 +70,7 @@ import HorizontalPanel from "../HorizontalPanel.vue";
 import _ from "lodash-es";
 import {PropType} from "vue";
 import {Icon as MyIcon} from '@iconify/vue';
-
+import BottomEdit from "./BottomEdit.vue";
 //组件选项
 declare interface IOption {
   //类型，字符串
@@ -94,9 +92,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {HorizontalPanel, 
-    MyIcon
-  },
+  components: {HorizontalPanel},
 
   name: "Widget",
 

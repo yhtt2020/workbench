@@ -1,24 +1,44 @@
 <template>
-    <div class="w-full">
+    <div class="w-full ">
         
         <reply @addComment="getReplyText"/>
         <div class="mb-4 font-14 xt-text">
             评论 {{ props.reply }}
             <!-- {{ commentList }} -->
         </div>
-        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index"></MainReplyComment>
+        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
+        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible"/>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h, computed ,onMounted} from 'vue'
+import { ref, computed ,onMounted} from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
-import {useCommunityStore} from '../community'
+import {useCommunityStore} from '../commun'
+onMounted(async ()=>{
+    // props.tid
+    // console.log(props.tid);
+    // console.log(typeof props.reply);
+    
+    await store.getCommunityPostReply(store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id)
+})
+const current = ref(1)
+const changePage=(val)=>{
+    current.value=val
+    store.getCommunityPostReply(store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id,val)
+}
+const totalReply=computed(()=>{
+    return props.reply
+})
+const paginationVisible=computed(()=>{
+    return totalReply.value>0?true:false
+})
 const store=useCommunityStore()
 const props=defineProps({
     tid:Number,
-    reply:Number
+    reply:Number,
+    uid:Number
 })
 const value = ref('')
 // 评论内容列表
@@ -29,13 +49,11 @@ const commentList = computed(()=>{
 const getReplyText=(val)=>{
     // console.log(val);
     commentList.value=val.value
-    console.log('com',commentList);
-    console.log('comstore',store.communityReply);
+    // console.log('com',commentList);
+    // console.log('comstore',store.communityReply);
     
 }
-onMounted(()=>{
-    store.getCommunityPostReply(props.tid)
-})
+
 </script>
 <style lang='scss' scoped>
 .font-14 {
@@ -57,7 +75,9 @@ onMounted(()=>{
         // margin-left: 3px;
     }
 }
-
+:deep(.ant-pagination){
+    text-align: center;
+}
 
 
 .input-btm {

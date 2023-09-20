@@ -1,97 +1,136 @@
 <template >
     <!-- {{ isShow.isShow }} -->
-    <div class="w-full card" style="height:auto">
+    <div class="w-full card " style="height:auto">
         <!-- {{ isShow.isShow }} -->
+
         <div class="w-full card-content">
-            <div class="card-top">
-                <div class="top-left">
-                    <a-avatar :src="cardData.user.avatar" :size="32">
-                        <template #icon>
-                            <UserOutlined />
-                        </template>
-                    </a-avatar>
-                    <div class="user-msg">
-                        <div class="username" style="color: var(--primary-text);">
-                            {{ cardData.user.nickname }}
-                        </div>
-                        <div class="self-msg " style="color:  var(--secondary-text);">
-                            <span class="date">{{ createTime[0] }}</span>
-                            <span class="time">{{ createTime[1] }}</span>
-                            <span class="ip">{{ cardData.user.ip_home.region }}</span>
+            <div class="flex justify-between mb-2 -mt-3">
+                <span class="xt-text-2 font-16">详情</span>
+                <div class="flex items-center">
+                    <Icon class="text-xl xt-text pointer" icon="fluent:more-horizontal-16-filled" />
+                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail"/>
+                    <Icon class="ml-3 text-xl xt-text pointer" icon="majesticons:open" @click="goYuan" />
+                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:cross" @click="closeDetail" />
+                </div>
+            </div>
+            <div v-if="refreshDetailFlag">
+                <div class="card-top">
+                    <div class="top-left">
+                        <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
+                            @click.stop="showCard(uid, userInfo)">
+                            <template #icon>
+                                <UserOutlined />
+                            </template>
+                        </a-avatar>
+                        <div class="user-msg">
+                            <div class="username" style="color: var(--primary-text);">
+                                {{ cardData.user.nickname }}
+                            </div>
+                            <div class="self-msg " style="color:  var(--secondary-text);">
+                                <span class="date">{{ createTime[0] }}</span>
+                                <span class="time">{{ createTime[1] }}</span>
+                                <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="top-right">
-                    <!-- 当展示文章详情时,需要一个返回按钮去返回上一级 -->
-                    <slot name="top-right"></slot>
+                    <div class="top-right">
+                        <!-- 当展示文章详情时,需要一个返回按钮去返回上一级 -->
+                        <!-- <slot name="top-right"></slot> -->
+                    </div>
+
                 </div>
 
-            </div>
-
-            <div>
                 <div>
-                    <div class="flex flex-col items-center ">
-                        <video class="object-cover mb-2 rounded-md cover-lm" v-if="cardData.data?.video">
-                            <source :src="cardData.data.video" type="video/mp4" />
-                            <source :src="cardData.data.video" type="video/webm" />
-                        </video>
-                    </div>
-                    <template v-if="cardData.image">
-                        <ul class="flex flex-col items-center p-0 mb-0">
-                            <img :src="item.image" v-for="(item,index) in cardData.image" class="mb-2 rounded-md cover-lm" :key="index">
-                        </ul>
-                    </template>
-                    <!-- 正文元素 -->
-                    <div class="mt-1">
-                        <div>
-                            <span id="title" style="color: var(--primary-text); " >{{
-                                cardData.title
-                            }}</span>
-                            <br>
-                            <span id="context" style="color:  var(--secondary-text);">{{
-                                cardData.summary
-                            }}</span>
+                    <div>
+                        <div class="flex flex-col items-center " v-if="cardData.data?.video">
+                            <video class="object-cover mb-2 rounded-md cover-lm">
+                                <source :src="cardData.data.video" type="video/mp4" />
+                                <source :src="cardData.data.video" type="video/webm" />
+                            </video>
                         </div>
+                        <template v-if="cardData.image">
+                            <ul class="flex flex-col items-center p-0 mb-0">
+                                <img :src="item.image" v-for="(item, index) in cardData.image_170_170"
+                                    class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
+                            </ul>
+                        </template>
+                        <!-- 正文元素 -->
+                        <div class="mt-1">
+                            <div>
+                                <div id="title" style="color: var(--primary-text); " v-if="cardData.title"
+                                    :innerHTML="title">
+                                </div>
+                                <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;"
+                                    :innerHTML="content"></div>
+                            </div>
 
+                        </div>
                     </div>
+
                 </div>
+                <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
+                    <span class="view" style="cursor: pointer;">{{ cardData.view_count }} 浏览</span>
+                    <span class="like" style="cursor: pointer;">{{ cardData.support_count }} 点赞</span>
+                    <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
+                </div>
+                <!-- 分隔线 -->
+                <!-- <div class="w-full h-[2px] mt-4 xt-bg-2"></div> -->
+                <a-divider class="w-full h-[2px] mt-4 xt-bg-2" />
+                <div class="flex mt-4 mb-4 ">
+                    <!-- :icon="h(SearchOutlined)" -->
+                    <!-- {{ isLike }} -->
+                    <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
+                        <button class="mr-3 reply w-[57px] h-[32px]  pl-5 "
+                            :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
+                            style="position: relative;border: none;cursor: pointer;">{{ cardData.support_count }}</button>
+                        <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
+                            style="position: absolute;left:34px;">
+                    </div>
+                    <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
+                        <button class="reply w-[57px] h-[32px]  pl-5"
+                            :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
+                            style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count }}</button>
+                        <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
+                            style="position: absolute;left:102px;">
+                    </div>
 
+                </div>
+                <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
             </div>
-            <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
-                <span class="view" style="cursor: pointer;">{{ cardData.view_count }} 浏览</span>
-                <span class="like" style="cursor: pointer;">{{ cardData.support_count }} 点赞</span>
-                <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
-            </div>
-            <!-- 分隔线 -->
-            <!-- <div class="w-full h-[2px] mt-4 xt-bg-2"></div> -->
-            <a-divider   class="w-full h-[2px] mt-4 xt-bg-2" />
-            <div class="flex mt-4 mb-4 ">
-            <!-- :icon="h(SearchOutlined)" -->
-            <!-- {{ isLike }} -->
-            <div class="flex items-center "  style="cursor: pointer;" @click="clickLike">
-                <button class="mr-3 reply w-[57px] h-[32px]  pl-5 " :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                    style="position: relative;border: none;cursor: pointer;" >{{ cardData.support_count }}</button>
-                <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
-                    style="position: absolute;left:45px;">
-            </div>
-            <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
-                <button class="reply w-[57px] h-[32px]  pl-6" :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" 
-                    style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count }}</button>
-                <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
-                    style="position: absolute;left:114px;">
-            </div>
-
-        </div>
-            <Comment :tid="tid" :reply="cardData.reply_count"/>
+            <a-spin v-else tip="Loading..." size="large" style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive, computed,onBeforeUpdate } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
-import { useCommunityStore } from '../community'
+import { useCommunityStore } from '../commun'
+import { appStore } from '../../../../table/store'
+import { Icon } from '@iconify/vue';
+import browser from '../../../js/common/browser';
+import emojiReplace from '../../../js/chat/emoji'
+const useUserStore = appStore()
+let uid = props.cardData.user.uid
+let userInfo = {
+    uid: uid,
+    nickname: props.cardData.user.nickname,
+    avatar: props.cardData.user.avatar_128
+}
+// 弹出用户个人卡片
+const showCard = (uid, userInfo) => {
+    useUserStore.showUserCard(uid, userInfo)
+}
+const goYuan = () => {
+    browser.openInUserSelect(`https://s.apps.vip/post/${props.cardData.pay_set.tid}`)
+}
+const detailVisible = ref(true)
+const emit = defineEmits(['closeDetail'])
+const closeDetail = () => {
+    detailVisible.value = false
+    emit('closeDetail', detailVisible.value)
+}
 const store = useCommunityStore();
 // 点赞
 const isLike = ref(false)
@@ -101,7 +140,7 @@ const clickLike = () => {
 }
 const isCollect = ref(false)
 // 
-const clickCollect  = () => {
+const clickCollect = () => {
     isCollect.value = !isCollect.value
 }
 const props = defineProps({
@@ -111,11 +150,36 @@ const props = defineProps({
         default: () => []
     }
 })
-const createTime=computed(()=>{
-    let [date, time]=props.cardData.create_time.split(' ')
-    return [date,time]
+const createTime = computed(() => {
+    let [date, time] = props.cardData.create_time.split(' ')
+    return [date, time]
 })
-const tid=store.communityPostDetail.pay_set.tid
+// const tid=store.communityPostDetail.pay_set.tid 
+let tid=store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id
+// console.log(store.communityPostDetail);
+// 当tid不存在时，处理
+// if (store.communityPostDetail.pay_set) {
+//     tid = store.communityPostDetail.pay_set.tid
+// }
+
+const refreshDetailFlag = ref(true)
+const refreshDetail = async () => {
+    refreshDetailFlag.value = false
+    await store.getCommunityPostDetail(tid)
+    refreshDetailFlag.value = true
+}
+// onBeforeUpdate(()=>{
+//     store.getCommunityPostDetail(tid)
+// })
+// 用于在动态和评论中使用的表情
+// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
+// https://sad.apps.vip/public/static/emoji/emojistatic/
+const content = computed(() => {
+    return emojiReplace(props.cardData.content);
+});
+const title = computed(() => {
+    return emojiReplace(props.cardData.title);
+});
 </script>
 <style lang='scss' scoped>
 .card {
@@ -180,15 +244,16 @@ const tid=store.communityPostDetail.pay_set.tid
         }
 
         .cover-lm {
-            width: 240px;
-            height: 150px;
+            width: 250px;
+            height: 175px;
             text-align: center;
             // object-fit: cover;
 
         }
     }
+
     .reply {
-    border-radius: 8px;
+        border-radius: 8px;
     }
 
     #title {
@@ -207,23 +272,26 @@ const tid=store.communityPostDetail.pay_set.tid
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
+
     .card-bottom {
-            margin-top: 12px;
+        margin-top: 12px;
 
-            .view::after {
-                content: '·';
-                margin-left: 5px;
-                margin-right: 5px;
+        .view::after {
+            content: '·';
+            margin-left: 5px;
+            margin-right: 5px;
 
-            }
-
-            .like::after {
-                content: '·';
-                margin-left: 5px;
-                margin-right: 5px;
-            }
         }
+
+        .like::after {
+            content: '·';
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
 
 }
 </style>
